@@ -20,6 +20,76 @@ static func overlaps(actor: CharacterBody3D, query: PhysicsShapeQueryParameters3
 		rows.append({"collider": collider(hit.get("collider"), hit.get("rid", RID())), "shape": hit.get("shape", -1)})
 	return {"origin": vector(query.transform.origin), "margin": query.margin, "hits": rows, "saturated": hits.size() == 32}
 
+static func terrain_seam_report(arrival: Node, world: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> void:
+	# R4 Water entry has one missing support witness at x=-radius. The baked
+	# neighboring tiles are present, finite and hole-free. Observe both the
+	# original ray neighborhood and wider raw rays before choosing a repair.
+	var terrain := world.get_node_or_null(^"Terrain") as Node3D
+	if terrain == null or not terrain.is_class("Terrain3D"): return
+	var data: Object = terrain.get("data")
+	if data == null: return
+	var before := actor.global_transform
+	var rows: Array[Dictionary] = []
+	var shapes := {}
+	var tiles: Array[Dictionary] = []
+	var native_collision: Object = terrain.call("get_collision")
+	var terrain_rid: RID = native_collision.call("get_rid") if native_collision != null else RID()
+	if terrain_rid.is_valid():
+		var body_transform: Transform3D = PhysicsServer3D.body_get_state(terrain_rid, PhysicsServer3D.BODY_STATE_TRANSFORM)
+		for index in PhysicsServer3D.body_get_shape_count(terrain_rid):
+			var shape := PhysicsServer3D.body_get_shape(terrain_rid, index)
+			var transform := body_transform * PhysicsServer3D.body_get_shape_transform(terrain_rid, index)
+			var tile := {"shape": index, "world_origin": vector(transform.origin),
+				"shape_type": PhysicsServer3D.shape_get_type(shape)}
+			if absf(transform.origin.x - target.x) < float(terrain.get("region_size")) * 0.75 \
+				and absf(transform.origin.z - target.z) < float(terrain.get("region_size")) * 0.75 \
+				and PhysicsServer3D.shape_get_type(shape) == PhysicsServer3D.SHAPE_HEIGHTMAP:
+				var shape_data: Dictionary = PhysicsServer3D.shape_get_data(shape)
+				var heights: PackedFloat32Array = shape_data.get("heights", PackedFloat32Array())
+				tile["heightmap"] = {"width": shape_data.get("width"), "depth": shape_data.get("depth"), "height_count": heights.size()}
+			tiles.append(tile)
+	for dz: float in [-0.5, 0.0, 0.5]:
+		for dx: float in [-1.0, -radius, -0.01, 0.0, 0.01, radius, 1.0]:
+			var at := target + Vector3(dx, 0.0, dz)
+			var height: float = world.call("ground_height_at", at.x, at.z)
+			var raw_height: float = data.call("get_height", Vector3(at.x, 0.0, at.z))
+			var row := {"at": vector(at), "sampled_height": height, "raw_data_height": raw_height,
+				"accepted_support": not (arrival.call("_landing_hit", world, actor, at, radius) as Dictionary).is_empty()}
+			for band: String in ["original", "wide"]:
+				if band == "original" and not is_finite(height): continue
+				var from := Vector3(at.x, height + radius, at.z) if band == "original" else Vector3(at.x, actor.global_position.y + 4.0, at.z)
+				var to := Vector3(at.x, height - radius, at.z) if band == "original" else Vector3(at.x, actor.global_position.y - 4.0, at.z)
+				var ray := PhysicsRayQueryParameters3D.create(from, to, actor.collision_mask, [actor.get_rid()])
+				var hit := actor.get_world_3d().direct_space_state.intersect_ray(ray)
+				var witness := {"from": vector(from), "to": vector(to), "hit": not hit.is_empty()}
+				if not hit.is_empty():
+					var rid: RID = hit.get("rid", RID())
+					var index := int(hit.get("shape", -1))
+					witness.merge({"point": vector(hit.position), "normal": vector(hit.normal),
+						"shape": index, "collider": collider(hit.get("collider"), rid)})
+					var key := str(rid) + ":" + str(index)
+					if not shapes.has(key) and rid.is_valid():
+						var count := PhysicsServer3D.body_get_shape_count(rid)
+						if index >= 0 and index < count:
+							var transform := PhysicsServer3D.body_get_shape_transform(rid, index)
+							var body_transform: Transform3D = PhysicsServer3D.body_get_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM)
+							var shape := PhysicsServer3D.body_get_shape(rid, index)
+							shapes[key] = {"body_shape_count": count, "local_origin": vector(transform.origin),
+								"world_origin": vector((body_transform * transform).origin),
+								"local_basis": [vector(transform.basis.x), vector(transform.basis.y), vector(transform.basis.z)],
+								"shape_type": PhysicsServer3D.shape_get_type(shape)}
+							if PhysicsServer3D.shape_get_type(shape) == PhysicsServer3D.SHAPE_HEIGHTMAP:
+								var shape_data: Dictionary = PhysicsServer3D.shape_get_data(shape)
+								var heights: PackedFloat32Array = shape_data.get("heights", PackedFloat32Array())
+								shapes[key]["heightmap"] = {"keys": shape_data.keys(), "width": shape_data.get("width"),
+									"depth": shape_data.get("depth"), "height_count": heights.size()}
+				row[band] = witness
+			rows.append(row)
+	print("F18_TERRAIN_SEAM_DIAGNOSTIC " + JSON.stringify({"target": vector(target), "radius": radius,
+		"vertex_spacing": terrain.get("vertex_spacing"), "region_size": terrain.get("region_size"),
+		"collision_mode": terrain.get("collision_mode"), "actor_transform_unchanged": actor.global_transform == before,
+		"rows": rows, "native_shapes": shapes, "terrain_collision_rid": str(terrain_rid), "native_tiles": tiles}))
+
 static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target: Vector3, radius: float, label: String) -> void:
 	var before := actor.global_transform
 	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D

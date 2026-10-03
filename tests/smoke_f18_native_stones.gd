@@ -352,6 +352,8 @@ func _entry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: N
 	_check(clear, entry_id + " actual Player complete candidate capsule clear")
 	if target.is_finite() and (not landing.is_finite() or realm == "cloudreach"):
 		DIAGNOSTIC.report(arrival, world, player, target, radius, entry_id)
+	if target.is_finite() and realm == "water" and not landing.is_finite():
+		DIAGNOSTIC.terrain_seam_report(arrival, world, player, target, radius)
 	if realm == "cloudreach": _transition_topology(world, entry_id)
 	var floor_streak := 0
 	var supported_frames := 0
