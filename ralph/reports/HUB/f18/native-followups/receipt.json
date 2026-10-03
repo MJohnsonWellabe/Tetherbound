@@ -7511,6 +7511,47 @@
       },
       "evidence_limit": "One disconnected Water fixture with disclosed key/free-play/carrier/unlock/dry staging. Requested one native X11 draw, automatic loop disabled and Dummy audio. No earned unlock/travel/crossing/co-op/audio/continuous-performance/fullF18 acceptance; all six criteria remain UNPROVEN. Prior Meadows rendered failures remain FAILED/unproven and stall cause unproved.",
       "outcome": "Scoped actual Water mounted flight refusal/native frame/readability PASS."
+    },
+    {
+      "id": 37108768756,
+      "display_title": "render f18-waveform-lifetime-r2 @ ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "head_branch": "tb/integration",
+      "head_sha": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37108768756",
+      "checkout": "ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "label": "f18-waveform-lifetime-r2",
+      "mode": "headless",
+      "script": "tests/smoke_f18_presentation_lifetime.gd",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Existing freed-reference observer regression + changed helper parse only. Does not exercise playing-stream export or establish audio/listening/earned/fullF18 acceptance.",
+      "artifact_id": 11268269519,
+      "raw_artifact": "waveform-lifetime-r2-remote.zip",
+      "bytes": 1424,
+      "sha256": "a399a9b12289d623baf16ff4be2d95daba6c30d22deee9fee88ba49f2fdeeef9",
+      "native_exit_code": "0",
+      "elapsed_seconds": 5,
+      "independent_native_review": "APPROVE scoped original audit GPT-6.1 Sol f18_sol_review; exact hash/exit0/complete component receipt/zeroerrorswarnings",
+      "outcome": "PASS helper parse and10freedreference component checks; playingstream/export/actualraises/earned/listening/deviceaudio UNPROVEN.",
+      "logs": {
+        "run.log": {
+          "errors": {},
+          "warnings": {}
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {}
+        }
+      },
+      "component_receipt": {
+        "failures": [],
+        "fixture": "detached actual HomeKey presenters with explicitly freed visual nodes; no travel acceptance",
+        "local_fields": 5,
+        "remote_fields": 5,
+        "transition_snapshot_present": true
+      }
     }
   ],
   "acceptance": {
@@ -7531,22 +7572,5 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": [
-    {
-      "id": 37108768756,
-      "display_title": "render f18-waveform-lifetime-r2 @ ec931361ee2aca3cec8a58beecec1bf9848baea7",
-      "head_branch": "tb/integration",
-      "head_sha": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
-      "status": "in_progress",
-      "conclusion": null,
-      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37108768756",
-      "checkout": "ec931361ee2aca3cec8a58beecec1bf9848baea7",
-      "label": "f18-waveform-lifetime-r2",
-      "mode": "headless",
-      "script": "tests/smoke_f18_presentation_lifetime.gd",
-      "resolution": "1280x720",
-      "timeout_minutes": "15",
-      "scope": "Existing freed-reference observer regression + changed helper parse only. Does not exercise playing-stream export or establish audio/listening/earned/fullF18 acceptance."
-    }
-  ]
+  "pending_dispatches": []
 }

@@ -63,7 +63,7 @@
     "change": "Observer saves exact existing valid playing HomeKey AudioStreamWAV once per runtime instance. Standalone entry includes actual source_path (empty for generated resources), stream/node identity, bus/player gain, playback time and monotonic/process/physics observation timestamps.",
     "bounds": "Fresh enclosing output, no overwrite, at most8attempts; nonempty payload <=4MiB and length <=10s. Errors retained; unavailable states no acceptance.",
     "no_changes": "No production source, audio/playback/bus/state/pose/input setters, added awaits or timing budgets; previous raw Variant validity-first checks retained.",
-    "runtime_status": "UNPROVEN; component parse/lifetime regression and actual waveform capture/listening pending",
+    "runtime_status": "Existing10freedreference component regression + helperparse PASS; originalSol auditAPPROVE. Playingstream export/actualraises/earned/listening/audio UNPROVEN.",
     "scope": "Source-stream content only, excludes player/bus gain, spatial/mixed/device output. Dummy driver explicitly recorded. Earned/native audio acceptance remains UNPROVEN.",
     "api_sources": [
       "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/AudioStreamWAV.xml",
@@ -74,8 +74,8 @@
       "display_title": "render f18-waveform-lifetime-r2 @ ec931361ee2aca3cec8a58beecec1bf9848baea7",
       "head_branch": "tb/integration",
       "head_sha": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37108768756",
       "checkout": "ec931361ee2aca3cec8a58beecec1bf9848baea7",
       "label": "f18-waveform-lifetime-r2",
@@ -85,6 +85,47 @@
       "timeout_minutes": "15",
       "scope": "Existing freed-reference observer regression + changed helper parse only. Does not exercise playing-stream export or establish audio/listening/earned/fullF18 acceptance."
     },
-    "coordinator_dependency": "Root explicitly prohibits broad earned/co-op and movingintegration imports until reviewed main-green baseline supplied; latest native arrival production2bdd48645ea778b59f2b6dd256a0c5b17de94b41 is not an approved matched F18 dependency group."
+    "coordinator_dependency": "Root explicitly prohibits broad earned/co-op and movingintegration imports until reviewed main-green baseline supplied; latest native arrival production2bdd48645ea778b59f2b6dd256a0c5b17de94b41 is not an approved matched F18 dependency group.",
+    "component_native_result": {
+      "id": 37108768756,
+      "display_title": "render f18-waveform-lifetime-r2 @ ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "head_branch": "tb/integration",
+      "head_sha": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37108768756",
+      "checkout": "ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "label": "f18-waveform-lifetime-r2",
+      "mode": "headless",
+      "script": "tests/smoke_f18_presentation_lifetime.gd",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Existing freed-reference observer regression + changed helper parse only. Does not exercise playing-stream export or establish audio/listening/earned/fullF18 acceptance.",
+      "artifact_id": 11268269519,
+      "raw_artifact": "waveform-lifetime-r2-remote.zip",
+      "bytes": 1424,
+      "sha256": "a399a9b12289d623baf16ff4be2d95daba6c30d22deee9fee88ba49f2fdeeef9",
+      "native_exit_code": "0",
+      "elapsed_seconds": 5,
+      "independent_native_review": "APPROVE scoped original audit GPT-6.1 Sol f18_sol_review; exact hash/exit0/complete component receipt/zeroerrorswarnings",
+      "outcome": "PASS helper parse and10freedreference component checks; playingstream/export/actualraises/earned/listening/deviceaudio UNPROVEN.",
+      "logs": {
+        "run.log": {
+          "errors": {},
+          "warnings": {}
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {}
+        }
+      },
+      "component_receipt": {
+        "failures": [],
+        "fixture": "detached actual HomeKey presenters with explicitly freed visual nodes; no travel acceptance",
+        "local_fields": 5,
+        "remote_fields": 5,
+        "transition_snapshot_present": true
+      }
+    }
   }
 }
