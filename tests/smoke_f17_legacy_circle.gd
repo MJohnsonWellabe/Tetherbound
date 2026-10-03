@@ -39,7 +39,8 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 	for point: Vector2 in [road_end, (road_start + road_end) * .5, garden_turn, Vector2(garden_turn.x, 0)]:
 		if not await _circle_walk(nav, Vector3(point.x, 0, point.y), "garden approach"):
 			return false
-	# Start at south; adjoining outside-ring legs avoid crossing the plinths.
+	# Visit all four actual members; production navigation observes each leg's
+	# real terrain/colliders. These goals do not prescribe an exterior-only arc.
 	for index in [2, 3, 0, 1]:
 		var member: Node3D = members[index]
 		var outward := member.global_position - centre
