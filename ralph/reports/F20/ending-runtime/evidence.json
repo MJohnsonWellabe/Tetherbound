@@ -771,6 +771,16 @@
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37091888883",
       "status": "in progress; clock diagnostic no result claimed"
+    },
+    "solo_r12": {
+      "run": 37092294181,
+      "job": 111115004043,
+      "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
+      "script": "tests/smoke_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37092294181",
+      "status": "in progress; affected bounty-road continuation, no result claimed"
     }
   },
   "lesson_input_driver": {
@@ -820,6 +830,6 @@
     "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
     "independent_source_review": "PASS f20_review: exactmountedBountyInteraction._prompt identity; strictuniquefiniteauthored MainStreet pair; oneexistingNAV.walk_to_guided with ORIGINAL directdistanceframebudget/sharedwatchdog/capsule; samegrounding/recovery/arbiter/actionable/normalinput/activationchecks. No parser/type issue, production/F49/F17/sharednav change orwaiver. Actualsolo replay required.",
     "reason": "r11 actualcapsulewalk fails near south-sidehouse row; source shows directdiagonalcrosses thatrow. Exactcolliderunproved; followexistingauthoredroad beforeturningtotournamentlawn, no target/player/floorpose assignment.",
-    "runtime": "pending affected solo-r12; criterion3 remainsOPEN"
+    "runtime": "Affectedsolo-r12 live37092294181/job111115004043 onexactc352; sourcePASS only, criterion3OPEN."
   }
 }
