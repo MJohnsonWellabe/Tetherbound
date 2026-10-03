@@ -23,6 +23,7 @@ const REALM_STEP_BUDGET_S := 1200.0
 const MEADOWS := "meadows"
 const CLOUDREACH := "cloudreach"
 const CLOUDREACH_KEY_FLAG := "realm_key_cloudreach"
+const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
 
 
 func _initialize() -> void:
@@ -49,6 +50,15 @@ func _run() -> void:
 			return
 	check(_peers.size() == 2, "coordinator tracked 2 peers")
 	_step_phase_deadline_ms = Time.get_ticks_msec() + REALM_STEP_BUDGET_S * 1000.0
+	# Initial route/proximity mechanics fixtures precede all network admission.
+	# Subsequent crossings use the actual public portal transaction and ACK.
+	for fixture_peer in 2:
+		var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": CLOUDREACH,
+			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "session_host_first_realm", "portal_prepare_only": true})
+		check(prepared.get("verdict") == "PASS", "Disclosed initial Hall placement/open canonical route without earned chapter credit")
+		if prepared.get("verdict") != "PASS":
+			quit(await finish())
+			return
 
 	var session = await probe(0, "session")
 	var have_session := session is Dictionary and bool((session as Dictionary).get("available", false))
@@ -81,7 +91,8 @@ func _run() -> void:
 	var budget_frames := int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4
 
 	# 1. The HOST crosses first. The guest stays in the Meadows.
-	var host_crossed: Dictionary = await step(0, "enter_realm", {"realm": CLOUDREACH}, budget_frames)
+	var host_crossed: Dictionary = await step(0, "enter_realm", {"realm": CLOUDREACH,
+		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "session_host_first_realm"}, budget_frames)
 	check(str(host_crossed.get("verdict", "")) == "PASS",
 		"the host crossed into Cloudreach first (%s)" % str(host_crossed.get("detail", "")))
 	if str(host_crossed.get("verdict", "")) != "PASS":
@@ -104,7 +115,8 @@ func _run() -> void:
 			% _others(guest_meadows_bodies, false).size())
 
 	# 2. The guest follows.
-	var guest_crossed: Dictionary = await step(1, "enter_realm", {"realm": CLOUDREACH}, budget_frames)
+	var guest_crossed: Dictionary = await step(1, "enter_realm", {"realm": CLOUDREACH,
+		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "session_host_first_realm"}, budget_frames)
 	check(str(guest_crossed.get("verdict", "")) == "PASS",
 		"the guest followed the host into Cloudreach (%s)" % str(guest_crossed.get("detail", "")))
 	if str(guest_crossed.get("verdict", "")) != "PASS":

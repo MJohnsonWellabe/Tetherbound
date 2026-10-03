@@ -2194,7 +2194,24 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	var budget := maxi(1, int(args.get("budget_frames", 6000)))
 	var started_ms := Time.get_ticks_msec()
 	var started_physics_frame := Engine.get_physics_frames()
-	var crossed: bool = await game.call("enter_realm", realm, str(args.get("entry", "")))
+	var crossed: bool
+	var portal_reason := ""
+	if args.has("actual_portal_fixture"):
+		var portal: Script = load("res://tools/net/portal_smoke_travel.gd") as Script
+		if portal == null or portal.call("selected", args) != true:
+			return {"verdict": "FAIL", "detail": "Explicit named actual portal fixture required"}
+		if args.get("portal_prepare_only") == true:
+			return await portal.call("prepare", self, args, budget)
+		var preparation_frames: int = portal.call("preparation_frames", self, args)
+		if preparation_frames < 0:
+			return {"verdict": "FAIL", "detail": "Initial actual Hall fixture unavailable"}
+		started_physics_frame -= preparation_frames
+		var driver: RefCounted = portal.new()
+		var travel: Dictionary = await driver.call("travel", self, args, started_physics_frame, budget)
+		crossed = travel.get("ok") == true
+		portal_reason = str(travel.get("reason", ""))
+	else:
+		crossed = await game.call("enter_realm", realm, str(args.get("entry", "")))
 	var observed_frames := Engine.get_physics_frames() - started_physics_frame
 	if observed_frames > budget:
 		return {"verdict": "FAIL", "detail": ("Game.enter_realm('%s') exceeded its %d-physics-frame budget "
@@ -2203,7 +2220,7 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	if not crossed:
 		return {"verdict": "FAIL",
 			"detail": "Game.enter_realm('%s') refused from '%s' (can_enter=%s)"
-				% [realm, was, str(game.call("can_enter_realm", realm))]}
+				% [realm, was, str(game.call("can_enter_realm", realm))] + ("; " + portal_reason if not portal_reason.is_empty() else "")}
 	var wanted := str(REALM_ROOT_NAMES.get(realm, ""))
 	# `enter_realm()` now owns the readiness wait. Keep the original, literal
 	# physics-frame budget around the whole transition rather than starting a
@@ -4061,7 +4078,9 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		if frames % stride != 0:
 			continue
 		var mine: Variant = manager.call("active_creature")
-		if mine != null:
+		# Named wiring callers may explicitly decline self-HP aid. Default callers
+		# retain the existing provider requirement and durable save/ACK path.
+		if mine != null and args.get("self_hp_topups", true) != false:
 			if director.call("uses_durable_trainer_rewards", str(manager.call("encounter_id"))) == true:
 				var topup: Variant = args.get("fixture_topup_provider")
 				if not topup is Node or not is_instance_valid(topup) or topup.get_script() == null \

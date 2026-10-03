@@ -35,6 +35,9 @@ func _run_livewire() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
+	if not await _prepare_initial_portal("stormwood_livewire"):
+		quit(await finish())
+		return
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	if str(hosted.get("verdict", "")) != "PASS":
@@ -62,7 +65,8 @@ func _run_livewire() -> void:
 			check(str(seen.get("verdict", "")) == "PASS",
 				"peer %d received '%s'" % [peer, flag])
 
-	var entered := await step(1, "enter_realm", {"realm": STORMWOOD}, REALM_STEP_BUDGET)
+	var entered := await step(1, "enter_realm", {"realm": STORMWOOD,
+		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_livewire"}, REALM_STEP_BUDGET)
 	check(str(entered.get("verdict", "")) == "PASS", "client entered Stormwood")
 	if str(entered.get("verdict", "")) != "PASS":
 		quit(await finish())

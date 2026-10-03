@@ -14,6 +14,9 @@ var _worker: RefCounted
 var _gate: RefCounted
 var _completions: Array[bool] = []
 var _completion_threads: Array[bool] = []
+var _submissions: Array[Dictionary] = []
+var _observations: Array[Dictionary] = []
+var _evidence_order: Array[String] = []
 
 
 class GateWriter:
@@ -34,6 +37,18 @@ class GateWriter:
 	func release_later() -> void:
 		OS.delay_msec(40)
 		release.post()
+
+class ObservedGateWriter extends GateWriter:
+	var observed_calls := 0
+	func write_snapshot_observed(request: Dictionary) -> bool:
+		observed_calls += 1
+		if days.is_empty():
+			entered.post()
+			release.wait()
+		days.append(int(request.data.day))
+		main_thread_writes.append(Thread.is_main_thread())
+		return false if reject else bool(inner.write_snapshot_observed(request))
+	func fallback_write_receipt() -> Dictionary: return inner.fallback_write_receipt()
 
 
 class PausingWorldStore:
@@ -62,6 +77,9 @@ func before_each() -> void:
 	_saver.fallback_completed.connect(_completed)
 	_completions.clear()
 	_completion_threads.clear()
+	_submissions.clear()
+	_observations.clear()
+	_evidence_order.clear()
 
 
 func after_each() -> void:
@@ -73,6 +91,44 @@ func after_each() -> void:
 func _completed(success: bool) -> void:
 	_completions.append(success)
 	_completion_threads.append(Thread.is_main_thread())
+	_evidence_order.append("bool")
+
+func _submitted(job_id: String, request: Dictionary) -> void:
+	_submissions.append({"id":job_id,"request":request,"main_thread":Thread.is_main_thread()})
+	_evidence_order.append("submitted:"+str(request.data.day))
+
+func _observed(job_id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void:
+	_observations.append({"id":job_id,"request":request,"success":success,"receipt":receipt,
+		"main_thread":Thread.is_main_thread()})
+	_evidence_order.append("request:"+str(request.data.day))
+
+func _watch_requests(observed_writer: bool = true) -> void:
+	if observed_writer:
+		var gate := ObservedGateWriter.new()
+		gate.inner=SAVE.new(_dir)
+		_gate=gate
+		_saver._fallback_writer=gate
+	_saver.fallback_submitted.connect(_submitted)
+	_saver.fallback_request_completed.connect(_observed)
+
+func _assert_locked_receipt(observation: Dictionary) -> void:
+	var receipt: Dictionary = observation.receipt
+	assert_false(receipt.is_empty(),"only a real successful locked writer supplies committed-file proof")
+	if receipt.is_empty(): return
+	assert_true(observation.main_thread)
+	assert_true(observation.success)
+	assert_true(receipt.is_read_only())
+	assert_eq(receipt.source,"SaveGame_locked_fallback_write_TRUE_BOOL")
+	assert_eq(receipt.writer_script,"res://scripts/save/save_game.gd")
+	assert_eq(receipt.writer_instance_id,_gate.inner.get_instance_id())
+	assert_eq(receipt.request_sha256,preload("res://scripts/save/save_document.gd").stringify(observation.request).sha256_text())
+	for kind: String in receipt.files:
+		var bytes: PackedByteArray = Marshalls.base64_to_raw(receipt.files[kind].bytes_base64)
+		var hash: HashingContext = HashingContext.new()
+		hash.start(HashingContext.HASH_SHA256)
+		hash.update(bytes)
+		assert_eq(hash.finish().hex_encode(),receipt.files[kind].sha256,"exact original written "+kind+" bytes")
+		assert_eq(preload("res://scripts/save/save_document.gd").parse(bytes.get_string_from_utf8()),receipt.files[kind].payload)
 
 
 func _queue(day: int) -> void:
@@ -241,3 +297,120 @@ func test_separate_savers_cannot_interleave_split_transactions() -> void:
 	assert_true(serialized, "other saver must wait for all three commits")
 	_assert_day(9)
 	assert_eq(SAVE.new(_dir).characters().read(str(_game.local.character_id)).get("realm"), "cloudreach")
+
+func test_request_identity_freezes_at_submission_and_only_started_coalesced_jobs_complete() -> void:
+	_watch_requests()
+	_queue(2)
+	_gate.entered.wait()
+	_queue(3)
+	_queue(4)
+	_game.day=99
+	assert_eq(_submissions.size(),3)
+	assert_true(_submissions[0].request.is_read_only())
+	assert_true(_submissions[0].request.data.is_read_only())
+	assert_eq(_submissions[0].request.data.day,2)
+	assert_eq(_submissions[2].request.data.day,4)
+	assert_ne(_submissions[0].id,_submissions[1].id)
+	assert_ne(_submissions[1].id,_submissions[2].id)
+	for submitted: Dictionary in _submissions:
+		assert_true(submitted.main_thread)
+		assert_eq(submitted.id.length(),32)
+	assert_eq(_observations.size(),0,"submission is never reported as completion")
+	_gate.release.post()
+	assert_true(_saver.finish_fallback())
+	assert_eq(_observations.size(),2)
+	if _observations.size() != 2: return
+	assert_eq(_gate.days,[2,4])
+	assert_eq(_completions,[true,true])
+	assert_eq(_observations[0].id,_submissions[0].id)
+	assert_eq(_observations[1].id,_submissions[2].id)
+	assert_eq(_observations[0].request,_submissions[0].request)
+	assert_eq(_observations[1].request,_submissions[2].request)
+	assert_ne(_observations[1].id,_submissions[1].id,"superseded pending job has no invented completion")
+	assert_eq(_evidence_order,["submitted:2","submitted:3","submitted:4","bool","request:2","bool","request:4"])
+	_assert_locked_receipt(_observations[0])
+	_assert_locked_receipt(_observations[1])
+	assert_eq(_observations[0].receipt.files.slot.payload.day,2,"first receipt cannot borrow pending successor's current file")
+	assert_eq(_observations[1].receipt.files.slot.payload.day,4)
+	_assert_day(4)
+
+func test_false_writer_BOOL_has_no_success_receipt_and_generic_BOOL_writer_stays_compatible() -> void:
+	_watch_requests(false)
+	_queue(2)
+	_gate.entered.wait()
+	_gate.release.post()
+	assert_true(_saver.finish_fallback())
+	assert_eq(_observations.size(),1)
+	assert_true(_observations[0].success)
+	assert_true(_observations[0].receipt.is_empty(),"generic BOOL callable has explicitly unavailable file receipt")
+	assert_eq(_observations[0].id,_submissions[0].id)
+	_gate.reject=true
+	_queue(3)
+	assert_false(_saver.finish_fallback())
+	assert_eq(_observations.size(),2)
+	assert_false(_observations[1].success)
+	assert_true(_observations[1].receipt.is_empty())
+	assert_eq(_observations[1].id,_submissions[1].id)
+	assert_eq(_completions,[true,false])
+	_assert_day(2)
+
+func test_unwatched_fallback_preserves_original_writer_without_receipt_IO() -> void:
+	var gate := ObservedGateWriter.new()
+	gate.inner=SAVE.new(_dir)
+	_gate=gate
+	_saver._fallback_writer=gate
+	_queue(2)
+	_gate.entered.wait()
+	_gate.release.post()
+	assert_true(_saver.finish_fallback())
+	assert_eq(gate.observed_calls,0)
+	assert_true(gate.inner.fallback_write_receipt().is_empty())
+	assert_eq(_gate.days,[2])
+	assert_eq(_completions,[true])
+	_assert_day(2)
+
+func test_observed_real_split_failure_rolls_back_and_cannot_certify_a_success_receipt() -> void:
+	_watch_requests()
+	_game.day=7
+	assert_true(_saver.save(_game,0))
+	_gate.inner._characters=ATOMIC_TEST.FailingCharacterStore.new(_gate.inner._characters)
+	_queue(12)
+	_gate.entered.wait()
+	_gate.release.post()
+	assert_false(_saver.finish_fallback())
+	assert_eq(_observations.size(),1)
+	assert_false(_observations[0].success)
+	assert_true(_observations[0].receipt.is_empty())
+	assert_true(_gate.inner.fallback_write_receipt().is_empty())
+	assert_eq(_observations[0].id,_submissions[0].id)
+	assert_eq(_completions,[false])
+	_assert_day(7)
+
+func test_receipt_captures_full_original_primaries_before_contending_writer_can_replace_them() -> void:
+	_watch_requests()
+	var paused := PausingWorldStore.new()
+	paused.inner=_gate.inner._worlds
+	_gate.inner._worlds=paused
+	_queue(2)
+	_gate.entered.wait()
+	_gate.release.post()
+	paused.entered.wait()
+	var other := SAVE.new(_dir)
+	_game.day=9
+	_game.current_realm="cloudreach"
+	var later: Dictionary = other._prepare_snapshot(_game,0)
+	var contender := Thread.new()
+	assert_eq(contender.start(other.write_snapshot.bind(later)),OK)
+	paused.release.post()
+	assert_true(_saver.finish_fallback())
+	assert_true(contender.wait_to_finish() == true)
+	assert_eq(_observations.size(),1)
+	if _observations.size() != 1: return
+	_assert_locked_receipt(_observations[0])
+	assert_eq(_observations[0].receipt.files.slot.payload.day,2)
+	assert_eq(_observations[0].receipt.files.world.payload.day,2)
+	assert_eq(_observations[0].receipt.files.character.payload.realm,"meadows")
+	assert_eq(_observations[0].request.data.day,2)
+	assert_eq(_observations[0].id,_submissions[0].id)
+	_assert_day(9)
+	assert_eq(SAVE.new(_dir).characters().read(str(_game.local.character_id)).get("realm"),"cloudreach")

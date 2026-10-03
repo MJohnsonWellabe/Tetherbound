@@ -57,7 +57,7 @@ extends "res://tests/helpers/net_harness.gd"
 ##     earned route to the Warden in this file; the Hall gauntlet and the
 ##     Meadows spine belong to other witnesses.
 ##   * The Warden is won with `win_trainer_battle`, the same step-driven fight
-##     the handoff leg uses.
+##     the handoff leg uses, with no self-HP top-ups.
 ##   * Walks after the seat are teleport-free but step-driven (`move_to`, a
 ##     stick navigator), and every answer is a real `interact` press on the
 ##     live prompt. Dialogue is cleared with `dismiss_dialogue` presses.
@@ -173,7 +173,8 @@ func _run() -> void:
 	var guest_in: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	check(str(guest_in.get("verdict", "")) == "PASS", "guest joined the Warden's own fight")
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING,
+		 "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "both peers felled the Warden (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())

@@ -17,7 +17,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## the same call `trainer_npc.gd` makes when a player presses the challenge
 ## prompt). Peer 1 joins that fight already in progress (§6). Peer 0 then fights
 ## Bryn's whole team down with real `strike_intent` submissions, so the host
-## arbitrates every blow. Then:
+## arbitrates every blow. The driver supplies no self-HP top-ups. Then:
 ##
 ##   * **once for the world** -- Bryn's `defeat_flag` is set on BOTH peers, and
 ##     peer 1 never fought a trainer battle of its own: it has no
@@ -174,7 +174,7 @@ func _run() -> void:
 		+ "so any defeat flag it ends up holding can only have come from the host")
 
 	# --- and peer 0 fights Bryn's team down ------------------------------------
-	var won: Dictionary = await step(0, "win_trainer_battle", {}, 6000)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false}, 6000)
 	check(str(won.get("verdict", "")) == "PASS",
 		"peer 0 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":

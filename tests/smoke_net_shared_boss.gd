@@ -82,6 +82,7 @@ const ORIGINAL_STARTER_FIXTURE := preload("res://tests/helpers/net_original_star
 ## which pulls the opponent's `hp` down. It never touches `max_hp`, `attack` or
 ## `defence` -- the three this asserts on -- but reading them afterwards would
 ## invite the next reader to assume it might.
+## The fight driver supplies no self-HP top-ups in any of this smoke's modes.
 ##
 ## ### FINDING F1, CLOSED: the stat multiplier and the cooldown now reach the
 ## ### creature, and this file asserts it
@@ -473,7 +474,7 @@ func _run() -> void:
 
 	# --- his second creature comes out, with two people already fighting ------
 	var first_down: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": ROUND_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING,
+		{"budget_frames": ROUND_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false,
 		 "stop_when_creatures_left": AUTHORED_TEAM_SIZE - 2}, ROUND_FRAMES)
 	check(str(first_down.get("verdict", "")) == "PASS",
 		"the two of them put his first creature down and he sent out his second (%s)"
@@ -838,7 +839,7 @@ func _run() -> void:
 
 	# --- and the five of them go down -----------------------------------------
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS",
 		"the two of them fought the Warden's whole team of %d down (%s)"
 			% [AUTHORED_TEAM_SIZE, str(won.get("detail", ""))])
@@ -966,7 +967,7 @@ func _run_chapter_handoff() -> void:
 	check(str(guest_joined.get("verdict", "")) == "PASS",
 		"guest joined the Warden's own fight rather than opening another")
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "both peers felled the Warden (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())
@@ -1223,7 +1224,7 @@ func _run_client_chapter_handoff() -> void:
 		quit(await finish())
 		return
 	var won: Dictionary = await step(1, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "the guest felled the Warden alone (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())
@@ -1475,7 +1476,7 @@ func _run_hall_room(row: Dictionary, markers: Dictionary) -> bool:
 		"the guest is IN '%s' without running a trainer battle of its own" % trainer)
 
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS",
 		"both peers resolved '%s' (%s)" % [trainer, str(won.get("detail", ""))])
 	if str(won.get("verdict", "")) != "PASS":
@@ -1571,7 +1572,7 @@ func _run_tournament_round(round: Dictionary) -> bool:
 		var landed := await _tournament_hit(peer)
 		check(landed, "peer %d reduced '%s' shared opponent HP%s"
 			% [peer, trainer, "" if landed else " -- " + _tournament_hit_detail])
-	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s'" % trainer)
 	if str(won.get("verdict", "")) != "PASS":
 		return false

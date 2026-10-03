@@ -1,0 +1,45 @@
+{
+  "verdict": "PASS",
+  "run_id": 37122249425,
+  "artifact_id": 11273502298,
+  "checkout_ref": "ae63ed1932f128e5c373a15d31143e4c259ce56f",
+  "archive_sha256": "0cd08d68feddf2785a74c413c2ea8d34164ac87f0113fc21b89c2014c49cc696",
+  "files": {
+    "run.log": {
+      "retained_file": "epochs-aftermath-r2-37122249425-0-run.log.gz",
+      "sha256": "dd70445c6564f239ab299145b2781f4835e1d1d79b73b889d8a74876cc5b31f3",
+      "errors": []
+    },
+    "exit_code": {
+      "retained_file": "epochs-aftermath-r2-37122249425-1-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/aftermath-lifetime-2358-23448594.log": {
+      "retained_file": "epochs-aftermath-r2-37122249425-2-aftermath-lifetime-2358-23448594.log.gz",
+      "sha256": "8a3aa55174ed32159fffe958bce80f56dd5fd6a649c6cca64593837c0b86e86e",
+      "errors": []
+    },
+    "MANIFEST.txt": {
+      "retained_file": "epochs-aftermath-r2-37122249425-3-MANIFEST.txt.gz",
+      "sha256": "f1e0abe2a667370e7af9de122f2438cf256b52e8c058af50108e4d91b54b0b8d",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "epochs-aftermath-r2-37122249425-4-boot_log.txt.gz",
+      "sha256": "2d1bf8a0ddc40328d9ea45afb81a3560d1f32139c5a5e9d6fa3e087879082773",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "epochs-aftermath-r2-37122249425-5-godot.log.gz",
+      "sha256": "f78e684fc0f9b1a42fa919efccf83a1efed1e51de1b606ca7b0f533923ef6682",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/trainer-aftermath-lifecycle-child.log": {
+      "retained_file": "epochs-aftermath-r2-37122249425-6-trainer-aftermath-lifecycle-child.log.gz",
+      "sha256": "1abda4eebe2a4244381d1e95f5ba723e966bb835133455578153fdd3f9927725",
+      "errors": []
+    }
+  },
+  "scope": "17 tests/282 assertions/0 failed/exit0/28s; actual epoch recovery and bound aftermath native lifecycle; no original log errors."
+}

@@ -289,9 +289,12 @@ const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 const WATER_RECIPE_MIGRATION := preload("res://scripts/save/water_recipe_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 
 signal fallback_completed(success: bool)
+signal fallback_submitted(job_id: String, request: Dictionary)
+signal fallback_request_completed(job_id: String, request: Dictionary, success: bool, receipt: Dictionary)
 
 var _dir: String
 var _legacy_dir: String = ""
@@ -299,6 +302,7 @@ var _worlds: RefCounted = null
 var _characters: RefCounted = null
 var _fallback: RefCounted = null
 var _fallback_writer: RefCounted = null
+var _fallback_write_receipt: Dictionary = {}
 ## Typed outcome for UI and tools; refused loads never apply live state.
 var last_load_result: Dictionary = {}
 
@@ -548,11 +552,21 @@ func request_fallback(game: Object, slot: int, character_only: String = "") -> b
 		_fallback = FALLBACK_WORKER.new()
 		_fallback.completed.connect(_on_fallback_completed)
 		_fallback_writer = get_script().new(_dir)
+	if not _fallback.submitted.is_connected(_on_fallback_submitted):
+		_fallback.submitted.connect(_on_fallback_submitted)
+	if not _fallback.completed_request.is_connected(_on_fallback_request_completed):
+		_fallback.completed_request.connect(_on_fallback_request_completed)
 	var request := _prepare_snapshot(game, slot, character_only.is_empty(), character_only)
 	if request.is_empty():
 		_on_fallback_completed(false)
 		return false
-	return _fallback.submit(request, _fallback_writer.write_snapshot)
+	var observed_writer := Callable()
+	var receipt_reader := Callable()
+	if (not fallback_submitted.get_connections().is_empty() or not fallback_request_completed.get_connections().is_empty()) \
+		and _fallback_writer.has_method("write_snapshot_observed") and _fallback_writer.has_method("fallback_write_receipt"):
+		observed_writer=Callable(_fallback_writer,"write_snapshot_observed")
+		receipt_reader=Callable(_fallback_writer,"fallback_write_receipt")
+	return _fallback.submit(request, _fallback_writer.write_snapshot, observed_writer, receipt_reader)
 
 
 func poll_fallback() -> void:
@@ -573,17 +587,63 @@ func _on_fallback_completed(success: bool) -> void:
 		push_warning("fallback autosave: could not commit save")
 	fallback_completed.emit(success)
 
+func _on_fallback_submitted(job_id: String, request: Dictionary) -> void:
+	fallback_submitted.emit(job_id,request)
+
+func _on_fallback_request_completed(job_id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void:
+	fallback_request_completed.emit(job_id,request,success,receipt)
+
 
 ## The existing slot/world/character transaction, now independent of Game.
 ## A process-wide recursive IO mutex also serializes saves from other saver
 ## instances and protects AtomicSaveFile's shared validity cache.
 func write_snapshot(request: Dictionary) -> bool:
+	return _write_snapshot_transaction(request,false)
+
+## Opt-in companion proof only. The original write and BOOL are unchanged.
+func write_snapshot_observed(request: Dictionary) -> bool:
+	return _write_snapshot_transaction(request,true)
+
+func fallback_write_receipt() -> Dictionary:
+	return _fallback_write_receipt
+
+func _write_snapshot_transaction(request: Dictionary, observe: bool) -> bool:
+	if observe: _fallback_write_receipt={}
 	if request.is_empty():
 		return false
 	ATOMIC_SAVE_FILE.begin_transaction()
 	var success := _write_snapshot_locked(request)
+	if observe and success: _fallback_write_receipt=_snapshot_receipt_locked(request)
 	ATOMIC_SAVE_FILE.end_transaction()
 	return success
+
+## Still inside the existing writer mutex, before a pending successor can
+## overwrite these primaries. Raw reads do not join, repair or use store caches.
+func _snapshot_receipt_locked(request: Dictionary) -> Dictionary:
+	var paths: Dictionary = {}
+	if request.character_only:
+		paths.character=_characters.call("path_for",str(request.character_id))
+	else:
+		paths.slot=slot_path(int(request.slot))
+		if request.write_split:
+			if request.host: paths.world=_worlds.call("path_for",str(request.world_id))
+			paths.character=_characters.call("path_for",str(request.character_id))
+	var files: Dictionary = {}
+	for kind: String in paths:
+		var file: FileAccess = FileAccess.open(str(paths[kind]),FileAccess.READ)
+		if file == null: return {} # A BOOL alone cannot invent missing file proof.
+		var bytes: PackedByteArray = file.get_buffer(file.get_length())
+		file.close()
+		var payload: Variant = SAVE_DOCUMENT.parse(bytes.get_string_from_utf8())
+		if not payload is Dictionary: return {}
+		var hasher: HashingContext = HashingContext.new()
+		hasher.start(HashingContext.HASH_SHA256)
+		hasher.update(bytes)
+		files[kind]={"path":str(paths[kind]),"bytes_base64":Marshalls.raw_to_base64(bytes),
+			"sha256":hasher.finish().hex_encode(),"payload":payload}
+	return _immutable_copy({"version":1,"source":"SaveGame_locked_fallback_write_TRUE_BOOL",
+		"writer_instance_id":get_instance_id(),"writer_script":get_script().resource_path,
+		"request_sha256":SAVE_DOCUMENT.stringify(request).sha256_text(),"files":files})
 
 
 func _write_snapshot_locked(request: Dictionary) -> bool:
