@@ -459,7 +459,10 @@ func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool
 	if blocker == "undeployed":
 		await travel.tap("creature_recall")
 		var callout_deadline := Time.get_ticks_msec() + 30000
-		while Time.get_ticks_msec() < callout_deadline and director.call("usable_ally_blocker") == "undeployed":
+		while Time.get_ticks_msec() < callout_deadline:
+			if director.call("usable_ally_blocker") != "undeployed":
+				var preparing_body := director.call("ally_body") as Node3D
+				if not is_instance_valid(preparing_body) or preparing_body.visible: break
 			await tree.process_frame
 	var ally: RefCounted = director.get("_ally")
 	var ally_body := director.call("ally_body") as Node3D
