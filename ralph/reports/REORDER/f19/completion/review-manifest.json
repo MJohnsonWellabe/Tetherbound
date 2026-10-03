@@ -268,6 +268,22 @@
       "status": "PASS45checks",
       "artifact": 11266201977
     },
-    "acceptance": false
+    "acceptance": false,
+    "full_native_witnesses": {
+      "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+      "scope": "Entire original six-case native choice/save/reload drivers, no reference retention or diagnostic behavior. Original fixtures, assertions and prompt guards unchanged; no earned play claim.",
+      "veridian": {
+        "run": 37101815341,
+        "job": 111142677312,
+        "status": "Live",
+        "script": "tests/smoke_f19_veridian_functional.gd"
+      },
+      "solmane": {
+        "run": 37101816593,
+        "job": 111142681335,
+        "status": "Live",
+        "script": "tests/smoke_f19_solmane_functional.gd"
+      }
+    }
   }
 }
