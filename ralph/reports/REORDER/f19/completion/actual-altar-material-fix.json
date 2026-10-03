@@ -33,7 +33,7 @@
     "raw_log": "ci-altar-lifecycle-37095606238.log.gz",
     "raw_log_sha256": "452e4756cf79d3e85ea843c522eef259e19522f00297abf63b0c5d75fe77adbc"
   },
-  "paid_f48_replay_still_required": true,
+  "paid_f48_replay_still_required": false,
   "independent_review_pending": false,
   "f19_full_world_material_errors_not_closed": true,
   "independent_review": {
@@ -41,5 +41,20 @@
     "verdict": "PASS exact production two-file commit; coordinator inspected both raw native originals",
     "integration_commit": "1fbd41c0f0",
     "actual_paid_f48_replay": "Pending coordinator replay/service fixes; not main-green proof"
+  },
+  "paid_f48_replay": {
+    "run": 37097792318,
+    "artifact": 11265261105,
+    "source_commit": "fc91ff531f0980a90572f60d5cc9cdd68c57ea68",
+    "scope": "Original actual paid Altar build and saved-state checks passed without null-material error. Whole producer later failed at distinct normalized catch reply assertion; no full producer/package pass.",
+    "coordinator_evidence": "ralph/reports/INTEGRATION/main-green/catch-normalized-r6-native.log.gz",
+    "status": "Original native driver paid Altar oracle PASS and original peer-0 log inspected: zero engine/script errors. Whole producer catch assertion failure remains distinct.",
+    "native_driver_log_sha256": "94768d3bb4dd89fb04839eefeb77581fc96dcc6c8a2d7be8d59a6934a1dc52d5",
+    "peer_log": {
+      "raw_log": "ci-paid-altar-peer-37097792318.log.gz",
+      "sha256": "eb36bb6a495578d5652d8a46ceda3cebc3dc2dcb258c8f5b0ef3846db9a8567e",
+      "engine_and_script_errors": 0,
+      "oracle_marker_present": true
+    }
   }
 }
