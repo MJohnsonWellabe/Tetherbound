@@ -1289,17 +1289,6 @@
     }
   },
   "remote_pending": {
-    "solo_authority_r1": {
-      "run": 37101544118,
-      "job": 111141902304,
-      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
-      "script": "tests/run_tests.gd",
-      "args": "--only=test_rematch_solo_admission",
-      "mode": "headless",
-      "timeout_minutes": 10,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101544118",
-      "status": "Original exact-source job setup/import in progress; no duplicate/restart or result claimed."
-    },
     "solo_r20": {
       "run": 37101560576,
       "job": 111141951247,
@@ -1536,6 +1525,36 @@
     "change": "Only begin_trainer_battle rematch authority guard now uses present Session.is_host, consistent with Foundation offline solo authority. Shared director _is_host unchanged; writer/runtime/normal trainer guards unchanged. Readonly preX host/active/director/writer/signal bindings diagnostic.",
     "source_cause": "Session.is_host explicitly accepts offline solo; director _is_host requires active networking. This offline smoke never hosts. Prior first rematch guard therefore refuses the solo path; additional actual blockers not excluded.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete source: scoped guard preserves missingSession/client/preparingclient/writer/runtime/normal admission gates; focused actualSession/productionbegin guard test explicitly stubs only can_challenge/sendout; preX observer adds no mutations or input changes. Actual remote verification required.",
-    "runtime": "Focused authority and full solo-r20 both setup/import in isolated hosted jobs; no result claimed. #3 OPEN."
+    "runtime": "Focused authority native PASS1test10assertions0failed/exit0/6s/zeroerrors; actual solo-r20 still in progress, #3 OPEN.",
+    "focused_native": {
+      "run": 37101544118,
+      "job": 111141902304,
+      "artifact": 11266432027,
+      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+      "verdict": "PASS authority guard only",
+      "workflow_conclusion": "success",
+      "tests": 1,
+      "assertions": 10,
+      "failures": 0,
+      "exit": 0,
+      "seconds": 6,
+      "native_bytes": 279,
+      "native_sha256": "3df4f4535f5420267e1981373e4210874ab4c6d2fefd80eb82fcd3dc11b37b0a",
+      "user_log_bytes": 264,
+      "user_log_sha256": "63606e66d1edcc93c709384c6693fce2faa2cfdb381137b693f6b101468c4e11",
+      "native_script_errors": 0,
+      "native_engine_errors": 0,
+      "user_script_errors": 0,
+      "user_engine_errors": 0,
+      "artifact_bytes": 1320,
+      "artifact_sha256": "01b67683359dfa71beb8b6ee07b0652c860e06358cdc2827418622902510c062",
+      "logs": [
+        "f20-authority-r1-native.log.gz",
+        "f20-authority-r1-workflow.log.gz",
+        "f20-authority-r1-artifact.zip"
+      ],
+      "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/user/ZIP bytes and hashes; 1test10assertions0failed/exit0/6s/zeroerrors. Narrow production guard and realSession mode scope.",
+      "limits": "Actual begin_trainer_battle with real Session offline/host/client/preparingclient and writer guard; can_challenge/sendout stubs explicit. No actualworld/enemy/fight/outcome proof; F20#3 still OPEN."
+    }
   }
 }
