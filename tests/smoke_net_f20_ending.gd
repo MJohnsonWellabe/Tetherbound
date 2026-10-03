@@ -28,6 +28,10 @@ func _run() -> void:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return
 		if not await _pass(peer, "f20_return"): return
 		if not await _pass(peer, "f20_fifth"): return
+		# Physical travel and the authored reader are distinct commands. r7's
+		# 163s walk plus42s reader exceeded their combined205s wall limit.
+		# Retain original per-command/whole-proof budgets and all assertions.
+		if not await _pass(peer, "f20_approach"): return
 		if not await _pass(peer, "f20_talk"): return
 		if peer == 0 and not await _pass(peer, "f20_skip"): return
 		if peer == 0 and not await _pass(peer, "f20_revisit"): return
@@ -47,6 +51,7 @@ func _run() -> void:
 	check(returned.retained.character == guest_id and returned.retained.uids == guest.retained.uids \
 		and returned.context.homecoming_seen \
 		and not returned.context.regional_credits_seen, "rejoin reloads the original personal acknowledgement without crediting interrupted credits")
+	if not await _pass(1, "f20_approach"): return
 	if not await _pass(1, "f20_talk"): return
 	if not await _pass(1, "f20_skip"): return
 	if not await _pass(1, "save_reload_here", {}): return

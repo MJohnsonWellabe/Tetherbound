@@ -20,6 +20,37 @@ func activate(prompt: Node3D) -> bool:
 	while _lesson_busy: await tree.process_frame
 	return passed and failures.size() == failures_before
 
+## Full two-peer proof separates the physical walk from the authored reader.
+## This command never presses X; activate() still proves the original input.
+func approach_grandpa(prompt: Node3D) -> bool:
+	if prompt == null or prompt.get_parent().name != "Grandpa":
+		return _fail("F20 approach requires the actual Grandpa prompt")
+	var failures_before := failures.size()
+	await _continue_navigation_lesson()
+	tree.process_frame.connect(_continue_navigation_lesson)
+	var passed := await _walk_to_grandpa(prompt)
+	tree.process_frame.disconnect(_continue_navigation_lesson)
+	while _lesson_busy: await tree.process_frame
+	return passed and failures.size() == failures_before
+
+func _walk_to_grandpa(prompt: Node3D) -> bool:
+	if not _bind(): return false
+	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
+	if arbiter == null: return _fail("F20 Grandpa approach lacks the actual arbiter")
+	var recoveries_before := int(_player.get("_unstick_count"))
+	var nav := NAV.new(tree, _player, _rig, _stick)
+	var distance := _player.global_position.distance_to(prompt.global_position)
+	var reached: bool = await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5)
+	_stick(0, 0)
+	if not reached: return _fail("F20 ordinary capsule walk failed to Grandpa")
+	for frame in 8: await tree.physics_frame
+	for frame in 2: await tree.process_frame
+	if int(_player.get("_unstick_count")) != recoveries_before or not _player.is_on_floor() \
+			or arbiter.call("winning_provider") != prompt:
+		return _fail("F20 Grandpa approach requires grounded exact provider without recovery")
+	var offer: Dictionary = arbiter.call("winner")
+	return offer.get("actionable") == true or _fail("F20 actual Grandpa approach refused its action")
+
 func _continue_navigation_lesson() -> void:
 	if _lesson_busy: return
 	var owner := INPUT_OWNER.current(tree)

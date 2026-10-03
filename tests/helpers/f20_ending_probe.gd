@@ -162,6 +162,17 @@ func diagnose_home_anchor(tree: SceneTree, game: Node) -> void:
 		print("F20 HOME ANCHOR actual_surface=", floor.position, " normal=", floor.normal,
 			" path=", floor.collider.get_path())
 
+func approach_grandpa(tree: SceneTree, game: Node) -> bool:
+	if not await ready(tree, game): return false
+	var prompt: Node3D
+	for node: Node in tree.current_scene.find_children("*", "", true, false):
+		if node.has_method("interaction_offer") and node.get_parent().name == "Grandpa": prompt = node as Node3D
+	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
+	if not check(prompt != null and panel != null and not panel.call("is_open"), "Grandpa approach starts with the actual closed panel"): return false
+	var travel := TRAVEL.new(tree, game)
+	if not await travel.approach_grandpa(prompt): failures.append_array(travel.failures); return false
+	return check(not panel.call("is_open"), "ordinary Grandpa walk preserves the closed dialogue until normal X")
+
 func open_credits(tree: SceneTree, game: Node) -> bool:
 	if not await ready(tree, game): return false
 	var travel := TRAVEL.new(tree, game)

@@ -93,6 +93,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var passed := false
 	match action:
 		"f20_return": passed = await f20.return_home(self, game)
+		"f20_approach": passed = await f20.approach_grandpa(self, game)
 		"f20_talk": passed = await f20.open_credits(self, game)
 		"f20_skip": passed = await f20.finish_credits(self, game)
 		"f20_revisit": passed = await f20.revisit_completed(self, game)
