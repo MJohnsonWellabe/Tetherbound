@@ -26,7 +26,12 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 	var nav := NAV.new(self, _player, _rig, _circle_stick, true)
 	# Return along the installed Main Street, then leave the farmhouse frontage
 	# on its east edge before the garden. These are route goals, never poses.
-	for point: Vector2 in [Vector2(91, 14), Vector2(8.3, 14), Vector2(8.3, 0)]:
+	var plan: Dictionary = _json(VILLAGE_CONFIG).get("road_plan", {})
+	var road_start := _v(plan.get("road_start", []))
+	var road_end := _v(plan.get("road_end", []))
+	# The82.7m road exceeds900ticks at the production5m/s walk. Use its
+	# actual midpoint as a separate goal, retaining every900tick allowance.
+	for point: Vector2 in [road_end, (road_start + road_end) * .5, road_start, Vector2(road_start.x, 0)]:
 		if not await _circle_walk(nav, Vector3(point.x, 0, point.y), "garden approach"):
 			return false
 	# Start at south; adjoining outside-ring legs avoid crossing the plinths.
