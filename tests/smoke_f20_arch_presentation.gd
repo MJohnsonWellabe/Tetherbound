@@ -49,6 +49,11 @@ func _prepare_camera(travel: RefCounted) -> void:
 	var player := root.get_node("Game").call("find_player") as CharacterBody3D
 	print("F20 CAPTURE ordinary recenter camera=", camera.global_transform if camera != null else Transform3D.IDENTITY,
 		" player=", player.global_position if player != null else Vector3.INF)
+	for arch: Node3D in get_nodes_in_group("portal_arches"):
+		if arch.get("arch_id") == "biome5" and current_scene.is_ancestor_of(arch) and camera != null:
+			print("F20 CAPTURE target_arch=", arch.global_transform,
+				" behind_camera=", camera.is_position_behind(arch.global_position + Vector3.UP),
+				" screen_point=", camera.unproject_position(arch.global_position + Vector3.UP))
 
 func _capture_stir(result: Dictionary) -> void:
 	var game := root.get_node("Game")
