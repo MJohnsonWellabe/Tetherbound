@@ -1,7 +1,11 @@
 {
   "base": "3313852380fc17e9a4fc6782f04828b1cb62a902",
   "source": "b24864060e5f66837a885868e7292ae4f5fd2acd",
-  "path": "scripts/net/foundation_portal_arrival.gd",
+  "paths": [
+    "scripts/net/foundation_portal_arrival.gd",
+    "scripts/net/waystone_mounts.gd",
+    "scripts/world/waystone_terrain_support.gd"
+  ],
   "helpers_exact_source": [
     "_supported_capsule",
     "_walkable_contacts",
@@ -11,7 +15,9 @@
     "_landing_height",
     "_landing_hit"
   ],
-  "scope": "Only actual physical floor/full capsule cast/scalar rounding/final support and actual destination-world binding; no HomeKey fade/save retry/runtime flags/session/passive/terrain resident changes.",
+  "candidate_normalized_lf_sha256": "2a17de8500441b687935589a1f14b55170b22194e1f10bb0633b82598d8756ac",
+  "candidate_delivered_sha256": "2a17de8500441b687935589a1f14b55170b22194e1f10bb0633b82598d8756ac",
+  "scope": "Only actual physical floor/full capsule cast/scalar rounding/live owner and host final support, actual destination-world binding, bounded native Terrain3D resident support and production mount hooks; no HomeKey fade/save retry/runtime flags/session/passive changes.",
   "runtime": "Extracted candidate requires coordinator parser/native split run; feature exact helpers natively proven on b248, not a claim this extracted root candidate ran.",
   "evidence": {
     "arrival_run": 37090828863,
@@ -23,8 +29,7 @@
     "rounding_assertions": 7
   },
   "retained": "Original owner/permit/envelope/controller generation/collision object/shape/complete own-RID-only intersection/contact/save ACK fences remain; final support is strengthened.",
-  "candidate_normalized_lf_sha256": "08f92c69072a72466c658a26ac7847b3b347c1905f6e7833dc36b06546792807",
-  "candidate_delivered_crlf_sha256": "774253e43c747e59003638f9e8aa9002f9b32edda12da78a91fba2dd70e1753a",
-  "independent_source_review": "PASS: exact seven helper bodies verified; original authority/controller/contact/save fences retained; remote host validator unchanged; extracted candidate native proof pending.",
-  "patch_application": "git apply --check and actual apply against isolated exact331 fixture passed; normalized/byte result matched generated candidate. Initial checks on wrong current feature source and PowerShell reconstructed baseline failed, corrected by exact git subprocess source; no root files changed."
+  "independent_source_review": "PASS expanded three-path package: all seven helpers and remote_binding exact b248, mount/resident files exact b248. Applied candidate checksum and actual GDScript whitespace checked; extracted combination native proof pending.",
+  "supersedes": "3fc2202c28 single-file physical patch; this revision adds explicitly requested host support, resident geometry and mount hooks. Both versions pinned in Git.",
+  "native_limit": "Later actual fullscene0c native Meadows and Water PASS; Cloudreach and Stormwood FAIL at some initial landing guards. Conservative contact normal/scalar bound refusals under analysis. This package reuses R6 proven helpers, not a claim all authored native sites pass."
 }
