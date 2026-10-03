@@ -3693,6 +3693,10 @@ func _altar_peer_in_combat(peer: int) -> bool:
 	var found_host := false
 	for node: Node in _foundation_directors_under(roots):
 		if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
+		# Portal/station use can precede the first combat ingress. Resolve that
+		# same real host arbiter before asking whether its guest is fighting.
+		if is_host() and node.get("_session") == self and node.get("_encounter_host") == null:
+			node.call("_ensure_encounter_arbiters")
 		var host: Variant = node.get("_encounter_host")
 		if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
 			if host.has_method("pending_move_mastery"):
