@@ -160,8 +160,15 @@ func _run() -> void:
 		"peer 1 joined the trainer battle already in progress (%s)"
 			% str(joined_fight.get("detail", "")))
 
-	var during = await probe(0, "encounter")
-	var live: Dictionary = during if during is Dictionary else {}
+	# The guest's local join returns before its join RPC reaches the host;
+	# give the host record a bounded window to show both participants.
+	var live: Dictionary = {}
+	for _poll in 30:
+		var during = await probe(0, "encounter")
+		live = during if during is Dictionary else {}
+		if (live.get("participants", []) as Array).size() == 2:
+			break
+		await step(0, "wait", {"frames": 10})
 	check((live.get("participants", []) as Array).size() == 2,
 		"the host's record now holds 2 participants (got %d)"
 			% (live.get("participants", []) as Array).size())

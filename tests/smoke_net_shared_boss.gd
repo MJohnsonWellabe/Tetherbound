@@ -419,8 +419,16 @@ func _run() -> void:
 		"peer 1 joined the boss fight already in progress (%s)" % str(joined_fight.get("detail", "")))
 
 	# --- 1. ONE record, not two fights ----------------------------------------
-	var host_live: Dictionary = await _boss(0)
-	var host_rec: Dictionary = host_live.get("record", {}) as Dictionary
+	# The guest's local join returns before its join RPC reaches the host;
+	# give the host record a bounded window to show both participants.
+	var host_live: Dictionary = {}
+	var host_rec: Dictionary = {}
+	for _poll in 30:
+		host_live = await _boss(0)
+		host_rec = host_live.get("record", {}) as Dictionary
+		if (host_rec.get("participants", []) as Array).size() == 2:
+			break
+		await step(0, "wait", {"frames": 10})
 	check((host_rec.get("participants", []) as Array).size() == 2,
 		"the host's ONE record holds 2 participants (got %d)"
 			% (host_rec.get("participants", []) as Array).size())
@@ -807,11 +815,16 @@ func _run() -> void:
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate's creature reached the host (%s)"
 			% str(friendly.get("detail", "")))
-	# The client's own local answer is `pending`, and `pending` is the host being
-	# ASKED, not the host saying no. Asserted so nothing here can mistake the two.
+	# The client's own local answer never refuses: it is `pending` (the host
+	# being ASKED) on the legacy strike path, or the accepted local move start
+	# when F23's move commit is live (the swing then goes through the player's
+	# own input path and the host still decides). Either way no local refusal
+	# code, so nothing here can mistake the host saying no for the client.
 	var local_answer: Dictionary = (friendly.get("data", {}) as Dictionary)
-	check(bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true)),
-		"and the client's own local answer was `pending` -- the host being asked, not a refusal"
+	var asked_host := bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true))
+	var started_move := bool(local_answer.get("ok", false)) and not bool(local_answer.get("pending", false))
+	check((asked_host or started_move) and str(local_answer.get("code", "")).is_empty(),
+		"and the client's own local answer was not a refusal -- the host decides"
 		+ " (ok=%s pending=%s code='%s')" % [str(local_answer.get("ok", true)),
 			str(local_answer.get("pending", false)), str(local_answer.get("code", ""))])
 	# HALF ONE: the host said no, out loud, with §5's own code, and the sentence
