@@ -435,7 +435,13 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
 			and session.call("_owner_training_snapshot_allowed", portal_owner, owner_guard_data) != true:
 		return {}
-	var redesign_errors := _redesign_errors(initial_data, portal_character)
+	# The merged slot payload keeps file identity in its split locator. Typed
+	# journals still require the actual live world during pre-identity checks;
+	# supply it only to this detached validation input, never to a receipt.
+	var validation_data := initial_data.duplicate()
+	var validation_world: Variant = game.get("world")
+	validation_data["world_id"] = str(validation_world.get("world_id")) if validation_world is Object else ""
+	var redesign_errors := _redesign_errors(validation_data, portal_character)
 	if not redesign_errors.is_empty():
 		push_error("Save refused: invalid redesign state")
 		# Preserve the rejected pre-identity candidate in the existing log only.
@@ -730,7 +736,13 @@ func load_slot(game: Object, slot: int) -> bool:
 	last_load_result = version_result(data.get("version", null))
 	if not bool(last_load_result.ok):
 		return false
-	var redesign_errors := _redesign_errors(data, slot_locator_character(slot))
+	# Validate journal ownership against the selected on-disk locator, rather
+	# than the world currently in memory or an absent flat-payload field.
+	var validation_data := data.duplicate()
+	var validation_locator: Variant = data.get(SPLIT_LOCATOR_KEY)
+	if validation_locator is Dictionary:
+		validation_data["world_id"] = str(validation_locator.get("world_id", ""))
+	var redesign_errors := _redesign_errors(validation_data, slot_locator_character(slot))
 	if not redesign_errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That save contains invalid data.", "errors": redesign_errors}
 		return false
