@@ -4283,8 +4283,105 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		var last_instance: Variant = last_enemy.get("instance") if last_enemy != null and is_instance_valid(last_enemy) else null
 		var last_active: Variant = manager.call("active_creature")
 		var last_refusal: Variant = manager.get("last_encounter_refusal")
+		# One failure-only observation of the actual retained source. These reads
+		# never admit a character, retry a writer, or advance the encounter.
+		var failed_id: String = str(manager.call("encounter_id"))
+		var ordinary_diagnostic_suffix: String = ""
+		if director.call("uses_durable_trainer_rewards", failed_id) == true:
+			var observed_game: Node = root.get_node_or_null(^"Game")
+			var observed_session: Node = observed_game.get("session") as Node if observed_game != null else null
+			var observed_host: RefCounted = director.get("_encounter_host") as RefCounted
+			var actual_record: Dictionary = observed_host.call("record", failed_id).duplicate(true) if observed_host != null else {}
+			var actual_round: Dictionary = director.get("_ordinary_combat_rounds").get(failed_id, {}).duplicate(true)
+			var actual_scope: Dictionary = director.get_meta("foundation_ordinary_combat_scopes", {}).get(failed_id, {}).duplicate(true)
+			var actual_proofs: Dictionary = {}
+			for proof_key: Variant in director.get_meta("foundation_ordinary_vitals_commits", {}):
+				var proof: Dictionary = director.get_meta("foundation_ordinary_vitals_commits")[proof_key]
+				if proof.get("proposal", {}).get("encounter_id") == failed_id:
+					actual_proofs[proof_key] = proof.duplicate(true)
+			var actual_originals: Array = []
+			for original: Dictionary in director.get("_ordinary_actor_vitals_proposals").values():
+				if original.get("encounter_id") != failed_id: continue
+				var data: Dictionary = {}
+				for field: String in ["encounter_id", "peer_id", "proposal", "character_revision", "binding",
+						"host_record", "record_after", "payload", "committed", "presented", "heal_bundle", "fixture_source", "fixture_disclosure"]:
+					if original.has(field): data[field] = original[field]
+				data["fixture_provider_present"] = original.has("fixture_provider")
+				var provider_reference: WeakRef = original.get("fixture_provider") as WeakRef
+				var provider_node: Node = provider_reference.get_ref() as Node if provider_reference != null else null
+				data["fixture_provider_valid"] = is_instance_valid(provider_node)
+				data["fixture_provider_instance_id"] = provider_node.get_instance_id() if is_instance_valid(provider_node) else 0
+				actual_originals.append(data.duplicate(true))
+			var actual_authority: RefCounted = observed_session.get("_character_authority") as RefCounted if observed_session != null else null
+			var actual_members: Array = []
+			var source_members: Dictionary = actual_record.get("participants", {}).duplicate(true)
+			source_members.merge(actual_record.get("retained_actor_participants", {}))
+			for peer_key: Variant in source_members:
+				var member: Dictionary = source_members[peer_key]
+				var character: String = str(member.get("character_id", ""))
+				var deployed: Node3D = director.call("deployed_body_for", peer_key) as Node3D if peer_key is int else null
+				actual_members.append({"original_peer_key": peer_key, "member": member.duplicate(true),
+					"body_instance_id": deployed.get_instance_id() if is_instance_valid(deployed) else 0,
+					"body_path": str(deployed.get_path()) if is_instance_valid(deployed) and deployed.is_inside_tree() else "",
+					"body_inside_tree": is_instance_valid(deployed) and deployed.is_inside_tree(),
+					"authority_state": actual_authority.call("state", character) if actual_authority != null else {},
+					"authority_revision": int(actual_authority.call("revision", character)) if actual_authority != null else -1})
+			var actual_writer: Node = observed_session.get_node_or_null(^"LedgerRpc") if observed_session != null else null
+			var actual_enemy: Dictionary = WATER_CAPTURE_CODEC.encode(last_instance as RefCounted) if last_instance is RefCounted else {}
+			var actual_world: RefCounted = observed_game.get("world") as RefCounted if observed_game != null else null
+			var actual_duties: Dictionary = {}
+			var duty_checks: Array = []
+			for pending_key: Variant in director.get_meta("foundation_combat_round_pending", {}):
+				var pending: Dictionary = director.get_meta("foundation_combat_round_pending")[pending_key]
+				if pending.get("scope", {}).get("encounter_id") != failed_id: continue
+				actual_duties[pending_key] = pending.duplicate(true)
+				for duty: Dictionary in pending.get("duties", []):
+					duty_checks.append({"key": pending_key, "character_id": duty.get("character_id"),
+						"source_valid": preload("res://scripts/net/combat_round_reward.gd").source_valid(
+							duty.intent, duty.context, str(duty.character_id))})
+			var actual_leaves: Array = []
+			for leave: Dictionary in director.get_meta("foundation_ordinary_leave_transitions", []):
+				if leave.get("encounter_id") == failed_id: actual_leaves.append(leave.duplicate(true))
+			var terminal_checks: Dictionary = {
+				"session_source_live": observed_session.call("_ordinary_combat_director_live", director) if observed_session != null else false,
+				"scope_valid": preload("res://scripts/net/combat_round_reward.gd").scope_valid(actual_scope),
+				"settled_record_matches_current": preload("res://scripts/creatures/essence.gd")._equivalent(actual_round.get("settled_record"), actual_record),
+				# This checker only constructs detached host records to replay the
+				# retained original transitions; it never writes the live arbiter.
+				"original_transitions_match_current": observed_session.call("_ordinary_combat_settled_record",
+					actual_round.get("record", {}), actual_record, actual_proofs, actual_leaves) if observed_session != null else false,
+				"captured_enemy_matches_current": preload("res://scripts/creatures/essence.gd")._equivalent(actual_round.get("enemy"), actual_enemy),
+				"opponent_card_uid_matches_current": actual_record.get("opponent", {}).get("card", {}).get("uid") == actual_enemy.get("uid"),
+				"trainer_body_matches_enemy_body": director.get("_trainer_body") == last_enemy,
+				"enemy_body_inside_tree": is_instance_valid(last_enemy) and last_enemy.is_inside_tree()}
+			var observed: Dictionary = {"scope": "failure_only_actual_ordinary_round_source", "encounter_id": failed_id,
+				"physics_frame": _physics_count, "driver_frames": frames, "manager_state": manager.get("state"),
+				"manager_outcome": manager.call("outcome"), "trainer_spec": director.get("_trainer_spec").duplicate(true),
+				"round": actual_round, "current_record": actual_record, "actual_enemy": actual_enemy,
+				"enemy_body_instance_id": last_enemy.get_instance_id() if is_instance_valid(last_enemy) else 0,
+				"enemy_body_path": str(last_enemy.get_path()) if is_instance_valid(last_enemy) and last_enemy.is_inside_tree() else "",
+				"enemy_instance_id": last_instance.get_instance_id() if is_instance_valid(last_instance) else 0,
+				"manager_wild_matches_enemy_body": manager.get("_wild") == last_enemy,
+				"manager_enemy_matches_enemy_instance": manager.get("_enemy") == last_instance,
+				"owner_scope": actual_scope,
+				"transport_epoch": str(observed_session.call("_altar_current_epoch")) if observed_session != null else "",
+				"journal_epoch": str(actual_writer.get("_actor_vitals_session_id")) if actual_writer != null else "",
+				"world_namespace": str(actual_world.get("reward_delivery_namespace")) if actual_world != null else "",
+				"actual_owned": director.call("uses_durable_trainer_rewards", failed_id),
+				"actor_vitals_pending": director.call("ordinary_actor_vitals_pending", failed_id),
+				"arbiter_pending_vitals": observed_host.call("pending_actor_vitals", failed_id) if observed_host != null else [],
+				"actor_originals": actual_originals, "actor_proofs": actual_proofs, "members": actual_members,
+				"leave_transitions": actual_leaves, "terminal_checks": terminal_checks,
+				"retained_duties": actual_duties, "retained_duty_checks": duty_checks}
+			observed["round_present"] = not actual_round.is_empty()
+			observed["last_resolution_result_present"] = actual_round.has("last_resolution_result")
+			# Exact Variant bytes preserve numeric types, full records and vectors.
+			observed["portable_variant_hex"] = var_to_bytes(observed).hex_encode()
+			var diagnostic_path: String = "user://ordinary-round-failure-%d-%d.json" % [OS.get_process_id(), _physics_count]
+			var diagnostic_saved: bool = preload("res://tools/net/f48_detached_file.gd").publish(diagnostic_path, observed)
+			ordinary_diagnostic_suffix = "; actual_round_diagnostic=%s saved=%s" % [diagnostic_path, str(diagnostic_saved)]
 		return {"verdict": "FAIL",
-			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued); enemy=%s hp=%.3f/%.3f quick_ready=%s fighting=%s active_hp=%.3f fainted=%s refusal=%s bound=%s"
+			"detail": "the battle never resolved in %d frames (%d swings, %d of their creatures met, %d still queued); enemy=%s hp=%.3f/%.3f quick_ready=%s fighting=%s active_hp=%.3f fainted=%s refusal=%s bound=%s%s"
 				% [frames, swings, creatures_seen.size(), int(director.call("trainer_creatures_left")),
 					str(last_enemy.get("species_id")) if last_enemy != null and is_instance_valid(last_enemy) else "none",
 					float(last_instance.get("hp")) if last_instance != null else -1.0,
@@ -4292,7 +4389,7 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 					str(manager.call("quick_ready")), str(manager.call("is_fighting")),
 					float(last_active.get("hp")) if last_active != null else -1.0,
 					str(last_active.get("fainted")) if last_active != null else "?",
-					str(last_refusal), str(manager.call("encounter_id"))]}
+					str(last_refusal), str(manager.call("encounter_id")), ordinary_diagnostic_suffix]}
 	if drives_guest_master and manager.call("outcome") != "won":
 		return {"verdict": "FAIL", "detail": "Actual guest Master resolved without a production won outcome"}
 	# The payout is committed from `_finish_trainer_battle()` and the deltas

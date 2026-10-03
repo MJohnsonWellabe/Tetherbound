@@ -138,6 +138,53 @@ func test_actual_locked_fallback_full_receipt_matches_frozen_request_and_rejects
 	assert_true(PROOF._fallback_receipt_files(request,changed_full_card,paths,saver.get_instance_id()).is_empty(),"Even internally valid changed full bytes must match every frozen request field")
 	FIXTURE.wipe(directory)
 
+func test_actual_character_only_receipt_retains_full_snapshot_without_world_partition() -> void:
+	var directory: String = "user://test_f48_character_only_" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
+	var game: RefCounted = FIXTURE.game(ITEM_DB.new(),false)
+	var saver: RefCounted = SAVE.new(directory)
+	var initial: Dictionary = saver.call("_prepare_snapshot",game,0)
+	assert_false(initial.is_empty())
+	if initial.is_empty():
+		FIXTURE.wipe(directory)
+		return
+	game.set("host",false)
+	game.set("satiety",63.25)
+	var request: Dictionary = saver.call("_prepare_snapshot",game,0,false,str(initial.character_id))
+	assert_false(request.is_empty())
+	if request.is_empty():
+		FIXTURE.wipe(directory)
+		return
+	assert_true(request.character_only)
+	assert_false(request.write_split)
+	assert_false(request.host)
+	assert_true(request.world_data.is_empty(),"Guest character-only writer has no world partition")
+	assert_true(request.data.has("reward_deliveries"),"Its original full frozen snapshot still carries the journal source")
+	assert_true(saver.call("write_snapshot_observed",request) == true)
+	var receipt: Dictionary = saver.call("fallback_write_receipt")
+	var paths := {"character":saver.get("_characters").call("path_for",str(request.character_id))}
+	var files: Dictionary = PROOF._fallback_receipt_files(request,receipt,paths,saver.get_instance_id())
+	assert_eq(files.size(),1,"Actual character-only transaction certifies one full primary")
+	assert_eq(files.get("character",{}).get("satiety"),63.25)
+	assert_eq(files.get("character",{}),receipt.get("files",{}).get("character",{}).get("payload"))
+	assert_false(FileAccess.file_exists(str(saver.call("slot_path",0))),"Character-only BOOL does not create a merged slot")
+	assert_false(FileAccess.file_exists(str(saver.get("_worlds").call("path_for",str(request.world_id)))),"Guest does not invent a world write")
+	var changed_hash: Dictionary = receipt.duplicate(true)
+	changed_hash.files.character.sha256 = "changed"
+	assert_true(PROOF._fallback_receipt_files(request,changed_hash,paths,saver.get_instance_id()).is_empty())
+	var changed_request: Dictionary = request.duplicate(true)
+	changed_request.character_data.satiety -= 1.0
+	assert_true(PROOF._fallback_receipt_files(changed_request,receipt,paths,saver.get_instance_id()).is_empty())
+	var changed_party: Dictionary = receipt.duplicate(true)
+	changed_party.files.character.payload.party.append(memory.party[0].duplicate(true))
+	var bytes: PackedByteArray = DOCUMENT.stringify(changed_party.files.character.payload).to_utf8_buffer()
+	var hasher: HashingContext = HashingContext.new()
+	hasher.start(HashingContext.HASH_SHA256)
+	hasher.update(bytes)
+	changed_party.files.character.bytes_base64 = Marshalls.raw_to_base64(bytes)
+	changed_party.files.character.sha256 = hasher.finish().hex_encode()
+	assert_true(PROOF._fallback_receipt_files(request,changed_party,paths,saver.get_instance_id()).is_empty(),"Internally matching raw bytes cannot add an owned card absent from the actual frozen request")
+	FIXTURE.wipe(directory)
+
 func test_descendant_keeps_original_full_canonical_parent_and_exact_replayed_party() -> void:
 	edge.row.status = "pending"
 	edge.row.receipt = "original-receipt"

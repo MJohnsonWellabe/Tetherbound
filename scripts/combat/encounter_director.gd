@@ -4121,6 +4121,8 @@ func _resolve_ordinary_combat_round(id: String) -> bool:
 	if not _session.has_method("foundation_combat_round_resolution"): return false
 	var result: Variant = _session.call("foundation_combat_round_resolution", self, id,
 		int(retained.round), retained.enemy.duplicate(true), str(retained.outcome))
+	if result is Dictionary:
+		retained["last_resolution_result"] = result.duplicate(true)
 	if not result is Dictionary or result.get("resolved") != true: return false
 	retained["resolved"] = true
 	_host_after_encounter_change(id)

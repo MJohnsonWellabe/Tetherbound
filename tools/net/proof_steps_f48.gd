@@ -259,7 +259,7 @@ static func _fallback_submitted(bound: Dictionary, id: String, request: Dictiona
 		or request.get("world_instance_id") != game.get("world").get("reward_delivery_namespace") \
 		or request.get("host") != (game.call("world_save_owned") == true) \
 		or not _fallback_parent_matches(edge,game.get("world").get("reward_deliveries").get(edge.get("identity"))) \
-		or not _fallback_parent_matches(edge,request.get("world_data",{}).get("reward_deliveries",{}).get(edge.get("identity"))) \
+		or not _fallback_parent_matches(edge,request.get("data",{}).get("reward_deliveries",{}).get(edge.get("identity"))) \
 		or _digest(str(edge.get("path",""))) != edge.get("sha256") \
 		or not _fallback_request_carrier_matches(edge,request,request.get("character_data",{}).get("party")) \
 		or not PASSIVE.matches(tree,str(edge.get("anchor","")),request.character_data.party): return
@@ -277,7 +277,14 @@ static func _fallback_receipt_files(request: Dictionary, receipt: Dictionary, pa
 	for kind: String in paths:
 		var file: Variant = receipt.files.get(kind)
 		if not file is Dictionary or file.size() != 4 or file.get("path") != paths[kind] or not file.get("bytes_base64") is String: return {}
+		# Reject malformed untrusted evidence before invoking native decoders.
+		var encoded: String = file.bytes_base64
+		if encoded.is_empty() or encoded.length() % 4 != 0: return {}
+		var base64: RegEx = RegEx.new()
+		if base64.compile("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$") != OK \
+			or base64.search(encoded) == null: return {}
 		var bytes: PackedByteArray = Marshalls.base64_to_raw(file.bytes_base64)
+		if bytes.is_empty() or Marshalls.raw_to_base64(bytes) != encoded: return {}
 		var hasher: HashingContext = HashingContext.new()
 		hasher.start(HashingContext.HASH_SHA256)
 		hasher.update(bytes)

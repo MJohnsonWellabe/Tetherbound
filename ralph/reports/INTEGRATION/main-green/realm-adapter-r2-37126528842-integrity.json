@@ -1,0 +1,29 @@
+{
+  "run_id": 37126528842,
+  "artifact_id": 11275467739,
+  "checkout_ref": "7361726e1bf1706aa00c8f26de1d18b6ab5ac02e",
+  "result": "PASS Game108 exactly4originalinjectederrors, all3native modes host40/33/37 departing33/36/33 staying23/23 latejoin27, allactualprocessesexit0/zerounexpectederrors/32s",
+  "archive_sha256": "37df1ceeee257ec77acec78e191faad443064604c08c63dc60dba283ab0df5e8",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "realm-adapter-r2-37126528842-0-MANIFEST.txt.gz",
+      "sha256": "755df7689fa4afaeeb8f20fb3e65d999188b3ae5b53efab459bd9e1f80cfecf5"
+    },
+    "exit_code": {
+      "retained_file": "realm-adapter-r2-37126528842-1-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "run.log": {
+      "retained_file": "realm-adapter-r2-37126528842-2-run.log.gz",
+      "sha256": "1e345e36356135a713ef64bbe81d5d8fdcb2065ed7018e64955eeedf675656e5"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "realm-adapter-r2-37126528842-3-boot_log.txt.gz",
+      "sha256": "0c634679f9c0d6c449c718ff98a374491201f62187b4f4ea38173a0a7c2e11b0"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "realm-adapter-r2-37126528842-4-godot.log.gz",
+      "sha256": "34198d52e97d93d2f212e6cf283136c26b0a2775e4203d11c09887f1495b6a8d"
+    }
+  }
+}
