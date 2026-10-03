@@ -1,5 +1,5 @@
 {
-  "scope": "All 735 original file selectors exercised exactly once across four disjoint slices; remote fourth adds two new files. Source changed during batch: coverage evidence, not uniform exact-head green acceptance. Original sparse-evidence and obsolete JSON-oracle failures retained and resolved by recorded affected proofs, without skipping or normalization.",
+  "scope": "All 735 original file selectors exercised exactly once across four disjoint slices; remote fourth adds two new files. Existing internal conditional checks for missing S02/S04/S05 telemetry and GateF protocol evidence did not all execute in the sparse checkout. Source changed during batch: coverage evidence, not uniform exact-head green acceptance. Original sparse-evidence and obsolete JSON-oracle failures retained and resolved by recorded affected proofs, without selector skipping or normalization.",
   "baseline_census_commit": "749bf41b23",
   "completed_shards": [
     {
@@ -3787,7 +3787,7 @@
   "shard4_failure_resolution": {
     "source_commit": "f25a61b21e",
     "adoption": "Only exact two test-file hunks. No Alpha or other production changes. Compare actual full native claims against the original native claim, removing obsolete decimal JSON rewriting.",
-    "independent_review": "Coordinator independent review approved exact two test oracles; native 10 tests / 163 assertions clean. Reused proof with identical tests and persistence/reward dependencies. Root WorldLedger has one additional generic guest flag guard; these reward fixtures commit flags as host peer1, so the added guest-only branch does not execute. No full rerun.",
+    "independent_review": "Coordinator independent review approved exact two test oracles; native 10 tests / 163 assertions clean. Reused proof with identical tests and persistence/reward dependencies. Coordinator f25 contains a guest-only chapter-settlement flag guard absent from our d79; these host-peer1 reward fixtures do not execute that branch. No full rerun.",
     "evidence": "claim-oracle-rerun-reused.log.gz",
     "evidence_sha256": "0d14788d2ea19a835aec4c3a803540e072cda2f28e2b3833a59796c8794e86b3",
     "source_test_blob_ids": {
