@@ -35,6 +35,15 @@ assert.equal(result.resumed_from, '');
 assert.equal(result.dry_run, false);
 const journey = readLine('F49 JOURNEY ');
 assert.deepEqual(journey.order, ['meadows', 'tidewake', 'cloudreach', 'stormwood', 'homecoming_credits']);
+const offloadLines = lines.filter(line => line.startsWith('F19 FUNCTIONAL OFFLOAD '));
+assert.ok(offloadLines.length <= 1, 'A single functional offload configuration is allowed');
+const offload = offloadLines.length ? readLine('F19 FUNCTIONAL OFFLOAD ') : null;
+if (offload) {
+  assert.equal(offload.scenario, 'full_fresh_campaign');
+  assert.equal(offload.rendering_method, 'gl_compatibility');
+  assert.equal(offload.continuous_drawing, false);
+  assert.equal(offload.ordinary_controller_physics_saves, true);
+}
 const emitted = lines.filter(line => line.startsWith('F49 DISK HANDOFF '))
   .map(line => JSON.parse(line.slice('F49 DISK HANDOFF '.length)));
 const boundaries = ['meadows_settled', 'tidewake_settled', 'cloudreach_settled', 'stormwood_settled', 'completed_world'];
@@ -126,7 +135,8 @@ for (let index = 0; index < boundaries.length; index++) {
 // The evidence source must be committed and available for replay/review.
 execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {stdio: 'pipe'});
 const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: sourceCommit,
-  command: `Godot 4.7 ${/^OpenGL.*(?:API|Renderer)/m.test(log) ? '' : '--headless '}--script tests/smoke_four_biome_continuous.gd`,
+  command: `Godot 4.7 ${/^OpenGL.*(?:API|Renderer)/m.test(log) ? '' : '--headless '}--script tests/${offload ? 'smoke_f19_campaign_functional' : 'smoke_four_biome_continuous'}.gd`,
+  functional_offload: offload,
   source_log_sha256: sha256(logFile), journey, boundaries,
   transport: relocation ? {kind: 'downloaded_ci_artifact', original_handoff_root: emittedRoot, original_paths: emitted.map(row => row.path)} : {kind: 'local_original_paths'},
   disclosures: journey.shortcuts, scope: 'Earned progression/save boundaries; no hardware, timing or visual acceptance claim'};
