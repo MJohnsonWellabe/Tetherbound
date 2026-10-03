@@ -154,9 +154,10 @@
   "latest_remote_audit": "functional-offload-actual-results.json",
   "latest_material_diagnostic": "chamber-label-counterfactual-r2.json",
   "latest_material_probe": {
-    "run": 37086324872,
-    "source_commit": "0679bb12aafa61028acb6a8917b0c485df5983bc",
+    "run": 37088068152,
+    "source_commit": "1544456506522ff102c7d116b980f37ae492921c",
     "acceptance": false,
-    "status": "Completed diagnostic,48engine errors, zero original assertion failures; negative caption reproduction"
-  }
+    "status": "Offloaded native Terrain3D component diagnostic pending"
+  },
+  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json"
 }

@@ -154,5 +154,13 @@
     "raw_log_sha256": "a63e1f849ffc636680d558763a34a52287d6958e05a4051b65371ebfe55c61cd",
     "next_diagnostic": "Actual installed Terrain3D MouseQuad lifecycle: baseline versus retained active ShaderMaterial versus base detached at permanent world destruction; drawing true/false. Empty terrain component fixture, never acceptance.",
     "exclusions": "No product patch, original assertion waiver, clean native choice proof, earned save fixture or completed campaign."
-  }
+  },
+  "next_diagnostic": {
+    "source_commit": "1544456506522ff102c7d116b980f37ae492921c",
+    "run": 37088068152,
+    "script": "tests/probe_f19_terrain_material_lifetime.gd",
+    "scope": "Actual installed Terrain3D empty terrain+camera lifetime; drawing true/false; baseline/retained actual MouseQuad Material/base detached at permanent teardown. Component fixture only.",
+    "status": "Verified setup-godot step live; no native result yet"
+  },
+  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json"
 }
