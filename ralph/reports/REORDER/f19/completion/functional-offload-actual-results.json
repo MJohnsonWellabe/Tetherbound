@@ -246,7 +246,7 @@
   "next_diagnostic": {
     "script": "tests/probe_f19_populated_terrain_material_lifetime.gd",
     "scope": "Installed Terrain3D with actual committed Meadows region data and production terrain/material factory methods. Compare default versus authored material with drawing true/false. Earlier empty Terrain3D probe did not cover populated native mesher/region lifecycle; no world actors or acceptance claim.",
-    "status": "Prepared; not yet dispatched"
+    "status": "Component rig preflight corrected; replacement not yet dispatched"
   },
   "particle_material_counterfactual_r4": {
     "kind": "f19_actual_world_particle_material_counterfactual",
@@ -317,5 +317,11 @@
     "raw_log": "ci-sprite-material-negative-37091898727.log.gz",
     "raw_log_sha256": "1f0d32dd22b9e40ff22ca2007164a74020e1c29d4774ef3f293bae5e4dd6a6be",
     "next_diagnostic": "Installed Terrain3D with actual committed Meadows region data and production terrain/material factory methods. Compare default versus authored material with drawing true/false. Earlier empty Terrain3D probe did not cover populated native mesher/region lifecycle; no world actors or acceptance claim."
+  },
+  "populated_terrain_preflight_cancel": {
+    "run": 37093005552,
+    "source_commit": "47f166ab7d0f73318c1267adbf80f63d476895aa",
+    "cancel_requested": true,
+    "reason": "Inherited playground onready fields require Player and CameraRig/Camera3D nodes; original component host omitted them. Add blank structurally correct fixture nodes before tree entry. No reproduction or acceptance verdict from this handle."
   }
 }

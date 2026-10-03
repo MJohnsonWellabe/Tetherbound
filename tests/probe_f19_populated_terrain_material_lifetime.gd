@@ -1,7 +1,7 @@
 extends SceneTree
 
 ## Diagnostic only. Actual committed Meadows regions and production terrain
-## node/material factories; camera and isolated host are fixtures. No actors,
+## node/material factories; blank rig nodes and isolated host are fixtures. No gameplay actors,
 ## campaign, earned save or acceptance claim. No region generation or writes.
 const HOST := preload("res://tests/helpers/f19_populated_terrain_host.gd")
 var _failures: Array[String] = []
@@ -22,10 +22,19 @@ func _run() -> void:
 				"acceptance": false}))
 			var host := HOST.new()
 			host.name = "PopulatedTerrainComponent"
-			root.add_child(host)
+			# The inherited onready fields require this exact node structure,
+			# even though the host's full-world _ready/process are suppressed.
+			var player := CharacterBody3D.new()
+			player.name = "Player"
+			host.add_child(player)
+			var camera_rig := Node3D.new()
+			camera_rig.name = "CameraRig"
+			host.add_child(camera_rig)
 			var camera := Camera3D.new()
-			host.add_child(camera)
+			camera.name = "Camera3D"
+			camera_rig.add_child(camera)
 			camera.position = Vector3(-16.5, 8, 12)
+			root.add_child(host)
 			camera.look_at(Vector3(-16.5, 0, 0))
 			camera.current = true
 			var terrain: Node3D = host.call("_build_terrain") as Node3D
