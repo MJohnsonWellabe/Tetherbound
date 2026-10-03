@@ -37,9 +37,15 @@ void fragment() {
         vec3 surface = texture(surface_texture, p.yz).rgb * weights.x
                      + texture(surface_texture, p.xz).rgb * weights.y
                      + texture(surface_texture, p.xy).rgb * weights.z;
-        float mineral = smoothstep(0.36, 0.6, dot(surface, vec3(0.299, 0.587, 0.114)));
+        float luma = dot(surface, vec3(0.299, 0.587, 0.114));
+        float mineral = smoothstep(0.36, 0.6, luma);
         vec3 tinted = mix(stone_colour.rgb, mineral_colour.rgb, mineral * 0.28);
-        ALBEDO = mix(tinted, surface, clamp(texture_blend, 0.0, 1.0));
+        // Detail is multiplied into the earthy tint (dark crevices, lit
+        // ridges) instead of mixed toward the pale scree, which washed the
+        // whole body out to grey-white under the Meadows sun.
+        vec3 detailed = tinted * mix(1.0, 0.45 + luma * 1.25, clamp(texture_blend, 0.0, 1.0));
+        float crevice = smoothstep(0.55, 0.95, abs(grain)) * seams;
+        ALBEDO = detailed * (1.0 - crevice * 0.35);
         ROUGHNESS = clamp(surface_roughness, 0.5, 1.0);
         SPECULAR = 0.19;
     }
