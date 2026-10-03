@@ -14,9 +14,19 @@ var _actor_vitals_proposals: Dictionary = {}
 var _serial: int = 0
 var _observations: Array = []
 
+## Proof peers use the explicit shipping harness wrapper, not the base CLI
+## entry. Check both actual resources and its immediate base; another subclass
+## cannot acquire this source. Localize only real project resource paths.
+static func runner_script_valid(runtime_script: Script) -> bool:
+	if runtime_script == null: return false
+	var path: String = ProjectSettings.localize_path(runtime_script.resource_path)
+	if path == "res://tools/net/peer_runner.gd": return true
+	if path != "res://tools/net/proof_peer_runner.gd": return false
+	var base: Script = runtime_script.get_base_script()
+	return base != null and ProjectSettings.localize_path(base.resource_path) == "res://tools/net/peer_runner.gd"
+
 static func install(tree: SceneTree, disclosure: Dictionary) -> Node:
-	if tree == null or tree.root == null or tree.get_script() == null \
-		or tree.get_script().resource_path != "res://tools/net/peer_runner.gd" \
+	if tree == null or tree.root == null or not runner_script_valid(tree.get_script()) \
 		or not EXACT._equivalent(disclosure, DISCLOSURE): return null
 	var session: Node = tree.root.get_node_or_null(^"Game/Session")
 	if session == null or session.call("is_host") != true: return null
@@ -122,8 +132,7 @@ func request_topup(director: Node, manager: Node) -> Dictionary:
 func _installed() -> bool:
 	if not is_inside_tree() or is_queued_for_deletion() or fixture_runner == null: return false
 	var runner: Object = fixture_runner.get_ref() if fixture_runner != null else null
-	return is_instance_valid(runner) and runner == get_tree() and runner.get_script() != null \
-		and runner.get_script().resource_path == "res://tools/net/peer_runner.gd" \
+	return is_instance_valid(runner) and runner == get_tree() and runner_script_valid(runner.get_script()) \
 		and get_parent() == get_tree().root and name == &"F48ActorTopup" \
 		and EXACT._equivalent(fixture_disclosure, DISCLOSURE)
 

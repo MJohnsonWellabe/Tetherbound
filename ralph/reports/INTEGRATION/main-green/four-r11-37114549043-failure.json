@@ -1,0 +1,18 @@
+{
+  "verdict": "FAIL",
+  "run_id": 37114549043,
+  "artifact_id": 11271415083,
+  "checkout_ref": "30408e3cdd31fb13c12f92bc7a854b8363e07170",
+  "failures": [
+    "#36 peer 0 f48_fixture_trainer_fight (boss_fight: disclosed mechanics fixture) -> FAIL -- The disclosed canonical Warden aid requires the actual host PeerRunner"
+  ],
+  "archive_sha256": "5212802f20435f5f802284d49026f61d8d9c4f451b455f4dea0a92579a915fbd",
+  "original_run_log_sha256": "15b41f102bc0ac1d5bead8b30174ac58b5cb404658a2f51abfc310cf233e5e74",
+  "all_peer_errors": {
+    "peer-0.log": [],
+    "peer-1.log": [],
+    "peer-2.log": [],
+    "peer-3.log": []
+  },
+  "boundary": "Actual producer uses proof_peer_runner immediate subclass of peer_runner; new provider leaf-only guard refuses installation before canonical battle/typed heal. No canonical multiplayer acceptance."
+}

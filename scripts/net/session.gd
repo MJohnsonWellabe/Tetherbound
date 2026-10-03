@@ -920,7 +920,7 @@ func _ordinary_fixture_topup_source(provider: Node, director: Node, encounter_id
 	var runner_ref: Variant = provider.get("fixture_runner")
 	var runner: SceneTree = runner_ref.get_ref() as SceneTree if runner_ref is WeakRef else null
 	if runner == null or runner != get_tree() or runner.get_script() == null \
-		or runner.get_script().resource_path != "res://tools/net/peer_runner.gd" \
+		or provider.get_script().call("runner_script_valid", runner.get_script()) != true \
 		or runner.get("_role") != "host": return false
 	var required: Dictionary = {"scope": "named_mechanics_only", "self_hp_topups": true,
 		"ally_placement": true, "enemy_hp_ceiling": 0, "earned_campaign_credit": false}

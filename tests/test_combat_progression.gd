@@ -36,6 +36,7 @@ const ACCEPTED_ACTION_HOST := preload("res://scripts/combat/accepted_action_host
 const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
 const F48_ACTOR_TOPUP := preload("res://tools/net/f48_actor_topup.gd")
 const F48_PEER_RUNNER := preload("res://tools/net/peer_runner.gd")
+const F48_PROOF_PEER_RUNNER := preload("res://tools/net/proof_peer_runner.gd")
 
 ## Disclosed ownership-answer seam; canonical host proof is tested separately.
 class DurableTrainerRewardsFixture extends Node:
@@ -643,7 +644,13 @@ func test_actual_fixture_provider_refuses_non_runner_tree_and_detached_request()
 	var driver: Script = F48_PEER_RUNNER
 	assert_eq(driver.resource_path, "res://tools/net/peer_runner.gd",
 		"the actual driver is compiled by the focused native check")
+	var proof_driver: Script = F48_PROOF_PEER_RUNNER
+	assert_true(F48_ACTOR_TOPUP.runner_script_valid(driver))
+	assert_true(F48_ACTOR_TOPUP.runner_script_valid(proof_driver),
+		"the actual proof launch script extends the exact allowed base runner")
+	assert_false(F48_ACTOR_TOPUP.runner_script_valid(null))
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	assert_false(F48_ACTOR_TOPUP.runner_script_valid(tree.get_script()))
 	assert_eq(F48_ACTOR_TOPUP.install(tree, F48_ACTOR_TOPUP.DISCLOSURE), null,
 		"the actual test tree cannot install the PeerRunner-only aid")
 	var provider: Node = F48_ACTOR_TOPUP.new()
