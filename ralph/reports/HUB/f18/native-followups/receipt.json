@@ -3757,5 +3757,27 @@
     "sha256": "d857c2f32c0cf12af5863500749c9d3d33abf24c366d0b97ac11e4f7db1fa7ca",
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
-  }
+  },
+  "pending_dispatches": [
+    {
+      "id": 37100334560,
+      "label": "f18-earned-headless-r8",
+      "checkout": "9cde1be4b041b400b3b56959e60c0db2c8005721",
+      "workflow_head": "46d4602500ac2091d7182c96fc26aa07fe0c075b",
+      "mode": "headless",
+      "timeout_minutes": 60,
+      "status_at_recording": "in_progress",
+      "scope": "Original earned loop with actual open TrailGate+authored road headings, same total budget/watchdog/floor/unstick guards, scalar resource-lifetime observer. Source independently APPROVED; no runtime result yet."
+    },
+    {
+      "id": 37100730912,
+      "label": "f18-native-stones-water-r5",
+      "checkout": "d0fed65e80f37efb12626bbec469af5cfa280f4a",
+      "workflow_head": "46d4602500ac2091d7182c96fc26aa07fe0c075b",
+      "mode": "headless",
+      "timeout_minutes": 15,
+      "status_at_recording": "in_progress",
+      "scope": "Original strict Water native geometry checks, plus bounded read-only seam diagnostic; original R4 entry failure retained, no production correction or runtime result yet."
+    }
+  ]
 }
