@@ -630,6 +630,14 @@
       "peak": 0.45,
       "late": 0.35
     },
-    "shutter_note": "windup/travel are fractions of travel; contact/peak are seconds after arrival; late is seconds before the presentation ends."
+    "shutter_note": "windup/travel are fractions of travel; contact/peak are seconds after arrival; late is seconds before the presentation ends.",
+    "auto_frame": true,
+    "frame_margin_m": 0.6,
+    "frame_headroom": 1.5,
+    "frame_view_direction": [
+      0.05,
+      0.28,
+      1.0
+    ]
   }
 }

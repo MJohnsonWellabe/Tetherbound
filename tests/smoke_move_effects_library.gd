@@ -740,6 +740,7 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
 	var from := _attacker_origin(case, move_id, 0.0)
 	if not from.is_finite(): _failures.append("Attacker model missing " + encounter); return
 	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
+	if bool(cfg.get("auto_frame", false)): _frame_fight(cfg)
 	var binding := {"character_id": "f35-proof", "creature_uid": "f35-proof-attacker",
 		"encounter_id": encounter, "generation": 1, "action": 1}
 	var spec := {"slot": "ultimate", "move_id": move_id, "action_id": encounter + ":1",
@@ -789,3 +790,32 @@ func _species_has_model(species: String) -> bool:
 	var found := bool(probe.call("has_model"))
 	probe.queue_free()
 	return found
+
+
+## Fit the camera to the posed attacker and target (legendaries are many
+## times a starter's size) along the configured view direction, with
+## headroom above for effects that arrive from the sky.
+func _frame_fight(cfg: Dictionary) -> void:
+	var camera := get_root().get_viewport().get_camera_3d()
+	if camera == null or _current_attacker == null or _target == null: return
+	var inverse := _arena.global_transform.affine_inverse()
+	var box := AABB()
+	var first := true
+	for body: Node3D in [_current_attacker, _target]:
+		var pivot := body.call("model_pivot") as Node3D
+		var local := inverse * pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+		box = local if first else box.merge(local)
+		first = false
+	box = box.grow(float(cfg.get("frame_margin_m", 0.6)))
+	box.size.y *= float(cfg.get("frame_headroom", 1.5))
+	var centre := box.get_center()
+	var view: Array = cfg.get("frame_view_direction", [0.05, 0.28, 1.0])
+	var direction := Vector3(float(view[0]), float(view[1]), float(view[2])).normalized()
+	var half_v := deg_to_rad(camera.fov) * 0.5
+	var aspect := float(root.size.x) / float(root.size.y)
+	var half_h := atan(tan(half_v) * aspect)
+	var radius_x := box.size.x * 0.5
+	var radius_y := box.size.y * 0.5
+	var distance := maxf(radius_x / tan(half_h), radius_y / tan(half_v)) + box.size.z * 0.5
+	camera.global_position = _arena.to_global(centre + direction * distance)
+	camera.look_at(_arena.to_global(centre), Vector3.UP)
