@@ -68,6 +68,23 @@
     "api_sources": [
       "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/AudioStreamWAV.xml",
       "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/AudioServer.xml"
-    ]
+    ],
+    "dispatch": {
+      "id": 37108768756,
+      "display_title": "render f18-waveform-lifetime-r2 @ ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "head_branch": "tb/integration",
+      "head_sha": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37108768756",
+      "checkout": "ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "label": "f18-waveform-lifetime-r2",
+      "mode": "headless",
+      "script": "tests/smoke_f18_presentation_lifetime.gd",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Existing freed-reference observer regression + changed helper parse only. Does not exercise playing-stream export or establish audio/listening/earned/fullF18 acceptance."
+    },
+    "coordinator_dependency": "Root explicitly prohibits broad earned/co-op and movingintegration imports until reviewed main-green baseline supplied; latest native arrival production2bdd48645ea778b59f2b6dd256a0c5b17de94b41 is not an approved matched F18 dependency group."
   }
 }

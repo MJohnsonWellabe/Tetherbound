@@ -2024,7 +2024,7 @@
         "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light"
       ],
       "result_lines": [
-        "GATE A OPENING +120.89s — Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+        "GATE A OPENING +120.89s \u2014 Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
         "F18_EARNED_LOOP {\"failures\":[\"fresh earned opening: [\\\"F18 earned key Drop/binding: [\\\\\\\"opening catch must retain its original Basic Orb binding on slot 1\\\\\\\"]\\\"]\"],\"fixtures\":false,\"input\":\"parsed harness actions/joypad axes through production UI\",\"receipts\":[],\"setup\":\"private save-system directory, preserving developer saves\"}"
       ],
       "outcome": "Ordinary opening reached actual Home Key gift and lesson; F18 guard precondition incorrectly requires orb slot1 before original driver binds it. Earned acceptance remains unproven.",
@@ -2153,7 +2153,7 @@
         "F18_HOME_KEY_REFUSAL_COMPONENT {\"checks\":30,\"failures\":[],\"fixtures\":\"real inventory/parsed input/HomeKey toast and lesson/system-screen presenters; fixture content/modal branches/fight/refusal state; structural checks and component captures only, no live gameplay acceptance\"}",
         "exit=0 took=10s"
       ],
-      "outcome": "Native component30checks0failed after test waits for actual second process emission; unchanged production owner-relative layering. Actual layers31→81 with original message/deadline unchanged. Component, not earned modal visual acceptance.",
+      "outcome": "Native component30checks0failed after test waits for actual second process emission; unchanged production owner-relative layering. Actual layers31\u219281 with original message/deadline unchanged. Component, not earned modal visual acceptance.",
       "fixtures": "Explicit isolated native geometry/UI component fixture; not actual earned play/save/co-op/presentation acceptance.",
       "visual_review": "Independent source-aware inspection of both actual R4 PNGs: readable unclipped refusal above actual presenter; system toast still overlaps part of its title. Explicit component only; no code-blind live earned acceptance."
     },
@@ -5527,7 +5527,7 @@
         "terrain_collision_rid": "RID(10587094384642)",
         "vertex_spacing": 1.0
       },
-      "outcome": "74checks/4fail; all5actualstonesPASS, actualentryfailsunchangedguards. Raw vertical rays atnegativeX miss only exactZ162; rowsZ161.5/162.5 accepted. Actual31heightmaps exist, nearby2tiles513². Finitecachedsamples agree with physical hits. Zeroengineerrors; no nativeexitfile.",
+      "outcome": "74checks/4fail; all5actualstonesPASS, actualentryfailsunchangedguards. Raw vertical rays atnegativeX miss only exactZ162; rowsZ161.5/162.5 accepted. Actual31heightmaps exist, nearby2tiles513\u00b2. Finitecachedsamples agree with physical hits. Zeroengineerrors; no nativeexitfile.",
       "independent_source_inference": "Exact Godot5b4e0cb0f heightmap -90Yfloat32basis makes negative-tile vertical ray localX93.9999923706; adding cell origin256 rounds350 then selects edge94, rejecting ray7.629e-6outside selected cell with strict barycentric test. Pure f32 reproduction matches3negative misses/4nonnegativehits. Not bakedhole/regionabsence. R6 must prove candidate shifted actual footprint."
     },
     {
@@ -6278,7 +6278,7 @@
           "F18_RESOURCE_LIFETIME {\"event\":\"exited\",\"instance_id\":60642002453260,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2\",\"physics_frame\":6236,\"process_frame\":2253,\"role\":\"outgoing:axe\"}",
           "ERROR: Parameter \"material\" is null.",
           "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
-          "GATE A NPC/GATHER +53.25s — pickaxe equipped, swung, gathered +4 Stone",
+          "GATE A NPC/GATHER +53.25s \u2014 pickaxe equipped, swung, gathered +4 Stone",
           "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":34879043765895,\"path\":\"/root/MeadowsPlayground/@Node3D@63543\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"harvest:fiber\"}",
           "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":34879328978571,\"path\":\"/root/MeadowsPlayground/@Node3D@63543/@Node3D@63544/Plant_7_Big2/Plant_7_Big\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"harvest:fiber\"}",
           "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":62420236354205,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"outgoing:pickaxe\"}",
@@ -7531,5 +7531,22 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": []
+  "pending_dispatches": [
+    {
+      "id": 37108768756,
+      "display_title": "render f18-waveform-lifetime-r2 @ ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "head_branch": "tb/integration",
+      "head_sha": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37108768756",
+      "checkout": "ec931361ee2aca3cec8a58beecec1bf9848baea7",
+      "label": "f18-waveform-lifetime-r2",
+      "mode": "headless",
+      "script": "tests/smoke_f18_presentation_lifetime.gd",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Existing freed-reference observer regression + changed helper parse only. Does not exercise playing-stream export or establish audio/listening/earned/fullF18 acceptance."
+    }
+  ]
 }
