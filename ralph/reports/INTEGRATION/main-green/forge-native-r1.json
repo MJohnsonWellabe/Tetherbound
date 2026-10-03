@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS",
+  "checkout_ref": "387fd9276fbce06c0acd047c197d8556a303e102",
+  "run_id": 37117380409,
+  "artifact_id": 11272081617,
+  "tests": 28,
+  "assertions": 159,
+  "failed": 0,
+  "exit_code": 0,
+  "duration_seconds": 12,
+  "child_result": {
+    "assertions": 34,
+    "completed": true,
+    "failures": []
+  },
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/craft-confirm-2460-5486584.log": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": []
+  },
+  "retained": {
+    "run.log": {
+      "retained_file": "forge-native-r1-37117380409-original.log.gz",
+      "sha256": "c0943f1b56a5eea61007947db10b895ee6143c8976f96f0bfacc89817510509c"
+    },
+    "user/godot/app_userdata/Tetherbound/craft-confirm-2460-5486584.log": {
+      "retained_file": "forge-native-r1-37117380409-child.log.gz",
+      "sha256": "0015872c52712380f2b8b71c49f0b466c37ab5b3d4364a46e1439a257c4c3d1a"
+    }
+  },
+  "original_archive_sha256": "599bf53f7a65f771bebdb85d522ab36bb98213797aca0dc68dcd4713b5bb24ad",
+  "boundary": "Actual native GUI down/up/pressed callbacks, production Craft lifetime guard and strict runner script validator verified. Session read/submission doubles explicitly disclosed; no earned refining, owner-save, actual Warden or F48 bundle acceptance."
+}
