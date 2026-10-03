@@ -5,6 +5,8 @@ extends RefCounted
 const CARE := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+const LESSON_SERVICE := preload("res://scripts/onboarding/lesson_service.gd")
 var tree: SceneTree
 var game: Node
 var travel: RefCounted
@@ -100,7 +102,22 @@ func _assign_in_satchel(tab: Node, care: RefCounted, item: String, destination: 
 		or _fail("ordinary Satchel assignment did not reach required slot for " + item)
 
 func _refusal_context(kind: String, source: Node, scene: Node) -> bool:
-	if not is_instance_valid(source) or tree.current_scene != scene or not scene.is_ancestor_of(source): return false
+	if not is_instance_valid(source) or tree.current_scene != scene: return false
+	if kind == "cutscene":
+		var service: Node = game.get_node_or_null(^"OnboardingLessons")
+		var session: Node = game.get("session")
+		if service == null or service.get_script() != LESSON_SERVICE or service.get_parent() != game \
+			or service.get("_panel") != source or source.get_parent() != service or source.get_script() != LESSON_PANEL \
+			or service.get("_identity") != game.get("local").get("character_id") or service.get("_replaying") != true \
+			or source.call("is_open") != true or INPUT_OWNER.current(tree) != source \
+			or source.get("_row").get("id") != "home_key" or source.get("_row").get("conversation") != "lesson_home_key" \
+			or not (source as CanvasLayer).visible or session == null: return false
+		var context: Dictionary = session.call("_host_portal_context", session.call("local_peer_id"))
+		var lifecycle: Node = session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		var sample: Dictionary = lifecycle.call("local_sample") if lifecycle != null else {}
+		return context.get("combat") == false and context.get("dialogue") == false and context.get("cutscene") == true \
+			and sample.get("dialogue") == false and sample.get("cutscene") == true
+	if not scene.is_ancestor_of(source): return false
 	if kind == "combat":
 		var hud: Node = scene.get_node_or_null(^"PlaygroundHUD")
 		return source == scene.get_node_or_null(^"CombatManager") and source.call("is_fighting") == true \
@@ -112,7 +129,8 @@ func _refusal_context(kind: String, source: Node, scene: Node) -> bool:
 func bound_refusal(kind: String, source: Node) -> bool:
 	# Observe production state and press the actually assigned action. Never
 	# call use/refuse, open a channel, or arrange a combat/dialogue context.
-	var expected: String = "Not during a fight." if kind == "combat" else "Finish the conversation first."
+	var expected: String = "Not during a fight." if kind == "combat" else \
+		("Wait until the scene finishes." if kind == "cutscene" else "Finish the conversation first.")
 	var scene: Node = tree.current_scene
 	var actor: Node3D = game.call("find_player")
 	var key: Node = game.get_node_or_null(^"HomeKey")
@@ -139,6 +157,9 @@ func bound_refusal(kind: String, source: Node) -> bool:
 	var enemy: Node3D = source.call("enemy_body") if kind == "combat" else null
 	var dialogue_id: String = str(source.get("_runner").call("conversation_id")) if kind == "dialogue" else ""
 	var dialogue_line: int = int(source.get("_runner").get("_index")) if kind == "dialogue" else -1
+	var lesson_line: int = int(source.get("_line")) if kind == "cutscene" else -1
+	var lesson_row: Dictionary = (source.get("_row") as Dictionary).duplicate(true) if kind == "cutscene" else {}
+	var safety: Dictionary = session.call("_host_portal_context", session.call("local_peer_id")) if kind == "cutscene" else {}
 	var results: Array[Dictionary] = []
 	var observe := func(result: Dictionary) -> void: results.append(result.duplicate(true))
 	game.connect("portal_action_result", observe)
@@ -158,17 +179,133 @@ func bound_refusal(kind: String, source: Node) -> bool:
 	if kind == "dialogue":
 		unchanged = unchanged and is_instance_valid(source) and str(source.get("_runner").call("conversation_id")) == dialogue_id \
 			and int(source.get("_runner").get("_index")) == dialogue_line
-	else:
+	elif kind == "combat":
 		unchanged = unchanged and is_instance_valid(source) and source.call("enemy_body") == enemy
+	elif kind == "cutscene":
+		unchanged = unchanged and is_instance_valid(source) and source.get("_line") == lesson_line and source.get("_row") == lesson_row
 	var readable: bool = label != null and panel != null and label.is_visible_in_tree() \
 		and panel.is_visible_in_tree() and label.text == expected
+	var refusal_layer: CanvasLayer = key.get("_refusal_layer") if is_instance_valid(key) else null
+	if kind == "cutscene": readable = readable and refusal_layer != null and is_instance_valid(source) \
+		and refusal_layer.layer > (source as CanvasLayer).layer
 	receipts.append({"phase": kind + "_key_refusal", "input": action, "binding": binding,
 		"reason": label.text if label != null else "", "expected_reason": expected,
 		"readable": readable, "unchanged": unchanged, "home_keys": inventory.call("count", "home_key"),
 		"owner": character, "epoch": epoch, "realm": realm, "source": source_path, "dialogue": dialogue_id,
 		"portal_actions": results, "channel_created": policy.call("open_channels") != channels,
+		"lesson_line": lesson_line, "refusal_layer": refusal_layer.layer if refusal_layer != null else -1,
+		"lesson_layer": (source as CanvasLayer).layer if kind == "cutscene" and is_instance_valid(source) else -1,
+		"actual_safety": {"combat": safety.get("combat"), "dialogue": safety.get("dialogue"), "cutscene": safety.get("cutscene")} if kind == "cutscene" else {},
+		"visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim",
 		"passed": readable and unchanged})
 	return (readable and unchanged) or _fail("actual bound " + kind + " key press did not visibly refuse without side effects")
+
+func replay_cutscene(open_tab: Callable) -> bool:
+	var scene: Node = tree.current_scene
+	var actor: Node3D = game.call("find_player")
+	var local: RefCounted = game.get("local")
+	var world: RefCounted = game.get("world")
+	var session: Node = game.get("session")
+	var character: String = local.get("character_id")
+	var epoch: String = session.call("_altar_current_epoch")
+	var retained: Callable = func() -> bool:
+		return tree.current_scene == scene and game.call("find_player") == actor and game.get("world") == world \
+			and game.get("local") == local and local.get("character_id") == character and game.get("session") == session \
+			and session.call("_altar_current_epoch") == epoch
+	var before_flags: Array = local.get("flags").call("all_set")
+	before_flags.sort()
+	var before_receipts: Array = (local.get("redesign_character").get("transaction_receipts") as Array).duplicate(true)
+	var before_inventory: Array = _inventory()
+	var before_bar: Array = (game.get("hotbar") as Array).duplicate()
+	if actor == null or scene == null or not scene.is_ancestor_of(actor) or INPUT_OWNER.current(tree) != null \
+		or local.get("flags").call("has", "opening:lesson:home_key") != true:
+		return _fail("earned Home Key Replay requires actual completed opening lesson and world input")
+	var tab: Node = await open_tab.call("settings")
+	if not retained.call() or tab == null or tab.get_script().resource_path != "res://scripts/ui/tab_settings.gd": return _fail("ordinary Settings route/retained owner missing")
+	var buttons: Array = tab.get("_lesson_buttons")
+	if buttons.is_empty() or not buttons[0] is Button or tree.root.gui_get_focus_owner() != buttons[0] \
+		or buttons[0].text != "Home Key" or not buttons[0].is_visible_in_tree():
+		return _fail("Settings did not focus the actual available Home Key lesson button")
+	await travel.tap("ui_accept")
+	var service: Node = game.get_node_or_null(^"OnboardingLessons")
+	var lesson: Node = service.get("_panel") if service != null else null
+	var opened: bool = false
+	for frame in 180:
+		if not retained.call(): return _fail("actual owner/scene changed while waiting for Replay")
+		if _refusal_context("cutscene", lesson, scene): opened = true; break
+		await tree.process_frame
+	if not opened or game.call("menu").call("is_open") == true: return _fail("Settings Replay did not open the actual owned lesson cutscene")
+	if not await bound_refusal("cutscene", lesson): return false
+	var row: Dictionary = (lesson.get("_row") as Dictionary).duplicate(true)
+	var lines: int = (row.get("lines") as Array).size()
+	if lines < 1 or lines > 20 or lesson.get("_line") != 0: return _fail("Replay lesson cursor/content changed before ordinary continuation")
+	for line in lines:
+		if not retained.call() or not _refusal_context("cutscene", lesson, scene) or lesson.get("_row") != row or lesson.get("_line") != line:
+			return _fail("actual Replay lesson changed identity/content during continuation")
+		await travel.tap("menu_confirm")
+	var released: bool = false
+	for frame in 180:
+		if not retained.call(): return _fail("actual owner/scene changed during Replay release")
+		if is_instance_valid(lesson) and lesson.call("is_open") == false and lesson.call("owns_input") == false \
+			and INPUT_OWNER.current(tree) == null and not tree.paused: released = true; break
+		await tree.process_frame
+	var after_flags: Array = local.get("flags").call("all_set")
+	after_flags.sort()
+	var unchanged: bool = tree.current_scene == scene and game.call("find_player") == actor and game.get("world") == world \
+		and game.get("local") == local and local.get("character_id") == character and game.get("session") == session \
+		and session.call("_altar_current_epoch") == epoch and _inventory() == before_inventory and game.get("hotbar") == before_bar \
+		and after_flags == before_flags and local.get("redesign_character").get("transaction_receipts") == before_receipts
+	receipts.append({"phase": "settings_home_key_replay", "input": ["inventory", "menu_tab_right", "ui_accept", "hotbar_5", "menu_confirm"],
+		"lesson": row.get("id"), "conversation": row.get("conversation"), "confirmed_lines": lines,
+		"owner": character, "epoch": epoch, "released": released, "flags_unchanged": after_flags == before_flags,
+		"transaction_receipts_unchanged": local.get("redesign_character").get("transaction_receipts") == before_receipts,
+		"unchanged": unchanged, "passed": released and unchanged})
+	return (released and unchanged) or _fail("ordinary Replay failed to release input or changed owned progression/receipts/inventory")
+
+func shop_key_offer_absent(panel: Node) -> bool:
+	if panel == null or panel.get_script().resource_path != "res://scripts/ui/shop_panel.gd" \
+		or panel.call("is_open") != true or INPUT_OWNER.current(tree) != panel:
+		return _fail("actual open shop must own input for sell-offer observation")
+	var vendor: String = panel.call("vendor_id")
+	if vendor not in ["mira", "bram"]: return _fail("unexpected actual shop vendor: " + vendor)
+	var before: Array = _inventory()
+	var inventory: RefCounted = game.get("inventory")
+	var db: RefCounted = game.get("items")
+	var trade: RefCounted = panel.get("_trade")
+	var column: Control = panel.get("_sell_column")
+	if trade == null or column == null or not column.is_visible_in_tree() or inventory.call("count", "home_key") != 1:
+		return _fail("actual sell rows/earned Home Key missing")
+	var key_name: String = db.call("item_name", "home_key")
+	var expected: Array[String] = []
+	var traded: Array = trade.call("traded_ids", vendor)
+	for raw: Variant in traded:
+		var item: String = str(raw)
+		var count: int = inventory.call("count", item)
+		if trade.call("buys", vendor, item) == true and count > 0:
+			expected.append("%s x%d" % [str(db.call("item_name", item)), count])
+	var offered: Array[String] = []
+	var labels: Array[String] = []
+	for child: Node in column.get_children():
+		var control: Control = child as Control
+		if child.is_queued_for_deletion() or control == null or not control.is_visible_in_tree(): continue
+		if child is Button:
+			var row_labels: Array[Node] = child.find_children("*", "Label", true, false)
+			if child.disabled or child.focus_mode != Control.FOCUS_ALL or row_labels.is_empty(): return _fail("actual sale offer lacks its controller row")
+			offered.append(str(row_labels[0].get("text")))
+			for candidate: Node in row_labels:
+				var label: Label = candidate as Label
+				if label != null and not label.is_queued_for_deletion() and label.is_visible_in_tree(): labels.append(label.text)
+		elif child is Label: labels.append(child.text)
+	var absent: bool = not key_name.is_empty()
+	for label: String in labels:
+		if label.contains(key_name): absent = false
+	var unchanged: bool = _inventory() == before and inventory.call("count", "home_key") == 1
+	var complete: bool = offered == expected and (not offered.is_empty() or labels.has("(nothing she wants)"))
+	receipts.append({"phase": "shop_key_offer_absent", "vendor": vendor, "reachable_sell_offers": offered,
+		"visible_sell_labels": labels, "home_key_name": key_name, "home_key_in_traded_ids": traded.has("home_key"),
+		"vendor_buys_home_key": trade.call("buys", vendor, "home_key"), "home_keys": inventory.call("count", "home_key"),
+		"inventory_unchanged": unchanged, "attempted_sale": false, "passed": absent and complete and unchanged})
+	return (absent and complete and unchanged) or _fail("actual shop offered the retained Home Key or sell rows did not match actual vendor stock")
 
 func locked_arch() -> bool:
 	var scene := tree.current_scene

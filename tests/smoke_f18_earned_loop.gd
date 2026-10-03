@@ -38,6 +38,12 @@ class OpeningDriver extends "res://tests/helpers/fresh_opening_segment.gd":
 class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 	var guards: RefCounted
 	var dialogue_proven := false
+	func _wait_open_panel(script_suffix: String, budget: int) -> Node:
+		var panel: Node = await super._wait_open_panel(script_suffix, budget)
+		if panel != null and script_suffix == "shop_panel.gd" and not guards.shop_key_offer_absent(panel):
+			_fail("F18 actual vendor sell-offer protection: " + str(guards.failures))
+			return null
+		return panel
 	func _wait_dialogue_open(budget: int) -> bool:
 		if not await super._wait_dialogue_open(budget): return false
 		if dialogue_proven: return true
@@ -96,6 +102,10 @@ func _run() -> void:
 		return
 	receipts.append_array(_guards.receipts)
 	_guards.receipts.clear()
+	if not await _guards.replay_cutscene(_tab):
+		_fail("ordinary Settings Home Key Replay refusal: " + str(_guards.failures))
+		_report()
+		return
 	var village_driver := VillageDriver.new()
 	village_driver.guards = _guards
 	var village: Array[String] = await village_driver.run(self, current_scene, game,
@@ -199,9 +209,8 @@ func _loop() -> bool:
 		return _fail("actual touch never committed this character's stone")
 	receipts.append({"phase": "deep_touch", "position": str(current_scene.get_node(^"Player").global_position),
 		"waystone": STONE_ID})
-	if DisplayServer.get_name() != "headless":
-		_presentation = preload("res://tests/helpers/f18_presentation_capture.gd").attach(self, game,
-			"res://ralph/reports/HUB/f18/native/earned_%d" % Time.get_ticks_usec())
+	_presentation = preload("res://tests/helpers/f18_presentation_capture.gd").attach(self, game,
+		"res://ralph/reports/HUB/f18/native/earned_%d" % Time.get_ticks_usec())
 	if not await travel.home_key(): return _fail("actual Satchel Home Key: " + str(travel.failures))
 	if not await _guards.locked_arch(): return _fail("actual locked arch: " + str(_guards.failures))
 	receipts.append_array(_guards.receipts)
