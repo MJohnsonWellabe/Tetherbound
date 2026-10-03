@@ -42,5 +42,17 @@
     ],
     "inference": "This native quad lies outside prior chamber-only observers; component lifecycle comparison may localize pending material dependency errors.",
     "limitations": "The installed binary has not been independently mapped to the upstream tag commit. This is source-informed hypothesis, not native reproduction or a production patch."
+  },
+  "particle_followup": {
+    "sources": [
+      "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/cpu_particles_3d.cpp",
+      "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/gpu_particles_3d.cpp"
+    ],
+    "facts": [
+      "CPUParticles3D owns a draw Mesh and multimesh RID; destructor frees its multimesh.",
+      "GPUParticles3D owns draw-pass Mesh references and a particle RID; destructor frees its particle RID."
+    ],
+    "inference": "Draw Mesh surface Materials are outside the previous MeshInstance/MultiMeshInstance retention set. Actual owner and failure are unproven until the live full-world comparison.",
+    "terrain_source_correction": "Terrain3DMaterial::uninitialize only clears its terrain pointer; destroy frees its material RID. Explicit uninitialize does not establish material RID destruction."
   }
 }

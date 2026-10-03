@@ -242,5 +242,12 @@
     "raw_log": "ci-world-material-negative-37088521645.log.gz",
     "raw_log_sha256": "8de7ea95653c77f95d87efe612aba88b6e23b9d8f1b8a428946768d972290fde",
     "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
+  },
+  "next_diagnostic": {
+    "source_commit": "be1c10b18f6191d950e1dc5648a12e9024b4f154",
+    "run": 37090546213,
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original spaceaccept/reload baseline versus retained actual CPU/GPU particle draw Meshes/Materials/process Material; actual geometry class histogram and particle owner paths. Diagnostic only.",
+    "status": "Verified native Run step live on same handle; no result yet"
   }
 }
