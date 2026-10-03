@@ -1,0 +1,13 @@
+diff --git a/data/config/water_world.json b/data/config/water_world.json
+index 49546d3455..bce9dc111f 100644
+--- a/data/config/water_world.json
++++ b/data/config/water_world.json
+@@ -1318,7 +1318,7 @@
+       "position": [
+         0.0,
+         1.929,
+-        162.0
++        162.5
+       ],
+       "requires_key": "realm_key_water"
+     },
