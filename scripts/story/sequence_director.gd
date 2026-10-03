@@ -51,6 +51,7 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
 const REGIONAL_HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
 const REGIONAL_CREDITS := preload("res://scripts/ui/regional_credits.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 ## D39 (OF31). The two trading screens a villager's `shop:` effect can open.
@@ -1823,15 +1824,28 @@ func _on_dialogue_completed(id: String) -> void:
 		should_open = REGIONAL_HOMECOMING.context_matches(game, expected_context) \
 			and REGIONAL_HOMECOMING.credits_pending(game)
 	if should_open:
-		call_deferred("_open_regional_credits", expected_character_id, expected_world)
+		call_deferred("_open_regional_credits", expected_character_id, expected_world, expected_context)
 
 
-func _open_regional_credits(expected_character_id: String, expected_world: Object) -> void:
+func _open_regional_credits(expected_character_id: String, expected_world: Object,
+		expected_context: Dictionary) -> void:
 	var game := get_node_or_null(^"/root/Game")
-	if game == null or game.get("world") != expected_world \
-			or REGIONAL_HOMECOMING.character_id(game) != expected_character_id \
-			or not REGIONAL_HOMECOMING.credits_pending(game):
-		return
+	# completed() runs before the final interact press has been released.
+	# Keep the credits handoff across that closing edge, without taking input
+	# from another conversation/modal or adopting a later speaking context.
+	while is_inside_tree():
+		if game == null or game.get("world") != expected_world \
+				or REGIONAL_HOMECOMING.character_id(game) != expected_character_id \
+				or _regional_presentation_context != expected_context \
+				or not REGIONAL_HOMECOMING.context_matches(game, expected_context) \
+				or not REGIONAL_HOMECOMING.credits_pending(game): return
+		var owner := INPUT_OWNER.current(get_tree())
+		if owner == null: break
+		if owner != _dialogue or _dialogue.call("is_open") == true \
+				or not owns_regional_presentation(owner, game) \
+				or not Input.is_action_pressed("interact"): return
+		await get_tree().physics_frame
+	if not is_inside_tree(): return
 	if _regional_credits == null or not is_instance_valid(_regional_credits):
 		_regional_credits = REGIONAL_CREDITS.new()
 		_regional_credits.name = "RegionalCredits"
