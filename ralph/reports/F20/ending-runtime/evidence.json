@@ -744,6 +744,6 @@
     "independent_source_review": "PASS f20_review: actual active SaveGame read-only slot serializer includes null slots/quantities; detached snapshots include companion UIDs; shape/type guards and explicit continuation/completion result fail closed if required phases abort. No producer or durable state mutation. Actual affected batch pending.",
     "change": "F20-only uses actualactiveSaveGame._inventory_to_array slot serializer anddeepcopy; includescurrentcompanionUIDs. Snapshotshape/type gates protectsolo/peerinspect andbefore/afterreload; explicitVariantcontinuationresult andcompleted sentinel failclosed onabortedrequiredphases. No production state mutation or criterion weakening.",
     "peer_identity_source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
-    "peer_identity_review": "PASS f20_review: returning guest and both final reloaded parties compare ordered companion UIDs as well as names; proof assertions only, unchanged deadlines and production path."
+    "peer_identity_review": "PASS f20_review: returning guest compares ordered companion UIDs; final guest disk reload compares both names and ordered UIDs; proof assertions only, unchanged deadlines and production path."
   }
 }
