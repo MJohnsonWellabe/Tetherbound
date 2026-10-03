@@ -11,6 +11,14 @@ func _init() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
+	if "--compatibility-offload" in OS.get_cmdline_user_args():
+		if DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "gl_compatibility":
+			quit(2)
+			return
+		RenderingServer.render_loop_enabled = false
+	print("F19 HEALING DUST BACKEND " + JSON.stringify({
+		"display": DisplayServer.get_name(), "renderer": RenderingServer.get_current_rendering_method(),
+		"continuous_drawing": RenderingServer.render_loop_enabled, "component_fixture": true}))
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(HEALING.CONFIG_PATH))
 	var spec: Dictionary = config.get("pylons", {}).get("dust", {})
 	if spec.is_empty() or not bool(spec.get("enabled", false)):

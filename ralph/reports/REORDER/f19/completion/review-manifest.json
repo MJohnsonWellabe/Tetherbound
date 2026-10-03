@@ -190,6 +190,15 @@
   "next_world_owner_diagnostic": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Original full-world baseline versus only late CPUParticles3D mesh surface Materials. No other material, Mesh, MultiMesh or Terrain resource retained. Read-only prompt positions/live state before and after choice dialogue; original assertions retained.",
+    "status": "Native Run confirmed live; no terminal result",
+    "source_commit": "5ed2e306334e0d4df35db3dd5c92e13a6cb6ae52",
+    "run": 37097475220,
+    "job": 111130248583
+  },
+  "next_compatibility_component": {
+    "script": "tests/probe_f19_healing_dust_material_lifetime.gd",
+    "args": "--compatibility-offload",
+    "scope": "Same actual dust component on world-failure backend: real X11 Compatibility with continuous drawing disabled. Headless negative did not cover GLES material_casts_shadows queries.",
     "status": "Prepared, not yet dispatched"
   }
 }

@@ -14,5 +14,6 @@
   "result": "Negative isolated reproduction; does not certify full-world batched teardown. No dust product correction justified.",
   "acceptance": false,
   "raw_log": "ci-healing-dust-negative-37097131914.log.gz",
-  "raw_log_sha256": "ea3dc0dba76a28a6378fc1c31f8a1a77e2834a2c056ff6c50c94b082716275ea"
+  "raw_log_sha256": "ea3dc0dba76a28a6378fc1c31f8a1a77e2834a2c056ff6c50c94b082716275ea",
+  "backend": "Headless/Dummy; negative cannot exclude Compatibility material_casts_shadows lifetime failure"
 }
