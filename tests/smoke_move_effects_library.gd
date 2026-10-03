@@ -48,8 +48,8 @@ func _run() -> void:
 		if arg == "--medium": _medium = true
 		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
 		if arg.begins_with("--stage="): _stage = arg.trim_prefix("--stage=")
-		# Affected-subset reruns: --archetypes=a,b and --ranks=1,3 narrow the
-		# mastery batch only; a full mastery run passes neither.
+		# Affected-subset reruns: --archetypes=a,b narrows the mastery batch,
+		# --ranks=1,3 narrows mastery and identities; full runs pass neither.
 		if arg.begins_with("--archetypes="): _archetype_filter = Array(arg.trim_prefix("--archetypes=").split(","))
 		if arg.begins_with("--ranks="):
 			for rank: String in arg.trim_prefix("--ranks=").split(","): _rank_filter.append(int(rank))
@@ -154,6 +154,7 @@ func _run() -> void:
 	if _batch == "identities":
 		for case: Dictionary in _scenarios.identities:
 			for rank: int in _scenarios.ranks:
+				if not _rank_filter.is_empty() and rank not in _rank_filter: continue
 				if _identity.is_empty() or _identity == "%s:r%d" % [str(case.id), rank]:
 					await _exercise(case, rank, 1, true)
 	else:
