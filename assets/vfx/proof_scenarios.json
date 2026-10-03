@@ -614,5 +614,6 @@
       }
     }
   },
-  "capture_wall_watchdog_s": 120.0
+  "capture_wall_watchdog_s": 5400.0,
+  "capture_wall_watchdog_note": "Hang safety net only. The authored lifetime allowance runs on the presentation clock; the full Meadows world renders at ~8 s per frame under llvmpipe."
 }
