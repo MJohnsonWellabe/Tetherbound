@@ -434,7 +434,10 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var target_name := str(args.get("target", ""))
 	if scene == null or target_name not in ["master_t1", "master_t1_chest", "warden_aldis", "forge", "kitchen", "altar", "home_arch", "tidewake_arch", "meadows_pedestal"]:
 		return _result(false, "Unknown authored mechanics approach")
+	var game := tree.root.get_node_or_null(^"Game")
 	var target: Node3D
+	var altar_interaction: Node3D
+	var altar_binding := {}
 	for candidate: Node in scene.find_children("*", "Node3D", true, false):
 		if target_name.begins_with("master_t1") and candidate.get_script() == preload("res://scripts/masters/master_site.gd") \
 			and candidate.get("master_id") == "master_t1" and candidate.get("_mounted") == true:
@@ -443,9 +446,37 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 		elif target_name == "warden_aldis" and candidate.get_script() == preload("res://scripts/world/stronghold_climax.gd"):
 			if target != null: return _result(false, "Ambiguous actual Warden site")
 			target = candidate.call("warden_body") as Node3D
-		elif target_name in ["forge", "kitchen", "altar"] and candidate.get_script() == preload("res://scripts/build/station_piece.gd") \
+		elif target_name in ["forge", "kitchen"] and candidate.get_script() == preload("res://scripts/build/station_piece.gd") \
 			and candidate.get("_id") == target_name and candidate.get("_ghost") == false and candidate.get("_registered") == true:
 			if target != null: return _result(false, "Ambiguous actual registered station")
+			target = candidate as Node3D
+		elif target_name == "altar" and candidate.get_script() == preload("res://scripts/build/build_piece.gd") \
+			and candidate.get_meta("building_id", "") == "altar":
+			if target != null: return _result(false, "Ambiguous actual paid Altar")
+			var placer: Node
+			for node: Node in tree.get_nodes_in_group("build_placer"):
+				if scene.is_ancestor_of(node) and node.get_script() == preload("res://scripts/build/build_placer.gd"):
+					if placer != null: return _result(false, "Ambiguous actual Altar placer")
+					placer = node
+			if game == null or placer == null: return _result(false, "Actual owning Altar placer unavailable")
+			var key := "altar:meadows:" + str(candidate.get_meta("building_uid", ""))
+			var resolved: Dictionary = placer.call("resolve_altar_station", game, key, candidate)
+			if resolved.get("ok") != true: return _result(false, "Actual paid Altar node does not resolve", resolved)
+			var world: RefCounted = game.get("world")
+			var paid := WORLD_STATE.altar_paid_provenance(world.get("reward_deliveries"),
+				str(world.get("reward_delivery_namespace")), str(world.get("world_id")), resolved.record)
+			if paid.is_empty(): return _result(false, "Actual accepted paid Altar provenance unavailable")
+			altar_interaction = candidate.get_node_or_null(^"AltarInteraction") as Node3D
+			if altar_interaction == null or altar_interaction.get_script() != preload("res://scripts/ui/altar_station_interaction.gd") \
+				or altar_interaction.call("_live_binding") != true:
+				return _result(false, "Actual paid Altar interaction is not mounted")
+			var prompt: Node3D = altar_interaction.get("_prompt") as Node3D
+			if not is_instance_valid(prompt) or prompt.get_parent() != altar_interaction \
+				or prompt.get_script() != preload("res://scripts/world/interactable.gd") or prompt.get("enabled") != true:
+				return _result(false, "Actual mounted Altar prompt unavailable")
+			altar_binding = {"building_uid": candidate.get_meta("building_uid"), "station_key": key,
+				"record": resolved.record, "paid_delivery_id": paid.delivery_id,
+				"interaction_path": str(altar_interaction.get_path()), "prompt_path": str(prompt.get_path())}
 			target = candidate as Node3D
 		elif target_name in ["home_arch", "tidewake_arch", "meadows_pedestal"] \
 			and candidate.get_script() == preload("res://scripts/world/crossing_hall.gd"):
@@ -454,7 +485,6 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 			if target_name == "meadows_pedestal": slot = candidate.get("_pedestals").get("meadows") as Node3D
 			else: slot = candidate.call("arch", "home" if target_name == "home_arch" else "tidewake") as Node3D
 			target = slot.get_node_or_null(^"Approach") as Node3D if slot != null else null
-	var game := tree.root.get_node_or_null(^"Game")
 	var player := (tree.get("_probe") as Object).call("player") as CharacterBody3D
 	var director := scene.get_node_or_null(^"EncounterDirector")
 	if not is_instance_valid(target) or game == null or player == null or director == null:
@@ -486,6 +516,10 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"ally_before": [ally_before.x, ally_before.y, ally_before.z], "ally_requested": [ally_requested.x, ally_requested.y, ally_requested.z],
 		"ally_after": [actual_ally.x, actual_ally.y, actual_ally.z], "ally_placement_accepted": ally_placed,
 		"fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
+	if target_name == "altar":
+		data["altar_binding"] = altar_binding
+		if not is_instance_valid(altar_interaction) or altar_interaction.call("_live_binding") != true:
+			return _result(false, "Actual paid Altar interaction changed during approach", data)
 	var output := OS.get_environment("TB_PROOF_OUT")
 	if output.is_empty(): return _result(false, "No detached fixture approach observation root", data)
 	var folder := output.path_join("f48-fixture-approaches")

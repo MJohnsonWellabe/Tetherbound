@@ -297,8 +297,8 @@ def generate(sources: list[Path], layout_path: Path, output: Path, route_pack: P
               "craft_prepare": prepare(layout, "forge"),
               "craft_reopen": prepare(layout, "forge"),
               "craft_commit": [input_step("f48_button", text="Refine Rootiron Ingot"), input_step("wait", frames=150)],
-              "essence_spend_prepare": prepare(layout, "altar") + [input_step("f48_button", text="Creature training"), input_step("wait", frames=45)],
-              "essence_spend_reopen": prepare(layout, "altar") + [input_step("f48_button", text="Creature training"), input_step("wait", frames=45)]}
+              "essence_spend_prepare": prepare(layout, "altar"),
+              "essence_spend_reopen": prepare(layout, "altar")}
     outcomes = {}
     profile = {"provenance": "DISCLOSED initial mechanics fixture: actual retained v28 characters/owned cards; "
                "added initial material stock, paid station records and starting pose. No earned campaign claim. "

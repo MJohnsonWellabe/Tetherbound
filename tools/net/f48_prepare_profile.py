@@ -27,7 +27,9 @@ def produce(source: Path, output: Path):
     routes=profile["routes"]
     routes["craft_prepare"]=contact("forge")
     routes["craft_reopen"]=copy.deepcopy(routes["craft_prepare"])
-    routes["essence_spend_prepare"]=contact("altar")+[button("Creature training"),wait()]
+    # The original paid BuildPiece opens AltarPanel directly through its
+    # mounted AltarInteraction; it does not open the generic CraftPanel.
+    routes["essence_spend_prepare"]=contact("altar")
     routes["essence_spend_reopen"]=copy.deepcopy(routes["essence_spend_prepare"])
     for peer in range(2):
         files=list(Path(profile["saves"][peer]).rglob("character.json")); assert len(files)==1
