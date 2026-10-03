@@ -7552,6 +7552,143 @@
         "remote_fields": 5,
         "transition_snapshot_present": true
       }
+    },
+    {
+      "id": 37109521121,
+      "display_title": "render f18-waveform-export-r1 @ 3a744a364f1a11273dd70321f6e25b4557083366",
+      "head_branch": "tb/integration",
+      "head_sha": "46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37109521121",
+      "checkout": "3a744a364f1a11273dd70321f6e25b4557083366",
+      "label": "f18-waveform-export-r1",
+      "mode": "headless",
+      "script": "tests/smoke_f18_waveform_export.gd",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Isolated directly invoked production chime/passive export component; exactPCM/nonmutation/cache/durable provenance only. No actual key use/player/input/raise/travel/earned/listening/device/mixedbus audio acceptance.",
+      "artifact_id": 11269465830,
+      "raw_artifact": "waveform-export-r1-remote.zip",
+      "bytes": 81078,
+      "sha256": "54cee565999ca1014fbf04b2632491f00f4cbe0f6e71f1ba69d4296b7094d776",
+      "native_exit_code": "0",
+      "elapsed_seconds": 4,
+      "logs": {
+        "run.log": {
+          "errors": {},
+          "warnings": {}
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {}
+        }
+      },
+      "component_receipt": {
+        "audio_driver": "Dummy",
+        "failures": [],
+        "fixture": "isolated remote-only actual HomeKey presenter; private production chime invoked directly; no actual key use/input/raise/travel/earned/device/listening acceptance",
+        "output": "res://ralph/reports/HUB/f18/native/waveform_component_2233_3335968",
+        "pcm_bytes": 88200,
+        "waveform": {
+          "audio_node": {
+            "class": "AudioStreamPlayer",
+            "instance_id": 224311380033,
+            "path": "/root/@Node@24/@AudioStreamPlayer@25",
+            "present": true,
+            "script": ""
+          },
+          "bus": "SFX",
+          "device_playback_proven": false,
+          "format": 1,
+          "listened": false,
+          "mix_rate": 22050,
+          "observed_monotonic_msec": 3350,
+          "observed_physics_frame": 8,
+          "observed_process_frame": 0,
+          "playback_seconds": 0.00580498855561018,
+          "playing_at_observation": true,
+          "scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+          "source_bytes": 88200,
+          "source_path": "",
+          "status": "exported_runtime_waveform",
+          "stereo": false,
+          "stream_instance": -9223371812560172992,
+          "stream_seconds": 2.0,
+          "volume_db": -12.0,
+          "wav": "home_key_stream_-9223371812560172992.wav",
+          "write_error": 0
+        },
+        "waveform_file_sha256": "e489053fd821e1e6232336ce7b8a02aefe236fc28fb21f515551b2dcc91d8c74"
+      },
+      "manifest": {
+        "acceptance_verdict": "not assessed; pixels require visual review, audio requires listening",
+        "audio_driver": "Dummy",
+        "capture_source": "actual root viewport texture after frame_post_draw",
+        "display_server": "headless",
+        "episodes": [],
+        "errors": [],
+        "finished_monotonic_msec": 3351,
+        "headless_reason": "Headless has no native presentation framebuffer.",
+        "native_draws_observed": 0,
+        "native_framebuffer_available": false,
+        "pid": 2233,
+        "samples": [],
+        "schema_version": 1,
+        "started_monotonic_msec": 3336,
+        "stop_reason": "isolated production chime/export component finished",
+        "waveform_scope": "Actual observed Home Key stream contents only; no device playback or mixed-bus recording",
+        "waveforms": [
+          {
+            "audio_node": {
+              "class": "AudioStreamPlayer",
+              "instance_id": 224311380033,
+              "path": "/root/@Node@24/@AudioStreamPlayer@25",
+              "present": true,
+              "script": ""
+            },
+            "bus": "SFX",
+            "device_playback_proven": false,
+            "format": 1,
+            "listened": false,
+            "mix_rate": 22050,
+            "observed_monotonic_msec": 3350,
+            "observed_physics_frame": 8,
+            "observed_process_frame": 0,
+            "playback_seconds": 0.00580498855561018,
+            "playing_at_observation": true,
+            "scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+            "source_bytes": 88200,
+            "source_path": "",
+            "status": "exported_runtime_waveform",
+            "stereo": false,
+            "stream_instance": -9223371812560172992,
+            "stream_seconds": 2.0,
+            "volume_db": -12.0,
+            "wav": "home_key_stream_-9223371812560172992.wav",
+            "write_error": 0
+          }
+        ]
+      },
+      "waveform_analysis": {
+        "file": "production-chime-component-r1.wav",
+        "bytes": 88244,
+        "sha256": "e489053fd821e1e6232336ce7b8a02aefe236fc28fb21f515551b2dcc91d8c74",
+        "frames": 44100,
+        "mix_rate": 22050,
+        "channels": 1,
+        "sample_width": 2,
+        "seconds": 2.0,
+        "pcm_bytes": 88200,
+        "pcm_sha256": "89cb437eb36b798dd763405832d50d356cf3b19a9eba521999c2d203246f234f",
+        "peak_signed_pcm": 3931,
+        "rms_signed_pcm": 1965.614021102477,
+        "saturated_samples": 0,
+        "listened": false,
+        "device_playback_proven": false
+      },
+      "independent_native_review": "APPROVE exactoriginalZIP/exit/complete componentreceipt/durable manifest equality/WAV+PCMhashes/signed resource identity by GPT-6.1 Sol f18_sol_review; no errors/warnings.",
+      "outcome": "PASS isolated production chime/passive export exactPCM/nonmutation/cache/provenance/durable manifest. No check-count field emitted; no count claim. Actualkeyuse/raise/input/earned/travel/listening/device/mixedaudio acceptance UNPROVEN."
     }
   ],
   "acceptance": {
@@ -7572,24 +7709,7 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": [
-    {
-      "id": 37109521121,
-      "display_title": "render f18-waveform-export-r1 @ 3a744a364f1a11273dd70321f6e25b4557083366",
-      "head_branch": "tb/integration",
-      "head_sha": "46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
-      "status": "in_progress",
-      "conclusion": null,
-      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37109521121",
-      "checkout": "3a744a364f1a11273dd70321f6e25b4557083366",
-      "label": "f18-waveform-export-r1",
-      "mode": "headless",
-      "script": "tests/smoke_f18_waveform_export.gd",
-      "resolution": "1280x720",
-      "timeout_minutes": "15",
-      "scope": "Isolated directly invoked production chime/passive export component; exactPCM/nonmutation/cache/durable provenance only. No actual key use/player/input/raise/travel/earned/listening/device/mixedbus audio acceptance."
-    }
-  ],
+  "pending_dispatches": [],
   "coordinator_baseline_dependency": {
     "status": "WAIT reviewed main-green matched dependency group per explicit coordinator hold",
     "last_thread_status": "systemError/lastturnfailed when read; followup sent",
