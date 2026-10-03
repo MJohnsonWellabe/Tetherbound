@@ -30,7 +30,8 @@ Saved fixture board remains empty at bounty_day0/day1; reviewed `50d9796995` adv
 Actual solo-r15 (37096201917) PASS63checks0/zeroengine-script errors: production-generated three bounties
 and clock receipt survive reset/reload; ordinary board opens/live3rows/Bclose PASS. Strict review also requires actual rematch admission beyond
 enabled prompts; F20-only `e7826924b3`/lesson-wrapper `c18441cab5` adds normal X/canonical endgame fight checks,
-independent source PASS; affected solo-r16 (37096904861) queued. Isolated proof quits during trainer fight; no win/reward/recovery claim, #3 OPEN. Earlier r10 misleading green with
+independent source PASS; Actual solo-r16 (37096904861) FAIL65checks2/zeroerrors: actualBryn groundedactionable gate holds,
+but normal X expectedprovideractivation is missing; activated/null/owner/fight trace under review. Isolated proof quits during trainer fight; no win/reward/recovery claim, #3 OPEN. Earlier r10 misleading green with
 three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
 Two-peer-r4 saves host homecoming then times out its command. Net-r5 on29bc cleanly passes host ending,
 guarded credits1ACK and completed repeat; navigation takes143.303s and11ordinarytaps38.138s. The inherited300s
@@ -39,7 +40,8 @@ total-proof allowance1500s `b066552af9` passes independent source review; actual
 Host disk has guest portal_arrival pending, guest portable disk lacks the new receipt; fresh668ms heartbeat,
 no globalfatal or engine-script errors. Owner apply/save/ACK remains unproved; reviewedF20-only raw observer `e39a361e7c` has
 actualnet-r7 (37093999890) hits hostGrandpa205s deadline beforeguestHome; nativecreditsopens duringteardown,
-coordinatorcommand notPASS. Guest-only net-r8 (37094965898) refuses HomeKey begin: Not during a fight; ownerplan trace unreached.
+coordinatorcommand notPASS. Guest-only net-r8 (37094965898) reports HomeKey begin refusal: Not during a fight; ownerplan trace unreached.
+Reviewed `7fefaea2ed` reports refused begin promptly; actual full replay awaits coordinator arrival dependency.
 Reviewed `03829bfa3f` separates normal Grandpa walk from unchanged reader in full peer proof; affected replay pending; per-command205s/readiness180s/productionACK8s remain unchanged.
 #4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
 isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
