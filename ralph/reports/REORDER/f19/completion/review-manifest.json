@@ -140,7 +140,8 @@
       "ci-stormheart-37074151200.log:44 assertions",
       "stormheart-capacity-r2.log:89 assertions",
       "veridian-complete-clean.json:all six actual native choice/save/reload cases,1872s/0failures/0engine+script errors; original guards unchanged",
-      "veridian-harvest-fixed-clean.json:all six original native cases,1455s/0engine+script+leak errors on6809 cleanup source; original guards intact"
+      "veridian-harvest-fixed-clean.json:all six original native cases,1455s/0engine+script+leak errors on6809 cleanup source; original guards intact",
+      "solmane-harvest-fixed-clean.json:all six original native cases,2597s/0engine+script+leak errors on6809 cleanup source; original guards intact"
     ],
     "F19#5": [
       "order-consumers-corrected.log:recommendations visible; host policy accepts level1 with earned unlock",
@@ -149,7 +150,6 @@
     ]
   },
   "open_acceptance": [
-    "Solmane all six original gameplay cases pass on c510, but four cold-transition GLES errors remain (37101816593/artifact11267041523); solmane-complete-rejected.json. Veridian full six-case witness is clean (37101815341). Original guards remain unchanged.",
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
     "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
   ],
@@ -430,7 +430,7 @@
     "acceptance": false,
     "full_choice_witnesses": {
       "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
-      "status": "Live original full choice witnesses; terminal raw logs required",
+      "status": "Both complete original choice witnesses clean on6809; Veridian1455s/Solmane2597s/0errors",
       "veridian": {
         "kind": "f19_actual_veridian_full_harvest_fixed_choice_witness",
         "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
@@ -463,8 +463,34 @@
         "script": "tests/smoke_f19_veridian_functional.gd"
       },
       "solmane": {
+        "kind": "f19_actual_solmane_full_harvest_fixed_choice_witness",
+        "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
         "run": 37108381309,
         "job": 111161263274,
+        "artifact": 11269492847,
+        "process_exit": 0,
+        "elapsed_seconds": 2597,
+        "engine_errors": 0,
+        "script_errors": 0,
+        "leak_warnings": [],
+        "failures": [],
+        "cases": [
+          "space-accept",
+          "space-refuse",
+          "capacity-refuse-at-prompt",
+          "capacity-accept-then-let-newcomer-go",
+          "capacity-accept-release-one",
+          "save-while-choice-open"
+        ],
+        "scope": "Entire original six-case native choice/save/reload driver on the Harvest cleanup source; X11 Compatibility/drawingfalse. Original staged victory/party/pose fixtures and original assertions/prompt/cap guards retained. No diagnostic resource retention, earned play, ENet or visual/device credit.",
+        "original_prompt_guards_passed": true,
+        "original_party_cap_guard_passed": true,
+        "choice_open_reload_marker": true,
+        "accepted_clean_choice_witness": true,
+        "earned_campaign": false,
+        "raw_log": "ci-solmane-full-harvest-fixed-37108381309.log.gz",
+        "raw_log_sha256": "5b26808496c2f108417c6828faf9b690c014fee72e3d640424d0eaaa9ddab766",
+        "status": "Terminal clean PASS; all six original cases,2597s/0errors",
         "script": "tests/smoke_f19_solmane_functional.gd"
       },
       "scope": "Entire original six-case choice/save/reload matrices; no resource retention, original guards unchanged"
