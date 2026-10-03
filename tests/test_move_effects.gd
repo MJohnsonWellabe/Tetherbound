@@ -88,3 +88,43 @@ func test_light_cap_is_global_idempotent_and_reclaims_existing_lease() -> void:
 	for token in tokens: BUDGET.release(token)
 	assert_eq(BUDGET.lights_used(), 0)
 	for i in 5: assert_eq(BUDGET.used("light-unit-%d" % i), 0)
+
+## Authored launch/contact/aftermath stages are presentation-only meshes.
+## Every one must name a style the ground-mark shader draws, stay within
+## its metre caps and fixed per-effect mesh budget, and end in finite time
+## so the effect (and its particle lease) is always released.
+func test_authored_stages_are_bounded_and_drawable() -> void:
+	const EFFECT := preload("res://scripts/vfx/move_effect.gd")
+	var styles := ["scorch", "dust", "shockwave", "burn"]
+	var authored := 0
+	for id: String in LIBRARY.config().archetypes:
+		var row := LIBRARY.resolve({"archetype": id}, 5)
+		var launch: Dictionary = row.get("launch", {})
+		var stages: Dictionary = (row.impact as Dictionary).get("stages", {})
+		if launch.is_empty() and stages.is_empty(): continue
+		authored += 1
+		var meshes := 0
+		var parts: Array[Dictionary] = []
+		for key: String in ["flash", "ground"]:
+			if launch.get(key) is Dictionary: parts.append(launch[key]); meshes += 1
+		for key: String in ["flash", "shockwave", "mark"]:
+			if stages.get(key) is Dictionary: parts.append(stages[key]); meshes += 1
+		assert_true(meshes <= EFFECT.MAX_STAGE_MESHES, id + " stage meshes within the fixed cap")
+		for part: Dictionary in parts:
+			var duration := float(part.get("duration", 0.0))
+			assert_true(duration > 0.0 and duration <= 2.5, id + " stage ends in bounded time")
+			assert_true(float(part.get("min_m", 0.0)) <= float(part.get("max_m", 1.0)), id + " stage metre caps ordered")
+			assert_true(float(part.get("max_m", 1.0)) <= 4.0, id + " stage never covers a whole arena")
+			if part.has("style"): assert_true(str(part.style) in styles, id + " ground style " + str(part.style) + " is drawable")
+		var linger := float(stages.get("mote_linger_seconds", 0.0))
+		assert_true(linger >= 0.0 and linger <= 1.5, id + " settled debris lingers briefly")
+	assert_true(authored >= 20, "most archetypes author a launch or impact stage")
+
+## Stages never change gameplay timing: arrival and travel stay frozen at
+## every rank whether or not an archetype authors stages.
+func test_stages_do_not_change_arrival_or_travel() -> void:
+	for id: String in LIBRARY.config().archetypes:
+		var base := LIBRARY.resolve({"archetype": id}, 1)
+		var grown := LIBRARY.resolve({"archetype": id}, 5)
+		assert_eq(base.arrival, grown.arrival, id)
+		assert_almost_eq(LIBRARY.travel_seconds(Vector3.ZERO, Vector3.ONE * 4.0, {"archetype": id}, {"travel_seconds": 0.31, "mastery_rank": 5}), 0.31)
