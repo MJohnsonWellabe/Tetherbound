@@ -349,3 +349,36 @@ with the projectile and drop at the target, brighter lightning with a longer
 charge, softer fireball edge and trail, and a fireball burst that holds its
 body (`fade_hold_power`). One real-world Fireball r3 case ran exit 0 with all
 five phases. No F25 criterion is closed by any of this.
+
+## R28 real Meadows world batch and blind review
+
+Source dbc78477b on the `world` stage (shipped `meadows_playground.tscn`,
+read-only, practice-trainer clearing), FPS 20, one Godot process (setsid):
+exit 0, 12 identity cases, 0 failures, light lifecycle 18/18, resident
+trainer relocated behind the attacker. `world-r28/single-process-check.txt`
+ties all 60 frames to that one process; an earlier attempt was discarded
+after a liveness check missed a still-running batch writing the same folder.
+Evidence: `world-r28/` (results, raw log, runner, SHA-256 of originals,
+judged strips, verbatim `independent-review.txt`).
+
+Fresh code-blind review (shuffled neutral sequences, references only):
+all 12 identities named correctly (fire orb from the attacker; bolt from the
+sky; one boulder; a pebble volley). Strength order matched ranks 1<3<5 for
+fire, lightning and pebbles; inverted for the boulder (rank 1 judged
+strongest, ranks 3/5 barely separable). Full craft FAIL for every group:
+no visible target reaction, no glow or cast light, low particle energy, a
+fire smoke card with a straight edge and a marker-like ring, a washed-out
+bolt with an offset ground mark and no link from the attacker, banded
+flat-faceted boulder and chunks that swallow the target, and pebbles that
+stack vertically and read as dirt clods. Scene: belongs to the key-art world
+and the same genre, at a lower production tier attributed mostly to the
+effects. The reviewer's loader rate-limited; all strips and about 25
+individual frames were seen (list in the review).
+
+Diagnosis of the boulder inversion: impact chunk growth hit its cap at rank
+1, so contact/impact were identical at every rank while only the flying body
+grew. db519311d: chunks scale with rank and scatter outward, blended stone
+normals, flatter pebble fan and size floor, fire glow halo without the smoke
+card or ring, lightning sky call/softer splash/mark under the strike/glow,
+and the harness makes combat's own landed-hit call (`combat_vfx.hit`) at
+arrival. Not yet rendered. F25 criteria remain open; library OFF.
