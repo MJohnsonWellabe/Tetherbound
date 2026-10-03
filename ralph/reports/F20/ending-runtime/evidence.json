@@ -843,6 +843,97 @@
         },
         "limits": "Disclosedpost-finale/current fixtures/headless/harnessinput. No#4closure or guestcause measured. Changeapproach to scoped2peer guestHome-onlydiagnostic onoriginalbudget rather than repeatinglonghostdialogue justtoreachguest. Full#4 proofstillrequired.",
         "independent_review": "PASS f20_review exactZIP/coordinator/host/guest/native/user hashes/zeroerrors/fatalempty/205s commandtimeout audit. Hostnative11tap/prose/creditsopen duringforcedteardown do not constitute acceptedtalkverdict/Skip/ACK; guestHomeunreached. Peer/coordinator ticks notcomparable; #4OPEN."
+      },
+      {
+        "run": 37094641926,
+        "job": 111121964490,
+        "artifact": 11264480369,
+        "source": "31003a424b778ec869b8e80a6ea77e54fb34401b",
+        "workflow_conclusion": "failure",
+        "verdict": "FAIL",
+        "native_bytes": 73236,
+        "native_sha256": "cf974591fa768e781eb6543b2c94ffd488cb911c829a635224915048de45f5b0",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "artifact_bytes": 670749,
+        "artifact_sha256": "43d802b979c4f55d3efc1255db45902f8214af31c55a4d3132670b6187d06309",
+        "logs": [
+          "f20-solo-r14-native.log.gz",
+          "f20-solo-r14-workflow.log.gz",
+          "f20-solo-r14-artifact.zip"
+        ],
+        "passed": "Actual ending, truthful prose, guarded Skip1ACK, real save/reset/reload and exact UID/name/inventory/world/receipt retention, repeat/no replay, movement/journal/enabled rematches/road walk PASS.",
+        "failure": "Live ready/three-active-rows guard FAIL, completion sentinel FAIL; B close unreached. Exact screen input now PASS after idle-edge correction.",
+        "limits": "Post-finale/current fixture, headless and harness input disclosed. Disk personal board remains initial anchor_world empty/slots[]; world day1/bounty_day0. Source requires bounty_day>=1; fixture has not advanced first host morning. No live view printed yet. #3 OPEN.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/peer/user/disk failed-scope audit. r14 60checks2fail includes empty saved board, screenopenPASS/rowsFAIL; r8 explicit host combat refusal, no detachedownercomparison or END sentinel, savedworld deliveries empty. All0engine/script errors, original warnings retained. No full F20 closure.",
+        "user_log": {
+          "bytes": 72982,
+          "sha256": "3583cf455591e2e5fb26d3b3d7fcee81e2adfa7ba1b80682393a959ea3f4c4ff"
+        }
+      },
+      {
+        "run": 37094965898,
+        "job": 111122919883,
+        "artifact": 11262829807,
+        "source": "81318b919d28c099c511b2e8730feed18045b524",
+        "workflow_conclusion": "failure",
+        "verdict": "FAIL",
+        "native_bytes": 1908,
+        "native_sha256": "f42d78e9fbfc8f4ed82ecbaf2a4dc205f2be5628ee611b8a35ad647587dcd757",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "artifact_bytes": 145521,
+        "artifact_sha256": "92bd18e46490e6939e71cbf602061856534bd8d50a33478281dcdcca0ae11aca",
+        "logs": [
+          "f20-net-r8-NET_RUN.json",
+          "f20-net-r8-native.log.gz",
+          "f20-net-r8-workflow.log.gz",
+          "f20-net-r8-peer-0.log.gz",
+          "f20-net-r8-peer-1.log.gz",
+          "f20-net-r8-artifact.zip"
+        ],
+        "passed": "Two real isolated ENet peers host/join/registry PASS; readonly diagnostic compiles; all native/peer/user logs zero SCRIPT/engine errors.",
+        "failure": "Guest Home Key begin authority refusal reason Not during a fight.; no pending arrival/owner_plan comparison reached. Individual205s command noverdict, fatalempty; full proof budget not exhausted.",
+        "limits": "Guest-only diagnostic explicitly NOT#4 acceptance. Earlier full net6 guest pendingarrival remains unresolved; cannot infer ownerapply/save/ACK cause from this earlier combat refusal. No host ending before guest request in scoped run. #4 OPEN.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/peer/user/disk failed-scope audit. r14 60checks2fail includes empty saved board, screenopenPASS/rowsFAIL; r8 explicit host combat refusal, no detachedownercomparison or END sentinel, savedworld deliveries empty. All0engine/script errors, original warnings retained. No full F20 closure.",
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 11439,
+            "sha256": "52140c1c55ba7f50d06b15c253f1f414ac82f7fa312c717b7c49ff3b6899045b"
+          },
+          "peer-1.log": {
+            "bytes": 12881,
+            "sha256": "f4dfe010a6eb721da3507ad5de6b3a5fcaf6d256ecf8e093759a2b436aeb6034"
+          }
+        },
+        "command_timeout_observation": {
+          "action": "f20_return",
+          "coordinator_deadline_ms": 325130.0,
+          "coordinator_observed_ms": 325135,
+          "heartbeat": {
+            "context": "world",
+            "frame": 571.0,
+            "physics_frame": 4320.0,
+            "pos": [
+              0.0,
+              0.900942385196686,
+              0.0
+            ],
+            "session_peers": [
+              1.0,
+              1288552260.0
+            ],
+            "state_hash": 2182759257.0,
+            "t": 319.941,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 960.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 324175.0,
+          "id": "s4",
+          "phase": "timeout_before_finish"
+        }
       }
     ],
     "limitations": [
@@ -994,7 +1085,7 @@
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
       "indirect_only": "Synthetic62 PASS reused; actualsolo-r11 now proves cleanreload/safecompletedworld partial but bounty availability remainsunproved.",
-      "latest_runtime": "solo-r13 realreload/retention/repeat/safemovement/unfinishedjournal/enabledrematches/roadwalk PASS; bountyexactproviderFAIL, playergrounded/LOStrue/actionableboard butstoredHaldaGreetwins. Actualbountyscreen/live3rows/closeunproved. #3OPEN."
+      "latest_runtime": "Solo-r14 reload, exact retention, completed repeat, movement, journal, enabled rematches and normal bounty screen open PASS. Live ready/three active rows FAIL; B close unproved, #3 OPEN. Saved fixture bounty_day0/initial empty board; first-host-morning setup under investigation."
     },
     "4": {
       "verdict": "OPEN",
@@ -1045,28 +1136,7 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {
-    "solo_r14": {
-      "run": 37094641926,
-      "source": "31003a424b778ec869b8e80a6ea77e54fb34401b",
-      "script": "tests/smoke_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094641926",
-      "status": "in progress; affected ordinaryidlepublication proof, noresultclaimed",
-      "job": 111121964490
-    },
-    "net_r8": {
-      "run": 37094965898,
-      "job": 111122919883,
-      "source": "81318b919d28c099c511b2e8730feed18045b524",
-      "script": "tests/smoke_net_f20_home_diagnostic.gd",
-      "mode": "headless",
-      "timeout_minutes": 15,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094965898",
-      "status": "in progress; bounded guestHome-only two-real-peer diagnostic with detachedlossless ownerplan/current/before/after observer, NOT#4acceptance; noresultclaimed"
-    }
-  },
+  "remote_pending": {},
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1143,7 +1213,7 @@
     "source": "cd7f80204aaf6397971aabc0641faa2b654f641c",
     "source_delta": "e34c64f009 adds15 F20-only lines; cd7 replaces decimalJSON with originallosslessSaveDocumentcodec+ENDmarker.",
     "independent_review": "PASS f20_review exacte34+cd7. Pure portableprojection/owner_plan/schema stage and losslesscodec operate on detachedrecords; no apply/save/ACK/input/deadline mutations. PlayerState.save_data may initialize absent map caches generally; exact F20 path has two prior production saves that initialize allmaps, so observer is read-only on this already-saved fixture path. Once per original nonempty local pending receipt.",
-    "runtime": "Affected net-r8 live37094965898/job111122919883 exact81318 includes reviewedcd7; guestHome-onlydiagnosticNOT#4, no pureplan/apply/saveBOOL result yet.",
+    "runtime": "Actual net-r8 compiled but original guestHome refused before arrival pending; comparison unexercised. Earlier net6 persisted care differences remain observations only.",
     "disk_lead": "Exact net-r6 PERSISTED guest portable projection differs from hostrow.before only by party0..4 happiness/nourishment (10fields). Disk is not livecurrent, so this is a lead, not an ownerplan/cause verdict.",
     "derived_disk_diff": "f20-net-r6-disk-projection-diff.json"
   },
@@ -1152,17 +1222,30 @@
     "change": "Preserveoriginal8physicssettling frames, thenawait2ordinaryprocessframeedges before originalrecovery/floor/exactprovider/actionable/inputactivation checks. One completedidle callbackpass occursbetweenedges. No_recompute calls/route/tolerance/radius/priority/input/budget/productchange.",
     "reason": "r13 currentboardoffer priority0/distance2.2524 nearer than storedHaldaGreetpriority0/distance2.2921. Sourcearbiter publishes on_process while oldproofsettles physics only; stalepublication is supportedinference.",
     "independent_review": "PASS f20_review exact31003a424b sixlines. Twoordinaryprocess edges afteroriginal8physics includeonecompletedidle pass; originalbudget/tolerance/recovery/floor/exactprovider/actionable/X+activated gates unchanged. No productionwrite or_recompute call.",
-    "runtime": "Affectedsolo-r14 live37094641926 exact31003; noresultclaimed."
+    "runtime": "Actual solo-r14 normal input opens production bounty screen PASS; live ready/three rows FAIL, #3 OPEN."
   },
   "scoped_guest_home_diagnostic": {
     "source": "81318b919d28c099c511b2e8730feed18045b524",
     "script": "tests/smoke_net_f20_home_diagnostic.gd",
     "independent_review": "PASS f20_review exact18lines/dynamic_initialize/async/inheritedbudgets/spawn/isolation/cleanup. Two actualENetpeers host/join/registry thenoriginalguestf20_return only; explicit NOT#4acceptance and fullproof retained.",
-    "runtime": "AffectedguestHome-onlynet-r8 live37094965898/job111122919883 exact81318. Noresultclaimed; full#4acceptance stillrequired.",
+    "runtime": "Actual net-r8 FAIL guest HomeKey begin authority Not during a fight.; no pending arrival or ownerplan comparison reached. Not #4 acceptance.",
     "reason": "Actualnet-r7 host205s command noverdict preventsguestobserver. Narrowto originalguestHome path to measure ownerplan/current/before/after, no timeoutincrease or sharedSession edit."
   },
   "resource_direction": {
     "local": "AbsolutehumanValheim localGodot/render/import/GPU pause remains; norelease inferred.",
-    "conditional_usage": "Coordinator relays explicit owner direction to save/push allsessions andwinddown at<=10%remaining in any reportedcorewindow; noresetconsumption/resumeafterreset. Latestreadweekly39%used/61%remaining; otherwindowunavailable, thresholdnotreached."
+    "conditional_usage": "Explicit owner direction save/push all sessions and wind down at <=10% remaining any reported core window. Latest read42%used/58%remaining weekly; other window unavailable, threshold not reached. No reset requested."
+  },
+  "grandpa_peer_command_segmentation": {
+    "source": "03829bfa3f84eb944b4f27a86354b87e3652814f",
+    "independent_review": "PASS f20_review exact source, no parser/cleanup/assertion issue.",
+    "change": "Complete two-peer proof now issues ordinary physical f20_approach before each f20_talk. Same capsule walk/maxframes/radius/unstick/provider/actionable gates; approach holds no dialogue. Original normal input/prose/ACK/credits/drop/rejoin/reload checks remain. Individual205s/total1500/hello180/heartbeat150/ACK8 unchanged.",
+    "runtime": "Complete affected peer replay pending, #4 OPEN."
+  },
+  "bounty_first_morning_fixture": {
+    "source": "50d9796995",
+    "change": "Solo-only disclosed abbreviated post-finale fixture invokes existinghost Game.advance_day once, assertsday2/bountyday1 before originalsecondproductionfixture save. No direct board/slots/rotationcalls; productionhostpoll and realownerBOOL/save/ACK alone must issue rows. Existing ending/reload/screen/3rows/close gates unchanged. Failureonly existingview/localboard/day diagnostic.",
+    "reason": "Actualr14 saved fixture initialday1/bountyday0/emptyboard. Runtimeclock is deliberately separate/default0 and increments only actualhostadvance_day; BOARD requires>=1. Conceptualpostcampaign fixture had omittedfirstmorning. No firstdaygameplaybugclaimed.",
+    "independent_review": "pending exactsource",
+    "runtime": "Affectedsolo replay pending; #3 OPEN."
   }
 }
