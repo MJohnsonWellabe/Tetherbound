@@ -2069,7 +2069,7 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 	# report it without calling the freed instance.
 	var failure := {"message": ""}
 	driver.connect("failed", func(message: String) -> void: failure.message = message, CONNECT_ONE_SHOT)
-	var driver_ref := weakref(driver)
+	var driver_ref: WeakRef = weakref(driver)
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 	for i in maxi(1, budget):
 		await physics_frame
@@ -7801,7 +7801,7 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 	var local: RefCounted = game.get("local")
 	var saver: RefCounted = game.get("save_system")
 	var mode := str(args.get("mode", "inspect"))
-	var personal_only := args.get("personal_only") == true
+	var personal_only: bool = args.get("personal_only") == true
 	if mode == "seed":
 		if personal_only and _session() != null and _session().call("is_active") == true:
 			return {"verdict": "FAIL", "detail": "personal fixture must be prepared before admission"}
