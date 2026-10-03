@@ -28,6 +28,11 @@ static func decode(payload: Variant, trait_record: Dictionary = {}) -> RefCounte
 		return null
 	var temporary := PARTY.new()
 	var character := {"creatures": {str(payload.uid): trait_record.duplicate(true)}} if not trait_record.is_empty() else {}
+	if not trait_record.is_empty():
+		# The source card is already validated above. Complete its transient
+		# move mirror before the saved-party reader compares both carriers;
+		# a trait-only mirror otherwise rejects every modern Alpha offer.
+		character = TEACHING.character_loadout_mirror([payload], character)
 	SAVE.new()._array_to_party([payload.duplicate(true)], temporary, character)
 	var creature: RefCounted = temporary.remove_at(0) if temporary.members().size() == 1 else null
 	if creature != null and not trait_record.is_empty():

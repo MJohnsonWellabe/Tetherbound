@@ -10,7 +10,7 @@ extends RefCounted
 ## The caller re-fetches every scene node from the returned world.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
-const SLOT := 1
+const SLOT := SAVE.AUTOSAVE_SLOT
 
 ## Point Game at an isolated production SaveGame directory (same class and
 ## format as the shipped one), so a run never touches another run's slots.

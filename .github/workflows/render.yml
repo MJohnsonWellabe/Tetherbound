@@ -10,6 +10,8 @@
 # Output: every file the run created or changed in the working tree (shots/,
 # ralph/reports/, ...), the run's user:// directory and run.log, uploaded as
 # artifact `render-<label>-<run_id>`.
+# Functional offloads select Dummy audio explicitly: hosted runners have no
+# audio device. These artifacts cannot establish audible playback acceptance.
 name: render
 run-name: render ${{ inputs.label }} @ ${{ inputs.checkout_ref }}
 
@@ -123,7 +125,7 @@ jobs:
           t0=$SECONDS
           if [ "$MODE" = render ]; then
             timeout "$((TMIN * 60))" xvfb-run -a -s "-screen 0 ${RES}x24" \
-              godot --path . --rendering-driver opengl3 --resolution "$RES" \
+              godot --path . --rendering-driver opengl3 --audio-driver Dummy --resolution "$RES" \
               --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1
           else
             timeout "$((TMIN * 60))" godot --headless --path . \
