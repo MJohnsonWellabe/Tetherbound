@@ -3747,11 +3747,10 @@ func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dict
 	var revision:=int(_character_authority.call("revision",character))
 	var seen: Dictionary={}
 	var proposals: Array[Dictionary]=[]
-	while not nodes.is_empty():
-		var node: Node=nodes.pop_back()
-		for child: Node in node.get_children(): nodes.append(child)
-		var script: Script=node.get_script()
-		if script==null or not FOUNDATION_DIRECTORS.has(script.resource_path): continue
+	# Use the same authenticated director index as the other foundation
+	# retries; a training ACK must not rescan every terrain/vegetation node.
+	# The helper retains the detached-fixture walk and exact script/root guards.
+	for node: Node in _foundation_directors_under(nodes):
 		# Normal gathering/crafting can precede the first combat ingress, which
 		# otherwise creates this same sole arbiter lazily. An empty real arbiter
 		# can validate the baseline without fabricating an encounter or actor.

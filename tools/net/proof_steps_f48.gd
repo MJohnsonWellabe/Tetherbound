@@ -28,7 +28,13 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 		"f48_deploy_owned": return await _deploy_owned(tree)
 		"f48_dialogue": return await _dialogue(tree, args)
 		"f48_fixture_join_boss": return await _fixture_join_boss(tree, args)
-		"f48_fixture_capture": return await tree.call("_step_f48_fixture_capture", args)
+		"f48_fixture_capture":
+			var captured: Dictionary = await tree.call("_step_f48_fixture_capture", args)
+			var data: Dictionary = captured.get("data", {})
+			if data.get("owner_training_row") is Dictionary and data.has("owner_projection"):
+				data["owner_before_difference"] = _json_difference(data.owner_training_row.get("before"), data.owner_projection)
+				data["owner_after_difference"] = _json_difference(data.owner_training_row.get("after"), data.owner_projection)
+			return await _sealed_reply(tree, action, args, captured)
 		"f48_button": return await _button(tree, args)
 		"f48_choice": return await _choice(tree, args)
 		"f48_build_cell": return await _build_cell(tree, args)

@@ -846,9 +846,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"catch_fixture_rng":
 			out = _step_catch_fixture_rng(args)
 		"f48_fixture_capture":
-			var captured: Dictionary = await _step_f48_fixture_capture(args)
-			out = await load("res://tools/net/proof_steps_f48.gd").call("_sealed_reply", self,
-				"f48_fixture_capture", args, captured)
+			out = await _step_f48_fixture_capture(args)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
 		"veridian_fixture":
@@ -4643,7 +4641,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 			and reply.get("ok") == true and reply.get("delta", {}).get("caught") == true \
 			and reply.get("peer") == director.call("_local_peer_id") \
 			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty()
-	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant", "data": fixture}
+	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
 
 func _fixture_capture_pose(fixture: Dictionary, player: CharacterBody3D) -> void:
 	var pose := player.global_position
