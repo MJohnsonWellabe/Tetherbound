@@ -565,7 +565,9 @@ func _update_impact(u: float, delta: float) -> void:
 	_update_puffs(u)
 	for child: Node in _impact.get_children():
 		if child is MeshInstance3D:
-			var alpha := (1.0 - u) * float(child.get_meta("base_opacity", profile.get("opacity", 0.82)))
+			# fade_hold_power > 1 holds a burst's body before it fades (1 - u^p);
+			# the default 1.0 keeps the original linear fade.
+			var alpha := (1.0 - pow(u, maxf(0.2, float(profile.get("fade_hold_power", 1.0))))) * float(child.get_meta("base_opacity", profile.get("opacity", 0.82)))
 			_set_opacity(child.material_override, alpha)
 			if bool(child.get_meta("thermal_aftermath", false)) and child.material_override is ShaderMaterial:
 				(child.material_override as ShaderMaterial).set_shader_parameter("impact_age", u)

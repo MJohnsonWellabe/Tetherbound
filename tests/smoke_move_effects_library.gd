@@ -684,9 +684,10 @@ func _build_world_stage(floor: MeshInstance3D, sun: DirectionalLight3D,
 	# stays in shot as the scale ruler. Recorded in results.
 	var clear_radius := float(world_cfg.get("clear_radius_m", 6.5))
 	var slot := 0
-	for node: Node in _world.find_children("*", "CharacterBody3D", true, false):
+	for node: Node in _world.find_children("*", "Node3D", true, false):
 		var body := node as Node3D
-		if body == null or not body.is_visible_in_tree(): continue
+		var npc := body.get_script() != null and str((body.get_script() as Script).resource_path).ends_with("npc_body.gd")
+		if not (npc or body is CharacterBody3D) or not body.is_visible_in_tree(): continue
 		var local := _arena.to_local(body.global_position)
 		if Vector2(local.x, local.z).length() > clear_radius: continue
 		body.process_mode = Node.PROCESS_MODE_DISABLED

@@ -556,6 +556,7 @@
           "hot_colour": "#fff0a8"
         },
         "impact": {
+          "fade_hold_power": 2.4,
           "stages": {
             "flash": {
               "size_scale": 2.0,
@@ -612,7 +613,7 @@
           "duration": 0.72,
           "grow": 1.18,
           "heat": 0.9,
-          "opacity": 0.72,
+          "opacity": 0.95,
           "mote_shape": "soft_ember",
           "mote_size": 0.07,
           "speed": 5.4,
@@ -639,8 +640,8 @@
               "colour": "#ff681d",
               "hot_colour": "#ffe39a",
               "ember_colour": "#922409",
-              "opacity": 0.5,
-              "emission_strength": 0.42,
+              "opacity": 0.85,
+              "emission_strength": 0.8,
               "edge_breakup": 0.29,
               "porosity": 0.7,
               "curl_scale": 6.4,
@@ -666,8 +667,8 @@
               "colour": "#ff932c",
               "hot_colour": "#fff0b8",
               "ember_colour": "#9c2708",
-              "opacity": 0.54,
-              "emission_strength": 0.48,
+              "opacity": 0.88,
+              "emission_strength": 0.85,
               "edge_breakup": 0.24,
               "porosity": 0.66,
               "curl_scale": 5.8,
@@ -706,7 +707,7 @@
           "puff_start_radius_scale": 0.15,
           "puff_end_radius_scale": 0.85,
           "puff_size_scale": 0.48,
-          "puff_opacity": 0.42,
+          "puff_opacity": 0.7,
           "puff_lift_m": 0.35,
           "puff_grow": 1.05,
           "puff_initial_scale": 0.42,
