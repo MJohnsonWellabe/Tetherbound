@@ -126,6 +126,20 @@
         "remote_fields": 5,
         "transition_snapshot_present": true
       }
+    },
+    "export_component_source": {
+      "file": "tests/smoke_f18_waveform_export.gd",
+      "source_status": "APPROVE independent GPT-6.1 Sol f18_sol_review: synchronous isolated production chime/runtime stream, no owner/input/authority hooks, raw Variant validity-first, bounded advancing RIFF parser, exactPCM/nonmutation/cache/provenance/duration/durable manifest checks; no actualraise/earned/device/mixed-bus/listening credit.",
+      "runtime_status": "UNPROVEN",
+      "fixture": "Isolated actual HomeKey remote-only presenter, shipped settings and directly invoked private production chime, passive observer attached to actual Game; no key use/input/player/raise/travel/earned/device/listening acceptance.",
+      "required_checks": [
+        "saved RIFF data-chunk PCM equals observed production runtime bytes",
+        "export leaves actual resource/data/bus/player gain/playing state unchanged",
+        "repeat observation retains original provenance and one export record",
+        "actual stream/node/source/time provenance and no acceptance flags",
+        "actual duration matches shipped raise settings",
+        "durable manifest has one waveform and no write errors"
+      ]
     }
   }
 }

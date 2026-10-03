@@ -7572,5 +7572,27 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": []
+  "pending_dispatches": [],
+  "coordinator_baseline_dependency": {
+    "status": "WAIT reviewed main-green matched dependency group per explicit coordinator hold",
+    "last_thread_status": "systemError/lastturnfailed when read; followup sent",
+    "native_arrival_source": "2bdd48645ea778b59f2b6dd256a0c5b17de94b41",
+    "native_arrival_is_approved_f18_dependency_group": false,
+    "queried_original_handles": [
+      {
+        "id": 37108731460,
+        "tested_source": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 37108733471,
+        "tested_source": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
+        "status": "completed",
+        "conclusion": "failure"
+      }
+    ],
+    "f18_engine_gpu_local_hold": true,
+    "no_broad_journey_dispatch_or_movingintegration_import": true
+  }
 }
