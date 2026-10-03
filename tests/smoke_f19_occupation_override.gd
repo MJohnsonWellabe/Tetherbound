@@ -1,8 +1,14 @@
-extends "res://tests/probe_f19_siphon_material_lifetime.gd"
+extends SceneTree
 
 ## Native regression on actual glow/siphon factories. No Material references
 ## survive a helper call: teardown observes IDs and WeakRefs only.
+const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
+const OCCUPATION := preload("res://scripts/world/stronghold_occupation.gd")
 var _checks := 0
+var _failures: Array[String] = []
+
+func _init() -> void:
+	_run.call_deferred()
 
 func _run() -> void:
 	if DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "gl_compatibility":
@@ -42,8 +48,24 @@ func _run() -> void:
 	for frame in 4: await process_frame
 	print("F19 OCCUPATION OVERRIDE RESULT " + JSON.stringify({"checks": _checks,
 		"failures": _failures, "renderer": RenderingServer.get_current_rendering_method(),
-		"drawing": false, "retained_materials": _held.size(), "earned_campaign": false}))
+		"drawing": false, "observer_state": "IDs and WeakRefs only", "earned_campaign": false}))
 	quit(0 if _failures.is_empty() else 1)
+
+func _build_siphons(factory: Node3D) -> Node3D:
+	var holder := Node3D.new()
+	holder.name = "TetherRetrofit"
+	var authored: Dictionary = factory.call("_occupation")
+	for entry: Variant in authored.get("retrofit", []):
+		var spec := entry as Dictionary
+		if not str(spec.get("model", "")).begins_with("rift_siphon"): continue
+		var node: Node3D = factory.call("_load_prop", STRONGHOLD.HALL_PROPS, spec["model"])
+		if node == null:
+			_failures.append("Actual siphon model failed to load")
+			continue
+		holder.add_child(node)
+		factory.call("_reserve_tether_oxblood", node)
+		factory.call("_light_the_siphon", node, spec)
+	return holder
 
 func _darken_and_check(holder: Node3D, occupation: Node) -> Array[Dictionary]:
 	var snapshots: Array[Dictionary] = []
