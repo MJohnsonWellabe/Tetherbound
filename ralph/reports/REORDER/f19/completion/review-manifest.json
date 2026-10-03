@@ -284,6 +284,25 @@
         "status": "Live",
         "script": "tests/smoke_f19_solmane_functional.gd"
       }
-    }
+    },
+    "review_delivery_source": "6106c3760628f767cc97ae886d7bf29c133ae43d",
+    "standalone_lifecycle_native": {
+      "run": 37102421114,
+      "job": 111144416782,
+      "artifact": 11265794052,
+      "source_commit": "6106c3760628f767cc97ae886d7bf29c133ae43d",
+      "production_blob": "bf5e68b0c4169474382fe983c4f41627a552afed",
+      "production_identical_to_c510": true,
+      "process_exit": 0,
+      "elapsed_seconds": 11,
+      "checks": 45,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "failures": [],
+      "scope": "Standalone SceneTree regression; only shipping Stronghold/Occupation preloads, actual factory/config and same45 assertions. Observer state IDs/WeakRefs only; no diagnostic-script dependency.",
+      "raw_log": "ci-occupation-override-standalone-37102421114.log.gz",
+      "raw_log_sha256": "83bc501046d43d86a607b62f85a2bd66ca67eceb745c7c37dc11496e74c6103c"
+    },
+    "independent_review_request": "Coordinator request sent: cumulative53ef452d0d→6106 two-file bundle, standalone native45checks clean. Pending verdict."
   }
 }
