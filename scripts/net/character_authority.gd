@@ -26,13 +26,14 @@ var _vitals_seen: Dictionary = {}
 var _vitals_stages: Dictionary = {}
 var _vitals_stage_sequence := 0
 var _groom_preparations: Dictionary = {}
+var _research_preparations: Dictionary = {}
 
 
 func bind_world(world_instance: String) -> bool:
 	if world_instance.is_empty():
 		return false
 	if world_instance != _world_instance:
-		if not _groom_preparations.is_empty() or not _training_stages.is_empty() or not _training_pending.is_empty() or not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
+		if not _research_preparations.is_empty() or not _groom_preparations.is_empty() or not _training_stages.is_empty() or not _training_pending.is_empty() or not _portal_stages.is_empty() or not _loadout_pending.is_empty() or not _vitals_pending.is_empty():
 			return false
 		_records.clear()
 		_portal_stages.clear()
@@ -135,6 +136,83 @@ func retain_groom_preparation(character: String, prepared: Dictionary) -> bool:
 		or _training_locked(character): return false
 	_groom_preparations[character] = prepared.duplicate(true)
 	return true
+
+## Research preparations reserve the same admitted record, but bind an actual
+## retained event instead of a Groom station/action. They grant no reward.
+func reserve_research_preparation(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
+	if not _research_preparation_valid(character, prepared, retained): return false
+	if _research_preparations.has(character):
+		var original: Dictionary = _research_preparations[character]
+		return not original.committed and not _research_other_transaction(character) \
+			and not _training_stages.has(character) and not _training_pending.has(character) and not _groom_preparations.has(character) \
+			and equivalent(original.prepared, prepared) \
+			and equivalent(original.retained, retained) and _research_reserved_state_matches(character, prepared)
+	if _research_other_transaction(character) or _training_locked(character) \
+		or revision(character) != prepared.revision or not equivalent(state(character), prepared.before): return false
+	_research_preparations[character] = {"prepared": prepared.duplicate(true),
+		"retained": retained.duplicate(true), "committed": false, "applied": false}
+	return true
+
+## Caller must authenticate the actual owner's successful BOOL-save ACK.
+## This private host API accepts no save-success boolean from a packet.
+## Commit and the real research stage MUST be synchronous, without an await,
+## signal publication, or another writer between them. On failed world write,
+## retain the SAME original; on success cancel its transient reservation.
+func commit_research_preparation(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
+	if not _research_original_matches(character, prepared, retained) or _research_other_transaction(character) \
+		or _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character): return false
+	var original: Dictionary = _research_preparations[character]
+	if original.committed:
+		return revision(character) == int(prepared.revision) + 1 and equivalent(state(character), prepared.after)
+	if not _research_reserved_state_matches(character, prepared): return false
+	if not original.applied:
+		var discovered := discovered_landmarks(character)
+		for realm: String in prepared.discoveries:
+			if not discovered.has(realm): discovered[realm] = []
+			for id: String in prepared.discoveries[realm]:
+				if not discovered[realm].has(id): discovered[realm].append(id)
+		if not preload("res://scripts/net/groom_passive_sync.gd").discovery_shape(discovered): return false
+		_replace_record(character, int(prepared.revision) + 1, prepared.after.duplicate(true))
+		_records[character].discovered_landmarks = discovered
+		original.applied = true
+	original.committed = true
+	return true
+
+func retain_research_preparation(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
+	if not _research_original_matches(character, prepared, retained) or _research_other_transaction(character) \
+		or _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character) \
+		or _research_preparations[character].applied != true \
+		or revision(character) != int(prepared.revision) + 1 or not equivalent(state(character), prepared.after): return false
+	# Exact retained retry is idempotent; an unreserved candidate cannot create it.
+	_research_preparations[character].committed = false
+	return true
+
+func cancel_research_preparation(character: String, hash: String) -> bool:
+	if _research_preparations.get(character, {}).get("prepared", {}).get("hash") != hash: return false
+	_research_preparations.erase(character)
+	return true # An already BOOL-saved/committed baseline is never rolled back.
+
+func _research_preparation_valid(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
+	return _records.has(character) and prepared.get("character_id") == character \
+		and prepared.get("world_namespace") == _world_instance \
+		and preload("res://scripts/net/research_passive_preparation.gd").valid(prepared, retained)
+
+func _research_original_matches(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
+	var original: Dictionary = _research_preparations.get(character, {})
+	return not original.is_empty() and _research_preparation_valid(character, prepared, retained) \
+		and equivalent(original.prepared, prepared) and equivalent(original.retained, retained)
+
+func _research_reserved_state_matches(character: String, prepared: Dictionary) -> bool:
+	if _research_preparations.get(character, {}).get("applied") == true:
+		return revision(character) == int(prepared.revision) + 1 and equivalent(state(character), prepared.after)
+	return revision(character) == prepared.revision and equivalent(state(character), prepared.before)
+
+func _research_other_transaction(character: String) -> bool:
+	return _portal_mutation_pending(character) or _portal_stages.has(character) \
+		or _loadout_pending.has(character) or _vitals_pending.has(character) or _vitals_stages.has(character)
+
+func _research_reserved(character: String) -> bool:
+	return _research_preparations.has(character) and _research_preparations[character].committed != true
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
@@ -654,6 +732,9 @@ func recover_durable_vitals(character_id: String, deliveries: Dictionary) -> Dic
 	var failures := errors(candidate, character_id)
 	if not failures.is_empty():
 		return {"ok": false, "code": "invalid_character", "errors": failures}
+	if _research_reserved(character_id) and (high_water != revision(character_id) \
+		or not equivalent(candidate, state(character_id)) or not pending.is_empty()):
+		return {"ok": false, "code": "transaction_busy"}
 	_replace_record(character_id, high_water, candidate)
 	if not pending.is_empty():
 		_vitals_pending[character_id] = pending
@@ -700,7 +781,7 @@ static func equivalent(left: Variant, right: Variant) -> bool:
 ## Only the same admitted full record is staged. Proposed before/state are
 ## internal frozen outputs, recomputed here rather than packet baselines.
 func _training_locked(character: String) -> bool:
-	return _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character)
+	return _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character) or _research_reserved(character)
 
 
 func stage_creature_training(character: String, action: String, action_id: String,
@@ -783,10 +864,12 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 		# Old accepted history must never replace a later earned portable state.
 		if not current.redesign_character.transaction_receipts.has(row.receipt):
 			return {"ok": false, "code": "accepted_training_marker_missing"}
+		if _research_reserved(character) and int(row.character_revision) > revision(character):
+			return {"ok": false, "code": "transaction_busy"}
 		_records[character].revision = maxi(revision(character), int(row.character_revision))
 		return {"ok": true}
 	if _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
-			or _vitals_stages.has(character) or _training_stages.has(character):
+			or _vitals_stages.has(character) or _training_stages.has(character) or _research_reserved(character):
 		return {"ok": false, "code": "transaction_busy"}
 	var projected := RECORD_RULES.training_projection(current, row, ESSENCE.training_projection)
 	if not equivalent(projected, row.before) and not equivalent(projected, row.after):
@@ -858,7 +941,7 @@ func recover_durable_portals(character_id: String, deliveries: Dictionary) -> Di
 		if not DELIVERY.valid(raw, character_id, _world_instance) or raw.status not in ["pending", "accepted"]:
 			return {"ok": false, "code": "invalid_portal_journal"}
 		if candidate.redesign_character.transaction_receipts.has(raw.receipt): continue
-		if _portal_stages.has(character_id) or _training_stages.has(character_id) or _training_pending.has(character_id) or _loadout_pending.has(character_id) or _vitals_pending.has(character_id): return {"ok": false, "code": "transaction_busy"}
+		if _portal_stages.has(character_id) or _training_stages.has(character_id) or _training_pending.has(character_id) or _loadout_pending.has(character_id) or _vitals_pending.has(character_id) or _research_reserved(character_id): return {"ok": false, "code": "transaction_busy"}
 		var slot := -1
 		for index: int in candidate.inventory.size():
 			var stack: Variant = candidate.inventory[index]
