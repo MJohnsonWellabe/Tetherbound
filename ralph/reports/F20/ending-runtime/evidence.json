@@ -1323,7 +1323,7 @@
     "2": {
       "verdict": "OPEN",
       "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN."
+      "latest_runtime": "Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN. Reviewed1a7b9ef ordinary bounded mouse orbit/framing guard now hostedarch-r8 37104784649 in progress; #2 stays OPEN."
     },
     "3": {
       "verdict": "MET on candidate; main landing pending",
@@ -1383,7 +1383,18 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {},
+  "remote_pending": {
+    "arch_r8": {
+      "run": 37104784649,
+      "job": 111151068714,
+      "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+      "script": "tests/smoke_f20_arch_presentation.gd",
+      "mode": "render",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37104784649",
+      "status": "Original hosted isolated checkout in progress; no duplicate/local run. Actual image and supported-listener verdict pending."
+    }
+  },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1646,5 +1657,12 @@
     "change": "Presentation-only600000ms readiness allowance; defaultsolo/net180000 unchanged. Full shell/floor/journey predicates unchanged. Process/postdraw observers connected before scene startup and disconnected on either readiness outcome; readonly counters/elapsed and actual budget logged.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol decision and concrete source. Typedtimeout/default and counters avoid inferredVariant concerns. No world/player/constructionhold/pose/input/assertion mutation; no physicaldevice/audibleacceptance claim. If bounded run still fails same predicates, investigate measured lifecycle rather than repeat render.",
     "runtime": "Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN."
+  },
+  "arch_ordinary_look_candidate": {
+    "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+    "reason": "Actualr7 arch/glow projects belowviewport; player-root recenter bearing does not face actual arch. The camera must orbit the player through ordinary input to place the lens on the opposite side.",
+    "change": "Render-only preparation uses actual surface/player bearing and pure horizontal preference sensitivity, <=32 ordinary relative mouse motions/180s, real idle+physics settling; requires all8 actual opening AABB corners and glow point front/inset, zero queued motion, captured mouse, no UI owner, floor/no recovery and exact actionable provider. Explicit false callback suppresses X and records failure; null callback behavior retained. No transforms/settings/geometry or production camera changes.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete diff, followed by requested final captured-mouse guard recheck. Sign/sensitivity matches production unhandled_input/apply_look; known types avoid inferredVariant. Projection is framing only, not occlusion/visible-glow proof. No engine/GPU execution.",
+    "runtime": "Original isolated hosted arch-r8 run37104784649/job111151068714 in progress; actual image still requires independent view. No runtime result or audible verdict claimed."
   }
 }
