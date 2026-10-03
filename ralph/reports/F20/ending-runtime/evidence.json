@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, actualc352 roadwalk succeeds butcombinedfloor/exactprovider gatefails; readonlyfailuretraceunderreview. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066sourcePASS/requiredfullnet-r6pending. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
+    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, actualc352 roadwalk succeeds butcombinedfloor/exactprovider gatefails; readonlyfailuretracea924sourcePASS/solo-r13live. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066 actualnet-r6hostPASS/guest205scommandtimeout at pendinghostarrival/missingpersonalreceipt; readonlyownerobservere39sourcePASS/net-r7live. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -175,7 +175,7 @@
           "f20-net-r2-artifact.zip"
         ],
         "passed": "Both actual ENet peer hellos/host/join/registry, host outcome-bound durable HomeKey, host fifth producer debit/sealed/glow+playing SFX/line/noquest/repeatrefusal. Strict retained peer error scan PASS.",
-        "failure": "Host f20_talk no verdict at unchanged300s step deadline. Retained heartbeat context panel:@CanvasLayer at exact solo-r5 stuck pose26.95059,0.90094,15.16730; host log ends before Grandpa input. A common lesson navigation blockage is strongly inferred from explicit solo owner path; net does not name panel script. Guest homecoming/credits/rejoin/reload not reached.",
+        "failure": "Host f20_talk no verdict at unchanged205s command deadline (the historical300s label referred to total post-hello allowance). Retained heartbeat context panel:@CanvasLayer at exact solo-r5 stuck pose26.95059,0.90094,15.16730; host log ends before Grandpa input. A common lesson navigation blockage is strongly inferred from explicit solo owner path; net does not name panel script. Guest homecoming/credits/rejoin/reload not reached.",
         "limits": "Post-finale fixtures, headless functional only. Original complete peer logs/homes/disk/NET_RUN preserved in ZIP. No F20#4 acceptance.",
         "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: complete peer logs/homes/disk retained, exact ZIP hash, host producer passes, fresh284ms panel heartbeat at same solo stuck pose; net panel script not identified, shared lesson cause is strong inference from explicit solo observation. Zero errors in all3 logs. No guest ending/rejoin/reload reached, no exit_code artifact; workflowfailure authoritative."
       },
@@ -955,6 +955,16 @@
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37093720949",
       "status": "in progress; affected exact bounty floor/provider diagnostic, no result claimed"
+    },
+    "net_r7": {
+      "run": 37093999890,
+      "job": 111120074500,
+      "source": "e39a361e7ceb816b47a31e49e2d7c5b4a99d07e8",
+      "script": "tests/smoke_net_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37093999890",
+      "status": "in progress; affected original two-peer path with bounded raw owner-arrival diagnostic, no result claimed"
     }
   },
   "lesson_input_driver": {
@@ -1025,8 +1035,8 @@
     "runtime": "Affected solo-r13 live37093720949/job111119255015 exacta924; no result claimed."
   },
   "pending_arrival_diagnostic": {
-    "source": "e39a361e7c",
+    "source": "e39a361e7ceb816b47a31e49e2d7c5b4a99d07e8",
     "independent_review": "PASS f20_review exact51 F20-only raw-read diagnostic lines. Originalheartbeatfirst, <=10s frequency; remote_body identity lookup only; no foundation_ground_contact/admission/save/arrivalcache calls, input/waits/assertions/permits/deadline changes.",
-    "runtime": "Affected two-peer replay pending; no producer/cause claim."
+    "runtime": "Affectednet-r7 live37093999890/job111120074500 exacte39; no result claimed."
   }
 }
