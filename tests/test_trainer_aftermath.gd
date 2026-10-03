@@ -144,7 +144,15 @@ func test_the_aftermath_beats_happen_inside_the_victory_lines() -> void:
 	assert_eq(npc.count("await _until_the_last_victory_line(lines)"), 2, "both stand-down paths wait for the last line")
 	assert_true(npc.find("var lines := _watch_victory_lines()") < npc.find("await get_tree().create_timer(hold)"), "the last line is listened for from the defeat, not after the slump")
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
-	assert_true(director.contains("TRAINER_AFTERMATH.hand_over(shown, player)"), "the director hands the tokens over on the last line")
+	# Lifetime-safe callbacks preserve the dialogue beat through bound methods.
+	# The initialized lifetime case separately proves actual early/last signals.
+	var presentation: String = director.get_slice("func _present_trainer_victory(", 1).get_slice("\nfunc ", 0)
+	var binding: String = director.get_slice("func _bind_victory_aftermath(", 1).get_slice("\nfunc ", 0)
+	var last_line: String = director.get_slice("func _on_victory_aftermath_line(", 1).get_slice("\nfunc ", 0)
+	assert_true(presentation.contains("_bind_victory_aftermath(panel, shown, _player, delay)"), "victory presentation installs the handover listener")
+	assert_true(binding.contains("_on_victory_aftermath_line.bind(") and binding.contains('panel.connect("line_presented", on_line)'), "actual dialogue lines reach the bound handover callback")
+	assert_true(last_line.contains("if is_last and is_instance_valid(shown) and shown.is_inside_tree():"), "earlier lines and expired tokens cannot start handover")
+	assert_true(last_line.contains("create_timer(delay).timeout.connect(") and last_line.contains("TRAINER_AFTERMATH.hand_over.bind(shown, player_ref.get_ref()"), "the last line schedules the production handover with its configured delay")
 	for id: String in ["captain_riverwatch", "captain_field", "captain_ridge"]:
 		assert_true(float(AFTERMATH.for_trainer(id)["victory_show"]["side_m"]) >= 1.0, "%s's Sigil clears the hip" % id)
 

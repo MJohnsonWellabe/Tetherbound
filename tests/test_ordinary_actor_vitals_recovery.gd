@@ -28,7 +28,9 @@ class EpochSession extends SAVE_FIXTURE.FixtureSession:
 	var fixture_epoch: String = "resource-epoch"
 	func _altar_current_epoch() -> String: return fixture_epoch
 	func _foundation_directors_under(_roots: Array) -> Array[Node]:
-		return [fixture_director] if fixture_director != null else []
+		var directors: Array[Node] = []
+		if fixture_director != null: directors.append(fixture_director)
+		return directors
 	func _ordinary_combat_director_live(director: Node) -> bool: return director == fixture_director
 
 class AckSession extends Node:
