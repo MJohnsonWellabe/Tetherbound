@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Actual Tidewake r7 passes on687732d0b2 after host admission refresh and lossless codec integration; independent f20_review scores criterion0 MET on candidate. Solo/net/render criteria1-4 remain OPEN and await the serialized slot after F18/F19/F17.",
+    "reason": "Tidewake criterion0 independently MET on candidate. Remote solo r4 proves actual saved Home Key arrival, then fails strict fifth-key save validation because merged validation input lacks world locator. Delegated narrow SaveGame fix231ad9cc reviewed and remote disk checks37082210657 failed only new test parsing; explicit types corrected in8a3ce18047, r2 checks37083030264 and actual solo-r5 37083033029 pending. Net r1 reaches two real peers/host Home Key, then no fifth verdict; missing original peer evidence corrected in reviewed afde2bacc2 without changing deadlines. Criteria1-4 remain OPEN; local renderer/audio suspended while owner plays Valheim.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -101,6 +101,34 @@
         "engine_errors": 0,
         "warnings": "One pre-existing water_world instance_reset_physics_interpolation deprecation; retained in exact log.",
         "scope": "Disclosed restored-current fixture, then real Mara afterword, ordinary capsule walk/exact dock X, durable world and personal receipt, production save0true, no homecoming or credits. No earned Nerissa/campaign claim."
+      },
+      {
+        "log": "f20-solo-r4-native.log.gz",
+        "workflow_log": "f20-solo-r4-workflow.log.gz",
+        "artifact": "f20-solo-r4-artifact.zip",
+        "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
+        "run": 37080411315,
+        "remote_artifact": 11258946535,
+        "artifact_sha256": "9b2e909078006c940f2d8b8ddf7c65b0c766c2d84907d2e5629da636f64a4450",
+        "verdict": "FAIL",
+        "checks": 11,
+        "failures": 1,
+        "workflow_step_exit": 1,
+        "scope": "Actual post-finale Stormwood Home Key -> saved/durable/grounded Meadows outcome-bound return PASS; real fifth-key input creates pending host row but owner character writer refuses invalid portal world receipt. No Grandpa/credits/reload reached.",
+        "engine_errors": "At least6 retained save-refusal ERROR lines; complete original count unavailable.",
+        "log_truncation": "Workflow retained first5MB and last20MB of original649299519-byte run.log with marker. Original expected exit-code artifact absent because old dispatch workflow shell exits on script failure; terminal workflow job records exit1."
+      },
+      {
+        "log": "f20-net-r1-native.log.gz",
+        "workflow_log": "f20-net-r1-workflow.log.gz",
+        "artifact": "f20-net-r1-artifact.zip",
+        "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
+        "run": 37081328188,
+        "remote_artifact": 11259022945,
+        "verdict": "FAIL",
+        "workflow_step_exit": 1,
+        "scope": "Both actual peer hellos, host/join, registry2 and host Home Key return PASS, then host f20_fifth no verdict.",
+        "limitations": "Original /tmp peer logs, NET_RUN and character files are outside workflow collection and absent from artifact. Cause and peer engine-error cleanliness unknown; no co-op acceptance. Corrected F20-only output path and single POSIX log writer in afde2bacc2; existing deadlines unchanged."
       }
     ],
     "limitations": [
@@ -154,6 +182,11 @@
       "feature": "F18 physical floor and consumed-permit presentation",
       "original": "cd272f5c5141e895c5b95b28941590054e497feb",
       "local": "542d46d874"
+    },
+    {
+      "feature": "coordinator preidentity cross-slot guard / capture mirror / functional remote workflow",
+      "original": "fe40f752aca7ca51cb94d4a998be9a10fb7bad44",
+      "local": "822347d177"
     }
   ],
   "home_anchor_probe": {
@@ -228,18 +261,18 @@
       "required": "actual Tidewake dock conclusion saves world and personal receipt, no credits",
       "latest_runtime": "f20-tidewake-r7.log.gz PASS21checks0failures",
       "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
-      "independent_verdict": "f20_review §7.2 MET: actual Mara afterword, ordinary capsule/exact grounded actionable dock input, both durable world and personal completion, production save0true, no credits/homecoming. Gzip matches raw log; zero engine/script errors; retained deprecation warning.",
+      "independent_verdict": "f20_review \u00a77.2 MET: actual Mara afterword, ordinary capsule/exact grounded actionable dock input, both durable world and personal completion, production save0true, no credits/homecoming. Gzip matches raw log; zero engine/script errors; retained deprecation warning.",
       "limitations": "Disclosed restored-current/post-Nerissa fixture, no earned campaign, co-op or reload claim. Does not claim main acceptance."
     },
     "1": {
       "verdict": "OPEN",
       "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
-      "latest_runtime": "f20-solo-r3.log.gz FAIL before F18 physical floor/presentation fix"
+      "latest_runtime": "f20-solo-r4-native.log.gz: actual outcome-bound Home Key return saved PASS, then fifth owner save FAIL before Grandpa/credits"
     },
     "2": {
       "verdict": "OPEN",
       "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "f20-arch-render-r2.log.gz FAIL before authored room Approach route; no valid PNG/WAV"
+      "latest_runtime": "f20-solo-r4-native.log.gz: host pending fifth receipt, owner save refuses invalid portal world receipt; no durable debit/presentation acceptance. Local arch render/audio remains OPEN."
     },
     "3": {
       "verdict": "OPEN",
@@ -249,7 +282,46 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "not run; prerequisites now ready"
+      "latest_runtime": "f20-net-r1-native.log.gz: real two-peer hello/join/registry and host Home Key PASS; fifth no verdict, missing original peer logs; full ending/rejoin/reload still OPEN"
+    }
+  },
+  "delegated_locator_fix": {
+    "source": "231ad9ccc320986a97473d6d5cbfc3f18c0d6afc",
+    "independent_source_review": "PASS f20_review; detached actual-live/save-disk-locator projection, strict row validation, serialized schema and root fe40 preidentity guard preserved",
+    "runtime": "r1 remote37082210657 FAIL new regression parse (two inferred Variant warnings); existing113 tests973 assertions PASS within failed run. Corrected test-only8a3ce18047 source review PASS; r2 remote dispatch pending terminal result.",
+    "selected": "f20_portal_save_identity,character_save_format,save_format,authoritative_split_load",
+    "scope": "Three dedicated typed-state fixtures with real owner/world/slot disk writers and loader; no actual world/input/campaign claim.",
+    "first_actual_existing_files": [
+      "test_character_save_format.gd",
+      "test_save_format.gd",
+      "test_world_save_format.gd"
+    ],
+    "first_unmatched_selector": "authoritative_split_load did not match actual test_authoritative_split_slot_load.gd; no authoritative split coverage claimed from r1.",
+    "second_selected": "f20_portal_save_identity,authoritative_split_slot_load",
+    "first_logs": [
+      "f20-portal-locator-r1-native.log.gz",
+      "f20-portal-locator-r1-workflow.log.gz",
+      "f20-portal-locator-r1-artifact.zip"
+    ],
+    "integration_candidate": "Coordinator independently reviewed and integrated production231 as ae690f2852; required integration CI pending, no main claim."
+  },
+  "remote_pending": {
+    "solo_r5": {
+      "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+      "script": "tests/smoke_f20_ending.gd",
+      "label": "f20-solo-r5-locator",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "run": 37083033029
+    },
+    "portal_locator_r2": {
+      "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+      "script": "tests/run_tests.gd",
+      "args": "--only=f20_portal_save_identity,authoritative_split_slot_load",
+      "label": "f20-portal-save-locator-r2",
+      "mode": "headless",
+      "timeout_minutes": 15,
+      "run": 37083030264
     }
   }
 }
