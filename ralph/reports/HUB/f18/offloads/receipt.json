@@ -242,11 +242,12 @@
   },
   "native_followups": "../native-followups/receipt.json",
   "earned_latest": {
-    "id": 37092993376,
-    "checkout": "6254d3ab87344f0dbbd50d56236ebda64a5c2b23",
+    "id": 37094320580,
+    "checkout": "7e7b9d9aae7e690098f90c4de50eb4c6a501fa57",
     "status": "completed",
     "conclusion": "failure",
-    "scope": "Actual opening/catch/tools/protected key/Drop/combat/dialogue/Settings Replay cutscene and live shop offers pass. Paid Workbench catalogue and null-material error unresolved; full loop unproven.",
-    "evidence": "../native-followups/receipt.json"
+    "scope": "Actual opening/catch/key protections/tool bindings and first shop observation pass; later Bram shop is open but not current InputOwner. Original strict guard failure and separate null-material error retained; later BuildDriver path not reached.",
+    "evidence": "../native-followups/receipt.json",
+    "followup": "e269dcfe24 bounded same90totalprocessframes exactactualshop input-owner handoff. Actual R6 dispatched; original strict guard unchanged."
   }
 }

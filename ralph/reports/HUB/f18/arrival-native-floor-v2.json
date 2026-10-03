@@ -14,7 +14,7 @@
   "patch_bytes": 4294,
   "source_review": "Independent source PASS; unchanged ceiling/unsafe-witness/full-capsule and final contact/save fences. Equivalent Terrain3D cross-RID retains normal proof. New same-RID bevel/foreign-RID/highY fixtures and full production first-entry/19stone geometry runtime IN PROGRESS.",
   "prior_package_preserved": "arrival-physical-only.patch/json at09b4586a1f unchanged; this is a separate two-function delta, not replacement.",
-  "runtime_status": "UNPROVEN pending exact native geometry/obstruction and resident runs; no parser/runtime success inferred.",
+  "runtime_status": "Current388 production partial native proof: resident28/28 and Meadows74/74 pass, all18other stone initial casts pass but Summit probe final support fails. Original49synthetic+8highY pass; new wrong-winding fixture failures retained and corrected674. Canonical entries in Cloud/Water/Storm falsely collide with actual Player due copy-probe fixture; actualPlayer readonly entry correction674 pending.",
   "local_resource_constraint": "No local Godot/import/render/desktop/GPU use.",
   "native_runs": [
     {
@@ -22,8 +22,8 @@
       "display_title": "render f18-native-stones-water-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
       "head_branch": "tb/integration",
       "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094743571"
     },
     {
@@ -31,8 +31,8 @@
       "display_title": "render f18-native-stones-meadows-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
       "head_branch": "tb/integration",
       "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094741748"
     },
     {
@@ -40,8 +40,8 @@
       "display_title": "render f18-native-stones-stormwood-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
       "head_branch": "tb/integration",
       "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094740030"
     },
     {
@@ -49,8 +49,8 @@
       "display_title": "render f18-resident-r7 @ 61106753e257ccbca23c2390d43698953538f0c4",
       "head_branch": "tb/integration",
       "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094738320"
     },
     {
@@ -58,8 +58,8 @@
       "display_title": "render f18-arrival-r7 @ 61106753e257ccbca23c2390d43698953538f0c4",
       "head_branch": "tb/integration",
       "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094736602"
     },
     {
@@ -67,8 +67,8 @@
       "display_title": "render f18-native-stones-cloudreach-r2 @ 61106753e257ccbca23c2390d43698953538f0c4",
       "head_branch": "tb/integration",
       "head_sha": "d6c57a1a59f3221a220ddec79361affe24187ab6",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "failure",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094735034"
     }
   ],
@@ -79,5 +79,7 @@
     "native_other_realms": 74
   },
   "reused_rounding": "R6 scalar helper and exact test unchanged;2tests7assertions native0fail reused, no redundant unit rerun.",
-  "isolated_patch_apply": "git apply --check + actual apply against exact ae552 baseline in isolated .tmp fixture; applied LF SHA256 matches receipt. No root/shared worktree writes."
+  "isolated_patch_apply": "git apply --check + actual apply against exact ae552 baseline in isolated .tmp fixture; applied LF SHA256 matches receipt. No root/shared worktree writes.",
+  "original_results": "native-followups/receipt.json",
+  "new_source_fix": "674f86d54827442a6cdd64b5598ac5465cbf7d95: actualPlayer readonly first-entry case; corrected clockwise ridge/bevel winding and actual unobserved-RID classifier fixture. Production two-function patch unchanged."
 }
