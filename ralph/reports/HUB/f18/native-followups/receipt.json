@@ -123,6 +123,420 @@
       "checkout": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
       "outcome": "Ordinary opening received 50 orbs and entered real catch; actual aim failed before Home Key gift. No earned loop receipt.",
       "followup": "Reviewed F17 paired-axis dispatch/neutral flush adopted alone from2e24263a81 in5b18e3cb9e; actual retry required."
+    },
+    {
+      "id": 37085974934,
+      "display_title": "render f18-scoped-startup-r2-a575 @ a575e3a746a53592ba5924e9a04629274fbd73cf",
+      "head_branch": "tb/integration",
+      "head_sha": "ac9ffa59d9da1dd523e489382b5cff6c5ce91b69",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37085974934",
+      "checkout": "a575e3a746a53592ba5924e9a04629274fbd73cf",
+      "artifact_id": 11261155292,
+      "raw_artifact": "scoped-r2-remote.zip",
+      "sha256": "8804b35a28acf39d7fdf9ebd8844e096c525b2dbc101e21c4f1b45f4d73876df",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: save: target slot conflicts with retained world transactions"
+      ],
+      "result_lines": [
+        "15 tests, 242 assertions, 0 failed",
+        "exit=0 took=7s"
+      ],
+      "outcome": "15 tests/242 assertions/0 failed; zero ScriptError; expected retained-transaction cross-slot warning. Adds actual aim-release latch assertion; no earned F18 acceptance."
+    },
+    {
+      "id": 37085972780,
+      "display_title": "render f18-refusal-startup-r2-a575 @ a575e3a746a53592ba5924e9a04629274fbd73cf",
+      "head_branch": "tb/integration",
+      "head_sha": "ac9ffa59d9da1dd523e489382b5cff6c5ce91b69",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37085972780",
+      "checkout": "a575e3a746a53592ba5924e9a04629274fbd73cf",
+      "artifact_id": 11261255117,
+      "raw_artifact": "refusal-r2-remote.zip",
+      "sha256": "b102a7444f24e46c83cab0498089c992a686d337fcb24896c9948f98370399ae",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver."
+      ],
+      "result_lines": [
+        "F18_HOME_KEY_REFUSAL_COMPONENT {\"checks\":11,\"failures\":[],\"fixtures\":\"real inventory/parsed input/HomeKey toast; fake modal/fight/refusal state; no live gameplay acceptance\"}",
+        "exit=0 took=18s"
+      ],
+      "outcome": "11 checks/0 failed, actual Game composition persistent mount before use and idempotent retry; same disclosed fake modal/fight/refusal context, actual input/presenter/PNG. Zero ScriptError. Visual fixture limits unchanged."
+    },
+    {
+      "id": 37085970740,
+      "display_title": "render f18-terrain-diagnostic-r2-a575 @ a575e3a746a53592ba5924e9a04629274fbd73cf",
+      "head_branch": "tb/integration",
+      "head_sha": "ac9ffa59d9da1dd523e489382b5cff6c5ce91b69",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37085970740",
+      "checkout": "a575e3a746a53592ba5924e9a04629274fbd73cf",
+      "artifact_id": 11260444862,
+      "raw_artifact": "terrain-r2-remote.zip",
+      "sha256": "79020d4785e34982b2ca00bd09b7ed766fc89033b7b98e6fc038a76e4f3da019",
+      "native_exit_code": null,
+      "native_exit_limit": "Artifact contains no exit_code; Actions failure and logged assertions retained.",
+      "error_lines": [
+        "ERROR: Signal 'height_maps_changed' is already connected to given callable 'GDScript::_invalidate' in that object.",
+        "ERROR: Signal 'control_maps_changed' is already connected to given callable 'GDScript::_invalidate' in that object.",
+        "ERROR: Signal 'region_map_changed' is already connected to given callable 'GDScript::_invalidate' in that object."
+      ],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated."
+      ],
+      "result_lines": [
+        "F18_SUPPORT_CONTACT_DIAGNOSTIC {\"actor_position\":[344.299987792969,2.45670962333679,926.599975585938],\"actor_transform_unchanged\":true,\"canonical_actor_y\":{\"collision_mask\":1,\"hits\":[{\"class\":\"StaticBody3D\",\"hit_instance_id\":244309821802,\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\",\"shape\":0},{\"class\":\"Terrain3D\",\"hit_instance_id\":223959058497,\"instance_id\":223959058497,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\",\"shape\":36}],\"origin\":[344.299987792969,3.34854245185852,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"collision_origin\":[344.299987792969,3.35670948028564,926.599975585938],\"floor_normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"is_on_floor\":true,\"plus_safe_margin\":{\"collision_mask\":1,\"hits\":[],\"origin\":[344.299987792969,3.3577094078064,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"raw\":{\"collision_mask\":1,\"hits\":[{\"class\":\"StaticBody3D\",\"hit_instance_id\":244309821802,\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\",\"shape\":0},{\"class\":\"Terrain3D\",\"hit_instance_id\":223959058497,\"instance_id\":223959058497,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\",\"shape\":36}],\"origin\":[344.299987792969,3.35670948028564,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"rays\":[{\"at\":[344.299987792969,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"position\":[344.299987792969,2.44754266738892,926.599975585938],\"production_height\":2.44754266738892,\"ray_from\":[344.299987792969,2.83718585968018,926.599975585938],\"ray_to\":[344.299987792969,2.03718566894531,926.599975585938],\"shape\":0,\"terrain_height\":2.43718576431274},{\"at\":[343.899993896484,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.114911213517189,0.975601613521576,0.187074899673462],\"position\":[343.899993896484,2.49377751350403,926.599975585938],\"production_height\":2.49377751350403,\"ray_from\":[343.899993896484,2.89280581474304,926.599975585938],\"ray_to\":[343.899993896484,2.09280562400818,926.599975585938],\"shape\":0,\"terrain_height\":2.49280571937561},{\"at\":[344.699981689453,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"position\":[344.699981689453,2.39666819572449,926.599975585938],\"production_height\":2.39666819572449,\"ray_from\":[344.699981689453,2.7774338722229,926.599975585938],\"ray_to\":[344.699981689453,1.97743380069733,926.599975585938],\"shape\":0,\"terrain_height\":2.37743377685547},{\"at\":[344.299987792969,2.43718576431274,926.199951171875],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"position\":[344.299987792969,2.51931476593018,926.199951171875],\"production_height\":2.51931476593018,\"ray_from\":[344.299987792969,2.91093254089355,926.199951171875],\"ray_to\":[344.299987792969,2.11093235015869,926.199951171875],\"shape\":0,\"terrain_height\":2.51093244552612},{\"at\":[344.299987792969,2.43718576431274,927.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"position\":[344.299987792969,2.37083649635315,927.0],\"production_height\":2.37083649635315,\"ray_from\":[344.299987792969,2.7634391784668,927.0],\"ray_to\":[344.299987792969,1.96343910694122,927.0],\"shape\":0,\"terrain_height\":2.36343908309937}],\"safe_margin\":0.00100000004749745,\"zero_motion\":{\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244309821802,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"collider_shape\":0,\"depth\":0.0000894069671630859,\"local_shape\":0,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255218505859,2.46701622009277,926.525268554688]},{\"collider\":{\"class\":\"Terrain3D\",\"instance_id\":223959058497,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\"},\"collider_shape\":36,\"depth\":0.0000743865966796875,\"local_shape\":0,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255218505859,2.46700119972229,926.525268554688]}],\"margin\":0.00100000004749745,\"remainder\":[0.0,0.0,0.0],\"saturated\":false,\"travel\":[0.00018310546875,0.00155997276306152,0.00030517578125]}}",
+        "F18_RESIDENT_TERRAIN_SUPPORT {\"checks\":21,\"failures\":[\"final production support/capsule guard accepts actual supported body\",\"control map change invalidates old collision\",\"painted native hole stays refused without filling vertices\"],\"fixtures\":\"isolated baked-terrain native instance, probe bodies, camera moves, temporary in-memory painted hole; no files saved\"}"
+      ],
+      "outcome": "21 checks/3 failures,3 duplicate static Callable signal errors. Original final capsule guard still fails; weak captures fix freed Nodes but equal static bound callback prevents remount invalidation/hole refusal. No assertion suppressed.",
+      "actual_contact_diagnostic": {
+        "actor_position": [
+          344.299987792969,
+          2.45670962333679,
+          926.599975585938
+        ],
+        "actor_transform_unchanged": true,
+        "canonical_actor_y": {
+          "collision_mask": 1,
+          "hits": [
+            {
+              "class": "StaticBody3D",
+              "hit_instance_id": 244309821802,
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)",
+              "shape": 0
+            },
+            {
+              "class": "Terrain3D",
+              "hit_instance_id": 223959058497,
+              "instance_id": 223959058497,
+              "path": "/root/@Node3D@24/Terrain",
+              "rid": "RID(7546257539072)",
+              "shape": 36
+            }
+          ],
+          "origin": [
+            344.299987792969,
+            3.34854245185852,
+            926.599975585938
+          ],
+          "query_margin": 0.0,
+          "saturated": false
+        },
+        "collision_origin": [
+          344.299987792969,
+          3.35670948028564,
+          926.599975585938
+        ],
+        "floor_normal": [
+          0.112091079354286,
+          0.975917935371399,
+          0.187135562300682
+        ],
+        "is_on_floor": true,
+        "plus_safe_margin": {
+          "collision_mask": 1,
+          "hits": [],
+          "origin": [
+            344.299987792969,
+            3.3577094078064,
+            926.599975585938
+          ],
+          "query_margin": 0.0,
+          "saturated": false
+        },
+        "raw": {
+          "collision_mask": 1,
+          "hits": [
+            {
+              "class": "StaticBody3D",
+              "hit_instance_id": 244309821802,
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)",
+              "shape": 0
+            },
+            {
+              "class": "Terrain3D",
+              "hit_instance_id": 223959058497,
+              "instance_id": 223959058497,
+              "path": "/root/@Node3D@24/Terrain",
+              "rid": "RID(7546257539072)",
+              "shape": 36
+            }
+          ],
+          "origin": [
+            344.299987792969,
+            3.35670948028564,
+            926.599975585938
+          ],
+          "query_margin": 0.0,
+          "saturated": false
+        },
+        "rays": [
+          {
+            "at": [
+              344.299987792969,
+              2.43718576431274,
+              926.599975585938
+            ],
+            "collider": {
+              "class": "StaticBody3D",
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)"
+            },
+            "hit": true,
+            "normal": [
+              0.112091086804867,
+              0.975917994976044,
+              0.187135577201843
+            ],
+            "position": [
+              344.299987792969,
+              2.44754266738892,
+              926.599975585938
+            ],
+            "production_height": 2.44754266738892,
+            "ray_from": [
+              344.299987792969,
+              2.83718585968018,
+              926.599975585938
+            ],
+            "ray_to": [
+              344.299987792969,
+              2.03718566894531,
+              926.599975585938
+            ],
+            "shape": 0,
+            "terrain_height": 2.43718576431274
+          },
+          {
+            "at": [
+              343.899993896484,
+              2.43718576431274,
+              926.599975585938
+            ],
+            "collider": {
+              "class": "StaticBody3D",
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)"
+            },
+            "hit": true,
+            "normal": [
+              0.114911213517189,
+              0.975601613521576,
+              0.187074899673462
+            ],
+            "position": [
+              343.899993896484,
+              2.49377751350403,
+              926.599975585938
+            ],
+            "production_height": 2.49377751350403,
+            "ray_from": [
+              343.899993896484,
+              2.89280581474304,
+              926.599975585938
+            ],
+            "ray_to": [
+              343.899993896484,
+              2.09280562400818,
+              926.599975585938
+            ],
+            "shape": 0,
+            "terrain_height": 2.49280571937561
+          },
+          {
+            "at": [
+              344.699981689453,
+              2.43718576431274,
+              926.599975585938
+            ],
+            "collider": {
+              "class": "StaticBody3D",
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)"
+            },
+            "hit": true,
+            "normal": [
+              0.160431176424026,
+              0.977184593677521,
+              0.139183849096298
+            ],
+            "position": [
+              344.699981689453,
+              2.39666819572449,
+              926.599975585938
+            ],
+            "production_height": 2.39666819572449,
+            "ray_from": [
+              344.699981689453,
+              2.7774338722229,
+              926.599975585938
+            ],
+            "ray_to": [
+              344.699981689453,
+              1.97743380069733,
+              926.599975585938
+            ],
+            "shape": 0,
+            "terrain_height": 2.37743377685547
+          },
+          {
+            "at": [
+              344.299987792969,
+              2.43718576431274,
+              926.199951171875
+            ],
+            "collider": {
+              "class": "StaticBody3D",
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)"
+            },
+            "hit": true,
+            "normal": [
+              0.160431176424026,
+              0.977184593677521,
+              0.139183849096298
+            ],
+            "position": [
+              344.299987792969,
+              2.51931476593018,
+              926.199951171875
+            ],
+            "production_height": 2.51931476593018,
+            "ray_from": [
+              344.299987792969,
+              2.91093254089355,
+              926.199951171875
+            ],
+            "ray_to": [
+              344.299987792969,
+              2.11093235015869,
+              926.199951171875
+            ],
+            "shape": 0,
+            "terrain_height": 2.51093244552612
+          },
+          {
+            "at": [
+              344.299987792969,
+              2.43718576431274,
+              927.0
+            ],
+            "collider": {
+              "class": "StaticBody3D",
+              "instance_id": 244309821802,
+              "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+              "rid": "RID(7838315315203)"
+            },
+            "hit": true,
+            "normal": [
+              0.112091086804867,
+              0.975917994976044,
+              0.187135577201843
+            ],
+            "position": [
+              344.299987792969,
+              2.37083649635315,
+              927.0
+            ],
+            "production_height": 2.37083649635315,
+            "ray_from": [
+              344.299987792969,
+              2.7634391784668,
+              927.0
+            ],
+            "ray_to": [
+              344.299987792969,
+              1.96343910694122,
+              927.0
+            ],
+            "shape": 0,
+            "terrain_height": 2.36343908309937
+          }
+        ],
+        "safe_margin": 0.00100000004749745,
+        "zero_motion": {
+          "collided": true,
+          "contacts": [
+            {
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 244309821802,
+                "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                "rid": "RID(7838315315203)"
+              },
+              "collider_shape": 0,
+              "depth": 8.94069671630859e-05,
+              "local_shape": 0,
+              "normal": [
+                0.112091079354286,
+                0.975917935371399,
+                0.187135562300682
+              ],
+              "point": [
+                344.255218505859,
+                2.46701622009277,
+                926.525268554688
+              ]
+            },
+            {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 223959058497,
+                "path": "/root/@Node3D@24/Terrain",
+                "rid": "RID(7546257539072)"
+              },
+              "collider_shape": 36,
+              "depth": 7.43865966796875e-05,
+              "local_shape": 0,
+              "normal": [
+                0.112091079354286,
+                0.975917935371399,
+                0.187135562300682
+              ],
+              "point": [
+                344.255218505859,
+                2.46700119972229,
+                926.525268554688
+              ]
+            }
+          ],
+          "margin": 0.00100000004749745,
+          "remainder": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "saturated": false,
+          "travel": [
+            0.00018310546875,
+            0.00155997276306152,
+            0.00030517578125
+          ]
+        }
+      },
+      "diagnostic_scope": "Observational queries only; actor_transform_unchanged=true. Stable real floor; raw overlaps resident/native same walkable plane, +actualsafe_marginY query empty, measured contact depths below margin. Canonical centerfloorY is genuinely penetrating on slope. No ordinary player/co-op proof.",
+      "followup": "Unique WeakRef-only per-mount callback + exact exit disconnect and guarded full capsule vertical cast/floor skin candidate; required actual negative tests and retry remain open."
     }
   ],
   "acceptance": {
