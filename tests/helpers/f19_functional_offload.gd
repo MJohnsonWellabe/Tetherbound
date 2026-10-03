@@ -13,9 +13,13 @@ static func configure(scenario: String) -> bool:
 			print("F19 FUNCTIONAL OFFLOAD refused: frame capture requires continuous drawing")
 			return false
 	RenderingServer.render_loop_enabled = false
+	var choice_fixture := scenario != "full_fresh_campaign"
+	var veridian_group := OS.get_environment("TB_VERIDIAN_CASE_GROUP") if scenario == "veridian_choice_driver" else ""
 	print("F19 FUNCTIONAL OFFLOAD " + JSON.stringify({"scenario": scenario,
 		"rendering_method": RenderingServer.get_current_rendering_method(),
 		"display_server": DisplayServer.get_name(), "continuous_drawing": false,
-		"ordinary_controller_physics_saves": true,
-		"scope": "Full mechanics driver; no visual, audio, owner-play or device-performance acceptance"}))
+		"original_driver_unchanged": true, "ordinary_controller_physics_saves": not choice_fixture,
+		"uses_original_choice_fixtures": choice_fixture,
+		"selected_veridian_case_group": ("all" if veridian_group.is_empty() else veridian_group) if scenario == "veridian_choice_driver" else "not_applicable",
+		"scope": "Inherited mechanics driver; choice fixtures remain disclosed by parent; no visual, audio, owner-play or device-performance acceptance"}))
 	return true
