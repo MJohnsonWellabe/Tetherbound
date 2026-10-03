@@ -243,5 +243,29 @@
     "job": 111140469987,
     "artifact": 11265956855,
     "status": "Terminal positive native ownership reproduction; siphon-material-component.json; before withdrawal0/baseline8/hold-only3copies0 errors; no acceptance"
+  },
+  "occupation_override_fix": {
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "files": [
+      "scripts/world/stronghold_occupation.gd",
+      "tests/smoke_f19_occupation_override.gd"
+    ],
+    "problem": "Withdrawal copied geometry overrides into masked surface slots; the active material stayed emissive and three shared-mesh siphons reproduced eight native material errors.",
+    "change": "Duplicate the active geometry override into the geometry override slot. Existing per-surface fallback retained; reported affected-surface count preserved. No delayed cleanup or reference cache.",
+    "baseline": "siphon-material-component.json and stronghold-surfaces-r11.json",
+    "status": "Production fix pushed; exact native reproduction and property/lifecycle regression running; independent review and full original six-case matrices still required",
+    "native_original_reproduction": {
+      "run": 37101523304,
+      "job": 111141839736,
+      "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+      "status": "Live"
+    },
+    "native_lifecycle_regression": {
+      "run": 37101526190,
+      "job": 111141848634,
+      "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+      "status": "Live"
+    },
+    "acceptance": false
   }
 }
