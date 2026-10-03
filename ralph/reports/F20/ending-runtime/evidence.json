@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "F20#0 and #1 independently MET on candidates; main landing pending. Actual solo-r15 passes 63 checks with zero failures or engine/script errors: real Home Key, truthful current-team Grandpa prose, exactly one credits acknowledgement, disk reset/reload preserving identities/inventory/receipts, completed repeat without replay, safe movement, remaining journal entries and ordinary bounty screen with three production-generated saved rows and B close. #3 remains OPEN after actualsolo-r16 failed expectednormalX provideractivation atBryn despite priorgroundedactionablegate; exactactivated/null/inputowner/fight trace underreview. #4 remains OPEN: earlier full net-r6 reaches pending guest arrival with no personal receipt; full net-r7 times out combined host navigation/reader; scoped net-r8 reports explicit Home Key begin refusal before pending arrival or owner-plan comparison. Source 03829 separates original physical approach and reader commands; 7fef reports actual begin refusal promptly. Full peer replay awaits coordinator arrival checkpoint dependency. #2 remains OPEN: functional fifth-key path passes, prior image does not show arch/glow and mixed audio cannot attribute hum; revised capture compiles but prior render readiness fails before capture. No local engine/GPU or blind render retry.",
+    "reason": "Actual Tidewake chapter close and solo personal ending/reload pass their measured scope. r17 FAIL65/2/zeroerrors: original Bryn talk activated instead of endgame rematch. Independently reviewed translation-only side-anchor correction93e9 is running native-r1 and original fullsolo-r18. #3 remains OPEN pending actual canonical fight admission; #2 presentation/listener and #4 fullpeer remain OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1226,7 +1226,28 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {},
+  "remote_pending": {
+    "rematch_anchor_native_r1": {
+      "run": 37099206242,
+      "job": 111135250161,
+      "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+      "script": "tests/smoke_rematch_prompt_anchor.gd",
+      "mode": "headless",
+      "timeout_minutes": 5,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099206242",
+      "status": "Original isolated hosted run confirmed live; no result claimed; no local engine/GPU use."
+    },
+    "solo_r18": {
+      "run": 37099207884,
+      "job": 111135255404,
+      "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+      "script": "tests/smoke_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099207884",
+      "status": "Original isolated hosted run confirmed live; no result claimed; no local engine/GPU use."
+    }
+  },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1364,5 +1385,18 @@
     "owner": "coordinator",
     "status": "Coordinator reported native PASS68tests1765assertions0failed/exit0/39s/zeroengine-script errors on run37097557875/art11265155463. fc91 is a delta on integration owner-passive framework absent from this lane; not adopted alone. Coordinator directs merge of then-green main as established baseline after firstcut lands, retain F20 delta, then exact isolated full-peer proof. Main pending; #4 OPEN.",
     "scope": "Bounded departure checkpoint, actualgroundedBOOL/CAS/rebase/repeatedlostACK recovery; no physics change."
+  },
+  "rematch_prompt_anchor": {
+    "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+    "production_files": [
+      "scripts/repeatables/rematch_prompt.gd",
+      "scripts/net/foundation_rematches.gd"
+    ],
+    "reason": "r17 normal X actually activated original Bryn talk. Source separately shows NPC root turns toward player while local side rematch children orbit. Fix removes that rotation inheritance while retaining translation and child lifetime; r17 rotation cause is not directly measured.",
+    "change": "Interactable subclass top_level side zones at fixed world +/-1.5X, following real trainer translation in idle callbacks. Inherited registration/reindex/exit/LOS/offer/input unchanged; mount keeps radius/disabled-first/configure/canonical-source/authority/admission binding. Halda boss prompts unchanged.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required.",
+    "limits": "Idle translation is not frame-atomic moving-trainer admission. Native empty fixture has no art, ground, campaign, fight or save proof. Original full F20 actual reload/canonical rematch admission remains required, #3 OPEN.",
+    "native": "Original anchor-native-r1 run37099206242/job111135250161 live, no result claimed.",
+    "actual": "Original solo-r18 run37099207884/job111135255404 live, no result claimed."
   }
 }
