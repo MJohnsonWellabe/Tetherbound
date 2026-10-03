@@ -53,10 +53,11 @@ func _send_heartbeat() -> void:
 				var delivery := preload("res://scripts/net/character_action_delivery.gd")
 				var current: Dictionary = record.portable_projection(game.local.call("save_data"))
 				var plan: Dictionary = delivery.owner_plan(current, value, record.errors)
-				print("F20 ARRIVAL detached owner comparison ", JSON.stringify({
+				print("F20 ARRIVAL detached owner comparison ", preload("res://scripts/save/save_document.gd").stringify({
 					"receipt": receipt, "current": current, "before": value.get("before", {}),
 					"after": value.get("after", {}), "pure_plan_ok": plan.get("ok", false),
 					"pure_plan_code": plan.get("code", ""), "pure_plan_duplicate": plan.get("duplicate", false)}))
+				print("F20 ARRIVAL detached owner comparison END receipt=", receipt)
 	var lifecycle := session.get_node_or_null("FoundationComposition/TravelLifecycle")
 	for peer: int in remote:
 		var original: Dictionary = remote[peer]
