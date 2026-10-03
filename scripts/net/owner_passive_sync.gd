@@ -179,6 +179,8 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			if not context.get("initial_position") is Vector3: return # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
 				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
+				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
+					"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 				stream.error = "owner_passive_initial_pose_unconfirmed"; return
 		var input_context := context.duplicate()
 		if input.get("op") == "discovery" and REPLAY._position(input.get("from")) and REPLAY._position(input.get("to")):
@@ -191,6 +193,8 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 				input_context.discontinuity_authorized = true
 		var applied := REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
+			stream.first_input_refusal = {"input": input.duplicate(true), "context": input_context.duplicate(true),
+				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
 		stream.cursor = applied.cursor
 		stream.seen[sequence] = digest

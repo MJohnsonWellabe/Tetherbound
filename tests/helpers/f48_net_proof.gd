@@ -480,6 +480,17 @@ func _run_entry(index: int, peer: int, entry: Dictionary) -> bool:
 			entry.args.boundary_delivery_id = observed.delivery_id
 			entry.args.erase("boundary_case")
 		var passed: bool = await super._run_entry(index, peer, entry)
+		if not passed and entry.get("action") == "f48_fixture_capture":
+			# The original failure is already recorded. Inspect the live host via
+			# the existing control probe before teardown; never rerun the input.
+			var host_observation: Variant = await probe(0, "f48_owner_passive_diagnostic")
+			var folder := OS.get_environment("TB_PROOF_OUT").path_join("f48-observations")
+			DirAccess.make_dir_recursive_absolute(folder)
+			var path := folder.path_join("f48-capture-host-diagnostic-%d-%d.json" % [index, Time.get_ticks_usec()])
+			var retained := DETACHED.publish(path, {"read_only": true, "failed_peer": peer,
+				"original_failure": _peers[peer].get("last_verdict", {}).duplicate(true),
+				"host_observation": host_observation})
+			print("F48 failed-capture host diagnostic: %s retained=%s" % [path, str(retained)])
 		if passed and entry.get("action") == "f48_assert" and entry.get("args", {}).has("saved_transaction"):
 			var observed_row: Dictionary = _peers[peer].get("last_verdict", {}).get("data", {}).get("saved_transaction_row", {})
 			if observed_row.is_empty():

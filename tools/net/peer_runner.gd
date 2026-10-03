@@ -4649,7 +4649,80 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 			and reply.get("ok") == true and reply.get("delta", {}).get("caught") == true \
 			and reply.get("peer") == director.call("_local_peer_id") \
 			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty()
+	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
+
+func _f48_owner_passive_diagnostic() -> Dictionary:
+	# Read existing state only: never construct a service, admit, stage or save.
+	var game := root.get_node_or_null(^"Game")
+	var session: Node = game.get("session") if game != null else null
+	var service: RefCounted = session.get("_owner_passive") if session != null else null
+	var out := {"read_only": true, "sampled_ms": Time.get_ticks_msec(), "service_present": service != null}
+	if service == null: return out
+	var hash_script := preload("res://scripts/net/research_passive_preparation.gd")
+	var local: Dictionary = service.get("local").duplicate(true)
+	var inputs: Array = local.get("inputs", [])
+	local.erase("inputs")
+	local["input_count"] = inputs.size()
+	local["first_input_batch"] = inputs.slice(0, mini(64, inputs.size()))
+	for input: Dictionary in inputs:
+		if input.get("op") == "discovery":
+			local["first_buffered_discovery"] = input.duplicate(true)
+			break
+	var rebase: Dictionary = local.get("rebase", {})
+	var old_inputs: Array = rebase.get("old_inputs", [])
+	rebase.erase("old_inputs")
+	if not rebase.is_empty():
+		rebase["old_input_count"] = old_inputs.size()
+		rebase["first_old_input_batch"] = old_inputs.slice(0, mini(64, old_inputs.size()))
+	out["local"] = local
+	out["pending"] = service.get("pending").duplicate(true)
+	out["pending_variant_hex"] = var_to_bytes(out.pending).hex_encode()
+	# Match the portable portion of PlayerState.save_data without map_payloads,
+	# which can create realm maps. All serializers below only read owned fields.
+	var player: RefCounted = game.get("local")
+	var serializer := preload("res://scripts/save/save_game.gd").new()
+	var personal := {"character_id": player.get("character_id"),
+		"party": serializer.call("_party_to_array", player.get("party")),
+		"inventory": serializer.call("_inventory_to_array", player.get("inventory")),
+		"redesign_character": player.get("redesign_character").duplicate(true),
+		"satchel_escrow": player.get("satchel_escrow").duplicate(true),
+		"equipment": player.get("equipment").call("save_data") if player.get("equipment") != null else {},
+		"realm_hearts": player.get("hearts").call("save_data") if player.get("hearts") != null else {}}
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	if teaching.party_loadout_errors(personal.party, personal.redesign_character).is_empty():
+		personal.redesign_character = teaching.character_loadout_mirror(personal.party, personal.redesign_character)
+	var projection: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(personal)
+	out["owner_projection"] = projection
+	out["owner_projection_hash"] = hash_script.fingerprint(projection)
+	out["owner_projection_variant_hex"] = var_to_bytes(projection).hex_encode()
+	out["hosts"] = {}
+	var authority: RefCounted = session.get("_character_authority")
+	for character: String in service.get("hosts"):
+		var stream: Dictionary = service.get("hosts")[character]
+		var observed: Dictionary = stream.duplicate(true)
+		observed["seen_count"] = observed.get("seen", {}).size()
+		observed.erase("seen")
+		observed["cursor_variant_hex"] = var_to_bytes(stream.cursor).hex_encode()
+		observed["base_hash"] = hash_script.fingerprint(stream.cursor.base)
+		observed["state_hash"] = hash_script.fingerprint(stream.cursor.state)
+		observed["checkpoint_variant_hex"] = var_to_bytes(stream.checkpoint).hex_encode()
+		var admitted: Dictionary = authority.call("state", character) if authority != null else {}
+		observed["authority"] = admitted
+		observed["authority_revision"] = authority.call("revision", character) if authority != null else -1
+		observed["authority_hash"] = hash_script.fingerprint(admitted)
+		observed["authority_variant_hex"] = var_to_bytes(admitted).hex_encode()
+		# Current context is explicitly distinct from the retained first refusal.
+		# _context uses map_for: do not let a diagnostic lazily create a map.
+		var realm := ""
+		for registered: Dictionary in session.call("registry").call("rows"):
+			if registered.get("peer_id") == stream.peer: realm = str(registered.get("realm", ""))
+		observed["current_host_context"] = service.call("_context", int(stream.peer), stream) \
+			if (game.get("local").get("maps") as Dictionary).has(realm) else {"unavailable": "map_not_already_mounted", "realm": realm}
+		observed["current_host_context_variant_hex"] = var_to_bytes(observed.current_host_context).hex_encode()
+		observed["first_input_refusal_variant_hex"] = var_to_bytes(stream.get("first_input_refusal", {})).hex_encode()
+		out.hosts[character] = observed
+	return out
 
 func _fixture_capture_pose(fixture: Dictionary, player: CharacterBody3D) -> void:
 	var pose := player.global_position
@@ -5475,6 +5548,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	var what := str(msg.get("what", ""))
 	var args: Dictionary = msg.get("args", {}) as Dictionary
 	match what:
+		"f48_owner_passive_diagnostic":
+			return _f48_owner_passive_diagnostic()
 		"water_mounted":
 			return _probe_water_mounted()
 		"water_swimming":
