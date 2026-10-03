@@ -10,6 +10,8 @@ const TARGET_SECONDS := [0.0, 0.5, 1.5, 2.0]
 const MAX_EPISODES := 4
 const MAX_SAMPLES := 1200
 const MAX_SECONDS := 600.0
+const MAX_WAVEFORM_BYTES := 4 * 1024 * 1024
+const MAX_WAVEFORM_SECONDS := 10.0
 
 var _game: Node
 var _output: String
@@ -22,6 +24,7 @@ var _last_phase: String = "unobserved"
 var _episode: Dictionary = {}
 var _manifest: Dictionary = {}
 var _stopped: bool = false
+var _waveforms: Dictionary = {}
 
 
 ## Call once in each already-running process, with a distinct fresh directory:
@@ -43,7 +46,9 @@ static func attach(tree: SceneTree, game: Node, output_path: String) -> Node:
 		"capture_source": "actual root viewport texture after frame_post_draw",
 		"headless_reason": "" if observer._native else "Headless has no native presentation framebuffer.",
 		"acceptance_verdict": "not assessed; pixels require visual review, audio requires listening",
-		"started_monotonic_msec": observer._started_msec, "episodes": [], "samples": [], "errors": []}
+		"started_monotonic_msec": observer._started_msec, "episodes": [], "samples": [], "errors": [],
+		"waveform_scope": "Actual observed Home Key stream contents only; no device playback or mixed-bus recording",
+		"audio_driver": AudioServer.get_driver_name(), "waveforms": []}
 	observer.process_mode = Node.PROCESS_MODE_ALWAYS
 	tree.root.add_child(observer)
 	if observer._native: RenderingServer.frame_post_draw.connect(observer._after_draw)
@@ -177,7 +182,42 @@ func _audio_info(audio: Variant) -> Dictionary:
 		"playback_seconds": audio.get_playback_position(), "stream_class": stream.get_class() if stream != null else "",
 		"stream_path": stream.resource_path if stream != null else "", "stream_seconds": stream.get_length() if stream != null else null,
 		"bus_muted": AudioServer.is_bus_mute(bus_index) if bus_index >= 0 else null,
-		"bus_volume_db": AudioServer.get_bus_volume_db(bus_index) if bus_index >= 0 else null, "listened": false}
+		"bus_volume_db": AudioServer.get_bus_volume_db(bus_index) if bus_index >= 0 else null,
+		"waveform": _export_waveform(audio, stream), "listened": false}
+
+
+func _export_waveform(audio: Variant, stream: AudioStream) -> Dictionary:
+	# Save the exact existing runtime waveform once; never replace its stream,
+	# change playback/buses, or synthesize evidence from production constants.
+	if not is_instance_valid(audio) or not audio.playing or not stream is AudioStreamWAV:
+		return {"status": "unavailable_not_playing_wav", "device_playback_proven": false}
+	if _output.is_empty() or not _manifest.has("waveforms"):
+		return {"status": "unavailable_unattached_observer", "device_playback_proven": false}
+	var wave := stream as AudioStreamWAV
+	var instance: int = wave.get_instance_id()
+	if _waveforms.has(instance): return _waveforms[instance]
+	if _waveforms.size() >= MAX_EPISODES * 2:
+		return {"status": "bounded_waveform_limit", "device_playback_proven": false}
+	if wave.data.size() == 0 or wave.data.size() > MAX_WAVEFORM_BYTES or wave.get_length() > MAX_WAVEFORM_SECONDS:
+		return {"status": "unavailable_waveform_size_or_duration", "device_playback_proven": false}
+	var filename := "home_key_stream_%d.wav" % instance
+	var path := _output.path_join(filename)
+	# The enclosing folder was freshly created; never overwrite any file.
+	var error: Error = ERR_ALREADY_EXISTS if FileAccess.file_exists(path) else wave.save_to_wav(path)
+	var observation := {"stream_instance": instance, "source_path": wave.resource_path,
+		"observed_monotonic_msec": Time.get_ticks_msec(), "observed_process_frame": Engine.get_process_frames(),
+		"observed_physics_frame": Engine.get_physics_frames(), "status": "exported_runtime_waveform" if error == OK else "wav_write_failed",
+		"wav": filename if error == OK else "", "write_error": error,
+		"stream_seconds": wave.get_length(), "mix_rate": wave.mix_rate,
+		"format": wave.format, "stereo": wave.stereo, "source_bytes": wave.data.size(),
+		"audio_node": _node_info(audio), "bus": str(audio.bus), "volume_db": audio.volume_db,
+		"playing_at_observation": audio.playing, "playback_seconds": audio.get_playback_position(),
+		"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+		"listened": false, "device_playback_proven": false}
+	_waveforms[instance] = observation
+	_manifest.waveforms.append(observation)
+	if error != OK: _manifest.errors.append("WAV write failed: %s (%d)" % [filename, error])
+	return observation
 
 
 func _remote_info(key: Node) -> Array:

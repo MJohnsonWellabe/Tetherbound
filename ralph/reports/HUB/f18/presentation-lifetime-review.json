@@ -55,5 +55,19 @@
     },
     "outcome": "Scoped native component PASS: freed local/remote visual fields safely observed absent, complete transition snapshot, failuresempty/exit0/3s; no engine/script errors or warnings.",
     "evidence_limit": "Detached actual presenter component regression only. Real earned HomeKey return, presentation/render/audio and allsixF18 remain UNPROVEN. Source binding uses API/dispatch provenance; artifact manifest is only file list."
+  },
+  "waveform_followup": {
+    "parent_source": "109c2bca6752097ba091ec985bcba02d344197bf",
+    "file": "tests/helpers/f18_presentation_capture.gd",
+    "source_verdict": "APPROVE independent GPT-6.1 Sol f18_sol_review; provenance additions reconfirmed",
+    "change": "Observer saves exact existing valid playing HomeKey AudioStreamWAV once per runtime instance. Standalone entry includes actual source_path (empty for generated resources), stream/node identity, bus/player gain, playback time and monotonic/process/physics observation timestamps.",
+    "bounds": "Fresh enclosing output, no overwrite, at most8attempts; nonempty payload <=4MiB and length <=10s. Errors retained; unavailable states no acceptance.",
+    "no_changes": "No production source, audio/playback/bus/state/pose/input setters, added awaits or timing budgets; previous raw Variant validity-first checks retained.",
+    "runtime_status": "UNPROVEN; component parse/lifetime regression and actual waveform capture/listening pending",
+    "scope": "Source-stream content only, excludes player/bus gain, spatial/mixed/device output. Dummy driver explicitly recorded. Earned/native audio acceptance remains UNPROVEN.",
+    "api_sources": [
+      "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/AudioStreamWAV.xml",
+      "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/AudioServer.xml"
+    ]
   }
 }
