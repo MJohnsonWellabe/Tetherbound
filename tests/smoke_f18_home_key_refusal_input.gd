@@ -65,6 +65,17 @@ func _preserved(game: FixtureGame, key: Node, owner: Node, before: Vector3, mess
 		and key.get("_phase") == "idle" and game.inventory.count("home_key") == 1
 		and game.actor.global_position == before, message)
 
+func _toast_observation(key: Node, expected_owner: Node) -> Dictionary:
+	var layer: CanvasLayer = key.get("_refusal_layer")
+	var panel: Control = key.get("_refusal_panel")
+	var owner := OWNER.current(self)
+	return {"layer": layer.layer if is_instance_valid(layer) else -1,
+		"visible": is_instance_valid(panel) and panel.visible,
+		"owner_is_expected": owner == expected_owner,
+		"owner": str(owner.get_path()) if is_instance_valid(owner) else "",
+		"time_left_msec": int(key.get("_refusal_until_msec")) - Time.get_ticks_msec(),
+		"process_frame": Engine.get_process_frames()}
+
 func _run() -> void:
 	await process_frame
 	await process_frame
@@ -138,14 +149,24 @@ func _run() -> void:
 	_check(key._refusal_layer.layer == 31, "repeated lesson refusal does not escalate its draw layer")
 	await _capture("user://F18_HOME_KEY_REFUSAL_COMPONENT.png")
 	# Keep an existing visible toast while the actual input owner changes.
-	key._show_refusal(game.reason)
+	var transition_deadline: int = key._refusal_until_msec
+	var transition_notices := game.messages.size()
 	lesson.free()
 	var screen := SCREEN.new()
 	world.add_child(screen)
 	_check(screen.begin("Home Key refusal · Component fixture", "UI fixture only; no earned gameplay acceptance."),
 		"actual system-screen presenter opens with disclosed fixture content")
+	var transition_observations: Array[Dictionary] = [_toast_observation(key, screen)]
+	# process_frame emits before node _process callbacks. Two emissions allow
+	# one real HomeKey process pass, without renewing the original toast timer.
 	await process_frame
-	_check(screen.layer == 80 and key._refusal_layer.layer == 81 and key._refusal_panel.visible,
+	transition_observations.append(_toast_observation(key, screen))
+	await process_frame
+	transition_observations.append(_toast_observation(key, screen))
+	print("F18_HOME_KEY_REFUSAL_TRANSITION " + JSON.stringify(transition_observations))
+	_check(screen.layer == 80 and key._refusal_layer.layer == 81 and key._refusal_panel.visible
+		and OWNER.current(self) == screen and game.messages.size() == transition_notices
+		and key._refusal_until_msec == transition_deadline and Time.get_ticks_msec() < transition_deadline,
 		"visible toast follows actual input-owner change without a new refusal")
 	game.reason = "Close the current screen first."
 	key._refusal_at = -INF
