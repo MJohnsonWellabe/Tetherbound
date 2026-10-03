@@ -31,9 +31,10 @@ func protected_drop_and_assign() -> bool:
 	var slot: int = inventory.call("find_slot", "home_key")
 	if slot < 0 or inventory.call("count", "home_key") != 1: return _fail("actual earned Home Key required")
 	var before := _inventory()
-	var original_bar: Array = (game.get("hotbar") as Array).duplicate()
-	if original_bar.is_empty() or original_bar[0] != "orb_basic":
-		return _fail("opening catch must retain its original Basic Orb binding on slot 1")
+	var starting_bar: Array = (game.get("hotbar") as Array).duplicate()
+	receipts.append({"phase": "earned_key_starting_bindings", "hotbar": starting_bar,
+		"home_keys": 1, "earned_basic_orbs": inventory.call("count", "orb_basic"),
+		"owner": str(game.get("local").get("character_id"))})
 	await travel.tap("inventory")
 	var menu: Node = game.call("menu")
 	if menu == null or menu.call("is_open") != true or menu.call("current_tab_id") != "backpack":
@@ -42,6 +43,9 @@ func protected_drop_and_assign() -> bool:
 	var care := CARE.new()
 	care.set("_tree", tree)
 	if not await care.call("_focus_slot", tab.get("_buttons"), slot): return _fail("controller focus did not reach earned key")
+	# Read the actual UI-time bar too: a just-released lesson can precede the
+	# HUD's ordinary initial autofill. No pre-existing orb binding is required.
+	var original_bar: Array = (game.get("hotbar") as Array).duplicate()
 	await travel.tap("backpack_drop")
 	var rows: Array = tab.get("_confirm_rows")
 	if int(tab.get("_confirming")) != slot or rows.is_empty() or tree.root.gui_get_focus_owner() != rows[0]:
@@ -49,19 +53,35 @@ func protected_drop_and_assign() -> bool:
 	await travel.tap("ui_accept")
 	var reason: Label = menu.get("_status")
 	if inventory.call("count", "home_key") != 1 or _inventory() != before or int(tab.get("_confirming")) != -1 \
-		or reason == null or reason.text != "Keys stay with their owner." or not reason.is_visible_in_tree():
+		or game.get("hotbar") != original_bar or reason == null or reason.text != "Keys stay with their owner." or not reason.is_visible_in_tree():
 		return _fail("actual protected-key Drop did not visibly refuse without changing inventory")
 	receipts.append({"phase": "protected_drop", "input": ["inventory", "backpack_drop", "ui_accept"],
-		"reason": reason.text, "home_keys": inventory.call("count", "home_key"), "inventory_unchanged": true})
+		"reason": reason.text, "home_keys": inventory.call("count", "home_key"), "inventory_unchanged": true,
+		"hotbar_before_drop": original_bar, "hotbar_unchanged": true})
 	if not await care.call("_focus_slot", tab.get("_buttons"), slot): return _fail("key focus not restored after Drop refusal")
-	# The real verb walks through occupied slots. Keep the key on slot 5,
-	# then restore the displaced opening orb through that same focused UI.
+	# The real verb walks through occupied slots. Restore the actual prior
+	# items in reverse order after assigning the key; slot 5 is its new home.
 	if not await _assign_in_satchel(tab, care, "home_key", 4): return false
-	if not await _assign_in_satchel(tab, care, "orb_basic", 0): return false
+	var expected_bar: Array = original_bar.duplicate()
+	if expected_bar.size() != 5: return _fail("actual quick bar does not have five slots")
+	for destination in range(3, -1, -1):
+		var item: String = str(original_bar[destination])
+		if item == "home_key": expected_bar[destination] = ""
+		elif not item.is_empty() and not await _assign_in_satchel(tab, care, item, destination): return false
+	expected_bar[4] = "home_key"
+	# Gate A presses combat_throw. ThrowAim selects/spends its strongest earned
+	# orb from inventory, independently of the tool/food/consumable quick bar.
+	var combat: Node = tree.current_scene.get_node_or_null(^"CombatManager")
+	var throw: Node = combat.call("throw_aim") if combat != null else null
+	var catch_orb: String = str(throw.call("current_orb_id")) if throw != null else ""
 	if inventory.call("count", "home_key") != 1 or _inventory() != before:
 		return _fail("ordinary quick-slot assignment changed earned inventory")
+	if game.get("hotbar") != expected_bar or catch_orb != "orb_basic":
+		return _fail("ordinary key binding changed prior quick slots or the production earned catch orb")
 	receipts.append({"phase": "key_binding", "slot": 4, "input": "backpack_assign", "home_keys": 1,
-		"restored_original_orb_slot": 0, "owner": str(game.get("local").get("character_id"))})
+		"starting_hotbar": starting_bar, "hotbar_before_binding": original_bar, "hotbar_after_binding": expected_bar,
+		"catch_input": "combat_throw", "production_catch_orb": catch_orb, "catch_orb_source": "earned_inventory",
+		"inventory_unchanged": true, "owner": str(game.get("local").get("character_id"))})
 	await travel.tap("menu_cancel")
 	for frame in 30:
 		await tree.physics_frame
