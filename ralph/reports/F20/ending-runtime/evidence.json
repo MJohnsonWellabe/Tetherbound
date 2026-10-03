@@ -1,12 +1,12 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
     "local": "5a315cef84"
   },
-  "source_review": "PASS: independent read-only f20_review, including dock host refresh/retry and installed Hall Approach navigation; actual acceptance OPEN",
+  "source_review": "Production/input driver through9d4 independent read-only f20_review PASS. Diagnostica507 initialreviewwithdrawn after native duplicate-owner ParseError. Corrected trace769d source reviewPASS; actual compilation/runtime pending. F20#1\u20134OPEN.",
   "focused": {
     "verdict": "PASS",
     "log": "f20-f18-focused-r2.log.gz",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake criterion0 independently MET on candidate. Actual HomeKey/fifth producer passes. Reviewed lesson driver9d4 succeeds with actual portal lesson rendering/ordinaryContinue/personal acknowledgement, then solo-r6/net-r3 fail naturalGrandpa ackcheck with exact cause notyetobserved. Bounded dialogue/completed/context/owner row diagnostic reviewed/pusheda507, solo-r7queued without deadlines/check changes. Remote software arch-render-r3 fails180s readiness before key/PNG/WAV; exact failed predicate unknown, reviewedreadinessdiagnostic remote-r4queued. Criteria1\u20134 OPEN; no local renderer/audio while owner Valheim.",
+    "reason": "Tidewake criterion0 independently MET on candidate. Actual saved HomeKey/fifth and ordinary portal lesson/navigation pass on9d4; solo-r6/net-r3 fail naturalGrandpa ackcheck with exactdialogue/producercause unknown. Diagnosticsa507 failedparse due confirmedduplicateowner athelper229 (allerrors retained), sourceclearancewithdrawn. Exact3-line correctedtrace769d reviewed/pushed; actualsolo-r8/arch-r5 dispatched for unchanged30s/180s checks. Remote software arch-r3 readinesscause stillunknown/noPNG/WAV; no localrenderer/audio whileownerValheim. Criteria1\u20134OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -252,6 +252,72 @@
         "renderer": "Compatibility OpenGL4.5 Mesa25.2.8 llvmpipe LLVM20.1.2",
         "failure": "Production world/personal context readiness180s failure before key input. Exact failed predicate/cause unknown; no GL-warmup cause established. No fifth PNG/WAV captured.",
         "limits": "Hosted software rendering and Dummy audio; zero acceptance advancement. Readiness diagnostic retains deadline/predicate."
+      },
+      {
+        "run": 37086096148,
+        "job": 111096610357,
+        "artifact": 11261155455,
+        "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+        "verdict": "FAIL compile; no gameplay exercised",
+        "workflow_conclusion": "failure",
+        "script_errors": 5,
+        "engine_errors": 1,
+        "native_bytes": 1095,
+        "native_sha256": "eeb88fea52f082786711969aff230c57e85a58ef59def0bdc4a2fc269e16e3d5",
+        "artifact_bytes": 1155,
+        "artifact_sha256": "8465ce2fe33728d9447ab810ed3a806f59a6ff8442176841beeaf5cb1a069803",
+        "logs": [
+          "f20-solo-r7-native.log.gz",
+          "f20-solo-r7-workflow.log.gz",
+          "f20-solo-r7-artifact.zip"
+        ],
+        "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
+        "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
+        "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
+      },
+      {
+        "run": 37086104045,
+        "job": 111096633169,
+        "artifact": 11260518286,
+        "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+        "verdict": "FAIL compile; no gameplay exercised",
+        "workflow_conclusion": "failure",
+        "script_errors": 5,
+        "engine_errors": 1,
+        "native_bytes": 1463,
+        "native_sha256": "aa9a790643a05ac5e930558cf8aa2b22db106de02428707678f5fdafac535599",
+        "artifact_bytes": 1572,
+        "artifact_sha256": "e42a645c5a9f6a1a070588281fa2bc1b98a18a925260f2c81ab06fa491971af5",
+        "logs": [
+          "f20-arch-render-r4-native.log.gz",
+          "f20-arch-render-r4-workflow.log.gz",
+          "f20-arch-render-r4-artifact.zip"
+        ],
+        "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
+        "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
+        "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
+      },
+      {
+        "run": 37086609484,
+        "job": 111098133365,
+        "artifact": 11260826417,
+        "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+        "verdict": "FAIL compile; no gameplay exercised",
+        "workflow_conclusion": "failure",
+        "script_errors": 1,
+        "engine_errors": 1,
+        "native_bytes": 401,
+        "native_sha256": "2e446cab4956760906d57b3430757a7f5d993af02ffab5db96b1513b5e3c641e",
+        "artifact_bytes": 1006,
+        "artifact_sha256": "b8065a15752eb242ea90979e3e6a3b864f6be606a53009627c107e3e50a3d483",
+        "logs": [
+          "f20-probe-parser-native.log.gz",
+          "f20-probe-parser-workflow.log.gz",
+          "f20-probe-parser-artifact.zip"
+        ],
+        "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
+        "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
+        "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
       }
     ],
     "limitations": [
@@ -452,19 +518,19 @@
     }
   },
   "remote_pending": {
-    "solo_r7": {
-      "run": 37086096148,
-      "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+    "solo_r8": {
+      "run": 37086997616,
+      "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
       "script": "tests/smoke_f20_ending.gd",
-      "label": "f20-solo-r7-dialogue-trace",
+      "label": "f20-solo-r8-dialogue-trace",
       "mode": "headless",
       "timeout_minutes": 30
     },
-    "arch_render_r4": {
-      "run": 37086104045,
-      "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+    "arch_render_r5": {
+      "run": 37087002514,
+      "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
       "script": "tests/smoke_f20_arch_presentation.gd",
-      "label": "f20-arch-render-r4-ready-trace",
+      "label": "f20-arch-render-r5-ready-trace",
       "mode": "render",
       "timeout_minutes": 20
     }
@@ -475,6 +541,10 @@
   },
   "diagnostic_probe": {
     "source": "a507d6022d743be7bc92f10ad1511493812c314c",
-    "independent_review": "PASS f20_review: original180sready+30sdialoguepredicates/input/assertions unchanged, actualcompletedcallback/read-onlycontext/owner/action+intent+renderedtext; ready samples/elapsed/maxresumeinterval only. Max interval includes loopwork, not isolatedGLwarmup."
+    "independent_review": "WITHDRAWN: initialsourcePASS missed duplicate localowner nativeconfirmed athelper229. Ready180s/dialogue30s unchanged; actualdiagnostic notexercised.",
+    "correction": {
+      "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
+      "independent_source_review": "PASS f20_review: exact3-line newdiagnosticouterowner rename to dialogue_owner, confirmedduplicate removed, originalcreditsloop/behavior/deadlines unchanged. Fullcompilation/runtime awaitingreplay."
+    }
   }
 }
