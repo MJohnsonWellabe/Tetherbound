@@ -8,6 +8,15 @@ var _lesson_busy := false
 var before_interact: Callable
 var trace_input := false
 
+func _portal_result(result: Dictionary) -> void:
+	super._portal_result(result)
+	# A refused begin is terminal for this ordinary Use, never a successful
+	# arrival. The shared walker otherwise waits only for finish replies.
+	if result.get("kind") == "home_key_begin" and result.get("ok") == false \
+		and result.get("character_id") == game.local.character_id \
+		and result.get("world_instance_id") == game.world.reward_delivery_namespace:
+		_home_result = result.duplicate(true)
+
 func activate(prompt: Node3D) -> bool:
 	var failures_before := failures.size()
 	# A lesson may be due on this character's first walk past its teacher.
