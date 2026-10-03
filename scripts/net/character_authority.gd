@@ -267,6 +267,17 @@ func _research_other_transaction(character: String) -> bool:
 func _research_reserved(character: String) -> bool:
 	return _research_preparations.has(character) and _research_preparations[character].committed != true
 
+## An owner-applied reward payout, replayed exactly by the owner-passive
+## stream. Only satchel slots move; no revision CAS changes.
+func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary) -> bool:
+	if not _records.has(character) or not ESSENCE._equivalent(_records[character].state, before) \
+		or not after.get("inventory") is Array: return false
+	var next: Dictionary = _records[character].state.duplicate(true)
+	next.inventory = after.inventory.duplicate(true)
+	if not ESSENCE._equivalent(next, after): return false
+	_records[character].state = next
+	return true
+
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
 

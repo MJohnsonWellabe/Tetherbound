@@ -175,6 +175,15 @@ func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
 				"session_epoch": scope.session_id, "journal_session_id": row.session_id}
 	return {}
 
+## A guest payout moves its satchel; its owner-passive stream must carry that.
+func _owner_passive_delivery_ready() -> bool:
+	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return true
+	return _owner_passive.call("recording_active") == true
+
+func _owner_passive_delivery_record(row: Dictionary) -> void:
+	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return
+	_owner_passive.call("record_delivery", row)
+
 func _owner_passive_actor_vitals_record(row: Dictionary, saved: bool) -> bool:
 	var receipt: Variant = row.get("receipt")
 	if not receipt is Dictionary: return false

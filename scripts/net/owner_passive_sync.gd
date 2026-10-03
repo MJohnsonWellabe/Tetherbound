@@ -104,6 +104,13 @@ func record_vitals(row: Dictionary, saved: bool) -> bool:
 	local.vitals_seen = seen
 	return true
 
+## The owner applied a host-journaled payout to its satchel and saved it.
+func record_delivery(row: Dictionary) -> bool:
+	if not recording_active() or row.get("character_id") != local.character: return false
+	record_input({"op": "reward_delivery_applied", "delivery_id": str(row.get("delivery_id", "")),
+		"stacks_hash": HASH.fingerprint({"stacks": row.get("stacks")})})
+	return true
+
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
 
@@ -330,6 +337,12 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
 				stream.error = "owner_passive_vitals_saved_before_applied"; return
 			applied = REPLAY.apply_vitals(stream.cursor, input, proof)
+		elif input.get("op") == "reward_delivery_applied":
+			var row: Variant = _game().get("world").reward_deliveries.get(input.get("delivery_id"))
+			applied = REPLAY.apply_delivery(stream.cursor, input, row)
+			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
+				stream.character, stream.cursor.base, applied.cursor.base) != true:
+				stream.error = "owner_passive_delivery_authority_changed"; return
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:

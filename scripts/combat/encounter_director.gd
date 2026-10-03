@@ -2774,6 +2774,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	if bool(verdict.get("ok", false)):
 		_freeze_bounty_instances(encounter_id, peer_id)
 		_retain_research(encounter_id, peer_id, "sight", str(record.get("opponent", {}).get("species_id", "")), "engage")
+		# A mid-fight joiner's deployed creature is its round-reward actor.
+		_ordinary_bind_deployed_peer(peer_id)
 		if tournament_round:
 			_freeze_tournament_roster(encounter_id, peer_id, tournament_ids)
 		_host_after_encounter_change(encounter_id)

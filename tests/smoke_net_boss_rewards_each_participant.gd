@@ -99,6 +99,11 @@ func _run() -> void:
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
 	var host_session = await probe(0, "session")
 	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
+	# A real guest arrives with its party in its save; the host admits that
+	# party at join and never adopts later local-only party edits.
+	var adopted: Dictionary = await step(1, "deploy_creature", {"owned": true})
+	check(str(adopted.get("verdict", "")) == "PASS",
+		"peer 1 owns its creature before joining (%s)" % str(adopted.get("detail", "")))
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS",
 		"peer 1 joined peer 0's world on port %d (%s)" % [port, str(joined.get("detail", ""))])
