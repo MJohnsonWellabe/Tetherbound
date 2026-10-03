@@ -38,6 +38,66 @@ class OpeningDriver extends "res://tests/helpers/fresh_opening_segment.gd":
 class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 	var guards: RefCounted
 	var dialogue_proven := false
+	var _f18_assigning_tools := false
+	var _f18_assignment_trace: Array[Dictionary] = []
+	func _assign_tools_in_satchel() -> bool:
+		var initial: Dictionary = _f18_tool_observation()
+		var inventory_before: Array = guards._inventory()
+		_f18_assignment_trace.clear()
+		_f18_assigning_tools = true
+		# Keep the original four destinations, reverse order, focus algorithm,
+		# one-cycle bound, menu close and actual movement-resumed proof.
+		var passed: bool = await super._assign_tools_in_satchel()
+		_f18_assigning_tools = false
+		var final: Dictionary = _f18_tool_observation()
+		var retained: bool = int(_game.call("hotbar_slot_of", "home_key")) == 4 \
+			and guards._inventory() == inventory_before
+		guards.receipts.append({"phase": "earned_tool_bindings", "initial": initial,
+			"assignment_presses": _f18_assignment_trace.duplicate(true), "final": final,
+			"input": "actual InputMap joypad edges, each flushed through a process frame; original 3/5 physics minima",
+			"original_cycle_bound": 6, "home_key_slot": 4, "inventory_unchanged": guards._inventory() == inventory_before,
+			"passed": passed and retained})
+		if passed and not retained: _fail("F18 ordinary tool assignment lost key slot5 or changed earned inventory")
+		return passed and retained
+	func _f18_tool_observation(action: StringName = &"backpack_assign") -> Dictionary:
+		var focused: Control = _tree.root.gui_get_focus_owner()
+		var backpack: Node = (_menu.get("_bodies") as Array)[0]
+		var slot: int = (backpack.get("_buttons") as Array).find(focused)
+		var selected: int = int(backpack.get("_focused"))
+		var inventory: RefCounted = _game.get("inventory")
+		return {"hotbar": (_game.get("hotbar") as Array).duplicate(),
+			"menu_open": _menu.call("is_open"), "tab": _menu.call("current_tab_id"),
+			"gui_focus": str(focused.get_path()) if focused != null else "", "gui_inventory_slot": slot,
+			"gui_stack": inventory.call("stack_at", slot), "selected_slot": selected,
+			"selected_stack": inventory.call("stack_at", selected), "status": str(_menu.get("_status").get("text")),
+			"action_pressed": Input.is_action_pressed(action), "action_just_pressed": Input.is_action_just_pressed(action),
+			"physics_frame": Engine.get_physics_frames(), "process_frame": Engine.get_process_frames()}
+	func _tap_action(action: StringName) -> void:
+		if not _f18_assigning_tools:
+			await super._tap_action(action)
+			return
+		var event: InputEvent = _event_for(action, true)
+		var trace: Dictionary = {"action": str(action), "before": _f18_tool_observation(action), "edges": []}
+		if event == null:
+			trace["error"] = "no actual InputMap joypad binding"
+			_f18_assignment_trace.append(trace)
+			_fail("F18 tool assignment action has no physical joypad binding: " + str(action))
+			return
+		# Like FreshOpening's corrected pad driver: physics-only waits can put
+		# both edges in one event flush. A process frame makes each real edge
+		# observable to Satchel.poll without extending its six-press cycle.
+		for pressed: bool in [true, false]:
+			var edge: InputEvent = event if pressed else _event_for(action, false)
+			var started: int = Engine.get_physics_frames()
+			Input.parse_input_event(edge)
+			await _tree.process_frame
+			while Engine.get_physics_frames() - started < (3 if pressed else 5): await _tree.physics_frame
+			if action == &"backpack_assign":
+				trace.edges.append({"pressed": pressed, "event": edge.as_text(),
+					"physics_start": started, "observed": _f18_tool_observation(action)})
+		if action == &"backpack_assign":
+			trace["after"] = _f18_tool_observation(action)
+			_f18_assignment_trace.append(trace)
 	func _wait_open_panel(script_suffix: String, budget: int) -> Node:
 		var panel: Node = await super._wait_open_panel(script_suffix, budget)
 		if panel != null and script_suffix == "shop_panel.gd" and not guards.shop_key_offer_absent(panel):
