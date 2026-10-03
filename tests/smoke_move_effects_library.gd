@@ -4,6 +4,9 @@ extends SceneTree
 ## result fixture mutation. Cannot certify the required four-creature fight.
 ## --batch=identities|mastery|library|profile|clock --out=<directory> --medium
 ## --identity=<id>:r<rank> selects one explicit identity for an affected rerun.
+## --stage=arena|meadows: identity/mastery captures default to the configured
+## stage (production Meadows day look, installed ground and nature family, a
+## posed attacker of the move's type). arena keeps the earlier flat backdrop.
 const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 const LEGACY := preload("res://scripts/vfx/legacy_move_travel.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
@@ -11,8 +14,11 @@ const CREATURE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
+const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
+var _attackers: Dictionary = {}
+var _stage := ""
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -32,6 +38,7 @@ func _run() -> void:
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
 		if arg == "--medium": _medium = true
 		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
+		if arg.begins_with("--stage="): _stage = arg.trim_prefix("--stage=")
 	if _batch not in ["identities", "mastery", "library", "profile", "clock"]:
 		push_error("Unknown effect batch"); quit(1); return
 	if _batch in ["identities", "mastery", "profile"] and DisplayServer.get_name() == "headless":
@@ -81,6 +88,12 @@ func _run() -> void:
 	camera.position = Vector3(0, 5, 14)
 	camera.look_at(Vector3(0, 1.5, 0), Vector3.UP)
 	camera.current = true
+	if _stage.is_empty():
+		_stage = str((_scenarios.get("stage", {}) as Dictionary).get("default", "arena")) if _batch in ["identities", "mastery"] else "arena"
+	if _stage not in ["arena", "meadows"]:
+		push_error("Unknown stage " + _stage); quit(1); return
+	if _stage == "meadows":
+		if not _build_meadows_stage(floor, sun, world_environment, camera): return
 	if _batch in ["identities", "mastery"]:
 		# Production creature scene/script/model, with no encounter, AI or HP
 		# transaction. This establishes visible target coverage only.
@@ -169,10 +182,10 @@ func _exercise_light_lifecycle() -> void:
 	var cancelled: Array[Node3D] = []
 	var cancel_arrivals := [0]
 	for i in 5:
-		var context := {"action_id": "light-cancel:%d" % (i + 1),
-			"encounter_id": "light-cancel-%d" % i, "mastery_rank": 1,
-			"seed": i, "travel_seconds": 0.05, "impact_audio_owner": "renderer"}
-		var effect := LIBRARY.launch(_arena, Vector3(-5, 2, -8), Vector3(2, 2, -8), _moves.fireball.vfx, context)
+		var frozen := _frozen_move("fireball", _moves.fireball.vfx, 1, "light-cancel:%d" % (i + 1), "light-cancel-%d" % i, i + 1)
+		var context := {"travel_seconds": 0.05, "current_actor": frozen.actor_binding,
+			"source_ground": Vector3(-5, 0.04, -8), "target_ground": Vector3(2, 0.04, -8)}
+		var effect := LIBRARY.launch(_arena, Vector3(-5, 2, -8), Vector3(2, 2, -8), frozen, context)
 		if effect != null:
 			cancelled.append(effect)
 			effect.connect("arrived", func() -> void: cancel_arrivals[0] += 1)
@@ -203,10 +216,10 @@ func _exercise_light_lifecycle() -> void:
 	var natural: Array[Node3D] = []
 	var natural_arrivals := [0]
 	for i in 5:
-		var context := {"action_id": "light-natural:%d" % (i + 1),
-			"encounter_id": "light-natural-%d" % i, "mastery_rank": 1,
-			"seed": i + 5, "travel_seconds": 0.05, "impact_audio_owner": "renderer"}
-		var effect := LIBRARY.launch(_arena, Vector3(-5, 2, -8), Vector3(2, 2, -8), _moves.fireball.vfx, context)
+		var frozen := _frozen_move("fireball", _moves.fireball.vfx, 1, "light-natural:%d" % (i + 1), "light-natural-%d" % i, i + 6)
+		var context := {"travel_seconds": 0.05, "current_actor": frozen.actor_binding,
+			"source_ground": Vector3(-5, 0.04, -8), "target_ground": Vector3(2, 0.04, -8)}
+		var effect := LIBRARY.launch(_arena, Vector3(-5, 2, -8), Vector3(2, 2, -8), frozen, context)
 		if effect != null:
 			natural.append(effect)
 			effect.connect("arrived", func() -> void: natural_arrivals[0] += 1)
@@ -236,7 +249,9 @@ func _exercise_light_lifecycle() -> void:
 		if str(entry.name) == "fireball:launch": launches += 1
 		if str(entry.name) == "fireball:impact": impacts += 1
 	checks["one_launch_voice_per_node"] = launches == 10
-	checks["natural_only_contact_cues"] = impacts == 5
+	# The integrated presentation contract freezes impact_audio_owner=receipt:
+	# the accepted combat receipt owns the one contact cue, never this renderer.
+	checks["contact_cue_deferred_to_receipt"] = impacts == 0
 	AUDIO.logging_enabled = previous_logging
 	_light_lifecycle = {"scope": "production_nodes_synthetic_lifetime_only",
 		"checks": checks, "check_count": checks.size(), "peak_lights": peak,
@@ -266,8 +281,10 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var arrival_wall: Array[float] = []
 	var arrival_frames: Array[int] = []
 	var independent_result_frame := [-1]
-	var flight_ready := [false]
-	var impact_ready := [false]
+	# Shutter readiness per configured phase. Pre-arrival phases (launch,
+	# flight) open on the presentation clock; contact opens on actual arrival;
+	# later phases open on a presentation timer started by that arrival.
+	var phase_ready := {}
 	var target_bounds := AABB()
 	if capture and _target != null:
 		var pivot := _target.call("model_pivot") as Node3D
@@ -283,14 +300,24 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		var z := float(i) * 2 - float(simultaneous - 1)
 		var to := Vector3(3, 1.5, z)
 		if capture and _target != null: to = _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
-		var context := {"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
-			 "mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)}
+		var frozen := _frozen_move(move_id, spec, rank, "%s:%d" % [encounter, i], encounter, i + 1)
+		var context := {"travel_seconds": travel, "current_actor": frozen.actor_binding,
+			"source_ground": Vector3(-3, 0.04, z), "target_ground": Vector3(3, 0.04, z)}
 		if capture:
 			context["target_visual_bounds"] = {"position": target_bounds.position, "size": target_bounds.size}
-			transit = _transit_shutter(row, Vector3(-3, to.y, z), to, target_bounds)
+		var from := Vector3(-3, to.y, z)
+		if capture and _stage == "meadows":
+			from = _attacker_origin(case, move_id, z)
+			if not from.is_finite():
+				_failures.append("Attacker model missing " + encounter); return
+			context["source_ground"] = Vector3(from.x, 0.04, z)
+		if capture:
+			transit = _transit_shutter(row, from, to, target_bounds)
 			if transit.has("error"):
-				_failures.append(str(transit.error) + " " + encounter); return
-		var effect: Node3D = LEGACY.launch(_arena, Vector3(-3, to.y, z), to, spec, context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, Vector3(-3, to.y, z), to, spec, context)
+				_failures.append("%s %s from=%s target=%s" % [transit.error, encounter, from, target_bounds]); return
+		var legacy_context := {"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
+			"mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)}
+		var effect: Node3D = LEGACY.launch(_arena, from, to, spec, legacy_context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, from, to, frozen, context)
 		if effect == null: _failures.append("Launch failed " + id); return
 		effects.append(effect)
 		effect.connect("arrived", func() -> void:
@@ -298,12 +325,19 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 			arrival_frames.append(Engine.get_process_frames())
 			arrival_wall.append(float(Time.get_ticks_usec() - started) / 1000000.0)
 			if capture and int(arrivals[0]) == simultaneous:
-				create_timer(travel * maxf(0.0, float(_scenarios.capture_phases.impact) - 1.0), false).timeout.connect(func() -> void: impact_ready[0] = true))
+				for phase: String in _scenarios.capture_phases:
+					var fraction := float(_scenarios.capture_phases[phase])
+					if phase == "contact": phase_ready[phase] = true
+					elif phase != "flight" and fraction > 1.0:
+						create_timer(travel * (fraction - 1.0), false).timeout.connect(func() -> void: phase_ready[phase] = true))
 	if capture:
 		# Disk capture can stretch wall time without advancing the same amount
 		# of presentation time. Shutters follow its timer/contact, never a wall
 		# duration inference; recorded wall timestamps retain the real stalls.
-		create_timer(travel * float(transit.fraction), false).timeout.connect(func() -> void: flight_ready[0] = true)
+		for phase: String in _scenarios.capture_phases:
+			var fraction := float(transit.fraction) if phase == "flight" else float(_scenarios.capture_phases[phase])
+			if phase == "flight" or fraction < 1.0:
+				create_timer(travel * fraction, false).timeout.connect(func() -> void: phase_ready[phase] = true)
 	# Same separate idle timer combat owns; it never waits for the node. This
 	# local clock proof makes no HP mutation and cannot replace player evidence.
 	create_timer(travel, false).timeout.connect(func() -> void:
@@ -334,7 +368,8 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		if capture and DisplayServer.get_name() != "headless":
 			for phase: String in _scenarios.capture_phases:
 				if captured.has(phase): continue
-				var ready: bool = bool(flight_ready[0]) if phase == "flight" else (bool(impact_ready[0]) if phase == "impact" else int(arrivals[0]) == simultaneous)
+				var ready := bool(phase_ready.get(phase, false))
+				var pre_arrival := phase == "flight" or float(_scenarios.capture_phases[phase]) < 1.0
 				if not ready: continue
 				await RenderingServer.frame_post_draw
 				# Neutral filenames keep archetype and rank out of blind-judge
@@ -355,11 +390,14 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					captured[phase]["actual_body_positions"] = positions
 					captured[phase]["clear_of_expanded_target_bounds"] = clear
 					if not clear: _failures.append("Flight body reached measured target envelope " + encounter)
-				if phase == "flight" and int(arrivals[0]) > 0:
-					_failures.append("Flight frame reached after contact " + encounter)
-				if phase != "flight" and int(arrivals[0]) != simultaneous:
-					_failures.append("Contact/impact frame taken before arrival " + encounter)
-		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0: break
+				if pre_arrival and int(arrivals[0]) > 0:
+					_failures.append("%s frame reached after contact %s" % [phase.capitalize(), encounter])
+				if not pre_arrival and int(arrivals[0]) != simultaneous:
+					_failures.append("%s frame taken before arrival %s" % [phase.capitalize(), encounter])
+		# A capture also waits for every configured shutter; an aftermath frame
+		# after the effect freed itself honestly records an empty aftermath.
+		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0 \
+				and (not capture or captured.size() == _scenarios.capture_phases.size()): break
 	if int(arrivals[0]) != simultaneous: _failures.append("Missing arrival " + encounter)
 	var watchdog_expired := capture and Time.get_ticks_usec() - started >= wall_watchdog
 	if watchdog_expired: _failures.append("Capture wall watchdog expired " + encounter)
@@ -423,3 +461,97 @@ func _percentile(samples: Array[float], fraction: float) -> float:
 	var sorted: Array[float] = samples.duplicate()
 	sorted.sort()
 	return sorted[clampi(ceili(float(sorted.size()) * fraction) - 1, 0, sorted.size() - 1)]
+
+## Production Meadows day look (art.json + meadows_look.json through the real
+## WorldLook), the installed terrain grass texture and installed nature family
+## as dressing. Presentation context for judging only; no world, encounter,
+## save or gameplay state is created.
+func _build_meadows_stage(floor: MeshInstance3D, sun: DirectionalLight3D,
+		world_environment: WorldEnvironment, camera: Camera3D) -> bool:
+	var stage: Dictionary = _scenarios.get("stage", {})
+	var ground := StandardMaterial3D.new()
+	ground.albedo_texture = load(str(stage.ground_albedo)) as Texture2D
+	ground.normal_enabled = true
+	ground.normal_texture = load(str(stage.ground_normal)) as Texture2D
+	ground.roughness = 0.95
+	ground.uv1_scale = Vector3.ONE * float(stage.get("ground_uv_scale", 10.0))
+	ground.albedo_color = Color(str(stage.get("ground_tint", "#ffffff")))
+	if ground.albedo_texture == null:
+		push_error("Stage ground texture missing"); quit(1); return false
+	(floor.mesh as PlaneMesh).size = Vector2.ONE * float(stage.get("ground_size_m", 60.0))
+	floor.material_override = ground
+	for prop: Dictionary in stage.get("dressing", []):
+		var packed := load(str(prop.scene)) as PackedScene
+		if packed == null:
+			push_error("Stage dressing missing " + str(prop.scene)); quit(1); return false
+		var node := packed.instantiate() as Node3D
+		_arena.add_child(node)
+		var p: Array = prop.position
+		node.position = Vector3(float(p[0]), float(p[1]), float(p[2]))
+		node.rotation_degrees.y = float(prop.get("yaw_deg", 0.0))
+		node.scale = Vector3.ONE * float(prop.get("scale", 1.0))
+	sun.name = "Sun"
+	world_environment.name = "Environment"
+	world_environment.environment.background_mode = Environment.BG_SKY
+	# WorldLook styles the sky the scene already owns, as world scenes do.
+	world_environment.environment.sky = Sky.new()
+	world_environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	var look := WORLD_LOOK.new()
+	look.name = "WorldLook"
+	look.realm_look_path = str(stage.look_path)
+	look.sun_path = sun.get_path()
+	look.environment_path = world_environment.get_path()
+	_arena.add_child(look)
+	look.call("set_clock_frozen", true)
+	look.call("apply_time", str(stage.get("time", "day")))
+	var cam: Dictionary = stage.camera
+	camera.position = Vector3(float(cam.position[0]), float(cam.position[1]), float(cam.position[2]))
+	camera.fov = float(cam.get("fov", 60.0))
+	camera.look_at(Vector3(float(cam.look_at[0]), float(cam.look_at[1]), float(cam.look_at[2])), Vector3.UP)
+	return true
+
+## Posed production attacker of the case's configured species facing the
+## target. Returns a launch point just in front of its measured model bounds
+## at mouth height, or a non-finite vector when the production model is absent.
+func _attacker_origin(case: Dictionary, move_id: String, z: float) -> Vector3:
+	var stage: Dictionary = _scenarios.get("stage", {})
+	var species := str(case.get("attacker_species", (stage.get("attackers_by_type", {}) as Dictionary).get(
+		str(_moves.get(move_id, {}).get("type", "")), stage.get("attacker_species", "terrapup"))))
+	for key: String in _attackers: (_attackers[key] as Node3D).visible = key == species
+	if not _attackers.has(species):
+		var body := CREATURE.instantiate() as CharacterBody3D
+		body.set_script(CREATURE_BODY)
+		_arena.add_child(body)
+		body.call("setup", species)
+		body.set_physics_process(false)
+		body.position = Vector3(float(stage.get("attacker_x", -3.4)), 0, z)
+		body.rotation.y = PI * 0.5
+		if not bool(body.call("has_model")): return Vector3(INF, INF, INF)
+		# Production creatures differ widely in length. Place the measured
+		# muzzle face at the configured line so every attacker leaves the
+		# same readable gap to the target instead of overlapping it.
+		var placed_pivot := body.call("model_pivot") as Node3D
+		var placed := placed_pivot.global_transform * RENDER_BOUNDS.measure(placed_pivot)
+		body.position.x += float(stage.get("attacker_front_x", -3.0)) - placed.end.x
+		_attackers[species] = body
+	var attacker := _attackers[species] as CharacterBody3D
+	var pivot := attacker.call("model_pivot") as Node3D
+	var bounds := pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+	if not bounds.size.is_finite() or bounds.size.y <= 0.0: return Vector3(INF, INF, INF)
+	return Vector3(bounds.end.x + float(stage.get("muzzle_clearance_m", 0.12)),
+		bounds.position.y + bounds.size.y * float(stage.get("muzzle_height_ratio", 0.62)), z)
+
+## The integrated presentation contract (move_presentation_contract.gd) admits
+## only a frozen move row bound to one actor action. This synthetic binding
+## names a proof actor and is never a combat receipt or HP authority.
+func _frozen_move(move_id: String, visual: Dictionary, rank: int, action_id: String,
+		encounter: String, action: int) -> Dictionary:
+	var vfx := visual.duplicate(true)
+	if not vfx.has("count"):
+		var base: Dictionary = (LIBRARY.config().archetypes[str(vfx.archetype)] as Dictionary).get("parameters", {})
+		for key: String in base: if not vfx.has(key): vfx[key] = base[key]
+	vfx["mastery_owner"] = "f25"
+	var binding := {"character_id": "f25-proof", "creature_uid": "f25-proof-attacker",
+		"encounter_id": encounter, "generation": 1, "action": action}
+	return {"vfx": vfx, "actor_binding": binding, "action_id": action_id,
+		"mastery_rank": rank, "move_id": move_id}
