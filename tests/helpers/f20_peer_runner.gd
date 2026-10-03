@@ -4,6 +4,7 @@ extends "res://tools/net/peer_runner.gd"
 const F20 := preload("res://tests/helpers/f20_ending_probe.gd")
 var f20 := F20.new()
 var _f20_arrival_trace_at := 0
+var _f20_arrival_projections: Dictionary = {}
 
 func _send_heartbeat() -> void:
 	super._send_heartbeat()
@@ -42,6 +43,20 @@ func _send_heartbeat() -> void:
 			print("F20 ARRIVAL row character=", value.get("character_id", ""),
 				" status=", value.get("status", ""), " intent=", value.get("intent", {}),
 				" receipt=", value.get("receipt", ""))
+			# One detached owner projection per original local pending receipt.
+			# The pure plan reports its comparison, not an apply/save BOOL result.
+			var receipt: String = str(value.get("receipt", ""))
+			if value.get("character_id") == game.local.character_id and value.get("status") == "pending" \
+					and not receipt.is_empty() and not _f20_arrival_projections.has(receipt):
+				_f20_arrival_projections[receipt] = true
+				var record := preload("res://scripts/net/character_record_rules.gd")
+				var delivery := preload("res://scripts/net/character_action_delivery.gd")
+				var current: Dictionary = record.portable_projection(game.local.call("save_data"))
+				var plan: Dictionary = delivery.owner_plan(current, value, record.errors)
+				print("F20 ARRIVAL detached owner comparison ", JSON.stringify({
+					"receipt": receipt, "current": current, "before": value.get("before", {}),
+					"after": value.get("after", {}), "pure_plan_ok": plan.get("ok", false),
+					"pure_plan_code": plan.get("code", ""), "pure_plan_duplicate": plan.get("duplicate", false)}))
 	var lifecycle := session.get_node_or_null("FoundationComposition/TravelLifecycle")
 	for peer: int in remote:
 		var original: Dictionary = remote[peer]
