@@ -3,6 +3,7 @@ const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
+const FOUNDATION_RETRY_ORDER := preload("res://scripts/net/foundation_retry_order.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
@@ -730,68 +731,68 @@ func _retry_foundation_events() -> void:
 	var world: RefCounted = _game().get("world")
 	var handled := {}
 	var research_no_progress := {}
-	for raw: Variant in world.reward_deliveries.values():
-		if not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
-		for duty: Dictionary in raw.duties:
-			if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
-			if duty.action == "boss_relic":
-				var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
-				if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
-			var peer := int(_registry.call("peer_for_character", duty.character_id))
-			if peer < 1 or handled.has(duty.character_id): continue
-			if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
-			var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
-			var receipt := _foundation_duty_receipt(duty)
-			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
-			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
-				and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
-				get_node(^"LedgerRpc").call("_process_creature_training", latest)
-				handled[duty.character_id] = true
-				continue # Re-deliver the immutable original; never prepare it again.
-			var research_signature := ""
-			if duty.action == "research_event":
-				research_signature = JSON.stringify([duty.character_id, peer, duty.context.world_namespace,
-					duty.context.session_id, duty.context.species_id, duty.context.kind,
-					duty.context.get("move_id"), duty.context.get("night")])
-				# A real no-progress result excludes only equivalent research in
-				# this synchronous scan at the same authority revision. Retained
-				# originals and receipt/ACK recovery above still run for every duty.
-				if research_no_progress.has(research_signature) \
-					and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)): continue
-			# Retained historical duties and in-fight mastery need no new action.
-			# Project/recover authority only after those exclusions; a long fight
-			# can retain hundreds of mastery sources for this same character.
-			if admitted_character_state(peer).is_empty(): continue
-			var context: Dictionary = duty.context.duplicate(true)
-			if duty.action == "boss_relic": context.boss_settlement_world_flags = world.flags.all_set().duplicate()
-			context.character_id = duty.character_id
-			context.expected_revision = int(_character_authority.call("revision", duty.character_id))
-			context.in_range = true
-			context.retained_event = raw.delivery_id
-			var result: Dictionary
-			if duty.action == "research_event":
-				result = preload("res://scripts/creatures/research_actions.gd").commit(self, peer, duty.action, duty.intent, context)
-			elif duty.action == "bounty_event":
-				var bounty := get_node_or_null(^"FoundationComposition/BountyHost")
-				if bounty == null: continue
-				result = bounty.call("confirmed_event", peer, str(duty.context.event_id))
-			else:
-				context.in_combat = false
-				context.foundation_runtime_authorized = true
-				if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery"]:
-					var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
-					if ready.get("ok") != true:
-						handled[duty.character_id] = true
-						continue
-				if duty.action in FOUNDATION_ACTIONS.ACTIONS:
-					result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
-				else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
-			if duty.action == "research_event" and result.get("code") == "research_no_progress":
-				# Admission inside the real research adapter may refresh the local
-				# record; remember its resulting revision, never a character state.
-				research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
-			if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
+	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
+		var raw: Dictionary = work.event
+		var duty: Dictionary = work.duty
+		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
+		if duty.action == "boss_relic":
+			var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
+			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
+		var peer := int(_registry.call("peer_for_character", duty.character_id))
+		if peer < 1 or handled.has(duty.character_id): continue
+		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
+		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
+		var receipt := _foundation_duty_receipt(duty)
+		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
+			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
+			and latest.status == "pending" and latest.after.redesign_character.transaction_receipts.has(receipt):
+			get_node(^"LedgerRpc").call("_process_creature_training", latest)
+			handled[duty.character_id] = true
+			continue # Re-deliver the immutable original; never prepare it again.
+		var research_signature := ""
+		if duty.action == "research_event":
+			research_signature = JSON.stringify([duty.character_id, peer, duty.context.world_namespace,
+				duty.context.session_id, duty.context.species_id, duty.context.kind,
+				duty.context.get("move_id"), duty.context.get("night")])
+			# A real no-progress result excludes only equivalent research in
+			# this synchronous scan at the same authority revision. Retained
+			# originals and receipt/ACK recovery above still run for every duty.
+			if research_no_progress.has(research_signature) \
+				and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)): continue
+		# Retained historical duties and in-fight mastery need no new action.
+		# Project/recover authority only after those exclusions; a long fight
+		# can retain hundreds of mastery sources for this same character.
+		if admitted_character_state(peer).is_empty(): continue
+		var context: Dictionary = duty.context.duplicate(true)
+		if duty.action == "boss_relic": context.boss_settlement_world_flags = world.flags.all_set().duplicate()
+		context.character_id = duty.character_id
+		context.expected_revision = int(_character_authority.call("revision", duty.character_id))
+		context.in_range = true
+		context.retained_event = raw.delivery_id
+		var result: Dictionary
+		if duty.action == "research_event":
+			result = preload("res://scripts/creatures/research_actions.gd").commit(self, peer, duty.action, duty.intent, context)
+		elif duty.action == "bounty_event":
+			var bounty := get_node_or_null(^"FoundationComposition/BountyHost")
+			if bounty == null: continue
+			result = bounty.call("confirmed_event", peer, str(duty.context.event_id))
+		else:
+			context.in_combat = false
+			context.foundation_runtime_authorized = true
+			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery"]:
+				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
+				if ready.get("ok") != true:
+					handled[duty.character_id] = true
+					continue
+			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
+				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+		if duty.action == "research_event" and result.get("code") == "research_no_progress":
+			# Admission inside the real research adapter may refresh the local
+			# record; remember its resulting revision, never a character state.
+			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
+		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]

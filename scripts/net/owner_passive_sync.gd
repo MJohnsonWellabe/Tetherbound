@@ -10,6 +10,8 @@ const E := preload("res://scripts/creatures/essence.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
 const GROOM := preload("res://scripts/net/groom_passive_sync.gd")
 const RESEARCH := preload("res://scripts/creatures/research_actions.gd")
+const CLOUD_MAP := preload("res://scripts/world/cloudreach_map_state.gd")
+const DATA := preload("res://scripts/data/redesign_data.gd")
 const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival"]
 const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest"]
 const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery"]
@@ -28,6 +30,11 @@ var pending: Dictionary = {}
 var committing: Dictionary = {}
 var saving := false
 var _left := 0.0
+
+class NavigationFlags extends RefCounted:
+	var flags: Dictionary = {}
+	var revision := 0
+	func has(id: String) -> bool: return flags.get(id) == true
 
 func _init(session: Node = null) -> void:
 	if session != null: _session = weakref(session)
@@ -453,9 +460,44 @@ func portal_grounded(peer: int, request: Dictionary) -> Dictionary:
 	var checkpoint: Dictionary = stream.get("checkpoint", {})
 	if checkpoint.get("source_kind") != "portal_arrival" or not PREP.exact(checkpoint.get("request"), request) \
 		or checkpoint.get("travel_ready") != true: return _deny("owner_passive_arrival_pending")
+	if request.permit.realm == "cloudreach" and not checkpoint.has("arrival_discoveries"):
+		var context := _context(peer, stream)
+		if context.realm != request.permit.realm or not context.get("initial_position") is Vector3:
+			return _deny("owner_passive_arrival_pending")
+		# Cloud's scene bind reveals navigation landmarks while this origin
+		# checkpoint freezes ordinary discovery ticks. Reproduce that ORIGINAL
+		# navigation operation from host ground/flags, without a passive tick.
+		# Scene navigation binds BEFORE any personal waystone seating. Only
+		# the original canonical first entry proves that same navigation source.
+		if _cloud_initial_navigation_bound(request, stream.cursor.state, context.initial_position, stream.cursor.discovered):
+			checkpoint.arrival_discoveries = _cloud_arrival_discoveries(stream.cursor.discovered,
+				context.initial_position, owner().call("_foundation_flags", peer), _game().get("world").flags.call("all_set"))
 	checkpoint.grounded = true # Caller just revalidated actual owner BOOL + host ground binding.
 	_commit_saved(peer, stream)
 	return checkpoint.get("result", checkpoint.get("last_result", _deny("owner_passive_arrival_pending"))).duplicate(true)
+
+static func _cloud_initial_navigation_bound(request: Dictionary, state: Dictionary, at: Vector3, discovered: Dictionary) -> bool:
+	if request.permit.realm != "cloudreach" or not discovered.get("cloudreach", []).is_empty() \
+		or not str(state.redesign_character.last_waystones.get("cloudreach", "")).is_empty(): return false
+	var world: Dictionary = DATA.json("res://data/config/cloudreach_world.json")
+	var entry: Dictionary = world.transition_points.meadows_entry
+	if request.permit.entry_id != entry.id: return false
+	var position: Array = entry.position
+	var region: String = CLOUD_MAP.region_at(world, Vector3(position[0], position[1], position[2]))
+	return not region.is_empty() and CLOUD_MAP.region_at(world, at) == region
+
+static func _cloud_arrival_discoveries(previous: Dictionary, at: Vector3, personal: Dictionary, world_flags: Array) -> Dictionary:
+	var flags := NavigationFlags.new()
+	flags.flags = personal.duplicate(true)
+	for id: String in world_flags: flags.flags[id] = true
+	var map := CLOUD_MAP.new()
+	map.configure_cloudreach(DATA.json("res://data/config/cloudreach_world.json"),
+		DATA.json("res://data/config/cloudreach_chapter.json"), flags)
+	map.load_data({"realm_id": "cloudreach", "landmarks": previous.get("cloudreach", []).duplicate()})
+	map.sync_navigation(flags, at)
+	var result := previous.duplicate(true)
+	result.cloudreach = map.save_data().landmarks.duplicate()
+	return result
 
 func portal_refused(peer: int, request: Dictionary, reason: String) -> bool:
 	var character: String = owner().call("_authority_character", peer)
@@ -900,6 +942,15 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 		if previous.id != packet.get("old_stream") or previous.cursor.sequence != packet.get("old_sequence") \
 			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"): return
 		discoveries = previous.cursor.discovered.duplicate(true)
+		var checkpoint: Dictionary = previous.checkpoint
+		if not packet.has("checkpoint_id") and row is Dictionary and checkpoint.get("source_kind") == "portal_arrival" \
+			and checkpoint.get("grounded") == true and checkpoint.get("result", {}).get("durable") == true \
+			and checkpoint.result.get("receipt") == row.get("receipt") \
+			and checkpoint.get("arrival_discoveries") is Dictionary \
+			and row.get("action") == "portal_arrival" and PREP.exact(row.get("intent"), {
+				"permit_id": checkpoint.request.permit.request_id, "realm": checkpoint.request.permit.realm,
+				"entry_id": checkpoint.request.permit.entry_id}):
+			discoveries = checkpoint.arrival_discoveries.duplicate(true)
 	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"): return
 	if packet.has("checkpoint_id"):
 		if not hosts.has(character): return

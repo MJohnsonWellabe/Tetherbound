@@ -18,6 +18,10 @@ class World extends RefCounted:
 	var world_id := ""
 	var reward_delivery_namespace := ""
 	var reward_deliveries := {}
+	var flags: RefCounted
+
+class Flags extends RefCounted:
+	func all_set() -> Array: return []
 
 class Writer extends RefCounted:
 	var accepted := false
@@ -56,6 +60,7 @@ class Session extends Node:
 	func _game() -> Node: return game
 	func _groom_service() -> RefCounted: return maps
 	func _altar_current_epoch() -> String: return "current-epoch"
+	func _foundation_flags(_peer: int) -> Dictionary: return {}
 	func is_host() -> bool: return host
 	func local_peer_id() -> int: return 1 if host else 2
 	func snapshot_ready() -> bool: return true
@@ -84,10 +89,11 @@ class Session extends Node:
 
 class Service extends SYNC:
 	var body_ready := true
+	var body_realm := "meadows"
 	# Disclosed host-body fixture used by reset endpoint confirmation.
 	var body_position := Vector3.ZERO
 	func _context(_peer: int, _stream: Dictionary) -> Dictionary:
-		var result := {"realm": "meadows", "landmarks": {}, "max_speed": 40.0, "max_elapsed": 100.0}
+		var result := {"realm": body_realm, "landmarks": {}, "max_speed": 40.0, "max_elapsed": 100.0}
 		if body_ready:
 			result.initial_position = body_position
 			result.initial_max_distance = 80.0
@@ -107,6 +113,7 @@ func before_each() -> void:
 	game.local.character_id = before.character_id
 	game.local.data = before.duplicate(true)
 	game.world = World.new()
+	game.world.flags = Flags.new()
 	game.world.world_id = event.world_id
 	game.world.reward_delivery_namespace = event.world_namespace
 	game.world.reward_deliveries[event.delivery_id] = event.duplicate(true)
@@ -577,6 +584,102 @@ func test_portal_origin_checkpoint_reserves_without_promoting_until_actual_groun
 		assert_true(PREP.exact(session.action_calls[-1].request, request))
 		assert_eq(session._character_authority.revision(before.character_id), 0)
 		assert_true(session._character_authority.creature_training_is_pending(before.character_id))
+
+func test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_before_next_portal() -> void:
+	var request := _portal_request()
+	request.envelope.payload.arch_id = "cloudreach"
+	request.permit.realm = "cloudreach"
+	request.permit.entry_id = "cloudreach_arrival_from_meadows"
+	var stream := _portal_frozen(request)
+	var original_prepared := var_to_bytes(stream.checkpoint.prepared)
+	var old_stream: String = stream.id
+	service.receive_host(2, _envelope({"op": "saved", "id": stream.checkpoint.id,
+		"hash": stream.checkpoint.prepared.hash, "saved": true}))
+	assert_false(stream.checkpoint.has("arrival_discoveries"), "origin BOOL cannot prove destination navigation")
+	service.body_realm = "cloudreach"
+	service.body_position = Vector3(0, 105.03, -260)
+	assert_true(SYNC._cloud_initial_navigation_bound(request, stream.cursor.state, service.body_position, stream.cursor.discovered))
+	var other_entry: Dictionary = request.duplicate(true)
+	other_entry.permit.entry_id = "cloudreach_summit_bivouac"
+	assert_false(SYNC._cloud_initial_navigation_bound(other_entry, stream.cursor.state, service.body_position, stream.cursor.discovered))
+	var returning: Dictionary = stream.cursor.state.duplicate(true)
+	returning.redesign_character.last_waystones.cloudreach = "cloudreach_galefoot_waycamp"
+	assert_false(SYNC._cloud_initial_navigation_bound(request, returning, service.body_position, stream.cursor.discovered))
+	assert_false(SYNC._cloud_initial_navigation_bound(request, stream.cursor.state, Vector3(0, 1000, 5000), stream.cursor.discovered))
+	assert_false(SYNC._cloud_initial_navigation_bound(request, stream.cursor.state, service.body_position,
+		{"cloudreach": ["realm_gate_crag"]}), "prior Cloud visit is not a first-entry navigation proof")
+	session.action_result = {"ok": true, "durable": true, "receipt": "fixture-accepted-portal-receipt"}
+	service.portal_grounded(2, request)
+	assert_true(stream.checkpoint.has("arrival_discoveries"))
+	if not stream.checkpoint.has("arrival_discoveries"): return
+	var discoveries: Dictionary = stream.checkpoint.arrival_discoveries.duplicate(true)
+	assert_eq(discoveries.cloudreach, ["realm_gate_crag"], "production navigation reveals the arrival region while ticks are frozen")
+	assert_eq(var_to_bytes(stream.checkpoint.prepared), original_prepared, "origin preparation stays immutable")
+	assert_true(PREP.exact(stream.cursor.state, session._character_authority.state(before.character_id)), "navigation adds no passive credit")
+	# Disclosed accepted journal/owner doubles: this fixture has no production
+	# writer. Exercise the original accepted-row rebase with actual map logic.
+	var row := {"kind": "creature_training", "version": 2, "action": "portal_arrival", "status": "accepted", "receipt": session.action_result.receipt,
+		"delivery_id": "fixture-cloud-portal-delivery", "character_id": before.character_id,
+		"intent": {"permit_id": request.permit.request_id, "realm": request.permit.realm, "entry_id": request.permit.entry_id},
+		"after": session._character_authority.state(before.character_id)}
+	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+	game.local.data = row.after.duplicate(true)
+	session.maps.value = discoveries.duplicate(true)
+	session.host = false
+	service.receive_owner(_envelope({"op": "inputs_ack", "sequence": stream.cursor.sequence}))
+	service.owner_settled(row)
+	var packet: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(packet.op, "rebase")
+	session.host = true
+	var forged: Dictionary = packet.duplicate(true)
+	var extra: Dictionary = discoveries.duplicate(true)
+	extra.cloudreach.append("three_bells_bridge")
+	forged.discoveries_hash = PREP.fingerprint({"discovered": extra})
+	service.receive_host(2, forged)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "no owner-supplied extra landmark")
+	extra = discoveries.duplicate(true)
+	extra.meadows = ["village"]
+	forged.discoveries_hash = PREP.fingerprint({"discovered": extra})
+	service.receive_host(2, forged)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "proof cannot change another realm")
+	forged = packet.duplicate(true)
+	forged.old_prefix_hash = "0".repeat(64)
+	service.receive_host(2, forged)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "original exact input prefix required")
+	game.world.reward_deliveries[row.delivery_id].intent.permit_id = "another-consumed-permit"
+	service.receive_host(2, packet)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "another row cannot use this proof")
+	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+	game.world.reward_deliveries[row.delivery_id].receipt = "another-arrival-receipt"
+	forged = packet.duplicate(true)
+	forged.receipt = "another-arrival-receipt"
+	service.receive_host(2, forged)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "matching intent still requires original committed receipt")
+	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+	stream.checkpoint.grounded = false
+	service.receive_host(2, packet)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "ungrounded origin cannot grant discoveries")
+	stream.checkpoint.grounded = true
+	service.receive_host(3, packet)
+	assert_eq(service.hosts[before.character_id].id, old_stream, "actual admitted owner required")
+	forged = packet.duplicate(true)
+	forged.session_epoch = "old-epoch"
+	service.receive_host(2, forged)
+	assert_eq(service.hosts[before.character_id].id, old_stream)
+	service.receive_host(2, packet)
+	assert_eq(session.messages[-1].op, "rebase_ack")
+	assert_eq(service.hosts[before.character_id].id, packet.stream_id)
+	assert_true(PREP.exact(service.hosts[before.character_id].cursor.discovered, discoveries))
+	var rebased := var_to_bytes(service.hosts[before.character_id].cursor)
+	service.receive_host(2, packet)
+	assert_eq(var_to_bytes(service.hosts[before.character_id].cursor), rebased, "duplicate completion cannot restart cursor")
+	var next := _portal_request()
+	next.envelope.request_id += ":return"
+	next.envelope.payload = {"kind": "home_key_finish", "use_id": "actual-home-key-raise"}
+	next.permit.origin_realm = "cloudreach"
+	next.permit.realm = "meadows"
+	next.permit.request_id += ":return"
+	assert_eq(service.portal_begin(2, next).code, "owner_passive_checkpoint_pending", "second portal uses exact new baseline")
 
 func test_portal_owner_freeze_blocks_new_inputs_and_pose_save_requires_exact_saved_token() -> void:
 	var request := _portal_request()
