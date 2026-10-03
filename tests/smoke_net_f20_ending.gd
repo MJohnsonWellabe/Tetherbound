@@ -35,7 +35,8 @@ func _run() -> void:
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return
 	var returned := await _inspect(1)
-	check(returned.retained.character == guest_id and returned.context.homecoming_seen \
+	check(returned.retained.character == guest_id and returned.retained.uids == guest.retained.uids \
+		and returned.context.homecoming_seen \
 		and not returned.context.regional_credits_seen, "rejoin reloads the original personal acknowledgement without crediting interrupted credits")
 	if not await _pass(1, "f20_talk"): return
 	if not await _pass(1, "f20_skip"): return
@@ -44,7 +45,8 @@ func _run() -> void:
 	var completed := await _inspect(1)
 	check(completed.context.regional_credits_seen and not completed.credits_open,
 		"guest credits acknowledged exactly once and remain closed after real disk reload")
-	check(completed.retained.names == guest.retained.names, "disconnect/reload retains this character's actual five")
+	check(completed.retained.names == guest.retained.names and completed.retained.uids == guest.retained.uids,
+		"disconnect/reload retains this character's actual five identities")
 	var host_after := await _inspect(0)
 	check(host_after.retained.character == host.retained.character and host_after.context.regional_credits_seen,
 		"guest reconnect does not overwrite host completion")
