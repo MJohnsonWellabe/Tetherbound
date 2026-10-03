@@ -52,9 +52,9 @@ func fixture(game: Node, label: String) -> bool:
 			"solo post-finale fixture has passed its first actual host morning"): return false
 	return check(game.call("save_game", 0), "post-finale fixture saves through production schema")
 
-func ready(tree: SceneTree, game: Node) -> bool:
+func ready(tree: SceneTree, game: Node, timeout_ms: int = 180000) -> bool:
 	var began := Time.get_ticks_msec()
-	var deadline := began + 180000
+	var deadline := began + timeout_ms
 	var previous := began
 	var samples := 0
 	var max_wait_ms := 0
@@ -68,12 +68,14 @@ func ready(tree: SceneTree, game: Node) -> bool:
 		var player := game.call("find_player") as CharacterBody3D
 		if scene != null and scene.has_method("shell_build_complete") and scene.call("shell_build_complete") \
 			and player != null and player.is_on_floor() and not HOME.journey_context(game).is_empty():
-			print("F20 READY elapsed_ms=", now - began, " physics_samples=", samples, " max_wait_ms=", max_wait_ms)
+			print("F20 READY elapsed_ms=", now - began, " physics_samples=", samples, " max_wait_ms=", max_wait_ms,
+				" budget_ms=", timeout_ms)
 			return true
 	var scene := tree.current_scene
 	var player := game.call("find_player") as CharacterBody3D
 	var owner := INPUT_OWNER.current(tree)
 	print("F20 READY TIMEOUT elapsed_ms=", Time.get_ticks_msec() - began,
+		" budget_ms=", timeout_ms,
 		" physics_samples=", samples, " max_wait_ms=", max_wait_ms,
 		" scene=", scene.get_path() if scene != null else "none",
 		" shell_complete=", scene.call("shell_build_complete") if scene != null and scene.has_method("shell_build_complete") else false,

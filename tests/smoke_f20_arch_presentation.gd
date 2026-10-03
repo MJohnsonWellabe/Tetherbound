@@ -9,6 +9,9 @@ var _recording: AudioEffectRecord
 var _capture_started := false
 var _capture_done := false
 var _image_saved := false
+var _startup_began := 0
+var _startup_process_frames := 0
+var _startup_draw_frames := 0
 
 func _init() -> void: _run.call_deferred()
 
@@ -16,8 +19,16 @@ func _run() -> void:
 	await process_frame
 	var game := root.get_node("Game")
 	if not proof.fixture(game, "Presentation"): finish(); return
+	_startup_began = Time.get_ticks_msec()
+	process_frame.connect(_observe_startup_process)
+	RenderingServer.frame_post_draw.connect(_observe_startup_draw)
 	change_scene_to_file("res://scenes/world/meadows_playground.tscn")
-	if not await proof.ready(self, game): finish(); return
+	# Hosted software rendering has measured 132-second gaps between physics
+	# samples. Allow bounded cold startup here; solo/net retain 180 seconds.
+	# Shell completion, floor contact and personal context remain mandatory.
+	var ready: bool = await proof.ready(self, game, 600000)
+	_stop_startup_observers()
+	if not ready: finish(); return
 	proof.diagnose_home_anchor(self, game)
 	var bus := AudioServer.get_bus_index("SFX")
 	if not proof.check(bus >= 0, "production SFX bus exists"): finish(); return
@@ -40,6 +51,17 @@ func _run() -> void:
 	AudioServer.remove_bus_effect(bus, effect)
 	print("F20 PRESENTATION FILES ", OS.get_user_data_dir())
 	finish()
+
+func _observe_startup_process() -> void: _startup_process_frames += 1
+
+func _observe_startup_draw() -> void: _startup_draw_frames += 1
+
+func _stop_startup_observers() -> void:
+	if process_frame.is_connected(_observe_startup_process): process_frame.disconnect(_observe_startup_process)
+	if RenderingServer.frame_post_draw.is_connected(_observe_startup_draw): RenderingServer.frame_post_draw.disconnect(_observe_startup_draw)
+	print("F20 RENDER STARTUP elapsed_ms=", Time.get_ticks_msec() - _startup_began,
+		" process_frames=", _startup_process_frames, " post_draw_frames=", _startup_draw_frames,
+		" readiness_budget_ms=600000; software-render allowance, no device performance claim")
 
 func _prepare_camera(travel: RefCounted) -> void:
 	# Use the player's normal recenter button. Never assign a camera pose or
