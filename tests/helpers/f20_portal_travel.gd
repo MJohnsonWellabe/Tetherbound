@@ -3,7 +3,44 @@ extends "res://tests/helpers/f49_portal_travel.gd"
 ## Preserve the existing real navigation/provider/authority checks. Hold a
 ## normal button edge through both clocks: world X is read on physics ticks,
 ## while inventory/credits also read idle frames.
+const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
+var _lesson_busy := false
+
 func activate(prompt: Node3D) -> bool:
+	var failures_before := failures.size()
+	# A lesson may be due on this character's first walk past its teacher.
+	# Read/continue its real card; retain the original navigation budget and
+	# exact grounded/provider checks after ordinary world input returns.
+	await _continue_navigation_lesson()
+	tree.process_frame.connect(_continue_navigation_lesson)
+	var passed := await _activate_world(prompt)
+	tree.process_frame.disconnect(_continue_navigation_lesson)
+	while _lesson_busy: await tree.process_frame
+	return passed and failures.size() == failures_before
+
+func _continue_navigation_lesson() -> void:
+	if _lesson_busy: return
+	var owner := INPUT_OWNER.current(tree)
+	if owner == null or owner.get_script() != LESSON_PANEL or not owner.call("is_open"): return
+	_lesson_busy = true
+	var row: Dictionary = owner.get("_row")
+	var id := str(row.get("id", ""))
+	var deadline := Time.get_ticks_msec() + 30000
+	print("F20 LESSON actual ordinary Continue id=", id)
+	while is_instance_valid(owner) and INPUT_OWNER.current(tree) == owner \
+		and owner.call("is_open") and Time.get_ticks_msec() < deadline:
+		print("F20 LESSON rendered ", owner.get("_text").text)
+		await tap("menu_confirm")
+	while Time.get_ticks_msec() < deadline and game.local.flags.call("has", "opening:lesson:" + id) != true:
+		await tree.process_frame
+	if id.is_empty() or not is_instance_valid(owner) or owner.call("is_open") \
+		or game.local.flags.call("has", "opening:lesson:" + id) != true:
+		_fail("F20 ordinary lesson Continue did not complete this character's actual " + id)
+	else:
+		print("F20 LESSON actual personal acknowledgement id=", id)
+	_lesson_busy = false
+
+func _activate_world(prompt: Node3D) -> bool:
 	# Hall arches face an authored room approach. Reaching their coordinates
 	# from the exterior side of the wall does not establish a visible offer.
 	# Walk the installed marker through the original capsule navigator first.
