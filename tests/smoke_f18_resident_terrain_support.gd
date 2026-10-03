@@ -177,6 +177,20 @@ func _run() -> void:
 		await process_frame
 		_finish()
 		return
+	var original_pose := probe.global_transform
+	var capsule_landing: Vector3 = arrival._capsule_landing(world, probe, target, .4)
+	_check(capsule_landing.is_finite(), "production complete-capsule cast finds distant native sloped landing")
+	_check(probe.global_transform == original_pose, "native landing solver observes without moving the probe")
+	if capsule_landing.is_finite():
+		var landing_query := PhysicsShapeQueryParameters3D.new()
+		landing_query.shape = probe.get_node(^"Collision").shape
+		landing_query.transform = probe.get_node(^"Collision").global_transform
+		landing_query.transform.origin += capsule_landing - probe.global_position
+		landing_query.collision_mask = probe.collision_mask
+		landing_query.exclude = [probe.get_rid()]
+		_check(probe.get_world_3d().direct_space_state.intersect_shape(landing_query, 1).is_empty(), "native cast landing clears the complete real capsule")
+	else:
+		_check(false, "native cast landing clears the complete real capsule")
 	for offset: Vector2 in [Vector2(-.4, 0), Vector2(.4, 0), Vector2(0, -.4), Vector2(0, .4)]:
 		_check(is_finite(arrival._landing_height(world, probe, target + Vector3(offset.x, 0, offset.y), .4)), "all capsule perimeter rays hit real resident terrain")
 	var shape := stone.get_child(0).get_child(0).shape as ConcavePolygonShape3D
@@ -215,6 +229,9 @@ func _run() -> void:
 	query.exclude = [probe.get_rid()]
 	_check(not probe.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty(), "resident terrain never waives a real full-capsule wall obstruction")
 	_check(not arrival._supported_capsule(world, probe, target, .4), "final production guard refuses an obstruction added after the initial landing")
+	var wall_pose := probe.global_transform
+	_check(not arrival._capsule_landing(world, probe, target, .4).is_finite(), "initial native landing solver also refuses the real wall")
+	_check(probe.global_transform == wall_pose, "blocked native solver never moves the probe")
 	wall.queue_free()
 	probe.set_physics_process(false)
 	camera.global_position = Vector3(96.2, 10, 14)

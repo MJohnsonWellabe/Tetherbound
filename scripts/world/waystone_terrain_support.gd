@@ -8,6 +8,20 @@ const HALF_WIDTH := 8.0
 const MAX_VERTICES := 2048
 const CHILD_NAME := "ResidentTerrainSupport"
 
+class ResidentBody extends StaticBody3D:
+	var stone_ref: WeakRef
+	var data_ref: WeakRef
+	func invalidate() -> void:
+		var stone := stone_ref.get_ref() as Node
+		if stone != null and not is_queued_for_deletion() and get_parent() == stone:
+			stone.remove_child(self)
+			queue_free()
+	func _exit_tree() -> void:
+		var source: Object = data_ref.get_ref() if data_ref != null else null
+		if source == null: return
+		for signal_name: String in ["height_maps_changed", "control_maps_changed", "region_map_changed"]:
+			if source.is_connected(signal_name, invalidate): source.disconnect(signal_name, invalidate)
+
 static func mount(world: Node3D, stone: Node3D) -> bool:
 	if world == null or stone == null or not world.is_inside_tree() or not stone.is_inside_tree(): return false
 	var terrain := world.get_node_or_null(^"Terrain") as Node3D
@@ -27,7 +41,9 @@ static func mount(world: Node3D, stone: Node3D) -> bool:
 	if faces.is_empty() or faces.size() % 3 != 0 or faces.size() > MAX_VERTICES: return false
 	for i in faces.size():
 		faces[i] = stone.to_local(faces[i])
-	var body := StaticBody3D.new()
+	var body := ResidentBody.new()
+	body.stone_ref = weakref(stone)
+	body.data_ref = weakref(data)
 	body.name = CHILD_NAME
 	body.collision_layer = int(terrain.get("collision_layer"))
 	body.collision_mask = int(terrain.get("collision_mask"))
@@ -42,20 +58,11 @@ static func mount(world: Node3D, stone: Node3D) -> bool:
 	stone.add_child(body)
 	# If terrain data changes, stale triangles cannot remain physical support.
 	# The normal mount poll can recreate them from the new native data.
-	var invalidate := _invalidate.bind(weakref(body), weakref(stone))
+	# The real body's instance method is a distinct connection owner. It
+	# captures no Nodes and disconnects exactly its own callbacks on disposal.
 	for signal_name: String in ["height_maps_changed", "control_maps_changed", "region_map_changed"]:
-		data.connect(signal_name, invalidate, CONNECT_ONE_SHOT)
+		data.connect(signal_name, body.invalidate, CONNECT_ONE_SHOT)
 	return true
-
-static func _invalidate(body_ref: WeakRef, stone_ref: WeakRef) -> void:
-	# Signal argument captures must never retain freed Node values: Godot
-	# validates captures before a lambda's own validity guard can execute.
-	var body := body_ref.get_ref() as Node
-	var stone := stone_ref.get_ref() as Node
-	if is_instance_valid(body) and is_instance_valid(stone) \
-		and not body.is_queued_for_deletion() and body.get_parent() == stone:
-		stone.remove_child(body)
-		body.queue_free()
 
 static func native_faces(data: Object, spacing: float, center: Vector3) -> PackedVector3Array:
 	var empty := PackedVector3Array()
