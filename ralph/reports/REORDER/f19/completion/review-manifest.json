@@ -58,6 +58,12 @@
     {
       "commit": "6b4a1a5592",
       "purpose": "All four two-owner persisted handoffs, retained CI witnesses and explicit artifact relocation validation"
+    },
+    {
+      "commit": "76dfac7c5011d79e3d2725c6d04ae54d25501d20",
+      "dependency": "38b655d684d4da586a964fae933a516b448e0b27",
+      "purpose": "Exact reviewed ordinary Mira purchases and bounded combat observations; actual fifth purchase/full route still unproven",
+      "evidence": "reviewed-meadows-care-dependency.json"
     }
   ],
   "separate_dependency": {

@@ -1,0 +1,30 @@
+{
+  "kind": "f19_material_lifetime_primary_source_audit",
+  "scope": "Godot 4.7 source facts informing the already-dispatched actual chamber diagnostic; no production fix or acceptance claim",
+  "sources": [
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/mesh_instance_3d.h",
+      "observed": "MeshInstance3D owns mesh and surface override Material references as members, with no declared custom destructor."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/visual_instance_3d.h",
+      "observed": "GeometryInstance3D owns override and overlay Material references; it derives from VisualInstance3D."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/visual_instance_3d.cpp",
+      "observed": "VisualInstance3D's destructor frees its rendering instance RID."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/servers/rendering/renderer_scene_cull.cpp",
+      "observed": "free(instance) processes all dirty instances before clearing the deleting instance's base and material bindings. Dirty geometry processing queries material shadows, animation, uniforms and dependency state."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/label_3d.cpp",
+      "observed": "Label3D owns raw material RIDs internally. Its destructor frees the mesh and then these materials; text reshaping clears mesh surfaces before freeing prior materials. MeshInstance active-Material retention does not retain these internal Label3D RIDs."
+    }
+  ],
+  "inference": "C++ member destruction precedes base destruction, so a last Material reference may disappear before the rendering instance is freed. That instance deletion can flush another pending instance as well. The current game's actual dangling owner remains unproven until its native counterfactual result is inspected.",
+  "interpretation": "Clean isolated body, marker and build-component probes do not certify the full world's deletion batch. Holding actual chamber active materials is a diagnostic counterfactual only; remaining errors may belong outside that retained set, including internal label resources.",
+  "actual_job": {"run": 37084465536, "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b", "status": "Confirmed Run step live; no terminal result at this audit"},
+  "exclusions": "No speculative product material patch, suppressed engine errors, changed graphics binary, clean witness, earned boundary or full campaign acceptance. Source URLs use official 4.7-stable tag; an exact binary-to-tag commit identity was not independently checked."
+}
