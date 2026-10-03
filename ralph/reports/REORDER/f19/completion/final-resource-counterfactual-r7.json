@@ -1,0 +1,20 @@
+{
+  "kind": "f19_final_world_resource_counterfactual_r7",
+  "source_commit": "d77bc8f4ef28c36d71b4ce2a20c334c5ac8b2830",
+  "run": 37093868386,
+  "job": 111119687698,
+  "artifact": 11262819031,
+  "process_exit": 0,
+  "elapsed_seconds": 798,
+  "engine_errors": 384,
+  "script_errors": 0,
+  "original_failures": [],
+  "baseline_errors": 16,
+  "treatment_errors": 368,
+  "result": "Rejected diagnostic: retaining exposed Mesh/MultiMesh resources as well as materials amplified errors. Sampling time and retained resource classes both changed; cannot attribute amplification to one change or infer a production correction.",
+  "late_observation": "MeadowHealing created transient CPUParticles3D after choice readiness: 15 baseline at first post-choice deletion, 18 retained at equivalent deletion and 5 at next. Earlier readiness census reporting zero CPU particles does not cover the entire scenario.",
+  "hidden_override_limitation": "get_active_material omits per-surface overrides masked by a geometry material_override. Resource retention also does not guarantee native Terrain3D raw material RID lifetime.",
+  "accepted_full_world_witness": false,
+  "raw_log": "ci-final-resource-rejected-37093868386.log.gz",
+  "raw_log_sha256": "d63b78faec40c2af8d3782d0aa9654d94f610d7e897fe3bd5c7cc60e9a389f0a"
+}

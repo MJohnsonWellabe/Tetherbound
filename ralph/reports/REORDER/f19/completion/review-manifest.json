@@ -152,18 +152,18 @@
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
-  "latest_material_diagnostic": "populated-terrain-component-r2.json",
+  "latest_material_diagnostic": "final-resource-counterfactual-r7.json",
   "latest_material_probe": {
     "source_commit": "d77bc8f4ef28c36d71b4ce2a20c334c5ac8b2830",
     "run": 37093868386,
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Original full-world spaceaccept/save/reload; baseline versus exposed Mesh/MultiMesh/Material and particle resources rescanned immediately before actual world deletion; new Material owner samples; diagnosis only",
-    "status": "Dispatched; checkout step confirmed live; no terminal result"
+    "status": "Terminal: 384 engine errors, rejected diagnostic; original assertion failures empty"
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
   "latest_population_proof": "seed-provenance-correction.json",
   "latest_m1_dependency": "reviewed-meadows-loss-wait-dependency.json",
-  "evidence_by_criterion": {},
-  "latest_band_baseline_proof": "native-band-baseline.json"
+  "latest_band_baseline_proof": "native-band-baseline.json",
+  "main_required_altar_diagnostic": "actual-altar-material-r1.json"
 }

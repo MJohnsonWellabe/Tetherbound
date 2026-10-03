@@ -21,7 +21,7 @@ func _run() -> void:
 	if game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-active-resources"]:
+	for treatment: String in ["baseline", "retain-ghost-surface-overrides"]:
 		print("F19 ACTUAL ALTAR BEGIN " + JSON.stringify({"treatment": treatment,
 			"acceptance": false, "paid_build": false}))
 		var world := Node3D.new()
@@ -59,7 +59,7 @@ func _run() -> void:
 		# Actual placement keeps selection; its occupied footprint makes the
 		# preview invalid before an explicit cancel drops that actual ghost.
 		ghost.tint_ghost_state(PIECE.STATE_INVALID)
-		_observe(world, treatment == "retain-active-resources")
+		_observe(world, treatment == "retain-ghost-surface-overrides")
 		print("F19 ACTUAL ALTAR DROP GHOST " + treatment)
 		placer.call("_drop_ghost")
 		for frame in 3: await process_frame
@@ -81,15 +81,20 @@ func _observe(node: Node, retain: bool) -> void:
 	if node is MeshInstance3D:
 		var mesh_node := node as MeshInstance3D
 		var materials: Array[String] = []
+		var overrides: Array[String] = []
 		if mesh_node.mesh != null:
-			if retain: _held.append(mesh_node.mesh)
 			for surface in mesh_node.mesh.get_surface_count():
 				var material := mesh_node.get_active_material(surface)
 				if material != null:
 					materials.append(str(material.get_instance_id()))
-					if retain: _held.append(material)
-		for material: Material in [mesh_node.material_override, mesh_node.material_overlay]:
-			if retain and material != null: _held.append(material)
+				var surface_override := mesh_node.get_surface_override_material(surface)
+				if surface_override != null:
+					overrides.append(str(surface_override.get_instance_id()))
+					# The ghost tint masks BuildMaterialFinish's per-instance
+					# override; get_active_material cannot observe that owner.
+					if retain and "ActualAltarGhost" in str(node.get_path()):
+						_held.append(surface_override)
 		print("F19 ACTUAL ALTAR MESH " + JSON.stringify({"path": str(node.get_path()),
-			"active_material_ids": materials, "retained": retain}))
+			"active_material_ids": materials, "surface_override_ids": overrides,
+			"retained_ghost_surface_overrides": _held.size()}))
 	for child: Node in node.get_children(): _observe(child, retain)

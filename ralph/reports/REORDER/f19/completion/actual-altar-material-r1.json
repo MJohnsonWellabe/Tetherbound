@@ -1,0 +1,25 @@
+{
+  "kind": "f19_actual_production_altar_component_r1",
+  "source_commit": "b17ac7520d7eeb4790975fff7c172d1c63c2238a",
+  "run": 37094783177,
+  "job": 111122375899,
+  "artifact": 11264035509,
+  "process_exit": 0,
+  "elapsed_seconds": 3,
+  "engine_errors": 2,
+  "script_errors": 0,
+  "failures": [],
+  "cases": [
+    "baseline",
+    "retain-active-resources"
+  ],
+  "error_phase_each": "Actual BuildPlacer._drop_ghost, before placed Altar deletion",
+  "error_signature": "Parameter material is null at material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
+  "production_identity": "BuildPiece + BookStand.gltf. BuildPiece, BuildMaterialFinish, BuildPlacer and catalogue byte-identical to coordinator b3574213912be083b4fa1afafdfa9922c1c98cc4.",
+  "result": "Positive minimal reproduction of coordinator engine signature. Retaining active materials and Mesh resources does not eliminate error. Next isolate hidden BuildMaterialFinish surface override masked by cached ghost tint.",
+  "paid_transaction": false,
+  "acceptance": false,
+  "prior_component_scope_correction": "37083791397 tested StationPiece procedural Altar, whereas actual placement explicitly uses BuildPiece; its clean component cannot cover this actual Altar error.",
+  "raw_log": "ci-actual-altar-reproduction-37094783177.log.gz",
+  "raw_log_sha256": "177998bd4262a4f40be7ab15cbf02c30d2f07108d8dbfd08d2fdff19ecf6f835"
+}
