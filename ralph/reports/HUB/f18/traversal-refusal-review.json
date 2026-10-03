@@ -602,7 +602,7 @@
     ]
   },
   "native_sampling_followup": {
-    "source_status": "Independent source review PENDING",
+    "source_status": "APPROVE independent GPT-6.1 Sol source review; explicit native-only launch/render sampling; original input/deadlines and failclosed capture/release guards preserved; runtime/pixelpending",
     "render_fixture": "Explicit --f18-draw-on-request; actual native display/Compatibility1280x720 resources; automatic draws skipped while actual logic/input/physics runs, force_draw only after existing refusal before same-context postdraw viewport capture",
     "audio": "Explicit Dummy on native child, no audible acceptance",
     "invariants": "original gameplayinput/pose/scene/controller/rendererquality/geometry/budgets unchanged;120framecaptureguard preserved; no performanceacceptance",

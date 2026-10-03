@@ -241,10 +241,15 @@ func _f18_restart_guest() -> bool:
 
 func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene: String,
 		home: String, log_path: String, extra_args: Array) -> int:
-	# Narrow net_harness launch copy: only the subclass script path differs.
+	# F18 adapter launch, with an explicitly requested renderer-sampling fixture.
 	var exe := OS.get_executable_path()
 	var args := ["--path", ProjectSettings.globalize_path("res://")]
 	if not OS.get_cmdline_user_args().has("--native-peer=%d" % i): args.push_front("--headless")
+	elif OS.get_cmdline_user_args().has("--f18-draw-on-request"):
+		# Native display/Compatibility resources stay live; unsampled frames are
+		# skipped only in this disclosed still-frame proof, never shipping play.
+		args.append_array(["--disable-render-loop", "--rendering-driver", "opengl3",
+			"--audio-driver", "Dummy", "--resolution", "1280x720"])
 	if _is_windows(): args.append_array(["--log-file", log_path])
 	args.append_array(["--script", "res://tests/helpers/f18_net_peer.gd", "--", "--role=%s" % role,
 		"--peer=%d" % i, "--control-port=%d" % control_port, "--enet-port=%d" % enet_port,

@@ -6,6 +6,9 @@ extends "res://tests/smoke_net_f18_travel.gd"
 func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
+	if OS.get_cmdline_user_args().has("--f18-draw-on-request"):
+		RenderingServer.set_render_loop_enabled(false)
+		print("F18_NATIVE_SAMPLING: native display/Compatibility1280x720; automatic rendering disabled, one actual refusal draw requested; Dummy audio. No continuous-render performance or audio acceptance.")
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:"],
 		"F18 traversal refusal peer logs have no engine/script errors")
 	if not await launch(1, "title"):

@@ -305,7 +305,10 @@ func _f18_capture_refusal(game: Node, guards: RefCounted, kind: String, source: 
 			"input": "actual hotbar_5; flight retains ordinary climb hold until capture then verifies Jump release",
 			"capture_source": "actual peer root viewport texture in frame_post_draw callback"})
 		result.passed = image.save_png(result.path) == OK
+	result.automatic_render_loop = RenderingServer.is_render_loop_enabled()
+	result.renderer_sampling = "continuous native frames" if result.automatic_render_loop else "disclosed one explicit native draw; no continuous-render performance acceptance"
 	RenderingServer.frame_post_draw.connect(capture, CONNECT_ONE_SHOT)
+	if not result.automatic_render_loop: RenderingServer.force_draw()
 	for frame in 120:
 		if result.captured: break
 		await process_frame
