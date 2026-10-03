@@ -21,6 +21,7 @@ class FightObserver extends Node:
 	var saving := false
 	var failure := ""
 	var live_frames := 0
+	var retain_sample: Callable
 
 	func _process(_delta: float) -> void:
 		if saving or not failure.is_empty(): return
@@ -91,6 +92,8 @@ class FightObserver extends Node:
 			"ally_body": _body(ally), "enemy_body": _body(foe),
 			"ally": _creature(active), "enemy": _creature(enemy)})
 		next_ms = at + 100
+		if not retain_sample.call():
+			failure = "could not retain incomplete earned fight manifest"
 
 	func finish() -> bool:
 		if began_ms < 0:
@@ -146,6 +149,7 @@ func _run() -> void:
 	_observer.name = "F17EarnedOpeningFightObserver"
 	_observer.output = _fight_output
 	_observer.preset = _fight_preset
+	_observer.retain_sample = _write_fight_manifest.bind(false, false)
 	_observer.process_mode = Node.PROCESS_MODE_ALWAYS
 	root.add_child(_observer)
 	await super._run()
@@ -157,15 +161,21 @@ func _finish(prefix_passed: bool) -> void:
 	if captured: captured = await _observer.finish()
 	if not captured:
 		failures.append(_observer.failure if _observer != null and not _observer.failure.is_empty() else "earned opening or native fight observation did not complete")
-	if _observer != null:
-		var file := FileAccess.open(_fight_output.path_join("manifest.json"), FileAccess.WRITE)
-		if file == null:
-			failures.append("could not retain earned fight manifest")
-		else:
-			file.store_string(JSON.stringify({"complete": captured and failures.is_empty(), "source": _fight_source,
-				"presets": [_fight_preset], "renderer": RenderingServer.get_current_rendering_method(), "resolution": [1920, 1080],
-				"views": _observer.rows, "live_fight_frames": _observer.live_frames, "requested_prefix_passed": prefix_passed,
-				"failures": failures, "scope": "actual fresh title/starter/catch presentation and >=30s native motion; no full M1, visual bar, multiplayer or device claim",
-				"shortcuts": ["inherited ordinary-input fresh opening driver", "observational JPEG95 frames at actual timestamps", "motion may include ordinary post-catch aftermath", "no added gameplay inputs or state mutations by observer"]}, "\t") + "\n")
-			file.close()
+	if _observer != null and not _write_fight_manifest(captured and failures.is_empty(), prefix_passed):
+		failures.append("could not retain earned fight manifest")
 	super._finish(captured and failures.is_empty())
+
+func _write_fight_manifest(complete: bool, prefix_passed: bool) -> bool:
+	var file := FileAccess.open(_fight_output.path_join("manifest.json"), FileAccess.WRITE)
+	if file == null: return false
+	file.store_string(JSON.stringify({"complete": complete, "source": _fight_source,
+		"presets": [_fight_preset], "renderer": RenderingServer.get_current_rendering_method(), "resolution": [1920, 1080],
+		"views": _observer.rows, "live_fight_frames": _observer.live_frames, "requested_prefix_passed": prefix_passed,
+		"failures": failures, "scope": ("actual fresh title/starter/catch presentation and >=30s native motion" if complete
+			else "incomplete native earned-opening observation; opening/catch completion and >=30s motion remain unproved")
+			+ "; no full M1, visual bar, multiplayer or device claim",
+		"shortcuts": ["inherited ordinary-input fresh opening driver", "observational JPEG95 frames at actual timestamps", "motion may include ordinary post-catch aftermath", "no added gameplay inputs or state mutations by observer"]}, "\t") + "\n")
+	file.flush()
+	var write_error := file.get_error()
+	file.close()
+	return write_error == OK

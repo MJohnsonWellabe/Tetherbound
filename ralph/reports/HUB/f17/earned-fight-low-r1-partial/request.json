@@ -1,0 +1,12 @@
+{
+  "ref": "main",
+  "inputs": {
+    "checkout_ref": "8a7b44f6ccadf6b70117f4dd97006326e7a6e55d",
+    "script": "tools/capture_f17_opening_fight.gd",
+    "args": "--preset=Low --source-commit=8a7b44f6ccadf6b70117f4dd97006326e7a6e55d --output=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/HUB/f17/earned-fight-low-r1 --through-opening --no-checkpoints --world-seed=4",
+    "mode": "render",
+    "resolution": "1920x1080",
+    "timeout_minutes": "60",
+    "label": "f17-earned-fight-low-r1"
+  }
+}
