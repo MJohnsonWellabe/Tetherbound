@@ -34,7 +34,8 @@
     {
       "commit": "fd329e6f60c1af217a5199357dd58095505dbc65",
       "purpose": "Bounded F32 freed adopted-node read and actual native lifecycle regression",
-      "validation": "8 checks, 0 failures, 0 engine errors; resource-mount-and-material-audit.json"
+      "validation": "8 checks, 0 failures, 0 engine errors; resource-mount-and-material-audit.json",
+      "coordinator_integration": "e9707f1608 (pushed in40e7)"
     }
   ],
   "remaining_review_sequence": [
@@ -139,7 +140,7 @@
     ]
   },
   "open_acceptance": [
-    "Clean Veridian and Solmane actual choice runs; Veridian completed all six but emitted 136 GLES3 material-null errors; Solmane remains running.",
+    "Clean Veridian and Solmane actual choice runs; all six completed natively in each, but raw GLES3 material-null errors remain (136 Veridian, 4 Solmane).",
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
     "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
   ],

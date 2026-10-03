@@ -60,8 +60,26 @@
   },
   "solmane": {
     "run": 37081327114,
-    "status": "in_progress_at_last_verified_check",
-    "accepted_clean_witness": false
+    "artifact": 11259732238,
+    "source_commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+    "process_exit": 0,
+    "elapsed_seconds": 2552,
+    "native_result": "solmane offer choice smoke test passed",
+    "scenarios": [
+      "space-accept",
+      "space-refuse",
+      "capacity-refuse-at-prompt",
+      "capacity-accept-then-let-newcomer-go",
+      "capacity-accept-release-one",
+      "save-while-choice-open"
+    ],
+    "engine_errors": 4,
+    "script_errors": 0,
+    "accepted_clean_witness": false,
+    "error_location": "First Cloudreach world boot before the first scenario; material-null GLES3 dependency functions",
+    "caveat": "This source predates fd329; old cancelled source reproduced freed resource-cache reads, this run did not. Absence here does not replace the independent actual-node regression.",
+    "log": "ci-solmane-functional-rejected-37081327114.log.gz",
+    "fixtures": "Original declared victory/party/pose fixtures; actual native choice UI, capacity and split save/reload"
   },
   "body_diagnostic": {
     "source_commit": "9c2034f0f6367c8271d7ca708cd6a62bd56f5592",
@@ -76,10 +94,24 @@
     "log": "ci-legendary-body-lifetime-37082873789.log"
   },
   "next_diagnostic": {
-    "source_commit": "742ed94d2af49924d5048b45914f143326a82a57",
-    "run": 37083791397,
-    "script": "tests/probe_f19_build_material_lifetime.gd",
-    "scope": "Actual station ghost tint/cancel, placed geometry teardown and BuildPlacer overlay lifecycle; startup/interaction fixtures; no paid placement claim"
+    "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
+    "run": 37084465536,
+    "script": "tests/probe_f19_chamber_material_lifetime.gd",
+    "scope": "Original space-accept twice, normal then active chamber materials retained across deletion; counterfactual diagnosis never acceptance proof"
   },
-  "exclusions": "No earned fixtures promoted, no visual/audio/owner-play/device-performance acceptance. All engine work remains offloaded while user plays Valheim."
+  "exclusions": "No earned fixtures promoted, no visual/audio/owner-play/device-performance acceptance. All engine work remains offloaded while user plays Valheim.",
+  "build_component_diagnostic": {
+    "run": 37083791397,
+    "artifact": 11260045718,
+    "source_commit": "742ed94d2af49924d5048b45914f143326a82a57",
+    "process_exit": 0,
+    "elapsed_seconds": 9,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "cases": "drawing true/false x settled frames 0/3",
+    "actual_methods": "Station Altar geometry/tint, BuildPlacer _ensure_overlay/_drop_ghost/_set_overlay_visible, world/overlay teardown",
+    "fixtures": "Startup and interaction disabled in component subclasses; no paid placement, mounted world, reward or earned claim",
+    "outcome": "Negative material-error reproduction; no build material production fix",
+    "log": "ci-build-material-lifetime-37083791397.log"
+  }
 }
