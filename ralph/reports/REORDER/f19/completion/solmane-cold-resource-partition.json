@@ -1,0 +1,78 @@
+{
+  "kind": "f19_solmane_cold_resource_partition",
+  "reports": [
+    {
+      "run": 37107215424,
+      "job": 111157991749,
+      "artifact": 11268221957,
+      "source_commit": "13ead2b4318d4b627f4e17eb58c72f040b1bd62a",
+      "process_exit": 0,
+      "elapsed_seconds": 263,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "failures": [],
+      "raw_log": "ci-f19-solmane-cold-resources-37107215424.log.gz",
+      "raw_log_sha256": "b6edb53fc6044e7d44cb50399edcbf1c2d1e77daa3d35d9826e7188017af6de8",
+      "observations": [
+        {
+          "phase": "initial-world-ready",
+          "treatment": "retain-active-surface-overrides",
+          "held": 26
+        },
+        {
+          "phase": "after-original-reset",
+          "treatment": "retain-active-surface-overrides",
+          "held": 26
+        },
+        {
+          "phase": "second-world-ready",
+          "treatment": "retain-active-surface-overrides",
+          "held": 52
+        },
+        {
+          "phase": "before-final-delete",
+          "treatment": "retain-active-surface-overrides",
+          "held": 26
+        }
+      ]
+    },
+    {
+      "run": 37107216842,
+      "job": 111157998170,
+      "artifact": 11268721343,
+      "source_commit": "13ead2b4318d4b627f4e17eb58c72f040b1bd62a",
+      "process_exit": 0,
+      "elapsed_seconds": 287,
+      "engine_errors": 8,
+      "script_errors": 0,
+      "failures": [],
+      "raw_log": "ci-f19-solmane-cold-except-resources-landmarks-37107216842.log.gz",
+      "raw_log_sha256": "3d4c039a1f6339b751d8054de24169154d44fa12e29e1f6582607a59e3e5ed2b",
+      "observations": [
+        {
+          "phase": "initial-world-ready",
+          "treatment": "retain-active-surface-overrides",
+          "held": 81
+        },
+        {
+          "phase": "after-original-reset",
+          "treatment": "retain-active-surface-overrides",
+          "held": 81
+        },
+        {
+          "phase": "second-world-ready",
+          "treatment": "retain-active-surface-overrides",
+          "held": 147
+        },
+        {
+          "phase": "before-final-delete",
+          "treatment": "retain-active-surface-overrides",
+          "held": 87
+        }
+      ]
+    }
+  ],
+  "acceptance": false,
+  "scope": "Only active surface override refs under CloudreachResources/RenewableResources versus remaining non-Landmarks roots. Original cold lifecycle unchanged.",
+  "result": "Resource roots-only retention0 errors with26 initial Materials; complement8 errors. Harvest visual factory isolated further by actual fifteen-crop component."
+}

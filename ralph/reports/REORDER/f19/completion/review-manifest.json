@@ -355,10 +355,29 @@
   },
   "solmane_cold_resource_partition": {
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
-    "status": "Live separate native resource owner partitions; no acceptance pending terminal raw logs",
+    "status": "Terminal: solmane-cold-resource-partition.json; resources0/complement8; diagnosis only",
     "source_commit": "13ead2b4318d4b627f4e17eb58c72f040b1bd62a",
-    "resources": {"run": 37107215424, "job": 111157991749},
-    "except_resources_landmarks": {"run": 37107216842, "job": 111157998170},
+    "resources": {
+      "run": 37107215424,
+      "job": 111157991749,
+      "artifact": 11268221957
+    },
+    "except_resources_landmarks": {
+      "run": 37107216842,
+      "job": 111157998170,
+      "artifact": 11268721343
+    },
     "scope": "Only active surface override refs under CloudreachResources/RenewableResources versus remaining non-Landmarks roots. Original cold lifecycle unchanged; diagnosis only."
+  },
+  "harvest_material_fix": {
+    "source_commit": "6809a7aedf",
+    "files": [
+      "scripts/world/harvest_node.gd",
+      "tests/smoke_f19_harvest_material_lifecycle.gd"
+    ],
+    "scope": "PREDELETE clears only actual harvest visual surface bindings while mesh children are alive; removal/re-entry remains unchanged. No retained reference cache, stock or gameplay changes.",
+    "baseline": "harvest-material-component.json",
+    "status": "Pushed; fixed component/lifecycle/cold native proofs dispatched separately; independent review pending",
+    "acceptance": false
   }
 }
