@@ -64,6 +64,26 @@ func _run() -> void:
 	var host_after := await _inspect(0)
 	check(host_after.retained.character == host.retained.character and host_after.context.regional_credits_seen,
 		"guest reconnect does not overwrite host completion")
+	# The guest already exercised interrupted credits and the returning title
+	# route. Also read the host's completed character from its real disk slot;
+	# this is an in-process shipping reload, not a fresh-process claim.
+	if not await _pass(0, "save_reload_here", {}): return
+	if not await _pass(0, "f20_revisit"): return
+	var host_reloaded := await _inspect(0)
+	check(host_reloaded.retained == host_after.retained,
+		"host disk reload and normal revisit retain the complete personal snapshot")
+	var guest_after := await _inspect(1)
+	check(guest_after.retained == completed.retained and guest_after.context == completed.context \
+		and not guest_after.credits_open,
+		"host disk reload preserves the guest's completed personal state")
+	for finished: Dictionary in [host_reloaded, guest_after]:
+		check(finished.context.get("homecoming_seen") == true \
+			and finished.context.get("regional_credits_seen") == true and not finished.credits_open,
+			"both personal ending acknowledgements survive each peer's disk reload")
+		for stage: String in ["homecoming_seen", "regional_credits_seen"]:
+			var receipt := "craft:regional_ending_%s:%s" % [stage, finished.retained.character]
+			check(finished.retained.receipts.count(receipt) == 1,
+				"completed peer retains exactly one " + stage + " receipt")
 	print("F20 TWO PEERS: post-finale fixture; production Home Key, key debit, Grandpa, credits and title rejoin; controller Skip disclosed")
 	quit(await finish())
 
