@@ -934,7 +934,12 @@ func _retry_foundation_events() -> void:
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
 			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
-		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
+		# Research from a fight waits for that fight to end, and the fight's next
+		# round waits on this character's round reward behind it. A research
+		# duty held only by combat must not block the duties after it.
+		var combat_wait: bool = duty.action == "research_event" and result.get("code") == "combat_still_active"
+		if result.get("resolved") != true and not combat_wait \
+			and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
