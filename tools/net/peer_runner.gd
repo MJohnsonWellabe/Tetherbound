@@ -846,7 +846,9 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"catch_fixture_rng":
 			out = _step_catch_fixture_rng(args)
 		"f48_fixture_capture":
-			out = await _step_f48_fixture_capture(args)
+			var captured: Dictionary = await _step_f48_fixture_capture(args)
+			out = await load("res://tools/net/proof_steps_f48.gd").call("_sealed_reply", self,
+				"f48_fixture_capture", args, captured)
 		"dismiss_dialogue":
 			out = await _step_dismiss_dialogue(args)
 		"veridian_fixture":
@@ -4618,6 +4620,15 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	fixture["owner_before"] = before
 	fixture["owner_after"] = after
 	fixture["finish_reply"] = director.get("_shared_catch_finish_reply")
+	# Read the original pending owner row without applying it or saving. A
+	# successful host catch can still be blocked by an earlier owner decision.
+	var session: Node = game.get("session")
+	var row: Dictionary = session.call("_owner_training_row") if session != null else {}
+	fixture["owner_training_row"] = row
+	fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
+	if not row.is_empty() and row.get("version") in [2, 3]:
+		fixture["owner_plan"] = preload("res://scripts/net/character_action_delivery.gd").owner_plan(
+			fixture.owner_projection, row, preload("res://scripts/net/character_record_rules.gd").errors)
 	var added: Array = []
 	for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
 		if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)

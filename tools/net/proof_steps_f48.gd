@@ -345,12 +345,21 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 		(guest and (master.get("master_id") != trainer or master.get("encounter_id") != manager.call("encounter_id"))):
 		return _result(false, "Fixture fight is not bound to the actual already-started named encounter")
 	var budget := int(args.get("budget_frames", 3000))
-	if budget < 240 or budget > 3000: return _result(false, "Existing bounded mechanics fight budget exceeded")
+	# Native 37079967838 reached its second ordinary victory at frame 2760;
+	# the generic 3000-frame input budget cannot cover five full-HP opponents.
+	# Only this named full-roster mechanics fixture receives a longer bound.
+	var maximum := 9000 if trainer == "warden_aldis" else 3000
+	if budget < 240 or budget > maximum: return _result(false, "Bounded named mechanics fight budget exceeded")
 	var result: Dictionary = await tree.call("_step_win_trainer_battle", {"budget_frames": budget,
 		"fixture_guest_master": guest, "retain_fixture_actions": true, "enemy_hp_ceiling": 0})
 	var retained: Variant = tree.get("_trainer_fight_progress")
 	var data := {"trainer_id": trainer, "fixture_disclosure": required, "result": result.duplicate(true),
 		"actions": retained.get("fixture_actions", []) if retained is Dictionary else [], "acceptance_credit": false}
+	data["driver_budget_frames"] = budget
+	data["final_manager"] = {"state": manager.get("state"), "outcome": manager.get("_outcome"),
+		"resolve_timer": manager.get("_resolve_timer"), "waiting_shared_trainer_round": manager.get("_waiting_shared_trainer_round")}
+	data["trainer_send_delay"] = director.get("_trainer_send_delay")
+	data["killing_verdict"] = tree.get("_trainer_fight_killing_verdict")
 	var output := OS.get_environment("TB_PROOF_OUT")
 	if output.is_empty(): return _result(false, "No retained fixture-fight observation root", data)
 	var folder := output.path_join("f48-fixture-fights")
