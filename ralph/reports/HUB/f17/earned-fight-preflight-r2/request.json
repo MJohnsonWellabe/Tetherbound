@@ -1,0 +1,11 @@
+{
+  "ref": "main",
+  "inputs": {
+    "args": "--through-opening --no-checkpoints --world-seed=4",
+    "checkout_ref": "1ef75431e366689314a1bee9a5c1f24f488d631c",
+    "script": "tools/capture_f17_opening_fight.gd",
+    "mode": "headless",
+    "label": "f17-earned-fight-preflight-r2",
+    "timeout_minutes": "2"
+  }
+}

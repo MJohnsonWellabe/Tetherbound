@@ -1,0 +1,11 @@
+# Independent bounded preflight receipt review
+
+Verdict: PASS for exact-source compile/load and intended invalid-headless preflight refusal only. No local engine or render was run for this review.
+
+Reviewed run `37092531110`, job `111115710179`, artifact `11263481494`, executed checkout `1ef75431e366689314a1bee9a5c1f24f488d631c`. The job's actual checkout log confirms this source; workflow metadata's `head_sha` refers to the separate workflow launch revision. `git show` of the executed capture file hashes to `4EE6CBB8889B3C4CBF1A957CA14023CC914827EF15DE7BA5F305E66B07144F7A`, identical to the independently reviewed final successor.
+
+All eight SHA256 entries in result.json match the actual archived files. The original ZIP is 1506 bytes, SHA256 `30fd4137bf23bfb7311f45918d877011a0edaff3085ceb3c04cab1b9715b0eea`; its run.log is byte-identical to native.log, SHA256 `ab40a2799a64cf6d36384c2cc449aa76ee9ec4b12b3544f6572a502f8c20aef6`. ZIP contents and archived artifact-manifest.txt contain no exit_code record. Workflow artifact metadata independently gives the same ZIP size/digest.
+
+The actual native log reaches an ordinary FRESH CAMPAIGN RESULT at 5.978 seconds: reached=title, scratch empty, no checkpoints/local chains/resume, campaign_complete=false, counts_as_proof=false and requested_prefix_passed=false. Its sole failure is the capture tool's intended grouped native-display/preset/source/output preflight refusal. This is a terminal script result, not a parser/load failure; the native log has zero SCRIPT ERROR and zero ERROR records. The request used mode=headless and omitted the capture-specific preset/source/output arguments, so this receipt does not isolate each individual guard. Actual source places this guard before observer creation and inherited campaign/world work. The wrapper reports exit 1; there is no separate native exit record, and workflow conclusion remains failure as expected.
+
+This receipt exercises compile/load and early invalid-input refusal. It does not exercise the sample callback, incremental manifest writing, write-failure propagation, native images, measured motion, successful opening prefix, full visual Bars A/B or any new F17 acceptance. Native callback/capture proof remains pending and F17#6 remains OPEN; existing six scoped passes are unchanged.
