@@ -52,7 +52,7 @@ static func valid(raw: Variant, retained: Variant) -> bool:
 	if not RECORD.errors(raw.before, raw.character_id).is_empty() \
 		or not RECORD.errors(raw.after, raw.character_id).is_empty() \
 		or not EVENT.valid(retained, raw.world_namespace, raw.world_id) \
-		or retained.delivery_id != raw.retained_event or raw.duty.get("action") != "research_event" \
+		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer"] \
 		or raw.duty.get("character_id") != raw.character_id or fingerprint(raw.duty) != raw.duty_hash:
 		return false
 	var matches := 0

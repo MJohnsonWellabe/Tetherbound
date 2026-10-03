@@ -276,6 +276,12 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			and preload("res://scripts/creatures/creature_gear.gd").recipe_known(full, recipe, preload("res://scripts/creatures/creature_gear.gd").config())
 		for flag: String in recipe.get("requires_personal_flags", []):
 			if flags.get(flag) != true: context.recipe_known = false
+	# A retained catch offer is a new full-character decision after its research
+	# duties. Flush the exact owner's intervening care inputs before staging it.
+	# Matching immutable pending/accepted decisions returned above stay untouched.
+	if envelope.op == "wild_capture" and peer != local_peer_id():
+		var ready: Dictionary = _owner_passive_service().call("capture_gate", peer, envelope, context)
+		if ready.get("ok") != true: return ready
 	var stage: Dictionary = _character_authority.call("stage_character_action", character, envelope.revision, envelope.op, envelope.intent, context)
 	if stage.get("ok") != true: return _foundation_refusal(str(stage.get("code", stage.get("reason", "stage_refused"))))
 	var accepted: Dictionary = _character_authority.call("staged_creature_training", stage)

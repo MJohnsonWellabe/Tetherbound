@@ -217,14 +217,54 @@ func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> D
 		expected.retained_event = retained.delivery_id
 		if E._equivalent(expected, event): matching.append(duty)
 	if matching.size() != 1: return _deny("owner_passive_original_duty_required")
+	return _checkpoint(peer, stream, binding, retained, matching[0])
+
+func capture_gate(peer: int, envelope: Dictionary, context: Dictionary) -> Dictionary:
+	var session := owner()
+	if peer == session.call("local_peer_id"): return {"ok": true}
+	var character: String = session.call("_authority_character", peer)
+	# Only the synchronous post-BOOL/CAS call below can reuse this exact request.
+	if committing.get("character") == character and committing.get("action") == "wild_capture" \
+		and PREP.exact(committing.get("envelope"), envelope): return {"ok": true}
+	if envelope.get("op") != "wild_capture" or not envelope.get("intent") is Dictionary \
+		or not hosts.has(character): return _deny("owner_passive_recording_unavailable")
+	var stream: Dictionary = hosts[character]
+	if not str(stream.error).is_empty(): return _deny(str(stream.error))
+	var world: RefCounted = _game().get("world")
+	if envelope.get("session_epoch") != session.call("_altar_current_epoch") \
+		or envelope.get("world_namespace") != world.reward_delivery_namespace: return _deny("owner_passive_capture_scope_changed")
+	var retained: Variant = world.reward_deliveries.get(context.get("retained_event"))
+	if not EVENT.valid(retained, world.reward_delivery_namespace, world.world_id): return _deny("owner_passive_retained_event_required")
+	var matching: Array[Dictionary] = []
+	for duty: Dictionary in retained.duties:
+		if duty.character_id != character or duty.action != "capture_offer": continue
+		var expected: Dictionary = duty.context.duplicate(true)
+		expected.character_id = character
+		expected.expected_revision = session.get("_character_authority").call("revision", character)
+		expected.in_range = true
+		expected.in_combat = false
+		expected.foundation_runtime_authorized = true
+		expected.retained_event = retained.delivery_id
+		if PREP.exact(expected, context) and envelope.get("character_id") == character \
+			and envelope.get("station_key") == duty.context.source_key \
+			and envelope.get("revision") == expected.expected_revision: matching.append(duty)
+	if matching.size() != 1: return _deny("owner_passive_original_duty_required")
+	var current: Dictionary = session.get("_character_authority").call("state", character)
+	var choice: Dictionary = preload("res://scripts/net/foundation_capture_rules.gd").stage(current, envelope.intent, context)
+	if choice.get("ok") != true: return _deny(str(choice.get("code", "capture_choice_refused")))
+	var binding := {"character": character, "action": "wild_capture", "intent": envelope.intent.duplicate(true),
+		"event": context.duplicate(true), "envelope": envelope.duplicate(true)}
+	return _checkpoint(peer, stream, binding, retained, matching[0])
+
+func _checkpoint(peer: int, stream: Dictionary, binding: Dictionary, retained: Dictionary, duty: Dictionary) -> Dictionary:
 	if stream.checkpoint.is_empty():
-		var authority: RefCounted = session.get("_character_authority")
-		if authority.call("creature_training_is_pending", character) == true: return _deny("owner_passive_prior_transaction_pending")
+		var authority: RefCounted = owner().get("_character_authority")
+		if authority.call("creature_training_is_pending", str(stream.character)) == true: return _deny("owner_passive_prior_transaction_pending")
 		stream.checkpoint = {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "binding": binding.duplicate(true),
-			"retained": retained.duplicate(true), "duty": matching[0].duplicate(true)}
+			"retained": retained.duplicate(true), "duty": duty.duplicate(true)}
 	elif not E._equivalent(stream.checkpoint.binding, binding): return _deny("owner_passive_original_pending")
 	_send_owner(peer, stream, {"op": "freeze", "id": stream.checkpoint.id,
-		"retained_event": retained.delivery_id, "duty_hash": HASH.fingerprint(matching[0])})
+		"retained_event": retained.delivery_id, "duty_hash": HASH.fingerprint(duty)})
 	return _deny("owner_passive_checkpoint_pending")
 
 func _frozen_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
@@ -266,7 +306,14 @@ func _saved_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	var authority: RefCounted = owner().get("_character_authority")
 	if authority.call("commit_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash) != true: return
 	committing = checkpoint.binding.duplicate(true)
-	var result := RESEARCH.commit(owner(), peer, committing.action, committing.intent, committing.event)
+	var result: Dictionary
+	if committing.action == "wild_capture":
+		# The exact choice/source remains the authenticated original. Only this
+		# host's successful checkpoint CAS advances its expected revision.
+		committing.envelope.revision = authority.call("revision", stream.character)
+		result = owner().call("_foundation_handle", peer, committing.envelope)
+	else:
+		result = RESEARCH.commit(owner(), peer, committing.action, committing.intent, committing.event)
 	committing.clear()
 	if result.get("durable") == true or result.get("code") == "research_no_progress":
 		authority.call("cancel_owner_passive_checkpoint", stream.character, checkpoint.prepared.hash)

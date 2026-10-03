@@ -10,6 +10,15 @@ const GROOM := preload("res://tests/test_den_groom_saved_transaction.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
 const E := preload("res://scripts/creatures/essence.gd")
 
+func _capture_event() -> Dictionary:
+	var creature := preload("res://scripts/creatures/creature_species.gd").spawn("mosshell")
+	var traits := preload("res://scripts/creatures/traits.gd").roll_spawn("resource-namespace", "checkpoint-caught-source", 1, true, false, false)
+	var offer := {"offer_id": "checkpoint-catch", "source_key": "capture:checkpoint-catch",
+		"world_namespace": "resource-namespace", "session_id": "original-epoch", "participants": [DATA.CHARACTER],
+		"realm": "meadows", "creature": preload("res://scripts/save/water_capture_codec.gd").encode(creature), "capture_traits": traits}
+	var duty := {"character_id": DATA.CHARACTER, "action": "capture_offer", "intent": {}, "context": offer}
+	return preload("res://scripts/net/foundation_event.gd").make(DATA.new()._world(), "original-epoch", offer.source_key, [duty])
+
 func _fixture() -> Dictionary:
 	var before: Dictionary = GROOM.new()._before()
 	var cursor := REPLAY.begin(before, {"meadows": ["admitted_history"]})
@@ -94,3 +103,26 @@ func test_exact_cas_retry_after_failed_real_research_stage_and_stale_ack() -> vo
 	assert_true(authority.cancel_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
 	assert_false(authority.commit_owner_passive_checkpoint(DATA.CHARACTER, f.prepared.hash))
 	assert_true(E._equivalent(authority.state(DATA.CHARACTER), f.prepared.after), "cancel never rolls back saved checkpoint")
+
+func test_capture_checkpoint_binds_original_offer_without_granting_its_creature() -> void:
+	var f := _fixture()
+	var capture := _capture_event()
+	assert_false(capture.is_empty())
+	var prepared := PREP.make(capture, capture.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN)
+	assert_false(prepared.is_empty())
+	assert_true(PREP.valid_host(prepared, capture, f.cursor))
+	assert_eq(prepared.after.party.size(), f.before.party.size(), "checkpoint changes no roster; original capture handler owns the later choice")
+	assert_true(PREP.exact(prepared.after, f.cursor.state))
+	assert_true(f.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, prepared, capture, f.cursor))
+	assert_true(f.authority.commit_owner_passive_checkpoint(DATA.CHARACTER, prepared.hash))
+	assert_eq(f.authority.state(DATA.CHARACTER).party.size(), f.before.party.size())
+	var substituted := capture.duplicate(true)
+	substituted.duties[0].context.creature.nickname = "changed after preparation"
+	assert_false(PREP.valid(prepared, substituted), "full retained creature offer remains immutable")
+	var selected := capture.duplicate(true)
+	selected.duties[0].intent = {"offer_id": "checkpoint-catch", "keep": true, "released_uid": ""}
+	assert_true(PREP.make(selected, selected.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN).is_empty(),
+		"capture choice must not rewrite the original empty-intent offer duty")
+	var unsupported := capture.duplicate(true)
+	unsupported.duties[0].action = "wild_capture"
+	assert_true(PREP.make(unsupported, unsupported.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN).is_empty())

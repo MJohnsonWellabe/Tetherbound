@@ -45,6 +45,9 @@ class Session extends Node:
 	var _character_authority: RefCounted
 	var messages: Array[Dictionary] = []
 	var maps: RefCounted
+	var capture_service: RefCounted
+	var capture_context: Dictionary = {}
+	var capture_calls: Array[Dictionary] = []
 	func _game() -> Node: return game
 	func _groom_service() -> RefCounted: return maps
 	func _altar_current_epoch() -> String: return "current-epoch"
@@ -54,6 +57,15 @@ class Session extends Node:
 	func _authority_character(peer: int) -> String: return game.local.character_id if peer == 2 else "host"
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_send_peer(_peer: int, packet: Dictionary) -> void: messages.append(packet.duplicate(true))
+	func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
+		# Disclosed failed world-writer seam: the real service must have completed
+		# its CAS, and must retain the original for another authenticated ACK.
+		var context := capture_context.duplicate(true)
+		context.expected_revision = _character_authority.call("revision", game.local.character_id)
+		var gate: Dictionary = capture_service.call("capture_gate", peer, envelope, context)
+		capture_calls.append({"envelope": envelope.duplicate(true), "gate": gate,
+			"revision": context.expected_revision, "state": _character_authority.call("state", game.local.character_id)})
+		return {"ok": false, "durable": false, "code": "fixture_world_write_failed"}
 
 class Service extends SYNC:
 	var body_ready := true
@@ -315,3 +327,55 @@ func test_legacy_typed_accepted_row_rebases_full_record_and_duplicate_keeps_prog
 	session.host = false
 	service.receive_owner(session.messages[-1])
 	assert_true(service.local.rebase.is_empty())
+
+func test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_handler() -> void:
+	var capture: Dictionary = preload("res://tests/test_owner_passive_preparation.gd").new()._capture_event()
+	assert_false(capture.is_empty())
+	game.world.reward_deliveries[capture.delivery_id] = capture.duplicate(true)
+	var stream := _host_stream()
+	var context: Dictionary = capture.duties[0].context.duplicate(true)
+	context.merge({"character_id": before.character_id, "expected_revision": 0, "in_range": true,
+		"in_combat": false, "foundation_runtime_authorized": true, "retained_event": capture.delivery_id})
+	var envelope := {"op": "wild_capture", "session_epoch": "current-epoch", "world_namespace": event.world_namespace,
+		"character_id": before.character_id, "station_key": context.source_key, "revision": 0,
+		"intent": {"offer_id": context.offer_id, "keep": true, "released_uid": ""}}
+	var changed := envelope.duplicate(true)
+	changed.intent.released_uid = before.party[0].uid
+	assert_false(service.capture_gate(2, changed, context).ok, "free-slot capture cannot silently release an owned companion")
+	assert_true(stream.checkpoint.is_empty())
+	changed = envelope.duplicate(true)
+	changed.session_epoch = "foreign"
+	assert_false(service.capture_gate(2, changed, context).ok)
+	assert_true(stream.checkpoint.is_empty())
+	assert_eq(service.capture_gate(2, envelope, context).code, "owner_passive_checkpoint_pending")
+	var original: PackedByteArray = var_to_bytes(stream.checkpoint)
+	assert_eq(service.capture_gate(2, envelope, context).code, "owner_passive_checkpoint_pending")
+	assert_eq(var_to_bytes(stream.checkpoint), original)
+	changed = envelope.duplicate(true)
+	changed.intent.keep = false
+	assert_eq(service.capture_gate(2, changed, context).code, "owner_passive_original_pending")
+	assert_eq(var_to_bytes(stream.checkpoint), original, "decline cannot substitute for the frozen keep choice")
+	service.receive_host(2, _envelope({"op": "frozen", "id": stream.checkpoint.id, "sequence": stream.cursor.sequence,
+		"prefix_hash": stream.cursor.prefix_hash, "hash": PREP.fingerprint(stream.cursor.state)}))
+	assert_true(stream.checkpoint.has("prepared"))
+	if not stream.checkpoint.has("prepared"): return
+	var saved := _envelope({"op": "saved", "id": stream.checkpoint.id, "hash": stream.checkpoint.prepared.hash, "saved": false})
+	service.receive_host(2, saved)
+	assert_eq(session._character_authority.revision(before.character_id), 0)
+	assert_true(session.capture_calls.is_empty(), "failed BOOL-save cannot reach the capture handler")
+	session.capture_service = service
+	session.capture_context = context.duplicate(true)
+	saved.saved = true
+	service.receive_host(2, saved)
+	assert_eq(session.capture_calls.size(), 1)
+	if session.capture_calls.is_empty(): return
+	assert_true(session.capture_calls[0].gate.ok, "only synchronous exact original handler reentry bypasses the checkpoint")
+	assert_eq(session.capture_calls[0].revision, 1)
+	assert_true(PREP.exact(session.capture_calls[0].envelope.intent, envelope.intent))
+	assert_true(PREP.exact(session.capture_calls[0].state, stream.checkpoint.prepared.after))
+	assert_true(session._character_authority.creature_training_is_pending(before.character_id), "failed world writer retains exact checkpoint")
+	service.receive_host(2, saved)
+	assert_eq(session.capture_calls.size(), 2)
+	assert_eq(session._character_authority.revision(before.character_id), 1, "saved ACK retry cannot replay passive inputs twice")
+	assert_true(PREP.exact(stream.checkpoint.binding.envelope, envelope), "host-derived CAS revision never rewrites original request")
+	assert_eq(session._character_authority.state(before.character_id).party.size(), before.party.size(), "failed capture writer grants no creature")
