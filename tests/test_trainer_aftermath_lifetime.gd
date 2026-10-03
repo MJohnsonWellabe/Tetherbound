@@ -2,7 +2,7 @@ extends "res://tests/test_case.gd"
 
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 
-class Panel extends Node:
+class DialogueEmitter extends Node:
 	signal line_presented(conversation_id: String, is_last: bool)
 	signal finished(conversation_id: String)
 
@@ -11,7 +11,7 @@ class Panel extends Node:
 ## This does not claim a played victory, camera or durable reward.
 func run_initialized_lifetime_case(tree: SceneTree) -> Dictionary:
 	var director := DIRECTOR.new()
-	var panel := Panel.new()
+	var panel := DialogueEmitter.new()
 	var player := Node3D.new()
 	tree.root.add_child(panel)
 	tree.root.add_child(player)
