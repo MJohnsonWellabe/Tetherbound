@@ -1,0 +1,41 @@
+{
+  "kind": "f19_solmane_cold_landmarks_partition",
+  "reports": [
+    {
+      "name": "landmarks",
+      "run": 37106639601,
+      "job": 111156354429,
+      "artifact": 11268375993,
+      "source_commit": "2a2c412a711d6199dcc1a986aa49063812f8956f",
+      "elapsed_seconds": 300,
+      "process_exit": 0,
+      "engine_errors": 8,
+      "script_errors": 0,
+      "held_peak": 863,
+      "held_initial": 433,
+      "failures": [],
+      "raw_log": "ci-solmane-cold-landmarks-37106639601.log.gz",
+      "raw_log_sha256": "621b0ec0b7e11dd75aae7dc15b1da3051a0824619dc866be2132ca50a9cd1246"
+    },
+    {
+      "name": "except-landmarks",
+      "run": 37106640734,
+      "job": 111156358760,
+      "artifact": 11268351041,
+      "source_commit": "2a2c412a711d6199dcc1a986aa49063812f8956f",
+      "elapsed_seconds": 293,
+      "process_exit": 0,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "held_peak": 199,
+      "held_initial": 107,
+      "failures": [],
+      "raw_log": "ci-solmane-cold-except-landmarks-37106640734.log.gz",
+      "raw_log_sha256": "7eade90baaa6b1684679f612b63d8a311925935e45271d8334851cbb4e26f747"
+    }
+  ],
+  "acceptance": false,
+  "scope": "Retain only active per-surface override Materials located under Landmarks versus its complement. All original cold lifecycle steps retained. Shared Materials may appear in multiple subtrees; location is not exclusive resource ownership.",
+  "result": "Landmarks-only retention leaves all8 errors; complement retention0 errors with107 initial Materials. Specific factory remains unproven.",
+  "next": "Partition complement into CloudreachResources/RenewableResources versus the remaining non-Landmarks roots."
+}

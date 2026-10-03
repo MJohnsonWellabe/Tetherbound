@@ -336,13 +336,26 @@
   "solmane_cold_owner_partition": {
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
     "scope": "Same original cold lifecycle; retain only active per-surface override Materials in Landmarks or its complement. No additional resources or gameplay modifications.",
-    "status": "Live separate native owner partitions; no acceptance pending terminal raw logs",
+    "status": "Terminal: solmane-cold-landmarks-partition.json; Landmarks-only8 errors versus complement0; diagnosis only",
     "source_commit": "2a2c412a711d6199dcc1a986aa49063812f8956f",
-    "landmarks": {"run": 37106639601, "job": 111156354429},
-    "except_landmarks": {"run": 37106640734, "job": 111156358760},
+    "landmarks": {
+      "run": 37106639601,
+      "job": 111156354429,
+      "artifact": 11268375993
+    },
+    "except_landmarks": {
+      "run": 37106640734,
+      "job": 111156358760,
+      "artifact": 11268351041
+    },
     "selection": [
       "--retain-active-surface-overrides --active-owner-root=Landmarks",
       "--retain-active-surface-overrides --exclude-active-owner-root=Landmarks"
     ]
+  },
+  "solmane_cold_resource_partition": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "status": "Prepared; not yet dispatched",
+    "scope": "Only active surface override refs under CloudreachResources/RenewableResources versus remaining non-Landmarks roots. Original cold lifecycle unchanged; diagnosis only."
   }
 }

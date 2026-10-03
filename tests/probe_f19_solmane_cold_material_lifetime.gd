@@ -60,7 +60,7 @@ func _observe(phase: String) -> void:
 		"treatment": _treatment(), "root_children": roots,
 		"unique_material_candidates": _candidate_ids.size(), "held_materials": _held.size(),
 		"owner_samples": _samples, "sample_limit": 32,
-		"new_retained_owner_samples": _retained_samples, "retained_sample_limit": 64}))
+		"new_retained_owner_samples": _retained_samples, "retained_sample_limit": 128}))
 	print("F19 SOLMANE COLD ACTIVE OWNER GROUPS " + JSON.stringify({"phase": phase,
 		"counts": _active_owner_counts, "selection_args": OS.get_cmdline_user_args()}))
 
@@ -102,11 +102,13 @@ func _note(node: Node, surface: int, kind: String, material: Material) -> void:
 		for argument: String in OS.get_cmdline_user_args():
 			if argument.begins_with("--active-owner-root="):
 				retain = retain and owner == argument.trim_prefix("--active-owner-root=")
+			elif argument.begins_with("--active-owner-roots="):
+				retain = retain and argument.trim_prefix("--active-owner-roots=").split(",").has(owner)
 			elif argument.begins_with("--exclude-active-owner-root="):
 				retain = retain and owner != argument.trim_prefix("--exclude-active-owner-root=")
 	if retain and not _held_ids.has(id):
 		_held_ids[id] = true
 		_held.append(material)
-		if _retained_samples.size() < 64:
+		if _retained_samples.size() < 128:
 			_retained_samples.append("%s:%s:%d:%d:%s:%s" % [str(node.get_path()), kind,
 				surface, id, material.get_class(), material.resource_name])
