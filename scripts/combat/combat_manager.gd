@@ -4386,7 +4386,8 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	# burst was created correctly twelve times in a row and rendered none of
 	# them. The arena is a Node3D that already exists for exactly the length of
 	# the fight, so it also cleans these up on its way out.
-	var host: Node = _arena if _arena != null else _player.get_parent()
+	var host: Node = _arena if _arena != null else (_player.get_parent() if _player != null else null)
+	if host == null: return # no world to draw into (a bare manager under test)
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
 	if shake_camera and impact.is_empty(): _nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
