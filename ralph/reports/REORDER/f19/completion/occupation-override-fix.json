@@ -52,8 +52,10 @@
     "solmane": {
       "run": 37101816593,
       "job": 111142681335,
-      "status": "Live",
-      "script": "tests/smoke_f19_solmane_functional.gd"
+      "status": "Gameplay PASS, clean witness rejected for four first-transition errors",
+      "script": "tests/smoke_f19_solmane_functional.gd",
+      "artifact": 11267041523,
+      "evidence": "solmane-complete-rejected.json"
     }
   },
   "review_delivery_source": "6106c3760628f767cc97ae886d7bf29c133ae43d",

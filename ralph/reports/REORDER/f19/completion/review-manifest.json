@@ -148,7 +148,7 @@
     ]
   },
   "open_acceptance": [
-    "Clean Solmane actual full six-case witness still required (37101816593 live). Veridian original full six cases now clean on c510 (37101815341/artifact11266764847). Prior intermittent prompt guard failures remain recorded; full current Veridian witness original guards pass without waiver.",
+    "Solmane all six original gameplay cases pass on c510, but four cold-transition GLES errors remain (37101816593/artifact11267041523); solmane-complete-rejected.json. Veridian full six-case witness is clean (37101815341). Original guards remain unchanged.",
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
     "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
   ],
@@ -283,8 +283,9 @@
       "solmane": {
         "run": 37101816593,
         "job": 111142681335,
-        "status": "Live",
-        "script": "tests/smoke_f19_solmane_functional.gd"
+        "status": "Terminal gameplay PASS but rejected for four original cold-transition engine errors",
+        "script": "tests/smoke_f19_solmane_functional.gd",
+        "artifact": 11267041523
       }
     },
     "review_delivery_source": "6106c3760628f767cc97ae886d7bf29c133ae43d",
@@ -306,5 +307,10 @@
       "raw_log_sha256": "83bc501046d43d86a607b62f85a2bd66ca67eceb745c7c37dc11496e74c6103c"
     },
     "independent_review_request": "Coordinator request sent: cumulative53ef452d0d→6106 two-file bundle, standalone native45checks clean. Pending verdict."
+  },
+  "solmane_cold_material_diagnostic": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "scope": "First original bootstrap/reset/reboot only; all root children masked Material census, no active/particle/Terrain/Mesh refs or gameplay mutation added; baseline and retained copies in distinct processes.",
+    "status": "Prepared; not yet dispatched"
   }
 }
