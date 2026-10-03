@@ -22,7 +22,7 @@ func _run() -> void:
 	var occupation := OCCUPATION.new()
 	for treatment: String in ["before-withdrawal", "baseline", "retain-masked-surface"]:
 		print("F19 SIPHON MATERIAL BEGIN " + treatment)
-		var holder := _build_siphons(factory, config)
+		var holder := _build_siphons(factory)
 		world.add_child(holder)
 		for frame in 3: await process_frame
 		if treatment != "before-withdrawal":
@@ -46,10 +46,11 @@ func _run() -> void:
 		"acceptance": false, "renderer": RenderingServer.get_current_rendering_method(), "drawing": false}))
 	quit(0 if _failures.is_empty() else 1)
 
-func _build_siphons(factory: Node3D, config: Dictionary) -> Node3D:
+func _build_siphons(factory: Node3D) -> Node3D:
 	var holder := Node3D.new()
 	holder.name = "TetherRetrofit"
-	for entry: Variant in (config.get("site", {}) as Dictionary).get("retrofit", []):
+	var authored: Dictionary = factory.call("_occupation")
+	for entry: Variant in authored.get("retrofit", []):
 		var spec := entry as Dictionary
 		if not str(spec.get("model", "")).begins_with("rift_siphon"): continue
 		var node: Node3D = factory.call("_load_prop", STRONGHOLD.HALL_PROPS, spec["model"])

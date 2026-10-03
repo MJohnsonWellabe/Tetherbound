@@ -225,5 +225,11 @@
     "source_commit": "35b0fe616be4b60230cba8635b1926b3695dcebb",
     "run": 37100322208,
     "job": 111138410545
+  },
+  "siphon_component_source_correction": {
+    "run": 37100956165,
+    "source_commit": "65d49017cf456a31950cdc5cbee412b72e741a0a",
+    "reason": "Invalid fixture read site.retrofit instead of shipping hall_occupation; cancellation requested while checkout active, no lifetime result claimed. Corrected fixture calls actual factory._occupation.",
+    "acceptance": false
   }
 }
