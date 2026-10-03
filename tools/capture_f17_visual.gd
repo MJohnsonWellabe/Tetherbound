@@ -303,7 +303,19 @@ func _coordinates(value: Vector3) -> Array[float]:
 
 
 func _capture_presets() -> Array[String]:
-	var presets: Array[String] = ["Medium", "High"] if _paired_high else [_preset]
+	return capture_presets(_preset, _paired_high)
+
+
+static func capture_presets(preset: String, paired_high: bool) -> Array[String]:
+	# A conditional expression produces an untyped Array even when each arm
+	# contains strings. Godot rejects assigning that Variant to Array[String]
+	# at runtime; check-only cannot establish this branch's execution.
+	var presets: Array[String] = []
+	if paired_high:
+		presets.append("Medium")
+		presets.append("High")
+	else:
+		presets.append(preset)
 	return presets
 
 
