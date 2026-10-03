@@ -992,6 +992,37 @@
         "failure": "AfteroriginalnormalX, _activated !=expectedprompt, thencomplete-sentinelFAIL; actualactivationcouldbe null, original wording anotherprovider is not proof ofanotherprovider. Actualactivated/winner/inputowner/fightstate notprinted. Finalcanonicalfight/spec/tier assertion unreached. No producerrootcause inferred.",
         "limits": "Disclosedpost-finale/current/firstmorning fixture/headless/harnessinput/Skip. #1METcandidate corroborated; #3OPEN. Failedpromptactivation is new substantive rematch-availability boundary, not F44win/reward proof.",
         "independent_review": "PASS GPT-6.1 Sol f20_review_sol exactworkflow source/native-user-ZIP bytes/hash/65checks2fail0errors; priorending/bounty gates PASS, selectedBryn, actual activated-or-null unknown. Sourcephysicsrecomputes onpress and checks owner/enabled/fight; prepresswinner alone insufficient, failure-only trace required."
+      },
+      {
+        "run": 37097937017,
+        "job": 111131593354,
+        "artifact": 11265336671,
+        "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
+        "verdict": "FAIL ordinary X activates original trainer conversation instead of endgame rematch",
+        "workflow_conclusion": "failure",
+        "checks": 65,
+        "failures": 2,
+        "native_bytes": 77296,
+        "native_sha256": "4a6c299b12d25b809dd1a4b4f9ac00cc1e411610d0e1b57d827189e16301f82b",
+        "user_log_bytes": 77042,
+        "user_log_sha256": "5f93ca6f64f0af427beb98813619a90b3be2e87d6ed8fbf5e5e0f1be4ac05321",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "warnings_per_log": 22,
+        "artifact_bytes": 672374,
+        "artifact_sha256": "d47d510d9919ed2fc94e52fc78f975a3b3be74bc3a1f86fd64e76a5f30d8c4b2",
+        "logs": [
+          "f20-solo-r17-native.log.gz",
+          "f20-solo-r17-workflow.log.gz",
+          "f20-solo-r17-artifact.zip"
+        ],
+        "passed": "Original ending, one guarded credits ACK, production save/reset/reload identity/inventory/world/receipts, completed repeat, safe movement, unfinished journal, actual bounty open/three live rows/B-close all PASS. Actual Bryn selected; prepress grounded exact actionable provider gate did not fail.",
+        "failure": "Normal X actually activates Bryn original Interactable. DialoguePanel owns input; director inactive, source none, spec empty, manager not fighting. Expected endgame activation and final completion sentinel fail; final canonical fight admission unreached.",
+        "diagnostic_limits": "Aftertap player is about2.20m from expected side prompt. No prepress pose/axis samples: player drift or queued stick remains inference. Source npc_body._process turns parent root toward player, so local side rematch children also orbit; translation-only anchor candidate under preparation, not runtime-proved.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user hashes and error counts; 65checks2fail/exit1/22warnings each. Actual original-talk identity now established, not null. No premature cause or F20#3 closure.",
+        "limits": "Disclosed post-finale/current/firstmorning fixture, headless, harness input and Skip. #1 MET candidate corroborated; #3 OPEN."
       }
     ],
     "limitations": [
@@ -1143,7 +1174,7 @@
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
       "indirect_only": "Synthetic62 PASS is supplemental only. Actual solo-r15 directly proves reload, safe movement and ordinary bounty availability; actual rematch admission remains required.",
-      "latest_runtime": "Solo-r15/r16 directly prove actualending/resetreload/identity-inventory-receipts/safemovement/journal/normalbountyopen3rows/Bclose. r16Bryn rematch exactactionableprovider gate doesnotfail, butnormalX expectedactivationnotrecorded; actualadmission unproved. #3OPEN; failureonly input/owner/provider/fight trace underreview.",
+      "latest_runtime": "Solo r15-r17 preserve actual ending/reload/safe movement/journal/three real bounty rows/B-close. r17 proves X chooses original Bryn talk instead of rematch despite prepress provider gate; actual canonical rematch admission unproved, #3 OPEN.",
       "limits": "Requires strengthened actual nonmaster rematch admission in addition to retained reload/safe movement/journal and normalbountyinput/live3rows/Bclose. Enabledprompts alone do not establish full admission. No F44win or allrepeatloop closure claimed."
     },
     "4": {
@@ -1195,18 +1226,7 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {
-    "solo_r17": {
-      "run": 37097937017,
-      "job": 111131593354,
-      "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
-      "script": "tests/smoke_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37097937017",
-      "status": "Original affected rematch input trace running; no result claimed. Includes existing ending/reload/bounty and actual rematch admission assertions. No local Godot/GPU use."
-    }
-  },
+  "remote_pending": {},
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1324,7 +1344,7 @@
     "change": "Afterallpriorreload/movement/journal/bountyinput/live3rows/Bclose checks, nearestactualenabledcanonicaltrainerprofile Endgameprompt walkedusingoriginalcapsule NAV/maxframes/recovery/ground/LOS/exactwinner/actionable checks. NormalX activatesproducer, bounded30s verifiesactualmanagerfighting/director/source/exactcanonicalendgamespec/liveopponentfirstspecies/configuredlevel/enemyidentity/trainerowned. ExistingordinarylessonContinue wrapper retained. No directactivation/challenge/resolve/HP/transform edits.",
     "cleanup": "Terminalisolatedfixture quits duringgenuinelyadmittedtrainerfight; flee prohibitedbyproduction. No win/payout/recovery claim; safemovementprovedbeforeadmission.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact c184 plus e782: actualsource/spec/livebody/fight gates sound, existinglessonwrapper cleanup correctly retained. Original8/2clocksettling/NAV/recovery/input/admission bounded; affectedactualsolo required.",
-    "runtime": "Actual solo-r16 FAIL65checks2/0engine-scripterrors. Allpriorending/reload/bounty checks PASS; actualBryn selected and groundedexactactionable gate doesnotfail. NormalX expectedactivation missing, actualprovider/null/owner/fightstate unknown; finaladmissioncheckunreached, #3OPEN."
+    "runtime": "Actual r17 FAIL65checks2/zeroerrors. X actually selects original Bryn talk prompt; no fight admission. Independent raw audit PASS narrow failed scope; #3 OPEN."
   },
   "home_begin_refusal_proof": {
     "source": "7fefaea2ed86a4328b537903a74c513a811b8f95",
@@ -1337,7 +1357,7 @@
     "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
     "change": "Temporaryexistinginputclocktrace duringoriginalrematchtap/restoredafter; failureonly actualactivated/null/winner/offer/enabled/inputowner/pose/fight/director/spec/source. Accuratefailurewording no longerassertsanotherprovider whenactualnullunknown. Sameinput/NAV/provider/admission/budgets.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact2a7 plus663: existingclocktrace/restore/signaldisconnect/lessoncleanup/read-onlycast/getters, no recompute/input/budget/guard changes. Actualaffectedr17 required.",
-    "runtime": "Actual solo-r17 37097937017/job111131593354 runs exact 2a7f2eee6dedd6d32cd321892901f8dfa6287ba0; original result pending; #3 OPEN."
+    "runtime": "Actual r17 FAIL65checks2/zeroerrors. X actually selects original Bryn talk prompt; no fight admission. Independent raw audit PASS narrow failed scope; #3 OPEN."
   },
   "arrival_checkpoint_dependency": {
     "source": "fc91ff531f0980a90572f60d5cc9cdd68c57ea68",

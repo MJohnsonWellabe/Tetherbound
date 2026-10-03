@@ -31,7 +31,7 @@ Actual solo-r15 (37096201917) PASS63checks0/zeroengine-script errors: production
 and clock receipt survive reset/reload; ordinary board opens/live3rows/Bclose PASS. Strict review also requires actual rematch admission beyond
 enabled prompts; F20-only `e7826924b3`/lesson-wrapper `c18441cab5` adds normal X/canonical endgame fight checks,
 independent source PASS; Actual solo-r16 (37096904861) FAIL65checks2/zeroerrors: actualBryn groundedactionable gate holds,
-but normal X expectedprovideractivation is missing; reviewed `2a7f2eee6d` input/owner/fight trace is live in solo-r17 (37097937017), result pending. Isolated proof quits during trainer fight; no win/reward/recovery claim, #3 OPEN. Earlier r10 misleading green with
+but normal X expectedprovideractivation is missing; actual solo-r17 (37097937017) FAIL65/2/zeroerrors proves X selects Bryn original talk prompt, opens DialoguePanel and starts no fight. Side rematch children inherit npc_body facing rotation; translation-only anchor candidate in preparation, no producer fix claim yet. Isolated proof quits during trainer fight; no win/reward/recovery claim, #3 OPEN. Earlier r10 misleading green with
 three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
 Two-peer-r4 saves host homecoming then times out its command. Net-r5 on29bc cleanly passes host ending,
 guarded credits1ACK and completed repeat; navigation takes143.303s and11ordinarytaps38.138s. The inherited300s
