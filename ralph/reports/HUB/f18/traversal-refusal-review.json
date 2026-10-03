@@ -3,8 +3,12 @@
   "parent_source": "bb364f620e595c47e1f3954de2d5442869a50d1b",
   "reviewer": "independent GPT-6.1 Sol read-only",
   "source_verdict": "APPROVE actual traversal adapter, snapshots and scoped runner source after grounded launch/release guards",
-  "files": ["tests/helpers/f18_player_guards.gd", "tests/helpers/f18_net_peer.gd", "tests/smoke_net_f18_traversal_refusal.gd"],
-  "native_status": "UNPROVEN; scoped remote dispatch pending",
+  "files": [
+    "tests/helpers/f18_player_guards.gd",
+    "tests/helpers/f18_net_peer.gd",
+    "tests/smoke_net_f18_traversal_refusal.gd"
+  ],
+  "native_status": "IN_PROGRESS; original artifacts/result pending",
   "checks": {
     "swimming": "actual scene actor's exact mounted SwimController, current Water world, HUMAN mode, swimming and airborne",
     "flying": "actual scene actor's exact mounted FlyController, flying and airborne",
@@ -18,5 +22,37 @@
     "shared_or_production_edits": false
   },
   "fixture_limits": "One disconnected actual peer per run. Own key/starter/free-play and traversal setup are fixtures, not earned opening/unlock/crossing/travel. Readability is structural until pixels reviewed; all warnings retained.",
-  "all_six_f18_criteria": "UNPROVEN"
+  "all_six_f18_criteria": "UNPROVEN",
+  "native_dispatches": [
+    {
+      "id": 37104799774,
+      "display_title": "render f18-swimming-refusal-r1 @ 149a3a82b781cf367e9f875440bb005e0b358ca8",
+      "head_branch": "tb/integration",
+      "head_sha": "d0fe50900b06d0da51cf9c4c78eadd042b49bf96",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37104799774",
+      "checkout": "149a3a82b781cf367e9f875440bb005e0b358ca8",
+      "script": "tests/smoke_net_f18_traversal_refusal.gd",
+      "args": "",
+      "mode": "headless",
+      "timeout_minutes": 15,
+      "scope": "Actual swimming refusal only; disclosed pre-input fixtures, no earned unlock/crossing/travel/render/audio credit."
+    },
+    {
+      "id": 37104801163,
+      "display_title": "render f18-flying-refusal-r1 @ 149a3a82b781cf367e9f875440bb005e0b358ca8",
+      "head_branch": "tb/integration",
+      "head_sha": "d0fe50900b06d0da51cf9c4c78eadd042b49bf96",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37104801163",
+      "checkout": "149a3a82b781cf367e9f875440bb005e0b358ca8",
+      "script": "tests/smoke_net_f18_traversal_refusal.gd",
+      "args": "--flying",
+      "mode": "headless",
+      "timeout_minutes": 15,
+      "scope": "Actual flying refusal only; disclosed pre-input fixtures, no earned unlock/crossing/travel/render/audio credit."
+    }
+  ]
 }
