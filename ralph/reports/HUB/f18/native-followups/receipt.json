@@ -6321,6 +6321,39 @@
       "material_limit": "One materialnull follows Axe root/mesh tree exits at physics6236/process2253, preceding +4Stone completion. No Stone exits. Stronger Axe candidate; no offending RID or renderer-destructor causality proved. Shared cleanup remains coordinator-owned.",
       "observer_failure": "1192 freed casts at snapshot132 stale glow and1191 cascading missing-transition errors; partial manifest then1200sample cap, not valid presentation acceptance.",
       "evidence_limit": "Entire earned loop, warning/error cleanliness, durable Hall arrival/station/save-reload/portal-return and allsixF18 remain UNPROVEN. No rendered or audible acceptance."
+    },
+    {
+      "id": 37103683161,
+      "display_title": "render f18-presentation-lifetime-r1 @ 8ed4b4b746cca104a22bbbfdc105f7a0d489cddf",
+      "head_sha": "e045d5750cec7811c747b1cfed34a8863d17a2eb",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37103683161",
+      "checkout": "8ed4b4b746cca104a22bbbfdc105f7a0d489cddf",
+      "artifact_id": 11267016113,
+      "raw_artifact": "presentation-lifetime-r1-remote.zip",
+      "bytes": 1424,
+      "sha256": "a377689fa6b18acc35f3527b6dfe27e79919e42fede4f16077408a149a958146",
+      "native_exit_code": "0",
+      "native_summary": {
+        "failures": [],
+        "fixture": "detached actual HomeKey presenters with explicitly freed visual nodes; no travel acceptance",
+        "local_fields": 5,
+        "remote_fields": 5,
+        "transition_snapshot_present": true
+      },
+      "logs": {
+        "run.log": {
+          "errors": [],
+          "warnings": []
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": [],
+          "warnings": []
+        }
+      },
+      "outcome": "Scoped native component PASS: freed local/remote visual fields safely observed absent, complete transition snapshot, failuresempty/exit0/3s; no engine/script errors or warnings.",
+      "evidence_limit": "Detached actual presenter component regression only. Real earned HomeKey return, presentation/render/audio and allsixF18 remain UNPROVEN. Source binding uses API/dispatch provenance; artifact manifest is only file list."
     }
   ],
   "acceptance": {

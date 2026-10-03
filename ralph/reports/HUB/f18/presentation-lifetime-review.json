@@ -10,8 +10,50 @@
     "Node/audio observation parameters accept raw Variants, including remote raise fields.",
     "Detached actual HomeKey presenters regression frees all five fields and checks ten local/remote absent results plus complete transition snapshot."
   ],
-  "no_changes_to": ["gameplay", "driver", "physics", "input", "flags", "travel guards", "budgets", "timers"],
-  "native_status": "NOT RUN",
+  "no_changes_to": [
+    "gameplay",
+    "driver",
+    "physics",
+    "input",
+    "flags",
+    "travel guards",
+    "budgets",
+    "timers"
+  ],
+  "native_status": "PASS scoped original native component evidence; independent original review APPROVE",
   "native_proof": "tests/smoke_f18_presentation_lifetime.gd",
-  "limits": "Component lifetime proof only. Original1192 freed casts/1191 cascading errors and one unresolved materialnull are retained; full earned travel, rendered/audio and allsixF18 acceptance remain UNPROVEN."
+  "limits": "Component lifetime proof only. Original1192 freed casts/1191 cascading errors and one unresolved materialnull are retained; full earned travel, rendered/audio and allsixF18 acceptance remain UNPROVEN.",
+  "native_result": {
+    "id": 37103683161,
+    "display_title": "render f18-presentation-lifetime-r1 @ 8ed4b4b746cca104a22bbbfdc105f7a0d489cddf",
+    "head_sha": "e045d5750cec7811c747b1cfed34a8863d17a2eb",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37103683161",
+    "checkout": "8ed4b4b746cca104a22bbbfdc105f7a0d489cddf",
+    "artifact_id": 11267016113,
+    "raw_artifact": "presentation-lifetime-r1-remote.zip",
+    "bytes": 1424,
+    "sha256": "a377689fa6b18acc35f3527b6dfe27e79919e42fede4f16077408a149a958146",
+    "native_exit_code": "0",
+    "native_summary": {
+      "failures": [],
+      "fixture": "detached actual HomeKey presenters with explicitly freed visual nodes; no travel acceptance",
+      "local_fields": 5,
+      "remote_fields": 5,
+      "transition_snapshot_present": true
+    },
+    "logs": {
+      "run.log": {
+        "errors": [],
+        "warnings": []
+      },
+      "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+        "errors": [],
+        "warnings": []
+      }
+    },
+    "outcome": "Scoped native component PASS: freed local/remote visual fields safely observed absent, complete transition snapshot, failuresempty/exit0/3s; no engine/script errors or warnings.",
+    "evidence_limit": "Detached actual presenter component regression only. Real earned HomeKey return, presentation/render/audio and allsixF18 remain UNPROVEN. Source binding uses API/dispatch provenance; artifact manifest is only file list."
+  }
 }

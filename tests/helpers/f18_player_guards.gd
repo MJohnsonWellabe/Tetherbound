@@ -7,6 +7,9 @@ const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 const LESSON_SERVICE := preload("res://scripts/onboarding/lesson_service.gd")
+const SWIM_CONTROLLER := preload("res://scripts/player/swim_controller.gd")
+const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+const FLY_CONTROLLER := preload("res://scripts/player/fly_controller.gd")
 var tree: SceneTree
 var game: Node
 var travel: RefCounted
@@ -118,6 +121,16 @@ func _refusal_context(kind: String, source: Node, scene: Node) -> bool:
 		return context.get("combat") == false and context.get("dialogue") == false and context.get("cutscene") == true \
 			and sample.get("dialogue") == false and sample.get("cutscene") == true
 	if not scene.is_ancestor_of(source): return false
+	if kind in ["swimming", "flying"]:
+		var actor := game.call("find_player") as CharacterBody3D
+		if actor == null or not scene.is_ancestor_of(actor): return false
+		if kind == "swimming":
+			return game.get("current_realm") == "water" and source == actor.get("swim_controller") \
+				and source.get_script() == SWIM_CONTROLLER and source.get_parent() == actor \
+				and source.get("_world") == scene and source.get("state").get("mode") == SWIM_STATE.Mode.HUMAN \
+				and source.call("is_swimming") == true and not actor.is_on_floor()
+		return source == actor.get("fly_controller") and source.get_script() == FLY_CONTROLLER \
+			and source.get_parent() == actor and source.call("is_flying") == true and not actor.is_on_floor()
 	if kind == "combat":
 		var hud: Node = scene.get_node_or_null(^"PlaygroundHUD")
 		return source == scene.get_node_or_null(^"CombatManager") and source.call("is_fighting") == true \
@@ -129,8 +142,9 @@ func _refusal_context(kind: String, source: Node, scene: Node) -> bool:
 func bound_refusal(kind: String, source: Node) -> bool:
 	# Observe production state and press the actually assigned action. Never
 	# call use/refuse, open a channel, or arrange a combat/dialogue context.
-	var expected: String = "Not during a fight." if kind == "combat" else \
-		("Wait until the scene finishes." if kind == "cutscene" else "Finish the conversation first.")
+	var expected: String = {"combat": "Not during a fight.", "cutscene": "Wait until the scene finishes.",
+		"dialogue": "Finish the conversation first.", "swimming": "Reach solid ground first.",
+		"flying": "Land first."}.get(kind, "")
 	var scene: Node = tree.current_scene
 	var actor: Node3D = game.call("find_player")
 	var key: Node = game.get_node_or_null(^"HomeKey")

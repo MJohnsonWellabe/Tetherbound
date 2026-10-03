@@ -1,0 +1,15 @@
+{
+  "scope": "F18 actual swimming/flying refusal witness extension",
+  "parent_source": "fcafd03a0be9b11c3679be12e796f8f95dd4d9c6",
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "source_verdict": "APPROVE tests/helpers/f18_player_guards.gd",
+  "native_status": "UNPROVEN; actual traversal producer/input proof pending",
+  "checks": {
+    "swimming": "actual scene actor's exact mounted SwimController, current Water world, HUMAN mode, swimming and airborne",
+    "flying": "actual scene actor's exact mounted FlyController, flying and airborne",
+    "reason": "exact production Reach solid ground first./Land first. strings",
+    "side_effect_guards": "existing idle key/binding, scene/session/character/epoch/owner, inventory/hotbar/key, request/channel/no-result checks unchanged; actual traversal repeated after input await",
+    "state_arrangement_or_production_edits": false
+  },
+  "all_six_f18_criteria": "UNPROVEN"
+}
