@@ -163,5 +163,7 @@
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
   "latest_population_proof": "seed-provenance-correction.json",
-  "latest_m1_dependency": "reviewed-meadows-loss-wait-dependency.json"
+  "latest_m1_dependency": "reviewed-meadows-loss-wait-dependency.json",
+  "evidence_by_criterion": {},
+  "latest_band_baseline_proof": "native-band-baseline.json"
 }
