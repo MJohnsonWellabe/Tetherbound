@@ -377,7 +377,7 @@
     ],
     "scope": "PREDELETE clears only actual harvest visual surface bindings while mesh children are alive; removal/re-entry remains unchanged. No retained reference cache, stock or gameplay changes.",
     "baseline": "harvest-material-component.json",
-    "status": "Fixed component10s and137-check lifecycle11s clean; harvest-material-fix.json. Original cold transition/full choice witnesses and independent review remain required.",
+    "status": "Actual component10s,137-check lifecycle11s and original cold transition292s all clean, no retained Materials in baseline/regression/cold. Full original choice witnesses dispatched; independent review pending.",
     "fixed_component": {
       "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
       "run": 37107889673,
@@ -411,9 +411,26 @@
       "scope": "All actual15 Cloudreach crop specs, original active/source/mesh identities preserved through removal/re-entry; copied Materials expire after actual deletion. No Game/stock/gathering or earned-play claim."
     },
     "cold_no_retention": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
       "run": 37107891893,
-      "job": 111159894349
+      "job": 111159894349,
+      "artifact": 11268353038,
+      "process_exit": 0,
+      "elapsed_seconds": 292,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "leak_warnings": [],
+      "failures": [],
+      "held_materials_all_observations": 0,
+      "raw_log": "ci-solmane-cold-harvest-fixed-37107891893.log.gz",
+      "raw_log_sha256": "1438e7c11e781d9cd3b83b581d154542682b1b4688b65caebdf28fdef88eb655",
+      "scope": "Original bootstrap/reset/reboot and explicit final deletion, same baseline treatment, no reference retention. Original gameplay fixtures remain disclosed; no choice or earned-play credit."
     },
-    "acceptance": false
+    "acceptance": false,
+    "full_choice_witnesses": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "status": "Dispatched; exact run/job IDs pending first listing",
+      "scope": "Entire original six-case choice/save/reload matrices; no resource retention, original guards unchanged"
+    }
   }
 }
