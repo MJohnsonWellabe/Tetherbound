@@ -9,6 +9,7 @@ const F18_STONE := preload("res://scripts/world/waystone.gd")
 const F18_TEACHING := preload("res://scripts/creatures/teaching.gd")
 const F18_NAV := preload("res://tests/helpers/stick_navigator.gd")
 const F18_INPUT := preload("res://scripts/ui/input_owner.gd")
+const F18_LESSON := preload("res://scripts/onboarding/lesson_panel.gd")
 var _f18_fixture_done := false
 var _f18_started := false
 var _f18_staged := false
@@ -86,6 +87,10 @@ func _f18_fixture(game: Node, args: Dictionary) -> Dictionary:
 	for node: Node in get_nodes_in_group("progression_restore"):
 		if node.has_method("restore_progression_from_game"): node.call("restore_progression_from_game", game)
 	for frame in 30: await physics_frame
+	# The disclosed key fixture naturally opens Grandpa's real teaching card.
+	# Continue its actual lines before admission/save, never seed lesson flags.
+	var teaching: Dictionary = await _f18_finish_fixture_teaching(game)
+	if teaching.get("verdict") != "PASS": return teaching
 	# The joiner relinquished world-save ownership before its initial scene;
 	# disconnected solo autosave consequently refuses. This PUBLIC portable
 	# save is fixture setup only, before admission or gameplay evidence.
@@ -96,8 +101,55 @@ func _f18_fixture(game: Node, args: Dictionary) -> Dictionary:
 		var saved: Dictionary = _step_save_character_here({})
 		if saved.get("verdict") != "PASS": return saved
 	_f18_fixture_done = true
+	var state: Dictionary = _f18_state(game, {})
+	state.fixture_teaching = teaching.data
 	return _f18_verdict(true, "DISCLOSED setup only: starter/free-play flags and own HomeKey per peer; guest Tidewake key, not earned opening",
-		_f18_state(game, {}))
+		state)
+
+func _f18_finish_fixture_teaching(game: Node) -> Dictionary:
+	var scene: Node = current_scene
+	var session: Node = _session()
+	var local: RefCounted = game.get("local")
+	var identity: String = str(local.get("character_id"))
+	var service: Node = game.get_node_or_null(^"OnboardingLessons")
+	var lesson: Node = service.get("_panel") if service != null else null
+	var travel := F18_TRAVEL.new(self, game)
+	var started: int = Engine.get_physics_frames()
+	var presses: Array[Dictionary] = []
+	var row: Dictionary = {}
+	var previous_line := -1
+	while Engine.get_physics_frames() - started <= 180:
+		if current_scene != scene or _session() != session or game.get("local") != local \
+				or str(local.get("character_id")) != identity or session.call("is_active") == true:
+			return _f18_verdict(false, "fixture teaching changed source/character/session before admission")
+		var holder: Node = F18_INPUT.current(self)
+		if holder != null and holder == lesson and lesson.get_script() == F18_LESSON \
+				and lesson.call("is_open") == true and service.get("_identity") == identity:
+			var actual: Dictionary = lesson.get("_row")
+			var line: int = int(lesson.get("_line"))
+			var lines: Array = actual.get("lines", [])
+			if actual.get("id") != "home_key" or actual.get("conversation") != "lesson_home_key" \
+					or lines.is_empty() or lines.size() > 20 or line != previous_line + 1 \
+					or (not row.is_empty() and actual != row):
+				return _f18_verdict(false, "fixture teaching is not the unchanged actual Home Key lesson/cursor")
+			if row.is_empty(): row = actual.duplicate(true)
+			presses.append({"line": line, "text": str(lesson.get("_text").get("text")),
+				"character_id": identity, "panel": str(lesson.get_path())})
+			previous_line = line
+			await travel.tap("menu_confirm")
+		elif holder == null and not paused:
+			var pending: bool = service != null and (service.get("_pending") as Dictionary).has("opening:lesson:home_key")
+			if not pending:
+				if not presses.is_empty() and (presses.size() != (row.get("lines") as Array).size() \
+						or local.get("flags").call("has", "opening:lesson:home_key") != true):
+					return _f18_verdict(false, "ordinary fixture lesson continuation lacks all lines/production acknowledgement")
+				return _f18_verdict(true, "actual pre-admission teaching released ordinary input", {
+					"menu_confirm_presses": presses, "budget_frames": 180,
+					"frames_used": Engine.get_physics_frames() - started,
+					"character_id": identity, "earned_opening_credit": false})
+		await physics_frame
+	return _f18_verdict(false, "actual fixture teaching did not release input within 180 frames", {
+		"menu_confirm_presses": presses, "holder": str(F18_INPUT.current(self))})
 
 func _f18_stage(game: Node, args: Dictionary) -> Dictionary:
 	if not _f18_fixture_done or _f18_staged or _f18_started:

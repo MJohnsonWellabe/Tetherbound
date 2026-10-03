@@ -1,0 +1,28 @@
+{
+  "scope": "F18-only pre-admission fixture lesson continuation",
+  "parent_source": "ac64e847816db876ce4cc8e221b553b654449c72",
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "source_verdict": "APPROVE peer continuation and focused native proof source",
+  "focused_native_proof": "tests/smoke_net_f18_fixture_teaching.gd",
+  "native_status": "NOT RUN",
+  "prior_actual_failure": "F18 co-op fixture Home Key lesson retained ordinary input ownership",
+  "checks": {
+    "ordinary_harness_input": "existing F49 tap parses menu_confirm press/release, four process frames each",
+    "actual_panel": "existing service/panel, exact lesson script and input owner, bound character, Home Key ID/conversation",
+    "retained_context": "scene/session/local object/character ID and disconnected state checked after awaited input",
+    "content": "unchanged row, sequential actual cursor, all actual lines continued",
+    "completion": "production acknowledgement, no pending acknowledgement and actual input release",
+    "budget": "one 180 physics-frame continuation budget, matching existing root split fixture",
+    "production_or_shared_edits": false,
+    "new_flags_or_owner_bypass": false,
+    "additional_actor_writes": false,
+    "local_engine_or_gpu": false
+  },
+  "limitations": [
+    "A zero-press peer-helper PASS means input was already free; the focused native proof requires actual presses.",
+    "Fixture key/starter/free-play facts remain disclosed setup, not earned opening proof.",
+    "Focused proof does not host, admit peers or prove travel/co-op/render/audio acceptance."
+    ,"Focused proof requires clean engine/script errors; all warnings must be retained and counted separately. Full travel proof's strict warning check is unchanged."
+  ],
+  "all_six_f18_criteria": "UNPROVEN"
+}
