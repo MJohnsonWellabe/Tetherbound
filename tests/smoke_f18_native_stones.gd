@@ -227,6 +227,84 @@ func _transition_topology(world: Node3D, entry_id: String) -> void:
 	print("F18_TRANSITION_TOPOLOGY " + JSON.stringify({"entry_id": entry_id, "top_vertices": top.size(),
 		"collision_vertices": faces.size(), "boundary_vertices": boundary.size(), "rim_vertices": rim.size(),
 		"identical_top": identical, "flat": flat, "upward": upward, "same_perimeter": same_perimeter}))
+	_transition_route_union(world, pad, top)
+
+func _transition_route_union(world: Node3D, pad: Node3D, transition_top: PackedVector3Array) -> void:
+	var route := world.get_node_or_null(^"AuthoredRoutes/ArrivalGateRoad_Ledge0") as Node3D
+	var mesh := route.get_node_or_null(^"StratifiedCliffBody") as MeshInstance3D if route != null else null
+	var body := route.get_node_or_null(^"Collision") as StaticBody3D if route != null else null
+	var shape := body.get_child(0) as CollisionShape3D if body != null and body.get_child_count() == 1 else null
+	_check(mesh != null and mesh.mesh != null and shape != null and shape.shape is ConcavePolygonShape3D,
+		"arrival road retains actual visible geology and outer collision")
+	if mesh == null or mesh.mesh == null or shape == null or not shape.shape is ConcavePolygonShape3D: return
+	var top: PackedVector3Array = mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var faces := (shape.shape as ConcavePolygonShape3D).get_faces()
+	var hub_triangles := 0
+	for i in range(0, top.size(), 3):
+		if top[i].x != 0.0 or top[i].z != 0.0: break
+		hub_triangles += 1
+	var removed := hub_triangles * 3
+	var same_outer := hub_triangles >= 48 and faces.size() == top.size() - removed + hub_triangles * 6
+	for i in range(removed, top.size()):
+		var j := i - removed
+		same_outer = same_outer and j < faces.size() and faces[j] == top[i].snapped(Vector3.ONE * .0001)
+	_check(same_outer, "only hub collision omitted; outer strips unchanged and skirt triangle count retained")
+	var plane := pad.to_global(transition_top[0]).y
+	var coplanar := true
+	var centroids_supported := true
+	var native_hits := 0
+	for i in range(0, removed, 3):
+		var centre := Vector3.ZERO
+		for j in 3:
+			var point := route.to_global(top[i + j])
+			coplanar = coplanar and point.y == plane
+			centre += point / 3.0
+		var hit := _union_floor_ray(world, centre)
+		centroids_supported = centroids_supported and not hit.is_empty() \
+			and hit.get("collider") == pad.get_node(^"Collision") \
+			and absf(hit.position.y - plane) <= (world.get_node(^"Player") as CharacterBody3D).safe_margin
+		if not hit.is_empty(): native_hits += 1
+	_check(coplanar and world.call("_transition_covers_arrival_hub", route, top[0], _route_hub_ring(top, removed)) == true,
+		"actual omitted hub fully contained on exactly coplanar transition triangles")
+	_check(centroids_supported, "every removed triangle centroid still has actual transition support")
+	var seam_supported := true
+	for radius: float in [1.75, 2.0, 2.25, 12.8, 13.12, 13.4]:
+		for i in 16:
+			var angle := TAU * float(i) / 16.0
+			var hit := _union_floor_ray(world, Vector3(pad.global_position.x + cos(angle) * radius, plane,
+				pad.global_position.z + sin(angle) * radius))
+			seam_supported = seam_supported and not hit.is_empty()
+	_check(seam_supported, "native floor union covers hub seam and retained route rim")
+	var approach_supported := true
+	var direction := Vector3(-80.0, 0, 300.0).normalized()
+	for distance: float in [0.0, 1.9, 2.0, 2.1, 6.0, 6.56, 10.0, 13.12, 14.0, 16.0, 18.0, 22.0, 28.0]:
+		var centre := Vector3(pad.global_position.x, plane, pad.global_position.z) + direction * distance
+		for offset: Vector2 in [Vector2.ZERO, Vector2(-.4, 0), Vector2(.4, 0), Vector2(0, -.4), Vector2(0, .4)]:
+			var hit := _union_floor_ray(world, centre + Vector3(offset.x, 0, offset.y))
+			approach_supported = approach_supported and not hit.is_empty()
+	_check(approach_supported, "native complete-footprint floor union continues across transition boundary onto rising road")
+	print("F18_TRANSITION_ROUTE_UNION " + JSON.stringify({"hub_triangles": hub_triangles, "visible_top_vertices": top.size(),
+		"collision_vertices": faces.size(), "same_outer": same_outer, "coplanar": coplanar, "centroid_hits": native_hits,
+		"centroids_supported": centroids_supported, "seam_supported": seam_supported, "approach_supported": approach_supported,
+		"fixture": "read-only actual geometry and native rays; no Player pose writes or traversal acceptance claim"}))
+
+func _route_hub_ring(top: PackedVector3Array, removed: int) -> Array:
+	var ring: Array[Vector3] = []
+	# Submitted fan is crown, inner[i], inner[next]; remove the shared lift.
+	for i in range(0, removed, 3): ring.append(top[i + 1] - Vector3.UP * .03)
+	return ring
+
+func _union_floor_ray(world: Node3D, at: Vector3) -> Dictionary:
+	var player := world.get_node(^"Player") as CharacterBody3D
+	var ray := PhysicsRayQueryParameters3D.create(at + Vector3.UP * 3.0, at - Vector3.UP * 3.0, player.collision_mask)
+	ray.exclude = [player.get_rid()]
+	var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
+	if hit.is_empty() or not hit.get("collider") is StaticBody3D: return {}
+	var point: Vector3 = hit.position
+	var normal: Vector3 = hit.normal
+	if not point.is_finite() or not normal.is_finite() or normal.length_squared() <= 0.0: return {}
+	if normal.angle_to(Vector3.UP) > player.floor_max_angle: return {}
+	return hit
 
 func _entry(world: Node3D, player: CharacterBody3D, arrival: Node, game: Node) -> void:
 	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
