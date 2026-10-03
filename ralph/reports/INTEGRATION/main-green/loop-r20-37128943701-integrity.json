@@ -1,0 +1,9 @@
+{
+  "run_id": 37128943701,
+  "artifact_id": 11276256946,
+  "checkout_ref": "9794a21092e8162c3708280b43ae17527404f47a",
+  "result": "FAIL25: actual caught UID/normalizedfinish accepted; latest one-slot row advanced to accepted research_event after600frames. Observer fix retains original BOOL edge + exact accepted delta; no gameplay guard change.",
+  "archive": "loop-r20-37128943701-original-artifact.zip",
+  "archive_sha256": "e96e8d05856c54d06a6f71907b8848ea7852f99747973cc337ec04e5b5408ae6",
+  "retention": "Complete original archive, no filtering, no error waivers."
+}

@@ -4874,20 +4874,40 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 		joined["data"] = fixture; return joined
 	var record: Dictionary = director.call("encounter_record")
 	var actual: Array = record.get("opponent", {}).get("position", [])
+	# The training journal has one current row per owner. Real catch research
+	# may replace it during the existing presentation wait. Observe the actual
+	# original BOOL edge and accepted delta before that replacement, not a
+	# reconstructed row or the later action's current carrier.
+	var session: Node = game.get("session")
+	var writer: Node = session.get_node_or_null(^"LedgerRpc") if session != null else null
+	if writer == null or writer.get_script() != preload("res://scripts/net/ledger_rpc.gd"):
+		return {"verdict": "FAIL", "detail": "Actual catch writer unavailable", "data": fixture}
+	var capture_source := {"game":weakref(game), "session":weakref(session), "world":weakref(game.get("world")),
+		"writer":weakref(writer), "epoch":str(session.call("_altar_current_epoch")),
+		"character":str(game.get("local").get("character_id")), "before":before, "edge":{}, "accepted":{}}
+	var save_observer: Callable = _f48_capture_saved_source.bind(capture_source)
+	var accepted_observer: Callable = _f48_capture_accepted_source.bind(capture_source)
+	writer.connect("transaction_boundary", save_observer)
+	writer.connect("delta_applied", accepted_observer)
 	var thrown: Dictionary = _step_catch_throw({"target": actual, "orb_id": "orb_basic"})
 	if thrown.get("verdict") != "PASS":
+		writer.disconnect("transaction_boundary", save_observer)
+		writer.disconnect("delta_applied", accepted_observer)
 		_fixture_capture_pose(fixture, player)
 		thrown["data"] = fixture; return thrown
 	for _frame: int in 600: await physics_frame
+	if is_instance_valid(writer):
+		writer.disconnect("transaction_boundary", save_observer)
+		writer.disconnect("delta_applied", accepted_observer)
 	_fixture_capture_pose(fixture, player)
 	var after: Dictionary = game.get("local").call("save_data")
 	fixture["owner_before"] = before
 	fixture["owner_after"] = after
 	fixture["finish_reply"] = director.get("_shared_catch_finish_reply")
-	# Read the original pending owner row without applying it or saving. A
-	# successful host catch can still be blocked by an earlier owner decision.
-	var session: Node = game.get("session")
-	var row: Dictionary = session.call("_owner_training_row") if session != null else {}
+	var row: Dictionary = capture_source.accepted
+	fixture["latest_owner_training_row"] = session.call("_owner_training_row") if is_instance_valid(session) else {}
+	fixture["capture_saved_edge"] = {"path":capture_source.edge.get("path"), "sha256":capture_source.edge.get("sha256"),
+		"row":capture_source.edge.get("row"), "accepted_delta":capture_source.get("accepted_delta",{})}
 	fixture["owner_training_row"] = row
 	fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
 	if not row.is_empty() and row.get("version") in [2, 3]:
@@ -4923,6 +4943,45 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 			and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
 	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch created one source companion with its accepted original receipt and normalized finish reply." if valid else "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
+
+func _f48_capture_source_live(source: Dictionary) -> bool:
+	var game: Node = source.game.get_ref() as Node
+	var session: Node = source.session.get_ref() as Node
+	var writer: Node = source.writer.get_ref() as Node
+	return is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(writer) \
+		and root.get_node_or_null(^"Game") == game and game.get("session") == session \
+		and game.get("world") == source.world.get_ref() and session.get_node_or_null(^"LedgerRpc") == writer \
+		and str(session.call("_altar_current_epoch")) == source.epoch \
+		and str(game.get("local").get("character_id")) == source.character
+
+func _f48_capture_saved_source(packet: Dictionary, source: Dictionary) -> void:
+	if not _f48_capture_source_live(source) or not source.edge.is_empty() \
+		or packet.get("phase") != "after_owner_write_before_ack" or packet.get("action") != "wild_capture" \
+		or packet.get("character_id") != source.character: return
+	var edge: Dictionary = get_meta("f48_latest_owner_save", {})
+	var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+	if edge.is_empty() or edge.get("packet") != packet or not edge.get("row") is Dictionary \
+		or edge.row.get("action") != "wild_capture" or edge.row.get("character_id") != source.character \
+		or source.before.get("redesign_character",{}).get("transaction_receipts",[]).has(edge.row.get("receipt")) \
+		or not proof.call("_saved_edge_errors",edge).is_empty() \
+		or FileAccess.get_sha256(str(edge.get("path",""))) != edge.get("sha256"): return
+	source.edge = edge.duplicate(true)
+
+func _f48_capture_accepted_source(delta: Dictionary, source: Dictionary) -> void:
+	if not _f48_capture_source_live(source) or source.edge.is_empty() or not source.accepted.is_empty(): return
+	var original: Dictionary = source.edge.row
+	var expected := {"op":"creature_training_accept", "scope":"world", "delivery_id":original.delivery_id,
+		"character_id":original.character_id, "journal_revision":original.journal_revision, "receipt":original.receipt}
+	var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+	var correlated: bool = false
+	for op: Variant in delta.get("ops",[]):
+		if proof.call("_json_equal",op,expected): correlated = true
+	if not correlated: return
+	var game: Node = source.game.get_ref() as Node
+	var current: Variant = game.get("world").get("reward_deliveries").get(source.edge.identity)
+	if not proof.call("_fallback_parent_matches",source.edge,current): return
+	source.accepted = current.duplicate(true)
+	source.accepted_delta = delta.duplicate(true)
 
 func _f48_owner_passive_diagnostic() -> Dictionary:
 	# Read existing state only: never construct a service, admit, stage or save.

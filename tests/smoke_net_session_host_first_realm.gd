@@ -24,6 +24,7 @@ const MEADOWS := "meadows"
 const CLOUDREACH := "cloudreach"
 const CLOUDREACH_KEY_FLAG := "realm_key_cloudreach"
 const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
+const PORTAL_FRAME_BUDGET := 6000
 
 
 func _initialize() -> void:
@@ -52,11 +53,18 @@ func _run() -> void:
 	_step_phase_deadline_ms = Time.get_ticks_msec() + REALM_STEP_BUDGET_S * 1000.0
 	# Initial route/proximity mechanics fixtures precede all network admission.
 	# Subsequent crossings use the actual public portal transaction and ACK.
+	var preparation_cost: Array[int] = [0, 0]
 	for fixture_peer in 2:
 		var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": CLOUDREACH,
 			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "session_host_first_realm", "portal_prepare_only": true})
 		check(prepared.get("verdict") == "PASS", "Disclosed initial Hall placement/open canonical route without earned chapter credit")
 		if prepared.get("verdict") != "PASS":
+			quit(await finish())
+			return
+		preparation_cost[fixture_peer] = _frame_count(prepared.get("data", {}).get("frames"))
+		check(preparation_cost[fixture_peer] >= 0 and preparation_cost[fixture_peer] < PORTAL_FRAME_BUDGET,
+			"Initial actual preparation cost fits the original portal budget")
+		if preparation_cost[fixture_peer] < 0 or preparation_cost[fixture_peer] >= PORTAL_FRAME_BUDGET:
 			quit(await finish())
 			return
 
@@ -115,8 +123,17 @@ func _run() -> void:
 			% _others(guest_meadows_bodies, false).size())
 
 	# 2. The guest follows.
+	# The host's saved Cloudreach arrival can finish before the origin Meadows
+	# shell is ready to authenticate this guest's arch request. Observe the real
+	# shell and charge the entire wait to the same guest crossing frame budget.
+	var origin: Dictionary = await _await_host_origin_shell(PORTAL_FRAME_BUDGET - preparation_cost[1])
+	check(origin.get("ready") == true, "The actual host Meadows origin shell is ready before the guest requests its portal")
+	if origin.get("ready") != true:
+		quit(await finish())
+		return
 	var guest_crossed: Dictionary = await step(1, "enter_realm", {"realm": CLOUDREACH,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "session_host_first_realm"}, budget_frames)
+		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "session_host_first_realm",
+		"portal_prior_frames": origin.frames}, budget_frames)
 	check(str(guest_crossed.get("verdict", "")) == "PASS",
 		"the guest followed the host into Cloudreach (%s)" % str(guest_crossed.get("detail", "")))
 	if str(guest_crossed.get("verdict", "")) != "PASS":
@@ -142,6 +159,28 @@ func _run() -> void:
 				"peer %d's view of the other trainer is visible" % i)
 
 	quit(await finish())
+
+
+static func _frame_count(value: Variant) -> int:
+	if not (value is int or value is float) or not is_finite(float(value)) \
+		or float(value) != floorf(float(value)) or value < 0: return -1
+	return int(value)
+
+
+func _await_host_origin_shell(remaining: int) -> Dictionary:
+	var first: Variant = await probe(1, "local_pause")
+	var started: int = _frame_count(first.get("physics_frame")) if first is Dictionary else -1
+	if started < 0 or remaining <= 0: return {"ready": false, "frames": -1}
+	while true:
+		var report: Variant = await probe(0, "realm_shells")
+		var clock: Variant = await probe(1, "local_pause")
+		var current: int = _frame_count(clock.get("physics_frame")) if clock is Dictionary else -1
+		if current < started or current - started >= remaining:
+			return {"ready": false, "frames": current - started}
+		if report is Dictionary and report.get("realms", {}).get(MEADOWS, {}).get("ready") == true:
+			return {"ready": true, "frames": current - started}
+		var waited: Dictionary = await step(1, "wait", {"frames": 1})
+		if waited.get("verdict") != "PASS": return {"ready": false, "frames": current - started}
 
 
 func _await_others_drawn(peer: int, want: int, seconds: int) -> Array:
