@@ -582,7 +582,20 @@
       }
     ],
     "attacker_front_x": -2.4,
-    "target_x": 4.6
+    "target_x": 4.6,
+    "world": {
+      "scene": "res://scenes/world/meadows_playground.tscn",
+      "scope": "Shipped Meadows world loaded read-only: real Terrain3D ground, vegetation, sky and WorldLook; clock/weather frozen, HUD hidden, player/camera rig/encounter/trainer/sequence systems disabled; no save or network state.",
+      "origin": [
+        78.0,
+        44.0
+      ],
+      "origin_why": "The practice trainer's fight ground (vegetation.json clearings[4]): an authored open clearing the game keeps for 11 m trainer arenas.",
+      "yaw_deg": 0.0,
+      "weather": "clear",
+      "settle_frames": 180,
+      "post_freeze_frames": 30
+    }
   },
   "capture_wall_watchdog_s": 120.0
 }

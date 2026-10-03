@@ -443,7 +443,12 @@ func _build_impact() -> void:
 		var multimesh := MultiMesh.new()
 		multimesh.transform_format = MultiMesh.TRANSFORM_3D
 		multimesh.use_custom_data = true
-		multimesh.mesh = GEOMETRY.shape(str(profile.get("mote_shape", "orb")), float(profile.get("mote_size", 0.045)))
+		# Debris may scale with the projectile: a boulder breaks into chunks
+		# instead of collapsing into pebble-sized chips at contact.
+		var mote_size := float(profile.get("mote_size", 0.045))
+		if profile.has("mote_reference_scale"):
+			mote_size *= clampf(scale_factor / maxf(0.01, float(profile.mote_reference_scale)), 1.0, float(profile.get("mote_max_growth", 4.0)))
+		multimesh.mesh = GEOMETRY.shape(str(profile.get("mote_shape", "orb")), mote_size)
 		multimesh.instance_count = count
 		_motes = MultiMeshInstance3D.new()
 		_motes.multimesh = multimesh
@@ -583,7 +588,7 @@ func _update_impact(u: float, delta: float) -> void:
 		if tumble > 0.0:
 			_mote_bases[i] = _mote_bases[i].rotated(Vector3(0.7, 0.3, 0.6).normalized(), tumble * delta * (1.0 + float(i % 3) * 0.3))
 		var ground: Vector3 = _context.get("target_ground", _to)
-		var floor_y := ground.y - _contact_position().y + float(profile.get("mote_size", 0.045))
+		var floor_y := ground.y - _contact_position().y + float(profile.get("mote_size", 0.045)) * 0.5
 		if bool(profile.get("settle_on_ground", false)) and _mote_positions[i].y < floor_y:
 			_mote_positions[i].y = floor_y
 			_velocities[i] = Vector3.ZERO

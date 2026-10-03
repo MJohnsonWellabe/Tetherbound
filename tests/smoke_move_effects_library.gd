@@ -15,13 +15,18 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
+const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
 var _attackers: Dictionary = {}
+var _current_attacker: Node3D = null
 var _stage := ""
 var _target_x := 3.0
 var _archetype_filter: Array = []
 var _rank_filter: Array = []
+## world stage only: the shipped terrain height source and the loaded world.
+var _field: RefCounted = null
+var _world: Node = null
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -96,12 +101,20 @@ func _run() -> void:
 	camera.position = Vector3(0, 5, 14)
 	camera.look_at(Vector3(0, 1.5, 0), Vector3.UP)
 	camera.current = true
+	if _batch == "identities":
+		# The light-pool lifecycle is synthetic and independent of the
+		# backdrop; run it on the bare arena before any heavy stage loads.
+		LIBRARY.config()["enabled"] = true # Process-local diagnostic opt-in only.
+		for i in int(_scenarios.warmup_frames): await process_frame
+		await _exercise_light_lifecycle()
 	if _stage.is_empty():
 		_stage = str((_scenarios.get("stage", {}) as Dictionary).get("default", "arena")) if _batch in ["identities", "mastery"] else "arena"
-	if _stage not in ["arena", "meadows"]:
+	if _stage not in ["arena", "meadows", "world"]:
 		push_error("Unknown stage " + _stage); quit(1); return
 	if _stage == "meadows":
 		if not _build_meadows_stage(floor, sun, world_environment, camera): return
+	if _stage == "world":
+		if not await _build_world_stage(floor, sun, world_environment, camera): return
 	if _batch in ["identities", "mastery"]:
 		# Production creature scene/script/model, with no encounter, AI or HP
 		# transaction. This establishes visible target coverage only.
@@ -110,8 +123,8 @@ func _run() -> void:
 		_arena.add_child(_target)
 		_target.call("setup", str(_scenarios.get("target_species", "mudsnout")))
 		_target.set_physics_process(false)
-		if _stage == "meadows": _target_x = float((_scenarios.stage as Dictionary).get("target_x", 3.0))
-		_target.position = Vector3(_target_x, 0, 0)
+		if _stage in ["meadows", "world"]: _target_x = float((_scenarios.stage as Dictionary).get("target_x", 3.0))
+		_target.position = Vector3(_target_x, _local_ground_y(_target_x, 0.0), 0)
 		_target.rotation.y = -PI * 0.5
 		if not bool(_target.call("has_model")):
 			push_error("Identity evidence requires the actual production creature model"); quit(1); return
@@ -138,7 +151,6 @@ func _run() -> void:
 	LIBRARY.config()["enabled"] = true # Process-local diagnostic opt-in only.
 	for i in int(_scenarios.warmup_frames): await process_frame
 	if _batch == "identities":
-		await _exercise_light_lifecycle()
 		for case: Dictionary in _scenarios.identities:
 			for rank: int in _scenarios.ranks:
 				if _identity.is_empty() or _identity == "%s:r%d" % [str(case.id), rank]:
@@ -312,29 +324,35 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var started := Time.get_ticks_usec()
 	for i in simultaneous:
 		var z := float(i) * 2 - float(simultaneous - 1)
-		var to := Vector3(_target_x, 1.5, z)
+		var to := _arena.to_global(Vector3(_target_x, 1.5, z))
 		if capture and _target != null: to = _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
 		var frozen := _frozen_move(move_id, spec, rank, "%s:%d" % [encounter, i], encounter, i + 1)
 		var context := {"travel_seconds": travel, "current_actor": frozen.actor_binding,
-			"source_ground": Vector3(-3, 0.04, z), "target_ground": Vector3(_target_x, 0.04, z)}
+			"source_ground": _ground_point(-3.0, z), "target_ground": _ground_point(_target_x, z)}
 		if capture:
 			context["target_visual_bounds"] = {"position": target_bounds.position, "size": target_bounds.size}
-		var from := Vector3(-3, to.y, z)
-		if capture and _stage == "meadows":
+		var from := _arena.to_global(Vector3(-3, _arena.to_local(to).y, z))
+		if capture and _stage in ["meadows", "world"]:
 			from = _attacker_origin(case, move_id, z)
 			if not from.is_finite():
 				_failures.append("Attacker model missing " + encounter); return
-			context["source_ground"] = Vector3(from.x, 0.04, z)
+			context["source_ground"] = _ground_point(_arena.to_local(from).x, z)
 		if capture:
 			transit = _transit_shutter(row, from, to, target_bounds)
 			if transit.has("error"):
 				_failures.append("%s %s from=%s target=%s" % [transit.error, encounter, from, target_bounds]); return
 		var legacy_context := {"action_id": "%s:%d" % [encounter, i], "encounter_id": encounter, "travel_seconds": travel,
-			"mastery_rank": rank, "seed": 21 + i, "target_ground": Vector3(3, 0.04, z)}
+			"mastery_rank": rank, "seed": 21 + i, "target_ground": _ground_point(_target_x, z)}
 		var effect: Node3D = LEGACY.launch(_arena, from, to, spec, legacy_context) if bool(case.get("legacy", false)) else LIBRARY.launch(_arena, from, to, frozen, context)
 		if effect == null: _failures.append("Launch failed " + id); return
 		effects.append(effect)
+		# Same public presentation calls combat makes (play_attack at launch,
+		# visual-pivot flinch at the hit); no HP, collision or receipt.
+		var reacting := capture and _stage in ["meadows", "world"]
+		if reacting and _current_attacker != null and _current_attacker.has_method("play_attack"): _current_attacker.call("play_attack")
+		var away := (to - from).normalized()
 		effect.connect("arrived", func() -> void:
+			if reacting and _target != null and _target.has_method("play_combat_flinch"): _target.call("play_combat_flinch", away)
 			arrivals[0] += 1
 			arrival_frames.append(Engine.get_process_frames())
 			arrival_wall.append(float(Time.get_ticks_usec() - started) / 1000000.0)
@@ -391,6 +409,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				# Neutral filenames keep archetype and rank out of blind-judge
 				# inputs; the private results record retains the mapping.
 				var path := _out.path_join("sequence-%02d-%s.png" % [_records.size(), phase])
+				print("F25 capture %s %s wall=%dms" % [encounter, phase, Time.get_ticks_msec()])
 				if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 				var captured_elapsed := float(Time.get_ticks_usec() - started) / 1000000.0
 				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
@@ -558,15 +577,17 @@ func _attacker_origin(case: Dictionary, move_id: String, z: float) -> Vector3:
 		# muzzle face at the configured line so every attacker leaves the
 		# same readable gap to the target instead of overlapping it.
 		var placed_pivot := body.call("model_pivot") as Node3D
-		var placed := placed_pivot.global_transform * RENDER_BOUNDS.measure(placed_pivot)
+		var placed := _arena.global_transform.affine_inverse() * placed_pivot.global_transform * RENDER_BOUNDS.measure(placed_pivot)
 		body.position.x += float(stage.get("attacker_front_x", -3.0)) - placed.end.x
+		body.position.y = _local_ground_y(body.position.x, z)
 		_attackers[species] = body
 	var attacker := _attackers[species] as CharacterBody3D
+	_current_attacker = attacker
 	var pivot := attacker.call("model_pivot") as Node3D
-	var bounds := pivot.global_transform * RENDER_BOUNDS.measure(pivot)
+	var bounds := _arena.global_transform.affine_inverse() * pivot.global_transform * RENDER_BOUNDS.measure(pivot)
 	if not bounds.size.is_finite() or bounds.size.y <= 0.0: return Vector3(INF, INF, INF)
-	return Vector3(bounds.end.x + float(stage.get("muzzle_clearance_m", 0.12)),
-		bounds.position.y + bounds.size.y * float(stage.get("muzzle_height_ratio", 0.62)), z)
+	return _arena.to_global(Vector3(bounds.end.x + float(stage.get("muzzle_clearance_m", 0.12)),
+		bounds.position.y + bounds.size.y * float(stage.get("muzzle_height_ratio", 0.62)), z))
 
 ## The integrated presentation contract (move_presentation_contract.gd) admits
 ## only a frozen move row bound to one actor action. This synthetic binding
@@ -582,3 +603,78 @@ func _frozen_move(move_id: String, visual: Dictionary, rank: int, action_id: Str
 		"encounter_id": encounter, "generation": 1, "action": action}
 	return {"vfx": vfx, "actor_binding": binding, "action_id": action_id,
 		"mastery_rank": rank, "move_id": move_id}
+
+## Arena-local ground height: real terrain on the world stage, flat otherwise.
+func _local_ground_y(local_x: float, local_z: float) -> float:
+	if _field == null: return 0.0
+	var global := _arena.to_global(Vector3(local_x, 0.0, local_z))
+	return float(_field.call("height_at", global.x, global.z)) - _arena.global_position.y
+
+## Global contact ground a few centimetres above the surface at an arena point.
+func _ground_point(local_x: float, local_z: float) -> Vector3:
+	return _arena.to_global(Vector3(local_x, _local_ground_y(local_x, local_z) + 0.04, local_z))
+
+## The shipped Meadows world (meadows_playground.tscn), loaded read-only as the
+## backdrop: real Terrain3D ground, vegetation scatter, sky and WorldLook. Its
+## clock and weather are frozen, its HUD/UI hidden, its follow camera, player,
+## spawning and encounter systems stopped. No save, network or durable state
+## is written; the arena (attacker, target, effects, camera) is posed at an
+## authored open spot on the real terrain height.
+func _build_world_stage(floor: MeshInstance3D, sun: DirectionalLight3D,
+		world_environment: WorldEnvironment, camera: Camera3D) -> bool:
+	var stage: Dictionary = _scenarios.stage
+	var world_cfg: Dictionary = stage.world
+	var packed := load(str(world_cfg.scene)) as PackedScene
+	if packed == null:
+		push_error("World stage scene missing"); quit(1); return false
+	floor.queue_free()
+	sun.queue_free()
+	world_environment.queue_free()
+	_world = packed.instantiate()
+	root.add_child(_world)
+	var weather := _world.get_node_or_null(^"WorldWeather")
+	if weather != null and weather.has_method("set_weather"):
+		weather.call("set_weather", str(world_cfg.get("weather", "clear")))
+		weather.set_process(false)
+		weather.set_physics_process(false)
+	for path: String in ["CameraRig", "EncounterDirector", "TrainerSpawn", "SequenceDirector", "RidingController"]:
+		var node := _world.get_node_or_null(NodePath(path))
+		if node != null:
+			node.process_mode = Node.PROCESS_MODE_DISABLED
+	var player := _world.get_node_or_null(^"Player") as Node3D
+	if player != null:
+		player.process_mode = Node.PROCESS_MODE_DISABLED
+		player.visible = false
+	_field = HEIGHTFIELD.new()
+	var origin: Array = world_cfg.origin
+	var ox := float(origin[0])
+	var oz := float(origin[1])
+	_arena.global_position = Vector3(ox, float(_field.call("height_at", ox, oz)), oz)
+	_arena.rotation.y = deg_to_rad(float(world_cfg.get("yaw_deg", 0.0)))
+	var cam: Dictionary = stage.camera
+	camera.position = Vector3(float(cam.position[0]), float(cam.position[1]), float(cam.position[2]))
+	camera.position.y += _local_ground_y(camera.position.x, camera.position.z)
+	camera.fov = float(cam.get("fov", 60.0))
+	camera.far = 2000.0
+	camera.make_current()
+	var look_at := Vector3(float(cam.look_at[0]), float(cam.look_at[1]), float(cam.look_at[2]))
+	look_at.y += _local_ground_y(look_at.x, look_at.z)
+	camera.look_at(_arena.to_global(look_at), Vector3.UP)
+	var terrain := _world.get_node_or_null(^"Terrain")
+	if terrain != null and terrain.has_method("set_camera"): terrain.call("set_camera", camera)
+	var settle := int(world_cfg.get("settle_frames", 240))
+	for i in settle:
+		await physics_frame
+		if i % 30 == 0: print("F25 world settle %d/%d wall=%dms" % [i, settle, Time.get_ticks_msec()])
+	var look := _world.get_node_or_null(^"WorldLook")
+	if look != null:
+		look.call("set_clock_frozen", true)
+		look.call("apply_time", str(stage.get("time", "day")))
+	# HUD and UI are not part of an effect judgement; hide every canvas layer.
+	for node: Node in _world.find_children("*", "CanvasLayer", true, false):
+		(node as CanvasLayer).visible = false
+	# Wild/trainer bodies the opening may already have spawned stay out of shot.
+	var spawned := _world.get_node_or_null(^"Spawned") as Node3D
+	if spawned != null: spawned.visible = false
+	for i in int(world_cfg.get("post_freeze_frames", 30)): await process_frame
+	return true

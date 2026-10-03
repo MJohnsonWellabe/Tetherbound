@@ -69,8 +69,14 @@ void fragment() {
 		albedo = mix(mark_colour.rgb * 0.8, mark_colour.rgb * 1.2, grains);
 	} else if (mode == 2) {
 		float radius = mix(0.12, 0.92, sqrt(age));
-		float width = ring_width * (1.0 - 0.5 * age);
-		float band = 1.0 - smoothstep(0.0, width, abs(r - radius * edge));
+		float width = ring_width * (1.0 + 0.6 * age);
+		// Soft gaussian band, broken along its length, with kicked-up dust
+		// trailing inside it: a pressure wave through grass, not a UI ring.
+		float d = (r - radius * edge) / max(0.001, width);
+		float band = exp(-d * d * 2.2);
+		float trailing = exp(-max(0.0, -d) * 0.9) * step(r, radius * edge) * 0.25;
+		float breakup_along = 0.45 + 0.55 * fbm(centered / max(r, 0.001) * 2.2 + vec2(seed, r * 3.0));
+		band = (band + trailing) * breakup_along;
 		alpha = band * (1.0 - age);
 		albedo = mark_colour.rgb;
 		emission = glow_colour.rgb * glow_strength * band * pow(1.0 - age, 1.5);

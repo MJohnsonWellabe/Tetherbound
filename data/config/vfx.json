@@ -206,6 +206,8 @@
           "flow_speed": 2.4
         },
         "impact": {
+          "mote_max_growth": 4.5,
+          "mote_reference_scale": 0.22,
           "stages": {
             "flash": {
               "size_scale": 2.0,
@@ -259,8 +261,8 @@
           "card_extent_scale": 2.4,
           "mote_shape": "stone",
           "mote_size": 0.12,
-          "speed": 5.3,
-          "gravity": 13.0,
+          "speed": 3.6,
+          "gravity": 19.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16,
@@ -290,8 +292,8 @@
           "puff_reveal_power": 0.18,
           "visual_anchor": "contact_surface",
           "puff_ground_clearance_scale": 0.79,
-          "puff_backscatter": 1.0,
-          "mote_backscatter": 1.5,
+          "puff_backscatter": 0.5,
+          "mote_backscatter": 0.55,
           "mote_tumble_radians": 8.0,
           "stone_colour": "#66543f",
           "mineral_colour": "#95805f",
@@ -535,14 +537,14 @@
           "card_extent_scale": 3.5,
           "flow_speed": 3.8,
           "surface_scale": 4.8,
-          "deformation": 0.22,
-          "edge_softness": 0.42,
-          "emission_strength": 0.9
+          "deformation": 0.34,
+          "edge_softness": 0.58,
+          "emission_strength": 1.25
         },
         "trail": {
           "style": "painted_flame",
-          "width": 0.64,
-          "opacity": 0.88,
+          "width": 0.86,
+          "opacity": 0.82,
           "wave_amplitude": 0.08,
           "wave_frequency": 1.5,
           "wave_speed": 6.0,
@@ -550,7 +552,7 @@
           "max_length_m": 2.3,
           "flow_speed": 4.0,
           "emission_strength": 0.75,
-          "breakup_strength": 0.72,
+          "breakup_strength": 0.55,
           "hot_colour": "#fff0a8"
         },
         "impact": {
@@ -1106,13 +1108,13 @@
         },
         "launch": {
           "flash": {
-            "size_scale": 2.4,
+            "size_scale": 4.5,
             "min_m": 0.35,
-            "max_m": 1.0,
-            "duration": 0.22,
+            "max_m": 1.6,
+            "duration": 0.36,
             "core_colour": "#f4fbff",
             "edge_colour": "#8fd3ff",
-            "opacity": 0.9,
+            "opacity": 1.0,
             "streaks": 11,
             "streak_strength": 0.9,
             "forward_scale": 0.2
@@ -1138,21 +1140,21 @@
           "contact_anchor": "target_ground",
           "contact_hold_seconds": 0.22,
           "contact_fade_power": 2.4,
-          "stroke_width_scale": 2.0,
+          "stroke_width_scale": 2.6,
           "branch_length_m": 0.9,
           "branch_count": 2,
           "branch_add_per_rank": 2,
           "branch_down_ratio": 0.5,
           "pulse_strength": 0.04,
           "core_width": 0.28,
-          "corona_width": 0.74,
-          "corona_opacity": 0.28,
+          "corona_width": 0.92,
+          "corona_opacity": 0.5,
           "filament_sway": 0.015,
           "corona_sway": 0.025,
           "corona_power": 1.8,
           "vein_strength": 0.18,
-          "emission_floor": 0.15,
-          "emission_strength": 1.25
+          "emission_floor": 0.35,
+          "emission_strength": 2.6
         },
         "trail": {
           "style": "ion",
@@ -1248,7 +1250,7 @@
           "visual_anchor": "sky_surface",
           "visual_surface_lift_m": 0.03,
           "accent_count": 6,
-          "accent_width_scale": 0.34,
+          "accent_width_scale": 0.6,
           "core_width": 0.28,
           "corona_width": 0.74,
           "corona_opacity": 0.28,
