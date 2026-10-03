@@ -206,12 +206,12 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 			await travel.tap("interact")
 		elif HOME.context(game).get("homecoming_seen") == true: break
 	panel.disconnect("completed", completion_observer)
-	var owner := INPUT_OWNER.current(tree)
+	var dialogue_owner := INPUT_OWNER.current(tree)
 	var row: Dictionary = game.session.call("_owner_training_row")
 	print("F20 DIALOGUE finish opened=", opened, " completed=", completed,
 		" panel_open=", panel.call("is_open"), " id=", panel.call("runner").call("conversation_id"),
-		" owner=", owner.get_path() if owner != null else "none",
-		" owner_script=", owner.get_script().resource_path if owner != null and owner.get_script() != null else "none",
+		" owner=", dialogue_owner.get_path() if dialogue_owner != null else "none",
+		" owner_script=", dialogue_owner.get_script().resource_path if dialogue_owner != null and dialogue_owner.get_script() != null else "none",
 		" context=", game.call("regional_ending_context"),
 		" ack_intents=", game.get("_regional_ack_intents"),
 		" training_action=", row.get("action", ""), " training_intent=", row.get("intent", {}),
