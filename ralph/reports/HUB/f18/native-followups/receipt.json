@@ -7988,7 +7988,15 @@
       "patch_validation": "Applied to isolated exact pinned31d07d7 files; both changed functions and smoke match F18 candidate. Root/shared files untouched.",
       "native_status": "NOT RUN; coordinator must test scoped import on current shared baseline. No acceptance credit.",
       "source_review": "Raw before_snapshot compares disk party AND redesign_character exactly; fresh raw after_snapshot verifies both after apply Booltrue. Normalized observers only compare live world/ID/redesign roundtrip. Prepared writer requires actual Booltrue, finished/notbusy fallback, no guest world file before/after, no autosave/world writer. personal_only skips offline-host world seeding. Personal fixture precedes admission; actual guest carrier settles without dropping recovery rows or replacing host authority. failed(String) Dictionary capture and WeakRef after every physics await protects JoinDriver; original budget preserved. Native evidence pending; no main/F16/F18 acceptance.",
-      "source_sha": "572b050c14dbd55f633e0a87d1e5178223e5486e"
+      "source_sha": "572b050c14dbd55f633e0a87d1e5178223e5486e",
+      "patch_archive": {
+        "path": "ralph/reports/HUB/f18/native-followups/main-ci-foundations-join-v1.patch.zip",
+        "bytes": 2457,
+        "sha256": "cfa971f446c7a4dd4c76e39062bde6ba8e509aa455a446755b01dd6c30d5d00a",
+        "member": "main-ci-foundations-join-v1.patch",
+        "member_sha256": "58766d46b424ca8ea718043514acbd8b74077a7c8f92cb0baee80e16a08ade73"
+      },
+      "patch_retention": "Exact diff bytes archived to avoid whitespace checks treating diff-context prefixes as GDScript indentation; local original remains available to coordinator."
     },
     "typed_capture_r19_followup": {
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37122872058",
