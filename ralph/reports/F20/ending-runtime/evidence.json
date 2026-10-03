@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Actual Tidewake chapter close and solo personal ending/reload pass their measured scope. r17 FAIL65/2/zeroerrors: original Bryn talk activated instead of endgame rematch. Independently reviewed translation-only side-anchor correction93e9 is running native-r1 and original fullsolo-r18. #3 remains OPEN pending actual canonical fight admission; #2 presentation/listener and #4 fullpeer remain OPEN.",
+    "reason": "Actual chapter close and solo ending/reload retain their independently measured passing scope. Reviewed stable rematch anchor passes focusednative13/0 and originalsolo-r18 normalX activation; finalcanonicalfight predicate stillFAIL66/2/zeroerrors. F20-only normalcallout and failurepredicate snapshot candidate underreview. #2/#3/#4 remain OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1023,6 +1023,36 @@
         "diagnostic_limits": "Aftertap player is about2.20m from expected side prompt. No prepress pose/axis samples: player drift or queued stick remains inference. Source npc_body._process turns parent root toward player, so local side rematch children also orbit; translation-only anchor candidate under preparation, not runtime-proved.",
         "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user hashes and error counts; 65checks2fail/exit1/22warnings each. Actual original-talk identity now established, not null. No premature cause or F20#3 closure.",
         "limits": "Disclosed post-finale/current/firstmorning fixture, headless, harness input and Skip. #1 MET candidate corroborated; #3 OPEN."
+      },
+      {
+        "run": 37099207884,
+        "job": 111135255404,
+        "artifact": 11265373622,
+        "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+        "verdict": "FAIL final canonical rematch fight predicate after successful expected provider activation",
+        "workflow_conclusion": "failure",
+        "checks": 66,
+        "failures": 2,
+        "native_bytes": 76426,
+        "native_sha256": "2b57b955317c7e30e82c5d75d9e013612c7f34937d62baced8280c9346c34bfb",
+        "user_log_bytes": 76172,
+        "user_log_sha256": "96670ac743b40fb7ee2b7aba951706694fa6344ffad5253436b4d91611f3c4a8",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 672121,
+        "artifact_sha256": "03f05053efea59ffb25835455bb11377b05db94d73ca56809c9e54e9600fba30",
+        "logs": [
+          "f20-solo-r18-native.log.gz",
+          "f20-solo-r18-workflow.log.gz",
+          "f20-solo-r18-artifact.zip"
+        ],
+        "passed": "All earlier actual ending/reload/identity/inventory/world/receipts/repeat/safe movement/journal/normal bounty3rows/B-close gates pass. Bryn normal X passes expected endgame provider activation gate; DialoguePanel remains closed and owner none through tap.",
+        "failure": "Final compound canonical fight assertion now reached and FAIL, plus completion sentinel. Which manager/director/source/spec/enemy/ownership predicate fails is not printed. Neither actual fight start nor admission refusal is inferred.",
+        "next_evidence": "F20-only candidate uses ordinary creature_recall if actual director reports undeployed, asserts actual owned visible ally and preserves original final fight predicate. Fresh load does not auto-deploy and can_challenge requires a deployed ally, but r18 undeployed cause not observed. Failure-only predicate snapshot prepared.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user bytes and suppliedSHA256/66checks2/zeroerrors. Expected rematch activation gate passes; actual finalfight outcome remains unknown. No F20#3 closure.",
+        "limits": "Disclosed post-finale/current/firstmorning fixture, headless/harnessinput/Skip. Production anchor advances real path past prior wrong-talk failure; full rematch admission remains required."
       }
     ],
     "limitations": [
@@ -1174,7 +1204,7 @@
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
       "indirect_only": "Synthetic62 PASS is supplemental only. Actual solo-r15 directly proves reload, safe movement and ordinary bounty availability; actual rematch admission remains required.",
-      "latest_runtime": "Solo r15-r17 preserve actual ending/reload/safe movement/journal/three real bounty rows/B-close. r17 proves X chooses original Bryn talk instead of rematch despite prepress provider gate; actual canonical rematch admission unproved, #3 OPEN.",
+      "latest_runtime": "Actual solo-r18 FAIL66checks2/zeroerrors: expected normalX rematch provider activation passes, dialogueclosed; finalcanonicalfight predicate fails with actual subpredicate unknown. Independent raw auditPASS narrow scope; #3 OPEN.",
       "limits": "Requires strengthened actual nonmaster rematch admission in addition to retained reload/safe movement/journal and normalbountyinput/live3rows/Bclose. Enabledprompts alone do not establish full admission. No F44win or allrepeatloop closure claimed."
     },
     "4": {
@@ -1226,18 +1256,7 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {
-    "solo_r18": {
-      "run": 37099207884,
-      "job": 111135255404,
-      "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
-      "script": "tests/smoke_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099207884",
-      "status": "Original isolated hosted run confirmed live; no result claimed; no local engine/GPU use."
-    }
-  },
+  "remote_pending": {},
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1355,7 +1374,7 @@
     "change": "Afterallpriorreload/movement/journal/bountyinput/live3rows/Bclose checks, nearestactualenabledcanonicaltrainerprofile Endgameprompt walkedusingoriginalcapsule NAV/maxframes/recovery/ground/LOS/exactwinner/actionable checks. NormalX activatesproducer, bounded30s verifiesactualmanagerfighting/director/source/exactcanonicalendgamespec/liveopponentfirstspecies/configuredlevel/enemyidentity/trainerowned. ExistingordinarylessonContinue wrapper retained. No directactivation/challenge/resolve/HP/transform edits.",
     "cleanup": "Terminalisolatedfixture quits duringgenuinelyadmittedtrainerfight; flee prohibitedbyproduction. No win/payout/recovery claim; safemovementprovedbeforeadmission.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact c184 plus e782: actualsource/spec/livebody/fight gates sound, existinglessonwrapper cleanup correctly retained. Original8/2clocksettling/NAV/recovery/input/admission bounded; affectedactualsolo required.",
-    "runtime": "Actual r17 FAIL65checks2/zeroerrors. X actually selects original Bryn talk prompt; no fight admission. Independent raw audit PASS narrow failed scope; #3 OPEN."
+    "runtime": "Actual solo-r18 FAIL66checks2/zeroerrors: expected normalX rematch provider activation passes, dialogueclosed; finalcanonicalfight predicate fails with actual subpredicate unknown. Independent raw auditPASS narrow scope; #3 OPEN."
   },
   "home_begin_refusal_proof": {
     "source": "7fefaea2ed86a4328b537903a74c513a811b8f95",
@@ -1387,7 +1406,7 @@
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required. Original no-parser-concern clearance WITHDRAWN for fixture line67 after actual native parse failure; production portion has no runtime result from this check. One-line explicit WeakRef correction under fresh review.",
     "limits": "Idle translation is not frame-atomic moving-trainer admission. Native empty fixture has no art, ground, campaign, fight or save proof. Original full F20 actual reload/canonical rematch admission remains required, #3 OPEN.",
     "native": "Actual native-r2 PASS13checks0/exit0/4s/zeroengine-script errors. Original r1 failed fixture parse retained. Scope remains synthetic actual NPC/arbiter; fullsolo-r18 canonical encounter remains required.",
-    "actual": "Original solo-r18 run37099207884/job111135255404 live, no result claimed.",
+    "actual": "Actual solo-r18 FAIL66checks2/zeroerrors: expected normalX rematch provider activation passes, dialogueclosed; finalcanonicalfight predicate fails with actual subpredicate unknown. Independent raw auditPASS narrow scope; #3 OPEN.",
     "native_attempts": [
       {
         "run": 37099206242,
@@ -1449,5 +1468,11 @@
       "change": "One explicit WeakRef annotation on weakref() result; no assertions, scene, lifetime or production behavior changed.",
       "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact one-line correction. Original r1 fixture syntax clearance withdrawn; raw1SCRIPT+1engine ERROR eachlog/zero checks verified. Actual native-r2 still required."
     }
+  },
+  "rematch_callout_candidate": {
+    "change": "Before originalrematch NAV/X, only actualundeployed blocker gets normal creature_recall input andbounded30s deploymentwait. Require actualconsciousownedparty member/visiblebody/localowner. Original finalcanonicalfight predicate unchanged; failure-only reads expose each condition/source/spec/enemy/ownership and pure admissionqueries.",
+    "reason": "Freshload intentionallydoesnotauto deploy; can_challenge requires actualallybody. Earlier proof omittednormalcallout. Actualr18 blocker notprinted, so noobservedcauseclaim.",
+    "independent_review": "pending workingcandidate",
+    "runtime": "not dispatched; #3 OPEN."
   }
 }
