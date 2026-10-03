@@ -1230,7 +1230,7 @@
     "2": {
       "verdict": "OPEN",
       "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "r5functional16/0/exit0 butimagevisiblearchFAIL/audiounattributed; source65cbb/c620capturefix compilesinr6 butREADY182460ms shellfalse/playerheldfloorfalse, noPNG/WAV. Exactready/release predicatesknown, time/callcauseunknown. Noextra renderretry;criterion2OPEN."
+      "latest_runtime": "r5functional16/0/exit0 butimagevisiblearchFAIL/audiounattributed; source65cbb/c620capturefix compilesinr6 butREADY182460ms shellfalse/playerheldfloorfalse, noPNG/WAV. Exactready/release predicatesknown, time/callcauseunknown. Noextra renderretry;criterion2OPEN. Reviewedfe6496 render-only600s startup allowance+lifecycle counters now actualarch-r7 37102097177 in progress; unchanged readiness predicates and no result claimed."
     },
     "3": {
       "verdict": "OPEN",
@@ -1299,6 +1299,16 @@
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101560576",
       "status": "Original exact-source job setup/import in progress; no duplicate/restart or result claimed."
+    },
+    "arch_r7": {
+      "run": 37102097177,
+      "job": 111143496815,
+      "source": "fe6496ef607dc59f27950c7cd8ed0fed29031fa8",
+      "script": "tests/smoke_f20_arch_presentation.gd",
+      "mode": "render",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37102097177",
+      "status": "Original hosted isolated job checkout in progress; no result or image/audio acceptance claimed. No local engine/GPU."
     }
   },
   "lesson_input_driver": {
@@ -1556,5 +1566,12 @@
       "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/user/ZIP bytes and hashes; 1test10assertions0failed/exit0/6s/zeroerrors. Narrow production guard and realSession mode scope.",
       "limits": "Actual begin_trainer_battle with real Session offline/host/client/preparingclient and writer guard; can_challenge/sendout stubs explicit. No actualworld/enemy/fight/outcome proof; F20#3 still OPEN."
     }
+  },
+  "arch_render_startup_measurement": {
+    "source": "fe6496ef607dc59f27950c7cd8ed0fed29031fa8",
+    "reason": "Actual r5 readiness121444ms/maxgap82289; r6 timeout182460ms/17physics/maxgap132569/shellfalse/playerheldfloorfalse, no capture. These observations justify accommodating slow software-render lifecycle; no GL warmup or exact engine-call cause inferred. Criterion2 has no startup-time requirement.",
+    "change": "Presentation-only600000ms readiness allowance; defaultsolo/net180000 unchanged. Full shell/floor/journey predicates unchanged. Process/postdraw observers connected before scene startup and disconnected on either readiness outcome; readonly counters/elapsed and actual budget logged.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol decision and concrete source. Typedtimeout/default and counters avoid inferredVariant concerns. No world/player/constructionhold/pose/input/assertion mutation; no physicaldevice/audibleacceptance claim. If bounded run still fails same predicates, investigate measured lifecycle rather than repeat render.",
+    "runtime": "Originalarch-r7 run37102097177/job111143496815 exactfe6496 checkout in progress. Ordinary camera/resultframe/SFX capture source remains pending actual execution; #2 OPEN."
   }
 }

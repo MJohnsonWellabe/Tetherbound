@@ -44,7 +44,7 @@ coordinatorcommand notPASS. Guest-only net-r8 (37094965898) reports HomeKey begi
 Reviewed `7fefaea2ed` reports refused begin promptly; actual full replay awaits green-main baseline containing coordinator arrival dependency and its owner-passive prerequisites; fc91 alone cannot apply to this lane.
 Reviewed `03829bfa3f` separates normal Grandpa walk from unchanged reader in full peer proof; affected replay pending; per-command205s/readiness180s/productionACK8s remain unchanged.
 #4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
-isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
+isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. Reviewed `fe6496ef60` adds disclosed render-only600s startup allowance (solo/net180s unchanged) and pre-startup process/postdraw counters, preserving fullshell/floor/journey gates. Actualarch-r7 37102097177 checkout in progress; no image/audio acceptance claimed. #2 remains OPEN;
 no further blind render retry or shared-world edit. No local engine/GPU while the owner plays Valheim. Exact original
 ZIPs, native logs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
 
