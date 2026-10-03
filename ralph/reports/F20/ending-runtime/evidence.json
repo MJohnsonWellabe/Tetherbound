@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake criterion0 independently MET on candidate. Actual saved Stormwood Home Key passed in solo r4; failed fifth owner save led to strict detached locator projection231ad9ccc3. Corrected named disk run37083030264 passes12tests104assertions0failed, no engine/script errors. Actual solo-r5 37083033029 and corrected two-peer net-r2 are running remote; local renderer/audio suspended while owner plays Valheim. Actual criteria1-4 remain OPEN.",
+    "reason": "Tidewake criterion0 independently MET on candidate. Strict locator fix passes12tests104assertions, actual solo-r5 now passes saved HomeKey and fifth producer but fails Grandpa walk while actual onboarding lesson owns input. Reviewed F20-only driver9d4 continues actual lesson cards through ordinary input; no bypass. Solo-r6/net-r3 queued remote; net-r2 retained panel-heartbeat failure corroborates solo blockage. Criteria1\u20134 remain OPEN; local renderer/audio suspended for owner Valheim.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -129,6 +129,55 @@
         "workflow_step_exit": 1,
         "scope": "Both actual peer hellos, host/join, registry2 and host Home Key return PASS, then host f20_fifth no verdict.",
         "limitations": "Original /tmp peer logs, NET_RUN and character files are outside workflow collection and absent from artifact. Cause and peer engine-error cleanliness unknown; no co-op acceptance. Corrected F20-only output path and single POSIX log writer in afde2bacc2; existing deadlines unchanged."
+      },
+      {
+        "run": 37083033029,
+        "job": 111087486384,
+        "artifact": 11260120674,
+        "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+        "verdict": "FAIL",
+        "checks": 16,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_terminal": "F20 SOLO: 16 checks, 1 failures",
+        "engine_script_errors": 0,
+        "native_bytes": 16974,
+        "native_sha256": "03199d1178e8f102cd84b1b967fed6c9180f82bcc7bcfc8d15f74fe5b6938dbc",
+        "artifact_bytes": 652226,
+        "artifact_sha256": "c53910b1a4da5608ee152637384e4cf5211c2409f6807ad411eb8204d25092fe",
+        "logs": [
+          "f20-solo-r5-native.log.gz",
+          "f20-solo-r5-workflow.log.gz",
+          "f20-solo-r5-artifact.zip"
+        ],
+        "passed": "Actual saved outcome-bound Home Key return; actual fifth key debit, sealed state, one durable bright glow/playing SFX source, exact not-ready line, no main quest change and repeat key refusal.",
+        "failure": "Unchanged ordinary navigator exhausts Grandpa walk budget when real onboarding lesson takes input midwalk (OnboardingLessons lesson_panel, player26.95059,0.900941,15.1673). No Grandpa/credits/reload reached.",
+        "limitations": "Disclosed post-finale state fixture. Hosted headless Dummy sound source is functional only; no visual or audible acceptance. No earned campaign or criteria1\u20134 closure.",
+        "independent_review": "PASS f20_review \u00a77.2: zero errors in native+user Godot logs; actual durable HomeKey/fifth functional partial valid; lesson input owner blocks unchanged navigator. F20#1\u20134 remainOPEN."
+      },
+      {
+        "run": 37083772545,
+        "job": 111089712050,
+        "artifact": 11260236648,
+        "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_coordinator_and_both_retained_peers": 0,
+        "artifact_bytes": 148612,
+        "artifact_sha256": "a2184ae4b8cdcb84dcd5e682ae11f1dc00e56df66f253e05789ff9e4d9dc0686",
+        "logs": [
+          "f20-net-r2-native.log.gz",
+          "f20-net-r2-workflow.log.gz",
+          "f20-net-r2-peer-0.log.gz",
+          "f20-net-r2-peer-1.log.gz",
+          "f20-net-r2-NET_RUN.json",
+          "f20-net-r2-artifact.zip"
+        ],
+        "passed": "Both actual ENet peer hellos/host/join/registry, host outcome-bound durable HomeKey, host fifth producer debit/sealed/glow+playing SFX/line/noquest/repeatrefusal. Strict retained peer error scan PASS.",
+        "failure": "Host f20_talk no verdict at unchanged300s step deadline. Retained heartbeat context panel:@CanvasLayer at exact solo-r5 stuck pose26.95059,0.90094,15.16730; host log ends before Grandpa input. A common lesson navigation blockage is strongly inferred from explicit solo owner path; net does not name panel script. Guest homecoming/credits/rejoin/reload not reached.",
+        "limits": "Post-finale fixtures, headless functional only. Original complete peer logs/homes/disk/NET_RUN preserved in ZIP. No F20#4 acceptance.",
+        "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: complete peer logs/homes/disk retained, exact ZIP hash, host producer passes, fresh284ms panel heartbeat at same solo stuck pose; net panel script not identified, shared lesson cause is strong inference from explicit solo observation. Zero errors in all3 logs. No guest ending/rejoin/reload reached, no exit_code artifact; workflowfailure authoritative."
       }
     ],
     "limitations": [
@@ -267,12 +316,12 @@
     "1": {
       "verdict": "OPEN",
       "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
-      "latest_runtime": "f20-solo-r4-native.log.gz: actual outcome-bound Home Key return saved PASS, then fifth owner save FAIL before Grandpa/credits"
+      "latest_runtime": "solo-r5: actual Home Key return saved PASS; actual fifth producer passes, then onboarding lesson blocks ordinary walk before Grandpa/credits"
     },
     "2": {
       "verdict": "OPEN",
       "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "f20-solo-r4-native.log.gz: host pending fifth receipt, owner save refuses invalid portal world receipt; no durable debit/presentation acceptance. Local arch render/audio remains OPEN."
+      "latest_runtime": "solo-r5: actual key debit/sealed/glow+playing SFX source/one not-ready line/no new quest/repeat refusal PASS. Headless functional partial only; inspected real renderer/audio still OPEN."
     },
     "3": {
       "verdict": "OPEN",
@@ -282,7 +331,7 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "f20-net-r1-native.log.gz: real two-peer hello/join/registry and host Home Key PASS; fifth no verdict, missing original peer logs; full ending/rejoin/reload still OPEN"
+      "latest_runtime": "net-r2: complete two-peer logs retained, host durable HomeKey and fifth producer PASS; actual lesson panel blocks f20_talk at300s deadline, no guest ending/rejoin/reload reached."
     }
   },
   "delegated_locator_fix": {
@@ -329,23 +378,25 @@
     }
   },
   "remote_pending": {
-    "solo_r5": {
-      "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+    "solo_r6": {
+      "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+      "run": 37084560197,
       "script": "tests/smoke_f20_ending.gd",
-      "label": "f20-solo-r5-locator",
+      "label": "f20-solo-r6-lessons",
       "mode": "headless",
-      "timeout_minutes": 30,
-      "run": 37083033029
+      "timeout_minutes": 30
     },
-    "net_r2": {
-      "run": 37083772545,
-      "job": 111089712050,
-      "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+    "net_r3": {
+      "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+      "run": 37084565111,
       "script": "tests/smoke_net_f20_ending.gd",
-      "label": "f20-net-r2-locator",
+      "label": "f20-net-r3-lessons",
       "mode": "headless",
-      "timeout_minutes": 20,
-      "scope": "Two actual ENet peers with own collected peer logs/JSON/disk; original hello/step/heartbeat deadlines unchanged."
+      "timeout_minutes": 20
     }
+  },
+  "lesson_input_driver": {
+    "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+    "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
   }
 }
