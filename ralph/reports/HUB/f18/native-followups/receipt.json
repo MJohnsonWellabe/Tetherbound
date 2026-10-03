@@ -7738,7 +7738,8 @@
       }
     ],
     "f18_engine_gpu_local_hold": true,
-    "no_broad_journey_dispatch_or_movingintegration_import": true
+    "no_broad_journey_dispatch_or_movingintegration_import": true,
+    "latest_assist": "Reviewed fixture/join and Session hunks imported into current integration; strict parse failure retained/corrected; capture-fence diagnostic delivered for scoped import. Matched earned F18 dependency group/main-green remains unverified."
   },
   "blocked_audit": {
     "observed_utc": "2026-10-03 08:39:18 UTC",
@@ -7791,7 +7792,7 @@
     "no_user_action_requested_now": true
   },
   "main_ci_read_only_assist": {
-    "scope": "Coordinator-requested main-CI investigation plus explicitly approved fixture/join-harness correction in own worktree. No shipping Session/catch edits, shared edits, baseline import, engine/UI/GPU or new native run.",
+    "scope": "Coordinator-requested main-CI investigation plus explicitly approved own-worktree fixture/join correction, two-line shipping Session readiness guard and read-only capture-presentation failure diagnostic. No shared edits, broader baseline import, shipping catch remedy, local engine/UI/GPU or self-dispatched native run.",
     "inspection_source_sha": "31d07d769afba5b387cc1a44f8ff978f2a26b351",
     "original_runtime_sha": "56b76d8fb9d7a8d11857fb9642407cd4eca8f6fd",
     "original_ci_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37120921415",
@@ -7986,7 +7987,7 @@
       "bytes": 7016,
       "sha256": "58766d46b424ca8ea718043514acbd8b74077a7c8f92cb0baee80e16a08ade73",
       "patch_validation": "Applied to isolated exact pinned31d07d7 files; both changed functions and smoke match F18 candidate. Root/shared files untouched.",
-      "native_status": "NOT RUN; coordinator must test scoped import on current shared baseline. No acceptance credit.",
+      "native_status": "FAIL before test runtime: run37125936812/art11275466642 rejected inferred personal_only and driver_ref under strict parser; corrected declarations reviewed and pushed, fresh native parse/runtime pending.",
       "source_review": "Raw before_snapshot compares disk party AND redesign_character exactly; fresh raw after_snapshot verifies both after apply Booltrue. Normalized observers only compare live world/ID/redesign roundtrip. Prepared writer requires actual Booltrue, finished/notbusy fallback, no guest world file before/after, no autosave/world writer. personal_only skips offline-host world seeding. Personal fixture precedes admission; actual guest carrier settles without dropping recovery rows or replacing host authority. failed(String) Dictionary capture and WeakRef after every physics await protects JoinDriver; original budget preserved. Native evidence pending; no main/F16/F18 acceptance.",
       "source_sha": "572b050c14dbd55f633e0a87d1e5178223e5486e",
       "patch_archive": {
@@ -7996,7 +7997,29 @@
         "member": "main-ci-foundations-join-v1.patch",
         "member_sha256": "58766d46b424ca8ea718043514acbd8b74077a7c8f92cb0baee80e16a08ade73"
       },
-      "patch_retention": "Exact diff bytes archived to avoid whitespace checks treating diff-context prefixes as GDScript indentation; local original remains available to coordinator."
+      "patch_retention": "Exact diff bytes archived to avoid whitespace checks treating diff-context prefixes as GDScript indentation; local original remains available to coordinator.",
+      "coordinator_import": "Coordinator acknowledged scoped 572b050c14 import into current integration only; no whole old branch import.",
+      "strict_type_followup": {
+        "source_sha": "46c6e89c9d768e4641ce148f1caaf65572447b96",
+        "paths": [
+          "tools/net/peer_runner.gd"
+        ],
+        "changes": [
+          "driver_ref: WeakRef = weakref(driver)",
+          "personal_only: bool = args.get(\"personal_only\") == true"
+        ],
+        "independent_review": "f18_sol_review GPT-6.1 Sol APPROVE explicit types; earlier source review missed inference requirements. No behavior/budget change.",
+        "original_failure": {
+          "run_id": 37125936812,
+          "artifact_id": 11275466642,
+          "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37125936812",
+          "local_original": "D:\\tetherbound\\.tmp\\join-foundations-r1-37125936812.zip",
+          "retained_original": "ralph/reports/HUB/f18/native-followups/main-ci-join-foundations-parse-failure-original.zip",
+          "bytes": 17981,
+          "sha256": "ef64337631ba097cc6766761f5794c1d60f1915ccc09ad7ce66f0e3521e8b232",
+          "classification": "Byte-identical original artifact copy; parse FAIL, no native foundations conclusion."
+        }
+      }
     },
     "typed_capture_r19_followup": {
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37122872058",
@@ -8058,7 +8081,51 @@
         "latest owner row kind/action/status/receipt/journal_revision",
         "current world namespace, journal session ID and actual transport epoch as separate values"
       ],
-      "scope": "Read-only triage. No close input, fake ACK, care exclusion, guard bypass, or timeout change. Production remedy not selected without actual pending identity."
+      "scope": "Read-only triage. No close input, fake ACK, care exclusion, guard bypass, or timeout change. Production remedy not selected without actual pending identity.",
+      "implemented_diagnostic": {
+        "source_sha": "bf8cd283161b3850a864140fea139ddca6e30897",
+        "paths": [
+          "tools/net/proof_steps_f48.gd"
+        ],
+        "failure_boundary": "_finish_capture_presentation original pending catch/owner/capture refusal before any close input",
+        "root_import_patch": "D:\\tetherbound\\feature-f18\\.tmp\\main-ci-capture-pending-diagnostic-v1.patch",
+        "patch_archive": "ralph/reports/HUB/f18/native-followups/main-ci-capture-pending-diagnostic-v1.patch.zip",
+        "patch_bytes": 5748,
+        "patch_sha256": "423e926fd907c5d9099ae472d65577b7bbb3fde847ebb3d45f2198cb5351dd53",
+        "archive_sha256": "b04ba1f7c1fc3cebe3f98cb1d8cde8c119f86a468ca468fb89cf8d7de56d7177",
+        "patch_validation": "Applied to isolated exact pinned31d07d769afba5b387cc1a44f8ff978f2a26b351 file. Only three new readonly diagnostic helpers and one refused-close data hook. Removing these yields byte-identical original pinned file.",
+        "older_branch_bridge": "Own code commit minimally carries pinned _capture_input_state/_finish_capture_presentation and fixture result sealing so own code is wired. Existing helper guards match pin exactly after removing hook. These bridge hunks are EXCLUDED from root patch; do not import whole older file/commit.",
+        "actual_source_retained": [
+          "retry actual scalar keys/receipt/saved/revision with raw Variant hex",
+          "retry player/world/release_instance/capture_originals actual WeakRef validity and target IDs/current owner/world matches",
+          "complete owner_passive.pending and groom_passive.pending dictionaries with raw Variant hex",
+          "actual owner_passive.local.error presence/value/type",
+          "complete latest original _owner_training_row with raw Variant hex preserving before/after and journal identity",
+          "actual live character/world/namespace and current transport instance/status/epoch/snapshot",
+          "actual is_host and pending portal arm value with Variant type"
+        ],
+        "source_review": "f18_sol_review GPT-6.1 Sol APPROVE final scoped diagnostic. No diagnostic await/input/save/retry/ACK/setter/clear. All copied presentation guards unchanged; guest portal/host attribution gap addressed.",
+        "coordinator_delivery": "Exact patch and pushed source SHA sent for scoped root import; coordinator native diagnostic pending.",
+        "native_status": "NOT RUN; no actual pending-arm result or runtime remedy inferred from source. R19 remains original FAIL; no F18/F48 acceptance."
+      }
+    },
+    "session_readiness_implementation": {
+      "source_sha": "95269cb953a7fd4432d613120abc57d74f87228b",
+      "paths": [
+        "scripts/net/session.gd"
+      ],
+      "function": "publish_travel_lifecycle",
+      "changes": [
+        "Actual _peer CONNECTION_CONNECTED",
+        "Actual snapshot_ready()"
+      ],
+      "patch_local": "D:\\tetherbound\\feature-f18\\.tmp\\main-ci-session-transport-ready-v1.patch",
+      "patch_bytes": 681,
+      "patch_sha256": "af1993e23e07471d96f28782d0a028e95d76b20ed5c10217802d5d30458144e5",
+      "validation": "Exact two-line hunk applies to isolated pinned31 source; existing producer and valid_sample guards retained.",
+      "source_review": "f18_sol_review GPT-6.1 Sol APPROVE. Snapshot bootstrap through original ledger reconciliation, actual owner save/ACK and training baseline staging has no lifecycle-observation prerequisite. owner_passive already requires snapshot_ready. Lifecycle sequence gaps allowed; actual authenticated body separate.",
+      "coordinator_import": "Coordinator acknowledged scoped import/source PASS; main landing not verified.",
+      "native_status": "NOT PROVEN on matched baseline; no local engine or repeated closed proofs."
     }
   }
 }
