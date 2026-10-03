@@ -518,6 +518,10 @@ func _connect_combat() -> void:
 	_combat.connect("attack_missed", _on_attack_missed)
 	_combat.connect("orb_shook", _on_orb_shook)
 	_combat.connect("catch_resolved", _on_catch_resolved)
+	if _combat.has_signal("staggered"):
+		_combat.connect("staggered", _on_staggered)
+	if _combat.has_signal("impact_confirmed"):
+		_combat.connect("impact_confirmed", _on_impact_confirmed)
 
 
 func _on_combat_entered() -> void:
@@ -554,6 +558,24 @@ func _on_hit_landed(on_enemy: bool, _amount: float) -> void:
 	var table: Dictionary = CONFIG.section("combat").get("effectiveness_sound", {}) as Dictionary
 	var key := str(_pending_effectiveness) if _pending_on_enemy == on_enemy else "0"
 	CONFIG.play(str(table.get(key, "impact_normal")), "SFX")
+
+
+## F21#1: a crit layers its own sting over the effectiveness impact; only the
+## local player's own receipts (a peer's hit is `own_hit: false`).
+func _on_impact_confirmed(_on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
+	if bool(receipt.get("critical", false)) and bool(receipt.get("own_hit", true)):
+		_play_combat_cue("critical_sound")
+
+
+## F21#2: a poise break is heard as well as seen.
+func _on_staggered(_on_enemy: bool) -> void:
+	_play_combat_cue("stagger_sound")
+
+
+func _play_combat_cue(key: String) -> void:
+	var cue: Dictionary = CONFIG.section("combat").get(key, {}) as Dictionary
+	if cue.is_empty(): return
+	CONFIG.play(str(cue.get("sfx", "")), "SFX", float(cue.get("volume_db", 0.0)), float(cue.get("pitch", 1.0)))
 
 
 func _on_attack_missed(_by_player: bool) -> void:

@@ -407,7 +407,18 @@
           "weak": 0.3,
           "strong": 0.5,
           "seconds": 0.14
+        },
+        "critical": {
+          "weak": 0.1,
+          "strong": 0.55,
+          "seconds": 0.07
         }
+      },
+      "_comment_shake_scale": "F21#3 (COMBAT \u00a711): multiplier on `charged_camera_nudge.degrees` per impact class. Light and medium hits never shake; reduced motion and the 0-100% setting still scale it to nothing.",
+      "shake_scale": {
+        "heavy": 1.0,
+        "critical": 1.15,
+        "ultimate": 1.6
       },
       "critical_hitstop_seconds": 0.12,
       "giant_height_m": 5.0,
@@ -441,8 +452,10 @@
         }
       },
       "numbers": {
-        "enabled": false,
-        "mode": "off",
+        "_comment": "F21#0/#1 world-space numbers (COMBAT \u00a711). The player's On / Own only / Off choice lives in motion_prefs (settings.json accessibility.damage_numbers).",
+        "enabled": true,
+        "merge_seconds": 0.15,
+        "hold_fraction": 0.4,
         "font_px": 28,
         "min_font_px": 22,
         "own_target_scale": 0.85,

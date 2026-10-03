@@ -146,6 +146,9 @@
       "0": "impact_normal",
       "1": "impact_super"
     },
+    "_comment_feedback": "F21#1/#2 (COMBAT \u00a711, AUDIO \u00a75): a stagger-crit lands a lower, louder sting on top of its effectiveness impact, and a poise break thuds, so neither reads by colour alone. Both are installed clips re-pitched, played only for the local fight.",
+    "critical_sound": { "sfx": "impact_super", "pitch": 0.78, "volume_db": 2.0 },
+    "stagger_sound": { "sfx": "build_place_thud", "pitch": 0.72, "volume_db": 1.0 },
     "_comment_shake": "Each successive orb shake plays a semitone higher. Three rising clicks is a question; three identical ones is a stutter.",
     "orb_shake_pitch_step": 1.06
   },

@@ -996,7 +996,7 @@ func _on_graphics_restart() -> void:
 
 func _accessibility_lane() -> Array[Control]:
 	var out: Array[Control] = []
-	for control: Control in [_reduced_motion_button, _shake_button, _look_sensitivity_button,
+	for control: Control in [_reduced_motion_button, _shake_button, _rumble_button, _numbers_button, _look_sensitivity_button,
 			_invert_x_button, _invert_y_button, _aim_assist_button, _text_size_button,
 			_dialogue_bg_button]:
 		if control != null:
@@ -1304,6 +1304,13 @@ var _look_max := LOOK_PREFS.FALLBACK_MAX_PERCENT
 var _look_step := 10
 var _shake_button: Button = null
 var _shake_label := "Camera shake"
+## UX §18 combat feedback, beside camera shake (F21#3): rumble 0-100% with Off,
+## and damage numbers On / Own only / Off.
+var _rumble_button: Button = null
+var _rumble_label := "Controller rumble"
+var _numbers_button: Button = null
+var _numbers_label := "Damage numbers"
+var _numbers_names: Dictionary = {"on": "On", "own": "Own only", "off": "Off"}
 var _invert_x_button: Button = null
 var _invert_x_label := "Invert horizontal look"
 var _invert_y_button: Button = null
@@ -1343,6 +1350,11 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 
 	_shake_label = str(access.get("camera_shake_label", _shake_label))
 	_shake_button = _settings_row(list)
+	_rumble_label = str(access.get("rumble_label", _rumble_label))
+	_rumble_button = _settings_row(list)
+	_numbers_label = str(access.get("damage_numbers_label", _numbers_label))
+	_numbers_button = _settings_row(list)
+	_numbers_button.pressed.connect(_on_damage_numbers)
 
 	_look_min = int(access.get("look_sensitivity_min_percent", LOOK_PREFS.FALLBACK_MIN_PERCENT))
 	_look_max = int(access.get("look_sensitivity_max_percent", LOOK_PREFS.FALLBACK_MAX_PERCENT))
@@ -1439,6 +1451,7 @@ func _poll_accessibility() -> void:
 ## volume rows are (`_poll_audio()`): `_input` belongs to the rebind capture.
 func _poll_look() -> void:
 	_poll_shake()
+	_poll_combat_feedback()
 	_poll_dialogue_text()
 	if _look_sensitivity_button == null:
 		return
@@ -1500,6 +1513,50 @@ func _poll_shake() -> void:
 	_shake_button.add_theme_color_override("font_color",
 		COLOUR_QUIET if percent == 0 or MOTION_PREFS.reduced_motion() else
 		(COLOUR_DEFAULT if percent == 100 else COLOUR_CHANGED))
+
+
+## Rumble: left/right in steps of `_look_step`, 0 reads Off. Damage numbers:
+## A cycles On -> Own only -> Off. Device-local, never sent to peers.
+func _poll_combat_feedback() -> void:
+	if _rumble_button != null:
+		if _rumble_button.has_focus() and not _capturing and _settle <= 0:
+			var delta := 0
+			if Input.is_action_just_pressed("ui_right"):
+				delta = _look_step
+			elif Input.is_action_just_pressed("ui_left"):
+				delta = -_look_step
+			if delta != 0:
+				var before := MOTION_PREFS.rumble_percent()
+				MOTION_PREFS.set_rumble_percent(before + delta)
+				if MOTION_PREFS.rumble_percent() != before:
+					_save_motion()
+					AUDIO_CUES.play(&"ui_focus")
+		var percent := MOTION_PREFS.rumble_percent()
+		var filled := int(round(float(percent) / 10.0))
+		_rumble_button.text = "  %s:  [%s%s]  %s" % [_rumble_label, "|".repeat(filled),
+			" ".repeat(10 - filled), "Off" if percent == 0 else "%d%%" % percent]
+		_rumble_button.add_theme_color_override("font_color",
+			COLOUR_QUIET if percent == 0 else (COLOUR_DEFAULT if percent == 100 else COLOUR_CHANGED))
+	if _numbers_button != null:
+		var mode := MOTION_PREFS.damage_numbers_mode()
+		_numbers_button.text = "  %s:  %s" % [_numbers_label, str(_numbers_names.get(mode, mode))]
+		_numbers_button.add_theme_color_override("font_color", COLOUR_DEFAULT if mode == "on" else COLOUR_CHANGED)
+
+
+func _on_damage_numbers() -> void:
+	MOTION_PREFS.set_damage_numbers_mode(MOTION_PREFS.next_damage_numbers_mode())
+	var said := "%s: %s." % [_numbers_label, str(_numbers_names.get(MOTION_PREFS.damage_numbers_mode(), ""))]
+	if not _save_motion():
+		said += " (This session only — the settings file could not be written.)"
+	say(said)
+
+
+func _save_motion() -> bool:
+	var bindings: RefCounted = _bindings()
+	if bindings == null:
+		return false
+	MOTION_PREFS.store_to(bindings)
+	return bool(bindings.call("save"))
 
 
 func _on_text_size() -> void:

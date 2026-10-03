@@ -125,6 +125,12 @@ static func style_key(receipt: Dictionary) -> String:
 	return key
 
 
+## Camera-shake multiplier on the built charged nudge; "" (light/medium) = none.
+static func shake_scale(impact: Dictionary) -> float:
+	var key := feel_key(impact)
+	return 0.0 if key.is_empty() else float(config().get("shake_scale", {}).get(key, 1.0))
+
+
 static func flash_style(receipt: Dictionary) -> Dictionary:
 	return (config().get("flashes", {}) as Dictionary).get(style_key(receipt), {}).duplicate(true)
 
@@ -141,9 +147,17 @@ static func with_launch(receipt: Dictionary, launch: Dictionary, vfx: Dictionary
 	return frozen
 
 ## Device-local tactile amplitude never changes the frozen gameplay receipt.
+## COMBAT §11: heavy, stagger-crit and ultimate impacts rumble; crit is sharp.
+static func feel_key(impact: Dictionary) -> String:
+	var weight := str(impact.get("weight", "light"))
+	if weight == "ultimate": return weight
+	if bool(impact.get("critical", false)): return "critical"
+	return weight if weight == "heavy" else ""
+
 static func rumble_spec(impact: Dictionary, scale: float) -> Dictionary:
-	if str(impact.get("weight", "light")) not in ["heavy", "ultimate"] or scale <= 0.0: return {}
-	var spec: Dictionary = config().get("rumble", {}).get(str(impact.get("weight", "light")), {})
+	var key := feel_key(impact)
+	if key.is_empty() or scale <= 0.0: return {}
+	var spec: Dictionary = config().get("rumble", {}).get(key, {})
 	if spec.is_empty(): return {}
 	return {"weak": clampf(float(spec.get("weak", 0.0)) * scale, 0.0, 1.0),
 		"strong": clampf(float(spec.get("strong", 0.0)) * scale, 0.0, 1.0),
