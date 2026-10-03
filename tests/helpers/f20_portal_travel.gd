@@ -51,6 +51,33 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 	var offer: Dictionary = arbiter.call("winner")
 	return offer.get("actionable") == true or _fail("F20 actual Grandpa approach refused its action")
 
+## Rematch prompts sit beside a trainer's original conversation prompt.
+## Approach this actual provider closely through the original capsule walker;
+## preserve range/LOS/winner/input checks without editing either prompt.
+func activate_endgame_rematch(prompt: Node3D) -> bool:
+	if prompt == null or prompt.get("label") != "Endgame rematch" or not _bind():
+		return _fail("F20 rematch requires its actual enabled world provider")
+	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
+	if arbiter == null: return _fail("F20 rematch lacks the actual arbiter")
+	var recoveries_before := int(_player.get("_unstick_count"))
+	var distance := _player.global_position.distance_to(prompt.global_position)
+	var nav := NAV.new(tree, _player, _rig, _stick)
+	var reached: bool = await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 0.6)
+	_stick(0, 0)
+	if not reached: return _fail("F20 ordinary capsule walk failed to endgame rematch")
+	for frame in 8: await tree.physics_frame
+	for frame in 2: await tree.process_frame
+	if int(_player.get("_unstick_count")) != recoveries_before or not _player.is_on_floor() \
+			or arbiter.call("winning_provider") != prompt or arbiter.call("winner").get("actionable") != true:
+		print("F20 REMATCH provider expected=", prompt.get_path(), " winner=", arbiter.call("winning_provider"),
+			" offer=", arbiter.call("winner"), " player=", _player.global_position, " target=", prompt.global_position)
+		return _fail("F20 rematch lacks grounded exact actionable provider without recovery")
+	_activated = null
+	arbiter.connect("activated", _activation)
+	await tap("interact")
+	if is_instance_valid(arbiter) and arbiter.is_connected("activated", _activation): arbiter.disconnect("activated", _activation)
+	return _activated == prompt or _fail("F20 rematch input activated another provider")
+
 func _continue_navigation_lesson() -> void:
 	if _lesson_busy: return
 	var owner := INPUT_OWNER.current(tree)

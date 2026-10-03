@@ -421,4 +421,45 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 	if not check(view.get("ready") == true and view.get("rows", []).size() == 3,
 		"reloaded character has three active bounties in the live board"): return false
 	await travel.tap("menu_cancel")
-	return check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input")
+	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
+	return await admit_endgame_rematch(tree, game, rematches)
+
+## F20 checks continuation availability, not F44 victory or repeat rewards.
+## The isolated proof finishes in this genuinely admitted trainer fight;
+## trainers cannot flee, so no forced outcome or fake recovery is used.
+func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool:
+	var rules := preload("res://scripts/repeatables/rematch_rules.gd")
+	var player := game.call("find_player") as CharacterBody3D
+	var prompt: Node3D
+	var nearest := INF
+	for reference: WeakRef in rematches.get("_prompts").values():
+		var candidate := reference.get_ref() as Node3D
+		if candidate == null or not candidate.is_inside_tree() or candidate.get("label") != "Endgame rematch" \
+			or candidate.get("enabled") != true: continue
+		var spec: Dictionary = candidate.get_parent().get_meta("foundation_trainer_spec", {})
+		if rules.profile(str(spec.get("id", ""))).get("kind") != "trainer": continue
+		var distance := player.global_position.distance_to(candidate.global_position)
+		if distance < nearest:
+			nearest = distance
+			prompt = candidate
+	if not check(prompt != null, "reloaded world has a mounted nonmaster endgame rematch"): return false
+	var source := prompt.get_parent() as Node3D
+	var original: Dictionary = source.get_meta("foundation_trainer_spec", {}).duplicate(true)
+	var expected: Dictionary = rules.encounter_spec(original, "endgame")
+	var director := tree.current_scene.get_node_or_null("EncounterDirector")
+	var manager: Node = director.get("_manager") if director != null else null
+	if not check(not expected.is_empty() and manager != null and director.call("trainer_battle_active") == false \
+		and manager.call("is_fighting") == false, "rematch admission starts from ordinary completed-world exploration"): return false
+	print("F20 REMATCH ordinary source=", source.get_path(), " trainer=", original.id, " tier=endgame")
+	var travel := TRAVEL.new(tree, game)
+	if not await travel.activate_endgame_rematch(prompt): failures.append_array(travel.failures); return false
+	var deadline := Time.get_ticks_msec() + 30000
+	while Time.get_ticks_msec() < deadline and manager.call("is_fighting") != true: await tree.process_frame
+	var body := director.get("_trainer_body") as Node3D
+	var enemy: RefCounted = body.get("instance") if is_instance_valid(body) else null
+	return check(director.call("trainer_battle_active") == true and manager.call("is_fighting") == true \
+		and director.get("_trainer_node") == source and director.get("_trainer_spec") == expected \
+		and enemy != null and enemy.get("species_id") == expected.team[0].species \
+		and int(enemy.get("level")) == int(expected.team[0].level) and manager.get("_enemy") == enemy \
+		and manager.get("_enemy_owned") == true,
+		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight")
