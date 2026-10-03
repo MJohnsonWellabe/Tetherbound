@@ -1,0 +1,39 @@
+{
+  "kind": "main_required_actual_altar_surface_material_fix",
+  "production_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+  "production_file": "scripts/build/build_piece.gd",
+  "delta": "Detach private per-surface Material overrides at NOTIFICATION_PREDELETE; retain live materials through ordinary tree exit/reparent. No static cache growth, renderer changes or frame waits.",
+  "owner_evidence": "actual-altar-hidden-override-r2.json",
+  "native_fixed_reproduction": {
+    "run": 37095605069,
+    "job": 111124777223,
+    "artifact": 11264555484,
+    "source_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+    "process_exit": 0,
+    "elapsed_seconds": 4,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "cases": 2,
+    "raw_log": "ci-altar-fixed-37095605069.log.gz",
+    "raw_log_sha256": "f8b4976a4dcd1b33dfd5e2e5e8b6ddd4a2def958e54424c2454456e322e918e5"
+  },
+  "native_lifecycle_regression": {
+    "run": 37095606238,
+    "job": 111124780023,
+    "artifact": 11263369673,
+    "source_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+    "process_exit": 0,
+    "elapsed_seconds": 4,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "checks": 25,
+    "failures": [],
+    "scope": "Placed and all three actual ghost tints; preserve Material IDs through tree exit/re-entry; queue-free immediately after invalid-tint update; unbuilt immediate free. Observer snapshots contain IDs only.",
+    "raw_log": "ci-altar-lifecycle-37095606238.log.gz",
+    "raw_log_sha256": "452e4756cf79d3e85ea843c522eef259e19522f00297abf63b0c5d75fe77adbc"
+  },
+  "paid_f48_replay_still_required": true,
+  "independent_review_pending": true,
+  "f19_full_world_material_errors_not_closed": true
+}

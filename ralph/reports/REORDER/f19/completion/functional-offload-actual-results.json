@@ -108,7 +108,8 @@
     "actual_methods": "Station Altar geometry/tint, BuildPlacer _ensure_overlay/_drop_ghost/_set_overlay_visible, world/overlay teardown",
     "fixtures": "Startup and interaction disabled in component subclasses; no paid placement, mounted world, reward or earned claim",
     "outcome": "Negative material-error reproduction; no build material production fix",
-    "log": "ci-build-material-lifetime-37083791397.log"
+    "log": "ci-build-material-lifetime-37083791397.log",
+    "scope_correction": "Earlier StationPiece procedural Altar differs from production BuildPiece BookStand; see actual-altar-material-r1.json."
   },
   "chamber_material_diagnostic_r1": {
     "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
@@ -358,5 +359,7 @@
     "raw_log": "ci-populated-terrain-negative-37093187450.log",
     "raw_log_sha256": "ded91a11922da4328358b2926659a0c0060f548b0ffba25c2827c896949c9025",
     "next_diagnostic": "Original full-world spaceaccept/save/reload; baseline versus all exposed geometry Mesh/Material resources sampled again immediately before actual world deletion. Prior readiness-only scans could miss post-choice or post-load creations/replacements. Log newly retained Material owner paths without altering product state."
-  }
+  },
+  "final_world_resource_diagnostic": "final-resource-counterfactual-r7.json",
+  "actual_altar_owner_isolation": "actual-altar-hidden-override-r2.json"
 }

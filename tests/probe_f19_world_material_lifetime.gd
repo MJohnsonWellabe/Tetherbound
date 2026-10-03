@@ -3,7 +3,9 @@ extends "res://tests/smoke_f19_veridian_functional.gd"
 ## Diagnostic only: original choice/save/reload, with actual whole-world
 ## teardown. Earlier retention sampled world/choice readiness, before the
 ## choice could create or replace resources. Resample all exposed geometry
-## Mesh/Material resources immediately before each actual world deletion.
+## Material references immediately before each actual world deletion, including
+## hidden surface overrides missed by get_active_material. Do not retain native
+## Mesh/MultiMesh resources: that prior counterfactual amplified errors.
 const LABEL_DELETE_PROBE := preload("res://tests/helpers/f19_label_base_teardown_probe.gd")
 const SPRITE_DELETE_PROBE := preload("res://tests/helpers/f19_sprite_base_teardown_probe.gd")
 var _treatment := "baseline"
@@ -25,7 +27,7 @@ func _run_diagnostic() -> void:
 	if _game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-final-world-resources"]:
+	for treatment: String in ["baseline", "retain-final-world-materials"]:
 		_treatment = treatment
 		print("F19 WORLD MATERIAL BEGIN " + JSON.stringify({
 			"treatment": treatment, "acceptance": false,
@@ -67,7 +69,7 @@ func _observe_world(phase: String) -> void:
 	var state := {"labels": [], "existing_script_labels": [], "geometry_count": 0,
 		"geometry_classes": {}, "particles": [], "sprites": []}
 	_observe(_world, state)
-	if phase == "choice-ready" and _treatment == "retain-final-world-resources" and _held.is_empty():
+	if phase == "choice-ready" and _treatment == "retain-final-world-materials" and _held.is_empty():
 		_fail("Final-resource counterfactual retained no actual geometry resources")
 	if phase == "choice-ready" and _treatment == "detach-world-sprites" and (state["sprites"] as Array).is_empty():
 		_fail("Sprite counterfactual observed no actual world Sprite3D")
@@ -88,24 +90,23 @@ func _observe(node: Node, state: Dictionary) -> void:
 		state["geometry_count"] = int(state["geometry_count"]) + 1
 		var classes: Dictionary = state["geometry_classes"]
 		classes[node.get_class()] = int(classes.get(node.get_class(), 0)) + 1
-		if _treatment == "retain-final-world-resources":
+		if _treatment == "retain-final-world-materials":
 			var geometry := node as GeometryInstance3D
 			_hold(geometry.material_override)
 			_hold(geometry.material_overlay)
 			if node is MeshInstance3D:
 				var instance := node as MeshInstance3D
 				if instance.mesh != null:
-					_hold(instance.mesh)
 					for surface in instance.mesh.get_surface_count():
 						_hold(instance.get_active_material(surface))
+						_hold(instance.get_surface_override_material(surface))
+						_hold(instance.mesh.surface_get_material(surface))
 			elif node is MultiMeshInstance3D:
 				var instance := node as MultiMeshInstance3D
 				if instance.multimesh != null and instance.multimesh.mesh != null:
-					_hold(instance.multimesh)
-					_hold(instance.multimesh.mesh)
 					for surface in instance.multimesh.mesh.get_surface_count():
 						_hold(instance.multimesh.mesh.surface_get_material(surface))
-	if node.get_class() == "Terrain3D" and _treatment == "retain-final-world-resources":
+	if node.get_class() == "Terrain3D" and _treatment == "retain-final-world-materials":
 		# Raw native RID teardown may ignore Resource references; disclose that
 		# limitation rather than silently assuming Terrain3DMaterial retention.
 		_hold(node.get("material") as Resource)
@@ -119,16 +120,15 @@ func _observe(node: Node, state: Dictionary) -> void:
 			for pass_index in particles.draw_passes:
 				var mesh: Mesh = particles.get("draw_pass_%d" % (pass_index + 1)) as Mesh
 				if mesh != null: meshes.append(mesh)
-			if _treatment == "retain-final-world-resources": _hold(particles.process_material)
+			if _treatment == "retain-final-world-materials": _hold(particles.process_material)
 		var materials := 0
 		for mesh: Mesh in meshes:
-			if _treatment == "retain-final-world-resources": _hold(mesh)
 			for surface in mesh.get_surface_count():
 				var material := mesh.surface_get_material(surface)
 				if material != null:
 					materials += 1
-					if _treatment == "retain-final-world-resources": _hold(material)
-		if _treatment == "retain-final-world-resources":
+					if _treatment == "retain-final-world-materials": _hold(material)
+		if _treatment == "retain-final-world-materials":
 			_hold((node as GeometryInstance3D).material_override)
 			_hold((node as GeometryInstance3D).material_overlay)
 		(state["particles"] as Array).append({"path": str(node.get_path()), "class": node.get_class(),
