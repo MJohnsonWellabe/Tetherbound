@@ -1195,7 +1195,18 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {},
+  "remote_pending": {
+    "solo_r17": {
+      "run": 37097937017,
+      "job": 111131593354,
+      "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
+      "script": "tests/smoke_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37097937017",
+      "status": "Original affected rematch input trace running; no result claimed. Includes existing ending/reload/bounty and actual rematch admission assertions. No local Godot/GPU use."
+    }
+  },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1326,12 +1337,12 @@
     "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
     "change": "Temporaryexistinginputclocktrace duringoriginalrematchtap/restoredafter; failureonly actualactivated/null/winner/offer/enabled/inputowner/pose/fight/director/spec/source. Accuratefailurewording no longerassertsanotherprovider whenactualnullunknown. Sameinput/NAV/provider/admission/budgets.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact2a7 plus663: existingclocktrace/restore/signaldisconnect/lessoncleanup/read-onlycast/getters, no recompute/input/budget/guard changes. Actualaffectedr17 required.",
-    "runtime": "Affected diagnosticreplay pending, #3OPEN."
+    "runtime": "Actual solo-r17 37097937017/job111131593354 runs exact 2a7f2eee6dedd6d32cd321892901f8dfa6287ba0; original result pending; #3 OPEN."
   },
   "arrival_checkpoint_dependency": {
     "source": "fc91ff531f0980a90572f60d5cc9cdd68c57ea68",
     "owner": "coordinator",
-    "status": "Coordinator personally inspected actualnative37097557875/art11265155463 exactfc91: PASS68tests1765assertions0failed/exit0/39s/zeroengine-script errors. Boundeddependency noweligible for isolatedF20sourcecandidate; do notimportbroadbranch. Not yet adopted; actualfullpeer stillrequired.",
+    "status": "Coordinator reported native PASS68tests1765assertions0failed/exit0/39s/zeroengine-script errors on run37097557875/art11265155463. fc91 is a delta on integration owner-passive framework absent from this lane; not adopted alone. Coordinator directs merge of then-green main as established baseline after firstcut lands, retain F20 delta, then exact isolated full-peer proof. Main pending; #4 OPEN.",
     "scope": "Bounded departure checkpoint, actualgroundedBOOL/CAS/rebase/repeatedlostACK recovery; no physics change."
   }
 }
