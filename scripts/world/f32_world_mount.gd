@@ -113,8 +113,12 @@ func mount_authored_farm(world: Node3D, trainer: CharacterBody3D, service: Node)
 	return census()
 
 func node_for(id: String) -> Node3D:
-	var node: Node3D = _mounted.get(id)
-	return node if is_instance_valid(node) and node.is_inside_tree() and not node.is_queued_for_deletion() else null
+	# An adopted legacy node can be destroyed while a save reload rebuilds its
+	# placements. Validate the Variant before assigning a typed Node variable.
+	var candidate: Variant = _mounted.get(id)
+	if not is_instance_valid(candidate): return null
+	var node := candidate as Node3D
+	return node if node != null and node.is_inside_tree() and not node.is_queued_for_deletion() else null
 
 func census() -> Dictionary:
 	var ids: Array[String] = []
