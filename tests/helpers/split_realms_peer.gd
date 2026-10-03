@@ -53,7 +53,14 @@ class PermissionEndpoint extends Node:
 			JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json")),
 			JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json")), Time.get_ticks_msec())
 		if result.get("ok") != true or owner.call("_portal_envelope_valid", peer, envelope) != true:
-			refuse(peer, str(result.get("reason", "Invalid actual owner envelope."))); return
+			var observations: Array = []
+			for director: Node in owner.call("_foundation_directors_under", owner.call("_foundation_realm_roots")):
+				var arbiter: Variant = director.get("_encounter_host")
+				var manager: Node = director.get("_manager")
+				observations.append({"director": str(director.get_path()), "session_owned": director.get("_session") == owner,
+					"arbiter_present": arbiter is RefCounted, "manager_fighting": manager.call("is_fighting") if manager != null else null})
+			refuse(peer, str(result.get("reason", "Invalid actual owner envelope.")) + " [actual host combat observation: " \
+				+ JSON.stringify({"peer": peer, "combat": context.get("combat"), "directors": observations}) + "]"); return
 		used[peer] = true
 		prepared[envelope.request_id] = {"peer": peer, "envelope": envelope, "result": result,
 			"world": weakref(game.get("world")), "session": weakref(owner)}
@@ -163,6 +170,28 @@ func _split_inventory() -> Array:
 	for index in int(inventory.call("slot_count")): slots.append(inventory.call("stack_at", index))
 	return slots
 
+func _split_settle_combat(started_frame: int, budget: int) -> Dictionary:
+	var owner: Node = _session()
+	var manager: Node = _combat_manager()
+	var source: Node = current_scene
+	if manager == null: return {"verdict": "FAIL", "detail": "actual local combat observer is unavailable"}
+	var was_fighting: bool = manager.call("is_fighting") == true
+	if was_fighting:
+		# Either owner may already be fighting. Use the inherited ordinary
+		# wild-fight exit; never clear manager state or any host encounter row.
+		var fled: Dictionary = await _step_press({"action": "combat_run"})
+		if fled.get("verdict") != "PASS": return fled
+	while Engine.get_physics_frames() - started_frame <= budget:
+		if not is_instance_valid(manager) or current_scene != source or _session() != owner:
+			return {"verdict": "FAIL", "detail": "actual source/session changed while settling combat"}
+		var observed_combat: bool = owner.call("_altar_peer_in_combat", owner.call("local_peer_id")) == true
+		if manager.call("is_fighting") != true and not observed_combat:
+			if was_fighting: print("SPLIT_TRANSPORT_COMBAT_SETTLED " + JSON.stringify({"peer": owner.call("local_peer_id"), "input": "combat_run", "manager_fighting": false, "observed_combat": false}))
+			return {"verdict": "PASS", "detail": "actual local manager and combat observation settled before travel setup",
+				"data": {"was_fighting": was_fighting, "input": "combat_run" if was_fighting else "none", "manager_fighting": false, "observed_combat": false}}
+		await physics_frame
+	return {"verdict": "FAIL", "detail": "ordinary fight departure and actual combat observation did not settle within original travel budget"}
+
 func _step_enter_realm(args: Dictionary) -> Dictionary:
 	if not _split_fixture_done: return await super._step_enter_realm(args)
 	var game: Node = root.get_node(^"Game")
@@ -186,23 +215,15 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL", "detail": "raw Game entry must visibly refuse without source drain", "data": raw}
 		_split_raw_proved = true
 		print("SPLIT_TRANSPORT_RAW_REFUSAL " + JSON.stringify({"reason": _split_raw_refusal, "source_unchanged": true, "inventory_unchanged": true, "accepted_permit": false}))
+	# Keep the first raw refusal before all preparation. Both the fixed arch
+	# departure and actual Home Key return require the same real safety state.
+	var settled: Dictionary = await _split_settle_combat(started_frame, budget)
+	if settled.get("verdict") != "PASS": return settled
 	_split_reply.clear()
 	_split_endpoint.set("error", "")
 	_split_endpoint.set("evidence", {})
 	if realm == "cloudreach":
 		if _session().call("is_host") == true:
-			# The original smoke deliberately engaged a live wild fight. Leave by
-			# its ordinary input before asking the unchanged policy for travel.
-			var manager: Node = _combat_manager()
-			if manager != null and manager.call("is_fighting") == true:
-				var fled: Dictionary = await _step_press({"action": "combat_run"})
-				if fled.get("verdict") != "PASS": return fled
-				while Engine.get_physics_frames() - started_frame <= budget:
-					await physics_frame
-					var observed: Dictionary = _session().call("_host_portal_context", _session().call("local_peer_id"))
-					if manager.call("is_fighting") != true and observed.get("combat") == false: break
-				if manager.call("is_fighting") == true:
-					return {"verdict": "FAIL", "detail": "ordinary wild fight departure did not settle within original travel budget"}
 			_split_endpoint.call("prepare_cloudreach", _session().call("local_peer_id"))
 		else: _split_endpoint.rpc_id(1, "request_cloudreach")
 	else:
@@ -210,7 +231,8 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 	var wanted: String = str(REALM_ROOT_NAMES.get(realm, ""))
 	while Engine.get_physics_frames() - started_frame <= budget:
 		await physics_frame
-		if not str(_split_endpoint.get("error")).is_empty(): return {"verdict": "FAIL", "detail": _split_endpoint.get("error")}
+		if not str(_split_endpoint.get("error")).is_empty():
+			return {"verdict": "FAIL", "detail": str(_split_endpoint.get("error")) + " [actual local combat observation: " + JSON.stringify(settled.data) + "]"}
 		if _split_reply.get("ok") == false: return {"verdict": "FAIL", "detail": _split_reply.get("reason", "production arrival refused")}
 		if _split_reply.get("ok") != true: continue
 		var permission: Dictionary = _split_endpoint.get("evidence")
@@ -234,6 +256,6 @@ func _step_enter_realm(args: Dictionary) -> Dictionary:
 		for frame in int(args.get("settle_frames", DEFAULT_SETTLE_FRAMES)): await physics_frame
 		if Engine.get_physics_frames() - started_frame > budget: break
 		return {"verdict": "PASS", "detail": "production consumed-permit arrival '%s' -> '%s'; real receiver/capsule and durable owner ACK, no earned credit" % [was, realm],
-			"data": {"reply": _split_reply, "permission": _split_endpoint.get("evidence"), "raw_refusal": _split_raw_refusal,
+			"data": {"reply": _split_reply, "permission": _split_endpoint.get("evidence"), "raw_refusal": _split_raw_refusal, "combat": settled.data,
 				"orchestration": "PortalArrival invokes original Game.enter_realm; inherited receiver/shell/heartbeat machinery unchanged"}}
 	return {"verdict": "FAIL", "detail": "production consumed-permit arrival exceeded original %d-physics-frame budget" % budget}
