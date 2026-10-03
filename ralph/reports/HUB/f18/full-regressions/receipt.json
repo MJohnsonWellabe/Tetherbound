@@ -1,5 +1,5 @@
 {
-  "scope": "Complete original 735-file test census in four disjoint slices; first three complete, final 183 files pending. Source changed during batch: this is coverage evidence, not uniform exact-head green acceptance. New F18 lifecycle and shared SaveDocument are covered by separate focused tests.",
+  "scope": "All 735 original file selectors exercised exactly once across four disjoint slices; remote fourth adds two new files. Source changed during batch: coverage evidence, not uniform exact-head green acceptance. Original sparse-evidence and obsolete JSON-oracle failures retained and resolved by recorded affected proofs, without skipping or normalization.",
   "baseline_census_commit": "749bf41b23",
   "completed_shards": [
     {
@@ -3177,13 +3177,622 @@
           ]
         }
       ]
+    },
+    {
+      "shard": 4,
+      "execution": "GitHub remote render.yml headless",
+      "workflow_run": 37081274565,
+      "workflow_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37081274565",
+      "game_source": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
+      "original_files": 183,
+      "extra_new_files": [
+        "test_save_document.gd",
+        "test_f18_arrival_lifecycle.gd"
+      ],
+      "tests": 1342,
+      "assertions": 378911,
+      "failed": 1,
+      "script_errors": 0,
+      "sha256": "54a084623d66bef3775677c26b4ea6b61ed9db4cab87d0f40da84fc2f334a90d",
+      "diagnostics": [
+        {
+          "line": 89,
+          "message": "WARNING: MapState.load_data: saved grid geometry does not match this world; keeping a fresh grid",
+          "context": [
+            "  ok    test_characterize_map_state.gd :: test_add_dynamic_marker_replaces_rather_than_stacks_on_a_repeated_id",
+            "  ok    test_characterize_map_state.gd :: test_alpha_pin_round_trip_restores_the_pinned_set_and_its_markers",
+            "WARNING: MapState.load_data: saved grid geometry does not match this world; keeping a fresh grid",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] load_data (res://autoload/map_state.gd:910)",
+            "         [1] test_load_data_discards_fog_when_the_saved_grid_descriptor_does_not_match (res://tests/test_characterize_map_state.gd:116)"
+          ]
+        },
+        {
+          "line": 165,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_cloudreach_realm_gate_crag.gd :: test_named_location_catalogue_stands_on_the_approach_not_inside_the_gate",
+            "  ok    test_cloudreach_realm_gate_crag.gd :: test_realm_gate_crag_presentation_has_complete_arrival_hierarchy",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _mountable_body (res://scripts/world/riding_controller.gd:258)",
+            "       [1] _mountable_body (res://scripts/world/cloudreach_riding_controller.gd:148)"
+          ]
+        },
+        {
+          "line": 173,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_cloudreach_riding_airborne_mount.gd :: test_a_companion_falling_over_open_air_is_not_mountable",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _mountable_body (res://scripts/world/riding_controller.gd:258)",
+            "       [1] _mountable_body (res://scripts/world/cloudreach_riding_controller.gd:148)"
+          ]
+        },
+        {
+          "line": 181,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_cloudreach_riding_airborne_mount.gd :: test_a_hop_over_ground_is_still_mountable",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _mountable_body (res://scripts/world/riding_controller.gd:258)",
+            "       [1] _mountable_body (res://scripts/world/cloudreach_riding_controller.gd:148)"
+          ]
+        },
+        {
+          "line": 318,
+          "message": "WARNING: dialogue map reveal 'not_a_place' is not authored",
+          "context": [
+            "  ok    test_dialogue_map_reveal.gd :: test_reveal_packets_match_the_production_map_and_spawn_sources",
+            "  ok    test_dialogue_map_reveal.gd :: test_two_road_people_and_the_pond_fisher_deliver_the_reveals",
+            "WARNING: dialogue map reveal 'not_a_place' is not authored",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] apply (res://scripts/world/dialogue_map_reveal.gd:17)",
+            "         [1] test_unknown_reveal_cannot_change_the_map (res://tests/test_dialogue_map_reveal.gd:51)"
+          ]
+        },
+        {
+          "line": 387,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_f48_saved_edge.gd :: test_saved_edge_cannot_accept_old_party_even_if_writer_reported_true",
+            "  ok    test_f48_saved_edge.gd :: test_v2_and_json_v3_require_all_eight_canonical_fields",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 395,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_gather_is_exposed_for_a_swing_to_call (res://tests/test_felled_resource.gd:104)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 404,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_felled_resource.gd :: test_gather_is_exposed_for_a_swing_to_call",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 412,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_neither_felled_kind_carries_a_glint (res://tests/test_felled_resource.gd:85)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 420,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_neither_felled_kind_carries_a_glint (res://tests/test_felled_resource.gd:85)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 428,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_neither_felled_kind_carries_a_glint (res://tests/test_felled_resource.gd:85)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 437,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_felled_resource.gd :: test_neither_felled_kind_carries_a_glint",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 445,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_setup_carries_the_prompt_and_the_felled_key (res://tests/test_felled_resource.gd:92)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 454,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_felled_resource.gd :: test_setup_carries_the_prompt_and_the_felled_key",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 462,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_stone_stands_a_rubble_mound_not_a_woodpile (res://tests/test_felled_resource.gd:71)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 471,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_felled_resource.gd :: test_stone_stands_a_rubble_mound_not_a_woodpile",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 479,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [3] test_wood_stands_a_real_woodpile_with_several_logs (res://tests/test_felled_resource.gd:51)",
+            "       [4] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 583,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_harvest_permanence.gd :: test_bit_set_and_get_round_trip_every_bit_independently",
+            "  ok    test_harvest_permanence.gd :: test_bitset_bytes_rounds_up_to_the_nearest_byte",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 592,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_clear_felled_forgets_the_tracking_entry (res://tests/test_harvest_permanence.gd:372)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 603,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_harvest_permanence.gd :: test_clear_felled_forgets_the_tracking_entry",
+            "  ok    test_harvest_permanence.gd :: test_fell_on_an_unknown_key_still_chops_but_stands_nothing",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 612,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default (res://tests/test_harvest_permanence.gd:335)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 622,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_harvest_permanence.gd :: test_fell_pays_out_the_caller_supplied_amount_not_the_layer_default",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 631,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_fell_removes_the_standing_placement_and_stands_a_felled_pickup (res://tests/test_harvest_permanence.gd:317)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 641,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "  ok    test_harvest_permanence.gd :: test_fell_removes_the_standing_placement_and_stands_a_felled_pickup",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 650,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_fell_tracks_the_placement_in_felled_for_persistence (res://tests/test_harvest_permanence.gd:346)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 664,
+          "message": "WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts",
+          "context": [
+            "  ok    test_harvest_permanence.gd :: test_harvest_permanently_twice_on_the_same_index_is_a_no_op_the_second_time",
+            "  ok    test_harvest_permanence.gd :: test_harvested_count_reports_only_what_is_actually_chopped",
+            "WARNING: scatter anchor at (80.0, -64.0) placed 0 of 2 in 24 attempts",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)",
+            "         [1] placements_for (res://scripts/world/scatter_rules.gd:287)"
+          ]
+        },
+        {
+          "line": 672,
+          "message": "WARNING: scatter anchor at (2.0, 47.0) placed 0 of 1 in 12 attempts",
+          "context": [
+            "         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)",
+            "         [4] _init (res://tests/run_tests.gd:120)",
+            "WARNING: scatter anchor at (2.0, 47.0) placed 0 of 1 in 12 attempts",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)",
+            "         [1] placements_for (res://scripts/world/scatter_rules.gd:287)"
+          ]
+        },
+        {
+          "line": 680,
+          "message": "WARNING: scatter anchor at (2.0, 47.0) placed 0 of 4 in 48 attempts",
+          "context": [
+            "         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)",
+            "         [4] _init (res://tests/run_tests.gd:120)",
+            "WARNING: scatter anchor at (2.0, 47.0) placed 0 of 4 in 48 attempts",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)",
+            "         [1] placements_for (res://scripts/world/scatter_rules.gd:287)"
+          ]
+        },
+        {
+          "line": 688,
+          "message": "WARNING: scatter anchor at (-10.0, 1318.0) placed 6 of 8 in 96 attempts",
+          "context": [
+            "         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)",
+            "         [4] _init (res://tests/run_tests.gd:120)",
+            "WARNING: scatter anchor at (-10.0, 1318.0) placed 6 of 8 in 96 attempts",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)",
+            "         [1] placements_for (res://scripts/world/scatter_rules.gd:287)"
+          ]
+        },
+        {
+          "line": 696,
+          "message": "WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts",
+          "context": [
+            "         [3] test_marking_gives_every_tree_and_rock_a_harvest_point_at_full_density (res://tests/test_harvest_permanence.gd:117)",
+            "         [4] _init (res://tests/run_tests.gd:120)",
+            "WARNING: scatter anchor at (-248.74, 6462.9) placed 0 of 2 in 24 attempts",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _place_anchor (res://scripts/world/scatter_rules.gd:479)",
+            "         [1] placements_for (res://scripts/world/scatter_rules.gd:287)"
+          ]
+        },
+        {
+          "line": 708,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_harvest_permanence.gd :: test_new_bitset_starts_all_clear",
+            "  ok    test_harvest_permanence.gd :: test_restore_from_game_applies_saved_chops_on_top_of_a_fresh_build",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 717,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_restore_from_game_does_not_restand_an_already_gathered_chop (res://tests/test_harvest_permanence.gd:440)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 729,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_harvest_permanence.gd :: test_restore_from_game_ignores_a_layer_whose_bitset_size_no_longer_matches",
+            "  ok    test_harvest_permanence.gd :: test_restore_from_game_never_un_chops_something_already_removed_this_session",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 738,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 747,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:399)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 756,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_restore_from_game_restands_a_felled_pickup_the_save_still_owes (res://tests/test_harvest_permanence.gd:410)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 767,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "  ok    test_harvest_permanence.gd :: test_restore_from_game_restands_a_felled_pickup_the_save_still_owes",
+            "  ok    test_harvest_permanence.gd :: test_sync_state_to_game_writes_a_base64_bitset_per_layer",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_colour (res://scripts/world/felled_resource.gd:375)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 776,
+          "message": "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+          "context": [
+            "       [4] test_sync_state_to_game_writes_felled_vegetation_alongside_harvested (res://tests/test_harvest_permanence.gd:383)",
+            "       [5] _init (res://tests/run_tests.gd:120)",
+            "ERROR: Can't use get_node() with absolute paths from outside the active scene tree.",
+            "   at: get_node_or_null (scene/main/node.cpp:1910)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] _pile_kind (res://scripts/world/felled_resource.gd:386)",
+            "       [1] setup (res://scripts/world/felled_resource.gd:109)"
+          ]
+        },
+        {
+          "line": 939,
+          "message": "ERROR: unscoped flag: a_flag_nobody_ever_declared",
+          "context": [
+            "  ok    test_merged_progression.gd :: test_a_redundant_write_does_not_move_the_revision",
+            "  ok    test_merged_progression.gd :: test_all_set_is_the_union_with_no_duplicates",
+            "ERROR: unscoped flag: a_flag_nobody_ever_declared",
+            "   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] store_for (res://autoload/merged_progression.gd:71)",
+            "       [1] set_flag (res://autoload/merged_progression.gd:56)"
+          ]
+        },
+        {
+          "line": 1047,
+          "message": "WARNING: [player] grounded platform velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; discarded",
+          "context": [
+            "  ok    test_pickup_glow.gd :: test_the_glow_sits_on_the_item_not_above_it",
+            "  ok    test_pickup_glow.gd :: test_the_glow_stops_before_it_becomes_a_map_marker",
+            "WARNING: [player] grounded platform velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; discarded",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _clamp_runaway_velocity (res://scripts/player/player_controller.gd:414)",
+            "         [1] test_grounded_platform_impulse_is_discarded_before_it_can_become_lethal (res://tests/test_player_runaway_velocity_guard.gd:13)"
+          ]
+        },
+        {
+          "line": 1056,
+          "message": "WARNING: [player] velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; clamped",
+          "context": [
+            "  ok    test_player_runaway_velocity_guard.gd :: test_idle_flat_floor_keeps_native_recovery_while_slopes_keep_the_stop",
+            "  ok    test_player_runaway_velocity_guard.gd :: test_idle_flat_floor_policy_uses_the_current_up_direction",
+            "WARNING: [player] velocity 903 m/s exceeded the 120 m/s ceiling at 0.0, 0.0, 0.0; clamped",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] _clamp_runaway_velocity (res://scripts/player/player_controller.gd:419)",
+            "         [1] test_real_airborne_fall_keeps_its_direction_when_bounded (res://tests/test_player_runaway_velocity_guard.gd:26)"
+          ]
+        },
+        {
+          "line": 1133,
+          "message": "ERROR: unscoped flag: upper_open",
+          "context": [
+            "  ok    test_realm_spawn_origins.gd :: test_receiver_disconnect_reuse_rejects_old_ready_and_pending_deltas",
+            "  ok    test_realm_world_records.gd :: test_cloudreach_records_do_not_block_snap_or_satisfy_meadows_home",
+            "ERROR: unscoped flag: upper_open",
+            "   at: push_error (core/variant/variant_utility.cpp:1023)",
+            "   GDScript backtrace (most recent call first):",
+            "       [0] store_for (res://autoload/merged_progression.gd:71)",
+            "       [1] set_flag (res://autoload/merged_progression.gd:56)"
+          ]
+        },
+        {
+          "line": 1211,
+          "message": "WARNING: Session.join_with_peer: peer is disconnected or identifies as a server",
+          "context": [
+            "  ok    test_schema_biome_order.gd :: test_realm_heart_order_ignores_authored_dictionary_insertion_order",
+            "  ok    test_schema_biome_order.gd :: test_relic_slots_place_tidewake_before_cloudreach_and_stormwood",
+            "WARNING: Session.join_with_peer: peer is disconnected or identifies as a server",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] join_with_peer (res://scripts/net/session.gd:1472)",
+            "         [1] test_a_new_join_closes_a_still_lingering_transport_first (res://tests/test_session_reconnect_reservation.gd:123)"
+          ]
+        },
+        {
+          "line": 1701,
+          "message": "WARNING: world 'slot-1' is version 29, this build reads 28 -- not loading",
+          "context": [
+            "  ok    test_world_save_format.gd :: test_a_missing_world_reads_as_nothing_to_load",
+            "[save] minted character id 'character-3c169d3bb96325f4d611093d2e5f95e3' for slot 1 (no existing locator)",
+            "WARNING: world 'slot-1' is version 29, this build reads 28 -- not loading",
+            "     at: push_warning (core/variant/variant_utility.cpp:1033)",
+            "     GDScript backtrace (most recent call first):",
+            "         [0] read (res://scripts/save/world_save.gd:235)",
+            "         [1] test_a_newer_than_this_build_world_file_refuses (res://tests/test_world_save_format.gd:226)"
+          ]
+        }
+      ],
+      "failure": "test_water_guardian_reward.gd::test_exact_guardian_per_participant_offers_survive_real_world_file compares loaded lossless native carrier against obsolete decimal JSON-rewritten expected carrier. Proposed native pre-read oracle correction awaiting shared-file ownership; no runtime normalization."
     }
   ],
-  "remaining_original_files": 183,
+  "remaining_original_files": 0,
   "shard3_failure": {
     "cause": "Sparse checkout omitted tracked Meadows named-location evidence manifests and blind reviews; no game assertion was weakened.",
     "resolution": "Restored eight exact HEAD tracked evidence files and reran existing ledger test with F18 rules.",
     "rerun": "8 tests, 82 assertions, 0 failed; raw original failure and diagnostics retained."
   },
-  "acceptance": "All F18 gameplay criteria remain UNPROVEN. Unit fixtures contain expected negative-test diagnostics and detached-world warnings; these logs do not constitute clean ordinary runtime evidence."
+  "acceptance": "All F18 gameplay criteria remain UNPROVEN. Unit fixtures contain expected negative-test diagnostics and detached-world warnings; these logs do not constitute clean ordinary runtime evidence.",
+  "total_observed": {
+    "tests": 5824,
+    "assertions": 4082992,
+    "original_failed_methods": 2,
+    "script_errors": 0
+  },
+  "shard4_failure_resolution": {
+    "source_commit": "f25a61b21e",
+    "adoption": "Only exact two test-file hunks. No Alpha or other production changes. Compare actual full native claims against the original native claim, removing obsolete decimal JSON rewriting.",
+    "independent_review": "Coordinator independent review approved exact two test oracles; native 10 tests / 163 assertions clean. Reused proof with identical tests and persistence/reward dependencies. Root WorldLedger has one additional generic guest flag guard; these reward fixtures commit flags as host peer1, so the added guest-only branch does not execute. No full rerun.",
+    "evidence": "claim-oracle-rerun-reused.log.gz",
+    "evidence_sha256": "0d14788d2ea19a835aec4c3a803540e072cda2f28e2b3833a59796c8794e86b3",
+    "source_test_blob_ids": {
+      "tests/test_water_guardian_reward.gd": "bbeb16a929391715d2347d7169ad939f3e76f688",
+      "tests/test_water_alpha_rewards.gd": "278dc382a7c383e485ea8f215dce3a2d7320aaa1"
+    }
+  }
 }

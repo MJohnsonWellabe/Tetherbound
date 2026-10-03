@@ -92,7 +92,7 @@ func test_exact_guardian_per_participant_offers_survive_real_world_file() -> voi
 		"world_instance": "guardian-reward-instance", "character_id": "character-A", "creature": expected})
 	var restored := WORLD.new()
 	restored.load_data(game.save_system.store.read(game.world.world_id))
-	assert_eq(restored.water_capture_claims, JSON.parse_string(JSON.stringify(game.world.water_capture_claims)))
+	assert_eq(restored.water_capture_claims, game.world.water_capture_claims)
 	assert_true(restored.flags.has(REWARD.offered_flag("character-A")))
 	assert_eq(CODEC.encode(CODEC.decode(restored.water_capture_claims[id].creature)), expected)
 	# Participant B receives their OWN offer; A's reservation is untouched.
