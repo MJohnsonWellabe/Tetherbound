@@ -2064,9 +2064,23 @@ func _step_production_join(args: Dictionary) -> Dictionary:
 	var driver := game.get_node_or_null(^"JoinDriver")
 	if driver == null:
 		return {"verdict": "FAIL", "detail": "title entry did not mount JoinDriver (returning route may have shown character picker)"}
+	# The title consumes/frees a failed driver when it returns. Keep the actual
+	# failure signal independently so that a later physics frame can still
+	# report it without calling the freed instance.
+	var failure := {"message": ""}
+	driver.connect("failed", func(message: String) -> void: failure.message = message, CONNECT_ONE_SHOT)
+	var driver_ref := weakref(driver)
 	var budget := int(args.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 	for i in maxi(1, budget):
 		await physics_frame
+		driver = driver_ref.get_ref() as Node
+		if driver == null:
+			return {"verdict": "FAIL", "detail": "JoinDriver ended after %d frames: %s"
+				% [i, str(failure.message) if not str(failure.message).is_empty()
+					else "the title removed the driver before a join completed"]}
+		if not str(failure.message).is_empty():
+			return {"verdict": "FAIL", "detail": "JoinDriver failed after %d frames: %s"
+				% [i, str(failure.message)]}
 		if current_scene != null and current_scene.is_in_group(&"title_screen") \
 				and not bool(driver.call("is_running")):
 			return {"verdict": "FAIL", "detail": "JoinDriver returned to title after %d frames: %s"
@@ -7787,7 +7801,10 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 	var local: RefCounted = game.get("local")
 	var saver: RefCounted = game.get("save_system")
 	var mode := str(args.get("mode", "inspect"))
+	var personal_only := args.get("personal_only") == true
 	if mode == "seed":
+		if personal_only and _session() != null and _session().call("is_active") == true:
+			return {"verdict": "FAIL", "detail": "personal fixture must be prepared before admission"}
 		var marker := clampi(int(args.get("marker", 1)), 1, 2)
 		var party: RefCounted = local.get("party")
 		if int(party.call("size")) == 0:
@@ -7841,12 +7858,44 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 			"station_tiers": {"forge": 2}, "node_cycles": {"essence_ground": 3},
 			"rematch_cycles": {"meadows": 4}, "alpha_cycles": {"meadows": 5},
 			"bounty_day": 6, "fifth_arch_stirred": true}
-		if bool(game.call("is_host")): errors.append_array(FOUNDATIONS_STATE.validate("world", hosted))
+		if not personal_only and bool(game.call("is_host")): errors.append_array(FOUNDATIONS_STATE.validate("world", hosted))
 		if not errors.is_empty(): return {"verdict": "FAIL", "detail": str(errors)}
 		local.set("redesign_character", canonical)
-		if bool(game.call("is_host")):
+		if not personal_only and bool(game.call("is_host")):
 			world.set("redesign_world", hosted)
 			world.set("revision", int(world.get("revision")) + 1)
+	elif mode == "personal_roundtrip":
+		if _session() != null and _session().call("is_active") == true:
+			return {"verdict": "FAIL", "detail": "personal fixture roundtrip must precede admission"}
+		var character_id := str(local.get("character_id"))
+		var characters: RefCounted = saver.call("characters")
+		var world_path := str((saver.call("worlds") as RefCounted).call("path_for", str(world.get("world_id"))))
+		if characters == null or character_id.is_empty() or FileAccess.file_exists(world_path):
+			return {"verdict": "FAIL", "detail": "personal fixture requires its named owner and no guest world file"}
+		saver.call("finish_fallback")
+		if saver.call("fallback_busy") == true:
+			return {"verdict": "FAIL", "detail": "personal fixture fallback is still writing"}
+		var before := _foundations_payload()
+		var before_snapshot: Dictionary = saver.call("snapshot", game)
+		# No autosave_here: a disconnected process may own a local world. Only
+		# the real prepared character writer may create this portable fixture.
+		var saved: Variant = saver.call("save_character_prepared", game, character_id)
+		if not saved is bool or saved != true:
+			return {"verdict": "FAIL", "detail": "personal fixture prepared character Bool write refused"}
+		var disk: Dictionary = characters.call("state", character_id)
+		if disk.get("character_id") != character_id or disk.get("party") != before_snapshot.get("party") \
+				or disk.get("redesign_character") != before_snapshot.get("redesign_character"):
+			return {"verdict": "FAIL", "detail": "personal fixture disk readback changed its owner or full carrier"}
+		var applied: Variant = characters.call("apply", game, character_id)
+		if not applied is bool or applied != true:
+			return {"verdict": "FAIL", "detail": "personal fixture portable character apply refused"}
+		var after := _foundations_payload()
+		var after_snapshot: Dictionary = saver.call("snapshot", game)
+		if after.character_id != character_id or after.character != before.character \
+				or after.world != before.world or after_snapshot.get("party") != before_snapshot.get("party") \
+				or after_snapshot.get("redesign_character") != before_snapshot.get("redesign_character") \
+				or FileAccess.file_exists(world_path):
+			return {"verdict": "FAIL", "detail": "personal fixture reload changed its carrier or created a guest world"}
 	elif mode == "roundtrip":
 		var before := _foundations_payload()
 		var result := await _step_save_reload_here({})
