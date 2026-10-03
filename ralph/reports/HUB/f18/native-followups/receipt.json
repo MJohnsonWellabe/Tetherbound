@@ -5873,6 +5873,18 @@
       "mode": "headless",
       "scope": "Originalearnedloop, reviewedguidededroadwithsameoriginaltotalbudget/watchdog/floor/unstickguards plusintIDidempotentread-onlyresourceexitobserver. R8earlierStonevariation andoriginalengineerrorsretained; noNAV/budget/terrainfix.",
       "runtime_verdict": "UNPROVEN pending original artifact"
+    },
+    {
+      "id": 37102718245,
+      "display_title": "render f18-fixture-teaching-r1 @ f9494ce9e4774a3233a81986579eaa0517789dea",
+      "head_branch": "tb/integration",
+      "head_sha": "79b03632901cff02ae292623d8d9a373f0943a20",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37102718245",
+      "checkout": "f9494ce9e4774a3233a81986579eaa0517789dea",
+      "script": "tests/smoke_net_f18_fixture_teaching.gd",
+      "scope": "Pre-admission actual lesson continuation only; no earned/co-op/travel credit."
     }
   ]
 }
