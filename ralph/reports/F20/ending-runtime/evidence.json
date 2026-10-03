@@ -1085,7 +1085,8 @@
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
       "indirect_only": "Synthetic62 PASS reused; actualsolo-r11 now proves cleanreload/safecompletedworld partial but bounty availability remainsunproved.",
-      "latest_runtime": "Solo-r14 reload, exact retention, completed repeat, movement, journal, enabled rematches and normal bounty screen open PASS. Live ready/three active rows FAIL; B close unproved, #3 OPEN. Saved fixture bounty_day0/initial empty board; first-host-morning setup under investigation."
+      "latest_runtime": "Solo-r14 reload, exact retention, completed repeat, movement, journal, enabled rematches and normal bounty screen open PASS. Live ready/three active rows FAIL; B close unproved, #3 OPEN. Saved fixture bounty_day0/initial empty board; first-host-morning setup under investigation.",
+      "limits": "Requires strengthened actual nonmaster rematch admission in addition to retained reload/safe movement/journal and normalbountyinput/live3rows/Bclose. Enabledprompts alone do not establish full admission. No F44win or allrepeatloop closure claimed."
     },
     "4": {
       "verdict": "OPEN",
@@ -1144,7 +1145,8 @@
       "mode": "headless",
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37096201917",
-      "status": "in progress; disclosed firstactualhostmorning setup and originalending/reload/continuation proof; no result claimed"
+      "status": "in progress; disclosed firstactualhostmorning setup and originalending/reload/continuation proof; no result claimed",
+      "job": 111126541894
     }
   },
   "lesson_input_driver": {
@@ -1257,5 +1259,13 @@
     "reason": "Actualr14 saved fixture initialday1/bountyday0/emptyboard. Runtimeclock is deliberately separate/default0 and increments only actualhostadvance_day; BOARD requires>=1. Conceptualpostcampaign fixture had omittedfirstmorning. No firstdaygameplaybugclaimed.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact8lines: originalhostguardedadvance/fixtureday2-clock1/no row injection; syntax/runtime/assertions intact. Productionpoll stillmust issue/deliver; affectedactual proof required. Existing adapterview checks live rows afterrealpanelopens; renderedpanelrows not independently inspected.",
     "runtime": "Actual solo-r15 live37096201917 exact50d979, noresult claimed; #3 OPEN."
+  },
+  "rematch_admission_proof": {
+    "source": "c18441cab560e5e770aab9e1b21c2f24d3a44dfc",
+    "reason": "Independent strict F20#3 audit finds enabledprompt alone insufficient: sourcebusy/range/roster/challenge/director guards remain. Require one realnormalinput nonmasterendgame rematch admission afteractualreload. Not F44win/allloopproof.",
+    "change": "Afterallpriorreload/movement/journal/bountyinput/live3rows/Bclose checks, nearestactualenabledcanonicaltrainerprofile Endgameprompt walkedusingoriginalcapsule NAV/maxframes/recovery/ground/LOS/exactwinner/actionable checks. NormalX activatesproducer, bounded30s verifiesactualmanagerfighting/director/source/exactcanonicalendgamespec/liveopponentfirstspecies/configuredlevel/enemyidentity/trainerowned. ExistingordinarylessonContinue wrapper retained. No directactivation/challenge/resolve/HP/transform edits.",
+    "cleanup": "Terminalisolatedfixture quits duringgenuinelyadmittedtrainerfight; flee prohibitedbyproduction. No win/payout/recovery claim; safemovementprovedbeforeadmission.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact c184 plus e782: actualsource/spec/livebody/fight gates sound, existinglessonwrapper cleanup correctly retained. Original8/2clocksettling/NAV/recovery/input/admission bounded; affectedactualsolo required.",
+    "runtime": "Strengthenedaffectedsolo replay pending, #3 OPEN even if earlier r15 simplercontinuation passes."
   }
 }
