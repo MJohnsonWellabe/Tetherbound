@@ -197,14 +197,20 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		print("F20 DIALOGUE completed id=", id)
 	panel.connect("completed", completion_observer)
 	print("F20 DIALOGUE start id=", panel.call("runner").call("conversation_id"), " expected=", expected)
+	# A software-rendered/loaded world can spend the old total30s merely
+	# drawing its authored lines. Bound actual input by that real line count
+	# (plus the panel's initial guard), then observe the durable ACK separately.
+	var line_count := int(panel.call("runner").call("_line_count"))
+	var presses := 0
+	while panel.call("is_open") and presses < line_count + 2:
+		opened = true
+		_heard += "\n" + str(panel.get("_body").text)
+		await travel.tap("interact")
+		presses += 1
+	print("F20 DIALOGUE input authored_lines=", line_count, " actual_presses=", presses)
 	var deadline := Time.get_ticks_msec() + 30000
-	while Time.get_ticks_msec() < deadline:
-		await tree.process_frame
-		if panel.call("is_open"):
-			opened = true
-			_heard += "\n" + str(panel.get("_body").text)
-			await travel.tap("interact")
-		elif HOME.context(game).get("homecoming_seen") == true: break
+	while not panel.call("is_open") and HOME.context(game).get("homecoming_seen") != true \
+			and Time.get_ticks_msec() < deadline: await tree.process_frame
 	panel.disconnect("completed", completion_observer)
 	var dialogue_owner := INPUT_OWNER.current(tree)
 	var row: Dictionary = game.session.call("_owner_training_row")
