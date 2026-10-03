@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN. Source investigation now targets solo authority mismatch in rematch-only guard and bound service lifecycle. #0/#1 retain measured candidate scope; #2/#4 OPEN.",
+    "reason": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN. Source investigation now targets solo authority mismatch in rematch-only guard and bound service lifecycle. #0/#1 retain measured candidate scope; #2/#4 OPEN. Reviewed scoped solo authority fix b610786130 pushed; focusednative37101544118 and actualsolo37101560576 in progress, no result claimed.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1288,7 +1288,30 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {},
+  "remote_pending": {
+    "solo_authority_r1": {
+      "run": 37101544118,
+      "job": 111141902304,
+      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+      "script": "tests/run_tests.gd",
+      "args": "--only=test_rematch_solo_admission",
+      "mode": "headless",
+      "timeout_minutes": 10,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101544118",
+      "status": "Original exact-source job setup/import in progress; no duplicate/restart or result claimed."
+    },
+    "solo_r20": {
+      "run": 37101560576,
+      "job": 111141951247,
+      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+      "script": "tests/smoke_f20_ending.gd",
+      "args": "",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101560576",
+      "status": "Original exact-source job setup/import in progress; no duplicate/restart or result claimed."
+    }
+  },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1507,5 +1530,12 @@
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact4530 normalcallout +011964 asyncvisiblewait: onlyactualundeployed normalinput;30sboundedwait, visibleactualownedlocalbody requirement; no directdeployment/stat/pose/save orguard changes. Typedfinalpredicate unchanged. Purecan_challenge/rematch_source_busy/failurefields; affectedactualreplay required.",
     "runtime": "Actual solo-r19 FAIL67/2/zeroerrors: ordinary owned callout and expected normalX endgame prompt activation pass; no fight/source/spec/enemy, can_challenge true. Independent raw auditPASS strict failed scope; #3 OPEN.",
     "source": "011964eff4fb9b2f5bcd3fe7f6b86e87a605228c"
+  },
+  "rematch_solo_authority_candidate": {
+    "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+    "change": "Only begin_trainer_battle rematch authority guard now uses present Session.is_host, consistent with Foundation offline solo authority. Shared director _is_host unchanged; writer/runtime/normal trainer guards unchanged. Readonly preX host/active/director/writer/signal bindings diagnostic.",
+    "source_cause": "Session.is_host explicitly accepts offline solo; director _is_host requires active networking. This offline smoke never hosts. Prior first rematch guard therefore refuses the solo path; additional actual blockers not excluded.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete source: scoped guard preserves missingSession/client/preparingclient/writer/runtime/normal admission gates; focused actualSession/productionbegin guard test explicitly stubs only can_challenge/sendout; preX observer adds no mutations or input changes. Actual remote verification required.",
+    "runtime": "Focused authority and full solo-r20 both setup/import in isolated hosted jobs; no result claimed. #3 OPEN."
   }
 }
