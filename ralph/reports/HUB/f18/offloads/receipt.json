@@ -20,7 +20,18 @@
     "initial_run": 37081696241,
     "source": "73566735625cb04368b03e5fc3612a0d3c586929",
     "status": "cancelled during checkout, before any wide net smoke, when independent audit confirmed pending shared SaveGame world-ID validation defect.",
-    "required_followup": "Reviewed shared save locator projection and corrected scoped proof adopted; retry held for native final-support predicate failure. Unchanged multiplayer-wide peers3 remains required."
+    "required_followup": "Native physical support77 checks pass; narrowly adopted reviewed idle-guest combat authority dependency requires actual scoped pass, then unchanged multiplayer-wide peers3 rerun.",
+    "authority_prerequisite_cancel": {
+      "run_id": 37090034416,
+      "source": "a97a33a28b7718b14068f602046a2132fbe7df44",
+      "cancel_request_http_status": 202,
+      "observed_stage_before_cancel": "setup-godot; wide gameplay discovery and smoke steps pending",
+      "reason": "Reviewed root real idle-guest arbiter initialization absent from old checkout; exact bounded correction adopted as c01cef5764, dependency native check pending.",
+      "jobs_snapshot": {
+        "path": "/repos/MJohnsonWellabe/Tetherbound/actions/runs/37090034416/jobs"
+      },
+      "scope": "Cancellation is neither gameplay failure nor PASS; only own remote run cancelled."
+    }
   },
   "acceptance": {
     "F18#0": "UNPROVEN",

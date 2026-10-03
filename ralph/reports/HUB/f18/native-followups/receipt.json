@@ -1771,6 +1771,93 @@
         "exit=0 took=8s"
       ],
       "outcome": "16 tests/246 assertions/0 failed, zero ScriptError; original15/242 plus actual native opening-aim flush test1/4. Expected cross-slot warning retained. Not complete F18 acceptance."
+    },
+    {
+      "id": 37089844435,
+      "display_title": "render f18-arrival-native-radius-r5 @ a97a33a28b7718b14068f602046a2132fbe7df44",
+      "head_branch": "tb/integration",
+      "head_sha": "d7b5677dc7b86ea4bb244f6089c2e0f177878d92",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37089844435",
+      "checkout": "a97a33a28b7718b14068f602046a2132fbe7df44",
+      "artifact_id": 11262536091,
+      "raw_artifact": "arrival-r5-remote.zip",
+      "sha256": "3506dea7106eb3d2977f0cbf90bedaf269faaad23837893446a09e548917af66",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "assertion_failure_lines": [],
+      "warning_lines": [],
+      "result_lines": [
+        "F18_CAPSULE_RADIUS_BINDING {\"case\":\"initial full-capsule solver accepts the actual Hall slab\",\"literal_exact_match\":false,\"production_radius_exact_match\":true,\"shape_radius\":0.400000005960464}",
+        "F18_CAPSULE_RADIUS_BINDING {\"case\":\"mirrored walkable slope -1.0 uses actual full-capsule cast\",\"literal_exact_match\":false,\"production_radius_exact_match\":true,\"shape_radius\":0.400000005960464}",
+        "F18_CAPSULE_RADIUS_BINDING {\"case\":\"mirrored walkable slope 1.0 uses actual full-capsule cast\",\"literal_exact_match\":false,\"production_radius_exact_match\":true,\"shape_radius\":0.400000005960464}",
+        "F18 SUPPORT: 49 checks, 0 failures",
+        "exit=0 took=5s"
+      ],
+      "outcome": "49 checks/0 failed; actual-radius Hall and mirrored slopes land and settle on actual move_and_slide floor; complete final guard; missing/steep/small floor, raised between-ray platform separate/shared concave shape, shared wall/tiny ceiling, deep embed, ungrounded skin and wrong-radius negatives all pass.",
+      "radius_binding_observations": [
+        {
+          "case": "initial full-capsule solver accepts the actual Hall slab",
+          "literal_exact_match": false,
+          "production_radius_exact_match": true,
+          "shape_radius": 0.400000005960464
+        },
+        {
+          "case": "mirrored walkable slope -1.0 uses actual full-capsule cast",
+          "literal_exact_match": false,
+          "production_radius_exact_match": true,
+          "shape_radius": 0.400000005960464
+        },
+        {
+          "case": "mirrored walkable slope 1.0 uses actual full-capsule cast",
+          "literal_exact_match": false,
+          "production_radius_exact_match": true,
+          "shape_radius": 0.400000005960464
+        }
+      ],
+      "fixtures": "Isolated actual native physics bodies/terrain and synthetic geometries; disclosed pose/camera/shape/hole setup. Not ordinary earned gameplay, co-op, native presentation or audio acceptance.",
+      "source_review": "Independent strict review: runtime93c799 and fidelitya97 source PASS. Exact radius runtime guard retained; corrected probes pass actual property used by shipping owner. Original R1-R4 failures retained. Source reviewer separately noted possible conservative float32 candidate-height false refusal; not observed in these runs."
+    },
+    {
+      "id": 37089846555,
+      "display_title": "render f18-resident-native-radius-r5 @ a97a33a28b7718b14068f602046a2132fbe7df44",
+      "head_branch": "tb/integration",
+      "head_sha": "d7b5677dc7b86ea4bb244f6089c2e0f177878d92",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37089846555",
+      "checkout": "a97a33a28b7718b14068f602046a2132fbe7df44",
+      "artifact_id": 11261987065,
+      "raw_artifact": "resident-r5-remote.zip",
+      "sha256": "fe9372cf5c0acf4ff2b72eb177b8b5aa3d0f9498e7d385d5e13195c19fc59565",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "assertion_failure_lines": [],
+      "warning_lines": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated."
+      ],
+      "result_lines": [
+        "F18_CAPSULE_RADIUS_BINDING {\"case\":\"distant baked native slope\",\"literal_exact_match\":false,\"production_radius_exact_match\":true,\"shape_radius\":0.400000005960464}",
+        "F18_SUPPORT_CONTACT_DIAGNOSTIC {\"actor_position\":[344.299987792969,2.45670962333679,926.599975585938],\"actor_transform_unchanged\":true,\"canonical_actor_y\":{\"collision_mask\":1,\"hits\":[{\"class\":\"StaticBody3D\",\"hit_instance_id\":244662143340,\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\",\"shape\":0},{\"class\":\"Terrain3D\",\"hit_instance_id\":224311380035,\"instance_id\":224311380035,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\",\"shape\":36}],\"origin\":[344.299987792969,3.34854245185852,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"collision_origin\":[344.299987792969,3.35670948028564,926.599975585938],\"floor_normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"is_on_floor\":true,\"plus_safe_margin\":{\"collision_mask\":1,\"hits\":[],\"origin\":[344.299987792969,3.3577094078064,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"raw\":{\"collision_mask\":1,\"hits\":[{\"class\":\"StaticBody3D\",\"hit_instance_id\":244662143340,\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\",\"shape\":0},{\"class\":\"Terrain3D\",\"hit_instance_id\":224311380035,\"instance_id\":224311380035,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\",\"shape\":36}],\"origin\":[344.299987792969,3.35670948028564,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"rays\":[{\"at\":[344.299987792969,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"position\":[344.299987792969,2.44754266738892,926.599975585938],\"production_height\":2.44754266738892,\"ray_from\":[344.299987792969,2.83718585968018,926.599975585938],\"ray_to\":[344.299987792969,2.03718566894531,926.599975585938],\"shape\":0,\"terrain_height\":2.43718576431274},{\"at\":[343.899993896484,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.114911213517189,0.975601613521576,0.187074899673462],\"position\":[343.899993896484,2.49377751350403,926.599975585938],\"production_height\":2.49377751350403,\"ray_from\":[343.899993896484,2.89280581474304,926.599975585938],\"ray_to\":[343.899993896484,2.09280562400818,926.599975585938],\"shape\":0,\"terrain_height\":2.49280571937561},{\"at\":[344.699981689453,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"position\":[344.699981689453,2.39666819572449,926.599975585938],\"production_height\":2.39666819572449,\"ray_from\":[344.699981689453,2.7774338722229,926.599975585938],\"ray_to\":[344.699981689453,1.97743380069733,926.599975585938],\"shape\":0,\"terrain_height\":2.37743377685547},{\"at\":[344.299987792969,2.43718576431274,926.199951171875],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"position\":[344.299987792969,2.51931476593018,926.199951171875],\"production_height\":2.51931476593018,\"ray_from\":[344.299987792969,2.91093254089355,926.199951171875],\"ray_to\":[344.299987792969,2.11093235015869,926.199951171875],\"shape\":0,\"terrain_height\":2.51093244552612},{\"at\":[344.299987792969,2.43718576431274,927.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"position\":[344.299987792969,2.37083649635315,927.0],\"production_height\":2.37083649635315,\"ray_from\":[344.299987792969,2.7634391784668,927.0],\"ray_to\":[344.299987792969,1.96343910694122,927.0],\"shape\":0,\"terrain_height\":2.36343908309937}],\"safe_margin\":0.00100000004749745,\"zero_motion\":{\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"collider_shape\":0,\"depth\":0.0000894069671630859,\"local_shape\":0,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255218505859,2.46701622009277,926.525268554688]},{\"collider\":{\"class\":\"Terrain3D\",\"instance_id\":224311380035,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\"},\"collider_shape\":36,\"depth\":0.0000743865966796875,\"local_shape\":0,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255218505859,2.46700119972229,926.525268554688]}],\"margin\":0.00100000004749745,\"remainder\":[0.0,0.0,0.0],\"saturated\":false,\"travel\":[0.00018310546875,0.00155997276306152,0.00030517578125]}}",
+        "F18_RESIDENT_TERRAIN_SUPPORT {\"checks\":28,\"failures\":[],\"fixtures\":\"isolated baked-terrain native instance, probe bodies, camera moves, temporary in-memory painted hole; no files saved\"}",
+        "exit=0 took=5s"
+      ],
+      "outcome": "28 checks/0 failed; real baked native distant capsule landing/full clearance, stable floor, tiny native/resident final contacts, actual wall initial/final refusal, wrong-radius, remount invalidation and painted-hole/missing-vertex negatives pass. No freed-node/duplicate-Callable errors; interpolation deprecation warning retained.",
+      "radius_binding_observations": [
+        {
+          "case": "distant baked native slope",
+          "literal_exact_match": false,
+          "production_radius_exact_match": true,
+          "shape_radius": 0.400000005960464
+        }
+      ],
+      "fixtures": "Isolated actual native physics bodies/terrain and synthetic geometries; disclosed pose/camera/shape/hole setup. Not ordinary earned gameplay, co-op, native presentation or audio acceptance.",
+      "source_review": "Independent strict review: runtime93c799 and fidelitya97 source PASS. Exact radius runtime guard retained; corrected probes pass actual property used by shipping owner. Original R1-R4 failures retained. Source reviewer separately noted possible conservative float32 candidate-height false refusal; not observed in these runs."
     }
   ],
   "acceptance": {
