@@ -393,16 +393,30 @@ func _capsule_landing(world_node: Node3D, actor: CharacterBody3D, target: Vector
 	var unsafe_pose := actor.global_transform
 	unsafe_pose.origin = start + query.motion * fractions[1]
 	if not _contacts_on_support(world_node, _walkable_contacts(actor, unsafe_pose), surfaces, actor.safe_margin): return refused
-	var landing := start + query.motion * fractions[0] + Vector3(0, actor.safe_margin, 0)
 	# The physical cast returns a safe/unsafe bracket. Its measured width is
 	# the solver's clearance bound; do not substitute an invented height bias.
 	var cast_clearance: float = absf(query.motion.y) * (fractions[1] - fractions[0])
+	var candidate_y := _cast_landing_y(float(start.y), float(query.motion.y), float(fractions[0]),
+		float(actor.safe_margin), highest, cast_clearance)
+	if not is_finite(candidate_y): return refused
+	var landing := Vector3(target.x, candidate_y, target.z)
+	var encoded_maximum_y := Vector3(0, highest + actor.safe_margin + cast_clearance, 0).y
 	if not landing.is_finite() or landing.distance_to(Vector3(target.x, height, target.z)) > radius \
-		or landing.y > highest + actor.safe_margin + cast_clearance: return refused
+		or landing.y > encoded_maximum_y: return refused
 	query.transform.origin += landing - start
 	query.motion = Vector3.ZERO
 	if not space.intersect_shape(query, 1).is_empty(): return refused
 	return landing
+
+static func _cast_landing_y(start_y: float, motion_y: float, safe_fraction: float, margin: float, highest: float, cast_clearance: float) -> float:
+	# Vector3 rounds each arithmetic operation to float32. Evaluate the actual
+	# cast coordinates once as scalars before encoding the final pose; otherwise
+	# accumulated rounding can reject a valid flat-floor boundary by nanometers.
+	# The scalar check still refuses values above the physical cast bound even
+	# when both would encode to the same Vector3 coordinate.
+	var candidate_y := start_y + motion_y * safe_fraction + margin
+	var maximum_y := highest + margin + cast_clearance
+	return candidate_y if is_finite(candidate_y) and is_finite(maximum_y) and candidate_y <= maximum_y else NAN
 
 func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(original.envelope.world_instance_id, original.envelope.character_id)

@@ -100,11 +100,19 @@ static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target:
 				"travel": vector(result.get_travel()), "contacts": contact_rows,
 				"production_walkable_contact_count": accepted_contacts.size(),
 				"production_contacts_on_support": arrival.call("_contacts_on_support", world, accepted_contacts, surfaces, actor.safe_margin)}
-			var landing := start + query.motion * fractions[0] + Vector3(0, actor.safe_margin, 0)
 			var bracket := absf(query.motion.y) * (fractions[1] - fractions[0])
+			var candidate_y: float = arrival.call("_cast_landing_y", float(start.y), float(query.motion.y),
+				float(fractions[0]), float(actor.safe_margin), highest, bracket)
+			if not is_finite(candidate_y):
+				out["candidate"] = {"scalar_bound_refused": true, "maximum_y": highest + actor.safe_margin + bracket}
+				out["actor_transform_unchanged"] = actor.global_transform == before
+				print("F18_INITIAL_CAPSULE_DIAGNOSTIC " + JSON.stringify(out))
+				return
+			var landing := Vector3(target.x, candidate_y, target.z)
 			out["candidate"] = {"origin": vector(landing), "center_floor": height, "highest_sample": highest,
 				"cast_bracket_width": bracket, "maximum_y": highest + actor.safe_margin + bracket,
-				"within_maximum_y": landing.y <= highest + actor.safe_margin + bracket,
+				"scalar_y": candidate_y, "within_maximum_y": candidate_y <= highest + actor.safe_margin + bracket,
+				"within_encoded_maximum_y": landing.y <= Vector3(0, highest + actor.safe_margin + bracket, 0).y,
 				"distance_to_physical_center": landing.distance_to(Vector3(target.x, height, target.z)),
 				"within_radius": landing.distance_to(Vector3(target.x, height, target.z)) <= radius}
 			query.transform.origin += landing - start
