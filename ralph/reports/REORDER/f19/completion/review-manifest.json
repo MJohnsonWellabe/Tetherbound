@@ -153,7 +153,7 @@
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
-  "latest_material_diagnostic": "masked-materials-r10.json",
+  "latest_material_diagnostic": "stronghold-surfaces-r11.json",
   "latest_material_probe": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Baseline versus Materials only, including masked per-surface overrides and post-choice CPU particle Materials; no retained Mesh/MultiMesh objects. Actual Altar counterfactual demonstrated active-material census misses hidden override owners.",
@@ -221,15 +221,27 @@
   "next_stronghold_masked_surface_diagnostic": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Original baseline versus only hidden per-surface override Materials under actual Stronghold. No mesh-surface Materials, MultiMesh, active Materials, particle, Terrain or Mesh resources retained. Original prompt guards and save/reload remain unchanged.",
-    "status": "Dispatched; queued; no terminal result or acceptance claim",
+    "status": "Terminal positive: stronghold-surfaces-r11.json; baseline16/treatment0, original guards pass; diagnosis only",
     "source_commit": "35b0fe616be4b60230cba8635b1926b3695dcebb",
     "run": 37100322208,
-    "job": 111138410545
+    "job": 111138410545,
+    "artifact": 11266531406
   },
   "siphon_component_source_correction": {
     "run": 37100956165,
     "source_commit": "65d49017cf456a31950cdc5cbee412b72e741a0a",
     "reason": "Invalid fixture read site.retrofit instead of shipping hall_occupation; cancellation requested while checkout active, no lifetime result claimed. Corrected fixture calls actual factory._occupation.",
-    "acceptance": false
+    "acceptance": false,
+    "job": 111140224273,
+    "artifact": 11266555724,
+    "status": "Terminal cancelled in checkout; engine setup and Run steps skipped; artifact only MANIFEST.txt"
+  },
+  "siphon_component": {
+    "script": "tests/probe_f19_siphon_material_lifetime.gd",
+    "source_commit": "193f5109bf544e7ba4143b4c29aea0e9c8d74950",
+    "run": 37101041988,
+    "job": 111140469987,
+    "artifact": 11265956855,
+    "status": "Terminal positive native ownership reproduction; siphon-material-component.json; before withdrawal0/baseline8/hold-only3copies0 errors; no acceptance"
   }
 }
