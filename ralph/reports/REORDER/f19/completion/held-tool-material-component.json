@@ -1,0 +1,67 @@
+{
+  "kind": "f19_actual_authored_held_tool_finish_component",
+  "source_commit": "9e3a1f884f1812c0c212d449cbe79ea3099a0b73",
+  "run": 37113063213,
+  "job": 111174561905,
+  "artifact": 11271280515,
+  "process_exit": 0,
+  "elapsed_seconds": 7,
+  "cases": {
+    "baseline axe": {
+      "engine_errors": 4,
+      "held": 0,
+      "item": "axe",
+      "model_path": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
+      "owners": [
+        "Axe_Bronze:0:MI_Trim_Props_Vertex"
+      ],
+      "surfaces": 1,
+      "treatment": "baseline",
+      "unique_active_materials": 1
+    },
+    "baseline pickaxe": {
+      "engine_errors": 4,
+      "held": 0,
+      "item": "pickaxe",
+      "model_path": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
+      "owners": [
+        "Pickaxe_Bronze:0:MI_Trim_Props_Vertex"
+      ],
+      "surfaces": 1,
+      "treatment": "baseline",
+      "unique_active_materials": 1
+    },
+    "retain-active-surface-overrides axe": {
+      "engine_errors": 0,
+      "held": 1,
+      "item": "axe",
+      "model_path": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
+      "owners": [
+        "Axe_Bronze:0:MI_Trim_Props_Vertex"
+      ],
+      "surfaces": 1,
+      "treatment": "retain-active-surface-overrides",
+      "unique_active_materials": 1
+    },
+    "retain-active-surface-overrides pickaxe": {
+      "engine_errors": 0,
+      "held": 1,
+      "item": "pickaxe",
+      "model_path": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
+      "owners": [
+        "Pickaxe_Bronze:0:MI_Trim_Props_Vertex"
+      ],
+      "surfaces": 1,
+      "treatment": "retain-active-surface-overrides",
+      "unique_active_materials": 1
+    }
+  },
+  "engine_errors": 8,
+  "script_errors": 0,
+  "leak_warnings": [],
+  "scope": "Authored axe/pickaxe model loader and actual BuildMaterialFinish.apply as used by ToolHold. Component baseline deletes props; counterfactual retains only one active surface finish per prop. No Game, equip input, gathering, rewards, route or earned acceptance supplied.",
+  "actual_fresh_material_owner_proved": false,
+  "acceptance": false,
+  "raw_log": "ci-held-tool-component-37113063213.log.gz",
+  "raw_log_sha256": "faf995df37fc2430198bc39f95c11b5788bcf4ef0db20b5557f4b4ca5246404a"
+}
