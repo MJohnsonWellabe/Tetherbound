@@ -244,9 +244,11 @@
     "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
   },
   "next_diagnostic": {
+    "source_commit": "9f94af3b1b5f321336fbaf57ebf1f8fe4c7eaacb",
+    "run": 37091898727,
     "script": "tests/probe_f19_world_material_lifetime.gd",
-    "scope": "Actual scriptless world Sprite3D PREDELETE rendering-base detachment; unchanged live properties, original spaceaccept/save/reload; no product edit or acceptance claim.",
-    "status": "Prepared; not yet dispatched"
+    "scope": "Original full-world spaceaccept/save/reload baseline versus actual scriptless Sprite3D PREDELETE rendering-base detachment; unchanged live properties; diagnosis only",
+    "status": "Dispatched distinct native comparison; initial checkout step observed; no terminal verdict"
   },
   "particle_material_counterfactual_r4": {
     "kind": "f19_actual_world_particle_material_counterfactual",

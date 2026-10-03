@@ -154,10 +154,11 @@
   "latest_remote_audit": "functional-offload-actual-results.json",
   "latest_material_diagnostic": "particle-material-counterfactual-r4.json",
   "latest_material_probe": {
-    "run": 37090546213,
-    "source_commit": "be1c10b18f6191d950e1dc5648a12e9024b4f154",
-    "acceptance": false,
-    "status": "Terminal negative: original assertions passed; 48 engine errors; particle retention did not reduce post-choice errors"
+    "source_commit": "9f94af3b1b5f321336fbaf57ebf1f8fe4c7eaacb",
+    "run": 37091898727,
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original full-world spaceaccept/save/reload baseline versus actual scriptless Sprite3D PREDELETE rendering-base detachment; unchanged live properties; diagnosis only",
+    "status": "Dispatched distinct native comparison; initial checkout step observed; no terminal verdict"
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
