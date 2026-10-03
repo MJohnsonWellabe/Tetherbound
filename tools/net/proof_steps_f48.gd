@@ -752,6 +752,88 @@ static func _capture_input_state(tree: SceneTree) -> Dictionary:
 		"capture_active": str(captures.get("_active")) if captures != null else "missing_capture_service",
 		"capture_requests": requests.size() if requests is Dictionary else -1}
 
+static func _capture_pending_object(value: Variant, expected: Variant = null) -> Dictionary:
+	# Object IDs are observations, never deserialized ownership or replacement refs.
+	var data := {"variant_type": typeof(value), "valid": is_instance_valid(value)}
+	if not is_instance_valid(value): return data
+	if value is Object:
+		data["instance_id"] = value.get_instance_id()
+	if value is WeakRef:
+		var target: Variant = value.get_ref()
+		data["target_valid"] = is_instance_valid(target)
+		if is_instance_valid(target) and target is Object:
+			data["target_instance_id"] = target.get_instance_id()
+			data["matches_current"] = is_instance_valid(expected) and target == expected
+	return data
+
+static func _capture_pending_source(value: Variant) -> Dictionary:
+	# These production rows/pending dictionaries contain portable data only.
+	# Retain all fields and original Variant numeric types beside readable JSON.
+	return {"variant_type": typeof(value), "value": value.duplicate(true) if value is Dictionary or value is Array else value,
+		"variant_hex": var_to_bytes(value).hex_encode()}
+
+static func _capture_pending_diagnostic(game: Node) -> Dictionary:
+	# One synchronous observation at the refused close boundary. No save, retry,
+	# ACK, setter, input or wait; an unknown service never becomes a clear fence.
+	var data := {"observed_at_tick_usec": Time.get_ticks_usec(), "game_present": is_instance_valid(game)}
+	if not is_instance_valid(game): return data
+	var session: Variant = game.get("session")
+	var player: Variant = game.get("local")
+	var world: Variant = game.get("world")
+	data["session"] = _capture_pending_object(session)
+	data["player"] = _capture_pending_object(player)
+	data["world"] = _capture_pending_object(world)
+	if not is_instance_valid(session) or not session is Node: return data
+	data["transport_epoch"] = session.call("_altar_current_epoch")
+	data["snapshot_ready"] = session.call("snapshot_ready")
+	var host: Variant = session.call("is_host")
+	data["is_host"] = host
+	data["is_host_variant_type"] = typeof(host)
+	var transport: Variant = session.get("_peer")
+	data["transport"] = _capture_pending_object(transport)
+	if is_instance_valid(transport) and transport is MultiplayerPeer:
+		data["transport_connection_status"] = transport.get_connection_status()
+	if is_instance_valid(player) and player is RefCounted:
+		data["character_id"] = player.get("character_id")
+		var portal_pending: Variant = session.call("_pending_portal_for", str(player.get("character_id")))
+		data["portal_pending"] = portal_pending
+		data["portal_pending_variant_type"] = typeof(portal_pending)
+		var blocked: Variant = session.call("_owner_training_mutation_blocked", player)
+		data["mutation_blocked"] = blocked
+		data["mutation_blocked_variant_type"] = typeof(blocked)
+	if is_instance_valid(world) and world is RefCounted:
+		data["world_id"] = world.get("world_id")
+		data["world_namespace"] = world.get("reward_delivery_namespace")
+	var retry: Variant = session.get("_owner_training_retry")
+	data["retry_variant_type"] = typeof(retry)
+	if retry is Dictionary:
+		var scalars: Dictionary = retry.duplicate(true)
+		var weak_sources := {}
+		for field: String in ["player", "world", "release_instance"]:
+			if not retry.has(field): continue
+			var expected: Variant = player if field == "player" else world if field == "world" else null
+			weak_sources[field] = _capture_pending_object(retry[field], expected)
+			scalars.erase(field)
+		if retry.has("capture_originals") and retry.capture_originals is Array:
+			var originals: Array = []
+			for original: Variant in retry.capture_originals: originals.append(_capture_pending_object(original))
+			weak_sources["capture_originals"] = originals
+			scalars.erase("capture_originals")
+		data["retry"] = {"keys": retry.keys(), "scalar_source": _capture_pending_source(scalars), "weak_sources": weak_sources}
+	data["owner_training_row"] = _capture_pending_source(session.call("_owner_training_row"))
+	for field: String in ["_owner_passive", "_groom_passive"]:
+		var service: Variant = session.get(field)
+		var observation := _capture_pending_object(service)
+		if is_instance_valid(service) and service is RefCounted:
+			observation["pending"] = _capture_pending_source(service.get("pending"))
+			if field == "_owner_passive":
+				var local: Variant = service.get("local")
+				observation["local_variant_type"] = typeof(local)
+				observation["local_error_present"] = local is Dictionary and local.has("error")
+				if local is Dictionary and local.has("error"): observation["local_error"] = _capture_pending_source(local.error)
+		data[field.trim_prefix("_")] = observation
+	return data
+
 static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
 	# An accepted free-slot catch leaves the real Creatures menu open. Finish
 	# that presentation with ordinary input only after all catch work settled.
@@ -763,6 +845,7 @@ static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
 		or captures.get_script() != preload("res://scripts/net/foundation_capture.gd") \
 		or game.pending_catch != null or not before.capture_active.is_empty() or before.capture_requests != 0 \
 		or game.session.call("_owner_training_mutation_blocked", game.local) == true:
+		data["pending_diagnostic"] = _capture_pending_diagnostic(game)
 		return _result(false, "Accepted catch presentation still has pending catch/owner/capture work; no close input sent", data)
 	var owner := INPUT_OWNER.current(tree)
 	if owner == null:
