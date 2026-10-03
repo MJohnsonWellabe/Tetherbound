@@ -842,7 +842,7 @@
           "phase": "timeout_before_finish"
         },
         "limits": "Disclosedpost-finale/current fixtures/headless/harnessinput. No#4closure or guestcause measured. Changeapproach to scoped2peer guestHome-onlydiagnostic onoriginalbudget rather than repeatinglonghostdialogue justtoreachguest. Full#4 proofstillrequired.",
-        "independent_review": "pending f20_review exactfailedscope audit"
+        "independent_review": "PASS f20_review exactZIP/coordinator/host/guest/native/user hashes/zeroerrors/fatalempty/205s commandtimeout audit. Hostnative11tap/prose/creditsopen duringforcedteardown do not constitute acceptedtalkverdict/Skip/ACK; guestHomeunreached. Peer/coordinator ticks notcomparable; #4OPEN."
       }
     ],
     "limitations": [
@@ -1053,7 +1053,18 @@
       "mode": "headless",
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094641926",
-      "status": "in progress; affected ordinaryidlepublication proof, noresultclaimed"
+      "status": "in progress; affected ordinaryidlepublication proof, noresultclaimed",
+      "job": 111121964490
+    },
+    "net_r8": {
+      "run": 37094965898,
+      "job": 111122919883,
+      "source": "81318b919d28c099c511b2e8730feed18045b524",
+      "script": "tests/smoke_net_f20_home_diagnostic.gd",
+      "mode": "headless",
+      "timeout_minutes": 15,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37094965898",
+      "status": "in progress; bounded guestHome-only two-real-peer diagnostic with detachedlossless ownerplan/current/before/after observer, NOT#4acceptance; noresultclaimed"
     }
   },
   "lesson_input_driver": {
@@ -1132,7 +1143,7 @@
     "source": "cd7f80204aaf6397971aabc0641faa2b654f641c",
     "source_delta": "e34c64f009 adds15 F20-only lines; cd7 replaces decimalJSON with originallosslessSaveDocumentcodec+ENDmarker.",
     "independent_review": "PASS f20_review exacte34+cd7. Pure portableprojection/owner_plan/schema stage and losslesscodec operate on detachedrecords; no apply/save/ACK/input/deadline mutations. PlayerState.save_data may initialize absent map caches generally; exact F20 path has two prior production saves that initialize allmaps, so observer is read-only on this already-saved fixture path. Once per original nonempty local pending receipt.",
-    "runtime": "Existing net-r7 e39 stopsat hostcommanddeadline beforeguestHome. Reviewedcd7 comparison stillunexercised; scoped2peer guestHome diagnostic81318sourceunderreview, originaltimeouts retained.",
+    "runtime": "Affected net-r8 live37094965898/job111122919883 exact81318 includes reviewedcd7; guestHome-onlydiagnosticNOT#4, no pureplan/apply/saveBOOL result yet.",
     "disk_lead": "Exact net-r6 PERSISTED guest portable projection differs from hostrow.before only by party0..4 happiness/nourishment (10fields). Disk is not livecurrent, so this is a lead, not an ownerplan/cause verdict.",
     "derived_disk_diff": "f20-net-r6-disk-projection-diff.json"
   },
@@ -1147,7 +1158,11 @@
     "source": "81318b919d28c099c511b2e8730feed18045b524",
     "script": "tests/smoke_net_f20_home_diagnostic.gd",
     "independent_review": "PASS f20_review exact18lines/dynamic_initialize/async/inheritedbudgets/spawn/isolation/cleanup. Two actualENetpeers host/join/registry thenoriginalguestf20_return only; explicit NOT#4acceptance and fullproof retained.",
-    "runtime": "Affectedscopeddiagnostic pending; noresultclaimed.",
+    "runtime": "AffectedguestHome-onlynet-r8 live37094965898/job111122919883 exact81318. Noresultclaimed; full#4acceptance stillrequired.",
     "reason": "Actualnet-r7 host205s command noverdict preventsguestobserver. Narrowto originalguestHome path to measure ownerplan/current/before/after, no timeoutincrease or sharedSession edit."
+  },
+  "resource_direction": {
+    "local": "AbsolutehumanValheim localGodot/render/import/GPU pause remains; norelease inferred.",
+    "conditional_usage": "Coordinator relays explicit owner direction to save/push allsessions andwinddown at<=10%remaining in any reportedcorewindow; noresetconsumption/resumeafterreset. Latestreadweekly39%used/61%remaining; otherwindowunavailable, thresholdnotreached."
   }
 }

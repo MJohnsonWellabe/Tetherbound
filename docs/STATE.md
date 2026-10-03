@@ -34,7 +34,7 @@ total-proof allowance1500s `b066552af9` passes independent source review; actual
 Host disk has guest portal_arrival pending, guest portable disk lacks the new receipt; fresh668ms heartbeat,
 no globalfatal or engine-script errors. Owner apply/save/ACK remains unproved; reviewedF20-only raw observer `e39a361e7c` has
 actualnet-r7 (37093999890) hits hostGrandpa205s deadline beforeguestHome; nativecreditsopens duringteardown,
-coordinatorcommand notPASS. Reviewed `81318b919d` scopes nextdiagnostic to twoactualpeers/guestHome only; full#4stillrequired; per-command205s/readiness180s/productionACK8s remain unchanged.
+coordinatorcommand notPASS. Reviewed `81318b919d` guestHome-only2peer diagnostic net-r8 (37094965898) is live; full#4stillrequired; per-command205s/readiness180s/productionACK8s remain unchanged.
 #4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
 isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
 no further blind render retry or shared-world edit. No local engine/GPU while the owner plays Valheim. Exact original
