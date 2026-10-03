@@ -333,7 +333,7 @@ func _buy_care_basket(panel: Node) -> bool:
 			if focused < 0:
 				_fail("care purchase lost real controller focus")
 				return false
-			await _tap_action(&"ui_down" if focused < index else &"ui_up")
+			await _tap_shop_action(&"ui_down" if focused < index else &"ui_up")
 		if not target.has_focus() or INPUT_OWNER.current(_tree) != panel:
 			_fail("care purchase controller did not reach the actual potion row")
 			return false
@@ -344,7 +344,33 @@ func _buy_care_basket(panel: Node) -> bool:
 		var active_before := int(party.call("active_index"))
 		var before_coin := int(inventory.call("count", coin))
 		var before_potions := int(inventory.call("count", "potion_small"))
-		await _tap_action(&"menu_confirm")
+		var binding := _event_for(&"menu_confirm", true)
+		if binding == null:
+			_fail("shop confirmation has no physical pad binding")
+			return false
+		var player_state: RefCounted = _game.get("local")
+		print("F17 SHOP INPUT PRE_EDGE " + JSON.stringify({"purchase": purchase + 1,
+			"ui_accept_held": Input.is_action_pressed("ui_accept"), "menu_confirm_held": Input.is_action_pressed("menu_confirm"),
+			"interact_held": Input.is_action_pressed("interact"), "target_focused": target.has_focus(),
+			"binding_device": binding.device, "binding": binding.as_text(),
+			"pressed_connections": target.get_signal_connection_list("pressed").size(),
+			"inventory_guard_blocked": bool(inventory.call("_owner_mutation_blocked")),
+			"same_panel_inventory": panel.call("_inventory") == inventory,
+			"same_player_inventory": player_state != null and player_state.get("inventory") == inventory,
+			"scope": "read-only live input, focus, identity and guard observation; no bypass"}))
+		var edges := [0, 0, 0]
+		target.button_down.connect(func() -> void: edges[0] += 1)
+		target.button_up.connect(func() -> void: edges[1] += 1)
+		target.pressed.connect(func() -> void: edges[2] += 1)
+		await _tap_shop_action(&"menu_confirm")
+		print("F17 SHOP INPUT OBSERVATION " + JSON.stringify({"purchase": purchase + 1,
+			"button_down": edges[0], "button_up": edges[1], "pressed": edges[2],
+			"coin_before": before_coin, "coin_after": int(inventory.call("count", coin)),
+			"potions_before": before_potions, "potions_after": int(inventory.call("count", "potion_small")),
+			"message": str((panel.get("_message") as Label).text), "paused": _tree.paused,
+			"menu_confirm_released": not Input.is_action_pressed("menu_confirm"),
+			"party_unchanged": _shop_party_states(party) == creature_states,
+			"scope": "read-only GUI event and actual paid-state observation"}))
 		if int(inventory.call("count", coin)) != before_coin - price \
 				or int(inventory.call("count", "potion_small")) != before_potions + 1 \
 				or party.call("members") != party_before or int(party.get("revision")) != party_revision \
@@ -370,6 +396,30 @@ func _shop_labels(node: Node) -> Array[String]:
 	for child: Node in node.get_children():
 		out.append_array(_shop_labels(child))
 	return out
+
+
+func _tap_shop_action(action: StringName) -> void:
+	var event := _event_for(action, true)
+	if event == null:
+		_fail("shop action has no physical pad binding: " + str(action))
+		return
+	Input.parse_input_event(event)
+	Input.flush_buffered_events()
+	# Buttons consume GUI input at idle delivery; separate press and release
+	# across process frames even when several physics ticks share one idle.
+	await _tree.process_frame
+	for _frame in 3:
+		await _tree.physics_frame
+	var released := event.duplicate() as InputEvent
+	if released is InputEventJoypadButton:
+		(released as InputEventJoypadButton).pressed = false
+	elif released is InputEventJoypadMotion:
+		(released as InputEventJoypadMotion).axis_value = 0.0
+	Input.parse_input_event(released)
+	Input.flush_buffered_events()
+	await _tree.process_frame
+	for _frame in 5:
+		await _tree.physics_frame
 
 
 func _inventory_counts(inventory: RefCounted) -> Dictionary:
