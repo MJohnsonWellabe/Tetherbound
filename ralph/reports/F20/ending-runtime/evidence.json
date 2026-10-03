@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake criterion0 independently MET on candidate. Remote solo r4 proves actual saved Home Key arrival, then fails strict fifth-key save validation because merged validation input lacks world locator. Delegated narrow SaveGame fix231ad9cc reviewed and remote disk checks37082210657 failed only new test parsing; explicit types corrected in8a3ce18047, r2 checks37083030264 and actual solo-r5 37083033029 pending. Net r1 reaches two real peers/host Home Key, then no fifth verdict; missing original peer evidence corrected in reviewed afde2bacc2 without changing deadlines. Criteria1-4 remain OPEN; local renderer/audio suspended while owner plays Valheim.",
+    "reason": "Tidewake criterion0 independently MET on candidate. Actual saved Stormwood Home Key passed in solo r4; failed fifth owner save led to strict detached locator projection231ad9ccc3. Corrected named disk run37083030264 passes12tests104assertions0failed, no engine/script errors. Actual solo-r5 37083033029 and corrected two-peer net-r2 are running remote; local renderer/audio suspended while owner plays Valheim. Actual criteria1-4 remain OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -288,7 +288,7 @@
   "delegated_locator_fix": {
     "source": "231ad9ccc320986a97473d6d5cbfc3f18c0d6afc",
     "independent_source_review": "PASS f20_review; detached actual-live/save-disk-locator projection, strict row validation, serialized schema and root fe40 preidentity guard preserved",
-    "runtime": "r1 remote37082210657 FAIL new regression parse (two inferred Variant warnings); existing113 tests973 assertions PASS within failed run. Corrected test-only8a3ce18047 source review PASS; r2 remote dispatch pending terminal result.",
+    "runtime": "PASS remote37083030264 on8a3ce18047:12tests104assertions0failed nativeexit0/took6s; all3 dedicated disk regression cases and9 authoritative split slot load cases; zero engine/script errors; expected refusal warnings retained. Fixture-only save identity coverage, no actual ending acceptance.",
     "selected": "f20_portal_save_identity,character_save_format,save_format,authoritative_split_load",
     "scope": "Three dedicated typed-state fixtures with real owner/world/slot disk writers and loader; no actual world/input/campaign claim.",
     "first_actual_existing_files": [
@@ -303,7 +303,30 @@
       "f20-portal-locator-r1-workflow.log.gz",
       "f20-portal-locator-r1-artifact.zip"
     ],
-    "integration_candidate": "Coordinator independently reviewed and integrated production231 as ae690f2852; required integration CI pending, no main claim."
+    "integration_candidate": "Coordinator independently reviewed and integrated production231 as ae690f2852; required integration CI pending, no main claim.",
+    "second_result": {
+      "run": 37083030264,
+      "job": 111087475920,
+      "artifact": 11259399403,
+      "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+      "verdict": "PASS",
+      "tests": 12,
+      "assertions": 104,
+      "failures": 0,
+      "exit_code": 0,
+      "engine_script_errors": 0,
+      "native_bytes": 4901,
+      "native_sha256": "2386545a5b936bc562454e13c8ac3520be4e2b2e5b97018b3d488db6448d2107",
+      "artifact_bytes": 2813,
+      "artifact_sha256": "97d94f00ce4ede98678356dd6280013544bcaf65ee7b4280bfb05804b9ca6f6f",
+      "logs": [
+        "f20-portal-locator-r2-native.log.gz",
+        "f20-portal-locator-r2-workflow.log.gz",
+        "f20-portal-locator-r2-artifact.zip"
+      ],
+      "independent_review": "PASS f20_review \u00a77.2: original ZIP/native hashes match, all3 new disk+9 split loader cases executed, native user godot.log corroborates; no engine/script errors in either. Expected refusal warnings retained. Source unchanged from8a3. No actual ending/input/campaign/visual/audio/two-peer acceptance.",
+      "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
+    }
   },
   "remote_pending": {
     "solo_r5": {
@@ -314,14 +337,15 @@
       "timeout_minutes": 30,
       "run": 37083033029
     },
-    "portal_locator_r2": {
+    "net_r2": {
+      "run": 37083772545,
+      "job": 111089712050,
       "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
-      "script": "tests/run_tests.gd",
-      "args": "--only=f20_portal_save_identity,authoritative_split_slot_load",
-      "label": "f20-portal-save-locator-r2",
+      "script": "tests/smoke_net_f20_ending.gd",
+      "label": "f20-net-r2-locator",
       "mode": "headless",
-      "timeout_minutes": 15,
-      "run": 37083030264
+      "timeout_minutes": 20,
+      "scope": "Two actual ENet peers with own collected peer logs/JSON/disk; original hello/step/heartbeat deadlines unchanged."
     }
   }
 }
