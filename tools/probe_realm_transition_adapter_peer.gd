@@ -510,7 +510,14 @@ func _fixture_permission_request() -> void:
 	var remote: Dictionary = arrival.get("_remote")
 	if remote.has(peer): _fail("transport fixture cannot replace another retained arrival"); return
 	_fixture_original = {"session": weakref(session), "world": weakref(world),
-		"envelope": envelope, "permit": permit, "owner_saved": false}
+		"envelope": envelope, "permit": permit, "owner_saved": false,
+		"arrival": weakref(arrival), "arrival_processing": arrival.is_processing()}
+	# This probe supplies only a departure predicate after the origin save.
+	# Its partial fixture cannot drive the separate full arrival-save producer.
+	# Keep the actual authorization methods/coordinator alive, then restore
+	# the producer only after retiring this exact injected fixture.
+	arrival.set_process(false)
+	if not _check(not arrival.is_processing(), "transport-only predicate fixture isolates the full arrival-save producer"): return
 	remote[peer] = _fixture_original
 	if not _check(arrival.call("transition_authorized", peer, TARGET) == false,
 		"consumed transport fixture alone cannot replace the prepared origin save"): return
@@ -639,12 +646,7 @@ func _arrived() -> void:
 	var streams: Dictionary = passive.get("hosts") if passive != null else {}
 	if not _check(passive != null and is_same(streams.get(character, {}).get("checkpoint"), _fixture_original.passive_checkpoint),
 		"actual arrival retires only the exact disclosed component checkpoint"): return
-	var stream: Dictionary = streams[character]
-	if _fixture_original.passive_checkpoint_was_present: stream["checkpoint"] = _fixture_original.passive_original_checkpoint
-	else: stream.erase("checkpoint")
-	if not _fixture_original.passive_stream_was_present and stream.is_empty(): streams.erase(character)
-	remote.erase(peer)
-	_fixture_original = {}
+	if not _check(_retire_transport_fixture(), "transport fixture cleanup restores the original arrival producer processing"): return
 	if latejoin_mode:
 		_check(not (transition.get("origins") as RefCounted).get("rows").is_empty(), "completed departure retains live origin policy")
 		departed_motion_before = _body(TARGET, int(ids.departing)).position.x
@@ -706,6 +708,9 @@ func _finish_local() -> void:
 	if observation_only and not failed:
 		print("ADAPTER OBSERVATION reached normal completion; no acceptance credit")
 		return
+	if not _retire_transport_fixture():
+		failed = true
+		print("ADAPTER FAIL %s transport fixture source changed before shutdown cleanup" % role)
 	stopping = true
 	set_physics_process(false)
 	transition.set_process(false)
@@ -761,6 +766,38 @@ func _finish_local() -> void:
 		owned_peer.close()
 	session.set("_peer", null)
 	get_tree().quit(1 if failed else 0)
+
+func _retire_transport_fixture() -> bool:
+	if _fixture_original.is_empty(): return true
+	var original: Dictionary = _fixture_original
+	var arrival: Node = original.arrival.get_ref()
+	var passive: RefCounted = original.get("passive").get_ref() if original.get("passive") is WeakRef else null
+	var owned := true
+	if original.has("passive") and passive == null: owned = false
+	if passive != null:
+		var streams: Dictionary = passive.get("hosts")
+		var character: String = str(original.passive_character)
+		var stream: Dictionary = streams.get(character, {})
+		if not is_same(stream.get("checkpoint"), original.passive_checkpoint):
+			owned = false
+		else:
+			if original.passive_checkpoint_was_present: stream["checkpoint"] = original.passive_original_checkpoint
+			else: stream.erase("checkpoint")
+			if not original.passive_stream_was_present and stream.is_empty(): streams.erase(character)
+	if is_instance_valid(arrival):
+		var remote: Dictionary = arrival.get("_remote")
+		var peer: int = int(original.permit.peer_id)
+		if is_same(remote.get(peer), original): remote.erase(peer)
+		else: owned = false
+		arrival.set_process(original.arrival_processing)
+		owned = owned and arrival.is_processing() == original.arrival_processing
+	else:
+		owned = false
+	_fixture_original = {}
+	return owned
+
+func _exit_tree() -> void:
+	_retire_transport_fixture()
 
 func _ordered_shutdown() -> void:
 	var transport := multiplayer.multiplayer_peer

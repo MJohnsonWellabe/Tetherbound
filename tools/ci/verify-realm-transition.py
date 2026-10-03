@@ -140,9 +140,9 @@ def native(mode, port):
             time.sleep(0.05)
         # Host adds three prepared-permit controls and the exact checkpoint
         # cleanup check at arrival. All original checks remain required.
-        fixed_counts = {"baseline": {"host": 38, "departing": 33, "staying": 23},
-                        "cancel": {"host": 31, "departing": 36, "staying": 23},
-                        "latejoin": {"host": 35, "departing": 33, "latejoin": 27}}
+        fixed_counts = {"baseline": {"host": 40, "departing": 33, "staying": 23},
+                        "cancel": {"host": 33, "departing": 36, "staying": 23},
+                        "latejoin": {"host": 37, "departing": 33, "latejoin": 27}}
         for row in rows:
             count = str(fixed_counts[mode][row["role"]])
             expected = rf"^ADAPTER RESULT {row['role']} checks={count} failed=false$"
