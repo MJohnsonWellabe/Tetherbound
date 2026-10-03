@@ -28,15 +28,15 @@ func _run_diagnostic() -> void:
 	if _game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-masked-materials"]:
+	for treatment: String in ["baseline", "retain-stronghold-masked-surfaces"]:
 		_treatment = treatment
 		print("F19 WORLD MATERIAL BEGIN " + JSON.stringify({
 			"treatment": treatment, "acceptance": false,
 			"scope": "Original space-accept with actual save/reload; original gameplay fixtures retained"}))
 		await _scenario(treatment, 4, "accept", "")
 		for frame in 3: await process_frame
-		if treatment == "retain-masked-materials" and _retained_total == 0:
-			_fail("Masked mesh material counterfactual observed no retained actual Materials")
+		if treatment == "retain-stronghold-masked-surfaces" and _retained_total == 0:
+			_fail("Stronghold masked surface counterfactual observed no retained actual Materials")
 		print("F19 WORLD MATERIAL END " + JSON.stringify({"treatment": treatment, "failures": _failures}))
 	# Keep the final world's actual resources alive through its destruction.
 	_observe_world("pre-world-delete")
@@ -113,6 +113,14 @@ func _observe(node: Node, state: Dictionary) -> void:
 		state["geometry_count"] = int(state["geometry_count"]) + 1
 		var classes: Dictionary = state["geometry_classes"]
 		classes[node.get_class()] = int(classes.get(node.get_class(), 0)) + 1
+		if _treatment == "retain-stronghold-masked-surfaces" and node is MeshInstance3D \
+				and str(node.get_path()).contains("/Stronghold/"):
+			var instance := node as MeshInstance3D
+			if instance.mesh != null:
+				for surface in instance.mesh.get_surface_count():
+					var active := instance.get_active_material(surface)
+					var surface_override := instance.get_surface_override_material(surface)
+					if surface_override != active: _hold(surface_override)
 		if _treatment == "retain-masked-materials":
 			if node is MeshInstance3D:
 				var instance := node as MeshInstance3D
