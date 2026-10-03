@@ -7711,8 +7711,8 @@
   },
   "pending_dispatches": [],
   "coordinator_baseline_dependency": {
-    "status": "WAIT reviewed main-green matched dependency group per explicit coordinator hold",
-    "last_thread_status": "systemError/lastturnfailed when read; followup sent",
+    "status": "BLOCKED on reviewed main-green matched group, explicit hold revalidated in threeconsecutivegoalturns",
+    "last_thread_status": "active/inProgress; previous systemError was resumed by authorized followup",
     "native_arrival_source": "2bdd48645ea778b59f2b6dd256a0c5b17de94b41",
     "native_arrival_is_approved_f18_dependency_group": false,
     "queried_original_handles": [
@@ -7727,9 +7727,67 @@
         "tested_source": "d354e71721762f21d93c3544e2c5b2bb6177b2d8",
         "status": "completed",
         "conclusion": "failure"
+      },
+      {
+        "id": 37109795953,
+        "display_title": "render main-green-f48-loop-forge-route-r15 @ 46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
+        "head_sha": "46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
+        "status": "completed",
+        "conclusion": "failure",
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37109795953"
       }
     ],
     "f18_engine_gpu_local_hold": true,
     "no_broad_journey_dispatch_or_movingintegration_import": true
+  },
+  "blocked_audit": {
+    "observed_utc": "2026-10-03 08:39:18 UTC",
+    "objective": "ALL six F18 criteria proved and delivered for main integration; scope unchanged",
+    "disposition": "External baseline impasse confirmed; goal blocked, never complete",
+    "reviewer": "Independent strict read-only GPT-6.1 Sol f18_sol_review",
+    "review_verdict": "No concrete necessary safely independent owned implementation or proof remains under current explicit coordinator hold. Additional component fixtures/repeating passes cannot resolve remaining full acceptance.",
+    "blocking_condition": "Coordinator explicitly forbids moving-integration imports and broad earned/co-op journeys until reviewed main-green matched dependency group supplied; nativearrival2bdd48645ea778b59f2b6dd256a0c5b17de94b41 explicitly is not that group. No approvedgroup supplied.",
+    "consecutive_goal_turns_same_condition": [
+      {
+        "id": "01a10081-b344-7741-923e-fb066c0b293a",
+        "classification": "progress: native swim/flight and observer source/lifetime proof; same group still held"
+      },
+      {
+        "id": "01a100d5-e834-7470-9e37-04f811762ab1",
+        "classification": "progress: exactPCM/nonmutation native chime export proof; same group still held"
+      },
+      {
+        "id": "01a100e3-f7cb-7b10-9614-9dd2ffeffe28",
+        "classification": "verified live upstream loop handle then revalidated terminalFAIL; no independent safe fullacceptance action; same group still held"
+      }
+    ],
+    "latest_coordinator_thread_status": "active/inProgress",
+    "latest_coordinator_handle": {
+      "id": 37109795953,
+      "display_title": "render main-green-f48-loop-forge-route-r15 @ 46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
+      "head_sha": "46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37109795953"
+    },
+    "own_pending_dispatches": [],
+    "all_six_criteria": {
+      "F18#0": "UNPROVEN",
+      "F18#1": "UNPROVEN",
+      "F18#2": "UNPROVEN",
+      "F18#3": "UNPROVEN",
+      "F18#4": "UNPROVEN",
+      "F18#5": "UNPROVEN"
+    },
+    "remaining_proofs": [
+      "ordinary earned HomeKey return/raise/glow/audio on matched production group",
+      "actual durable reload and portal-key consumption/return",
+      "individual/host-world/personal unlock and portable cross-host co-op travel",
+      "main integration accepted after exactsource verification"
+    ],
+    "saved_source_evidence_head": "7c93cf145a55bd3b849ac3a763abd13cbf92f205",
+    "resumption_condition": "Coordinator supplies reviewed main-green matched source/dependency group to this F18 task; then restore full ordinary/coop proof work",
+    "local_engine_gpu_hold": true,
+    "no_user_action_requested_now": true
   }
 }
