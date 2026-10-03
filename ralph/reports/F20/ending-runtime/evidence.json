@@ -1174,7 +1174,8 @@
       "mode": "headless",
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37096904861",
-      "status": "queued; strengthened actual nonmaster endgame rematch admission after fullending/reload/continuation, no resultclaimed"
+      "status": "in progress; current hosted job111128574981 confirmed live, no resultclaimed",
+      "job": 111128574981
     }
   },
   "lesson_input_driver": {
@@ -1295,5 +1296,12 @@
     "cleanup": "Terminalisolatedfixture quits duringgenuinelyadmittedtrainerfight; flee prohibitedbyproduction. No win/payout/recovery claim; safemovementprovedbeforeadmission.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact c184 plus e782: actualsource/spec/livebody/fight gates sound, existinglessonwrapper cleanup correctly retained. Original8/2clocksettling/NAV/recovery/input/admission bounded; affectedactualsolo required.",
     "runtime": "Strengthenedactual solo-r16 dispatched37096904861 exactc184; no resultclaimed, #3OPEN."
+  },
+  "home_begin_refusal_proof": {
+    "source": "7fefaea2ed86a4328b537903a74c513a811b8f95",
+    "change": "F20-only portalresult override retainsoriginalsuper finish behavior. Explicit failedhome_key_begin matchingcurrentcharacter/world populates existingrefusalresult; inheritednormalUse loop reports terminalrefusal promptly. Acceptedbegin never satisfiesarrival; successfulfinish/readyworld/keycount/UID/budgets unchanged.",
+    "reason": "Actualnet-r8 emittedexplicitbeginrefusal Not during a fight but sharedhelperonlyobservedfinish; 7200idlewait yielded205snoverdict. Refusalreason doesnotprove actualcombatencounter: hostcombatguard alsofailcloseswhennohostdirector/retainedpendingstate.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact9lines/virtualsignalbinding/superfinishpreserved/ownidentity and productionfrozenrequest+kind+char+world+epochvalidation before signal. No falsegreen/type/parser issue.",
+    "runtime": "Affectedcompletepeer replay pending rootarrivaldependency; no runtimeclaim."
   }
 }
