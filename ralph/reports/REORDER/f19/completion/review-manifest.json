@@ -212,6 +212,18 @@
   "next_occupation_component": {
     "script": "tests/probe_f19_occupation_material_lifetime.gd",
     "scope": "Actual Stronghold glow factory plus occupation._unlight, baseline versus hidden surface copy retained; Compatibility/drawingfalse; report active emission versus hidden copy.",
-    "status": "Prepared, not yet dispatched"
+    "status": "Terminal negative lifetime reproduction: occupation-material-component.json; active emission stays enabled; no production correction justified by isolated teardown result",
+    "source_commit": "9aa835b18d8956913a60f7267b16be487cea4ad0",
+    "run": 37099817944,
+    "job": 111136999807,
+    "artifact": 11265860516
+  },
+  "next_stronghold_masked_surface_diagnostic": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original baseline versus only hidden per-surface override Materials under actual Stronghold. No mesh-surface Materials, MultiMesh, active Materials, particle, Terrain or Mesh resources retained. Original prompt guards and save/reload remain unchanged.",
+    "status": "Dispatched; queued; no terminal result or acceptance claim",
+    "source_commit": "35b0fe616be4b60230cba8635b1926b3695dcebb",
+    "run": 37100322208,
+    "job": 111138410545
   }
 }

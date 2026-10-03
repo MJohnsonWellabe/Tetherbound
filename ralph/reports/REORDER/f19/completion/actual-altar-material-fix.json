@@ -40,7 +40,7 @@
     "coordinator_thread": "01a0fe96-225e-7f92-9b62-d9818a7f2e15",
     "verdict": "PASS exact production two-file commit; coordinator inspected both raw native originals",
     "integration_commit": "1fbd41c0f0",
-    "actual_paid_f48_replay": "Pending coordinator replay/service fixes; not main-green proof"
+    "actual_paid_f48_replay": "Verified original native paid Altar step at 37097792318, raw driver and peer retained below; whole producer/package remains separate"
   },
   "paid_f48_replay": {
     "run": 37097792318,
