@@ -19,6 +19,7 @@ var _arena: Node3D
 var _target: CharacterBody3D
 var _attackers: Dictionary = {}
 var _stage := ""
+var _target_x := 3.0
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -102,7 +103,8 @@ func _run() -> void:
 		_arena.add_child(_target)
 		_target.call("setup", str(_scenarios.get("target_species", "mudsnout")))
 		_target.set_physics_process(false)
-		_target.position = Vector3(3, 0, 0)
+		if _stage == "meadows": _target_x = float((_scenarios.stage as Dictionary).get("target_x", 3.0))
+		_target.position = Vector3(_target_x, 0, 0)
 		_target.rotation.y = -PI * 0.5
 		if not bool(_target.call("has_model")):
 			push_error("Identity evidence requires the actual production creature model"); quit(1); return
@@ -225,9 +227,11 @@ func _exercise_light_lifecycle() -> void:
 			effect.connect("arrived", func() -> void: natural_arrivals[0] += 1)
 	checks["natural_five_actual_nodes"] = natural.size() == 5
 	var peak := BUDGET.lights_used()
-	var deadline := Time.get_ticks_msec() + 8000
+	# Same 8 s allowance on the presentation (idle) clock the effects age on;
+	# a slow software renderer cannot expire it before the nodes could finish.
+	var deadline := create_timer(8.0, false)
 	removed = false
-	while Time.get_ticks_msec() < deadline:
+	while deadline.time_left > 0.0:
 		await process_frame
 		peak = maxi(peak, BUDGET.lights_used())
 		removed = true
@@ -298,11 +302,11 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var started := Time.get_ticks_usec()
 	for i in simultaneous:
 		var z := float(i) * 2 - float(simultaneous - 1)
-		var to := Vector3(3, 1.5, z)
+		var to := Vector3(_target_x, 1.5, z)
 		if capture and _target != null: to = _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
 		var frozen := _frozen_move(move_id, spec, rank, "%s:%d" % [encounter, i], encounter, i + 1)
 		var context := {"travel_seconds": travel, "current_actor": frozen.actor_binding,
-			"source_ground": Vector3(-3, 0.04, z), "target_ground": Vector3(3, 0.04, z)}
+			"source_ground": Vector3(-3, 0.04, z), "target_ground": Vector3(_target_x, 0.04, z)}
 		if capture:
 			context["target_visual_bounds"] = {"position": target_bounds.position, "size": target_bounds.size}
 		var from := Vector3(-3, to.y, z)
@@ -348,13 +352,15 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 	var captured := {}
 	var peak := BUDGET.used(encounter)
 	var previous := Time.get_ticks_usec()
-	var timeout := maxi(2000000, int((travel + float(row.impact.duration) + 1) * 1000000))
+	var timeout := maxi(2000000, int((travel + _presentation_lifetime(row) + 1) * 1000000))
 	# Presentation and capture shutters use the idle simulation clock. Movie
 	# encoding/material work may spend wall time without equivalent advancement.
 	# Keep the same lifetime allowance on that clock for captures, plus a finite
 	# wall watchdog. Noncapture profiling retains its original wall deadline.
 	var capture_deadline: SceneTreeTimer = create_timer(float(timeout) / 1000000.0, false) if capture else null
-	var wall_watchdog := 30000000 if capture else timeout
+	# Software renderers draw far slower than the presentation clock; the
+	# authored allowance stays on that clock, the wall watchdog is configurable.
+	var wall_watchdog := int(float(_scenarios.get("capture_wall_watchdog_s", 30.0)) * 1000000.0) if capture else timeout
 	while Time.get_ticks_usec() - started < wall_watchdog:
 		if capture and capture_deadline.time_left <= 0.0: break
 		await process_frame
@@ -418,6 +424,17 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 		"wall_frame_ms": frames, "cpu_process_ms": cpu, "p95_ms": _percentile(frames, 0.95), "p99_ms": _percentile(frames, 0.99)})
 	LIBRARY.cancel_encounter(self, encounter)
 	await process_frame
+
+## Impact plus any authored aftermath (lingering chips, ground marks) the
+## node keeps drawing after contact; flight-phase stages end before contact.
+func _presentation_lifetime(row: Dictionary) -> float:
+	var impact: Dictionary = row.impact
+	var lifetime := float(impact.get("duration", 0.45))
+	var stages: Dictionary = impact.get("stages", {})
+	lifetime += maxf(0.0, float(stages.get("mote_linger_seconds", 0.0)))
+	for kind: String in ["flash", "shockwave", "mark"]:
+		if stages.get(kind) is Dictionary: lifetime = maxf(lifetime, float((stages[kind] as Dictionary).get("duration", 0.0)))
+	return lifetime
 
 func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds: AABB) -> Dictionary:
 	var result := {"fraction": float(_scenarios.capture_phases.flight), "clear_transit_required": false}

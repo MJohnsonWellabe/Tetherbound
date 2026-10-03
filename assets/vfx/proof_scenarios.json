@@ -118,13 +118,13 @@
     "muzzle_height_ratio": 0.62,
     "camera": {
       "position": [
-        -0.6,
-        2.9,
-        10.0
+        0.4,
+        3.0,
+        11.2
       ],
       "look_at": [
-        -0.4,
-        1.3,
+        0.4,
+        1.2,
         0.0
       ],
       "fov": 46.0
@@ -421,16 +421,6 @@
         "yaw_deg": 209
       },
       {
-        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
-        "position": [
-          2.76,
-          0,
-          -1.02
-        ],
-        "scale": 0.89,
-        "yaw_deg": 64
-      },
-      {
         "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
         "position": [
           -5.98,
@@ -541,16 +531,6 @@
         "yaw_deg": 71
       },
       {
-        "scene": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
-        "position": [
-          2.75,
-          0,
-          0.64
-        ],
-        "scale": 0.82,
-        "yaw_deg": 277
-      },
-      {
         "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
         "position": [
           9.47,
@@ -601,6 +581,8 @@
         "yaw_deg": 346
       }
     ],
-    "attacker_front_x": -2.6
-  }
+    "attacker_front_x": -2.4,
+    "target_x": 4.6
+  },
+  "capture_wall_watchdog_s": 120.0
 }
