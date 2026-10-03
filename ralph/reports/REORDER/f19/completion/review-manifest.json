@@ -152,7 +152,8 @@
   "open_acceptance": [
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
     "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups.",
-    "fresh-contact-overflow-rejected.json: normal route reached paid_camp then generic tournament-picker failure after13 frames; four initial gather-stage material errors; no earned checkpoints. Broader rerun held until matched green main."
+    "fresh-contact-overflow-rejected.json: normal route reached paid_camp then generic tournament-picker failure after13 frames; four initial gather-stage material errors; no earned checkpoints. Broader rerun held until matched green main.",
+    "held-tool-material-fix.json: scoped tool cleanup passes62 checks including replacement, owner and external-mount parent deletion. Independent coordinator review/integration pending; normal fresh gather4 causal closure still requires actual route remeasurement after matched green main."
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
@@ -639,10 +640,37 @@
       "scripts/player/tool_hold.gd",
       "tests/smoke_f19_held_tool_material_lifecycle.gd"
     ],
-    "scope": "Release current prop instance finish bindings before replacement and ToolHold PREDELETE. No waits, shared mesh edits, equip/input/gather changes or reference cache. Native regression includes replacement, owner deletion and parent deletion with prop under earlier external mount.",
-    "status": "Native lifecycle result pending; independent coordinator review/integration pending",
+    "scope": "Authored axe/pickaxe finish fixtures assigned to actual shipping ToolHold. Production replacement and PREDELETE paths, including earlier external mount under parent deletion. Active/source/mesh identity retained across removal/re-entry; all private finish WeakRefs expire after actual deletion. Observer holds IDs/WeakRefs only; no Game, equip input, gather or earned acceptance supplied.",
+    "status": "Terminal clean component lifecycle:62 checks/10s/0engine-script-leak errors; coordinator review/integration and actual fresh remeasurement pending",
     "acceptance": false,
     "run": 37113450923,
-    "job": 111175627177
+    "job": 111175627177,
+    "kind": "f19_held_tool_material_cleanup_lifecycle",
+    "artifact": 11271011653,
+    "process_exit": 0,
+    "elapsed_seconds": 10,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "leak_warnings": [],
+    "result": {
+      "checks": 62,
+      "earned_campaign": false,
+      "failures": [],
+      "fixture": "Authored axe/pickaxe props assigned to shipping ToolHold; no Game/input/gather",
+      "observer_state": "IDs and WeakRefs only"
+    },
+    "cases": [
+      "replace axe",
+      "replace pickaxe",
+      "delete-owner axe",
+      "delete-owner pickaxe",
+      "delete-player-with-external-prop axe",
+      "delete-player-with-external-prop pickaxe"
+    ],
+    "actual_fresh_material_errors_closed": false,
+    "independent_review_pending": true,
+    "integration_pending": true,
+    "raw_log": "ci-held-tool-lifecycle-fixed-37113450923.log.gz",
+    "raw_log_sha256": "91d76608f8c7bbbd43cb1da772b9ac37539b0dc2f8949b270fcf8a910dda1f48"
   }
 }
