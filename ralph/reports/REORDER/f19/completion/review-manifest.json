@@ -430,9 +430,32 @@
     "full_choice_witnesses": {
       "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
       "status": "Live original full choice witnesses; terminal raw logs required",
-      "veridian": {"run": 37108379739, "job": 111161260966, "script": "tests/smoke_f19_veridian_functional.gd"},
-      "solmane": {"run": 37108381309, "job": 111161263274, "script": "tests/smoke_f19_solmane_functional.gd"},
+      "veridian": {
+        "run": 37108379739,
+        "job": 111161260966,
+        "script": "tests/smoke_f19_veridian_functional.gd"
+      },
+      "solmane": {
+        "run": 37108381309,
+        "job": 111161263274,
+        "script": "tests/smoke_f19_solmane_functional.gd"
+      },
       "scope": "Entire original six-case choice/save/reload matrices; no resource retention, original guards unchanged"
     }
+  },
+  "fresh_contact_overflow_diagnostic": {
+    "script": "tests/probe_f19_fresh_contact_overflow.gd",
+    "source_commit": "27d2fc2ebb773b85dda2690c9e500f0c925e9bb1",
+    "run": 37109365598,
+    "job": 111164127200,
+    "status": "Live original normal fresh journey with read-only post-refusal contact snapshot; terminal artifact required",
+    "scope": "Inherits original F49 route. Only after original unchanged contact-cap refusal samples first excess point from actual cached CharacterBody slide result. Deferred output; no new query, input/pose/cap changes, seed override, resume, setup or partial promotion.",
+    "shipping_and_f17_helper_identical_to": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+    "acceptance": false
+  },
+  "coordinator_disposition": {
+    "status": "No harvest integration/import approval yet; review deferred until a required root green gate needs the material dependency. Preserve existing root Harvest ready/stock guards. No matched moving portal group approved before actual main green.",
+    "home_key": "Preserve already reviewed monotonic candidate upstream538c971f6fa9355113efdd0f4756aa34f889e210, lane c0a8951cfb; root still has older frame-delta blob.",
+    "fresh_route": "Original contact cap remains8. First8 raw contacts are known; ninth owner awaits actual post-refusal snapshot. No F17 helper edit or cap waiver."
   }
 }
