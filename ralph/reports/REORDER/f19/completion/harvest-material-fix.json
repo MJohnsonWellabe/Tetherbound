@@ -59,5 +59,34 @@
     "raw_log": "ci-solmane-cold-harvest-fixed-37107891893.log.gz",
     "raw_log_sha256": "1438e7c11e781d9cd3b83b581d154542682b1b4688b65caebdf28fdef88eb655",
     "scope": "Original bootstrap/reset/reboot and explicit final deletion, same baseline treatment, no reference retention. Original gameplay fixtures remain disclosed; no choice or earned-play credit."
+  },
+  "full_veridian": {
+    "kind": "f19_actual_veridian_full_harvest_fixed_choice_witness",
+    "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+    "run": 37108379739,
+    "job": 111161260966,
+    "artifact": 11269326853,
+    "process_exit": 0,
+    "elapsed_seconds": 1455,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "leak_warnings": [],
+    "failures": [],
+    "cases": [
+      "space-accept",
+      "space-refuse",
+      "capacity-refuse-at-prompt",
+      "capacity-accept-then-let-newcomer-go",
+      "capacity-accept-release-one",
+      "save-while-choice-open"
+    ],
+    "scope": "Entire original six-case native choice/save/reload driver on the Harvest cleanup source; X11 Compatibility/drawingfalse, selected group all. Original staged victory/party/pose fixtures and original assertions/prompt/cap guards retained. No diagnostic resource retention, earned play, ENet or visual/device credit.",
+    "original_prompt_guards_passed": true,
+    "original_party_cap_guard_passed": true,
+    "choice_open_reload_marker": true,
+    "accepted_clean_choice_witness": true,
+    "earned_campaign": false,
+    "raw_log": "ci-veridian-full-harvest-fixed-37108379739.log.gz",
+    "raw_log_sha256": "4d83727a5314829eda5500a9710fd02242d98912ab102c61dfcf503f2120c4d9"
   }
 }

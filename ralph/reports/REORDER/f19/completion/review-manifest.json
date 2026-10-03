@@ -139,7 +139,8 @@
       "ci-guardian-37074149226.log:120 checks",
       "ci-stormheart-37074151200.log:44 assertions",
       "stormheart-capacity-r2.log:89 assertions",
-      "veridian-complete-clean.json:all six actual native choice/save/reload cases,1872s/0failures/0engine+script errors; original guards unchanged"
+      "veridian-complete-clean.json:all six actual native choice/save/reload cases,1872s/0failures/0engine+script errors; original guards unchanged",
+      "veridian-harvest-fixed-clean.json:all six original native cases,1455s/0engine+script+leak errors on6809 cleanup source; original guards intact"
     ],
     "F19#5": [
       "order-consumers-corrected.log:recommendations visible; host policy accepts level1 with earned unlock",
@@ -431,8 +432,34 @@
       "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
       "status": "Live original full choice witnesses; terminal raw logs required",
       "veridian": {
+        "kind": "f19_actual_veridian_full_harvest_fixed_choice_witness",
+        "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
         "run": 37108379739,
         "job": 111161260966,
+        "artifact": 11269326853,
+        "process_exit": 0,
+        "elapsed_seconds": 1455,
+        "engine_errors": 0,
+        "script_errors": 0,
+        "leak_warnings": [],
+        "failures": [],
+        "cases": [
+          "space-accept",
+          "space-refuse",
+          "capacity-refuse-at-prompt",
+          "capacity-accept-then-let-newcomer-go",
+          "capacity-accept-release-one",
+          "save-while-choice-open"
+        ],
+        "scope": "Entire original six-case native choice/save/reload driver on the Harvest cleanup source; X11 Compatibility/drawingfalse, selected group all. Original staged victory/party/pose fixtures and original assertions/prompt/cap guards retained. No diagnostic resource retention, earned play, ENet or visual/device credit.",
+        "original_prompt_guards_passed": true,
+        "original_party_cap_guard_passed": true,
+        "choice_open_reload_marker": true,
+        "accepted_clean_choice_witness": true,
+        "earned_campaign": false,
+        "raw_log": "ci-veridian-full-harvest-fixed-37108379739.log.gz",
+        "raw_log_sha256": "4d83727a5314829eda5500a9710fd02242d98912ab102c61dfcf503f2120c4d9",
+        "status": "Terminal clean PASS; all six original cases,1455s/0errors",
         "script": "tests/smoke_f19_veridian_functional.gd"
       },
       "solmane": {
