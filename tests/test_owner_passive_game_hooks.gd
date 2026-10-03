@@ -149,6 +149,70 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	menu.free()
 	_native_completed = true
 
+func _native_case_game_same_stream_fence_reset_replays_exactly() -> void:
+	# Actual Game fence and discovery accounting reproduce the rejected F48
+	# displacement, including its active 0.504022s discovery window. The host
+	# placement proof is a disclosed fixture; this case is not transport proof.
+	var before: Dictionary = RECORD.portable_projection(game.local.save_data())
+	game.actor.position = Vector3(0.0, 0.900942385196686, 0.0)
+	game._process(0.5)
+	game._process(0.004022000000004)
+	var frozen := var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	var count: int = owner_session.packets.size()
+	var active_discovery_elapsed: float = game._discovery_elapsed
+	owner_session.blocked = true
+	game._process(0.75)
+	assert_eq(owner_session.packets.size(), count, "fence emits no care input")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), frozen, "fence applies no care or bond")
+	assert_false(game._travel_pos_valid)
+	assert_eq(game._discovery_elapsed, active_discovery_elapsed, "paused frames are absent from active discovery time")
+	game.actor.position = Vector3(-16.0, 1.11597406864166, 14.0)
+	owner_session.blocked = false
+	game._process(0.5)
+	var reset: Dictionary = owner_session.packets.back()
+	assert_eq(reset.op, "discovery")
+	assert_false(reset.travel_valid)
+	assert_eq(reset.from, owner_session.packets[1].to)
+	assert_eq(reset.to, [game.actor.position.x, game.actor.position.y, game.actor.position.z])
+	assert_true(REPLAY._vector(reset.from).distance_to(REPLAY._vector(reset.to)) > 40.0 * (active_discovery_elapsed + 0.5))
+	var context := {"max_elapsed": 2.0, "max_speed": 40.0, "realm": "meadows", "landmarks": {}}
+	var cursor := REPLAY.begin(before, {})
+	for index: int in owner_session.packets.size():
+		var packet: Dictionary = owner_session.packets[index].duplicate(true)
+		packet.version = 1
+		packet.sequence = index + 1
+		if index == owner_session.packets.size() - 1:
+			var refused := REPLAY.apply(cursor, packet, context)
+			assert_false(refused.ok, "owner reset alone has no host provenance")
+			assert_eq(refused.code, "travel_baseline_mismatch")
+			context.travel_reset_authorized = true
+			context.travel_reset_position = reset.to.duplicate()
+		var applied := REPLAY.apply(cursor, packet, context)
+		assert_true(applied.ok, str(applied))
+		if applied.get("ok") != true: return
+		cursor = applied.cursor
+	var live := RECORD.portable_projection(game.local.save_data())
+	assert_eq(var_to_bytes(cursor.state), var_to_bytes(live), "full portable record matches exact Game arithmetic after fence")
+	for card: Dictionary in live.party:
+		assert_eq(card.distance_m_together, before.party[0].distance_m_together, "arrival displacement gives no walking credit")
+	context.erase("travel_reset_authorized")
+	context.erase("travel_reset_position")
+	game.actor.position.x += 3.0
+	game._process(0.5)
+	for index: int in range(count + 2, owner_session.packets.size()):
+		var packet: Dictionary = owner_session.packets[index].duplicate(true)
+		packet.version = 1
+		packet.sequence = index + 1
+		var applied := REPLAY.apply(cursor, packet, context)
+		assert_true(applied.ok, str(applied))
+		if applied.get("ok") != true: return
+		cursor = applied.cursor
+	live = RECORD.portable_projection(game.local.save_data())
+	assert_eq(var_to_bytes(cursor.state), var_to_bytes(live), "ordinary movement resumes exact full-record replay")
+	for card: Dictionary in live.party:
+		assert_eq(card.distance_m_together, before.party[0].distance_m_together + 3.0)
+	_native_completed = true
+
 func test_actual_game_input_hooks_replay_identically() -> void:
 	NATIVE.run_case(self, "res://tests/test_owner_passive_game_hooks.gd", "_native_case_game_records_exact_ticks_discoveries_and_replays_live_record", 34)
 
@@ -157,3 +221,6 @@ func test_actual_game_existing_fence_and_disabled_recorder() -> void:
 
 func test_actual_backpack_target_fence() -> void:
 	NATIVE.run_case(self, "res://tests/test_owner_passive_game_hooks.gd", "_native_case_backpack_target_guard_precedes_any_care_or_item_write", 5)
+
+func test_actual_game_same_stream_fence_reset() -> void:
+	NATIVE.run_case(self, "res://tests/test_owner_passive_game_hooks.gd", "_native_case_game_same_stream_fence_reset_replays_exactly", 22)

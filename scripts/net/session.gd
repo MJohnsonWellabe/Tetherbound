@@ -42,6 +42,10 @@ func owner_passive_recording_active() -> bool:
 func record_owner_passive_input(packet: Dictionary) -> void:
 	if _owner_passive != null: _owner_passive.call("record_input", packet)
 
+func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+	if is_host() and _owner_passive != null:
+		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor)
+
 func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	return _owner_passive_service().call("gate", peer, action, intent, event)
 
@@ -700,6 +704,7 @@ func _retry_foundation_events() -> void:
 	_retry_combat_mastery_sources()
 	var world: RefCounted = _game().get("world")
 	var handled := {}
+	var research_no_progress := {}
 	for raw: Variant in world.reward_deliveries.values():
 		if not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
 		for duty: Dictionary in raw.duties:
@@ -719,6 +724,16 @@ func _retry_foundation_events() -> void:
 				get_node(^"LedgerRpc").call("_process_creature_training", latest)
 				handled[duty.character_id] = true
 				continue # Re-deliver the immutable original; never prepare it again.
+			var research_signature := ""
+			if duty.action == "research_event":
+				research_signature = JSON.stringify([duty.character_id, peer, duty.context.world_namespace,
+					duty.context.session_id, duty.context.species_id, duty.context.kind,
+					duty.context.get("move_id"), duty.context.get("night")])
+				# A real no-progress result excludes only equivalent research in
+				# this synchronous scan at the same authority revision. Retained
+				# originals and receipt/ACK recovery above still run for every duty.
+				if research_no_progress.has(research_signature) \
+					and research_no_progress[research_signature] == int(_character_authority.call("revision", duty.character_id)): continue
 			# Retained historical duties and in-fight mastery need no new action.
 			# Project/recover authority only after those exclusions; a long fight
 			# can retain hundreds of mastery sources for this same character.
@@ -747,6 +762,10 @@ func _retry_foundation_events() -> void:
 				if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 					result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 				else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+			if duty.action == "research_event" and result.get("code") == "research_no_progress":
+				# Admission inside the real research adapter may refresh the local
+				# record; remember its resulting revision, never a character state.
+				research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
 			if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:

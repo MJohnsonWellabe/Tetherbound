@@ -159,6 +159,31 @@ func _context(peer: int, stream: Dictionary) -> Dictionary:
 		context.initial_max_distance = MAX_SPEED * INITIAL_POSE_LAG_S
 	return context
 
+func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+	if owner() == null or owner().call("is_host") != true or not anchor.is_finite(): return
+	var character: String = owner().call("_authority_character", peer)
+	var stream: Dictionary = hosts.get(character, {})
+	if stream.get("departed") == true: stream = stream.get("recovery", {})
+	if stream.is_empty() or stream.peer != peer or stream.epoch != owner().call("_altar_current_epoch") \
+		or stream.world_id != _game().get("world").world_id \
+		or stream.world_namespace != _game().get("world").reward_delivery_namespace: return
+	var context := _context(peer, stream)
+	if context.realm != realm or not context.get("initial_position") is Vector3: return
+	stream.travel_reset = {"peer": peer, "stream_id": stream.id, "epoch": stream.epoch, "realm": realm,
+		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence}
+
+func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: Dictionary) -> bool:
+	var proof: Dictionary = stream.get("travel_reset", {})
+	if proof.is_empty() or input.get("op") != "discovery" or input.get("travel_valid") != false \
+		or stream.cursor.travel_valid != true or proof.peer != peer or proof.stream_id != stream.id \
+		or proof.epoch != stream.epoch or proof.realm != context.realm or input.get("realm") != proof.realm \
+		or int(input.sequence) <= int(proof.sequence) or not E._equivalent(input.get("from"), stream.cursor.position) \
+		or not E._equivalent(input.get("to"), proof.anchor) or not REPLAY._position(input.get("to")) \
+		or not context.get("initial_position") is Vector3: return false
+	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+	# Reuse the existing live-body discontinuity endpoint tolerance.
+	return context.initial_position.distance_to(at) <= 2.0
+
 func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
 		or packet.inputs.is_empty() or packet.inputs.size() > MAX_BATCH: return
@@ -183,6 +208,10 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 					"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 				stream.error = "owner_passive_initial_pose_unconfirmed"; return
 		var input_context := context.duplicate()
+		var reset: bool = _reset_matches(peer, stream, input, context)
+		if reset:
+			input_context.travel_reset_authorized = true
+			input_context.travel_reset_position = input.to.duplicate()
 		if input.get("op") == "discovery" and REPLAY._position(input.get("from")) and REPLAY._position(input.get("to")):
 			var from := Vector3(float(input.from[0]), float(input.from[1]), float(input.from[2]))
 			var to := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
@@ -198,6 +227,7 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
 		stream.cursor = applied.cursor
 		stream.seen[sequence] = digest
+		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
 	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
 	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
 		_prepare_host(peer, stream)

@@ -221,3 +221,69 @@ func test_only_trusted_long_discontinuity_bypasses_speed_without_walking_credit(
 	assert_eq(accepted.discovered.meadows, ["far"])
 	packet.new_landmarks = ["near"]
 	_denied(cursor, packet, "landmark_out_of_range", context)
+
+func test_same_stream_reset_requires_exact_host_endpoint_and_preserves_original_credit() -> void:
+	var cursor := REPLAY.begin(FIXTURE.new()._before(), {})
+	cursor = _advance(cursor, _condition(cursor, 0.5))
+	cursor = _advance(cursor, _discovery(cursor, [0.0, 0.900942385196686, 0.0]))
+	cursor = _advance(cursor, _condition(cursor, 0.504022000000004))
+	var packet := _discovery(cursor, [-16.0, 1.11597406864166, 14.0])
+	assert_true(REPLAY._vector(packet.from).distance_to(REPLAY._vector(packet.to)) > 40.0 * cursor.discovery_elapsed)
+	packet.travel_valid = false
+	_denied(cursor, packet, "travel_baseline_mismatch")
+	var context := _context()
+	context.travel_reset_position = packet.to.duplicate()
+	for flag: Variant in [false, 1, "true", null]:
+		context.travel_reset_authorized = flag
+		_denied(cursor, packet, "travel_baseline_mismatch", context)
+	context.travel_reset_authorized = true
+	for endpoint: Variant in [null, Vector3(-16, 1.115974, 14), [NAN, 0, 0], [90, 0, 0]]:
+		context.travel_reset_position = endpoint
+		_denied(cursor, packet, "travel_baseline_mismatch", context)
+	context.travel_reset_position = packet.to.duplicate()
+	var forged := packet.duplicate(true)
+	forged.from = [1, 0, 0]
+	_denied(cursor, forged, "travel_baseline_mismatch", context)
+	forged = packet.duplicate(true)
+	forged.to = [90, 0, 0]
+	_denied(cursor, forged, "travel_baseline_mismatch", context)
+	forged = packet.duplicate(true)
+	forged.travel_reset_authorized = true
+	_denied(cursor, forged, "invalid_packet", context)
+	forged = packet.duplicate(true)
+	forged.realm = "water"
+	_denied(cursor, forged, "realm_mismatch", context)
+	var before := var_to_bytes(cursor)
+	var input := var_to_bytes(packet)
+	var distance: float = cursor.state.party[0].distance_m_together
+	var accepted := _advance(cursor, packet, context)
+	assert_eq(accepted.state.party[0].distance_m_together, distance, "host placement reset earns no walking credit")
+	assert_eq(var_to_bytes(cursor), before)
+	assert_eq(var_to_bytes(packet), input, "accepted reset never rewrites original owner input")
+	assert_eq(accepted.prefix_hash, preload("res://scripts/net/research_passive_preparation.gd").fingerprint({"previous": cursor.prefix_hash, "packet": packet}))
+	assert_true(accepted.travel_valid)
+	assert_eq(accepted.position, packet.to)
+	accepted = _advance(accepted, _condition(accepted, 0.5))
+	_denied(accepted, _discovery(accepted, [5, 1.11597406864166, 14]), "speed_bound", context)
+	accepted = _advance(accepted, _discovery(accepted, [-13, 1.11597406864166, 14]))
+	assert_eq(accepted.state.party[0].distance_m_together, distance + 3.0, "next ordinary poll resumes exact travel credit")
+
+func test_confirmed_reset_keeps_landmark_range_and_one_visit_per_poll() -> void:
+	var cursor := REPLAY.begin(FIXTURE.new()._before(), {})
+	cursor = _advance(cursor, _condition(cursor, 0.5))
+	cursor = _advance(cursor, _discovery(cursor, [0, 0, 0]))
+	cursor = _advance(cursor, _condition(cursor, 0.5))
+	var packet := _discovery(cursor, [3, 0, 0], ["near", "also_near"])
+	packet.travel_valid = false
+	var context := _context()
+	context.travel_reset_authorized = true
+	context.travel_reset_position = packet.to.duplicate()
+	var distance: float = cursor.state.party[0].distance_m_together
+	var visits: int = cursor.state.party[0].landmarks_visited_together
+	var accepted := _advance(cursor, packet, context)
+	assert_eq(accepted.state.party[0].distance_m_together, distance)
+	assert_eq(accepted.state.party[0].landmarks_visited_together, visits + 1)
+	assert_eq(accepted.discovered.meadows, ["near", "also_near"])
+	for id: String in ["manual", "far", "high"]:
+		packet.new_landmarks = [id]
+		_denied(cursor, packet, "invalid_landmark" if id == "manual" else "landmark_out_of_range", context)

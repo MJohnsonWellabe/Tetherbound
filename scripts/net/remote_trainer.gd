@@ -896,6 +896,12 @@ func _rpc_request_landing_anchor(claim: Array, realm: String, request_id: int) -
 		return
 	if not _realm_body_rpc_allowed(sender):
 		return
+	if answer.get("ok") == true:
+		var game := get_node_or_null(^"/root/Game")
+		if game != null and game.get("session") != null:
+			# Bind replay to the accepted actual body claim. The safe anchor's
+			# floor offset is a fallback destination, not this sampled pose.
+			game.session.call("owner_passive_travel_reset_confirmed", sender, realm, params.claim)
 	rpc_id(sender, "_rpc_landing_anchor_verdict", bool(answer.get("ok", false)),
 		[anchor.x, anchor.y, anchor.z], str(answer.get("code", "")),
 		str(answer.get("reason", "")), request_id)

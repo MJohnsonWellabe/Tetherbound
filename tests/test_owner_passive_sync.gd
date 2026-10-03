@@ -523,3 +523,48 @@ func test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint() -> 
 	session.host = false
 	service.receive_owner(session.messages[-1])
 	assert_true(service.local.rebase.is_empty())
+
+func test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance() -> void:
+	var stream := _host_stream()
+	service.body_position = Vector3(-16, 1.11597406864166, 14)
+	service.travel_reset_confirmed(3, "meadows", service.body_position)
+	assert_false(stream.has("travel_reset"), "a different peer cannot mint a reset proof")
+	service.travel_reset_confirmed(2, "water", service.body_position)
+	assert_false(stream.has("travel_reset"), "a different realm cannot mint a reset proof")
+	service.travel_reset_confirmed(2, "meadows", service.body_position)
+	assert_true(stream.has("travel_reset"))
+	# Landing RPC can precede the buffered initial discovery inputs. The proof
+	# is scoped to this stream, rather than a stale from-position snapshot.
+	service.record_input(_input(0.6))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0, 0, 0], "to": [0, 0.900942, 0],
+		"travel_valid": false, "new_landmarks": []})
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_true(stream.cursor.travel_valid)
+	assert_true(stream.has("travel_reset"))
+	var previous_distance: float = stream.cursor.state.party[0].distance_m_together
+	service.record_input(_input(0.504022))
+	var target := [service.body_position.x, service.body_position.y, service.body_position.z]
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0, 0.900942, 0], "to": target,
+		"travel_valid": false, "new_landmarks": []})
+	var reset: Dictionary = service.local.inputs[-1]
+	var context: Dictionary = service._context(2, stream)
+	var wrong: Dictionary = reset.duplicate(true)
+	wrong.to = [-15, service.body_position.y, 14]
+	assert_false(service._reset_matches(2, stream, wrong, context), "owner cannot replace the accepted endpoint")
+	wrong = reset.duplicate(true)
+	wrong.travel_valid = true
+	assert_false(service._reset_matches(2, stream, wrong, context), "ordinary walking keeps its speed and distance rules")
+	var packet := _envelope({"op": "inputs", "inputs": service.local.inputs.slice(2).duplicate(true)})
+	service.receive_host(2, packet)
+	assert_eq(stream.error, "")
+	assert_false(stream.has("travel_reset"))
+	assert_eq(stream.cursor.state.party[0].distance_m_together, previous_distance)
+	var cursor_bytes := var_to_bytes(stream.cursor)
+	service.receive_host(2, packet)
+	assert_eq(var_to_bytes(stream.cursor), cursor_bytes, "duplicate prefix grants no second credit")
+	service.body_position = Vector3.ZERO
+	service.record_input(_input(0.6))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": target, "to": [0, 0, 0],
+		"travel_valid": false, "new_landmarks": []})
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
+	assert_eq(stream.error, "travel_baseline_mismatch", "live endpoint alone never grants another false reset")

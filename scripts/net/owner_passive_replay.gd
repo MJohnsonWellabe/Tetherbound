@@ -74,10 +74,19 @@ static func _discovery(next: Dictionary, packet: Dictionary, context: Dictionary
 		or not packet.new_landmarks is Array: return "invalid_discovery"
 	if float(next.discovery_elapsed) < 0.5: return "discovery_cadence"
 	var expected_valid: bool = next.travel_valid and next.realm == context.realm
-	if packet.travel_valid != expected_valid: return "travel_baseline_mismatch"
+	# Game drops its travel baseline while an owner mutation fence is active.
+	# An authenticated host arrival/placement may explain that same-stream
+	# reset, even when its relocation exceeds the active care-tick speed bound.
+	# Only the host service supplies this exact, single-use endpoint proof.
+	# The owner's input and prefix remain unchanged; a reset earns no distance.
+	var reset: bool = expected_valid and packet.travel_valid == false \
+		and context.get("travel_reset_authorized") is bool and context.get("travel_reset_authorized") == true \
+		and _position(context.get("travel_reset_position")) \
+		and E._equivalent(context.travel_reset_position, packet.to)
+	if packet.travel_valid != expected_valid and not reset: return "travel_baseline_mismatch"
 	if expected_valid and not E._equivalent(packet.from, next.position): return "travel_baseline_mismatch"
 	var at := _vector(packet.to)
-	var distance := _vector(packet.from).distance_to(at) if expected_valid else 0.0
+	var distance := _vector(packet.from).distance_to(at) if expected_valid and not reset else 0.0
 	# Only the host service may confirm a discontinuity against the actual
 	# same-realm body endpoint. It never creates walking credit, and cannot
 	# relax the speed check on an ordinary <=30m discovery step.
