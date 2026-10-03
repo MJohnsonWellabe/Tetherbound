@@ -1,12 +1,12 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
     "local": "5a315cef84"
   },
-  "source_review": "Production/input driver through9d4 independent read-only f20_review PASS. Diagnostica507 initialreviewwithdrawn after native duplicate-owner ParseError. Corrected trace769d source reviewPASS; actual compilation/runtime pending. F20#1\u20134OPEN.",
+  "source_review": "Production/input driver through9d4 independently reviewed;diagnostica507 clearancewithdrawn;769d actualcompile/runtimeconfirmed. 72fde creditsclosingpresshandoff sourcePASS notyetreached afterr9 deadline. Proofcapture65cbb/c620sourcePASS compilesinr6 butreadyFAILbeforeinput. Authoredlineinput37b17 sourcePASS/solo-r10live. Criteria1\u20134OPEN.",
   "focused": {
     "verdict": "PASS",
     "log": "f20-f18-focused-r2.log.gz",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake criterion0 independently MET on candidate. Actual saved HomeKey/fifth and ordinary portal lesson/navigation pass on9d4; solo-r6/net-r3 fail naturalGrandpa ackcheck with exactdialogue/producercause unknown. Diagnosticsa507 failedparse due confirmedduplicateowner athelper229 (allerrors retained), sourceclearancewithdrawn. Exact3-line correctedtrace769d reviewed/pushed; actualsolo-r8/arch-r5 dispatched for unchanged30s/180s checks. Remote software arch-r3 readinesscause stillunknown/noPNG/WAV; no localrenderer/audio whileownerValheim. Criteria1\u20134OPEN.",
+    "reason": "Tidewake#0METcandidate. r8actualtruthfulhomecoming/diskACK thencreditsownerFAIL; source72fdeclosingpressfixreviewed. r9first10of11linesrecorded/panelstillopen/noACK atoldglobal30sproofdeadline, so72fdepathunexercised. Reviewed37b17 finiteauthoredlineinput/separateACK30s replayr10live. r5functional16/0butimageFAIL/audiounattributed; reviewed65cbb/c620capturefix compilesinr6butready/releasefalse182460ms beforeinput/noPNG/WAV. No blindrerender/no sharedworldedit/no localGPUengine/criteria1\u20134OPEN/mainpending.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -318,6 +318,140 @@
         "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
         "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
         "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
+      },
+      {
+        "run": 37086997616,
+        "job": 111099263632,
+        "artifact": 11260888445,
+        "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
+        "checks": 28,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_bytes": 22578,
+        "native_sha256": "a4a59f7154a1ae0586b3dfa4bac61576cb6ef7b30ce21ee201bb969e8ea49fa1",
+        "user_log_bytes": 22420,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 654599,
+        "artifact_sha256": "c2bf5b8bb8c79c5e7f7d7f22f071808836d63fa9b5eb7feeafac1d11d301578a",
+        "logs": [
+          "f20-solo-r8-native.log.gz",
+          "f20-solo-r8-workflow.log.gz",
+          "f20-solo-r8-artifact.zip"
+        ],
+        "verdict": "FAIL credits ownership after real acknowledged homecoming",
+        "passed": "Actual HomeKey/fifth/ordinary portal lesson/navigation; actual completed(regional_homecoming_5), all5names/starter/one actual1landmark bond memory/four personal decisions rendered. Homecoming receipt independently found in actual character disk payload.",
+        "failure": "Production credits input owner never observed during unchanged600frame wait. No credits completion/reload/continuation. Original r6/r3 dialogue cause remains unknown; this r8 partial does not retroactively prove it.",
+        "independent_review": "PASS f20_review failed-evidence scope: native22578/user22420bytes zero engine/script errors;28checks1fail, actual rendering/completed/ACK proven;F20#1 remains OPEN."
+      },
+      {
+        "run": 37087002514,
+        "job": 111099278835,
+        "artifact": 11261033697,
+        "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
+        "checks": 16,
+        "failures": 0,
+        "workflow_conclusion": "success",
+        "native_bytes": 11794,
+        "native_sha256": "5976dc52990288b6fbdc05c1b3e3fed0a865c49a11c198325e6e1784e970d1ad",
+        "user_log_bytes": 11671,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 2502935,
+        "artifact_sha256": "2d1482b49bd9e376f209b12616942993a0d9197eb393fafeeda7fdd43ac2a967",
+        "logs": [
+          "f20-arch-render-r5-native.log.gz",
+          "f20-arch-render-r5-workflow.log.gz",
+          "f20-arch-render-r5-artifact.zip"
+        ],
+        "verdict": "PASS functional16checks; FAIL visible arch/stir acceptance",
+        "exit_code": 0,
+        "elapsed_seconds": 801,
+        "readiness": {
+          "elapsed_ms": 121444,
+          "physics_samples": 46,
+          "max_wait_ms": 82289,
+          "limit": "Interval includes loop work; no originalr3readiness cause established."
+        },
+        "passed": "Actual key debit/sealed/glow+playingSFXsource/one-line/noquest/repeatrefusal; actual framebuffer and mixed SFX file created.",
+        "renderer": "Compatibility OpenGL4.5 Mesa25.2.8 llvmpipe LLVM20.1.2;1280x720;Dummy audio",
+        "visual": "FAIL independent f20_review and root: actual PNG mostly lavender/sky with partial Hall beam; trainer, fifth arch and glow not visible. Not-ready line/quiet arch prompt visible. No visual acceptance.",
+        "audio_inspection": {
+          "channels": 2,
+          "sample_width": 2,
+          "rate": 44100,
+          "frames": 29179904,
+          "duration_seconds": 661.6758276643991,
+          "bytes": 116719660,
+          "sha256": "013b0af5664d35ef100021b682f73abbbbb04e49e6cc576ef96b63168ae742f2",
+          "nonzero_samples": 1013556,
+          "peak": 8320,
+          "rms": 120.38872188619091
+        },
+        "audio_limits": "661.676second stereo44.1kHz mixed file includes full navigation and unrelated SFX; nonzero PCM does not isolate or prove audible low hum. Hosted Dummy output cannot establish physical device/listener acceptance.",
+        "independent_review": "PASS f20_review functional/failedvisual scope:16checks0/exit0/took801s, native11794bytes0errors, readiness succeeds without deadline change. Independent WAV header/nonzero PCM/hash agree; no listening or individual hum attribution. Criterion2OPEN."
+      },
+      {
+        "run": 37088421507,
+        "job": 111103365982,
+        "artifact": 11261920562,
+        "source": "72fde3eb147de38c4fee900fd602ede300ad1efe",
+        "verdict": "FAIL proof conversation deadline before final line/completion; credits handoff not exercised",
+        "checks": 19,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_bytes": 20613,
+        "native_sha256": "acf50ea6e6b62f7fe48bbaad8f086aa91922e1822c81c46c10d5f2e47b59b034",
+        "user_log_bytes": 20455,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 653989,
+        "artifact_sha256": "16c15bdf31c05e6c27c8b550ff95b417c4c80fe5904ca70a2389b922757fa1cb",
+        "logs": [
+          "f20-solo-r9-native.log.gz",
+          "f20-solo-r9-workflow.log.gz",
+          "f20-solo-r9-artifact.zip"
+        ],
+        "actual_trace": "Dialogue remains open regional_homecoming_5 with actual DialoguePanel owning input; completed=[]; first10of11 authoredlines recorded by reader, stable safe own context, ACKintents empty, trainingaction stillportal_arrival. Final11 may already be displayed after lasttap but was not recorded/closed. Global30s reader loop ended before final closing press; no producerACKrefusal evidence.",
+        "limits": "HomeKey/fifth/lesson/navigation and healthy Grandpa line progression pass, but no completed callback/ACK/credits/reload. Does not validate or refute creditsclosingpressfix72fde because that path was not reached.",
+        "independent_review": "PASS f20_review: native20613/user20455bytes0errors; ZIP653989sha16c15bdf31c05e6c27c8b550ff95b417c4c80fe5904ca70a2389b922757fa1cb and nativeacf50ea6e6b62f7fe48bbaad8f086aa91922e1822c81c46c10d5f2e47b59b034 match. First10lines recorded; finalmayalreadydisplay; nocompleted/ACK/creditsfixexercise;criteria1\u20134OPEN."
+      },
+      {
+        "run": 37089044472,
+        "job": 111105247954,
+        "artifact": 11262350489,
+        "source": "c620ba4e9da42c76956c622bb67253799a8f8244",
+        "verdict": "FAIL readiness before key/capture",
+        "checks": 8,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_bytes": 10960,
+        "native_sha256": "c7c58d39922f63442565fb489731e07940e227768de9f3e1adf9241c784947dc",
+        "user_log_bytes": 10854,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 942305,
+        "artifact_sha256": "08b46120b95b1e526a1444bcef0e4df3337a70361c1f4a35561754cc0b01bc4d",
+        "logs": [
+          "f20-arch-render-r6-native.log.gz",
+          "f20-arch-render-r6-workflow.log.gz",
+          "f20-arch-render-r6-artifact.zip"
+        ],
+        "readiness": {
+          "elapsed_ms": 182460,
+          "physics_samples": 17,
+          "max_wait_ms": 132569,
+          "scene": "/root/MeadowsPlayground",
+          "shell_complete": false,
+          "player_floor": false,
+          "player_position": [
+            0,
+            2.9,
+            0
+          ],
+          "journey_empty": false,
+          "paused": false,
+          "input_owner": "none"
+        },
+        "failure": "World readiness/release predicates false at original180s limit. Bootlog last phase02:17:47 says_readycomplete/waitingfirstframe; source waitsphysics+process before constructionhold release/_shell_ready. This identifies predicates, not exact cost/call cause or GLwarmup.",
+        "limits": "Newcapture source compiles; no actual fifth/recenter/result callback/PNG/WAV exercised. No sharedworld source changes or further blindrender retry. Criteria2OPEN.",
+        "independent_review": "PASS f20_review: native10960 sha c7c58d39922f63442565fb489731e07940e227768de9f3e1adf9241c784947dc/user10854bytes both0errors; ZIP942305 sha08b46120b95b1e526a1444bcef0e4df3337a70361c1f4a35561754cc0b01bc4d matches. Exact8checks1 readiness/release predicates verified; no fifthPNG/WAV or exit_code. Capture callbacks unexercised; no construction-stillrunning/GLwarmup cause claimed. Criterion2OPEN."
       }
     ],
     "limitations": [
@@ -456,12 +590,12 @@
     "1": {
       "verdict": "OPEN",
       "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
-      "latest_runtime": "solo-r6/net-r3: actual saved HomeKey, fifth and ordinary portal lesson/navigation PASS; actualGrandpa prompt activates and personal reader valid, then natural completion/ackcheckFAIL (rendered/completed evidence missing)."
+      "latest_runtime": "r8 actualtruthful completedhomecoming/diskACK thencreditsownerFAIL; r9 first10of11lines recorded/panelstillopen/noACK atoldproof30s deadline. Reviewed finiteauthoredlineinput37b17 replayr10live. Credits72fdefixunexercised;criterion1OPEN."
     },
     "2": {
       "verdict": "OPEN",
       "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "solo-r5: actual key debit/sealed/glow+playing SFX source/one not-ready line/no new quest/repeat refusal PASS. Headless functional partial only; inspected real renderer/audio still OPEN."
+      "latest_runtime": "r5functional16/0/exit0 butimagevisiblearchFAIL/audiounattributed; source65cbb/c620capturefix compilesinr6 butREADY182460ms shellfalse/playerheldfloorfalse, noPNG/WAV. Exactready/release predicatesknown, time/callcauseunknown. Noextra renderretry;criterion2OPEN."
     },
     "3": {
       "verdict": "OPEN",
@@ -518,21 +652,12 @@
     }
   },
   "remote_pending": {
-    "solo_r8": {
-      "run": 37086997616,
-      "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
-      "script": "tests/smoke_f20_ending.gd",
-      "label": "f20-solo-r8-dialogue-trace",
-      "mode": "headless",
-      "timeout_minutes": 30
-    },
-    "arch_render_r5": {
-      "run": 37087002514,
-      "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
-      "script": "tests/smoke_f20_arch_presentation.gd",
-      "label": "f20-arch-render-r5-ready-trace",
-      "mode": "render",
-      "timeout_minutes": 20
+    "solo_r10": {
+      "run": 37089384568,
+      "job": 111106265599,
+      "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
+      "label": "f20-solo-r10-authored-dialogue",
+      "status": "live checkout at02:21 observation; freshjobs authoritative"
     }
   },
   "lesson_input_driver": {
@@ -544,7 +669,24 @@
     "independent_review": "WITHDRAWN: initialsourcePASS missed duplicate localowner nativeconfirmed athelper229. Ready180s/dialogue30s unchanged; actualdiagnostic notexercised.",
     "correction": {
       "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
-      "independent_source_review": "PASS f20_review: exact3-line newdiagnosticouterowner rename to dialogue_owner, confirmedduplicate removed, originalcreditsloop/behavior/deadlines unchanged. Fullcompilation/runtime awaitingreplay."
+      "independent_source_review": "PASS f20_review: exact3-line newdiagnosticouterowner rename to dialogue_owner, confirmedduplicate removed, originalcreditsloop/behavior/deadlines unchanged. Fullcompilation/runtime awaitingreplay.",
+      "runtime": "Actual solo-r8 and arch-render-r5 compile/run; all native/user errors0. r8 real homecoming28checks1creditsfailure;archr5 functional16checks0 but visiblearchFAIL."
     }
+  },
+  "credits_handoff_correction": {
+    "source": "72fde3eb147de38c4fee900fd602ede300ad1efe",
+    "independent_source_review": "PASS f20_review: retain frozen world/id/context, wait only own closed regionaldialogueheldpress, reject unrelatedowner/reopen/drift/removal; existingopen_forguardunchanged. Actualfixpending.",
+    "causal_limit": "Old deferred handoff has concrete source race with closinginteract owner and no retry. r8 raw trace does not directly log initialopen_for refusal, so source interpretation fits evidence but must be replayed.",
+    "runtime": "Still pending: solo-r9 failed earlier while actual dialogue stillopen/ACKunattempted. This does not validate/refute credits fix."
+  },
+  "arch_capture_correction": {
+    "source": "65cbb1e878c7363c8c84590490a1115bb26c6e42,c620ba4e9da42c76956c622bb67253799a8f8244",
+    "independent_source_review": "PASS f20_review: consumedonce ordinary camera_recenter callback after existing exactprovider navigation; no transforms assigned. Actualown durable result starts recording/firstpostdraw capture; in-flight capture joined before effect removal; real camera/arch framing diagnostics read-only. Compilation/artifact/visual/audio pendingr6.",
+    "runtime": "Compiled inr6, but key/recenter/resultcapture unexercised because readinessfails beforeinput. Actualimage/audiofixstillpending; noadditionalrenderretry queued."
+  },
+  "dialogue_input_correction": {
+    "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
+    "independent_source_review": "PASS f20_review: finite actualauthoredlinecount+2normalpress/releases andseparate30sACKobservation; noauthoritative writes/runneradvance/close/inputownership bypass or authoredcriterionwaiver. Runtimepending solo-r10.",
+    "change": "Bound ordinaryX input by actual authoredlinecount+2initialguard presses, then preserve30s distinctdurableACKobservation. Native r9 proves oldglobal30s inputdeadline endedwith healthyopenconversationbeforefinalpress. Alltruthful renderedprose/credits/receipts checks remain; no authoritativewrites or productiontiming changes. Net300s/readiness180s/globalremote caps unchanged."
   }
 }

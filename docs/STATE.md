@@ -14,7 +14,26 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F18 arrival dependency:** Upstream `cd272f5c51` measures actual nearby physics floor, preserves complete capsule/new contact/save fences, awaits the consumed-permit fade, and releases presentation during retained save retries. Source review and29 tests/377 assertions plus9 synthetic physics checks pass (`ralph/reports/HUB/f18/arrival-support.json`). All19 authored simulation stone/return pads pass after Salt Crown/Summit fixes (`authored-stones.json`). These dependency checks do not close actual arrival or F20 ending acceptance.
 
-**F20 candidate:** Outcome-bound personal Home Key receipts, durable credits ownership and personal fifth-arch presentation are wired. Tidewake r7 on `687732d0b2` passes 21 actual dock checks with 0 failures; independent §7.2 review scores F20#0 MET on candidate, main landing pending (restored-current fixture and one warning disclosed). Focused ending checks 33/350 and synthetic split-writer/reload 62 pass. Delegated SaveGame locator projection `231ad9ccc3` plus corrected test `8a3ce18047` passes 12 real disk regression tests/104 assertions, zero errors. Actual solo-r6 and two-peer net-r3 pass saved Home Key, durable fifth key debit/sealed/glow+playing SFX source/one-line/noquest/repeat refusal and real portal lesson Continue/personal acknowledgement. Grandpa prompt activation and personal prose reader pass, but natural completion/ackcheck fails; exact dialogue/producer cause remains unknown. Reviewed diagnostic `a507d6022d` failed parsing at duplicate owner229; its initial source clearance is withdrawn and every failure retained. Three-line correction `769d93e9ba` is independently source-reviewed; actual solo-r8 and remote software arch-r5 queued with original deadlines/checks. Remote arch-r3 failed readiness before key/PNG/WAV. Actual Grandpa/credits, two-peer ending, disk continuation and visual/audio F20#1–4 remain OPEN; no local engine/GPU while the owner plays Valheim. Logs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
+**F20 candidate:** Outcome-bound personal Home Key receipts, durable credits ownership and personal fifth-arch
+presentation are wired. Tidewake r7 on `687732d0b2` passes 21 actual dock checks with 0 failures; independent §7.2
+review scores F20#0 MET on candidate, main landing pending (restored-current fixture and one warning disclosed).
+Focused ending checks 33/350 and synthetic split-writer/reload 62 pass. Delegated SaveGame locator projection
+`231ad9ccc3` plus corrected test `8a3ce18047` passes 12 real disk regression tests/104 assertions, zero errors.
+Corrected diagnostic `769d93e9ba` compiles in solo-r8/arch-r5 (earlier `a507d6022d` parse failures and clearance
+withdrawal retained). Solo-r8 passes actual saved Home Key/fifth/ordinary portal lesson, actual Grandpa completed
+conversation rendering all five/starter/one earned landmark/four decisions and disk homecoming receipt, then fails
+credits input ownership (28 checks, 1 failure). Reviewed `72fde3eb14` retains the frozen handoff while its own
+closing dialogue press releases. Solo-r9 records the first 10 of 11 lines and its panel remains open at the proof's
+30s deadline (final line may already be displayed); ACK/credits fix unexercised. Reviewed authored-line bounded
+input proof `37b17d2917` sends normal presses then observes ACK separately; solo-r10 is live. Arch-r5 passes
+readiness in 121444ms and 16 functional checks/exit0 and creates PNG/WAV, but the image shows no visible arch/glow
+and the 661.676s mixed WAV does not isolate
+the hum or prove physical output. Reviewed65cbb/c620 captures the first actual result frame after ordinary
+recenter and records that result's mixed audio. It compiles in arch-r6 but readiness fails at 182460ms before input:
+shell incomplete, player held at the origin and airborne; the boot log says build complete, waiting for first frame.
+Capture remains unexercised; the exact costly call and earlier causes are not established. No further render retry is queued.
+F20#1–4 remain OPEN, including credits/disk continuation/two-peer ending and visual/audio. No local engine/GPU
+while the owner plays Valheim. Logs and disclosures: `ralph/reports/F20/ending-runtime/evidence.json`.
 
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
 
