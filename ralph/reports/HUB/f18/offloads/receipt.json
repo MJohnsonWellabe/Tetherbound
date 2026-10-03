@@ -13,14 +13,14 @@
     "workflow_ref": "tb/integration@0537ae7bd13252d66ae6177bec9759304b9aed6e",
     "checkout": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
     "label": "f18-earned-loop-dummy-2237",
-    "status": "queued at last observation",
+    "status": "completed failure before Home Key gift: live first-catch aim did not converge; original artifact retained in ../native-followups/earned-r1-remote.zip",
     "scope": "Rendered controller path and pixels only; Dummy audio cannot prove audible playback."
   },
   "three_peer": {
     "initial_run": 37081696241,
     "source": "73566735625cb04368b03e5fc3612a0d3c586929",
     "status": "cancelled during checkout, before any wide net smoke, when independent audit confirmed pending shared SaveGame world-ID validation defect.",
-    "required_followup": "Adopt reviewed shared validation-only identity projection, then dispatch unchanged multiplayer-wide peers3. No MP assertion/diagnostic relaxation."
+    "required_followup": "Reviewed shared save locator projection and corrected scoped proof adopted; retry held for native final-support predicate failure. Unchanged multiplayer-wide peers3 remains required."
   },
   "acceptance": {
     "F18#0": "UNPROVEN",
@@ -29,5 +29,6 @@
     "F18#3": "UNPROVEN",
     "F18#4": "UNPROVEN",
     "F18#5": "UNPROVEN"
-  }
+  },
+  "native_followups": "../native-followups/receipt.json"
 }

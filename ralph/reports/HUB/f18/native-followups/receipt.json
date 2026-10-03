@@ -1,0 +1,136 @@
+{
+  "resource_constraint": "User playing Valheim; no local Godot/import/render/desktop use.",
+  "audio_limit": "Remote functional workflow uses Dummy audio; audible playback remains unproven.",
+  "runs": [
+    {
+      "id": 37084855246,
+      "display_title": "render f18-arrival-clock-scoped-r1 @ 01ecf7f305ab2b7a57a0f2d6bc32aedc8161c9d2",
+      "head_branch": "tb/integration",
+      "head_sha": "40e7af3db307de702d5b9dda7458120821d1bbde",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37084855246",
+      "artifact_id": 11259633273,
+      "raw_artifact": "scoped-r1-remote.zip",
+      "sha256": "f00c3a82b23b8fcee6ad2779eac948aa72e67a1c62ce1db339eb701569019350",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: save: target slot conflicts with retained world transactions"
+      ],
+      "result_lines": [
+        "15 tests, 241 assertions, 0 failed",
+        "exit=0 took=6s"
+      ],
+      "checkout": "01ecf7f305ab2b7a57a0f2d6bc32aedc8161c9d2",
+      "outcome": "15 tests/241 assertions, zero failed and zero ScriptError. Expected negative cross-slot-save warning retained. Covers four scoped files, not complete F18 acceptance."
+    },
+    {
+      "id": 37084852685,
+      "display_title": "render f18-refusal-component-r1 @ 01ecf7f305ab2b7a57a0f2d6bc32aedc8161c9d2",
+      "head_branch": "tb/integration",
+      "head_sha": "40e7af3db307de702d5b9dda7458120821d1bbde",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37084852685",
+      "artifact_id": 11259948061,
+      "raw_artifact": "refusal-r1-remote.zip",
+      "sha256": "cd693df2da9b8eb639aa79491fa4fbca2e3138b25f3859c6c153a959e5a9a067",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver."
+      ],
+      "result_lines": [
+        "F18_HOME_KEY_REFUSAL_COMPONENT {\"checks\":9,\"failures\":[],\"fixtures\":\"real inventory/parsed input/HomeKey toast; fake modal/fight/refusal state; no live gameplay acceptance\"}",
+        "exit=0 took=5s"
+      ],
+      "checkout": "01ecf7f305ab2b7a57a0f2d6bc32aedc8161c9d2",
+      "outcome": "9 component checks pass; native PNG captured.",
+      "fixtures": "Actual inventory/parsed input/HomeKey presenter; fake modal, fight and refusal context.",
+      "visual_review": "Independent code-blind agent saw readable Finish talking first. banner, strong contrast, no clipping. Blank scene contains no visible modal/gameplay; image proves banner readability only.",
+      "followup": "1bd5ae74b1 mounts observer before first key use and respects existing HUD aim-release latch; startup/component retry required."
+    },
+    {
+      "id": 37084850482,
+      "display_title": "render f18-resident-terrain-r1 @ 01ecf7f305ab2b7a57a0f2d6bc32aedc8161c9d2",
+      "head_branch": "tb/integration",
+      "head_sha": "40e7af3db307de702d5b9dda7458120821d1bbde",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37084850482",
+      "artifact_id": 11260187725,
+      "raw_artifact": "terrain-r1-remote.zip",
+      "sha256": "f80ae88050e55bc908d0279e92dd6608d9828b0490a308745133ed0391fda100",
+      "native_exit_code": null,
+      "native_exit_limit": "Artifact does not contain exit_code; Actions failure and logged assertions retained.",
+      "error_lines": [
+        "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+        "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+        "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+        "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead.",
+        "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+        "ERROR: Lambda capture at index 1 was freed. Passed \"null\" instead."
+      ],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated."
+      ],
+      "result_lines": [
+        "F18_RESIDENT_TERRAIN_SUPPORT {\"checks\":21,\"failures\":[\"final production support/capsule guard accepts actual supported body\"],\"fixtures\":\"isolated baked-terrain native instance, probe bodies, camera moves, temporary in-memory painted hole; no files saved\"}"
+      ],
+      "checkout": "01ecf7f305ab2b7a57a0f2d6bc32aedc8161c9d2",
+      "outcome": "21 checks; final supported capsule fails;6 freed callback errors. Actual native distant support and stable controller floor, dynamic overlap, hole and missing-region negatives pass.",
+      "fixtures": "Isolated native baked Meadows instance; probe actors and camera positions; in-memory unsaved hole; no actual player/co-op acceptance.",
+      "followup": "dc284433f6 replaces Node captures with weak references. a575e3a746 adds read-only ray/overlap/recovery observations; predicate and original assertion unchanged."
+    },
+    {
+      "id": 37081693748,
+      "display_title": "render f18-earned-loop-dummy-2237 @ 2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
+      "head_branch": "tb/integration",
+      "head_sha": "0537ae7bd13252d66ae6177bec9759304b9aed6e",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37081693748",
+      "artifact_id": 11260606382,
+      "raw_artifact": "earned-r1-remote.zip",
+      "sha256": "4eb56e9a4bf7aea2c336ce81abdfb64fc73ac21a1a599e8e2556fd435fc49243",
+      "native_exit_code": null,
+      "native_exit_limit": "Artifact does not contain exit_code; Actions failure and logged assertions retained.",
+      "error_lines": [
+        "ERROR: live catch right-stick aim did not converge"
+      ],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+        "WARNING: instance_reset_physics_interpolation() is deprecated.",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light"
+      ],
+      "result_lines": [
+        "F18_EARNED_LOOP {\"failures\":[\"fresh earned opening: [\\\"live catch right-stick aim did not converge\\\"]\"],\"fixtures\":false,\"input\":\"parsed harness actions/joypad axes through production UI\",\"receipts\":[],\"setup\":\"private save-system directory, preserving developer saves\"}"
+      ],
+      "checkout": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
+      "outcome": "Ordinary opening received 50 orbs and entered real catch; actual aim failed before Home Key gift. No earned loop receipt.",
+      "followup": "Reviewed F17 paired-axis dispatch/neutral flush adopted alone from2e24263a81 in5b18e3cb9e; actual retry required."
+    }
+  ],
+  "acceptance": {
+    "F18#0": "UNPROVEN",
+    "F18#1": "UNPROVEN",
+    "F18#2": "UNPROVEN",
+    "F18#3": "UNPROVEN",
+    "F18#4": "UNPROVEN",
+    "F18#5": "UNPROVEN"
+  }
+}
