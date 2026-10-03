@@ -185,7 +185,7 @@ func _geometry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival
 		"safe_margin": probe.safe_margin, "mask": probe.collision_mask,
 		"consecutive_floor_frames": probe.consecutive_floor_frames, "stable_contact": stable, "final_supported": final_supported}
 
-func _entry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: Node, game: Node) -> void:
+func _entry(world: Node3D, player: CharacterBody3D, arrival: Node, game: Node) -> void:
 	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
 	var entry_id := ""
 	for arch: Dictionary in config.arches:
@@ -200,7 +200,54 @@ func _entry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: N
 	if runtime != null and not entry_id.is_empty():
 		target = runtime.call("_arrival_target", world, {"realm": realm, "entry_id": entry_id})
 	_check(target.is_finite(), entry_id + " actual first-portal arrival target")
-	entries.append(await _geometry(world, player, probe, arrival, target, entry_id))
+	# The production scene already places its real Player at the first entry.
+	# A second probe there would test collision with that Player. Observe the
+	# ACTUAL body instead: its query excludes only its own RID, and this harness
+	# never assigns it the proposed landing or changes its controller state.
+	var collision := player.get_node(^"Collision") as CollisionShape3D
+	var radius: float = (collision.shape as CapsuleShape3D).radius
+	var before := player.global_transform
+	var landing: Vector3 = arrival.call("_capsule_landing", world, player, target, radius)
+	_check(player.global_transform == before, entry_id + " solver observes actual Player without pose writes")
+	_check(landing.is_finite(), entry_id + " actual Player full-capsule landing accepted")
+	var clear := false
+	if landing.is_finite():
+		var query := PhysicsShapeQueryParameters3D.new()
+		query.shape = collision.shape
+		var pose := player.global_transform
+		pose.origin = landing
+		query.transform = pose * collision.transform
+		query.collision_mask = player.collision_mask
+		query.exclude = [player.get_rid()]
+		clear = player.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
+	_check(clear, entry_id + " actual Player complete candidate capsule clear")
+	if not landing.is_finite() and target.is_finite(): DIAGNOSTIC.report(arrival, world, player, target, radius, entry_id)
+	var floor_streak := 0
+	var supported_frames := 0
+	var queries_untouched := true
+	for frame in SETTLE_FRAMES:
+		if Time.get_ticks_msec() >= _deadline: break
+		await physics_frame
+		await process_frame
+		floor_streak = floor_streak + 1 if player.is_on_floor() else 0
+		if frame >= SETTLE_FRAMES - 12:
+			before = player.global_transform
+			if arrival.call("_supported_capsule", world, player, target, radius) == true: supported_frames += 1
+			queries_untouched = queries_untouched and player.global_transform == before
+	before = player.global_transform
+	var final_supported: bool = arrival.call("_supported_capsule", world, player, target, radius) == true
+	queries_untouched = queries_untouched and player.global_transform == before
+	var stable: bool = Time.get_ticks_msec() < _deadline and landing.is_finite() and player.is_on_floor() \
+		and floor_streak >= 12 and supported_frames == 12 and player.global_position.distance_to(landing) <= radius \
+		and player.get_floor_normal().angle_to(player.up_direction) <= player.floor_max_angle
+	_check(stable, entry_id + " actual existing Player controller stable walkable contact")
+	_check(final_supported, entry_id + " actual Player final five-floor/full-capsule guard")
+	_check(queries_untouched, entry_id + " actual Player support queries have no pose writes")
+	if not final_supported and target.is_finite(): DIAGNOSTIC.report(arrival, world, player, target, radius, entry_id + " actual Player settled")
+	entries.append({"id": entry_id, "target": DIAGNOSTIC.vector(target), "landing": DIAGNOSTIC.vector(landing),
+		"settled": DIAGNOSTIC.vector(player.global_position), "shape_radius": radius, "safe_margin": player.safe_margin,
+		"mask": player.collision_mask, "stable_contact": stable, "final_supported": final_supported,
+		"consecutive_floor_frames": floor_streak, "fixture": "direct scene boot; observe existing actual Player; no harness pose writes or controller changes"})
 
 func _run() -> void:
 	_deadline = Time.get_ticks_msec() + TOTAL_BUDGET_MSEC
@@ -261,7 +308,7 @@ func _run() -> void:
 	await physics_frame
 	await process_frame
 	var arrival := ARRIVAL.new()
-	await _entry(world, player, probe, arrival, game)
+	await _entry(world, player, arrival, game)
 	for row: Dictionary in rows:
 		await _stone(world, player, probe, arrival, row, str(config.presentation.model))
 	_check(records.size() == IDS[realm].size(), "every configured stone checked without skipped counts")

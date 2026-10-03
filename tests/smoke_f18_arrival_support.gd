@@ -159,7 +159,7 @@ func _precision_cases() -> void:
 		else: _check(false, "high-coordinate ordinary floor and complete final support")
 		world.queue_free()
 		await process_frame
-	for kind: String in ["ridge", "tiny_bevel", "coplanar_foreign_body"]:
+	for kind: String in ["ridge", "tiny_bevel"]:
 		var world := FlatWorld.new()
 		root.add_child(world)
 		world.position.x = 110.0
@@ -170,7 +170,8 @@ func _precision_cases() -> void:
 				var b := Vector3(pair.x, -absf(pair.x) * .02, 2)
 				var c := Vector3(pair.y, -absf(pair.y) * .02, 2)
 				var d := Vector3(pair.y, -absf(pair.y) * .02, -2)
-				faces.append_array(PackedVector3Array([a, b, c, a, c, d]))
+				# Godot's clockwise Plane(A,B,C) normal is (A-C)x(A-B).
+				faces.append_array(PackedVector3Array([a, c, b, a, d, c]))
 		else:
 			var mesh := BoxMesh.new()
 			mesh.size = Vector3(4, .1, 4)
@@ -181,22 +182,15 @@ func _precision_cases() -> void:
 				# is above the actual 1mm margin: the fallback must not climb it.
 				var apex := Vector3(.02, .0025, .02)
 				var ring := PackedVector3Array([Vector3(.01, 0, .01), Vector3(.01, 0, .03), Vector3(.03, 0, .03), Vector3(.03, 0, .01)])
-				for i in 4: faces.append_array(PackedVector3Array([apex, ring[i], ring[(i + 1) % 4]]))
+				for i in 4: faces.append_array(PackedVector3Array([apex, ring[(i + 1) % 4], ring[i]]))
 		_triangle_floor(world, faces)
 		var actor := _actor(world, world.global_position + Vector3(4, 3, 0))
-		var foreign_rid := RID()
-		if kind == "coplanar_foreign_body":
-			# A different body touches the capsule between the five sample rays.
-			# Coplanar geometry alone cannot authorize an unknown collider RID.
-			foreign_rid = _box(world, Vector3(.005, -.003, .005), Vector3(.006, .006, .006)).get_rid()
 		await physics_frame
 		await physics_frame
 		var target := world.global_position
 		if kind == "tiny_bevel":
 			_check(_first_contact_witness(arrival, world, actor, target, RID()).get("above_margin_inside_bound") == true, "tiny bevel has actual walkable first contact above margin inside original fallback bound")
 			CAPSULE_DIAGNOSTIC.report(arrival, world, actor, target, (actor.get_node(^"Collision").shape as CapsuleShape3D).radius, "tiny bevel refusal witness")
-		if kind == "coplanar_foreign_body":
-			_check(_first_contact_witness(arrival, world, actor, target, foreign_rid).get("foreign_coplanar_contact") == true, "unknown coplanar body has actual walkable unsafe contact on its distinct RID")
 		var landing := _landing_check(arrival, world, actor, target, kind == "ridge", "native same-shape floor contact classification " + kind)
 		if kind == "ridge":
 			if landing.is_finite():
@@ -209,6 +203,42 @@ func _precision_cases() -> void:
 			else: _check(false, "ridge actual ordinary controller contact and final support")
 		world.queue_free()
 		await process_frame
+	# Classifier identity regression, not an obstruction test: once a new
+	# body is sampled as floor it can legitimately become support. Capture
+	# the actual old witnesses first, then require actual contacts on the new
+	# unknown RID to be refused against those unchanged witnessed identities.
+	var world := FlatWorld.new()
+	root.add_child(world)
+	world.position.x = 120.0
+	_concave_boxes(world, [[Vector3(0, -.05, 0), Vector3(4, .1, 4)]])
+	var actor := _actor(world, world.global_position + Vector3(4, 3, 0))
+	await physics_frame
+	await physics_frame
+	var radius: float = (actor.get_node(^"Collision").shape as CapsuleShape3D).radius
+	var surfaces: Array[Dictionary] = []
+	for offset: Vector2 in [Vector2.ZERO, Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
+		var hit: Dictionary = arrival._landing_hit(world, actor, world.global_position + Vector3(offset.x, 0, offset.y), radius)
+		if not hit.is_empty(): surfaces.append(hit)
+	var foreign := _box(world, Vector3(0, -.0095, 0), Vector3(2, .02, 2))
+	await physics_frame
+	await physics_frame
+	var before := actor.global_transform
+	var pose := actor.global_transform
+	pose.origin = world.global_position
+	var contacts: Array[Dictionary] = arrival._walkable_contacts(actor, pose)
+	var witnessed_foreign := false
+	for contact: Dictionary in contacts:
+		if contact.rid == foreign.get_rid() and surfaces.size() == 5 \
+			and absf(surfaces[0].normal.dot(contact.point - surfaces[0].position)) <= actor.safe_margin:
+			witnessed_foreign = true
+	_check(witnessed_foreign, "unknown floor body has actual walkable contact within the old witnessed floor plane margin")
+	_check(surfaces.size() == 5 and not arrival._contacts_on_support(world, contacts, surfaces, actor.safe_margin), "coplanar unknown RID cannot inherit the five old floor witnesses")
+	_check(actor.global_transform == before, "unknown floor identity classifier leaves actual actor pose unchanged")
+	print("F18_FOREIGN_FLOOR_CONTACT_WITNESS " + JSON.stringify({"old_surfaces": surfaces.size(),
+		"actual_walkable_contacts": contacts.size(), "foreign_contact_observed": witnessed_foreign,
+		"actual_safe_margin": actor.safe_margin, "fixture": "old native floor ray witnesses, newly registered distinct native floor body; no dictionary injection or actor pose writes"}))
+	world.queue_free()
+	await process_frame
 	arrival.free()
 
 func _bounded_cases() -> void:
