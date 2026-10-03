@@ -5,6 +5,7 @@ extends "res://tests/helpers/f49_portal_travel.gd"
 ## while inventory/credits also read idle frames.
 const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 var _lesson_busy := false
+var before_interact: Callable
 
 func activate(prompt: Node3D) -> bool:
 	var failures_before := failures.size()
@@ -72,6 +73,12 @@ func _activate_world(prompt: Node3D) -> bool:
 	return passed
 
 func tap(action: String) -> void:
+	# Presentation proofs can use ordinary camera input after the original
+	# capsule navigation has reached its exact provider, before pressing X.
+	if action == "interact" and before_interact.is_valid():
+		var preparation := before_interact
+		before_interact = Callable()
+		await preparation.call()
 	for pressed: bool in [true, false]:
 		var event := InputEventAction.new()
 		event.action = action
