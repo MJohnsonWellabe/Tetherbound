@@ -311,6 +311,16 @@
   "solmane_cold_material_diagnostic": {
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
     "scope": "First original bootstrap/reset/reboot only; all root children masked Material census, no active/particle/Terrain/Mesh refs or gameplay mutation added; baseline and retained copies in distinct processes.",
-    "status": "Prepared; not yet dispatched"
+    "status": "Both original cold-transition processes live; no result or acceptance claim",
+    "source_commit": "ef33ae27f5738b40f64980047c0f2d9b7d018f56",
+    "baseline": {
+      "run": 37104723866,
+      "job": 111150900215
+    },
+    "retain_masked_materials": {
+      "run": 37104725293,
+      "job": 111150904967,
+      "args": "--retain-masked-materials"
+    }
   }
 }
