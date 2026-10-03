@@ -138,9 +138,9 @@ def native(mode, port):
                 if row["process"].poll() not in (None, 0):
                     raise RuntimeError(row["role"] + " exited nonzero")
             time.sleep(0.05)
-        fixed_counts = {"baseline": {"host": 29, "departing": 29, "staying": 23},
-                        "cancel": {"host": 22, "departing": 32, "staying": 23},
-                        "latejoin": {"host": 26, "departing": 29, "latejoin": 27}}
+        fixed_counts = {"baseline": {"host": 34, "departing": 33, "staying": 23},
+                        "cancel": {"host": 27, "departing": 36, "staying": 23},
+                        "latejoin": {"host": 31, "departing": 33, "latejoin": 27}}
         for row in rows:
             count = str(fixed_counts[mode][row["role"]])
             expected = rf"^ADAPTER RESULT {row['role']} checks={count} failed=false$"

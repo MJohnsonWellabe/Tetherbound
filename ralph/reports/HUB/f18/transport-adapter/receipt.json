@@ -1,0 +1,117 @@
+{
+  "source_base": "8dcb8114ab",
+  "implementation": "Two test-adapter/CI files only. Raw legacy request remains a readable refusal. Disclosed tiny-world host fixture evaluates/consumes shipping PortalPolicy and retains exact weak Session/world permission in production PortalArrival; canonical sender/target and original cleanup checked. All old fence/drain/recovery/latejoin checks retained. No production authorization bypass.",
+  "independent_review": {
+    "agent": "/root/f18_review",
+    "verdict": "PASS source only, prior to parser rename namespace -> world_namespace; root reviewed same binding rename"
+  },
+  "parser": {
+    "first_attempt": "Failed reserved local variable name; original diagnostic retained.",
+    "second_attempt": "Clean exit0 after rename."
+  },
+  "runtime": [
+    {
+      "mode": "baseline",
+      "checks": 90,
+      "roles": {
+        "host": 34,
+        "departing": 33,
+        "staying": 23
+      },
+      "elapsed_seconds": 24.8399654,
+      "diagnostics": [],
+      "finding": "",
+      "launcher_exit_codes": 0,
+      "engine_children": [
+        {
+          "pid": 20572,
+          "exit_code": null,
+          "peak_working_set_mb": 319.78515625
+        },
+        {
+          "pid": 7000,
+          "exit_code": null,
+          "peak_working_set_mb": 319.3125
+        },
+        {
+          "pid": 14880,
+          "exit_code": null,
+          "peak_working_set_mb": 319.01171875
+        }
+      ],
+      "engine_exit_limit": "Existing runner child Get-Process handles record null exit codes after termination; all child PIDs verified absent and exact final clean result markers retained. Do not claim measured child exit0."
+    },
+    {
+      "mode": "cancel",
+      "checks": 86,
+      "roles": {
+        "host": 27,
+        "departing": 36,
+        "staying": 23
+      },
+      "elapsed_seconds": 23.8239465,
+      "diagnostics": [],
+      "finding": "",
+      "launcher_exit_codes": 0,
+      "engine_children": [
+        {
+          "pid": 19964,
+          "exit_code": null,
+          "peak_working_set_mb": 319.640625
+        },
+        {
+          "pid": 19832,
+          "exit_code": null,
+          "peak_working_set_mb": 319.21484375
+        },
+        {
+          "pid": 20624,
+          "exit_code": null,
+          "peak_working_set_mb": 320.26953125
+        }
+      ],
+      "engine_exit_limit": "Existing runner child Get-Process handles record null exit codes after termination; all child PIDs verified absent and exact final clean result markers retained. Do not claim measured child exit0."
+    },
+    {
+      "mode": "latejoin",
+      "checks": 91,
+      "roles": {
+        "host": 31,
+        "departing": 33,
+        "latejoin": 27
+      },
+      "elapsed_seconds": 36.9439915,
+      "diagnostics": [],
+      "finding": "",
+      "launcher_exit_codes": 0,
+      "engine_children": [
+        {
+          "pid": 16252,
+          "exit_code": null,
+          "peak_working_set_mb": 321.48046875
+        },
+        {
+          "pid": 6456,
+          "exit_code": null,
+          "peak_working_set_mb": 320.84375
+        },
+        {
+          "pid": 10504,
+          "exit_code": null,
+          "peak_working_set_mb": 323.8046875
+        }
+      ],
+      "engine_exit_limit": "Existing runner child Get-Process handles record null exit codes after termination; all child PIDs verified absent and exact final clean result markers retained. Do not claim measured child exit0."
+    }
+  ],
+  "total_checks": 267,
+  "scope_limits": [
+    "Three native headless ENet processes use tiny authored replication worlds and disclosed host unlock/context fixtures.",
+    "Proof does not claim earned portal gameplay, procedural world travel, HomeKey presentation, ordinary disk-save arrival, or F18 criterion acceptance.",
+    "Coordinators exact baseline/Linux CI run still required."
+  ],
+  "source_sha256": {
+    "tools/probe_realm_transition_adapter_peer.gd": "05ff8ad5ed2994b4c42502170daf4aabad4d35c978b9ade60a193d763fac9d09",
+    "tools/ci/verify-realm-transition.py": "8a32b0ac798f64771c1c6edc45c0a894929ed79552c008b55b2917c6ad5c6474"
+  }
+}
