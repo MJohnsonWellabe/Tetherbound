@@ -1,7 +1,7 @@
 {
   "_comment": "Authored physical handoff between the Meadows and Cloudreach. Positions are realm-local x/z metres and are kept here so gates, arrival placement and evidence harnesses share one source.",
   "meadows_heart_shrine": {
-    "position": [10.0, 8.0],
+    "position": [-24.0, -12.0],
     "yaw_deg": 12.0,
     "heart_id": "meadows"
   },

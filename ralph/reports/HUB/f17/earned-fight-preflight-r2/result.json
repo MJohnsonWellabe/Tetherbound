@@ -1,0 +1,42 @@
+{
+  "source": "1ef75431e366689314a1bee9a5c1f24f488d631c",
+  "capture_sha256": "4ee6cbb8889b3c4cbf1a957ca14023cc914827ef15de7ba5f305e66b07144f7a",
+  "run": 37092531110,
+  "job": 111115710179,
+  "artifact": 11263481494,
+  "workflow_conclusion": "failure",
+  "wrapper_exit": 1,
+  "native_exit_record": null,
+  "expected_preflight_refusal": true,
+  "elapsed_seconds": 5.978,
+  "script_error_count": 0,
+  "error_count": 0,
+  "campaign_result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": false,
+    "cumulative_elapsed_seconds": 5.978,
+    "dry_run": false,
+    "elapsed_seconds": 5.978,
+    "failures": [
+      "earned fight capture requires native1920, matching preset/renderer, exact source, fresh output and through-opening/no-checkpoints"
+    ],
+    "local_chains": [],
+    "reached": "title",
+    "requested_prefix_passed": false,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": ""
+  },
+  "scope": "Exact modified capture script compiled/loaded and deliberately refused invalid headless capture before gameplay. This is no sample callback, I/O failure, capture, motion, full-bar or F17 acceptance pass.",
+  "hashes": {
+    ".gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "artifact-manifest.txt": "14475014ae4be69b65fd3750d5d1dc20824aad0d4f5b653cf53ea924f3eec52e",
+    "job.log": "34791576aa2a7b9cee8d7c6d320fdeeafb0d2ec8c4b051476ade03939aba00ff",
+    "native.log": "ab40a2799a64cf6d36384c2cc449aa76ee9ec4b12b3544f6572a502f8c20aef6",
+    "request.json": "fbd41542fb35081270595d47be13057c452bde4226eb86c1ee383716c107802a",
+    "runtime-artifact.zip": "30fd4137bf23bfb7311f45918d877011a0edaff3085ceb3c04cab1b9715b0eea",
+    "workflow-artifacts.json": "cac1730a5a0479671d2a00644b6e319ab0edfda94c43f8cae3f7c6c86ca6a2c2",
+    "workflow-jobs.json": "8d9c6e2f9f136654d7f35aaf9c17005bcf4a41076e44d70fdfb28a813d879dda"
+  }
+}

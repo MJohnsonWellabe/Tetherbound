@@ -1,0 +1,20 @@
+{
+  "source": "1a7a390cc5eeead8685a42094cedc683648c3e59",
+  "run": 37075566898,
+  "job": 111064580991,
+  "artifact": 11257889852,
+  "passed": false,
+  "run_step_exit": 124,
+  "timed_out": true,
+  "images": 0,
+  "scope": "failed Low capture; actual preset-selection script error then timeout; no visual acceptance",
+  "hashes": {
+    "native.log": "0ab0db9b78e7914662e44c5596e4ccff8b0494da675196eae19486db35c10a3b",
+    "request.json": "ba0662201e99995dfb31f2461f93c6a0872a2facfb18e63990d515e1766e6e73",
+    "result.md": "d7c7f8a717521aec3591cf98391beb648ba95cbc228a9c3f3c9b6ec189b5ea29",
+    "runtime-artifact.zip": "2074b78b36a185015882daaa38f5e354d638485ea3ecae4f027b8659e402ad70",
+    "workflow-artifacts.json": "3122261f91f6671b76d28132be68dbbb8a0c4b467aa53a11f4e1e23d0a856ce2",
+    "workflow-job.log": "3523e4c549ff9bbf61d7863601315b40026fb008e13b4b73d43c0ea6e6e8e1e3",
+    "workflow-jobs.json": "d7b98e40c7e57d29c1ff415c3fde2bae741135e6db1e9ca37a7d1ee81512f4f2"
+  }
+}

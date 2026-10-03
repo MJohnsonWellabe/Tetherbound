@@ -1,0 +1,11 @@
+{
+  "ref": "main",
+  "inputs": {
+    "args": "",
+    "script": "tests/smoke_f17_legacy_circle.gd",
+    "checkout_ref": "7dc0f307d3be4f0b869c6bf88191cc4cb79b5885",
+    "mode": "headless",
+    "label": "f17-circle-controller-r3",
+    "timeout_minutes": "20"
+  }
+}

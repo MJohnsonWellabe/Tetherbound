@@ -1,0 +1,17 @@
+{
+  "source": "ae511965c39bd606e7557d1547ab1803f38f1d00",
+  "run": 37078571395,
+  "job": 111073863678,
+  "artifact": 11257824087,
+  "passed": false,
+  "scope": "timed-out partial lighting diagnostic; no images/no visual conclusion",
+  "run_step_exit": 124,
+  "timed_out": true,
+  "hashes": {
+    "native.log": "ee081e207cad4733edea90303fd37a42312aedef5dcbeeb93d4aed82546e2d36",
+    "request.json": "b590ed349d9522d8db8eee8efd8cc12027e9dc055f0968254be894558fbfd145",
+    "runtime-artifact.zip": "f155f55ce4d2eb1acfe74a2eadc80477a61af35d1883d2345f4469df01bfe9f0",
+    "workflow-artifacts.json": "4c3af61498e09515274674a199f17d2034b7c3614fd2d5c2a610f16b1804abbe",
+    "workflow-jobs.json": "6a6468a3ed07710cd7db157c16a3c07a3f73f00e10ed5a637ea74a73059691f7"
+  }
+}

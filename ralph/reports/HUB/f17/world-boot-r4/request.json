@@ -1,0 +1,11 @@
+{
+  "inputs": {
+    "script": "tests/smoke_playground.gd",
+    "timeout_minutes": "15",
+    "args": "",
+    "label": "f17-world-boot-r4",
+    "checkout_ref": "2a4dd0c6f4d1eb632a017750f37bcb7d74de4d37",
+    "mode": "headless"
+  },
+  "ref": "main"
+}

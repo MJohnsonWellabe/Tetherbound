@@ -1,0 +1,20 @@
+{
+  "source": "34e92d996f36807dfa836a33c139b52ae14eb98d",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "tests/smoke_four_biome_continuous.gd",
+    "--",
+    "--through-tournament",
+    "--world-seed=4",
+    "--no-checkpoints"
+  ],
+  "exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 697.016,
+  "scope": "Existing uninterrupted earned M1 prefix through three tournament rounds; no later chapter proof."
+}

@@ -1,0 +1,15 @@
+MANIFEST.txt
+run.log
+tree/ralph/reports/HUB/f17/visual-low-r2/0000-actual-farmhouse-doorway-day-clear-low.png
+tree/ralph/reports/HUB/f17/visual-low-r2/0001-actual-farmhouse-doorway-night-clear-low.png
+tree/ralph/reports/HUB/f17/visual-low-r2/0002-actual-farmhouse-doorway-diagnostic-house-lights-off-night-clear-low.png
+tree/ralph/reports/HUB/f17/visual-low-r2/0003-actual-farmhouse-doorway-day-rain-low.png
+tree/ralph/reports/HUB/f17/visual-low-r2/0004-actual-farmhouse-doorway-night-rain-low.png
+tree/ralph/reports/HUB/f17/visual-low-r2/0005-actual-farmhouse-doorway-diagnostic-house-lights-off-night-rain-low.png
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key
+user/godot/app_userdata/Tetherbound/graphics_override.cfg
+user/godot/app_userdata/Tetherbound/graphics_override.cfg.previous
+user/godot/app_userdata/Tetherbound/logs/godot.log
+user/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json

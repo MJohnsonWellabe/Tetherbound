@@ -1,0 +1,36 @@
+{
+  "source": "6244407dbc40daa6bbfcddea84f95cad86b99eb1",
+  "run": 37084343436,
+  "job": 111091415806,
+  "artifact": 11260087284,
+  "passed": false,
+  "native_exit": 1,
+  "timed_out": false,
+  "failure": "actual production contact observation cap at farmhouse return frontage before garden",
+  "actual_contact_counts": [
+    3,
+    1,
+    3,
+    3
+  ],
+  "callback_own_us": 819,
+  "scope": "inherited farmhouse-road-Hall outward walk passes; midpoint return proceeds; no circle approach/visual pass",
+  "hashes": {
+    "job.log": "fc934d3e1c034a678937732d55f6855c16ec3410a25c9215b81331bfa0ed055d",
+    "native.log": "e8fbe15260bbfc79d5b8cb26bf42e63f3192bca9babcf01b706560b3d15797f0",
+    "request.json": "35746f35ca7ed1a01479945be6254ee762648e00d8939e6a5b0dc26ed71ca758",
+    "runtime-artifact.zip": "9d308bc31f674ef45bd4e72bee6c09212f015a5e5bf9357fb464d7bc56f2b2f7",
+    "workflow-artifacts.json": "14cf71df7ef09d301fb3bc66772c436cfa81eafac8697108fe9100e91e3a3d31",
+    "workflow-jobs.json": "b17ca56a736e8ab52daff6f0d6824edd0dc186839e8ca18509c009f3228ad607"
+  },
+  "actual_player": [
+    7.51554679870605,
+    0.900935709476471,
+    13.0828771591187
+  ],
+  "actual_request": [
+    8.30000019073486,
+    0.0,
+    14.0
+  ]
+}

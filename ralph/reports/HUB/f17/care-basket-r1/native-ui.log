@@ -1,0 +1,15 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+GATE A NPC/GATHER +13.28s — paid Mira care purchase 1: potion_small +1, coin -28, purse 112
+GATE A NPC/GATHER +13.41s — paid Mira care purchase 2: potion_small +1, coin -28, purse 84
+GATE A NPC/GATHER +13.55s — paid Mira care purchase 3: potion_small +1, coin -28, purse 56
+GATE A NPC/GATHER +13.68s — paid Mira care purchase 4: potion_small +1, coin -28, purse 28
+ERROR: care purchase refused: authored potions or earned funds are unavailable
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_npc_gather_segment.gd:1419)
+       [1] _buy_care_basket (res://tests/helpers/gate_a_npc_gather_segment.gd:315)
+       [2] _run (res://tests/probe_f17_care_shop.gd:54)
+       [3] _buy_care_basket (res://tests/helpers/gate_a_npc_gather_segment.gd:363)
+       [4] _tap_action (res://tests/helpers/gate_a_npc_gather_segment.gd:1341)
+F17 CARE SHOP DIAGNOSTIC {"checks":9,"failures":[],"passed":true,"scope":"declared detached UI fixture; no earned journey"}

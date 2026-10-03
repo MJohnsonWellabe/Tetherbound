@@ -1,0 +1,23 @@
+{
+  "source": "38b655d684d4da586a964fae933a516b448e0b27",
+  "run": 37085041762,
+  "job": 111093440578,
+  "artifact": 11259522712,
+  "passed": false,
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 298.591,
+  "reached": "village",
+  "requested_prefix_passed": false,
+  "script_error_count": 0,
+  "error_count": 4,
+  "scope": "all5 actualpaidMira purchases coin140to0 potion3to8 partyunchanged; later earnedcatch fails actualstarterfaint beforetraining; no care/route/rest/tournament pass",
+  "hashes": {
+    "job.log": "ea8a9c5d52f2463ef5c13a4bc2337c2e73a65a230646518db34cc058842c331c",
+    "native.log": "1df9d9af837112a94758f4eba84222c9bb5114521ee400d05b516f664f51b6c8",
+    "request.json": "97318487d8879e9c16fc347cf80d49b546d3d5c4815d3240776ea1d2863d6868",
+    "runtime-artifact.zip": "6f93c04f1e85f41ad55fa2142595ef74ee1e4de82435c961bcc5b3a6deeca252",
+    "workflow-artifacts.json": "b7724cbbc7fc2060003c80802bfa22c568a4fd7d1e2c1ac78d2046381be9e81b",
+    "workflow-jobs.json": "8a16d9a07815295adc424963ee1365b6cda3cc5c18718e6e3d1e23f656f11cab"
+  }
+}

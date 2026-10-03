@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f17_capture_presets.gd: 1 of 730 test files
+  ok    test_f17_capture_presets.gd :: test_native_capture_preset_branches_return_typed_strings
+
+1 tests, 7 assertions, 0 failed
+exit=0 took=4s

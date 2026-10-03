@@ -1,0 +1,53 @@
+{
+  "source": "8a7b44f6ccadf6b70117f4dd97006326e7a6e55d",
+  "run": 37087907342,
+  "job": 111101893644,
+  "artifact": 11263195063,
+  "passed": false,
+  "complete": false,
+  "workflow_conclusion": "failure",
+  "wrapper_exit": 124,
+  "native_exit_record": null,
+  "timed_out": true,
+  "script_timeout_seconds": 3600,
+  "native_images": {
+    "0000-earned-opening-low.jpg": [
+      1920,
+      1080
+    ],
+    "0001-earned-opening-low.jpg": [
+      1920,
+      1080
+    ],
+    "0002-earned-opening-low.jpg": [
+      1920,
+      1080
+    ],
+    "first-actual-live-fight-low.png": [
+      1920,
+      1080
+    ]
+  },
+  "capture_manifest_present": false,
+  "measured_motion_span_ms": null,
+  "requested_prefix_result_present": false,
+  "script_error_count": 0,
+  "error_count": 1,
+  "scope": "Partial genuine fresh title/Terrapup/practice approach reaches tutorial combat; actual Low/software native1920 PNG and three JPEG samples. No completed opening/catch, per-frame state/timing manifest, measured30s motion, Medium/High, device, or full visual-bar proof. Wrapper124 is timeout, not a native exit record. Image names do not independently prove HP/state; observer source and native log bound provenance.",
+  "hashes": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
+    "artifact-manifest.txt": "969f68c57b0fababac1528f4a7e20a8cd4bbcb5573d14e708af0ab12d73dba1e",
+    "graphics_override.cfg": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30",
+    "job.log": "5d6400c8fdb5e5d80b93df0c37ca0027388f7555184c61a2dde6d72948b2d810",
+    "native.log": "15b770888d9e7d53271c0c051940b78e08f702b79b62c3dea0d3a3b878784340",
+    "request.json": "f9eef971e47c13f34d0a2c4aedb3b46ef9a58d23c08c7e3c72b10e7d79653d19",
+    "runtime-artifact.zip": "8434d87f4d6a7b5209deffe02b337ec1ca94cfa1a10f06882e6ae570418ab6b0",
+    "workflow-artifacts.json": "1332007645ad1287d51a8a8899f1b535383f3435c97749ecff58ef3a6a565955",
+    "workflow-jobs.json": "56d0af2e01f06d6f39a2f6b6a9396cfe935f7782b6188cb0eaafc3836131c6eb",
+    "workflow-run.json": "98aa5ec5ed79fe97c8586dd7f0c9933f9f6b83a339509ee6004600662756c430",
+    "images/0000-earned-opening-low.jpg": "d8bc70c0e3b935942aa516b913a3e7a312bda2ef29336a13eb6b129ed46cc735",
+    "images/0001-earned-opening-low.jpg": "c684b8ceaa91f44c6729135e4f70150bc70518974d6433353a1932b643758fc6",
+    "images/0002-earned-opening-low.jpg": "0485f14ff9ec7343986950ee4c568d201843e10abb5adcdfb8b96b22bf3ddca4",
+    "images/first-actual-live-fight-low.png": "fff5377f730d1fdcf86b129f3be245e5812809b846556494b58387d7edb398e7"
+  }
+}
