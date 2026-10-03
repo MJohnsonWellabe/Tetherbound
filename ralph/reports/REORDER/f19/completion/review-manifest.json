@@ -151,7 +151,8 @@
   },
   "open_acceptance": [
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
-    "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
+    "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups.",
+    "fresh-contact-overflow-rejected.json: normal route reached paid_camp then generic tournament-picker failure after13 frames; four initial gather-stage material errors; no earned checkpoints. Broader rerun held until matched green main."
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
@@ -501,14 +502,66 @@
     "source_commit": "27d2fc2ebb773b85dda2690c9e500f0c925e9bb1",
     "run": 37109365598,
     "job": 111164127200,
-    "status": "Live original normal fresh journey with read-only post-refusal contact snapshot; terminal artifact required",
-    "scope": "Inherits original F49 route. Only after original unchanged contact-cap refusal samples first excess point from actual cached CharacterBody slide result. Deferred output; no new query, input/pose/cap changes, seed override, resume, setup or partial promotion.",
+    "status": "Terminal rejected: paid-camp rest failure, four gather-stage material errors, zero checkpoints; previous cap event did not reproduce",
+    "scope": "Original normal fresh F49 route with read-only post-refusal observer. Shipping/F17 helper source identical to6809. No seed override, resume, cap change, material retention, setup fixture, checkpoint promotion or earned acceptance credit.",
     "shipping_and_f17_helper_identical_to": "6809a7aedfb1f22bb15015eb49735e04060499cb",
-    "acceptance": false
+    "acceptance": false,
+    "kind": "f19_original_normal_fresh_contact_diagnostic_rejected",
+    "artifact": 11269562670,
+    "job_conclusion": "failure",
+    "process_exit": null,
+    "process_exit_note": "Raw artifact has no exit footer or exit_code file; job conclusion is authoritative.",
+    "engine_errors": 4,
+    "engine_error_messages": [
+      "ERROR: Parameter \"material\" is null.",
+      "ERROR: Parameter \"material\" is null.",
+      "ERROR: Parameter \"material\" is null.",
+      "ERROR: Parameter \"material\" is null."
+    ],
+    "script_errors": 0,
+    "leak_warnings": [],
+    "result": {
+      "campaign_complete": false,
+      "checkpoints": [],
+      "counts_as_proof": false,
+      "cumulative_elapsed_seconds": 1628.581,
+      "dry_run": false,
+      "elapsed_seconds": 1628.581,
+      "failures": [
+        "Earned rest could not reach Halda's tournament picker"
+      ],
+      "local_chains": [],
+      "reached": "paid_camp",
+      "requested_prefix_passed": false,
+      "resume": {},
+      "resumed_from": "",
+      "scratch": "user://f49_campaign_2544_11927"
+    },
+    "material_error_context": "All four material-null errors occur in initial village tool/gather stage, after production observation frame2160 and before pickaxe gathered +4 Stone. Owning factory not proved.",
+    "rest_context": {
+      "entry_frame": 50705,
+      "return_frame": 50718,
+      "player": [
+        29.76292,
+        0.204819,
+        -42.01878
+      ],
+      "failure": "Earned rest could not reach Halda's tournament picker",
+      "actual_tournament_marshal_walk_start_logged": false,
+      "source_branches": "Rest fails if prompt is missing or TAIL._walk_to_prompt returns false. TAIL first stows pending build and hammer before starting actual walk. Raw evidence does not distinguish those branches; private TAIL failures are not propagated into the generic rest result."
+    },
+    "overflow_event_count": 0,
+    "production_observation_count": 143,
+    "max_sampled_slide_points": 4,
+    "sampled_refusals": [],
+    "previous_ninth_contact_failure_closed": false,
+    "broader_journey_rerun": "Held by coordinator pending matched green main baseline.",
+    "raw_log": "ci-fresh-contact-overflow-rejected-37109365598.log.gz",
+    "raw_log_sha256": "08805e896779e06ccf1f998d31241762b576c0868e04b48deb0c1dd19ed048bc"
   },
   "coordinator_disposition": {
     "status": "No harvest integration/import approval yet; review deferred until a required root green gate needs the material dependency. Preserve existing root Harvest ready/stock guards. No matched moving portal group approved before actual main green.",
     "home_key": "Preserve already reviewed monotonic candidate upstream538c971f6fa9355113efdd0f4756aa34f889e210, lane c0a8951cfb; root still has older frame-delta blob.",
-    "fresh_route": "Original contact cap remains8. First8 raw contacts are known; ninth owner awaits actual post-refusal snapshot. No F17 helper edit or cap waiver."
+    "fresh_route": "Original contact cap remains8. New normal run did not reproduce the overflow (sampled maximum4), so historical ninth owner remains unproved. Fresh route instead failed at paid-camp rest. No F17 helper edit or cap waiver; broader reruns held pending matched green main."
   }
 }
