@@ -20,6 +20,8 @@
   "session": {
     "_comment_redesign_portal_runtime_enabled": "F18 Crossing Hall portals are unfinished (every F18 criterion unproven). Off, travel uses the physical crossings main ships (biome_order.legacy_physical_crossings) and no portal permit is required. F18 turns this on when it lands.",
     "redesign_portal_runtime_enabled": false,
+    "_comment_ordinary_combat_reward_runtime_enabled": "Durable per-owner trainer/boss round reward journal. Unfinished: rounds can stall at 0 HP waiting for an owner save. Off, rounds award through the local path main ships. Returns with F48.",
+    "ordinary_combat_reward_runtime_enabled": false,
     "redesign_boss_handoff_runtime_enabled": true,
     "redesign_ending_runtime_enabled": true,
     "port": 27015,
