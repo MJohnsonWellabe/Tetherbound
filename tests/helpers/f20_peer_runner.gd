@@ -3,6 +3,57 @@ extends "res://tools/net/peer_runner.gd"
 ## F20-only runner. The shared runner and other feature fixtures are untouched.
 const F20 := preload("res://tests/helpers/f20_ending_probe.gd")
 var f20 := F20.new()
+var _f20_arrival_trace_at := 0
+
+func _send_heartbeat() -> void:
+	super._send_heartbeat()
+	# Observe the pending shipping arrival on both peers at most once/10s.
+	# Read stored physical samples; foundation_ground_contact() also admits
+	# character state, so this observer must not call it or trigger a save.
+	if Time.get_ticks_msec() < _f20_arrival_trace_at: return
+	var game := root.get_node_or_null("Game")
+	if game == null or game.get("session") == null: return
+	var session: Node = game.get("session")
+	var arrival := session.get_node_or_null("FoundationComposition/PortalArrival")
+	if arrival == null: return
+	var pending: Dictionary = arrival.get("_pending")
+	var remote: Dictionary = arrival.get("_remote")
+	var requests: Dictionary = session.get("_portal_requests")
+	if pending.is_empty() and remote.is_empty() and requests.is_empty(): return
+	_f20_arrival_trace_at = Time.get_ticks_msec() + 10000
+	var key := game.get_node_or_null("HomeKey")
+	var player := game.call("find_player") as CharacterBody3D
+	print("F20 ARRIVAL peer=", _peer_index, " ticks_ms=", Time.get_ticks_msec(),
+		" physics=", Engine.get_physics_frames(), " requests=", requests,
+		" key_phase=", key.get("_phase") if key != null else "none",
+		" key_pending=", key.get("_pending") if key != null else "none",
+		" pending_keys=", pending.keys(), " seated=", pending.get("seated", false),
+		" pose_saved=", pending.get("pose_saved", false), " journal_started=", pending.get("journal_started", false),
+		" save_wait_notified=", pending.get("save_wait_notified", false),
+		" player=", player.global_position if player != null else Vector3.INF,
+		" floor=", player.is_on_floor() if player != null else false)
+	var retry: Dictionary = session.get("_owner_training_retry")
+	print("F20 ARRIVAL owner retry_keys=", retry.keys(), " retry_receipt=", retry.get("receipt", ""),
+		" retry_saved=", retry.get("saved", false), " install=", session.get("_owner_training_install"),
+		" bootstrap_waiting=", session.get("_training_bootstrap_waiting"),
+		" receipts=", game.local.redesign_character.get("transaction_receipts", []))
+	for value: Variant in game.world.reward_deliveries.values():
+		if value is Dictionary and value.get("action") == "portal_arrival":
+			print("F20 ARRIVAL row character=", value.get("character_id", ""),
+				" status=", value.get("status", ""), " intent=", value.get("intent", {}),
+				" receipt=", value.get("receipt", ""))
+	var lifecycle := session.get_node_or_null("FoundationComposition/TravelLifecycle")
+	for peer: int in remote:
+		var original: Dictionary = remote[peer]
+		var body: CharacterBody3D = lifecycle.call("remote_body", peer) if lifecycle != null else null
+		print("F20 ARRIVAL remote peer=", peer, " permit=", original.get("permit", {}),
+			" owner_saved=", original.get("owner_saved", false), " journal_started=", original.get("journal_started", false),
+			" body=", body.get_path() if body != null else "none",
+			" position=", body.global_position if body != null else Vector3.INF,
+			" floor=", body.is_on_floor() if body != null else false,
+			" contact_frame=", body.get("_foundation_ground_contact_frame") if body != null else -1,
+			" contact_position=", body.get("_foundation_ground_contact_position") if body != null else Vector3.INF,
+			" contact_generation=", body.get("_foundation_ground_contact_generation") if body != null else -1)
 
 func _boot_scene(which: String, settle: int) -> void:
 	await process_frame
