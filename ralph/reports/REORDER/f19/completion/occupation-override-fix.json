@@ -34,7 +34,7 @@
     "raw_log": "ci-occupation-override-37101526190.log.gz",
     "raw_log_sha256": "56f44df1c5df2164fb3b6bff794b96befe798daec5b10b619e8fe69a5e2d5310"
   },
-  "full_veridian_solmane_still_required": true,
+  "full_veridian_solmane_still_required": "Solmane full original witness still live; Veridian full original now clean",
   "independent_review_pending": true,
   "earned_campaign": false,
   "acceptance": false,
@@ -44,8 +44,10 @@
     "veridian": {
       "run": 37101815341,
       "job": 111142677312,
-      "status": "Live",
-      "script": "tests/smoke_f19_veridian_functional.gd"
+      "status": "PASS all six original cases",
+      "script": "tests/smoke_f19_veridian_functional.gd",
+      "artifact": 11266764847,
+      "evidence": "veridian-complete-clean.json"
     },
     "solmane": {
       "run": 37101816593,

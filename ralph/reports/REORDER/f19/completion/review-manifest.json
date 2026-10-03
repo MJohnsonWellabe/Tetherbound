@@ -138,7 +138,8 @@
       "legendary-contract-check.log:105 tests/773 assertions",
       "ci-guardian-37074149226.log:120 checks",
       "ci-stormheart-37074151200.log:44 assertions",
-      "stormheart-capacity-r2.log:89 assertions"
+      "stormheart-capacity-r2.log:89 assertions",
+      "veridian-complete-clean.json:all six actual native choice/save/reload cases,1872s/0failures/0engine+script errors; original guards unchanged"
     ],
     "F19#5": [
       "order-consumers-corrected.log:recommendations visible; host policy accepts level1 with earned unlock",
@@ -147,7 +148,7 @@
     ]
   },
   "open_acceptance": [
-    "Clean Veridian and Solmane actual choice runs; all six completed natively in each, but raw GLES3 material-null errors remain (136 Veridian, 4 Solmane). Actual chamber diagnostic also retained one original prompt-at-offer assertion failure; no clean claim or waived guard.",
+    "Clean Solmane actual full six-case witness still required (37101816593 live). Veridian original full six cases now clean on c510 (37101815341/artifact11266764847). Prior intermittent prompt guard failures remain recorded; full current Veridian witness original guards pass without waiver.",
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
     "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
   ],
@@ -275,8 +276,9 @@
       "veridian": {
         "run": 37101815341,
         "job": 111142677312,
-        "status": "Live",
-        "script": "tests/smoke_f19_veridian_functional.gd"
+        "status": "Terminal PASS:all six original cases,1872s/0errors",
+        "script": "tests/smoke_f19_veridian_functional.gd",
+        "artifact": 11266764847
       },
       "solmane": {
         "run": 37101816593,
