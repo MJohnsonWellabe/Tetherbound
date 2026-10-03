@@ -1357,6 +1357,11 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 func _complete_home_key_lesson() -> bool:
 	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
 	if rules.config().get("enabled") != true: return true
+	# Grandpa hands the Home Key over only while F18's portal runtime is on
+	# (sequence_director `finite_gift_enabled`); with it off there is no key
+	# and so no lesson to read.
+	var session: Node = _game.get("session")
+	if session == null or session.call("portal_runtime_ready") != true: return true
 	var local: RefCounted = _game.get("local")
 	var flag := rules.PREFIX + "home_key"
 	if local.get("flags").call("has", flag): return true
