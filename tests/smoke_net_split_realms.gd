@@ -100,6 +100,12 @@ func _run() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
+		var permission: Dictionary = await step(fixture_peer, "split_realms_permission_fixture", {})
+		check(permission.get("verdict") == "PASS",
+			"disclosed transport-only pre-admission Home Key and fixed Cloudreach permission fixture (%s)" % str(permission.get("detail", "")))
+		if permission.get("verdict") != "PASS":
+			quit(await finish())
+			return
 
 	check(_peers.size() == 2, "coordinator tracked 2 peers")
 
@@ -172,8 +178,10 @@ func _run() -> void:
 		check(str(seen.get("verdict", "")) == "PASS",
 			"peer %d sees the Cloudreach route open (%s)" % [i, str(seen.get("detail", ""))])
 
-	# 1. The client crosses. `enter_realm` is the game's own door; the step
-	#    fails loudly if it is still refused.
+	# 1. The subclass first proves raw Game entry refuses without source drain,
+	# then runs the production consumer with a real consumed fixed Cloudreach
+	# permit. The proximity/unlock/request registration are disclosed fixtures;
+	# source fences, receiver install, capsule support and save ACKs stay real.
 	var crossed: Dictionary = await step(1, "enter_realm", {"realm": CLOUDREACH},
 		int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4)
 	check(str(crossed.get("verdict", "")) == "PASS",
@@ -279,7 +287,8 @@ func _run() -> void:
 		"the Cloudreach shell survived the host's own fight (holds %s)" % str(_shell_realms(shells_mid)))
 
 	# 7. The swap. Client home first, so the host is never the only occupant of
-	#    a realm it is about to leave.
+	#    a realm it is about to leave. The subclass uses its actual Home Key,
+	#    then ordinary wild-fight flee input before the host's consumed portal.
 	var home: Dictionary = await step(1, "enter_realm", {"realm": MEADOWS},
 		int(_budgets.get("step_budget_frames", DEFAULT_STEP_BUDGET_FRAMES)) * 4)
 	check(str(home.get("verdict", "")) == "PASS",
@@ -341,6 +350,26 @@ func _run() -> void:
 			% stale_cached_node_count)
 
 	quit(await finish())
+
+
+func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene: String,
+		home: String, log_path: String, extra_args: Array) -> int:
+	# Same net_harness spawn contract; only the isolated test subclass differs.
+	var exe := OS.get_executable_path()
+	var args := ["--headless", "--path", ProjectSettings.globalize_path("res://")]
+	if _is_windows(): args.append_array(["--log-file", log_path])
+	args.append_array(["--script", "res://tests/helpers/split_realms_peer.gd", "--", "--role=%s" % role,
+		"--peer=%d" % i, "--control-port=%d" % control_port, "--enet-port=%d" % enet_port,
+		"--scene=%s" % scene, "TB_NET_RUN_ID=%s" % _run_id])
+	for extra: Variant in extra_args: args.append(str(extra))
+	OS.set_environment("XDG_DATA_HOME", home)
+	if _is_windows(): OS.set_environment("APPDATA", home)
+	OS.set_environment("TB_NET_RUN_ID", _run_id)
+	OS.set_environment("TB_WORLD_SEED", OS.get_environment("TB_NET_WORLD_SEED") if not OS.get_environment("TB_NET_WORLD_SEED").is_empty() else "0")
+	if _is_windows(): return OS.create_process(exe, args)
+	var parts: Array[String] = [_shq(exe)]
+	for arg: Variant in args: parts.append(_shq(str(arg)))
+	return OS.create_process("/bin/sh", ["-c", "exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
 
 
 ## Poll the host's shell report until it says what is expected, or the budget
