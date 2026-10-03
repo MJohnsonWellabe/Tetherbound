@@ -69,12 +69,17 @@ func _concave_boxes(world: Node3D, boxes: Array) -> StaticBody3D:
 
 func _landing_check(arrival: Node, world: Node3D, actor: CharacterBody3D, target: Vector3, accepted: bool, label: String) -> Vector3:
 	var before := actor.global_transform
-	var landing: Vector3 = arrival.call("_capsule_landing", world, actor, target, .4)
-	if accepted and not landing.is_finite(): CAPSULE_DIAGNOSTIC.report(arrival, world, actor, target, .4, label)
+	var collision := actor.get_node(^"Collision") as CollisionShape3D
+	# Shipping _travel_owner passes the actual native capsule property.
+	# A GDScript literal .4 need not equal that native real_t exactly.
+	var radius: float = (collision.shape as CapsuleShape3D).radius
+	if accepted: print("F18_CAPSULE_RADIUS_BINDING " + JSON.stringify({"case": label, "shape_radius": radius,
+		"literal_exact_match": radius == .4, "production_radius_exact_match": radius == (collision.shape as CapsuleShape3D).radius}))
+	var landing: Vector3 = arrival.call("_capsule_landing", world, actor, target, radius)
+	if accepted and not landing.is_finite(): CAPSULE_DIAGNOSTIC.report(arrival, world, actor, target, radius, label)
 	_check(landing.is_finite() == accepted, label)
 	_check(actor.global_transform == before, label + " leaves the actual actor pose unchanged")
 	if accepted and landing.is_finite():
-		var collision := actor.get_node(^"Collision") as CollisionShape3D
 		var query := PhysicsShapeQueryParameters3D.new()
 		query.shape = collision.shape
 		query.transform = collision.global_transform
@@ -208,6 +213,9 @@ func _run() -> void:
 	query.exclude = [actor.get_rid()]
 	_check(actor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty(), "supported landing clears the complete capsule")
 	_landing_check(arrival, world, actor, target, true, "initial full-capsule solver accepts the actual Hall slab")
+	var wrong_radius_pose := actor.global_transform
+	_check(not arrival._capsule_landing(world, actor, target, capsule.radius * .5).is_finite(), "initial solver rejects a radius that does not match the actual capsule")
+	_check(actor.global_transform == wrong_radius_pose, "wrong-radius refusal leaves actual actor pose unchanged")
 	_landing_check(arrival, world, actor, Vector3(50, 0, 0), false, "initial full-capsule solver refuses missing physical floor")
 	_landing_check(arrival, world, actor, Vector3(20, 0, 0), false, "initial full-capsule solver refuses steep physical floor")
 	_box(world, Vector3(0, 1, 0), Vector3(.2, .2, 2))

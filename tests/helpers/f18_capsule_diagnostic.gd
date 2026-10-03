@@ -22,8 +22,19 @@ static func overlaps(actor: CharacterBody3D, query: PhysicsShapeQueryParameters3
 
 static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target: Vector3, radius: float, label: String) -> void:
 	var before := actor.global_transform
+	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
 	var out := {"case": label, "actor_position": vector(actor.global_position), "target": vector(target),
 		"safe_margin": actor.safe_margin, "radius": radius, "collision_mask": actor.collision_mask}
+	out["guards"] = {"world_ancestor": world != null and world.is_ancestor_of(actor),
+		"target_finite": target.is_finite(), "radius_finite_positive": is_finite(radius) and radius > 0.0,
+		"margin_finite_positive_within_radius": is_finite(actor.safe_margin) and actor.safe_margin > 0.0 and actor.safe_margin <= radius,
+		"collision_exists": collision != null, "shape_enabled": collision != null and not collision.disabled,
+		"shape_is_capsule": collision != null and collision.shape is CapsuleShape3D}
+	if collision != null and collision.shape is CapsuleShape3D:
+		var shape_radius: float = (collision.shape as CapsuleShape3D).radius
+		out.guards["shape_radius"] = shape_radius
+		out.guards["radius_exact_match"] = shape_radius == radius
+		out.guards["literal_point_four_exact_match"] = shape_radius == .4
 	var surfaces: Array[Dictionary] = []
 	var surface_rows: Array[Dictionary] = []
 	var height := NAN
@@ -44,7 +55,6 @@ static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target:
 			row["within_walkable_height_delta"] = absf(float(hit.position.y) - height) <= tan(actor.floor_max_angle) * radius
 		surface_rows.append(row)
 	out["surfaces"] = surface_rows
-	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
 	if surfaces.size() == 5 and collision != null and collision.shape is CapsuleShape3D:
 		var start := Vector3(target.x, height + radius, target.z)
 		var query := PhysicsShapeQueryParameters3D.new()

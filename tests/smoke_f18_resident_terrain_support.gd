@@ -179,10 +179,16 @@ func _run() -> void:
 		_finish()
 		return
 	var original_pose := probe.global_transform
-	var capsule_landing: Vector3 = arrival._capsule_landing(world, probe, target, .4)
-	if not capsule_landing.is_finite(): CAPSULE_DIAGNOSTIC.report(arrival, world, probe, target, .4, "distant baked native slope")
+	var actual_capsule := (probe.get_node(^"Collision") as CollisionShape3D).shape as CapsuleShape3D
+	var actual_radius: float = actual_capsule.radius
+	print("F18_CAPSULE_RADIUS_BINDING " + JSON.stringify({"case": "distant baked native slope", "shape_radius": actual_radius,
+		"literal_exact_match": actual_radius == .4, "production_radius_exact_match": actual_radius == actual_capsule.radius}))
+	var capsule_landing: Vector3 = arrival._capsule_landing(world, probe, target, actual_radius)
+	if not capsule_landing.is_finite(): CAPSULE_DIAGNOSTIC.report(arrival, world, probe, target, actual_radius, "distant baked native slope")
 	_check(capsule_landing.is_finite(), "production complete-capsule cast finds distant native sloped landing")
 	_check(probe.global_transform == original_pose, "native landing solver observes without moving the probe")
+	_check(not arrival._capsule_landing(world, probe, target, actual_radius * .5).is_finite(), "native solver retains exact actual-radius guard")
+	_check(probe.global_transform == original_pose, "native wrong-radius refusal leaves probe pose unchanged")
 	if capsule_landing.is_finite():
 		var landing_query := PhysicsShapeQueryParameters3D.new()
 		landing_query.shape = probe.get_node(^"Collision").shape
@@ -232,7 +238,7 @@ func _run() -> void:
 	_check(not probe.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty(), "resident terrain never waives a real full-capsule wall obstruction")
 	_check(not arrival._supported_capsule(world, probe, target, .4), "final production guard refuses an obstruction added after the initial landing")
 	var wall_pose := probe.global_transform
-	_check(not arrival._capsule_landing(world, probe, target, .4).is_finite(), "initial native landing solver also refuses the real wall")
+	_check(not arrival._capsule_landing(world, probe, target, actual_radius).is_finite(), "initial native landing solver also refuses the real wall")
 	_check(probe.global_transform == wall_pose, "blocked native solver never moves the probe")
 	wall.queue_free()
 	probe.set_physics_process(false)
