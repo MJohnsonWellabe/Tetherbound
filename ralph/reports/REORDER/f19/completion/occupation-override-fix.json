@@ -1,0 +1,41 @@
+{
+  "kind": "f19_actual_occupation_active_override_fix",
+  "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+  "production": "scripts/world/stronghold_occupation.gd",
+  "baseline": "siphon-material-component.json and stronghold-surfaces-r11.json",
+  "original_native": {
+    "run": 37101523304,
+    "job": 111141839736,
+    "artifact": 11266801374,
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "process_exit": 0,
+    "elapsed_seconds": 8,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "held_material_peak": 0,
+    "scope": "Exact original three-case actual siphon component, all active emission flags false after withdrawal; no masked copy in either post-withdrawal case and no retained Material refs.",
+    "raw_log": "ci-siphon-material-fixed-37101523304.log.gz",
+    "raw_log_sha256": "d4115f2a0bc5012185f2ab7ad754c16a9216facd37b77f7cf0af355c3202c8dc"
+  },
+  "lifecycle_native": {
+    "run": 37101526190,
+    "job": 111141848634,
+    "artifact": 11266201977,
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "process_exit": 0,
+    "elapsed_seconds": 7,
+    "checks": 45,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "retained_materials": 0,
+    "scope": "Actual three imported siphons and one actual glow: active emission off, source stays emissive, other material properties unchanged, no masked copy, repeated call reuses copy, ordinary tree exit/re-entry preserves IDs, WeakRefs expire after actual node deletion. Direct factory/camera fixture, real X11 Compatibility/drawingfalse.",
+    "raw_log": "ci-occupation-override-37101526190.log.gz",
+    "raw_log_sha256": "56f44df1c5df2164fb3b6bff794b96befe798daec5b10b619e8fe69a5e2d5310"
+  },
+  "full_veridian_solmane_still_required": true,
+  "independent_review_pending": true,
+  "earned_campaign": false,
+  "acceptance": false
+}
