@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake criterion0 independently MET on candidate. Strict locator fix passes12tests104assertions, actual solo-r5 now passes saved HomeKey and fifth producer but fails Grandpa walk while actual onboarding lesson owns input. Reviewed F20-only driver9d4 continues actual lesson cards through ordinary input; no bypass. Solo-r6/net-r3 queued remote; net-r2 retained panel-heartbeat failure corroborates solo blockage. Criteria1\u20134 remain OPEN; local renderer/audio suspended for owner Valheim.",
+    "reason": "Tidewake criterion0 independently MET on candidate. Strict locator fix passes12tests104assertions, actual solo-r5 now passes saved HomeKey and fifth producer but fails Grandpa walk while actual onboarding lesson owns input. Reviewed F20-only driver9d4 continues actual lesson cards through ordinary input; no bypass. Solo-r6/net-r3 active on remote runners; remote arch-render-r3 also active for actual framebuffer inspection; net-r2 retained panel-heartbeat failure corroborates solo blockage. Criteria1\u20134 remain OPEN; local renderer/audio suspended for owner Valheim.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -384,7 +384,9 @@
       "script": "tests/smoke_f20_ending.gd",
       "label": "f20-solo-r6-lessons",
       "mode": "headless",
-      "timeout_minutes": 30
+      "timeout_minutes": 30,
+      "job": 111092043059,
+      "script_started_at": "2026-10-03T01:09:54Z"
     },
     "net_r3": {
       "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
@@ -392,7 +394,21 @@
       "script": "tests/smoke_net_f20_ending.gd",
       "label": "f20-net-r3-lessons",
       "mode": "headless",
-      "timeout_minutes": 20
+      "timeout_minutes": 20,
+      "job": 111092058849,
+      "script_started_at": "2026-10-03T01:10:06Z"
+    },
+    "arch_render_r3": {
+      "run": 37084998254,
+      "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+      "script": "tests/smoke_f20_arch_presentation.gd",
+      "label": "f20-arch-render-r3-remote",
+      "mode": "render",
+      "resolution": "1280x720",
+      "timeout_minutes": 20,
+      "scope": "Remote software OpenGL ordinary-camera capture to inspect glow; hosted Dummy audio disclosed, no physical device/listener acceptance.",
+      "job": 111093310987,
+      "script_started_at": "2026-10-03T01:10:56Z"
     }
   },
   "lesson_input_driver": {
