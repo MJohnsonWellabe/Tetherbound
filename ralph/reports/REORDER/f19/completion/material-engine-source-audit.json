@@ -25,6 +25,22 @@
   ],
   "inference": "C++ member destruction precedes base destruction, so a last Material reference may disappear before the rendering instance is freed. That instance deletion can flush another pending instance as well. The current game's actual dangling owner remains unproven until its native counterfactual result is inspected.",
   "interpretation": "Clean isolated body, marker and build-component probes do not certify the full world's deletion batch. Holding actual chamber active materials is a diagnostic counterfactual only; remaining errors may belong outside that retained set, including internal label resources.",
-  "actual_job": {"run": 37084465536, "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b", "status": "Confirmed Run step live; no terminal result at this audit"},
-  "exclusions": "No speculative product material patch, suppressed engine errors, changed graphics binary, clean witness, earned boundary or full campaign acceptance. Source URLs use official 4.7-stable tag; an exact binary-to-tag commit identity was not independently checked."
+  "actual_job": {
+    "run": 37084465536,
+    "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
+    "status": "Confirmed Run step live; no terminal result at this audit"
+  },
+  "exclusions": "No speculative product material patch, suppressed engine errors, changed graphics binary, clean witness, earned boundary or full campaign acceptance. Source URLs use official 4.7-stable tag; an exact binary-to-tag commit identity was not independently checked.",
+  "terrain_component_followup": {
+    "local_plugin_cfg_version": "1.0.2",
+    "upstream_tag": "v1.0.2-stable",
+    "upstream_commit": "0077405b52e353c5e5dc3a094e7ede49833ba6fe",
+    "source": "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d.cpp",
+    "facts": [
+      "Native _setup_mouse_picking creates MouseViewport/MouseCamera/MouseQuad and a surface override ShaderMaterial.",
+      "Native EXIT_TREE calls _destroy_mouse_picking, which deletes the quad, camera and viewport."
+    ],
+    "inference": "This native quad lies outside prior chamber-only observers; component lifecycle comparison may localize pending material dependency errors.",
+    "limitations": "The installed binary has not been independently mapped to the upstream tag commit. This is source-informed hypothesis, not native reproduction or a production patch."
+  }
 }
