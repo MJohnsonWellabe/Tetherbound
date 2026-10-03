@@ -1337,7 +1337,8 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "Full net-r6 actual host ending/credits1ACK/repeat PASS; guest host-side pending portal arrival and missing portable receipts, owner apply/save/ACK unproved. Full net-r7 host combined205s walk/reader command times out before guest path. Scoped net-r8 explicit home_key_begin refusal Not during a fight.; owner-plan comparison not reached and reason alone does not prove an actual combat encounter. Reviewed approach segmentation and refusal reporting pending full replay with coordinator arrival dependency. #4 OPEN."
+      "latest_runtime": "Full net-r6 actual host ending/credits1ACK/repeat PASS; guest host-side pending portal arrival and missing portable receipts, owner apply/save/ACK unproved. Full net-r7 host combined205s walk/reader command times out before guest path. Scoped net-r8 explicit home_key_begin refusal Not during a fight.; owner-plan comparison not reached and reason alone does not prove an actual combat encounter. Reviewed approach segmentation and refusal reporting pending full replay with coordinator arrival dependency. #4 OPEN.",
+      "coverage_addition": "Reviewed99e6fca560 adds host actualdiskreload/ordinaryrevisit, fullsnapshot/guestisolation and explicitbothstageflags/exactlyoneendingreceipt perpeer. Actual complete run remains required after then-green main baseline."
     }
   },
   "delegated_locator_fix": {
@@ -1664,5 +1665,13 @@
     "change": "Render-only preparation uses actual surface/player bearing and pure horizontal preference sensitivity, <=32 ordinary relative mouse motions/180s, real idle+physics settling; requires all8 actual opening AABB corners and glow point front/inset, zero queued motion, captured mouse, no UI owner, floor/no recovery and exact actionable provider. Explicit false callback suppresses X and records failure; null callback behavior retained. No transforms/settings/geometry or production camera changes.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete diff, followed by requested final captured-mouse guard recheck. Sign/sensitivity matches production unhandled_input/apply_look; known types avoid inferredVariant. Projection is framing only, not occlusion/visible-glow proof. No engine/GPU execution.",
     "runtime": "Original isolated hosted arch-r8 run37104784649/job111151068714 in progress; actual image still requires independent view. No runtime result or audible verdict claimed."
+  },
+  "two_peer_both_reload_candidate": {
+    "source": "99e6fca560fb09d416d5d8a10ae91c7635df00dc",
+    "reason": "Completion audit finds full peer proof genuinely disconnects/title-reloads interrupted guest credits and reloads completed guest, but only inspects host completion in memory. Explicitly prove both characters after disk reload.",
+    "change": "After original host preservation check, existing production host autosave/load_slot and normal Grandpa revisit; full retained host equality; unchanged completed guest retained/context and creditsclosed; explicit homecoming_seen/regional_credits_seen flags and exactly one matching production receipt for each character. All earlier guest disconnect/title rejoin/Skip/revisit assertions and budgets unchanged.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol design and concrete20-line diff. Receipt IDs match production foundation_actions; typed loops/string formatting avoid inferredVariant. Real load_slot validates disk pair. No engine execution.",
+    "disclosure": "Host shipping reload occurs within existing process, without memory reset. Guest exercises genuine interrupted disconnect/wipe/title rejoin plus completed portable disk reload. No fresh host-process restart claim.",
+    "runtime": "Pending actual full two-peer run after coordinator then-green main framework baseline. No dispatch or F20#4 acceptance claim."
   }
 }
