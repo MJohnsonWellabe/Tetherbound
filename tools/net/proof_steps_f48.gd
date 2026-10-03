@@ -1382,10 +1382,86 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 		# platform Dictionary number rendering; input still presses real button.
 		text = str(recipe.name) + " · " + str(recipe.cost)
 	_collect_buttons(tree.root, text, matches)
-	if matches.size() != 1: return _result(false, "Need exactly one visible enabled button: " + str(args.get("text", "")))
+	if matches.size() != 1:
+		var failure: Dictionary = _result(false, "Need exactly one visible enabled button: " + str(args.get("text", "")))
+		var snapshot: Dictionary = _button_failure_snapshot(tree, text, matches)
+		failure["data"] = snapshot
+		var output: String = OS.get_environment("TB_PROOF_OUT")
+		if not output.is_empty():
+			var folder: String = output.path_join("f48-observations")
+			var directory_error: int = DirAccess.make_dir_recursive_absolute(folder)
+			var path: String = folder.path_join("f48_button-%d-%d.json" % [OS.get_process_id(), Time.get_ticks_usec()])
+			var published: bool = directory_error == OK and DETACHED.publish(path, {"action": "f48_button", "args": args, "result": failure})
+			snapshot["diagnostic_path"] = path if published else ""
+			snapshot["diagnostic_published"] = published
+		else:
+			snapshot["diagnostic_path"] = ""
+			snapshot["diagnostic_published"] = false
+		return failure
 	matches[0].grab_focus()
 	await tree.process_frame
 	return await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+
+static func _button_failure_snapshot(tree: SceneTree, text: String, matches: Array[Button]) -> Dictionary:
+	# Read existing presentation only. No quote, admission, refresh or input.
+	var owner: Node = INPUT_OWNER.current(tree)
+	var probe: Object = tree.get("_probe") as Object
+	var owner_script: Script = owner.get_script() as Script if owner != null else null
+	var data: Dictionary = {"requested_text": text, "exact_enabled_match_count": matches.size(),
+		"exact_enabled_match_paths": [], "exact_match_paths_truncated": matches.size() > 32,
+		"context": str(probe.call("input_context")) if probe != null else "missing_probe",
+		"owner_path": str(owner.get_path()) if owner != null else "",
+		"owner_script": owner_script.resource_path if owner_script != null else ""}
+	for index: int in mini(matches.size(), 32):
+		data.exact_enabled_match_paths.append(str(matches[index].get_path()))
+	if owner_script == preload("res://scripts/ui/craft_panel.gd"):
+		var station_value: Variant = owner.get("_station")
+		var station: Node = station_value as Node if is_instance_valid(station_value) and station_value is Node else null
+		var station_script: Script = station.get_script() as Script if is_instance_valid(station) else null
+		var cache: Variant = owner.get("_presented_station_view")
+		var intent: Variant = owner.get("_station_intent")
+		var revision: Variant = cache.get("registry_revision") if cache is Dictionary else null
+		data["craft_panel"] = {"open": owner.get("_open"), "station_mode": owner.get("_station_mode"),
+			"station_path": str(station.get_path()) if is_instance_valid(station) and station.is_inside_tree() else "",
+			"station_inside_tree": is_instance_valid(station) and station.is_inside_tree(),
+			"station_script": station_script.resource_path if station_script != null else "",
+			"building_id": str(station.get_meta("building_id", "")) if is_instance_valid(station) else "",
+			"building_uid": str(station.get_meta("building_uid", "")) if is_instance_valid(station) else "",
+			"presented_registry_revision": revision if revision is int or revision is float else null,
+			"presented_registry_revision_type": typeof(revision),
+			"pending_intent": not intent.is_empty() if intent is Dictionary else null}
+	elif owner_script == preload("res://scripts/ui/altar_panel.gd"):
+		var quote: Variant = owner.get("_quote")
+		var revision: Variant = quote.get("expected_character_revision") if quote is Dictionary else null
+		data["altar_panel"] = {"open": owner.get("_open"), "closing": owner.get("_closing"),
+			"station_key": str(owner.get("_station_key")), "creature_uid": str(owner.get("_creature_uid")),
+			"quote_code": str(owner.get("_quote_code")), "quote_waiting": owner.get("_quote_waiting"),
+			"quote_ok": quote.get("ok") == true if quote is Dictionary else false,
+			"quoted_revision": revision if revision is int or revision is float else null,
+			"pending_id": str(owner.get("_pending_id")), "pending_durable": owner.get("_pending_durable")}
+	var census_root: Node = owner if owner != null else tree.root
+	var stack: Array[Node] = [census_root]
+	var buttons: Array[Dictionary] = []
+	var visited: int = 0
+	var truncated: bool = false
+	while not stack.is_empty() and visited < 4096 and buttons.size() < 128:
+		var node: Node = stack.pop_back()
+		visited += 1
+		if node is Button:
+			var button: Button = node as Button
+			buttons.append({"path": str(button.get_path()), "text": button.text.substr(0, 512),
+				"text_truncated": button.text.length() > 512,
+				"visible_in_tree": button.is_visible_in_tree(), "disabled": button.disabled,
+				"exact_text": button.text == text})
+		for child: Node in node.get_children():
+			if stack.size() >= 4096:
+				truncated = true
+				break
+			stack.append(child)
+	data["button_census"] = {"root_path": str(census_root.get_path()), "buttons": buttons,
+		"button_count": buttons.size(), "nodes_visited": visited, "node_limit": 4096, "button_limit": 128,
+		"truncated": truncated or not stack.is_empty()}
+	return data
 
 static func _choice(tree: SceneTree, args: Dictionary) -> Dictionary:
 	# The actual owned UID is read from a visible shipping OptionButton's item
