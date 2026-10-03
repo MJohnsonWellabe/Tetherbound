@@ -595,7 +595,23 @@
       "weather": "clear",
       "settle_frames": 60,
       "post_freeze_frames": 30,
-      "capture_fixed_fps": 20
+      "capture_fixed_fps": 20,
+      "clear_radius_m": 6.5,
+      "trainer_spot_x": -6.8,
+      "trainer_spot_z": 1.6,
+      "camera": {
+        "position": [
+          0.0,
+          2.9,
+          7.4
+        ],
+        "look_at": [
+          0.2,
+          1.1,
+          0.0
+        ],
+        "fov": 54.0
+      }
     }
   },
   "capture_wall_watchdog_s": 120.0

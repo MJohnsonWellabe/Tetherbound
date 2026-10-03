@@ -27,6 +27,7 @@ var _rank_filter: Array = []
 ## world stage only: the shipped terrain height source and the loaded world.
 var _field: RefCounted = null
 var _world: Node = null
+var _relocated: Array = []
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -184,6 +185,7 @@ func _run() -> void:
 		"medium_features": _medium, "cases": _records, "failures": _failures,
 		"light_lifecycle": _light_lifecycle, "selected_identity": _identity,
 		"archetype_filter": _archetype_filter, "rank_filter": _rank_filter, "stage": _stage,
+		"relocated_world_characters": _relocated,
 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
 	var file := FileAccess.open(_out.path_join("results.json"), FileAccess.WRITE)
@@ -651,7 +653,7 @@ func _build_world_stage(floor: MeshInstance3D, sun: DirectionalLight3D,
 	var oz := float(origin[1])
 	_arena.global_position = Vector3(ox, float(_field.call("height_at", ox, oz)), oz)
 	_arena.rotation.y = deg_to_rad(float(world_cfg.get("yaw_deg", 0.0)))
-	var cam: Dictionary = stage.camera
+	var cam: Dictionary = world_cfg.get("camera", stage.camera)
 	camera.position = Vector3(float(cam.position[0]), float(cam.position[1]), float(cam.position[2]))
 	camera.position.y += _local_ground_y(camera.position.x, camera.position.z)
 	camera.fov = float(cam.get("fov", 60.0))
@@ -676,5 +678,23 @@ func _build_world_stage(floor: MeshInstance3D, sun: DirectionalLight3D,
 	# Wild/trainer bodies the opening may already have spawned stay out of shot.
 	var spawned := _world.get_node_or_null(^"Spawned") as Node3D
 	if spawned != null: spawned.visible = false
+	# A resident character standing inside the fight area (the practice
+	# trainer lives on this clearing) moves to a trainer's place behind the
+	# attacker, frozen, so the line of fire is clear and a 1.80 m figure
+	# stays in shot as the scale ruler. Recorded in results.
+	var clear_radius := float(world_cfg.get("clear_radius_m", 6.5))
+	var slot := 0
+	for node: Node in _world.find_children("*", "CharacterBody3D", true, false):
+		var body := node as Node3D
+		if body == null or not body.is_visible_in_tree(): continue
+		var local := _arena.to_local(body.global_position)
+		if Vector2(local.x, local.z).length() > clear_radius: continue
+		body.process_mode = Node.PROCESS_MODE_DISABLED
+		var spot := Vector3(float(world_cfg.get("trainer_spot_x", -6.8)), 0.0, float(world_cfg.get("trainer_spot_z", 1.6)) + slot * 1.3)
+		spot.y = _local_ground_y(spot.x, spot.z)
+		body.global_position = _arena.to_global(spot)
+		body.global_rotation.y = _arena.global_rotation.y + PI * 0.5
+		_relocated.append({"node": str(body.get_path()), "to_local": spot})
+		slot += 1
 	for i in int(world_cfg.get("post_freeze_frames", 30)): await process_frame
 	return true
