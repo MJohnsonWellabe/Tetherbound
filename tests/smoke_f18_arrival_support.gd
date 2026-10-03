@@ -5,7 +5,8 @@ const CAPSULE_DIAGNOSTIC := preload("res://tests/helpers/f18_capsule_diagnostic.
 ## Bounded real physics regression, synthetic Hall, slopes and obstructions.
 ## This is not a live realm, earned loop, saved arrival or co-op witness.
 class FlatWorld extends Node3D:
-	func ground_height_at(_x: float, _z: float) -> float: return 0.0
+	var ground_y := 0.0
+	func ground_height_at(_x: float, _z: float) -> float: return ground_y
 
 class ProbeBody extends CharacterBody3D:
 	func _physics_process(delta: float) -> void:
@@ -82,14 +83,133 @@ func _landing_check(arrival: Node, world: Node3D, actor: CharacterBody3D, target
 	if accepted and landing.is_finite():
 		var query := PhysicsShapeQueryParameters3D.new()
 		query.shape = collision.shape
-		query.transform = collision.global_transform
-		query.transform.origin += landing - actor.global_position
+		var pose := actor.global_transform
+		pose.origin = landing
+		query.transform = pose * collision.transform
 		query.collision_mask = actor.collision_mask
 		query.exclude = [actor.get_rid()]
 		_check(landing.is_finite() and actor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty(), label + " clears the complete capsule")
 	elif accepted:
 		_check(false, label + " clears the complete capsule")
 	return landing
+
+func _triangle_floor(world: Node3D, faces: PackedVector3Array) -> StaticBody3D:
+	var shape := ConcavePolygonShape3D.new()
+	shape.set_faces(faces)
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	var body := StaticBody3D.new()
+	body.add_child(collision)
+	world.add_child(body)
+	return body
+
+func _first_contact_witness(arrival: Node, world: Node3D, actor: CharacterBody3D, target: Vector3, foreign_rid: RID) -> Dictionary:
+	var collision := actor.get_node(^"Collision") as CollisionShape3D
+	var radius: float = (collision.shape as CapsuleShape3D).radius
+	var center: Dictionary = arrival._landing_hit(world, actor, target, radius)
+	if center.is_empty(): return {}
+	var highest: float = center.position.y
+	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
+		var hit: Dictionary = arrival._landing_hit(world, actor, target + Vector3(offset.x, 0, offset.y), radius)
+		if hit.is_empty(): return {}
+		highest = maxf(highest, float(hit.position.y))
+	var pose := actor.global_transform
+	pose.origin = Vector3(target.x, center.position.y + radius, target.z)
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.transform = pose * collision.transform
+	query.collision_mask = actor.collision_mask
+	query.exclude = [actor.get_rid()]
+	query.motion = Vector3(0, -2 * radius, 0)
+	var fractions := actor.get_world_3d().direct_space_state.cast_motion(query)
+	if fractions.size() != 2 or fractions[0] < 0 or fractions[0] > fractions[1] or fractions[1] >= 1: return {}
+	pose.origin += query.motion * fractions[1]
+	var contacts: Array[Dictionary] = arrival._walkable_contacts(actor, pose)
+	var bound: float = highest + actor.safe_margin + absf(query.motion.y) * (fractions[1] - fractions[0])
+	var witnessed := false
+	var foreign := false
+	for contact: Dictionary in contacts:
+		if contact.point.y > highest + actor.safe_margin and contact.point.y < bound: witnessed = true
+		if contact.rid == foreign_rid and absf(contact.point.y - highest) <= actor.safe_margin: foreign = true
+	var record := {"walkable_contacts": contacts.size(), "floor_y": highest, "maximum_y": bound,
+		"peak_y": .0025, "above_margin_inside_bound": witnessed, "foreign_coplanar_contact": foreign}
+	print("F18_FIRST_CONTACT_WITNESS " + JSON.stringify(record))
+	return record
+
+func _precision_cases() -> void:
+	var arrival := preload("res://scripts/net/foundation_portal_arrival.gd").new()
+	for floor_y: float in [830.030029296875, 1160.030029296875]:
+		var world := FlatWorld.new()
+		world.ground_y = floor_y
+		root.add_child(world)
+		world.position = Vector3(388, 0, 3248)
+		_concave_boxes(world, [[Vector3(0, floor_y - .05, 0), Vector3(4, .1, 4)]])
+		var actor := _actor(world, world.global_position + Vector3(4, 3, 0))
+		await physics_frame
+		await physics_frame
+		var landing := _landing_check(arrival, world, actor, world.global_position + Vector3(0, floor_y, 0), true, "high-coordinate actual concave floor %s" % floor_y)
+		if landing.is_finite():
+			actor.global_position = landing
+			actor.velocity = Vector3.ZERO
+			actor.set_physics_process(true)
+			for frame in 30: await physics_frame
+			actor.set_physics_process(false)
+			var radius: float = (actor.get_node(^"Collision").shape as CapsuleShape3D).radius
+			_check(actor.is_on_floor() and arrival._supported_capsule(world, actor, landing, radius), "high-coordinate ordinary floor and complete final support")
+		else: _check(false, "high-coordinate ordinary floor and complete final support")
+		world.queue_free()
+		await process_frame
+	for kind: String in ["ridge", "tiny_bevel", "coplanar_foreign_body"]:
+		var world := FlatWorld.new()
+		root.add_child(world)
+		world.position.x = 110.0
+		var faces := PackedVector3Array()
+		if kind == "ridge":
+			for pair: Vector2 in [Vector2(-2, 0), Vector2(0, 2)]:
+				var a := Vector3(pair.x, -absf(pair.x) * .02, -2)
+				var b := Vector3(pair.x, -absf(pair.x) * .02, 2)
+				var c := Vector3(pair.y, -absf(pair.y) * .02, 2)
+				var d := Vector3(pair.y, -absf(pair.y) * .02, -2)
+				faces.append_array(PackedVector3Array([a, b, c, a, c, d]))
+		else:
+			var mesh := BoxMesh.new()
+			mesh.size = Vector3(4, .1, 4)
+			for vertex: Vector3 in mesh.get_faces(): faces.append(vertex + Vector3(0, -.05, 0))
+			if kind == "tiny_bevel":
+				# A walkable 2.5mm peak between the five floor rays, on the SAME
+				# RID and shape. It fits inside the old cast clearance budget but
+				# is above the actual 1mm margin: the fallback must not climb it.
+				var apex := Vector3(.02, .0025, .02)
+				var ring := PackedVector3Array([Vector3(.01, 0, .01), Vector3(.01, 0, .03), Vector3(.03, 0, .03), Vector3(.03, 0, .01)])
+				for i in 4: faces.append_array(PackedVector3Array([apex, ring[i], ring[(i + 1) % 4]]))
+		_triangle_floor(world, faces)
+		var actor := _actor(world, world.global_position + Vector3(4, 3, 0))
+		var foreign_rid := RID()
+		if kind == "coplanar_foreign_body":
+			# A different body touches the capsule between the five sample rays.
+			# Coplanar geometry alone cannot authorize an unknown collider RID.
+			foreign_rid = _box(world, Vector3(.005, -.003, .005), Vector3(.006, .006, .006)).get_rid()
+		await physics_frame
+		await physics_frame
+		var target := world.global_position
+		if kind == "tiny_bevel":
+			_check(_first_contact_witness(arrival, world, actor, target, RID()).get("above_margin_inside_bound") == true, "tiny bevel has actual walkable first contact above margin inside original fallback bound")
+			CAPSULE_DIAGNOSTIC.report(arrival, world, actor, target, (actor.get_node(^"Collision").shape as CapsuleShape3D).radius, "tiny bevel refusal witness")
+		if kind == "coplanar_foreign_body":
+			_check(_first_contact_witness(arrival, world, actor, target, foreign_rid).get("foreign_coplanar_contact") == true, "unknown coplanar body has actual walkable unsafe contact on its distinct RID")
+		var landing := _landing_check(arrival, world, actor, target, kind == "ridge", "native same-shape floor contact classification " + kind)
+		if kind == "ridge":
+			if landing.is_finite():
+				actor.global_position = landing
+				actor.set_physics_process(true)
+				for frame in 30: await physics_frame
+				actor.set_physics_process(false)
+				var radius: float = (actor.get_node(^"Collision").shape as CapsuleShape3D).radius
+				_check(actor.is_on_floor() and arrival._supported_capsule(world, actor, target, radius), "ridge actual ordinary controller contact and final support")
+			else: _check(false, "ridge actual ordinary controller contact and final support")
+		world.queue_free()
+		await process_frame
+	arrival.free()
 
 func _bounded_cases() -> void:
 	var arrival := preload("res://scripts/net/foundation_portal_arrival.gd").new()
@@ -226,5 +346,6 @@ func _run() -> void:
 	world.queue_free()
 	await process_frame
 	await _bounded_cases()
+	await _precision_cases()
 	print("F18 SUPPORT: %d checks, %d failures" % [_checks, _failed])
 	quit(0 if _failed == 0 else 1)

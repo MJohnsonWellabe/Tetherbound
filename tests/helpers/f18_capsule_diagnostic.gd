@@ -59,8 +59,9 @@ static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target:
 		var start := Vector3(target.x, height + radius, target.z)
 		var query := PhysicsShapeQueryParameters3D.new()
 		query.shape = collision.shape
-		query.transform = collision.global_transform
-		query.transform.origin += start - actor.global_position
+		var proposed_pose := actor.global_transform
+		proposed_pose.origin = start
+		query.transform = proposed_pose * collision.transform
 		query.collision_mask = actor.collision_mask
 		query.exclude = [actor.get_rid()]
 		out["start_actor_origin"] = vector(start)
@@ -103,6 +104,14 @@ static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target:
 			var bracket := absf(query.motion.y) * (fractions[1] - fractions[0])
 			var candidate_y: float = arrival.call("_cast_landing_y", float(start.y), float(query.motion.y),
 				float(fractions[0]), float(actor.safe_margin), highest, bracket)
+			var maximum_y: float = highest + actor.safe_margin + bracket
+			var bounded_alternative := Vector3(target.x, maximum_y, target.z)
+			proposed_pose.origin = bounded_alternative
+			query.transform = proposed_pose * collision.transform
+			query.motion = Vector3.ZERO
+			out["bounded_alternative"] = {"origin": vector(bounded_alternative), "scalar_y": maximum_y,
+				"within_radius": bounded_alternative.distance_to(Vector3(target.x, height, target.z)) <= radius,
+				"overlaps": overlaps(actor, query)}
 			if not is_finite(candidate_y):
 				out["candidate"] = {"scalar_bound_refused": true, "maximum_y": highest + actor.safe_margin + bracket}
 				out["actor_transform_unchanged"] = actor.global_transform == before
@@ -115,7 +124,8 @@ static func report(arrival: Node, world: Node3D, actor: CharacterBody3D, target:
 				"within_encoded_maximum_y": landing.y <= Vector3(0, highest + actor.safe_margin + bracket, 0).y,
 				"distance_to_physical_center": landing.distance_to(Vector3(target.x, height, target.z)),
 				"within_radius": landing.distance_to(Vector3(target.x, height, target.z)) <= radius}
-			query.transform.origin += landing - start
+			proposed_pose.origin = landing
+			query.transform = proposed_pose * collision.transform
 			query.motion = Vector3.ZERO
 			out["end_overlaps"] = overlaps(actor, query)
 	out["actor_transform_unchanged"] = actor.global_transform == before

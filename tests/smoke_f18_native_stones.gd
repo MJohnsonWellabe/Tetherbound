@@ -34,6 +34,7 @@ class ProbeBody extends CharacterBody3D:
 var checks := 0
 var failures: Array[String] = []
 var records: Array[Dictionary] = []
+var entries: Array[Dictionary] = []
 var realm := ""
 var _deadline := 0
 
@@ -47,7 +48,7 @@ func _check(ok: bool, label: String) -> void:
 
 func _finish(world: Node3D = null) -> void:
 	print("F18_NATIVE_STONES " + JSON.stringify({"realm": realm, "checks": checks,
-		"failures": failures, "stones": records, "simulation_only": false,
+		"failures": failures, "stones": records, "portal_entries": entries, "simulation_only": false,
 		"fixture": "direct realm/scene, private save, isolated copy of actual Player capsule and probe candidate poses",
 		"player_teleports": false, "camera_changes": false, "grants": false, "permission_bypass": false,
 		"earned_play": false, "touch_save_reload": false, "co_op": false, "readable_presentation": false,
@@ -88,8 +89,9 @@ func _clear_at(probe: ProbeBody, at: Vector3) -> bool:
 	var collision := probe.get_node(^"Collision") as CollisionShape3D
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
-	query.transform = collision.global_transform
-	query.transform.origin += at - probe.global_position
+	var pose := probe.global_transform
+	pose.origin = at
+	query.transform = pose * collision.transform
 	query.collision_mask = probe.collision_mask
 	query.exclude = [probe.get_rid()]
 	return probe.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
@@ -130,6 +132,11 @@ func _stone(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: N
 	_check(_registered_shrine(shrine, probe.collision_mask), id + " real shrine box registered in physics")
 	_check(canonical.is_finite() and node != null and node.global_position.distance_to(canonical) < .01, id + " exact canonical supported shrine position")
 	_check(target.is_finite(), id + " authored dry arrival footprint")
+	var record := await _geometry(world, player, probe, arrival, target, id)
+	record["shrine"] = DIAGNOSTIC.vector(canonical)
+	records.append(record)
+
+func _geometry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: Node, target: Vector3, id: String) -> Dictionary:
 	var collision := probe.get_node(^"Collision") as CollisionShape3D
 	var radius: float = (collision.shape as CapsuleShape3D).radius
 	var before := probe.global_transform
@@ -172,11 +179,28 @@ func _stone(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: N
 	_check(stable, id + " actual move_and_slide stable walkable contact")
 	_check(final_supported, id + " production final five-floor/full-capsule guard")
 	_check(untouched, id + " final support observes without actor writes")
-	records.append({"id": id, "shrine": DIAGNOSTIC.vector(canonical), "target": DIAGNOSTIC.vector(target),
+	return {"id": id, "target": DIAGNOSTIC.vector(target),
 		"landing": DIAGNOSTIC.vector(landing), "settled": DIAGNOSTIC.vector(probe.global_position),
 		"shape_radius": radius, "shape_height": (collision.shape as CapsuleShape3D).height,
 		"safe_margin": probe.safe_margin, "mask": probe.collision_mask,
-		"consecutive_floor_frames": probe.consecutive_floor_frames, "stable_contact": stable, "final_supported": final_supported})
+		"consecutive_floor_frames": probe.consecutive_floor_frames, "stable_contact": stable, "final_supported": final_supported}
+
+func _entry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: Node, game: Node) -> void:
+	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
+	var entry_id := ""
+	for arch: Dictionary in config.arches:
+		var destination: String = "water" if arch.biome == "tidewake" else str(arch.biome)
+		if arch.kind == "live" and destination == realm: entry_id = str(arch.entry_id)
+	var session: Node = game.get("session")
+	var runtime: Node = session.get_node_or_null(^"FoundationComposition/PortalArrival") if session != null else null
+	_check(runtime != null and not entry_id.is_empty(), "actual portal service and canonical first-entry ID")
+	# Observe the real resolver's exact permit destination without issuing a
+	# permit or travel. The canonical realm entry differs from its first stone.
+	var target := Vector3(INF, INF, INF)
+	if runtime != null and not entry_id.is_empty():
+		target = runtime.call("_arrival_target", world, {"realm": realm, "entry_id": entry_id})
+	_check(target.is_finite(), entry_id + " actual first-portal arrival target")
+	entries.append(await _geometry(world, player, probe, arrival, target, entry_id))
 
 func _run() -> void:
 	_deadline = Time.get_ticks_msec() + TOTAL_BUDGET_MSEC
@@ -237,6 +261,7 @@ func _run() -> void:
 	await physics_frame
 	await process_frame
 	var arrival := ARRIVAL.new()
+	await _entry(world, player, probe, arrival, game)
 	for row: Dictionary in rows:
 		await _stone(world, player, probe, arrival, row, str(config.presentation.model))
 	_check(records.size() == IDS[realm].size(), "every configured stone checked without skipped counts")
