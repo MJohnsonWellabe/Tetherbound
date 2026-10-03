@@ -833,6 +833,17 @@
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37092294181",
       "status": "in progress; affected bounty-road continuation, no result claimed"
+    },
+    "net_r6": {
+      "run": 37092788092,
+      "job": 111116479078,
+      "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
+      "script": "tests/smoke_net_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "total_post_hello_proof_seconds": 1500,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37092788092",
+      "status": "in progress; complete affected two-person ending/rejoin/reload proof, no result claimed"
     }
   },
   "lesson_input_driver": {
@@ -894,6 +905,6 @@
     "total_post_hello_budget_seconds": 1500,
     "independent_source_review": "PASS f20_review: F20-only9line_init_budgets override superthen selects existinglong2peer1500s wholeproof allowance. Individualcommandframes/slack/hello180/heartbeat/inputguard/productionACK8s/remote30min unchanged. Necessarycomplete2person/disconnect/reloadproof allowance, not an authoredproduct timing waiver. Freshcompleteactual proof required, #4OPEN.",
     "reason": "Actualnet-r5 cleanhostfullending/revisit consumesmost inherited300s total; guest onlyHomeKeybegin beforeglobalfatal. Other long2peer proofs alreadyselect1500. Oldr4 independentlyhadcommandtimeout; itscause notretrospectivelyresolved byglobalbudget diagnosis.",
-    "runtime": "pending affected full net-r6"
+    "runtime": "Affectedfullnet-r6 live37092788092/job111116479078 onexactb066, no result claimed; criterion4OPEN."
   }
 }
