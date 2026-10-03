@@ -510,7 +510,7 @@
         },
         "outcome": "FAIL before native refusal capture: actual child ALSA audio ERR_CANT_OPEN plus original command deadline exhausted during Satchel binding on software llvmpipe. No script/parse error; no PNG/no result.",
         "evidence_limit": "Neither actual native refusal nor readability established. Original headless actual refusal passes remain separately scoped. No deadline/state/input/guard waiver.",
-        "independent_native_review": "PENDING"
+        "independent_native_review": "CONFIRMED originalFAIL: independent Sol size/SHA/noexit/noPNG/actualALSAerror/commandtimeout/zero scriptparse audit; warnings retained. No nativeacceptance."
       },
       {
         "id": 37105696044,
@@ -597,7 +597,7 @@
         },
         "outcome": "FAIL before native refusal capture: actual child ALSA audio ERR_CANT_OPEN plus original command deadline exhausted during actual fixture lesson continuation on software llvmpipe. No script/parse error; no PNG/no result.",
         "evidence_limit": "Neither actual native refusal nor readability established. Original headless actual refusal passes remain separately scoped. No deadline/state/input/guard waiver.",
-        "independent_native_review": "PENDING"
+        "independent_native_review": "CONFIRMED originalFAIL: independent Sol size/SHA/noexit/noPNG/actualALSAerror/commandtimeout/zero scriptparse audit; warnings retained. No nativeacceptance."
       }
     ]
   },
@@ -609,6 +609,43 @@
     "engine_source_references": [
       "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/doc/classes/RenderingServer.xml",
       "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/main/main.cpp"
-    ]
+    ],
+    "dispatches": [
+      {
+        "id": 37106510349,
+        "display_title": "render f18-swimming-refusal-pixels-r2 @ 3e165c75d2a3ae4c903602123f48edb39ec25cce",
+        "head_branch": "tb/integration",
+        "head_sha": "c2bcdbeb7c3d58a0eaa2cddd1649a65dd1f4cec5",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37106510349",
+        "checkout": "3e165c75d2a3ae4c903602123f48edb39ec25cce",
+        "label": "f18-swimming-refusal-pixels-r2",
+        "mode": "render",
+        "script": "tests/smoke_net_f18_traversal_refusal.gd",
+        "args": "--native-peer=0 --f18-draw-on-request",
+        "resolution": "1280x720",
+        "timeout_minutes": "15",
+        "scope": "Disclosed native requested-draw actual traversal/refusal pixels only; no continuous-render performance/audio/earned/co-op/fullcriteria credit."
+      },
+      {
+        "id": 37106511827,
+        "display_title": "render f18-flying-refusal-pixels-r2 @ 3e165c75d2a3ae4c903602123f48edb39ec25cce",
+        "head_branch": "tb/integration",
+        "head_sha": "c2bcdbeb7c3d58a0eaa2cddd1649a65dd1f4cec5",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37106511827",
+        "checkout": "3e165c75d2a3ae4c903602123f48edb39ec25cce",
+        "label": "f18-flying-refusal-pixels-r2",
+        "mode": "render",
+        "script": "tests/smoke_net_f18_traversal_refusal.gd",
+        "args": "--native-peer=0 --f18-draw-on-request --flying",
+        "resolution": "1280x720",
+        "timeout_minutes": "15",
+        "scope": "Disclosed native requested-draw actual traversal/refusal pixels only; no continuous-render performance/audio/earned/co-op/fullcriteria credit."
+      }
+    ],
+    "native_status": "IN_PROGRESS; original artifact and pixel review pending"
   }
 }
