@@ -244,7 +244,10 @@ func tap(action: String) -> void:
 	if action == "interact" and before_interact.is_valid():
 		var preparation := before_interact
 		before_interact = Callable()
-		await preparation.call()
+		var prepared: Variant = await preparation.call()
+		if prepared is bool and not prepared:
+			_fail("F20 ordinary camera preparation failed before interaction")
+			return
 	for pressed: bool in [true, false]:
 		if trace_input: _trace_clock(action, pressed, "before input")
 		var event := InputEventAction.new()
