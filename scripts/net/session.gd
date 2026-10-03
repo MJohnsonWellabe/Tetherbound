@@ -4,6 +4,7 @@ const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const FOUNDATION_RETRY_ORDER := preload("res://scripts/net/foundation_retry_order.gd")
+const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
@@ -100,16 +101,70 @@ func _owner_passive_request_terminal(source_kind: String, request: Dictionary, r
 	elif source_kind in ["foundation_request", "manual_refine"]:
 		_rpc_foundation_reply(request, result) # Existing exact correlation/presentation path, no RPC send.
 
+## Typed delivery installs record only a receipt binding into the same care
+## stream. HP and condition values are resolved from the host's original row.
+func _owner_passive_actor_vitals_record(row: Dictionary, saved: bool) -> bool:
+	var game: Node = _game()
+	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	if game == null or game.get("world") == null or game.get("local") == null: return false
+	var world: RefCounted = game.get("world")
+	if not actor.valid(row, str(game.get("local").get("character_id")), str(world.get("reward_delivery_namespace"))) \
+		or row.world_id != world.get("world_id") or row.session_id != _altar_current_epoch() \
+		or not ESSENCE._equivalent(world.get("reward_deliveries").get(row.delivery_id), row): return false
+	if is_host(): return true # Actual host PlayerState admission already owns its passive baseline.
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if director.get("_session") != self: continue
+		if director.call("uses_durable_trainer_rewards", str(row.receipt.encounter_id)) == true:
+			return _owner_passive_service().call("record_vitals", row, saved) == true
+	return true # Unowned legacy deliveries have no ordinary reward checkpoint.
+
+func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dictionary:
+	if not is_host() or binding.size() != 6 or binding.get("version") != 1 \
+		or binding.get("op") not in ["actor_vitals_applied", "actor_vitals_saved"] \
+		or not binding.get("sequence") is int or int(binding.sequence) < 1 \
+		or not binding.get("journal_revision") is int or int(binding.journal_revision) < 1 \
+		or not binding.get("delivery_id") is String or not binding.get("receipt_hash") is String: return {}
+	var character: String = _authority_character(peer)
+	var world: RefCounted = _game().get("world")
+	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	if character.is_empty() or world == null: return {}
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var proofs: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {})
+		for proof: Dictionary in proofs.values():
+			var row: Dictionary = proof.get("row", {})
+			if row.get("delivery_id") != binding.delivery_id or row.get("journal_revision") != binding.journal_revision \
+				or preload("res://scripts/net/research_passive_preparation.gd").fingerprint(row.get("receipt", {})) != binding.receipt_hash: continue
+			var proposal: Dictionary = proof.get("proposal", {})
+			if proof.get("character_id") != character or proof.get("world_id") != world.get("world_id") \
+				or not actor.valid(row, character, str(world.get("reward_delivery_namespace"))) \
+				or row.session_id != _altar_current_epoch() or proof.get("scope", {}).get("session_id") != row.session_id \
+				or not ESSENCE._equivalent(row.receipt, proposal.get("settlement_receipt")) \
+				or not ESSENCE._equivalent(row.expected_hp, proposal.get("hp_before")) \
+				or not ESSENCE._equivalent(row.hp, proposal.get("hp_after")) \
+				or not ESSENCE._equivalent(row.max_hp, proposal.get("max_hp")) \
+				or row.fainted != proposal.get("fainted") or int(row.character_revision) != int(proof.get("revision_before", -1)) + 1: return {}
+			var latest: Dictionary = world.get("reward_deliveries").get(row.delivery_id, {})
+			var accepted: bool = proof.get("accepted") == true
+			if not accepted and not ESSENCE._equivalent(latest, row): return {}
+			if binding.op == "actor_vitals_saved" and not accepted: return {}
+			var original_row: Dictionary = row.duplicate(true)
+			if accepted: original_row.status = "accepted"
+			return {"row": original_row, "hp_before": float(proposal.hp_before),
+				"fainted_before": float(proposal.hp_before) == 0.0, "revision_before": int(proof.revision_before)}
+	return {}
+
 func _owner_passive_commit_retained(peer: int, binding: Dictionary) -> Dictionary:
 	if not is_host() or binding.get("character") != _authority_character(peer) \
-		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery"]:
+		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
 		return FOUNDATION_ACTIONS.deny("owner_passive_original_duty_required")
 	var world: RefCounted = _game().get("world")
 	if binding.action == "boss_relic":
 		var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(binding.intent.trainer_id), str(binding.event.realm))
 		if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()):
 			return FOUNDATION_ACTIONS.deny("boss_settlement_world_pending")
-	if binding.action == "combat_mastery" and _altar_peer_in_combat(peer): return FOUNDATION_ACTIONS.deny("combat_still_active")
+	if binding.action == "combat_mastery" and (_altar_peer_in_combat(peer) \
+		or _ordinary_round_pending_characters().has(binding.character)): return FOUNDATION_ACTIONS.deny("combat_still_active")
 	var context: Dictionary = binding.event.duplicate(true)
 	context.expected_revision = int(_character_authority.call("revision", binding.character))
 	var writer := get_node_or_null(^"LedgerRpc")
@@ -274,7 +329,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if quote.get("ok") != true: return _foundation_refusal(str(quote.get("code", "capture_choice_refused")))
 		return {"ok": true, "pending_uid": context.creature.uid, "released_uid": envelope.intent.released_uid,
 			"ceremony_id": context.offer_id, "expected_character_revision": context.expected_revision, "payout": quote.payout}
-	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "waystone_touch"]: return _foundation_refusal("host_producer_required")
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "combat_round_reward", "waystone_touch"]: return _foundation_refusal("host_producer_required")
 	if envelope.op == "rematch_start":
 		if envelope.intent.size() != 4 or envelope.revision != -1 \
 			or not ESSENCE._component(envelope.intent.get("trainer_id")) or envelope.intent.get("tier") not in ["r1", "endgame"] \
@@ -731,6 +786,7 @@ func _retry_foundation_events() -> void:
 	var world: RefCounted = _game().get("world")
 	var handled := {}
 	var research_no_progress := {}
+	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
 	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
@@ -750,6 +806,7 @@ func _retry_foundation_events() -> void:
 			get_node(^"LedgerRpc").call("_process_creature_training", latest)
 			handled[duty.character_id] = true
 			continue # Re-deliver the immutable original; never prepare it again.
+		if duty.action == "combat_mastery" and ordinary_waiting.has(duty.character_id): continue
 		var research_signature := ""
 		if duty.action == "research_event":
 			research_signature = JSON.stringify([duty.character_id, peer, duty.context.world_namespace,
@@ -780,7 +837,7 @@ func _retry_foundation_events() -> void:
 		else:
 			context.in_combat = false
 			context.foundation_runtime_authorized = true
-			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery"]:
+			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
 				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
 				if ready.get("ok") != true:
 					handled[duty.character_id] = true
@@ -795,6 +852,7 @@ func _retry_foundation_events() -> void:
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
+	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
@@ -808,6 +866,395 @@ func _foundation_duty_receipt(duty: Dictionary) -> String:
 
 ## Called by the actual host resolver after its real HP writer, or by the
 ## retry scan over that same retained action. A guest cannot send an outcome.
+func _ordinary_combat_director_live(director: Node) -> bool:
+	var game: Node = _game()
+	if not is_host() or not is_instance_valid(director) or game == null or game.get("session") != self \
+		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or director.get("_session") != self or not director.is_inside_tree() or director.is_queued_for_deletion(): return false
+	var manager: Node = director.get("_manager") as Node
+	if not is_instance_valid(manager) or not manager.is_inside_tree() or manager.is_queued_for_deletion() \
+		or manager.get_script() == null or not FOUNDATION_COMBAT_MANAGERS.has(manager.get_script().resource_path): return false
+	for root: Node in _foundation_realm_roots():
+		if root.is_ancestor_of(director) and root.is_ancestor_of(manager): return true
+	return false
+
+## Exact ordinary shared-round ownership is announced before Manager binding.
+## An unavailable canonical writer refuses ownership; it never permits a local award.
+func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dictionary:
+	var unavailable: Dictionary = {"enabled": true, "ready": false, "scope": {}}
+	if not _ordinary_combat_director_live(director) or not _bind_character_authority() \
+		or get_node_or_null(^"LedgerRpc") == null \
+		or not director.has_method("ordinary_combat_vitals_ready"): return unavailable
+	var vitals_ready: Variant = director.call("ordinary_combat_vitals_ready", encounter_id)
+	if not vitals_ready is bool or vitals_ready != true: return unavailable
+	var game: Node = _game()
+	var world: RefCounted = game.get("world")
+	var host: RefCounted = director.get("_encounter_host")
+	var spec: Dictionary = director.get("_trainer_spec")
+	if world == null or host == null or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")] \
+		or spec.is_empty() or spec.has("master") or spec.has("rematch") \
+		or preload("res://scripts/world/trainer_npc.gd").trainer(str(spec.get("id", ""))).is_empty() \
+		or not (director.get("_master_duel") as Dictionary).is_empty(): return unavailable
+	var record: Dictionary = host.call("record", encounter_id)
+	var realm: String = preload("res://scripts/data/biome_order.gd").canonical_id(str(director.call("_encounter_realm")))
+	if record.get("encounter_id") != encounter_id or record.get("kind") not in ["trainer", "boss"] \
+		or preload("res://scripts/data/biome_order.gd").canonical_id(str(record.get("realm"))) != realm or record.get("opponent", {}).get("owner_npc") != spec.get("id") \
+		or record.get("phase") not in ["active", "done"]: return unavailable
+	var scope: Dictionary = COMBAT_ROUND_REWARD.scope(str(world.get("reward_delivery_namespace")),
+		_altar_current_epoch(), realm, str(spec.get("id", "")), encounter_id)
+	if scope.is_empty(): return unavailable
+	var scopes: Dictionary = director.get_meta("foundation_ordinary_combat_scopes", {})
+	if scopes.has(encounter_id) and not ESSENCE._equivalent(scopes[encounter_id], scope): return unavailable
+	scopes[encounter_id] = scope.duplicate(true)
+	director.set_meta("foundation_ordinary_combat_scopes", scopes)
+	return {"enabled": true, "ready": true, "scope": scope}
+
+## The shipping producer has already retained one actual hit/self-heal proposal.
+## Journal its canonical HP transition before the private actor/resource commit.
+func ordinary_actor_vitals_commit(director: Node, encounter_id: String, peer: int, proposal: Dictionary) -> Dictionary:
+	var refused: Dictionary = {"ok": false, "durable": false, "resolved": false, "code": "original_actor_proposal_required"}
+	if not _ordinary_combat_director_live(director): return refused
+	var scopes: Dictionary = director.get_meta("foundation_ordinary_combat_scopes", {})
+	var scope: Dictionary = scopes.get(encounter_id, {})
+	var world: RefCounted = _game().get("world")
+	var host: RefCounted = director.get("_encounter_host")
+	if world == null or host == null or not COMBAT_ROUND_REWARD.scope_valid(scope) \
+		or scope.world_namespace != world.get("reward_delivery_namespace") or scope.session_id != _altar_current_epoch() \
+		or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")]: return refused
+	var pending: Dictionary = director.get("_ordinary_actor_vitals_proposals")
+	var original: Dictionary = pending.get(proposal.get("action_id"), {})
+	if original.get("encounter_id") != encounter_id or original.get("peer_id") != peer \
+		or not ESSENCE._equivalent(original.get("proposal"), proposal) \
+		or proposal.get("encounter_id") != encounter_id or proposal.get("peer_id") != peer \
+		or not proposal.get("settlement_receipt") is Dictionary: return refused
+	var source_record: Dictionary = original.get("host_record", {})
+	var source_member: Dictionary = source_record.get("participants", {}).get(peer, {})
+	var character: String = str(source_member.get("character_id", ""))
+	var delivery_peer: int = int(_registry.call("peer_for_character", character))
+	if delivery_peer < 1 or _authority_character(delivery_peer) != character:
+		return {"ok": false, "durable": false, "resolved": false, "code": "original_actor_owner_unavailable"}
+	var record: Dictionary = host.call("record", encounter_id)
+	var member: Dictionary = record.get("participants", {}).get(peer, {})
+	if member.is_empty(): member = record.get("retained_actor_participants", {}).get(character, {})
+	var uid: String = str(proposal.get("creature_uid", ""))
+	var actor: Dictionary = member.get("actor_vitals", {}).get(uid, {})
+	if character.is_empty() or member.get("character_id") != character \
+		or source_record.get("encounter_id") != encounter_id or source_record.get("phase") != "active" \
+		or preload("res://scripts/data/biome_order.gd").canonical_id(str(record.get("realm"))) != scope.realm \
+		or record.get("opponent", {}).get("owner_npc") != scope.trainer_id \
+		or source_member.get("actor_bound_uid") != uid or member.get("actor_bound_uid") != uid \
+		or int(actor.get("body_instance_id", 0)) <= 0 \
+		or actor.get("body_instance_id") != source_member.get("actor_vitals", {}).get(uid, {}).get("body_instance_id") \
+		or actor.get("body_generation") != proposal.get("body_generation"): return refused
+	var receipt: Dictionary = proposal.settlement_receipt
+	var actor_delivery: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	var existing: Dictionary = world.get("reward_deliveries").get(actor_delivery.delivery_id(scope.world_namespace, character, uid), {})
+	var proofs: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {})
+	if original.get("committed") != true:
+		if proposal.get("kind") == "damage" and (not host.has_method("verify_original_actor_vitals") \
+			or host.call("verify_original_actor_vitals", proposal, source_record) != true): return refused
+		var heal: Dictionary = original.get("heal_bundle", {})
+		if proposal.get("kind") == "heal":
+			if heal.is_empty() or not ESSENCE._equivalent(heal.get("vitals_proposal"), proposal): return refused
+			var heal_verified: Dictionary = host.call("stage_actor_heal_utility", heal.intent, peer, heal.view,
+				heal.move_id, heal.wind_profile, int(heal.receipt_limit))
+			if heal_verified.get("ok") != true or not ESSENCE._equivalent(heal_verified, heal): return refused
+		var canonical: Dictionary = _character_authority.call("state", character)
+		var owned: Dictionary = {}
+		for card: Dictionary in canonical.get("party", []):
+			if card.get("uid") == uid: owned = card
+		var original_saved: bool = actor_delivery.valid(existing, character, scope.world_namespace) \
+			and existing.world_id == str(world.get("world_id")) and existing.session_id == scope.session_id \
+			and ESSENCE._equivalent(existing.receipt, receipt) \
+			and ESSENCE._equivalent(existing.hp, proposal.get("hp_after")) and existing.fainted == proposal.get("fainted") \
+			and ESSENCE._equivalent(existing.expected_hp, proposal.get("hp_before"))
+		if owned.is_empty() or (not ESSENCE._equivalent(owned.get("hp"), proposal.get("hp_before")) \
+			and not (original_saved and ESSENCE._equivalent(owned.get("hp"), proposal.get("hp_after")))) \
+			or not ESSENCE._equivalent(owned.get("max_hp"), proposal.get("max_hp")) \
+			or (owned.get("fainted") != (float(proposal.hp_before) == 0.0) \
+				and not (original_saved and owned.get("fainted") == proposal.get("fainted"))): return refused
+		proofs[receipt.receipt_id] = {"scope": scope.duplicate(true), "world_id": str(world.get("world_id")),
+			"character_id": character, "proposal": proposal.duplicate(true), "source_record": source_record.duplicate(true),
+			"revision_before": int(original.get("character_revision", -1))}
+		director.set_meta("foundation_ordinary_vitals_commits", proofs)
+		if not original_saved:
+			var saved: Dictionary = host_commit_creature_vitals(delivery_peer, uid, int(original.get("character_revision", -1)),
+				float(proposal.hp_before), float(proposal.hp_before) == 0.0,
+				float(proposal.hp_after), bool(proposal.fainted), receipt)
+			if saved.get("ok") != true or saved.get("durable") != true:
+				return {"ok": false, "durable": false, "resolved": false, "code": "actor_world_save_pending"}
+		var durable_row: Dictionary = world.get("reward_deliveries").get(actor_delivery.delivery_id(scope.world_namespace, character, uid), {})
+		if not actor_delivery.valid(durable_row, character, scope.world_namespace) \
+			or not ESSENCE._equivalent(durable_row.receipt, receipt): return refused
+		proofs[receipt.receipt_id]["row"] = durable_row.duplicate(true)
+		director.set_meta("foundation_ordinary_vitals_commits", proofs)
+		var commit_record_before: Dictionary = host.call("record", encounter_id).duplicate(true)
+		var committed: Dictionary = host.call("commit_actor_heal_utility", heal) if proposal.kind == "heal" \
+			else host.call("commit_original_actor_vitals", proposal, source_record)
+		if committed.get("ok") != true:
+			return {"ok": false, "durable": true, "resolved": false, "code": "actor_commit_pending"}
+		original["committed"] = true
+		proofs[receipt.receipt_id]["record_before"] = commit_record_before
+		proofs[receipt.receipt_id]["record_after"] = host.call("record", encounter_id).duplicate(true)
+		director.set_meta("foundation_ordinary_vitals_commits", proofs)
+		if proposal.kind == "heal": original["heal_verdict"] = committed.get("verdict", {}).duplicate(true)
+		host_finalize_creature_vitals(delivery_peer, uid, receipt)
+	var latest: Dictionary = world.get("reward_deliveries").get(actor_delivery.delivery_id(scope.world_namespace, character, uid), {})
+	var resolved: bool = actor_delivery.valid(latest, character, scope.world_namespace) \
+		and latest.get("status") == "accepted" and ESSENCE._equivalent(latest.get("receipt"), receipt) \
+		and host_ack_creature_vitals(delivery_peer, uid, int(latest.get("character_revision", -1)), receipt)
+	return {"ok": true, "durable": true, "resolved": resolved,
+		"code": "actor_owner_saved" if resolved else "actor_owner_save_pending", "receipt": receipt.duplicate(true)}
+
+## Derive the full terminal continuation exclusively from the original
+## typed proposals and accepted BOOL decisions. No card field is excluded.
+static func _ordinary_combat_settled_record(original: Dictionary, settled: Dictionary,
+		proofs: Dictionary, leaves: Array = []) -> bool:
+	if original.is_empty() or settled.is_empty() or original.get("phase") != "done": return false
+	var scope: Dictionary = original.get("ordinary_combat_reward_owner", {})
+	if not COMBAT_ROUND_REWARD.scope_valid(scope): return false
+	var expected: Dictionary = original.duplicate(true)
+	var applied: Dictionary = {}
+	var actor_codec: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	for step: int in proofs.size() * 2 + leaves.size() + 1:
+		if ESSENCE._equivalent(expected, settled): return true
+		var progressed: bool = false
+		for proof_key: Variant in proofs:
+			var proof: Dictionary = proofs[proof_key]
+			var proposal: Dictionary = proof.get("proposal", {})
+			if proposal.get("encounter_id") != scope.encounter_id: continue
+			var character: String = str(proof.get("character_id", ""))
+			var peer: int = int(proposal.get("peer_id", 0))
+			var uid: String = str(proposal.get("creature_uid", ""))
+			var member: Dictionary = expected.get("participants", {}).get(peer, {})
+			if member.is_empty(): member = expected.get("retained_actor_participants", {}).get(character, {})
+			var current: Dictionary = member.get("actor_vitals", {}).get(uid, {})
+			var before: Dictionary = proof.get("source_record", {}).get("participants", {}).get(peer, {}).get("actor_vitals", {}).get(uid, {})
+			var row: Dictionary = proof.get("accepted_row", {})
+			if current.is_empty() or applied.has(proof_key): continue
+			# Historical unrelated generations remain history; they cannot
+			# supply the source for this original body.
+			if current.get("body_generation") != proposal.get("body_generation"): continue
+			if proof.get("accepted") != true or not ESSENCE._equivalent(proof.get("scope"), scope) \
+				or member.get("character_id") != character \
+				or not actor_codec.valid(row, character, scope.world_namespace) or row.status != "accepted" \
+				or row.session_id != scope.session_id or row.world_id != proof.get("world_id") \
+				or not ESSENCE._equivalent(row.receipt, proposal.get("settlement_receipt")) \
+				or not ESSENCE._equivalent(row.expected_hp, proposal.get("hp_before")) \
+				or not ESSENCE._equivalent(row.max_hp, proposal.get("max_hp")) \
+				or not ESSENCE._equivalent(row.hp, proposal.get("hp_after")) or row.fainted != proposal.get("fainted"): continue
+			if ESSENCE._equivalent(current, before) and ESSENCE._equivalent(expected, proof.get("record_before")):
+				var next: Dictionary = expected.duplicate(true)
+				var next_member: Dictionary = next.get("participants", {}).get(peer, {})
+				if next_member.is_empty(): next_member = next.get("retained_actor_participants", {}).get(character, {})
+				var actor: Dictionary = next_member.actor_vitals[uid]
+				actor.hp = proposal.hp_after
+				actor.fainted = proposal.fainted
+				actor.revision = proposal.revision
+				actor.settlement_receipt = proposal.settlement_receipt.duplicate(true)
+				actor.receipts[str(proposal.action_id)] = true
+				var after: Dictionary = proof.get("record_after", {})
+				if int(after.get("seq", -1)) <= int(expected.get("seq", -1)): return false
+				next.seq = after.seq
+				if not ESSENCE._equivalent(next, after): return false
+				expected = next
+				progressed = true
+				break
+			if current.get("revision") == proposal.get("revision") \
+				and ESSENCE._equivalent(current.get("settlement_receipt"), proposal.get("settlement_receipt")) \
+				and ESSENCE._equivalent(current.get("hp"), proposal.get("hp_after")) \
+				and current.get("fainted") == proposal.get("fainted"):
+				current.settled_revision = proposal.revision
+				applied[proof_key] = true
+				progressed = true
+				break
+		if progressed: continue
+		for index: int in leaves.size():
+			var leave: Dictionary = leaves[index]
+			var key: String = "leave:" + str(index)
+			if applied.has(key) or leave.get("encounter_id") != scope.encounter_id \
+				or not ESSENCE._equivalent(expected, leave.get("record_before")): continue
+			if not leave.get("peer_id") is int or not leave.get("host_seq_before") is int \
+				or not expected.get("participants", {}).has(leave.peer_id) \
+				or int(leave.host_seq_before) < int(expected.seq): return false
+			var trial: RefCounted = preload("res://scripts/net/encounter_host.gd").new(HOST_PEER_ID)
+			trial.set("encounters", {scope.encounter_id: expected.duplicate(true)})
+			trial.set("seq", int(leave.host_seq_before))
+			if trial.call("leave", scope.encounter_id, int(leave.peer_id)).get("ok") != true \
+				or not ESSENCE._equivalent(trial.call("record", scope.encounter_id), leave.get("record_after")): return false
+			expected = trial.call("record", scope.encounter_id).duplicate(true)
+			applied[key] = true
+			progressed = true
+			break
+		if not progressed: return false
+	return ESSENCE._equivalent(expected, settled)
+
+## The normal accepted training ACK already owns actor HP/maxHP/generation
+## promotion. Reuse that exact shipping transition on a detached record when
+## freezing completion; no new body is admitted in the done phase.
+func _ordinary_combat_completion_record(terminal: Dictionary, prior: Dictionary, current: Dictionary, world: RefCounted) -> bool:
+	var baseline: Dictionary = terminal.get("settled_record", {})
+	if baseline.is_empty(): return false
+	var trial: RefCounted = preload("res://scripts/combat/accepted_action_host.gd").new(HOST_PEER_ID)
+	trial.set("encounters", {str(current.encounter_id): baseline.duplicate(true)})
+	for duty: Dictionary in prior.duties:
+		var row: Dictionary = world.get("reward_deliveries").get(ESSENCE.training_delivery_id(prior.scope.world_namespace, duty.character_id), {})
+		if not TRAINING_WORLD.training_row_valid(row, prior.scope.world_namespace, str(world.get("world_id"))) \
+			or row.get("status") != "accepted" or row.get("action") != "combat_round_reward" \
+			or not ESSENCE._equivalent(row.get("intent"), duty.intent) \
+			or row.get("receipt") != COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context): return false
+		var admitted: Dictionary = _character_authority.call("state", duty.character_id)
+		var revision: int = int(_character_authority.call("revision", duty.character_id))
+		var proposal: Dictionary = trial.call("stage_actor_training_baseline", row, admitted, revision,
+			prior.scope.world_namespace, str(world.get("world_id")))
+		if proposal.get("ok") != true or trial.call("commit_actor_training_baseline", proposal, row, admitted,
+			revision, world.get("reward_deliveries"), prior.scope.world_namespace, str(world.get("world_id"))) != true: return false
+	return ESSENCE._equivalent(trial.call("record", str(current.encounter_id)), current)
+
+## Freeze the actual terminal arbiter/body facts before publication or teardown.
+## Retrying an unavailable writer uses these originals, never later owner cards.
+func foundation_combat_round_resolution(director: Node, encounter_id: String, round_number: int,
+		enemy_record: Dictionary, outcome: String, phase: String = "round") -> Dictionary:
+	var refused: Dictionary = {"ok": false, "durable": false, "resolved": false, "code": "actual_terminal_round_required"}
+	if not _ordinary_combat_director_live(director) or outcome != "won" or phase not in ["round", "completion"]: return refused
+	var world: RefCounted = _game().get("world")
+	var scopes: Dictionary = director.get_meta("foundation_ordinary_combat_scopes", {})
+	var scope: Dictionary = scopes.get(encounter_id, {})
+	if world == null or not COMBAT_ROUND_REWARD.scope_valid(scope) \
+		or scope.world_namespace != world.get("reward_delivery_namespace") or scope.session_id != _altar_current_epoch() \
+		or scope.realm != preload("res://scripts/data/biome_order.gd").canonical_id(str(director.call("_encounter_realm"))): return refused
+	var key: String = JSON.stringify([encounter_id, round_number, phase])
+	var retained: Dictionary = director.get_meta("foundation_combat_round_pending", {})
+	var prior_round: Dictionary = retained.get(JSON.stringify([encounter_id, round_number, "round"]), {})
+	if phase == "completion" and (prior_round.is_empty() or not _ordinary_combat_round_saved(prior_round, world)):
+		return {"ok": false, "durable": false, "resolved": false, "code": "original_round_owner_save_pending"}
+	var original: Dictionary = retained.get(key, {})
+	if original.is_empty():
+		if director.call("ordinary_actor_vitals_pending", encounter_id) != false:
+			return {"ok": false, "durable": false, "resolved": false, "code": "original_actor_owner_save_pending"}
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")]: return refused
+		var record: Dictionary = host.call("record", encounter_id)
+		var rounds: Dictionary = director.get("_ordinary_combat_rounds")
+		var terminal: Dictionary = rounds.get(encounter_id, {})
+		var spec: Dictionary = director.get("_trainer_spec")
+		var manager: Node = director.get("_manager") as Node
+		var enemy_body: Node3D = director.get("_trainer_body") as Node3D
+		var enemy: RefCounted = enemy_body.get("instance") as RefCounted if is_instance_valid(enemy_body) else null
+		if spec.has("master") or spec.has("rematch") or spec.get("id") != scope.trainer_id \
+			or record.get("encounter_id") != encounter_id or record.get("phase") != "done" \
+			or record.get("kind") not in ["trainer", "boss"] or preload("res://scripts/data/biome_order.gd").canonical_id(str(record.get("realm"))) != scope.realm \
+			or record.get("opponent", {}).get("round") != round_number \
+			or record.get("opponent", {}).get("owner_npc") != scope.trainer_id \
+			or terminal.get("round") != round_number or terminal.get("outcome") != outcome \
+			or (phase == "round" and (not ESSENCE._equivalent(terminal.get("settled_record"), record) \
+				or not _ordinary_combat_settled_record(terminal.get("record", {}), record, director.get_meta("foundation_ordinary_vitals_commits", {}), director.get_meta("foundation_ordinary_leave_transitions", [])))) \
+			or not ESSENCE._equivalent(terminal.get("enemy"), enemy_record) \
+			or not is_instance_valid(enemy_body) or not enemy_body.is_inside_tree() or enemy == null \
+			or manager.get("_wild") != enemy_body or manager.get("_enemy") != enemy \
+			or record.get("opponent", {}).get("card", {}).get("uid") != enemy_record.get("uid") \
+			or not ESSENCE._equivalent(preload("res://scripts/save/water_capture_codec.gd").encode(enemy), enemy_record) \
+			or enemy_record.get("hp") != 0 or enemy_record.get("fainted") != true: return refused
+		if phase == "completion" and not _ordinary_combat_completion_record(terminal, prior_round, record, world): return refused
+		var participants: Array = []
+		var members: Dictionary = record.get("participants", {}).duplicate(true)
+		if phase == "round":
+			for original_peer: Variant in terminal.record.get("participants", {}):
+				if members.has(original_peer): continue
+				var original_member: Dictionary = terminal.record.participants[original_peer]
+				var departed: Dictionary = record.get("retained_actor_participants", {}).get(original_member.get("character_id"), {})
+				if departed.is_empty(): return refused
+				members[original_peer] = departed
+		if phase == "completion":
+			for prior: Dictionary in prior_round.duties:
+				var previous_peer: int = int(prior.context.binding.peer_id)
+				if not members.has(previous_peer):
+					var departed: Dictionary = record.get("retained_actor_participants", {}).get(prior.character_id, {})
+					if departed.is_empty(): return refused
+					members[previous_peer] = departed
+		if members.is_empty() or members.size() > 4: return refused
+		for peer: Variant in members:
+			if not peer is int or peer < 1: return refused
+			var member: Dictionary = members[peer]
+			var character: String = str(member.get("character_id", ""))
+			var current_peer: int = int(_registry.call("peer_for_character", character))
+			if character.is_empty() or (current_peer > 0 and _authority_character(current_peer) != character) \
+				or (_character_authority.call("state", character) as Dictionary).is_empty(): return refused
+			participants.append({"peer_id": peer, "character_id": character})
+		var duties: Array = []
+		for participant: Dictionary in participants:
+			var peer: int = participant.peer_id
+			var character: String = participant.character_id
+			var state: Dictionary = _character_authority.call("state", character)
+			var member: Dictionary = members[peer]
+			var body: Node3D = director.call("deployed_body_for", peer) as Node3D
+			var active: String = str(member.get("actor_bound_uid", ""))
+			if phase == "completion":
+				for prior: Dictionary in prior_round.duties:
+					if prior.character_id == character and prior.context.binding.peer_id == peer:
+						active = str(prior.context.binding.active_uid)
+			var actors: Dictionary = member.get("actor_vitals", {})
+			var actor: Dictionary = actors.get(active, {})
+			if state.get("character_id") != character or not state.get("party") is Array \
+				or actor.is_empty() \
+				or (phase == "round" and (int(actor.get("body_instance_id", 0)) <= 0 \
+					or (record.get("participants", {}).has(peer) and (not is_instance_valid(body) \
+						or not body.is_inside_tree() or actor.get("body_instance_id") != body.get_instance_id())))) \
+				or member.get("creature_uid") != active or int(actor.get("body_generation", 0)) < 1: return refused
+			var vitals: Array = []
+			for card: Dictionary in state.party:
+				var actual: Dictionary = actors.get(card.get("uid"), {})
+				vitals.append({"uid": card.get("uid"), "hp": actual.get("hp", card.get("hp")),
+					"max_hp": actual.get("max_hp", card.get("max_hp")), "fainted": actual.get("fainted", card.get("fainted")),
+					"actor_generation": int(actual.get("body_generation", 0))})
+			var actor_source: Dictionary = participant.duplicate(true)
+			actor_source.merge({"active_uid": active, "actor_generation": int(actor.body_generation), "settled_vitals": vitals})
+			var duty: Dictionary = COMBAT_ROUND_REWARD.make_duty(scope.world_namespace, scope.session_id, scope.realm,
+				scope.trainer_id, encounter_id, round_number, enemy_record, actor_source, participants, phase)
+			if duty.is_empty(): return refused
+			duties.append(duty)
+		original = {"scope": scope.duplicate(true), "round": round_number, "phase": phase, "enemy": enemy_record.duplicate(true),
+			"outcome": outcome, "source_id": COMBAT_ROUND_REWARD.source_id(duties[0].intent, duties[0].context), "duties": duties}
+		retained[key] = original.duplicate(true)
+		director.set_meta("foundation_combat_round_pending", retained)
+	if not ESSENCE._equivalent(original.scope, scope) or original.round != round_number or original.phase != phase \
+		or original.outcome != outcome or not ESSENCE._equivalent(original.enemy, enemy_record): return refused
+	var writer: Node = get_node_or_null(^"LedgerRpc")
+	if writer == null: return {"ok": false, "durable": false, "resolved": false, "code": "round_writer_unavailable"}
+	var journal: Dictionary = writer.call("journal_foundation_event", original.source_id, original.duties)
+	if journal.get("ok") != true or journal.get("durable") != true:
+		return {"ok": false, "durable": false, "resolved": false, "code": "round_source_save_pending"}
+	var ready: bool = _ordinary_combat_round_saved(original, world)
+	return {"ok": true, "durable": true, "resolved": ready,
+		"code": "round_owner_saved" if ready else "round_owner_save_pending", "source_id": original.source_id}
+
+func _ordinary_round_pending_characters() -> Dictionary:
+	var waiting: Dictionary = {}
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var rounds: Dictionary = director.get("_ordinary_combat_rounds")
+		for terminal: Dictionary in rounds.values():
+			var source: Dictionary = terminal.get("record", {})
+			var trainer: Dictionary = preload("res://scripts/world/trainer_npc.gd").trainer(str(source.get("opponent", {}).get("owner_npc", "")))
+			var final_round: bool = int(terminal.get("round", 0)) == preload("res://scripts/world/trainer_npc.gd").team_of(trainer).size()
+			if terminal.get("resolved") == true and (not final_round or terminal.get("completion_resolved") == true): continue
+			for member: Dictionary in source.get("participants", {}).values():
+				waiting[str(member.get("character_id", ""))] = true
+	return waiting
+
+func _ordinary_combat_round_saved(original: Dictionary, world: RefCounted) -> bool:
+	var scope: Dictionary = original.scope
+	for duty: Dictionary in original.duties:
+		var peer: int = int(_registry.call("peer_for_character", duty.character_id))
+		if peer < 1 or _authority_character(peer) != duty.character_id:
+			return false
+		var latest: Dictionary = world.get("reward_deliveries").get(ESSENCE.training_delivery_id(scope.world_namespace, duty.character_id), {})
+		var receipt: String = COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
+		if not TRAINING_WORLD.training_row_valid(latest, scope.world_namespace, str(world.get("world_id"))) \
+			or latest.get("status") != "accepted" or not latest.after.redesign_character.transaction_receipts.has(receipt) \
+			or _foundation_decision(peer, latest).get("saved") != true: return false
+	return true
+
 func foundation_combat_mastery(director: Node, encounter_id: String, peer: Variant, action: int) -> Dictionary:
 	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
 		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false, "durable": false}
@@ -3341,10 +3788,50 @@ func admitted_pending_vitals(peer_id: int) -> Dictionary:
 
 func host_ack_creature_vitals(peer_id: int, creature_uid: String,
 		character_revision: int, receipt: Dictionary) -> bool:
-	if admitted_character_state(peer_id).is_empty():
-		return false
-	return bool(_character_authority.call("acknowledge_creature_vitals", _authority_character(peer_id),
-		creature_uid, character_revision, receipt))
+	if not is_host() or admitted_character_state(peer_id).is_empty(): return false
+	var character: String = _authority_character(peer_id)
+	var world: RefCounted = _game().get("world")
+	var actor_codec: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	var row: Dictionary = world.get("reward_deliveries").get(actor_codec.delivery_id(str(world.get("reward_delivery_namespace")), character, creature_uid), {})
+	if not actor_codec.valid(row, character, str(world.get("reward_delivery_namespace"))) \
+		or row.get("status") != "accepted" or row.world_id != str(world.get("world_id")) \
+		or row.character_revision != character_revision or not ESSENCE._equivalent(row.receipt, receipt): return false
+	# Authority may already be released when the accepted duplicate repairs a
+	# lost arbiter ACK. Only the exact accepted world decision permits that retry.
+	var pending: Dictionary = _character_authority.call("pending_creature_vitals", character)
+	if pending.has(creature_uid) and _character_authority.call("acknowledge_creature_vitals", character,
+		creature_uid, character_revision, receipt) != true: return false
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		var proofs: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {})
+		var proof: Dictionary = proofs.get(receipt.get("receipt_id"), {})
+		if proof.is_empty(): continue
+		if not _ordinary_combat_director_live(director) or proof.get("character_id") != character \
+			or proof.get("world_id") != row.world_id or proof.get("scope", {}).get("world_namespace") != row.world_namespace \
+			or proof.scope.session_id != row.session_id \
+			or not ESSENCE._equivalent(proof.get("proposal", {}).get("settlement_receipt"), receipt): return false
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")]: return false
+		var record: Dictionary = host.call("record", str(receipt.encounter_id))
+		var members: Array = record.get("participants", {}).values()
+		members.append_array(record.get("retained_actor_participants", {}).values())
+		var found: bool = false
+		for member: Dictionary in members:
+			if member.get("character_id") != character: continue
+			var actor: Dictionary = member.get("actor_vitals", {}).get(creature_uid, {})
+			if actor.is_empty(): return false
+			if int(actor.get("settled_revision", -1)) >= int(receipt.vitals_revision):
+				found = true # Historical ACK cannot rewrite a newer actor/body.
+			elif host.call("acknowledge_actor_vitals", str(receipt.encounter_id), character,
+				creature_uid, int(receipt.vitals_revision), receipt) == true: found = true
+		if not found: return false
+		if proof.get("accepted") == true:
+			if not ESSENCE._equivalent(proof.get("accepted_row"), row): return false
+		else:
+			if _character_authority.call("promote_accepted_vitals_marker", character, row) != true: return false
+			proof["accepted"] = true
+			proof["accepted_row"] = row.duplicate(true)
+		director.set_meta("foundation_ordinary_vitals_commits", proofs)
+	return true
 
 
 func admitted_portal_keys(peer_id: int) -> Dictionary:

@@ -12,6 +12,55 @@ const PASSIVE_FIELDS := ["nourishment", "happiness", "rested_seconds_left", "res
 const CONDITION_FIELDS := ["version", "sequence", "op", "delta", "uids"]
 const DISCOVERY_FIELDS := ["version", "sequence", "op", "realm", "from", "to", "travel_valid", "new_landmarks"]
 const CURSOR_FIELDS := ["base", "state", "discovered", "sequence", "elapsed", "discovery_elapsed", "travel_valid", "position", "realm", "prefix_hash"]
+const VITAL_FIELDS := ["version", "sequence", "op", "delivery_id", "journal_revision", "receipt_hash"]
+
+## The service supplies this context from an authenticated retained actual
+## actor proposal and original typed world journal, never the input packet.
+## These two explicit transitions preserve the original care sequence/hash.
+static func apply_vitals(cursor: Dictionary, packet: Dictionary, proof: Dictionary) -> Dictionary:
+	if not _cursor_valid(cursor): return _deny("invalid_cursor")
+	if not _fields(packet, VITAL_FIELDS) or not _integer(packet.get("version")) or packet.version != 1 \
+		or packet.get("op") not in ["actor_vitals_applied", "actor_vitals_saved"] \
+		or not _integer(packet.get("sequence")) or packet.sequence != int(cursor.sequence) + 1 \
+		or not proof.get("row") is Dictionary or not _number(proof.get("hp_before")) \
+		or not proof.get("fainted_before") is bool or not _integer(proof.get("revision_before")): return _deny("invalid_vitals_input")
+	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	var row: Dictionary = proof.row
+	if actor.call("valid", row, str(cursor.base.character_id)) != true \
+		or packet.delivery_id != row.delivery_id or packet.journal_revision != row.journal_revision \
+		or packet.receipt_hash != HASH.fingerprint(row.receipt) \
+		or int(row.character_revision) != int(proof.revision_before) + 1: return _deny("unproved_vitals_input")
+	if packet.op == "actor_vitals_saved" and row.status != "accepted": return _deny("vitals_owner_ACK_required")
+	var next := cursor.duplicate(true)
+	for name: String in ["base", "state"]:
+		var record: Dictionary = next[name]
+		var found := false
+		for index: int in record.party.size():
+			var card: Dictionary = record.party[index]
+			if card.uid != row.creature_uid: continue
+			if not E._equivalent(card.max_hp, row.max_hp): return _deny("vitals_maximum_changed")
+			if packet.op == "actor_vitals_applied":
+				if not E._equivalent(card.hp, proof.hp_before) or card.fainted != proof.fainted_before: return _deny("vitals_before_conflict")
+				var settled: Dictionary = actor.call("settled_card", card, float(row.hp), row.fainted)
+				if settled.is_empty(): return _deny("invalid_vitals_condition")
+				record.party[index] = settled
+			else:
+				if not E._equivalent(card.hp, row.hp) or card.fainted != row.fainted: return _deny("vitals_after_conflict")
+				var marker: Dictionary = row.duplicate(true)
+				marker.status = "settled"
+				var previous: Variant = record.vitals_escrow.get(row.delivery_id)
+				if previous != null:
+					if not previous is Dictionary or actor.call("valid", previous, str(record.character_id)) != true \
+						or previous.status != "settled" or int(previous.journal_revision) > int(row.journal_revision): return _deny("stale_vitals_marker")
+					if int(previous.journal_revision) == int(row.journal_revision) and not E._equivalent(previous, marker): return _deny("conflicting_vitals_marker")
+				record.vitals_escrow[row.delivery_id] = marker
+			found = true
+			break
+		if not found: return _deny("unowned_vitals")
+	if not _cursor_valid(next): return _deny("invalid_vitals_result")
+	next.sequence = int(packet.sequence)
+	next.prefix_hash = HASH.fingerprint({"previous": cursor.prefix_hash, "packet": packet})
+	return {"ok": true, "code": "ok", "cursor": next, "revision": int(row.character_revision)}
 
 class CareCard extends RefCounted:
 	var nourishment := 0.0

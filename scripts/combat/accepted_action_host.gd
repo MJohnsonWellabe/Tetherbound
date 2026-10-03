@@ -25,6 +25,17 @@ func _tracking_enabled() -> bool:
 	return MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
 
 
+func _tracking_enabled_for(id: String) -> bool:
+	if _tracking_enabled(): return true
+	var rec: Dictionary = encounters.get(id, {})
+	var scope: Variant = rec.get("ordinary_combat_reward_owner")
+	return preload("res://scripts/net/combat_round_reward.gd").scope_valid(scope) \
+		and scope.encounter_id == id \
+		and rec.get("kind") in ["trainer", "boss"] \
+		and scope.trainer_id == rec.get("opponent", {}).get("owner_npc") \
+		and scope.realm == preload("res://scripts/data/biome_order.gd").canonical_id(str(rec.get("realm", "")))
+
+
 func _actions(id: String, peer: int) -> Dictionary:
 	var state: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
 	return state.get("accepted_actions", {}) as Dictionary
@@ -59,7 +70,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	var id := str(intent.get("encounter_id", ""))
 	if move_action_publication_pending(id):
 		return _refuse("strike_intent", peer_id, "pending_action", "The original hit is still being published.")
-	if not _tracking_enabled(): return super.validate_strike(intent, peer_id, view)
+	if not _tracking_enabled_for(id): return super.validate_strike(intent, peer_id, view)
 	var binding: Dictionary = view.get("f22_actor_binding", {})
 	if not _binding_current(id, peer_id, binding):
 		return _refuse("strike_intent", peer_id, "stale_actor", "Your deployed creature is no longer current.")
@@ -101,7 +112,7 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 ## arrival state. A duplicate callback cannot invoke that writer twice.
 func begin_move_action_resolution(id: String, peer: int, action: int,
 		binding: Dictionary, target_uid: String, target_generation: int) -> Dictionary:
-	if not _tracking_enabled(): return {"ok": true, "tracked": false}
+	if not _tracking_enabled_for(id): return {"ok": true, "tracked": false}
 	var action_id := _action_id(id, peer, action, binding, target_uid, target_generation)
 	if action_id.is_empty() or move_action_publication_pending(id): return {"ok": false, "code": "not_arrivable"}
 	var entry: Dictionary = _actions(id, peer)[action_id]
@@ -278,6 +289,59 @@ func commit_actor_vitals(proposal: Dictionary) -> Dictionary:
 	if move_action_publication_pending(str(proposal.get("encounter_id", ""))):
 		return {"ok": false, "code": "pending_action"}
 	return super.commit_actor_vitals(proposal)
+
+
+## Session supplies only the director's original active, host-staged hit.
+## Terminal publication may precede a failed disk retry; it cannot restage a
+## fresh hit, change the original actor, or import any snapshot fields.
+func verify_original_actor_vitals(proposal: Dictionary, original: Dictionary) -> bool:
+	var id: String = str(proposal.get("encounter_id", ""))
+	var peer: int = int(proposal.get("peer_id", 0))
+	var uid: String = str(proposal.get("creature_uid", ""))
+	var rec: Dictionary = encounters.get(id, {})
+	if proposal.get("kind") != "damage" or original.get("encounter_id") != id \
+		or not preload("res://scripts/net/combat_round_reward.gd").scope_valid(rec.get("ordinary_combat_reward_owner")) \
+		or rec.get("kind") not in ["trainer", "boss"] \
+		or original.get("phase") != "active" or rec.get("phase") not in ["active", "resolving", "done"] \
+		or not _tracking_enabled_for(id) or move_action_publication_pending(id) \
+		or rec.get("realm") != original.get("realm") \
+		or rec.get("ordinary_combat_reward_owner") != original.get("ordinary_combat_reward_owner") \
+		or rec.get("opponent", {}).get("card", {}).get("uid") != original.get("opponent", {}).get("card", {}).get("uid") \
+		or rec.get("opponent", {}).get("body_generation") != original.get("opponent", {}).get("body_generation"):
+		return false
+	var source: Dictionary = original.get("participants", {}).get(peer, {})
+	var member: Dictionary = rec.get("participants", {}).get(peer, {})
+	if member.is_empty(): member = rec.get("retained_actor_participants", {}).get(source.get("character_id"), {})
+	var before: Dictionary = source.get("actor_vitals", {}).get(uid, {})
+	var current: Dictionary = member.get("actor_vitals", {}).get(uid, {})
+	if source.get("character_id") != member.get("character_id") or source.get("actor_bound_uid") != uid \
+		or member.get("actor_bound_uid") != uid or int(before.get("body_instance_id", 0)) <= 0 \
+		or before.is_empty() or current != before: return false
+	var trial: Variant = get_script().new(_host_peer_id)
+	trial.encounters[id] = original.duplicate(true)
+	trial._vitals_namespace = _vitals_namespace
+	var verified: Dictionary = trial.call("stage_actor_vitals", id, peer, uid,
+		int(proposal.get("body_generation", -1)), int(proposal.get("expected_revision", -1)),
+		str(proposal.get("action_id", "")), "damage", float(proposal.get("amount", NAN)),
+		int(proposal.get("receipt_limit", 0)))
+	return verified.get("ok") == true and verified == proposal
+
+
+func commit_original_actor_vitals(proposal: Dictionary, original: Dictionary) -> Dictionary:
+	if not verify_original_actor_vitals(proposal, original): return {"ok": false, "code": "stale_original_actor"}
+	var rec: Dictionary = encounters[str(proposal.encounter_id)]
+	var source: Dictionary = original.participants[int(proposal.peer_id)]
+	var member: Dictionary = rec.get("participants", {}).get(int(proposal.peer_id), {})
+	if member.is_empty(): member = rec.get("retained_actor_participants", {}).get(source.character_id, {})
+	var current: Dictionary = member.actor_vitals[str(proposal.creature_uid)]
+	current["hp"] = proposal.hp_after
+	current["fainted"] = proposal.fainted
+	current["revision"] = proposal.revision
+	current["settlement_receipt"] = proposal.settlement_receipt.duplicate(true)
+	current.receipts[str(proposal.action_id)] = true
+	seq += 1
+	rec["seq"] = seq
+	return {"ok": true, "vitals": _actor_vitals_view(current)}
 
 
 func bind_actor_body(id: String, peer: int, character: String, owned: Dictionary, body_id: int) -> Dictionary:

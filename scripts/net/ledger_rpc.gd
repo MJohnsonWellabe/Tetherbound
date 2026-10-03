@@ -730,7 +730,12 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 			or not ACTOR_VITALS.equivalent(row.receipt, receipt):
 		return false
 	if row.status == "accepted":
-		return true # Existing accepted world write is the durable duplicate proof.
+		# The second world write can succeed before local actor ACK repair.
+		# Reuse that exact durable decision; never rewrite or reapply owner HP.
+		var accepted_session: Node = game.get("session") as Node
+		return row.world_id == str(world.get("world_id")) and accepted_session != null \
+			and accepted_session.call("host_ack_creature_vitals", peer_id,
+				str(row.creature_uid), int(row.character_revision), receipt) == true
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or not saver.has_method("save_world_prepared") or bool(saver.call("fallback_busy")):
 		return false

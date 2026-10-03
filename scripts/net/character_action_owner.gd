@@ -149,7 +149,10 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
 		player.get("equipment").call("load_data", snapshot.equipment)
 	if (plan.release_index >= 0 or row.action == "wild_capture") and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")
-	var restored := ESSENCE._equivalent(RECORD.portable_projection(player.call("save_data")), row.before)
+	var expected: Dictionary = row.before
+	if row.action == "combat_round_reward":
+		expected = preload("res://scripts/net/combat_round_reward.gd").settled_before(row.before, row.intent, row.host_context)
+	var restored := ESSENCE._equivalent(RECORD.portable_projection(player.call("save_data")), expected)
 	session.call("_end_owner_training_install")
 	return {"ok": false, "saved": false, "pending": true, "durable": true, "code": code if restored else "owner_rollback_conflict"}
 

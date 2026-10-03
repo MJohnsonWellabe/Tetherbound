@@ -25,6 +25,8 @@ static func make(retained: Dictionary, duty: Dictionary, before: Dictionary, rev
 		"revision": revision, "before": before.duplicate(true), "after": cursor.get("state", {}).duplicate(true),
 		"discoveries": cursor.get("discovered", {}).duplicate(true),
 		"input_prefix_hash": cursor.get("prefix_hash", ""), "final_sequence": cursor.get("sequence", -1)}
+	if duty.get("action") == "combat_round_reward":
+		prepared.after = preload("res://scripts/net/combat_round_reward.gd").settled_before(prepared.after, duty.intent, duty.context)
 	prepared.hash = preparation_hash(prepared)
 	return prepared if valid_host(prepared, retained, cursor) else {}
 
@@ -204,19 +206,29 @@ static func valid(raw: Variant, retained: Variant) -> bool:
 	if not RECORD.errors(raw.before, raw.character_id).is_empty() \
 		or not RECORD.errors(raw.after, raw.character_id).is_empty() \
 		or not EVENT.valid(retained, raw.world_namespace, raw.world_id) \
-		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery"] \
+		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery", "combat_round_reward"] \
 		or raw.duty.get("character_id") != raw.character_id or fingerprint(raw.duty) != raw.duty_hash:
 		return false
 	var matches := 0
 	for duty: Dictionary in retained.duties:
 		if exact(duty, raw.duty): matches += 1
+	var core_before: Dictionary = raw.before
+	if raw.duty.action == "combat_round_reward":
+		core_before = preload("res://scripts/net/combat_round_reward.gd").settled_before(raw.before, raw.duty.intent, raw.duty.context)
+		if core_before.is_empty(): return false
 	return matches == 1 and preparation_hash(raw) == raw.hash \
-		and exact(PASSIVE.unchanged_core(raw.before), PASSIVE.unchanged_core(raw.after))
+		and exact(PASSIVE.unchanged_core(core_before), PASSIVE.unchanged_core(raw.after))
 
 static func valid_host(raw: Variant, retained: Variant, cursor: Variant) -> bool:
-	return valid(raw, retained) and cursor is Dictionary \
-		and exact(raw.before, cursor.get("base")) \
-		and exact(raw.after, cursor.get("state")) \
+	if not valid(raw, retained) or not cursor is Dictionary: return false
+	var expected: Variant = cursor.get("state")
+	if raw.duty.action == "combat_round_reward":
+		if not expected is Dictionary: return false
+		var replay: Script = load("res://scripts/net/owner_passive_replay.gd")
+		if replay.call("_cursor_valid", cursor) != true: return false
+		expected = preload("res://scripts/net/combat_round_reward.gd").settled_before(expected, raw.duty.intent, raw.duty.context)
+	return exact(raw.before, cursor.get("base")) \
+		and exact(raw.after, expected) \
 		and exact(raw.discoveries, cursor.get("discovered")) \
 		and raw.final_sequence == cursor.get("sequence", -1) \
 		and raw.input_prefix_hash == cursor.get("prefix_hash", "")

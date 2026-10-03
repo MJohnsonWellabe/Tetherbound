@@ -10,6 +10,25 @@ const KEYS := ["version", "kind", "delivery_id", "world_id", "world_namespace", 
 	"journal_revision", "receipt", "status"]
 const RECEIPT_KEYS := ["receipt_id", "encounter_id", "creature_uid", "body_generation", "vitals_revision"]
 
+## Exact host HP transition, including the existing faint condition effect.
+## Original alive/fainted state owns once-only application; a live-after
+## failed-write retry never spends mood/rest for the same faint a second time.
+static func settled_card(current: Dictionary, hp: float, fainted: bool) -> Dictionary:
+	if not current.get("fainted") is bool or not (current.get("max_hp") is int or current.get("max_hp") is float) \
+		or not is_finite(float(current.max_hp)) or float(current.max_hp) <= 0.0 \
+		or not is_finite(hp) or hp < 0.0 or hp > float(current.max_hp) or fainted != (hp == 0.0) \
+		or (current.fainted and not fainted): return {}
+	var next := current.duplicate(true)
+	next.hp = hp
+	next.fainted = fainted
+	if not current.fainted and fainted:
+		var snapshot := preload("res://scripts/creatures/progression.gd").TrainingConditionSnapshot.new()
+		snapshot.values = next
+		var condition: Script = preload("res://scripts/creatures/creature_condition.gd")
+		condition.call("note_faint", snapshot, condition.call("config"))
+		next = snapshot.values
+	return next
+
 
 static func delivery_id(world_namespace: String, character_id: String, uid: String) -> String:
 	if world_namespace.is_empty() or character_id.is_empty() or uid.is_empty():
@@ -286,6 +305,12 @@ static func apply_owner(game: Node, incoming: Variant) -> Dictionary:
 		# retries still perform a real bool write; equality is not durability.
 		return _save_owner(game, character, incoming, true)
 	var before_escrow: Dictionary = escrow.duplicate(true)
+	if session.has_method("_owner_passive_actor_vitals_record") \
+		and session.call("_owner_passive_actor_vitals_record", incoming, false) != true:
+		return {"ok": false, "code": "owner_passive_vitals_input_pending", "pending": true}
+	if not current_fainted and incoming.fainted:
+		var condition: Script = preload("res://scripts/creatures/creature_condition.gd")
+		condition.call("note_faint", owned, condition.call("config"))
 	owned.set("hp", float(incoming.hp))
 	owned.set("fainted", bool(incoming.fainted))
 	var marker: Dictionary = incoming.duplicate(true)
@@ -306,6 +331,10 @@ static func _save_owner(game: Node, character: String, row: Dictionary, duplicat
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or not bool(saver.call("save_character_prepared", game, character)):
 		return {"ok": false, "code": "owner_save_failed"}
+	var session: Node = game.get("session")
+	if session.has_method("_owner_passive_actor_vitals_record") \
+		and session.call("_owner_passive_actor_vitals_record", row, true) != true:
+		return {"ok": false, "code": "owner_passive_vitals_saved_input_pending", "saved": true, "pending": true}
 	game.get("session").call("_clear_owner_vitals_retry", game.get("local"), game.get("world"), row)
 	return {"ok": true, "duplicate": duplicate, "creature_uid": row.creature_uid,
 		"character_revision": row.character_revision, "journal_revision": row.journal_revision,

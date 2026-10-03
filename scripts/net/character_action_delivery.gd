@@ -60,6 +60,10 @@ static func make_record(world: String, world_namespace: String, epoch: String,
 
 
 static func owner_plan(current: Dictionary, row: Dictionary, schema_check: Callable) -> Dictionary:
+	if row.get("version") == 3:
+		var codec: Script = load("res://scripts/net/foundation_delivery.gd")
+		var result: Dictionary = codec.call("owner_plan", current, row, schema_check)
+		return result
 	if not valid(row, schema_check, str(current.get("character_id", ""))): return ACTIONS.deny("invalid_action_delivery")
 	if not ESSENCE._equivalent(current, row.before):
 		if ESSENCE._equivalent(current, row.after):

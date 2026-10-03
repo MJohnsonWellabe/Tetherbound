@@ -25,7 +25,7 @@ static func valid(raw: Variant, namespace_id: String, world_id: String) -> bool:
 		or not raw.duties is Array or raw.duties.is_empty(): return false
 	for duty: Variant in raw.duties:
 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
-			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer", "combat_mastery"] \
+			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer", "combat_mastery", "combat_round_reward"] \
 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
 		if not _duty_valid(duty, raw): return false
 	return true
@@ -42,6 +42,10 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 	var context: Dictionary = duty.context
 	var intent: Dictionary = duty.intent
 	if not ESSENCE._opaque_id(duty.character_id) or not ESSENCE._opaque_id(context.get("source_key")): return false
+	if duty.action == "combat_round_reward":
+		return context.get("world_namespace") == row.world_namespace and context.get("session_id") == row.session_id \
+			and row.source_id == context.source_key \
+			and preload("res://scripts/net/combat_round_reward.gd").source_valid(intent, context, duty.character_id)
 	if duty.action in ["research_event", "rematch_win", "bounty_event", "combat_mastery"]:
 		if context.get("world_namespace") != row.world_namespace or context.get("session_id") != row.session_id: return false
 	if duty.action != "master_win":

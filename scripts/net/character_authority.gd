@@ -641,8 +641,10 @@ func commit_creature_vitals(character_id: String, uid: String, expected_revision
 			or next_fainted != (next_hp == 0.0) or (expected_fainted and not next_fainted):
 		return {"ok": false, "code": "invalid_vitals"}
 	# The caller supplies only HP/faint. No maximum/party/move/inventory import.
-	owned.hp = next_hp
-	owned.fainted = next_fainted
+	var settled := preload("res://scripts/net/actor_vitals_delivery.gd").settled_card(owned, next_hp, next_fainted)
+	if settled.is_empty(): return {"ok": false, "code": "invalid_vitals_condition"}
+	for field: String in ["hp", "fainted", "happiness", "rested", "rested_seconds_left"]:
+		owned[field] = settled[field]
 	var failures := errors(candidate, character_id)
 	if not failures.is_empty():
 		return {"ok": false, "code": "invalid_character", "errors": failures}
@@ -768,8 +770,10 @@ func recover_durable_vitals(character_id: String, deliveries: Dictionary) -> Dic
 		if owned.is_empty() or not actor.personal_baseline_matches(owned, raw,
 			candidate.get("vitals_escrow", {}).get(raw.delivery_id)):
 			return {"ok": false, "code": "unsettled_vitals_conflict"}
-		owned.hp = float(raw.hp)
-		owned.fainted = bool(raw.fainted)
+		var settled := preload("res://scripts/net/actor_vitals_delivery.gd").settled_card(owned, float(raw.hp), raw.fainted)
+		if settled.is_empty(): return {"ok": false, "code": "invalid_vitals_condition"}
+		for field: String in ["hp", "fainted", "happiness", "rested", "rested_seconds_left"]:
+			owned[field] = settled[field]
 		var accepted := {"uid": str(raw.creature_uid), "hp": raw.hp, "fainted": raw.fainted,
 			"max_hp": raw.max_hp, "receipt": raw.receipt.duplicate(true),
 			"character_revision": raw.character_revision, "expected_hp": raw.expected_hp,
@@ -808,6 +812,36 @@ func acknowledge_creature_vitals(character_id: String, uid: String,
 	_vitals_pending[character_id].erase(uid)
 	if _vitals_pending[character_id].is_empty():
 		_vitals_pending.erase(character_id)
+	return true
+
+## Session calls only after the authenticated original world-row owner ACK.
+## The complete marker is derived from that typed row, never an owner record.
+## This is durable receipt metadata at the existing HP revision, not new XP.
+func promote_accepted_vitals_marker(character: String, row: Dictionary) -> bool:
+	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	if actor.call("valid", row, character, _world_instance) != true or row.status != "accepted" \
+		or revision(character) != int(row.character_revision) or _training_locked(character) \
+		or _portal_stages.has(character) or _vitals_stages.has(character): return false
+	var original: Dictionary = _vitals_seen.get(character, {}).get(row.receipt.receipt_id, {})
+	if original.get("durable") != true or original.get("character_revision") != row.character_revision \
+		or not equivalent(original.get("receipt"), row.receipt) or not equivalent(original.get("hp"), row.hp) \
+		or original.get("fainted") != row.fainted or not equivalent(original.get("max_hp"), row.max_hp): return false
+	var candidate := state(character)
+	var owned: Dictionary = {}
+	for card: Dictionary in candidate.party:
+		if card.uid == row.creature_uid: owned = card
+	if owned.is_empty() or not equivalent(owned.hp, row.hp) or owned.fainted != row.fainted \
+		or not equivalent(owned.max_hp, row.max_hp): return false
+	var marker := row.duplicate(true)
+	marker.status = "settled"
+	var previous: Variant = candidate.vitals_escrow.get(row.delivery_id)
+	if previous != null:
+		if not previous is Dictionary or actor.call("valid", previous, character, _world_instance) != true \
+			or previous.status != "settled" or int(previous.journal_revision) > int(row.journal_revision): return false
+		if int(previous.journal_revision) == int(row.journal_revision): return equivalent(previous, marker)
+	candidate.vitals_escrow[row.delivery_id] = marker
+	if not errors(candidate, character).is_empty(): return false
+	_replace_record(character, revision(character), candidate)
 	return true
 
 

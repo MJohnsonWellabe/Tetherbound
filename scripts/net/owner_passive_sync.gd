@@ -14,7 +14,7 @@ const CLOUD_MAP := preload("res://scripts/world/cloudreach_map_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival"]
 const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest"]
-const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery"]
+const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
 const MAX_PEERS := 4
@@ -75,6 +75,24 @@ func record_input(input: Dictionary) -> void:
 	local.sequence = packet.sequence
 	local.prefix_hash = HASH.fingerprint({"previous": local.prefix_hash, "packet": packet})
 	local.inputs.append(packet)
+
+func record_vitals(row: Dictionary, saved: bool) -> bool:
+	if local.is_empty(): return false
+	var scope := _scope()
+	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	if actor.call("valid", row, str(scope.get("character_id", "")), str(scope.get("world_namespace", ""))) != true \
+		or row.world_id != scope.get("world_id") or row.session_id != scope.get("session_epoch") \
+		or not E._equivalent(_game().get("world").reward_deliveries.get(row.delivery_id), row): return false
+	var receipt_hash := HASH.fingerprint(row.receipt)
+	var op := "actor_vitals_saved" if saved else "actor_vitals_applied"
+	var key: String = op + ":" + receipt_hash + ":" + str(row.journal_revision)
+	var seen: Dictionary = local.get("vitals_seen", {})
+	if seen.has(key): return true
+	if not recording_active() or seen.size() >= MAX_BUFFER or local.inputs.size() >= MAX_BUFFER: return false
+	record_input({"op": op, "delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt_hash": receipt_hash})
+	seen[key] = true
+	local.vitals_seen = seen
+	return true
 
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
@@ -292,12 +310,24 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 				# never walking credit. Wait for replication instead of inventing it.
 				if not context.get("initial_position") is Vector3 or context.initial_position.distance_to(to) > 2.0: return
 				input_context.discontinuity_authorized = true
-		var applied := REPLAY.apply(stream.cursor, input, input_context)
+		var applied: Dictionary
+		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
+			if not owner().has_method("_owner_passive_actor_vitals_context"): return
+			var proof: Dictionary = owner().call("_owner_passive_actor_vitals_context", peer, input)
+			if proof.is_empty(): return # Exact saved op waits the existing authenticated world ACK.
+			if input.op == "actor_vitals_applied" and proof.get("revision_before") != stream.revision:
+				stream.error = "owner_passive_vitals_revision_conflict"; return
+			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
+				stream.error = "owner_passive_vitals_saved_before_applied"; return
+			applied = REPLAY.apply_vitals(stream.cursor, input, proof)
+		else:
+			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
 			stream.first_input_refusal = {"input": input.duplicate(true), "context": input_context.duplicate(true),
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
 		stream.cursor = applied.cursor
+		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
 	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
@@ -579,8 +609,11 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 	if not str(stream.error).is_empty() or checkpoint.is_empty() or not checkpoint.has("frozen"): return
 	var frozen: Dictionary = checkpoint.frozen
 	if int(stream.cursor.sequence) < int(frozen.sequence): return
+	var projected: Dictionary = stream.cursor.state
+	if checkpoint.get("duty", {}).get("action") == "combat_round_reward":
+		projected = preload("res://scripts/net/combat_round_reward.gd").settled_before(projected, checkpoint.duty.intent, checkpoint.duty.context)
 	if stream.cursor.sequence != frozen.sequence or stream.cursor.prefix_hash != frozen.prefix_hash \
-		or HASH.fingerprint(stream.cursor.state) != frozen.hash:
+		or projected.is_empty() or HASH.fingerprint(projected) != frozen.hash:
 		stream.error = "owner_passive_exact_projection_conflict"; return
 	if checkpoint.get("recovery") == true:
 		if not checkpoint.has("prepared"):

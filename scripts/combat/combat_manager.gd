@@ -330,6 +330,7 @@ var _rng := RandomNumberGenerator.new()
 ## because a bar that un-drops is worse than a bar that lags.
 var _encounter_link: Node = null
 var _encounter_id: String = ""
+var _ordinary_reward_owned_id: String = ""
 var _realm_owned_opponent := false
 
 ## The record's `kind` ("wild" | "trainer" | "boss"). Held only so this file can
@@ -409,9 +410,14 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	# a new opponent and must be eligible for its one victory award.
 	if _encounter_id != encounter_id:
 		_victory_awarded = false
+		_ordinary_reward_owned_id = ""
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	if kind in ["trainer", "boss"] and not encounter_id.is_empty() \
+		and is_instance_valid(link) and link.has_method("uses_durable_trainer_rewards"):
+		var owner: Variant = link.call("uses_durable_trainer_rewards", encounter_id)
+		if owner is bool and owner: _ordinary_reward_owned_id = encounter_id
 	_catch_claim_id = ""
 	_catch_finish_requires_host = false
 	_catch_presentation_last_ms = 0
@@ -424,6 +430,7 @@ func unbind_encounter() -> void:
 	_move_awaiting_host = false
 	_encounter_link = null
 	_encounter_id = ""
+	_ordinary_reward_owned_id = ""
 	_encounter_kind = ""
 	_shared_trainer_round = 0
 	_shared_trainer_round_continues = false
@@ -3339,7 +3346,10 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		attack_missed.emit(false)
 		state_changed.emit()
 		return true
-	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")):
+	var durable_owner: Variant = _encounter_link.call("uses_durable_trainer_rewards", _encounter_id) \
+		if _encounter_link.has_method("uses_durable_trainer_rewards") else false
+	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")) \
+		and not (durable_owner is bool and durable_owner):
 		return false
 	_enemy_strike_connected = true
 
@@ -3385,14 +3395,17 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var creature := active_creature()
 	if creature == null:
 		return
+	var canonical: bool = _durable_trainer_reward_owned()
+	if canonical and not _saved_actor_vitals_matches(creature, payload): return
+	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
 	# Host rolls the base strike; this character's one active relic applies
 	# once at the owning health mutation, also for a host on another island.
-	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
+	var damage: float = float(payload.get("damage", 0.0)) if canonical else _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
-	var stagger_crit := _consume_player_stagger_critical()
-	if stagger_crit:
+	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical else _consume_player_stagger_critical()
+	if stagger_crit and not canonical:
 		damage *= _poise_crit_scale()
-	var killed: bool = creature.take_damage(damage)
+	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage)
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
 	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
@@ -3409,8 +3422,60 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
-		CONDITION.note_faint(creature, CONDITION.config())
+		if not canonical: CONDITION.note_faint(creature, CONDITION.config())
 		_handle_active_faint()
+
+
+func _durable_trainer_reward_owned() -> bool:
+	if not _ordinary_reward_owned_id.is_empty() and _ordinary_reward_owned_id == _encounter_id: return true
+	if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("uses_durable_trainer_rewards"): return false
+	var owned: Variant = _encounter_link.call("uses_durable_trainer_rewards", _encounter_id)
+	return owned is bool and owned
+
+
+func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> bool:
+	if not is_inside_tree() or payload.get("creature_uid") != creature.get("uid") \
+		or not payload.get("actor_vitals_receipt") is Dictionary \
+		or creature.get("hp") != payload.get("actor_vitals_hp") \
+		or creature.get("fainted") != payload.get("actor_vitals_fainted"): return false
+	var game: Node = get_node_or_null(^"/root/Game")
+	var player: RefCounted = game.get("local") if game != null else null
+	var world: RefCounted = game.get("world") if game != null else null
+	if player == null or world == null: return false
+	var session: Node = game.get("session") as Node
+	if not is_instance_valid(session) or not session.has_method("_altar_current_epoch"): return false
+	var character: String = str(player.get("character_id"))
+	var namespace_id: String = str(world.get("reward_delivery_namespace"))
+	var actor_delivery: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	var marker: Variant = player.get("satchel_escrow").get(actor_delivery.delivery_id(namespace_id, character, str(payload.creature_uid)))
+	return actor_delivery.valid(marker, character, namespace_id) and marker.get("status") == "settled" \
+		and marker.get("world_id") == world.get("world_id") \
+		and marker.get("session_id") == session.call("_altar_current_epoch") \
+		and marker.get("receipt", {}).get("encounter_id") == _encounter_id \
+		and marker.get("receipt") == payload.actor_vitals_receipt and marker.get("creature_uid") == payload.creature_uid \
+		and marker.get("hp") == payload.actor_vitals_hp and marker.get("fainted") == payload.actor_vitals_fainted
+
+
+func apply_host_actor_heal(payload: Dictionary) -> void:
+	var creature: RefCounted = active_creature()
+	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
+		or not _durable_trainer_reward_owned() or payload.get("canonical_self_heal") != true \
+		or not _saved_actor_vitals_matches(creature, payload) or not payload.get("move") is Dictionary: return
+	var action_id: String = str(payload.actor_vitals_receipt.get("receipt_id", ""))
+	if action_id.is_empty() or _seen_impact_actions.has(action_id): return
+	_seen_impact_actions[action_id] = true
+	_move_awaiting_host = false
+	var delta: Dictionary = payload.get("heal_verdict", {}).get("delta", {})
+	_sync_authoritative_wind(delta)
+	var move: Dictionary = payload.move
+	_party_utility_cooldown[str(creature.get("uid"))] = maxf(0.0, float(move.get("cooldown", 0.0)))
+	_clear_move_input()
+	_pending_move = {}
+	_action = Action.RECOVERY
+	_action_timer = maxf(0.0, float(move.get("windup", 0.0)) + float(move.get("recovery", 0.0)))
+	_ally_body.call("play_attack")
+	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(str(move.get("move_id", "")))), _ally_body, 0.0)
+	state_changed.emit()
 
 
 ## The opponent's body and instance, for the host to read its own truth off.
@@ -3433,6 +3498,8 @@ func _award_victory() -> void:
 	if _encounter_link != null and _encounter_link.has_method("uses_durable_rematch_rewards") \
 		and _encounter_link.call("uses_durable_rematch_rewards", _encounter_id) == true:
 		return # The host's retained rematch award owns this portable mutation.
+	if _encounter_kind in ["trainer", "boss"] and not _encounter_id.is_empty() and _durable_trainer_reward_owned():
+		return # This exact host-owned round supplies the journaled party award.
 	if _enemy == null:
 		return
 	if _victory_awarded:
@@ -4828,6 +4895,9 @@ func _begin_resolve(outcome: String) -> void:
 
 
 func _finish() -> void:
+	if _outcome == "won" and _durable_trainer_reward_owned():
+		if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("ordinary_combat_round_release_ready") \
+			or _encounter_link.call("ordinary_combat_round_release_ready", _encounter_id) != true: return
 	_clear_move_input()
 	if is_inside_tree(): PROJECTILE.cancel_encounter(get_tree(), _encounter_id)
 	_end_hitstop()
@@ -4988,6 +5058,11 @@ func cycle_active(direction: int) -> bool:
 ## clamped: an illegal request is refused outright (returns false), never
 ## partially applied.
 func request_switch(index: int) -> bool:
+	if _durable_trainer_reward_owned():
+		if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("ordinary_actor_vitals_pending") \
+			or _encounter_link.call("ordinary_actor_vitals_pending", _encounter_id) == true:
+			_move_refusal("The original health change is still being saved.")
+			return false
 	if not can_switch():
 		return false
 	if index < 0 or index >= _party.size() or index == _active_index:

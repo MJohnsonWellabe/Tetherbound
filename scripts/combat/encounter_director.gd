@@ -281,6 +281,11 @@ var _shared_telegraph_until_ms: int = 0
 ## Host-only, encounter id -> SharedWildHostFight. Unlike `_encounter`, these
 ## authority engines survive the local host leaving or binding another fight.
 var _shared_host_fights: Dictionary = {}
+var _ordinary_combat_reward_owners: Dictionary = {}
+var _ordinary_combat_rounds: Dictionary = {}
+var _ordinary_combat_round_exit: Dictionary = {}
+var _ordinary_actor_vitals_proposals: Dictionary = {}
+var _ordinary_actor_hit_serial: int = 0
 var _remote_rematches: Dictionary = {}
 var _host_defence: Dictionary = {}
 # Transient presentation fencing; this is not a character or damage journal.
@@ -1937,7 +1942,8 @@ func _rpc_creature_deployed(row: Dictionary) -> void:
 func _rpc_creature_recalled() -> void:
 	if not _is_host():
 		return
-	_host_clear_deployed(multiplayer.get_remote_sender_id())
+	var peer: int = multiplayer.get_remote_sender_id()
+	if not _ordinary_deployment_pending(peer, ""): _host_clear_deployed(peer)
 
 
 func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
@@ -1949,6 +1955,7 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 	row = row.duplicate(true)
 	row["character_id"] = character_id
 	var creature_uid := str(row.get("creature_uid", ""))
+	if _ordinary_deployment_pending(peer_id, creature_uid): return
 	_prune_tournament_rosters()
 	for encounter_id: Variant in _tournament_rosters_by_encounter:
 		var by_peer: Dictionary = _tournament_rosters_by_encounter[encounter_id]
@@ -1964,9 +1971,11 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 			and str(previous.get("species_id", "")) == str(row.get("species_id", "")) \
 			and bool(previous.get("shiny", false)) == bool(row.get("shiny", false)) \
 			and str(previous.get("character_id", "")) == str(row.get("character_id", "")):
+		_ordinary_bind_deployed_peer(peer_id)
 		return
 	_despawn_creature_proxy(peer_id)
 	_spawn_creature_proxy(peer_id)
+	_ordinary_bind_deployed_peer(peer_id)
 
 
 func _host_clear_deployed(peer_id: int) -> void:
@@ -2607,7 +2616,7 @@ func _apply_shared_cue(payload: Dictionary) -> void:
 func _rpc_encounter_enemy_hit(encounter_id: String, payload: Dictionary) -> void:
 	if _manager == null or str(_encounter.get("encounter_id", "")) != encounter_id:
 		return
-	_manager.call("apply_host_enemy_hit", payload)
+	_manager.call("apply_host_actor_heal" if payload.get("canonical_self_heal") == true else "apply_host_enemy_hit", payload)
 
 
 ## Host -> everybody who did NOT win the catch. §8 step 4: their HUD says who
@@ -2662,6 +2671,10 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 	_ensure_encounter_arbiters()
 	var kind := str(intent.get("kind", ""))
 	var encounter_id := str(intent.get("encounter_id", ""))
+	if kind in ["move_start", "strike_intent", "burst_intent", "disengage"] \
+		and ordinary_actor_vitals_pending(encounter_id):
+		return {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
+			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}}
 	match kind:
 		"engage":
 			return _host_engage(intent, peer_id)
@@ -2693,7 +2706,7 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 					var target := _nearest_shared_participant_body(encounter_id, peer_id)
 					if target != null:
 						runtime.call("resume_after_catch", target)
-			var out: Dictionary = _encounter_host.call("leave", encounter_id, peer_id)
+			var out: Dictionary = _ordinary_host_leave(encounter_id, peer_id)
 			if not _tournament_roster_stays_frozen(encounter_id):
 				_release_tournament_roster(encounter_id, peer_id)
 			_host_after_encounter_change(encounter_id)
@@ -2845,7 +2858,12 @@ func _tournament_combat_identity_valid(encounter_id: String, peer_id: int) -> bo
 ## §5. The host takes its OWN position for both bodies, rebuilds the move from
 ## its own config, and rolls with its own `_rng`.
 func _f22_publication_binding(id: String, peer: int, body: Node3D) -> Dictionary:
-	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true: return {}
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true \
+		and not uses_durable_trainer_rewards(id): return {}
+	return _ordinary_actor_binding(id, peer, body)
+
+
+func _ordinary_actor_binding(id: String, peer: int, body: Node3D) -> Dictionary:
 	if _session == null or not _session.has_method("_game"): return {}
 	# The authenticated Session owns the Game. This is the same production
 	# parent used by its registry/writers and by the retained source hooks.
@@ -2894,7 +2912,8 @@ func _f22_publication_binding(id: String, peer: int, body: Node3D) -> Dictionary
 
 
 func _f22_begin_publication(id: String, peer: int, action: int, source: Node3D, target: Node3D) -> Dictionary:
-	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true:
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true \
+		and not uses_durable_trainer_rewards(id):
 		return {"ok": true, "tracked": false}
 	var opponent: Variant = target.get("instance")
 	if not opponent is RefCounted: return {"ok": false}
@@ -2950,6 +2969,9 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
+	if uses_durable_trainer_rewards(id) and slot == "utility" \
+		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
+		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
 		binding, move, COMBAT_MANAGER.host_wind_profile(card), Time.get_ticks_msec())
 	if verdict.get("ok") == true: _host_after_encounter_change(id, peer)
@@ -3143,6 +3165,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 					str(publication.action_id), "done"): return verdict
 		else:
 			_encounter_host.call("set_phase", encounter_id, "done")
+		_capture_ordinary_combat_round(encounter_id, opponent)
 	# Reconcile observer contact before the reliable absolute-HP snapshot.
 	_host_publish_peer_impact(encounter_id, peer_id, impact)
 	_host_after_encounter_change(encounter_id, peer_id, 0, impact)
@@ -3487,6 +3510,7 @@ func _prune_shared_catch_finish_results() -> void:
 func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 		origin: Vector3, facing: Vector3) -> Dictionary:
 	_ensure_encounter_arbiters()
+	if ordinary_actor_vitals_pending(encounter_id): return {}
 	var candidates: Array = []
 	for peer_id: int in (_encounter_host.call("participants_of", encounter_id) as Array):
 		var body := deployed_body_for(peer_id)
@@ -3501,7 +3525,10 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 		return {}
 	var struck := int(best.get("peer_id", 0))
 	_encounter_host.call("note_struck", encounter_id, struck)
-	return {"peer_id": struck, "card": _creature_card_for(struck), "body": deployed_body_for(struck)}
+	var body: Node3D = deployed_body_for(struck)
+	if uses_durable_trainer_rewards(encounter_id) \
+		and _ordinary_actor_binding(encounter_id, struck, body).is_empty(): return {}
+	return {"peer_id": struck, "card": _creature_card_for(struck), "body": body}
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
@@ -3545,6 +3572,9 @@ func _rpc_encounter_enemy_launch(encounter_id: String, launch: Dictionary) -> vo
 
 
 func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> void:
+	if uses_durable_trainer_rewards(encounter_id):
+		_stage_ordinary_enemy_hit(encounter_id, peer_id, payload)
+		return
 	if _encounter_host != null and float(payload.get("damage", 0.0)) > 0.0:
 		_encounter_host.call("cancel_move_start", encounter_id, peer_id)
 	if peer_id == _local_peer_id():
@@ -3555,11 +3585,163 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 		_send_realm_rpc(peer_id, "_rpc_encounter_enemy_hit", [encounter_id, payload])
 
 
+func ordinary_actor_vitals_pending(id: String) -> bool:
+	if not uses_durable_trainer_rewards(id): return false
+	if not _is_host():
+		return _encounter.get("ordinary_actor_vitals_pending") == true
+	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
+		if original.encounter_id == id and original.get("presented") != true: return true
+	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
+
+
+func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
+	for id: String in _ordinary_combat_reward_owners:
+		if not ordinary_actor_vitals_pending(id): continue
+		var rec: Dictionary = _encounter_host.call("record", id)
+		var member: Dictionary = rec.get("participants", {}).get(peer, {})
+		if member.is_empty() or member.get("actor_bound_uid") == next_uid: continue
+		var refusal: Dictionary = {"ok": false, "pending": false, "kind": "deployment", "peer": peer,
+			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}}
+		if peer == _local_peer_id(): _deliver_encounter_verdict(refusal)
+		elif _can_encounter_rpc(): _send_realm_rpc(peer, "_rpc_encounter_verdict", [refusal])
+		return true
+	return false
+
+
+func _ordinary_bind_deployed_peer(peer: int) -> void:
+	for id: String in _ordinary_combat_reward_owners:
+		if not uses_durable_trainer_rewards(id) or ordinary_actor_vitals_pending(id): continue
+		var rec: Dictionary = _encounter_host.call("record", id)
+		if rec.get("phase") == "active" and rec.get("participants", {}).has(peer):
+			_ordinary_actor_binding(id, peer, deployed_body_for(peer))
+
+
+func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> void:
+	if not _is_host() or ordinary_actor_vitals_pending(id): return
+	var body: Node3D = deployed_body_for(peer)
+	var binding: Dictionary = _ordinary_actor_binding(id, peer, body)
+	if binding.is_empty(): return
+	var actor: Dictionary = _encounter_host.call("actor_vitals", id, peer,
+		str(binding.creature_uid), int(binding.actor_generation))
+	if actor.is_empty(): return
+	var limit: int = int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0))
+	if limit < 1 or _ordinary_actor_proposal_count(id) >= limit: return
+	_ordinary_actor_hit_serial += 1
+	var action_id: String = "%s:enemy:%d" % [id, _ordinary_actor_hit_serial]
+	var original: Dictionary = payload.duplicate(true)
+	original["impact"] = HIT_FEEDBACK.receipt(action_id, str(payload.get("move_id", "")),
+		preload("res://scripts/creatures/move_db.gd").load_default().move(str(payload.get("move_id", ""))),
+		"quick", float(payload.get("damage", 0.0)), float(payload.get("type_mult", 1.0)), false,
+		body.call("facing"), float(body.call("body_height")), 1.0, str(binding.creature_uid), body.call("centre"))
+	var resolved: Dictionary = host_resolve_enemy_hit(id, peer, original)
+	if resolved.is_empty(): return
+	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", id, peer,
+		str(binding.creature_uid), int(binding.actor_generation), int(actor.revision),
+		action_id, "damage", float(resolved.damage), limit)
+	if proposal.get("ok") != true: return
+	var retained: Dictionary = {"encounter_id": id, "peer_id": peer,
+		"proposal": preload("res://scripts/combat/accepted_action_host.gd")._original(proposal),
+		"character_revision": int(_session.call("admitted_character_revision", peer)),
+		"binding": binding, "payload": preload("res://scripts/combat/accepted_action_host.gd")._original(resolved),
+		"host_record": preload("res://scripts/combat/accepted_action_host.gd")._original(_encounter_host.call("record", id)),
+		"committed": false, "presented": false}
+	_ordinary_actor_vitals_proposals[action_id] = retained
+	_encounter_host.call("cancel_move_start", id, peer)
+	_host_after_encounter_change(id)
+	_retry_ordinary_actor_vitals()
+
+
+func _retry_ordinary_actor_vitals() -> void:
+	if not _is_host() or _session == null: return
+	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
+		if original.get("presented") == true: continue
+		var result: Variant = _session.call("ordinary_actor_vitals_commit", self,
+			str(original.encounter_id), int(original.peer_id), original.proposal)
+		if original.get("committed") == true and not original.has("record_after"):
+			original["record_after"] = preload("res://scripts/combat/accepted_action_host.gd")._original(
+				_encounter_host.call("record", str(original.encounter_id)))
+		if not result is Dictionary or result.get("resolved") != true: continue
+		var payload: Dictionary = original.payload.duplicate(true)
+		payload["creature_uid"] = str(original.proposal.creature_uid)
+		payload["actor_vitals_receipt"] = original.proposal.settlement_receipt.duplicate(true)
+		payload["actor_vitals_hp"] = float(original.proposal.hp_after)
+		payload["actor_vitals_fainted"] = bool(original.proposal.fainted)
+		if original.has("heal_bundle"):
+			payload["heal_verdict"] = original.get("heal_verdict", {}).duplicate(true)
+		original["presented"] = true
+		_host_after_encounter_change(str(original.encounter_id))
+		if int(original.peer_id) == _local_peer_id():
+			if _manager != null and _local_bound_encounter_id() == str(original.encounter_id):
+				_manager.call("apply_host_actor_heal" if original.has("heal_bundle") else "apply_host_enemy_hit", payload)
+		elif _can_encounter_rpc():
+			_send_realm_rpc(int(original.peer_id), "_rpc_encounter_enemy_hit", [str(original.encounter_id), payload])
+
+
+func _stage_ordinary_self_heal(id: String, peer: int, intent: Dictionary, body: Node3D,
+		move: Dictionary, card: Dictionary) -> Dictionary:
+	var denied: Dictionary = {"ok": false, "pending": false, "kind": "move_start", "peer": peer,
+		"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}}
+	if ordinary_actor_vitals_pending(id): return denied
+	var binding: Dictionary = _ordinary_actor_binding(id, peer, body)
+	if binding.is_empty(): return denied
+	var origin: Vector3 = body.call("centre")
+	var limit: int = int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0))
+	if limit < 1 or _ordinary_actor_proposal_count(id) >= limit: return denied
+	var bundle: Dictionary = _encounter_host.call("stage_actor_heal_utility", intent, peer,
+		{"source_uid": str(binding.creature_uid), "source_generation": int(binding.actor_generation),
+		"now_ms": Time.get_ticks_msec(), "origin": [origin.x, origin.y, origin.z]},
+		str(move.get("move_id", "")), COMBAT_MANAGER.host_wind_profile(card), limit)
+	if bundle.get("ok") != true:
+		denied["code"] = str(bundle.get("code", "invalid_heal"))
+		denied["reason"] = "That heal could not commit safely."
+		return denied
+	var proposal: Dictionary = bundle.vitals_proposal
+	_ordinary_actor_vitals_proposals[str(proposal.action_id)] = {"encounter_id": id, "peer_id": peer,
+		"proposal": preload("res://scripts/combat/accepted_action_host.gd")._original(proposal),
+		"character_revision": int(_session.call("admitted_character_revision", peer)), "binding": binding,
+		"payload": {"canonical_self_heal": true, "move": move.duplicate(true)},
+		"heal_bundle": preload("res://scripts/combat/accepted_action_host.gd")._original(bundle),
+		"host_record": preload("res://scripts/combat/accepted_action_host.gd")._original(_encounter_host.call("record", id)),
+		"committed": false, "presented": false}
+	_host_after_encounter_change(id)
+	return denied
+
+
+func _ordinary_actor_proposal_count(id: String) -> int:
+	var count: int = 0
+	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
+		if original.encounter_id == id: count += 1
+	return count
+
+
+## The real transport leave is itself a host source. Keep its original
+## global sequence and exact full transition for Session's detached replay.
+func _ordinary_host_leave(id: String, peer: int) -> Dictionary:
+	if not uses_durable_trainer_rewards(id): return _encounter_host.call("leave", id, peer)
+	var record_before: Dictionary = preload("res://scripts/combat/accepted_action_host.gd")._original(_encounter_host.call("record", id))
+	var host_sequence: int = int(_encounter_host.get("seq"))
+	var result: Dictionary = _encounter_host.call("leave", id, peer)
+	if result.get("ok") == true and record_before.get("participants", {}).has(peer):
+		var transitions: Array = get_meta("foundation_ordinary_leave_transitions", [])
+		transitions.append(preload("res://scripts/combat/accepted_action_host.gd")._original({
+			"encounter_id": id, "peer_id": peer, "record_before": record_before,
+			"host_seq_before": host_sequence, "record_after": _encounter_host.call("record", id)}))
+		set_meta("foundation_ordinary_leave_transitions", transitions)
+	return result
+
+
 ## The record changed, so everybody in it is told. §3: nothing else is
 ## authoritative, so this is the only broadcast a participant's HUD needs.
 func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	if uses_durable_trainer_rewards(encounter_id):
+		rec = rec.duplicate(true)
+		rec["ordinary_actor_vitals_pending"] = ordinary_actor_vitals_pending(encounter_id)
+		var round_source: Dictionary = _ordinary_combat_rounds.get(encounter_id, {})
+		if round_source.get("resolved") == true:
+			rec["ordinary_combat_round_saved"] = int(round_source.round)
+			rec["ordinary_combat_completion_saved"] = round_source.get("completion_resolved") == true
 	# Presentation metadata on this accepted-hit snapshot only; not save state.
 	if not resolved_impact.is_empty(): rec["resolved_impact"] = resolved_impact.duplicate()
 	if rec.is_empty():
@@ -3662,6 +3844,7 @@ func _tick_encounter(delta: float) -> void:
 					_send_realm_rpc(peer_id, "_rpc_shared_opponent_pose", [payload])
 	if not _encounter.is_empty() and str(_encounter.get("kind", "")) != "wild":
 		var local_id := str(_encounter.get("encounter_id", ""))
+		if uses_durable_trainer_rewards(local_id) and str(_encounter_host.call("phase", local_id)) == "done": return
 		if not local_id.is_empty() and _engaged_with != null and is_instance_valid(_engaged_with):
 			_encounter_host.call("note_opponent_position", local_id,
 				_engaged_with.call("centre"), Time.get_ticks_msec())
@@ -3877,6 +4060,106 @@ func uses_durable_rematch_rewards(id: String) -> bool:
 		(_record_is_remote_rematch(_encounter) or _trainer_spec.has("rematch")))
 
 
+## Only the actual host producer's scoped ownership excludes the local award.
+## Guest copies arrive on the existing authenticated encounter record RPC.
+func uses_durable_trainer_rewards(id: String) -> bool:
+	if id.is_empty() or _session == null: return false
+	var record: Dictionary = _encounter_host.call("record", id) if _is_host() and _encounter_host != null else _encounter
+	var scope_value: Variant = _ordinary_combat_reward_owners.get(id) if _is_host() else record.get("ordinary_combat_reward_owner")
+	if not preload("res://scripts/net/combat_round_reward.gd").scope_valid(scope_value) \
+		or record.get("encounter_id") != id or record.get("kind") not in ["trainer", "boss"]: return false
+	var scope: Dictionary = scope_value
+	var game: Node = _session.call("_game")
+	var world: RefCounted = game.get("world") if game != null else null
+	return world != null and scope.world_namespace == world.get("reward_delivery_namespace") \
+		and scope.session_id == _session.call("_altar_current_epoch") \
+		and scope.realm == preload("res://scripts/data/biome_order.gd").canonical_id(_encounter_realm()) \
+		and scope.trainer_id == record.get("opponent", {}).get("owner_npc") and scope.encounter_id == id
+
+
+func _install_ordinary_combat_reward_owner(id: String) -> bool:
+	if _trainer_spec.has("master") or _trainer_spec.has("rematch") or _session == null \
+		or not _session.has_method("ordinary_combat_reward_owner"): return true
+	var owner: Variant = _session.call("ordinary_combat_reward_owner", self, id)
+	if not owner is Dictionary or not owner.get("enabled") is bool or not owner.get("ready") is bool: return false
+	if owner.enabled == false: return not _ordinary_combat_reward_owners.has(id)
+	var scope: Variant = owner.get("scope")
+	if owner.ready != true or not preload("res://scripts/net/combat_round_reward.gd").scope_valid(scope): return false
+	_ordinary_combat_reward_owners[id] = scope.duplicate(true)
+	if not uses_durable_trainer_rewards(id):
+		_ordinary_combat_reward_owners.erase(id)
+		return false
+	var record: Dictionary = _encounter_host.call("record", id)
+	record["ordinary_combat_reward_owner"] = scope.duplicate(true)
+	return true
+
+
+## Freeze the real host terminal record before manager disengage removes its
+## participants. Session retains the canonical duty before any journal retry.
+func _capture_ordinary_combat_round(id: String, enemy: RefCounted) -> void:
+	if not uses_durable_trainer_rewards(id) or not _is_host(): return
+	var record: Dictionary = _encounter_host.call("record", id)
+	var round_number: int = int(record.get("opponent", {}).get("round", 0))
+	var previous: Dictionary = _ordinary_combat_rounds.get(id, {})
+	if not previous.is_empty() and int(previous.round) == round_number: return
+	if not previous.is_empty() and previous.get("resolved") != true: return
+	_ordinary_combat_rounds[id] = {"round": round_number, "enemy": WATER_CAPTURE_CODEC.encode(enemy),
+		"outcome": "won", "record": record.duplicate(true), "resolved": false}
+	_resolve_ordinary_combat_round(id)
+
+
+func _resolve_ordinary_combat_round(id: String) -> bool:
+	var retained: Dictionary = _ordinary_combat_rounds.get(id, {})
+	if retained.is_empty() or not uses_durable_trainer_rewards(id) or not _is_host(): return false
+	if retained.get("resolved") == true: return true
+	if ordinary_actor_vitals_pending(id): return false
+	if not retained.has("settled_record"):
+		retained["settled_record"] = preload("res://scripts/combat/accepted_action_host.gd")._original(_encounter_host.call("record", id))
+	if not _session.has_method("foundation_combat_round_resolution"): return false
+	var result: Variant = _session.call("foundation_combat_round_resolution", self, id,
+		int(retained.round), retained.enemy.duplicate(true), str(retained.outcome))
+	if not result is Dictionary or result.get("resolved") != true: return false
+	retained["resolved"] = true
+	_host_after_encounter_change(id)
+	return true
+
+
+func ordinary_combat_vitals_ready(id: String) -> bool:
+	if not _is_host() or _session == null or not _session.has_method("ordinary_actor_vitals_commit") \
+		or not _session.has_method("host_ack_creature_vitals") or _encounter_host == null \
+		or _trainer_spec.has("master") or _trainer_spec.has("rematch"): return false
+	var rec: Dictionary = _encounter_host.call("record", id)
+	if rec.get("kind") not in ["trainer", "boss"] or rec.get("phase") != "active" \
+		or rec.get("opponent", {}).get("owner_npc") != _trainer_spec.get("id") \
+		or rec.get("realm") != _encounter_realm() or rec.get("participants", {}).is_empty(): return false
+	for peer: int in rec.participants:
+		if _ordinary_actor_binding(id, peer, deployed_body_for(peer)).is_empty(): return false
+	return true
+
+
+func _resolve_ordinary_combat_completion(id: String) -> bool:
+	var retained: Dictionary = _ordinary_combat_rounds.get(id, {})
+	if retained.get("resolved") != true or not _is_host(): return false
+	if retained.get("completion_resolved") == true: return true
+	var result: Variant = _session.call("foundation_combat_round_resolution", self, id,
+		int(retained.round), retained.enemy.duplicate(true), str(retained.outcome), "completion")
+	if not result is Dictionary or result.get("resolved") != true: return false
+	retained["completion_resolved"] = true
+	_host_after_encounter_change(id)
+	return true
+
+
+## Keep the original enemy/body/source alive until every owner saved its row.
+func ordinary_combat_round_release_ready(id: String) -> bool:
+	if not uses_durable_trainer_rewards(id): return true
+	if _is_host():
+		if not _resolve_ordinary_combat_round(id): return false
+		return not _trainer_queue.is_empty() or _resolve_ordinary_combat_completion(id)
+	return _encounter.get("ordinary_combat_round_saved") == _encounter.get("opponent", {}).get("round") \
+		and (_encounter.get("opponent", {}).get("round_continues") == true \
+			or _encounter.get("ordinary_combat_completion_saved") == true)
+
+
 func accept_remote_rematch(intent: Dictionary, rec: Dictionary) -> bool:
 	if _is_host() or not _record_is_remote_rematch(rec) or rec.get("phase") != "active" \
 		or rec.get("opponent", {}).get("rematch") != {"trainer_id": intent.get("trainer_id"), "tier": intent.get("tier")} \
@@ -3952,6 +4235,13 @@ func _withdraw_peer_from_shared_fights(peer_id: int) -> void:
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
 		if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
 			_host_commit_encounter({"kind": "disengage", "encounter_id": encounter_id}, peer_id)
+	# Ordinary trainer records use the actual local Manager rather than the
+	# shared-wild runtime map. A real disconnect still retains their actor.
+	for encounter_id: String in _ordinary_combat_reward_owners.keys().duplicate():
+		if _shared_host_fights.has(encounter_id): continue
+		if (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id):
+			_ordinary_host_leave(encounter_id, peer_id)
+			_host_after_encounter_change(encounter_id)
 
 
 func _finalize_shared_host_fight(encounter_id: String, outcome: String) -> void:
@@ -4923,6 +5213,7 @@ func interaction_activate() -> void:
 
 
 func _process(delta: float) -> void:
+	_retry_ordinary_actor_vitals()
 	_retry_research_sources()
 	_tick_pending_shared_join()
 	_tick_pending_tournament_join()
@@ -5531,6 +5822,9 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			and bool(_encounter_host.call("set_opponent", live_id, opponent)):
 		_encounter = _encounter_host.call("record", live_id)
 		_encounter_sample_countdown = 0
+		if not _install_ordinary_combat_reward_owner(live_id):
+			_manager.call("_begin_resolve", "fled")
+			return
 		_manager.call("bind_encounter", self, live_id, str(_encounter.get("kind", "trainer")))
 		_host_after_encounter_change(live_id)
 		_note_trainer_participants(live_id)
@@ -5542,6 +5836,9 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		opponent,
 		str(_ally.get("uid")) if _ally != null else "", character_id)
 	_encounter = rec
+	if opponent_owned and not _install_ordinary_combat_reward_owner(str(rec["encounter_id"])):
+		_manager.call("_begin_resolve", "fled")
+		return
 	if opponent_owned and not _tournament_members.is_empty():
 		_tournament_host_encounter_id = str(rec["encounter_id"])
 		var selected_ids: Array[String] = []
@@ -6912,6 +7209,16 @@ func _send_out_spot() -> Vector3:
 ## state a wild loss leaves behind, and `player_death.gd` — which is about
 ## falling off things — is not involved.
 func _on_trainer_round_ended(outcome: String) -> void:
+	var ordinary_id: String = str(_encounter.get("encounter_id", ""))
+	if outcome == "won" and uses_durable_trainer_rewards(ordinary_id) \
+		and not _resolve_ordinary_combat_round(ordinary_id):
+		_ordinary_combat_round_exit = {"encounter_id": ordinary_id, "outcome": outcome}
+		return
+	if outcome == "won" and _trainer_queue.is_empty() and uses_durable_trainer_rewards(ordinary_id) \
+		and _is_host() and not _resolve_ordinary_combat_completion(ordinary_id):
+		_ordinary_combat_round_exit = {"encounter_id": ordinary_id, "outcome": outcome}
+		return
+	_ordinary_combat_round_exit.clear()
 	var body := _trainer_body
 	_trainer_body = null
 	_engaged_with = null
@@ -6939,6 +7246,11 @@ func _on_trainer_round_ended(outcome: String) -> void:
 ## same shape as `_tick_respawn` above, and kept separate from it because a
 ## trainer's creature never respawns.
 func _tick_trainer_battle(delta: float) -> void:
+	if not _ordinary_combat_round_exit.is_empty():
+		var id: String = str(_ordinary_combat_round_exit.encounter_id)
+		if _resolve_ordinary_combat_round(id):
+			_on_trainer_round_ended(str(_ordinary_combat_round_exit.outcome))
+		return
 	if _boss_pending_win:
 		_finish_trainer_battle(true)
 		return
@@ -6964,6 +7276,11 @@ func _tick_trainer_battle(delta: float) -> void:
 ## so no exit from a trainer battle can leave the player unable to walk.
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
+	var ordinary_id: String = str(_encounter.get("encounter_id", ""))
+	if won and uses_durable_trainer_rewards(ordinary_id) and _is_host() \
+		and not _resolve_ordinary_combat_completion(ordinary_id):
+		_boss_pending_win = true
+		return
 	if won and not spec.has("master") and not spec.has("rematch") and _session != null and _is_host():
 		var handoff: Dictionary = _session.call("foundation_boss_outcome", self, spec.duplicate(true), _encounter.duplicate(true))
 		if handoff.get("durable") != true:
@@ -7270,7 +7587,7 @@ func _pay_trainer_reward(spec: Dictionary) -> void:
 		if landed > 0:
 			won.append("%d %s" % [landed, str(catalogue.call("item_name", id)) if catalogue != null else id])
 
-	if xp_bonus > 0:
+	if xp_bonus > 0 and not uses_durable_trainer_rewards(str(_encounter.get("encounter_id", ""))):
 		var party := _party()
 		if party != null:
 			var cfg: Dictionary = PROGRESSION.config()
@@ -7411,6 +7728,7 @@ func _tell_the_paid(spec: Dictionary, paid: Array) -> void:
 		"xp": ENCOUNTER_REWARDS.xp_bonus(spec),
 		"line": _trainer_reward_line(spec),
 	}
+	if uses_durable_trainer_rewards(str(_encounter.get("encounter_id", ""))): payload["xp"] = 0
 	for peer: Variant in paid:
 		_tell_participant_they_were_paid(int(peer), payload)
 
