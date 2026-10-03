@@ -56,7 +56,9 @@
       ]
     },
     "shared_helper_owner": "Coordinator relays actual contact-cap evidence to F17; F19 does not edit competing helper",
-    "log": "ci-campaign-functional-rejected-37081328436.log.gz"
+    "log": "ci-campaign-functional-rejected-37081328436.log.gz",
+    "actual_world_seed": 920716524,
+    "next_comparator": "Existing --world-seed=4 normal generation option matches the canonical F17 fresh route. No state/pose/HP/observer guard changes; preserve random-seed contact-count failure and make no all-seed coverage claim. Full fresh rerun still waits for actual reviewed route evidence."
   },
   "solmane": {
     "run": 37081327114,
@@ -94,10 +96,11 @@
     "log": "ci-legendary-body-lifetime-37082873789.log"
   },
   "next_diagnostic": {
-    "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
-    "run": 37084465536,
+    "source_commit": "0679bb12aafa61028acb6a8917b0c485df5983bc",
+    "run": 37086324872,
     "script": "tests/probe_f19_chamber_material_lifetime.gd",
-    "scope": "Original space-accept twice, normal then active chamber materials retained across deletion; counterfactual diagnosis never acceptance proof"
+    "scope": "Same original space-accept twice; baseline versus actual chamber Label3D base detachment on PREDELETE. Checks unchanged live label properties; no product script replaced; counterfactual cannot count as acceptance.",
+    "status": "Verified Run step live at last API inspection; no terminal evidence yet"
   },
   "exclusions": "No earned fixtures promoted, no visual/audio/owner-play/device-performance acceptance. All engine work remains offloaded while user plays Valheim.",
   "build_component_diagnostic": {
@@ -113,5 +116,15 @@
     "fixtures": "Startup and interaction disabled in component subclasses; no paid placement, mounted world, reward or earned claim",
     "outcome": "Negative material-error reproduction; no build material production fix",
     "log": "ci-build-material-lifetime-37083791397.log"
+  },
+  "chamber_material_diagnostic_r1": {
+    "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
+    "run": 37084465536,
+    "accepted_clean_witness": false,
+    "workflow_conclusion": "failure",
+    "engine_errors": 48,
+    "script_errors": 0,
+    "result": "Eight active chamber Material references retained did not reduce post-choice errors:16 in each case. Original prompt placement assertion failed in baseline and remains preserved.",
+    "evidence": "chamber-material-counterfactual-r1.json"
   }
 }

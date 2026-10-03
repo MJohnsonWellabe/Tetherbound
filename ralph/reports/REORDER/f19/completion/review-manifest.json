@@ -146,10 +146,16 @@
     ]
   },
   "open_acceptance": [
-    "Clean Veridian and Solmane actual choice runs; all six completed natively in each, but raw GLES3 material-null errors remain (136 Veridian, 4 Solmane).",
+    "Clean Veridian and Solmane actual choice runs; all six completed natively in each, but raw GLES3 material-null errors remain (136 Veridian, 4 Solmane). Actual chamber diagnostic also retained one original prompt-at-offer assertion failure; no clean claim or waived guard.",
     "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
     "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups."
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
-  "latest_remote_audit": "functional-offload-actual-results.json"
+  "latest_remote_audit": "functional-offload-actual-results.json",
+  "latest_material_diagnostic": "chamber-material-counterfactual-r1.json",
+  "latest_material_probe": {
+    "run": 37086324872,
+    "source_commit": "0679bb12aafa61028acb6a8917b0c485df5983bc",
+    "acceptance": false
+  }
 }
