@@ -768,7 +768,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"guardian_pilot":
 			out = await _step_guardian_pilot(args)
 		"join_encounter":
-			out = await _step_join_encounter(args)
+			out = await _step_join_encounter(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"teleport":
 			out = await _step_teleport(args)
 		"place_creature":
@@ -2541,7 +2541,7 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 
 
 ## Protocol §6: join a fight already running, by id.
-func _step_join_encounter(args: Dictionary) -> Dictionary:
+func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var director := _encounter_director()
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
@@ -2550,16 +2550,77 @@ func _step_join_encounter(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
+	# A shared join returns while the host's admission/record is still pending.
+	# Observe THAT request's original deadline, rather than inventing a longer
+	# settle delay. Legacy/tournament joins keep their existing 120-frame wait.
+	var shared := str(director.get("_pending_shared_join_id")) == id \
+		or str(director.get("_shared_active_id")) == id
+	var admission_deadline := int(director.get("_pending_shared_join_deadline_ms")) if shared else 0
+	var frames := maxi(1, int(args.get("settle", 120)))
+	if shared:
+		frames = maxi(1, command_budget_frames)
+		if args.has("settle"):
+			frames = mini(frames, maxi(1, int(args["settle"])))
 	var manager := _combat_manager()
 	var bound := false
-	for i in maxi(1, int(args.get("settle", 120))):
+	var failure := ""
+	var observed_world_message := ""
+	for i in frames:
 		await physics_frame
+		if shared:
+			if (director.get("_cancelled_shared_joins") as Dictionary).has(id):
+				failure = "shared admission was cancelled by the producer"
+				# Shared refusal bypasses manager.last_encounter_refusal. This
+				# global toast is observation only: the HUD may have consumed it,
+				# or another gameplay message may have replaced the actual reason.
+				var game := root.get_node_or_null(^"Game")
+				if game != null:
+					observed_world_message = str(game.get("_pending_world_message"))
+				break
 		manager = _combat_manager()
 		if manager != null and bool(manager.call("is_fighting")) \
 				and str(manager.call("encounter_id")) == id:
-			bound = true
-			break
+			if not shared:
+				bound = true
+			else:
+				var rec: Dictionary = director.call("encounter_record")
+				var opponent: Dictionary = rec.get("opponent", {})
+				var body: Node3D = manager.call("enemy_body") as Node3D
+				var card: Dictionary = opponent.get("card", {})
+				var creature: RefCounted = body.get("instance") as RefCounted if is_instance_valid(body) else null
+				var generation := int(opponent.get("body_generation", 0))
+				var source_matches := false
+				if is_instance_valid(body) and generation > 0:
+					if bool(director.call("_is_host")):
+						var runtime: Node = director.call("_shared_host_fight", id) as Node
+						source_matches = is_instance_valid(runtime) and runtime.call("body") == body \
+							and int(runtime.get("body_generation")) == generation
+					else:
+						var script: Script = body.get_script() as Script
+						source_matches = body == director.get("_shared_opponent_proxy") and script != null \
+							and script.resource_path == "res://scripts/creatures/shared_opponent_proxy.gd" \
+							and int(body.get("body_generation")) == generation
+				bound = str(rec.get("encounter_id", "")) == id and rec.get("phase") == "active" \
+					and director.call("_shared_record_is_current_realm", rec) == true \
+					and (rec.get("participants", {}) as Dictionary).has(int(director.call("_local_peer_id"))) \
+					and str(director.get("_shared_active_id")) == id and source_matches \
+					and creature != null and not str(card.get("uid", "")).is_empty() \
+					and str(creature.get("uid")) == str(card.get("uid", "")) \
+					and str(creature.get("species_id")) == str(opponent.get("species_id", ""))
+			if bound:
+				break
+		if shared:
+			if str(director.get("_pending_shared_join_id")) != id:
+				failure = "shared admission ended without a matching host record and presentation"
+				break
+			if admission_deadline <= 0 or Time.get_ticks_msec() >= admission_deadline:
+				failure = "shared admission reached its original producer deadline"
+				break
 	if not bound:
+		if shared:
+			return {"verdict": "FAIL", "detail": failure if not failure.is_empty() else "shared admission reached the caller frame limit",
+				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline,
+					"frame_limit": frames, "observed_world_message": observed_world_message}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
