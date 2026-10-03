@@ -649,9 +649,9 @@ func withdrawal_report() -> Dictionary:
 ## Everything under `holder` that gives off light stops: lights are hidden
 ## (hidden rather than zeroed, because `stronghold.gd::_flicker_fires` and
 ## this file's own flicker both rewrite energy every frame), flame and ember
-## nodes are hidden, and emissive surfaces get an unlit copy of their material
-## as a per-surface override so no shared resource elsewhere in the world is
-## repainted. The iron, the brackets and the hardware stay where they are.
+## nodes are hidden, and emissive surfaces get an unlit copy at the active
+## override so no shared resource elsewhere in the world is repainted.
+## The iron, the brackets and the hardware stay where they are.
 func _darken(holder: Node, report: Dictionary) -> void:
 	var stack: Array[Node] = [holder]
 	while not stack.is_empty():
@@ -675,6 +675,19 @@ func _darken(holder: Node, report: Dictionary) -> void:
 func _unlight(instance: MeshInstance3D) -> int:
 	var changed := 0
 	if instance.mesh == null:
+		return 0
+	# A geometry override masks every surface override. Replacing it both
+	# darkens the rendered material and uses GeometryInstance3D's native
+	# override cleanup during teardown. A hidden surface copy can die
+	# while another imported instance still owns their shared mesh.
+	if instance.material_override != null:
+		var source := instance.material_override
+		if source is BaseMaterial3D and (source as BaseMaterial3D).emission_enabled:
+			var copy := (source as BaseMaterial3D).duplicate() as BaseMaterial3D
+			copy.emission_enabled = false
+			copy.emission_energy_multiplier = 0.0
+			instance.material_override = copy
+			return instance.mesh.get_surface_count()
 		return 0
 	for surface in instance.mesh.get_surface_count():
 		var source := instance.get_active_material(surface)

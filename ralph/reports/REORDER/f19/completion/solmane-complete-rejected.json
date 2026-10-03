@@ -1,0 +1,26 @@
+{
+  "kind": "f19_actual_solmane_full_native_choice_rejected",
+  "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+  "run": 37101816593,
+  "job": 111142681335,
+  "artifact": 11267041523,
+  "process_exit": 0,
+  "elapsed_seconds": 2344,
+  "engine_errors": 4,
+  "script_errors": 0,
+  "failures": [],
+  "cases": [
+    "space-accept",
+    "space-refuse",
+    "capacity-refuse-at-prompt",
+    "capacity-accept-then-let-newcomer-go",
+    "capacity-accept-release-one",
+    "save-while-choice-open"
+  ],
+  "original_gameplay_cases_passed": true,
+  "accepted_clean_choice_witness": false,
+  "scope": "All six original gameplay/save/reload cases pass; four GLES material errors occur during first scenario before its lever/choice. No clean acceptance, fixture promotion, diagnostic retention, assertion waiver or earned claim.",
+  "next_diagnostic": "Original cold bootstrap/reset/reboot only; baseline versus masked Material refs across ALL root children, including automatic project scene and Game menu. Current original full errors have one invalid Material signature, before first offer.",
+  "raw_log": "ci-solmane-full-rejected-37101816593.log.gz",
+  "raw_log_sha256": "92b101cd9149267349ed0d94d59ebbcc5fdbaee6bcd57bc1134fd181e6095fee"
+}

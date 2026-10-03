@@ -1062,6 +1062,8 @@ const CHARACTER_ACTIONS := preload("res://scripts/net/character_action_rules.gd"
 ## this stage immediately with its real bool world-save result before yielding.
 func stage_character_action(character: String, expected_revision: int,
 		action: String, original_intent: Dictionary, host_context: Dictionary) -> Dictionary:
+	if action == "boss_relic" and host_context.get("world_namespace") != _world_instance:
+		return {"ok": false, "code": "wrong_world", "durable": false}
 	if _portal_mutation_pending(character) or not _records.has(character) or _training_locked(character) \
 			or _portal_stages.has(character) or _loadout_pending.has(character) \
 			or _vitals_pending.has(character) or _vitals_stages.has(character):

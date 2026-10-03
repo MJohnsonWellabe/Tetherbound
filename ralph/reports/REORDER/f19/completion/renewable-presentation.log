@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f19_renewable_presentation.gd: 1 of 736 test files
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_stock_received_before_mount_waits_for_real_tree_then_reconciles (res://tests/test_f19_renewable_presentation.gd:12)
+   GDScript backtrace (most recent call first):
+       [0] test_stock_received_before_mount_waits_for_real_tree_then_reconciles (res://tests/test_f19_renewable_presentation.gd:12)
+       [1] _init (res://tests/run_tests.gd:120)
+  ok    test_f19_renewable_presentation.gd :: test_stock_received_before_mount_waits_for_real_tree_then_reconciles
+
+1 tests, 0 assertions, 0 failed

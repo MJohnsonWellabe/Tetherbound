@@ -1,0 +1,35 @@
+{
+  "run": 37107517659,
+  "job": 111158855048,
+  "artifact": 11268556784,
+  "source_commit": "e6c09df88eaf72aa35ad66805bc023a2afaf5543",
+  "process_exit": 0,
+  "elapsed_seconds": 8,
+  "engine_errors": 4,
+  "script_errors": 0,
+  "failures": [],
+  "raw_log": "ci-f19-cloudreach-harvest-component-37107517659.log.gz",
+  "raw_log_sha256": "d016de5508ed1673f404f14d9e819ec9e9b90ae287c104352c00d146c8339e70",
+  "observations": [
+    {
+      "treatment": "baseline",
+      "held": 0,
+      "crops": 15,
+      "surfaces": 15,
+      "unique_active_materials": 15
+    },
+    {
+      "treatment": "retain-active-surface-overrides",
+      "held": 15,
+      "crops": 15,
+      "surfaces": 15,
+      "unique_active_materials": 15
+    }
+  ],
+  "kind": "f19_actual_cloudreach_harvest_material_baseline",
+  "acceptance": false,
+  "scope": "All15 authored Cloudreach harvest specs through shipping Harvest.setup, no Game/stock/gathering. Exact visual factories; baseline versus only active surface override Material retention.",
+  "baseline_errors": 4,
+  "retained_errors": 0,
+  "result": "Baseline actual deletion4 errors; holding only15 actual per-instance override Materials0. No shipping cache or earned credit."
+}

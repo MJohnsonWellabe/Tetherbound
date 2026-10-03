@@ -1,0 +1,30 @@
+{
+  "kind": "f19_actual_chamber_material_counterfactual",
+  "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
+  "run": 37084465536,
+  "artifact": 11260623380,
+  "workflow_conclusion": "failure",
+  "accepted_clean_witness": false,
+  "script_errors": 0,
+  "engine_errors": 48,
+  "original_assertion_failure": "(material-baseline) 'Leave the Veridian Stag free (final)' was live where the player stood when the offer landed",
+  "original_assertion_preserved": true,
+  "scopes": {
+    "baseline": {
+      "retained_materials": 0,
+      "errors_after_choice_before_release": 16
+    },
+    "retained": {
+      "retained_materials": 8,
+      "errors_before_choice": 8,
+      "errors_after_choice_before_release": 16,
+      "errors_after_end": 8
+    }
+  },
+  "actual_transactions": "Both original space-accept scenarios added exactly one Veridian at five, wrote actual personal receipts and completed the inherited save/reload/no-reoffer observations; that does not override the failed prompt assertion or engine errors.",
+  "retained_nodes": "Actual StrongholdClimax readout/duty-board meshes, legendary body meshes and two AnswerMark meshes; Label3D internal raw material RIDs were outside this active-Material retention set.",
+  "conclusion": "Holding eight active chamber Materials did not reduce the observed post-choice errors. No chamber Mesh material last-reference fix is justified by this comparison.",
+  "raw_log": "ci-chamber-material-rejected-37084465536.log.gz",
+  "next_diagnostic": "Same two original actual space-accept scenarios, baseline versus a test-only script on actual chamber Label3D captions. Script detaches render base on PREDELETE only, checks unchanged live label properties and refuses to replace existing product scripts.",
+  "exclusions": "No product fix, assertion relaxation, gameplay/authority change, clean acceptance, earned fixture or completed campaign. Counterfactual runs cannot count as clean witnesses."
+}

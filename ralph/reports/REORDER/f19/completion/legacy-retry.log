@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f19_boss_delivery.gd: 1 of 733 test files
+  ok    test_f19_boss_delivery.gd :: test_captured_boss_duty_keeps_original_epoch_through_real_prepared_and_owner_save_retry
+  ok    test_f19_boss_delivery.gd :: test_paid_legacy_boss_duty_never_starves_the_next_owed_duty_for_that_character
+
+2 tests, 37 assertions, 0 failed

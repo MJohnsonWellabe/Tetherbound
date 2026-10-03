@@ -1,0 +1,32 @@
+{
+  "kind": "f19_actual_world_sprite_material_counterfactual",
+  "source_commit": "9f94af3b1b5f321336fbaf57ebf1f8fe4c7eaacb",
+  "run": 37091898727,
+  "job": 111113822263,
+  "artifact": 11263276695,
+  "workflow_conclusion": "success",
+  "process_exit": 0,
+  "elapsed_seconds": 745,
+  "engine_errors": 48,
+  "script_errors": 0,
+  "original_assertion_failures": [],
+  "accepted_clean_witness": false,
+  "actual_sprite_path": "/root/MeadowsPlayground/IronwoodGrovePresentation/IronwoodLightningHeart/LightningHeartAura",
+  "predelete_detach_markers": 3,
+  "live_properties_unchanged": true,
+  "existing_product_scripts_replaced": 0,
+  "scopes": {
+    "baseline": {
+      "post_choice_errors": 16
+    },
+    "actual_sprite_base_detachment": {
+      "post_choice_errors": 16,
+      "prior_world_teardown_errors": 8,
+      "final_teardown_errors": 8
+    }
+  },
+  "result": "Actual scriptless Sprite3D PREDELETE base detachment did not reduce original full-world post-choice errors. All original gameplay guards passed; raw engine errors prohibit acceptance. No aura production change is justified.",
+  "raw_log": "ci-sprite-material-negative-37091898727.log.gz",
+  "raw_log_sha256": "1f0d32dd22b9e40ff22ca2007164a74020e1c29d4774ef3f293bae5e4dd6a6be",
+  "next_diagnostic": "Installed Terrain3D with actual committed Meadows region data and production terrain/material factory methods. Compare default versus authored material with drawing true/false. Earlier empty Terrain3D probe did not cover populated native mesher/region lifecycle; no world actors or acceptance claim."
+}

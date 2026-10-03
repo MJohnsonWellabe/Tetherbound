@@ -1,0 +1,20 @@
+{
+  "kind": "f19_stronghold_masked_surface_counterfactual_r11",
+  "source_commit": "35b0fe616be4b60230cba8635b1926b3695dcebb",
+  "run": 37100322208,
+  "job": 111138410545,
+  "artifact": 11266531406,
+  "process_exit": 0,
+  "elapsed_seconds": 803,
+  "engine_errors": 16,
+  "script_errors": 0,
+  "failures": [],
+  "baseline_errors": 16,
+  "retain_only_stronghold_masked_surface_errors": 0,
+  "held_peak": 23,
+  "scope": "Only Stronghold hidden per-surface override Materials. No original mesh-surface, active, particle, Terrain, Mesh or MultiMesh resources held. Original full space-accept/save/reload and prompt guards unchanged.",
+  "result": "Positive: the 23 Stronghold hidden surface copies alone suppress all world errors; original guards pass both cases. Actual three-siphon component independently narrows the native eight-error signature.",
+  "acceptance": false,
+  "raw_log": "ci-stronghold-surfaces-37100322208.log.gz",
+  "raw_log_sha256": "e0a7e81902d3c01bf3179456c41bdb328480f926da8908c00a02e3066fead052"
+}

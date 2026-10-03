@@ -1,0 +1,20 @@
+{
+  "kind": "f19_solmane_cold_active_surface_positive",
+  "source_commit": "c825fad9b47271282dae90c2d1a171a6a8dc251a",
+  "run": 37106042367,
+  "job": 111154649960,
+  "artifact": 11267797962,
+  "process_exit": 0,
+  "elapsed_seconds": 295,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "failures": [],
+  "acceptance": false,
+  "held_peak": 968,
+  "raw_log": "ci-solmane-cold-active-positive-37106042367.log.gz",
+  "raw_log_sha256": "15c30d08f587840d0a24ef89962c820369a0b51c2c1b58f9c374b52a3f0e88a7",
+  "baseline": "solmane-cold-masked-negative.json",
+  "scope": "Same original bootstrap/reset/reboot followed by explicit final deletion. Only active per-surface override Materials retained; no geometry override, mesh-base, particle, Terrain, Mesh or MultiMesh resources. Explicit diagnostic retention is not a shipping fix or acceptance witness.",
+  "result": "Baseline8 and masked-only8 errors versus active surface override-only0. Owner class isolated; specific owning factory remains unproven.",
+  "next": "Partition active surface override owners into Landmarks versus every other root subtree in separate native processes."
+}

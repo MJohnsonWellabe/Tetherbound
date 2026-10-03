@@ -1,0 +1,35 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+F19 TERRAIN MATERIAL BEGIN {"acceptance":false,"drawing":true,"treatment":"baseline"}
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _run (res://tests/probe_f19_terrain_material_lifetime.gd:30)
+F19 TERRAIN MATERIAL QUAD {"material_present":true,"path":"/root/@Node3D@24/@Terrain3D@26/MouseViewport/MouseCamera/MouseQuad","terrain_version":"1.0.2"}
+F19 TERRAIN MATERIAL WORLD FREED baseline
+F19 TERRAIN MATERIAL END baseline
+F19 TERRAIN MATERIAL BEGIN {"acceptance":false,"drawing":true,"treatment":"retain-quad-material"}
+F19 TERRAIN MATERIAL QUAD {"material_present":true,"path":"/root/@Node3D@27/@Terrain3D@29/MouseViewport/MouseCamera/MouseQuad","terrain_version":"1.0.2"}
+F19 TERRAIN MATERIAL WORLD FREED retain-quad-material
+F19 TERRAIN MATERIAL END retain-quad-material
+F19 TERRAIN MATERIAL BEGIN {"acceptance":false,"drawing":true,"treatment":"detach-quad-base"}
+F19 TERRAIN MATERIAL QUAD {"material_present":true,"path":"/root/@Node3D@30/@Terrain3D@32/MouseViewport/MouseCamera/MouseQuad","terrain_version":"1.0.2"}
+F19 TERRAIN MATERIAL WORLD FREED detach-quad-base
+F19 TERRAIN MATERIAL END detach-quad-base
+F19 TERRAIN MATERIAL BEGIN {"acceptance":false,"drawing":false,"treatment":"baseline"}
+F19 TERRAIN MATERIAL QUAD {"material_present":true,"path":"/root/@Node3D@33/@Terrain3D@35/MouseViewport/MouseCamera/MouseQuad","terrain_version":"1.0.2"}
+F19 TERRAIN MATERIAL WORLD FREED baseline
+F19 TERRAIN MATERIAL END baseline
+F19 TERRAIN MATERIAL BEGIN {"acceptance":false,"drawing":false,"treatment":"retain-quad-material"}
+F19 TERRAIN MATERIAL QUAD {"material_present":true,"path":"/root/@Node3D@36/@Terrain3D@38/MouseViewport/MouseCamera/MouseQuad","terrain_version":"1.0.2"}
+F19 TERRAIN MATERIAL WORLD FREED retain-quad-material
+F19 TERRAIN MATERIAL END retain-quad-material
+F19 TERRAIN MATERIAL BEGIN {"acceptance":false,"drawing":false,"treatment":"detach-quad-base"}
+F19 TERRAIN MATERIAL QUAD {"material_present":true,"path":"/root/@Node3D@39/@Terrain3D@41/MouseViewport/MouseCamera/MouseQuad","terrain_version":"1.0.2"}
+F19 TERRAIN MATERIAL WORLD FREED detach-quad-base
+F19 TERRAIN MATERIAL END detach-quad-base
+F19 TERRAIN MATERIAL DIAGNOSTIC ONLY {"failures":[]}
+exit=0 took=10s

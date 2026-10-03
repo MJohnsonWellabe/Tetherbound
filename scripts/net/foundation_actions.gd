@@ -176,19 +176,29 @@ static func _relic(current: Dictionary, action: String, intent: Dictionary, cont
 		var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(intent.get("trainer_id", "")), str(context.get("realm", "")))
 		if intent.size() != 3 or grant.is_empty() or grant.relic_biome != intent.biome \
 			or context.get("validated_host_outcome") != "win" or context.get("encounter_id") != intent.get("encounter_id") \
-			or not context.get("participants") is Array or not context.participants.has(current.character_id): return deny("actual_boss_participant_required")
+			or not context.get("participants") is Array or not context.participants.has(current.character_id) \
+			or (context.has("world_namespace") and not ESSENCE._opaque_id(context.world_namespace)): return deny("actual_boss_participant_required")
 		if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(grant, context.get("boss_settlement_world_flags", [])):
 			return deny("boss_ceremony_pending")
-		receipt = "defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]
-		if next.redesign_character.relics_held.has(intent.biome) or next.redesign_character.relics_hung.has(intent.biome): return deny("reconcile_original_decision")
+		# Replay existing v3 snapshots with their original identity. The actual
+		# admitted registry requires a matching namespace for every new stage.
+		receipt = boss_receipt(context.world_namespace, intent.trainer_id, current.character_id) if context.has("world_namespace") \
+			else "defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]
+		# Older personal receipts lack world identity. Preserve their once-only
+		# decision conservatively; never repay a legacy save by changing its ID.
+		if next.redesign_character.transaction_receipts.has("defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]): return deny("reconcile_original_decision")
 		var bag_rules := preload("res://scripts/world/death_satchel_rules.gd")
 		var bag := bag_rules.inventory_from(current.inventory)
 		if not bag_rules.give_stack(bag, {"id": grant.portal_key_item, "n": 1}): return deny("boss_handoff_make_satchel_room")
 		next.inventory = bag_rules.slots(bag)
-		next.redesign_character.relics_held.append(intent.biome)
+		if not next.redesign_character.relics_held.has(intent.biome) and not next.redesign_character.relics_hung.has(intent.biome):
+			next.redesign_character.relics_held.append(intent.biome)
 	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}
+
+static func boss_receipt(world_namespace: String, trainer: String, character: String) -> String:
+	return "defeat:boss_%s_%s:%s" % [trainer, world_namespace.sha256_text(), character]
 
 static func camp_plan(current: Dictionary, revision: int, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if context.get("foundation_runtime_authorized") != true or not context.get("world_before") is Array \

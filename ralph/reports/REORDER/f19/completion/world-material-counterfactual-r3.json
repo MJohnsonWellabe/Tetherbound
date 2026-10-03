@@ -1,0 +1,43 @@
+{
+  "kind": "f19_actual_world_material_counterfactual",
+  "source_commit": "6c3572a5645190f6377cc41c70a121fb2534311a",
+  "run": 37088521645,
+  "artifact": 11261936821,
+  "workflow_conclusion": "success",
+  "process_exit": 0,
+  "elapsed_seconds": 1074,
+  "engine_errors": 72,
+  "script_errors": 0,
+  "original_assertion_failures": [],
+  "accepted_clean_witness": false,
+  "scopes": {
+    "baseline": {
+      "post_choice_errors": 16
+    },
+    "retained_mesh_multimesh_terrain_resources": {
+      "peak_references": 3992,
+      "post_choice_errors": 16,
+      "prior_world_teardown_errors": 8
+    },
+    "scriptless_world_label_base_detachment": {
+      "labels_observed_per_world": [
+        139,
+        141
+      ],
+      "predelete_detach_markers": 421,
+      "existing_product_scripts_replaced": 0,
+      "post_choice_errors": 16,
+      "prior_world_teardown_errors": 8,
+      "final_teardown_errors": 8
+    }
+  },
+  "actual_geometry_count_range": [
+    48102,
+    48240
+  ],
+  "retained_scope": "Geometry override/overlay, MeshInstance active surface Materials, MultiMesh surface Materials and Terrain3D material Resource. GPUParticles draw passes and CPUParticles mesh resources were outside this set.",
+  "result": "Neither declared resource retention nor scriptless Label3D PREDELETE detachment reduced post-choice errors. All original choice/party/save/reload guards passed; raw engine errors prohibit clean acceptance.",
+  "raw_log": "ci-world-material-negative-37088521645.log.gz",
+  "raw_log_sha256": "8de7ea95653c77f95d87efe612aba88b6e23b9d8f1b8a428946768d972290fde",
+  "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
+}

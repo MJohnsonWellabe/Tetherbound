@@ -1,0 +1,23 @@
+{
+  "kind": "f19_masked_mesh_material_counterfactual_r10",
+  "source_commit": "8bbfcf4eb41c0adb3f6ef51910e0d36770d84f6d",
+  "run": 37098727171,
+  "job": 111133868125,
+  "artifact": 11265407732,
+  "process_exit": 0,
+  "elapsed_seconds": 554,
+  "engine_errors": 16,
+  "script_errors": 0,
+  "failures": [],
+  "baseline_errors": 16,
+  "retain_only_masked_material_errors": 0,
+  "held_peak": 207,
+  "retained_scope": "Only non-active hidden per-surface overrides and mesh-surface Materials masked by active overrides; no active, particle, Mesh/MultiMesh or Terrain resources retained.",
+  "new_masked_at_choice": 23,
+  "new_owners_at_choice": "18 HallBraziers TorchGlow,2GateSconces,3TetherRetrofit TT_RiftCore",
+  "result": "Positive ownership isolation: hidden mesh Materials alone prevent all baseline errors. Actual occupation._unlight duplicates emission materials into per-surface overrides; on TorchGlow the geometry material_override masks this copy, so get_active_material still reports emission enabled. Minimal actual factory/unlight component is next; no production change yet.",
+  "prompt_guard": "Both cases original guards pass; before/after dialogue position stable, prompts2.56278m away and not live. Prior intermittent R8 guard remains open.",
+  "acceptance": false,
+  "raw_log": "ci-masked-materials-37098727171.log.gz",
+  "raw_log_sha256": "3c8184884879d42aac21dece08e1607b76f9b640279324ecaa08164da31b1982"
+}

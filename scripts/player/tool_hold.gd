@@ -96,6 +96,25 @@ var _swing_impact_fraction: float = SWING_IMPACT_FRACTION
 var _timing_loaded: bool = false
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_release_prop_materials()
+
+
+## The finish copies belong to this prop, while its imported mesh is shared.
+## Release the instance bindings while the renderer instance is still alive.
+## Removal/re-entry keeps the finish; only actual destruction reaches here.
+func _release_prop_materials() -> void:
+	if not is_instance_valid(_prop): return
+	var meshes: Array[Node] = _prop.find_children("*", "MeshInstance3D", true, false)
+	if _prop is MeshInstance3D: meshes.append(_prop)
+	for node: Node in meshes:
+		var instance := node as MeshInstance3D
+		if instance.mesh == null: continue
+		for surface in instance.mesh.get_surface_count():
+			instance.set_surface_override_material(surface, null)
+
+
 func _process(delta: float) -> void:
 	_sync_equipped()
 	if _swing_left > 0.0:
@@ -249,6 +268,7 @@ func _sync_equipped() -> void:
 
 func _rebuild_prop() -> void:
 	if _prop != null and is_instance_valid(_prop):
+		_release_prop_materials()
 		_prop.queue_free()
 	_prop = null
 	if _equipped.is_empty():

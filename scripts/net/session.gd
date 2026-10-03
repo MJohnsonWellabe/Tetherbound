@@ -874,7 +874,7 @@ func _retry_foundation_events() -> void:
 		if peer < 1 or handled.has(duty.character_id): continue
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
-		var receipt := _foundation_duty_receipt(duty)
+		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
@@ -897,8 +897,14 @@ func _retry_foundation_events() -> void:
 		# Project/recover authority only after those exclusions; a long fight
 		# can retain hundreds of mastery sources for this same character.
 		if admitted_character_state(peer).is_empty(): continue
+		if duty.action == "boss_relic" and (_character_authority.call("state", duty.character_id) as Dictionary).get("redesign_character", {}).get("transaction_receipts", []).has("defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]):
+			# Legacy personal decisions are complete; preserve their original
+			# identity without starving this character's later owed duties.
+			continue
 		var context: Dictionary = duty.context.duplicate(true)
-		if duty.action == "boss_relic": context.boss_settlement_world_flags = world.flags.all_set().duplicate()
+		if duty.action == "boss_relic":
+			context.boss_settlement_world_flags = world.flags.all_set().duplicate()
+			context.world_namespace = world.reward_delivery_namespace
 		context.character_id = duty.character_id
 		context.expected_revision = int(_character_authority.call("revision", duty.character_id))
 		context.in_range = true
@@ -927,12 +933,12 @@ func _retry_foundation_events() -> void:
 			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
-func _foundation_duty_receipt(duty: Dictionary) -> String:
+func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
-	if duty.action == "boss_relic": return "defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]
+	if duty.action == "boss_relic": return FOUNDATION_ACTIONS.boss_receipt(world_namespace, duty.intent.trainer_id, duty.character_id)
 	if duty.action == "research_event":
 		var event: Dictionary = duty.context
 		return "research:event_%s:%s" % [JSON.stringify([event.world_namespace, event.session_id, event.event_id, event.species_id, event.kind]).sha256_text(), duty.character_id]

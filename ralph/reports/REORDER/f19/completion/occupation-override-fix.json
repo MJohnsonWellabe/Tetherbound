@@ -1,0 +1,82 @@
+{
+  "kind": "f19_actual_occupation_active_override_fix",
+  "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+  "production": "scripts/world/stronghold_occupation.gd",
+  "baseline": "siphon-material-component.json and stronghold-surfaces-r11.json",
+  "original_native": {
+    "run": 37101523304,
+    "job": 111141839736,
+    "artifact": 11266801374,
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "process_exit": 0,
+    "elapsed_seconds": 8,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "held_material_peak": 0,
+    "scope": "Exact original three-case actual siphon component, all active emission flags false after withdrawal; no masked copy in either post-withdrawal case and no retained Material refs.",
+    "raw_log": "ci-siphon-material-fixed-37101523304.log.gz",
+    "raw_log_sha256": "d4115f2a0bc5012185f2ab7ad754c16a9216facd37b77f7cf0af355c3202c8dc"
+  },
+  "lifecycle_native": {
+    "run": 37101526190,
+    "job": 111141848634,
+    "artifact": 11266201977,
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "process_exit": 0,
+    "elapsed_seconds": 7,
+    "checks": 45,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "retained_materials": 0,
+    "scope": "Actual three imported siphons and one actual glow: active emission off, source stays emissive, other material properties unchanged, no masked copy, repeated call reuses copy, ordinary tree exit/re-entry preserves IDs, WeakRefs expire after actual node deletion. Direct factory/camera fixture, real X11 Compatibility/drawingfalse.",
+    "raw_log": "ci-occupation-override-37101526190.log.gz",
+    "raw_log_sha256": "56f44df1c5df2164fb3b6bff794b96befe798daec5b10b619e8fe69a5e2d5310"
+  },
+  "full_veridian_solmane_still_required": true,
+  "independent_review_pending": true,
+  "earned_campaign": false,
+  "acceptance": false,
+  "full_native_witnesses": {
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "scope": "Entire original six-case native choice/save/reload drivers, no reference retention or diagnostic behavior. Original fixtures, assertions and prompt guards unchanged; no earned play claim.",
+    "veridian": {
+      "run": 37101815341,
+      "job": 111142677312,
+      "status": "PASS all six original cases",
+      "script": "tests/smoke_f19_veridian_functional.gd",
+      "artifact": 11266764847,
+      "evidence": "veridian-complete-clean.json"
+    },
+    "solmane": {
+      "run": 37101816593,
+      "job": 111142681335,
+      "status": "Gameplay PASS, clean witness rejected for four first-transition errors",
+      "script": "tests/smoke_f19_solmane_functional.gd",
+      "artifact": 11267041523,
+      "evidence": "solmane-complete-rejected.json"
+    }
+  },
+  "review_delivery_source": "6106c3760628f767cc97ae886d7bf29c133ae43d",
+  "standalone_lifecycle_native": {
+    "run": 37102421114,
+    "job": 111144416782,
+    "artifact": 11265794052,
+    "source_commit": "6106c3760628f767cc97ae886d7bf29c133ae43d",
+    "production_blob": "bf5e68b0c4169474382fe983c4f41627a552afed",
+    "production_identical_to_c510": true,
+    "process_exit": 0,
+    "elapsed_seconds": 11,
+    "checks": 45,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "scope": "Standalone SceneTree regression; only shipping Stronghold/Occupation preloads, actual factory/config and same45 assertions. Observer state IDs/WeakRefs only; no diagnostic-script dependency.",
+    "raw_log": "ci-occupation-override-standalone-37102421114.log.gz",
+    "raw_log_sha256": "83bc501046d43d86a607b62f85a2bd66ca67eceb745c7c37dc11496e74c6103c"
+  },
+  "review_delivery_scope": "Cumulative53ef452d0d to6106, limited to scripts/world/stronghold_occupation.gd and tests/smoke_f19_occupation_override.gd; two-file complete bundle. Standalone source verdict requested from coordinator; full original witness runs still live.",
+  "full_veridian_still_required": false,
+  "full_solmane_still_required": true
+}

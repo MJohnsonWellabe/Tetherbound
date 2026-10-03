@@ -1,0 +1,39 @@
+{
+  "kind": "f19_live_choice_rejections_and_mount_lifecycle",
+  "source_commit": "879068624cc9f7896db6ffb11685fd16332a6226",
+  "rejected_ci_witnesses": [
+    {
+      "legendary": "Solmane",
+      "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37074146883",
+      "artifact_id": 11256711909,
+      "log": "ci-solmane-rejected-37074146883.log",
+      "failures": 5,
+      "engine_errors": 12,
+      "cause": "Fixture reset replaced the party but retained the portable creature mirrors loaded by the preceding scenario. Real save validation correctly refused five later saves for unknown/unowned UIDs. Six additional absolute-path lookup errors occur when renewable stock reaches a detached presentation shell; one material-null error comes from the dummy renderer.",
+      "change": "Reset the disclosed whole-roster fixture's redesign_character alongside its party, matching the existing Veridian fixture. Keep real save validation intact."
+    },
+    {
+      "legendary": "Veridian",
+      "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37074144449",
+      "artifact_id": 11256372296,
+      "log": "ci-veridian-rejected-37074144449.log",
+      "exit_code": 0,
+      "scenario_failures": 0,
+      "engine_errors": 34,
+      "cause": "All six choice/save/reload scenarios complete, but headless dummy rendering emits material-null errors. Exit zero alone is insufficient for a clean witness.",
+      "next_validation": "Run the unchanged choice assertions through offloaded production OpenGL under xvfb. No log-error suppression or speculative material change."
+    }
+  ],
+  "harvest_lifecycle": {
+    "change": "Retain stock received before mount without an absolute Game lookup or premature visibility changes; reconcile current stock immediately on real ready. Skip presentation work on detached/queued shells.",
+    "command": "Godot 4.7 --headless --script tests/smoke_f19_renewable_presentation.gd",
+    "log": "renewable-presentation-r2.log",
+    "assertions": 9,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": "Actual harvest shell before mount, ready, stock restoration and detached snapshot. Declared stock service fixture; no harvest payout or earned route claim.",
+    "rejected_harness_attempt": "renewable-presentation.log used Engine.get_main_loop during the unit runner constructor, before a main loop existed. Switched to a deferred lightweight SceneTree smoke; the rejected attempt supplies no passing proof."
+  },
+  "diagnostic_nonfindings": ["Existing burrowback material rebuild probe is clean on this Windows engine.", "Isolated actual answer-marker free probe is also clean; no material caller was changed without reproduction."],
+  "remaining": "Clean-engine Veridian/Solmane live choice witnesses and complete fresh F49 earned checkpoints remain open."
+}

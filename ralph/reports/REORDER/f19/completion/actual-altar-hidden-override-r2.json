@@ -1,0 +1,21 @@
+{
+  "kind": "f19_actual_altar_hidden_surface_override_counterfactual_r2",
+  "source_commit": "eeb04e0300ff1713823367cb76d0d33e43625ff8",
+  "run": 37095374239,
+  "job": 111124096367,
+  "artifact": 11264171237,
+  "process_exit": 0,
+  "elapsed_seconds": 5,
+  "engine_errors": 1,
+  "script_errors": 0,
+  "original_failures": [],
+  "baseline_errors": 1,
+  "retain_only_ghost_surface_override_errors": 0,
+  "retained_resources": 1,
+  "scope": "Only actual ghost per-surface override retained; no observer reference to active ghost tint, Mesh, placed piece or overlay.",
+  "result": "Positive ownership isolation: baseline material_storage.cpp:264 error at _drop_ghost disappears when the hidden BuildMaterialFinish MI_Trim_Furniture surface override alone is retained. The retained reference is later released without errors.",
+  "paid_placement": false,
+  "acceptance": false,
+  "raw_log": "ci-altar-hidden-override-37095374239.log.gz",
+  "raw_log_sha256": "5cb6845e4e296c5de8da557edc4a0dd8f9c2493c96db10305ae6fddf7c0e7f02"
+}

@@ -1,0 +1,60 @@
+{
+  "kind": "main_required_actual_altar_surface_material_fix",
+  "production_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+  "production_file": "scripts/build/build_piece.gd",
+  "delta": "Detach private per-surface Material overrides at NOTIFICATION_PREDELETE; retain live materials through ordinary tree exit/reparent. No static cache growth, renderer changes or frame waits.",
+  "owner_evidence": "actual-altar-hidden-override-r2.json",
+  "native_fixed_reproduction": {
+    "run": 37095605069,
+    "job": 111124777223,
+    "artifact": 11264555484,
+    "source_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+    "process_exit": 0,
+    "elapsed_seconds": 4,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "cases": 2,
+    "raw_log": "ci-altar-fixed-37095605069.log.gz",
+    "raw_log_sha256": "f8b4976a4dcd1b33dfd5e2e5e8b6ddd4a2def958e54424c2454456e322e918e5"
+  },
+  "native_lifecycle_regression": {
+    "run": 37095606238,
+    "job": 111124780023,
+    "artifact": 11263369673,
+    "source_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+    "process_exit": 0,
+    "elapsed_seconds": 4,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "checks": 25,
+    "failures": [],
+    "scope": "Placed and all three actual ghost tints; preserve Material IDs through tree exit/re-entry; queue-free immediately after invalid-tint update; unbuilt immediate free. Observer snapshots contain IDs only.",
+    "raw_log": "ci-altar-lifecycle-37095606238.log.gz",
+    "raw_log_sha256": "452e4756cf79d3e85ea843c522eef259e19522f00297abf63b0c5d75fe77adbc"
+  },
+  "paid_f48_replay_still_required": false,
+  "independent_review_pending": false,
+  "f19_full_world_material_errors_not_closed": true,
+  "independent_review": {
+    "coordinator_thread": "01a0fe96-225e-7f92-9b62-d9818a7f2e15",
+    "verdict": "PASS exact production two-file commit; coordinator inspected both raw native originals",
+    "integration_commit": "1fbd41c0f0",
+    "actual_paid_f48_replay": "Verified original native paid Altar step at 37097792318, raw driver and peer retained below; whole producer/package remains separate"
+  },
+  "paid_f48_replay": {
+    "run": 37097792318,
+    "artifact": 11265261105,
+    "source_commit": "fc91ff531f0980a90572f60d5cc9cdd68c57ea68",
+    "scope": "Original actual paid Altar build and saved-state checks passed without null-material error. Whole producer later failed at distinct normalized catch reply assertion; no full producer/package pass.",
+    "coordinator_evidence": "ralph/reports/INTEGRATION/main-green/catch-normalized-r6-native.log.gz",
+    "status": "Original native driver paid Altar oracle PASS and original peer-0 log inspected: zero engine/script errors. Whole producer catch assertion failure remains distinct.",
+    "native_driver_log_sha256": "94768d3bb4dd89fb04839eefeb77581fc96dcc6c8a2d7be8d59a6934a1dc52d5",
+    "peer_log": {
+      "raw_log": "ci-paid-altar-peer-37097792318.log.gz",
+      "sha256": "eb36bb6a495578d5652d8a46ceda3cebc3dc2dcb258c8f5b0ef3846db9a8567e",
+      "engine_and_script_errors": 0,
+      "oracle_marker_present": true
+    }
+  }
+}
