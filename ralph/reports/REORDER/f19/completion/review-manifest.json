@@ -153,7 +153,7 @@
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
-  "latest_material_diagnostic": "world-material-reference-r8.json",
+  "latest_material_diagnostic": "masked-materials-r10.json",
   "latest_material_probe": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Baseline versus Materials only, including masked per-surface overrides and post-choice CPU particle Materials; no retained Mesh/MultiMesh objects. Actual Altar counterfactual demonstrated active-material census misses hidden override owners.",
@@ -204,9 +204,14 @@
   "next_masked_material_diagnostic": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Original baseline versus only non-active per-surface override and mesh-surface Material refs hidden by active overrides, including MultiMesh bases. No active Material, particle Mesh/Material, Terrain or Mesh/MultiMesh resources retained. Read-only original prompt guard trace preserved.",
-    "status": "Native Run confirmed live; no terminal result",
+    "status": "Terminal positive: masked-materials-r10.json baseline16/treatment0 errors, all original guards passed; diagnosis only",
     "source_commit": "8bbfcf4eb41c0adb3f6ef51910e0d36770d84f6d",
     "run": 37098727171,
     "job": 111133868125
+  },
+  "next_occupation_component": {
+    "script": "tests/probe_f19_occupation_material_lifetime.gd",
+    "scope": "Actual Stronghold glow factory plus occupation._unlight, baseline versus hidden surface copy retained; Compatibility/drawingfalse; report active emission versus hidden copy.",
+    "status": "Prepared, not yet dispatched"
   }
 }
