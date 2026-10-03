@@ -370,14 +370,17 @@
     "scope": "Only active surface override refs under CloudreachResources/RenewableResources versus remaining non-Landmarks roots. Original cold lifecycle unchanged; diagnosis only."
   },
   "harvest_material_fix": {
-    "source_commit": "6809a7aedf",
+    "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
     "files": [
       "scripts/world/harvest_node.gd",
       "tests/smoke_f19_harvest_material_lifecycle.gd"
     ],
     "scope": "PREDELETE clears only actual harvest visual surface bindings while mesh children are alive; removal/re-entry remains unchanged. No retained reference cache, stock or gameplay changes.",
     "baseline": "harvest-material-component.json",
-    "status": "Pushed; fixed component/lifecycle/cold native proofs dispatched separately; independent review pending",
+    "status": "Live fixed component/lifecycle/cold native proofs; coordinator independent review requested; no acceptance pending raw logs",
+    "fixed_component": {"run": 37107889673, "job": 111159887938},
+    "lifecycle": {"run": 37107890850, "job": 111159893142},
+    "cold_no_retention": {"run": 37107891893, "job": 111159894349},
     "acceptance": false
   }
 }
