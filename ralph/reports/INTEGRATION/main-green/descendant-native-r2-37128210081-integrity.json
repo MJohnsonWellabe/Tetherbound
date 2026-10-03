@@ -1,0 +1,29 @@
+{
+  "run_id": 37128210081,
+  "artifact_id": 11275188976,
+  "checkout_ref": "9794a21092e8162c3708280b43ae17527404f47a",
+  "result": "STRICT PASS 19 tests107 assertions0 failed exit0 11s; everyoriginal engine log has0 errors. Actual character-only full immutable snapshot receipt and negative controls retained.",
+  "archive_sha256": "6c6bbe7158b1b9a15a7007095f9ae859e79ea0254b3b8e50da1fbf2c45087af5",
+  "files": {
+    "run.log": {
+      "retained_file": "descendant-native-r2-37128210081-0-run.log.gz",
+      "sha256": "9e3d21b2cd81fe0f83b2a6b47a10dbfaf2cc360b62aacebbeb41df45426d5f04"
+    },
+    "exit_code": {
+      "retained_file": "descendant-native-r2-37128210081-1-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "descendant-native-r2-37128210081-2-boot_log.txt.gz",
+      "sha256": "020d447ff6f8a5b7fcbe266fd1aadd595c86c15343e475eb211d58c1933685dd"
+    },
+    "MANIFEST.txt": {
+      "retained_file": "descendant-native-r2-37128210081-3-MANIFEST.txt.gz",
+      "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "descendant-native-r2-37128210081-4-godot.log.gz",
+      "sha256": "d250d860db800ca47e8b5ede3604f43e0e1aed98cf928a2360499289e69ae1f3"
+    }
+  }
+}
