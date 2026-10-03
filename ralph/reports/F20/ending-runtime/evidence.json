@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, F20-onlyauthoredroad c352sourcePASS/affectedreplaypending. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066sourcePASS/requiredfullnet-r6pending. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
+    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, actualc352 roadwalk succeeds butcombinedfloor/exactprovider gatefails; readonlyfailuretraceunderreview. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066sourcePASS/requiredfullnet-r6pending. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -621,6 +621,35 @@
         "limits": "Disclosedpost-finale/restoredcurrent fixtures, headless functional, Input.parse_input_event/Skip. No#4 closure. One run doesnot prove cause of older r4 commandtimeout or anyrenderstartup failure.",
         "independent_review": "PASS f20_review failed/partial evidence audit: exactZIP/native/host/guest hashes andalluserlogs verified,0engine/SCRIPTERROR whileexplicitharnessfatalglobalbudget/exit2 retained. Hostactualending/11spokenlines/truthfulprose/creditsguardedSkip1ACK/repeatPASS; diskhostbothendingreceipts/guestnone. Measurednavigation143303ms/11taps38138ms; finaltapreturns normally. Guestfailedcharacterwrite warningatshutdown remains failed-write evidence, no cleanlinessdismissal. Guestending/rejoin/reload/UIDchecks unreached, #4OPEN.",
         "workflow_exit_code": 2
+      },
+      {
+        "run": 37092294181,
+        "job": 111115004043,
+        "artifact": 11262574266,
+        "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
+        "verdict": "FAIL bounty grounded/exact-provider gate; actual road walk succeeds",
+        "workflow_conclusion": "failure",
+        "checks": 58,
+        "failures": 2,
+        "native_bytes": 73102,
+        "native_sha256": "c64e91215d4941c291a51a8fcd608736e49521ea66729f63bc23da94fe11d9b8",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_log_bytes": 72848,
+        "user_log_sha256": "4028ac9560d4eac9adaed9d94f8645ba207406b86c879aff75b69975c2f9de2e",
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 670341,
+        "artifact_sha256": "60b20184c31795c3b68794c95065b3110556b78565d90374b11c86218e79a524",
+        "logs": [
+          "f20-solo-r12-native.log.gz",
+          "f20-solo-r12-workflow.log.gz",
+          "f20-solo-r12-artifact.zip"
+        ],
+        "passed": "Actualinitial ending/currentfive/starter/memory/choices/credits1ACK/realreset-reload/sameUIDs-inventory-world-receipts/completedGrandparepeat/no-replay/safemovement/unfinishedlocaljournal/enabledactualrematches/mountedbounty. AuthoredMainStreet headings8.3,14\u219291,14 carry oneexistingguidedcapsulewalk toactualbountyboard within originalbudget; unchangedentombment recoverycount passes.",
+        "failure": "After successfulwalk and8physicsframe wait, combined player.is_on_floor()/arbiter.winning_provider()==actualbounty gate fails. Existingbranchdoesnot printpose/floor/winner; exactfailedpredicate/LOS/radius/competingprovider/collider unknown. Actualbountyscreen/3activerows/close unreached. Explicitcompletionguard records secondfailure.",
+        "limits": "Disclosedpost-finale/restoredcurrent fixture andharnessinput/Skip/headless. #1 priorMETcandidate reused, #3OPEN. No proof bountyproducerbroken orspecificallyaLOS/radius/providercollision; originalwalk budget/input/capsule checks intact.",
+        "independent_review": "PASS f20_review exact artifact/native/user/hash and 58checks2 failed-scope audit; actual ending/reload and road walk pass, combined floor/exact-provider gate fails; #3OPEN."
       }
     ],
     "limitations": [
@@ -772,7 +801,7 @@
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
       "indirect_only": "Synthetic62 PASS reused; actualsolo-r11 now proves cleanreload/safecompletedworld partial but bounty availability remainsunproved.",
-      "latest_runtime": "solo-r11 actualdiskreset/reload/sameUIDs/inventory/world/receipts/no-replay/safemovement/unfinishedlocaljournal/enabledrematches PASS; actualbountywalkFAIL, boardopening/3activepersonalrows/close unreached. #3 OPEN."
+      "latest_runtime": "solo-r12 realdiskreset/reload/sameUIDs/inventory/world/receipts/no-replay/safemovement/unfinishedjournal/enabledrematches PASS; authoredroadwalk succeeds butbountyfloor/exactprovider gateFAIL. Actualbountyscreen/live3rows/close unproved. #3OPEN."
     },
     "4": {
       "verdict": "OPEN",
@@ -824,16 +853,6 @@
     }
   },
   "remote_pending": {
-    "solo_r12": {
-      "run": 37092294181,
-      "job": 111115004043,
-      "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
-      "script": "tests/smoke_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37092294181",
-      "status": "in progress; affected bounty-road continuation, no result claimed"
-    },
     "net_r6": {
       "run": 37092788092,
       "job": 111116479078,
@@ -894,7 +913,7 @@
     "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
     "independent_source_review": "PASS f20_review: exactmountedBountyInteraction._prompt identity; strictuniquefiniteauthored MainStreet pair; oneexistingNAV.walk_to_guided with ORIGINAL directdistanceframebudget/sharedwatchdog/capsule; samegrounding/recovery/arbiter/actionable/normalinput/activationchecks. No parser/type issue, production/F49/F17/sharednav change orwaiver. Actualsolo replay required.",
     "reason": "r11 actualcapsulewalk fails near south-sidehouse row; source shows directdiagonalcrosses thatrow. Exactcolliderunproved; followexistingauthoredroad beforeturningtotournamentlawn, no target/player/floorpose assignment.",
-    "runtime": "Affectedsolo-r12 live37092294181/job111115004043 onexactc352; sourcePASS only, criterion3OPEN."
+    "runtime": "Actualsolo-r12 sourcec352 compiles andsingleauthoredroadwalk/recoverycount pass, butfloor/exactprovider guardfailsafter8physicsframes; whichpredicate unknownbecauseoldcombinedguard lacks trace. No bountyopen/active3rows/close. #3OPEN."
   },
   "net_budget_clarification": {
     "source": "tests/helpers/net_harness.gd::launch and step",
@@ -906,5 +925,10 @@
     "independent_source_review": "PASS f20_review: F20-only9line_init_budgets override superthen selects existinglong2peer1500s wholeproof allowance. Individualcommandframes/slack/hello180/heartbeat/inputguard/productionACK8s/remote30min unchanged. Necessarycomplete2person/disconnect/reloadproof allowance, not an authoredproduct timing waiver. Freshcompleteactual proof required, #4OPEN.",
     "reason": "Actualnet-r5 cleanhostfullending/revisit consumesmost inherited300s total; guest onlyHomeKeybegin beforeglobalfatal. Other long2peer proofs alreadyselect1500. Oldr4 independentlyhadcommandtimeout; itscause notretrospectivelyresolved byglobalbudget diagnosis.",
     "runtime": "Affectedfullnet-r6 live37092788092/job111116479078 onexactb066, no result claimed; criterion4OPEN."
+  },
+  "bounty_provider_diagnostic": {
+    "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
+    "independent_review": "PASS f20_review exact10 failure-only read/print lines, typednullablewinner path safe; no input/await/state/assertion/radius/budget changes.",
+    "runtime": "Affected solo replay pending; no predicate/cause claim before actual trace."
   }
 }
