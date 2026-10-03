@@ -156,7 +156,10 @@
   "latest_material_probe": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Baseline versus Materials only, including masked per-surface overrides and post-choice CPU particle Materials; no retained Mesh/MultiMesh objects. Actual Altar counterfactual demonstrated active-material census misses hidden override owners.",
-    "status": "Prepared, not yet dispatched; prior broad resource retention rejected"
+    "status": "Native Run step started; no terminal result",
+    "source_commit": "08083abbf093f21e5291b2b5e257b1ff3c45b716",
+    "run": 37095874691,
+    "job": 111125570872
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
@@ -164,5 +167,10 @@
   "latest_m1_dependency": "reviewed-meadows-loss-wait-dependency.json",
   "latest_band_baseline_proof": "native-band-baseline.json",
   "main_required_altar_diagnostic": "actual-altar-hidden-override-r2.json",
-  "main_required_altar_fix": "actual-altar-material-fix.json"
+  "main_required_altar_fix": "actual-altar-material-fix.json",
+  "main_required_altar_handoff": {
+    "production_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+    "coordinator_thread": "01a0fe96-225e-7f92-9b62-d9818a7f2e15",
+    "status": "Pinned native clean results delivered; coordinator independent review underway. Actual paid F48 replay and integration still required."
+  }
 }
