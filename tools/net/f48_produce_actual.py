@@ -95,17 +95,30 @@ def main() -> int:
     parser.add_argument("--godot", default="godot")
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--prepare-only", action="store_true")
-    parser.add_argument("--producer", choices=("loop", "boss_four"), default="loop")
+    parser.add_argument("--producer", choices=("loop", "boss_four", "behind"), default="loop")
+    parser.add_argument("--loop-output", type=Path)
+    parser.add_argument("--loop-profile", type=Path)
+    parser.add_argument("--loop-profile-sha256")
+    parser.add_argument("--behind-guest-peer", type=int, choices=(2, 3), default=2)
     args = parser.parse_args()
     output = args.output.resolve()
     fixture.require(not output.exists(), "Fresh producer output required; preserve prior attempts")
     bundle = ROOT / "tests/fixtures/f48-producer-seeds"
-    sources = restore_seeds(bundle, output / "originals")
-    manifest = fixture.read(bundle / "manifest.json")
-    fixture.generate(sources if args.producer == "boss_four" else sources[:2], bundle / "layout.json", output / "mechanics-start", None,
-                     manifest["provenance"], "full", True, True, True)
-    build_profile = boss_profile if args.producer == "boss_four" else prepare.produce
-    profile_path = build_profile(output / "mechanics-start/profile.json", output / "producer-profile")
+    if args.producer == "behind":
+        fixture.require(args.loop_output is not None and args.loop_profile is not None and args.loop_profile_sha256,
+                        "Behind requires the completed original loop artifact, reviewed profile and SHA256")
+        import f48_behind_profile
+        profile_path = f48_behind_profile.generate(args.loop_output, args.loop_profile,
+            args.loop_profile_sha256, output, args.behind_guest_peer)
+    else:
+        fixture.require(args.loop_output is None and args.loop_profile is None and args.loop_profile_sha256 is None,
+                        "Loop source arguments apply only to behind producer")
+        sources = restore_seeds(bundle, output / "originals")
+        manifest = fixture.read(bundle / "manifest.json")
+        fixture.generate(sources if args.producer == "boss_four" else sources[:2], bundle / "layout.json", output / "mechanics-start", None,
+                         manifest["provenance"], "full", True, True, True)
+        build_profile = boss_profile if args.producer == "boss_four" else prepare.produce
+        profile_path = build_profile(output / "mechanics-start/profile.json", output / "producer-profile")
     if args.prepare_only:
         print(json.dumps({"profile": str(profile_path), "acceptance_credit": False, "native_run": False}))
         return 0
@@ -121,7 +134,8 @@ def main() -> int:
         # This existing observer measures real heartbeat snapshots/encoding.
         env["TB_PEER_PHASE_TRACE"] = "1"
         env["TB_BACKGROUND_WORK_TRACE"] = "1"
-    script = "tools/net/f48_prepare_boss_four.gd" if args.producer == "boss_four" else "tools/net/f48_prepare.gd"
+    script = {"loop": "tools/net/f48_prepare.gd", "boss_four": "tools/net/f48_prepare_boss_four.gd",
+              "behind": "tools/net/f48_prepare_behind.gd"}[args.producer]
     command = [args.godot, "--headless", "--path", str(ROOT), "--script", script]
     with configuration_overlay(ROOT, profile) as pins:
         fixture.write(output / "invocation.json", {"command": command, "profile_sha256": fixture.digest(profile_path),

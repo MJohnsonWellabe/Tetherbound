@@ -5,12 +5,19 @@ extends SceneTree
 ## the reviewed overlay and the real native producer's child processes.
 func _init() -> void:
 	var producer := "loop"
+	var options: Dictionary = {}
 	for argument: String in OS.get_cmdline_user_args():
-		if argument != "--producer=boss_four":
+		var pair: PackedStringArray = argument.split("=", true, 1)
+		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer"]:
 			push_error("Unknown actual-input producer argument: " + argument)
 			quit(1)
 			return
-		producer = "boss_four"
+		options[pair[0]] = pair[1]
+	producer = str(options.get("--producer", "loop"))
+	if producer not in ["loop", "boss_four", "behind"]:
+		push_error("Unknown actual-input producer: " + producer)
+		quit(1)
+		return
 	var python := OS.get_environment("TB_F48_PROCESS_PYTHON")
 	if python.is_empty(): python = "python" if OS.get_name() == "Windows" else "python3"
 	var output: Array = []
@@ -20,6 +27,11 @@ func _init() -> void:
 		# render.yml's uploader excludes hidden directories, including .tmp.
 		"--output", ProjectSettings.globalize_path("res://ralph/reports/INTEGRATION/main-green/native-f48-" + producer),
 		"--producer", producer])
+	for option: String in ["--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer"]:
+		if options.has(option):
+			arguments.append(option)
+			var value := str(options[option])
+			arguments.append(ProjectSettings.globalize_path(value) if option in ["--loop-output", "--loop-profile"] else value)
 	var result := OS.execute(python, arguments, output, true)
 	for line: String in output: print(line)
 	quit(result)
