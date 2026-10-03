@@ -164,7 +164,7 @@ func _run() -> void:
 
 func _required_step(peer: int, action: String, args: Dictionary = {}) -> bool:
 	var result: Dictionary = await step(peer, action, args, 1200)
-	var ok := result.get("verdict") == "PASS" and _fatal_reason.is_empty()
+	var ok: bool = result.get("verdict") == "PASS" and _fatal_reason.is_empty()
 	check(ok, "Peer %d %s: %s" % [peer, action, str(result.get("detail", ""))])
 	return ok
 

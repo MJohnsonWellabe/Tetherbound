@@ -1,0 +1,17 @@
+{
+  "provenance": "Pre-existing untracked local receipts dated2026-10-01, source commit unknown, failure only, no acceptance credit. GZIP files preserve exact original bytes across Git text normalization; original local files untouched. Plain text copies are convenience only.",
+  "files": [
+    {
+      "original": "NET_RUN.json",
+      "retained_file": "retained-local-prior-NET_RUN.json.gz",
+      "uncompressed_sha256": "bc2634f9af5e6febaf52846fd0883905398ad7183d14db60b90f165fad4cddb5",
+      "gzip_sha256": "75febd824ec11c747d2cf68ed5de35d2ecdab1ece4717d16b886094c914b69e6"
+    },
+    {
+      "original": "SUMMARY.md",
+      "retained_file": "retained-local-prior-SUMMARY.md.gz",
+      "uncompressed_sha256": "da7dc653250a1c522ea090942917364a401a71d4f9e65e81786e283733642cda",
+      "gzip_sha256": "162ce442550e78f791067c08c9fec783462a9be28e7bf0e9c6db03cdbbc5675b"
+    }
+  ]
+}
