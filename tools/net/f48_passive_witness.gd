@@ -34,7 +34,7 @@ static func start(tree: SceneTree) -> bool:
 		"configuration": cfg, "configuration_sha256": FileAccess.get_sha256("res://data/config/creature_condition.json"),
 		"chain_sha256": "", "game_ref": weakref(game), "world_ref": weakref(game.world), "session_ref": weakref(game.session),
 		"character_id": str(game.local.character_id), "world_namespace": str(game.world.reward_delivery_namespace), "epoch": epoch}
-	file.store_line(JSON.stringify({"source": "Game actual tick_buffs; CreatureCondition.tick when condition_tick_applied", "condition_config": cfg,
+	file.store_line(JSON.stringify({"source": "Game actual clocks and discovery credits; complete card replay", "condition_config": cfg,
 		"configuration_sha256": state.configuration_sha256, "max_events": MAX_EVENTS, "max_bytes": MAX_BYTES,
 		"character_id": state.character_id, "world_namespace": state.world_namespace, "session_epoch": state.epoch}))
 	var observer := func(packet: Dictionary) -> void: _tick(state, packet)
@@ -67,6 +67,8 @@ static func _tick(state: Dictionary, packet: Dictionary) -> void:
 	if not _live(state) or packet.get("character_id") != state.character_id \
 		or packet.get("world_namespace") != state.world_namespace or packet.get("session_epoch") != state.epoch:
 		state.error = "Actual passive owner/world/session lifetime changed"; return
+	if packet.get("operation", "clock") == "discovery" and packet.get("realm") != state.game_ref.get_ref().get("current_realm"):
+		state.error = "Actual discovery realm changed"; return
 	var sequence: Variant = packet.get("sequence")
 	var delta: Variant = packet.get("delta")
 	if not sequence is int or sequence <= 0 or (state.sequence >= 0 and sequence != state.sequence + 1) \
@@ -94,9 +96,15 @@ static func _tick(state: Dictionary, packet: Dictionary) -> void:
 				anchor.expected[index] = predicted.duplicate(true)
 				anchor.buffs[packet.uid] = packet.buffs_after.duplicate(true)
 			break
-	var line := JSON.stringify({"s": sequence, "u": packet.uid, "d": delta,
+	var recorded := {"s": sequence, "u": packet.uid, "d": delta,
 		"condition_tick_applied": packet.get("condition_tick_applied", true),
-		"b": JSON.stringify(packet.before).sha256_text(), "a": JSON.stringify(packet.after).sha256_text()})
+		"b": JSON.stringify(packet.before).sha256_text(), "a": JSON.stringify(packet.after).sha256_text()}
+	if packet.get("operation", "clock") == "discovery":
+		recorded.operation = "discovery"
+		for field: String in ["realm", "from", "to", "travel_valid", "discovery_elapsed", "landmarks_before", "landmarks_after"]:
+			recorded[field] = packet[field]
+		recorded.erase("condition_tick_applied") # This operation advances neither care nor buffs.
+	var line := JSON.stringify(recorded)
 	if state.file.get_position() + line.to_utf8_buffer().size() + 1 > MAX_BYTES:
 		state.error = "Actual passive evidence overflow; no transition dropped"; return
 	state.file.store_line(line)
@@ -107,6 +115,8 @@ static func _tick(state: Dictionary, packet: Dictionary) -> void:
 	state.events += 1
 
 static func replay_packet(packet: Dictionary, configuration: Dictionary) -> Dictionary:
+	if packet.get("operation", "clock") not in ["clock", "discovery"]:
+		return {"error": "Unknown actual passive operation"}
 	if packet.has("condition_tick_applied") and not packet.condition_tick_applied is bool:
 		return {"error": "Malformed actual condition-clock observation"}
 	var clone: RefCounted = INSTANCE.new()
@@ -131,13 +141,51 @@ static func replay_packet(packet: Dictionary, configuration: Dictionary) -> Dict
 	var saver: RefCounted = SAVE.new()
 	var roundtrip: Dictionary = saver.call("_party_to_array", source)[0]
 	if not equal(roundtrip, packet.before): return {"error": "Detached full-card replay did not roundtrip exactly"}
-	clone.call("tick_buffs", float(packet.delta))
-	if packet.get("condition_tick_applied", true) == true:
-		CONDITION.tick(clone, configuration, float(packet.delta))
+	if packet.get("operation", "clock") == "discovery":
+		var reason := _replay_discovery(clone, packet)
+		if not reason.is_empty(): return {"error": reason}
+	else:
+		clone.call("tick_buffs", float(packet.delta))
+		if packet.get("condition_tick_applied", true) == true:
+			CONDITION.tick(clone, configuration, float(packet.delta))
 	var predicted: Dictionary = saver.call("_party_to_array", source)[0]
 	if not equal(predicted, packet.after) or not equal(clone.get("active_buffs"), packet.buffs_after):
-		return {"error": "Actual passive update differs from independently replayed shipping timers"}
+		return {"error": "Actual passive update differs from independently replayed shipping operations"}
 	return {"after": predicted, "buffs_after": clone.get("active_buffs").duplicate(true)}
+
+static func _replay_discovery(clone: RefCounted, packet: Dictionary) -> String:
+	if packet.get("realm") not in ["meadows", "water", "cloudreach", "stormwood"] \
+		or not _position(packet.get("from")) or not _position(packet.get("to")) \
+		or not packet.get("travel_valid") is bool or packet.get("delta") != 0.0 \
+		or not _number(packet.get("discovery_elapsed")) or float(packet.discovery_elapsed) < 0.5 \
+		or not _discoveries(packet.get("landmarks_before")) or not _discoveries(packet.get("landmarks_after")):
+		return "Malformed actual discovery observation"
+	for id: String in packet.landmarks_before:
+		if not packet.landmarks_after.has(id): return "Actual discovery removed an original landmark"
+	var from := Vector3(float(packet.from[0]), float(packet.from[1]), float(packet.from[2]))
+	var to := Vector3(float(packet.to[0]), float(packet.to[1]), float(packet.to[2]))
+	if not from.is_finite() or not to.is_finite(): return "Malformed actual discovery observation"
+	var distance := from.distance_to(to) if packet.travel_valid else 0.0
+	if not is_finite(distance): return "Malformed actual discovery observation"
+	# Exact per-poll Game/BondMilestones counter arithmetic, also used by
+	# owner_passive_replay. Do not invoke credit(), which publishes live feedback.
+	if distance > 0.0 and distance <= 30.0:
+		clone.set("distance_m_together", float(clone.get("distance_m_together")) + distance)
+	if packet.landmarks_after.size() > packet.landmarks_before.size():
+		clone.set("landmarks_visited_together", int(round(float(clone.get("landmarks_visited_together")) + 1.0)))
+	return ""
+
+static func _number(value: Variant) -> bool:
+	return (value is int or value is float) and is_finite(float(value))
+
+static func _position(value: Variant) -> bool:
+	return value is Array and value.size() == 3 and _number(value[0]) and _number(value[1]) and _number(value[2])
+
+static func _discoveries(value: Variant) -> bool:
+	if not value is Dictionary: return false
+	for id: Variant in value:
+		if not id is String or id.is_empty() or not value[id] is bool or value[id] != true: return false
+	return true
 
 static func anchor(tree: SceneTree, name: String, data: Dictionary) -> bool:
 	if not start(tree): return false

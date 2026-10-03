@@ -1,6 +1,6 @@
 extends Node
 
-## Read-only proof observation around the actual buff/condition clocks.
+## Read-only proof observation around the actual clocks and discovery credits.
 ## condition_tick_applied distinguishes host-owned care from a local tick.
 ## No listener means no additional card serialization or observer snapshots.
 signal party_passive_tick(observation: Dictionary)
@@ -1141,6 +1141,7 @@ func _process(delta: float) -> void:
 	_discovery_elapsed += delta
 	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
 		return
+	var discovery_elapsed := _discovery_elapsed
 	_discovery_elapsed = 0.0
 	var player := _find_player()
 	if player == null:
@@ -1151,7 +1152,16 @@ func _process(delta: float) -> void:
 	# used) — measured here rather than in player_controller.gd so the
 	# player's own delicate movement/collision code stays untouched.
 	var landmarks_before := int(map.discovered_landmark_count())
-	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive else {}
+	var watch_discovery := not canonical_passive and party != null \
+		and not get_signal_connection_list("party_passive_tick").is_empty()
+	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive or watch_discovery else {}
+	var discovery_cards: Array[Dictionary] = []
+	if watch_discovery:
+		for member: Variant in (party.call("members") as Array):
+			var source := PassiveCardSnapshot.new()
+			source.instance = member as RefCounted
+			discovery_cards.append({"source": source, "before": SAVE_GAME.new().call("_party_to_array", source)[0],
+				"buffs_before": (member.get("active_buffs") as Array).duplicate(true)})
 	var here := player.global_position
 	var travel_from := _travel_pos
 	var travel_was_valid := _travel_pos_valid
@@ -1169,6 +1179,20 @@ func _process(delta: float) -> void:
 	if not canonical_passive and landmarks_gained > 0 and party != null:
 		for member: Variant in (party.call("members") as Array):
 			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)
+	if watch_discovery:
+		for observed: Dictionary in discovery_cards:
+			var member: RefCounted = observed.source.instance
+			_passive_observation_sequence += 1
+			party_passive_tick.emit({"operation": "discovery", "sequence": _passive_observation_sequence, "delta": 0.0,
+				"character_id": str(local.character_id), "world_namespace": str(world.reward_delivery_namespace),
+				"session_epoch": str(session.call("_altar_current_epoch")) if session != null else "",
+				"uid": str(member.get("uid")), "before": observed.before,
+				"after": SAVE_GAME.new().call("_party_to_array", observed.source)[0],
+				"buffs_before": observed.buffs_before, "buffs_after": (member.get("active_buffs") as Array).duplicate(true),
+				"condition_config": CREATURE_CONDITION.config().duplicate(true),
+				"realm": current_realm, "from": [travel_from.x, travel_from.y, travel_from.z],
+				"to": [here.x, here.y, here.z], "travel_valid": travel_was_valid, "discovery_elapsed": discovery_elapsed,
+				"landmarks_before": discovered_before.duplicate(), "landmarks_after": (map.get("_discovered") as Dictionary).duplicate()})
 	if record_passive and not canonical_passive:
 		var new_landmarks: Array[String] = []
 		for id: String in (map.get("_discovered") as Dictionary):
