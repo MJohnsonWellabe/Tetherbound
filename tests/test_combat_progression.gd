@@ -34,6 +34,8 @@ const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const CREATURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 const ACCEPTED_ACTION_HOST := preload("res://scripts/combat/accepted_action_host.gd")
 const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
+const F48_ACTOR_TOPUP := preload("res://tools/net/f48_actor_topup.gd")
+const F48_PEER_RUNNER := preload("res://tools/net/peer_runner.gd")
 
 ## Disclosed ownership-answer seam; canonical host proof is tested separately.
 class DurableTrainerRewardsFixture extends Node:
@@ -544,3 +546,106 @@ func test_original_typed_damage_targets_same_retained_actor_after_actual_leave()
 	assert_true(host.call("acknowledge_actor_vitals", id, "departed-owner", owned.uid,
 		int(proposal.revision), proposal.settlement_receipt) == true)
 	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+
+
+func test_disclosed_original_full_topup_uses_exact_actor_receipt_and_survives_terminal() -> void:
+	var host: RefCounted = ACCEPTED_ACTION_HOST.new()
+	var owned: Dictionary = CREATURE_CODEC.encode(_creature(3, "Fixture owned"))
+	var rec: Dictionary = host.call("open", 1, "meadows", "boss",
+		{"hp": 100.0, "hp_max": 100.0, "owner_npc": "warden_aldis",
+			"card": {"uid": "fixture-original-enemy"}, "body_generation": 1},
+		str(owned.uid), "fixture-owner")
+	var id: String = str(rec.encounter_id)
+	rec["ordinary_combat_reward_owner"] = COMBAT_ROUND_REWARD.scope("fixture-world", "fixture-epoch", "meadows", "warden_aldis", id)
+	var bound: Dictionary = host.call("bind_actor_body", id, 1, "fixture-owner", owned, 456)
+	assert_true(bound.get("ok") == true)
+	var generation: int = int(bound.vitals.body_generation)
+	var damage: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		0, "fixture-original-damage", "damage", 7.5, 4096)
+	assert_true(damage.get("ok") == true)
+	var damage_source: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	assert_true((host.call("commit_original_actor_vitals", damage, damage_source) as Dictionary).get("ok") == true)
+	assert_true(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(damage.revision), damage.settlement_receipt) == true)
+	var actor: Dictionary = rec.participants[1].actor_vitals[owned.uid]
+	assert_eq(actor.hp, float(owned.hp) - 7.5)
+	var topup: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-original-topup", "heal", float(actor.max_hp) - float(actor.hp), 4096)
+	assert_true(topup.get("ok") == true)
+	var original: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	assert_true(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	assert_false(host.call("verify_original_actor_vitals", topup, original) == true,
+		"the normal damage source cannot authorize a fixture heal")
+	var partial: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-partial-topup", "heal", 3.0, 4096)
+	assert_true(partial.get("ok") == true)
+	assert_false(host.call("verify_original_fixture_actor_topup", partial, original) == true,
+		"even a valid smaller heal is not the disclosed full-topup source")
+	var changed: Dictionary = topup.duplicate(true)
+	changed["hp_after"] = float(changed.hp_after) - 1.0
+	assert_false(host.call("verify_original_fixture_actor_topup", changed, original) == true)
+	changed = topup.duplicate(true)
+	changed["peer_id"] = 2
+	assert_false(host.call("verify_original_fixture_actor_topup", changed, original) == true)
+	actor["body_instance_id"] = 457
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	actor["body_instance_id"] = 456
+	var original_scope: Dictionary = rec.ordinary_combat_reward_owner.duplicate(true)
+	rec.ordinary_combat_reward_owner["session_id"] = "different-fixture-epoch"
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	rec["ordinary_combat_reward_owner"] = original_scope
+	rec.opponent.card["uid"] = "replacement-enemy"
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	rec.opponent.card["uid"] = "fixture-original-enemy"
+	actor["hp"] = 0.0
+	actor["fainted"] = true
+	var fainted_source: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	var revive: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-forbidden-revive", "heal", float(actor.max_hp), 4096)
+	assert_false(revive.get("ok") == true)
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, fainted_source) == true)
+	actor["hp"] = topup.hp_before
+	actor["fainted"] = false
+	host.call("set_phase", id, "done")
+	var fresh: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-fresh-terminal-topup", "heal", 7.5, 4096)
+	assert_false(fresh.get("ok") == true)
+	assert_true(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	assert_true((host.call("commit_original_fixture_actor_topup", topup, original) as Dictionary).get("ok") == true)
+	assert_eq(actor.hp, owned.max_hp)
+	assert_false(actor.fainted)
+	assert_eq(original.participants[1].actor_vitals[owned.uid].hp, float(owned.hp) - 7.5,
+		"settlement cannot rewrite the original damaged source")
+	assert_false((host.call("commit_original_fixture_actor_topup", topup, original) as Dictionary).get("ok") == true)
+	assert_eq((host.call("pending_actor_vitals", id) as Array).size(), 1)
+	assert_false(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(topup.revision), damage.settlement_receipt) == true)
+	assert_true(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(topup.revision), topup.settlement_receipt) == true)
+	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+	host.call("set_phase", id, "active")
+	var full: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-full-again", "heal", 7.5, 4096)
+	assert_false(full.get("ok") == true, "full HP cannot mint another topup receipt")
+	var next_damage: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-next-damage", "damage", 5.0, 4096)
+	var next_source: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	assert_true(next_damage.get("ok") == true)
+	assert_eq(next_damage.hp_before, owned.max_hp)
+	assert_true((host.call("commit_original_actor_vitals", next_damage, next_source) as Dictionary).get("ok") == true)
+	assert_eq(actor.hp, float(owned.max_hp) - 5.0)
+	assert_true(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(next_damage.revision), next_damage.settlement_receipt) == true)
+	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+
+
+func test_actual_fixture_provider_refuses_non_runner_tree_and_detached_request() -> void:
+	assert_eq(F48_PEER_RUNNER.resource_path, "res://tools/net/peer_runner.gd",
+		"the actual driver is compiled by the focused native check")
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	assert_eq(F48_ACTOR_TOPUP.install(tree, F48_ACTOR_TOPUP.DISCLOSURE), null,
+		"the actual test tree cannot install the PeerRunner-only aid")
+	var provider: Node = F48_ACTOR_TOPUP.new()
+	var refused: Dictionary = provider.call("request_topup", null, null)
+	assert_eq(refused, {"ok": false, "pending": false, "code": "fixture_source_required"})
+	provider.free()

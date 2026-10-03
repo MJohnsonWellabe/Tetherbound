@@ -344,6 +344,63 @@ func commit_original_actor_vitals(proposal: Dictionary, original: Dictionary) ->
 	return {"ok": true, "vitals": _actor_vitals_view(current)}
 
 
+## A separate disclosed harness source may heal one alive damaged actor to
+## its existing maximum. Session authenticates the actual PeerRunner provider;
+## this pure replay never authorizes a fresh source in a terminal encounter.
+func verify_original_fixture_actor_topup(proposal: Dictionary, original: Dictionary) -> bool:
+	var id: String = str(proposal.get("encounter_id", ""))
+	var peer: int = int(proposal.get("peer_id", 0))
+	var uid: String = str(proposal.get("creature_uid", ""))
+	var rec: Dictionary = encounters.get(id, {})
+	var scope: Dictionary = rec.get("ordinary_combat_reward_owner", {})
+	if proposal.get("kind") != "heal" or original.get("encounter_id") != id \
+		or not preload("res://scripts/net/combat_round_reward.gd").scope_valid(scope) \
+		or scope.trainer_id != "warden_aldis" or rec.get("kind") != "boss" \
+		or original.get("phase") != "active" or rec.get("phase") not in ["active", "resolving", "done"] \
+		or not _tracking_enabled_for(id) or move_action_publication_pending(id) \
+		or rec.get("realm") != original.get("realm") \
+		or rec.get("ordinary_combat_reward_owner") != original.get("ordinary_combat_reward_owner") \
+		or rec.get("opponent", {}).get("card", {}).get("uid") != original.get("opponent", {}).get("card", {}).get("uid") \
+		or rec.get("opponent", {}).get("body_generation") != original.get("opponent", {}).get("body_generation"):
+		return false
+	var source: Dictionary = original.get("participants", {}).get(peer, {})
+	var member: Dictionary = rec.get("participants", {}).get(peer, {})
+	if member.is_empty(): member = rec.get("retained_actor_participants", {}).get(source.get("character_id"), {})
+	var before: Dictionary = source.get("actor_vitals", {}).get(uid, {})
+	var current: Dictionary = member.get("actor_vitals", {}).get(uid, {})
+	if before.is_empty() or source.get("character_id") != member.get("character_id") \
+		or source.get("actor_bound_uid") != uid or member.get("actor_bound_uid") != uid \
+		or int(before.get("body_instance_id", 0)) <= 0 or current != before \
+		or before.get("fainted") != false or float(before.get("hp", 0.0)) <= 0.0 \
+		or float(before.hp) >= float(before.max_hp) \
+		or proposal.get("amount") != float(before.max_hp) - float(before.hp): return false
+	var trial: Variant = get_script().new(_host_peer_id)
+	trial.encounters[id] = original.duplicate(true)
+	trial._vitals_namespace = _vitals_namespace
+	var verified: Dictionary = trial.call("stage_actor_vitals", id, peer, uid,
+		int(proposal.get("body_generation", -1)), int(proposal.get("expected_revision", -1)),
+		str(proposal.get("action_id", "")), "heal", float(before.max_hp) - float(before.hp),
+		int(proposal.get("receipt_limit", 0)))
+	return verified.get("ok") == true and verified == proposal
+
+
+func commit_original_fixture_actor_topup(proposal: Dictionary, original: Dictionary) -> Dictionary:
+	if not verify_original_fixture_actor_topup(proposal, original): return {"ok": false, "code": "stale_original_fixture_actor"}
+	var rec: Dictionary = encounters[str(proposal.encounter_id)]
+	var source: Dictionary = original.participants[int(proposal.peer_id)]
+	var member: Dictionary = rec.get("participants", {}).get(int(proposal.peer_id), {})
+	if member.is_empty(): member = rec.get("retained_actor_participants", {}).get(source.character_id, {})
+	var current: Dictionary = member.actor_vitals[str(proposal.creature_uid)]
+	current["hp"] = proposal.hp_after
+	current["fainted"] = proposal.fainted
+	current["revision"] = proposal.revision
+	current["settlement_receipt"] = proposal.settlement_receipt.duplicate(true)
+	current.receipts[str(proposal.action_id)] = true
+	seq += 1
+	rec["seq"] = seq
+	return {"ok": true, "vitals": _actor_vitals_view(current)}
+
+
 func bind_actor_body(id: String, peer: int, character: String, owned: Dictionary, body_id: int) -> Dictionary:
 	if move_action_publication_pending(id): return {"ok": false, "code": "pending_action"}
 	return super.bind_actor_body(id, peer, character, owned, body_id)

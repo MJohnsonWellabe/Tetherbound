@@ -4062,17 +4062,39 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			continue
 		var mine: Variant = manager.call("active_creature")
 		if mine != null:
-			# Exactly what `smoke_trainer_battle.gd` does, for its reason: this
-			# arm is testing the payout at the end of a won battle, not the
-			# player's ability to survive one, and a creature that faints ends
-			# the battle in a LOSS and tests nothing.
-			if args.get("retain_fixture_actions") == true:
-				var observed_enemy := manager.call("enemy_body") as Node3D
-				(_trainer_fight_progress.fixture_actions as Array).append({"kind": "self_hp_topup", "frame": frames,
-					"uid": str(mine.get("uid")), "before": float(mine.get("hp")), "after": float(mine.get("max_hp")),
-					"opponent": str(observed_enemy.name) if is_instance_valid(observed_enemy) else "none",
-					"encounter_id": str(manager.call("encounter_id"))})
-			(mine as RefCounted).set("hp", float((mine as RefCounted).get("max_hp")))
+			if director.call("uses_durable_trainer_rewards", str(manager.call("encounter_id"))) == true:
+				var topup: Variant = args.get("fixture_topup_provider")
+				if not topup is Node or not is_instance_valid(topup) or topup.get_script() == null \
+					or topup.get_script().resource_path != "res://tools/net/f48_actor_topup.gd" \
+					or topup.get_parent() != root or topup.name != &"F48ActorTopup":
+					return {"verdict": "FAIL", "detail": "Canonical self-HP aid requires the disclosed actual host fixture provider"}
+				var healed: Dictionary = topup.call("request_topup", director, manager)
+				if healed.has("action_id") and args.get("retain_fixture_actions") == true:
+					var seen: Dictionary = _trainer_fight_progress.get("topup_observations", {})
+					var key: String = str(healed.action_id) + ":" + str(healed.get("code"))
+					if not seen.has(key):
+						seen[key] = true
+						_trainer_fight_progress["topup_observations"] = seen
+						(_trainer_fight_progress.fixture_actions as Array).append({"kind": "typed_self_hp_topup",
+							"frame": frames, "uid": str(mine.get("uid")), "result": healed.duplicate(true),
+							"encounter_id": str(manager.call("encounter_id"))})
+				if healed.get("ok") != true:
+					return {"verdict": "FAIL", "detail": "Typed fixture topup refused: " + str(healed.get("code"))}
+				if healed.get("pending") == true:
+					_trainer_fight_progress["phase"] = "wait_typed_fixture_topup_ack"
+					continue # Existing physics-frame budget includes this original save/ACK wait.
+			else:
+				# Exactly what `smoke_trainer_battle.gd` does, for its reason: this
+				# arm is testing the payout at the end of a won battle, not the
+				# player's ability to survive one, and a creature that faints ends
+				# the battle in a LOSS and tests nothing.
+				if args.get("retain_fixture_actions") == true:
+					var observed_enemy := manager.call("enemy_body") as Node3D
+					(_trainer_fight_progress.fixture_actions as Array).append({"kind": "self_hp_topup", "frame": frames,
+						"uid": str(mine.get("uid")), "before": float(mine.get("hp")), "after": float(mine.get("max_hp")),
+						"opponent": str(observed_enemy.name) if is_instance_valid(observed_enemy) else "none",
+						"encounter_id": str(manager.call("encounter_id"))})
+				(mine as RefCounted).set("hp", float((mine as RefCounted).get("max_hp")))
 		var opponent: Variant = manager.call("enemy_body")
 		var body: Variant = director.call("ally_body")
 		if opponent == null or not is_instance_valid(opponent) \

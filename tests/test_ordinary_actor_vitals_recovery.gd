@@ -10,6 +10,8 @@ const ACCEPTED := preload("res://scripts/combat/accepted_action_host.gd")
 const AUTH := preload("res://scripts/net/character_authority.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const ROUND_FIXTURE := preload("res://tests/test_combat_round_reward.gd")
+const SAVE_FIXTURE := preload("res://tests/test_foundation_resource_save.gd")
+const DATA_FIXTURE := preload("res://tests/test_foundation_resources.gd")
 
 class AckSession extends Node:
 	var arbiter: RefCounted
@@ -283,4 +285,170 @@ func test_completion_replays_exact_accepted_round_actor_promotion_without_new_bo
 	world.get("reward_deliveries")[row.delivery_id] = wrong
 	assert_false(session.call("_ordinary_combat_completion_record", terminal, prior, current, world))
 	session.free()
+	body.free()
+
+func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_projection() -> void:
+	# Physical/PeerRunner authorization is deliberately absent in this detached
+	# canonical writer fixture. Actual F48 owns that source proof separately.
+	var directory: String = "user://test_fixture_topup_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var builder: RefCounted = ROUND_FIXTURE.new()
+	var game := SAVE_FIXTURE.FixtureGame.new()
+	game.local = builder.call("_player")
+	game.world = DATA_FIXTURE.new().call("_world")
+	var session := SAVE_FIXTURE.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var authority: RefCounted = AUTH.new()
+	session.set("_character_authority", authority)
+	var writer := SAVE_FIXTURE.BoolWriter.new()
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := SAVE_FIXTURE.FixtureRpc.new()
+	rpc.fixture = game
+	rpc.ledger = LEDGER.new(game.world)
+	rpc.set("_actor_vitals_session_id", "resource-epoch")
+	var initial: Dictionary = RECORD.portable_projection(game.local.call("save_data"))
+	var character: String = str(initial.character_id)
+	var uid: String = str(initial.party[0].uid)
+	assert_true(authority.call("bind_world", "resource-namespace"))
+	assert_true(authority.call("seed_admitted_character", initial, character).get("ok") == true)
+	assert_true(writer.save_character_prepared(game, character))
+	var host: RefCounted = ACCEPTED.new()
+	var body := Node.new()
+	var final_template: Dictionary = builder.call("_duty", initial, "completion")
+	assert_false(final_template.is_empty())
+	if final_template.is_empty():
+		body.free()
+		SAVE_FIXTURE.new().call("_close", game, rpc, directory)
+		return
+	var record: Dictionary = host.call("open", 1, "meadows", "boss", {"hp": 20.0,
+		"owner_npc": "warden_aldis", "card": final_template.context.enemy_record,
+		"round": final_template.intent.round}, uid, character)
+	var id: String = str(record.encounter_id)
+	record.ordinary_combat_reward_owner = ROUND.scope("resource-namespace", "resource-epoch", "meadows", "warden_aldis", id)
+	assert_true(host.call("bind_actor_body", id, 1, character, initial.party[0], body.get_instance_id()).get("ok") == true)
+	var owner_path: String = writer.character_store.call("path_for", character)
+	for action: String in ["damage_a", "fixture_heal", "damage_b"]:
+		var source: Dictionary = host.call("record", id).duplicate(true)
+		var actor: Dictionary = source.participants[1].actor_vitals[uid]
+		var heal: bool = action == "fixture_heal"
+		var amount: float = float(actor.max_hp) - float(actor.hp) if heal else (7.0 if action == "damage_a" else 5.0)
+		var proposal: Dictionary = host.call("stage_actor_vitals", id, 1, uid, int(actor.body_generation),
+			int(actor.revision), action, "heal" if heal else "damage", amount, 16)
+		assert_true(proposal.get("ok") == true)
+		if proposal.get("ok") != true: break
+		var frozen: PackedByteArray = var_to_bytes(proposal)
+		var previous_hp: float = float(authority.call("state", character).party[0].hp)
+		var character_revision: int = int(authority.call("revision", character))
+		if heal:
+			assert_true(host.call("verify_original_fixture_actor_topup", proposal, source))
+			writer.refuse_world = true
+			var failed_stage: Dictionary = authority.call("stage_creature_vitals", character, uid, character_revision,
+				float(proposal.hp_before), false, float(proposal.hp_after), false, proposal.settlement_receipt)
+			assert_true(failed_stage.get("ok") == true)
+			var failed: Dictionary = rpc.journal_actor_vitals_prepared(1, character, authority.call("staged_creature_vitals", failed_stage))
+			assert_false(failed.get("durable", true))
+			assert_true(authority.call("finish_creature_vitals", failed_stage, false))
+			assert_eq(authority.call("state", character).party[0].hp, previous_hp)
+			assert_eq(host.call("record", id), source, "world refusal never privately heals")
+			writer.refuse_world = false
+		var stage: Dictionary = authority.call("stage_creature_vitals", character, uid, character_revision,
+			float(proposal.hp_before), false, float(proposal.hp_after), false, proposal.settlement_receipt)
+		assert_true(stage.get("ok") == true)
+		var journal: Dictionary = rpc.journal_actor_vitals_prepared(1, character, authority.call("staged_creature_vitals", stage))
+		assert_true(journal.get("ok") == true and journal.get("durable") == true)
+		assert_true(authority.call("finish_creature_vitals", stage, true))
+		var committed: Dictionary = host.call("commit_original_fixture_actor_topup", proposal, source) if heal \
+			else host.call("commit_original_actor_vitals", proposal, source)
+		assert_true(committed.get("ok") == true)
+		var row: Dictionary = game.world.get("reward_deliveries")[journal.delivery_id].duplicate(true)
+		if heal:
+			var old_disk: PackedByteArray = FileAccess.get_file_as_bytes(owner_path)
+			writer.refuse_owner = true
+			assert_false(ACTOR.apply_owner(game, row).get("ok", false))
+			assert_eq(game.local.party.at(0).hp, proposal.hp_after, "accepted live heal waits real BOOL without rolling back")
+			assert_eq(FileAccess.get_file_as_bytes(owner_path), old_disk)
+			assert_false(host.call("pending_actor_vitals", id).is_empty())
+			writer.refuse_owner = false
+		assert_true(ACTOR.apply_owner(game, row).get("ok", false))
+		assert_eq(writer.character_store.call("read", character).party[0].hp, proposal.hp_after)
+		assert_true(rpc.ledger.call("accept_actor_vitals_delivery", row.delivery_id, character,
+			int(row.journal_revision), row.receipt, 1).get("ok") == true)
+		assert_true(writer.save_world_prepared(game, "resource-slot"))
+		assert_true(authority.call("acknowledge_creature_vitals", character, uid, int(row.character_revision), row.receipt))
+		assert_true(host.call("acknowledge_actor_vitals", id, character, uid, int(row.receipt.vitals_revision), row.receipt))
+		var accepted: Dictionary = game.world.get("reward_deliveries")[row.delivery_id]
+		assert_true(authority.call("promote_accepted_vitals_marker", character, accepted))
+		assert_true(host.call("pending_actor_vitals", id).is_empty())
+		assert_eq(var_to_bytes(proposal), frozen, "all failed-write retries preserve the original source")
+		assert_true(RECORD.errors(authority.call("state", character), character).is_empty())
+		if heal:
+			assert_false(host.call("commit_original_fixture_actor_topup", proposal, source).get("ok", false), "no duplicate heal commit")
+	var before_round: Dictionary = authority.call("state", character)
+	assert_true(ACTOR.equivalent(before_round, RECORD.portable_projection(game.local.call("save_data"))), "actual saved typed history remains full-card equal")
+	var actor: Dictionary = host.call("record", id).participants[1].actor_vitals[uid]
+	var vitals: Array = []
+	for card: Dictionary in before_round.party:
+		vitals.append({"uid": card.uid, "hp": card.hp, "max_hp": card.max_hp, "fainted": card.fainted,
+			"actor_generation": int(actor.body_generation) if card.uid == uid else 0})
+	var binding: Dictionary = {"peer_id": 1, "character_id": character, "active_uid": uid,
+		"actor_generation": int(actor.body_generation), "settled_vitals": vitals}
+	for phase: String in ["round", "completion"]:
+		var duty: Dictionary = ROUND.make_duty("resource-namespace", "resource-epoch", "meadows", "warden_aldis", id,
+			int(final_template.intent.round), final_template.context.enemy_record, binding,
+			[{"peer_id": 1, "character_id": character}], phase)
+		assert_false(duty.is_empty())
+		if duty.is_empty(): continue
+		assert_true(ACTOR.equivalent(ROUND.settled_before(before_round, duty.intent, duty.context), before_round))
+		assert_true(ROUND.stage(before_round, duty.intent, duty.context).get("ok") == true, "original healed then damaged core is admissible for each actual phase")
+	body.free()
+	SAVE_FIXTURE.new().call("_close", game, rpc, directory)
+
+func test_fixture_full_heal_refuses_foreign_peer_generation_epoch_amount_pending_and_terminal_sources() -> void:
+	var host: RefCounted = ACCEPTED.new()
+	var body := Node.new()
+	var owned: Dictionary = {"uid": "owned_a", "hp": 100.0, "max_hp": 100.0, "fainted": false}
+	var record: Dictionary = host.call("open", 1, "meadows", "boss",
+		{"hp": 20.0, "owner_npc": "warden_aldis", "card": {"uid": "enemy_a"}, "body_generation": 1}, owned.uid, "owner_a")
+	var id: String = str(record.encounter_id)
+	record.ordinary_combat_reward_owner = ROUND.scope("namespace_a", "epoch_a", "meadows", "warden_aldis", id)
+	assert_true(host.call("bind_actor_body", id, 1, "owner_a", owned, body.get_instance_id()).get("ok") == true)
+	var damage: Dictionary = host.call("stage_actor_vitals", id, 1, owned.uid, 1, 0, "actual_damage", "damage", 7.0, 16)
+	assert_true(host.call("commit_actor_vitals", damage).get("ok") == true)
+	assert_true(host.call("acknowledge_actor_vitals", id, "owner_a", owned.uid, 1, damage.settlement_receipt))
+	var source: Dictionary = host.call("record", id).duplicate(true)
+	var heal: Dictionary = host.call("stage_actor_vitals", id, 1, owned.uid, 1, 1, "actual_fixture_topup", "heal", 7.0, 16)
+	assert_true(heal.get("ok") == true)
+	assert_true(host.call("verify_original_fixture_actor_topup", heal, source))
+	for defect: String in ["peer", "generation", "amount", "uid", "epoch", "terminal_source", "fainted_source", "full_source"]:
+		var proposal: Dictionary = heal.duplicate(true)
+		var original: Dictionary = source.duplicate(true)
+		match defect:
+			"peer": proposal.peer_id = 9
+			"generation": proposal.body_generation = 2
+			"amount": proposal.amount -= 1.0
+			"uid": proposal.creature_uid = "foreign_uid"
+			"epoch": original.ordinary_combat_reward_owner.session_id = "foreign_epoch"
+			"terminal_source": original.phase = "done"
+			"fainted_source":
+				original.participants[1].actor_vitals.owned_a.hp = 0.0
+				original.participants[1].actor_vitals.owned_a.fainted = true
+			"full_source": original.participants[1].actor_vitals.owned_a.hp = 100.0
+		assert_false(host.call("verify_original_fixture_actor_topup", proposal, original), defect)
+	var session: Node = SESSION.new()
+	var foreign_provider := Node.new()
+	var foreign_director := Node.new()
+	assert_false(session.call("ordinary_fixture_actor_topup_commit", foreign_provider, foreign_director, id, 1, heal).get("ok", true))
+	host.call("set_phase", id, "done")
+	assert_false(host.call("stage_actor_vitals", id, 1, owned.uid, 1, 1, "fresh_done_heal", "heal", 7.0, 16).get("ok", true))
+	assert_true(host.call("verify_original_fixture_actor_topup", heal, source), "only the retained original active source survives terminal")
+	assert_true(host.call("commit_original_fixture_actor_topup", heal, source).get("ok") == true)
+	assert_false(host.call("commit_original_fixture_actor_topup", heal, source).get("ok", true))
+	assert_false(host.call("pending_actor_vitals", id).is_empty(), "typed heal remains unresolved until its exact real saved ACK")
+	assert_true(host.call("acknowledge_actor_vitals", id, "owner_a", owned.uid, 2, heal.settlement_receipt))
+	assert_true(host.call("pending_actor_vitals", id).is_empty())
+	session.free()
+	foreign_provider.free()
+	foreign_director.free()
 	body.free()

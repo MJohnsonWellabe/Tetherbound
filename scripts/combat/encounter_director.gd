@@ -3655,6 +3655,9 @@ func _retry_ordinary_actor_vitals() -> void:
 	if not _is_host() or _session == null: return
 	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
 		if original.get("presented") == true: continue
+		# The disclosed harness source retries its own original typed heal.
+		# It remains in this map's pending fence even if its provider is lost.
+		if original.has("fixture_provider"): continue
 		var result: Variant = _session.call("ordinary_actor_vitals_commit", self,
 			str(original.encounter_id), int(original.peer_id), original.proposal)
 		if original.get("committed") == true and not original.has("record_after"):

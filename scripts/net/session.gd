@@ -909,9 +909,85 @@ func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dicti
 	director.set_meta("foundation_ordinary_combat_scopes", scopes)
 	return {"enabled": true, "ready": true, "scope": scope}
 
+## Only the installed, explicitly disclosed mechanics provider may request
+## this host-derived full heal. There is no RPC or caller-supplied HP amount.
+func _ordinary_fixture_topup_source(provider: Node, director: Node, encounter_id: String,
+		peer: int, proposal: Dictionary) -> bool:
+	if not _ordinary_combat_director_live(director) or not is_instance_valid(provider) \
+		or not provider.is_inside_tree() or provider.is_queued_for_deletion() or not is_inside_tree() \
+		or provider.get_script() == null or provider.get_script().resource_path != "res://tools/net/f48_actor_topup.gd" \
+		or provider.get_parent() != get_tree().root or get_tree().root.get_node_or_null(^"F48ActorTopup") != provider: return false
+	var runner_ref: Variant = provider.get("fixture_runner")
+	var runner: SceneTree = runner_ref.get_ref() as SceneTree if runner_ref is WeakRef else null
+	if runner == null or runner != get_tree() or runner.get_script() == null \
+		or runner.get_script().resource_path != "res://tools/net/peer_runner.gd" \
+		or runner.get("_role") != "host": return false
+	var required: Dictionary = {"scope": "named_mechanics_only", "self_hp_topups": true,
+		"ally_placement": true, "enemy_hp_ceiling": 0, "earned_campaign_credit": false}
+	if not ESSENCE._equivalent(provider.get("fixture_disclosure"), required): return false
+	var scope: Dictionary = director.get_meta("foundation_ordinary_combat_scopes", {}).get(encounter_id, {})
+	var world: RefCounted = _game().get("world")
+	if world == null or peer != local_peer_id() or not COMBAT_ROUND_REWARD.scope_valid(scope) or scope.trainer_id != "warden_aldis" \
+		or scope.world_namespace != world.get("reward_delivery_namespace") or scope.session_id != _altar_current_epoch(): return false
+	var originals: Dictionary = provider.get("_actor_vitals_proposals")
+	var original: Dictionary = originals.get(proposal.get("action_id"), {})
+	var source: Dictionary = original.get("fixture_source", {})
+	var source_ref: Variant = original.get("fixture_provider")
+	var host_record: Dictionary = original.get("host_record", {})
+	var member: Dictionary = host_record.get("participants", {}).get(peer, {})
+	var actor: Dictionary = member.get("actor_vitals", {}).get(proposal.get("creature_uid"), {})
+	var character: String = str(member.get("character_id", ""))
+	var source_valid: bool = source_ref is WeakRef and source_ref.get_ref() == provider \
+		and (director.get("_ordinary_actor_vitals_proposals") as Dictionary).get(proposal.get("action_id")) == original \
+		and ESSENCE._equivalent(original.get("fixture_disclosure"), required) \
+		and source.size() == 6 and ESSENCE._equivalent(source.get("scope"), scope) \
+		and source.get("world_id") == world.get("world_id") and source.get("character_id") == character \
+		and not character.is_empty() and source.get("creature_uid") == proposal.get("creature_uid") \
+		and source.get("body_instance_id") == actor.get("body_instance_id") and int(source.get("body_instance_id", 0)) > 0 \
+		and source.get("body_generation") == actor.get("body_generation") \
+		and source.get("body_generation") == proposal.get("body_generation") \
+		and original.get("encounter_id") == encounter_id and original.get("peer_id") == peer \
+		and host_record.get("encounter_id") == encounter_id and host_record.get("phase") == "active" \
+		and host_record.get("kind") == "boss" and host_record.get("opponent", {}).get("owner_npc") == "warden_aldis" \
+		and member.get("actor_bound_uid") == proposal.get("creature_uid") \
+		and ESSENCE._equivalent(original.get("proposal"), proposal) \
+		and proposal.get("kind") == "heal" and actor.get("fainted") == false \
+		and float(actor.get("hp", 0.0)) > 0.0 and float(actor.get("hp", 0.0)) < float(actor.get("max_hp", 0.0)) \
+		and ESSENCE._equivalent(proposal.get("amount"), float(actor.max_hp) - float(actor.hp)) \
+		and ESSENCE._equivalent(proposal.get("hp_after"), actor.get("max_hp"))
+	if not source_valid: return false
+	var manifest: Dictionary = {"encounter_id": encounter_id, "peer_id": peer, "proposal": proposal,
+		"character_revision": original.get("character_revision"), "binding": original.get("binding"),
+		"host_record": host_record, "fixture_source": source, "fixture_disclosure": required}
+	var authenticated: Dictionary = director.get_meta("foundation_fixture_topup_sources", {})
+	var prior: Dictionary = authenticated.get(proposal.get("action_id"), {})
+	if not prior.is_empty():
+		return prior.provider.get_ref() == provider and prior.runner.get_ref() == runner \
+			and ESSENCE._equivalent(prior.manifest, manifest)
+	if runner.get("_trainer_fight_director") != director \
+		or runner.get("_trainer_fight_observed_encounter_id") != encounter_id \
+		or (runner.get("_trainer_fight_progress") as Dictionary).get("running") != true: return false
+	# Authentication precedes the first writer and survives that writer's
+	# refusal/terminal/departure. It never becomes permission for another heal.
+	authenticated[proposal.action_id] = {"provider": weakref(provider), "runner": weakref(runner),
+		"manifest": preload("res://scripts/combat/accepted_action_host.gd")._original(manifest)}
+	director.set_meta("foundation_fixture_topup_sources", authenticated)
+	return true
+
+
+func ordinary_fixture_actor_topup_commit(provider: Node, director: Node, encounter_id: String,
+		peer: int, proposal: Dictionary) -> Dictionary:
+	if not _ordinary_fixture_topup_source(provider, director, encounter_id, peer, proposal):
+		return {"ok": false, "durable": false, "resolved": false, "code": "actual_disclosed_fixture_topup_required"}
+	return _ordinary_actor_vitals_commit_source(director, encounter_id, peer, proposal, provider)
+
 ## The shipping producer has already retained one actual hit/self-heal proposal.
 ## Journal its canonical HP transition before the private actor/resource commit.
 func ordinary_actor_vitals_commit(director: Node, encounter_id: String, peer: int, proposal: Dictionary) -> Dictionary:
+	return _ordinary_actor_vitals_commit_source(director, encounter_id, peer, proposal)
+
+func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, peer: int,
+		proposal: Dictionary, fixture_provider: Node = null) -> Dictionary:
 	var refused: Dictionary = {"ok": false, "durable": false, "resolved": false, "code": "original_actor_proposal_required"}
 	if not _ordinary_combat_director_live(director): return refused
 	var scopes: Dictionary = director.get_meta("foundation_ordinary_combat_scopes", {})
@@ -923,6 +999,9 @@ func ordinary_actor_vitals_commit(director: Node, encounter_id: String, peer: in
 		or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")]: return refused
 	var pending: Dictionary = director.get("_ordinary_actor_vitals_proposals")
 	var original: Dictionary = pending.get(proposal.get("action_id"), {})
+	if original.has("fixture_provider"):
+		if fixture_provider == null or not _ordinary_fixture_topup_source(fixture_provider, director, encounter_id, peer, proposal): return refused
+	elif fixture_provider != null: return refused
 	if original.get("encounter_id") != encounter_id or original.get("peer_id") != peer \
 		or not ESSENCE._equivalent(original.get("proposal"), proposal) \
 		or proposal.get("encounter_id") != encounter_id or proposal.get("peer_id") != peer \
@@ -954,7 +1033,10 @@ func ordinary_actor_vitals_commit(director: Node, encounter_id: String, peer: in
 		if proposal.get("kind") == "damage" and (not host.has_method("verify_original_actor_vitals") \
 			or host.call("verify_original_actor_vitals", proposal, source_record) != true): return refused
 		var heal: Dictionary = original.get("heal_bundle", {})
-		if proposal.get("kind") == "heal":
+		if fixture_provider != null:
+			if not host.has_method("verify_original_fixture_actor_topup") \
+				or host.call("verify_original_fixture_actor_topup", proposal, source_record) != true: return refused
+		elif proposal.get("kind") == "heal":
 			if heal.is_empty() or not ESSENCE._equivalent(heal.get("vitals_proposal"), proposal): return refused
 			var heal_verified: Dictionary = host.call("stage_actor_heal_utility", heal.intent, peer, heal.view,
 				heal.move_id, heal.wind_profile, int(heal.receipt_limit))
@@ -976,6 +1058,9 @@ func ordinary_actor_vitals_commit(director: Node, encounter_id: String, peer: in
 		proofs[receipt.receipt_id] = {"scope": scope.duplicate(true), "world_id": str(world.get("world_id")),
 			"character_id": character, "proposal": proposal.duplicate(true), "source_record": source_record.duplicate(true),
 			"revision_before": int(original.get("character_revision", -1))}
+		if fixture_provider != null:
+			proofs[receipt.receipt_id]["fixture_source"] = original.fixture_source.duplicate(true)
+			proofs[receipt.receipt_id]["fixture_disclosure"] = original.fixture_disclosure.duplicate(true)
 		director.set_meta("foundation_ordinary_vitals_commits", proofs)
 		if not original_saved:
 			var saved: Dictionary = host_commit_creature_vitals(delivery_peer, uid, int(original.get("character_revision", -1)),
@@ -989,15 +1074,17 @@ func ordinary_actor_vitals_commit(director: Node, encounter_id: String, peer: in
 		proofs[receipt.receipt_id]["row"] = durable_row.duplicate(true)
 		director.set_meta("foundation_ordinary_vitals_commits", proofs)
 		var commit_record_before: Dictionary = host.call("record", encounter_id).duplicate(true)
-		var committed: Dictionary = host.call("commit_actor_heal_utility", heal) if proposal.kind == "heal" \
-			else host.call("commit_original_actor_vitals", proposal, source_record)
+		var committed: Dictionary
+		if fixture_provider != null: committed = host.call("commit_original_fixture_actor_topup", proposal, source_record)
+		elif proposal.kind == "heal": committed = host.call("commit_actor_heal_utility", heal)
+		else: committed = host.call("commit_original_actor_vitals", proposal, source_record)
 		if committed.get("ok") != true:
 			return {"ok": false, "durable": true, "resolved": false, "code": "actor_commit_pending"}
 		original["committed"] = true
 		proofs[receipt.receipt_id]["record_before"] = commit_record_before
 		proofs[receipt.receipt_id]["record_after"] = host.call("record", encounter_id).duplicate(true)
 		director.set_meta("foundation_ordinary_vitals_commits", proofs)
-		if proposal.kind == "heal": original["heal_verdict"] = committed.get("verdict", {}).duplicate(true)
+		if proposal.kind == "heal" and fixture_provider == null: original["heal_verdict"] = committed.get("verdict", {}).duplicate(true)
 		host_finalize_creature_vitals(delivery_peer, uid, receipt)
 	var latest: Dictionary = world.get("reward_deliveries").get(actor_delivery.delivery_id(scope.world_namespace, character, uid), {})
 	var resolved: bool = actor_delivery.valid(latest, character, scope.world_namespace) \

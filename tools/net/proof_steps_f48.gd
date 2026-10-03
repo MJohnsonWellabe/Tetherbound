@@ -64,6 +64,13 @@ static func _start_case(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var game := tree.root.get_node_or_null(^"Game")
 	if game == null or game.session == null or game.session.call("is_active"):
 		return _result(false, "Original saved inputs can be restored only outside a session")
+	var topup: Node = tree.root.get_node_or_null(^"F48ActorTopup")
+	if topup != null:
+		if topup.get_script() == null or topup.get_script().resource_path != "res://tools/net/f48_actor_topup.gd" \
+			or topup.call("unresolved") != false:
+			return _result(false, "The original disclosed topup still requires its actual save/ACK")
+		tree.root.remove_child(topup)
+		topup.queue_free()
 	var observer: Variant = tree.get_meta("f48_boundary_armed", null)
 	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
 	if observer is Callable and writer != null and writer.is_connected("transaction_boundary", observer):
@@ -364,12 +371,19 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 	# Only this named full-roster mechanics fixture receives a longer bound.
 	var maximum := 9000 if trainer == "warden_aldis" else 3000
 	if budget < 240 or budget > maximum: return _result(false, "Bounded named mechanics fight budget exceeded")
+	var topup: Node = null
+	if trainer == "warden_aldis":
+		var provider_script: Script = load("res://tools/net/f48_actor_topup.gd")
+		topup = provider_script.call("install", tree, required)
+		if topup == null: return _result(false, "The disclosed canonical Warden aid requires the actual host PeerRunner")
 	var result: Dictionary = await tree.call("_step_win_trainer_battle", {"budget_frames": budget,
-		"fixture_guest_master": guest, "retain_fixture_actions": true, "enemy_hp_ceiling": 0})
+		"fixture_guest_master": guest, "retain_fixture_actions": true, "enemy_hp_ceiling": 0,
+		"fixture_topup_provider": topup})
 	var retained: Variant = tree.get("_trainer_fight_progress")
 	var data := {"trainer_id": trainer, "fixture_disclosure": required, "result": result.duplicate(true),
 		"actions": retained.get("fixture_actions", []) if retained is Dictionary else [], "acceptance_credit": false}
 	data["driver_budget_frames"] = budget
+	if topup != null: data["typed_self_topups"] = topup.call("observations")
 	data["final_manager"] = {"state": manager.get("state"), "outcome": manager.get("_outcome"),
 		"resolve_timer": manager.get("_resolve_timer"), "waiting_shared_trainer_round": manager.get("_waiting_shared_trainer_round")}
 	data["trainer_send_delay"] = director.get("_trainer_send_delay")
