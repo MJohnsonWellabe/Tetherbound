@@ -51,6 +51,7 @@ const bosses = ['warden_aldis', 'water_trainer_nerissa', 'captain_veyra_storm_an
 assert.deepEqual(emitted.map(row => row.boundary), boundaries, 'Each actual new boundary must be captured in order');
 let sourceCommit = '';
 let emittedRoot = '';
+let savedWorldSeed;
 const candidates = [];
 for (let index = 0; index < boundaries.length; index++) {
   const boundary = boundaries[index];
@@ -122,6 +123,22 @@ for (let index = 0; index < boundaries.length; index++) {
   const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => parseSaveDocument(fs.readFileSync(file, 'utf8')));
   assert.equal(worlds.length, 1, 'A fresh campaign must retain exactly its actual world');
   const world = worlds[0];
+  const population = receipt.population_provenance;
+  assert.ok(population && typeof population === 'object', 'Actual population seed provenance required');
+  assert.ok(Number.isSafeInteger(world.world_seed), 'Actual fresh saved world seed required');
+  assert.equal(receipt.state.world_seed, world.world_seed, 'Observed world seed must match actual save bytes');
+  assert.deepEqual(population, emitted[index].population_provenance, 'Seed provenance must match actual handoff log');
+  assert.equal(population.saved_world_seed, world.world_seed, 'Population provenance must name actual saved world');
+  assert.equal(population.effective_encounter_seed, world.world_seed,
+    'Encounter override differs from saved population; ordinary reload cannot reproduce played population');
+  assert.equal(typeof population.has_environment_override, 'boolean');
+  assert.equal(typeof population.environment_override, 'string');
+  if (population.has_environment_override) {
+    assert.match(population.environment_override.trim(), /^[+-]?\d+$/, 'Numeric encounter override required');
+    assert.equal(Number(population.environment_override.trim()), world.world_seed, 'Override must match saved population');
+  } else assert.equal(population.environment_override, '');
+  savedWorldSeed ??= world.world_seed;
+  assert.equal(world.world_seed, savedWorldSeed, 'All boundaries retain the original fresh world seed');
   assert.ok(typeof world.reward_delivery_namespace === 'string' && world.reward_delivery_namespace.length > 0);
   const flags = [...new Set([...world.flags.flags, ...character.flags.flags])].sort();
   assert.deepEqual(flags, receipt.state.flags, 'Observed progression must match the actual split files');
@@ -137,6 +154,7 @@ execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {stdio: 'pip
 const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: sourceCommit,
   command: `Godot 4.7 ${/^OpenGL.*(?:API|Renderer)/m.test(log) ? '' : '--headless '}--script tests/${offload ? 'smoke_f19_campaign_functional' : 'smoke_four_biome_continuous'}.gd`,
   functional_offload: offload,
+  population_provenance: candidates.map(row => ({boundary: row.boundary, ...row.receipt.population_provenance})),
   source_log_sha256: sha256(logFile), journey, boundaries,
   transport: relocation ? {kind: 'downloaded_ci_artifact', original_handoff_root: emittedRoot, original_paths: emitted.map(row => row.path)} : {kind: 'local_original_paths'},
   disclosures: journey.shortcuts, scope: 'Earned progression/save boundaries; no hardware, timing or visual acceptance claim'};

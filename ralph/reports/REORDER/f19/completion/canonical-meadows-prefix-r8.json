@@ -55,6 +55,25 @@
       "Neither this argument nor the observed director seed pins all terrain generation or changes the persisted world seed."
     ],
     "source_effect": "Matching encounter-roll seed only; saved-world identity and terrain/contact comparator not established.",
-    "persisted_snapshot_limit": "F17 earned-rested-team snapshot is before bracket; final scratch autosave is not terminal tournament_won persisted snapshot."
-  }
+    "persisted_snapshot_limit": "F17 earned-rested-team snapshot is before bracket; final scratch autosave is not terminal tournament_won persisted snapshot.",
+    "persisted_seed_independently_read": true
+  },
+  "actual_saved_world_seed_samples": [
+    {
+      "relative": "four_biome_checkpoints/rested_team_2452/save/worlds/slot-0/world.json",
+      "sha256": "f4ad777208255f03211d07555e7cc8d16ac6ea67b85943b06674e244abcfc2c6",
+      "version": 28,
+      "saved_world_seed": 1434901555,
+      "tournament_flags": []
+    },
+    {
+      "relative": "f49_campaign_2452_8665/worlds/slot-0/world.json",
+      "sha256": "329481c3bcb0079c24290ebd46f2bb9ef8053fe669671395d7f4ecdcee0583be",
+      "version": 28,
+      "saved_world_seed": 1434901555,
+      "tournament_flags": [
+        "tournament_quarter_won"
+      ]
+    }
+  ]
 }

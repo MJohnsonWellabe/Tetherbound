@@ -87,6 +87,35 @@ try {
   fs.writeFileSync(firstReceipt, codec(metadata));
   writeLog();
   refused(/Invalid production save codec/);
+  // Reproduce the real R8 distinction: a saved random population versus
+  // capture-only encounter override4. These remain fabricated refusals.
+  const party = {uid: 'negative-creature', species_id: 'terrapup', level: 5, xp: 0, hp: 5, fainted: false};
+  metadata.state.party = [{uid: party.uid, species: party.species_id, level: 5, xp: 0, hp: 5, fainted: false}];
+  metadata.state.inventory = {};
+  metadata.state.world_seed = 1434901555;
+  const ownerBytes = codec({version: 28, character_id: metadata.state.character_id,
+    redesign_character: metadata.state.redesign_character, party: [party], inventory: [], flags: {flags: []}});
+  const worldBytes = codec({version: 28, world_seed: 1434901555, flags: {flags: []}, reward_delivery_namespace: 'negative-world'});
+  fs.writeFileSync(firstSave, ownerBytes);
+  fs.writeFileSync(path.join(handoffs, boundaries[0], 'save/world.json'), worldBytes);
+  metadata.files_sha256 = {'character.json': sha(ownerBytes), 'world.json': sha(worldBytes)};
+  emitted[0].files_sha256 = metadata.files_sha256;
+  metadata.population_provenance = {saved_world_seed: 1434901555, effective_encounter_seed: 4,
+    has_environment_override: true, environment_override: '4'};
+  emitted[0].population_provenance = metadata.population_provenance;
+  const writeMetadata = () => { fs.writeFileSync(firstReceipt, codec(metadata)); writeLog(); };
+  writeMetadata();
+  refused(/Encounter override differs from saved population/);
+  metadata.state.world_seed = 4;
+  writeMetadata();
+  refused(/Observed world seed must match actual save bytes/);
+  metadata.state.world_seed = 1434901555;
+  delete metadata.population_provenance;
+  writeMetadata();
+  refused(/Actual population seed provenance required/);
+  metadata.population_provenance = {...emitted[0].population_provenance, effective_encounter_seed: 1434901555};
+  writeMetadata();
+  refused(/Seed provenance must match actual handoff log/);
   console.log(JSON.stringify({test: 'F19-earned-promotion-negative-controls', checks, result: 'PASS', scope: 'fabricated rejection controls only; no earned saves were generated'}));
 } finally {
   assert.ok(path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep), 'Cleanup stays inside the named temporary root');

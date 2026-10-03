@@ -7,6 +7,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const COMMITS := preload("res://tests/helpers/four_biome_checkpoints.gd")
+const SPAWNS := preload("res://scripts/combat/spawn_tables.gd")
 var tree: SceneTree
 var game: Node
 var base: String
@@ -47,6 +48,7 @@ func export_boundary(label: String) -> bool:
 		return _fail("F49 save changed during the immutable disk handoff")
 	var receipt := {"kind": "f49_ordinary_input_handoff", "boundary": label,
 		"commit": source_commit, "realm": str(game.current_realm),
+		"population_provenance": population_provenance(),
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
 	var output := FileAccess.open(destination.path_join("receipt.json"), FileAccess.WRITE)
 	if output == null: return _fail("F49 immutable receipt write failed")
@@ -58,8 +60,17 @@ func export_boundary(label: String) -> bool:
 	output.store_string(encoded)
 	output.close()
 	snapshots[label] = receipt
-	print("F49 DISK HANDOFF " + JSON.stringify({"path": destination, "boundary": label, "commit": source_commit, "files_sha256": hashes}))
+	print("F49 DISK HANDOFF " + JSON.stringify({"path": destination, "boundary": label, "commit": source_commit,
+		"files_sha256": hashes, "population_provenance": receipt.population_provenance}))
 	return true
+
+func population_provenance() -> Dictionary:
+	# The capture override belongs to the encounter director, not save data.
+	# Observe both identities; never rewrite Game/world seed to reconcile them.
+	var saved := int(game.get("world_seed"))
+	return {"saved_world_seed": saved, "effective_encounter_seed": SPAWNS.resolve_seed(saved),
+		"has_environment_override": OS.has_environment(SPAWNS.SEED_ENV_VAR),
+		"environment_override": OS.get_environment(SPAWNS.SEED_ENV_VAR)}
 
 func _hash_tree(path: String, prefix: String = "") -> Dictionary:
 	var out := {}
@@ -89,6 +100,7 @@ func _state() -> Dictionary:
 		if not stack.is_empty(): inventory[str(slot)] = stack.duplicate(true)
 	var context := HOME.journey_context(game)
 	return {"party": party, "flags": flags, "inventory": inventory,
+		"world_seed": int(game.get("world_seed")),
 		"redesign_character": game.local.get("redesign_character").duplicate(true),
 		"realm": str(game.current_realm), "character_id": HOME.character_id(game),
 		"ending": {"outcome_id": context.get("outcome_id"), "home_return_receipt": context.get("home_return_receipt"),
