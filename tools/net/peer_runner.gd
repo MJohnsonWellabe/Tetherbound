@@ -603,6 +603,14 @@ func _trainer_fight_heartbeat_observation() -> Dictionary:
 		var authority: Dictionary = host.call("strike_authority_state", encounter_id,
 			_local_peer_id_or_host()) if host != null else {}
 		var sample := _trainer_fight_progress.duplicate()
+		# The complete action log belongs to the final fixture evidence. A shallow
+		# copy would otherwise alias its growing array into all four heartbeats,
+		# including samples whose retention window has already closed.
+		var fixture_actions: Array = sample.get("fixture_actions", [])
+		sample.erase("fixture_actions")
+		sample["fixture_action_count"] = fixture_actions.size()
+		sample["fixture_last_action_frame"] = int(fixture_actions.back().get("frame", -1)) \
+			if not fixture_actions.is_empty() else -1
 		sample.merge({
 			"sampled_ms": sampled_ms, "physics_frame": _physics_count,
 			"in_flight_inject_physics_frames": _physics_count - int(_trainer_fight_progress["inject_started_physics_frame"])

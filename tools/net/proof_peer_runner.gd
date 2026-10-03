@@ -21,6 +21,11 @@ const F48_STEPS := preload("res://tools/net/proof_steps_f48.gd")
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	if action.begins_with("f48_"):
+		if action == "f48_fixture_trainer_fight":
+			# This dispatch bypasses the base win_trainer_battle branch. Carry its
+			# actual outer budget into diagnostic retention only; execution bounds
+			# remain with the coordinator and the original input driver.
+			_trainer_fight_command_budget_frames = int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 		return await F48_STEPS.step(self, action, msg.get("args", {}))
 	if action.begins_with("f37_"):
 		return await F37_STEPS.step(self, action, msg.get("args", {}))
