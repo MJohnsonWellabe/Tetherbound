@@ -133,6 +133,7 @@ func _refresh_station_view(force_presentation: bool = false) -> void:
 	if _station_press_active():
 		_station_presentation_deferred=true
 		return
+	_station_presentation_deferred=false
 	_presented_station_view=view.duplicate(true)
 	_presented_gear_context=context.duplicate(true)
 	_rebuild_station_presentation()
@@ -412,9 +413,18 @@ func _station_button(parent: VBoxContainer, label: String, action: Callable, foc
 ## Keep the native release-mode Button alive until its release is dispatched.
 ## Producer reads and eligibility checks continue while presentation waits.
 func _station_press_active() -> bool:
+	if not _open or not is_inside_tree(): return false
 	var button: Button = _station_press.get_ref() as Button if _station_press != null else null
-	return _open and is_instance_valid(button) and not button.is_queued_for_deletion() \
-		and button.is_inside_tree() and _station_buttons.has(button)
+	if is_instance_valid(button) and not button.is_queued_for_deletion() \
+		and button.is_inside_tree() and _station_buttons.has(button): return true
+	# The paired polled edge is visible before its queued native event. Keep
+	# the actual focused station control until button_down takes ownership.
+	# Native ownership above still protects a queued release after action_up.
+	var focused: Button = get_viewport().gui_get_focus_owner() as Button
+	return Input.is_action_pressed("ui_accept") and is_instance_valid(focused) \
+		and INPUT_OWNER.current(get_tree()) == self and not focused.disabled \
+		and focused.is_visible_in_tree() and not focused.is_queued_for_deletion() and focused.is_inside_tree() \
+		and _station_buttons.has(focused)
 
 func _station_button_down(target: WeakRef) -> void:
 	var button: Button = target.get_ref() as Button
@@ -1118,6 +1128,10 @@ func _process(delta: float) -> void:
 		return
 	if not _open:
 		return
+	if _station_presentation_deferred and not _station_press_active():
+		# A polled edge can be cancelled without ever reaching native down.
+		# Re-read current producer data once that edge no longer owns a control.
+		_refresh_station_view(true)
 	if Input.is_action_just_pressed("menu_cancel"):
 		INPUT_OWNER.suppress_pause_reopen(get_tree())
 		close()
