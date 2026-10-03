@@ -761,10 +761,12 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
-	_apply_player_ops(delta)
-	delta_applied.emit(delta)
+	# Send first: applying the host's own player ops can synchronously publish
+	# a follow-up delta (its own vitals ACK), which peers must receive after.
 	if _can_rpc() and _is_multi_peer():
 		rpc("_rpc_delta", delta)
+	_apply_player_ops(delta)
+	delta_applied.emit(delta)
 
 
 # --- rpc ------------------------------------------------------------------------
@@ -973,6 +975,10 @@ func _process_reward_delivery(delivery: Dictionary) -> void:
 	var flags: RefCounted = player.get("flags")
 	var before_flags: Dictionary = flags.call("save_data") if flags != null else {}
 	var before_escrow: Dictionary = player.get("satchel_escrow").duplicate(true)
+	var session: Variant = game.get("session")
+	if session is Node and session.has_method("_owner_passive_delivery_ready") \
+		and session.call("_owner_passive_delivery_ready") != true:
+		return # Retries once the owner-passive stream can carry this payout.
 	var outcome: Dictionary = REWARD_DELIVERY.apply(player, delivery)
 	if not bool(outcome.get("ok", false)):
 		return
@@ -988,6 +994,9 @@ func _process_reward_delivery(delivery: Dictionary) -> void:
 			flags.call("load_data", before_flags)
 		player.set("satchel_escrow", before_escrow)
 		return
+	if SATCHEL_RULES.slots(player.get("inventory")) != before_slots and session is Node \
+		and session.has_method("_owner_passive_delivery_record"):
+		session.call("_owner_passive_delivery_record", delivery)
 	if show_room_message:
 		game.call("push_world_message", "Your earned reward is safe. Make room in your satchel to receive it.")
 	if bool(outcome.get("settled", false)) and bool(outcome.get("changed", false)):
