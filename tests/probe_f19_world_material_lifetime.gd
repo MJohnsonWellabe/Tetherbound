@@ -1,8 +1,9 @@
 extends "res://tests/smoke_f19_veridian_functional.gd"
 
 ## Diagnostic only: original choice/save/reload, with actual whole-world
-## resource retention or scriptless Label3D deletion observers. The prior
-## chamber-only and empty Terrain3D component comparisons were negative.
+## resource retention. Prior world Mesh/MultiMesh/terrain-resource retention
+## and scriptless Label3D deletion observers were negative. Particle draw
+## meshes were outside that retained-resource set; compare them explicitly.
 const LABEL_DELETE_PROBE := preload("res://tests/helpers/f19_label_base_teardown_probe.gd")
 var _treatment := "baseline"
 var _held: Array[Resource] = []
@@ -20,7 +21,7 @@ func _run_diagnostic() -> void:
 	if _game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-world-materials", "detach-world-labels"]:
+	for treatment: String in ["baseline", "retain-particle-meshes"]:
 		_treatment = treatment
 		print("F19 WORLD MATERIAL BEGIN " + JSON.stringify({
 			"treatment": treatment, "acceptance": false,
@@ -54,16 +55,20 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 	return reached
 
 func _observe_world(phase: String) -> void:
-	var state := {"labels": [], "existing_script_labels": [], "geometry_count": 0}
+	var state := {"labels": [], "existing_script_labels": [], "geometry_count": 0,
+		"geometry_classes": {}, "particles": []}
 	_observe(_world, state)
 	print("F19 WORLD MATERIAL OBSERVED " + JSON.stringify({
 		"phase": phase, "treatment": _treatment, "held_resources": _held.size(),
 		"geometry_count": state["geometry_count"], "labels": state["labels"],
-		"existing_script_labels": state["existing_script_labels"]}))
+		"existing_script_labels": state["existing_script_labels"],
+		"geometry_classes": state["geometry_classes"], "particles": state["particles"]}))
 
 func _observe(node: Node, state: Dictionary) -> void:
 	if node is GeometryInstance3D:
 		state["geometry_count"] = int(state["geometry_count"]) + 1
+		var classes: Dictionary = state["geometry_classes"]
+		classes[node.get_class()] = int(classes.get(node.get_class(), 0)) + 1
 		if _treatment == "retain-world-materials":
 			var geometry := node as GeometryInstance3D
 			_hold(geometry.material_override)
@@ -82,6 +87,30 @@ func _observe(node: Node, state: Dictionary) -> void:
 		# Raw native RID teardown may ignore Resource references; disclose that
 		# limitation rather than silently assuming Terrain3DMaterial retention.
 		_hold(node.get("material") as Resource)
+	if node is GPUParticles3D or node is CPUParticles3D:
+		var meshes: Array[Mesh] = []
+		if node is CPUParticles3D:
+			var mesh := (node as CPUParticles3D).mesh
+			if mesh != null: meshes.append(mesh)
+		else:
+			var particles := node as GPUParticles3D
+			for pass_index in particles.draw_passes:
+				var mesh: Mesh = particles.get("draw_pass_%d" % (pass_index + 1)) as Mesh
+				if mesh != null: meshes.append(mesh)
+			if _treatment == "retain-particle-meshes": _hold(particles.process_material)
+		var materials := 0
+		for mesh: Mesh in meshes:
+			if _treatment == "retain-particle-meshes": _hold(mesh)
+			for surface in mesh.get_surface_count():
+				var material := mesh.surface_get_material(surface)
+				if material != null:
+					materials += 1
+					if _treatment == "retain-particle-meshes": _hold(material)
+		if _treatment == "retain-particle-meshes":
+			_hold((node as GeometryInstance3D).material_override)
+			_hold((node as GeometryInstance3D).material_overlay)
+		(state["particles"] as Array).append({"path": str(node.get_path()), "class": node.get_class(),
+			"draw_meshes": meshes.size(), "draw_materials": materials})
 	if node is Label3D:
 		var label := node as Label3D
 		(state["labels"] as Array).append(str(label.get_path()))
