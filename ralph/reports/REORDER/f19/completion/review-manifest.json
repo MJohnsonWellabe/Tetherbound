@@ -182,6 +182,14 @@
   "next_owner_diagnostic": {
     "script": "tests/probe_f19_healing_dust_material_lifetime.gd",
     "scope": "Actual authored MeadowHealing late CPU dust factory, early parent teardown and actual authored lifetime timer; baseline versus only dust Material retention, no Mesh retention.",
+    "status": "Terminal negative: healing-dust-component.json, 4cases/0errors",
+    "source_commit": "eef2360f438c815be0555f8374b0b4156b3066da",
+    "run": 37097131914,
+    "job": 111129241607
+  },
+  "next_world_owner_diagnostic": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original full-world baseline versus only late CPUParticles3D mesh surface Materials. No other material, Mesh, MultiMesh or Terrain resource retained. Read-only prompt positions/live state before and after choice dialogue; original assertions retained.",
     "status": "Prepared, not yet dispatched"
   }
 }

@@ -14,6 +14,7 @@ var _held_ids: Dictionary = {}
 var _new_material_count := 0
 var _new_material_owners: Array[String] = []
 var _hold_owner := ""
+var _retained_total := 0
 
 func _run() -> void:
 	_run_diagnostic.call_deferred()
@@ -27,13 +28,15 @@ func _run_diagnostic() -> void:
 	if _game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-final-world-materials"]:
+	for treatment: String in ["baseline", "retain-late-cpu-materials"]:
 		_treatment = treatment
 		print("F19 WORLD MATERIAL BEGIN " + JSON.stringify({
 			"treatment": treatment, "acceptance": false,
 			"scope": "Original space-accept with actual save/reload; original gameplay fixtures retained"}))
 		await _scenario(treatment, 4, "accept", "")
 		for frame in 3: await process_frame
+		if treatment == "retain-late-cpu-materials" and _retained_total == 0:
+			_fail("Late CPU particle counterfactual observed no retained actual Materials")
 		print("F19 WORLD MATERIAL END " + JSON.stringify({"treatment": treatment, "failures": _failures}))
 	# Keep the final world's actual resources alive through its destruction.
 	_observe_world("pre-world-delete")
@@ -61,6 +64,26 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 	var reached: bool = await super._drive_to_choice(climax, label)
 	if reached: _observe_world("choice-ready")
 	return reached
+
+func _read_the_choice(climax: Node, label: String) -> bool:
+	_prompt_state("before-reading", climax, label)
+	var read: bool = await super._read_the_choice(climax, label)
+	_prompt_state("after-reading", climax, label)
+	return read
+
+func _prompt_state(phase: String, climax: Node, label: String) -> void:
+	var player := _world.get_node_or_null(^"Player") as CharacterBody3D
+	if player == null: return
+	var prompts: Array = []
+	for key: String in ["_accept_prompt", "_refuse_prompt"]:
+		var prompt: Node3D = climax.get(key)
+		if is_instance_valid(prompt):
+			prompts.append({"key": key, "position": str(prompt.global_position),
+				"distance": player.global_position.distance_to(prompt.global_position),
+				"live": not (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty()})
+	print("F19 PROMPT OBSERVED " + JSON.stringify({"phase": phase, "label": label,
+		"player_position": str(player.global_position), "velocity": str(player.velocity),
+		"on_floor": player.is_on_floor(), "prompts": prompts}))
 
 func _observe_world(phase: String) -> void:
 	var previous_held := _held.size()
@@ -111,6 +134,8 @@ func _observe(node: Node, state: Dictionary) -> void:
 		# limitation rather than silently assuming Terrain3DMaterial retention.
 		_hold(node.get("material") as Resource)
 	if node is GPUParticles3D or node is CPUParticles3D:
+		var retain_particle := _treatment == "retain-final-world-materials" \
+			or (_treatment == "retain-late-cpu-materials" and node is CPUParticles3D)
 		var meshes: Array[Mesh] = []
 		if node is CPUParticles3D:
 			var mesh := (node as CPUParticles3D).mesh
@@ -127,8 +152,8 @@ func _observe(node: Node, state: Dictionary) -> void:
 				var material := mesh.surface_get_material(surface)
 				if material != null:
 					materials += 1
-					if _treatment == "retain-final-world-materials": _hold(material)
-		if _treatment == "retain-final-world-materials":
+					if retain_particle: _hold(material)
+		if retain_particle:
 			_hold((node as GeometryInstance3D).material_override)
 			_hold((node as GeometryInstance3D).material_overlay)
 		(state["particles"] as Array).append({"path": str(node.get_path()), "class": node.get_class(),
@@ -170,6 +195,7 @@ func _hold(resource: Resource) -> void:
 	if resource != null and not _held_ids.has(resource.get_instance_id()):
 		_held_ids[resource.get_instance_id()] = true
 		_held.append(resource)
+		_retained_total += 1
 		if resource is Material:
 			_new_material_count += 1
 			if _new_material_owners.size() < 64:
