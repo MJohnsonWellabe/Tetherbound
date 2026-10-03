@@ -112,6 +112,12 @@ func _activate_bounty_via_road(prompt: Node3D) -> bool:
 	_stick(0, 0)
 	if not reached: return _fail("F20 ordinary bounty capsule walk failed via the authored village road")
 	for frame in 8: await tree.physics_frame
+	# The arbiter publishes its prompt in _process, whereas navigation and
+	# settling use physics. r13's current board offer was nearer than the
+	# stored Halda winner. Let ordinary idle callbacks publish the stopped
+	# position; two edges include one completed callback pass, without calling
+	# _recompute or changing the original exact-provider/input checks.
+	for frame in 2: await tree.process_frame
 	if int(_player.get("_unstick_count")) != recoveries_before:
 		return _fail("F20 unexpected entombment recovery interrupted bounty travel")
 	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
