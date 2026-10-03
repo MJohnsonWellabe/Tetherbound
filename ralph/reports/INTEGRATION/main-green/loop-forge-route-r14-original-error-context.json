@@ -1,0 +1,50 @@
+{
+  "0": {
+    "errors": 12222,
+    "first_original_context": [
+      "SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)",
+      "          at: GDScript::reload (res://scripts/combat/encounter_director.gd:7066)",
+      "          GDScript backtrace (most recent call first):",
+      "              [0] _boot_scene (res://tools/net/peer_runner.gd:397)",
+      "              [1] _load_save (res://tools/net/proof_steps.gd:332)",
+      "              [2] run (res://tools/net/proof_steps.gd:126)",
+      "              [3] _execute_step (res://tools/net/proof_peer_runner.gd:44)",
+      "              [4] _handle_message (res://tools/net/peer_runner.gd:526)",
+      "ERROR: Failed to load script \"res://scripts/combat/encounter_director.gd\" with error \"Parse error\".",
+      "   at: load (modules/gdscript/gdscript_resource_format.cpp:46)",
+      "   GDScript backtrace (most recent call first):",
+      "       [0] _boot_scene (res://tools/net/peer_runner.gd:397)",
+      "       [1] _load_save (res://tools/net/proof_steps.gd:332)",
+      "       [2] run (res://tools/net/proof_steps.gd:126)",
+      "       [3] _execute_step (res://tools/net/proof_peer_runner.gd:44)",
+      "       [4] _handle_message (res://tools/net/peer_runner.gd:526)"
+    ]
+  },
+  "1": {
+    "errors": 2799,
+    "first_original_context": [
+      "SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)",
+      "          at: GDScript::reload (res://scripts/combat/encounter_director.gd:7066)",
+      "          GDScript backtrace (most recent call first):",
+      "              [0] _go_to_world (res://scripts/ui/title_screen.gd:1912)",
+      "              [1] _begin_join (res://scripts/ui/title_screen.gd:1649)",
+      "              [2] _join_via (res://scripts/ui/title_screen.gd:1541)",
+      "              [3] _step_production_join (res://tools/net/peer_runner.gd:2065)",
+      "ERROR: Failed to load script \"res://scripts/combat/encounter_director.gd\" with error \"Parse error\".",
+      "   at: load (modules/gdscript/gdscript_resource_format.cpp:46)",
+      "   GDScript backtrace (most recent call first):",
+      "       [0] _go_to_world (res://scripts/ui/title_screen.gd:1912)",
+      "       [1] _begin_join (res://scripts/ui/title_screen.gd:1649)",
+      "       [2] _join_via (res://scripts/ui/title_screen.gd:1541)",
+      "       [3] _step_production_join (res://tools/net/peer_runner.gd:2065)",
+      "SCRIPT ERROR: Invalid call. Nonexistent function 'suspend_default_starter (via call)' in base 'Node'.",
+      "          at: _ready (res://scripts/story/sequence_director.gd:300)",
+      "          GDScript backtrace (most recent call first):",
+      "              [0] _ready (res://scripts/story/sequence_director.gd:300)",
+      "WARNING: instance_reset_physics_interpolation() is deprecated.",
+      "     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)",
+      "     GDScript backtrace (most recent call first):",
+      "         [0] _build_terrain (res://scripts/world/playground_world.gd:1172)"
+    ]
+  }
+}

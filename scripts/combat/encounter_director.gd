@@ -7063,7 +7063,7 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 ## The token fallback can finish before the dialogue. Bound callbacks retain
 ## weak references, so later line/finish signals never capture deleted Nodes.
 func _bind_victory_aftermath(panel: Node, shown: Node3D, player: Node3D, delay: float) -> void:
-	var panel_ref := weakref(panel)
+	var panel_ref: WeakRef = weakref(panel)
 	var player_ref: WeakRef = weakref(player) if is_instance_valid(player) else null
 	var on_line := _on_victory_aftermath_line.bind(weakref(shown), player_ref, delay)
 	panel.connect("line_presented", on_line)
