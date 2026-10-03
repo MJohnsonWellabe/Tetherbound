@@ -813,6 +813,19 @@
         }
       },
       "flame_cone": {
+        "launch": {
+          "flash": {
+            "size_scale": 1.6,
+            "min_m": 0.3,
+            "max_m": 1.0,
+            "duration": 0.2,
+            "core_colour": "#fff3c4",
+            "edge_colour": "#ff7a1f",
+            "opacity": 0.9,
+            "streaks": 6,
+            "streak_strength": 0.4
+          }
+        },
         "body": {
           "shape": "flame_volume",
           "motion": "cone",
@@ -844,6 +857,36 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 1.8,
+              "min_m": 0.3,
+              "max_m": 1.2,
+              "duration": 0.1,
+              "core_colour": "#fff8de",
+              "edge_colour": "#ff8a2a",
+              "opacity": 0.8,
+              "streaks": 8,
+              "streak_strength": 0.6
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 3.2,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.8,
+              "colour": "#2b1d14",
+              "glow_colour": "#ff6a1a",
+              "glow_strength": 2.0,
+              "opacity": 0.82,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.6,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "fire_bloom",
           "duration": 0.72,
           "grow": 3.4,
@@ -988,6 +1031,52 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 2.2,
+              "min_m": 0.3,
+              "max_m": 1.4,
+              "duration": 0.12,
+              "core_colour": "#fff8de",
+              "edge_colour": "#ff8a2a",
+              "opacity": 0.8,
+              "streaks": 8,
+              "streak_strength": 0.6
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 6.0,
+              "min_m": 1.0,
+              "max_m": 3.6,
+              "duration": 0.38,
+              "colour": "#ffbf6a",
+              "glow_colour": "#ff7a1f",
+              "glow_strength": 1.4,
+              "opacity": 0.7,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 3.0,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.8,
+              "colour": "#2b1d14",
+              "glow_colour": "#ff6a1a",
+              "glow_strength": 2.0,
+              "opacity": 0.8,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.0,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "fire_explosion",
           "hot_colour": "#ffeabd",
           "ember_colour": "#8d3d14",
@@ -1346,6 +1435,19 @@
         }
       },
       "chain_lightning": {
+        "launch": {
+          "flash": {
+            "size_scale": 3.0,
+            "min_m": 0.3,
+            "max_m": 1.2,
+            "duration": 0.24,
+            "core_colour": "#f4fbff",
+            "edge_colour": "#8fd3ff",
+            "opacity": 1.0,
+            "streaks": 11,
+            "streak_strength": 0.9
+          }
+        },
         "body": {
           "shape": "beam",
           "motion": "chain",
@@ -1372,6 +1474,36 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 3.0,
+              "min_m": 0.3,
+              "max_m": 1.3,
+              "duration": 0.1,
+              "core_colour": "#ffffff",
+              "edge_colour": "#a6e4ff",
+              "opacity": 0.8,
+              "streaks": 12,
+              "streak_strength": 0.9
+            },
+            "mark": {
+              "style": "burn",
+              "radius_scale": 6.0,
+              "min_m": 0.9,
+              "max_m": 2.2,
+              "duration": 1.4,
+              "colour": "#1d1918",
+              "glow_colour": "#9fe8ff",
+              "glow_strength": 2.2,
+              "opacity": 0.85,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 1.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 8
+            }
+          },
           "shape": "orb",
           "duration": 0.42,
           "grow": 1.8,
@@ -1501,6 +1633,52 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 1.8,
+              "min_m": 0.3,
+              "max_m": 1.1,
+              "duration": 0.1,
+              "core_colour": "#f4fcff",
+              "edge_colour": "#8fd0ec",
+              "opacity": 0.6,
+              "streaks": 6,
+              "streak_strength": 0.4
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 4.5,
+              "min_m": 1.0,
+              "max_m": 2.6,
+              "duration": 0.38,
+              "colour": "#d6f1fb",
+              "glow_colour": "#57b6e8",
+              "glow_strength": 0.4,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.2,
+              "min_m": 0.7,
+              "max_m": 2.2,
+              "duration": 1.8,
+              "colour": "#344a3a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.6,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.4,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "soft_foam",
           "duration": 0.42,
           "grow": 1.8,
@@ -1637,6 +1815,36 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 1.6,
+              "min_m": 0.3,
+              "max_m": 0.9,
+              "duration": 0.08,
+              "core_colour": "#f4fcff",
+              "edge_colour": "#8fd0ec",
+              "opacity": 0.55,
+              "streaks": 5,
+              "streak_strength": 0.3
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.0,
+              "min_m": 0.7,
+              "max_m": 1.8,
+              "duration": 1.6,
+              "colour": "#344a3a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.5,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.4,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "ring",
           "duration": 0.42,
           "grow": 1.8,
@@ -2155,6 +2363,41 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 6.0,
+              "min_m": 1.0,
+              "max_m": 3.4,
+              "duration": 0.42,
+              "colour": "#eaf5fb",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.55,
+              "ring_width": 0.12,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.6,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.2,
+              "colour": "#9fae7a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.45,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.0,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "vortex",
           "duration": 0.42,
           "grow": 1.8,
@@ -2290,6 +2533,36 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 1.8,
+              "min_m": 0.3,
+              "max_m": 1.0,
+              "duration": 0.08,
+              "core_colour": "#ffffff",
+              "edge_colour": "#bfe8f7",
+              "opacity": 0.7,
+              "streaks": 9,
+              "streak_strength": 0.8
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.0,
+              "min_m": 0.7,
+              "max_m": 2.0,
+              "duration": 1.8,
+              "colour": "#dbeef5",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.7,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.4,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "soft_foam",
           "duration": 0.42,
           "grow": 1.8,
@@ -2427,6 +2700,25 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.6,
+              "min_m": 0.7,
+              "max_m": 2.6,
+              "duration": 2.0,
+              "colour": "#dbeef5",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.6,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "soft_foam",
           "duration": 0.42,
           "grow": 1.8,
@@ -2576,6 +2868,52 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 2.0,
+              "min_m": 0.3,
+              "max_m": 1.2,
+              "duration": 0.1,
+              "core_colour": "#e9dcff",
+              "edge_colour": "#785da0",
+              "opacity": 0.8,
+              "streaks": 7,
+              "streak_strength": 0.5
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.0,
+              "min_m": 1.0,
+              "max_m": 3.0,
+              "duration": 0.38,
+              "colour": "#4a3a66",
+              "glow_colour": "#9a7ad0",
+              "glow_strength": 0.9,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 2.8,
+              "min_m": 0.7,
+              "max_m": 2.0,
+              "duration": 1.6,
+              "colour": "#1c1626",
+              "glow_colour": "#9a7ad0",
+              "glow_strength": 1.4,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "orb",
           "shadow_surface": true,
           "shadow_colour": "#261f3b",
@@ -2706,6 +3044,35 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 2.2,
+              "min_m": 0.3,
+              "max_m": 1.3,
+              "duration": 0.1,
+              "core_colour": "#f6f3ff",
+              "edge_colour": "#a6b4ed",
+              "opacity": 0.7,
+              "streaks": 10,
+              "streak_strength": 0.5
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 7.0,
+              "min_m": 1.0,
+              "max_m": 3.8,
+              "duration": 0.45,
+              "colour": "#dfe5ff",
+              "glow_colour": "#a6b4ed",
+              "glow_strength": 1.2,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            }
+          },
           "shape": "ring",
           "duration": 0.42,
           "grow": 1.8,
@@ -3000,6 +3367,42 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 7.0,
+              "min_m": 1.4,
+              "max_m": 4.0,
+              "duration": 0.45,
+              "colour": "#cbb68a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.7,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "burn",
+              "radius_scale": 7.0,
+              "min_m": 1.2,
+              "max_m": 3.0,
+              "duration": 1.9,
+              "colour": "#3e3226",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.0,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 10
+            },
+            "mote_linger_seconds": 0.8
+          },
           "shape": "stone",
           "duration": 0.42,
           "grow": 1.8,
@@ -3420,6 +3823,23 @@
         }
       },
       "heal_pulse": {
+        "launch": {
+          "ground": {
+            "style": "shockwave",
+            "radius_scale": 6.0,
+            "min_m": 1.0,
+            "max_m": 3.0,
+            "duration": 0.6,
+            "colour": "#d8f7e6",
+            "glow_colour": "#98e1b8",
+            "glow_strength": 1.4,
+            "opacity": 0.7,
+            "ring_width": 0.1,
+            "hold": 0.0,
+            "fade_in": 0.02,
+            "initial_scale": 1.0
+          }
+        },
         "body": {
           "shape": "ring",
           "motion": "self",
@@ -3540,6 +3960,23 @@
         }
       },
       "buff_aura": {
+        "launch": {
+          "ground": {
+            "style": "shockwave",
+            "radius_scale": 6.0,
+            "min_m": 1.0,
+            "max_m": 3.0,
+            "duration": 0.6,
+            "colour": "#fbf2cf",
+            "glow_colour": "#ebdca0",
+            "glow_strength": 1.4,
+            "opacity": 0.7,
+            "ring_width": 0.1,
+            "hold": 0.0,
+            "fade_in": 0.02,
+            "initial_scale": 1.0
+          }
+        },
         "body": {
           "shape": "vortex",
           "motion": "self",
@@ -3694,6 +4131,24 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.0,
+              "min_m": 1.0,
+              "max_m": 3.0,
+              "duration": 0.5,
+              "colour": "#d9d4f2",
+              "glow_colour": "#b5afd5",
+              "glow_strength": 1.0,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            }
+          },
           "shape": "sigil",
           "duration": 0.42,
           "grow": 1.8,
@@ -3788,6 +4243,19 @@
         }
       },
       "guard_flash": {
+        "launch": {
+          "flash": {
+            "size_scale": 3.0,
+            "min_m": 0.5,
+            "max_m": 1.4,
+            "duration": 0.14,
+            "core_colour": "#ffffff",
+            "edge_colour": "#fff4d8",
+            "opacity": 0.9,
+            "streaks": 10,
+            "streak_strength": 0.7
+          }
+        },
         "body": {
           "shape": "glint",
           "motion": "self",
