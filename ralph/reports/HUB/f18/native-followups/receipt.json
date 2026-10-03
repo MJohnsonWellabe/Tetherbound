@@ -7572,7 +7572,24 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": [],
+  "pending_dispatches": [
+    {
+      "id": 37109521121,
+      "display_title": "render f18-waveform-export-r1 @ 3a744a364f1a11273dd70321f6e25b4557083366",
+      "head_branch": "tb/integration",
+      "head_sha": "46d0f6ebf996e90f70908ad9ef83b7ff3a021590",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37109521121",
+      "checkout": "3a744a364f1a11273dd70321f6e25b4557083366",
+      "label": "f18-waveform-export-r1",
+      "mode": "headless",
+      "script": "tests/smoke_f18_waveform_export.gd",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Isolated directly invoked production chime/passive export component; exactPCM/nonmutation/cache/durable provenance only. No actual key use/player/input/raise/travel/earned/listening/device/mixedbus audio acceptance."
+    }
+  ],
   "coordinator_baseline_dependency": {
     "status": "WAIT reviewed main-green matched dependency group per explicit coordinator hold",
     "last_thread_status": "systemError/lastturnfailed when read; followup sent",
