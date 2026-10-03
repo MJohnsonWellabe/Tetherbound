@@ -3912,6 +3912,11 @@ func _altar_peer_in_combat(peer: int) -> bool:
 	var found_host := false
 	for node: Node in _foundation_directors_under(roots):
 		if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
+		# A done round and an idle manager still belong to the same trainer
+		# battle during send-out. Staging mastery here can defer its owner ACK
+		# into the next active round and fence the very inputs needed to finish.
+		if node.get("_session") == self and node.call("trainer_battle_active") == true \
+			and (node.get("_trainer_battle_participants") as Dictionary).has(peer): return true
 		# Portal/station use can precede the first combat ingress. Resolve that
 		# same real host arbiter before asking whether its guest is fighting.
 		if is_host() and node.get("_session") == self and node.get("_encounter_host") == null:
