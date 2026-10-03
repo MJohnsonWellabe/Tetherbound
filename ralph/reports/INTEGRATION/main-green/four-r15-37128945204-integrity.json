@@ -1,0 +1,8 @@
+{
+  "run_id": 37128945204,
+  "artifact_id": 11276926019,
+  "checkout_ref": "9794a21092e8162c3708280b43ae17527404f47a",
+  "archive": "four-r15-37128945204-original-artifact.zip",
+  "archive_sha256": "45566c86ffc19c5c74dd539cecfe370125950154be14b9b59d539466689e2e9d",
+  "result": "FAIL original step36: first Burrowback actually killed, round neverresolved in8760frames/45swings/4queued. All four peer logs0SCRIPTERROR/ERROR. Fullactual ordinary-round-failure-2602-24911.json retained; do not assume terminal predicate or pending_vitals last strike refusal is proven rootcause."
+}
