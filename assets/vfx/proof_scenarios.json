@@ -615,5 +615,21 @@
     }
   },
   "capture_wall_watchdog_s": 5400.0,
-  "capture_wall_watchdog_note": "Hang safety net only. The authored lifetime allowance runs on the presentation clock; the full Meadows world renders at ~8 s per frame under llvmpipe."
+  "capture_wall_watchdog_note": "Hang safety net only. The authored lifetime allowance runs on the presentation clock; the full Meadows world renders at ~8 s per frame under llvmpipe.",
+  "ultimate_capture": {
+    "scope": "F35 actual ultimate presentation nodes via ULTIMATES.launch on the configured stage; not an earned meter/HP path.",
+    "travel_seconds": 0.7,
+    "breakthroughs": [
+      0,
+      5
+    ],
+    "shutters": {
+      "windup": 0.25,
+      "travel": 0.75,
+      "contact": 0.05,
+      "peak": 0.45,
+      "late": 0.35
+    },
+    "shutter_note": "windup/travel are fractions of travel; contact/peak are seconds after arrival; late is seconds before the presentation ends."
+  }
 }

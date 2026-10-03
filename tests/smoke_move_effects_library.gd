@@ -16,6 +16,7 @@ const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const AUDIO := preload("res://scripts/audio/audio_manager.gd")
 const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
 var _attackers: Dictionary = {}
@@ -28,6 +29,8 @@ var _rank_filter: Array = []
 var _field: RefCounted = null
 var _world: Node = null
 var _relocated: Array = []
+var _ultimate_filter: Array = []
+var _breakthrough_filter: Array = []
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -48,14 +51,17 @@ func _run() -> void:
 		if arg == "--medium": _medium = true
 		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
 		if arg.begins_with("--stage="): _stage = arg.trim_prefix("--stage=")
+		if arg.begins_with("--ultimates="): _ultimate_filter = Array(arg.trim_prefix("--ultimates=").split(","))
+		if arg.begins_with("--breakthroughs="):
+			for count: String in arg.trim_prefix("--breakthroughs=").split(","): _breakthrough_filter.append(int(count))
 		# Affected-subset reruns: --archetypes=a,b narrows the mastery batch,
 		# --ranks=1,3 narrows mastery and identities; full runs pass neither.
 		if arg.begins_with("--archetypes="): _archetype_filter = Array(arg.trim_prefix("--archetypes=").split(","))
 		if arg.begins_with("--ranks="):
 			for rank: String in arg.trim_prefix("--ranks=").split(","): _rank_filter.append(int(rank))
-	if _batch not in ["identities", "mastery", "library", "profile", "clock"]:
+	if _batch not in ["identities", "mastery", "library", "profile", "clock", "ultimates"]:
 		push_error("Unknown effect batch"); quit(1); return
-	if _batch in ["identities", "mastery", "profile"] and DisplayServer.get_name() == "headless":
+	if _batch in ["identities", "mastery", "profile", "ultimates"] and DisplayServer.get_name() == "headless":
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
 	if not _identity.is_empty():
@@ -109,14 +115,14 @@ func _run() -> void:
 		for i in int(_scenarios.warmup_frames): await process_frame
 		await _exercise_light_lifecycle()
 	if _stage.is_empty():
-		_stage = str((_scenarios.get("stage", {}) as Dictionary).get("default", "arena")) if _batch in ["identities", "mastery"] else "arena"
+		_stage = str((_scenarios.get("stage", {}) as Dictionary).get("default", "arena")) if _batch in ["identities", "mastery", "ultimates"] else "arena"
 	if _stage not in ["arena", "meadows", "world"]:
 		push_error("Unknown stage " + _stage); quit(1); return
 	if _stage == "meadows":
 		if not _build_meadows_stage(floor, sun, world_environment, camera): return
 	if _stage == "world":
 		if not await _build_world_stage(floor, sun, world_environment, camera): return
-	if _batch in ["identities", "mastery"]:
+	if _batch in ["identities", "mastery", "ultimates"]:
 		# Production creature scene/script/model, with no encounter, AI or HP
 		# transaction. This establishes visible target coverage only.
 		_target = CREATURE.instantiate() as CharacterBody3D
@@ -151,7 +157,9 @@ func _run() -> void:
 		camera.far = float(distance.far)
 	LIBRARY.config()["enabled"] = true # Process-local diagnostic opt-in only.
 	for i in int(_scenarios.warmup_frames): await process_frame
-	if _batch == "identities":
+	if _batch == "ultimates":
+		await _run_ultimates()
+	elif _batch == "identities":
 		for case: Dictionary in _scenarios.identities:
 			for rank: int in _scenarios.ranks:
 				if not _rank_filter.is_empty() and rank not in _rank_filter: continue
@@ -700,3 +708,84 @@ func _build_world_stage(floor: MeshInstance3D, sun: DirectionalLight3D,
 		slot += 1
 	for i in int(world_cfg.get("post_freeze_frames", 30)): await process_frame
 	return true
+
+
+## F35 batch: actual accepted-ultimate presentation nodes through the real
+## ULTIMATES.launch contract (frozen F23 row + bound actor), posed between a
+## production attacker and the target on the configured stage. Shutters run on
+## the presentation clock at authored offsets. No meter, HP or receipt.
+func _run_ultimates() -> void:
+	ULTIMATES.config()
+	ULTIMATES._config["enabled"] = true # Process-local diagnostic opt-in only.
+	var cfg: Dictionary = _scenarios.ultimate_capture
+	var ids: Array = (ULTIMATES._config.visuals as Dictionary).keys()
+	ids.sort()
+	var counts: Array = cfg.breakthroughs if _breakthrough_filter.is_empty() else _breakthrough_filter
+	for move_id: String in ids:
+		if not _ultimate_filter.is_empty() and move_id not in _ultimate_filter: continue
+		if not _moves.has(move_id): _failures.append("Ultimate visual without move " + move_id); continue
+		for count: int in counts: await _exercise_ultimate(move_id, int(count), cfg)
+
+func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
+	var move: Dictionary = _moves[move_id]
+	var signature: Dictionary = move.get("ultimate", {})
+	var duration := float(signature.get("presentation_seconds", 2.4))
+	var travel := minf(float(cfg.travel_seconds), duration * 0.5)
+	var encounter := "%s:b%d" % [move_id, count]
+	var species := move_id.trim_prefix("ultimate_")
+	var case := {"id": move_id}
+	if bool(signature.get("unique", false)):
+		if _species_has_model(species): case["attacker_species"] = species
+		else: case["attacker_fallback"] = species
+	var from := _attacker_origin(case, move_id, 0.0)
+	if not from.is_finite(): _failures.append("Attacker model missing " + encounter); return
+	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
+	var binding := {"character_id": "f35-proof", "creature_uid": "f35-proof-attacker",
+		"encounter_id": encounter, "generation": 1, "action": 1}
+	var spec := {"slot": "ultimate", "move_id": move_id, "action_id": encounter + ":1",
+		"actor_binding": binding, "mastery_rank": 1, "breakthrough_count": count,
+		"ultimate": signature.duplicate(true), "vfx": move.get("vfx", {}).duplicate(true)}
+	var context := {"current_actor": binding, "travel_seconds": travel,
+		"recipient_character_id": "f35-proof", "source_ground": _ground_point(_arena.to_local(from).x, 0.0),
+		"target_ground": _ground_point(_target_x, 0.0)}
+	var effect: Node3D = ULTIMATES.launch(_arena, from, to, spec, context)
+	if effect == null: _failures.append("Ultimate launch refused " + encounter); return
+	if _current_attacker != null and _current_attacker.has_method("play_attack"): _current_attacker.call("play_attack")
+	var arrivals := [0]
+	var away := (to - from).normalized()
+	effect.connect("arrived", func() -> void:
+		arrivals[0] += 1
+		if _target.has_method("play_combat_flinch"): _target.call("play_combat_flinch", away))
+	var ready := {}
+	var shutters: Dictionary = cfg.shutters
+	for phase: String in shutters:
+		var at := float(shutters[phase]) * travel if phase in ["windup", "travel"] else (travel + float(shutters[phase]) if phase != "late" else duration - float(shutters[phase]))
+		create_timer(maxf(0.0, at), false).timeout.connect(func() -> void: ready[phase] = true)
+	var captured := {}
+	var deadline := create_timer(duration + 1.5, false)
+	var started := Time.get_ticks_usec()
+	while deadline.time_left > 0.0 and captured.size() < shutters.size():
+		await process_frame
+		for phase: String in shutters:
+			if captured.has(phase) or not bool(ready.get(phase, false)): continue
+			await RenderingServer.frame_post_draw
+			var path := _out.path_join("ultimate-%02d-%s.png" % [_records.size(), phase])
+			print("F35 capture %s %s wall=%dms" % [encounter, phase, Time.get_ticks_msec()])
+			if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
+			captured[phase] = {"wall_seconds": float(Time.get_ticks_usec() - started) / 1000000.0, "arrivals": arrivals[0]}
+	if captured.size() != shutters.size(): _failures.append("Incomplete ultimate frames " + encounter)
+	if int(arrivals[0]) != 1: _failures.append("Ultimate arrival count %d %s" % [arrivals[0], encounter])
+	_records.append({"id": move_id, "breakthrough_count": count, "presentation_seconds": duration,
+		"travel_seconds": travel, "unique": bool(signature.get("unique", false)), "attacker": case,
+		"captures": captured, "arrivals": arrivals[0]})
+	if is_instance_valid(effect): effect.call("cancel_presentation")
+	for i in 3: await process_frame
+
+func _species_has_model(species: String) -> bool:
+	var probe := CREATURE.instantiate() as CharacterBody3D
+	probe.set_script(CREATURE_BODY)
+	_arena.add_child(probe)
+	probe.call("setup", species)
+	var found := bool(probe.call("has_model"))
+	probe.queue_free()
+	return found
