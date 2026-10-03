@@ -10,7 +10,9 @@ class HostSession extends SESSION:
 	func is_host() -> bool: return hosting
 	func local_peer_id() -> int: return 1
 	func _foundation_realm_roots() -> Array[Node]:
-		return [world_root] if world_root != null else []
+		var roots: Array[Node] = []
+		if world_root != null: roots.append(world_root)
+		return roots
 
 func test_guest_before_first_fight_uses_real_empty_arbiter_and_retains_live_combat_checks() -> void:
 	var session := HostSession.new()
