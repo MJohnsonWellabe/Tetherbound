@@ -649,10 +649,11 @@ func test_actual_fixture_provider_refuses_non_runner_tree_and_detached_request()
 	assert_true(F48_ACTOR_TOPUP.runner_script_valid(proof_driver),
 		"the actual proof launch script extends the exact allowed base runner")
 	assert_false(F48_ACTOR_TOPUP.runner_script_valid(null))
+	var actual_test_script: Script = get_script()
+	assert_false(F48_ACTOR_TOPUP.runner_script_valid(actual_test_script))
 	var tree: SceneTree = Engine.get_main_loop() as SceneTree
-	assert_false(F48_ACTOR_TOPUP.runner_script_valid(tree.get_script()))
 	assert_eq(F48_ACTOR_TOPUP.install(tree, F48_ACTOR_TOPUP.DISCLOSURE), null,
-		"the actual test tree cannot install the PeerRunner-only aid")
+		"the native test loop cannot install the PeerRunner-only aid")
 	var provider: Node = F48_ACTOR_TOPUP.new()
 	var refused: Dictionary = provider.call("request_topup", null, null)
 	assert_eq(refused, {"ok": false, "pending": false, "code": "fixture_source_required"})

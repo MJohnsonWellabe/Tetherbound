@@ -14,6 +14,11 @@ const PORTAL_DELIVERY := preload("res://scripts/net/portal_delivery.gd")
 const PROOF_FILES := preload("res://tools/net/proof_steps.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
+class ButtonActivationObservation extends RefCounted:
+	var count: int = 0
+	func note_pressed() -> void:
+		count += 1
+
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
 	match action:
 		"f48_witness": return await _witness(tree, args)
@@ -1432,9 +1437,49 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 			snapshot["diagnostic_path"] = ""
 			snapshot["diagnostic_published"] = false
 		return failure
-	matches[0].grab_focus()
+	var owner: Node = INPUT_OWNER.current(tree)
+	var forge_refine: bool = owner != null and owner.get_script() == preload("res://scripts/ui/craft_panel.gd") \
+		and str(matches[0].get_meta("station_focus_key", "")).begins_with("refine:")
+	if not forge_refine:
+		matches[0].grab_focus()
+		await tree.process_frame
+		return await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+	# Let already deferred presentation/focus finish, then select the actual
+	# current button immediately before the ordinary physical down event.
+	# The same one process-frame wait is retained; no retry or extra budget.
 	await tree.process_frame
-	return await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+	matches.clear()
+	_collect_buttons(tree.root, text, matches)
+	if matches.size() != 1 or INPUT_OWNER.current(tree) != owner \
+		or not str(matches[0].get_meta("station_focus_key", "")).begins_with("refine:"):
+		return _result(false, "Original Forge button changed before physical confirmation")
+	var target: Button = matches[0]
+	var target_path: String = str(target.get_path())
+	var target_id: int = target.get_instance_id()
+	var activated: ButtonActivationObservation = ButtonActivationObservation.new()
+	var callback: Callable = activated.note_pressed
+	target.pressed.connect(callback)
+	target.grab_focus()
+	var focus_before: Control = tree.root.get_viewport().gui_get_focus_owner()
+	var focused_target: bool = focus_before == target
+	var input: Dictionary = await tree.call("_step_press", {"action": "ui_accept", "tap_frames": 2})
+	if is_instance_valid(target) and target.is_connected("pressed", callback):
+		target.disconnect("pressed", callback)
+	var panel_press: Variant = tree.get("_last_panel_press_observation")
+	var data: Dictionary = {"requested_text": text, "target_path": target_path,
+		"target_instance_id": target_id, "focused_actual_target_before_down": focused_target,
+		"actual_pressed_count": activated.count, "input_result": input.duplicate(true),
+		"panel_press": panel_press.duplicate(true) if panel_press is Dictionary else {}}
+	var ok: bool = input.get("verdict") == "PASS" and focused_target and activated.count == 1
+	var result: Dictionary = _result(ok, "Actual Forge button activation count=" + str(activated.count), data)
+	var output: String = OS.get_environment("TB_PROOF_OUT")
+	if not output.is_empty():
+		var folder: String = output.path_join("f48-observations")
+		var path: String = folder.path_join("f48_button_activation-%d-%d.json" % [OS.get_process_id(), Time.get_ticks_usec()])
+		if DirAccess.make_dir_recursive_absolute(folder) != OK \
+			or not DETACHED.publish(path, {"action": "f48_button", "args": args, "result": result}):
+			return _result(false, "Could not preserve actual Forge button activation")
+	return result
 
 static func _button_failure_snapshot(tree: SceneTree, text: String, matches: Array[Button]) -> Dictionary:
 	# Read existing presentation only. No quote, admission, refresh or input.

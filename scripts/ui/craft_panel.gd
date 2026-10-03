@@ -69,6 +69,8 @@ var _presented_station_view: Dictionary = {}
 var _presented_gear_context: Dictionary = {}
 var _upgrade_label: Label
 var _station_buttons: Array[Button] = []
+var _station_press: WeakRef
+var _station_presentation_deferred := false
 var _producer: Node
 var _original_revision := -1
 var _gear_cfg: Dictionary = {}
@@ -121,18 +123,24 @@ func _station_view_completed() -> void:
 
 ## Notification only: re-read the producer's authenticated current cache.
 ## A new quote never rebases, retries or releases the original transaction.
-func _refresh_station_view() -> void:
+func _refresh_station_view(force_presentation: bool = false) -> void:
 	_view_refresh_pending=false
 	if not _open or not is_instance_valid(_station) or not is_instance_valid(_producer) \
 			or game == null: return
 	var view := _station_view()
 	var context := _gear_context(view)
-	if view == _presented_station_view and context == _presented_gear_context: return
+	if not force_presentation and view == _presented_station_view and context == _presented_gear_context: return
+	if _station_press_active():
+		_station_presentation_deferred=true
+		return
 	_presented_station_view=view.duplicate(true)
 	_presented_gear_context=context.duplicate(true)
 	_rebuild_station_presentation()
 
 func _rebuild_station_presentation() -> void:
+	if _station_press_active():
+		_station_presentation_deferred=true
+		return
 	var message := _status.text if is_instance_valid(_status) else ""
 	var remaining := _status_left
 	var focus := get_viewport().gui_get_focus_owner() as Button
@@ -392,11 +400,37 @@ func _station_button(parent: VBoxContainer, label: String, action: Callable, foc
 	button.custom_minimum_size=Vector2(740,42)
 	button.add_theme_font_size_override("font_size",UITokens.FONT_READ)
 	button.pressed.connect(action)
+	var target: WeakRef = weakref(button)
+	button.button_down.connect(_station_button_down.bind(target))
+	button.button_up.connect(_station_button_up.bind(target))
 	parent.add_child(button)
 	button.focus_entered.connect(func() -> void:
 		var scroll := parent.get_parent() as ScrollContainer
 		if scroll != null: scroll.ensure_control_visible(button))
 	_station_buttons.append(button)
+
+## Keep the native release-mode Button alive until its release is dispatched.
+## Producer reads and eligibility checks continue while presentation waits.
+func _station_press_active() -> bool:
+	var button: Button = _station_press.get_ref() as Button if _station_press != null else null
+	return _open and is_instance_valid(button) and not button.is_queued_for_deletion() \
+		and button.is_inside_tree() and _station_buttons.has(button)
+
+func _station_button_down(target: WeakRef) -> void:
+	var button: Button = target.get_ref() as Button
+	if _open and is_instance_valid(button) and _station_buttons.has(button): _station_press=target
+
+func _station_button_up(target: WeakRef) -> void:
+	# button_up can precede pressed. Clearing here, or polling Input's paired
+	# action_release, would let a queued rebuild destroy the pending activation.
+	if _station_press == target: call_deferred("_release_station_press",target)
+
+func _release_station_press(target: WeakRef) -> void:
+	if _station_press != target: return
+	_station_press=null
+	var refresh := _station_presentation_deferred
+	_station_presentation_deferred=false
+	if refresh: _refresh_station_view(true) # Read the latest actual producer view.
 
 func _refresh_next_upgrade() -> void:
 	if _upgrade_label == null or not is_instance_valid(_station): return
@@ -743,6 +777,8 @@ func close() -> void:
 	if not _open:
 		return
 	_open = false
+	_station_press=null
+	_station_presentation_deferred=false
 	visible = false
 	# RG1: release is determined by the live ownership graph, not by the
 	# pause bit this panel happened to observe when it opened. A cached
