@@ -1,0 +1,24 @@
+{
+  "kind": "f19_reload_lifecycle_audit",
+  "resource_mount": {
+    "original_run": 37077413048,
+    "original_artifact": 11259241808,
+    "source_error": "Twelve SCRIPT ERROR occurrences at f32_world_mount.gd:116 node_for; assigning a freed cached object to Node3D before checking validity",
+    "fix_commit": "fd329e6f60c1af217a5199357dd58095505dbc65",
+    "independent_source_review": "Coordinator confirmed approved bounded fix and lifecycle regression",
+    "remote_check": {"run": 37082468995, "artifact": 11259408064, "checks": 8, "failures": 0, "engine_errors": 0, "exit": 0, "seconds": 4},
+    "log": "ci-resource-mount-lifecycle-37082468995.log",
+    "scope": "Actual live, queued, freed, replaced and detached Node lifecycle; declared cache entries only. No stock, placement or resource-delivery acceptance claim."
+  },
+  "materials": {
+    "original_run": 37077411116,
+    "original_artifact": 11258912467,
+    "source_error": "Twenty-four material-null errors after actual Veridian space acceptance and departure on real GLES3 backend, in addition to startup ALSA error",
+    "marker_probe": {"run": 37082471084, "artifact": 11259398179, "authored_caption": "Walk out together", "actual_camera_and_draw_frames": true, "engine_errors": 0, "exit": 0, "seconds": 7},
+    "marker_log": "ci-answer-marker-lifetime-37082471084.log",
+    "result": "Marker-only teardown did not reproduce the material error. No speculative marker product change. Actual legendary-body teardown probe dispatched separately; investigation remains open."
+  },
+  "retained_diagnostics": ["ci-solmane-cancelled-37077413048.log.gz", "ci-veridian-cancelled-37077411116.log.gz", "ci-campaign-cancelled-37079703205.log.gz"],
+  "rejection_policy": "Cancelled diagnostics do not prove clean engine behavior or full earned progression. Any SCRIPT ERROR or ERROR remains disqualifying for an accepted campaign witness.",
+  "resource_constraint": "All native checks and probes above ran on GitHub. No local engine under Valheim constraint."
+}
