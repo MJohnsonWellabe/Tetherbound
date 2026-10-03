@@ -115,6 +115,16 @@ func _activate_bounty_via_road(prompt: Node3D) -> bool:
 	if int(_player.get("_unstick_count")) != recoveries_before:
 		return _fail("F20 unexpected entombment recovery interrupted bounty travel")
 	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
+		var bounty_owner := INPUT_OWNER.current(tree)
+		var bounty_winner: Node = arbiter.call("winning_provider") as Node
+		print("F20 BOUNTY provider trace player=", _player.global_position, " floor=", _player.is_on_floor(),
+			" prompt=", prompt.global_position, " prompt_radius=", prompt.get("radius"),
+			" expected=", prompt.get_path(), " target_offer=", prompt.call("interaction_offer", _player.global_position),
+			" target_los=", prompt.call("_has_line_of_sight", _player.global_position),
+			" winner=", arbiter.call("winning_provider"), " winning_offer=", arbiter.call("winner"),
+			" winner_path=", bounty_winner.get_path() if bounty_winner != null else "none",
+			" arbiter_enabled=", arbiter.call("enabled"), " fight_owns=", arbiter.call("_fight_owns_the_world"),
+			" owner=", bounty_owner.get_path() if bounty_owner != null else "none")
 		return _fail("F20 bounty travel did not reach its grounded exact provider")
 	var offer: Dictionary = arbiter.call("winner")
 	if offer.get("actionable") != true: return _fail("F20 actual bounty provider refused its action")
