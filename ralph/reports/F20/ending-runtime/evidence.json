@@ -1042,7 +1042,7 @@
   "pending_arrival_owner_comparison": {
     "source": "cd7f80204aaf6397971aabc0641faa2b654f641c",
     "source_delta": "e34c64f009 adds15 F20-only lines; cd7 replaces decimalJSON with originallosslessSaveDocumentcodec+ENDmarker.",
-    "independent_review": "PASS f20_review exact e34+cd7. Detached save_data/portableprojection/pureowner_plan/schema stage and losslesscodec cloneonly; no apply/save/ACK/input/deadline mutations. Once per original nonempty local pending receipt.",
+    "independent_review": "PASS f20_review exacte34+cd7. Pure portableprojection/owner_plan/schema stage and losslesscodec operate on detachedrecords; no apply/save/ACK/input/deadline mutations. PlayerState.save_data may initialize absent map caches generally; exact F20 path has two prior production saves that initialize allmaps, so observer is read-only on this already-saved fixture path. Once per original nonempty local pending receipt.",
     "runtime": "Not yet exercised. Existing net-r7 tests prior reviewed e39; wait its actual result before affected comparison replay. No pureplan/BOOL refusal claim yet.",
     "disk_lead": "Exact net-r6 PERSISTED guest portable projection differs from hostrow.before only by party0..4 happiness/nourishment (10fields). Disk is not livecurrent, so this is a lead, not an ownerplan/cause verdict.",
     "derived_disk_diff": "f20-net-r6-disk-projection-diff.json"
