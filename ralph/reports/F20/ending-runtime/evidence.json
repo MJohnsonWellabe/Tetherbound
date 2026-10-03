@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake criterion0 independently MET on candidate. Strict locator fix passes12tests104assertions, actual solo-r5 now passes saved HomeKey and fifth producer but fails Grandpa walk while actual onboarding lesson owns input. Reviewed F20-only driver9d4 continues actual lesson cards through ordinary input; no bypass. Solo-r6/net-r3 active on remote runners; remote arch-render-r3 also active for actual framebuffer inspection; net-r2 retained panel-heartbeat failure corroborates solo blockage. Criteria1\u20134 remain OPEN; local renderer/audio suspended for owner Valheim.",
+    "reason": "Tidewake criterion0 independently MET on candidate. Actual HomeKey/fifth producer passes. Reviewed lesson driver9d4 succeeds with actual portal lesson rendering/ordinaryContinue/personal acknowledgement, then solo-r6/net-r3 fail naturalGrandpa ackcheck with exact cause notyetobserved. Bounded dialogue/completed/context/owner row diagnostic reviewed/pusheda507, solo-r7queued without deadlines/check changes. Remote software arch-render-r3 fails180s readiness before key/PNG/WAV; exact failed predicate unknown, reviewedreadinessdiagnostic remote-r4queued. Criteria1\u20134 OPEN; no local renderer/audio while owner Valheim.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -178,6 +178,80 @@
         "failure": "Host f20_talk no verdict at unchanged300s step deadline. Retained heartbeat context panel:@CanvasLayer at exact solo-r5 stuck pose26.95059,0.90094,15.16730; host log ends before Grandpa input. A common lesson navigation blockage is strongly inferred from explicit solo owner path; net does not name panel script. Guest homecoming/credits/rejoin/reload not reached.",
         "limits": "Post-finale fixtures, headless functional only. Original complete peer logs/homes/disk/NET_RUN preserved in ZIP. No F20#4 acceptance.",
         "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: complete peer logs/homes/disk retained, exact ZIP hash, host producer passes, fresh284ms panel heartbeat at same solo stuck pose; net panel script not identified, shared lesson cause is strong inference from explicit solo observation. Zero errors in all3 logs. No guest ending/rejoin/reload reached, no exit_code artifact; workflowfailure authoritative."
+      },
+      {
+        "run": 37084560197,
+        "job": 111092043059,
+        "artifact": 11260612816,
+        "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_retained_native_and_peer_logs": 0,
+        "native_bytes": 17462,
+        "native_sha256": "c83c25dade1759fc7d72c4f445a089f511828b66c0532b6d920977faed70cabb",
+        "artifact_bytes": 652446,
+        "artifact_sha256": "ffeed5632443a9a40e4e5fe1b6d90540df1fbcc80b627e65ad37b1ea47f1aa3d",
+        "logs": [
+          "f20-solo-r6-native.log.gz",
+          "f20-solo-r6-workflow.log.gz",
+          "f20-solo-r6-artifact.zip"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: exact ZIP hashes, native solo+user/net host+guest+coordinatorzeroengine/script errors; real lesson Continue+personalack and reader checks pass, but dialogue-completed callback/rendered prose/ACKfailure cause notobserved. No criterion closure.",
+        "passed": "Actual durable HomeKey return and fifth producer; actual portal lesson rendered/continued with normalmenu_confirm and personal lesson acknowledgement. Ordinary navigation/Grandpa prompt activation succeeds, canonical own four-choice/starter/live-memory reader checks pass.",
+        "failure": "Natural Grandpa completion/acknowledgement check fails. Original proof does not record rendered dialogue/completed callback/result, so exact dialogue/input/transaction cause remains unknown; unchanged30s conversation budget.",
+        "limits": "Post-finale fixture; reader checks are not actual rendered Grandpa prose or completed ending proof. No credits/reload reached. Criteria1\u20134 OPEN.",
+        "checks": 19
+      },
+      {
+        "run": 37084565111,
+        "job": 111092058849,
+        "artifact": 11259898797,
+        "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_retained_native_and_peer_logs": 0,
+        "native_bytes": 1870,
+        "native_sha256": "6b170c2e43d97ae29f6b55ba09d66391001d99d1fcfc0a359ea276b1b435776e",
+        "artifact_bytes": 149174,
+        "artifact_sha256": "fa8ed665a5d09b7123bd3f0f539f810cb5d56f244fb5f533b4b72cdd82f8d520",
+        "logs": [
+          "f20-net-r3-NET_RUN.json",
+          "f20-net-r3-peer-0.log.gz",
+          "f20-net-r3-peer-1.log.gz",
+          "f20-net-r3-native.log.gz",
+          "f20-net-r3-workflow.log.gz",
+          "f20-net-r3-artifact.zip"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: exact ZIP hashes, native solo+user/net host+guest+coordinatorzeroengine/script errors; real lesson Continue+personalack and reader checks pass, but dialogue-completed callback/rendered prose/ACKfailure cause notobserved. No criterion closure.",
+        "passed": "Actual durable HomeKey return and fifth producer; actual portal lesson rendered/continued with normalmenu_confirm and personal lesson acknowledgement. Ordinary navigation/Grandpa prompt activation succeeds, canonical own four-choice/starter/live-memory reader checks pass.",
+        "failure": "Natural Grandpa completion/acknowledgement check fails. Original proof does not record rendered dialogue/completed callback/result, so exact dialogue/input/transaction cause remains unknown; unchanged30s conversation budget.",
+        "limits": "Post-finale fixture; reader checks are not actual rendered Grandpa prose or completed ending proof. No credits/reload reached. Criteria1\u20134 OPEN."
+      },
+      {
+        "run": 37084998254,
+        "job": 111093310987,
+        "artifact": 11260357016,
+        "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_retained_native_and_peer_logs": 0,
+        "native_bytes": 10716,
+        "native_sha256": "d4b018ce1edea905ef8b0fb75fc3f34e749b40f878af6a6841677ffe0e4961cb",
+        "artifact_bytes": 942057,
+        "artifact_sha256": "48ed454b6d84eaf3d7d4084f8b63b007da943cea8c62cf902225605d2dde90d9",
+        "logs": [
+          "f20-arch-render-r3-native.log.gz",
+          "f20-arch-render-r3-workflow.log.gz",
+          "f20-arch-render-r3-artifact.zip"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2 failed evidence: exact ZIPhash10716-byte native,0engine/script errors in run+userlog, readinessfailure8checks1fail; no fifth PNG/WAV entries. Predicate/causeunknown.",
+        "checks": 8,
+        "renderer": "Compatibility OpenGL4.5 Mesa25.2.8 llvmpipe LLVM20.1.2",
+        "failure": "Production world/personal context readiness180s failure before key input. Exact failed predicate/cause unknown; no GL-warmup cause established. No fifth PNG/WAV captured.",
+        "limits": "Hosted software rendering and Dummy audio; zero acceptance advancement. Readiness diagnostic retains deadline/predicate."
       }
     ],
     "limitations": [
@@ -316,7 +390,7 @@
     "1": {
       "verdict": "OPEN",
       "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
-      "latest_runtime": "solo-r5: actual Home Key return saved PASS; actual fifth producer passes, then onboarding lesson blocks ordinary walk before Grandpa/credits"
+      "latest_runtime": "solo-r6/net-r3: actual saved HomeKey, fifth and ordinary portal lesson/navigation PASS; actualGrandpa prompt activates and personal reader valid, then natural completion/ackcheckFAIL (rendered/completed evidence missing)."
     },
     "2": {
       "verdict": "OPEN",
@@ -331,7 +405,7 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "net-r2: complete two-peer logs retained, host durable HomeKey and fifth producer PASS; actual lesson panel blocks f20_talk at300s deadline, no guest ending/rejoin/reload reached."
+      "latest_runtime": "net-r3: both peers connect and hostHomeKey/fifth/portal lesson/navigationPASS; hostnaturalGrandpa ackcheckFAIL; guest ending/credits/rejoin/reload unreached."
     }
   },
   "delegated_locator_fix": {
@@ -378,41 +452,29 @@
     }
   },
   "remote_pending": {
-    "solo_r6": {
-      "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
-      "run": 37084560197,
+    "solo_r7": {
+      "run": 37086096148,
+      "source": "a507d6022d743be7bc92f10ad1511493812c314c",
       "script": "tests/smoke_f20_ending.gd",
-      "label": "f20-solo-r6-lessons",
+      "label": "f20-solo-r7-dialogue-trace",
       "mode": "headless",
-      "timeout_minutes": 30,
-      "job": 111092043059,
-      "script_started_at": "2026-10-03T01:09:54Z"
+      "timeout_minutes": 30
     },
-    "net_r3": {
-      "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
-      "run": 37084565111,
-      "script": "tests/smoke_net_f20_ending.gd",
-      "label": "f20-net-r3-lessons",
-      "mode": "headless",
-      "timeout_minutes": 20,
-      "job": 111092058849,
-      "script_started_at": "2026-10-03T01:10:06Z"
-    },
-    "arch_render_r3": {
-      "run": 37084998254,
-      "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+    "arch_render_r4": {
+      "run": 37086104045,
+      "source": "a507d6022d743be7bc92f10ad1511493812c314c",
       "script": "tests/smoke_f20_arch_presentation.gd",
-      "label": "f20-arch-render-r3-remote",
+      "label": "f20-arch-render-r4-ready-trace",
       "mode": "render",
-      "resolution": "1280x720",
-      "timeout_minutes": 20,
-      "scope": "Remote software OpenGL ordinary-camera capture to inspect glow; hosted Dummy audio disclosed, no physical device/listener acceptance.",
-      "job": 111093310987,
-      "script_started_at": "2026-10-03T01:10:56Z"
+      "timeout_minutes": 20
     }
   },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
+  },
+  "diagnostic_probe": {
+    "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+    "independent_review": "PASS f20_review: original180sready+30sdialoguepredicates/input/assertions unchanged, actualcompletedcallback/read-onlycontext/owner/action+intent+renderedtext; ready samples/elapsed/maxresumeinterval only. Max interval includes loopwork, not isolatedGLwarmup."
   }
 }
