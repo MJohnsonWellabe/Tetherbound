@@ -170,7 +170,9 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		if node.has_method("interaction_offer") and node.get_parent().name == "Grandpa": prompt = node as Node3D
 	var panel: Node = tree.current_scene.get_node_or_null("DialoguePanel")
 	if not check(prompt != null and panel != null, "real Grandpa prompt and dialogue panel exist"): return false
+	print("F20 TALK navigation start ticks_ms=", Time.get_ticks_msec(), " process=", Engine.get_process_frames(), " physics=", Engine.get_physics_frames())
 	if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+	print("F20 TALK navigation complete ticks_ms=", Time.get_ticks_msec(), " process=", Engine.get_process_frames(), " physics=", Engine.get_physics_frames())
 	var expected := HOME.context(game)
 	var first: bool = expected.get("homecoming_seen") != true
 	var prose := HOME.substitutions(game)
@@ -202,11 +204,15 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	# (plus the panel's initial guard), then observe the durable ACK separately.
 	var line_count := int(panel.call("runner").call("_line_count"))
 	var presses := 0
+	travel.trace_input = true
 	while panel.call("is_open") and presses < line_count + 2:
 		opened = true
 		_heard += "\n" + str(panel.get("_body").text)
+		print("F20 TALK tap start index=", presses, " ticks_ms=", Time.get_ticks_msec())
 		await travel.tap("interact")
+		print("F20 TALK tap returned index=", presses, " ticks_ms=", Time.get_ticks_msec())
 		presses += 1
+	travel.trace_input = false
 	print("F20 DIALOGUE input authored_lines=", line_count, " actual_presses=", presses)
 	var deadline := Time.get_ticks_msec() + 30000
 	while not panel.call("is_open") and HOME.context(game).get("homecoming_seen") != true \

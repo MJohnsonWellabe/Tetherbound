@@ -6,6 +6,7 @@ extends "res://tests/helpers/f49_portal_travel.gd"
 const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 var _lesson_busy := false
 var before_interact: Callable
+var trace_input := false
 
 func activate(prompt: Node3D) -> bool:
 	var failures_before := failures.size()
@@ -80,11 +81,25 @@ func tap(action: String) -> void:
 		before_interact = Callable()
 		await preparation.call()
 	for pressed: bool in [true, false]:
+		if trace_input: _trace_clock(action, pressed, "before input")
 		var event := InputEventAction.new()
 		event.action = action
 		event.pressed = pressed
 		event.strength = 1.0 if pressed else 0.0
 		Input.parse_input_event(event)
 		for frame in 2:
+			if trace_input: _trace_clock(action, pressed, "before physics %d" % frame)
 			await tree.physics_frame
+			if trace_input: _trace_clock(action, pressed, "after physics %d" % frame)
 			await tree.process_frame
+			if trace_input: _trace_clock(action, pressed, "after process %d" % frame)
+
+func _trace_clock(action: String, pressed: bool, phase: String) -> void:
+	var input_owner := INPUT_OWNER.current(tree)
+	var dialogue: Node = tree.current_scene.get_node_or_null("DialoguePanel") if tree.current_scene != null else null
+	print("F20 INPUT CLOCK ticks_ms=", Time.get_ticks_msec(), " process=", Engine.get_process_frames(),
+		" physics=", Engine.get_physics_frames(), " action=", action, " pressed=", pressed, " phase=", phase,
+		" held=", Input.is_action_pressed(action), " paused=", tree.paused,
+		" panel_open=", dialogue.call("is_open") if dialogue != null else false,
+		" owner=", input_owner.get_path() if input_owner != null else "none",
+		" owner_script=", input_owner.get_script().resource_path if input_owner != null and input_owner.get_script() != null else "none")
