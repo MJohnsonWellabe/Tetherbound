@@ -336,7 +336,10 @@
   "solmane_cold_owner_partition": {
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
     "scope": "Same original cold lifecycle; retain only active per-surface override Materials in Landmarks or its complement. No additional resources or gameplay modifications.",
-    "status": "Prepared; not yet dispatched",
+    "status": "Live separate native owner partitions; no acceptance pending terminal raw logs",
+    "source_commit": "2a2c412a711d6199dcc1a986aa49063812f8956f",
+    "landmarks": {"run": 37106639601, "job": 111156354429},
+    "except_landmarks": {"run": 37106640734, "job": 111156358760},
     "selection": [
       "--retain-active-surface-overrides --active-owner-root=Landmarks",
       "--retain-active-surface-overrides --exclude-active-owner-root=Landmarks"
