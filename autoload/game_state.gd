@@ -1079,6 +1079,8 @@ func _process(delta: float) -> void:
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
 	var canonical_passive := _canonical_guest_passive()
+	var record_passive := session != null and session.has_method("owner_passive_recording_active") \
+		and session.call("owner_passive_recording_active") == true
 	if canonical_passive: _travel_pos_valid = false
 	_tick_autosave(delta)
 	_tick_creature_bed_recovery(delta)
@@ -1090,7 +1092,9 @@ func _process(delta: float) -> void:
 	# tonic time.
 	if party != null:
 		var condition_cfg: Dictionary = CREATURE_CONDITION.config()
+		var passive_uids: Array[String] = []
 		for member: Variant in (party.call("members") as Array):
+			if record_passive: passive_uids.append(str(member.get("uid")))
 			var watched: bool = not get_signal_connection_list("party_passive_tick").is_empty()
 			var source: PassiveCardSnapshot
 			var before: Dictionary = {}
@@ -1116,6 +1120,8 @@ func _process(delta: float) -> void:
 					"after": SAVE_GAME.new().call("_party_to_array", source)[0],
 					"buffs_before": buffs_before, "buffs_after": (member.get("active_buffs") as Array).duplicate(true),
 					"condition_config": condition_cfg.duplicate(true), "condition_tick_applied": not canonical_passive})
+		if record_passive and not canonical_passive:
+			session.call("record_owner_passive_input", {"op": "condition", "delta": delta, "uids": passive_uids})
 	var progression_revision: int = int(progression.get("revision"))
 	var realm_changed: bool = bool(quest_log.call("set_realm", current_realm))
 	var rung_moved := progression_revision != _last_progression_revision or realm_changed
@@ -1145,7 +1151,10 @@ func _process(delta: float) -> void:
 	# used) — measured here rather than in player_controller.gd so the
 	# player's own delicate movement/collision code stays untouched.
 	var landmarks_before := int(map.discovered_landmark_count())
+	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive else {}
 	var here := player.global_position
+	var travel_from := _travel_pos
+	var travel_was_valid := _travel_pos_valid
 	if not canonical_passive and _travel_pos_valid:
 		var stepped := here.distance_to(_travel_pos)
 		if stepped > 0.0 and stepped <= _TRAVEL_TELEPORT_GUARD_M and party != null:
@@ -1160,6 +1169,13 @@ func _process(delta: float) -> void:
 	if not canonical_passive and landmarks_gained > 0 and party != null:
 		for member: Variant in (party.call("members") as Array):
 			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)
+	if record_passive and not canonical_passive:
+		var new_landmarks: Array[String] = []
+		for id: String in (map.get("_discovered") as Dictionary):
+			if not discovered_before.has(id): new_landmarks.append(id)
+		session.call("record_owner_passive_input", {"op": "discovery", "realm": current_realm,
+			"from": [travel_from.x, travel_from.y, travel_from.z], "to": [here.x, here.y, here.z],
+			"travel_valid": travel_was_valid, "new_landmarks": new_landmarks})
 
 
 ## Session supplies the authenticated ownership decision. Until that capability

@@ -141,6 +141,40 @@ func retain_groom_preparation(character: String, prepared: Dictionary) -> bool:
 ## retained event instead of a Groom station/action. They grant no reward.
 func reserve_research_preparation(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
 	if not _research_preparation_valid(character, prepared, retained): return false
+	return _reserve_research_preparation_checked(character, prepared, retained)
+
+## Cursor is the host service's locally validated contiguous input replay,
+## never a value read from a peer packet. The common reservation keeps every
+## existing transaction exclusion and original/retry guard in one place.
+func reserve_owner_passive_checkpoint(character: String, prepared: Dictionary, retained: Dictionary, cursor: Dictionary) -> bool:
+	if not _records.has(character) or prepared.get("character_id") != character \
+		or prepared.get("world_namespace") != _world_instance \
+		or not preload("res://scripts/net/owner_passive_preparation.gd").valid_host(prepared, retained, cursor): return false
+	for realm: String in discovered_landmarks(character):
+		for id: String in discovered_landmarks(character)[realm]:
+			if not prepared.discoveries.get(realm, []).has(id): return false
+	if not _reserve_research_preparation_checked(character, prepared, retained): return false
+	_research_preparations[character].owner_cursor = cursor.duplicate(true)
+	return true
+
+func commit_owner_passive_checkpoint(character: String, token_hash: String) -> bool:
+	var original := _owner_passive_original(character, token_hash)
+	return not original.is_empty() and commit_research_preparation(character, original.prepared, original.retained)
+
+func retain_owner_passive_checkpoint(character: String, token_hash: String) -> bool:
+	var original := _owner_passive_original(character, token_hash)
+	return not original.is_empty() and retain_research_preparation(character, original.prepared, original.retained)
+
+func cancel_owner_passive_checkpoint(character: String, token_hash: String) -> bool:
+	return not _owner_passive_original(character, token_hash).is_empty() and cancel_research_preparation(character, token_hash)
+
+func _owner_passive_original(character: String, token_hash: String) -> Dictionary:
+	var original: Dictionary = _research_preparations.get(character, {})
+	if original.get("prepared", {}).get("kind") != "owner_passive_preparation" \
+		or original.prepared.get("hash") != token_hash: return {}
+	return original
+
+func _reserve_research_preparation_checked(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
 	if _research_preparations.has(character):
 		var original: Dictionary = _research_preparations[character]
 		return not original.committed and not _research_other_transaction(character) \
@@ -148,7 +182,7 @@ func reserve_research_preparation(character: String, prepared: Dictionary, retai
 			and equivalent(original.prepared, prepared) \
 			and equivalent(original.retained, retained) and _research_reserved_state_matches(character, prepared)
 	if _research_other_transaction(character) or _training_locked(character) \
-		or revision(character) != prepared.revision or not equivalent(state(character), prepared.before): return false
+		or revision(character) != prepared.revision or not _research_state_equivalent(prepared, state(character), prepared.before): return false
 	_research_preparations[character] = {"prepared": prepared.duplicate(true),
 		"retained": retained.duplicate(true), "committed": false, "applied": false}
 	return true
@@ -163,7 +197,7 @@ func commit_research_preparation(character: String, prepared: Dictionary, retain
 		or _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character): return false
 	var original: Dictionary = _research_preparations[character]
 	if original.committed:
-		return revision(character) == int(prepared.revision) + 1 and equivalent(state(character), prepared.after)
+		return revision(character) == int(prepared.revision) + 1 and _research_state_equivalent(prepared, state(character), prepared.after)
 	if not _research_reserved_state_matches(character, prepared): return false
 	if not original.applied:
 		var discovered := discovered_landmarks(character)
@@ -182,7 +216,7 @@ func retain_research_preparation(character: String, prepared: Dictionary, retain
 	if not _research_original_matches(character, prepared, retained) or _research_other_transaction(character) \
 		or _training_stages.has(character) or _training_pending.has(character) or _groom_preparations.has(character) \
 		or _research_preparations[character].applied != true \
-		or revision(character) != int(prepared.revision) + 1 or not equivalent(state(character), prepared.after): return false
+		or revision(character) != int(prepared.revision) + 1 or not _research_state_equivalent(prepared, state(character), prepared.after): return false
 	# Exact retained retry is idempotent; an unreserved candidate cannot create it.
 	_research_preparations[character].committed = false
 	return true
@@ -193,9 +227,13 @@ func cancel_research_preparation(character: String, hash: String) -> bool:
 	return true # An already BOOL-saved/committed baseline is never rolled back.
 
 func _research_preparation_valid(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
-	return _records.has(character) and prepared.get("character_id") == character \
-		and prepared.get("world_namespace") == _world_instance \
-		and preload("res://scripts/net/research_passive_preparation.gd").valid(prepared, retained)
+	if not _records.has(character) or prepared.get("character_id") != character \
+		or prepared.get("world_namespace") != _world_instance: return false
+	if prepared.get("kind") == "owner_passive_preparation":
+		# Only the explicit host cursor reservation can introduce this variant.
+		var cursor: Dictionary = _research_preparations.get(character, {}).get("owner_cursor", {})
+		return preload("res://scripts/net/owner_passive_preparation.gd").valid_host(prepared, retained, cursor)
+	return preload("res://scripts/net/research_passive_preparation.gd").valid(prepared, retained)
 
 func _research_original_matches(character: String, prepared: Dictionary, retained: Dictionary) -> bool:
 	var original: Dictionary = _research_preparations.get(character, {})
@@ -204,8 +242,13 @@ func _research_original_matches(character: String, prepared: Dictionary, retaine
 
 func _research_reserved_state_matches(character: String, prepared: Dictionary) -> bool:
 	if _research_preparations.get(character, {}).get("applied") == true:
-		return revision(character) == int(prepared.revision) + 1 and equivalent(state(character), prepared.after)
-	return revision(character) == prepared.revision and equivalent(state(character), prepared.before)
+		return revision(character) == int(prepared.revision) + 1 and _research_state_equivalent(prepared, state(character), prepared.after)
+	return revision(character) == prepared.revision and _research_state_equivalent(prepared, state(character), prepared.before)
+
+func _research_state_equivalent(prepared: Dictionary, left: Dictionary, right: Dictionary) -> bool:
+	if prepared.get("kind") == "owner_passive_preparation":
+		return preload("res://scripts/net/owner_passive_preparation.gd").exact(left, right)
+	return equivalent(left, right)
 
 func _research_other_transaction(character: String) -> bool:
 	return _portal_mutation_pending(character) or _portal_stages.has(character) \

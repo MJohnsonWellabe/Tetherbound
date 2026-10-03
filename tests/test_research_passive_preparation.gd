@@ -138,7 +138,16 @@ func test_hash_keeps_large_integral_floats_without_int64_conversion() -> void:
 	assert_eq(var_to_bytes(decoded.large), var_to_bytes(original.large), "float bytes survive document roundtrip")
 	assert_eq(var_to_bytes(decoded.edge), var_to_bytes(original.edge))
 	assert_eq(PREP.fingerprint(decoded), PREP.fingerprint(original))
-	assert_eq(PREP.fingerprint({"value": 9007199254740991.0}), PREP.fingerprint({"value": 9007199254740991}))
+	# Integer conversion constructs the intended exact boundary. The decimal
+	# literal 9007199254740991.0 already rounds down in Godot's source parser.
+	var edge := float(DOCUMENT.MAX_SAFE_INTEGER)
+	assert_eq(int(edge), DOCUMENT.MAX_SAFE_INTEGER)
+	var boundary: Dictionary = PREP._canonical({"value": edge})
+	assert_true(boundary.value is int, "exact safe boundary is canonicalized")
+	assert_eq(boundary.value, DOCUMENT.MAX_SAFE_INTEGER)
+	assert_eq(PREP.fingerprint({"value": edge}), PREP.fingerprint({"value": DOCUMENT.MAX_SAFE_INTEGER}), "equal boundary numbers share an ACK hash")
+	assert_eq(PREP.fingerprint({"value": -edge}), PREP.fingerprint({"value": -DOCUMENT.MAX_SAFE_INTEGER}))
+	assert_ne(PREP.fingerprint({"value": edge - 1.0}), PREP.fingerprint({"value": edge}), "neighboring exact integers remain distinct")
 
 func _assert_bad_passive(before: Dictionary, event: Dictionary, prepared: Dictionary, label: String) -> void:
 	assert_true(_prepared(event, before).is_empty(), "make refuses " + label)

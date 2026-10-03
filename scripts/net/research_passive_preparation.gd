@@ -45,7 +45,9 @@ static func _canonical(value: Variant) -> Variant:
 		return next
 	# Larger integral floats still carry meaningful float64 bits. Keep them
 	# for the lossless document codec instead of overflowing an int64 cast.
-	if value is float and is_finite(value) and absf(value) <= 9007199254740991.0 \
+	# Construct this edge from its exact integer: Godot's decimal literal parser
+	# rounds 9007199254740991.0 down by one before this function ever runs.
+	if value is float and is_finite(value) and absf(value) <= float(DOCUMENT.MAX_SAFE_INTEGER) \
 		and value == floorf(value): return int(value)
 	return value
 

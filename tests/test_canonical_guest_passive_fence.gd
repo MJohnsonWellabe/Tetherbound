@@ -4,6 +4,7 @@ extends "res://tests/test_case.gd"
 ## explicit map/session/maintenance doubles; no network or F48 proof claim.
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
+const NATIVE_CASE := preload("res://tests/helpers/passive_native_case.gd")
 
 class LegacySession extends Node:
 	var blocked := false
@@ -48,8 +49,10 @@ var map_state: MapFixture
 var quests: QuestFixture
 var creature: RefCounted
 var original_feed: RefCounted
+var _native_ready := false
+var _native_completed := false
 
-func before_each() -> void:
+func _native_setup() -> void:
 	original_feed = FEED._active
 	game = GameFixture.new()
 	game.actor = Node3D.new()
@@ -68,14 +71,16 @@ func before_each() -> void:
 	assert_true(game.party.add(creature))
 	game._travel_pos = Vector3.ZERO
 	game._travel_pos_valid = true
+	_native_ready = true
 
-func after_each() -> void:
-	game.actor.free()
-	game.free()
-	owner_session.free()
+func _native_cleanup() -> void:
+	if is_instance_valid(game):
+		if is_instance_valid(game.actor): game.actor.free()
+		game.free()
+	if is_instance_valid(owner_session): owner_session.free()
 	FEED.set_active(original_feed)
 
-func test_canonical_guest_preserves_care_and_bond_but_runs_other_process_work() -> void:
+func _native_case_canonical_guest_preserves_care_and_bond_but_runs_other_process_work() -> void:
 	var nourishment: float = creature.nourishment
 	var happiness: float = creature.happiness
 	var observations: Array[Dictionary] = []
@@ -100,7 +105,9 @@ func test_canonical_guest_preserves_care_and_bond_but_runs_other_process_work() 
 	assert_true(observations[0].buffs_after.is_empty())
 	assert_eq(observations[0].before.nourishment, observations[0].after.nourishment)
 
-func test_absent_or_false_capability_keeps_local_clocks_and_bond() -> void:
+	_native_completed = true
+
+func _native_case_absent_or_false_capability_keeps_local_clocks_and_bond() -> void:
 	var legacy := LegacySession.new()
 	game.session = legacy
 	assert_false(game._canonical_guest_passive())
@@ -120,7 +127,9 @@ func test_absent_or_false_capability_keeps_local_clocks_and_bond() -> void:
 	assert_false(game._canonical_guest_passive())
 	legacy.free()
 
-func test_canonical_interval_does_not_accumulate_resume_distance_or_landmarks() -> void:
+	_native_completed = true
+
+func _native_case_canonical_interval_does_not_accumulate_resume_distance_or_landmarks() -> void:
 	game._process(0.1)
 	assert_false(game._travel_pos_valid, "fence resets even before discovery throttle runs")
 	game.actor.position.x = 12.0
@@ -135,7 +144,9 @@ func test_canonical_interval_does_not_accumulate_resume_distance_or_landmarks() 
 	game._process(0.5)
 	assert_eq(creature.distance_m_together, 2.0)
 
-func test_existing_transaction_fence_still_blocks_all_mutation() -> void:
+	_native_completed = true
+
+func _native_case_existing_transaction_fence_still_blocks_all_mutation() -> void:
 	owner_session.blocked = true
 	game._process(0.5)
 	assert_false(game._travel_pos_valid)
@@ -143,3 +154,16 @@ func test_existing_transaction_fence_still_blocks_all_mutation() -> void:
 	assert_eq([map_state.visits, map_state.region_updates], [0, 0])
 	assert_eq(creature.active_buffs.size(), 1)
 	assert_eq(creature.rested_seconds_left, 0.25)
+	_native_completed = true
+
+func test_canonical_guest_preserves_care_and_bond_but_runs_other_process_work() -> void:
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_canonical_guest_preserves_care_and_bond_but_runs_other_process_work", 19)
+
+func test_absent_or_false_capability_keeps_local_clocks_and_bond() -> void:
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_absent_or_false_capability_keeps_local_clocks_and_bond", 9)
+
+func test_canonical_interval_does_not_accumulate_resume_distance_or_landmarks() -> void:
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_canonical_interval_does_not_accumulate_resume_distance_or_landmarks", 6)
+
+func test_existing_transaction_fence_still_blocks_all_mutation() -> void:
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_existing_transaction_fence_still_blocks_all_mutation", 6)

@@ -2223,6 +2223,12 @@ func _ineligible_row_message(creature: RefCounted) -> String:
 func _on_target_row(index: int) -> void:
 	if _targeting < 0:
 		return
+	var owner_game := state()
+	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
+	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
+		say("Saving your last action. Try again in a moment.")
+		return
 	# T5-CARE: the trainer eats it themselves. Same spend, same buff and the
 	# same `player_vitals.gd::eat()` the quick bar calls, so one berry cannot
 	# behave two ways depending on which screen reached it.

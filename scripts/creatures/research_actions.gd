@@ -47,6 +47,12 @@ static func commit(session: Node, peer: int, action: String, intent: Dictionary,
 			return ACTIONS.deny("research_decision_not_retained")
 		if row.get("status") == "pending": writer.call("_process_creature_training", row)
 		return {"ok": true, "durable": true, "resolved": row.get("status") == "accepted"}
+	# Flush exact owner-input history BEFORE creating a new immutable row. A
+	# retained pending decision above always retries its original codec instead.
+	if action == "research_event" and peer != session.call("local_peer_id"):
+		if not session.has_method("owner_passive_research_gate"): return ACTIONS.deny("owner_passive_recording_unavailable")
+		var ready: Dictionary = session.call("owner_passive_research_gate", peer, action, intent, event)
+		if ready.get("ok") != true: return ready
 	return ACTIONS.commit_host_action(registry, writer, peer, character, revision, action, intent, context)
 
 static func _receipt(character: String, action: String, intent: Dictionary, event: Dictionary) -> String:

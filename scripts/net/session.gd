@@ -7,6 +7,8 @@ const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 const GROOM_PASSIVE := preload("res://scripts/net/groom_passive_sync.gd")
 var _groom_passive: RefCounted
+const OWNER_PASSIVE := preload("res://scripts/net/owner_passive_sync.gd")
+var _owner_passive: RefCounted
 const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
 const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
 ## Joined in each script's _enter_tree (encounter_director.gd, combat_manager.gd).
@@ -25,6 +27,34 @@ var _process_exit_refusal := ""
 func _groom_service() -> RefCounted:
 	if _groom_passive == null: _groom_passive = GROOM_PASSIVE.new(self)
 	return _groom_passive
+
+func _owner_passive_service() -> RefCounted:
+	if _owner_passive == null: _owner_passive = OWNER_PASSIVE.new(self)
+	return _owner_passive
+
+func owner_passive_recording_active() -> bool:
+	return _owner_passive != null and _owner_passive.call("recording_active") == true
+
+func record_owner_passive_input(packet: Dictionary) -> void:
+	if _owner_passive != null: _owner_passive.call("record_input", packet)
+
+func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
+	return _owner_passive_service().call("gate", peer, action, intent, event)
+
+func _owner_passive_send_host(packet: Dictionary) -> void:
+	if not is_host() and is_active(): rpc_id(HOST_PEER_ID, "_rpc_owner_passive_input", packet)
+
+func _owner_passive_send_peer(peer: int, packet: Dictionary) -> void:
+	if is_host() and _registry.call("has", peer) == true: rpc_id(peer, "_rpc_owner_passive_reply", packet)
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_owner_passive_input(packet: Dictionary) -> void:
+	if is_host(): _owner_passive_service().call("receive_host", multiplayer.get_remote_sender_id(), packet)
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_owner_passive_reply(packet: Dictionary) -> void:
+	if not is_host() and multiplayer.get_remote_sender_id() == HOST_PEER_ID and _owner_passive != null:
+		_owner_passive.call("receive_owner", packet)
 
 func groom_original_pending(original: Dictionary) -> bool:
 	return _groom_passive != null and _groom_passive.call("pending_original", original) == true
@@ -561,12 +591,16 @@ func _retry_foundation_events() -> void:
 				var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
 				if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 			var peer := int(_registry.call("peer_for_character", duty.character_id))
-			if peer < 1 or handled.has(duty.character_id) or admitted_character_state(peer).is_empty(): continue
+			if peer < 1 or handled.has(duty.character_id): continue
 			if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 			var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 			var receipt := _foundation_duty_receipt(duty)
 			if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 				and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
+			# Retained historical duties and in-fight mastery need no new action.
+			# Project/recover authority only after those exclusions; a long fight
+			# can retain hundreds of mastery sources for this same character.
+			if admitted_character_state(peer).is_empty(): continue
 			var context: Dictionary = duty.context.duplicate(true)
 			if duty.action == "boss_relic": context.boss_settlement_world_flags = world.flags.all_set().duplicate()
 			context.character_id = duty.character_id
@@ -1524,6 +1558,7 @@ func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		summary["portable_authority"] = CHARACTER_AUTHORITY.portable_projection(admission_game.get("local").save_data())
 		summary["personal_flags"] = admission_game.get("local").flags.call("save_data").duplicate(true)
 		summary["discovered_landmarks"] = _groom_service().call("admission_landmarks")
+		summary["owner_passive_stream"] = _owner_passive_service().call("arm_owner", summary.portable_authority, summary.discovered_landmarks)
 	# Always this process's own fingerprint: a caller cannot claim another build.
 	summary["build"] = BUILD_FINGERPRINT.current()
 	_pending_hello = summary
@@ -1921,6 +1956,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
 	_groom_service().call("admitted", character_id, _character_authority.call("discovered_landmarks", character_id))
+	_owner_passive_service().call("admitted", sender, summary)
 	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):
 		return
 	_finish_peer_hello(sender)
@@ -2553,6 +2589,7 @@ func _on_server_disconnected() -> void:
 func _process(delta: float) -> void:
 	_bind_training_container_guards()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
+	if _owner_passive != null: _owner_passive.call("tick", delta)
 	# Building the host portal context re-projects and recovers the whole local
 	# character record (~100 ms in Tidewake); cancel_invalid() can only act on a
 	# frozen Home Key channel, so build it only while one is open.
@@ -2848,6 +2885,7 @@ func _restore_character_here(wanted_id: String) -> bool:
 ## `_poll_lingering_peer()` instead of being closed under the goodbye.
 func _teardown(linger_transport: bool = false) -> void:
 	if _groom_passive != null: _groom_passive.call("reset")
+	if _owner_passive != null: _owner_passive.call("reset")
 	# Session's altar epoch survives a transport teardown. Explicitly retire
 	# observations and consumed travel identities before a peer can rejoin.
 	for path: NodePath in [^"FoundationComposition/TravelLifecycle", ^"FoundationComposition/PortalArrival", ^"FoundationComposition/ForgeHost"]:
@@ -3575,6 +3613,7 @@ func _owner_training_mutation_blocked(player: RefCounted) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true: return true
+	if _owner_passive != null and _owner_passive.call("blocked", player) == true: return true
 	var row := _owner_training_row()
 	if _pending_portal_for(str(player.character_id)): return true
 	if is_host() and _character_authority.call("creature_training_is_pending", str(player.character_id)) == true:
@@ -3699,6 +3738,7 @@ func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dict
 
 func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
 	if _groom_passive != null and _groom_passive.call("snapshot_allowed", player, payload) == true: return true
+	if _owner_passive != null and _owner_passive.call("snapshot_allowed", player, payload) == true: return true
 	if _pending_portal_for(str(player.character_id)):
 		return not _owner_portal_conflicting_transaction(player) and _owner_portal_snapshot_allowed(player, payload)
 	if not _owner_training_mutation_blocked(player): return true
@@ -3718,6 +3758,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
 			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
+	if _owner_passive != null: _owner_passive.call("owner_settled", row)
 	if not _altar_spend_request.is_empty() and _altar_spend_request.get("intent", {}).get("spend_id") == row.action_id:
 		var request := _altar_spend_request.duplicate(true)
 		_altar_spend_request = {}
@@ -3732,6 +3773,10 @@ func _altar_peer_in_combat(peer: int) -> bool:
 	var found_host := false
 	for node: Node in _foundation_directors_under(roots):
 		if node.has_method("pending_remote_rematch_settlement") and node.call("pending_remote_rematch_settlement") == true: return true
+		# Portal/station use can precede the first combat ingress. Resolve that
+		# same real host arbiter before asking whether its guest is fighting.
+		if is_host() and node.get("_session") == self and node.get("_encounter_host") == null:
+			node.call("_ensure_encounter_arbiters")
 		var host: Variant = node.get("_encounter_host")
 		if host is RefCounted and host.has_method("record") and host.has_method("is_participant"):
 			if host.has_method("pending_move_mastery"):

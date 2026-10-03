@@ -6,6 +6,8 @@ extends Node
 var _serial: int = 0
 var _left: float = 0.0
 var _observations: Dictionary = {}
+const SAMPLE_FIELDS := ["character_id", "world_instance_id", "session_epoch", "realm", "damage_revision", "dialogue", "cutscene", "swimming", "flying", "downed", "station_ack_only", "ending_owner", "party_revision", "party_signature", "sequence"]
+const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active"]
 
 func _ready() -> void:
 	session().connect("peer_left", func(peer: int) -> void: _observations.erase(peer))
@@ -93,8 +95,16 @@ func local_sample() -> Dictionary:
 		"swimming": swimming.swimming, "flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
 		"station_ack_only": input_owner == owner and owner.call("owns_input") == true and not other_dialogue and not fading,
 		"equipped_tool": str(game.get("equipped_tool")),
+		"passive_clock_active": local_passive_clock_active(game, owner),
 		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
 		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
+
+## D102 multiplayer modals do not pause Game. Use actual processing and the
+## existing transaction fence, never dialogue/cutscene/input ownership flags.
+static func local_passive_clock_active(game: Node, owner: Node) -> bool:
+	return game != null and owner != null and game.get("local") != null and game.can_process() and game.is_processing() \
+		and owner.has_method("_owner_training_mutation_blocked") \
+		and owner.call("_owner_training_mutation_blocked", game.get("local")) == false
 
 ## Water alone mounts SwimController. The other actual realm bodies have no
 ## swimming state; absence there is ordinary dry travel, not missing authority.
@@ -107,8 +117,13 @@ static func swimming_observation(realm: String, controller: Node) -> Dictionary:
 	return {"swimming": observed} if observed is bool else {}
 
 static func valid_sample(sample: Dictionary) -> bool:
-	if sample.size() not in [15, 16]: return false
-	if sample.size() == 16 and (not sample.get("equipped_tool") is String or sample.equipped_tool.length() > 96): return false
+	if sample.size() < SAMPLE_FIELDS.size() or sample.size() > SAMPLE_FIELDS.size() + OPTIONAL_SAMPLE_FIELDS.size(): return false
+	for field: String in SAMPLE_FIELDS:
+		if not sample.has(field): return false
+	for field: Variant in sample:
+		if field not in SAMPLE_FIELDS and field not in OPTIONAL_SAMPLE_FIELDS: return false
+	if sample.has("equipped_tool") and (not sample.equipped_tool is String or sample.equipped_tool.length() > 96): return false
+	if sample.has("passive_clock_active") and not sample.passive_clock_active is bool: return false
 	for field: String in ["character_id", "world_instance_id", "session_epoch", "realm"]:
 		if not sample.get(field) is String or sample[field].is_empty() or sample[field].length() > 192: return false
 	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner", "station_ack_only"]:
@@ -130,6 +145,25 @@ func accept(peer: int, sample: Dictionary) -> void:
 	if not prior.is_empty() and prior.sample.session_epoch == sample.session_epoch \
 		and (sample.sequence <= prior.sample.sequence or sample.damage_revision < prior.sample.damage_revision): return
 	_observations[peer] = {"sample": sample.duplicate(true), "seen_at": Time.get_ticks_msec()}
+
+## Cheap read of an already authenticated observation. This does not refresh
+## admission, inspect geometry, or construct the portal host context. Legacy
+## packets remain valid for travel but cannot authorize canonical elapsed time.
+func host_passive_clock_active(peer: int) -> bool:
+	var owner: Node = session()
+	if owner == null or owner.call("is_host") != true or owner.call("is_active") != true: return false
+	var observation: Dictionary = _observations.get(peer, {})
+	if observation.is_empty(): return false
+	var game: Node = owner.call("_game")
+	if game == null or game.get("world") == null: return false
+	var sample: Dictionary = observation.sample
+	var age := Time.get_ticks_msec() - int(observation.seen_at)
+	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
+	return age >= 0 and age <= int(timeout * 1000.0) and sample.get("passive_clock_active") == true \
+		and sample.character_id == owner.call("_authority_character", peer) \
+		and sample.realm == owner.call("realm_of", peer) \
+		and sample.session_epoch == owner.call("_altar_current_epoch") \
+		and sample.world_instance_id == game.get("world").reward_delivery_namespace
 
 func remote_body(peer: int) -> CharacterBody3D:
 	var owner: Node = session()
