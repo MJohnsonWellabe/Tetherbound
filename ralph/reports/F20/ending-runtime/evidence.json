@@ -1,12 +1,12 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917,7dc0283081,11aa0b1afe",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
     "local": "5a315cef84"
   },
-  "source_review": "Production/input driver through9d4 independently reviewed;diagnostica507 clearancewithdrawn;769d actualcompile/runtimeconfirmed. 72fde creditsclosingpresshandoff sourcePASS notyetreached afterr9 deadline. Proofcapture65cbb/c620sourcePASS compilesinr6 butreadyFAILbeforeinput. Authoredlineinput37b17 sourcePASS/solo-r10live. Criteria1\u20134OPEN.",
+  "source_review": "Production/input through9d4 independently reviewed; diagnostic a507 clearance WITHDRAWN;769d actual compile confirmed.72fde closing-press handoff and37b17 authored input sourcePASS, exercised by actualr10 homecoming/credits/Skip1ACK.65cbb/c620 capture sourcePASS compilesr6 but readyFAIL.7dc snapshot/phase guard and11aa peer identity assertions sourcePASS; affected solo-r11/two-peer-r4 pending. Criteria1\u20134 OPEN.",
   "focused": {
     "verdict": "PASS",
     "log": "f20-f18-focused-r2.log.gz",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake#0METcandidate. r8actualtruthfulhomecoming/diskACK thencreditsownerFAIL; source72fdeclosingpressfixreviewed. r9first10of11linesrecorded/panelstillopen/noACK atoldglobal30sproofdeadline, so72fdepathunexercised. Reviewed37b17 finiteauthoredlineinput/separateACK30s replayr10live. r5functional16/0butimageFAIL/audiounattributed; reviewed65cbb/c620capturefix compilesinr6butready/releasefalse182460ms beforeinput/noPNG/WAV. No blindrerender/no sharedworldedit/no localGPUengine/criteria1\u20134OPEN/mainpending.",
+    "reason": "Tidewake#0 MET candidate/main pending. Actualr10 initial homecoming/credits/guardedSkip1ACK/disk receipts pass but3SCRIPT ERRORs abort continuation despite34checks0/exit0: overall FAIL retained. Reviewed F20-only7dc/11aa serializer/UID/completion guards pushed; required affected solo-r11 and two-peer-r4 running on exact11aa. Earlier arch-r5 imageFAIL/audiohumunattributed andr6 readiness/release failure retained; no new render retry/shared-world edit/local engine/GPU. Criteria1\u20134 OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -452,6 +452,41 @@
         "failure": "World readiness/release predicates false at original180s limit. Bootlog last phase02:17:47 says_readycomplete/waitingfirstframe; source waitsphysics+process before constructionhold release/_shell_ready. This identifies predicates, not exact cost/call cause or GLwarmup.",
         "limits": "Newcapture source compiles; no actual fifth/recenter/result callback/PNG/WAV exercised. No sharedworld source changes or further blindrender retry. Criteria2OPEN.",
         "independent_review": "PASS f20_review: native10960 sha c7c58d39922f63442565fb489731e07940e227768de9f3e1adf9241c784947dc/user10854bytes both0errors; ZIP942305 sha08b46120b95b1e526a1444bcef0e4df3337a70361c1f4a35561754cc0b01bc4d matches. Exact8checks1 readiness/release predicates verified; no fifthPNG/WAV or exit_code. Capture callbacks unexercised; no construction-stillrunning/GLwarmup cause claimed. Criterion2OPEN."
+      },
+      {
+        "run": 37089384568,
+        "job": 111106265599,
+        "artifact": 11262336400,
+        "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
+        "verdict": "FAIL script errors/aborted continuation despite workflow success",
+        "checks_reported": 34,
+        "failures_reported": 0,
+        "workflow_conclusion": "success",
+        "exit_code": 0,
+        "elapsed_seconds": 402,
+        "native_bytes": 33796,
+        "native_sha256": "50e5c28a34d8babfb2dc4385d0e4a21c57d6a565b5c3063ea439d99425feca4a",
+        "native_script_errors": 3,
+        "native_engine_errors": 0,
+        "user_log_bytes": 33420,
+        "user_log_sha256": "dd50b0abb8b25de4bf5fa8c059bb8d4d1e3b4cdc70f1e975ada865883df65577",
+        "user_script_errors": 3,
+        "user_engine_errors": 0,
+        "artifact_bytes": 660101,
+        "artifact_sha256": "144c6a898ea73c7b53509d6cdb64a770dafdf2416e80979fead1cc127d7d7ebe",
+        "logs": [
+          "f20-solo-r10-native.log.gz",
+          "f20-solo-r10-workflow.log.gz",
+          "f20-solo-r10-artifact.zip"
+        ],
+        "passed": "Actual11authoredpresses/completed(regional_homecoming_5)/all5names/starter/live1landmark/fourdecisions, durablehomecoming; productioncreditsopen/inputguard/Skip exactly1durableACK;completedworldsave. Actualdisk character holds both homecoming and credits receipt. Memoryreset andproductionload_game returnstrue.",
+        "failure": "F20proofretained calls nonexistentInventory.save_data before reset and after load; resumed reads character from resultingemptyDictionary. ThreeSCRIPTERRORs abort snapshot/reloadcomparison/continuation, but oldrunnerstill prints34checks0 andexit0. Neveraccepted as clean orcompletedcriterion evidence.",
+        "ending_receipts_found_in_actual_disk": [
+          "craft:regional_ending_homecoming_seen:character-58e89efb0f4b261b450c3fe5213c92ad",
+          "craft:regional_ending_regional_credits_seen:character-58e89efb0f4b261b450c3fe5213c92ad"
+        ],
+        "limits": "No verified sameparty/inventory/world comparison afterreload, no completedGrandparevisit/no-replay/safemovement/bounty/rematch/remainingactivity proof. Criteria1/3 remainOPEN; nopeercriterion4.",
+        "independent_review": "PASS f20_review failed-evidence audit: exact original ZIP/native/user logs and hashes verified; actual initial homecoming/credits/Skip1ACK/disk receipts passed, but 3 SCRIPT ERRORs abort retained snapshot/reload comparisons/continuation despite exit0 and34checks0. Overall acceptance FAIL; criteria1/3 OPEN."
       }
     ],
     "limitations": [
@@ -590,7 +625,7 @@
     "1": {
       "verdict": "OPEN",
       "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
-      "latest_runtime": "r8 actualtruthful completedhomecoming/diskACK thencreditsownerFAIL; r9 first10of11lines recorded/panelstillopen/noACK atoldproof30s deadline. Reviewed finiteauthoredlineinput37b17 replayr10live. Credits72fdefixunexercised;criterion1OPEN."
+      "latest_runtime": "r10actualHomeKey/11spokenlines/completed/homecoming/creditsopen/guardedSkip1durableACK+diskreceiptsPASS;3SCRIPTERROR inretainedproof preventcleanrevisit/onceafterreload. Criterion1OPEN."
     },
     "2": {
       "verdict": "OPEN",
@@ -600,7 +635,8 @@
     "3": {
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
-      "indirect_only": "synthetic62checks PASS; actual script not yet reached reload"
+      "indirect_only": "Synthetic62 checks PASS. Actualr10 disk save/reset/load succeeds but proof script errors prevent clean retained-state comparison and completed-world continuation; affected solo-r11 pending.",
+      "latest_runtime": "r10actualcompletedworldsave/memoryreset/productionload_gamePASS;retainedinventoryprooferrors abortreloadedstatecomparison/revisit/safemovement/bounty/rematch/remainingactivities. Criterion3OPEN."
     },
     "4": {
       "verdict": "OPEN",
@@ -652,12 +688,25 @@
     }
   },
   "remote_pending": {
-    "solo_r10": {
-      "run": 37089384568,
-      "job": 111106265599,
-      "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
-      "label": "f20-solo-r10-authored-dialogue",
-      "status": "live checkout at02:21 observation; freshjobs authoritative"
+    "solo_r11": {
+      "run": 37090781811,
+      "job": 111110467978,
+      "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+      "script": "tests/smoke_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37090781811",
+      "status": "in progress; no result claimed"
+    },
+    "net_r4": {
+      "run": 37090792874,
+      "job": 111110505505,
+      "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+      "script": "tests/smoke_net_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37090792874",
+      "status": "in progress; no result claimed"
     }
   },
   "lesson_input_driver": {
@@ -677,7 +726,7 @@
     "source": "72fde3eb147de38c4fee900fd602ede300ad1efe",
     "independent_source_review": "PASS f20_review: retain frozen world/id/context, wait only own closed regionaldialogueheldpress, reject unrelatedowner/reopen/drift/removal; existingopen_forguardunchanged. Actualfixpending.",
     "causal_limit": "Old deferred handoff has concrete source race with closinginteract owner and no retry. r8 raw trace does not directly log initialopen_for refusal, so source interpretation fits evidence but must be replayed.",
-    "runtime": "Still pending: solo-r9 failed earlier while actual dialogue stillopen/ACKunattempted. This does not validate/refute credits fix."
+    "runtime": "Actualsolo-r10 reaches productioncreditsopen after completedhomecoming andSkip emits exactlyonedurableACK forowncharacter; bothendingreceipts inrealcharacterdisk. Replaystillnotclean because unrelatedretainedinventoryproof errors abortcontinuation; no overallcriteria closure."
   },
   "arch_capture_correction": {
     "source": "65cbb1e878c7363c8c84590490a1115bb26c6e42,c620ba4e9da42c76956c622bb67253799a8f8244",
@@ -687,6 +736,14 @@
   "dialogue_input_correction": {
     "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
     "independent_source_review": "PASS f20_review: finite actualauthoredlinecount+2normalpress/releases andseparate30sACKobservation; noauthoritative writes/runneradvance/close/inputownership bypass or authoredcriterionwaiver. Runtimepending solo-r10.",
-    "change": "Bound ordinaryX input by actual authoredlinecount+2initialguard presses, then preserve30s distinctdurableACKobservation. Native r9 proves oldglobal30s inputdeadline endedwith healthyopenconversationbeforefinalpress. Alltruthful renderedprose/credits/receipts checks remain; no authoritativewrites or productiontiming changes. Net300s/readiness180s/globalremote caps unchanged."
+    "change": "Bound ordinaryX input by actual authoredlinecount+2initialguard presses, then preserve30s distinctdurableACKobservation. Native r9 proves oldglobal30s inputdeadline endedwith healthyopenconversationbeforefinalpress. Alltruthful renderedprose/credits/receipts checks remain; no authoritativewrites or productiontiming changes. Net300s/readiness180s/globalremote caps unchanged.",
+    "runtime": "Actualsolo-r10 authored11lines/11normalpresses completesactualdialogue andalltruthfulprose checks. Source37driver change exercised; no productionACKrefusal."
+  },
+  "retained_inventory_correction": {
+    "source": "7dc028308166c18786db0f771ca351ef5304e2df",
+    "independent_source_review": "PASS f20_review: actual active SaveGame read-only slot serializer includes null slots/quantities; detached snapshots include companion UIDs; shape/type guards and explicit continuation/completion result fail closed if required phases abort. No producer or durable state mutation. Actual affected batch pending.",
+    "change": "F20-only uses actualactiveSaveGame._inventory_to_array slot serializer anddeepcopy; includescurrentcompanionUIDs. Snapshotshape/type gates protectsolo/peerinspect andbefore/afterreload; explicitVariantcontinuationresult andcompleted sentinel failclosed onabortedrequiredphases. No production state mutation or criterion weakening.",
+    "peer_identity_source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+    "peer_identity_review": "PASS f20_review: returning guest and both final reloaded parties compare ordered companion UIDs as well as names; proof assertions only, unchanged deadlines and production path."
   }
 }
