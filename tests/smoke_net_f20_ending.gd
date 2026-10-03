@@ -10,6 +10,7 @@ func _initialize() -> void:
 func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
+	require_peer_logs_without(["ERROR:", "SCRIPT ERROR:"], "F20 actual peer logs have no engine/script errors")
 	if not await launch(2, "world", [], {1: ["--joiner"]}): quit(await finish()); return
 	var port := int(_peers[0].hello.enet_port)
 	if not await _pass(0, "host", {"port": port}): return
@@ -63,12 +64,22 @@ func _pass(peer: int, action: String, args: Dictionary = {}, frames: int = 12000
 	return passed
 
 ## Use the base coordinator's isolation/control protocol with a scoped runner.
+func _resolve_run_dir() -> String:
+	if not OS.get_environment("TB_NET_OUT_DIR").is_empty(): return super._resolve_run_dir()
+	var safe_id := _run_id.replace("/", "_").replace(":", "_").replace(" ", "_")
+	# The remote workflow collects project reports and user://, not /tmp.
+	# Keep every real peer log, disk file and coordinator verdict together.
+	return ProjectSettings.globalize_path("res://ralph/reports/F20/ending-runtime/").path_join("net-run-" + safe_id)
+
 func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene: String,
 		home: String, log_path: String, extra_args: Array) -> int:
-	var args := ["--headless", "--path", ProjectSettings.globalize_path("res://"),
-		"--log-file", log_path, "--script", "res://tests/helpers/f20_peer_runner.gd", "--",
+	var args := ["--headless", "--path", ProjectSettings.globalize_path("res://")]
+	# POSIX redirects both streams below; two simultaneous writers to the
+	# same log would lose diagnostics. Windows uses Godot's own log file.
+	if _is_windows(): args.append_array(["--log-file", log_path])
+	args.append_array(["--script", "res://tests/helpers/f20_peer_runner.gd", "--",
 		"--role=%s" % role, "--peer=%d" % i, "--control-port=%d" % control_port,
-		"--enet-port=%d" % enet_port, "--scene=%s" % scene, "TB_NET_RUN_ID=%s" % _run_id]
+		"--enet-port=%d" % enet_port, "--scene=%s" % scene, "TB_NET_RUN_ID=%s" % _run_id])
 	for extra: Variant in extra_args: args.append(str(extra))
 	OS.set_environment("XDG_DATA_HOME", home)
 	if _is_windows(): OS.set_environment("APPDATA", home)
