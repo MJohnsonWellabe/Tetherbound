@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Criteria0/1/3 MET candidate, main pending. Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN. Next justified capture preparation is bounded ordinary look input toward actual arch with live framing and unchanged provider/ground checks; no transform/geometry changes. #4 fullpeer waits then-green framework baseline.",
+    "reason": "Criteria0/1/3 MET candidate/main pending. Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1178,6 +1178,69 @@
         },
         "independent_review": "PASS GPT-6.1 Sol f20_review_sol exactsource/workflow/ZIP/native/user/PNG/WAV hashes and functional16/0/zeroerrors; independently VIEWED visible-stir FAIL, audible verdict withheld. #2 OPEN.",
         "limits": "Hosted llvmpipe OpenGL Compatibility and Dummy audio, ordinary harness camera/input and post-finale fixture. No physical-device/listener acceptance or earnedcampaign proof."
+      },
+      {
+        "run": 37104784649,
+        "job": 111151068714,
+        "artifact": 11267687918,
+        "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+        "verdict": "Functional and visible-stir PASS; audible hum OPEN",
+        "workflow_conclusion": "success",
+        "checks": 20,
+        "failures": 0,
+        "exit": 0,
+        "seconds": 1595,
+        "native_bytes": 12755,
+        "native_sha256": "886c6e95cedefb228cfa560de6c907e58d0c3c583c7ec806304a2c3b266aa43a",
+        "user_log_bytes": 12631,
+        "user_log_sha256": "55e12283efe59a2fceb6299adfd8659afea885163d9da2faf6d9d608301ea5e8",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "native_warnings": 10,
+        "user_warnings": 10,
+        "artifact_bytes": 2569100,
+        "artifact_sha256": "58f1e5b6d9bd605888ae50f42b5a7666ba955db2edda597c129542c7d6541469",
+        "logs": [
+          "f20-arch-render-r8-native.log.gz",
+          "f20-arch-render-r8-workflow.log.gz",
+          "f20-arch-render-r8-artifact.zip"
+        ],
+        "startup": {
+          "ready_ms": 193204,
+          "physics_samples": 46,
+          "max_wait_ms": 125927,
+          "budget_ms": 600000,
+          "observed_ms": 196824,
+          "process_frames": 5,
+          "post_draw_frames": 6
+        },
+        "ordinary_look": {
+          "motions": 8,
+          "projection_framed": true,
+          "retained": "Captured mouse/no owner, actual player floor/no recovery, exact actionable arch provider, zero queued relative motion before X."
+        },
+        "png": {
+          "file": "f20-arch-render-r8-fifth-stir.png",
+          "bytes": 1519699,
+          "sha256": "b3a0274a7c709181f435233b6d01e45af9f807cd70ad9b86984b3f8e096782f1",
+          "verdict": "PASS independently viewed by root and Sol reviewer: centered sealed opening, pale violet glow above player and visible dust ring; single not-ready line readable, existing fixture HomeKey/Grandpa quest unchanged."
+        },
+        "wav": {
+          "file": "f20-arch-render-r8-fifth-sfx.wav",
+          "bytes": 933932,
+          "sha256": "07b25f23a67c3475fc44d0c8b11315bd3663b3fbcd15706fa1d70b0e529c60d8",
+          "channels": 2,
+          "sample_width": 2,
+          "rate": 44100,
+          "frames": 233472,
+          "seconds": 5.294149659863946,
+          "interval": "Actual own durable result starts SFX recording, actual first postdraw after5384ms; mixed clip5.29414966s. Original bytes unchanged.",
+          "verdict": "OPEN audible hum: model audio input explicitly unsupported; no listening/low-hum verdict inferred from PCM/state. Original r7 human listener question remains pending; new original clip also retained."
+        },
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user/PNG/WAV sizes and SHA256,20checks0/exit0/1595s/zeroerrors. Independently VIEWED visible-stir PASS: sealed centered arch/paleviolet glow/dust/singleline, no new quest. Audible sound withheld; F20#2 OPEN.",
+        "limits": "Hosted llvmpipe Compatibility/Dummy audio, disclosed post-finale fixture and ordinary harness input; no physical-device performance, full visual-quality, supported-listener or earned-campaign claim."
       }
     ],
     "limitations": [
@@ -1323,7 +1386,7 @@
     "2": {
       "verdict": "OPEN",
       "required": "actual key debit, sealed fifth arch, inspected glow and audible SFX/one line, unchanged main quest",
-      "latest_runtime": "Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN. Reviewed1a7b9ef ordinary bounded mouse orbit/framing guard now hostedarch-r8 37104784649 in progress; #2 stays OPEN."
+      "latest_runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
     },
     "3": {
       "verdict": "MET on candidate; main landing pending",
@@ -1384,18 +1447,7 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {
-    "arch_r8": {
-      "run": 37104784649,
-      "job": 111151068714,
-      "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
-      "script": "tests/smoke_f20_arch_presentation.gd",
-      "mode": "render",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37104784649",
-      "status": "Original hosted isolated checkout in progress; no duplicate/local run. Actual image and supported-listener verdict pending."
-    }
-  },
+  "remote_pending": {},
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1418,7 +1470,7 @@
   "arch_capture_correction": {
     "source": "65cbb1e878c7363c8c84590490a1115bb26c6e42,c620ba4e9da42c76956c622bb67253799a8f8244",
     "independent_source_review": "PASS f20_review: consumedonce ordinary camera_recenter callback after existing exactprovider navigation; no transforms assigned. Actualown durable result starts recording/firstpostdraw capture; in-flight capture joined before effect removal; real camera/arch framing diagnostics read-only. Compilation/artifact/visual/audio pendingr6.",
-    "runtime": "Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN."
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
   },
   "dialogue_input_correction": {
     "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
@@ -1657,14 +1709,14 @@
     "reason": "Actual r5 readiness121444ms/maxgap82289; r6 timeout182460ms/17physics/maxgap132569/shellfalse/playerheldfloorfalse, no capture. These observations justify accommodating slow software-render lifecycle; no GL warmup or exact engine-call cause inferred. Criterion2 has no startup-time requirement.",
     "change": "Presentation-only600000ms readiness allowance; defaultsolo/net180000 unchanged. Full shell/floor/journey predicates unchanged. Process/postdraw observers connected before scene startup and disconnected on either readiness outcome; readonly counters/elapsed and actual budget logged.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol decision and concrete source. Typedtimeout/default and counters avoid inferredVariant concerns. No world/player/constructionhold/pose/input/assertion mutation; no physicaldevice/audibleacceptance claim. If bounded run still fails same predicates, investigate measured lifecycle rather than repeat render.",
-    "runtime": "Actual arch-r7 functional16/0/exit0/1484s/zeroerrors. Full readiness200081ms/46physics/max132788 with600s allowance; process5/postdraw6. Actual own result PNG/4.27247s mixed SFX window captured. Independently viewed PNG FAIL: arch/glow offscreen belowviewport after yaw0 recenter. Audible verdict requires supported listener; #2 OPEN."
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
   },
   "arch_ordinary_look_candidate": {
     "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
     "reason": "Actualr7 arch/glow projects belowviewport; player-root recenter bearing does not face actual arch. The camera must orbit the player through ordinary input to place the lens on the opposite side.",
     "change": "Render-only preparation uses actual surface/player bearing and pure horizontal preference sensitivity, <=32 ordinary relative mouse motions/180s, real idle+physics settling; requires all8 actual opening AABB corners and glow point front/inset, zero queued motion, captured mouse, no UI owner, floor/no recovery and exact actionable provider. Explicit false callback suppresses X and records failure; null callback behavior retained. No transforms/settings/geometry or production camera changes.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete diff, followed by requested final captured-mouse guard recheck. Sign/sensitivity matches production unhandled_input/apply_look; known types avoid inferredVariant. Projection is framing only, not occlusion/visible-glow proof. No engine/GPU execution.",
-    "runtime": "Original isolated hosted arch-r8 run37104784649/job111151068714 in progress; actual image still requires independent view. No runtime result or audible verdict claimed."
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; original PNG independently VIEWED PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Original own-result5.29415s WAV retained; audible hum requires supported listener, pending existing human question. #2 OPEN only for sound verdict; #4 waits then-green main fullpeer baseline."
   },
   "two_peer_both_reload_candidate": {
     "source": "99e6fca560fb09d416d5d8a10ae91c7635df00dc",
