@@ -8,6 +8,7 @@ var _held_ids: Dictionary = {}
 var _candidate_ids: Dictionary = {}
 var _samples: Array[String] = []
 var _retained_samples: Array[String] = []
+var _active_owner_counts: Dictionary = {}
 
 func _run() -> void:
 	if not preload("res://tests/helpers/f19_functional_offload.gd").configure("solmane_cold_material_diagnostic"):
@@ -51,6 +52,7 @@ func _observe(phase: String) -> void:
 	_candidate_ids.clear()
 	_samples.clear()
 	_retained_samples.clear()
+	_active_owner_counts.clear()
 	_scan(root)
 	var roots: Array[String] = []
 	for child: Node in root.get_children(): roots.append(str(child.get_path()))
@@ -59,6 +61,8 @@ func _observe(phase: String) -> void:
 		"unique_material_candidates": _candidate_ids.size(), "held_materials": _held.size(),
 		"owner_samples": _samples, "sample_limit": 32,
 		"new_retained_owner_samples": _retained_samples, "retained_sample_limit": 64}))
+	print("F19 SOLMANE COLD ACTIVE OWNER GROUPS " + JSON.stringify({"phase": phase,
+		"counts": _active_owner_counts, "selection_args": OS.get_cmdline_user_args()}))
 
 func _scan(node: Node) -> void:
 	if node is MeshInstance3D:
@@ -81,6 +85,11 @@ func _scan(node: Node) -> void:
 
 func _note(node: Node, surface: int, kind: String, material: Material) -> void:
 	if material == null: return
+	var path := str(node.get_path())
+	var parts := path.split("/")
+	var owner := str(parts[3]) if parts.size() > 3 else path
+	if kind == "active-surface-override":
+		_active_owner_counts[owner] = int(_active_owner_counts.get(owner, 0)) + 1
 	var id := material.get_instance_id()
 	if not _candidate_ids.has(id):
 		_candidate_ids[id] = true
@@ -89,6 +98,12 @@ func _note(node: Node, surface: int, kind: String, material: Material) -> void:
 				surface, id, material.get_class(), material.resource_name])
 	var retain := (_treatment() == "retain-masked-materials" and kind != "active-surface-override") \
 		or (_treatment() == "retain-active-surface-overrides" and kind == "active-surface-override")
+	if kind == "active-surface-override":
+		for argument: String in OS.get_cmdline_user_args():
+			if argument.begins_with("--active-owner-root="):
+				retain = retain and owner == argument.trim_prefix("--active-owner-root=")
+			elif argument.begins_with("--exclude-active-owner-root="):
+				retain = retain and owner != argument.trim_prefix("--exclude-active-owner-root=")
 	if retain and not _held_ids.has(id):
 		_held_ids[id] = true
 		_held.append(material)
