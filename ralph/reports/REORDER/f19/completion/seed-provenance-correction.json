@@ -21,7 +21,19 @@
     "scope": "Original eleven refusals plus four seed provenance contradictions; all fabricated refusal controls, no earned artifact produced"
   },
   "native_probe": "tests/probe_f19_population_provenance.gd",
-  "native_status": "Not yet run; prepared for remote actual WorldState/WorldSave regression",
+  "native_status": {
+    "source_commit": "6f7ebb70b8dde3b9332dfbb3461866d05d6be223",
+    "run": 37089232408,
+    "artifact": 11261532342,
+    "process_exit": 0,
+    "elapsed_seconds": 3,
+    "checks": 12,
+    "failures": [],
+    "engine_errors": 0,
+    "script_errors": 0,
+    "scope": "Actual WorldState/WorldSave disk bytes and read-only seed observation under absent/present capture override; save and WorldState unchanged",
+    "log": "ci-population-provenance-37089232408.log"
+  },
   "full_route": "No override, no resume, no source-fixture supplied saves; prepared seed4 dispatch remains held",
   "integration": "No main-required production delta in this proof-only change; independent broader review still needed after coordinator main-green priority."
 }

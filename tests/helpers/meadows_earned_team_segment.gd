@@ -835,6 +835,7 @@ var _catch_retries := 0
 func _catch_with_retries(wild: Node3D) -> Dictionary:
 	var caught: Dictionary = {}
 	for attempt in MAX_CATCH_ATTEMPTS:
+		var retained_ids := _party_ids()
 		var catch_driver := CATCH.new()
 		caught = await catch_driver.catch_existing(_tree, _world, _game, _player, _rig, wild)
 		if bool(caught.get("passed", false)):
@@ -844,6 +845,27 @@ func _catch_with_retries(wild: Node3D) -> Dictionary:
 			"fighting": _fighting(), "party": _party_snapshot()})
 		if _catch_retries > MAX_CATCH_ATTEMPTS * 2:
 			return caught
+		var active: RefCounted = _combat.call("active_creature")
+		if active != null and bool(active.get("fainted")) \
+				and str(_combat.call("outcome")) == "lost":
+			# is_fighting includes the real1.6s result banner. R7 burned its
+			# remaining catch attempts in that same tick against a fainted lead.
+			# Await the already-decided ordinary loss inside the existing240tick
+			# cleanup bound; never retry, heal or force resolution during it.
+			_stick(0, 0)
+			Input.flush_buffered_events()
+			var began := Engine.get_physics_frames()
+			for _frame in 240:
+				if not _fighting() and INPUT_OWNER.current(_tree) == null:
+					if str(_combat.call("outcome")) != "lost" or _party_ids() != retained_ids:
+						return caught
+					_receipt("catch_loss_resolved", {"attempt": attempt + 1, "failed_attempts": _catch_retries,
+						"outcome": str(_combat.call("outcome")), "waited_physics_frames": Engine.get_physics_frames() - began,
+						"party": _party_snapshot(), "party_ids_unchanged": _party_ids() == retained_ids,
+						"failures": caught.get("failures", []), "scope": "actual lost encounter settled; no catch or victory credit"})
+					return {}
+				await _tree.physics_frame
+			return caught # An unresolved loss remains a real failed capture.
 		if not _fighting() or not is_instance_valid(wild):
 			for _frame in 240:
 				if INPUT_OWNER.current(_tree) == null:

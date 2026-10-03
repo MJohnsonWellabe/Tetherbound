@@ -34,8 +34,9 @@
     "path": "tests/helpers/meadows_earned_team_segment.gd",
     "source_blob": "fe7e6ae9cd6cdf404e5bd33ad61b57e32749cadc",
     "source_sha256": "bc9a0d6f87af976a5e97543a5cce3b3ae3a4ee02d2d42aa23493db7685cf8fcc",
-    "status": "Prepared exact snapshot; independent verdict requested through coordinator before import",
-    "delta": "22 lines awaiting actual catch-loss resolution inside existing240tick cleanup; no loss in R8 so branch unexercised"
+    "status": "Exact source snapshot now imported only into isolated F19, independently approved source SHA; same-branch native proof still required",
+    "delta": "22 lines awaiting actual catch-loss resolution inside existing240tick cleanup; no loss in R8 so branch unexercised",
+    "evidence": "reviewed-meadows-loss-wait-dependency.json"
   },
   "next_f19_scope": "Full fresh ordinary all-five-boundary route, unchanged eight-contact guard. Seed strategy must preserve and disclose actual saved-world identity; no inference that --world-seed=4 fixes the contact cap or pins terrain. Prepared seed4 dispatch is held.",
   "exclusions": "Native boundedprefix success only; one engine error prohibits clean-engine claim. No five boundary receipts, full campaign, no earned saves promoted, no catch-loss-branch proof.",

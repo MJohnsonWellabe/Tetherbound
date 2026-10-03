@@ -191,6 +191,20 @@
     "run": 37088521645,
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Original spaceaccept/save/reload baseline versus whole-world actual resource retention versus scriptless world Label3D deletion observer; diagnostic only",
-    "status": "Verified queued; no terminal native evidence"
-  }
+    "status": "Verified native Run step live at last API inspection"
+  },
+  "population_provenance_native": {
+    "source_commit": "6f7ebb70b8dde3b9332dfbb3461866d05d6be223",
+    "run": 37089232408,
+    "artifact": 11261532342,
+    "process_exit": 0,
+    "elapsed_seconds": 3,
+    "checks": 12,
+    "failures": [],
+    "engine_errors": 0,
+    "script_errors": 0,
+    "scope": "Actual WorldState/WorldSave disk bytes and read-only seed observation under absent/present capture override; save and WorldState unchanged",
+    "log": "ci-population-provenance-37089232408.log"
+  },
+  "actual_saved_seed_samples": "canonical-meadows-prefix-r8.json"
 }

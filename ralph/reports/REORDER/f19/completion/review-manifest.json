@@ -157,8 +157,10 @@
     "run": 37088521645,
     "source_commit": "6c3572a5645190f6377cc41c70a121fb2534311a",
     "acceptance": false,
-    "status": "Offloaded actual world teardown diagnostic queued"
+    "status": "Verified native Run step live; same run handle, no restart"
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
-  "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed."
+  "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
+  "latest_population_proof": "seed-provenance-correction.json",
+  "latest_m1_dependency": "reviewed-meadows-loss-wait-dependency.json"
 }
