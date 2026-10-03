@@ -20,12 +20,12 @@ class FixtureRpc extends SAVE.FixtureRpc:
 		return false # Publication/owner ACK withheld explicitly; only world BOOL tested here.
 
 class FixtureSession extends SAVE.FixtureSession:
-	var host := true
+	var fixture_host := true
 	var station := true
 	var gate := Gate.new()
 	var sent_quote: Dictionary = {}
 	var sent_request: Dictionary = {}
-	func is_host() -> bool: return host
+	func is_host() -> bool: return fixture_host
 	func _authority_character(peer: int) -> String: return DATA.CHARACTER if peer in [1, 2] else ""
 	func admitted_character_state(_peer: int) -> Dictionary: return get("_character_authority").call("state", DATA.CHARACTER)
 	func _altar_station_for_peer(_peer: int, _key: String) -> bool: return station
@@ -33,7 +33,7 @@ class FixtureSession extends SAVE.FixtureSession:
 		return {"character_id": DATA.CHARACTER, "expected_revision": get("_character_authority").call("revision", DATA.CHARACTER),
 			"source_key": key, "station_id": "altar", "homestead": true, "in_range": true, "in_combat": false}
 	func _altar_envelope_matches(peer: int, envelope: Dictionary, fields: Array) -> bool:
-		if not host or peer not in [1, 2] or envelope.size() != fields.size(): return false
+		if not fixture_host or peer not in [1, 2] or envelope.size() != fields.size(): return false
 		for field: String in fields:
 			if not envelope.has(field): return false
 		return envelope.character_id == DATA.CHARACTER and envelope.session_epoch == "resource-epoch" \
@@ -133,17 +133,17 @@ func test_guest_checkpoint_precedes_stage_and_foreign_or_changed_requests_refuse
 
 func test_async_quote_accepts_only_original_scope_and_notifies_existing_ui_signal() -> void:
 	var f := _fixture()
-	f.session.host = false
+	f.session.fixture_host = false
 	var updates: Array = []
 	f.session.connect("altar_trait_quote_completed", func(key: String, uid: String) -> void: updates.append([key, uid]))
 	var first: Dictionary = f.transport.quote(f.request.station_key, f.request.intent.creature_uid)
 	assert_eq(first.code, "quote_pending")
 	var original: Dictionary = f.session.sent_quote.duplicate(true)
-	f.session.host = true
+	f.session.fixture_host = true
 	var quote: Dictionary = f.transport.handle_quote(2, original)
 	assert_true(quote.get("ok") == true, str(quote))
 	assert_true(quote.get("release_allowed") == true)
-	f.session.host = false
+	f.session.fixture_host = false
 	var foreign: Dictionary = original.duplicate(true)
 	foreign.quote_id = "f".repeat(32)
 	f.transport.receive_quote(foreign, quote)
