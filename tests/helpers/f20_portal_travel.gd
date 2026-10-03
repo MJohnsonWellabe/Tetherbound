@@ -43,6 +43,9 @@ func _continue_navigation_lesson() -> void:
 	_lesson_busy = false
 
 func _activate_world(prompt: Node3D) -> bool:
+	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
+	if bounty != null and bounty.get("_prompt") == prompt:
+		return await _activate_bounty_via_road(prompt)
 	# Hall arches face an authored room approach. Reaching their coordinates
 	# from the exterior side of the wall does not establish a visible offer.
 	# Walk the installed marker through the original capsule navigator first.
@@ -72,6 +75,54 @@ func _activate_world(prompt: Node3D) -> bool:
 			" offer=", prompt.call("interaction_offer", _player.global_position) if is_instance_valid(prompt) and is_instance_valid(_player) else {},
 			" dock_complete=", game.world.flags.call("has", "water_civilian_departure_complete"))
 	return passed
+
+func _activate_bounty_via_road(prompt: Node3D) -> bool:
+	if prompt == null or not _bind(): return _fail("F20 bounty travel requires ordinary world input")
+	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
+	if arbiter == null: return _fail("F20 bounty travel lacks the actual interaction arbiter")
+	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	if not terrain is Dictionary or not terrain.get("paths") is Dictionary \
+			or not terrain.paths.get("approaches") is Array:
+		return _fail("F20 bounty travel lacks the authored village road")
+	var road: Array = []
+	var matches := 0
+	for route: Variant in terrain.paths.approaches:
+		if route is Dictionary and route.get("id") == "village_main_street":
+			matches += 1
+			if route.get("points") is Array: road = route.points
+	if matches != 1 or road.size() != 2: return _fail("F20 bounty travel requires the one straight authored village road")
+	var ends: Array[Vector2] = []
+	for raw: Variant in road:
+		if not raw is Array or raw.size() != 2 or not (raw[0] is int or raw[0] is float) \
+				or not (raw[1] is int or raw[1] is float): return _fail("F20 bounty road coordinates are invalid")
+		var at := Vector2(float(raw[0]), float(raw[1]))
+		if not at.is_finite(): return _fail("F20 bounty road coordinates are not finite")
+		ends.append(at)
+	var start := Geometry2D.get_closest_point_to_segment(Vector2(_player.global_position.x, _player.global_position.z), ends[0], ends[1])
+	var headings: Array[Vector3] = [Vector3(start.x, _player.global_position.y, start.y),
+		Vector3(ends[1].x, _player.global_position.y, ends[1].y)]
+	var distance := _player.global_position.distance_to(prompt.global_position)
+	var recoveries_before := int(_player.get("_unstick_count"))
+	var nav := NAV.new(tree, _player, _rig, _stick)
+	# The failed diagonal crosses the south-side house row. Follow the actual
+	# eastward road before turning onto the tournament lawn. All headings
+	# share the original direct-distance budget and confined watchdog.
+	print("F20 BOUNTY authored road headings=", headings, " target=", prompt.global_position)
+	var reached: bool = await nav.walk_to_guided(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5, headings)
+	_stick(0, 0)
+	if not reached: return _fail("F20 ordinary bounty capsule walk failed via the authored village road")
+	for frame in 8: await tree.physics_frame
+	if int(_player.get("_unstick_count")) != recoveries_before:
+		return _fail("F20 unexpected entombment recovery interrupted bounty travel")
+	if not _player.is_on_floor() or arbiter.call("winning_provider") != prompt:
+		return _fail("F20 bounty travel did not reach its grounded exact provider")
+	var offer: Dictionary = arbiter.call("winner")
+	if offer.get("actionable") != true: return _fail("F20 actual bounty provider refused its action")
+	_activated = null
+	arbiter.connect("activated", _activation)
+	await tap("interact")
+	if is_instance_valid(arbiter) and arbiter.is_connected("activated", _activation): arbiter.disconnect("activated", _activation)
+	return _activated == prompt or _fail("F20 bounty input activated another provider")
 
 func tap(action: String) -> void:
 	# Presentation proofs can use ordinary camera input after the original
