@@ -40,6 +40,28 @@ class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 	var dialogue_proven := false
 	var _f18_assigning_tools := false
 	var _f18_assignment_trace: Array[Dictionary] = []
+	func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: StringName) -> bool:
+		# Observe the actual resource and outgoing prop without retaining any
+		# Material references or changing the inherited gather/input timing.
+		var resource: Node3D = _nearest_authored_node(item_id)
+		if resource != null: _f18_watch_resource_exit(resource, "harvest:" + item_id)
+		var hold: Node = _player.get("tool_hold")
+		if hold != null:
+			var prop: Node = hold.call("prop_node")
+			if is_instance_valid(prop): _f18_watch_resource_exit(prop, "outgoing:" + str(_game.get("equipped_tool")))
+		return await super._gather_authored_node(item_id, tool_id, hotbar_action)
+	func _f18_watch_resource_exit(node: Node, role: String) -> void:
+		var nodes: Array[Node] = [node]
+		nodes.append_array(node.find_children("*", "MeshInstance3D", true, false))
+		for observed: Node in nodes:
+			var path := str(observed.get_path())
+			var instance_id := observed.get_instance_id()
+			observed.tree_exiting.connect(_f18_resource_exit.bind("exiting", role, path, instance_id), CONNECT_ONE_SHOT)
+			observed.tree_exited.connect(_f18_resource_exit.bind("exited", role, path, instance_id), CONNECT_ONE_SHOT)
+			_f18_resource_exit("watch", role, path, instance_id)
+	func _f18_resource_exit(event: String, role: String, path: String, instance_id: int) -> void:
+		print("F18_RESOURCE_LIFETIME " + JSON.stringify({"event": event, "role": role, "path": path,
+			"instance_id": instance_id, "process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames()}))
 	func _assign_tools_in_satchel() -> bool:
 		var initial: Dictionary = _f18_tool_observation()
 		var inventory_before: Array = guards._inventory()

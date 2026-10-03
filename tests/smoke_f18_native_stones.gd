@@ -306,7 +306,7 @@ func _union_floor_ray(world: Node3D, at: Vector3) -> Dictionary:
 	if normal.angle_to(Vector3.UP) > player.floor_max_angle: return {}
 	return hit
 
-func _entry(world: Node3D, player: CharacterBody3D, arrival: Node, game: Node) -> void:
+func _entry(world: Node3D, player: CharacterBody3D, probe: ProbeBody, arrival: Node, game: Node) -> void:
 	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
 	var entry_id := ""
 	for arch: Dictionary in config.arches:
@@ -327,6 +327,14 @@ func _entry(world: Node3D, player: CharacterBody3D, arrival: Node, game: Node) -
 	# never assigns it the proposed landing or changes its controller state.
 	var collision := player.get_node(^"Collision") as CollisionShape3D
 	var radius: float = (collision.shape as CapsuleShape3D).radius
+	# Direct Meadows scene boot starts at the village opening, away from the
+	# Hall portal fallback. Use the disclosed isolated candidate/controller
+	# fixture there; observing the remote Player cannot prove entry contact.
+	if realm == "meadows" and target.is_finite() and player.global_position.distance_to(target) > radius:
+		var record := await _geometry(world, player, probe, arrival, target, entry_id)
+		record["fixture"] = "direct Meadows scene boot at village; isolated actual-capsule candidate/controller fixture at Hall portal fallback; no Player pose writes"
+		entries.append(record)
+		return
 	var before := player.global_transform
 	var landing: Vector3 = arrival.call("_capsule_landing", world, player, target, radius)
 	_check(player.global_transform == before, entry_id + " solver observes actual Player without pose writes")
@@ -431,7 +439,7 @@ func _run() -> void:
 	await physics_frame
 	await process_frame
 	var arrival := ARRIVAL.new()
-	await _entry(world, player, arrival, game)
+	await _entry(world, player, probe, arrival, game)
 	for row: Dictionary in rows:
 		await _stone(world, player, probe, arrival, row, str(config.presentation.model))
 	_check(records.size() == IDS[realm].size(), "every configured stone checked without skipped counts")

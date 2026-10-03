@@ -10,7 +10,7 @@
   "isolated_apply_check": true,
   "applied_lf_sha256": "ec71cc6887f13e1294f238c75f2069cd116ec0e9f754a5fe14782634943f4b5a",
   "scope": "Same actualflattransitionpolygon/topheight/yaw/UV/skirt with sharedvisible/collisiontriangulation; directrawConcavefaces avoidTriangleMesh snap. ArrivalGateRoad_Ledge0 retains rendered44mgeology, allouter/risingstrips,skirt/undercap/nature/road; onlyits2mcollisionhub omitted IFexactnativeownerprefix, exactcoplanarity/XZandactualcompletepolygoncontainment provefull coverage. All defaults elsewhere unchanged.",
-  "source_review": "Independent GPT-6.1 Sol source APPROVE; native independent evidence review requested.",
+  "source_review": "Independent GPT-6.1 Sol source APPROVE and original R5 native-geometry APPROVE; original ZIP personally reviewed exit0/73checks/zeroerrors and contact/mesh/union receipts. Geometry scope only; fullF18 UNPROVEN.",
   "runtime_status": "Exactsource nativeCloudR5 PASS73/73 exit0 zeroengine/script errors. All4stones andactualcanonicalPlayer clearcandidate/stable60frames/finalsupport pass; unsafe actualcontacts1 unsaturated onlymatchedfloorRID. Actualmeshparity/perimeter and53removedtriangle/fullpolygon/nativehub-seam-rim-roadfivefootprint union pass. Scopedgeometry acceptance; fullF18stillUNPROVEN.",
   "geometry_dependency": "arrival-native-floor-v2.patch, only_contacts_on_support/_capsule_landing helpers, must apply serialalongsidecoordinatorownedlifecycle; no lifecycle overwrite.",
   "preserved_predicates": [
@@ -34,5 +34,17 @@
     "owners": {
       "/root/CloudreachCliffs/RealmTransitionLedges/CloudreachArrivalFromMeadows/Collision": 1
     }
+  },
+  "independent_native_review": {
+    "verdict": "APPROVE scoped actual Cloud geometry/support correction",
+    "reviewer": "Independent GPT-6.1 Sol read-only sub-agent",
+    "original_artifact_sha256": "528facba8614a797e1ff1075a0a5b76b9bff8446fb4f762c8fd280f47303b145",
+    "runtime_run_id": 37098294158,
+    "source": "016d473a754305fd1d33ba50d84f746b9d420c09",
+    "limits": [
+      "Skirt coordinate preservation source-reviewed; runtime assertion measures unchanged triangle count.",
+      "Directscene/isolatedprobe actualgeometry andread-onlyactualPlayer, not consumedtravel/earnedplay/save/reload/co-op/readablevisual/audio/fullF18acceptance.",
+      "Checkout association retained by original Actions API dispatch/fetch provenance; originalZIPmanifest does not encodeSHA."
+    ]
   }
 }
