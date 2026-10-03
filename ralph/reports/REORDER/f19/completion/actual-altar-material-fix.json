@@ -34,6 +34,12 @@
     "raw_log_sha256": "452e4756cf79d3e85ea843c522eef259e19522f00297abf63b0c5d75fe77adbc"
   },
   "paid_f48_replay_still_required": true,
-  "independent_review_pending": true,
-  "f19_full_world_material_errors_not_closed": true
+  "independent_review_pending": false,
+  "f19_full_world_material_errors_not_closed": true,
+  "independent_review": {
+    "coordinator_thread": "01a0fe96-225e-7f92-9b62-d9818a7f2e15",
+    "verdict": "PASS exact production two-file commit; coordinator inspected both raw native originals",
+    "integration_commit": "1fbd41c0f0",
+    "actual_paid_f48_replay": "Pending coordinator replay/service fixes; not main-green proof"
+  }
 }

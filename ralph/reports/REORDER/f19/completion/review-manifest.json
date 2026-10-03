@@ -122,7 +122,8 @@
     ],
     "F19#1": [
       "boss-delivery-validated.log: production curve readers and tables",
-      "node tests/test_f19_curve.mjs:88 named teams/36 wild tables"
+      "node tests/test_f19_curve.mjs:88 named teams/36 wild tables",
+      "native-band-baseline.json:6 native tests/1474 assertions/0 failures/0 engine errors"
     ],
     "F19#2": [
       "participant-delivery-world-flags.log:128 assertions, actual two-owner files for all four handoffs",
@@ -171,6 +172,11 @@
   "main_required_altar_handoff": {
     "production_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
     "coordinator_thread": "01a0fe96-225e-7f92-9b62-d9818a7f2e15",
-    "status": "Pinned native clean results delivered; coordinator independent review underway. Actual paid F48 replay and integration still required."
+    "status": "Independently reviewed PASS and adopted narrowly on integration1fbd41c0f0; actual paid F48 replay still pending"
+  },
+  "next_component_diagnostic": {
+    "script": "tests/probe_f19_menu_preview_material_lifetime.gd",
+    "scope": "Actual CreatureViewport, Veridian/Solmane model replacement and backdrop deletion; Game menu outside disposable world census; baseline versus all exposed preview Material refs",
+    "status": "Prepared, not yet dispatched"
   }
 }
