@@ -377,10 +377,43 @@
     ],
     "scope": "PREDELETE clears only actual harvest visual surface bindings while mesh children are alive; removal/re-entry remains unchanged. No retained reference cache, stock or gameplay changes.",
     "baseline": "harvest-material-component.json",
-    "status": "Live fixed component/lifecycle/cold native proofs; coordinator independent review requested; no acceptance pending raw logs",
-    "fixed_component": {"run": 37107889673, "job": 111159887938},
-    "lifecycle": {"run": 37107890850, "job": 111159893142},
-    "cold_no_retention": {"run": 37107891893, "job": 111159894349},
+    "status": "Fixed component10s and137-check lifecycle11s clean; harvest-material-fix.json. Original cold transition/full choice witnesses and independent review remain required.",
+    "fixed_component": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "run": 37107889673,
+      "job": 111159887938,
+      "artifact": 11268926505,
+      "process_exit": 0,
+      "elapsed_seconds": 10,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "leak_warnings": [],
+      "failures": [],
+      "raw_log": "ci-f19-harvest-fixed-component-37107889673.log.gz",
+      "raw_log_sha256": "5544dd3809a9575c5e7e954f4fd8d9388672291fea43a352f49f267feca1383e",
+      "scope": "Exact original fifteen-crop factory reproduction; baseline and retained comparison both0 errors. Normal baseline retains no Material references."
+    },
+    "lifecycle": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "run": 37107890850,
+      "job": 111159893142,
+      "artifact": 11268542510,
+      "process_exit": 0,
+      "elapsed_seconds": 11,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "leak_warnings": [],
+      "failures": [],
+      "raw_log": "ci-f19-harvest-lifecycle-37107890850.log.gz",
+      "raw_log_sha256": "23275eb0ee3488294ee8b935b7ee4d214c27e1f0a566dde07dde45d6e78a830d",
+      "checks": 137,
+      "observer_state": "IDs and WeakRefs only",
+      "scope": "All actual15 Cloudreach crop specs, original active/source/mesh identities preserved through removal/re-entry; copied Materials expire after actual deletion. No Game/stock/gathering or earned-play claim."
+    },
+    "cold_no_retention": {
+      "run": 37107891893,
+      "job": 111159894349
+    },
     "acceptance": false
   }
 }
