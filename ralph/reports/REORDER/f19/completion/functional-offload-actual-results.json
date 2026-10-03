@@ -244,9 +244,11 @@
     "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
   },
   "next_diagnostic": {
+    "source_commit": "0d0ba1dabf65112e76bbd5f5ef97bfe5cf696624",
+    "run": 37093187450,
     "script": "tests/probe_f19_populated_terrain_material_lifetime.gd",
-    "scope": "Installed Terrain3D with actual committed Meadows region data and production terrain/material factory methods. Compare default versus authored material with drawing true/false. Earlier empty Terrain3D probe did not cover populated native mesher/region lifecycle; no world actors or acceptance claim.",
-    "status": "Component rig preflight corrected; replacement not yet dispatched"
+    "scope": "Actual committed Meadows regions and production Terrain3D factory/material methods; default/authored materials and drawing true/false; blank inherited rig structure; component diagnosis only",
+    "status": "Replacement dispatched; job queued confirmed; no terminal reproduction verdict"
   },
   "particle_material_counterfactual_r4": {
     "kind": "f19_actual_world_particle_material_counterfactual",
@@ -322,6 +324,8 @@
     "run": 37093005552,
     "source_commit": "47f166ab7d0f73318c1267adbf80f63d476895aa",
     "cancel_requested": true,
-    "reason": "Inherited playground onready fields require Player and CameraRig/Camera3D nodes; original component host omitted them. Add blank structurally correct fixture nodes before tree entry. No reproduction or acceptance verdict from this handle."
+    "reason": "Inherited playground onready fields require Player and CameraRig/Camera3D nodes; original component host omitted them. Add blank structurally correct fixture nodes before tree entry. No reproduction or acceptance verdict from this handle.",
+    "workflow_conclusion": "cancelled",
+    "artifact": 11262968002
   }
 }

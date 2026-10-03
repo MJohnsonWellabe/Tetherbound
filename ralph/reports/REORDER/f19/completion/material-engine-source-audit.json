@@ -69,11 +69,13 @@
   },
   "populated_terrain_followup": {
     "sources": [
-      "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d.cpp"
+      "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d.cpp",
+      "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d_mesher.cpp"
     ],
     "facts": [
       "EXIT_TREE destroys native mesher and mouse picking, then uninitializes asset and material resources.",
-      "PREDELETE destroys mesher/instancer/collision, releases assets/material, then deletes region data and label/container nodes."
+      "PREDELETE destroys mesher/instancer/collision, releases assets/material, then deletes region data and label/container nodes.",
+      "Mesher creates direct RenderingServer instances and binds terrain material RID to native meshes; these handles are outside a Node GeometryInstance3D census. Its destroy method frees clipmap instance RIDs before mesh RIDs."
     ],
     "inference": "An empty Terrain3D component does not cover actual committed region data and native populated mesher ownership. Reuse production factories in a disclosed component host, suppress unrelated world startup, and compare default versus authored material before any product change.",
     "limitations": "Installed version1.0.2; exact binary-to-upstream commit not independently verified. Component counterfactual cannot close full-world or earned-save acceptance."

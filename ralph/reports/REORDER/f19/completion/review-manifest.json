@@ -154,10 +154,11 @@
   "latest_remote_audit": "functional-offload-actual-results.json",
   "latest_material_diagnostic": "sprite-material-counterfactual-r5.json",
   "latest_material_probe": {
-    "run": 37091898727,
-    "source_commit": "9f94af3b1b5f321336fbaf57ebf1f8fe4c7eaacb",
-    "acceptance": false,
-    "status": "Terminal negative: 48 engine errors, all original guards passed, actual Sprite3D deletion hook ran without reduction"
+    "source_commit": "0d0ba1dabf65112e76bbd5f5ef97bfe5cf696624",
+    "run": 37093187450,
+    "script": "tests/probe_f19_populated_terrain_material_lifetime.gd",
+    "scope": "Actual committed Meadows regions and production Terrain3D factory/material methods; default/authored materials and drawing true/false; blank inherited rig structure; component diagnosis only",
+    "status": "Replacement dispatched; job queued confirmed; no terminal reproduction verdict"
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
