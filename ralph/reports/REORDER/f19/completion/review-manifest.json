@@ -563,5 +563,13 @@
     "status": "No harvest integration/import approval yet; review deferred until a required root green gate needs the material dependency. Preserve existing root Harvest ready/stock guards. No matched moving portal group approved before actual main green.",
     "home_key": "Preserve already reviewed monotonic candidate upstream538c971f6fa9355113efdd0f4756aa34f889e210, lane c0a8951cfb; root still has older frame-delta blob.",
     "fresh_route": "Original contact cap remains8. New normal run did not reproduce the overflow (sampled maximum4), so historical ninth owner remains unproved. Fresh route instead failed at paid-camp rest. No F17 helper edit or cap waiver; broader reruns held pending matched green main."
+  },
+  "held_tool_material_component": {
+    "source_commit": "9e3a1f884f1812c0c212d449cbe79ea3099a0b73",
+    "run": 37113063213,
+    "script": "tests/probe_f19_held_tool_material_lifetime.gd",
+    "status": "Queued isolated cloud component diagnostic; terminal artifact required",
+    "scope": "Actual authored axe/pickaxe model loader and shipping BuildMaterialFinish.apply; baseline deletion versus active-surface-only resource retention. No Game, input, gather, reward or earned-route credit.",
+    "acceptance": false
   }
 }
