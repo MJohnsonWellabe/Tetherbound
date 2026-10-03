@@ -152,10 +152,11 @@
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
-  "latest_material_diagnostic": "chamber-material-counterfactual-r1.json",
+  "latest_material_diagnostic": "chamber-label-counterfactual-r2.json",
   "latest_material_probe": {
     "run": 37086324872,
     "source_commit": "0679bb12aafa61028acb6a8917b0c485df5983bc",
-    "acceptance": false
+    "acceptance": false,
+    "status": "Completed diagnostic,48engine errors, zero original assertion failures; negative caption reproduction"
   }
 }
