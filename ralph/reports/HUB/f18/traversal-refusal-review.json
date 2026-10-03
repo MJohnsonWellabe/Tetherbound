@@ -1,15 +1,22 @@
 {
   "scope": "F18 actual swimming/flying refusal witness extension",
-  "parent_source": "fcafd03a0be9b11c3679be12e796f8f95dd4d9c6",
+  "parent_source": "bb364f620e595c47e1f3954de2d5442869a50d1b",
   "reviewer": "independent GPT-6.1 Sol read-only",
-  "source_verdict": "APPROVE tests/helpers/f18_player_guards.gd",
-  "native_status": "UNPROVEN; actual traversal producer/input proof pending",
+  "source_verdict": "APPROVE actual traversal adapter, snapshots and scoped runner source after grounded launch/release guards",
+  "files": ["tests/helpers/f18_player_guards.gd", "tests/helpers/f18_net_peer.gd", "tests/smoke_net_f18_traversal_refusal.gd"],
+  "native_status": "UNPROVEN; scoped remote dispatch pending",
   "checks": {
     "swimming": "actual scene actor's exact mounted SwimController, current Water world, HUMAN mode, swimming and airborne",
     "flying": "actual scene actor's exact mounted FlyController, flying and airborne",
     "reason": "exact production Reach solid ground first./Land first. strings",
     "side_effect_guards": "existing idle key/binding, scene/session/character/epoch/owner, inventory/hotbar/key, request/channel/no-result checks unchanged; actual traversal repeated after input await",
-    "state_arrangement_or_production_edits": false
+    "snapshots": "actual source resource/instance, actor position/floor, real swimming mode or flight active/state/seconds before and after bound key input",
+    "water_driver": "one authored dry lesson staging fixture,60 settle frames and FINAL grounded check; then ordinary NAV900/.4 stick walk to actual authored wet marker without recovery",
+    "flight_driver": "disclosed existing fly_setup unlock/carrier/launch-site fixture; actual grounded nonflying start, height0/oneattempt/settle0 double Jump, ordinary Jump hold for climb; release edge and released polled action required",
+    "binding": "ordinary Satchel Assign to actual key slot4; no assignment setter",
+    "evidence_phase_state_or_pose_writes": false,
+    "shared_or_production_edits": false
   },
+  "fixture_limits": "One disconnected actual peer per run. Own key/starter/free-play and traversal setup are fixtures, not earned opening/unlock/crossing/travel. Readability is structural until pixels reviewed; all warnings retained.",
   "all_six_f18_criteria": "UNPROVEN"
 }

@@ -139,6 +139,16 @@ func _refusal_context(kind: String, source: Node, scene: Node) -> bool:
 	return kind == "dialogue" and source == scene.get_node_or_null(^"DialoguePanel") \
 		and source.call("is_open") == true and INPUT_OWNER.current(tree) == source
 
+func _traversal_snapshot(kind: String, source: Variant, actor: Variant) -> Dictionary:
+	if kind not in ["swimming", "flying"] or not is_instance_valid(source) or not is_instance_valid(actor) \
+			or not source is Node or not actor is CharacterBody3D:
+		return {}
+	return {"source_script": source.get_script().resource_path, "source_instance": source.get_instance_id(),
+		"on_floor": actor.is_on_floor(), "position": [actor.global_position.x, actor.global_position.y, actor.global_position.z],
+		"swimming": source.call("snapshot") if kind == "swimming" else {},
+		"flying": {"active": source.call("is_flying"), "state": str(source.get("state")),
+			"flight_seconds": source.get("flight_seconds")} if kind == "flying" else {}}
+
 func bound_refusal(kind: String, source: Node) -> bool:
 	# Observe production state and press the actually assigned action. Never
 	# call use/refuse, open a channel, or arrange a combat/dialogue context.
@@ -174,6 +184,7 @@ func bound_refusal(kind: String, source: Node) -> bool:
 	var lesson_line: int = int(source.get("_line")) if kind == "cutscene" else -1
 	var lesson_row: Dictionary = (source.get("_row") as Dictionary).duplicate(true) if kind == "cutscene" else {}
 	var safety: Dictionary = session.call("_host_portal_context", session.call("local_peer_id")) if kind == "cutscene" else {}
+	var traversal_before: Dictionary = _traversal_snapshot(kind, source, actor)
 	var results: Array[Dictionary] = []
 	var observe := func(result: Dictionary) -> void: results.append(result.duplicate(true))
 	game.connect("portal_action_result", observe)
@@ -210,6 +221,7 @@ func bound_refusal(kind: String, source: Node) -> bool:
 		"lesson_line": lesson_line, "refusal_layer": refusal_layer.layer if refusal_layer != null else -1,
 		"lesson_layer": (source as CanvasLayer).layer if kind == "cutscene" and is_instance_valid(source) else -1,
 		"actual_safety": {"combat": safety.get("combat"), "dialogue": safety.get("dialogue"), "cutscene": safety.get("cutscene")} if kind == "cutscene" else {},
+		"traversal_before": traversal_before, "traversal_after": _traversal_snapshot(kind, source, actor),
 		"visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim",
 		"passed": readable and unchanged})
 	return (readable and unchanged) or _fail("actual bound " + kind + " key press did not visibly refuse without side effects")

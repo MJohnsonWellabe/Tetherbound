@@ -2,14 +2,16 @@ extends "res://tools/net/peer_runner.gd"
 
 ## F18 integration witness. Fixtures are explicitly separate from evidence:
 ## one creature, protected keys and free-play flags BEFORE hosting/admission;
-## one grounded staging teleport BEFORE the first touch/input action. Nothing
-## after that seam grants items, edits progress, permissions or actor transforms.
+## grounded staging BEFORE gameplay evidence. Scoped traversal fixtures are
+## disclosed by their runner. No setup writes follow its gameplay input seam.
 const F18_TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
 const F18_STONE := preload("res://scripts/world/waystone.gd")
 const F18_TEACHING := preload("res://scripts/creatures/teaching.gd")
 const F18_NAV := preload("res://tests/helpers/stick_navigator.gd")
 const F18_INPUT := preload("res://scripts/ui/input_owner.gd")
 const F18_LESSON := preload("res://scripts/onboarding/lesson_panel.gd")
+const F18_GUARDS := preload("res://tests/helpers/f18_player_guards.gd")
+const F18_CARE := preload("res://tests/helpers/meadows_earned_team_segment.gd")
 var _f18_fixture_done := false
 var _f18_started := false
 var _f18_staged := false
@@ -38,6 +40,15 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 				result = _f18_verdict(current_scene != null and current_scene.scene_file_path == WORLD_SCENE,
 					"disclosed sequential world fixture boot after lightweight title hello")
 		"f18_fixture": result = await _f18_fixture(game, args)
+		"f18_boot_water_fixture":
+			if _f18_started or _f18_fixture_done or _session().call("is_active") == true:
+				result = _f18_verdict(false, "Water fixture boot must precede setup/admission")
+			else:
+				await _boot_scene("water", 30)
+				result = _f18_verdict(current_scene != null and current_scene.scene_file_path == WATER_SCENE,
+					"DISCLOSED direct Water fixture boot; no earned portal crossing")
+		"f18_stage_water_lesson": result = await _f18_stage_water_lesson(game)
+		"f18_traversal_refusal": result = await _f18_traversal_refusal(game, str(args.get("kind", "")))
 		"f18_stage": result = await _f18_stage(game, args)
 		"f18_inspect": result = _f18_verdict(true, "read-only production/disk witness", _f18_state(game, args))
 		"f18_touch":
@@ -173,6 +184,95 @@ func _f18_find_stone(id: String) -> Node3D:
 		if current_scene != null and current_scene.is_ancestor_of(node) and node.get("waystone_id") == id:
 			return node as Node3D
 	return null
+
+func _f18_stage_water_lesson(game: Node) -> Dictionary:
+	if not _f18_fixture_done or _f18_staged or _f18_started or _session().call("is_active") == true \
+			or game.get("current_realm") != "water" or current_scene == null:
+		return _f18_verdict(false, "Water lesson staging requires the disconnected pre-evidence fixture")
+	var player := game.call("find_player") as CharacterBody3D
+	if player == null or not current_scene.is_ancestor_of(player): return _f18_verdict(false, "actual Water Player missing")
+	var config: Dictionary = current_scene.get("config")
+	var at := Vector3.INF
+	for row: Dictionary in config.anchors:
+		if row.get("id") == config.swim_lesson.start_anchor:
+			var raw: Array = row.safe_position
+			at = Vector3(float(raw[0]), 0, float(raw[2]))
+			at.y = float(current_scene.call("ground_height_at", at.x, at.z)) + player.safe_margin
+			break
+	if not at.is_finite(): return _f18_verdict(false, "authored Water lesson dry landing missing")
+	REMOTE_CREATURE_TP.teleport_body(player, at)
+	player.velocity = Vector3.ZERO
+	for frame in 60: await physics_frame
+	_f18_staged = true
+	var swim: Node = player.get("swim_controller")
+	return _f18_verdict(player.is_on_floor() and swim != null and swim.call("is_swimming") == false,
+		"DISCLOSED one grounded dry-lesson staging fixture; subsequent movement is ordinary input", {
+			"position": [player.global_position.x, player.global_position.y, player.global_position.z],
+			"grounded": player.is_on_floor(), "earned_crossing_credit": false})
+
+func _f18_traversal_refusal(game: Node, kind: String) -> Dictionary:
+	if not _f18_fixture_done or _f18_started or _session().call("is_active") == true \
+			or kind not in ["swimming", "flying"] or F18_INPUT.current(self) != null:
+		return _f18_verdict(false, "traversal refusal needs the disconnected fixture and actual world input")
+	var player := game.call("find_player") as CharacterBody3D
+	var rig := current_scene.get_node_or_null(^"CameraRig") as Node3D
+	if player == null or rig == null: return _f18_verdict(false, "actual traversal Player/rig missing")
+	_f18_started = true
+	var travel := F18_TRAVEL.new(self, game)
+	var guards := F18_GUARDS.new(self, game, travel)
+	# Bind the real fixture key through the actual Satchel verb, not a setter.
+	await travel.tap("inventory")
+	var menu: Node = game.call("menu")
+	if menu == null or menu.call("is_open") != true or menu.call("current_tab_id") != "backpack":
+		return _f18_verdict(false, "actual Satchel did not open for traversal key binding")
+	var care := F18_CARE.new()
+	care.set("_tree", self)
+	var tab: Node = (menu.get("_bodies") as Array)[0]
+	if not await guards._assign_in_satchel(tab, care, "home_key", 4):
+		return _f18_verdict(false, "ordinary traversal key assignment failed", {"failures": guards.failures})
+	await travel.tap("menu_cancel")
+	for frame in 30:
+		if F18_INPUT.current(self) == null: break
+		await physics_frame
+	if F18_INPUT.current(self) != null: return _f18_verdict(false, "actual Satchel did not release input")
+	var recoveries: int = int(player.get("_unstick_count"))
+	var source: Node
+	var inputs: Array[String]
+	if kind == "swimming":
+		if not _f18_staged or game.get("current_realm") != "water":
+			return _f18_verdict(false, "swimming proof requires the declared dry Water lesson start")
+		var raw: Array = current_scene.get("config").swim_lesson.surface_polyline[0]
+		var target := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+		var nav := F18_NAV.new(self, player, rig, travel._stick)
+		var walked: bool = await nav.walk_to(target, 900, 0.4)
+		travel._stick(0, 0)
+		if not walked or int(player.get("_unstick_count")) != recoveries:
+			return _f18_verdict(false, "ordinary dry-to-water lesson walk failed or recovered")
+		source = player.get("swim_controller")
+		inputs = ["Satchel Assign", "left stick dry-to-water", "hotbar_5"]
+	else:
+		# Height stays ZERO: two actual Jump presses launch from actual ground.
+		var fly: Node = player.get("fly_controller")
+		if not player.is_on_floor() or fly == null or fly.call("is_flying") != false:
+			return _f18_verdict(false, "actual ground double Jump requires grounded nonflying start")
+		var launched: Dictionary = await _step_fly_launch({"height": 0.0, "settle": 0, "attempts": 1})
+		if launched.get("verdict") != "PASS": return launched
+		source = player.get("fly_controller")
+		var climbing: Dictionary = _press_edge("jump", true)
+		if climbing.get("ok") != true: return _f18_verdict(false, "ordinary flight climb input failed")
+		inputs = ["Satchel Assign", "double Jump from ground", "hold Jump to climb", "hotbar_5", "release Jump"]
+	var refused: bool = await guards.bound_refusal(kind, source)
+	var released: bool = true
+	if kind == "flying":
+		var release_edge: Dictionary = _press_edge("jump", false)
+		released = release_edge.get("ok") == true and not Input.is_action_pressed("jump")
+	return _f18_verdict(refused and released and int(player.get("_unstick_count")) == recoveries,
+		"actual traversal + bound key input requires stated refusal without travel/inventory/channel changes", {
+			"kind": kind, "inputs": inputs, "receipts": guards.receipts, "failures": guards.failures,
+			"jump_released": released if kind == "flying" else null,
+			"unstick_count_before": recoveries, "unstick_count_after": player.get("_unstick_count"),
+			"position": [player.global_position.x, player.global_position.y, player.global_position.z],
+			"earned_opening_or_traversal_unlock_credit": false})
 
 func _f18_find_arch(id: String) -> Node3D:
 	for node: Node in get_nodes_in_group("portal_arches"):
