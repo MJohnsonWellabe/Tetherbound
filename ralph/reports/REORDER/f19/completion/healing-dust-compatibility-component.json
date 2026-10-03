@@ -1,0 +1,18 @@
+{
+  "kind": "f19_actual_healing_dust_compatibility_component",
+  "source_commit": "2b77b7c8ee7311418fd3208cbce16c91df769603",
+  "run": 37098265236,
+  "job": 111132535071,
+  "artifact": 11264523843,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "backend": "F19 HEALING DUST BACKEND {\"component_fixture\":true,\"continuous_drawing\":false,\"display\":\"X11\",\"renderer\":\"gl_compatibility\"}",
+  "result_markers": [
+    "F19 HEALING DUST DIAGNOSTIC ONLY {\"acceptance\":false,\"authored_spec\":\"res://data/config/meadow_healing.json\",\"failures\":[],\"mesh_retention\":false}",
+    "exit=0 took=17s"
+  ],
+  "scope": "Same four actual dust factory/early-parent/production-timer cases on real Compatibility with drawing disabled; component fixtures remain disclosed.",
+  "acceptance": false,
+  "raw_log": "ci-healing-dust-compat-37098265236.log.gz",
+  "raw_log_sha256": "d47a0b7c789804416644b2bd8eb0ce34bbf482e66540c5a11b3835fbfcfd9da1"
+}

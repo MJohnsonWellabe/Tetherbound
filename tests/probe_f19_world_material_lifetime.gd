@@ -28,15 +28,15 @@ func _run_diagnostic() -> void:
 	if _game == null:
 		quit(2)
 		return
-	for treatment: String in ["baseline", "retain-late-cpu-materials"]:
+	for treatment: String in ["baseline", "retain-masked-materials"]:
 		_treatment = treatment
 		print("F19 WORLD MATERIAL BEGIN " + JSON.stringify({
 			"treatment": treatment, "acceptance": false,
 			"scope": "Original space-accept with actual save/reload; original gameplay fixtures retained"}))
 		await _scenario(treatment, 4, "accept", "")
 		for frame in 3: await process_frame
-		if treatment == "retain-late-cpu-materials" and _retained_total == 0:
-			_fail("Late CPU particle counterfactual observed no retained actual Materials")
+		if treatment == "retain-masked-materials" and _retained_total == 0:
+			_fail("Masked mesh material counterfactual observed no retained actual Materials")
 		print("F19 WORLD MATERIAL END " + JSON.stringify({"treatment": treatment, "failures": _failures}))
 	# Keep the final world's actual resources alive through its destruction.
 	_observe_world("pre-world-delete")
@@ -113,6 +113,22 @@ func _observe(node: Node, state: Dictionary) -> void:
 		state["geometry_count"] = int(state["geometry_count"]) + 1
 		var classes: Dictionary = state["geometry_classes"]
 		classes[node.get_class()] = int(classes.get(node.get_class(), 0)) + 1
+		if _treatment == "retain-masked-materials":
+			if node is MeshInstance3D:
+				var instance := node as MeshInstance3D
+				if instance.mesh != null:
+					for surface in instance.mesh.get_surface_count():
+						var active := instance.get_active_material(surface)
+						var surface_override := instance.get_surface_override_material(surface)
+						var base := instance.mesh.surface_get_material(surface)
+						if surface_override != active: _hold(surface_override)
+						if base != active: _hold(base)
+			elif node is MultiMeshInstance3D:
+				var instance := node as MultiMeshInstance3D
+				if instance.material_override != null and instance.multimesh != null and instance.multimesh.mesh != null:
+					for surface in instance.multimesh.mesh.get_surface_count():
+						var base := instance.multimesh.mesh.surface_get_material(surface)
+						if base != instance.material_override: _hold(base)
 		if _treatment == "retain-final-world-materials":
 			var geometry := node as GeometryInstance3D
 			_hold(geometry.material_override)
@@ -199,7 +215,8 @@ func _hold(resource: Resource) -> void:
 		if resource is Material:
 			_new_material_count += 1
 			if _new_material_owners.size() < 64:
-				_new_material_owners.append(_hold_owner + ":" + str(resource.get_instance_id()))
+				_new_material_owners.append(_hold_owner + ":" + str(resource.get_instance_id())
+					+ ":" + resource.get_class() + ":" + resource.resource_name)
 
 func _label_live_state(label: Label3D) -> Dictionary:
 	var state := {"base": label.get_base()}
