@@ -2024,7 +2024,7 @@
         "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light"
       ],
       "result_lines": [
-        "GATE A OPENING +120.89s \u2014 Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+        "GATE A OPENING +120.89s — Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
         "F18_EARNED_LOOP {\"failures\":[\"fresh earned opening: [\\\"F18 earned key Drop/binding: [\\\\\\\"opening catch must retain its original Basic Orb binding on slot 1\\\\\\\"]\\\"]\"],\"fixtures\":false,\"input\":\"parsed harness actions/joypad axes through production UI\",\"receipts\":[],\"setup\":\"private save-system directory, preserving developer saves\"}"
       ],
       "outcome": "Ordinary opening reached actual Home Key gift and lesson; F18 guard precondition incorrectly requires orb slot1 before original driver binds it. Earned acceptance remains unproven.",
@@ -2153,7 +2153,7 @@
         "F18_HOME_KEY_REFUSAL_COMPONENT {\"checks\":30,\"failures\":[],\"fixtures\":\"real inventory/parsed input/HomeKey toast and lesson/system-screen presenters; fixture content/modal branches/fight/refusal state; structural checks and component captures only, no live gameplay acceptance\"}",
         "exit=0 took=10s"
       ],
-      "outcome": "Native component30checks0failed after test waits for actual second process emission; unchanged production owner-relative layering. Actual layers31\u219281 with original message/deadline unchanged. Component, not earned modal visual acceptance.",
+      "outcome": "Native component30checks0failed after test waits for actual second process emission; unchanged production owner-relative layering. Actual layers31→81 with original message/deadline unchanged. Component, not earned modal visual acceptance.",
       "fixtures": "Explicit isolated native geometry/UI component fixture; not actual earned play/save/co-op/presentation acceptance.",
       "visual_review": "Independent source-aware inspection of both actual R4 PNGs: readable unclipped refusal above actual presenter; system toast still overlaps part of its title. Explicit component only; no code-blind live earned acceptance."
     },
@@ -5527,7 +5527,7 @@
         "terrain_collision_rid": "RID(10587094384642)",
         "vertex_spacing": 1.0
       },
-      "outcome": "74checks/4fail; all5actualstonesPASS, actualentryfailsunchangedguards. Raw vertical rays atnegativeX miss only exactZ162; rowsZ161.5/162.5 accepted. Actual31heightmaps exist, nearby2tiles513\u00b2. Finitecachedsamples agree with physical hits. Zeroengineerrors; no nativeexitfile.",
+      "outcome": "74checks/4fail; all5actualstonesPASS, actualentryfailsunchangedguards. Raw vertical rays atnegativeX miss only exactZ162; rowsZ161.5/162.5 accepted. Actual31heightmaps exist, nearby2tiles513². Finitecachedsamples agree with physical hits. Zeroengineerrors; no nativeexitfile.",
       "independent_source_inference": "Exact Godot5b4e0cb0f heightmap -90Yfloat32basis makes negative-tile vertical ray localX93.9999923706; adding cell origin256 rounds350 then selects edge94, rejecting ray7.629e-6outside selected cell with strict barycentric test. Pure f32 reproduction matches3negative misses/4nonnegativehits. Not bakedhole/regionabsence. R6 must prove candidate shifted actual footprint."
     },
     {
@@ -6278,7 +6278,7 @@
           "F18_RESOURCE_LIFETIME {\"event\":\"exited\",\"instance_id\":60642002453260,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2\",\"physics_frame\":6236,\"process_frame\":2253,\"role\":\"outgoing:axe\"}",
           "ERROR: Parameter \"material\" is null.",
           "   at: material_get_instance_shader_parameters (servers/rendering/dummy/storage/material_storage.cpp:264)",
-          "GATE A NPC/GATHER +53.25s \u2014 pickaxe equipped, swung, gathered +4 Stone",
+          "GATE A NPC/GATHER +53.25s — pickaxe equipped, swung, gathered +4 Stone",
           "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":34879043765895,\"path\":\"/root/MeadowsPlayground/@Node3D@63543\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"harvest:fiber\"}",
           "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":34879328978571,\"path\":\"/root/MeadowsPlayground/@Node3D@63543/@Node3D@63544/Plant_7_Big2/Plant_7_Big\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"harvest:fiber\"}",
           "F18_RESOURCE_LIFETIME {\"event\":\"watch\",\"instance_id\":62420236354205,\"path\":\"/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Pickaxe_Bronze2\",\"physics_frame\":6282,\"process_frame\":2262,\"role\":\"outgoing:pickaxe\"}",
@@ -7789,5 +7789,268 @@
     "resumption_condition": "Coordinator supplies reviewed main-green matched source/dependency group to this F18 task; then restore full ordinary/coop proof work",
     "local_engine_gpu_hold": true,
     "no_user_action_requested_now": true
+  },
+  "main_ci_read_only_assist": {
+    "scope": "Coordinator-requested main-CI investigation plus explicitly approved fixture/join-harness correction in own worktree. No shipping Session/catch edits, shared edits, baseline import, engine/UI/GPU or new native run.",
+    "inspection_source_sha": "31d07d769afba5b387cc1a44f8ff978f2a26b351",
+    "original_runtime_sha": "56b76d8fb9d7a8d11857fb9642407cd4eca8f6fd",
+    "original_ci_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37120921415",
+    "artifact": {
+      "id": 11273617770,
+      "name": "net-smoke-runs-6",
+      "bytes": 15148155,
+      "sha256": "2db993aa0d0cf8428f7474fa7df9216e0a6253125ef4c62915ca9887d58e62e7"
+    },
+    "review_bundle": {
+      "path": "ralph/reports/HUB/f18/native-followups/main-ci-net6-original-selection.zip",
+      "bytes": 51700,
+      "sha256": "c4b30b1ce80e180b77d227ef0b584ec539ec35f0813dd076e31b784bd53661d7",
+      "classification": "Derived selection of original bytes; not a new native run",
+      "members": [
+        {
+          "original_member": "net-catch_race-20261003T121442Z/NET_RUN.json",
+          "bytes": 2748,
+          "sha256": "80fe09552bbba84f50adbd53b8808a205b2510dd7a3fb36ca001c7b8923e1fb0"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/SUMMARY.md",
+          "bytes": 412,
+          "sha256": "d849afbd66bc955fa85b299638bfb2a5d648559bb1cd65264cacc3b522c25176"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-2456f19de424741aecd555cc12bb0f90/character.json",
+          "bytes": 2775213,
+          "sha256": "95f35239c2f3bd837433c51fd985b19354544a8818df9fd246e91812bf4dfa38"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+          "bytes": 36785,
+          "sha256": "b73ea77d49eb1cc26f965549578c6dc69e6e11e133f595b329bf625db2cf6880"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-4f3a5e43a7c2b8072fe586da9c4b2ba6/character.json",
+          "bytes": 2775591,
+          "sha256": "ee2e355d2218edfa5b28352765cdd0ffad8a8590196400a7877ea4b79633ed4c"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+          "bytes": 8082,
+          "sha256": "3c22c41170b5b4e7ee976d33952c0f7626f8e2f20182263de7365ae74b4166eb"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/peer-0.log",
+          "bytes": 12042,
+          "sha256": "c5c53cd009c0e61586b9030811ca29b2ae57e242055174f38b113e27f14c3941"
+        },
+        {
+          "original_member": "net-catch_race-20261003T121442Z/peer-1.log",
+          "bytes": 11736,
+          "sha256": "6752d150fa33396f57523cb0db757025d8c2c3862b2d2bb55e6cd7734f92a317"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/NET_RUN.json",
+          "bytes": 3367,
+          "sha256": "988e3ef9cff8ec759241ef008261fb6f2dc3f475833991c053eb925e77d6a2b6"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/SUMMARY.md",
+          "bytes": 258,
+          "sha256": "e5fda570dbbb126253a180ec996f7d5eba0a389511c2a18820b1032f134fcaf4"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-90d4e5f5ff74038681c58834448ca8ec/character.json",
+          "bytes": 2779614,
+          "sha256": "0ba3b59ec55264c44f21e773959889e3a9a1f88446756a2cd2558859246d7b62"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+          "bytes": 32943,
+          "sha256": "80e582cb3facacde277bf394d94de6408b75c0365bc5190de89a66881ae8c63f"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-e490ebb95f3d64678b161b40c8279430/character.json",
+          "bytes": 2778953,
+          "sha256": "f013eaf950e6559660e6344c83f910934c04200ceb328ff147903ef38ae40e79"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/peer-0.log",
+          "bytes": 27168,
+          "sha256": "69b27a993062c7626dcc3c34f05eac4dddbd8d165b2655eb88871fcdf39d18d5"
+        },
+        {
+          "original_member": "net-foundations-20261003T120428Z/peer-1.log",
+          "bytes": 31179,
+          "sha256": "4d6ace2ac593c94f7334a2ad96b029dd30622e4d8d0ecc1113a6c3191d19eb82"
+        }
+      ]
+    },
+    "source_comparison": "git diff runtime56b76d8..inspection31d07d7 empty for peer_runner, both smokes, CombatManager, EncounterDirector, JoinDriver, title, capture codec, Session, LedgerRpc, Party, owner_passive_sync, character_action_owner.",
+    "foundations": {
+      "proven": [
+        "guest peer-1.log302 disconnected RPC from publish_travel_lifecycle before connected",
+        "guest peer-1.log323 freed JoinDriver call from production_join2113 after return to title; explains blank verdict",
+        "host accepted named guest character as peer667652509 but no guest snapshot applied",
+        "host original world has pending bounty_rotate full-owner row with before/after party=[] and creatures={}",
+        "guest original character disk has fixture party UID creature-de4fc533fd5f296821fe9df61d6be7e6 and populated record",
+        "smoke seeds guest after first admission; direct fixture/roundtrip never updates host admitted baseline"
+      ],
+      "pending_row_identity": {
+        "character_id": "character-e490ebb95f3d64678b161b40c8279430",
+        "delivery_id": "creature_training:4faa919b90bfdaf1f4d907c64b7940b1fd1e4408a0cb8c3e3da568ab93d43936",
+        "world_namespace": "43f7934c77c77ea8b8fb298672387e9b",
+        "session_id": "98a99da3d84cf126a8d7c10929d669a6",
+        "character_revision": 1,
+        "journal_revision": 1
+      },
+      "source_inference": "Owner-plan exact baseline conflict prevents the pending bounty full-owner row from being applied; bootstrap correctly waits for genuine owner Bool write and host ACK.",
+      "minimal_proposal": "Prepare guest personal-only fixture before first admission. Persist through actual save_character_prepared Bool==true and parse/apply/read back the exact portable file. Admission summary must carry that same full owner carrier. Preserve no guest world file and forged-world negative control. Capture post-runtime settled carrier for equality. Do not reset/drop pending bounty row, replace host authority, loosen full projection comparison or extend timeouts.",
+      "independent_secondary_proposals": [
+        "Guard and re-resolve JoinDriver after every await, record its failed signal/last_error before title frees it, return explicit FAIL if invalid; no blank ERROR.",
+        "Suppress lifecycle publication until connected and initial snapshot/admission is ready; retain existing authenticated sample validation."
+      ],
+      "runtime_validation_required": "One corrected foundations actual two-peer production-title rejoin with populated disk carriers; original budget/strict error scan unchanged."
+    },
+    "catch_race": {
+      "proven": [
+        "guest host finish_reply ok=true/caught=true with explicit fresh claim and canonical UID/stats",
+        "guest party/owned_cards stay empty; canonical UID is creature-e8f3ca56a2cf589e0266423a415b6a69",
+        "peer-1.log154 ERROR the caught bramblebun never reached the party; stack _resolve_catch6716 -> _on_combat_exited6457 -> _finish4946",
+        "host original world retains catch research_event but no capture_offer duty for this ordinary wild"
+      ],
+      "source_inference": "Fresh decoded non-null instance, empty party and is_full=false rule out all Party.add refusals except its owner mutation guard. Original evidence does not identify which pending owner guard arm was active at the call.",
+      "minimal_proposal_under_review": "For ordinary confirmed caught outcome, retain same canonical RefCounted in existing CombatManager RESOLVING state before _finish/disengage/exited until the actual Party.owner_mutation_blocked returns Bool false. Existing physics ticks retry; then execute normal _resolve_catch/Party.add once. Preserve typed alpha path and refusal guards. Check research settlement cannot depend on exited before implementing.",
+      "scope_limit": "This addresses disposal during a pending owner write. Ordinary catch subsequent admitted authoritative roster freshness requires explicit assessment; do not claim durable typed capture acceptance from this proposal.",
+      "forbidden_shortcuts": [
+        "Bypass owner mutation guard",
+        "Treat finish reply as owner disk ACK",
+        "Add fabricated capture_traits/offer",
+        "Remove owned/identity assertions",
+        "Padding grant timeout"
+      ],
+      "runtime_validation_required": "One affected catch race using actual host arbiter and same canonical UID/IV/stats, no early/duplicate grant, no peer errors; genuine owner Bool/ACK if typed settlement used.",
+      "source_review": {
+        "direction": "APPROVE serialization direction only; no shipping implementation authorized yet",
+        "condition": "Require actual Party.owner_mutation_blocked Boolfalse before ordinary catch teardown; retain same canonical RefCounted; exclude foundation_capture_traits typed alpha path.",
+        "research_progress": "Source research checkpoint omits in_combat=false and saved/ACK retries run independently; actual guard arm still unlogged.",
+        "cycle_risk": "combat_mastery retained processing rejects in-combat while manager.is_fighting stays true in RESOLVING. If that actual pending fence depends on teardown, split logical fight departure from retained grant; never bypass fence.",
+        "authority_limit": "Ordinary Party.add plus local skill mutation has no admitted full-character CAS/typed roster installation; native local ownership alone cannot prove durable authority/rejoin correctness."
+      }
+    },
+    "independent_review": {
+      "status": "APPROVE implemented fixture and join lifetime source; conditional direction only for ordinary catch",
+      "agent": "f18_sol_review",
+      "model": "GPT-6.1 Sol",
+      "report": "Raw before_snapshot compares disk party AND redesign_character exactly; fresh raw after_snapshot verifies both after apply Booltrue. Normalized observers only compare live world/ID/redesign roundtrip. Prepared writer requires actual Booltrue, finished/notbusy fallback, no guest world file before/after, no autosave/world writer. personal_only skips offline-host world seeding. Personal fixture precedes admission; actual guest carrier settles without dropping recovery rows or replacing host authority. failed(String) Dictionary capture and WeakRef after every physics await protects JoinDriver; original budget preserved. Native evidence pending; no main/F16/F18 acceptance."
+    },
+    "f18_acceptance": "All six remain UNPROVEN; no main integration or completion credit from read-only assistance.",
+    "pinned_source_function_lines": {
+      "scripts/net/session.gd": {
+        "func publish_travel_lifecycle": 5518,
+        "func _finalize_snapshot_receive": 2983,
+        "func _owner_training_mutation_blocked": 4464
+      },
+      "scripts/net/ledger_rpc.gd": {
+        "func reconcile_creature_training_before_ready": 1276,
+        "func _process_creature_training": 1196
+      },
+      "scripts/combat/combat_manager.gd": {
+        "func _finish()": 4897,
+        "func _finish_catch()": 4734
+      },
+      "scripts/combat/encounter_director.gd": {
+        "func _resolve_catch": 6687,
+        "func _on_combat_exited": 6387
+      },
+      "tools/net/peer_runner.gd": {
+        "func _step_production_join": 2032,
+        "func _step_foundations_state": 7947
+      },
+      "autoload/party.gd": {
+        "func add(": 66
+      },
+      "scripts/net/character_action_delivery.gd": {
+        "static func owner_plan": 62
+      }
+    },
+    "approved_implementation": {
+      "authorization": "Coordinator approved personal pre-admission fixture and PeerRunner join lifetime only; shipping Session and catch remain proposals.",
+      "paths": [
+        "tools/net/peer_runner.gd",
+        "tests/smoke_net_foundations.gd"
+      ],
+      "functions": [
+        "_step_production_join",
+        "_step_foundations_state"
+      ],
+      "patch": "ralph/reports/HUB/f18/native-followups/main-ci-foundations-join-v1.patch",
+      "bytes": 7016,
+      "sha256": "58766d46b424ca8ea718043514acbd8b74077a7c8f92cb0baee80e16a08ade73",
+      "patch_validation": "Applied to isolated exact pinned31d07d7 files; both changed functions and smoke match F18 candidate. Root/shared files untouched.",
+      "native_status": "NOT RUN; coordinator must test scoped import on current shared baseline. No acceptance credit.",
+      "source_review": "Raw before_snapshot compares disk party AND redesign_character exactly; fresh raw after_snapshot verifies both after apply Booltrue. Normalized observers only compare live world/ID/redesign roundtrip. Prepared writer requires actual Booltrue, finished/notbusy fallback, no guest world file before/after, no autosave/world writer. personal_only skips offline-host world seeding. Personal fixture precedes admission; actual guest carrier settles without dropping recovery rows or replacing host authority. failed(String) Dictionary capture and WeakRef after every physics await protects JoinDriver; original budget preserved. Native evidence pending; no main/F16/F18 acceptance.",
+      "source_sha": "572b050c14dbd55f633e0a87d1e5178223e5486e"
+    },
+    "typed_capture_r19_followup": {
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37122872058",
+      "artifact_id": 11273992793,
+      "original_zip_path": "D:/tetherbound/.tmp/loop-r19-37122872058.zip",
+      "bytes": 1624631,
+      "sha256": "a86a4264521f008aabe02cd1f7f8f86df391ee3517c5af0f26ec97fab2b0af67",
+      "runtime_sha": "31d07d769afba5b387cc1a44f8ff978f2a26b351",
+      "original_guest_member": "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_fixture_capture-2495-270666017.json",
+      "guest_member_sha256": "67bd8e32da4f925e83cfc5f4eb5092deb1dabc59c656310e07f44a969da61800",
+      "original_host_member": "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48-capture-host-diagnostic-25-277403608.json",
+      "host_member_sha256": "a05f79d2c587da9a07745bd3c961fe6ff9eea88ff6f06735901410e74fcfb9dc",
+      "presentation_exit_original": {
+        "before": {
+          "capture_active": "",
+          "capture_requests": 0,
+          "context": "panel:Session",
+          "owner_path": "/root/Game/Session",
+          "owner_script": "res://scripts/net/session.gd",
+          "pending_catch_uid": "",
+          "tab": ""
+        },
+        "ordinary_cancel": false
+      },
+      "accepted_row_identity": {
+        "kind": "creature_training",
+        "action": "wild_capture",
+        "receipt": "craft:wild_capture_08de4a5d8f2c3f332fe8f15556e140934936985c2e58151a550bc4fc461b4cb2:character-a79c7bee9128c2ef03d266ce0352c666",
+        "journal_revision": 2,
+        "character_revision": 4,
+        "session_id": "627f70bb6546f8f9f4891e434c1afd82",
+        "world_namespace": "48b9875d0fe7870af6ac7de4caf42897",
+        "world_id": "slot-0",
+        "character_id": "character-a79c7bee9128c2ef03d266ce0352c666"
+      },
+      "owner_after_difference_original": {
+        "left_type": "float",
+        "left_variant_hex": "03000100146a35eece2d5140",
+        "path": "$/party/0/nourishment",
+        "right_type": "float",
+        "right_variant_hex": "03000100752a0cfcee2c5140"
+      },
+      "owner_plan_code_original": "owner_action_baseline_conflict",
+      "nourishment": {
+        "accepted_after": 68.7157550355553,
+        "guest_live": 68.7020864599998,
+        "host_authority": 68.7020864599998
+      },
+      "host_snapshot": {
+        "pending": {},
+        "checkpoint": {},
+        "error": ""
+      },
+      "conclusion": "Original accepted typed capture has no pending catch/service work. Session owns input. Immediate presentation preflight fails on an owner fence. Later legitimate care can differ from historical accepted row; owner_plan conflict is not proof of a stuck training retry. Actual GUEST blocking arm is absent from original artifact.",
+      "exact_needed_failure_observation": [
+        "_owner_training_retry nonempty, receipt, saved, weak owner/world identity matches",
+        "_owner_passive.pending scope/id/phase and local.error",
+        "_groom_passive.pending scope/action/id/phase",
+        "latest owner row kind/action/status/receipt/journal_revision",
+        "current world namespace, journal session ID and actual transport epoch as separate values"
+      ],
+      "scope": "Read-only triage. No close input, fake ACK, care exclusion, guard bypass, or timeout change. Production remedy not selected without actual pending identity."
+    }
   }
 }
