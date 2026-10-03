@@ -6851,7 +6851,9 @@ func usable_ally_blocker() -> String:
 ## team, or with the player having nothing to fight with, would suspend
 ## exploration and never give it back.
 func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
-	if spec.has("rematch") and (not _is_host() or not _rematch_outcome_writer.is_valid() \
+	# Rematches use Foundation's local authority in offline solo as well as a
+	# network host. _is_host() additionally requires an active network session.
+	if spec.has("rematch") and (_session == null or _session.call("is_host") != true or not _rematch_outcome_writer.is_valid() \
 		or preload("res://scripts/repeatables/rematch_rules.gd").config().get("runtime_enabled") != true): return false
 	var tournament_round := not spec.has("rematch") and TOURNAMENT.is_round(str(spec.get("id", "")))
 	var selected: Array = []

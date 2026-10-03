@@ -1,0 +1,154 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 1500.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"peer 0 f20_talk: no verdict"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": {
+				"action": "f20_talk",
+				"coordinator_deadline_ms": 417796.0,
+				"coordinator_observed_ms": 417803,
+				"heartbeat": {
+					"context": "narrative_modal",
+					"frame": 364.0,
+					"physics_frame": 2671.0,
+					"pos": [
+						1.41553485393524,
+						1.02094388008118,
+						14.9077844619751
+					],
+					"session_peers": [
+						1.0,
+						1643747160.0
+					],
+					"state_hash": 2182759257.0,
+					"t": 410.912,
+					"type": "heartbeat"
+				},
+				"heartbeat_known": true,
+				"heartbeat_receive_age_ms": 1363.0,
+				"heartbeat_receive_time_known": true,
+				"heartbeat_received_ms": 416440.0,
+				"id": "s5",
+				"phase": "timeout_before_finish"
+			},
+			"control_port": 34825,
+			"exited": false,
+			"hashes": [
+				2182759257,
+				2182759257,
+				2182759257
+			],
+			"hello": {
+				"enet_port": 30941.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "e39a361e7ceb",
+				"peer": 0.0,
+				"pid": 2466.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F20/ending-runtime/net-run-local-5498060/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "panel:RegionalCredits",
+				"frame": 367.0,
+				"physics_frame": 2689.0,
+				"pos": [
+					1.41553485393524,
+					1.02094388008118,
+					14.9077844619751
+				],
+				"session_peers": [
+					1.0
+				],
+				"state_hash": 2182759257.0,
+				"t": 417.176,
+				"type": "heartbeat"
+			},
+			"pid": 2466,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 34233,
+			"exited": true,
+			"hashes": [
+				2182759257,
+				2182759257,
+				2182759257
+			],
+			"hello": {
+				"enet_port": 30942.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "e39a361e7ceb",
+				"peer": 1.0,
+				"pid": 2467.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F20/ending-runtime/net-run-local-5498060/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 609.0,
+				"physics_frame": 4620.0,
+				"pos": [
+					0.0,
+					0.900942385196686,
+					0.0
+				],
+				"session_peers": [
+					1.0,
+					1643747160.0
+				],
+				"state_hash": 2182759257.0,
+				"t": 411.82,
+				"type": "heartbeat"
+			},
+			"pid": 2467,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "local-5498060",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

@@ -1,0 +1,63 @@
+{
+  "scope": "Synthetic verifier sensitivity controls only; actual sound proof uses untouched hosted r8 WAV. No engine/listening proof from controls.",
+  "controls": [
+    {
+      "control": "reference",
+      "expected": "PASS",
+      "actual": "PASS",
+      "failed_checks": []
+    },
+    {
+      "control": "silence",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "failed_checks": []
+    },
+    {
+      "control": "wrong_frequency",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "failed_checks": [
+        "configured_frequency",
+        "configured_half_sine_envelope_and_tone"
+      ]
+    },
+    {
+      "control": "wrong_duration",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "failed_checks": [
+        "configured_duration",
+        "configured_half_sine_envelope_and_tone"
+      ]
+    },
+    {
+      "control": "wrong_envelope",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "failed_checks": [
+        "configured_half_sine_envelope_and_tone"
+      ]
+    },
+    {
+      "control": "clipping",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "failed_checks": [
+        "no_clipped_samples"
+      ]
+    },
+    {
+      "control": "late_extra_sound",
+      "expected": "FAIL",
+      "actual": "FAIL",
+      "failed_checks": [
+        "configured_duration",
+        "configured_half_sine_envelope_and_tone",
+        "silence_after_cue"
+      ]
+    }
+  ],
+  "passed": 7,
+  "failed": 0
+}

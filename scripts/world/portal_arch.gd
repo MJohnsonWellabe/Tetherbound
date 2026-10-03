@@ -50,7 +50,7 @@ func _ready() -> void:
 	refresh()
 	# Restoring saved presentation is silent. A durable use result alone starts
 	# the moment; loading a stirred world never repeats its sound or line.
-	_stir_seen = bool(_view().get("fifth_arch_stirred", false))
+	_stir_seen = bool(_view().get("character_stirred", false))
 
 
 func _process(delta: float) -> void:

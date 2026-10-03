@@ -4,7 +4,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 ## 0. Handoff — Claude CI pass on PR519, returned to Codex (2026-10-02)
 
-**Active integration:** The owner assigned Codex to bring the existing PR519 baseline to green main before taking the new feature sessions' work. Baseline is f48a0ba1ea; integration uses `D:/tetherbound/foundations-batch-check`, `tb/integration`. F17–F20 continue separately and return bounded deltas; only an independently verified dependency required to fix the selected gates belongs in this first cut. CI6200/37068576138 is the baseline run. No merge or acceptance closure yet. Initial admission-cost repair reuses the existing authored species catalogue without caching character state; affected checks and measurements are in `ralph/reports/INTEGRATION/main-green/PROOF.md`.
+**Active integration:** Codex owns PR519 main-green in `D:/tetherbound/foundations-batch-check`, `tb/integration`, baseline f48a0ba1ea/CI6200. Combined feature work is isolated in `D:/tetherbound/f17-f20-combined`, `tb/f17-f20`, starting at verified9794a21092e8162c3708280b43ae17527404f47a. Integration fixes win shared logic; every integration push merges forward. PR519 must land before a feature PR; acceptance requires main. Exact CI/evidence remains in `ralph/reports/INTEGRATION/main-green/PROOF.md`.
 
 **Owner overnight limit:** Work remotely with the local engine/GPU hold. At10% remaining in any reported core window, stop new work/runs, push code/evidence and exact live IDs, verify remotes, then pause as instructed. Observed weekly54%used/46%remaining; other windows unknown. Root checks usage and the15-minute heartbeat. Never consume resets or resume automatically.
 
@@ -12,13 +12,13 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F17 continuation:** Hub4ecaded22a retains original scoped #0–5 proofs; no combined or main acceptance credit. Exact pins and boundaries: `ralph/reports/HUB/f17/continuation-proof-index.md`. Earned Terrapup M1 R8 37086098279 at6a13e6e44 passes; its checkpoint is pre-bracket, not a saved final victory/full campaign. #6 village/Hall Bars A/B and GPU motion matrix remain OPEN. Native Forward+37123298044 initialized then SIG11/wrapper134 before capture; cause unknown. Compatibility default and local engine/GPU hold remain.
 
-**Authority:** The owner asked Claude to move `tb/integration` ([PR519](https://github.com/MJohnsonWellabe/Tetherbound/pull/519)) to main, fixing CI as it ran; then, with a short window and no owner-run steps available, to stop at a state Codex can continue. PR519 stays **draft and unmerged**; main is 30fcc38fc. The game is unfinished; MET110/280 is unchanged. The owner deleted every other `tb/*` branch; each was verified fully contained in `tb/integration` first (including the four formerly "unmerged" closeout branches, already gone).
+**Authority:** PR519 remains draft/unmerged; main30fcc38fc and MET110/280 are unchanged. Previously deleted `tb/*` branches were verified contained in integration. New feature candidates carry scoped evidence, not release acceptance.
 
 **F18 candidate:** All six remain UNPROVEN. Original scoped entry/all19stones, lesson17/lifetime10/refusal pixels/WAV passes and earnedR9 Workbench/deep road/touch PASS with HomeKey FAIL remain old-pin evidence in `ralph/reports/HUB/f18/native-followups/receipt.json`. Ready-world/runtime boundaries also remain in `runtime-integration.json`; authored Water entry0.5m correction is source-only. Join/readiness and capture-fence diagnostics are included; matched actual proof remains open.
 
 **F19 candidate:** Completiond6f7baab61 imports world-scoped personal boss drops, legacy-duty non-starvation and private material cleanup onto the integration guards. Original scoped review manifest: `ralph/reports/REORDER/f19/completion/review-manifest.json`; later join/Deep Watch changes still require actual proof. F19#5 earned checkpoints remain OPEN. No current combined or main credit.
 
-**CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
+**CI baseline:** CI6181/36998880911 on e19d231f9 failed across gameplay and multiplayer; known-red probes remain `continue-on-error`. Original failure details and later repairs remain in Git and PROOF.md.
 
 **Earlier integration repairs:** Units/progression map, Cradle seam, aim/input latch, bounded foundation/portal polling, host world snapshots and Foundation saves, trainer/wild arbitration, traversal flee and settled combat smoke expectations are committed and verified in the earlier headless runs. F31 paid station journal/price/refund/attachments are merged8042f8fc9; guest station building and remaining recipe/visual proofs stay open. CI6184 had all single-process gates green except gate-b-core. Later gate-b-core uses bounded physics-server skin recovery and assignment until the tool lands; full CI must confirm it. Exact historical changes and raw run records remain in Git and PROOF.md.
 
@@ -188,3 +188,5 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
 - Record owner feedback here; it overrides other documents on its subject.
 
 R2/R3 source consolidated; production wiring, runtime proof and main pending.
+
+Combined `tb/f17-f20`: F19 completion merged at `4eb3c01a967587f879095bdd627175d1ac275f8f`; epoch-only ancestry `30ce8fd448` adds no source delta. F20 ending/rematch source is merged as a candidate; original scoped #0–3 evidence remains in `ralph/reports/F20/ending-runtime/evidence.json`, while #4 matched full-peer proof stays OPEN. No combined runtime acceptance or main credit.

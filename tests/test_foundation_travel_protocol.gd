@@ -158,6 +158,9 @@ func test_guest_ending_fields_require_original_personal_answer_home_receipt_and_
 		"transaction_receipts": ["starter_choice:guest_a:starter_uid", "craft:home_return_world_a_original_permit:guest_a"]}}
 	var flags := {"stormwood:legendary_ceremony_settled": true,
 		"stormwood:regional_outcome:original_claim:refused": true, "stormwood:legendary_answer:original_claim:refused": true}
+	assert_true(LIFECYCLE.ending_fields(personal, flags, sample).is_empty(), "a home return before the finale cannot unlock the ending")
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	personal.redesign_character.transaction_receipts.append(ending.return_prefix("world_a", "stormwood:legendary_answer:original_claim:refused") + "actual_home_key_permit:guest_a")
 	var expected := LIFECYCLE.ending_fields(personal, flags, sample)
 	assert_false(expected.is_empty())
 	if expected.is_empty(): return

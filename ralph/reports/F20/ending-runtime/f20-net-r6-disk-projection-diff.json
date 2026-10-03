@@ -1,0 +1,131 @@
+{
+  "scope": "Exact persisted guest portable projection versus host row.before/after, NOT live current snapshot; not an owner_plan verdict or specific cause. Float64 codec decoded little-endian.",
+  "row_identity": {
+    "character_id": "character-924350a0f31ecb1846f713e27b3abb18",
+    "receipt": "craft:portal_arrival_travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3:character-924350a0f31ecb1846f713e27b3abb18",
+    "status": "pending",
+    "intent": {
+      "entry_id": "hall_home",
+      "permit_id": "travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3",
+      "realm": "meadows"
+    }
+  },
+  "disk_vs_before": [
+    {
+      "path": "party.0.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.0.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.1.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.1.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.2.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.2.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.3.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.3.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.4.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.4.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    }
+  ],
+  "disk_vs_after": [
+    {
+      "path": "party.0.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.0.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.1.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.1.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.2.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.2.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.3.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.3.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "party.4.happiness",
+      "disk": 54.75768142000033,
+      "row": 54.989689869166654
+    },
+    {
+      "path": "party.4.nourishment",
+      "disk": 68.22299707999929,
+      "row": 69.92439237388885
+    },
+    {
+      "path": "redesign_character.transaction_receipts",
+      "disk": [
+        "starter_choice:character-924350a0f31ecb1846f713e27b3abb18:creature-a97a605f1ca576642546a36fba830ff5",
+        "craft:home_return_f6bc64bad64a2de3d4c2b0ddde971951_before_finale:character-924350a0f31ecb1846f713e27b3abb18"
+      ],
+      "row": [
+        "starter_choice:character-924350a0f31ecb1846f713e27b3abb18:creature-a97a605f1ca576642546a36fba830ff5",
+        "craft:home_return_f6bc64bad64a2de3d4c2b0ddde971951_before_finale:character-924350a0f31ecb1846f713e27b3abb18",
+        "craft:portal_arrival_travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3:character-924350a0f31ecb1846f713e27b3abb18",
+        "craft:home_return_456739bef3b0fd249b07c99b0e25d5b9_travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3:character-924350a0f31ecb1846f713e27b3abb18",
+        "craft:ending_home_return_456739bef3b0fd249b07c99b0e25d5b9_44b234cb15638a2be2196e8d7ed959f7c9baf32a5f1c4262ea21918be0df0d79_travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3:character-924350a0f31ecb1846f713e27b3abb18"
+      ]
+    }
+  ]
+}
