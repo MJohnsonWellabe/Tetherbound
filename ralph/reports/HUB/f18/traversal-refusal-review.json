@@ -1005,14 +1005,14 @@
     "scope": "Optional --flying --f18-flight-water direct actual Water fixture, existing dry lesson staging before existing fly_setup, actual Water Player grounded double Jump thereafter. Previous Meadows native failures remain unproven. No earned Water/Fly unlock or crossing credit.",
     "invariants": "Same actual mountedFly/offfloor/preciseLandfirst/keybinding/owner/inventory/request/channel/context/recovery/release guards and original deadlines; no gameplaystate/posewrites beyond disclosed priorfixtures; defaultflyingMeadowsunchanged.",
     "native_phase_trace": "Read-only originalguardreceipt beforecapture and passed/captured/monotonic fields aftercapture; noawait/inputchanges",
-    "native_status": "IN_PROGRESS; original/native/pixel review pending",
+    "native_status": "Scoped native refusal/frame + independent code-blind readability PASS; no fullcriteria acceptance.",
     "dispatch": {
       "id": 37107358897,
       "display_title": "render f18-flying-water-refusal-pixels-r3 @ 4a7684011340cc025deff3fc685c93d992224b78",
       "head_branch": "tb/integration",
       "head_sha": "67a4522aab4ebdb16a140f5c9249b33cf9f35207",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37107358897",
       "checkout": "4a7684011340cc025deff3fc685c93d992224b78",
       "label": "f18-flying-water-refusal-pixels-r3",
@@ -1022,6 +1022,323 @@
       "resolution": "1280x720",
       "timeout_minutes": "15",
       "scope": "Actual Water Player grounded double Jump/midflight key refusal/native requested-draw pixels only. Disclosed Water/dry stage/fly_setup fixtures; previous Meadows failures retained. No performance/audio/earned/unlock/crossing/raise/co-op/fullcriteria credit."
-    }
+    },
+    "native_results": [
+      {
+        "id": 37107358897,
+        "display_title": "render f18-flying-water-refusal-pixels-r3 @ 4a7684011340cc025deff3fc685c93d992224b78",
+        "head_branch": "tb/integration",
+        "head_sha": "67a4522aab4ebdb16a140f5c9249b33cf9f35207",
+        "status": "completed",
+        "conclusion": "success",
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37107358897",
+        "checkout": "4a7684011340cc025deff3fc685c93d992224b78",
+        "label": "f18-flying-water-refusal-pixels-r3",
+        "mode": "render",
+        "script": "tests/smoke_net_f18_traversal_refusal.gd",
+        "args": "--native-peer=0 --f18-draw-on-request --flying --f18-flight-water",
+        "resolution": "1280x720",
+        "timeout_minutes": "15",
+        "scope": "Actual Water Player grounded double Jump/midflight key refusal/native requested-draw pixels only. Disclosed Water/dry stage/fly_setup fixtures; previous Meadows failures retained. No performance/audio/earned/unlock/crossing/raise/co-op/fullcriteria credit.",
+        "artifact_id": 11267914104,
+        "raw_artifact": "flying-water-refusal-pixels-r3-remote.zip",
+        "bytes": 7067590,
+        "sha256": "457819a00eafbfc42a60535c790c395b3bbee62db5b825f258e4fdfd79537aa8",
+        "native_exit_code": "0",
+        "checks_passed": 7,
+        "elapsed_seconds": 90,
+        "logs": {
+          "net-runs/net-run-local-8718938/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+            "errors": {},
+            "warnings": {
+              "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1,
+              "WARNING: instance_reset_physics_interpolation() is deprecated.": 1
+            }
+          },
+          "net-runs/net-run-local-8718938/peer-0.log": {
+            "errors": {},
+            "warnings": {
+              "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1,
+              "WARNING: instance_reset_physics_interpolation() is deprecated.": 1
+            }
+          },
+          "run.log": {
+            "errors": {},
+            "warnings": {
+              "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1
+            }
+          },
+          "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+            "errors": {},
+            "warnings": {
+              "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1
+            }
+          }
+        },
+        "net_failures": [],
+        "net_fatal": "",
+        "timeouts": [
+          null
+        ],
+        "peer_hello": {
+          "enet_port": 29581.0,
+          "godot_version": "4.7-stable (official)",
+          "main_sha": "4a7684011340",
+          "peer": 0.0,
+          "pid": 2339.0,
+          "role": "host",
+          "type": "hello",
+          "user_data_dir": "/tmp/net-run-local-8718938/home-0/godot/app_userdata/Tetherbound"
+        },
+        "witness": {
+          "action": "f18_traversal_refusal",
+          "peer": 0,
+          "result": {
+            "data": {
+              "earned_opening_or_traversal_unlock_credit": false,
+              "failures": [],
+              "inputs": [
+                "Satchel Assign",
+                "double Jump from ground",
+                "hold Jump to climb",
+                "hotbar_5",
+                "release Jump"
+              ],
+              "jump_released": true,
+              "kind": "flying",
+              "native_pixels": {
+                "automatic_render_loop": false,
+                "capture_source": "actual peer root viewport texture in frame_post_draw callback",
+                "captured": true,
+                "display_server": "X11",
+                "height": 720.0,
+                "input": "actual hotbar_5; flight retains ordinary climb hold until capture then verifies Jump release",
+                "label_rect": [
+                  496.0,
+                  80.0,
+                  928.0,
+                  34.0
+                ],
+                "passed": true,
+                "path": "res://ralph/reports/HUB/f18/native/refusal_flying_2339_55624083/refusal.png",
+                "physics_frame": 944.0,
+                "process_frame": 12693.0,
+                "reason": "Land first.",
+                "renderer_sampling": "disclosed one explicit native draw; no continuous-render performance acceptance",
+                "traversal": {
+                  "flying": {
+                    "active": true,
+                    "flight_seconds": 0.65,
+                    "state": "glide"
+                  },
+                  "on_floor": false,
+                  "position": [
+                    57.3681221008301,
+                    3.561847448349,
+                    151.502136230469
+                  ],
+                  "source_instance": 1271209659271.0,
+                  "source_script": "res://scripts/player/fly_controller.gd",
+                  "swimming": {}
+                },
+                "visual_verdict": "UNASSESSED; independent pixel review required",
+                "width": 1280.0
+              },
+              "position": [
+                57.3681221008301,
+                3.561847448349,
+                151.502136230469
+              ],
+              "receipts": [
+                {
+                  "actual_safety": {},
+                  "binding": 4.0,
+                  "channel_created": false,
+                  "dialogue": "",
+                  "epoch": "579065bbe3a6732d1f1fdf2584665498",
+                  "expected_reason": "Land first.",
+                  "home_keys": 1.0,
+                  "input": "hotbar_5",
+                  "lesson_layer": -1.0,
+                  "lesson_line": -1.0,
+                  "owner": "character-028d03c22c36e83b7579747d54d4f035",
+                  "passed": true,
+                  "phase": "flying_key_refusal",
+                  "portal_actions": [],
+                  "readable": true,
+                  "realm": "water",
+                  "reason": "Land first.",
+                  "refusal_layer": 21.0,
+                  "source": "/root/WaterArchipelago/Player/FlyController",
+                  "traversal_after": {
+                    "flying": {
+                      "active": true,
+                      "flight_seconds": 0.65,
+                      "state": "glide"
+                    },
+                    "on_floor": false,
+                    "position": [
+                      57.3681221008301,
+                      3.561847448349,
+                      151.502136230469
+                    ],
+                    "source_instance": 1271209659271.0,
+                    "source_script": "res://scripts/player/fly_controller.gd",
+                    "swimming": {}
+                  },
+                  "traversal_before": {
+                    "flying": {
+                      "active": true,
+                      "flight_seconds": 0.0333333333333333,
+                      "state": "glide"
+                    },
+                    "on_floor": false,
+                    "position": [
+                      57.3681221008301,
+                      3.08217835426331,
+                      151.502136230469
+                    ],
+                    "source_instance": 1271209659271.0,
+                    "source_script": "res://scripts/player/fly_controller.gd",
+                    "swimming": {}
+                  },
+                  "unchanged": true,
+                  "visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim"
+                }
+              ],
+              "unstick_count_after": 0.0,
+              "unstick_count_before": 0.0
+            },
+            "detail": "actual traversal + bound key input requires stated refusal without travel/inventory/channel changes",
+            "frames_used": 69.0,
+            "id": "s4",
+            "type": "verdict",
+            "verdict": "PASS"
+          }
+        },
+        "capture": {
+          "automatic_render_loop": false,
+          "capture_source": "actual peer root viewport texture in frame_post_draw callback",
+          "captured": true,
+          "display_server": "X11",
+          "height": 720,
+          "input": "actual hotbar_5; flight retains ordinary climb hold until capture then verifies Jump release",
+          "label_rect": [
+            496.0,
+            80.0,
+            928.0,
+            34.0
+          ],
+          "passed": true,
+          "path": "res://ralph/reports/HUB/f18/native/refusal_flying_2339_55624083/refusal.png",
+          "physics_frame": 944,
+          "process_frame": 12693,
+          "reason": "Land first.",
+          "renderer_sampling": "disclosed one explicit native draw; no continuous-render performance acceptance",
+          "traversal": {
+            "flying": {
+              "active": true,
+              "flight_seconds": 0.65,
+              "state": "glide"
+            },
+            "on_floor": false,
+            "position": [
+              57.3681221008301,
+              3.561847448349,
+              151.502136230469
+            ],
+            "source_instance": 1271209659271,
+            "source_script": "res://scripts/player/fly_controller.gd",
+            "swimming": {}
+          },
+          "visual_verdict": "UNASSESSED; independent pixel review required",
+          "width": 1280
+        },
+        "capture_phases": [
+          {
+            "guard_receipt": {
+              "actual_safety": {},
+              "binding": 4,
+              "channel_created": false,
+              "dialogue": "",
+              "epoch": "579065bbe3a6732d1f1fdf2584665498",
+              "expected_reason": "Land first.",
+              "home_keys": 1,
+              "input": "hotbar_5",
+              "lesson_layer": -1,
+              "lesson_line": -1,
+              "owner": "character-028d03c22c36e83b7579747d54d4f035",
+              "passed": true,
+              "phase": "flying_key_refusal",
+              "portal_actions": [],
+              "readable": true,
+              "realm": "water",
+              "reason": "Land first.",
+              "refusal_layer": 21,
+              "source": "/root/WaterArchipelago/Player/FlyController",
+              "traversal_after": {
+                "flying": {
+                  "active": true,
+                  "flight_seconds": 0.65,
+                  "state": "glide"
+                },
+                "on_floor": false,
+                "position": [
+                  57.3681221008301,
+                  3.561847448349,
+                  151.502136230469
+                ],
+                "source_instance": 1271209659271,
+                "source_script": "res://scripts/player/fly_controller.gd",
+                "swimming": {}
+              },
+              "traversal_before": {
+                "flying": {
+                  "active": true,
+                  "flight_seconds": 0.0333333333333333,
+                  "state": "glide"
+                },
+                "on_floor": false,
+                "position": [
+                  57.3681221008301,
+                  3.08217835426331,
+                  151.502136230469
+                ],
+                "source_instance": 1271209659271,
+                "source_script": "res://scripts/player/fly_controller.gd",
+                "swimming": {}
+              },
+              "unchanged": true,
+              "visibility_evidence": "structural visibility/layer observation; no rendered acceptance claim"
+            },
+            "kind": "flying",
+            "monotonic_msec": 55623,
+            "phase": "before_native_capture",
+            "process_frame": 12693
+          },
+          {
+            "captured": true,
+            "kind": "flying",
+            "monotonic_msec": 79188,
+            "passed": true,
+            "phase": "after_native_capture"
+          }
+        ],
+        "png": "flying-water-refusal-pixels-r3.png",
+        "png_bytes": 1199023,
+        "png_sha256": "8b69b507c5ae4cb91ec8da5b0756596ce1ff364a91596ae6abab328ed8cc2dbe",
+        "fly_setup": "SETUP: fly_traversal_unlocked set, galecrest active, anchor=(57.36812, 1.930943, 151.5021), screen: no dialogue box was open, launch site: NO clear launch site found within 60 m; last refusal 'Find a clear launch with room for your companion overhead.' (locomotion=true carried=false on_floor=true)",
+        "setup_limit": "Inherited fly_setup reports PASS but NO clear launch site found within 60 m. No clear-site search success claimed; subsequent actual grounded height0 double Jump and mounted airborne controller independently establish refusal state.",
+        "independent_native_review": "APPROVE original ZIP/hash/source-bound native evidence by GPT-6.1 Sol f18_sol_review; seven checks, exit0, matching mounted airborne controller, same-draw PNG, JumpReleased verified; warnings retained.",
+        "visual_review": {
+          "verdict": "PASS refusal readability only",
+          "reviewer": "Independent fresh GPT-6.1 Sol code-blind f18_refusal_pixels_sol",
+          "observations": "Land first. readable in top banner and lower-right panel; sufficient contrast, no clipping/obstruction. Visible character under wing-spread bird near sand and trees; still image cannot establish flight behavior.",
+          "no_other_acceptance": true
+        },
+        "evidence_limit": "One disconnected Water fixture with disclosed key/free-play/carrier/unlock/dry staging. Requested one native X11 draw, automatic loop disabled and Dummy audio. No earned unlock/travel/crossing/co-op/audio/continuous-performance/fullF18 acceptance; all six criteria remain UNPROVEN. Prior Meadows rendered failures remain FAILED/unproven and stall cause unproved.",
+        "outcome": "Scoped actual Water mounted flight refusal/native frame/readability PASS."
+      }
+    ]
   }
 }
