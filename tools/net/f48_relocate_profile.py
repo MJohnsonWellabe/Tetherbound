@@ -22,7 +22,7 @@ def relocate(bundle, output):
             manifest.get("mutations")==[], "Immutable actual producer bundle required; no setup mutations")
     require(digest(original)==manifest.get("profile_sha256"), "Original packaged profile hash mismatch")
     profile=json.loads(original.read_bytes()); observed=[]
-    expected={"loop","behind","craft","release","feast","key","relic","essence_spend"}
+    expected={"loop","behind","boss_four","craft","release","feast","key","relic","essence_spend"}
     require(expected <= set(manifest["starts"]), "All original default suites/24 cuts require complete actual inputs")
     closure={}
     for name, start in manifest["starts"].items():

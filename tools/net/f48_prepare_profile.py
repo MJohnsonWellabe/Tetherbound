@@ -5,7 +5,9 @@ import save_document
 
 def step(step_action, **args): return {"action": step_action, "args": args}
 def approach(target):
-    return [step("f48_fixture_approach", target=target,
+    # A restored save does not retain its transient deployed body. The original
+    # idempotent input step verifies ownership and uses ordinary recall if needed.
+    return [step("f48_deploy_owned"), step("f48_fixture_approach", target=target,
                  fixture_disclosure="named_mechanics_actor_and_owned_ally_placement_no_earned_credit")]
 def press(action, **args): return step("press", action=action, **args)
 def button(text): return step("f48_button", text=text)

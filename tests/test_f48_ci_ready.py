@@ -120,6 +120,16 @@ class ReadinessTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             runner.validate_ready_profile(self.profile, "tests/smoke_net_f48_loop.gd")
 
+    def test_relocation_refuses_missing_four_peer_start_before_writing(self):
+        del self.profile["suite_profiles"]["boss_four"]
+        del self.manifest["starts"]["boss_four"]
+        self.save()
+        output = self.root / "must-not-relocate.json"
+        with self.assertRaisesRegex(ValueError, "complete actual inputs"):
+            relocate.relocate(self.bundle, output)
+        self.assertFalse(output.exists())
+        self.assertFalse(output.with_suffix(".relocation.json").exists())
+
     def test_modified_and_unlisted_save_bytes_refused(self):
         path = Path(self.manifest["starts"]["craft"]["documents"][0]["path"])
         original = path.read_bytes()
@@ -188,6 +198,37 @@ class ReadinessTests(unittest.TestCase):
         for mutation in ({"failures": ["actual failed admission"]}, {"fatal": "timeout"}, {"peers": []}):
             fixture.write(producer / "net-run/NET_RUN.json", dict(run, **mutation))
             with self.assertRaises(ValueError): gate.terminal_producer(*args)
+
+    def test_terminal_peer_count_matches_reviewed_two_or_four_peer_profile(self):
+        producer = self.root / "producer"
+        for expected in (2, 4):
+            with self.subTest(expected=expected):
+                self.profile["saves"] = self.profile["suite_profiles"]["boss_four" if expected == 4 else "loop"]["saves"][:]
+                self.save()
+                invocation = {"profile_sha256": fixture.digest(self.bundle / "profile.json"),
+                              "effective_configuration": [{"file": row["file"], "sha256": row["sha256"]}
+                                                          for row in self.profile["test_configuration"]]}
+                fixture.write(producer / "invocation.json", invocation)
+                (producer / "coordinator.log").write_text("ALL CHECKS PASSED\n")
+                args = (producer, self.bundle / "profile.json", invocation["profile_sha256"])
+                clean_peers = [{"index": peer, "exited": True, "unexpected_exit": False}
+                               for peer in range(expected)]
+                run = {"failures": [], "fatal": "", "peers": clean_peers}
+                fixture.write(producer / "net-run/NET_RUN.json", run)
+                self.assertEqual(len(gate.terminal_producer(*args)), 3)
+                other_peer_count = [{"index": peer, "exited": True, "unexpected_exit": False}
+                                    for peer in range(2 if expected == 4 else 4)]
+                for bad in (other_peer_count, clean_peers[:-1], clean_peers + [clean_peers[0]],
+                            clean_peers[:-1] + [clean_peers[0]],
+                            clean_peers[:-1] + [dict(clean_peers[-1], exited=False)],
+                            clean_peers[:-1] + [dict(clean_peers[-1], unexpected_exit=True)]):
+                    fixture.write(producer / "net-run/NET_RUN.json", dict(run, peers=bad))
+                    with self.assertRaisesRegex(ValueError, "not clean terminal returns"):
+                        gate.terminal_producer(*args)
+        self.profile["saves"] = self.profile["saves"][:3]
+        self.save()
+        with self.assertRaisesRegex(ValueError, "exactly two or four"):
+            gate.terminal_producer(producer, self.bundle / "profile.json", fixture.digest(self.bundle / "profile.json"))
 
 
 if __name__ == "__main__":

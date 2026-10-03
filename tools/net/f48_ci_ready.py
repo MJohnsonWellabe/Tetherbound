@@ -25,14 +25,20 @@ require = fixture.require
 def terminal_producer(root: Path, profile_path: Path, expected_sha: str) -> dict:
     """Read actual terminal artifacts; a partial snapshot is never sufficient."""
     require(fixture.digest(profile_path) == expected_sha, "Reviewed producer profile hash mismatch")
+    profile = fixture.read(profile_path)
+    saves = profile.get("saves")
+    require(isinstance(saves, list) and len(saves) in (2, 4),
+            "Reviewed producer requires exactly two or four original peers")
+    expected_peers = set(range(len(saves)))
     invocation = fixture.read(root / "invocation.json")
     require(invocation.get("profile_sha256") == expected_sha, "Producer invocation profile mismatch")
     run = fixture.read(root / "net-run/NET_RUN.json")
     require(run.get("failures") == [] and run.get("fatal") == "",
             "Actual producer failed; packaging refused")
     peers = run.get("peers", [])
-    require(isinstance(peers, list) and len(peers) == 2 and
-            {peer.get("index") for peer in peers} == {0, 1} and
+    require(isinstance(peers, list) and len(peers) == len(expected_peers) and
+            all(isinstance(peer, dict) for peer in peers) and
+            {peer.get("index") for peer in peers} == expected_peers and
             all(peer.get("exited") is True and peer.get("unexpected_exit") is False for peer in peers),
             "Actual producer peers are not clean terminal returns")
     lines = (root / "coordinator.log").read_text(encoding="utf-8").splitlines()
@@ -40,7 +46,6 @@ def terminal_producer(root: Path, profile_path: Path, expected_sha: str) -> dict
     require(lines and lines[-1] == "ALL CHECKS PASSED" and
             not any(line.startswith(("FAIL:", "SCRIPT ERROR:")) for line in lines),
             "Actual clean terminal coordinator verdict unavailable")
-    profile = fixture.read(profile_path)
     expected = [{"file": row["file"], "sha256": row["sha256"]}
                 for row in profile["test_configuration"]]
     require(invocation.get("effective_configuration") == expected,

@@ -10,6 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools/net"))
 import f48_produce_actual as producer
 import f48_profile_fixture as fixture
 import f48_profile_ready as ready
+import f48_prepare_profile as prepare
 
 
 class OriginalSourcesTests(unittest.TestCase):
@@ -68,6 +69,38 @@ class OriginalSourcesTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "lacks an original suite/transaction"):
             ready.generate(pack, self.output, True)
         self.assertFalse(self.output.exists())
+
+    def test_prepared_routes_deploy_original_companion_before_every_approach(self):
+        saves = []
+        for peer in range(2):
+            root = self.root / f"synthetic-peer-{peer}"
+            fixture.write(root / "character.json", {"party": [{"uid": f"unit-{peer}",
+                "species_id": "terrapup", "level": 9, "nickname": "A" if peer == 0 else "B"}]})
+            saves.append(str(root))
+        source = self.root / "synthetic-profile.json"
+        fixture.write(source, {"saves": saves, "configuration_scope": "full", "routes": {},
+                               "outcomes": {}, "provenance": "SYNTHETIC ROUTE UNIT TEST ONLY"})
+        path = prepare.produce(source, self.root / "prepared")
+        routes = fixture.read(path)["routes"]
+        self.assertIn("craft_reopen", routes)
+        self.assertIn("key_reopen", routes)
+        self.assertIn("essence_spend_reopen", routes)
+        for name, route in routes.items():
+            for index, row in enumerate(route):
+                if row["action"] == "f48_fixture_approach":
+                    with self.subTest(route=name):
+                        self.assertGreater(index, 0)
+                        self.assertEqual(route[index - 1], {"action": "f48_deploy_owned", "args": {}})
+
+    def test_four_peer_route_keeps_one_deployment_before_actual_approach(self):
+        source = self.root / "synthetic-four-profile.json"
+        fixture.write(source, {"saves": [f"synthetic-{peer}" for peer in range(4)],
+                               "provenance": "SYNTHETIC ROUTE UNIT TEST ONLY"})
+        path = producer.boss_profile(source, self.root / "boss-profile")
+        routes = fixture.read(path)["routes"]
+        for peer in range(4):
+            actions = [row["action"] for row in routes[f"boss_prepare_{peer}"]]
+            self.assertEqual(actions, ["f48_deploy_owned", "f48_fixture_approach"])
 
 
 if __name__ == "__main__":
