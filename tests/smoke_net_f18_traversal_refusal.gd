@@ -20,6 +20,10 @@ func _run() -> void:
 		if not await _f18_pass(0, "f18_stage_water_lesson", {}): return
 	var kind: String = "flying" if flying else "swimming"
 	if not await _f18_pass(0, "f18_traversal_refusal", {"kind": kind}): return
+	if OS.get_cmdline_user_args().has("--native-peer=0"):
+		var pixels: Dictionary = _f18_witnesses.back().result.data.get("native_pixels", {})
+		check(pixels.get("passed") == true and pixels.get("captured") == true,
+			"F18 actual refusal native frame captured; independent visual verdict still required")
 	var file := FileAccess.open(_run_dir.path_join("F18_WITNESSES.json"), FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(_f18_witnesses, "\t"))
 	print("F18_TRAVERSAL_REFUSAL_FIXTURES: own key/starter/free-play; " +

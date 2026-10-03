@@ -262,17 +262,58 @@ func _f18_traversal_refusal(game: Node, kind: String) -> Dictionary:
 		if climbing.get("ok") != true: return _f18_verdict(false, "ordinary flight climb input failed")
 		inputs = ["Satchel Assign", "double Jump from ground", "hold Jump to climb", "hotbar_5", "release Jump"]
 	var refused: bool = await guards.bound_refusal(kind, source)
+	var pixels: Dictionary = {}
+	if refused and DisplayServer.get_name() != "headless":
+		pixels = await _f18_capture_refusal(game, guards, kind, source, player)
 	var released: bool = true
 	if kind == "flying":
 		var release_edge: Dictionary = _press_edge("jump", false)
 		released = release_edge.get("ok") == true and not Input.is_action_pressed("jump")
-	return _f18_verdict(refused and released and int(player.get("_unstick_count")) == recoveries,
+	return _f18_verdict(refused and released and (pixels.is_empty() or pixels.get("passed") == true) \
+			and int(player.get("_unstick_count")) == recoveries,
 		"actual traversal + bound key input requires stated refusal without travel/inventory/channel changes", {
 			"kind": kind, "inputs": inputs, "receipts": guards.receipts, "failures": guards.failures,
-			"jump_released": released if kind == "flying" else null,
+			"jump_released": released if kind == "flying" else null, "native_pixels": pixels,
 			"unstick_count_before": recoveries, "unstick_count_after": player.get("_unstick_count"),
 			"position": [player.global_position.x, player.global_position.y, player.global_position.z],
 			"earned_opening_or_traversal_unlock_credit": false})
+
+func _f18_capture_refusal(game: Node, guards: RefCounted, kind: String, source: Node, player: CharacterBody3D) -> Dictionary:
+	# Native-only observation after the existing refusal proof. Capture pixels
+	# and their actual state in the same post-draw callback, without moving actors.
+	var folder := "res://ralph/reports/HUB/f18/native/refusal_%s_%d_%d" % [kind, OS.get_process_id(), Time.get_ticks_usec()]
+	var result := {"passed": false, "captured": false, "path": folder.path_join("refusal.png"),
+		"display_server": DisplayServer.get_name(), "visual_verdict": "UNASSESSED; independent pixel review required"}
+	if not preload("res://tools/fresh_capture_output.gd").create_fresh(folder, "F18 actual refusal pixels"): return result
+	var scene: Node = current_scene
+	var capture := func() -> void:
+		result.captured = true
+		if not is_instance_valid(game) or not is_instance_valid(source) or not is_instance_valid(player) \
+				or current_scene != scene or game.call("find_player") != player: return
+		var key: Node = game.get_node_or_null(^"HomeKey")
+		var label: Label = key.get("_refusal_label") if key != null else null
+		var panel: Control = key.get("_refusal_panel") if key != null else null
+		var expected: String = "Land first." if kind == "flying" else "Reach solid ground first."
+		if not is_instance_valid(label) or not is_instance_valid(panel) or not label.is_visible_in_tree() \
+				or not panel.is_visible_in_tree() or label.text != expected or not guards._refusal_context(kind, source, scene): return
+		var image: Image = root.get_texture().get_image()
+		if image == null or image.is_empty(): return
+		var rect: Rect2 = label.get_global_rect()
+		result.merge({"reason": label.text, "label_rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
+			"width": image.get_width(), "height": image.get_height(), "process_frame": Engine.get_process_frames(),
+			"physics_frame": Engine.get_physics_frames(), "traversal": guards._traversal_snapshot(kind, source, player),
+			"input": "actual hotbar_5; flight retains ordinary climb hold until capture then verifies Jump release",
+			"capture_source": "actual peer root viewport texture in frame_post_draw callback"})
+		result.passed = image.save_png(result.path) == OK
+	RenderingServer.frame_post_draw.connect(capture, CONNECT_ONE_SHOT)
+	for frame in 120:
+		if result.captured: break
+		await process_frame
+	if RenderingServer.frame_post_draw.is_connected(capture): RenderingServer.frame_post_draw.disconnect(capture)
+	var file := FileAccess.open(folder.path_join("receipt.json"), FileAccess.WRITE)
+	if file == null: result.passed = false
+	else: file.store_string(JSON.stringify(result, "\t"))
+	return result
 
 func _f18_find_arch(id: String) -> Node3D:
 	for node: Node in get_nodes_in_group("portal_arches"):
