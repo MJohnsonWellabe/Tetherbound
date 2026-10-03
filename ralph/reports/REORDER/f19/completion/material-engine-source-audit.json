@@ -64,6 +64,18 @@
     ],
     "actual_product_factory": "scripts/world/ironwood_grove_presentation.gd: LightningHeartAura Sprite3D, instantiated by playground_world.gd; prior choice census contains one Sprite3D.",
     "inference": "Prior Mesh/Material Resource retention does not retain internal SpriteBase3D material RIDs. Observe actual scriptless Sprite3D path and compare PREDELETE base detachment before inferring a product fix.",
-    "limitations": "Counterfactual only. Exact native owner remains unproven; no independently verified binary-to-tag commit mapping."
+    "limitations": "Counterfactual only. Exact native owner remains unproven; no independently verified binary-to-tag commit mapping.",
+    "result": "Native37091898727 terminal negative: actual LightningHeartAura confirmed, three deletion markers, baseline/treatment both16 post-choice errors; no production fix justified."
+  },
+  "populated_terrain_followup": {
+    "sources": [
+      "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d.cpp"
+    ],
+    "facts": [
+      "EXIT_TREE destroys native mesher and mouse picking, then uninitializes asset and material resources.",
+      "PREDELETE destroys mesher/instancer/collision, releases assets/material, then deletes region data and label/container nodes."
+    ],
+    "inference": "An empty Terrain3D component does not cover actual committed region data and native populated mesher ownership. Reuse production factories in a disclosed component host, suppress unrelated world startup, and compare default versus authored material before any product change.",
+    "limitations": "Installed version1.0.2; exact binary-to-upstream commit not independently verified. Component counterfactual cannot close full-world or earned-save acceptance."
   }
 }
