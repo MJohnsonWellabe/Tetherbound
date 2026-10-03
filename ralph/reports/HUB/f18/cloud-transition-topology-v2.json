@@ -10,8 +10,8 @@
   "isolated_apply_check": true,
   "applied_lf_sha256": "ec71cc6887f13e1294f238c75f2069cd116ec0e9f754a5fe14782634943f4b5a",
   "scope": "Same actualflattransitionpolygon/topheight/yaw/UV/skirt with sharedvisible/collisiontriangulation; directrawConcavefaces avoidTriangleMesh snap. ArrivalGateRoad_Ledge0 retains rendered44mgeology, allouter/risingstrips,skirt/undercap/nature/road; onlyits2mcollisionhub omitted IFexactnativeownerprefix, exactcoplanarity/XZandactualcompletepolygoncontainment provefull coverage. All defaults elsewhere unchanged.",
-  "source_review": "Independent GPT-6.1 Sol APPROVE. No parse/type/floatfindings. Source-only untilnativeCI.",
-  "runtime_status": "Exactsource nativeCloudR5 dispatched all4stones andcanonicalactualPlayer/nativefloorunion; awaitoriginalresult. V1partialfailedoriginal retained. NoF18criterionMETclaim.",
+  "source_review": "Independent GPT-6.1 Sol source APPROVE; native independent evidence review requested.",
+  "runtime_status": "Exactsource nativeCloudR5 PASS73/73 exit0 zeroengine/script errors. All4stones andactualcanonicalPlayer clearcandidate/stable60frames/finalsupport pass; unsafe actualcontacts1 unsaturated onlymatchedfloorRID. Actualmeshparity/perimeter and53removedtriangle/fullpolygon/nativehub-seam-rim-roadfivefootprint union pass. Scopedgeometry acceptance; fullF18stillUNPROVEN.",
   "geometry_dependency": "arrival-native-floor-v2.patch, only_contacts_on_support/_capsule_landing helpers, must apply serialalongsidecoordinatorownedlifecycle; no lifecycle overwrite.",
   "preserved_predicates": [
     "32contact saturation rejection",
@@ -21,5 +21,18 @@
     "oldphysicalheightbound/radius",
     "owner/save/durable generation fences"
   ],
-  "evidence_limit": "Direct actualscene/isolatedprobe geometry and actualPlayerreadonlyfirstentry; notearnedportalconsumption/touch/save/reload/co-op/render/audio acceptance."
+  "evidence_limit": "Direct actualscene/isolatedprobe geometry and actualPlayerreadonlyfirstentry; notearnedportalconsumption/touch/save/reload/co-op/render/audio acceptance.",
+  "runtime_run_id": 37098294158,
+  "artifact_id": 11265102048,
+  "original_results": "native-followups/receipt.json",
+  "original_raw_artifact": "native-followups/native-cloudreach-r5-remote.zip",
+  "raw_sha256": "528facba8614a797e1ff1075a0a5b76b9bff8446fb4f762c8fd280f47303b145",
+  "native_contact_summary": {
+    "count": 1,
+    "saturated": false,
+    "on_support": true,
+    "owners": {
+      "/root/CloudreachCliffs/RealmTransitionLedges/CloudreachArrivalFromMeadows/Collision": 1
+    }
+  }
 }

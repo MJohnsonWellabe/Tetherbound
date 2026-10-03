@@ -2788,6 +2788,212 @@
       ],
       "outcome": "All4actualCloudstones PASSincludingSummit afterunchangedshipping skin recovery. Canonicalentrystillrefused32saturatedcontacts; retopologizedtransition has1contact, remaining31 fromdifferentAuthoredRoutes/ArrivalGateRoad_Ledge0/Collision. 5raywitnessesonlytransitionRID; noidentitywaiver. Strictmeshparity fails because engineTriangleMesh snapscollision vertices to0.1mm; samefaceindices/winding authored unchanged. Exactrawtriangles corrective prepared; routefloorownershipresolutionstillneeded.",
       "evidence_limit": "Actualgeometry/read-onlyPlayer scene fixture; noearnedportalconsumption/save/reload/co-op/presentation acceptance."
+    },
+    {
+      "id": 37098294158,
+      "checkout": "016d473a754305fd1d33ba50d84f746b9d420c09",
+      "head_sha": "716b497bd5f39d5f82648dba163839fea91a4796",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37098294158",
+      "artifact_id": 11265102048,
+      "raw_artifact": "native-cloudreach-r5-remote.zip",
+      "sha256": "528facba8614a797e1ff1075a0a5b76b9bff8446fb4f762c8fd280f47303b145",
+      "bytes": 6532,
+      "checks": 73,
+      "failures": [],
+      "native_exit_code": "0",
+      "engine_error_lines": [],
+      "script_error_lines": [],
+      "warning_lines": [
+        "WARNING: Cloudreach physical placement needs a surface: cr_candy_broken_route_good_07 (-88.9, 465.4, 2335.0)",
+        "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+        "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+      ],
+      "stones": [
+        {
+          "consecutive_floor_frames": 63,
+          "final_supported": true,
+          "id": "cloudreach_galefoot_waycamp",
+          "landing": [
+            -273.0,
+            180.034118652344,
+            517.0
+          ],
+          "mask": 1,
+          "safe_margin": 0.00100000004749745,
+          "settled": [
+            -273.0,
+            180.03010559082,
+            517.0
+          ],
+          "shape_height": 1.79999995231628,
+          "shape_radius": 0.400000005960464,
+          "shrine": [
+            -273.0,
+            180.0,
+            520.0
+          ],
+          "stable_contact": true,
+          "target": [
+            -273.0,
+            180.0,
+            517.0
+          ]
+        },
+        {
+          "consecutive_floor_frames": 71,
+          "final_supported": true,
+          "id": "cloudreach_windscar_flight_aerie_camp",
+          "landing": [
+            388.0,
+            610.073608398438,
+            3248.0
+          ],
+          "mask": 1,
+          "safe_margin": 0.00100000004749745,
+          "settled": [
+            388.002166748047,
+            610.070373535156,
+            3248.0
+          ],
+          "shape_height": 1.79999995231628,
+          "shape_radius": 0.400000005960464,
+          "shrine": [
+            388.0,
+            610.0,
+            3251.0
+          ],
+          "stable_contact": true,
+          "target": [
+            388.0,
+            610.0,
+            3248.0
+          ]
+        },
+        {
+          "consecutive_floor_frames": 64,
+          "final_supported": true,
+          "id": "cloudreach_cliffhold_commons",
+          "landing": [
+            -340.0,
+            830.0341796875,
+            3960.0
+          ],
+          "mask": 1,
+          "safe_margin": 0.00100000004749745,
+          "settled": [
+            -340.0,
+            830.030090332031,
+            3960.0
+          ],
+          "shape_height": 1.79999995231628,
+          "shape_radius": 0.400000005960464,
+          "shrine": [
+            -340.0,
+            830.0,
+            3963.0
+          ],
+          "stable_contact": true,
+          "target": [
+            -340.0,
+            830.0,
+            3960.0
+          ]
+        },
+        {
+          "consecutive_floor_frames": 71,
+          "final_supported": true,
+          "id": "cloudreach_summit_bivouac",
+          "landing": [
+            132.0,
+            1160.0341796875,
+            5338.0
+          ],
+          "mask": 1,
+          "safe_margin": 0.00100000004749745,
+          "settled": [
+            132.0,
+            1160.03051757812,
+            5338.0
+          ],
+          "shape_height": 1.79999995231628,
+          "shape_radius": 0.400000005960464,
+          "shrine": [
+            132.0,
+            1160.0,
+            5335.0
+          ],
+          "stable_contact": true,
+          "target": [
+            132.0,
+            1160.0,
+            5338.0
+          ]
+        }
+      ],
+      "portal_entries": [
+        {
+          "consecutive_floor_frames": 60,
+          "final_supported": true,
+          "fixture": "direct scene boot; observe existing actual Player; no harness pose writes or controller changes",
+          "id": "cloudreach_arrival_from_meadows",
+          "landing": [
+            0.0,
+            105.03099822998,
+            -260.0
+          ],
+          "mask": 1,
+          "safe_margin": 0.00100000004749745,
+          "settled": [
+            0.0,
+            105.030944824219,
+            -260.0
+          ],
+          "shape_radius": 0.400000005960464,
+          "stable_contact": true,
+          "target": [
+            0.0,
+            105.0,
+            -260.0
+          ]
+        }
+      ],
+      "topology": {
+        "F18_TRANSITION_TOPOLOGY": {
+          "boundary_vertices": 50,
+          "collision_vertices": 444,
+          "entry_id": "cloudreach_arrival_from_meadows",
+          "flat": true,
+          "identical_top": true,
+          "rim_vertices": 50,
+          "same_perimeter": true,
+          "top_vertices": 144,
+          "upward": true
+        },
+        "F18_TRANSITION_ROUTE_UNION": {
+          "approach_supported": true,
+          "centroid_hits": 53,
+          "centroids_supported": true,
+          "collision_vertices": 2544,
+          "coplanar": true,
+          "fixture": "read-only actual geometry and native rays; no Player pose writes or traversal acceptance claim",
+          "hub_triangles": 53,
+          "same_outer": true,
+          "seam_supported": true,
+          "visible_top_vertices": 2385
+        }
+      },
+      "contact_summary": {
+        "count": 1,
+        "saturated": false,
+        "on_support": true,
+        "owners": {
+          "/root/CloudreachCliffs/RealmTransitionLedges/CloudreachArrivalFromMeadows/Collision": 1
+        }
+      },
+      "outcome": "ScopedactualCloudgeometryPASS: all4stones+canonicalactualPlayer clearcandidate/stablefloor/finalsupported; only1unsaturatednativefirstcontact matchingfivefloorwitnesses. Actualrender/collision prefix/rimexact; all53omittedroadfantriangles havecoplanarfullpolygoncoverage/nativecentroidsupport; allouterstripcoords andskirtcount retained, hub/rimseams/exitroadfivefootprintrays PASS.",
+      "evidence_limit": "Native directscene/isolatedprobe geometry plusactualPlayerreadonlyentry. No actualportalpermitconsumption/earnedtravel/touch-save-reload/co-op/readablevisual/audio/fullF18acceptance claim. OriginalR3/R4failedartifactsretained."
     }
   ],
   "acceptance": {
