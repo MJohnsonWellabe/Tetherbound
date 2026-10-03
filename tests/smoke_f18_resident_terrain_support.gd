@@ -46,6 +46,92 @@ func _body(world: Node3D, at: Vector3) -> ProbeBody:
 func _frames(count: int) -> void:
 	for frame in count: await physics_frame
 
+func _vector_record(value: Vector3) -> Array:
+	return [value.x, value.y, value.z]
+
+func _collider_record(collider: Object, rid: RID) -> Dictionary:
+	var record := {"rid": str(rid)}
+	if is_instance_valid(collider):
+		record["instance_id"] = collider.get_instance_id()
+		record["class"] = collider.get_class()
+		if collider is Node:
+			record["path"] = str(collider.get_path()) if collider.is_inside_tree() else str(collider.name)
+	return record
+
+func _overlap_record(probe: ProbeBody, collision: CollisionShape3D, at: Transform3D) -> Dictionary:
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.transform = at
+	query.collision_mask = probe.collision_mask
+	query.exclude = [probe.get_rid()]
+	# Diagnostics report every returned overlap and explicitly disclose a cap.
+	var hits: Array[Dictionary] = probe.get_world_3d().direct_space_state.intersect_shape(query, 2048)
+	var records: Array[Dictionary] = []
+	for hit: Dictionary in hits:
+		var record := _collider_record(hit.get("collider"), hit.get("rid", RID()))
+		record["shape"] = hit.get("shape", -1)
+		record["hit_instance_id"] = hit.get("collider_id", 0)
+		records.append(record)
+	return {"origin": _vector_record(at.origin), "query_margin": query.margin,
+		"collision_mask": query.collision_mask, "hits": records, "saturated": hits.size() == 2048}
+
+func _contact_diagnostic(world: ProbeWorld, probe: ProbeBody, arrival: Node, target: Vector3) -> void:
+	# Observations only: do not move the actor, alter a production predicate,
+	# suppress a failing assertion, or exclude any floor/terrain/wall RID.
+	var before := probe.global_transform
+	var collision := probe.get_node(^"Collision") as CollisionShape3D
+	var radius: float = (collision.shape as CapsuleShape3D).radius
+	var samples: Array[Dictionary] = []
+	for offset: Vector2 in [Vector2.ZERO, Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
+		var at := target + Vector3(offset.x, 0, offset.y)
+		var terrain: float = float(arrival.call("_ground_height", world, at))
+		var sample := {"at": _vector_record(at), "terrain_height": terrain,
+			"production_height": float(arrival.call("_landing_height", world, probe, at, radius)), "hit": false}
+		if is_finite(terrain):
+			var ray_from := Vector3(at.x, terrain + radius, at.z)
+			var ray_to := Vector3(at.x, terrain - radius, at.z)
+			var ray := PhysicsRayQueryParameters3D.create(ray_from, ray_to, probe.collision_mask, [probe.get_rid()])
+			var hit := probe.get_world_3d().direct_space_state.intersect_ray(ray)
+			sample["ray_from"] = _vector_record(ray_from)
+			sample["ray_to"] = _vector_record(ray_to)
+			if not hit.is_empty():
+				sample["hit"] = true
+				sample["position"] = _vector_record(hit.position)
+				sample["normal"] = _vector_record(hit.normal)
+				sample["collider"] = _collider_record(hit.get("collider"), hit.get("rid", RID()))
+				sample["shape"] = hit.get("shape", -1)
+		samples.append(sample)
+	var lifted := collision.global_transform
+	lifted.origin.y += probe.safe_margin
+	var canonical: float = float(arrival.call("_landing_height", world, probe, target, radius))
+	var canonical_overlap: Dictionary = {"skipped": "canonical physical floor missing"}
+	if is_finite(canonical):
+		var canonical_transform := collision.global_transform
+		# Change only the query's Y; retain the actual actor's X/Z and basis.
+		canonical_transform.origin.y += canonical + probe.safe_margin - probe.global_position.y
+		canonical_overlap = _overlap_record(probe, collision, canonical_transform)
+	var motion := PhysicsTestMotionParameters3D.new()
+	motion.from = probe.global_transform
+	motion.motion = Vector3.ZERO
+	motion.margin = probe.safe_margin
+	motion.recovery_as_collision = true
+	motion.max_collisions = 32
+	var result := PhysicsTestMotionResult3D.new()
+	var recovered := PhysicsServer3D.body_test_motion(probe.get_rid(), motion, result)
+	var contacts: Array[Dictionary] = []
+	for i in result.get_collision_count():
+		contacts.append({"depth": result.get_collision_depth(i), "normal": _vector_record(result.get_collision_normal(i)),
+			"point": _vector_record(result.get_collision_point(i)), "collider": _collider_record(result.get_collider(i), result.get_collider_rid(i)),
+			"collider_shape": result.get_collider_shape(i), "local_shape": result.get_collision_local_shape(i)})
+	print("F18_SUPPORT_CONTACT_DIAGNOSTIC " + JSON.stringify({"actor_position": _vector_record(probe.global_position),
+		"collision_origin": _vector_record(collision.global_position), "safe_margin": probe.safe_margin,
+		"is_on_floor": probe.is_on_floor(), "floor_normal": _vector_record(probe.get_floor_normal()), "rays": samples,
+		"raw": _overlap_record(probe, collision, collision.global_transform), "plus_safe_margin": _overlap_record(probe, collision, lifted),
+		"canonical_actor_y": canonical_overlap, "zero_motion": {"collided": recovered, "margin": motion.margin,
+			"travel": _vector_record(result.get_travel()), "remainder": _vector_record(result.get_remainder()),
+			"contacts": contacts, "saturated": result.get_collision_count() == motion.max_collisions},
+		"actor_transform_unchanged": probe.global_transform == before}))
+
 func _run() -> void:
 	await process_frame
 	if not ClassDB.class_exists("Terrain3D"):
@@ -111,21 +197,7 @@ func _run() -> void:
 	await _frames(60)
 	_check(probe.is_on_floor() and probe.velocity.length() < .1 and probe.global_position.distance_to(before) < .1,
 		"dynamic bubble overlap does not shove the body or lose contact")
-	var diagnostic_query := PhysicsShapeQueryParameters3D.new()
-	diagnostic_query.shape = probe.get_node(^"Collision").shape
-	diagnostic_query.transform = probe.get_node(^"Collision").global_transform
-	diagnostic_query.exclude = [probe.get_rid()]
-	var overlap: Array[Dictionary] = probe.get_world_3d().direct_space_state.intersect_shape(diagnostic_query, 8)
-	var colliders: Array[String] = []
-	for hit: Dictionary in overlap:
-		var collider: Object = hit.get("collider")
-		colliders.append(str(collider.get("name")) if collider is Node else str(collider))
-	var support_samples: Array[float] = []
-	for offset: Vector2 in [Vector2.ZERO, Vector2(-.4, 0), Vector2(.4, 0), Vector2(0, -.4), Vector2(0, .4)]:
-		support_samples.append(arrival._landing_height(world, probe, target + Vector3(offset.x, 0, offset.y), .4))
-	print("F18_SUPPORT_CONTACT_DIAGNOSTIC " + JSON.stringify({"position": str(probe.global_position),
-		"safe_margin": probe.safe_margin, "query_margin": diagnostic_query.margin, "floor": str(probe.get_floor_normal()),
-		"samples": support_samples, "overlap": colliders}))
+	_contact_diagnostic(world, probe, arrival, target)
 	_check(arrival._supported_capsule(world, probe, target, .4), "final production support/capsule guard accepts actual supported body")
 	probe.set_physics_process(false)
 	var wall := StaticBody3D.new()
