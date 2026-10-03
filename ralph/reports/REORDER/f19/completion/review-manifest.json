@@ -311,7 +311,7 @@
   "solmane_cold_material_diagnostic": {
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
     "scope": "First original bootstrap/reset/reboot only; all root children masked Material census, no active/particle/Terrain/Mesh refs or gameplay mutation added; baseline and retained copies in distinct processes.",
-    "status": "Both original cold-transition processes live; no result or acceptance claim",
+    "status": "Terminal: solmane-cold-masked-negative.json; baseline8/held8 errors,4 at original reboot and4 final; diagnosis only",
     "source_commit": "ef33ae27f5738b40f64980047c0f2d9b7d018f56",
     "baseline": {
       "run": 37104723866,
@@ -322,5 +322,11 @@
       "job": 111150904967,
       "args": "--retain-masked-materials"
     }
+  },
+  "solmane_cold_active_surface_diagnostic": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "args": "--retain-active-surface-overrides",
+    "scope": "Same original cold lifecycle; hold only per-surface overrides equal to actual get_active_material, no geometry override/base, Mesh, particle or Terrain resources.",
+    "status": "Prepared; not yet dispatched"
   }
 }

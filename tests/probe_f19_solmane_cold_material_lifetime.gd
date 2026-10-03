@@ -7,6 +7,7 @@ var _held: Array[Material] = []
 var _held_ids: Dictionary = {}
 var _candidate_ids: Dictionary = {}
 var _samples: Array[String] = []
+var _retained_samples: Array[String] = []
 
 func _run() -> void:
 	if not preload("res://tests/helpers/f19_functional_offload.gd").configure("solmane_cold_material_diagnostic"):
@@ -42,18 +43,22 @@ func _run() -> void:
 	quit(0 if _failures.is_empty() else 1)
 
 func _treatment() -> String:
+	if OS.get_cmdline_user_args().has("--retain-active-surface-overrides"):
+		return "retain-active-surface-overrides"
 	return "retain-masked-materials" if OS.get_cmdline_user_args().has("--retain-masked-materials") else "baseline"
 
 func _observe(phase: String) -> void:
 	_candidate_ids.clear()
 	_samples.clear()
+	_retained_samples.clear()
 	_scan(root)
 	var roots: Array[String] = []
 	for child: Node in root.get_children(): roots.append(str(child.get_path()))
 	print("F19 SOLMANE COLD OBSERVED " + JSON.stringify({"phase": phase,
 		"treatment": _treatment(), "root_children": roots,
-		"unique_masked_candidates": _candidate_ids.size(), "held_materials": _held.size(),
-		"owner_samples": _samples, "sample_limit": 32}))
+		"unique_material_candidates": _candidate_ids.size(), "held_materials": _held.size(),
+		"owner_samples": _samples, "sample_limit": 32,
+		"new_retained_owner_samples": _retained_samples, "retained_sample_limit": 64}))
 
 func _scan(node: Node) -> void:
 	if node is MeshInstance3D:
@@ -64,6 +69,7 @@ func _scan(node: Node) -> void:
 				var override := instance.get_surface_override_material(surface)
 				var base := instance.mesh.surface_get_material(surface)
 				if override != active: _note(instance, surface, "surface-override", override)
+				else: _note(instance, surface, "active-surface-override", override)
 				if base != active: _note(instance, surface, "mesh-surface", base)
 	elif node is MultiMeshInstance3D:
 		var instance := node as MultiMeshInstance3D
@@ -81,6 +87,11 @@ func _note(node: Node, surface: int, kind: String, material: Material) -> void:
 		if _samples.size() < 32:
 			_samples.append("%s:%s:%d:%d:%s:%s" % [str(node.get_path()), kind,
 				surface, id, material.get_class(), material.resource_name])
-	if _treatment() == "retain-masked-materials" and not _held_ids.has(id):
+	var retain := (_treatment() == "retain-masked-materials" and kind != "active-surface-override") \
+		or (_treatment() == "retain-active-surface-overrides" and kind == "active-surface-override")
+	if retain and not _held_ids.has(id):
 		_held_ids[id] = true
 		_held.append(material)
+		if _retained_samples.size() < 64:
+			_retained_samples.append("%s:%s:%d:%d:%s:%s" % [str(node.get_path()), kind,
+				surface, id, material.get_class(), material.resource_name])
