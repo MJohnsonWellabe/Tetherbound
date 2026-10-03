@@ -92,8 +92,24 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 		return _fail("F20 rematch lacks grounded exact actionable provider without recovery")
 	_activated = null
 	arbiter.connect("activated", _activation)
+	var previous_trace := trace_input
+	trace_input = true
 	await tap("interact")
+	trace_input = previous_trace
 	if is_instance_valid(arbiter) and arbiter.is_connected("activated", _activation): arbiter.disconnect("activated", _activation)
+	if _activated != prompt:
+		var activated_node := _activated as Node
+		var owner := INPUT_OWNER.current(tree)
+		var director := tree.current_scene.get_node_or_null("EncounterDirector")
+		var manager: Node = director.get("_manager") if director != null else null
+		print("F20 REMATCH activation expected=", prompt.get_path(),
+			" actual=", activated_node.get_path() if is_instance_valid(activated_node) else str(_activated),
+			" winner=", arbiter.call("winning_provider"), " offer=", arbiter.call("winner"),
+			" enabled=", arbiter.call("enabled"), " owner=", owner.get_path() if owner != null else "none",
+			" player=", _player.global_position, " target=", prompt.global_position,
+			" trainer_active=", director.call("trainer_battle_active") if director != null else false,
+			" trainer_spec=", director.get("_trainer_spec") if director != null else {},
+			" fighting=", manager.call("is_fighting") if manager != null else false)
 	return _activated == prompt or _fail("F20 rematch input activated another provider")
 
 func _continue_navigation_lesson() -> void:
