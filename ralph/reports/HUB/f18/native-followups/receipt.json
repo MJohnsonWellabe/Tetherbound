@@ -3054,6 +3054,690 @@
       "raw_log_sha256": "a940069c44a2f5fbd80fd324c7ff96a1bb98699d6b3958c15745bf871723c0c2",
       "gzip_sha256": "dd5ff01a930799c45927c87485f53aab136cc70256b4f9fb19910b0591005f56",
       "outcome": "AbbreviatedSHA mistakenly interpreted bycheckoutasbranch/tag glob refs/heads/fba1711d42*, gitfetch fails. No engine or native test ran. Correctedfull40charSHA nativeR4 dispatched; original job failure retained."
+    },
+    {
+      "id": 37099436406,
+      "display_title": "render f18-native-stones-water-r4 @ fba1711d423ed24312e7814957efe7dc1e7c3cb4",
+      "head_branch": "tb/integration",
+      "head_sha": "c7ed8eae7fe48dbd1d0c7b963e954a73eec017ad",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099436406",
+      "checkout": "fba1711d423ed24312e7814957efe7dc1e7c3cb4",
+      "artifact_id": 11265148666,
+      "raw_artifact": "native-water-r4-remote.zip",
+      "sha256": "c1b1a8e5952f13de69ae80c0e21271af7052c2456d87176817be43861d8f142f",
+      "bytes": 55003,
+      "native_exit_code": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_count": 1,
+      "evidence_limit": "Original artifact retained. Direct native geometry or partial earned loop does not close any of six F18 criteria; consumed travel/touch/save/reload/co-op and readable rendered visual/audio proof remain required.",
+      "native_summary": {
+        "checks": 74,
+        "failures": [
+          "water_arrival_from_stormwood actual Player full-capsule landing accepted",
+          "water_arrival_from_stormwood actual Player complete candidate capsule clear",
+          "water_arrival_from_stormwood actual existing Player controller stable walkable contact",
+          "water_arrival_from_stormwood actual Player final five-floor/full-capsule guard"
+        ],
+        "realm": "water",
+        "portal_entries": [
+          {
+            "consecutive_floor_frames": 60,
+            "final_supported": false,
+            "fixture": "direct scene boot; observe existing actual Player; no harness pose writes or controller changes",
+            "id": "water_arrival_from_stormwood",
+            "landing": [
+              null,
+              null,
+              null
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              0.0,
+              1.93102383613586,
+              162.0
+            ],
+            "shape_radius": 0.400000005960464,
+            "stable_contact": false,
+            "target": [
+              0.0,
+              2.07857155799866,
+              162.0
+            ]
+          }
+        ],
+        "stones": [
+          {
+            "consecutive_floor_frames": 142,
+            "final_supported": true,
+            "id": "tidewake_first_shore",
+            "landing": [
+              7.0,
+              8.25479221343994,
+              132.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              7.0,
+              8.25183010101318,
+              132.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              7.0,
+              7.84568166732788,
+              135.0
+            ],
+            "stable_contact": true,
+            "target": [
+              7.0,
+              8.24441432952881,
+              132.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 191,
+            "final_supported": true,
+            "id": "tidewake_shellwatch",
+            "landing": [
+              359.289459228516,
+              3.24492287635803,
+              961.46923828125
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              359.289459228516,
+              3.24379444122314,
+              961.46923828125
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              359.289459228516,
+              4.08132362365723,
+              964.46923828125
+            ],
+            "stable_contact": true,
+            "target": [
+              359.289459228516,
+              3.2306821346283,
+              961.46923828125
+            ]
+          },
+          {
+            "consecutive_floor_frames": 162,
+            "final_supported": true,
+            "id": "tidewake_tidal_cradle",
+            "landing": [
+              556.092163085938,
+              4.66839265823364,
+              1357.17846679688
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              556.092163085938,
+              4.66688346862793,
+              1357.17846679688
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              556.092163085938,
+              5.4042911529541,
+              1360.17846679688
+            ],
+            "stable_contact": true,
+            "target": [
+              556.092163085938,
+              4.6521110534668,
+              1357.17846679688
+            ]
+          },
+          {
+            "consecutive_floor_frames": 188,
+            "final_supported": true,
+            "id": "tidewake_salt_crown",
+            "landing": [
+              287.932739257812,
+              2.41122317314148,
+              2116.56884765625
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              287.932739257812,
+              2.40984082221985,
+              2116.56884765625
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              287.932739257812,
+              2.79995441436768,
+              2119.56884765625
+            ],
+            "stable_contact": true,
+            "target": [
+              287.932739257812,
+              2.40764713287354,
+              2116.56884765625
+            ]
+          },
+          {
+            "consecutive_floor_frames": 177,
+            "final_supported": true,
+            "id": "tidewake_sluice_isle",
+            "landing": [
+              672.336120605469,
+              4.23657846450806,
+              2778.5263671875
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              672.336120605469,
+              4.23378562927246,
+              2778.5263671875
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              672.336120605469,
+              4.93346643447876,
+              2781.5263671875
+            ],
+            "stable_contact": true,
+            "target": [
+              672.336120605469,
+              4.2216682434082,
+              2778.5263671875
+            ]
+          }
+        ]
+      },
+      "outcome": "74checks/4fails; all5actualstonesPASS. Canonical Water entry actual left-radius ray has no Terrain3D hit; complete floor/capsule guards correctly refuse. No engineerrors; exit_code artifact absent, do not infer native exit."
+    },
+    {
+      "id": 37099438106,
+      "display_title": "render f18-native-stones-stormwood-r4 @ fba1711d423ed24312e7814957efe7dc1e7c3cb4",
+      "head_branch": "tb/integration",
+      "head_sha": "c7ed8eae7fe48dbd1d0c7b963e954a73eec017ad",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099438106",
+      "checkout": "fba1711d423ed24312e7814957efe7dc1e7c3cb4",
+      "artifact_id": 11265423322,
+      "raw_artifact": "native-stormwood-r4-remote.zip",
+      "sha256": "c51af9137edbc044e53d2b06ea98d69d790d1a654c869742f97af888a7639499",
+      "bytes": 627187,
+      "native_exit_code": "0",
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_count": 6,
+      "evidence_limit": "Original artifact retained. Direct native geometry or partial earned loop does not close any of six F18 criteria; consumed travel/touch/save/reload/co-op and readable rendered visual/audio proof remain required.",
+      "native_summary": {
+        "checks": 74,
+        "failures": [],
+        "realm": "stormwood",
+        "portal_entries": [
+          {
+            "consecutive_floor_frames": 60,
+            "final_supported": true,
+            "fixture": "direct scene boot; observe existing actual Player; no harness pose writes or controller changes",
+            "id": "stormwood_arrival_from_cloudreach",
+            "landing": [
+              -300.0,
+              32.2756805419922,
+              180.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -300.0,
+              32.271728515625,
+              180.0
+            ],
+            "shape_radius": 0.400000005960464,
+            "stable_contact": true,
+            "target": [
+              -300.0,
+              30.0,
+              180.0
+            ]
+          }
+        ],
+        "stones": [
+          {
+            "consecutive_floor_frames": 67,
+            "final_supported": true,
+            "id": "stormwood_ashfoot_waycamp",
+            "landing": [
+              -325.0,
+              29.5473079681396,
+              456.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -325.0,
+              29.5443744659424,
+              456.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -325.0,
+              29.2891731262207,
+              459.0
+            ],
+            "stable_contact": true,
+            "target": [
+              -325.0,
+              29.5523586273193,
+              456.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 71,
+            "final_supported": true,
+            "id": "stormwood_lantern_pools_camp",
+            "landing": [
+              -410.0,
+              34.6778335571289,
+              1415.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -410.0,
+              34.6740798950195,
+              1415.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -410.0,
+              34.5901718139648,
+              1418.0
+            ],
+            "stable_contact": true,
+            "target": [
+              -410.0,
+              34.6850051879883,
+              1415.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 80,
+            "final_supported": true,
+            "id": "stormwood_still_grove_shelter",
+            "landing": [
+              -130.0,
+              32.2926559448242,
+              2720.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -130.0,
+              32.2905387878418,
+              2720.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -130.0,
+              32.1595153808594,
+              2723.0
+            ],
+            "stable_contact": true,
+            "target": [
+              -130.0,
+              32.2854042053223,
+              2720.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 77,
+            "final_supported": true,
+            "id": "stormwood_lantern_hollow_waycamp",
+            "landing": [
+              -422.0,
+              55.2751655578613,
+              3914.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -422.0,
+              55.2740783691406,
+              3914.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -422.0,
+              55.4888000488281,
+              3917.0
+            ],
+            "stable_contact": true,
+            "target": [
+              -422.0,
+              55.2710380554199,
+              3914.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 75,
+            "final_supported": true,
+            "id": "stormwood_ember_bivouac",
+            "landing": [
+              -140.0,
+              98.4715805053711,
+              5232.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -140.0,
+              98.4696655273438,
+              5232.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -140.0,
+              98.8074417114258,
+              5235.0
+            ],
+            "stable_contact": true,
+            "target": [
+              -140.0,
+              98.4674530029297,
+              5232.0
+            ]
+          }
+        ]
+      },
+      "outcome": "74checks/0fails, exit0, zeroengineerrors."
+    },
+    {
+      "id": 37099439627,
+      "display_title": "render f18-native-stones-meadows-r4 @ fba1711d423ed24312e7814957efe7dc1e7c3cb4",
+      "head_branch": "tb/integration",
+      "head_sha": "c7ed8eae7fe48dbd1d0c7b963e954a73eec017ad",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099439627",
+      "checkout": "fba1711d423ed24312e7814957efe7dc1e7c3cb4",
+      "artifact_id": 11264949740,
+      "raw_artifact": "native-meadows-r4-remote.zip",
+      "sha256": "fac9819327eedb8b15a55574f026f70c181d59a6b7a57774cc187ee0abba61f4",
+      "bytes": 59593,
+      "native_exit_code": "0",
+      "error_lines": [],
+      "script_error_lines": [],
+      "warning_count": 9,
+      "evidence_limit": "Original artifact retained. Direct native geometry or partial earned loop does not close any of six F18 criteria; consumed travel/touch/save/reload/co-op and readable rendered visual/audio proof remain required.",
+      "native_summary": {
+        "checks": 74,
+        "failures": [],
+        "realm": "meadows",
+        "portal_entries": [
+          {
+            "consecutive_floor_frames": 136,
+            "final_supported": true,
+            "fixture": "direct Meadows scene boot at village; isolated actual-capsule candidate/controller fixture at Hall portal fallback; no Player pose writes",
+            "id": "meadows_entry",
+            "landing": [
+              96.1999969482422,
+              0.914124965667725,
+              14.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              96.1999969482422,
+              0.910042405128479,
+              14.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "stable_contact": true,
+            "target": [
+              96.1999969482422,
+              1.14999985694885,
+              14.0
+            ]
+          }
+        ],
+        "stones": [
+          {
+            "consecutive_floor_frames": 168,
+            "final_supported": true,
+            "id": "meadows_trail_camp",
+            "landing": [
+              344.299987792969,
+              2.46104264259338,
+              926.599975585938
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              344.428466796875,
+              2.40225195884705,
+              926.815124511719
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              344.299987792969,
+              1.98321175575256,
+              929.599975585938
+            ],
+            "stable_contact": true,
+            "target": [
+              344.299987792969,
+              2.43718576431274,
+              926.599975585938
+            ]
+          },
+          {
+            "consecutive_floor_frames": 172,
+            "final_supported": true,
+            "id": "meadows_ranger_camp",
+            "landing": [
+              -256.399993896484,
+              8.01715564727783,
+              2250.10009765625
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -256.462097167969,
+              8.01433372497559,
+              2250.10009765625
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -256.399993896484,
+              7.98190546035767,
+              2253.10009765625
+            ],
+            "stable_contact": true,
+            "target": [
+              -256.399993896484,
+              8.01589870452881,
+              2250.10009765625
+            ]
+          },
+          {
+            "consecutive_floor_frames": 160,
+            "final_supported": true,
+            "id": "meadows_riverwatch",
+            "landing": [
+              211.0,
+              -4.40842771530151,
+              3690.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              210.992889404297,
+              -4.41855525970459,
+              3690.09228515625
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              211.0,
+              -4.6655101776123,
+              3693.0
+            ],
+            "stable_contact": true,
+            "target": [
+              211.0,
+              -4.41255283355713,
+              3690.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 168,
+            "final_supported": true,
+            "id": "meadows_highfield",
+            "landing": [
+              276.700012207031,
+              7.47904205322266,
+              5642.5
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              276.789093017578,
+              7.46995544433594,
+              5642.5
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              276.700012207031,
+              7.53892087936401,
+              5645.5
+            ],
+            "stable_contact": true,
+            "target": [
+              276.700012207031,
+              7.47451257705688,
+              5642.5
+            ]
+          },
+          {
+            "consecutive_floor_frames": 168,
+            "final_supported": true,
+            "id": "meadows_sigil_waystop",
+            "landing": [
+              -23.7999992370605,
+              1.19503593444824,
+              7446.89990234375
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              -23.5221347808838,
+              1.12661981582642,
+              7446.89990234375
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              -23.7999992370605,
+              1.27803027629852,
+              7449.89990234375
+            ],
+            "stable_contact": true,
+            "target": [
+              -23.7999992370605,
+              1.18330109119415,
+              7446.89990234375
+            ]
+          }
+        ]
+      },
+      "outcome": "74checks/0fails, exit0, zeroengineerrors."
+    },
+    {
+      "id": 37097295701,
+      "display_title": "render f18-earned-headless-r7 @ 8a3d204ef3d17e598444077a38d24177ca5e98aa",
+      "head_branch": "tb/integration",
+      "head_sha": "40936115b8863d801c090bfe2693f2da5a2b1510",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37097295701",
+      "checkout": "8a3d204ef3d17e598444077a38d24177ca5e98aa",
+      "artifact_id": 11265800243,
+      "raw_artifact": "earned-r7-remote.zip",
+      "sha256": "99d23c14348d81c4e5d9b80d367fdceb5a6ba516f6ad0210883384e93f2346aa",
+      "bytes": 1012904,
+      "native_exit_code": null,
+      "error_lines": [
+        "ERROR: Parameter \"material\" is null."
+      ],
+      "script_error_lines": [],
+      "warning_count": 9,
+      "evidence_limit": "Original artifact retained. Direct native geometry or partial earned loop does not close any of six F18 criteria; consumed travel/touch/save/reload/co-op and readable rendered visual/audio proof remain required.",
+      "earned_summary": {
+        "failures": [
+          "ordinary grounded walk failed: target=(344.3, 1.983212, 929.6) actual=(-9.126814, 0.885256, 26.43687)"
+        ],
+        "receipt_phases": [
+          "opening",
+          "earned_key_starting_bindings",
+          "protected_drop",
+          "key_binding",
+          "combat_key_refusal",
+          "paid_workbench",
+          "cutscene_key_refusal",
+          "settings_home_key_replay",
+          "dialogue_key_refusal",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_tool_bindings",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_build_selection"
+        ],
+        "paid_workbench": [
+          {
+            "before": {
+              "stone": 8,
+              "wood": 31
+            },
+            "phase": "paid_workbench",
+            "position": "(-6.0, 0.9, 18.0)"
+          }
+        ],
+        "build_selection": [
+          {
+            "passed": true,
+            "inventory_unchanged": true,
+            "actual_final_pending_build": "workbench",
+            "actual_final_selected_piece": ""
+          }
+        ]
+      },
+      "outcome": "Actual paid Workbench placement and exact10wood/4stone spend pass; catalogue ID correction works. Next ordinary grounded deepwalk fails nearvillage beforeTrailCamp touch; HomeKey loop/save/reload/return unproven. Original nullMaterial engineerror retained, observer not present on this source."
     }
   ],
   "acceptance": {
