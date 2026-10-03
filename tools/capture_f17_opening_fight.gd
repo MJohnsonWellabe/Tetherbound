@@ -162,7 +162,7 @@ func _finish(prefix_passed: bool) -> void:
 		if file == null:
 			failures.append("could not retain earned fight manifest")
 		else:
-			file.store_string(JSON.stringify({"complete": captured and failures.is_empty(), "source_commit": _fight_source,
+			file.store_string(JSON.stringify({"complete": captured and failures.is_empty(), "source": _fight_source,
 				"presets": [_fight_preset], "renderer": RenderingServer.get_current_rendering_method(), "resolution": [1920, 1080],
 				"views": _observer.rows, "live_fight_frames": _observer.live_frames, "requested_prefix_passed": prefix_passed,
 				"failures": failures, "scope": "actual fresh title/starter/catch presentation and >=30s native motion; no full M1, visual bar, multiplayer or device claim",

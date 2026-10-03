@@ -29,9 +29,14 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 	var plan: Dictionary = _json(VILLAGE_CONFIG).get("road_plan", {})
 	var road_start := _v(plan.get("road_start", []))
 	var road_end := _v(plan.get("road_end", []))
+	# The inherited outward trip already proves the actual farmhouse doorway.
+	# R2's return to that same doorway invoked its containing-house departure
+	# route beside the wall/lantern. Turn into the garden2m outward along the
+	# installed road instead, staying outside that doorway's approach fixtures.
+	var garden_turn := road_start + (road_end - road_start).normalized() * 2.0
 	# The82.7m road exceeds900ticks at the production5m/s walk. Use its
 	# actual midpoint as a separate goal, retaining every900tick allowance.
-	for point: Vector2 in [road_end, (road_start + road_end) * .5, road_start, Vector2(road_start.x, 0)]:
+	for point: Vector2 in [road_end, (road_start + road_end) * .5, garden_turn, Vector2(garden_turn.x, 0)]:
 		if not await _circle_walk(nav, Vector3(point.x, 0, point.y), "garden approach"):
 			return false
 	# Start at south; adjoining outside-ring legs avoid crossing the plinths.
