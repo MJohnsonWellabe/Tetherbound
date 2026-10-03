@@ -1136,7 +1136,17 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {},
+  "remote_pending": {
+    "solo_r15": {
+      "run": 37096201917,
+      "source": "50d9796995d05bf2030dbab5fb927c1aaf139fde",
+      "script": "tests/smoke_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37096201917",
+      "status": "in progress; disclosed firstactualhostmorning setup and originalending/reload/continuation proof; no result claimed"
+    }
+  },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1242,10 +1252,10 @@
     "runtime": "Complete affected peer replay pending, #4 OPEN."
   },
   "bounty_first_morning_fixture": {
-    "source": "50d9796995",
+    "source": "50d9796995d05bf2030dbab5fb927c1aaf139fde",
     "change": "Solo-only disclosed abbreviated post-finale fixture invokes existinghost Game.advance_day once, assertsday2/bountyday1 before originalsecondproductionfixture save. No direct board/slots/rotationcalls; productionhostpoll and realownerBOOL/save/ACK alone must issue rows. Existing ending/reload/screen/3rows/close gates unchanged. Failureonly existingview/localboard/day diagnostic.",
     "reason": "Actualr14 saved fixture initialday1/bountyday0/emptyboard. Runtimeclock is deliberately separate/default0 and increments only actualhostadvance_day; BOARD requires>=1. Conceptualpostcampaign fixture had omittedfirstmorning. No firstdaygameplaybugclaimed.",
-    "independent_review": "pending exactsource",
-    "runtime": "Affectedsolo replay pending; #3 OPEN."
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact8lines: originalhostguardedadvance/fixtureday2-clock1/no row injection; syntax/runtime/assertions intact. Productionpoll stillmust issue/deliver; affectedactual proof required. Existing adapterview checks live rows afterrealpanelopens; renderedpanelrows not independently inspected.",
+    "runtime": "Actual solo-r15 live37096201917 exact50d979, noresult claimed; #3 OPEN."
   }
 }

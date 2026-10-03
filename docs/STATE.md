@@ -26,7 +26,8 @@ Solo-r12/r13 authoredroadwalk succeeds. Exactr13 trace: playergrounded/boardLOSt
 distance2.2524, butstoredarbiter HaldaGreetwinner distance2.2921. Oldproof awaitedphysicssettling only;
 arbiterpublishes onidleframes. Reviewed `31003a424b` awaits twoordinaryidleedges before unchangedprovider/input
 checks; actual solo-r14 (37094641926) opens production bounty screen PASS, then ready/three rows FAIL.
-Saved fixture board remains empty at bounty_day0/day1; first host morning setup is being corrected, #3 OPEN. Earlier r10 misleading green with
+Saved fixture board remains empty at bounty_day0/day1; reviewed `50d9796995` advances the actual host once in disclosed solo setup;
+affected solo-r15 (37096201917) live, #3 OPEN. Earlier r10 misleading green with
 three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
 Two-peer-r4 saves host homecoming then times out its command. Net-r5 on29bc cleanly passes host ending,
 guarded credits1ACK and completed repeat; navigation takes143.303s and11ordinarytaps38.138s. The inherited300s
