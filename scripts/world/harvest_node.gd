@@ -103,6 +103,20 @@ var _renewable_stock: Dictionary = {}
 var _source_service: Node
 
 
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE or not is_instance_valid(_visual): return
+	# Imported models share meshes, but their harvest retints belong to these
+	# instances. Clear the native surface bindings while the children are alive.
+	# Temporary tree removal/re-entry must preserve their appearance.
+	var meshes: Array[Node] = _visual.find_children("*", "MeshInstance3D", true, false)
+	if _visual is MeshInstance3D: meshes.append(_visual)
+	for node: Node in meshes:
+		var instance := node as MeshInstance3D
+		if instance.mesh == null: continue
+		for surface in instance.mesh.get_surface_count():
+			instance.set_surface_override_material(surface, null)
+
+
 func bind_source_service(service: Node) -> void:
 	_source_service = service
 	if service != null and not service.is_connected("settled", _on_source_settled):
