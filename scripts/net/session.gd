@@ -103,19 +103,94 @@ func _owner_passive_request_terminal(source_kind: String, request: Dictionary, r
 
 ## Typed delivery installs record only a receipt binding into the same care
 ## stream. HP and condition values are resolved from the host's original row.
+## The world writer's epoch is independent of the authenticated transport.
+## Resolve it from the actual mounted writer, never from an owner packet.
+func _ordinary_actor_vitals_journal_epoch() -> String:
+	var game: Node = _game()
+	var writer: Node = get_node_or_null(^"LedgerRpc")
+	if not is_host() or game == null or game.get("session") != self or writer == null \
+		or game.get("world") == null or writer.get_parent() != self: return ""
+	var script: Script = writer.get_script()
+	while script != null and script.resource_path != "res://scripts/net/ledger_rpc.gd":
+		script = script.get_base_script()
+	if script == null: return ""
+	var ledger: RefCounted = writer.get("ledger")
+	var epoch: Variant = writer.get("_actor_vitals_session_id")
+	if writer.call("_game") != game or ledger == null or ledger.get("world") != game.get("world") \
+		or not _altar_hex_id(epoch): return ""
+	return epoch
+
+static func _ordinary_actor_vitals_original_row(proof: Dictionary, row: Dictionary) -> bool:
+	var original: Dictionary = proof.get("row", {})
+	if original.is_empty() or not _altar_hex_id(proof.get("journal_epoch")) \
+		or original.get("session_id") != proof.journal_epoch or row.get("session_id") != proof.journal_epoch: return false
+	var compared: Dictionary = row.duplicate(true)
+	compared["status"] = original.get("status")
+	return ESSENCE._equivalent(compared, original)
+
+## Once the actual ordinary source owns an id, loss of current readiness is
+## a refusal, never permission to install it through legacy recovery.
+func _ordinary_actor_vitals_owned_origin(director: Node, row: Dictionary) -> bool:
+	if director.get("_session") != self: return false
+	var receipt: Variant = row.get("receipt")
+	if not receipt is Dictionary: return false
+	var id: String = str(receipt.get("encounter_id", ""))
+	if id.is_empty(): return false
+	if is_host():
+		var owners: Dictionary = director.get("_ordinary_combat_reward_owners")
+		if owners.has(id): return true
+		var proof: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {}).get(receipt.get("receipt_id"), {})
+		if proof.get("proposal", {}).get("encounter_id") == id or proof.get("scope", {}).get("encounter_id") == id: return true
+	else:
+		var record: Dictionary = director.get("_encounter")
+		if record.get("encounter_id") == id and record.has("ordinary_combat_reward_owner"): return true
+	var manager: Node = director.get("_manager") as Node
+	return is_instance_valid(manager) and manager.get_script() != null \
+		and FOUNDATION_COMBAT_MANAGERS.has(manager.get_script().resource_path) \
+		and manager.get("_encounter_link") == director and manager.get("_encounter_id") == id \
+		and manager.get("_ordinary_reward_owned_id") == id
+
+## Transport ownership and the original journal source are independently bound.
+## Guest records already came through the authoritative replicated world door.
+func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
+	var game: Node = _game()
+	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	if game == null or game.get("session") != self or game.get("world") == null or game.get("local") == null: return {}
+	var world: RefCounted = game.get("world")
+	if not actor.valid(row, str(game.get("local").get("character_id")), str(world.get("reward_delivery_namespace"))) \
+		or row.world_id != world.get("world_id") \
+		or not ESSENCE._equivalent(world.get("reward_deliveries").get(row.delivery_id), row): return {}
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if _ordinary_actor_vitals_owned_origin(director, row):
+			var scope: Dictionary = director.get("_ordinary_combat_reward_owners").get(str(row.receipt.encounter_id), {}) \
+				if is_host() else director.get("_encounter").get("ordinary_combat_reward_owner", {})
+			if not COMBAT_ROUND_REWARD.scope_valid(scope) or scope.session_id != _altar_current_epoch() \
+				or scope.encounter_id != row.receipt.encounter_id or scope.world_namespace != row.world_namespace: return {}
+			if is_host():
+				var proof: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {}).get(row.receipt.receipt_id, {})
+				if not ESSENCE._equivalent(proof.get("scope"), scope) or proof.get("character_id") != row.character_id \
+					or proof.get("world_id") != row.world_id or not _ordinary_actor_vitals_original_row(proof, row) \
+					or not ESSENCE._equivalent(proof.get("proposal", {}).get("settlement_receipt"), row.receipt): return {}
+			return {"character_id": row.character_id, "world_id": row.world_id, "world_namespace": row.world_namespace,
+				"session_epoch": scope.session_id, "journal_session_id": row.session_id}
+	return {}
+
 func _owner_passive_actor_vitals_record(row: Dictionary, saved: bool) -> bool:
+	var receipt: Variant = row.get("receipt")
+	if not receipt is Dictionary: return false
+	var bound: Dictionary = _owner_passive_actor_vitals_scope(row)
+	if not bound.is_empty():
+		if is_host(): return true # Actual host PlayerState owns its passive baseline.
+		return _owner_passive_service().call("record_vitals", row, saved) == true
+	# Keep existing unowned typed recovery, but an owned source never falls back.
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if _ordinary_actor_vitals_owned_origin(director, row): return false
 	var game: Node = _game()
 	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
 	if game == null or game.get("world") == null or game.get("local") == null: return false
 	var world: RefCounted = game.get("world")
 	if not actor.valid(row, str(game.get("local").get("character_id")), str(world.get("reward_delivery_namespace"))) \
-		or row.world_id != world.get("world_id") or row.session_id != _altar_current_epoch() \
-		or not ESSENCE._equivalent(world.get("reward_deliveries").get(row.delivery_id), row): return false
-	if is_host(): return true # Actual host PlayerState admission already owns its passive baseline.
-	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
-		if director.get("_session") != self: continue
-		if director.call("uses_durable_trainer_rewards", str(row.receipt.encounter_id)) == true:
-			return _owner_passive_service().call("record_vitals", row, saved) == true
+		or row.world_id != world.get("world_id") or not ESSENCE._equivalent(world.get("reward_deliveries").get(row.delivery_id), row): return false
 	return true # Unowned legacy deliveries have no ordinary reward checkpoint.
 
 func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dictionary:
@@ -138,7 +213,8 @@ func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dict
 			var proposal: Dictionary = proof.get("proposal", {})
 			if proof.get("character_id") != character or proof.get("world_id") != world.get("world_id") \
 				or not actor.valid(row, character, str(world.get("reward_delivery_namespace"))) \
-				or row.session_id != _altar_current_epoch() or proof.get("scope", {}).get("session_id") != row.session_id \
+				or proof.get("scope", {}).get("session_id") != _altar_current_epoch() \
+				or not _ordinary_actor_vitals_original_row(proof, row) \
 				or not ESSENCE._equivalent(row.receipt, proposal.get("settlement_receipt")) \
 				or not ESSENCE._equivalent(row.expected_hp, proposal.get("hp_before")) \
 				or not ESSENCE._equivalent(row.hp, proposal.get("hp_after")) \
@@ -1029,6 +1105,12 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 	var actor_delivery: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
 	var existing: Dictionary = world.get("reward_deliveries").get(actor_delivery.delivery_id(scope.world_namespace, character, uid), {})
 	var proofs: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {})
+	var prior_proof: Dictionary = proofs.get(receipt.receipt_id, {})
+	var journal_epoch: String = _ordinary_actor_vitals_journal_epoch() if prior_proof.is_empty() else str(prior_proof.get("journal_epoch", ""))
+	if journal_epoch.is_empty(): return refused
+	if prior_proof.has("row"):
+		if not _ordinary_actor_vitals_original_row(prior_proof, existing): return refused
+	elif not prior_proof.is_empty() and journal_epoch != _ordinary_actor_vitals_journal_epoch(): return refused
 	if original.get("committed") != true:
 		if proposal.get("kind") == "damage" and (not host.has_method("verify_original_actor_vitals") \
 			or host.call("verify_original_actor_vitals", proposal, source_record) != true): return refused
@@ -1046,7 +1128,7 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 		for card: Dictionary in canonical.get("party", []):
 			if card.get("uid") == uid: owned = card
 		var original_saved: bool = actor_delivery.valid(existing, character, scope.world_namespace) \
-			and existing.world_id == str(world.get("world_id")) and existing.session_id == scope.session_id \
+			and existing.world_id == str(world.get("world_id")) and existing.session_id == journal_epoch \
 			and ESSENCE._equivalent(existing.receipt, receipt) \
 			and ESSENCE._equivalent(existing.hp, proposal.get("hp_after")) and existing.fainted == proposal.get("fainted") \
 			and ESSENCE._equivalent(existing.expected_hp, proposal.get("hp_before"))
@@ -1056,6 +1138,7 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 			or (owned.get("fainted") != (float(proposal.hp_before) == 0.0) \
 				and not (original_saved and owned.get("fainted") == proposal.get("fainted"))): return refused
 		proofs[receipt.receipt_id] = {"scope": scope.duplicate(true), "world_id": str(world.get("world_id")),
+			"journal_epoch": journal_epoch,
 			"character_id": character, "proposal": proposal.duplicate(true), "source_record": source_record.duplicate(true),
 			"revision_before": int(original.get("character_revision", -1))}
 		if fixture_provider != null:
@@ -1069,7 +1152,7 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 			if saved.get("ok") != true or saved.get("durable") != true:
 				return {"ok": false, "durable": false, "resolved": false, "code": "actor_world_save_pending"}
 		var durable_row: Dictionary = world.get("reward_deliveries").get(actor_delivery.delivery_id(scope.world_namespace, character, uid), {})
-		if not actor_delivery.valid(durable_row, character, scope.world_namespace) \
+		if not actor_delivery.valid(durable_row, character, scope.world_namespace) or durable_row.session_id != journal_epoch \
 			or not ESSENCE._equivalent(durable_row.receipt, receipt): return refused
 		proofs[receipt.receipt_id]["row"] = durable_row.duplicate(true)
 		director.set_meta("foundation_ordinary_vitals_commits", proofs)
@@ -1125,7 +1208,7 @@ static func _ordinary_combat_settled_record(original: Dictionary, settled: Dicti
 			if proof.get("accepted") != true or not ESSENCE._equivalent(proof.get("scope"), scope) \
 				or member.get("character_id") != character \
 				or not actor_codec.valid(row, character, scope.world_namespace) or row.status != "accepted" \
-				or row.session_id != scope.session_id or row.world_id != proof.get("world_id") \
+				or not _ordinary_actor_vitals_original_row(proof, row) or row.world_id != proof.get("world_id") \
 				or not ESSENCE._equivalent(row.receipt, proposal.get("settlement_receipt")) \
 				or not ESSENCE._equivalent(row.expected_hp, proposal.get("hp_before")) \
 				or not ESSENCE._equivalent(row.max_hp, proposal.get("max_hp")) \
@@ -3883,18 +3966,31 @@ func host_ack_creature_vitals(peer_id: int, creature_uid: String,
 	if not actor_codec.valid(row, character, str(world.get("reward_delivery_namespace"))) \
 		or row.get("status") != "accepted" or row.world_id != str(world.get("world_id")) \
 		or row.character_revision != character_revision or not ESSENCE._equivalent(row.receipt, receipt): return false
+	var directors: Array[Node] = _foundation_directors_under(_foundation_realm_roots())
+	# Validate both immutable source epochs before releasing any pending CAS.
+	for director: Node in directors:
+		var proof: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {}).get(receipt.get("receipt_id"), {})
+		if proof.is_empty():
+			if _ordinary_actor_vitals_owned_origin(director, row): return false
+			continue
+		if not _ordinary_combat_director_live(director) or proof.get("character_id") != character \
+			or proof.get("world_id") != row.world_id or proof.get("scope", {}).get("world_namespace") != row.world_namespace \
+			or proof.get("scope", {}).get("session_id") != _altar_current_epoch() \
+			or not _ordinary_actor_vitals_original_row(proof, row) \
+			or not ESSENCE._equivalent(proof.get("proposal", {}).get("settlement_receipt"), receipt) \
+			or (proof.get("accepted") == true and not ESSENCE._equivalent(proof.get("accepted_row"), row)): return false
 	# Authority may already be released when the accepted duplicate repairs a
 	# lost arbiter ACK. Only the exact accepted world decision permits that retry.
 	var pending: Dictionary = _character_authority.call("pending_creature_vitals", character)
 	if pending.has(creature_uid) and _character_authority.call("acknowledge_creature_vitals", character,
 		creature_uid, character_revision, receipt) != true: return false
-	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+	for director: Node in directors:
 		var proofs: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {})
 		var proof: Dictionary = proofs.get(receipt.get("receipt_id"), {})
 		if proof.is_empty(): continue
 		if not _ordinary_combat_director_live(director) or proof.get("character_id") != character \
 			or proof.get("world_id") != row.world_id or proof.get("scope", {}).get("world_namespace") != row.world_namespace \
-			or proof.scope.session_id != row.session_id \
+			or proof.scope.session_id != _altar_current_epoch() or not _ordinary_actor_vitals_original_row(proof, row) \
 			or not ESSENCE._equivalent(proof.get("proposal", {}).get("settlement_receipt"), receipt): return false
 		var host: RefCounted = director.get("_encounter_host")
 		if host == null or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")]: return false

@@ -13,6 +13,24 @@ const ROUND_FIXTURE := preload("res://tests/test_combat_round_reward.gd")
 const SAVE_FIXTURE := preload("res://tests/test_foundation_resource_save.gd")
 const DATA_FIXTURE := preload("res://tests/test_foundation_resources.gd")
 
+## Only physical discovery is detached; source epoch/owner hooks remain actual.
+class EpochDirector extends Node:
+	var _session: Node
+	var _encounter_host: RefCounted
+	var _manager: Node
+	var _ordinary_combat_reward_owners: Dictionary = {}
+	func uses_durable_trainer_rewards(id: String) -> bool:
+		return _ordinary_combat_reward_owners.has(id) \
+			and _ordinary_combat_reward_owners[id].get("session_id") == _session.call("_altar_current_epoch")
+
+class EpochSession extends SAVE_FIXTURE.FixtureSession:
+	var fixture_director: Node
+	var fixture_epoch: String = "resource-epoch"
+	func _altar_current_epoch() -> String: return fixture_epoch
+	func _foundation_directors_under(_roots: Array) -> Array[Node]:
+		return [fixture_director] if fixture_director != null else []
+	func _ordinary_combat_director_live(director: Node) -> bool: return director == fixture_director
+
 class AckSession extends Node:
 	var arbiter: RefCounted
 	var fixture_character := "owner_a"
@@ -53,7 +71,10 @@ func _fixture() -> Dictionary:
 	var source: Dictionary = record.duplicate(true)
 	var proposal: Dictionary = host.call("stage_actor_vitals", id, 2, owned.uid, 1, 0, "actual_hit_a", "damage", 7.0, 16)
 	assert_true(proposal.get("ok") == true)
-	var row: Dictionary = ACTOR.next_record("world_a", "namespace_a", "epoch_a", "owner_a", owned.uid,
+	var writer := Transport.new()
+	var journal_epoch: String = writer.get("_actor_vitals_session_id")
+	writer.free()
+	var row: Dictionary = ACTOR.next_record("world_a", "namespace_a", journal_epoch, "owner_a", owned.uid,
 		100.0, 100.0, false, 93.0, false, 2, proposal.settlement_receipt, null)
 	assert_true(ACTOR.valid(row, "owner_a", "namespace_a"))
 	return {"host": host, "body": body, "id": id, "source": source, "proposal": proposal, "row": row, "scope": scope}
@@ -154,12 +175,24 @@ func test_terminal_full_record_requires_exact_original_accepted_hp_transition() 
 	var accepted: Dictionary = f.row.duplicate(true)
 	accepted.status = "accepted"
 	var proof: Dictionary = {"accepted": true, "scope": f.scope, "world_id": "world_a", "character_id": "owner_a",
+		"journal_epoch": f.row.session_id, "row": f.row,
 		"proposal": f.proposal, "source_record": f.source, "accepted_row": accepted,
 		"record_before": terminal, "record_after": _committed_record(f, terminal)}
 	var proofs: Dictionary = {f.proposal.settlement_receipt.receipt_id: proof}
 	var original_before: Dictionary = terminal.duplicate(true)
 	assert_true(SESSION._ordinary_combat_settled_record(terminal, settled, proofs))
 	assert_true(SESSION._ordinary_combat_settled_record(terminal, settled, proofs), "duplicate original proof is idempotent")
+	assert_ne(f.row.session_id, f.scope.session_id, "actual journal source is distinct from transport")
+	var foreign_epoch: Dictionary = accepted.duplicate(true)
+	foreign_epoch.session_id = Crypto.new().generate_random_bytes(16).hex_encode()
+	proof.accepted_row = foreign_epoch
+	assert_false(SESSION._ordinary_combat_settled_record(terminal, settled, proofs), "foreign journal epoch cannot settle")
+	proof.accepted_row = accepted
+	var foreign_scope: Dictionary = f.scope.duplicate(true)
+	foreign_scope.session_id = "foreign_transport"
+	proof.scope = foreign_scope
+	assert_false(SESSION._ordinary_combat_settled_record(terminal, settled, proofs), "foreign transport cannot settle")
+	proof.scope = f.scope
 	assert_true(ACTOR.equivalent(terminal, original_before), "original full kill record remains immutable")
 	var forged: Dictionary = settled.duplicate(true)
 	forged.participants[2].actor_vitals.owned_a.hp -= 1.0
@@ -193,6 +226,7 @@ func test_terminal_actual_leave_composes_original_ack_with_global_sequence_proof
 	var accepted: Dictionary = f.row.duplicate(true)
 	accepted.status = "accepted"
 	var proof: Dictionary = {"accepted": true, "scope": f.scope, "world_id": "world_a", "character_id": "owner_a",
+		"journal_epoch": f.row.session_id, "row": f.row,
 		"proposal": f.proposal, "source_record": f.source, "accepted_row": accepted}
 	var proofs: Dictionary = {f.proposal.settlement_receipt.receipt_id: proof}
 	var before_leave: Dictionary = f.host.call("record", f.id).duplicate(true)
@@ -295,7 +329,7 @@ func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_p
 	var game := SAVE_FIXTURE.FixtureGame.new()
 	game.local = builder.call("_player")
 	game.world = DATA_FIXTURE.new().call("_world")
-	var session := SAVE_FIXTURE.FixtureSession.new()
+	var session := EpochSession.new()
 	session.fixture = game
 	game.session = session
 	var authority: RefCounted = AUTH.new()
@@ -307,7 +341,11 @@ func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_p
 	var rpc := SAVE_FIXTURE.FixtureRpc.new()
 	rpc.fixture = game
 	rpc.ledger = LEDGER.new(game.world)
-	rpc.set("_actor_vitals_session_id", "resource-epoch")
+	rpc.name = "LedgerRpc"
+	session.add_child(rpc)
+	var journal_epoch: String = rpc.get("_actor_vitals_session_id")
+	assert_ne(journal_epoch, session.call("_altar_current_epoch"))
+	assert_eq(session.call("_ordinary_actor_vitals_journal_epoch"), journal_epoch)
 	var initial: Dictionary = RECORD.portable_projection(game.local.call("save_data"))
 	var character: String = str(initial.character_id)
 	var uid: String = str(initial.party[0].uid)
@@ -327,6 +365,11 @@ func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_p
 		"round": final_template.intent.round}, uid, character)
 	var id: String = str(record.encounter_id)
 	record.ordinary_combat_reward_owner = ROUND.scope("resource-namespace", "resource-epoch", "meadows", "warden_aldis", id)
+	var director := EpochDirector.new()
+	director._session = session
+	director._encounter_host = host
+	director._ordinary_combat_reward_owners[id] = record.ordinary_combat_reward_owner
+	session.fixture_director = director
 	assert_true(host.call("bind_actor_body", id, 1, character, initial.party[0], body.get_instance_id()).get("ok") == true)
 	var owner_path: String = writer.character_store.call("path_for", character)
 	for action: String in ["damage_a", "fixture_heal", "damage_b"]:
@@ -363,9 +406,46 @@ func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_p
 			else host.call("commit_original_actor_vitals", proposal, source)
 		assert_true(committed.get("ok") == true)
 		var row: Dictionary = game.world.get("reward_deliveries")[journal.delivery_id].duplicate(true)
+		assert_eq(row.session_id, journal_epoch, "actual LedgerRpc stamps its original journal epoch")
+		var proof: Dictionary = {"scope": record.ordinary_combat_reward_owner.duplicate(true), "world_id": game.world.world_id,
+			"character_id": character, "journal_epoch": journal_epoch, "row": row.duplicate(true), "proposal": proposal,
+			"source_record": source, "revision_before": character_revision}
+		director.set_meta("foundation_ordinary_vitals_commits", {row.receipt.receipt_id: proof})
+		assert_true(session.call("_owner_passive_actor_vitals_record", row, false), "actual Session hook accepts distinct authenticated epochs")
+		session.fixture_epoch = "changed_actual_transport"
+		assert_false(director.uses_durable_trainer_rewards(id), "current readiness is lost while original owned source remains retained")
+		assert_true(session.call("_owner_passive_actor_vitals_scope", row).is_empty())
+		assert_false(session.call("_owner_passive_actor_vitals_record", row, false), "stale transport cannot downgrade an owned source to legacy")
+		director._ordinary_combat_reward_owners.erase(id)
+		assert_false(session.call("_owner_passive_actor_vitals_record", row, false), "retained exact proof still forbids legacy downgrade if current owner map is gone")
+		director._ordinary_combat_reward_owners[id] = record.ordinary_combat_reward_owner
+		session.fixture_epoch = "resource-epoch"
+		assert_true(director.uses_durable_trainer_rewards(id))
+		var original_scope: Dictionary = director._ordinary_combat_reward_owners[id]
+		director._ordinary_combat_reward_owners[id] = original_scope.duplicate(true)
+		director._ordinary_combat_reward_owners[id].session_id = "foreign_transport"
+		assert_false(session.call("_owner_passive_actor_vitals_record", row, false))
+		director._ordinary_combat_reward_owners[id] = original_scope
+		var foreign_row: Dictionary = row.duplicate(true)
+		foreign_row.session_id = Crypto.new().generate_random_bytes(16).hex_encode()
+		game.world.reward_deliveries[row.delivery_id] = foreign_row
+		assert_false(session.call("_owner_passive_actor_vitals_record", foreign_row, false), "even a substituted world row cannot change original journal")
+		game.world.reward_deliveries[row.delivery_id] = row
+		var replacement := SAVE_FIXTURE.FixtureRpc.new()
+		replacement.fixture = game
+		replacement.ledger = LEDGER.new(game.world)
+		replacement.name = "LedgerRpc"
+		session.remove_child(rpc)
+		session.add_child(replacement)
+		assert_ne(session.call("_ordinary_actor_vitals_journal_epoch"), journal_epoch)
+		assert_true(session.call("_owner_passive_actor_vitals_record", row, false), "durable original remains bound across writer replacement, never rebased")
+		session.remove_child(replacement)
+		replacement.free()
+		session.add_child(rpc)
 		if heal:
 			var old_disk: PackedByteArray = FileAccess.get_file_as_bytes(owner_path)
 			writer.refuse_owner = true
+			assert_true(rpc.call("publish_actor_vitals", 1, character, uid, row.receipt), "actual first publication runs only after the original row is pinned")
 			assert_false(ACTOR.apply_owner(game, row).get("ok", false))
 			assert_eq(game.local.party.at(0).hp, proposal.hp_after, "accepted live heal waits real BOOL without rolling back")
 			assert_eq(FileAccess.get_file_as_bytes(owner_path), old_disk)
@@ -373,13 +453,24 @@ func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_p
 			writer.refuse_owner = false
 		assert_true(ACTOR.apply_owner(game, row).get("ok", false))
 		assert_eq(writer.character_store.call("read", character).party[0].hp, proposal.hp_after)
-		assert_true(rpc.ledger.call("accept_actor_vitals_delivery", row.delivery_id, character,
-			int(row.journal_revision), row.receipt, 1).get("ok") == true)
-		assert_true(writer.save_world_prepared(game, "resource-slot"))
-		assert_true(authority.call("acknowledge_creature_vitals", character, uid, int(row.character_revision), row.receipt))
-		assert_true(host.call("acknowledge_actor_vitals", id, character, uid, int(row.receipt.vitals_revision), row.receipt))
+		var original_proof_scope: Dictionary = proof.scope
+		proof.scope = original_proof_scope.duplicate(true)
+		proof.scope.session_id = "foreign_transport"
+		var accepted_candidate: Dictionary = row.duplicate(true)
+		accepted_candidate.status = "accepted"
+		game.world.reward_deliveries[row.delivery_id] = accepted_candidate
+		assert_false(session.call("host_ack_creature_vitals", 1, uid, int(row.character_revision), row.receipt))
+		assert_false(authority.call("pending_creature_vitals", character).is_empty(), "foreign transport cannot release the pending authority CAS")
+		proof.scope = original_proof_scope
+		director.set_meta("foundation_ordinary_vitals_commits", {})
+		assert_false(session.call("host_ack_creature_vitals", 1, uid, int(row.character_revision), row.receipt), "retained ownership requires its original ACK proof")
+		assert_false(authority.call("pending_creature_vitals", character).is_empty())
+		director.set_meta("foundation_ordinary_vitals_commits", {row.receipt.receipt_id: proof})
+		game.world.reward_deliveries[row.delivery_id] = row
+		assert_true(rpc.call("_accept_actor_vitals", row.delivery_id, int(row.journal_revision), row.receipt, 1), "actual world BOOL and Session ACK settle original separate epochs")
 		var accepted: Dictionary = game.world.get("reward_deliveries")[row.delivery_id]
-		assert_true(authority.call("promote_accepted_vitals_marker", character, accepted))
+		assert_eq(accepted.status, "accepted")
+		assert_true(director.get_meta("foundation_ordinary_vitals_commits")[row.receipt.receipt_id].get("accepted") == true)
 		assert_true(host.call("pending_actor_vitals", id).is_empty())
 		assert_eq(var_to_bytes(proposal), frozen, "all failed-write retries preserve the original source")
 		assert_true(RECORD.errors(authority.call("state", character), character).is_empty())
@@ -403,6 +494,7 @@ func test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_p
 		assert_true(ACTOR.equivalent(ROUND.settled_before(before_round, duty.intent, duty.context), before_round))
 		assert_true(ROUND.stage(before_round, duty.intent, duty.context).get("ok") == true, "original healed then damaged core is admissible for each actual phase")
 	body.free()
+	director.free()
 	SAVE_FIXTURE.new().call("_close", game, rpc, directory)
 
 func test_fixture_full_heal_refuses_foreign_peer_generation_epoch_amount_pending_and_terminal_sources() -> void:

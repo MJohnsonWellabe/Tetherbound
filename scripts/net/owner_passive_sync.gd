@@ -79,9 +79,19 @@ func record_input(input: Dictionary) -> void:
 func record_vitals(row: Dictionary, saved: bool) -> bool:
 	if local.is_empty(): return false
 	var scope := _scope()
+	var session := owner()
+	if session == null or not session.has_method("_owner_passive_actor_vitals_scope") \
+		or scope.size() != 4 or local.character != scope.get("character_id"): return false
+	# Journal identity belongs to the original HOST writer. The care stream
+	# belongs to the current authenticated transport; these epochs are distinct.
+	var validated: Variant = session.call("_owner_passive_actor_vitals_scope",row)
+	if not validated is Dictionary or validated.size() != 5 \
+		or validated.get("journal_session_id") != row.get("session_id"): return false
+	for field: String in scope:
+		if validated.get(field) != scope[field]: return false
 	var actor: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
 	if actor.call("valid", row, str(scope.get("character_id", "")), str(scope.get("world_namespace", ""))) != true \
-		or row.world_id != scope.get("world_id") or row.session_id != scope.get("session_epoch") \
+		or row.world_id != scope.get("world_id") \
 		or not E._equivalent(_game().get("world").reward_deliveries.get(row.delivery_id), row): return false
 	var receipt_hash := HASH.fingerprint(row.receipt)
 	var op := "actor_vitals_saved" if saved else "actor_vitals_applied"

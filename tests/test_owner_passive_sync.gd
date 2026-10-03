@@ -8,6 +8,7 @@ const PREP := preload("res://scripts/net/owner_passive_preparation.gd")
 const AUTH := preload("res://scripts/net/character_authority.gd")
 const SOURCE := preload("res://tests/test_research_passive_preparation.gd")
 const GROOM := preload("res://tests/test_den_groom_saved_transaction.gd")
+const VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 
 class Player extends RefCounted:
 	var character_id := ""
@@ -57,9 +58,18 @@ class Session extends Node:
 	var action_calls: Array[Dictionary] = []
 	var action_terminals: Array[Dictionary] = []
 	var action_result := {"ok": false, "durable": false, "code": "fixture_world_write_failed"}
+	var epoch := "current-epoch"
+	var vitals_original: Dictionary = {}
+	var vitals_scope: Dictionary = {}
 	func _game() -> Node: return game
 	func _groom_service() -> RefCounted: return maps
-	func _altar_current_epoch() -> String: return "current-epoch"
+	func _altar_current_epoch() -> String: return epoch
+	func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
+		# Disclosed Session source boundary: only the retained canonical host
+		# row can authorize recording. Real Session source checks run separately.
+		if vitals_original.is_empty() or not PREP.exact(row,vitals_original) \
+			or not PREP.exact(game.world.reward_deliveries.get(row.get("delivery_id")),vitals_original): return {}
+		return vitals_scope.duplicate(true)
 	func _foundation_flags(_peer: int) -> Dictionary: return {}
 	func is_host() -> bool: return host
 	func local_peer_id() -> int: return 1 if host else 2
@@ -131,6 +141,91 @@ func before_each() -> void:
 func after_each() -> void:
 	game.free()
 	session.free()
+
+func _original_vitals() -> Dictionary:
+	# Real independent LedgerRpc identities, canonical typed row and actual
+	# WorldLedger install. No transport, owner BOOL or combat source is claimed.
+	var host_writer := preload("res://scripts/net/ledger_rpc.gd").new()
+	var guest_writer := preload("res://scripts/net/ledger_rpc.gd").new()
+	var journal_epoch: String = host_writer.get("_actor_vitals_session_id")
+	var guest_epoch: String = guest_writer.get("_actor_vitals_session_id")
+	host_writer.free()
+	guest_writer.free()
+	assert_ne(journal_epoch,session._altar_current_epoch())
+	assert_ne(journal_epoch,guest_epoch)
+	game.world=SOURCE.DATA.new()._world()
+	var card: Dictionary = before.party[0]
+	var receipt := {"receipt_id":"typed-original-host-hit","encounter_id":"typed-original-encounter",
+		"creature_uid":card.uid,"body_generation":7,"vitals_revision":1}
+	var row := VITALS.next_record(game.world.world_id,game.world.reward_delivery_namespace,journal_epoch,
+		before.character_id,card.uid,float(card.max_hp),float(card.hp),bool(card.fainted),
+		maxf(0.0,float(card.hp)-1.0),false,1,receipt,null)
+	assert_false(row.is_empty())
+	var ledger := preload("res://scripts/net/world_ledger.gd").new(game.world)
+	assert_true(ledger.commit_actor_vitals_delivery(row,2).get("ok") == true)
+	assert_true(PREP.exact(game.world.reward_deliveries.get(row.delivery_id),row))
+	session.vitals_original=row.duplicate(true)
+	session.vitals_scope=service._scope()
+	session.vitals_scope.journal_session_id=journal_epoch
+	return {"row":row,"host_epoch":journal_epoch,"guest_epoch":guest_epoch}
+
+func test_typed_vitals_records_host_journal_epoch_independently_of_transport_and_guest_writer() -> void:
+	var source := _original_vitals()
+	var row: Dictionary = source.row
+	var original := var_to_bytes(row)
+	var stream_id: String = service.local.id
+	assert_true(service.record_vitals(row,false),"current transport admits the independently identified original host journal")
+	assert_true(service.record_vitals(row,true),"saved binding records the same original journal without epoch replacement")
+	assert_eq(service.local.inputs.size(),2)
+	assert_eq(service.local.inputs[0].op,"actor_vitals_applied")
+	assert_eq(service.local.inputs[1].op,"actor_vitals_saved")
+	assert_eq(service.local.inputs[1].sequence,2)
+	assert_eq(service.local.inputs[0].receipt_hash,preload("res://scripts/net/research_passive_preparation.gd").fingerprint(row.receipt))
+	assert_true(service.record_vitals(row,true),"exact retry is idempotent")
+	assert_eq(service.local.inputs.size(),2)
+	assert_eq(service.local.id,stream_id,"typed recording preserves the existing care stream")
+	assert_eq(var_to_bytes(row),original)
+	assert_eq(row.session_id,source.host_epoch)
+	assert_ne(row.session_id,source.guest_epoch,"guest's private writer identity is never substituted")
+
+func test_typed_vitals_requires_current_transport_scope_and_exact_original_host_journal() -> void:
+	var source := _original_vitals()
+	var row: Dictionary = source.row
+	var prefix: String = service.local.prefix_hash
+	var original := var_to_bytes(row)
+	session.epoch=source.guest_epoch
+	assert_false(service.record_vitals(row,false),"retained source cannot cross into another transport scope")
+	session.epoch="current-epoch"
+	var forged: Dictionary = row.duplicate(true)
+	forged.session_id=source.guest_epoch
+	game.world.reward_deliveries[row.delivery_id]=forged.duplicate(true)
+	assert_true(VITALS.valid(forged,before.character_id,game.world.reward_delivery_namespace))
+	assert_false(service.record_vitals(forged,false),"even a locally installed schema-valid row cannot replace the retained host journal")
+	game.world.reward_deliveries[row.delivery_id]=row.duplicate(true)
+	forged=row.duplicate(true)
+	forged.receipt.body_generation += 1
+	game.world.reward_deliveries[row.delivery_id]=forged.duplicate(true)
+	assert_false(service.record_vitals(forged,false),"different body generation is a different original")
+	game.world.reward_deliveries[row.delivery_id]=row.duplicate(true)
+	session.vitals_scope.journal_session_id=source.guest_epoch
+	assert_false(service.record_vitals(row,false),"journal scope must agree with the exact source row")
+	session.vitals_scope.journal_session_id=source.host_epoch
+	for field: String in ["character_id","world_id","world_namespace","session_epoch"]:
+		var expected: String = session.vitals_scope[field]
+		session.vitals_scope[field]="foreign"
+		assert_false(service.record_vitals(row,false),"source bridge must bind "+field)
+		session.vitals_scope[field]=expected
+	session.vitals_scope.extra=true
+	assert_false(service.record_vitals(row,false),"unexpected source shape fails closed")
+	session.vitals_scope.erase("extra")
+	var retained: Dictionary = session.vitals_original.duplicate(true)
+	session.vitals_original={}
+	assert_false(service.record_vitals(row,false),"absence of authenticated current host source never records")
+	session.vitals_original=retained
+	assert_eq(service.local.inputs.size(),0)
+	assert_eq(service.local.prefix_hash,prefix,"all refusals preserve the original input chain")
+	assert_eq(var_to_bytes(row),original)
+	assert_true(service.record_vitals(row,false),"restoring only the original source/scope permits the untouched row")
 
 func _input(delta: float = 0.5) -> Dictionary:
 	var uids: Array = []

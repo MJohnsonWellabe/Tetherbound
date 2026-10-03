@@ -31,6 +31,17 @@ class VitalsSession extends SAVE.FixtureSession:
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_actor_vitals_record(row: Dictionary, saved: bool) -> bool:
 		return passive.call("record_vitals", row, saved) == true
+	func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
+		# Same disclosed retained source as the host context below. No physical
+		# Director exists in this codec/disk fixture, so do not claim its proof.
+		var world: RefCounted = fixture.get("world")
+		var character: String = fixture.get("local").get("character_id")
+		if not VITALS.valid(row,character,str(world.get("reward_delivery_namespace"))) \
+			or row.world_id != world.get("world_id") or not E._equivalent(proof.get("row"),row) \
+			or not E._equivalent(world.get("reward_deliveries").get(row.delivery_id),row): return {}
+		return {"character_id":character,"world_id":world.get("world_id"),
+			"world_namespace":world.get("reward_delivery_namespace"),"session_epoch":_altar_current_epoch(),
+			"journal_session_id":proof.row.session_id}
 	func _owner_passive_actor_vitals_context(peer: int, packet: Dictionary) -> Dictionary:
 		# Disclosed authenticated retained original; never read packet HP/core.
 		var row: Dictionary = proof.get("row", {})

@@ -1,0 +1,51 @@
+{
+  "verdict": "FAIL",
+  "checkout_ref": "4b7815de64066b9629f86d7ea627295f3ea867c0",
+  "run_id": 37119570794,
+  "artifact_id": 11272677752,
+  "failures": [
+    "#75 peer 1 f48_assert_snapshot (Read actual memory/disk carriers before any capture autosave) -> FAIL -- Read-only explicit input source actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK: Actual complete owner file changed after the latest observed edge"
+  ],
+  "retained": {
+    "run.log": {
+      "retained_file": "loop-r18-37119570794-original.log.gz",
+      "sha256": "dd5713d77ad61ac446b3fc33bcf593dded264178f6586b7abc9940a0485cee62"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/NET_RUN.json": {
+      "retained_file": "loop-r18-37119570794-NET_RUN.json.gz",
+      "sha256": "a1b46158eef335676439a5e7b9e5ddd50709c207c3b7fa4a74d68177be32f21c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "loop-r18-37119570794-guest-actual-character.json.gz",
+      "sha256": "b0fe6484949ceefeb06c07c966e25c8a16571886764290d1c696e6487ca5c6b0"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log": {
+      "retained_file": "loop-r18-37119570794-peer-0.log.gz",
+      "sha256": "c6526ed97085c3b6b44cd67a9fcd2527632108693216e02c41db7edbe3f44c29"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log": {
+      "retained_file": "loop-r18-37119570794-peer-1.log.gz",
+      "sha256": "abfe1fc14dbff37c155113c068384f15909736e60fefa4a6373aa3aad00f7df7"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_button_activation-2484-364752574.json": {
+      "retained_file": "loop-r18-37119570794-activation.json.gz",
+      "sha256": "94d17940cfe1dcc8a5930e96bb20ed440294b18dc9c8045a7719b245a405bc4a"
+    }
+  },
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator-home/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": []
+  },
+  "original_archive_sha256": "c2bca937994a4adf1020f8f2c124749f87e28c5a6111ef9c8e8094dcd7973e28",
+  "boundary": "ActualForge target pressed once, paid durable assertions72 and host snapshot75 passed. Guest bystander74 unchanged receipts/inventory passed but whole owner file capture75 refused bytes changed since observed BOOL/ACK edge. Exact write/fields investigation pending; no full loop/bundle acceptance."
+}
