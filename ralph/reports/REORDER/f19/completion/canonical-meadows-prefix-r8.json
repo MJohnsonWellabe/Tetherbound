@@ -1,0 +1,43 @@
+{
+  "kind": "f19_canonical_meadows_prefix_comparator",
+  "upstream_source": "6a13e6e44a2cfadd4c3488909bd656c4890e29f2",
+  "run": 37086098279,
+  "job": 111096616203,
+  "artifact": 11261227819,
+  "actual_world_seed": 4,
+  "result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": false,
+    "cumulative_elapsed_seconds": 1550.647,
+    "dry_run": false,
+    "elapsed_seconds": 1550.647,
+    "failures": [],
+    "local_chains": [],
+    "reached": "tournament_won",
+    "requested_prefix_passed": true,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://f49_campaign_2452_8665"
+  },
+  "script_errors": 0,
+  "engine_errors": 1,
+  "tournament_results": [
+    "EARNED TOURNAMENT — tournament_quarter_mira won through 2 real opponent defeats and 22 landed attacks",
+    "EARNED TOURNAMENT — tournament_semi_tam won through 2 real opponent defeats and 28 landed attacks",
+    "EARNED TOURNAMENT — tournament_final_oskar won through 3 real opponent defeats and 64 landed attacks"
+  ],
+  "native_elapsed_seconds": 1550.647,
+  "wrapper_exit_line": "exit=0 took=1561s",
+  "raw_log": "ci-f17-m1-prefix-37086098279.log.gz",
+  "raw_log_sha256": "a0149c198fb6f926f42a5d258cde20280c3942b168837f1d858aa9ed887ca6bc",
+  "candidate_dependency": {
+    "path": "tests/helpers/meadows_earned_team_segment.gd",
+    "source_blob": "fe7e6ae9cd6cdf404e5bd33ad61b57e32749cadc",
+    "source_sha256": "bc9a0d6f87af976a5e97543a5cce3b3ae3a4ee02d2d42aa23493db7685cf8fcc",
+    "status": "Prepared exact snapshot; independent verdict requested through coordinator before import",
+    "delta": "22 lines awaiting actual catch-loss resolution inside existing240tick cleanup; no loss in R8 so branch unexercised"
+  },
+  "next_f19_scope": "Full fresh ordinary all-five-boundary route with canonical generated world seed4, no resume or partial fixture, unchanged eight-contact observation guard; material error still unresolved.",
+  "exclusions": "Native boundedprefix success only; one engine error prohibits clean-engine claim. No five boundary receipts, full campaign, no earned saves promoted, no catch-loss-branch proof."
+}
