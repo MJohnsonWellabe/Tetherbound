@@ -1,0 +1,1 @@
+source dbc78477b, FPS=20, stage=world, runner run_capture.sh (setsid nohup, one Godot process)
