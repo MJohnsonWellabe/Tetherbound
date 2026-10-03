@@ -104,6 +104,46 @@ func test_existing_character_id_survives_saves_to_other_slots_and_reload() -> vo
 		assert_eq(loaded.party.size(), 1)
 
 
+func test_cross_slot_refusal_preserves_accepted_waystone_journal_and_original_save() -> void:
+	var source := preload("res://tests/test_f18_waystones.gd").new()
+	var proposal := source.ACTIONS.stage(source._current(), 0, "waystone_touch", source._intent(), source._context(), source.RECORD.errors)
+	assert_true(proposal.get("ok") == true)
+	if proposal.get("ok") != true: return
+	proposal.character_revision = 1
+	var row := source.DELIVERY.make_record("slot-0", "stone-world", "epoch", proposal, null, source.RECORD.errors)
+	assert_false(row.is_empty())
+	if row.is_empty(): return
+	row.status = "accepted"
+	var game := FIXTURE.game(db, false)
+	game.local = preload("res://autoload/player_state.gd").new()
+	game.local.configure(db)
+	game.local.character_id = "stone-owner"
+	game.local.redesign_character = proposal.state.redesign_character.duplicate(true)
+	game.party = game.local.party
+	game.inventory = game.local.inventory
+	game.world = preload("res://autoload/world_state.gd").new()
+	game.world.world_id = "slot-0"
+	game.world.reward_delivery_namespace = "stone-world"
+	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+	assert_true(saver.save(game, 0))
+	var original := FileAccess.get_file_as_bytes(saver.slot_path(0))
+	var owner_path: String = characters.path_for("stone-owner")
+	var owner_bytes := FileAccess.get_file_as_bytes(owner_path)
+	var world_path: String = saver.worlds().path_for("slot-0")
+	var world_bytes := FileAccess.get_file_as_bytes(world_path)
+	assert_false(saver.save(game, 1), "Original journal cannot move to a different world locator")
+	assert_eq(game.world.world_id, "slot-0", "Refusal must not rename the live world")
+	assert_eq(game.world.reward_delivery_namespace, "stone-world")
+	assert_eq(game.local.character_id, "stone-owner")
+	assert_eq(game.world.reward_deliveries[row.delivery_id], row)
+	assert_eq(FileAccess.get_file_as_bytes(saver.slot_path(0)), original)
+	assert_eq(FileAccess.get_file_as_bytes(owner_path), owner_bytes)
+	assert_eq(FileAccess.get_file_as_bytes(world_path), world_bytes)
+	assert_false(saver.has_slot(1))
+	assert_false(saver.worlds().has("slot-1"))
+	assert_true(saver.save(game, 0), "Original slot remains saveable after refused copy")
+	assert_eq(saver.worlds().read("slot-0").reward_deliveries[row.delivery_id], row)
+
 func test_scratch_save_does_not_mint_or_rename_live_identity() -> void:
 	var game := FIXTURE.populated_game(db)
 	assert_eq(str(game.local.character_id), "")

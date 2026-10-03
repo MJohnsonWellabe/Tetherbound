@@ -449,6 +449,17 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		return {}
 	var world_id := ""
 	var character_id := character_only
+	if write_split and character_only.is_empty() and _owns_world(game):
+		var target_world := _target_world_id(game, slot)
+		var live_world: Variant = game.get("world")
+		if live_world != null and str(live_world.get("world_id")) != target_world:
+			# A manual slot cannot rebind immutable journal ownership. Refuse
+			# before minting/changing any live identity or touching any file.
+			var targeted := initial_data.duplicate()
+			targeted["world_id"] = target_world
+			if not _redesign_errors(targeted, portal_character).is_empty():
+				push_warning("save: target slot conflicts with retained world transactions")
+				return {}
 	if write_split:
 		character_id = _character_id_for(game, slot)
 		# Validate portable identity before `_world_id_for` stamps the live world.
@@ -1139,13 +1150,20 @@ func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> Dictionary
 ## migrated it to -- so New Game, then Save to slot 2, writes slot 2's world
 ## rather than overwriting the world that was loaded from slot 1 before it.
 func _world_id_for(game: Object, slot: int) -> String:
+	var id := _target_world_id(game, slot)
+	var world: Variant = game.get("world") if game != null else null
+	if world != null: (world as RefCounted).set("world_id", id)
+	return id
+
+
+## Read-only target selection, also used before any save identity mutation.
+func _target_world_id(game: Object, slot: int) -> String:
 	var id := "slot-%d" % slot
 	var world: Variant = game.get("world") if game != null else null
 	if world != null:
 		var live := str((world as RefCounted).get("world_id"))
 		if live == id or live == "legacy-slot-%d" % slot:
 			return live
-		(world as RefCounted).set("world_id", id)
 	return id
 
 
