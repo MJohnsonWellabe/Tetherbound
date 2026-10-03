@@ -99,11 +99,50 @@ class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 			trace["after"] = _f18_tool_observation(action)
 			_f18_assignment_trace.append(trace)
 	func _wait_open_panel(script_suffix: String, budget: int) -> Node:
+		var started_process: int = Engine.get_process_frames()
+		var started_physics: int = Engine.get_physics_frames()
+		var scene: Node = _tree.current_scene
+		var character: String = str(_game.get("local").get("character_id"))
 		var panel: Node = await super._wait_open_panel(script_suffix, budget)
-		if panel != null and script_suffix == "shop_panel.gd" and not guards.shop_key_offer_absent(panel):
-			_fail("F18 actual vendor sell-offer protection: " + str(guards.failures))
-			return null
+		if panel != null and script_suffix == "shop_panel.gd":
+			var initial: Dictionary = _f18_shop_handoff_observation(panel)
+			# The original helper waits only for is_open(). Dialogue can retain
+			# its closing Interact edge while the real shop is already open.
+			# Wait for this exact panel to own input within that same process
+			# frame budget; do not replay the conversation or dismiss an owner.
+			while is_instance_valid(panel) and panel.call("is_open") == true \
+				and INPUT_OWNER.current(_tree) != panel \
+				and Engine.get_process_frames() - started_process < budget \
+				and _tree.current_scene == scene \
+				and str(_game.get("local").get("character_id")) == character:
+				await _tree.process_frame
+			var ready: bool = is_instance_valid(panel) and panel.call("is_open") == true \
+				and INPUT_OWNER.current(_tree) == panel and _tree.current_scene == scene \
+				and str(_game.get("local").get("character_id")) == character
+			guards.receipts.append({"phase": "earned_shop_input_handoff", "initial": initial,
+				"final": _f18_shop_handoff_observation(panel), "original_process_budget": budget,
+				"elapsed_process_frames": Engine.get_process_frames() - started_process,
+				"elapsed_physics_frames": Engine.get_physics_frames() - started_physics,
+				"character": character, "passed": ready})
+			if not ready:
+				_fail("F18 actual shop did not acquire input within the original panel handoff budget")
+				return null
+			if not guards.shop_key_offer_absent(panel):
+				_fail("F18 actual vendor sell-offer protection: " + str(guards.failures))
+				return null
 		return panel
+	func _f18_shop_handoff_observation(panel: Node) -> Dictionary:
+		var holder: Node = INPUT_OWNER.current(_tree)
+		return {"panel_path": str(panel.get_path()) if is_instance_valid(panel) else "",
+			"panel_open": panel.call("is_open") if is_instance_valid(panel) else false,
+			"vendor": panel.call("vendor_id") if is_instance_valid(panel) else "",
+			"holder_path": str(holder.get_path()) if holder != null else "",
+			"holder_script": holder.get_script().resource_path if holder != null and holder.get_script() != null else "",
+			"holder_open": holder.call("is_open") if holder != null and holder.has_method("is_open") else false,
+			"holder_owns_input": holder.call("owns_input") if holder != null and holder.has_method("owns_input") else false,
+			"interact_pressed": Input.is_action_pressed(&"interact"),
+			"interact_just_pressed": Input.is_action_just_pressed(&"interact"),
+			"physics_frame": Engine.get_physics_frames(), "process_frame": Engine.get_process_frames()}
 	func _wait_dialogue_open(budget: int) -> bool:
 		if not await super._wait_dialogue_open(budget): return false
 		if dialogue_proven: return true
