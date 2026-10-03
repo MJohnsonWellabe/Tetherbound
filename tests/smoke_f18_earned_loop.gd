@@ -5,8 +5,6 @@ extends SceneTree
 ## -> home portal -> original stone. Parsed harness input is disclosed.
 ## Isolated save-system path is harness setup. Gameplay uses no grants,
 ## fixtures, actor transforms, private gameplay calls or state edits.
-const OPENING := preload("res://tests/helpers/fresh_opening_segment.gd")
-const VILLAGE := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIALS := preload("res://tests/helpers/gate_a_material_route.gd")
 const TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
@@ -19,6 +17,38 @@ var travel: RefCounted
 var receipts: Array[Dictionary] = []
 var _presentation: Node
 var _guards: RefCounted
+
+class OpeningDriver extends "res://tests/helpers/fresh_opening_segment.gd":
+	var prepare_guards: Callable
+	var guards: RefCounted
+	func _complete_home_key_lesson() -> bool:
+		if not await super._complete_home_key_lesson(): return false
+		guards = prepare_guards.call()
+		if guards == null or not await guards.protected_drop_and_assign():
+			_fail("F18 earned key Drop/binding: " + str(guards.failures) if guards != null else "F18 guards missing")
+			return false
+		return true
+	func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+		if not await super._walk_to_and_engage_wild(target, budget): return false
+		if guards == null or not await guards.bound_refusal("combat", _combat):
+			_fail("F18 actual tutorial fight key refusal: " + str(guards.failures) if guards != null else "F18 guards missing")
+			return false
+		return true
+
+class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
+	var guards: RefCounted
+	var dialogue_proven := false
+	func _wait_dialogue_open(budget: int) -> bool:
+		if not await super._wait_dialogue_open(budget): return false
+		if dialogue_proven: return true
+		if str(_dialogue.get("_runner").call("conversation_id")) != "village_mira_shop_intro":
+			_fail("F18 first actual village dialogue was not Mira's earned introduction")
+			return false
+		if guards == null or not await guards.bound_refusal("dialogue", _dialogue):
+			_fail("F18 actual Mira dialogue key refusal: " + str(guards.failures) if guards != null else "F18 guards missing")
+			return false
+		dialogue_proven = true
+		return true
 
 class BuildDriver extends "res://tests/helpers/gate_a_build_segment.gd":
 	var open_ui: Callable
@@ -33,6 +63,10 @@ func _fail(message: String) -> bool:
 	return false
 
 func _report() -> void:
+	# Keep earlier protection/refusal evidence even if a later earned step fails.
+	if _guards != null:
+		receipts.append_array(_guards.receipts)
+		_guards.receipts.clear()
 	if is_instance_valid(_presentation): _presentation.call("finish")
 	print("F18_EARNED_LOOP " + JSON.stringify({"failures": failures, "receipts": receipts,
 		"input": "parsed harness actions/joypad axes through production UI", "fixtures": false,
@@ -43,29 +77,35 @@ func _run() -> void:
 	await process_frame
 	game = root.get_node(^"Game")
 	game.set("save_system", SAVE.new("user://f18_earned_loop_%d/" % Time.get_ticks_usec()))
-	var opening: Dictionary = await OPENING.new().run(self)
+	var opening_driver := OpeningDriver.new()
+	opening_driver.prepare_guards = _prepare_guards
+	var opening: Dictionary = await opening_driver.run(self)
 	if opening.get("passed") != true:
 		_fail("fresh earned opening: " + str(opening.get("failures")))
 		_report()
 		return
-	travel = TRAVEL.new(self, game)
 	receipts.append({"phase": "opening", "home_keys": game.get("inventory").count("home_key"),
 		"transcript": opening.get("transcript", [])})
 	if game.get("inventory").count("home_key") != 1:
 		_fail("Grandpa's actual opening did not give exactly one protected Home Key")
 		_report()
 		return
-	_guards = GUARDS.new(self, game, travel)
-	if not await _guards.protected_drop_and_assign():
-		_fail("actual Home Key Drop/binding: " + str(_guards.failures))
+	if _guards == null or travel == null:
+		_fail("earned opening did not initialize its actual-world F18 guards")
 		_report()
 		return
 	receipts.append_array(_guards.receipts)
 	_guards.receipts.clear()
-	var village: Array[String] = await VILLAGE.new().run(self, current_scene, game,
+	var village_driver := VillageDriver.new()
+	village_driver.guards = _guards
+	var village: Array[String] = await village_driver.run(self, current_scene, game,
 		current_scene.get_node(^"Player"), current_scene.get_node(^"CameraRig"))
 	if not village.is_empty():
 		_fail("earned village/tools: " + str(village))
+		_report()
+		return
+	if not village_driver.dialogue_proven or int(game.call("hotbar_slot_of", "home_key")) != 4:
+		_fail("earned village lost the actual dialogue proof or retained slot-5 Home Key binding")
 		_report()
 		return
 	var stock: Dictionary = await MATERIALS.new().run(self, current_scene, game,
@@ -78,6 +118,14 @@ func _run() -> void:
 		_report()
 		return
 	_report()
+
+func _prepare_guards() -> RefCounted:
+	# Called only after the original lesson releases input in the real world;
+	# FreshOpening starts on the title, where these dependencies do not exist.
+	if current_scene == null or current_scene.get_node_or_null(^"Player") == null: return null
+	travel = TRAVEL.new(self, game)
+	_guards = GUARDS.new(self, game, travel)
+	return _guards
 
 func _walk(target: Vector3, tolerance: float = 2.0) -> bool:
 	var player: CharacterBody3D = current_scene.get_node(^"Player")

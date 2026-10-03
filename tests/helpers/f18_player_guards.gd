@@ -31,6 +31,9 @@ func protected_drop_and_assign() -> bool:
 	var slot: int = inventory.call("find_slot", "home_key")
 	if slot < 0 or inventory.call("count", "home_key") != 1: return _fail("actual earned Home Key required")
 	var before := _inventory()
+	var original_bar: Array = (game.get("hotbar") as Array).duplicate()
+	if original_bar.is_empty() or original_bar[0] != "orb_basic":
+		return _fail("opening catch must retain its original Basic Orb binding on slot 1")
 	await travel.tap("inventory")
 	var menu: Node = game.call("menu")
 	if menu == null or menu.call("is_open") != true or menu.call("current_tab_id") != "backpack":
@@ -51,19 +54,101 @@ func protected_drop_and_assign() -> bool:
 	receipts.append({"phase": "protected_drop", "input": ["inventory", "backpack_drop", "ui_accept"],
 		"reason": reason.text, "home_keys": inventory.call("count", "home_key"), "inventory_unchanged": true})
 	if not await care.call("_focus_slot", tab.get("_buttons"), slot): return _fail("key focus not restored after Drop refusal")
-	# Cycle the real assignment verb; never write the quick bar directly.
-	for attempt in 2:
-		await travel.tap("backpack_assign")
-		if int(game.call("hotbar_slot_of", "home_key")) >= 0: break
-	var binding := int(game.call("hotbar_slot_of", "home_key"))
-	if binding < 0 or binding >= 5 or inventory.call("count", "home_key") != 1:
-		return _fail("actual Satchel assignment did not bind retained key")
-	receipts.append({"phase": "key_binding", "slot": binding, "input": "backpack_assign", "home_keys": 1})
+	# The real verb walks through occupied slots. Keep the key on slot 5,
+	# then restore the displaced opening orb through that same focused UI.
+	if not await _assign_in_satchel(tab, care, "home_key", 4): return false
+	if not await _assign_in_satchel(tab, care, "orb_basic", 0): return false
+	if inventory.call("count", "home_key") != 1 or _inventory() != before:
+		return _fail("ordinary quick-slot assignment changed earned inventory")
+	receipts.append({"phase": "key_binding", "slot": 4, "input": "backpack_assign", "home_keys": 1,
+		"restored_original_orb_slot": 0, "owner": str(game.get("local").get("character_id"))})
 	await travel.tap("menu_cancel")
 	for frame in 30:
 		await tree.physics_frame
 		if INPUT_OWNER.current(tree) == null: return true
 	return _fail("key protection menu did not release input")
+
+func _assign_in_satchel(tab: Node, care: RefCounted, item: String, destination: int) -> bool:
+	var inventory: RefCounted = game.get("inventory")
+	var slot: int = inventory.call("find_slot", item)
+	if slot < 0 or not await care.call("_focus_slot", tab.get("_buttons"), slot):
+		return _fail("ordinary Satchel focus did not reach " + item)
+	for attempt in (game.get("hotbar") as Array).size() + 1:
+		if int(game.call("hotbar_slot_of", item)) == destination: return true
+		await travel.tap("backpack_assign")
+	return int(game.call("hotbar_slot_of", item)) == destination \
+		or _fail("ordinary Satchel assignment did not reach required slot for " + item)
+
+func _refusal_context(kind: String, source: Node, scene: Node) -> bool:
+	if not is_instance_valid(source) or tree.current_scene != scene or not scene.is_ancestor_of(source): return false
+	if kind == "combat":
+		var hud: Node = scene.get_node_or_null(^"PlaygroundHUD")
+		return source == scene.get_node_or_null(^"CombatManager") and source.call("is_fighting") == true \
+			and source.call("presenting_fight") == true and source.call("is_aiming") == false \
+			and hud != null and hud.get("_aim_hotbar_latch") == false
+	return kind == "dialogue" and source == scene.get_node_or_null(^"DialoguePanel") \
+		and source.call("is_open") == true and INPUT_OWNER.current(tree) == source
+
+func bound_refusal(kind: String, source: Node) -> bool:
+	# Observe production state and press the actually assigned action. Never
+	# call use/refuse, open a channel, or arrange a combat/dialogue context.
+	var expected: String = "Not during a fight." if kind == "combat" else "Finish the conversation first."
+	var scene: Node = tree.current_scene
+	var actor: Node3D = game.call("find_player")
+	var key: Node = game.get_node_or_null(^"HomeKey")
+	var session: Node = game.get("session")
+	var inventory: RefCounted = game.get("inventory")
+	var binding: int = game.call("hotbar_slot_of", "home_key")
+	if scene == null or actor == null or not scene.is_ancestor_of(actor) or key == null or session == null \
+		or key.get("_phase") != "idle" or inventory.call("count", "home_key") != 1 or binding != 4 \
+		or not _refusal_context(kind, source, scene) or str(game.call("home_key_refusal")) != expected:
+		return _fail("actual " + kind + " refusal preconditions are missing")
+	var before: Array = _inventory()
+	var bar: Array = (game.get("hotbar") as Array).duplicate()
+	var realm: String = game.get("current_realm")
+	var world: RefCounted = game.get("world")
+	var local: RefCounted = game.get("local")
+	var character: String = local.get("character_id")
+	var epoch: String = str(session.call("_altar_current_epoch"))
+	var input_owner: Node = INPUT_OWNER.current(tree)
+	var serial: int = session.get("_portal_request_serial")
+	var requests: Dictionary = (session.get("_portal_requests") as Dictionary).duplicate(true)
+	var policy: RefCounted = session.get("_portal_policy")
+	var channels: Array = policy.call("open_channels")
+	var source_path: String = str(source.get_path())
+	var enemy: Node3D = source.call("enemy_body") if kind == "combat" else null
+	var dialogue_id: String = str(source.get("_runner").call("conversation_id")) if kind == "dialogue" else ""
+	var dialogue_line: int = int(source.get("_runner").get("_index")) if kind == "dialogue" else -1
+	var results: Array[Dictionary] = []
+	var observe := func(result: Dictionary) -> void: results.append(result.duplicate(true))
+	game.connect("portal_action_result", observe)
+	var action: String = "hotbar_%d" % (binding + 1)
+	await travel.tap(action)
+	game.disconnect("portal_action_result", observe)
+	var label: Label = key.get("_refusal_label") if is_instance_valid(key) else null
+	var panel: Control = key.get("_refusal_panel") if is_instance_valid(key) else null
+	var unchanged: bool = is_instance_valid(key) and tree.current_scene == scene and game.get("session") == session \
+		and game.call("find_player") == actor and game.get("world") == world and game.get("current_realm") == realm \
+		and game.get("local") == local and local.get("character_id") == character \
+		and str(session.call("_altar_current_epoch")) == epoch and INPUT_OWNER.current(tree) == input_owner \
+		and _inventory() == before and game.get("hotbar") == bar and inventory.call("count", "home_key") == 1 \
+		and key.get("_phase") == "idle" and key.get("_pending") == "" and key.get("_use_id") == "" \
+		and session.get("_portal_request_serial") == serial and session.get("_portal_requests") == requests \
+		and policy.call("open_channels") == channels and results.is_empty() and _refusal_context(kind, source, scene)
+	if kind == "dialogue":
+		unchanged = unchanged and is_instance_valid(source) and str(source.get("_runner").call("conversation_id")) == dialogue_id \
+			and int(source.get("_runner").get("_index")) == dialogue_line
+	else:
+		unchanged = unchanged and is_instance_valid(source) and source.call("enemy_body") == enemy
+	var readable: bool = label != null and panel != null and label.is_visible_in_tree() \
+		and panel.is_visible_in_tree() and label.text == expected
+	receipts.append({"phase": kind + "_key_refusal", "input": action, "binding": binding,
+		"reason": label.text if label != null else "", "expected_reason": expected,
+		"readable": readable, "unchanged": unchanged, "home_keys": inventory.call("count", "home_key"),
+		"owner": character, "epoch": epoch, "realm": realm, "source": source_path, "dialogue": dialogue_id,
+		"portal_actions": results, "channel_created": policy.call("open_channels") != channels,
+		"passed": readable and unchanged})
+	return (readable and unchanged) or _fail("actual bound " + kind + " key press did not visibly refuse without side effects")
 
 func locked_arch() -> bool:
 	var scene := tree.current_scene
