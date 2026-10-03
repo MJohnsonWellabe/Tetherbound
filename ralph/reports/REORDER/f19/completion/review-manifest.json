@@ -327,6 +327,9 @@
     "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
     "args": "--retain-active-surface-overrides",
     "scope": "Same original cold lifecycle; hold only per-surface overrides equal to actual get_active_material, no geometry override/base, Mesh, particle or Terrain resources.",
-    "status": "Prepared; not yet dispatched"
+    "status": "Live native diagnostic; no acceptance pending terminal raw log",
+    "source_commit": "c825fad9b47271282dae90c2d1a171a6a8dc251a",
+    "run": 37106042367,
+    "job": 111154649960
   }
 }
