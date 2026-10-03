@@ -226,6 +226,7 @@ var _physics_heartbeat_clock := PHYSICS_HEARTBEAT_CLOCK.new()
 ## part of world state, a verdict or an authority/input decision.
 var _trainer_fight_command_budget_frames := NET_STEP_BUDGET_FRAMES
 var _trainer_fight_progress: Dictionary = {}
+var _last_panel_press_observation: Dictionary = {}
 var _trainer_fight_samples: Array[Dictionary] = []
 var _trainer_fight_killing_verdict: Dictionary = {}
 var _trainer_fight_observed_encounter_id := ""
@@ -567,12 +568,36 @@ func _send_heartbeat() -> void:
 		# Wave 2: a real `Session` exists, so this is the real registry --
 		# `[]` only when this process has no session at all.
 		"session_peers": _session_peer_ids()}
+	if str(heartbeat.context).begins_with("panel:"):
+		heartbeat["panel_observation"] = _panel_input_observation()
+	if not _last_panel_press_observation.is_empty():
+		heartbeat["last_panel_press"] = _last_panel_press_observation
 	if not _trainer_fight_progress.is_empty():
 		heartbeat["trainer_fight"] = _trainer_fight_heartbeat_observation()
 	var send_started := PEER_PHASE_TRACE.begin("heartbeat.encode_and_send", Engine.get_process_frames(), _physics_count)
 	_send(heartbeat)
 	PEER_PHASE_TRACE.end("heartbeat.encode_and_send", send_started, Engine.get_process_frames(), _physics_count)
 	PEER_PHASE_TRACE.end("heartbeat.total", heartbeat_started, Engine.get_process_frames(), _physics_count)
+
+
+## Bounded observation of existing GUI ownership, not a refresh/quote/save.
+## Keeps the actual panel and physical cancel binding in original timeout data.
+func _panel_input_observation() -> Dictionary:
+	var owner: Node = _probe.call("input_owner_node") as Node
+	var script: Script = owner.get_script() as Script if is_instance_valid(owner) else null
+	var focus: Control = get_root().gui_get_focus_owner()
+	var result: Dictionary = {"owner_path": str(owner.get_path()).substr(0, 512) if is_instance_valid(owner) else "",
+		"owner_script": script.resource_path if script != null else "",
+		"focus_path": str(focus.get_path()).substr(0, 512) if is_instance_valid(focus) else "",
+		"tree_paused": paused}
+	if script != null and script.resource_path == "res://scripts/ui/craft_panel.gd":
+		var pending: Variant = owner.get("_station_intent")
+		var status: Label = owner.get("_status") as Label
+		result["craft"] = {"open": owner.get("_open"), "station_operation": owner.get("_station_operation"),
+			"pending_intent": not pending.is_empty() if pending is Dictionary else null,
+			"groom_waiting_release": owner.get("_groom_waiting_release"),
+			"status": status.text.substr(0, 256) if is_instance_valid(status) else ""}
+	return result
 
 
 ## Called only by fresh heartbeat sampling in the actual physics callback. No probing from the
@@ -1709,6 +1734,14 @@ func _step_press(args: Dictionary) -> Dictionary:
 	var action := str(args.get("action", ""))
 	var times := int(args.get("times", 1))
 	var gap := int(args.get("gap_frames", 18))
+	var observe_panel: bool = action in ["ui_accept", "ui_cancel", "menu_cancel"] and str(_probe.call("input_context")).begins_with("panel:")
+	if observe_panel:
+		var binding: InputEvent = GATE_F_HARNESS._physical_binding(StringName(action))
+		_last_panel_press_observation = {"action": action, "sampled_ms": Time.get_ticks_msec(),
+			"before": _panel_input_observation(),
+			"binding_class": binding.get_class() if binding != null else "",
+			"binding_button": (binding as InputEventJoypadButton).button_index if binding is InputEventJoypadButton else null,
+			"binding_menu_cancel": InputMap.action_has_event(&"menu_cancel", binding) if binding != null else false}
 	for i in maxi(1, times):
 		var guard := _press_guard(action)
 		if not bool(guard.get("ok", true)):
@@ -1722,6 +1755,8 @@ func _step_press(args: Dictionary) -> Dictionary:
 		if i < times:
 			for g in gap:
 				await physics_frame
+	if observe_panel:
+		_last_panel_press_observation["after"] = _panel_input_observation()
 	var confirm: Dictionary = args.get("confirm", {}) as Dictionary
 	if not confirm.is_empty():
 		# Item 3 (review): a transient effect (a jump's airtime is ~14
