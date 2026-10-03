@@ -105,6 +105,7 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	if not body.is_physics_processing() or body.get("_foundation_ground_contact_generation") == null:
 		_refuse("The ordinary arrival controller is not processing."); return
 	_pending.actor = weakref(body)
+	_pending.world_node = weakref(world_node)
 	_pending.contact_generation = int(body.get("_foundation_ground_contact_generation"))
 	_pending.collision = weakref(collision)
 	_pending.capsule = weakref(collision.shape)
@@ -137,7 +138,9 @@ func _grounded_actor(actor: CharacterBody3D) -> bool:
 		and _pending.capsule.get_ref().get("height") == _pending.capsule_height \
 		and actor.scale == Vector3.ONE and _pending.collision.get_ref().get("scale") == Vector3.ONE \
 		and actor.get_floor_normal().angle_to(Vector3.UP) <= actor.floor_max_angle \
-		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius)
+		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius) \
+		and _pending.has("world_node") and is_instance_valid(_pending.world_node.get_ref()) \
+		and _supported_capsule(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius))
 
 func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
 	var peer: int = int(permit.get("peer_id", 0))
@@ -278,7 +281,26 @@ func _remote_binding(peer: int, original: Dictionary) -> bool:
 		var support: float = _landing_height(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
 		if not is_finite(support) or absf(support - height) > tan(actor.floor_max_angle) * radius: return false
 	var landing := Vector3(target.x, height + actor.safe_margin, target.z)
-	return contact.position.distance_to(landing) <= radius
+	return contact.position.distance_to(landing) <= radius and _supported_capsule(world_node, actor, target, radius)
+
+func _supported_capsule(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> bool:
+	# Terrain/scatter may finish streaming or change after the initial pose.
+	# Recheck actual support and the complete live capsule before either owner
+	# or host can turn a controller contact into a durable arrival.
+	if world_node == null or actor == null or not world_node.is_ancestor_of(actor): return false
+	var height := _landing_height(world_node, actor, target, radius)
+	if not is_finite(height): return false
+	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
+		var support := _landing_height(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
+		if not is_finite(support) or absf(support - height) > tan(actor.floor_max_angle) * radius: return false
+	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D: return false
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.transform = collision.global_transform
+	query.collision_mask = actor.collision_mask
+	query.exclude = [actor.get_rid()]
+	return actor.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty()
 
 func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(original.envelope.world_instance_id, original.envelope.character_id)
