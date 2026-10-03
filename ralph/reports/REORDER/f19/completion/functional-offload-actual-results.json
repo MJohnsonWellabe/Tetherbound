@@ -57,8 +57,8 @@
     },
     "shared_helper_owner": "Coordinator relays actual contact-cap evidence to F17; F19 does not edit competing helper",
     "log": "ci-campaign-functional-rejected-37081328436.log.gz",
-    "actual_world_seed": 920716524,
-    "next_comparator": "Existing --world-seed=4 normal generation option matches the canonical F17 fresh route. No state/pose/HP/observer guard changes; preserve random-seed contact-count failure and make no all-seed coverage claim. Full fresh rerun still waits for actual reviewed route evidence."
+    "next_comparator": "F17 R8 proves a fresh earned prefix under encounter-only TB_WORLD_SEED=4, while saved Game.world_seed differs. Do not claim same-world/terrain reproduction or contact-cap fix. Full F19 seed strategy held pending coordinator disposition; all guards remain.",
+    "observed_encounter_director_seed": 920716524
   },
   "solmane": {
     "run": 37081327114,
@@ -185,5 +185,12 @@
     "raw_log": "ci-terrain-material-negative-37088068152.log",
     "raw_log_sha256": "37ebe50b8b3c39dc08ad8017ad83c127fcaad85f1f15ed84d43eef614dbee864",
     "next_diagnostic": "Original space-accept/save/reload with whole actual world material retention versus scriptless world Label3D permanent-deletion observers, retaining a baseline. Previous isolated lifetime negatives do not certify actual batched world destruction."
+  },
+  "next_diagnostic": {
+    "source_commit": "6c3572a5645190f6377cc41c70a121fb2534311a",
+    "run": 37088521645,
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original spaceaccept/save/reload baseline versus whole-world actual resource retention versus scriptless world Label3D deletion observer; diagnostic only",
+    "status": "Verified queued; no terminal native evidence"
   }
 }

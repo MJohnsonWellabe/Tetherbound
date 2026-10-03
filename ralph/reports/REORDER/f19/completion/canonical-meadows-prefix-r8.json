@@ -4,7 +4,6 @@
   "run": 37086098279,
   "job": 111096616203,
   "artifact": 11261227819,
-  "actual_world_seed": 4,
   "result": {
     "campaign_complete": false,
     "checkpoints": [],
@@ -38,6 +37,24 @@
     "status": "Prepared exact snapshot; independent verdict requested through coordinator before import",
     "delta": "22 lines awaiting actual catch-loss resolution inside existing240tick cleanup; no loss in R8 so branch unexercised"
   },
-  "next_f19_scope": "Full fresh ordinary all-five-boundary route with canonical generated world seed4, no resume or partial fixture, unchanged eight-contact observation guard; material error still unresolved.",
-  "exclusions": "Native boundedprefix success only; one engine error prohibits clean-engine claim. No five boundary receipts, full campaign, no earned saves promoted, no catch-loss-branch proof."
+  "next_f19_scope": "Full fresh ordinary all-five-boundary route, unchanged eight-contact guard. Seed strategy must preserve and disclose actual saved-world identity; no inference that --world-seed=4 fixes the contact cap or pins terrain. Prepared seed4 dispatch is held.",
+  "exclusions": "Native boundedprefix success only; one engine error prohibits clean-engine claim. No five boundary receipts, full campaign, no earned saves promoted, no catch-loss-branch proof.",
+  "actual_encounter_seed_override": 4,
+  "saved_world_seed_coordinator_relay": 1434901555,
+  "seed_provenance": {
+    "source_paths": [
+      "tests/helpers/f49_campaign_journey.gd:run",
+      "scripts/combat/spawn_tables.gd:resolve_seed",
+      "autoload/game_state.gd:reset",
+      "scripts/combat/encounter_director.gd:world_seed"
+    ],
+    "facts": [
+      "--world-seed sets TB_WORLD_SEED only.",
+      "New game independently generates Game.world_seed from the normal roll policy.",
+      "The encounter director resolves environment override before persisted seed.",
+      "Neither this argument nor the observed director seed pins all terrain generation or changes the persisted world seed."
+    ],
+    "source_effect": "Matching encounter-roll seed only; saved-world identity and terrain/contact comparator not established.",
+    "persisted_snapshot_limit": "F17 earned-rested-team snapshot is before bracket; final scratch autosave is not terminal tournament_won persisted snapshot."
+  }
 }

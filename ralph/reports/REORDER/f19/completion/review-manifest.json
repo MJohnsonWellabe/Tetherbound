@@ -154,10 +154,11 @@
   "latest_remote_audit": "functional-offload-actual-results.json",
   "latest_material_diagnostic": "chamber-label-counterfactual-r2.json",
   "latest_material_probe": {
-    "run": 37088068152,
-    "source_commit": "1544456506522ff102c7d116b980f37ae492921c",
+    "run": 37088521645,
+    "source_commit": "6c3572a5645190f6377cc41c70a121fb2534311a",
     "acceptance": false,
-    "status": "Offloaded native Terrain3D component diagnostic pending"
+    "status": "Offloaded actual world teardown diagnostic queued"
   },
-  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json"
+  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
+  "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed."
 }
