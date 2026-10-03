@@ -1,0 +1,20 @@
+{
+  "kind": "f19_complete_mechanics_driver_offload",
+  "source_commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+  "reviewed_workflow_cut": "fe40f752ac",
+  "workflow_ref": "tb/integration",
+  "workflow": "render.yml",
+  "mode": "render",
+  "resolution": "640x360",
+  "runs": [
+    {"run": 37081325571, "script": "tests/smoke_f19_veridian_functional.gd", "scope": "Entire inherited six-choice controller/save/reload driver"},
+    {"run": 37081327114, "script": "tests/smoke_f19_solmane_functional.gd", "scope": "Entire inherited six-choice controller/save/reload driver"},
+    {"run": 37081328436, "script": "tests/smoke_f19_campaign_functional.gd", "scope": "Entire inherited fresh ordinary-input four-chapter campaign and all five immutable boundaries"}
+  ],
+  "mechanics_policy": "OpenGL backend active, continuous drawing disabled as existing remote net proof does; no supplied gameplay/HP/pose/rewards/save state, unchanged original input/physics/encounter/clock/budget mechanics",
+  "audit": "Compatibility shell_build_budget never awaits Forward+ upload draws. Default continuous driver does not attach frame-capture recorders. Capture arguments refused.",
+  "provenance": "Promoter preserves explicit functional offload declaration and still demands full fresh success, five boundaries and exact actual production byte hashes",
+  "status": "Dispatched, engine verification and independent review pending",
+  "exclusions": "No visual, audio, owner-play or device-performance acceptance. No accepted earned fixture exists yet.",
+  "resource_constraint": "User playing Valheim; all engine/import/render testing offloaded, no local Godot tests"
+}
