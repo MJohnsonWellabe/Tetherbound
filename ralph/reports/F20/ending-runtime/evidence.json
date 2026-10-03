@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Actual chapter close and solo ending/reload retain their independently measured passing scope. Reviewed stable rematch anchor passes focusednative13/0 and originalsolo-r18 normalX activation; finalcanonicalfight predicate stillFAIL66/2/zeroerrors. F20-only normalcallout and failurepredicate snapshot candidate underreview. #2/#3/#4 remain OPEN.",
+    "reason": "Actual chapter close and solo ending/reload retain their independently measured passing scope. Reviewed stable rematch anchor passes focusednative13/0 and originalsolo-r18 normalX activation; finalcanonicalfight predicate stillFAIL66/2/zeroerrors. F20-only normalcallout and failurepredicate snapshot source011964 independentlyreviewed and actualsolo-r19 queued. #2/#3/#4 remain OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -1256,7 +1256,18 @@
       "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
     }
   },
-  "remote_pending": {},
+  "remote_pending": {
+    "solo_r19": {
+      "run": 37100298947,
+      "job": 111138342282,
+      "source": "011964eff4fb9b2f5bcd3fe7f6b86e87a605228c",
+      "script": "tests/smoke_f20_ending.gd",
+      "mode": "headless",
+      "timeout_minutes": 30,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37100298947",
+      "status": "Original affected replay confirmed queued; no duplicate/restart, no result claimed. Same ending/reload/bounty and final canonical fight assertions, ordinary preparation added."
+    }
+  },
   "lesson_input_driver": {
     "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
     "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
@@ -1472,7 +1483,8 @@
   "rematch_callout_candidate": {
     "change": "Before originalrematch NAV/X, only actualundeployed blocker gets normal creature_recall input andbounded30s deploymentwait. Require actualconsciousownedparty member/visiblebody/localowner. Original finalcanonicalfight predicate unchanged; failure-only reads expose each condition/source/spec/enemy/ownership and pure admissionqueries.",
     "reason": "Freshload intentionallydoesnotauto deploy; can_challenge requires actualallybody. Earlier proof omittednormalcallout. Actualr18 blocker notprinted, so noobservedcauseclaim.",
-    "independent_review": "pending workingcandidate",
-    "runtime": "not dispatched; #3 OPEN."
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact4530 normalcallout +011964 asyncvisiblewait: onlyactualundeployed normalinput;30sboundedwait, visibleactualownedlocalbody requirement; no directdeployment/stat/pose/save orguard changes. Typedfinalpredicate unchanged. Purecan_challenge/rematch_source_busy/failurefields; affectedactualreplay required.",
+    "runtime": "Actual solo-r19 run37100298947/job111138342282 exact011964 queued; no result claimed, #3 OPEN.",
+    "source": "011964eff4fb9b2f5bcd3fe7f6b86e87a605228c"
   }
 }
