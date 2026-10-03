@@ -1,0 +1,18 @@
+{
+  "kind": "f19_actual_menu_preview_component",
+  "source_commit": "ae1994981b999890483e67e528ede752ad061374",
+  "run": 37096724900,
+  "job": 111128061574,
+  "artifact": 11263939242,
+  "process_exit": 0,
+  "elapsed_seconds": 5,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "failures": [],
+  "cases": 2,
+  "scope": "Actual CreatureViewport Veridian to Solmane to empty selection and backdrop teardown; direct component fixture, baseline versus exposed Material retention.",
+  "result": "Negative reproduction. No menu product fix justified; does not certify full-world batched teardown or capacity UI.",
+  "acceptance": false,
+  "raw_log": "ci-menu-preview-negative-37096724900.log.gz",
+  "raw_log_sha256": "958c9589bc330105106fc747dfa3b5389c68ba5cbbd018f5a80b112e0e199a52"
+}

@@ -1,0 +1,22 @@
+{
+  "kind": "f19_world_material_reference_counterfactual_r8",
+  "source_commit": "08083abbf093f21e5291b2b5e257b1ff3c45b716",
+  "run": 37095874691,
+  "job": 111125570872,
+  "artifact": 11263838947,
+  "workflow_conclusion": "failure",
+  "process_exit": "Not retained: failing workflow exited before its exit footer/file was written",
+  "engine_errors": 16,
+  "script_errors": 0,
+  "baseline_engine_errors": 16,
+  "retained_material_engine_errors": 0,
+  "original_failures": [
+    "(baseline) 'Leave the Veridian Stag free (final)' was live where the player stood when the offer landed"
+  ],
+  "failures_accumulate": "The inherited array retains the baseline failure in the treatment END marker; no additional treatment assertion failure recorded.",
+  "retained_scope": "Geometry overrides/overlay, Mesh active/per-surface override/mesh-surface Materials, MultiMesh mesh-surface Materials, Terrain3DMaterial Resource and all GPU/late CPU particle Materials; no Mesh/MultiMesh resource retention.",
+  "held_resource_peak": 4314,
+  "result": "Positive material ownership counterfactual, not acceptance: baseline16 material errors versus treatment0. Two changes relative to readiness-only census remain to isolate: masked per-surface overrides and late-created particle Materials. All original guards retained; baseline prompt guard failed, so no clean choice claim.",
+  "raw_log": "ci-world-material-reference-37095874691.log.gz",
+  "raw_log_sha256": "03c9b0dbe79935d7d7b132256e98291f5691e9523b5b7fb3b9eb79ec62bac7ec"
+}

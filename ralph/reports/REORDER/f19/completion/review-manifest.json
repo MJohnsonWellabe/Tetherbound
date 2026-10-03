@@ -153,11 +153,11 @@
   ],
   "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
   "latest_remote_audit": "functional-offload-actual-results.json",
-  "latest_material_diagnostic": "final-resource-counterfactual-r7.json",
+  "latest_material_diagnostic": "world-material-reference-r8.json",
   "latest_material_probe": {
     "script": "tests/probe_f19_world_material_lifetime.gd",
     "scope": "Baseline versus Materials only, including masked per-surface overrides and post-choice CPU particle Materials; no retained Mesh/MultiMesh objects. Actual Altar counterfactual demonstrated active-material census misses hidden override owners.",
-    "status": "Native Run step started; no terminal result",
+    "status": "Terminal: world-material-reference-r8.json; baseline16 errors/treatment0; original baseline prompt guard failed; no clean acceptance",
     "source_commit": "08083abbf093f21e5291b2b5e257b1ff3c45b716",
     "run": 37095874691,
     "job": 111125570872
@@ -177,6 +177,11 @@
   "next_component_diagnostic": {
     "script": "tests/probe_f19_menu_preview_material_lifetime.gd",
     "scope": "Actual CreatureViewport, Veridian/Solmane model replacement and backdrop deletion; Game menu outside disposable world census; baseline versus all exposed preview Material refs",
+    "status": "Terminal negative: menu-preview-component.json,0errors both cases"
+  },
+  "next_owner_diagnostic": {
+    "script": "tests/probe_f19_healing_dust_material_lifetime.gd",
+    "scope": "Actual authored MeadowHealing late CPU dust factory, early parent teardown and actual authored lifetime timer; baseline versus only dust Material retention, no Mesh retention.",
     "status": "Prepared, not yet dispatched"
   }
 }
