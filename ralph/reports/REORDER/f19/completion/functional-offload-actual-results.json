@@ -155,12 +155,35 @@
     "next_diagnostic": "Actual installed Terrain3D MouseQuad lifecycle: baseline versus retained active ShaderMaterial versus base detached at permanent world destruction; drawing true/false. Empty terrain component fixture, never acceptance.",
     "exclusions": "No product patch, original assertion waiver, clean native choice proof, earned save fixture or completed campaign."
   },
-  "next_diagnostic": {
+  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
+  "terrain_component_diagnostic": {
+    "kind": "f19_actual_terrain_component_lifetime",
     "source_commit": "1544456506522ff102c7d116b980f37ae492921c",
     "run": 37088068152,
-    "script": "tests/probe_f19_terrain_material_lifetime.gd",
-    "scope": "Actual installed Terrain3D empty terrain+camera lifetime; drawing true/false; baseline/retained actual MouseQuad Material/base detached at permanent teardown. Component fixture only.",
-    "status": "Verified setup-godot step live; no native result yet"
-  },
-  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json"
+    "artifact": 11260778973,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 10,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "cases": 6,
+    "drawing_states": [
+      true,
+      false
+    ],
+    "treatments": [
+      "baseline",
+      "retain-quad-material",
+      "detach-quad-base"
+    ],
+    "actual_installed_terrain_version": "1.0.2",
+    "actual_mouse_quad_observed_in_each_case": true,
+    "original_guards_failures": [],
+    "result": "Negative reproduction: empty actual Terrain3D lifetime did not reproduce material errors; neither retention nor detachment establishes a product fix.",
+    "fixtures": "Empty installed terrain and camera, no mounted world or gameplay",
+    "accepted_clean_witness": false,
+    "raw_log": "ci-terrain-material-negative-37088068152.log",
+    "raw_log_sha256": "37ebe50b8b3c39dc08ad8017ad83c127fcaad85f1f15ed84d43eef614dbee864",
+    "next_diagnostic": "Original space-accept/save/reload with whole actual world material retention versus scriptless world Label3D permanent-deletion observers, retaining a baseline. Previous isolated lifetime negatives do not certify actual batched world destruction."
+  }
 }
