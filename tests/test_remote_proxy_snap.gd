@@ -21,8 +21,169 @@ extends "res://tests/test_case.gd"
 
 const REMOTE_CREATURE := preload("res://scripts/creatures/remote_creature.gd")
 const REMOTE_TRAINER := preload("res://scripts/net/remote_trainer.gd")
+const REMOTE_SCENE := preload("res://scenes/player/remote_trainer.tscn")
 
 const SNAP_M := 6.0
+
+class FloorTrainer extends "res://scripts/net/remote_trainer.gd":
+	# Disclosed network dispatch/presentation doubles. The actual _follow,
+	# CharacterBody3D motion, authored capsule and contact capture run unchanged.
+	var fixture_mount: Node3D
+	func _ready() -> void: pass
+	func _physics_process(delta: float) -> void: _follow(delta)
+	func _apply_ride_and_flight(_delta: float) -> void: pass
+	func _mount_body() -> Node3D: return fixture_mount
+
+
+func _floor_fixture(tree: SceneTree, support: bool = true) -> Dictionary:
+	var world := Node3D.new()
+	tree.root.add_child(world)
+	var floor_body: StaticBody3D
+	if support:
+		floor_body = StaticBody3D.new()
+		floor_body.position = Vector3(0, 104.5, -260)
+		var box := BoxShape3D.new()
+		box.size = Vector3(12, 1, 12) # Actual top plane at Cloud's 105m elevation.
+		var surface := CollisionShape3D.new()
+		surface.shape = box
+		floor_body.add_child(surface)
+		world.add_child(floor_body)
+	var actor := FloorTrainer.new()
+	var collision := CollisionShape3D.new()
+	collision.name = "Collision"
+	# Reuse the scene's actual authored footprint/snap instead of a test-only
+	# capsule, margin, collision bypass, floor flag or invented landing height.
+	var authored: SceneState = REMOTE_SCENE.get_state()
+	for node: int in authored.get_node_count():
+		for property: int in authored.get_node_property_count(node):
+			var key: StringName = authored.get_node_property_name(node, property)
+			var value: Variant = authored.get_node_property_value(node, property)
+			if authored.get_node_name(node) == &"RemoteTrainer" and key in [&"floor_max_angle", &"floor_snap_length"]:
+				actor.set(key, value)
+			elif authored.get_node_name(node) == &"Collision":
+				if key == &"shape": collision.shape = (value as CapsuleShape3D).duplicate() as CapsuleShape3D
+				elif key == &"transform": collision.transform = value
+	actor.add_child(collision)
+	actor.position = Vector3(0, 105.03099822998, -260) # Disclosed R7 starting pose.
+	actor.net_position = actor.position
+	actor._render_position = actor.position
+	actor._has_render = true
+	world.add_child(actor)
+	return {"world": world, "floor": floor_body, "actor": actor, "target": actor.net_position}
+
+
+func _free_floor_fixture(tree: SceneTree, fixture: Dictionary) -> void:
+	fixture.world.queue_free()
+	await tree.process_frame
+	await tree.process_frame
+
+
+func run_initialized_remote_floor_case(tree: SceneTree) -> Dictionary:
+	var f := _floor_fixture(tree)
+	var actor: FloorTrainer = f.actor
+	assert_eq(actor.floor_snap_length, 0.4)
+	assert_false(actor.is_on_floor())
+	for _frame in 8: await tree.physics_frame
+	assert_true(actor.is_on_floor(), "stationary remote landing must acquire ACTUAL floor contact")
+	assert_true(actor.get_floor_normal().angle_to(Vector3.UP) <= actor.floor_max_angle)
+	assert_eq(actor._foundation_ground_contact_position, actor.global_position, "capture follows the real snap")
+	assert_true(actor._foundation_ground_contact_generation > 0)
+	assert_true(actor.global_position.distance_to(f.target) <= actor.floor_snap_length, "only authored physical snap range")
+	assert_eq(actor.net_position, f.target, "host floor seating never replaces owner-published pose")
+	var stayed_grounded := true
+	for _frame in 12:
+		await tree.physics_frame
+		stayed_grounded = stayed_grounded and actor.is_on_floor()
+	assert_true(stayed_grounded, "owner-height correction must not alternate grounded and airborne frames")
+	var generation: int = actor._foundation_ground_contact_generation
+	f.floor.queue_free()
+	for _frame in 4: await tree.physics_frame
+	assert_false(actor.is_on_floor(), "removed actual support cannot retain a floor flag")
+	assert_true(actor._foundation_ground_contact_generation > generation)
+	await _free_floor_fixture(tree, f)
+	f = _floor_fixture(tree, false)
+	actor = f.actor
+	for _frame in 8: await tree.physics_frame
+	assert_false(actor.is_on_floor(), "unsupported stationary pose cannot manufacture contact")
+	assert_eq(actor.global_position, f.target)
+	assert_true(actor._foundation_ground_contact_generation > 0)
+	await _free_floor_fixture(tree, f)
+	f = _floor_fixture(tree)
+	actor = f.actor
+	actor.net_position += Vector3.UP * 0.2
+	for _frame in 4: await tree.physics_frame
+	assert_false(actor.is_on_floor(), "a rising target remains free even with idle animation")
+	assert_true(actor.global_position.y > (f.target as Vector3).y)
+	await _free_floor_fixture(tree, f)
+	f = _floor_fixture(tree)
+	actor = f.actor
+	actor.net_anim_state = "jump"
+	for _frame in 4: await tree.physics_frame
+	assert_false(actor.is_on_floor(), "an ascending jump remains free between pose updates")
+	assert_eq(actor.global_position, f.target)
+	await _free_floor_fixture(tree, f)
+	for mode: String in ["fly", "carried", "swim", "ride"]:
+		f = _floor_fixture(tree)
+		actor = f.actor
+		match mode:
+			"fly": actor.net_flying = true
+			"carried": actor.net_carried = true
+			"swim": actor.aquatic.mode = REMOTE_TRAINER.SWIM_STATE.Mode.HUMAN
+			"ride":
+				actor.net_riding = true
+				actor.fixture_mount = Node3D.new()
+				f.world.add_child(actor.fixture_mount)
+				actor.fixture_mount.global_position = f.target
+		for _frame in 4: await tree.physics_frame
+		assert_false(actor.is_on_floor(), mode + " cannot acquire a LAND snap")
+		assert_eq(actor._foundation_ground_contact_generation, 0, mode + " preserves its existing motion bypass")
+		await _free_floor_fixture(tree, f)
+	return {"assertions": assertion_count, "failures": failures, "completed": true}
+
+
+func test_native_stationary_remote_floor_contact_preserves_unsupported_and_transport_modes() -> void:
+	var suffix := "%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	var path := "user://remote-floor-" + suffix + ".gd"
+	var log_path := ProjectSettings.globalize_path("user://remote-floor-" + suffix + ".log")
+	var runner := FileAccess.open(path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('''extends SceneTree
+func _initialize() -> void:
+	call_deferred("run")
+func run() -> void:
+	var test: RefCounted = load("res://tests/test_remote_proxy_snap.gd").new()
+	var result: Dictionary = await test.call("run_initialized_remote_floor_case", self)
+	test = null
+	await process_frame
+	print("REMOTE_TRAINER_FLOOR_RESULT=" + JSON.stringify(result))
+	quit(0 if result.completed == true and result.assertions == 26 and result.failures.is_empty() else 1)
+''')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(path)
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"),
+		"--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	assert_true(FileAccess.file_exists(log_path), "retain the actual initialized controller log")
+	if FileAccess.file_exists(log_path): combined += "\n" + FileAccess.get_file_as_string(log_path)
+	var result: Dictionary = {}
+	var results := 0
+	for line: String in "\n".join(output).split("\n"):
+		if not line.begins_with("REMOTE_TRAINER_FLOOR_RESULT="): continue
+		print(line)
+		results += 1
+		var parsed: Variant = JSON.parse_string(line.trim_prefix("REMOTE_TRAINER_FLOOR_RESULT="))
+		if parsed is Dictionary: result = parsed
+	assert_eq(results, 1, combined)
+	assert_eq(result.get("assertions", 0), 26, "all eight actual physics scenarios must finish")
+	assert_true(result.get("completed") == true)
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \
+		or combined.contains("RID allocations") or combined.contains("RIDs of type"), combined)
+	assert_eq(code, 0, combined)
 
 
 func test_a_pinned_body_is_snapped_even_though_its_render_target_is_current() -> void:

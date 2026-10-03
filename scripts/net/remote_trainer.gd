@@ -681,6 +681,7 @@ func _follow(delta: float) -> void:
 		rotation.y = net_yaw
 		return
 
+	var target_rising: bool = net_position.dot(up_direction) > _render_position.dot(up_direction)
 	var weight := clampf(1.0 - exp(-delta / maxf(INTERP_HALF_LIFE_S, 0.001)), 0.0, 1.0)
 	_render_position = _render_position.lerp(net_position, weight)
 	rotation.y = lerp_angle(rotation.y, net_yaw, weight)
@@ -704,6 +705,11 @@ func _follow(delta: float) -> void:
 	var to := _render_position - global_position
 	velocity = to / maxf(delta, 0.0001)
 	move_and_slide()
+	# A stationary replicated landing can sit above the host's floor, leaving
+	# zero-motion move_and_slide without contact. Use the authored physical snap
+	# before capturing contact; target ascent/jump and transport modes stay free.
+	if not target_rising and net_anim_state != "jump" and not net_riding:
+		apply_floor_snap()
 	_foundation_ground_contact_generation += 1
 	_foundation_ground_contact_position = global_position
 	_foundation_ground_contact_frame = Engine.get_physics_frames()
