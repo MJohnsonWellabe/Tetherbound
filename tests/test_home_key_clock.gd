@@ -22,6 +22,24 @@ class EpochSession extends Node:
 	var epoch := "epoch"
 	func _altar_current_epoch() -> String: return epoch
 
+func test_assigned_key_refusal_binding_preserves_modal_and_aim_input() -> void:
+	var key_script := preload("res://scripts/world/home_key.gd")
+	var press := InputEventAction.new()
+	press.action = "hotbar_2"
+	press.pressed = true
+	assert_true(key_script.refusal_binding(press, ["food", "home_key", "", "", ""], false, false))
+	assert_false(key_script.refusal_binding(press, ["home_key", "food"], false, false), "other assigned items are untouched")
+	assert_false(key_script.refusal_binding(press, ["food", "home_key"], true, true), "aim cancel/throw is not key use")
+	press.pressed = false
+	assert_false(key_script.refusal_binding(press, ["food", "home_key"], false, false), "release is not another press")
+	press.pressed = true
+	press.action = "combat_item_1"
+	assert_true(key_script.refusal_binding(press, ["home_key", ""], true, false), "slot1 uses actual combat mapping")
+	assert_false(key_script.refusal_binding(press, ["home_key", ""], false, false))
+	press.action = "hotbar_1"
+	assert_false(key_script.refusal_binding(press, ["home_key", ""], true, false), "shared combat cancel mapping is untouched")
+	assert_true(key_script.refusal_binding(press, ["home_key", ""], false, false))
+
 func test_production_raise_uses_host_clock_despite_capped_frame_delta() -> void:
 	var key := ClockKey.new()
 	var game := GameDouble.new()

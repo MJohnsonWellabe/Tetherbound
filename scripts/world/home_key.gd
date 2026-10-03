@@ -34,9 +34,14 @@ var _fade_layer: CanvasLayer
 var _fade_rect: ColorRect
 var _fade_generation: int = 0
 var _fade_locked: bool = false
+var _refusal_layer: CanvasLayer
+var _refusal_panel: PanelContainer
+var _refusal_label: Label
+var _refusal_until_msec := 0
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_settings = (DATA.json("res://data/config/portals.json") as Dictionary).get("home_key", {}).duplicate(true)
 	_game = get_node_or_null(^"/root/Game")
 	if _remote_only:
@@ -50,6 +55,32 @@ func _ready() -> void:
 
 func owns_input() -> bool:
 	return _fade_locked or _closing_edge or _phase in ["confirming", "raising", "finishing", "travelling", "cancelling"]
+
+
+## A modal/fight can suspend the HUD before its hotbar poll. Explain an
+## assigned Home Key press without dispatching travel or consuming the
+## modal's own input. Ordinary successful use still belongs to the HUD.
+func _input(event: InputEvent) -> void:
+	if _remote_only or _phase != "idle" or _game == null or not is_inside_tree(): return
+	var actor: Node3D = _game.call("find_player")
+	var scene := get_tree().current_scene
+	if actor == null or scene == null or not scene.is_ancestor_of(actor): return
+	var inventory: RefCounted = _game.get("inventory")
+	if inventory == null or inventory.call("count", "home_key") != 1: return
+	var combat := scene.get_node_or_null(^"CombatManager")
+	var fighting: bool = combat != null and combat.has_method("presenting_fight") and combat.call("presenting_fight") == true
+	var aiming: bool = combat != null and combat.has_method("is_aiming") and combat.call("is_aiming") == true
+	if not refusal_binding(event, _game.get("hotbar"), fighting, aiming): return
+	var reason := str(_game.call("home_key_refusal"))
+	if not reason.is_empty(): _refuse(reason)
+
+static func refusal_binding(event: InputEvent, slots: Array, fighting: bool, aiming: bool) -> bool:
+	if event == null or aiming: return false
+	for i in mini(slots.size(), 5):
+		if slots[i] != "home_key": continue
+		var action: String = "combat_item_1" if fighting and i == 0 else "hotbar_%d" % (i + 1)
+		if event.is_action_pressed(action, false): return true
+	return false
 
 
 func use() -> bool:
@@ -89,6 +120,9 @@ func _now_msec() -> int:
 
 
 func _process(_delta: float) -> void:
+	if is_instance_valid(_refusal_panel) and _refusal_until_msec > 0 and _now_msec() >= _refusal_until_msec:
+		_refusal_panel.hide()
+		_refusal_until_msec = 0
 	if _closing_edge and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("hotbar_1"):
 		_closing_edge = false
 	if _remote_only:
@@ -486,5 +520,35 @@ func _refuse(reason: String) -> void:
 	if now - _refusal_at < float(_settings.get("refusal_interval_seconds", 2.0)):
 		return
 	_refusal_at = now
+	_show_refusal(reason)
 	if _game != null and _game.has_method("push_world_message"):
 		_game.call("push_world_message", reason)
+
+func _show_refusal(reason: String) -> void:
+	if reason.is_empty() or not is_inside_tree(): return
+	if not is_instance_valid(_refusal_layer):
+		_refusal_layer = CanvasLayer.new()
+		_refusal_layer.name = "HomeKeyMessage"
+		_refusal_layer.layer = UI_TOKENS.LAYER_MENU + 1
+		_refusal_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+		_refusal_panel = PanelContainer.new()
+		_refusal_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_refusal_panel.anchor_left = .25
+		_refusal_panel.anchor_right = .75
+		_refusal_panel.offset_top = 64.0
+		_refusal_panel.offset_bottom = 124.0
+		_refusal_panel.add_theme_stylebox_override("panel", UI_TOKENS.panel_box(UI_TOKENS.BG_DEEP))
+		_refusal_label = Label.new()
+		_refusal_label.name = "Reason"
+		_refusal_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_refusal_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_refusal_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_refusal_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		_refusal_label.add_theme_color_override("font_color", UI_TOKENS.TEXT_PRIMARY)
+		_refusal_label.add_theme_font_size_override("font_size", 24)
+		_refusal_panel.add_child(_refusal_label)
+		_refusal_layer.add_child(_refusal_panel)
+		add_child(_refusal_layer)
+	_refusal_label.text = reason
+	_refusal_panel.show()
+	_refusal_until_msec = _now_msec() + maxi(2500, int(float(_settings.get("refusal_interval_seconds", 2.0)) * 1000.0))
