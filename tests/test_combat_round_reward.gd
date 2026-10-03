@@ -106,8 +106,8 @@ func test_actual_settled_HP_and_reduced_round_award_keep_all_five_original_cards
 	if result.get("ok") != true: return
 	assert_eq(var_to_bytes(before), original)
 	assert_eq(result.state.party.size(), 5)
-	assert_eq(result.awards[before.party[0].uid], P.scaled_combat_xp(21, P.config(), E.config()))
-	assert_eq(result.awards[before.party[1].uid], P.scaled_party_combat_xp(21, P.config(), E.config()))
+	assert_eq(result.awards[before.party[0].uid].authored_award, P.scaled_combat_xp(21, P.config(), E.config()))
+	assert_eq(result.awards[before.party[1].uid].authored_award, P.scaled_party_combat_xp(21, P.config(), E.config()))
 	for index: int in 5:
 		assert_eq(result.state.party[index].uid, before.party[index].uid)
 		assert_eq(result.state.party[index].battles_fought, before.party[index].battles_fought + (0 if index == 4 else 1))
@@ -269,13 +269,14 @@ func test_original_round_owner_BOOL_failure_retries_disk_once_without_replacing_
 	var ledger := LEDGER.new(game.world)
 	assert_true(authority.bind_world("resource-namespace"))
 	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).ok)
-	assert_true(ledger.commit_creature_training_delivery(row, 2).ok)
-	assert_true(writer.save_world_prepared(game, "resource-slot"))
-	# The real actor has already received the exact authenticated host damage.
-	game.local.party.at(0).hp = float(duty.context.settled_vitals[0].hp)
 	assert_true(writer.save_character_prepared(game, DATA.CHARACTER))
 	var path: String = writer.character_store.call("path_for", DATA.CHARACTER)
 	var old_disk := FileAccess.get_file_as_bytes(path)
+	assert_true(ledger.commit_creature_training_delivery(row, 2).ok)
+	assert_true(writer.save_world_prepared(game, "resource-slot"))
+	# Controlled terminal actor fixture; actual typed HP BOOL/ACK is exercised
+	# separately by the interleaved care/HP test below.
+	game.local.party.at(0).hp = float(duty.context.settled_vitals[0].hp)
 	var instances: Array = game.local.party.members().duplicate()
 	writer.refuse_owner = true
 	var failed := OWNER.apply_owner(game, row)
