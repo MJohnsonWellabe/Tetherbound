@@ -34,7 +34,7 @@ static func start(tree: SceneTree) -> bool:
 		"configuration": cfg, "configuration_sha256": FileAccess.get_sha256("res://data/config/creature_condition.json"),
 		"chain_sha256": "", "game_ref": weakref(game), "world_ref": weakref(game.world), "session_ref": weakref(game.session),
 		"character_id": str(game.local.character_id), "world_namespace": str(game.world.reward_delivery_namespace), "epoch": epoch}
-	file.store_line(JSON.stringify({"source": "Game actual tick_buffs then CreatureCondition.tick", "condition_config": cfg,
+	file.store_line(JSON.stringify({"source": "Game actual tick_buffs; CreatureCondition.tick when condition_tick_applied", "condition_config": cfg,
 		"configuration_sha256": state.configuration_sha256, "max_events": MAX_EVENTS, "max_bytes": MAX_BYTES,
 		"character_id": state.character_id, "world_namespace": state.world_namespace, "session_epoch": state.epoch}))
 	var observer := func(packet: Dictionary) -> void: _tick(state, packet)
@@ -95,6 +95,7 @@ static func _tick(state: Dictionary, packet: Dictionary) -> void:
 				anchor.buffs[packet.uid] = packet.buffs_after.duplicate(true)
 			break
 	var line := JSON.stringify({"s": sequence, "u": packet.uid, "d": delta,
+		"condition_tick_applied": packet.get("condition_tick_applied", true),
 		"b": JSON.stringify(packet.before).sha256_text(), "a": JSON.stringify(packet.after).sha256_text()})
 	if state.file.get_position() + line.to_utf8_buffer().size() + 1 > MAX_BYTES:
 		state.error = "Actual passive evidence overflow; no transition dropped"; return
@@ -106,6 +107,8 @@ static func _tick(state: Dictionary, packet: Dictionary) -> void:
 	state.events += 1
 
 static func replay_packet(packet: Dictionary, configuration: Dictionary) -> Dictionary:
+	if packet.has("condition_tick_applied") and not packet.condition_tick_applied is bool:
+		return {"error": "Malformed actual condition-clock observation"}
 	var clone: RefCounted = INSTANCE.new()
 	var properties := {}
 	for property: Dictionary in clone.get_property_list(): properties[str(property.name)] = property
@@ -129,7 +132,8 @@ static func replay_packet(packet: Dictionary, configuration: Dictionary) -> Dict
 	var roundtrip: Dictionary = saver.call("_party_to_array", source)[0]
 	if not equal(roundtrip, packet.before): return {"error": "Detached full-card replay did not roundtrip exactly"}
 	clone.call("tick_buffs", float(packet.delta))
-	CONDITION.tick(clone, configuration, float(packet.delta))
+	if packet.get("condition_tick_applied", true) == true:
+		CONDITION.tick(clone, configuration, float(packet.delta))
 	var predicted: Dictionary = saver.call("_party_to_array", source)[0]
 	if not equal(predicted, packet.after) or not equal(clone.get("active_buffs"), packet.buffs_after):
 		return {"error": "Actual passive update differs from independently replayed shipping timers"}
@@ -179,4 +183,3 @@ static func equal(left: Variant, right: Variant) -> bool:
 		if typeof(left) != typeof(right) and (abs(float(left)) > 9007199254740991.0 or abs(float(right)) > 9007199254740991.0): return false
 		return left == right
 	return typeof(left) == typeof(right) and left == right
-

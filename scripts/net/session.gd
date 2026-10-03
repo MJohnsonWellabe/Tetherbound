@@ -1,5 +1,6 @@
 extends Node
 const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
@@ -2915,7 +2916,18 @@ func _game() -> Node:
 ## Equipment comes from the one admitted personal record; legacy realm power
 ## is inactive in this read view until protected personal hang is implemented.
 func admitted_character_state(peer_id: int) -> Dictionary:
-	if not is_host() or not _bind_character_authority():
+	var trace := BACKGROUND_TRACE.begin("admission.total", peer_id)
+	var result := _admitted_character_state_work(peer_id)
+	BACKGROUND_TRACE.end("admission.total", trace, peer_id)
+	return result
+
+
+func _admitted_character_state_work(peer_id: int) -> Dictionary:
+	if not is_host(): return {}
+	var binding_trace := BACKGROUND_TRACE.begin("admission.bind_authority", peer_id)
+	var bound := _bind_character_authority()
+	BACKGROUND_TRACE.end("admission.bind_authority", binding_trace, peer_id)
+	if not bound:
 		return {}
 	var character := _authority_character(peer_id)
 	if character.is_empty():
@@ -2923,20 +2935,33 @@ func admitted_character_state(peer_id: int) -> Dictionary:
 	if peer_id == local_peer_id():
 		var game := _game()
 		if game != null and game.get("local") != null:
+			var projection_trace := BACKGROUND_TRACE.begin("admission.local_save_projection", peer_id)
 			var portable := CHARACTER_AUTHORITY.portable_projection(game.get("local").save_data())
+			BACKGROUND_TRACE.end("admission.local_save_projection", projection_trace, peer_id)
+			var refresh_trace := BACKGROUND_TRACE.begin("admission.refresh_host_local", peer_id)
 			var refreshed: Dictionary = _character_authority.call("refresh_host_local", portable, character)
+			BACKGROUND_TRACE.end("admission.refresh_host_local", refresh_trace, peer_id)
 			if not bool(refreshed.get("ok", false)):
 				return {}
+			var vitals_trace := BACKGROUND_TRACE.begin("admission.recover_vitals", peer_id)
 			var recovered: Dictionary = _character_authority.call("recover_durable_vitals", character, game.get("world").reward_deliveries)
+			BACKGROUND_TRACE.end("admission.recover_vitals", vitals_trace, peer_id)
 			if not bool(recovered.get("ok", false)):
 				return {}
+	var training_trace := BACKGROUND_TRACE.begin("admission.recover_training", peer_id)
 	var training_recovered: Dictionary = _character_authority.call("recover_durable_training", character, _game().get("world").reward_deliveries)
+	BACKGROUND_TRACE.end("admission.recover_training", training_trace, peer_id)
 	if training_recovered.get("ok") != true: return {}
 	var game_for_portals := _game()
 	if game_for_portals != null and game_for_portals.get("world") != null:
+		var portals_trace := BACKGROUND_TRACE.begin("admission.recover_portals", peer_id)
 		var portals: Dictionary = _character_authority.call("recover_durable_portals", character, game_for_portals.get("world").reward_deliveries)
+		BACKGROUND_TRACE.end("admission.recover_portals", portals_trace, peer_id)
 		if portals.get("ok") != true: return {}
-	return _character_authority.call("actor_stat_state", character)
+	var actor_trace := BACKGROUND_TRACE.begin("admission.actor_stat_state", peer_id)
+	var result: Dictionary = _character_authority.call("actor_stat_state", character)
+	BACKGROUND_TRACE.end("admission.actor_stat_state", actor_trace, peer_id)
+	return result
 
 
 func admitted_character_revision(peer_id: int) -> int:

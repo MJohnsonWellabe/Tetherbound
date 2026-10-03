@@ -101,7 +101,7 @@ func test_owner_plan_preserves_progress_maps_and_every_nonpassive_field() -> voi
 	plan.state.party[0].hp = 0.0
 	assert_true(PREP.valid(prepared, event), "plan output is detached")
 	for field: String in PASSIVE.COUNTERS:
-		var ahead := prepared.after.duplicate(true)
+		var ahead: Dictionary = prepared.after.duplicate(true)
 		ahead.party[0][field] += 1
 		assert_eq(PREP.owner_plan(ahead, prepared, event, discoveries).code, "research_passive_unobserved_progress")
 	var healed := before.duplicate(true)
@@ -178,7 +178,7 @@ func test_passive_counters_keep_existing_storage_range_and_exact_owner_progress(
 	before.party[0].landmarks_visited_together = 9007199254740992
 	var prepared := _prepared(event, before)
 	assert_true(PREP.valid(prepared, event), "no new gameplay counter ceiling")
-	var ahead := prepared.after.duplicate(true)
+	var ahead: Dictionary = prepared.after.duplicate(true)
 	ahead.party[0].landmarks_visited_together += 1
 	assert_eq(PREP.owner_plan(ahead, prepared, event, {}).code, "research_passive_unobserved_progress", "integer history is not rounded to float for comparison")
 	before.party[0].landmarks_visited_together = 3.0

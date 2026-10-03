@@ -1,4 +1,5 @@
 extends RefCounted
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 ## Groom's preparation uses the existing admitted record and character file.
 ## This transient observer carries no inventory, HP, reward or receipt ledger.
@@ -260,11 +261,19 @@ func tick(delta: float) -> void:
 	_poll_left -= delta
 	if _poll_left > 0.0: return
 	_poll_left = 0.25
+	var trace := BACKGROUND_TRACE.begin("groom.poll")
 	if session.call("is_host") == true:
+		var prune_trace := BACKGROUND_TRACE.begin("groom.prune_departed")
 		_prune_departed()
+		BACKGROUND_TRACE.end("groom.prune_departed", prune_trace)
+		var sample_trace := BACKGROUND_TRACE.begin("groom.sample_host")
 		_sample_host()
+		BACKGROUND_TRACE.end("groom.sample_host", sample_trace)
 	elif not pending.is_empty() and session.call("snapshot_ready") == true:
+		var retry_trace := BACKGROUND_TRACE.begin("groom.retry_owner")
 		_retry_owner()
+		BACKGROUND_TRACE.end("groom.retry_owner", retry_trace)
+	BACKGROUND_TRACE.end("groom.poll", trace)
 
 func _prune_departed() -> void:
 	var session := owner()

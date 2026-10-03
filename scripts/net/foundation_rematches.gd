@@ -1,4 +1,5 @@
 extends Node
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 ## Mounted original trainer bodies supply the authored roster and arena.
 ## Outcomes are retained before the director releases their stable census.
@@ -25,6 +26,11 @@ func _process(delta: float) -> void:
 	_left -= delta
 	if _left > 0.0: return
 	_left = 1.0
+	var trace := BACKGROUND_TRACE.begin("rematches.poll")
+	_poll_background_work()
+	BACKGROUND_TRACE.end("rematches.poll", trace)
+
+func _poll_background_work() -> void:
 	var session := get_parent().get_parent()
 	if RULES.config().get("runtime_enabled") != true or session.call("snapshot_ready") != true: return
 	var epoch: String = session.call("_altar_current_epoch")
@@ -35,16 +41,22 @@ func _process(delta: float) -> void:
 	var game: Node = session.call("_game")
 	if game == null or game.get("local") == null: return
 	var realms := {str(game.current_realm): true}
+	var admissions_trace := BACKGROUND_TRACE.begin("rematches.admission_loop")
 	if session.call("is_host") == true:
 		for row: Dictionary in session.get("_registry").call("rows"):
 			if not session.call("admitted_character_state", int(row.get("peer_id", 0))).is_empty(): realms[str(row.get("realm", ""))] = true
+	BACKGROUND_TRACE.end("rematches.admission_loop", admissions_trace)
+	var mount_trace := BACKGROUND_TRACE.begin("rematches.mount_realms")
 	for realm: String in realms: _mount_realm(realm)
+	BACKGROUND_TRACE.end("rematches.mount_realms", mount_trace)
 	if not _pending.is_empty():
 		if _pending.character_id != game.local.character_id or _pending.world.get_ref() != game.world or _pending.realm != game.current_realm:
 			_pending.clear()
 		else:
 			var intent: Dictionary = _pending.intent
+			var pending_trace := BACKGROUND_TRACE.begin("rematches.retry_pending")
 			session.call("foundation_rematch_start", intent.trainer_id, intent.tier, intent.creature_uid, intent.action_id)
+			BACKGROUND_TRACE.end("rematches.retry_pending", pending_trace)
 
 func _director(realm: Node3D) -> Node:
 	if realm == null: return null

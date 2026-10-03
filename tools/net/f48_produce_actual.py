@@ -120,12 +120,14 @@ def main() -> int:
         # Attribute a repeated liveness failure without extending any deadline.
         # This existing observer measures real heartbeat snapshots/encoding.
         env["TB_PEER_PHASE_TRACE"] = "1"
+        env["TB_BACKGROUND_WORK_TRACE"] = "1"
     script = "tools/net/f48_prepare_boss_four.gd" if args.producer == "boss_four" else "tools/net/f48_prepare.gd"
     command = [args.godot, "--headless", "--path", str(ROOT), "--script", script]
     with configuration_overlay(ROOT, profile) as pins:
         fixture.write(output / "invocation.json", {"command": command, "profile_sha256": fixture.digest(profile_path),
                       "source_manifest_sha256": fixture.digest(bundle / "manifest.json"), "effective_configuration": pins,
                       "peer_phase_trace": env.get("TB_PEER_PHASE_TRACE") == "1",
+                      "background_work_trace": env.get("TB_BACKGROUND_WORK_TRACE") == "1",
                       "acceptance_credit": False, "ready_ci_bundle": False})
         with (output / "coordinator.log").open("wb") as log:
             result = subprocess.run(command, cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT, check=False)

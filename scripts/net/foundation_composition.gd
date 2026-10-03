@@ -1,4 +1,5 @@
 extends Node
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 ## Actual production lifetime composition under Game/Session.
 var _host: Node
@@ -51,9 +52,20 @@ func _process(delta: float) -> void:
 	_left -= delta
 	if _left > 0.0: return
 	_left = 1.0
+	var trace := BACKGROUND_TRACE.begin("composition.poll")
+	_poll_background_work()
+	BACKGROUND_TRACE.end("composition.poll", trace)
+
+func _poll_background_work() -> void:
+	var camp_trace := BACKGROUND_TRACE.begin("composition.retry_camp")
 	get_parent().call("_retry_foundation_camp")
+	BACKGROUND_TRACE.end("composition.retry_camp", camp_trace)
+	var events_trace := BACKGROUND_TRACE.begin("composition.retry_events")
 	get_parent().call("_retry_foundation_events")
+	BACKGROUND_TRACE.end("composition.retry_events", events_trace)
+	var sites_trace := BACKGROUND_TRACE.begin("composition.mount_master_sites")
 	_mount_occupied_master_sites()
+	BACKGROUND_TRACE.end("composition.mount_master_sites", sites_trace)
 	if _board != null and _board.get_ref() != null: return
 	# Resolve Halda's actual grounded tournament board, never a packet name.
 	# Tournaments join their group; walking every node of the tree each second

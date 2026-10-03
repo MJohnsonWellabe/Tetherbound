@@ -1,4 +1,5 @@
 extends Node
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 ## Host-internal composition adapter. Session authenticates peer/generation
 ## before calling claim; event tokens resolve ONLY through the real host
@@ -23,6 +24,11 @@ func _process(delta: float) -> void:
 	_poll_left -= delta
 	if _poll_left > 0.0: return
 	_poll_left = float(BOARD.config().get("host_poll_seconds", 1.0))
+	var trace := BACKGROUND_TRACE.begin("bounty.poll")
+	_poll_background_work()
+	BACKGROUND_TRACE.end("bounty.poll", trace)
+
+func _poll_background_work() -> void:
 	# Session's peer registry includes admitted guest identity. Never enumerate
 	# owner-supplied character IDs or persist another admission table here.
 	var peers: Array[int] = [int(_session.call("local_peer_id"))]
@@ -30,14 +36,18 @@ func _process(delta: float) -> void:
 		var peer: int = int(row.get("peer_id", 0))
 		if peer > 0 and not peers.has(peer): peers.append(peer)
 	for peer: int in peers:
+		var context_trace := BACKGROUND_TRACE.begin("bounty.context", peer)
 		var context := _context(peer)
+		BACKGROUND_TRACE.end("bounty.context", context_trace, peer)
 		if context.is_empty() or context.get("clock_confirmed") != true: continue
 		var registry: RefCounted = _session.get("_character_authority")
 		var current: Dictionary = registry.call("state", context.character_id)
 		var board: Dictionary = current.redesign_character.get("bounties", BOARD.empty_board())
 		if board.get("anchor_world") != context.get("world_namespace") \
 			or int(board.get("anchor_day", 0)) < int(context.get("host_day", 0)):
+			var morning_trace := BACKGROUND_TRACE.begin("bounty.morning", peer)
 			morning(peer)
+			BACKGROUND_TRACE.end("bounty.morning", morning_trace, peer)
 
 func _context(peer: int) -> Dictionary:
 	if BOARD.config().get("runtime_enabled") != true or not is_instance_valid(_session) \

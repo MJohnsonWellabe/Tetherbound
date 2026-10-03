@@ -76,6 +76,50 @@ func test_integral_json_card_fields_roundtrip_without_losing_full_fields() -> vo
 	assert_false(result.has("error"), str(result))
 	assert_true(PROOF.equal(result.after, parsed.before))
 
+func test_explicit_condition_clock_keeps_actual_full_tick() -> void:
+	packet.condition_tick_applied = true
+	PROOF._tick(state, packet)
+	assert_eq(state.error, "")
+	assert_eq(state.anchors.original.error, "")
+	assert_true(PROOF.equal(state.anchors.original.expected, [packet.after]))
+	assert_eq(state.events, 1)
+
+func test_buff_only_observation_preserves_full_card_and_replays_actual_buffs() -> void:
+	packet.condition_tick_applied = false
+	packet.after = packet.before.duplicate(true)
+	PROOF._tick(state, packet)
+	assert_eq(state.error, "")
+	assert_eq(state.anchors.original.error, "")
+	assert_true(PROOF.equal(state.anchors.original.expected, [packet.before]))
+	assert_true(state.anchors.original.buffs[packet.uid].is_empty(), "real buff expiry still advances")
+	assert_true(packet.after.rested, "no condition expiry is invented")
+	assert_eq(packet.after.rested_seconds_left, 0.25)
+	assert_eq(state.events, 1)
+	state.file.flush()
+	var recorded: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path).strip_edges())
+	assert_eq(recorded.condition_tick_applied, false, "retained diagnostic identifies the actual clock")
+
+func test_buff_only_cannot_excuse_condition_change_or_unadvanced_buffs() -> void:
+	packet.condition_tick_applied = false
+	assert_true(PROOF.replay_packet(packet, CONDITION.config()).has("error"), "condition actually changed")
+	packet.after = packet.before.duplicate(true)
+	packet.buffs_after = packet.buffs_before.duplicate(true)
+	assert_true(PROOF.replay_packet(packet, CONDITION.config()).has("error"), "buff clock must still advance")
+	packet.buffs_after = []
+	packet.after.attack += 1.0
+	assert_true(PROOF.replay_packet(packet, CONDITION.config()).has("error"), "unrelated full-card change still fails")
+
+func test_malformed_condition_clock_observation_is_refused_without_evidence() -> void:
+	for invalid: Variant in [null, 0, 1, 0.0, 1.0, "false", [], {}]:
+		packet.condition_tick_applied = invalid
+		assert_true(PROOF.replay_packet(packet, CONDITION.config()).has("error"))
+		PROOF._tick(state, packet)
+		assert_eq(state.error, "Malformed actual condition-clock observation")
+		assert_eq(state.events, 0)
+		assert_eq(state.sequence, -1)
+		assert_eq(state.file.get_position(), 0)
+		state.error = ""
+
 func test_missing_sequence_is_refused() -> void:
 	state.sequence = 1
 	packet.sequence = 3

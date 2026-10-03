@@ -127,7 +127,7 @@ func test_revision_core_hash_and_retained_source_changes_refuse_without_mutation
 	var replacement := PREP.make(event, event.duties[0], before, 0, "current-epoch", 2.0, 4.0, 1,
 		{"meadows": ["observed_landmark"]}, GROOM.SECOND)
 	assert_false(authority.retain_research_preparation(DATA.CHARACTER, replacement, event), "equal after-state cannot substitute another original")
-	var later := prepared.after.duplicate(true)
+	var later: Dictionary = prepared.after.duplicate(true)
 	later.party[0].distance_m_together += 1.0
 	assert_true(authority.refresh_host_local(later, DATA.CHARACTER).ok)
 	assert_false(authority.commit_research_preparation(DATA.CHARACTER, prepared, event))

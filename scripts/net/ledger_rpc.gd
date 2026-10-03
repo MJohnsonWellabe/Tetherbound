@@ -1,4 +1,5 @@
 extends Node
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 signal transaction_boundary(observation: Dictionary)
 
@@ -178,9 +179,17 @@ func _process(delta: float) -> void:
 	if _satchel_poll > 0.0:
 		return
 	_satchel_poll = 0.5
+	var trace := BACKGROUND_TRACE.begin("ledger.poll")
+	var satchel_trace := BACKGROUND_TRACE.begin("ledger.reconcile_satchel")
 	reconcile_satchel_escrow()
+	BACKGROUND_TRACE.end("ledger.reconcile_satchel", satchel_trace)
+	var rewards_trace := BACKGROUND_TRACE.begin("ledger.reconcile_rewards")
 	reconcile_reward_deliveries()
+	BACKGROUND_TRACE.end("ledger.reconcile_rewards", rewards_trace)
+	var portals_trace := BACKGROUND_TRACE.begin("ledger.reconcile_portals")
 	reconcile_portal_deliveries()
+	BACKGROUND_TRACE.end("ledger.reconcile_portals", portals_trace)
+	BACKGROUND_TRACE.end("ledger.poll", trace)
 
 func drop_satchel(at: Vector3, realm: String) -> Dictionary:
 	var game := _game()

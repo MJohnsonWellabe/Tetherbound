@@ -1,6 +1,7 @@
 extends Node
 
-## Read-only proof observation around the unchanged actual passive clocks.
+## Read-only proof observation around the actual buff/condition clocks.
+## condition_tick_applied distinguishes host-owned care from a local tick.
 ## No listener means no additional card serialization or observer snapshots.
 signal party_passive_tick(observation: Dictionary)
 var _passive_observation_sequence: int = 0
@@ -1077,6 +1078,8 @@ func _process(delta: float) -> void:
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
+	var canonical_passive := _canonical_guest_passive()
+	if canonical_passive: _travel_pos_valid = false
 	_tick_autosave(delta)
 	_tick_creature_bed_recovery(delta)
 	_watch_pending_catch()
@@ -1102,7 +1105,8 @@ func _process(delta: float) -> void:
 			# front: a five that only the active companion feeds is a five in
 			# name only. Paused menus pause the tree and this with it, so
 			# reading the backpack costs no nourishment.
-			CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
+			if not canonical_passive:
+				CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
 			if watched:
 				_passive_observation_sequence += 1
 				party_passive_tick.emit({"sequence": _passive_observation_sequence, "delta": delta,
@@ -1111,7 +1115,7 @@ func _process(delta: float) -> void:
 					"uid": str(member.get("uid")), "before": before,
 					"after": SAVE_GAME.new().call("_party_to_array", source)[0],
 					"buffs_before": buffs_before, "buffs_after": (member.get("active_buffs") as Array).duplicate(true),
-					"condition_config": condition_cfg.duplicate(true)})
+					"condition_config": condition_cfg.duplicate(true), "condition_tick_applied": not canonical_passive})
 	var progression_revision: int = int(progression.get("revision"))
 	var realm_changed: bool = bool(quest_log.call("set_realm", current_realm))
 	var rung_moved := progression_revision != _last_progression_revision or realm_changed
@@ -1142,20 +1146,27 @@ func _process(delta: float) -> void:
 	# player's own delicate movement/collision code stays untouched.
 	var landmarks_before := int(map.discovered_landmark_count())
 	var here := player.global_position
-	if _travel_pos_valid:
+	if not canonical_passive and _travel_pos_valid:
 		var stepped := here.distance_to(_travel_pos)
 		if stepped > 0.0 and stepped <= _TRAVEL_TELEPORT_GUARD_M and party != null:
 			for member: Variant in (party.call("members") as Array):
 				BOND_MILESTONES.credit_distance(member as RefCounted, stepped)
 	_travel_pos = here
-	_travel_pos_valid = true
+	_travel_pos_valid = not canonical_passive
 
 	map.mark_visited(here)
 	map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
-	if landmarks_gained > 0 and party != null:
+	if not canonical_passive and landmarks_gained > 0 and party != null:
 		for member: Variant in (party.call("members") as Array):
 			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)
+
+
+## Session supplies the authenticated ownership decision. Until that capability
+## exists, solo/host/legacy callers keep their existing local passive writers.
+func _canonical_guest_passive() -> bool:
+	return session != null and session.has_method("canonical_guest_passive") \
+		and session.call("canonical_guest_passive") == true
 
 
 ## R4.10. While a catch is waiting on the release ceremony, the Team screen is
