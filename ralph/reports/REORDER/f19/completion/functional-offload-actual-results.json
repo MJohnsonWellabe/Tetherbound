@@ -244,9 +244,11 @@
     "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
   },
   "next_diagnostic": {
+    "source_commit": "d77bc8f4ef28c36d71b4ce2a20c334c5ac8b2830",
+    "run": 37093868386,
     "script": "tests/probe_f19_world_material_lifetime.gd",
-    "scope": "Original full-world spaceaccept/save/reload; baseline versus all exposed geometry Mesh/Material resources sampled again immediately before actual world deletion. Prior readiness-only scans could miss post-choice or post-load creations/replacements. Log newly retained Material owner paths without altering product state.",
-    "status": "Prepared temporal coverage expansion; not yet dispatched"
+    "scope": "Original full-world spaceaccept/save/reload; baseline versus exposed Mesh/MultiMesh/Material and particle resources rescanned immediately before actual world deletion; new Material owner samples; diagnosis only",
+    "status": "Dispatched; checkout step confirmed live; no terminal result"
   },
   "particle_material_counterfactual_r4": {
     "kind": "f19_actual_world_particle_material_counterfactual",

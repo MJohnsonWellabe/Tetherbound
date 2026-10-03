@@ -154,10 +154,11 @@
   "latest_remote_audit": "functional-offload-actual-results.json",
   "latest_material_diagnostic": "populated-terrain-component-r2.json",
   "latest_material_probe": {
-    "run": 37093187450,
-    "source_commit": "0d0ba1dabf65112e76bbd5f5ef97bfe5cf696624",
-    "acceptance": false,
-    "status": "Terminal negative component reproduction: four populated actual Terrain3D cases,64regions each,0engine/0script errors; full-world remains unproven"
+    "source_commit": "d77bc8f4ef28c36d71b4ce2a20c334c5ac8b2830",
+    "run": 37093868386,
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original full-world spaceaccept/save/reload; baseline versus exposed Mesh/MultiMesh/Material and particle resources rescanned immediately before actual world deletion; new Material owner samples; diagnosis only",
+    "status": "Dispatched; checkout step confirmed live; no terminal result"
   },
   "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
   "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
