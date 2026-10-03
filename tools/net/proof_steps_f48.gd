@@ -476,7 +476,7 @@ static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
 	for _frame: int in 15: await tree.physics_frame # Existing modal release wait; no deadline extension.
 	var after := _capture_input_state(tree)
 	data["after"] = after
-	var released := is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
+	var released: bool = is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
 		and tree.root.get_node_or_null(^"Game") == game and game.session == session and game.local == local and game.world == world \
 		and session.call("_altar_current_epoch") == epoch \
 		and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures \
