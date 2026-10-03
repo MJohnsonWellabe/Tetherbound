@@ -600,6 +600,1177 @@
       "outcome": "26 checks/2 failed only new initial native capsule cast and complete clearance. Original21 final support/stable native floor/overlap/wall/remount/hole checks pass. No freed-node or duplicate-Callable errors. Native interpolation warning retained.",
       "fixtures": "Actual physical queries in isolated probe bodies/geometries; disclosed fixture transforms. Not ordinary earned gameplay, co-op, visual or audio proof.",
       "followup": "Read-only per-stage actual cast/contact diagnostic pending; production safety predicates and original assertions retained."
+    },
+    {
+      "id": 37089399185,
+      "display_title": "render f18-arrival-diagnostic-r4 @ 9715d319a796635029bec2954d78743c190fc806",
+      "head_branch": "tb/integration",
+      "head_sha": "d7b5677dc7b86ea4bb244f6089c2e0f177878d92",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37089399185",
+      "checkout": "9715d319a796635029bec2954d78743c190fc806",
+      "artifact_id": 11262011208,
+      "raw_artifact": "arrival-r4-remote.zip",
+      "sha256": "b60498d50f5bdbc99f457c442ca54307ad285d7415f807ac15cb594f5f455cd7",
+      "native_exit_code": null,
+      "native_exit_limit": "Artifact contains no exit_code; Actions failure and logged assertions retained.",
+      "error_lines": [],
+      "script_error_lines": [],
+      "assertion_failure_lines": [
+        "F18 SUPPORT FAIL: initial full-capsule solver accepts the actual Hall slab",
+        "F18 SUPPORT FAIL: initial full-capsule solver accepts the actual Hall slab clears the complete capsule",
+        "F18 SUPPORT FAIL: mirrored walkable slope -1.0 uses actual full-capsule cast",
+        "F18 SUPPORT FAIL: mirrored walkable slope -1.0 uses actual full-capsule cast clears the complete capsule",
+        "F18 SUPPORT FAIL: mirrored walkable slope 1.0 uses actual full-capsule cast",
+        "F18 SUPPORT FAIL: mirrored walkable slope 1.0 uses actual full-capsule cast clears the complete capsule"
+      ],
+      "warning_lines": [],
+      "result_lines": [
+        "F18_INITIAL_CAPSULE_DIAGNOSTIC {\"actor_position\":[6.0,1.0,0.0],\"actor_transform_unchanged\":true,\"candidate\":{\"cast_bracket_width\":0.00312500004656613,\"center_floor\":0.010000005364418,\"distance_to_physical_center\":0.000999985262751579,\"highest_sample\":0.010000005364418,\"maximum_y\":0.0141250054584816,\"origin\":[0.0,0.0109999906271696,0.0],\"within_maximum_y\":true,\"within_radius\":true},\"case\":\"initial full-capsule solver accepts the actual Hall slab\",\"collision_mask\":1,\"end_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[0.0,0.910999894142151,0.0],\"saturated\":false},\"fractions\":[0.5,0.50390625],\"motion\":[0.0,-0.800000011920929,0.0],\"radius\":0.4,\"safe_margin\":0.00100000004749745,\"start_actor_origin\":[0.0,0.409999996423721,0.0],\"start_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[0.0,1.30999994277954,0.0],\"saturated\":false},\"surfaces\":[{\"at\":[0.0,0.300000011920929,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":223791286330,\"path\":\"/root/@Node3D@24/@StaticBody3D@26\",\"rid\":\"RID(824633720832)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.0,1.0,0.0],\"point\":[0.0,0.010000005364418,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[-0.400000005960464,0.300000011920929,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":223791286330,\"path\":\"/root/@Node3D@24/@StaticBody3D@26\",\"rid\":\"RID(824633720832)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.0,1.0,0.0],\"point\":[-0.400000005960464,0.010000005364418,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[0.400000005960464,0.300000011920929,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":223791286330,\"path\":\"/root/@Node3D@24/@StaticBody3D@26\",\"rid\":\"RID(824633720832)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.0,1.0,0.0],\"point\":[0.400000005960464,0.010000005364418,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[0.0,0.300000011920929,-0.400000005960464],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":223791286330,\"path\":\"/root/@Node3D@24/@StaticBody3D@26\",\"rid\":\"RID(824633720832)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.0,1.0,0.0],\"point\":[0.0,0.010000005364418,-0.400000005960464],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[0.0,0.300000011920929,0.400000005960464],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":223791286330,\"path\":\"/root/@Node3D@24/@StaticBody3D@26\",\"rid\":\"RID(824633720832)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.0,1.0,0.0],\"point\":[0.0,0.010000005364418,0.400000005960464],\"shape\":0,\"within_walkable_height_delta\":true}],\"target\":[0.0,0.300000011920929,0.0],\"unsafe_zero_motion\":{\"actor_origin\":[0.0,0.00687497854232788,0.0],\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":223791286330,\"path\":\"/root/@Node3D@24/@StaticBody3D@26\",\"rid\":\"RID(824633720832)\"},\"depth\":0.000578133389353752,\"normal\":[0.0,1.0,0.0],\"point\":[0.0,0.010000005364418,0.0],\"shape\":0,\"support_comparisons\":[{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0}],\"walkable\":true}],\"count\":1,\"production_contacts_on_support\":true,\"production_walkable_contact_count\":1,\"saturated\":false,\"travel\":[0.0,0.00354691687971354,0.0]}}",
+        "F18_INITIAL_CAPSULE_DIAGNOSTIC {\"actor_position\":[64.0,3.0,0.0],\"actor_transform_unchanged\":true,\"candidate\":{\"cast_bracket_width\":0.00312500004656613,\"center_floor\":0.00101694092154503,\"distance_to_physical_center\":0.0103750098496675,\"highest_sample\":0.0821013897657394,\"maximum_y\":0.086226389859803,\"origin\":[60.0,0.0113919507712126,0.0],\"within_maximum_y\":true,\"within_radius\":true},\"case\":\"mirrored walkable slope -1.0 uses actual full-capsule cast\",\"collision_mask\":1,\"end_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[60.0,0.911392033100128,0.0],\"saturated\":false},\"fractions\":[0.48828125,0.4921875],\"motion\":[0.0,-0.800000011920929,0.0],\"radius\":0.4,\"safe_margin\":0.00100000004749745,\"start_actor_origin\":[60.0,0.4010169506073,0.0],\"start_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[60.0,1.30101704597473,0.0],\"saturated\":false},\"surfaces\":[{\"at\":[60.0,0.0,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":224512706620,\"path\":\"/root/@Node3D@32/@StaticBody3D@34\",\"rid\":\"RID(927712935936)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.198669329285622,0.9800665974617,0.0],\"point\":[60.0,0.00101694092154503,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[59.5999984741211,0.0,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":224512706620,\"path\":\"/root/@Node3D@32/@StaticBody3D@34\",\"rid\":\"RID(927712935936)\"},\"height_delta\":0.0810844488441944,\"hit\":true,\"normal\":[0.198669329285622,0.9800665974617,0.0],\"point\":[59.5999984741211,0.0821013897657394,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[60.4000015258789,0.0,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":224512706620,\"path\":\"/root/@Node3D@32/@StaticBody3D@34\",\"rid\":\"RID(927712935936)\"},\"height_delta\":-0.0810844860970974,\"hit\":true,\"normal\":[0.198669329285622,0.9800665974617,0.0],\"point\":[60.4000015258789,-0.0800675451755524,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[60.0,0.0,-0.400000005960464],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":224512706620,\"path\":\"/root/@Node3D@32/@StaticBody3D@34\",\"rid\":\"RID(927712935936)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.198669329285622,0.9800665974617,0.0],\"point\":[60.0,0.00101694092154503,-0.400000005960464],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[60.0,0.0,0.400000005960464],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":224512706620,\"path\":\"/root/@Node3D@32/@StaticBody3D@34\",\"rid\":\"RID(927712935936)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.198669329285622,0.9800665974617,0.0],\"point\":[60.0,0.00101694092154503,0.400000005960464],\"shape\":0,\"within_walkable_height_delta\":true}],\"target\":[60.0,0.0,0.0],\"unsafe_zero_motion\":{\"actor_origin\":[60.0,0.00726693868637085,0.0],\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":224512706620,\"path\":\"/root/@Node3D@32/@StaticBody3D@34\",\"rid\":\"RID(927712935936)\"},\"depth\":0.000411644956329837,\"normal\":[0.198669388890266,0.9800665974617,0.0],\"point\":[59.9208984375,0.0170506499707699,0.0],\"shape\":0,\"support_comparisons\":[{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":-0.000000951811671257019},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":-0.00000107288360595703},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":-0.000000789761543273926},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":-0.000000951811671257019},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":-0.000000951811671257019}],\"walkable\":true}],\"count\":1,\"production_contacts_on_support\":true,\"production_walkable_contact_count\":1,\"saturated\":false,\"travel\":[0.000484466552734375,0.00238662306219339,0.0]}}",
+        "F18_INITIAL_CAPSULE_DIAGNOSTIC {\"actor_position\":[74.0,3.0,0.0],\"actor_transform_unchanged\":true,\"candidate\":{\"cast_bracket_width\":0.00312500004656613,\"center_floor\":0.00101694092154503,\"distance_to_physical_center\":0.0103750098496675,\"highest_sample\":0.082101434469223,\"maximum_y\":0.0862264345632866,\"origin\":[70.0,0.0113919507712126,0.0],\"within_maximum_y\":true,\"within_radius\":true},\"case\":\"mirrored walkable slope 1.0 uses actual full-capsule cast\",\"collision_mask\":1,\"end_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[70.0,0.911392033100128,0.0],\"saturated\":false},\"fractions\":[0.48828125,0.4921875],\"motion\":[0.0,-0.800000011920929,0.0],\"radius\":0.4,\"safe_margin\":0.00100000004749745,\"start_actor_origin\":[70.0,0.4010169506073,0.0],\"start_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[70.0,1.30101704597473,0.0],\"saturated\":false},\"surfaces\":[{\"at\":[70.0,0.0,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":233136195644,\"path\":\"/root/@Node3D@36/@StaticBody3D@38\",\"rid\":\"RID(944892805120)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[-0.198669329285622,0.9800665974617,0.0],\"point\":[70.0,0.00101694092154503,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[69.5999984741211,0.0,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":233136195644,\"path\":\"/root/@Node3D@36/@StaticBody3D@38\",\"rid\":\"RID(944892805120)\"},\"height_delta\":-0.0810844115912914,\"hit\":true,\"normal\":[-0.198669329285622,0.9800665974617,0.0],\"point\":[69.5999984741211,-0.0800674706697464,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[70.4000015258789,0.0,0.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":233136195644,\"path\":\"/root/@Node3D@36/@StaticBody3D@38\",\"rid\":\"RID(944892805120)\"},\"height_delta\":0.081084493547678,\"hit\":true,\"normal\":[-0.198669329285622,0.9800665974617,0.0],\"point\":[70.4000015258789,0.082101434469223,0.0],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[70.0,0.0,-0.400000005960464],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":233136195644,\"path\":\"/root/@Node3D@36/@StaticBody3D@38\",\"rid\":\"RID(944892805120)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[-0.198669329285622,0.9800665974617,0.0],\"point\":[70.0,0.00101694092154503,-0.400000005960464],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[70.0,0.0,0.400000005960464],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":233136195644,\"path\":\"/root/@Node3D@36/@StaticBody3D@38\",\"rid\":\"RID(944892805120)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[-0.198669329285622,0.9800665974617,0.0],\"point\":[70.0,0.00101694092154503,0.400000005960464],\"shape\":0,\"within_walkable_height_delta\":true}],\"target\":[70.0,0.0,0.0],\"unsafe_zero_motion\":{\"actor_origin\":[70.0,0.00726693868637085,0.0],\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":233136195644,\"path\":\"/root/@Node3D@36/@StaticBody3D@38\",\"rid\":\"RID(944892805120)\"},\"depth\":0.000413319823564962,\"normal\":[-0.198669016361237,0.98006671667099,0.0],\"point\":[70.0791015625,0.0170524194836617,0.0],\"shape\":0,\"support_comparisons\":[{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.000000782310962677002},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.000000871717929840088},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.000000610947608947754},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.000000782310962677002},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.000000782310962677002}],\"walkable\":true}],\"count\":1,\"production_contacts_on_support\":true,\"production_walkable_contact_count\":1,\"saturated\":false,\"travel\":[-0.00048065185546875,0.00238747335970402,0.0]}}",
+        "F18 SUPPORT: 41 checks, 6 failures"
+      ],
+      "outcome": "Original r3 failures unchanged: synthetic41/6failed, native26/2failed. Failure-only observations prove all five floors/startclear/cast/unsafe walkable contact-plane matching/candidate bounds/endclear true for expected positive cases; no actor movement.",
+      "actual_initial_cast_diagnostics": [
+        {
+          "actor_position": [
+            6.0,
+            1.0,
+            0.0
+          ],
+          "actor_transform_unchanged": true,
+          "candidate": {
+            "cast_bracket_width": 0.00312500004656613,
+            "center_floor": 0.010000005364418,
+            "distance_to_physical_center": 0.000999985262751579,
+            "highest_sample": 0.010000005364418,
+            "maximum_y": 0.0141250054584816,
+            "origin": [
+              0.0,
+              0.0109999906271696,
+              0.0
+            ],
+            "within_maximum_y": true,
+            "within_radius": true
+          },
+          "case": "initial full-capsule solver accepts the actual Hall slab",
+          "collision_mask": 1,
+          "end_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              0.0,
+              0.910999894142151,
+              0.0
+            ],
+            "saturated": false
+          },
+          "fractions": [
+            0.5,
+            0.50390625
+          ],
+          "motion": [
+            0.0,
+            -0.800000011920929,
+            0.0
+          ],
+          "radius": 0.4,
+          "safe_margin": 0.00100000004749745,
+          "start_actor_origin": [
+            0.0,
+            0.409999996423721,
+            0.0
+          ],
+          "start_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              0.0,
+              1.30999994277954,
+              0.0
+            ],
+            "saturated": false
+          },
+          "surfaces": [
+            {
+              "at": [
+                0.0,
+                0.300000011920929,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 223791286330,
+                "path": "/root/@Node3D@24/@StaticBody3D@26",
+                "rid": "RID(824633720832)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "point": [
+                0.0,
+                0.010000005364418,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                -0.400000005960464,
+                0.300000011920929,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 223791286330,
+                "path": "/root/@Node3D@24/@StaticBody3D@26",
+                "rid": "RID(824633720832)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "point": [
+                -0.400000005960464,
+                0.010000005364418,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                0.400000005960464,
+                0.300000011920929,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 223791286330,
+                "path": "/root/@Node3D@24/@StaticBody3D@26",
+                "rid": "RID(824633720832)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "point": [
+                0.400000005960464,
+                0.010000005364418,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                0.0,
+                0.300000011920929,
+                -0.400000005960464
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 223791286330,
+                "path": "/root/@Node3D@24/@StaticBody3D@26",
+                "rid": "RID(824633720832)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "point": [
+                0.0,
+                0.010000005364418,
+                -0.400000005960464
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                0.0,
+                0.300000011920929,
+                0.400000005960464
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 223791286330,
+                "path": "/root/@Node3D@24/@StaticBody3D@26",
+                "rid": "RID(824633720832)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "point": [
+                0.0,
+                0.010000005364418,
+                0.400000005960464
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            }
+          ],
+          "target": [
+            0.0,
+            0.300000011920929,
+            0.0
+          ],
+          "unsafe_zero_motion": {
+            "actor_origin": [
+              0.0,
+              0.00687497854232788,
+              0.0
+            ],
+            "collided": true,
+            "contacts": [
+              {
+                "collider": {
+                  "class": "StaticBody3D",
+                  "instance_id": 223791286330,
+                  "path": "/root/@Node3D@24/@StaticBody3D@26",
+                  "rid": "RID(824633720832)"
+                },
+                "depth": 0.000578133389353752,
+                "normal": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "point": [
+                  0.0,
+                  0.010000005364418,
+                  0.0
+                ],
+                "shape": 0,
+                "support_comparisons": [
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 0.0
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 0.0
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 0.0
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 0.0
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 0.0
+                  }
+                ],
+                "walkable": true
+              }
+            ],
+            "count": 1,
+            "production_contacts_on_support": true,
+            "production_walkable_contact_count": 1,
+            "saturated": false,
+            "travel": [
+              0.0,
+              0.00354691687971354,
+              0.0
+            ]
+          }
+        },
+        {
+          "actor_position": [
+            64.0,
+            3.0,
+            0.0
+          ],
+          "actor_transform_unchanged": true,
+          "candidate": {
+            "cast_bracket_width": 0.00312500004656613,
+            "center_floor": 0.00101694092154503,
+            "distance_to_physical_center": 0.0103750098496675,
+            "highest_sample": 0.0821013897657394,
+            "maximum_y": 0.086226389859803,
+            "origin": [
+              60.0,
+              0.0113919507712126,
+              0.0
+            ],
+            "within_maximum_y": true,
+            "within_radius": true
+          },
+          "case": "mirrored walkable slope -1.0 uses actual full-capsule cast",
+          "collision_mask": 1,
+          "end_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              60.0,
+              0.911392033100128,
+              0.0
+            ],
+            "saturated": false
+          },
+          "fractions": [
+            0.48828125,
+            0.4921875
+          ],
+          "motion": [
+            0.0,
+            -0.800000011920929,
+            0.0
+          ],
+          "radius": 0.4,
+          "safe_margin": 0.00100000004749745,
+          "start_actor_origin": [
+            60.0,
+            0.4010169506073,
+            0.0
+          ],
+          "start_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              60.0,
+              1.30101704597473,
+              0.0
+            ],
+            "saturated": false
+          },
+          "surfaces": [
+            {
+              "at": [
+                60.0,
+                0.0,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 224512706620,
+                "path": "/root/@Node3D@32/@StaticBody3D@34",
+                "rid": "RID(927712935936)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                60.0,
+                0.00101694092154503,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                59.5999984741211,
+                0.0,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 224512706620,
+                "path": "/root/@Node3D@32/@StaticBody3D@34",
+                "rid": "RID(927712935936)"
+              },
+              "height_delta": 0.0810844488441944,
+              "hit": true,
+              "normal": [
+                0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                59.5999984741211,
+                0.0821013897657394,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                60.4000015258789,
+                0.0,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 224512706620,
+                "path": "/root/@Node3D@32/@StaticBody3D@34",
+                "rid": "RID(927712935936)"
+              },
+              "height_delta": -0.0810844860970974,
+              "hit": true,
+              "normal": [
+                0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                60.4000015258789,
+                -0.0800675451755524,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                60.0,
+                0.0,
+                -0.400000005960464
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 224512706620,
+                "path": "/root/@Node3D@32/@StaticBody3D@34",
+                "rid": "RID(927712935936)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                60.0,
+                0.00101694092154503,
+                -0.400000005960464
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                60.0,
+                0.0,
+                0.400000005960464
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 224512706620,
+                "path": "/root/@Node3D@32/@StaticBody3D@34",
+                "rid": "RID(927712935936)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                60.0,
+                0.00101694092154503,
+                0.400000005960464
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            }
+          ],
+          "target": [
+            60.0,
+            0.0,
+            0.0
+          ],
+          "unsafe_zero_motion": {
+            "actor_origin": [
+              60.0,
+              0.00726693868637085,
+              0.0
+            ],
+            "collided": true,
+            "contacts": [
+              {
+                "collider": {
+                  "class": "StaticBody3D",
+                  "instance_id": 224512706620,
+                  "path": "/root/@Node3D@32/@StaticBody3D@34",
+                  "rid": "RID(927712935936)"
+                },
+                "depth": 0.000411644956329837,
+                "normal": [
+                  0.198669388890266,
+                  0.9800665974617,
+                  0.0
+                ],
+                "point": [
+                  59.9208984375,
+                  0.0170506499707699,
+                  0.0
+                ],
+                "shape": 0,
+                "support_comparisons": [
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -9.51811671257019e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -1.07288360595703e-06
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -7.89761543273926e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -9.51811671257019e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -9.51811671257019e-07
+                  }
+                ],
+                "walkable": true
+              }
+            ],
+            "count": 1,
+            "production_contacts_on_support": true,
+            "production_walkable_contact_count": 1,
+            "saturated": false,
+            "travel": [
+              0.000484466552734375,
+              0.00238662306219339,
+              0.0
+            ]
+          }
+        },
+        {
+          "actor_position": [
+            74.0,
+            3.0,
+            0.0
+          ],
+          "actor_transform_unchanged": true,
+          "candidate": {
+            "cast_bracket_width": 0.00312500004656613,
+            "center_floor": 0.00101694092154503,
+            "distance_to_physical_center": 0.0103750098496675,
+            "highest_sample": 0.082101434469223,
+            "maximum_y": 0.0862264345632866,
+            "origin": [
+              70.0,
+              0.0113919507712126,
+              0.0
+            ],
+            "within_maximum_y": true,
+            "within_radius": true
+          },
+          "case": "mirrored walkable slope 1.0 uses actual full-capsule cast",
+          "collision_mask": 1,
+          "end_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              70.0,
+              0.911392033100128,
+              0.0
+            ],
+            "saturated": false
+          },
+          "fractions": [
+            0.48828125,
+            0.4921875
+          ],
+          "motion": [
+            0.0,
+            -0.800000011920929,
+            0.0
+          ],
+          "radius": 0.4,
+          "safe_margin": 0.00100000004749745,
+          "start_actor_origin": [
+            70.0,
+            0.4010169506073,
+            0.0
+          ],
+          "start_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              70.0,
+              1.30101704597473,
+              0.0
+            ],
+            "saturated": false
+          },
+          "surfaces": [
+            {
+              "at": [
+                70.0,
+                0.0,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 233136195644,
+                "path": "/root/@Node3D@36/@StaticBody3D@38",
+                "rid": "RID(944892805120)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                -0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                70.0,
+                0.00101694092154503,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                69.5999984741211,
+                0.0,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 233136195644,
+                "path": "/root/@Node3D@36/@StaticBody3D@38",
+                "rid": "RID(944892805120)"
+              },
+              "height_delta": -0.0810844115912914,
+              "hit": true,
+              "normal": [
+                -0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                69.5999984741211,
+                -0.0800674706697464,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                70.4000015258789,
+                0.0,
+                0.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 233136195644,
+                "path": "/root/@Node3D@36/@StaticBody3D@38",
+                "rid": "RID(944892805120)"
+              },
+              "height_delta": 0.081084493547678,
+              "hit": true,
+              "normal": [
+                -0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                70.4000015258789,
+                0.082101434469223,
+                0.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                70.0,
+                0.0,
+                -0.400000005960464
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 233136195644,
+                "path": "/root/@Node3D@36/@StaticBody3D@38",
+                "rid": "RID(944892805120)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                -0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                70.0,
+                0.00101694092154503,
+                -0.400000005960464
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                70.0,
+                0.0,
+                0.400000005960464
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 233136195644,
+                "path": "/root/@Node3D@36/@StaticBody3D@38",
+                "rid": "RID(944892805120)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                -0.198669329285622,
+                0.9800665974617,
+                0.0
+              ],
+              "point": [
+                70.0,
+                0.00101694092154503,
+                0.400000005960464
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            }
+          ],
+          "target": [
+            70.0,
+            0.0,
+            0.0
+          ],
+          "unsafe_zero_motion": {
+            "actor_origin": [
+              70.0,
+              0.00726693868637085,
+              0.0
+            ],
+            "collided": true,
+            "contacts": [
+              {
+                "collider": {
+                  "class": "StaticBody3D",
+                  "instance_id": 233136195644,
+                  "path": "/root/@Node3D@36/@StaticBody3D@38",
+                  "rid": "RID(944892805120)"
+                },
+                "depth": 0.000413319823564962,
+                "normal": [
+                  -0.198669016361237,
+                  0.98006671667099,
+                  0.0
+                ],
+                "point": [
+                  70.0791015625,
+                  0.0170524194836617,
+                  0.0
+                ],
+                "shape": 0,
+                "support_comparisons": [
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 7.82310962677002e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 8.71717929840088e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 6.10947608947754e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 7.82310962677002e-07
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 7.82310962677002e-07
+                  }
+                ],
+                "walkable": true
+              }
+            ],
+            "count": 1,
+            "production_contacts_on_support": true,
+            "production_walkable_contact_count": 1,
+            "saturated": false,
+            "travel": [
+              -0.00048065185546875,
+              0.00238747335970402,
+              0.0
+            ]
+          }
+        }
+      ],
+      "followup": "Concrete source diagnosis: probes pass literal float64 .4 to exact stored capsule radius guard, whereas shipping owner passes actual capsule.radius. Stored shape property equality diagnostic + actual-radius probe correction and explicit wrong-radius negative pending; no runtime predicate relaxation."
+    },
+    {
+      "id": 37089401168,
+      "display_title": "render f18-resident-diagnostic-r4 @ 9715d319a796635029bec2954d78743c190fc806",
+      "head_branch": "tb/integration",
+      "head_sha": "d7b5677dc7b86ea4bb244f6089c2e0f177878d92",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37089401168",
+      "checkout": "9715d319a796635029bec2954d78743c190fc806",
+      "artifact_id": 11262395708,
+      "raw_artifact": "resident-r4-remote.zip",
+      "sha256": "88fc2b4b6c7a3e429732b1dbfc2c0c5d81534fc28665f7cd16848f4bd92e6695",
+      "native_exit_code": null,
+      "native_exit_limit": "Artifact contains no exit_code; Actions failure and logged assertions retained.",
+      "error_lines": [],
+      "script_error_lines": [],
+      "assertion_failure_lines": [
+        "F18 RESIDENT SUPPORT FAIL: production complete-capsule cast finds distant native sloped landing",
+        "F18 RESIDENT SUPPORT FAIL: native cast landing clears the complete real capsule"
+      ],
+      "warning_lines": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated."
+      ],
+      "result_lines": [
+        "F18_INITIAL_CAPSULE_DIAGNOSTIC {\"actor_position\":[96.1999969482422,3.0,14.0],\"actor_transform_unchanged\":true,\"candidate\":{\"cast_bracket_width\":0.00312500004656613,\"center_floor\":2.44754266738892,\"distance_to_physical_center\":0.0134999752044678,\"highest_sample\":2.51931476593018,\"maximum_y\":2.52343976602424,\"origin\":[344.299987792969,2.46104264259338,926.599975585938],\"within_maximum_y\":true,\"within_radius\":true},\"case\":\"distant baked native slope\",\"collision_mask\":1,\"end_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[344.299987792969,3.36104273796082,926.599975585938],\"saturated\":false},\"fractions\":[0.484375,0.48828125],\"motion\":[0.0,-0.800000011920929,0.0],\"radius\":0.4,\"safe_margin\":0.00100000004749745,\"start_actor_origin\":[344.299987792969,2.84754276275635,926.599975585938],\"start_overlaps\":{\"hits\":[],\"margin\":0.0,\"origin\":[344.299987792969,3.74754285812378,926.599975585938],\"saturated\":false},\"surfaces\":[{\"at\":[344.299987792969,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"height_delta\":0.0,\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"point\":[344.299987792969,2.44754266738892,926.599975585938],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[343.899993896484,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"height_delta\":0.0462348461151123,\"hit\":true,\"normal\":[0.114911213517189,0.975601613521576,0.187074899673462],\"point\":[343.899993896484,2.49377751350403,926.599975585938],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[344.699981689453,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"height_delta\":-0.0508744716644287,\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"point\":[344.699981689453,2.39666819572449,926.599975585938],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[344.299987792969,2.43718576431274,926.199951171875],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"height_delta\":0.0717720985412598,\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"point\":[344.299987792969,2.51931476593018,926.199951171875],\"shape\":0,\"within_walkable_height_delta\":true},{\"at\":[344.299987792969,2.43718576431274,927.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"height_delta\":-0.0767061710357666,\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"point\":[344.299987792969,2.37083649635315,927.0],\"shape\":0,\"within_walkable_height_delta\":true}],\"target\":[344.299987792969,2.43718576431274,926.599975585938],\"unsafe_zero_motion\":{\"actor_origin\":[344.299987792969,2.45691776275635,926.599975585938],\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"depth\":0.000247762800427154,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255187988281,2.46703100204468,926.525268554688],\"shape\":0,\"support_comparisons\":[{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0000170152634382248},{\"normal_equal_approx\":false,\"same_rid_shape\":true,\"signed_plane_distance\":0.000746035948395729},{\"normal_equal_approx\":false,\"same_rid_shape\":true,\"signed_plane_distance\":-0.0129993380978703},{\"normal_equal_approx\":false,\"same_rid_shape\":true,\"signed_plane_distance\":-0.0129992477595806},{\"normal_equal_approx\":true,\"same_rid_shape\":true,\"signed_plane_distance\":0.0000171437859535217}],\"walkable\":true}],\"count\":1,\"production_contacts_on_support\":true,\"production_walkable_contact_count\":1,\"saturated\":false,\"travel\":[0.0001220703125,0.00121808052062988,0.000244140625]}}",
+        "F18_SUPPORT_CONTACT_DIAGNOSTIC {\"actor_position\":[344.299987792969,2.45670962333679,926.599975585938],\"actor_transform_unchanged\":true,\"canonical_actor_y\":{\"collision_mask\":1,\"hits\":[{\"class\":\"StaticBody3D\",\"hit_instance_id\":244662143340,\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\",\"shape\":0},{\"class\":\"Terrain3D\",\"hit_instance_id\":224311380035,\"instance_id\":224311380035,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\",\"shape\":36}],\"origin\":[344.299987792969,3.34854245185852,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"collision_origin\":[344.299987792969,3.35670948028564,926.599975585938],\"floor_normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"is_on_floor\":true,\"plus_safe_margin\":{\"collision_mask\":1,\"hits\":[],\"origin\":[344.299987792969,3.3577094078064,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"raw\":{\"collision_mask\":1,\"hits\":[{\"class\":\"StaticBody3D\",\"hit_instance_id\":244662143340,\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\",\"shape\":0},{\"class\":\"Terrain3D\",\"hit_instance_id\":224311380035,\"instance_id\":224311380035,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\",\"shape\":36}],\"origin\":[344.299987792969,3.35670948028564,926.599975585938],\"query_margin\":0.0,\"saturated\":false},\"rays\":[{\"at\":[344.299987792969,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"position\":[344.299987792969,2.44754266738892,926.599975585938],\"production_height\":2.44754266738892,\"ray_from\":[344.299987792969,2.83718585968018,926.599975585938],\"ray_to\":[344.299987792969,2.03718566894531,926.599975585938],\"shape\":0,\"terrain_height\":2.43718576431274},{\"at\":[343.899993896484,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.114911213517189,0.975601613521576,0.187074899673462],\"position\":[343.899993896484,2.49377751350403,926.599975585938],\"production_height\":2.49377751350403,\"ray_from\":[343.899993896484,2.89280581474304,926.599975585938],\"ray_to\":[343.899993896484,2.09280562400818,926.599975585938],\"shape\":0,\"terrain_height\":2.49280571937561},{\"at\":[344.699981689453,2.43718576431274,926.599975585938],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"position\":[344.699981689453,2.39666819572449,926.599975585938],\"production_height\":2.39666819572449,\"ray_from\":[344.699981689453,2.7774338722229,926.599975585938],\"ray_to\":[344.699981689453,1.97743380069733,926.599975585938],\"shape\":0,\"terrain_height\":2.37743377685547},{\"at\":[344.299987792969,2.43718576431274,926.199951171875],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.160431176424026,0.977184593677521,0.139183849096298],\"position\":[344.299987792969,2.51931476593018,926.199951171875],\"production_height\":2.51931476593018,\"ray_from\":[344.299987792969,2.91093254089355,926.199951171875],\"ray_to\":[344.299987792969,2.11093235015869,926.199951171875],\"shape\":0,\"terrain_height\":2.51093244552612},{\"at\":[344.299987792969,2.43718576431274,927.0],\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"hit\":true,\"normal\":[0.112091086804867,0.975917994976044,0.187135577201843],\"position\":[344.299987792969,2.37083649635315,927.0],\"production_height\":2.37083649635315,\"ray_from\":[344.299987792969,2.7634391784668,927.0],\"ray_to\":[344.299987792969,1.96343910694122,927.0],\"shape\":0,\"terrain_height\":2.36343908309937}],\"safe_margin\":0.00100000004749745,\"zero_motion\":{\"collided\":true,\"contacts\":[{\"collider\":{\"class\":\"StaticBody3D\",\"instance_id\":244662143340,\"path\":\"/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport\",\"rid\":\"RID(7838315315203)\"},\"collider_shape\":0,\"depth\":0.0000894069671630859,\"local_shape\":0,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255218505859,2.46701622009277,926.525268554688]},{\"collider\":{\"class\":\"Terrain3D\",\"instance_id\":224311380035,\"path\":\"/root/@Node3D@24/Terrain\",\"rid\":\"RID(7546257539072)\"},\"collider_shape\":36,\"depth\":0.0000743865966796875,\"local_shape\":0,\"normal\":[0.112091079354286,0.975917935371399,0.187135562300682],\"point\":[344.255218505859,2.46700119972229,926.525268554688]}],\"margin\":0.00100000004749745,\"remainder\":[0.0,0.0,0.0],\"saturated\":false,\"travel\":[0.00018310546875,0.00155997276306152,0.00030517578125]}}",
+        "F18_RESIDENT_TERRAIN_SUPPORT {\"checks\":26,\"failures\":[\"production complete-capsule cast finds distant native sloped landing\",\"native cast landing clears the complete real capsule\"],\"fixtures\":\"isolated baked-terrain native instance, probe bodies, camera moves, temporary in-memory painted hole; no files saved\"}"
+      ],
+      "outcome": "Original r3 failures unchanged: synthetic41/6failed, native26/2failed. Failure-only observations prove all five floors/startclear/cast/unsafe walkable contact-plane matching/candidate bounds/endclear true for expected positive cases; no actor movement.",
+      "actual_initial_cast_diagnostics": [
+        {
+          "actor_position": [
+            96.1999969482422,
+            3.0,
+            14.0
+          ],
+          "actor_transform_unchanged": true,
+          "candidate": {
+            "cast_bracket_width": 0.00312500004656613,
+            "center_floor": 2.44754266738892,
+            "distance_to_physical_center": 0.0134999752044678,
+            "highest_sample": 2.51931476593018,
+            "maximum_y": 2.52343976602424,
+            "origin": [
+              344.299987792969,
+              2.46104264259338,
+              926.599975585938
+            ],
+            "within_maximum_y": true,
+            "within_radius": true
+          },
+          "case": "distant baked native slope",
+          "collision_mask": 1,
+          "end_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              344.299987792969,
+              3.36104273796082,
+              926.599975585938
+            ],
+            "saturated": false
+          },
+          "fractions": [
+            0.484375,
+            0.48828125
+          ],
+          "motion": [
+            0.0,
+            -0.800000011920929,
+            0.0
+          ],
+          "radius": 0.4,
+          "safe_margin": 0.00100000004749745,
+          "start_actor_origin": [
+            344.299987792969,
+            2.84754276275635,
+            926.599975585938
+          ],
+          "start_overlaps": {
+            "hits": [],
+            "margin": 0.0,
+            "origin": [
+              344.299987792969,
+              3.74754285812378,
+              926.599975585938
+            ],
+            "saturated": false
+          },
+          "surfaces": [
+            {
+              "at": [
+                344.299987792969,
+                2.43718576431274,
+                926.599975585938
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 244662143340,
+                "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                "rid": "RID(7838315315203)"
+              },
+              "height_delta": 0.0,
+              "hit": true,
+              "normal": [
+                0.112091086804867,
+                0.975917994976044,
+                0.187135577201843
+              ],
+              "point": [
+                344.299987792969,
+                2.44754266738892,
+                926.599975585938
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                343.899993896484,
+                2.43718576431274,
+                926.599975585938
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 244662143340,
+                "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                "rid": "RID(7838315315203)"
+              },
+              "height_delta": 0.0462348461151123,
+              "hit": true,
+              "normal": [
+                0.114911213517189,
+                0.975601613521576,
+                0.187074899673462
+              ],
+              "point": [
+                343.899993896484,
+                2.49377751350403,
+                926.599975585938
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                344.699981689453,
+                2.43718576431274,
+                926.599975585938
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 244662143340,
+                "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                "rid": "RID(7838315315203)"
+              },
+              "height_delta": -0.0508744716644287,
+              "hit": true,
+              "normal": [
+                0.160431176424026,
+                0.977184593677521,
+                0.139183849096298
+              ],
+              "point": [
+                344.699981689453,
+                2.39666819572449,
+                926.599975585938
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                344.299987792969,
+                2.43718576431274,
+                926.199951171875
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 244662143340,
+                "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                "rid": "RID(7838315315203)"
+              },
+              "height_delta": 0.0717720985412598,
+              "hit": true,
+              "normal": [
+                0.160431176424026,
+                0.977184593677521,
+                0.139183849096298
+              ],
+              "point": [
+                344.299987792969,
+                2.51931476593018,
+                926.199951171875
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            },
+            {
+              "at": [
+                344.299987792969,
+                2.43718576431274,
+                927.0
+              ],
+              "collider": {
+                "class": "StaticBody3D",
+                "instance_id": 244662143340,
+                "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                "rid": "RID(7838315315203)"
+              },
+              "height_delta": -0.0767061710357666,
+              "hit": true,
+              "normal": [
+                0.112091086804867,
+                0.975917994976044,
+                0.187135577201843
+              ],
+              "point": [
+                344.299987792969,
+                2.37083649635315,
+                927.0
+              ],
+              "shape": 0,
+              "within_walkable_height_delta": true
+            }
+          ],
+          "target": [
+            344.299987792969,
+            2.43718576431274,
+            926.599975585938
+          ],
+          "unsafe_zero_motion": {
+            "actor_origin": [
+              344.299987792969,
+              2.45691776275635,
+              926.599975585938
+            ],
+            "collided": true,
+            "contacts": [
+              {
+                "collider": {
+                  "class": "StaticBody3D",
+                  "instance_id": 244662143340,
+                  "path": "/root/@Node3D@24/@Node3D@27/ResidentTerrainSupport",
+                  "rid": "RID(7838315315203)"
+                },
+                "depth": 0.000247762800427154,
+                "normal": [
+                  0.112091079354286,
+                  0.975917935371399,
+                  0.187135562300682
+                ],
+                "point": [
+                  344.255187988281,
+                  2.46703100204468,
+                  926.525268554688
+                ],
+                "shape": 0,
+                "support_comparisons": [
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 1.70152634382248e-05
+                  },
+                  {
+                    "normal_equal_approx": false,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 0.000746035948395729
+                  },
+                  {
+                    "normal_equal_approx": false,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -0.0129993380978703
+                  },
+                  {
+                    "normal_equal_approx": false,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": -0.0129992477595806
+                  },
+                  {
+                    "normal_equal_approx": true,
+                    "same_rid_shape": true,
+                    "signed_plane_distance": 1.71437859535217e-05
+                  }
+                ],
+                "walkable": true
+              }
+            ],
+            "count": 1,
+            "production_contacts_on_support": true,
+            "production_walkable_contact_count": 1,
+            "saturated": false,
+            "travel": [
+              0.0001220703125,
+              0.00121808052062988,
+              0.000244140625
+            ]
+          }
+        }
+      ],
+      "followup": "Concrete source diagnosis: probes pass literal float64 .4 to exact stored capsule radius guard, whereas shipping owner passes actual capsule.radius. Stored shape property equality diagnostic + actual-radius probe correction and explicit wrong-radius negative pending; no runtime predicate relaxation."
+    },
+    {
+      "id": 37089340354,
+      "display_title": "render f18-scoped-r3-f052 @ f0523bdd020a27502ccd41465dc8dc6dac8a1b64",
+      "head_branch": "tb/integration",
+      "head_sha": "d7b5677dc7b86ea4bb244f6089c2e0f177878d92",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37089340354",
+      "checkout": "f0523bdd020a27502ccd41465dc8dc6dac8a1b64",
+      "artifact_id": 11261911456,
+      "raw_artifact": "scoped-r4-remote.zip",
+      "sha256": "7f18dad0fdd846a2ecf225dff4daef2e8bbca0943906d276f54c3d3cfcfe48c7",
+      "native_exit_code": "0",
+      "native_exit_limit": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "assertion_failure_lines": [],
+      "warning_lines": [
+        "WARNING: save: target slot conflicts with retained world transactions"
+      ],
+      "result_lines": [
+        "16 tests, 246 assertions, 0 failed",
+        "exit=0 took=8s"
+      ],
+      "outcome": "16 tests/246 assertions/0 failed, zero ScriptError; original15/242 plus actual native opening-aim flush test1/4. Expected cross-slot warning retained. Not complete F18 acceptance."
     }
   ],
   "acceptance": {
