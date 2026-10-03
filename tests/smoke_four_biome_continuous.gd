@@ -240,10 +240,13 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 		return false
 	reached = "road_gate"
 	var village := VILLAGE.new()
-	# SYSTEMS' four-potion care basket, bought with Mira's earned opening
+	# Carried care, bought with Mira's earned opening
 	# float through her first actual shop. No restock flag or direct trade call.
 	if not OS.get_cmdline_user_args().has("--legacy-order-diagnostic"):
-		village.care_basket_purchases = 4
+		# Actual fresh r6 exhausted seven total potions before its last training
+		# fight. Spend the remaining authored28coin on one more at this same
+		# ordinary first visit; no grants or combat/readiness budget changes.
+		village.care_basket_purchases = 5
 	var village_failures: Array[String] = await village.run(self,
 		live["world"], live["game"], live["player"], live["rig"])
 	failures.append_array(village_failures)
