@@ -91,6 +91,11 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 			" offer=", arbiter.call("winner"), " player=", _player.global_position, " target=", prompt.global_position)
 		return _fail("F20 rematch lacks grounded exact actionable provider without recovery")
 	_activated = null
+	var director := tree.current_scene.get_node_or_null("EncounterDirector")
+	var writer: Callable = director.get("_rematch_outcome_writer") if director != null else Callable()
+	print("F20 REMATCH activation authority host=", game.session.call("is_host"),
+		" active=", game.session.call("is_active"), " director=", director,
+		" writer_valid=", writer.is_valid(), " bindings=", prompt.get_signal_connection_list("activated"))
 	arbiter.connect("activated", _activation)
 	var previous_trace := trace_input
 	trace_input = true
@@ -100,7 +105,6 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	if _activated != prompt:
 		var activated_node := _activated as Node
 		var owner := INPUT_OWNER.current(tree)
-		var director := tree.current_scene.get_node_or_null("EncounterDirector")
 		var manager: Node = director.get("_manager") if director != null else null
 		var actual_source := director.get("_trainer_node") as Node if director != null else null
 		print("F20 REMATCH activation expected=", prompt.get_path(),
