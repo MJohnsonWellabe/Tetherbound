@@ -61,6 +61,35 @@ func test_aquaryn_json_round_trip_matches_every_canonical_saved_field() -> void:
 	assert_true(destination.remove_at(0) == restored)
 	assert_eq(destination.members().size(), 0)
 
+func test_actual_alpha_trait_packet_decodes_with_modern_loadout_without_mutating_source() -> void:
+	var original := SPECIES.spawn("mosshell")
+	var packet := preload("res://scripts/creatures/traits.gd").roll_spawn("capture-world", "wild_once_1900", 1, true, false, false)
+	assert_false(packet.is_empty())
+	assert_true(original.loadout_initialized)
+	var payload := CODEC.encode(original)
+	var before := payload.duplicate(true)
+	var traits_before := packet.duplicate(true)
+	var restored := CODEC.decode(payload, packet)
+	assert_true(restored != null, "Modern Alpha offer must decode with its actual retained traits")
+	if restored != null:
+		assert_eq(restored.uid, original.uid)
+		assert_eq(restored.known_moves, original.known_moves)
+		assert_eq(restored.rolled_traits, packet.rolled_traits)
+		assert_eq(restored.get_meta("foundation_capture_traits"), packet)
+		assert_eq(CODEC.encode(restored), payload)
+	var offer := {"offer_id": "real-source-offer", "source_key": "capture:real-source-offer",
+		"world_namespace": "capture-world", "session_id": "epoch", "participants": ["guest-owner"],
+		"realm": "meadows", "creature": payload, "capture_traits": packet}
+	assert_true(preload("res://scripts/net/foundation_capture_rules.gd").offer_valid(offer))
+	assert_eq(payload, before)
+	assert_eq(packet, traits_before)
+	var malformed := payload.duplicate(true)
+	malformed.known_moves.append("forged_move")
+	assert_true(CODEC.decode(malformed, packet) == null, "Mirror construction cannot repair invalid source moves")
+	var forged := packet.duplicate(true)
+	forged.captured_from.spawn_generation = 0
+	assert_true(CODEC.decode(payload, forged) == null)
+
 func test_malformed_records_refuse_without_repair_or_species_invention() -> void:
 	var valid := CODEC.encode(populated())
 	for invalid: Variant in [null, [], "water_aquaryn", {}, {"species_id":"water_aquaryn"}]:
