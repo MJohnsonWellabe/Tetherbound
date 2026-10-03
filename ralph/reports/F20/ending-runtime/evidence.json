@@ -520,7 +520,7 @@
           "f20-net-r4-artifact.zip"
         ],
         "passed": "Two real ENet peers connect; host HomeKey durable personal finale return, fifth key debit/sealed/glow+playingSFX/line/noquest/repeatrefusal, real portal lesson Continue+personal ACK, navigation/Grandpa initial context and truthful prose prechecks. Actual host dialogue completed(regional_homecoming_5). Strict retained peer error scan PASS. Independent actual disk inspection confirms host homecoming_seen receipt and acceptedregional_ackrow; homecoming producer did succeed.",
-        "failure": "Host f20_talk has no verdict at unchanged300s step limit. Last native F20 trace is completed signal, before final ordinary tap returns/inputcount/finalcontext. Alive narrative_modal heartbeat frame364/physics2669 at1.415535,1.020944,14.907784. Exact blocking/cost cause not proved; no timeout increase or blind rerun.",
+        "failure": "Host f20_talk has no verdict at unchanged205s command deadline; separate total post-hello cap300s. Last native F20 trace is completed signal, before final ordinary tap returns/inputcount/finalcontext. Alive narrative_modal heartbeat frame364/physics2669 at1.415535,1.020944,14.907784. Exact blocking/cost cause not proved; no timeout increase or blind rerun.",
         "limits": "Disclosed post-finale/restored-world fixture; headless functional only. Host actualdisk homecomingreceipt proves durable ACK, but no actual rendered prose dump/credits open or Skip. Guest ending/rejoin/reload unreached; new UID/snapshot peer assertions unexercised. Criterion4 OPEN.",
         "independent_review": "PASS f20_review failed-evidence audit: exact ZIP/coordinator/host/guest hashes and all native/user logs0ERROR/SCRIPT ERROR; both hello SHA11aa/registry2. Actualhost character disk contains homecoming_seen receipt and worldregional_ackaccepted. Actualcredits receipt absent; guestending receipts absent. No rendered prose dump/creditsopen/Skip/reload/UID/continuation reached. #4 OPEN.",
         "next_action": "Reviewed F20-only clock/navigation/ordinarytap diagnostic29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da. Original inputs/assertions/300s remain; wait exactsolo-r11 before affected netdiagnostic. Read-only clocks locate signal waits, not completion of all node physics callbacks."
@@ -650,6 +650,99 @@
         "failure": "After successfulwalk and8physicsframe wait, combined player.is_on_floor()/arbiter.winning_provider()==actualbounty gate fails. Existingbranchdoesnot printpose/floor/winner; exactfailedpredicate/LOS/radius/competingprovider/collider unknown. Actualbountyscreen/3activerows/close unreached. Explicitcompletionguard records secondfailure.",
         "limits": "Disclosedpost-finale/restoredcurrent fixture andharnessinput/Skip/headless. #1 priorMETcandidate reused, #3OPEN. No proof bountyproducerbroken orspecificallyaLOS/radius/providercollision; originalwalk budget/input/capsule checks intact.",
         "independent_review": "PASS f20_review exact artifact/native/user/hash and 58checks2 failed-scope audit; actual ending/reload and road walk pass, combined floor/exact-provider gate fails; #3OPEN."
+      },
+      {
+        "run": 37092788092,
+        "job": 111116479078,
+        "artifact": 11263577803,
+        "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
+        "verdict": "FAIL guest Home Key individual command timeout after host ending succeeds",
+        "workflow_conclusion": "failure",
+        "workflow_exit_code": 1,
+        "failures": 1,
+        "fatal": "",
+        "native_bytes": 1909,
+        "native_sha256": "7821d5eec8e6caffc2a3c271f881f78d69fc1b8c51f0835e0a08762cad5af505",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 57786,
+            "sha256": "79a3d08df61ce946b0f0c31a2cdb8e5e71f9af8c627b105d80a5806fcb9f4b23",
+            "script_errors": 0,
+            "engine_errors": 0
+          },
+          "peer-1.log": {
+            "bytes": 12339,
+            "sha256": "ea3d0fc1dfb900e0d98982beffc80337b8b523cc7f9e2cb286e614af689db359",
+            "script_errors": 0,
+            "engine_errors": 0
+          }
+        },
+        "artifact_bytes": 159325,
+        "artifact_sha256": "0250da65078658a9d0afe55a288856138dfba3f5f9e0ec8e06406782e7a54807",
+        "logs": [
+          "f20-net-r6-native.log.gz",
+          "f20-net-r6-workflow.log.gz",
+          "f20-net-r6-peer-0.log.gz",
+          "f20-net-r6-peer-1.log.gz",
+          "f20-net-r6-NET_RUN.json",
+          "f20-net-r6-artifact.zip"
+        ],
+        "passed": "Both real ENet peers connect; actual host Home Key/fifth/lesson/nav/11 rendered truthful lines/durable homecoming/production credits/input guard/Skip1durableACK/completedGrandpa repeat PASS. Guest actual HomeKeybegin succeeds; later Hall landing is granted.",
+        "failure": "Guest f20_return returns no verdict at unchanged205s command deadline. NET_RUN fatal empty, whole-proof1500s not exhausted. Fresh668ms heartbeat at timeout, physics7545/process975, panel:Session, player96.2,.911,14. Host world contains exact guest portal_arrival row PENDING with after-state home-return/outcome receipt; guest portable disk lacks those new receipts. Owner apply/save/ACK completion unproved; no specific failure/cause claim.",
+        "command_timeout_observation": {
+          "action": "f20_return",
+          "coordinator_deadline_ms": 643007.0,
+          "coordinator_observed_ms": 643009,
+          "heartbeat": {
+            "context": "panel:Session",
+            "frame": 975.0,
+            "physics_frame": 7545.0,
+            "pos": [
+              96.1999969482422,
+              0.910999953746796,
+              14.0
+            ],
+            "session_peers": [
+              1.0,
+              1687272102.0
+            ],
+            "state_hash": 2182759257.0,
+            "t": 636.738,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 668.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 642341.0,
+          "id": "s9",
+          "phase": "timeout_before_finish"
+        },
+        "ending_receipts_found_in_actual_disk": {
+          "character-946e3851cd8002384d1b994ab4243b05": [
+            "craft:portal_arrival_travel:456739bef3b0fd249b07c99b0e25d5b9:character-946e3851cd8002384d1b994ab4243b05:1:character-946e3851cd8002384d1b994ab4243b05",
+            "craft:ending_home_return_456739bef3b0fd249b07c99b0e25d5b9_44b234cb15638a2be2196e8d7ed959f7c9baf32a5f1c4262ea21918be0df0d79_travel:456739bef3b0fd249b07c99b0e25d5b9:character-946e3851cd8002384d1b994ab4243b05:1:character-946e3851cd8002384d1b994ab4243b05",
+            "craft:regional_ending_homecoming_seen:character-946e3851cd8002384d1b994ab4243b05",
+            "craft:regional_ending_regional_credits_seen:character-946e3851cd8002384d1b994ab4243b05"
+          ],
+          "character-924350a0f31ecb1846f713e27b3abb18": []
+        },
+        "host_disk_pending_arrival": [
+          {
+            "character_id": "character-924350a0f31ecb1846f713e27b3abb18",
+            "status": "pending",
+            "intent": {
+              "entry_id": "hall_home",
+              "permit_id": "travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3",
+              "realm": "meadows"
+            },
+            "receipt": "craft:portal_arrival_travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3:character-924350a0f31ecb1846f713e27b3abb18"
+          }
+        ],
+        "warnings": "Exact guest clientleave could notwritecharacter warning during forced teardown retained. No character-loss or producer-cause inference.",
+        "limits": "Disclosedpost-finale/current fixtures, headless/harnessinput/Skip. Guestending/rejoin/reload/UID checks unreached. #4OPEN. Physical pose/hostpendingjournal do not prove completed personal return.",
+        "independent_review": "PASS f20_review exact artifact/hashes/native/peer/user/disk/fatal/timeout audit; host ending/credits pass, guest pending host journal/personal disk mismatch precisely scoped; #4OPEN."
       }
     ],
     "limitations": [
@@ -806,7 +899,7 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "net-r5 hostactualHomeKey/fifth/11spokenlines/credits1durableACK/repeatPASS; guestHomeKeybeginPASS then ENTIRE posthello300s smoke phasefatal. Guestending/rejoin/reload/UIDsnapshotunreached. Percommand205s unchanged. #4 OPEN."
+      "latest_runtime": "net-r6 actualhostending/credits1ACK/repeatPASS; guestHomeKeybegin/hostpendingportalarrival then205s individualcommandtimeout, fresh668msheartbeat/panel:Session. Guestpersonalapply/save/ACK/ending/rejoin/reloadunproved. Total1500s not exhausted. #4OPEN."
     }
   },
   "delegated_locator_fix": {
@@ -853,16 +946,15 @@
     }
   },
   "remote_pending": {
-    "net_r6": {
-      "run": 37092788092,
-      "job": 111116479078,
-      "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
-      "script": "tests/smoke_net_f20_ending.gd",
+    "solo_r13": {
+      "run": 37093720949,
+      "job": 111119255015,
+      "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
+      "script": "tests/smoke_f20_ending.gd",
       "mode": "headless",
       "timeout_minutes": 30,
-      "total_post_hello_proof_seconds": 1500,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37092788092",
-      "status": "in progress; complete affected two-person ending/rejoin/reload proof, no result claimed"
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37093720949",
+      "status": "in progress; affected exact bounty floor/provider diagnostic, no result claimed"
     }
   },
   "lesson_input_driver": {
@@ -917,18 +1009,24 @@
   },
   "net_budget_clarification": {
     "source": "tests/helpers/net_harness.gd::launch and step",
-    "correction": "Previous metadata describing300s as per-step/per-command was imprecise. It is the default TOTAL step phase for allsmoke commands afterhello. F20 ordinary12000frame commands individuallyallow205s (60Hz conversion+5s), unchanged. Historical originallogs/ZIP bytes unchanged. Net-r5 explicitlyprovesglobalphaseexpiry; r4 has noverdict atindividual commandtimeout."
+    "correction": "Previous metadata describing300s as per-step/per-command was imprecise. It is the default TOTAL step phase for allsmoke commands afterhello. F20 ordinary12000frame commands individuallyallow205s (60Hz conversion+5s), unchanged. Historical originallogs/ZIP bytes unchanged. Net-r5 explicitlyprovesglobalphaseexpiry; r4 has noverdict atindividual commandtimeout.",
+    "independent_correction": "f20_review withdraws originalr4 numeric300s command claim; individual12000frames is205s, total300s separate. Exactr4 bytes unchanged; r4 individual noverdict and r5 explicitglobalfatal remain distinct."
   },
   "complete_peer_proof_budget": {
     "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
     "total_post_hello_budget_seconds": 1500,
     "independent_source_review": "PASS f20_review: F20-only9line_init_budgets override superthen selects existinglong2peer1500s wholeproof allowance. Individualcommandframes/slack/hello180/heartbeat/inputguard/productionACK8s/remote30min unchanged. Necessarycomplete2person/disconnect/reloadproof allowance, not an authoredproduct timing waiver. Freshcompleteactual proof required, #4OPEN.",
     "reason": "Actualnet-r5 cleanhostfullending/revisit consumesmost inherited300s total; guest onlyHomeKeybegin beforeglobalfatal. Other long2peer proofs alreadyselect1500. Oldr4 independentlyhadcommandtimeout; itscause notretrospectivelyresolved byglobalbudget diagnosis.",
-    "runtime": "Affectedfullnet-r6 live37092788092/job111116479078 onexactb066, no result claimed; criterion4OPEN."
+    "runtime": "Exactb066 actualnet-r6 compiles/total1500s retained, hostending/revisitPASS; guest HomeKey205s command noverdict with pendinghostportal_arrival and missingportablearrivalreceipts. No globalfatal; #4OPEN."
   },
   "bounty_provider_diagnostic": {
     "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
     "independent_review": "PASS f20_review exact10 failure-only read/print lines, typednullablewinner path safe; no input/await/state/assertion/radius/budget changes.",
-    "runtime": "Affected solo replay pending; no predicate/cause claim before actual trace."
+    "runtime": "Affected solo-r13 live37093720949/job111119255015 exacta924; no result claimed."
+  },
+  "pending_arrival_diagnostic": {
+    "source": "e39a361e7c",
+    "independent_review": "PASS f20_review exact51 F20-only raw-read diagnostic lines. Originalheartbeatfirst, <=10s frequency; remote_body identity lookup only; no foundation_ground_contact/admission/save/arrivalcache calls, input/waits/assertions/permits/deadline changes.",
+    "runtime": "Affected two-peer replay pending; no producer/cause claim."
   }
 }

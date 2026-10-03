@@ -24,13 +24,15 @@ Solo-r11 remains overall FAIL58checks2/zero engine-script errors: safe movement,
 actual endgame rematches pass, then ordinary bounty-board navigation fails before its screen/three active rows.
 Solo-r12 on reviewed `c352e4979e` walks the authored road successfully within the original budget, then fails
 the combined grounded/exact bounty-provider check; floor/winner/LOS are not recorded. Read-only failure trace
-`a9241db0dc` passes independent source review; affected replay pending. Actual bounty screen/three rows
+`a9241db0dc` passes independent source review; solo-r13 (37093720949) is live. Actual bounty screen/three rows
 remain unproved, #3 OPEN. Earlier r10 misleading green with
 three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
 Two-peer-r4 saves host homecoming then times out its command. Net-r5 on29bc cleanly passes host ending,
 guarded credits1ACK and completed repeat; navigation takes143.303s and11ordinarytaps38.138s. The inherited300s
 is the ENTIRE post-hello proof allowance, not per-command; it expires as guestHomeKey begins. A bounded F20-only
-total-proof allowance1500s `b066552af9` passes independent source review; fullnet-r6 (37092788092) is live; per-command205s/readiness180s/productionACK8s remain unchanged.
+total-proof allowance1500s `b066552af9` passes independent source review; actualnet-r6 (37092788092) again passes host ending/revisit, then guest HomeKey times out its205s command.
+Host disk has guest portal_arrival pending, guest portable disk lacks the new receipt; fresh668ms heartbeat,
+no globalfatal or engine-script errors. Owner apply/save/ACK remains unproved; per-command205s/readiness180s/productionACK8s remain unchanged.
 #4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
 isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
 no further blind render retry or shared-world edit. No local engine/GPU while the owner plays Valheim. Exact original
