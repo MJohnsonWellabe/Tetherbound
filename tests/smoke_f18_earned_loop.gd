@@ -360,16 +360,55 @@ func _prepare_guards() -> RefCounted:
 	_guards = GUARDS.new(self, game, travel)
 	return _guards
 
-func _walk(target: Vector3, tolerance: float = 2.0) -> bool:
+func _walk(target: Vector3, tolerance: float = 2.0, headings: Array[Vector3] = []) -> bool:
 	var player: CharacterBody3D = current_scene.get_node(^"Player")
 	var rig: Node3D = current_scene.get_node(^"CameraRig")
 	var distance := player.global_position.distance_to(target)
 	var nav := NAV.new(self, player, rig, _stick)
 	var before: int = player.get("_unstick_count")
-	var ok: bool = await nav.walk_to(target, maxi(3600, int(distance * 100.0)), tolerance)
+	var budget := maxi(3600, int(distance * 100.0))
+	var ok: bool = await nav.walk_to_guided(target, budget, tolerance, headings)
 	_stick(0, 0)
+	receipts.append({"phase": "ordinary_walk", "target": str(target), "headings": headings.map(func(at: Vector3) -> String: return str(at)),
+		"original_frame_budget": budget, "arrived": ok, "grounded": player.is_on_floor(),
+		"unstick_count_before": before, "unstick_count_after": int(player.get("_unstick_count")),
+		"actual_position": str(player.global_position), "confined_resets": nav.confined_resets()})
 	return (ok and player.is_on_floor() and int(player.get("_unstick_count")) == before) \
 		or _fail("ordinary grounded walk failed: target=" + str(target) + " actual=" + str(player.global_position))
+
+func _trail_camp_headings(target: Vector3) -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var gate := current_scene.find_child("TrailGate", true, false) as Node3D
+	if gate == null or not bool(game.progression.call("has", "road_gate_open")):
+		_fail("earned village gate must be open before the deep walk")
+		return out
+	var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var points: Array = []
+	for band: Dictionary in terrain.get("trail", {}).get("bands", []):
+		if str(band.get("id", "")) == "band1_lower_meadows": points = band.get("points", [])
+	if points.size() < 3 or points.size() > 30:
+		_fail("authored Lower Meadows road is unavailable or exceeds the existing guided-walk limit")
+		return out
+	# R7 walked directly from the paid Workbench into a solid fence panel.
+	# Follow the real open gate and the existing road around the Pond instead.
+	# All headings share the original direct-distance budget and watchdog.
+	var nearest := -1
+	var nearest_distance := INF
+	for index in points.size():
+		var raw: Array = points[index]
+		if raw.size() != 2: return out
+		var at := Vector3(float(raw[0]), 0.0, float(raw[1]))
+		if not at.is_finite(): return out
+		var distance := Vector2(at.x - target.x, at.z - target.z).length_squared()
+		if distance < nearest_distance:
+			nearest = index
+			nearest_distance = distance
+	if nearest < 2: return out
+	for index in range(nearest + 1):
+		var raw: Array = points[index]
+		out.append(Vector3(float(raw[0]), 0.0, float(raw[1])))
+		if index == 1: out.append(gate.global_position)
+	return out
 
 func _tab(id: String) -> Node:
 	var menu: Node = game.call("menu")
@@ -425,7 +464,9 @@ func _build_workbench() -> bool:
 func _loop() -> bool:
 	var stone: Node3D = current_scene.get_node_or_null("Waystones/" + STONE_ID)
 	if stone == null: return _fail("production world did not mount trail camp waystone")
-	if not await _walk(stone.global_position, 2.1): return false
+	var headings := _trail_camp_headings(stone.global_position)
+	if headings.is_empty(): return _fail("actual Trail Camp road headings could not be resolved")
+	if not await _walk(stone.global_position, 2.1, headings): return false
 	for frame in 600:
 		await physics_frame
 		if game.get("local").redesign_character.last_waystones.get("meadows") == STONE_ID: break

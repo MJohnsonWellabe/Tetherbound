@@ -1,0 +1,29 @@
+{
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "outcome": "APPROVE source only",
+  "files": [
+    "tests/smoke_f18_earned_loop.gd"
+  ],
+  "working_diff_parent": "2ee5159905a2765d9f65640aa5d9705cc4516fca",
+  "evidence": "Original earnedR7 saved world payload flags includes pickup:castle_gate_key and road_gate_open; source material route uses actual pickup/gate. PaidWorkbench passes. Old direct heading hits real boundary panel; original failure ZIP retained.",
+  "source_checks": {
+    "actual_band1_point_count": 27,
+    "nearest_camp_road_vertex_index": 19,
+    "nearest_camp_road_vertex_xz": [
+      360,
+      910
+    ],
+    "guided_heading_count": 21,
+    "actual_gate_xz": [
+      13.79,
+      22.4
+    ],
+    "one_original_total_budget": true,
+    "shared_watchdog_and_held_counter": true,
+    "same_final_floor_and_unstick_guards": true,
+    "grants_or_pose_writes": false,
+    "shared_navigator_edits": false
+  },
+  "runtime_status": "UNPROVEN; corrected earned remote run pending",
+  "all_six_f18_criteria": "UNPROVEN"
+}
