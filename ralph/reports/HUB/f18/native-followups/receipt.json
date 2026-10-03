@@ -6675,6 +6675,178 @@
       "outcome": "Scoped actual flying bound-key refusal PASS; no engine/script errors, no recovery, warnings retained.",
       "independent_native_review": "APPROVE; independent GPT-6.1 Sol original ZIP size/SHA/exit/checks/controller/label/side-effect/recovery/warning audit. Remote run/source/workflow mapping from exact API dispatch/title/peer hello provenance.",
       "evidence_limit": "Disclosed pre-input setup fixtures; actual movement/input/controller/refusal only. Structural visibility, no rendered/audio credit. No earned opening/unlock/crossing/travel/full F18 acceptance. Source binding uses exact dispatch/title/API and peer hello; artifact manifest only file list."
+    },
+    {
+      "id": 37105694026,
+      "display_title": "render f18-swimming-refusal-pixels-r1 @ 85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+      "head_sha": "a157a9bb2b12ee0cb04532c88293f4dda53c4634",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37105694026",
+      "checkout": "85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+      "artifact_id": 11267287755,
+      "raw_artifact": "swimming-refusal-pixels-r1-remote.zip",
+      "bytes": 7018808,
+      "sha256": "917b229e233f9ef0473dbdbba7d28694a8cb4d0e13dd8cb85494ac250f6eb986",
+      "native_exit_code": null,
+      "native_exit_limit": "Original artifact contains no exit_code; no engine exit inferred.",
+      "native_pixels": [],
+      "net_failures": [
+        "peer 0 f18_traversal_refusal: no verdict",
+        "F18 traversal refusal peer logs have no engine/script errors (peer 0: ERROR: x1)"
+      ],
+      "net_fatal": "",
+      "timeouts": [
+        {
+          "action": "f18_traversal_refusal",
+          "coordinator_deadline_ms": 278816.0,
+          "coordinator_observed_ms": 278818,
+          "heartbeat": {
+            "context": "menu_backpack",
+            "frame": 81.0,
+            "physics_frame": 243.0,
+            "pos": [
+              57.3681221008301,
+              1.93094336986542,
+              151.502136230469
+            ],
+            "session_peers": [],
+            "state_hash": 648403070.0,
+            "t": 270.461,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 447.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 278371.0,
+          "id": "s3",
+          "phase": "timeout_before_finish"
+        }
+      ],
+      "logs": {
+        "net-runs/net-run-local-7880202/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {
+            "ERROR: Condition \"status < 0\" is true. Returning: ERR_CANT_OPEN": 1
+          },
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1,
+            "WARNING: All audio drivers failed, falling back to the dummy driver.": 1,
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1
+          }
+        },
+        "net-runs/net-run-local-7880202/peer-0.log": {
+          "errors": {
+            "ERROR: Condition \"status < 0\" is true. Returning: ERR_CANT_OPEN": 1
+          },
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1,
+            "WARNING: All audio drivers failed, falling back to the dummy driver.": 1,
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1
+          }
+        },
+        "run.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1
+          }
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1
+          }
+        }
+      },
+      "outcome": "FAIL before native refusal capture: actual child ALSA audio ERR_CANT_OPEN plus original command deadline exhausted during Satchel binding on software llvmpipe. No script/parse error; no PNG/no result.",
+      "evidence_limit": "Neither actual native refusal nor readability established. Original headless actual refusal passes remain separately scoped. No deadline/state/input/guard waiver.",
+      "independent_native_review": "PENDING"
+    },
+    {
+      "id": 37105696044,
+      "display_title": "render f18-flying-refusal-pixels-r1 @ 85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+      "head_sha": "a157a9bb2b12ee0cb04532c88293f4dda53c4634",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37105696044",
+      "checkout": "85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+      "artifact_id": 11267708964,
+      "raw_artifact": "flying-refusal-pixels-r1-remote.zip",
+      "bytes": 11930937,
+      "sha256": "a1b137414258853ef0cc9a9f7187704f3c8a5b497cfccceba829c55448fad799",
+      "native_exit_code": null,
+      "native_exit_limit": "Original artifact contains no exit_code; no engine exit inferred.",
+      "native_pixels": [],
+      "net_failures": [
+        "peer 0 f18_fixture: no verdict",
+        "F18 traversal refusal peer logs have no engine/script errors (peer 0: ERROR: x1)"
+      ],
+      "net_fatal": "",
+      "timeouts": [
+        {
+          "action": "f18_fixture",
+          "coordinator_deadline_ms": 277780.0,
+          "coordinator_observed_ms": 277785,
+          "heartbeat": {
+            "context": "panel:@CanvasLayer@67081",
+            "frame": 78.0,
+            "physics_frame": 67.0,
+            "pos": [
+              -1.40000009536743,
+              4.65094184875488,
+              14.2999992370605
+            ],
+            "session_peers": [],
+            "state_hash": 949396019.0,
+            "t": 255.646,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 8398.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 269387.0,
+          "id": "s1",
+          "phase": "timeout_before_finish"
+        }
+      ],
+      "logs": {
+        "net-runs/net-run-local-13719832/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {
+            "ERROR: Condition \"status < 0\" is true. Returning: ERR_CANT_OPEN": 1
+          },
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1,
+            "WARNING: All audio drivers failed, falling back to the dummy driver.": 1,
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "net-runs/net-run-local-13719832/peer-0.log": {
+          "errors": {
+            "ERROR: Condition \"status < 0\" is true. Returning: ERR_CANT_OPEN": 1
+          },
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1,
+            "WARNING: All audio drivers failed, falling back to the dummy driver.": 1,
+            "WARNING: instance_reset_physics_interpolation() is deprecated.": 1,
+            "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light": 8
+          }
+        },
+        "run.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1
+          }
+        },
+        "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+          "errors": {},
+          "warnings": {
+            "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.": 1
+          }
+        }
+      },
+      "outcome": "FAIL before native refusal capture: actual child ALSA audio ERR_CANT_OPEN plus original command deadline exhausted during actual fixture lesson continuation on software llvmpipe. No script/parse error; no PNG/no result.",
+      "evidence_limit": "Neither actual native refusal nor readability established. Original headless actual refusal passes remain separately scoped. No deadline/state/input/guard waiver.",
+      "independent_native_review": "PENDING"
     }
   ],
   "acceptance": {
@@ -6695,40 +6867,5 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": [
-    {
-      "id": 37105694026,
-      "display_title": "render f18-swimming-refusal-pixels-r1 @ 85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
-      "head_branch": "tb/integration",
-      "head_sha": "a157a9bb2b12ee0cb04532c88293f4dda53c4634",
-      "status": "in_progress",
-      "conclusion": null,
-      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37105694026",
-      "checkout": "85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
-      "label": "f18-swimming-refusal-pixels-r1",
-      "mode": "render",
-      "script": "tests/smoke_net_f18_traversal_refusal.gd",
-      "args": "--native-peer=0",
-      "resolution": "1280x720",
-      "timeout_minutes": "15",
-      "scope": "Actual traversal refusal pixels and same-draw state; independent visual/native review pending. No earned/unlock/crossing/raise/audio/co-op/fullcriteria credit."
-    },
-    {
-      "id": 37105696044,
-      "display_title": "render f18-flying-refusal-pixels-r1 @ 85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
-      "head_branch": "tb/integration",
-      "head_sha": "a157a9bb2b12ee0cb04532c88293f4dda53c4634",
-      "status": "in_progress",
-      "conclusion": null,
-      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37105696044",
-      "checkout": "85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
-      "label": "f18-flying-refusal-pixels-r1",
-      "mode": "render",
-      "script": "tests/smoke_net_f18_traversal_refusal.gd",
-      "args": "--native-peer=0 --flying",
-      "resolution": "1280x720",
-      "timeout_minutes": "15",
-      "scope": "Actual traversal refusal pixels and same-draw state; independent visual/native review pending. No earned/unlock/crossing/raise/audio/co-op/fullcriteria credit."
-    }
-  ]
+  "pending_dispatches": []
 }
