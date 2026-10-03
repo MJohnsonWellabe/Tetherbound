@@ -7,6 +7,7 @@ const SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 const TRAINERS := preload("res://scripts/net/trainer_spawn.gd")
 const SOURCE := "meadows"
 const TARGET := "water"
+const PASSIVE_PREPARATION := preload("res://scripts/net/owner_passive_preparation.gd")
 
 class CancellationCoordinator extends "res://scripts/net/realm_transition.gd":
 	var injected := false
@@ -511,6 +512,33 @@ func _fixture_permission_request() -> void:
 	_fixture_original = {"session": weakref(session), "world": weakref(world),
 		"envelope": envelope, "permit": permit, "owner_saved": false}
 	remote[peer] = _fixture_original
+	if not _check(arrival.call("transition_authorized", peer, TARGET) == false,
+		"consumed transport fixture alone cannot replace the prepared origin save"): return
+	var passive: RefCounted = session.call("_owner_passive_service")
+	var streams: Dictionary = passive.get("hosts")
+	var original_stream: Dictionary = streams.get(character, {})
+	if not _check(original_stream.get("checkpoint", {}).is_empty(), "transport checkpoint fixture cannot replace a retained passive source"): return
+	# This component probe starts after the origin BOOL grant. These are only
+	# the exact fields read by the shipping departure predicate, not a fake
+	# preparation packet or evidence of a disk write/earned portal arrival.
+	var checkpoint: Dictionary = {"source_kind": "portal_arrival",
+		"request": PASSIVE_PREPARATION.portal_request(envelope, permit), "travel_ready": true}
+	_fixture_original["passive"] = weakref(passive)
+	_fixture_original["passive_character"] = character
+	_fixture_original["passive_stream_was_present"] = streams.has(character)
+	_fixture_original["passive_checkpoint"] = checkpoint
+	_fixture_original["passive_checkpoint_was_present"] = original_stream.has("checkpoint")
+	_fixture_original["passive_original_checkpoint"] = original_stream.get("checkpoint")
+	var fixture_stream: Dictionary = original_stream.duplicate(true)
+	fixture_stream["checkpoint"] = checkpoint
+	streams[character] = fixture_stream
+	var request: Dictionary = checkpoint.request
+	var stale: Dictionary = request.duplicate(true)
+	stale.session_epoch = epoch + ":prior-generation"
+	checkpoint.request = stale
+	if not _check(arrival.call("transition_authorized", peer, TARGET) == false,
+		"a stale prepared generation cannot authorize the original consumed permit"): return
+	checkpoint.request = request
 	if not _check(arrival.call("transition_authorized", peer, TARGET) == true \
 		and arrival.call("transition_authorized", peer, "cloudreach") == false \
 		and arrival.call("transition_authorized", 1, TARGET) == false,
@@ -606,6 +634,15 @@ func _arrived() -> void:
 	if not _check(not _fixture_original.is_empty() and is_same(remote.get(peer), _fixture_original) \
 		and _fixture_original.session.get_ref() == session and _fixture_original.world.get_ref() == get_node("/root/Game").get("world"),
 		"actual arrived milestone retires only the exact original transport-fixture permission"): return
+	var passive: RefCounted = _fixture_original.passive.get_ref()
+	var character: String = str(_fixture_original.passive_character)
+	var streams: Dictionary = passive.get("hosts") if passive != null else {}
+	if not _check(passive != null and is_same(streams.get(character, {}).get("checkpoint"), _fixture_original.passive_checkpoint),
+		"actual arrival retires only the exact disclosed component checkpoint"): return
+	var stream: Dictionary = streams[character]
+	if _fixture_original.passive_checkpoint_was_present: stream["checkpoint"] = _fixture_original.passive_original_checkpoint
+	else: stream.erase("checkpoint")
+	if not _fixture_original.passive_stream_was_present and stream.is_empty(): streams.erase(character)
 	remote.erase(peer)
 	_fixture_original = {}
 	if latejoin_mode:

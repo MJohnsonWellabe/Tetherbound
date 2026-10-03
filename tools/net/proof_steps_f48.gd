@@ -123,6 +123,7 @@ static func _owner_transport_matches(game: Node, writer: Node, bound: Dictionary
 	return true
 
 static func _watch_owner_saves(tree: SceneTree) -> bool:
+	_watch_fallback_completions(tree)
 	if tree.has_meta("f48_owner_save_watch"): return true
 	var game := tree.root.get_node_or_null(^"Game")
 	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
@@ -190,6 +191,122 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 	writer.connect("transaction_boundary", observer)
 	tree.set_meta("f48_owner_save_watch", observer)
 	return true
+
+## Diagnostic only: completed(bool) carries no frozen request identity. Never
+## promote this current-file observation into a ledger edge or snapshot source.
+static func _watch_fallback_completions(tree: SceneTree) -> void:
+	if tree.has_meta("f48_fallback_completion_watch"): return
+	var game: Node = tree.root.get_node_or_null(^"Game")
+	if game == null or game.get("session") == null: return
+	var saver: Variant = game.get("save_system")
+	if not saver is RefCounted or not saver.has_signal("fallback_completed"): return
+	var saver_script: Script = saver.get_script()
+	if saver_script == null or saver_script.resource_path != "res://scripts/save/save_game.gd": return
+	var bound := {"tree": weakref(tree), "game": weakref(game),
+		"saver": weakref(saver), "session": weakref(game.get("session"))}
+	var observer := func(success: bool) -> void: _observe_fallback_completion(bound, success)
+	saver.connect("fallback_completed", observer)
+	tree.set_meta("f48_fallback_completion_watch", observer)
+
+static func _fallback_source_identity(value: Variant) -> Dictionary:
+	if not value is Object or not is_instance_valid(value): return {}
+	var script: Script = value.get_script()
+	return {"instance_id": value.get_instance_id(), "class": value.get_class(),
+		"script": script.resource_path if script != null else ""}
+
+## Read the primary file bytes only. Do not join a worker, repair/select an
+## atomic tail, or touch the saver/store caches while another request runs.
+static func _fallback_raw_file(path: String) -> Dictionary:
+	var file: FileAccess = FileAccess.open(path,FileAccess.READ)
+	if file == null: return {"payload":{},"sha256":""}
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
+	file.close()
+	var decoded: Variant = preload("res://scripts/save/save_document.gd").parse(bytes.get_string_from_utf8())
+	var hasher := HashingContext.new()
+	hasher.start(HashingContext.HASH_SHA256)
+	hasher.update(bytes)
+	return {"payload":decoded if decoded is Dictionary else {},"sha256":hasher.finish().hex_encode()}
+
+static func _fallback_current_files(game: Node, saver: RefCounted) -> Dictionary:
+	var local: RefCounted = game.get("local")
+	var world: RefCounted = game.get("world")
+	# SaveGame.characters()/worlds() call finish_fallback(). Fields are the
+	# actual mounted stores, whose path_for methods perform no writes/joins.
+	var characters: RefCounted = saver.get("_characters")
+	var worlds: RefCounted = saver.get("_worlds")
+	if local == null or world == null or characters == null or worlds == null: return {}
+	var character_path: String = characters.call("path_for",str(local.get("character_id")))
+	var world_path: String = worlds.call("path_for",str(world.get("world_id")))
+	var owner_file: Dictionary = _fallback_raw_file(character_path)
+	var owns_world: bool = game.call("world_save_owned") == true
+	var world_file: Dictionary = _fallback_raw_file(world_path) if owns_world else {"payload":{},"sha256":""}
+	return {"character_id":str(local.get("character_id")),"world_id":str(world.get("world_id")),
+		"world_namespace":str(world.get("reward_delivery_namespace")),"realm":str(local.get("realm")),
+		"memory":local.call("save_data"),"disk":owner_file.payload,"world":world.call("save_data"),
+		"disk_world":world_file.payload,"owns_world":owns_world,"character_path":character_path,"world_path":world_path,
+		"character_sha256":owner_file.sha256,"world_sha256":world_file.sha256}
+
+static func _observe_fallback_completion(bound: Dictionary, success: bool) -> void:
+	if not success: return
+	var tree: SceneTree = bound.tree.get_ref() as SceneTree
+	var game: Node = bound.game.get_ref() as Node
+	var saver: RefCounted = bound.saver.get_ref() as RefCounted
+	var session: Node = bound.session.get_ref() as Node
+	if not is_instance_valid(tree) or tree.root == null or not is_instance_valid(game) \
+		or not game.is_inside_tree() or game.is_queued_for_deletion() or not is_instance_valid(session) \
+		or not session.is_inside_tree() or session.is_queued_for_deletion() or saver == null or tree.root.get_node_or_null(^"Game") != game \
+		or game.get("save_system") != saver or game.get("session") != session: return
+	var writer: Node = session.get_node_or_null(^"LedgerRpc")
+	if not is_instance_valid(writer) or writer.is_queued_for_deletion(): return
+	var authority: Dictionary = _owner_transport(game, writer)
+	if authority.is_empty(): return
+	var sequence: int = int(tree.get_meta("f48_fallback_completion_sequence", 0)) + 1
+	if sequence > 32: return # Bounded diagnostics; no producer result is changed.
+	var characters: RefCounted = saver.get("_characters")
+	if characters == null: return
+	var owner_path: String = characters.call("path_for",str(game.get("local").get("character_id")))
+	var hash_before: String = _digest(owner_path)
+	var files: Dictionary = _fallback_current_files(game,saver)
+	if files.is_empty() or not _owner_transport_matches(game, writer, authority): return
+	var hash_after: String = _digest(owner_path)
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
+	var original: Dictionary = edge.get("row", {}).duplicate(true)
+	var current: Variant = files.get("world", {}).get("reward_deliveries", {}).get(edge.get("identity"))
+	var same_accepted: bool = false
+	if not original.is_empty() and current is Dictionary and current.get("status") == "accepted":
+		var compared: Dictionary = current.duplicate(true)
+		compared["status"] = original.get("status")
+		same_accepted = _json_equal(original, compared)
+	var identities := {}
+	for field: String in ["game_ref", "local_ref", "world_ref", "session_ref", "writer_ref", "transport_ref"]:
+		identities[field] = _fallback_source_identity(authority[field].get_ref())
+	var observation := {"source": "actual_SaveGame_fallback_completed_true_current_file_observation",
+		"completion_success": true, "request_bound": false,
+		"request_limitation": "completed(bool) contains no request identity; current file is observed at callback, not certified as that worker request",
+		"observer_pid": OS.get_process_id(), "sampled_ms": Time.get_ticks_msec(),
+		"physics_frame": Engine.get_physics_frames(), "session_epoch": authority.epoch,
+		"local_peer": authority.peer, "identities": identities, "saver": _fallback_source_identity(saver),
+		"worker": _fallback_source_identity(saver.get("_fallback")),
+		"worker_writer": _fallback_source_identity(saver.get("_fallback_writer")),
+		"files": files, "character_sha256_before_observe": hash_before, "character_sha256_after_observe": hash_after,
+		"observed_file_hash_stable": not hash_before.is_empty() and hash_before == hash_after and hash_before == files.character_sha256,
+		"original_ledger_row": original,
+		"current_ledger_row": current.duplicate(true) if current is Dictionary else {},
+		"original_row_accepted_unchanged": same_accepted,
+		"original_edge_lifetime_matches": _owner_transport_matches(game, writer, edge.get("authority", {})),
+		"original_edge_path": edge.get("path", ""), "original_edge_sha256": edge.get("sha256", ""),
+		"original_owner_file_sha256": edge.get("files", {}).get("character_sha256", ""),
+		"passive": PASSIVE.evidence(tree, _snapshot_anchor(tree))}
+	var output: String = OS.get_environment("TB_PROOF_OUT")
+	if output.is_empty(): return
+	var dir: String = output.path_join("f48-fallback-completions").path_join(str(files.character_id))
+	DirAccess.make_dir_recursive_absolute(dir)
+	var path: String = dir.path_join("completion-%d-%d.json" % [OS.get_process_id(), sequence])
+	if not DETACHED.publish(path, observation): return
+	tree.set_meta("f48_fallback_completion_sequence", sequence)
+	print("F48_FALLBACK_COMPLETION " + JSON.stringify({"path": path, "sha256": _digest(path),
+		"character_sha256": files.character_sha256, "request_bound": false,
+		"original_row_accepted_unchanged": same_accepted, "sampled_ms": observation.sampled_ms}))
 
 static func _saved_edge_errors(edge: Dictionary) -> Array[String]:
 	var errors: Array[String] = []

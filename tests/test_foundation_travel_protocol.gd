@@ -6,6 +6,8 @@ const POLICY := preload("res://scripts/net/portal_action_policy.gd")
 const LIFECYCLE := preload("res://scripts/net/foundation_travel_lifecycle.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
+const PASSIVE := preload("res://scripts/net/owner_passive_sync.gd")
+const PREPARATION := preload("res://scripts/net/owner_passive_preparation.gd")
 
 class GameFixture extends Node:
 	var world := WORLD.new()
@@ -15,6 +17,8 @@ class SessionFixture extends Node:
 	signal session_ended(reason: String)
 	var game := GameFixture.new()
 	var _portal_policy := POLICY.new()
+	var _character_authority := preload("res://scripts/net/character_authority.gd").new()
+	var passive: RefCounted
 	var context: Dictionary = {}
 	var sent: Dictionary = {}
 	var reply: Dictionary = {}
@@ -23,6 +27,10 @@ class SessionFixture extends Node:
 	func is_host() -> bool: return true
 	func local_peer_id() -> int: return 1
 	func _game() -> Node: return game
+	func _authority_character(peer: int) -> String: return "guest_a" if peer == 2 else "host_a"
+	func _owner_passive_service() -> RefCounted:
+		if passive == null: passive = PASSIVE.new(self)
+		return passive
 	func _host_portal_context(_peer: int) -> Dictionary: return context
 	func _portal_envelope_valid(peer: int, envelope: Dictionary) -> bool:
 		return peer == 2 and envelope.character_id == "guest_a" and envelope.session_epoch == "epoch_a"
@@ -99,9 +107,26 @@ func test_consumed_guest_permit_survives_failed_save_and_requires_correlated_not
 	assert_true(permit.request_id != envelope.request_id)
 	assert_true(session._portal_policy.consume_permit(permit.request_id, 2, "guest_a", "world_a", "meadows").is_empty())
 	assert_true(arrival._remote.has(2))
+	assert_false(arrival.transition_authorized(2, "meadows"), "consumed permission alone cannot substitute for the prepared origin save")
+	# This consumer fixture begins after the authenticated origin BOOL grant.
+	# Supply only its shipping departure predicate's exact checkpoint fields;
+	# no preparation packet, disk save, or earned travel credit is fabricated.
+	var passive: RefCounted = session._owner_passive_service()
+	assert_true(passive.get("hosts").get("guest_a", {}).get("checkpoint", {}).is_empty())
+	var request: Dictionary = PREPARATION.portal_request(envelope, permit)
+	var checkpoint: Dictionary = {"source_kind": "portal_arrival", "request": request, "travel_ready": true}
+	passive.get("hosts")["guest_a"] = {"checkpoint": checkpoint}
 	assert_true(arrival.transition_authorized(2, "meadows"), "consumed retained host permit authorizes its destination")
 	assert_false(arrival.transition_authorized(2, "stormwood"), "raw alternate destination is refused")
 	assert_false(arrival.transition_authorized(3, "meadows"), "another peer cannot borrow the permit")
+	checkpoint.travel_ready = false
+	assert_false(arrival.transition_authorized(2, "meadows"), "unsaved origin cannot depart")
+	checkpoint.travel_ready = true
+	var wrong_request: Dictionary = request.duplicate(true)
+	wrong_request.session_epoch = "prior_generation"
+	checkpoint.request = wrong_request
+	assert_false(arrival.transition_authorized(2, "meadows"), "another prepared generation cannot authorize the original permit")
+	checkpoint.request = request
 	arrival.owner_notice(2, envelope, envelope.request_id)
 	assert_false(arrival._remote[2].owner_saved)
 	var stale := envelope.duplicate(true)
