@@ -64,7 +64,7 @@ func _run() -> void:
 	for index in 2:
 		_check(prompts[index].global_position.is_equal_approx(trainer.global_position + Vector3(-1.5 if index == 0 else 1.5, 0, 0)),
 			"relocating the trainer carries its side interaction")
-	var retained := weakref(prompts[1])
+	var retained: WeakRef = weakref(prompts[1])
 	trainer.free()
 	_check(retained.get_ref() == null, "freeing the trainer removes its detached-transform prompt")
 	fixture.free()

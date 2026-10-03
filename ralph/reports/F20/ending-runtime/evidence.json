@@ -1227,16 +1227,6 @@
     }
   },
   "remote_pending": {
-    "rematch_anchor_native_r1": {
-      "run": 37099206242,
-      "job": 111135250161,
-      "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
-      "script": "tests/smoke_rematch_prompt_anchor.gd",
-      "mode": "headless",
-      "timeout_minutes": 5,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099206242",
-      "status": "Original isolated hosted run confirmed live; no result claimed; no local engine/GPU use."
-    },
     "solo_r18": {
       "run": 37099207884,
       "job": 111135255404,
@@ -1394,9 +1384,36 @@
     ],
     "reason": "r17 normal X actually activated original Bryn talk. Source separately shows NPC root turns toward player while local side rematch children orbit. Fix removes that rotation inheritance while retaining translation and child lifetime; r17 rotation cause is not directly measured.",
     "change": "Interactable subclass top_level side zones at fixed world +/-1.5X, following real trainer translation in idle callbacks. Inherited registration/reindex/exit/LOS/offer/input unchanged; mount keeps radius/disabled-first/configure/canonical-source/authority/admission binding. Halda boss prompts unchanged.",
-    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required. Original no-parser-concern clearance WITHDRAWN for fixture line67 after actual native parse failure; production portion has no runtime result from this check. One-line explicit WeakRef correction under fresh review.",
     "limits": "Idle translation is not frame-atomic moving-trainer admission. Native empty fixture has no art, ground, campaign, fight or save proof. Original full F20 actual reload/canonical rematch admission remains required, #3 OPEN.",
-    "native": "Original anchor-native-r1 run37099206242/job111135250161 live, no result claimed.",
-    "actual": "Original solo-r18 run37099207884/job111135255404 live, no result claimed."
+    "native": "Original native-r1 FAIL before execution with1SCRIPT+1engineERROR eachlog; original exactbytes retained. One-line fixture type correction under review; affected native-r2 not yet dispatched.",
+    "actual": "Original solo-r18 run37099207884/job111135255404 live, no result claimed.",
+    "native_attempts": [
+      {
+        "run": 37099206242,
+        "job": 111135250161,
+        "artifact": 11264769721,
+        "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+        "verdict": "FAIL before native checks: fixture inferred Variant warning treated as parser error",
+        "workflow_conclusion": "failure",
+        "checks_reached": 0,
+        "native_bytes": 458,
+        "native_sha256": "b375db505fd77178af030aeecd840978f38bc0f81c64bcd66af4c327e3b67e11",
+        "user_bytes": 451,
+        "user_sha256": "418461615d302d6f7bcf4a0d1542e418b11c8b640cfe6bf260f1f8f70ecb1d74",
+        "native_script_errors": 1,
+        "native_engine_errors": 1,
+        "user_script_errors": 1,
+        "user_engine_errors": 1,
+        "artifact_bytes": 1060,
+        "artifact_sha256": "b87e70f698ac64e2ae3f5ada40bd108454e839b46a607f5dc460b6f247927d15",
+        "logs": [
+          "f20-anchor-r1-native.log.gz",
+          "f20-anchor-r1-workflow.log.gz",
+          "f20-anchor-r1-artifact.zip"
+        ],
+        "reason": "Fixture line67 weakref() return inferred with :=. Correction explicitly annotates WeakRef; no runtime or production correctness inferred from failed parse."
+      }
+    ]
   }
 }
