@@ -10,6 +10,18 @@ const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const STATION := "altar:meadows:quote-fixture"
+const NATIVE_CASES := [
+	"host_quote_uses_three_arguments_and_builds_actual_payment_without_mutating_owner",
+	"guest_quote_rebuilds_from_correlated_actual_session_reply_once",
+	"quote_rejects_wrong_id_key_uid_source_and_session_transport_scope",
+	"inline_quote_signal_is_not_overwritten_by_pending_return",
+	"malformed_correlated_quote_never_enables_payment",
+	"quote_rejects_same_session_new_epoch_or_changed_character_world_context",
+	"closed_reopened_or_reselected_panel_rejects_previous_quote",
+	"spend_keeps_original_five_fields_and_requests_fresh_quote_after_terminal_result",
+]
+const NATIVE_ASSERTIONS := [12, 11, 12, 7, 18, 48, 29, 20]
+var _fixture_tree: SceneTree
 
 class FixtureGame extends Node:
 	var local: RefCounted
@@ -81,7 +93,7 @@ func _fixture(host: bool = true, two_creatures: bool = false) -> Dictionary:
 	assert_eq(RECORD.errors(session.quote_record, DATA.CHARACTER), [], "quote starts from a canonical retained owner")
 	var holder := Node.new()
 	holder.name = "AltarQuoteFixture_" + Crypto.new().generate_random_bytes(8).hex_encode()
-	(Engine.get_main_loop() as SceneTree).root.add_child(holder)
+	_fixture_tree.root.add_child(holder)
 	holder.add_child(session)
 	holder.add_child(game)
 	var service := SERVICE.new()
@@ -107,7 +119,7 @@ func _buttons(root: Node, label: String, enabled_only: bool = true) -> Array[But
 func _has_ground_payment(f: Dictionary) -> bool:
 	return _buttons(f.panel, "Ground Essence · Cost 20 · Have 100").size() == 1
 
-func test_host_quote_uses_three_arguments_and_builds_actual_payment_without_mutating_owner() -> void:
+func _case_host_quote_uses_three_arguments_and_builds_actual_payment_without_mutating_owner() -> void:
 	var f := _fixture()
 	var before := var_to_bytes(f.session.quote_record)
 	assert_true(f.service.open(STATION))
@@ -123,7 +135,7 @@ func test_host_quote_uses_three_arguments_and_builds_actual_payment_without_muta
 	assert_true(f.game.world.reward_deliveries.is_empty())
 	_free_fixture(f)
 
-func test_guest_quote_rebuilds_from_correlated_actual_session_reply_once() -> void:
+func _case_guest_quote_rebuilds_from_correlated_actual_session_reply_once() -> void:
 	var f := _fixture(false)
 	assert_true(f.service.open(STATION))
 	assert_false(_has_ground_payment(f))
@@ -141,7 +153,7 @@ func test_guest_quote_rebuilds_from_correlated_actual_session_reply_once() -> vo
 	assert_true(f.game.world.reward_deliveries.is_empty())
 	_free_fixture(f)
 
-func test_quote_rejects_wrong_id_key_uid_source_and_session_transport_scope() -> void:
+func _case_quote_rejects_wrong_id_key_uid_source_and_session_transport_scope() -> void:
 	var f := _fixture(false)
 	assert_true(f.service.open(STATION))
 	var request: Dictionary = f.session.sent_quotes[0]
@@ -164,7 +176,7 @@ func test_quote_rejects_wrong_id_key_uid_source_and_session_transport_scope() ->
 	assert_true(_has_ground_payment(f), "refused foreign replies do not consume the current original")
 	_free_fixture(f)
 
-func test_inline_quote_signal_is_not_overwritten_by_pending_return() -> void:
+func _case_inline_quote_signal_is_not_overwritten_by_pending_return() -> void:
 	var f := _fixture(false)
 	f.session.inline_quote_reply = true
 	assert_true(f.service.open(STATION))
@@ -174,7 +186,7 @@ func test_inline_quote_signal_is_not_overwritten_by_pending_return() -> void:
 	assert_true(f.service._quote_pending.is_empty())
 	_free_fixture(f)
 
-func test_malformed_correlated_quote_never_enables_payment() -> void:
+func _case_malformed_correlated_quote_never_enables_payment() -> void:
 	var f := _fixture(false)
 	assert_true(f.service.open(STATION))
 	for defect: String in ["creature", "level", "revision", "payment", "duplicate_payment"]:
@@ -193,7 +205,7 @@ func test_malformed_correlated_quote_never_enables_payment() -> void:
 		assert_true(f.session.spent.is_empty())
 	_free_fixture(f)
 
-func test_quote_rejects_same_session_new_epoch_or_changed_character_world_context() -> void:
+func _case_quote_rejects_same_session_new_epoch_or_changed_character_world_context() -> void:
 	for field: String in ["epoch", "character", "world", "namespace", "local_object", "world_object", "session_object", "station"]:
 		var f := _fixture(false)
 		assert_true(f.service.open(STATION))
@@ -220,7 +232,7 @@ func test_quote_rejects_same_session_new_epoch_or_changed_character_world_contex
 		if replacement != null: replacement.free()
 		_free_fixture(f)
 
-func test_closed_reopened_or_reselected_panel_rejects_previous_quote() -> void:
+func _case_closed_reopened_or_reselected_panel_rejects_previous_quote() -> void:
 	for change: String in ["close", "reopen", "same_selection", "other_selection"]:
 		var f := _fixture(false, true)
 		assert_true(f.service.open(STATION))
@@ -245,7 +257,7 @@ func test_closed_reopened_or_reselected_panel_rejects_previous_quote() -> void:
 			assert_false(f.panel._quote.is_empty(), "the new open/selection still receives its own quote")
 		_free_fixture(f)
 
-func test_spend_keeps_original_five_fields_and_requests_fresh_quote_after_terminal_result() -> void:
+func _case_spend_keeps_original_five_fields_and_requests_fresh_quote_after_terminal_result() -> void:
 	var f := _fixture(false)
 	assert_true(f.service.open(STATION))
 	var original: Dictionary = f.session.sent_quotes[0]
@@ -277,3 +289,65 @@ func test_spend_keeps_original_five_fields_and_requests_fresh_quote_after_termin
 	assert_true(_has_ground_payment(f))
 	assert_true(f.game.world.reward_deliveries.is_empty())
 	_free_fixture(f)
+
+
+func run_initialized_cases(tree: SceneTree) -> Dictionary:
+	_fixture_tree = tree
+	var completed: Array[String] = []
+	var counts: Array[int] = []
+	for name: String in NATIVE_CASES:
+		var before := assertion_count
+		call("_case_" + name)
+		completed.append(name)
+		counts.append(assertion_count - before)
+	_fixture_tree = null
+	return {"cases": completed, "case_assertions": counts, "assertions": assertion_count, "failures": failures}
+
+
+func test_initialized_native_tree_preserves_all_altar_quote_bridge_assertions() -> void:
+	# The ordinary runner calls cases during SceneTree._init, before the engine
+	# main loop is available. Use the existing cue/focus test pattern: one real
+	# initialized child tree, explicit injection, exact case/assertion accounting.
+	var suffix := "%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	var path := "user://altar-quote-bridge-" + suffix + ".gd"
+	var log_path := ProjectSettings.globalize_path("user://altar-quote-bridge-" + suffix + ".log")
+	var runner := FileAccess.open(path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('''extends SceneTree
+func _initialize():
+	call_deferred("run")
+func run():
+	var test = load("res://tests/test_altar_essence_quote_bridge.gd").new()
+	var result = test.run_initialized_cases(self)
+	test = null
+	await process_frame
+	print("ALTAR_QUOTE_BRIDGE_RESULT=" + JSON.stringify(result))
+	quit(0 if result.failures.is_empty() and result.cases.size() == 8 and result.assertions == 157 else 1)
+''')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(path)
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"),
+		"--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	assert_true(FileAccess.file_exists(log_path), "retain the real initialized child log")
+	if FileAccess.file_exists(log_path): combined += "\n" + FileAccess.get_file_as_string(log_path)
+	var result: Dictionary = {}
+	var result_count := 0
+	for line: String in "\n".join(output).split("\n"):
+		if line.begins_with("ALTAR_QUOTE_BRIDGE_RESULT="):
+			print(line) # Preserve the original child case/count proof in the parent artifact.
+			result_count += 1
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("ALTAR_QUOTE_BRIDGE_RESULT="))
+			if parsed is Dictionary: result = parsed
+	assert_eq(result_count, 1, combined)
+	assert_eq(result.get("cases", []), NATIVE_CASES, "every original quote case must execute")
+	assert_eq(result.get("case_assertions", []), NATIVE_ASSERTIONS, "no case can abort and still appear green")
+	assert_eq(result.get("assertions", 0), 157, "preserve all original assertions")
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \
+		or combined.contains("RID allocations") or combined.contains("RIDs of type"), combined)
+	assert_eq(code, 0, combined)
