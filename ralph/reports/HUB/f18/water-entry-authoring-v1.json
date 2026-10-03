@@ -31,5 +31,11 @@
     "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_shape_3d.cpp",
     "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/math/geometry_3d.h"
   ],
-  "all_six_f18_criteria": "UNPROVEN"
+  "all_six_f18_criteria": "UNPROVEN",
+  "runtime_status": {
+    "WaterR6": 37101531880,
+    "earnedR9": 37101535389,
+    "checkout": "ce5c6224567836c82191a8585423ea0987718329",
+    "status": "in_progress at recording; no result yet"
+  }
 }

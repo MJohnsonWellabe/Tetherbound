@@ -5657,5 +5657,32 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": []
+  "pending_dispatches": [
+    {
+      "id": 37101531880,
+      "display_title": "render f18-native-stones-water-r6 @ ce5c6224567836c82191a8585423ea0987718329",
+      "head_branch": "tb/integration",
+      "head_sha": "12961eaaf0ff955f0bef45eb205e1388fa45f180",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101531880",
+      "checkout": "ce5c6224567836c82191a8585423ea0987718329",
+      "mode": "headless",
+      "scope": "Coordinator-authorized ONEWatertransitioncoordinate Z162->162.5 insideoriginal3msafearea; allunchanged5stones andactualPlayerentryfullcapsule/fivefloor/stable60frames/nativeguard proof required.",
+      "runtime_verdict": "UNPROVEN pending original artifact"
+    },
+    {
+      "id": 37101535389,
+      "display_title": "render f18-earned-headless-r9 @ ce5c6224567836c82191a8585423ea0987718329",
+      "head_branch": "tb/integration",
+      "head_sha": "12961eaaf0ff955f0bef45eb205e1388fa45f180",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101535389",
+      "checkout": "ce5c6224567836c82191a8585423ea0987718329",
+      "mode": "headless",
+      "scope": "Originalearnedloop, reviewedguidededroadwithsameoriginaltotalbudget/watchdog/floor/unstickguards plusintIDidempotentread-onlyresourceexitobserver. R8earlierStonevariation andoriginalengineerrorsretained; noNAV/budget/terrainfix.",
+      "runtime_verdict": "UNPROVEN pending original artifact"
+    }
+  ]
 }
