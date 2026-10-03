@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, actualc352 roadwalk succeeds butcombinedfloor/exactprovider gatefails; readonlyfailuretracea924sourcePASS/solo-r13live. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066 actualnet-r6hostPASS/guest205scommandtimeout at pendinghostarrival/missingpersonalreceipt; readonlyownerobservere39sourcePASS/net-r7live. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
+    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, actuala924 r13 roadwalk/ground/LOS/boardoffer PASS butstoredHaldaGreetwinner fails exactprovidergate; normalidlepublication31003sourcePASS/affectedreplaypending. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066 actualnet-r6hostPASS/guest205scommandtimeout at pendinghostarrival/missingpersonalreceipt; readonlyownerobservere39sourcePASS/net-r7live. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -743,6 +743,36 @@
         "warnings": "Exact guest clientleave could notwritecharacter warning during forced teardown retained. No character-loss or producer-cause inference.",
         "limits": "Disclosedpost-finale/current fixtures, headless/harnessinput/Skip. Guestending/rejoin/reload/UID checks unreached. #4OPEN. Physical pose/hostpendingjournal do not prove completed personal return.",
         "independent_review": "PASS f20_review exact artifact/hashes/native/peer/user/disk/fatal/timeout audit; host ending/credits pass, guest pending host journal/personal disk mismatch precisely scoped; #4OPEN."
+      },
+      {
+        "run": 37093720949,
+        "job": 111119255015,
+        "artifact": 11263549304,
+        "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
+        "verdict": "FAIL exact bounty provider is stored Halda prompt despite actionable current board offer",
+        "workflow_conclusion": "failure",
+        "checks": 58,
+        "failures": 2,
+        "native_bytes": 73697,
+        "native_sha256": "e3650e3d192c271a4c601ac9e9edfab17abbfdadc61c8e989359e8a282076d5c",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_log_bytes": 73443,
+        "user_log_sha256": "b692ebe41ec215a5efe8d65f98d3d567299fecd1da396ebc29bee88054449531",
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 670915,
+        "artifact_sha256": "616012cc998174d50f0fd1bd8a3e68265ac052486c38a51fc0009be118af736f",
+        "logs": [
+          "f20-solo-r13-native.log.gz",
+          "f20-solo-r13-workflow.log.gz",
+          "f20-solo-r13-artifact.zip"
+        ],
+        "passed": "Actual ending/currentfive/truthfulprose/credits1ACK/realreset-reload/sameUIDs-inventory-world-receipts/repeat/no-replay/safemovement/unfinishedlocaljournal/enabledactualrematches/mountedbounty PASS. Original singleauthoredroadwalk and recoverycount PASS. At failure actualplayer grounded, boardLOS true and boardoffer actionable/radius3.6/distance2.25243544578552/priority0; ordinaryworldowner none/fightfalse.",
+        "exact_provider_trace": "F20 BOUNTY provider trace player=(86.42404, 0.900942, 46.78172) floor=true prompt=(86.10589, 1.8, 48.82229) prompt_radius=3.6 expected=/root/MeadowsPlayground/Tournament/Board/BountyInteractable target_offer={ \"label\": \"Read Halda\\'s bounties\", \"distance\": 2.25243544578552, \"priority\": 0, \"actionable\": true } target_los=true winner=Interactable:<Node3D#82653156171792> winning_offer={ \"label\": \"Greet Halda\", \"distance\": 2.29207062721252, \"priority\": 0, \"actionable\": true } winner_path=/root/MeadowsPlayground/VillageNPCs/Halda/Interactable arbiter_enabled=true fight_owns=false owner=none",
+        "failure": "Storedarbiterwinningprovider /root/MeadowsPlayground/VillageNPCs/Halda/Interactable, Greet Halda actionable/priority0/distance2.29207062721252. Exactbounty-provider gateFAIL pluscomplete-sentinelFAIL. Actualbountyscreen/3rows/close unreached. Currentboard offer is nearer than storedHalda winningoffer; source._process publishes winner, previousharnesswait only8physics afterstop, so staleidlepublication is a supported inference, not an observed idle-callback timeline.",
+        "limits": "Disclosedpost-finale/restoredcurrent fixture/harnessinput/Skip/headless. #1 priorMETcandidate reused; #3OPEN. No productionarbiter/radius/priority/wall/LOS/budget bypass or gameplayfailure inferred.",
+        "independent_review": "PASS f20_review exactZIP/native/user hashes and58checks2/0errors failedscope. Actualground/LOS/actionableboard pass, storedHalda prompt wins. Sourceidlepublication race is supported inference, not proven; #3OPEN."
       }
     ],
     "limitations": [
@@ -894,7 +924,7 @@
       "verdict": "OPEN",
       "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
       "indirect_only": "Synthetic62 PASS reused; actualsolo-r11 now proves cleanreload/safecompletedworld partial but bounty availability remainsunproved.",
-      "latest_runtime": "solo-r12 realdiskreset/reload/sameUIDs/inventory/world/receipts/no-replay/safemovement/unfinishedjournal/enabledrematches PASS; authoredroadwalk succeeds butbountyfloor/exactprovider gateFAIL. Actualbountyscreen/live3rows/close unproved. #3OPEN."
+      "latest_runtime": "solo-r13 realreload/retention/repeat/safemovement/unfinishedjournal/enabledrematches/roadwalk PASS; bountyexactproviderFAIL, playergrounded/LOStrue/actionableboard butstoredHaldaGreetwins. Actualbountyscreen/live3rows/closeunproved. #3OPEN."
     },
     "4": {
       "verdict": "OPEN",
@@ -946,16 +976,6 @@
     }
   },
   "remote_pending": {
-    "solo_r13": {
-      "run": 37093720949,
-      "job": 111119255015,
-      "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
-      "script": "tests/smoke_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37093720949",
-      "status": "in progress; affected exact bounty floor/provider diagnostic, no result claimed"
-    },
     "net_r7": {
       "run": 37093999890,
       "job": 111120074500,
@@ -1032,7 +1052,7 @@
   "bounty_provider_diagnostic": {
     "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
     "independent_review": "PASS f20_review exact10 failure-only read/print lines, typednullablewinner path safe; no input/await/state/assertion/radius/budget changes.",
-    "runtime": "Affected solo-r13 live37093720949/job111119255015 exacta924; no result claimed."
+    "runtime": "Actualsolo-r13 compiles/exactfailuretraceexercised: groundedtrue/LOStrue/actionableboardnearer than storedHaldaGreetwinner. #3OPEN; sourceclockpublication inference directs normalidle-frame proof correction."
   },
   "pending_arrival_diagnostic": {
     "source": "e39a361e7ceb816b47a31e49e2d7c5b4a99d07e8",
@@ -1046,5 +1066,12 @@
     "runtime": "Not yet exercised. Existing net-r7 tests prior reviewed e39; wait its actual result before affected comparison replay. No pureplan/BOOL refusal claim yet.",
     "disk_lead": "Exact net-r6 PERSISTED guest portable projection differs from hostrow.before only by party0..4 happiness/nourishment (10fields). Disk is not livecurrent, so this is a lead, not an ownerplan/cause verdict.",
     "derived_disk_diff": "f20-net-r6-disk-projection-diff.json"
+  },
+  "bounty_idle_publication_correction": {
+    "source": "31003a424b",
+    "change": "Preserveoriginal8physicssettling frames, thenawait2ordinaryprocessframeedges before originalrecovery/floor/exactprovider/actionable/inputactivation checks. One completedidle callbackpass occursbetweenedges. No_recompute calls/route/tolerance/radius/priority/input/budget/productchange.",
+    "reason": "r13 currentboardoffer priority0/distance2.2524 nearer than storedHaldaGreetpriority0/distance2.2921. Sourcearbiter publishes on_process while oldproofsettles physics only; stalepublication is supportedinference.",
+    "independent_review": "PASS f20_review exact31003a424b sixlines. Twoordinaryprocess edges afteroriginal8physics includeonecompletedidle pass; originalbudget/tolerance/recovery/floor/exactprovider/actionable/X+activated gates unchanged. No productionwrite or_recompute call.",
+    "runtime": "Affectedsolo replay pending; #3OPEN."
   }
 }
