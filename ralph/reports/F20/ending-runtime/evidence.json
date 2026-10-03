@@ -1236,6 +1236,16 @@
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099207884",
       "status": "Original isolated hosted run confirmed live; no result claimed; no local engine/GPU use."
+    },
+    "rematch_anchor_native_r2": {
+      "run": 37099539943,
+      "job": 111136205156,
+      "source": "ba9bc255314701fd1b6f422103d153bb2e3f5a49",
+      "script": "tests/smoke_rematch_prompt_anchor.gd",
+      "mode": "headless",
+      "timeout_minutes": 5,
+      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37099539943",
+      "status": "Original affected native fixture rerun confirmed live. Fullsolo-r18 original source93e9 unchanged/live; no duplicate or restart."
     }
   },
   "lesson_input_driver": {
@@ -1386,7 +1396,7 @@
     "change": "Interactable subclass top_level side zones at fixed world +/-1.5X, following real trainer translation in idle callbacks. Inherited registration/reindex/exit/LOS/offer/input unchanged; mount keeps radius/disabled-first/configure/canonical-source/authority/admission binding. Halda boss prompts unchanged.",
     "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required. Original no-parser-concern clearance WITHDRAWN for fixture line67 after actual native parse failure; production portion has no runtime result from this check. One-line explicit WeakRef correction under fresh review.",
     "limits": "Idle translation is not frame-atomic moving-trainer admission. Native empty fixture has no art, ground, campaign, fight or save proof. Original full F20 actual reload/canonical rematch admission remains required, #3 OPEN.",
-    "native": "Original native-r1 FAIL before execution with1SCRIPT+1engineERROR eachlog; original exactbytes retained. One-line fixture type correction under review; affected native-r2 not yet dispatched.",
+    "native": "Original r1 FAIL before fixture execution, exact bytes retained. Reviewed fixture type correction ba9bc runs native-r2 37099539943/job111136205156; no result claimed.",
     "actual": "Original solo-r18 run37099207884/job111135255404 live, no result claimed.",
     "native_attempts": [
       {
@@ -1414,6 +1424,11 @@
         ],
         "reason": "Fixture line67 weakref() return inferred with :=. Correction explicitly annotates WeakRef; no runtime or production correctness inferred from failed parse."
       }
-    ]
+    ],
+    "fixture_type_correction": {
+      "source": "ba9bc255314701fd1b6f422103d153bb2e3f5a49",
+      "change": "One explicit WeakRef annotation on weakref() result; no assertions, scene, lifetime or production behavior changed.",
+      "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact one-line correction. Original r1 fixture syntax clearance withdrawn; raw1SCRIPT+1engine ERROR eachlog/zero checks verified. Actual native-r2 still required."
+    }
   }
 }
