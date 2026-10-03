@@ -5,6 +5,8 @@ extends CanvasLayer
 ## Required service contract:
 ## station_available(station_key) -> bool (actual registered Altar/reach)
 ## quote_essence_spend(station_key, owned_uid) -> Dictionary (display only)
+## essence_quote_completed(station_key, owned_uid, result) for a guest quote.
+## invalidate_essence_quote() discards the current presentation request.
 ## submit_essence_spend(station_key, request) -> void
 ## essence_spend_completed(spend_id, result) after owner state promotion.
 ## Pending rebind also requires reconcile_essence_spend(spend_id): query the
@@ -37,6 +39,7 @@ var _creature_uid := ""
 var _pending_id := ""
 var _quote: Dictionary = {}
 var _quote_code := "quote_unavailable"
+var _quote_waiting := false
 var _pending_durable := false
 var _open := false
 var _closing := false
@@ -54,15 +57,19 @@ func _ready() -> void:
 
 func configure_service(service: Node) -> bool:
 	if (_open and _pending_id.is_empty()) or not is_instance_valid(service): return false
-	for method: String in ["station_available", "quote_essence_spend", "submit_essence_spend", "reconcile_essence_spend"]:
+	for method: String in ["station_available", "quote_essence_spend", "invalidate_essence_quote", "submit_essence_spend", "reconcile_essence_spend"]:
 		if not service.has_method(method): return false
-	if not service.has_signal("essence_spend_completed"): return false
+	if not service.has_signal("essence_spend_completed") or not service.has_signal("essence_quote_completed"): return false
 	if _open: close()
 	if is_instance_valid(_service) and _service.is_connected("essence_spend_completed", _on_completed):
 		_service.disconnect("essence_spend_completed", _on_completed)
+	if is_instance_valid(_service) and _service.is_connected("essence_quote_completed", _on_quote_completed):
+		_service.disconnect("essence_quote_completed", _on_quote_completed)
 	_service = service
 	if not _service.is_connected("essence_spend_completed", _on_completed):
 		_service.connect("essence_spend_completed", _on_completed)
+	if not _service.is_connected("essence_quote_completed", _on_quote_completed):
+		_service.connect("essence_quote_completed", _on_quote_completed)
 	if not _pending_id.is_empty():
 		# Connect before asking: recovery may complete synchronously. The id and
 		# original intent stay intact until this exact transaction resolves.
@@ -96,6 +103,7 @@ func owns_input() -> bool: return _open or _closing
 
 func close() -> void:
 	if not _open: return
+	_invalidate_quote()
 	INPUT_OWNER.suppress_pause_reopen(get_tree())
 	_open = false
 	_closing = true
@@ -115,12 +123,15 @@ func _release_presentation() -> void:
 
 
 func _exit_tree() -> void:
+	_invalidate_quote()
 	if _open:
 		_open = false
 		_closing = false
 		_release_presentation()
 	if is_instance_valid(_service) and _service.is_connected("essence_spend_completed", _on_completed):
 		_service.disconnect("essence_spend_completed", _on_completed)
+	if is_instance_valid(_service) and _service.is_connected("essence_quote_completed", _on_quote_completed):
+		_service.disconnect("essence_quote_completed", _on_quote_completed)
 	if is_instance_valid(_details_panel): _details_panel.queue_free()
 
 
@@ -161,11 +172,33 @@ func _creature() -> RefCounted:
 	return null
 
 
-func _refresh_quote() -> void:
+func _invalidate_quote() -> void:
 	_quote = {}
+	_quote_waiting = false
+	if is_instance_valid(_service): _service.call("invalidate_essence_quote")
+
+
+func _refresh_quote() -> void:
+	_invalidate_quote()
 	_quote_code = "station_unavailable"
-	if not _station_available(_station_key) or _creature() == null: return
+	if not _open or not _pending_id.is_empty() or not _station_available(_station_key) or _creature() == null: return
+	_quote_waiting = true
 	var raw: Variant = _service.call("quote_essence_spend", _station_key, _creature_uid)
+	if not _quote_waiting: return # A synchronous completion already applied its quote.
+	_quote_waiting = raw is Dictionary and raw.get("pending") == true
+	_apply_quote(raw)
+
+
+func _on_quote_completed(station_key: String, owned_uid: String, result: Dictionary) -> void:
+	if not _open or _closing or not _quote_waiting or not _pending_id.is_empty() \
+		or station_key != _station_key or owned_uid != _creature_uid or not _station_available(_station_key): return
+	_quote_waiting = false
+	_apply_quote(result)
+	_rebuild(true)
+
+
+func _apply_quote(raw: Variant) -> void:
+	_quote = {}
 	if raw is Dictionary and raw.get("ok") is bool and raw.ok == true and raw.get("creature_uid") == _creature_uid \
 			and raw.get("payments") is Array and raw.payments.size() <= 3 and ESSENCE._integer(raw.get("level"), 1, 60) \
 			and ESSENCE._integer(raw.get("cap"), 1, 60) \
@@ -417,6 +450,7 @@ func _spend(payment_item: String) -> void:
 	var request := {"spend_id": _pending_id, "creature_uid": _creature_uid,
 		"expected_level": int(_quote.level), "payment_item": payment_item,
 		"expected_character_revision": int(_quote.expected_character_revision)}
+	_invalidate_quote()
 	_rebuild()
 	_service.call("submit_essence_spend", _station_key, request)
 
@@ -447,6 +481,7 @@ func _retry_retained_spend() -> void:
 	_pending_id = retained.intent.spend_id
 	_pending_durable = true
 	_creature_uid = str(retained.intent.get("creature_uid", _creature_uid))
+	_invalidate_quote()
 	_status = "Waiting for the original saved level transaction."
 	_rebuild()
 	_service.call("retry_retained_transaction", _station_key, _pending_id)

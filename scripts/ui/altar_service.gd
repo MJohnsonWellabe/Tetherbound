@@ -6,7 +6,8 @@ extends Node
 ## Foundation Session contract (actual canonical/transport implementation):
 ## altar_station_available(key) -> bool (actual reach/out-of-combat AND all
 ## canonical registry/world/owner-write/recovery doors available)
-## quote_altar_essence_spend(key, owned_uid) -> Dictionary
+## quote_altar_essence_spend(key, owned_uid, quote_id) -> Dictionary
+## altar_essence_quote_completed(key, owned_uid, quote_id, result) signal.
 ## submit_altar_essence_spend(key, five-field-intent) -> Dictionary
 ## reconcile_altar_essence_spend(key, ORIGINAL-five-field-intent) -> Dictionary
 ## altar_essence_spend_completed(key, spend_id, result:Dictionary) signal.
@@ -17,9 +18,12 @@ const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const PARTY := preload("res://autoload/party.gd")
 const NODE_NAME := "AltarService"
 signal essence_spend_completed(spend_id: String, result: Dictionary)
+signal essence_quote_completed(station_key: String, owned_uid: String, result: Dictionary)
 var _game: Node = null
 var _session: Node = null
 var _connection := Callable()
+var _quote_connection := Callable()
+var _quote_pending: Dictionary = {}
 var _panel: CanvasLayer = null
 var _pending: Dictionary = {}
 var _retry_left := 0.0
@@ -65,8 +69,13 @@ func _disconnect_session() -> void:
 	if is_instance_valid(_session) and _connection.is_valid() \
 			and _session.is_connected("altar_essence_spend_completed", _connection):
 		_session.disconnect("altar_essence_spend_completed", _connection)
+	if is_instance_valid(_session) and _quote_connection.is_valid() \
+			and _session.is_connected("altar_essence_quote_completed", _quote_connection):
+		_session.disconnect("altar_essence_quote_completed", _quote_connection)
+	invalidate_essence_quote()
 	_session = null
 	_connection = Callable()
+	_quote_connection = Callable()
 
 
 func _bind_session() -> bool:
@@ -78,16 +87,18 @@ func _bind_session() -> bool:
 		_last_code = "authority_missing"
 		return false
 	for method: String in ["altar_station_available", "quote_altar_essence_spend",
-		"submit_altar_essence_spend", "reconcile_altar_essence_spend"]:
+		"submit_altar_essence_spend", "reconcile_altar_essence_spend", "_altar_current_epoch"]:
 		if not candidate.has_method(method):
 			_last_code = "authority_missing"
 			return false
-	if not candidate.has_signal("altar_essence_spend_completed"):
+	if not candidate.has_signal("altar_essence_spend_completed") or not candidate.has_signal("altar_essence_quote_completed"):
 		_last_code = "authority_missing"
 		return false
 	_session = candidate
 	_connection = _on_session_completed.bind(_session)
 	_session.connect("altar_essence_spend_completed", _connection)
+	_quote_connection = _on_session_quote_completed.bind(_session)
+	_session.connect("altar_essence_quote_completed", _quote_connection)
 	return true
 
 
@@ -132,10 +143,46 @@ func open(station_key: String) -> bool:
 
 
 func quote_essence_spend(station_key: String, owned_uid: String) -> Dictionary:
+	invalidate_essence_quote()
 	if not station_available(station_key): return {"ok": false, "code": _last_code}
 	if not ESSENCE._component(owned_uid): return {"ok": false, "code": "not_owned"}
-	var raw: Variant = _session.call("quote_altar_essence_spend", station_key, owned_uid)
+	var context := _context()
+	var epoch: Variant = _session.call("_altar_current_epoch")
+	if context.is_empty() or not ESSENCE._opaque_id(epoch): return {"ok": false, "code": "authority_missing"}
+	var quote_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	# One in-flight presentation request, never a reusable price/state cache.
+	_quote_pending = {"station_key": station_key, "owned_uid": owned_uid, "quote_id": quote_id,
+		"context": context, "epoch": epoch, "source": weakref(_session),
+		"local": weakref(_game.get("local")), "world": weakref(_game.get("world"))}
+	var raw: Variant = _session.call("quote_altar_essence_spend", station_key, owned_uid, quote_id)
+	if _quote_pending.is_empty(): return {"ok": false, "pending": true, "code": "quote_pending"} # Synchronous signal consumed it.
+	if not _quote_scope_current():
+		invalidate_essence_quote()
+		return {"ok": false, "code": "authority_missing"}
+	if not raw is Dictionary or raw.get("pending") != true: invalidate_essence_quote()
 	return raw.duplicate(true) if raw is Dictionary else {"ok": false, "code": "quote_unavailable"}
+
+
+func invalidate_essence_quote() -> void:
+	_quote_pending.clear()
+
+
+func _quote_scope_current() -> bool:
+	return not _quote_pending.is_empty() and is_instance_valid(_game) and is_instance_valid(_session) \
+		and _game.get("session") == _session and _quote_pending.source.get_ref() == _session \
+		and _quote_pending.local.get_ref() == _game.get("local") and _quote_pending.world.get_ref() == _game.get("world") \
+		and ESSENCE._equivalent(_context(), _quote_pending.context) \
+		and _session.call("_altar_current_epoch") == _quote_pending.epoch
+
+
+func _on_session_quote_completed(station_key: String, owned_uid: String, quote_id: String, result: Dictionary, source: Node) -> void:
+	if _quote_pending.is_empty() or source != _session or station_key != _quote_pending.station_key \
+		or owned_uid != _quote_pending.owned_uid or quote_id != _quote_pending.quote_id: return
+	if not _quote_scope_current() or not station_available(station_key):
+		invalidate_essence_quote()
+		return
+	invalidate_essence_quote() # Consume before notifying; selection/close may reenter.
+	essence_quote_completed.emit(station_key, owned_uid, result.duplicate(true))
 
 
 func _intent_valid(request: Dictionary) -> bool:
@@ -150,6 +197,7 @@ func _intent_valid(request: Dictionary) -> bool:
 
 
 func submit_essence_spend(station_key: String, request: Dictionary) -> void:
+	invalidate_essence_quote()
 	var id := str(request.get("spend_id", ""))
 	if not _intent_valid(request):
 		_emit_refusal(id, "invalid_spend_intent")
@@ -324,6 +372,7 @@ func _say(text: String) -> void:
 
 func refusal_text(code: String) -> String:
 	var messages := {"authority_missing": "Leveling at this Altar is not ready yet.",
+		"quote_pending": "Waiting for the host to quote this level.",
 		"training_registry_unavailable": "Leveling at this Altar is not ready yet.",
 		"training_writer_unavailable": "Leveling at this Altar is not ready yet.",
 		"station_unavailable": "Return to the Altar outside combat to raise a level.",
