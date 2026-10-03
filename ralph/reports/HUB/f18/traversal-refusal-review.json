@@ -388,6 +388,43 @@
     "capture": "same actual peer viewport/state post-draw callback after already-proven refusal, fresh output directory, bounded120processframe wait; actual mounted/offfloor controller and exactvisiblelabel required",
     "flight_input": "existing ordinary climb hold retained until capture, then existing verified Jump release",
     "limits": "Headless original path unchanged; images require independent code-blind review. No actor/camera/controller/scene edits, earned/unlock/crossing/raise/audio/co-op/fullcriteria credit.",
-    "review_checks": "Freshdir/callback/context/label/image/save/receipt failures fail closed; one-shot signal cleans up at120bound; no gameplay setters; JSON-safe receipt; verified Jump release preserved; headless original path unchanged."
+    "review_checks": "Freshdir/callback/context/label/image/save/receipt failures fail closed; one-shot signal cleans up at120bound; no gameplay setters; JSON-safe receipt; verified Jump release preserved; headless original path unchanged.",
+    "dispatches": [
+      {
+        "id": 37105694026,
+        "display_title": "render f18-swimming-refusal-pixels-r1 @ 85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+        "head_branch": "tb/integration",
+        "head_sha": "a157a9bb2b12ee0cb04532c88293f4dda53c4634",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37105694026",
+        "checkout": "85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+        "label": "f18-swimming-refusal-pixels-r1",
+        "mode": "render",
+        "script": "tests/smoke_net_f18_traversal_refusal.gd",
+        "args": "--native-peer=0",
+        "resolution": "1280x720",
+        "timeout_minutes": "15",
+        "scope": "Actual traversal refusal pixels and same-draw state; independent visual/native review pending. No earned/unlock/crossing/raise/audio/co-op/fullcriteria credit."
+      },
+      {
+        "id": 37105696044,
+        "display_title": "render f18-flying-refusal-pixels-r1 @ 85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+        "head_branch": "tb/integration",
+        "head_sha": "a157a9bb2b12ee0cb04532c88293f4dda53c4634",
+        "status": "in_progress",
+        "conclusion": null,
+        "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37105696044",
+        "checkout": "85ddb3a0b38a4950a14b77c3056e168c34c0dd02",
+        "label": "f18-flying-refusal-pixels-r1",
+        "mode": "render",
+        "script": "tests/smoke_net_f18_traversal_refusal.gd",
+        "args": "--native-peer=0 --flying",
+        "resolution": "1280x720",
+        "timeout_minutes": "15",
+        "scope": "Actual traversal refusal pixels and same-draw state; independent visual/native review pending. No earned/unlock/crossing/raise/audio/co-op/fullcriteria credit."
+      }
+    ],
+    "native_status": "IN_PROGRESS; original/native/pixel reviews pending"
   }
 }
