@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917,7dc0283081,11aa0b1afe",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917,7dc0283081,11aa0b1afe,29bc4f7145",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "Tidewake#0 MET candidate/main pending. Actualr10 initial homecoming/credits/guardedSkip1ACK/disk receipts pass but3SCRIPT ERRORs abort continuation despite34checks0/exit0: overall FAIL retained. Reviewed F20-only7dc/11aa serializer/UID/completion guards pushed; required affected solo-r11 and two-peer-r4 running on exact11aa. Earlier arch-r5 imageFAIL/audiohumunattributed andr6 readiness/release failure retained; no new render retry/shared-world edit/local engine/GPU. Criteria1\u20134 OPEN.",
+    "reason": "Tidewake#0 MET candidate/main pending. Actualr10 initial homecoming/credits/guardedSkip1ACK/disk receipts pass but3SCRIPT ERRORs abort continuation despite34checks0/exit0: overall FAIL retained. Reviewed F20-only7dc/11aa serializer/UID/completion guards pushed; required affected solo-r11 running on exact11aa; net-r4 terminalFAIL hosttalk noverdict after actualdialoguecompleted at300s, hostdurablehomecoming confirmed; finaltap/wait boundarycause unproved, reviewed29bcdiagnostic ready. Earlier arch-r5 imageFAIL/audiohumunattributed andr6 readiness/release failure retained; no new render retry/shared-world edit/local engine/GPU. Criteria1\u20134 OPEN.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -487,6 +487,43 @@
         ],
         "limits": "No verified sameparty/inventory/world comparison afterreload, no completedGrandparevisit/no-replay/safemovement/bounty/rematch/remainingactivity proof. Criteria1/3 remainOPEN; nopeercriterion4.",
         "independent_review": "PASS f20_review failed-evidence audit: exact original ZIP/native/user logs and hashes verified; actual initial homecoming/credits/Skip1ACK/disk receipts passed, but 3 SCRIPT ERRORs abort retained snapshot/reload comparisons/continuation despite exit0 and34checks0. Overall acceptance FAIL; criteria1/3 OPEN."
+      },
+      {
+        "run": 37090792874,
+        "job": 111110505505,
+        "artifact": 11262079263,
+        "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+        "verdict": "FAIL",
+        "workflow_conclusion": "failure",
+        "failures": 1,
+        "artifact_bytes": 150263,
+        "artifact_sha256": "9f9dc00f6aa889dff94529273078f8d642388054c764ef98d61003b5becc0cde",
+        "native_bytes": 1746,
+        "native_sha256": "73e0b31fad012769ed2cde9a17a4b3c6f8cc5596f64cb9a09dda3e550c863cf3",
+        "coordinator_and_both_peer_engine_script_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 14903,
+            "sha256": "d1d517ddbc9fba44d672c82b7d63a5a653c11898e193e8cd0ea6c84383031637"
+          },
+          "peer-1.log": {
+            "bytes": 11395,
+            "sha256": "51c39a6ffe50ee6ba2e5979f5ccde0ded564eedc9fa8ca0ec75165a28b2939c5"
+          }
+        },
+        "logs": [
+          "f20-net-r4-native.log.gz",
+          "f20-net-r4-workflow.log.gz",
+          "f20-net-r4-peer-0.log.gz",
+          "f20-net-r4-peer-1.log.gz",
+          "f20-net-r4-NET_RUN.json",
+          "f20-net-r4-artifact.zip"
+        ],
+        "passed": "Two real ENet peers connect; host HomeKey durable personal finale return, fifth key debit/sealed/glow+playingSFX/line/noquest/repeatrefusal, real portal lesson Continue+personal ACK, navigation/Grandpa initial context and truthful prose prechecks. Actual host dialogue completed(regional_homecoming_5). Strict retained peer error scan PASS. Independent actual disk inspection confirms host homecoming_seen receipt and acceptedregional_ackrow; homecoming producer did succeed.",
+        "failure": "Host f20_talk has no verdict at unchanged300s step limit. Last native F20 trace is completed signal, before final ordinary tap returns/inputcount/finalcontext. Alive narrative_modal heartbeat frame364/physics2669 at1.415535,1.020944,14.907784. Exact blocking/cost cause not proved; no timeout increase or blind rerun.",
+        "limits": "Disclosed post-finale/restored-world fixture; headless functional only. Host actualdisk homecomingreceipt proves durable ACK, but no actual rendered prose dump/credits open or Skip. Guest ending/rejoin/reload unreached; new UID/snapshot peer assertions unexercised. Criterion4 OPEN.",
+        "independent_review": "PASS f20_review failed-evidence audit: exact ZIP/coordinator/host/guest hashes and all native/user logs0ERROR/SCRIPT ERROR; both hello SHA11aa/registry2. Actualhost character disk contains homecoming_seen receipt and worldregional_ackaccepted. Actualcredits receipt absent; guestending receipts absent. No rendered prose dump/creditsopen/Skip/reload/UID/continuation reached. #4 OPEN.",
+        "next_action": "Reviewed F20-only clock/navigation/ordinarytap diagnostic29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da. Original inputs/assertions/300s remain; wait exactsolo-r11 before affected netdiagnostic. Read-only clocks locate signal waits, not completion of all node physics callbacks."
       }
     ],
     "limitations": [
@@ -641,7 +678,7 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "net-r3: both peers connect and hostHomeKey/fifth/portal lesson/navigationPASS; hostnaturalGrandpa ackcheckFAIL; guest ending/credits/rejoin/reload unreached."
+      "latest_runtime": "net-r4 on11aa: two real peers connect; hostHomeKey/fifth/lesson/nav/Grandpa initial checks PASS, actual host dialogue completed signal; no f20_talk verdict at unchanged300s. Logs0SCRIPT/engineERROR. Host actualdiskhomecoming receipt/acceptedregional_ack confirmed; credits and guestending/rejoin/reload unproved; #4 OPEN."
     }
   },
   "delegated_locator_fix": {
@@ -697,16 +734,6 @@
       "timeout_minutes": 30,
       "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37090781811",
       "status": "in progress; no result claimed"
-    },
-    "net_r4": {
-      "run": 37090792874,
-      "job": 111110505505,
-      "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
-      "script": "tests/smoke_net_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37090792874",
-      "status": "in progress; no result claimed"
     }
   },
   "lesson_input_driver": {
@@ -745,5 +772,10 @@
     "change": "F20-only uses actualactiveSaveGame._inventory_to_array slot serializer anddeepcopy; includescurrentcompanionUIDs. Snapshotshape/type gates protectsolo/peerinspect andbefore/afterreload; explicitVariantcontinuationresult andcompleted sentinel failclosed onabortedrequiredphases. No production state mutation or criterion weakening.",
     "peer_identity_source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
     "peer_identity_review": "PASS f20_review: returning guest compares ordered companion UIDs; final guest disk reload compares both names and ordered UIDs; proof assertions only, unchanged deadlines and production path."
+  },
+  "input_clock_diagnostic": {
+    "source": "29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da",
+    "independent_source_review": "PASS f20_review:21insertions read-only phase/tick/frame/held/panel/inputowner diagnostics around original navigation and existingpress/releasephysics/processawait. No type/scope/shadowing issue, no producer/state/assertion/budget change. Actualruntime pending.",
+    "limits": "Logging/read overhead remains real; afterphysics means the physics_frame signal edge, not proof all node callbacks have returned."
   }
 }
