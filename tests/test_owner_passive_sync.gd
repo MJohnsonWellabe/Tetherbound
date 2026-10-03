@@ -28,7 +28,7 @@ class Writer extends RefCounted:
 		writes += 1
 		return accepted
 
-class Game extends Node:
+class GameFixture extends Node:
 	var local: RefCounted
 	var world: RefCounted
 	var save_system: RefCounted
@@ -66,14 +66,14 @@ class Service extends SYNC:
 
 var session: Session
 var service: RefCounted
-var game: Game
+var game: GameFixture
 var before: Dictionary
 var event: Dictionary
 
 func before_each() -> void:
 	before = GROOM.new()._before()
 	event = SOURCE.new()._event()
-	game = Game.new()
+	game = GameFixture.new()
 	game.local = Player.new()
 	game.local.character_id = before.character_id
 	game.local.data = before.duplicate(true)
