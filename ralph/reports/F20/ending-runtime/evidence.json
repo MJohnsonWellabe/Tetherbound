@@ -1,6 +1,6 @@
 {
   "feature": "F20",
-  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917,7dc0283081,11aa0b1afe,29bc4f7145,c352e4979e",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917,7dc0283081,11aa0b1afe,29bc4f7145,c352e4979e,b066552af9",
   "proof_dependency": {
     "feature": "F18",
     "original": "98ff2a89cc",
@@ -35,7 +35,7 @@
   },
   "actual_world": {
     "verdict": "OPEN",
-    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, F20-onlyauthoredroad c352sourcePASS/affectedreplaypending. net-r4 durablehosthomecoming then300s noverdict aftercompleted; #4OPEN, reviewedclock29bc net-r5live. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
+    "reason": "F20#0 and#1 independentlyMETon candidates/mainpending. solo-r11 cleanending/once-after-reload/retainedUIDs/inventory/receipts/safemovement/rematches PASS thenactualbountywalkFAIL; overall58checks2FAIL,0errors. #3OPEN, F20-onlyauthoredroad c352sourcePASS/affectedreplaypending. net-r4 hosthomecoming thencommandtimeout; net-r5 hostfullending/repeatPASS, guestHomeKeybegin thenTOTAL300s phasefatal. #4OPEN, F20-only total1500s b066sourcePASS/requiredfullnet-r6pending. #2 earlierimageFAIL/audiohumunattributed/readinessfailure remainsOPEN; noextra renderretry/sharedworldedit/localengineGPU.",
     "scripts": [
       "tests/smoke_f20_ending.gd",
       "tests/smoke_f20_tidewake_close.gd",
@@ -559,6 +559,68 @@
         ],
         "independent_review": "PASS f20_review \u00a77.2: exact originalZIP/native/user hashes and0engine/SCRIPTERROR verified; actualcharacterdisk bothendingreceipts independentlyread. #1 METon candidate from cleanending+repeat/reload phase despiteoverallrunFAIL58checks2. #3OPEN becauseactualbountyavailabilityunproved; #2/#4OPEN, nooverall/mainclaim.",
         "limits": "Disclosed restored post-finale/current fixture, no earnedboss/fullcampaign claim; Input.parse_input_event harness/controllerSkip/headless rendering/audio. No bounty producer defect inferred solely from navigation failure; no visual/audio/two-peer acceptance."
+      },
+      {
+        "run": 37091888883,
+        "job": 111113792048,
+        "artifact": 11262711289,
+        "source": "29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da",
+        "verdict": "FAIL global smoke total phase budget after host ending succeeds",
+        "workflow_conclusion": "failure",
+        "failures": 1,
+        "fatal": "ERROR: smoke budget exceeded",
+        "native_bytes": 1967,
+        "native_sha256": "01851605a9956faf2f51b9a2b589aefaddd81e0ab464814179fd6dde8aa566f7",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 57775,
+            "sha256": "654f940034e0ce5837cc9e0f744da788749806402cfe32ad8c88fa6f5505cd20",
+            "script_errors": 0,
+            "engine_errors": 0
+          },
+          "peer-1.log": {
+            "bytes": 12329,
+            "sha256": "52cadd72ba81eee2b9a0a5bdc1533c58020f16c7ec20bf71cfb9dc92ad22d1b5",
+            "script_errors": 0,
+            "engine_errors": 0
+          }
+        },
+        "artifact_bytes": 159156,
+        "artifact_sha256": "f9ae0c85d9ea775575130693c7703ff587b5417cf840ee1505adb4568d5d23a4",
+        "logs": [
+          "f20-net-r5-native.log.gz",
+          "f20-net-r5-workflow.log.gz",
+          "f20-net-r5-peer-0.log.gz",
+          "f20-net-r5-peer-1.log.gz",
+          "f20-net-r5-NET_RUN.json",
+          "f20-net-r5-artifact.zip"
+        ],
+        "passed": "BothrealENetpeersconnect; hostactualHomeKey/fifth/portal lesson/nav/11authoredlines/currentfive/starter/memory/choices/durablehomecoming/productioncredits/inputguard/Skip1durableACK/completedGrandpa repeat ALLPASS. Final normal interacttap returns; actualRegionalCredits owns input afterrelease. Guest actualHomeKeybegin succeeds before global deadline.",
+        "timing": {
+          "host_navigation_started_ms": 190273,
+          "host_navigation_completed_ms": 333576,
+          "host_navigation_elapsed_ms": 143303,
+          "authored_first_tap_started_ms": 334079,
+          "authored_last_tap_returned_ms": 372217,
+          "authored11_taps_elapsed_ms": 38138,
+          "final_tap_started_ms": 360532,
+          "final_tap_returned_ms": 372217,
+          "original_total_post_hello_smoke_budget_seconds": 300
+        },
+        "ending_receipts_found_in_actual_disk": {
+          "character-158c35113ac18993cc0c0e5b0ae79482": [
+            "craft:regional_ending_homecoming_seen:character-158c35113ac18993cc0c0e5b0ae79482",
+            "craft:regional_ending_regional_credits_seen:character-158c35113ac18993cc0c0e5b0ae79482"
+          ],
+          "character-8f23fb355f3b64c5b3455c668808cbb6": []
+        },
+        "failure": "Inherited300s is the ENTIRE post-hello smoke phase (_step_phase_deadline_ms set once in launch), not a per-command deadline. It expires while guestHomeKeyfinish pending after hostfullending/revisit. All guestending/rejoin/reload and peerUIDsnapshots unreached. Nativecoordinator ERRORtext is the explicit harnessfatal; peerengine/SCRIPTerrors0.",
+        "warnings": "Guest logs clientleave could notwritecharacter during forced teardown with HomeKeypending. Exactwarning retained; no character-loss/producer-cause claim inferred.",
+        "limits": "Disclosedpost-finale/restoredcurrent fixtures, headless functional, Input.parse_input_event/Skip. No#4 closure. One run doesnot prove cause of older r4 commandtimeout or anyrenderstartup failure.",
+        "independent_review": "PASS f20_review failed/partial evidence audit: exactZIP/native/host/guest hashes andalluserlogs verified,0engine/SCRIPTERROR whileexplicitharnessfatalglobalbudget/exit2 retained. Hostactualending/11spokenlines/truthfulprose/creditsguardedSkip1ACK/repeatPASS; diskhostbothendingreceipts/guestnone. Measurednavigation143303ms/11taps38138ms; finaltapreturns normally. Guestfailedcharacterwrite warningatshutdown remains failed-write evidence, no cleanlinessdismissal. Guestending/rejoin/reload/UIDchecks unreached, #4OPEN.",
+        "workflow_exit_code": 2
       }
     ],
     "limitations": [
@@ -715,7 +777,7 @@
     "4": {
       "verdict": "OPEN",
       "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
-      "latest_runtime": "net-r4 on11aa: two real peers connect; hostHomeKey/fifth/lesson/nav/Grandpa initial checks PASS, actual host dialogue completed signal; no f20_talk verdict at unchanged300s. Logs0SCRIPT/engineERROR. Host actualdiskhomecoming receipt/acceptedregional_ack confirmed; credits and guestending/rejoin/reload unproved; #4 OPEN."
+      "latest_runtime": "net-r5 hostactualHomeKey/fifth/11spokenlines/credits1durableACK/repeatPASS; guestHomeKeybeginPASS then ENTIRE posthello300s smoke phasefatal. Guestending/rejoin/reload/UIDsnapshotunreached. Percommand205s unchanged. #4 OPEN."
     }
   },
   "delegated_locator_fix": {
@@ -762,16 +824,6 @@
     }
   },
   "remote_pending": {
-    "net_r5": {
-      "run": 37091888883,
-      "job": 111113792048,
-      "source": "29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da",
-      "script": "tests/smoke_net_f20_ending.gd",
-      "mode": "headless",
-      "timeout_minutes": 30,
-      "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37091888883",
-      "status": "in progress; clock diagnostic no result claimed"
-    },
     "solo_r12": {
       "run": 37092294181,
       "job": 111115004043,
@@ -824,12 +876,24 @@
   "input_clock_diagnostic": {
     "source": "29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da",
     "independent_source_review": "PASS f20_review:21insertions read-only phase/tick/frame/held/panel/inputowner diagnostics around original navigation and existingpress/releasephysics/processawait. No type/scope/shadowing issue, no producer/state/assertion/budget change. Actualruntime pending.",
-    "limits": "Logging/read overhead remains real; afterphysics means the physics_frame signal edge, not proof all node callbacks have returned."
+    "limits": "Logging/read overhead remains real; afterphysics means the physics_frame signal edge, not proof all node callbacks have returned.",
+    "runtime": "Actualnet-r5 compiles and shows normalclosingpress returns, credits gains exact input ownership onrelease, hostallending/revisitPASS. Navigation143303ms/11taps38138ms; inheritedtotal300s expiredwhen guestHomeKeybegin succeeds. Earlier r4 specificcauseunproved; no deadlockclaim."
   },
   "bounty_navigation_correction": {
     "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
     "independent_source_review": "PASS f20_review: exactmountedBountyInteraction._prompt identity; strictuniquefiniteauthored MainStreet pair; oneexistingNAV.walk_to_guided with ORIGINAL directdistanceframebudget/sharedwatchdog/capsule; samegrounding/recovery/arbiter/actionable/normalinput/activationchecks. No parser/type issue, production/F49/F17/sharednav change orwaiver. Actualsolo replay required.",
     "reason": "r11 actualcapsulewalk fails near south-sidehouse row; source shows directdiagonalcrosses thatrow. Exactcolliderunproved; followexistingauthoredroad beforeturningtotournamentlawn, no target/player/floorpose assignment.",
     "runtime": "Affectedsolo-r12 live37092294181/job111115004043 onexactc352; sourcePASS only, criterion3OPEN."
+  },
+  "net_budget_clarification": {
+    "source": "tests/helpers/net_harness.gd::launch and step",
+    "correction": "Previous metadata describing300s as per-step/per-command was imprecise. It is the default TOTAL step phase for allsmoke commands afterhello. F20 ordinary12000frame commands individuallyallow205s (60Hz conversion+5s), unchanged. Historical originallogs/ZIP bytes unchanged. Net-r5 explicitlyprovesglobalphaseexpiry; r4 has noverdict atindividual commandtimeout."
+  },
+  "complete_peer_proof_budget": {
+    "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
+    "total_post_hello_budget_seconds": 1500,
+    "independent_source_review": "PASS f20_review: F20-only9line_init_budgets override superthen selects existinglong2peer1500s wholeproof allowance. Individualcommandframes/slack/hello180/heartbeat/inputguard/productionACK8s/remote30min unchanged. Necessarycomplete2person/disconnect/reloadproof allowance, not an authoredproduct timing waiver. Freshcompleteactual proof required, #4OPEN.",
+    "reason": "Actualnet-r5 cleanhostfullending/revisit consumesmost inherited300s total; guest onlyHomeKeybegin beforeglobalfatal. Other long2peer proofs alreadyselect1500. Oldr4 independentlyhadcommandtimeout; itscause notretrospectivelyresolved byglobalbudget diagnosis.",
+    "runtime": "pending affected full net-r6"
   }
 }

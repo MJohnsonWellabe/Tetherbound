@@ -24,8 +24,10 @@ Solo-r11 remains overall FAIL58checks2/zero engine-script errors: safe movement,
 actual endgame rematches pass, then ordinary bounty-board navigation fails before its screen/three active rows.
 F20-only authored-road proof `c352e4979e` passes independent source review; solo-r12 (37092294181) is live, #3 OPEN. Earlier r10 misleading green with
 three script errors is preserved as FAIL; reviewed7dc/11aa now produce clean retained snapshot/reload checks.
-Two-peer-r4 connects both peers and saves host homecoming, then yields no f20_talk verdict at the unchanged300s
-limit; credits/guest ending/rejoin/reload remain unproved. Reviewed input-clock29bc runs as net-r5 (37091888883).
+Two-peer-r4 saves host homecoming then times out its command. Net-r5 on29bc cleanly passes host ending,
+guarded credits1ACK and completed repeat; navigation takes143.303s and11ordinarytaps38.138s. The inherited300s
+is the ENTIRE post-hello proof allowance, not per-command; it expires as guestHomeKey begins. A bounded F20-only
+total-proof allowance1500s `b066552af9` passes independent source review; affectedfullreplay pending; per-command205s/readiness180s/productionACK8s remain unchanged.
 #4 remains OPEN. Arch-r5 functional16/0 creates files but image lacks visible arch/glow and mixed audio does not
 isolate the hum; reviewed65cbb/c620 compiles in arch-r6 but readiness/release fails before capture. #2 remains OPEN;
 no further blind render retry or shared-world edit. No local engine/GPU while the owner plays Valheim. Exact original
