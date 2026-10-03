@@ -20,6 +20,8 @@ var _target: CharacterBody3D
 var _attackers: Dictionary = {}
 var _stage := ""
 var _target_x := 3.0
+var _archetype_filter: Array = []
+var _rank_filter: Array = []
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -40,6 +42,11 @@ func _run() -> void:
 		if arg == "--medium": _medium = true
 		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
 		if arg.begins_with("--stage="): _stage = arg.trim_prefix("--stage=")
+		# Affected-subset reruns: --archetypes=a,b and --ranks=1,3 narrow the
+		# mastery batch only; a full mastery run passes neither.
+		if arg.begins_with("--archetypes="): _archetype_filter = Array(arg.trim_prefix("--archetypes=").split(","))
+		if arg.begins_with("--ranks="):
+			for rank: String in arg.trim_prefix("--ranks=").split(","): _rank_filter.append(int(rank))
 	if _batch not in ["identities", "mastery", "library", "profile", "clock"]:
 		push_error("Unknown effect batch"); quit(1); return
 	if _batch in ["identities", "mastery", "profile"] and DisplayServer.get_name() == "headless":
@@ -140,6 +147,7 @@ func _run() -> void:
 		if _batch == "clock":
 			await _exercise({"id": "legacy-clock", "archetype": "stone_throw", "move_id": "pebble_toss", "legacy": true}, 1, 1, false)
 		for archetype: String in LIBRARY.config().archetypes:
+			if not _archetype_filter.is_empty() and archetype not in _archetype_filter: continue
 			var case := {"id": archetype, "archetype": archetype}
 			var chosen := ""
 			var count := 0
@@ -152,7 +160,8 @@ func _run() -> void:
 					chosen = id
 			if not chosen.is_empty(): case["move_id"] = chosen
 			if _batch == "mastery":
-				for rank in range(1, 6): await _exercise(case, rank, 1, true)
+				for rank in range(1, 6):
+					if _rank_filter.is_empty() or rank in _rank_filter: await _exercise(case, rank, 1, true)
 			else:
 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
 	var report := {"scope": "production_effect_nodes_synthetic_arena", "batch": _batch,
@@ -162,6 +171,7 @@ func _run() -> void:
 		"target": {"species": str(_scenarios.get("target_species", "mudsnout")), "production_model": _target != null, "scope": "posed production body; no encounter or HP authority"},
 		"medium_features": _medium, "cases": _records, "failures": _failures,
 		"light_lifecycle": _light_lifecycle, "selected_identity": _identity,
+		"archetype_filter": _archetype_filter, "rank_filter": _rank_filter, "stage": _stage,
 		"limits": ["No combat/damage authority exercised", "Wall-frame intervals include CPU/GPU/present/OS scheduling",
 			"No Ally or four-creature-fight acceptance claim", "Identity duration slowed for readable frames; host timing requires separate player witness"]}
 	var file := FileAccess.open(_out.path_join("results.json"), FileAccess.WRITE)
