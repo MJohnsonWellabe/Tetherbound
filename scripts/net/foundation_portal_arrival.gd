@@ -350,7 +350,11 @@ func _contacts_on_support(world_node: Node3D, contacts: Array[Dictionary], surfa
 			# Accept only this world's actual Terrain3D equivalent floor plane,
 			# never a different body or an entire shared Hall/scatter RID.
 			var native_equivalent: bool = terrain != null and terrain.is_class("Terrain3D") and contact.collider == terrain
-			if (same_shape or native_equivalent) and contact.normal.is_equal_approx(surface.normal) \
+			# Capsule contacts at a triangle edge need not have its ray normal.
+			# The same actual shape still needs a walkable contact on one of the
+			# five witnessed planes. A cross-shape terrain alias additionally
+			# needs the original matching-normal proof of equivalent support.
+			if (same_shape or (native_equivalent and contact.normal.is_equal_approx(surface.normal))) \
 				and absf(surface.normal.dot(contact.point - surface.position)) <= margin: matched = true
 		if not matched: return false
 	return true
@@ -361,7 +365,7 @@ func _capsule_landing(world_node: Node3D, actor: CharacterBody3D, target: Vector
 		or not target.is_finite() or not is_finite(radius) or radius <= 0.0 \
 		or not is_finite(actor.safe_margin) or actor.safe_margin <= 0.0 or actor.safe_margin > radius: return refused
 	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
-	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D: return refused
+	if collision == null or collision.disabled or collision.top_level or not collision.shape is CapsuleShape3D: return refused
 	if (collision.shape as CapsuleShape3D).radius != radius: return refused
 	var surfaces: Array[Dictionary] = []
 	var height := NAN
@@ -377,8 +381,9 @@ func _capsule_landing(world_node: Node3D, actor: CharacterBody3D, target: Vector
 	var start := Vector3(target.x, height + radius, target.z)
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
-	query.transform = collision.global_transform
-	query.transform.origin += start - actor.global_position
+	var proposed_pose := actor.global_transform
+	proposed_pose.origin = start
+	query.transform = proposed_pose * collision.transform
 	query.collision_mask = actor.collision_mask
 	query.exclude = [actor.get_rid()]
 	var space := actor.get_world_3d().direct_space_state
@@ -398,15 +403,24 @@ func _capsule_landing(world_node: Node3D, actor: CharacterBody3D, target: Vector
 	var cast_clearance: float = absf(query.motion.y) * (fractions[1] - fractions[0])
 	var candidate_y := _cast_landing_y(float(start.y), float(query.motion.y), float(fractions[0]),
 		float(actor.safe_margin), highest, cast_clearance)
-	if not is_finite(candidate_y): return refused
-	var landing := Vector3(target.x, candidate_y, target.z)
-	var encoded_maximum_y := Vector3(0, highest + actor.safe_margin + cast_clearance, 0).y
-	if not landing.is_finite() or landing.distance_to(Vector3(target.x, height, target.z)) > radius \
-		or landing.y > encoded_maximum_y: return refused
-	query.transform.origin += landing - start
+	var maximum_y: float = highest + actor.safe_margin + cast_clearance
+	if not is_finite(maximum_y): return refused
+	var encoded_maximum_y := Vector3(0, maximum_y, 0).y
 	query.motion = Vector3.ZERO
-	if not space.intersect_shape(query, 1).is_empty(): return refused
-	return landing
+	# At high world coordinates, encoding the start can put the fraction
+	# candidate above its scalar ceiling; native cast and static shape solvers
+	# can also disagree about clearance. Test a NEW position at the unchanged
+	# measured ceiling in those cases. Never accept the rejected fraction
+	# candidate, enlarge the bound, or bypass its actual unsafe floor contact.
+	for proposed_y: float in [candidate_y, maximum_y]:
+		if not is_finite(proposed_y) or proposed_y > maximum_y: continue
+		var landing := Vector3(target.x, proposed_y, target.z)
+		if not landing.is_finite() or landing.distance_to(Vector3(target.x, height, target.z)) > radius \
+			or landing.y > encoded_maximum_y: continue
+		proposed_pose.origin = landing
+		query.transform = proposed_pose * collision.transform
+		if space.intersect_shape(query, 1).is_empty(): return landing
+	return refused
 
 static func _cast_landing_y(start_y: float, motion_y: float, safe_fraction: float, margin: float, highest: float, cast_clearance: float) -> float:
 	# Vector3 rounds each arithmetic operation to float32. Evaluate the actual
