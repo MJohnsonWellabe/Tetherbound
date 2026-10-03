@@ -481,7 +481,13 @@ func _loop() -> bool:
 		"waystone": STONE_ID})
 	_presentation = preload("res://tests/helpers/f18_presentation_capture.gd").attach(self, game,
 		"res://ralph/reports/HUB/f18/native/earned_%d" % Time.get_ticks_usec())
-	if not await travel.home_key(): return _fail("actual Satchel Home Key: " + str(travel.failures))
+	var home_before := _home_key_observation()
+	var home_passed: bool = await travel.home_key()
+	receipts.append({"phase": "actual_home_key_completion", "passed": home_passed,
+		"before": home_before, "after": _home_key_observation(),
+		"driver_result": travel.get("_home_result").duplicate(true),
+		"original_process_frame_budget": 7200, "observer": "read-only before/after; no additional await or input"})
+	if not home_passed: return _fail("actual Satchel Home Key: " + str(travel.failures))
 	if not await _guards.locked_arch(): return _fail("actual locked arch: " + str(_guards.failures))
 	receipts.append_array(_guards.receipts)
 	_guards.receipts.clear()
@@ -502,6 +508,42 @@ func _loop() -> bool:
 			receipts.append({"phase": "portal_return", "position": str(player.global_position), "arrival": str(arrival)})
 			return true
 	return _fail("real home portal did not return to retained trail camp stone")
+
+func _home_key_observation() -> Dictionary:
+	# Serialize only values from live nodes. Never retain Materials, stale scene
+	# objects or the arrival coordinator's weak-reference bindings in receipts.
+	var scene: Node = current_scene
+	var actor: Variant = game.call("find_player")
+	var key: Node = game.get_node_or_null(^"HomeKey")
+	var session: Node = game.get("session")
+	var arrival: Node = session.get_node_or_null(^"FoundationComposition/PortalArrival") if session != null else null
+	var pending: Dictionary = arrival.get("_pending") if arrival != null else {}
+	var owner: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+	var local: RefCounted = game.get("local")
+	var realm: String = str(game.get("current_realm"))
+	var out := {"process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(),
+		"realm": realm, "pending_realm_entry": str(game.get("pending_realm_entry")),
+		"scene": scene.scene_file_path if scene != null else "", "scene_instance": scene.get_instance_id() if scene != null else 0,
+		"realm_scene_ready": game.call("_realm_scene_ready", scene, realm) if scene != null else false,
+		"input_owner": str(owner.get_path()) if owner != null else "",
+		"character_id": str(local.get("character_id")) if local != null else "",
+		"home_keys": game.get("inventory").call("count", "home_key"),
+		"key": {"phase": key.get("_phase"), "pending": key.get("_pending"), "use_id": key.get("_use_id"),
+			"elapsed_seconds": key.get("_elapsed"), "fading": key.call("is_fading")} if key != null else {},
+		"portal_requests": session.get("_portal_requests").keys() if session != null else [],
+		"arrival": {"present": arrival != null, "pending": not pending.is_empty(), "fields": pending.keys(),
+			"seated": pending.get("seated"), "journal_started": pending.get("journal_started"),
+			"contact_generation": pending.get("contact_generation"), "save_wait_notified": pending.get("save_wait_notified")},
+		"actor": {"present": false}}
+	if is_instance_valid(actor) and actor is CharacterBody3D and actor.is_inside_tree():
+		var contact: Variant = actor.get("_foundation_ground_contact_position")
+		out.actor = {"present": true, "instance_id": actor.get_instance_id(),
+			"position": [actor.global_position.x, actor.global_position.y, actor.global_position.z],
+			"on_floor": actor.is_on_floor(), "physics_processing": actor.is_physics_processing(),
+			"contact_generation": actor.get("_foundation_ground_contact_generation"),
+			"contact_position": [contact.x, contact.y, contact.z] if contact is Vector3 else null,
+			"unstick_count": actor.get("_unstick_count")}
+	return out
 
 func _craft_at_workbench() -> bool:
 	var bench: Node3D

@@ -61,5 +61,13 @@
     "target": "(344.3, 1.983212, 929.6)",
     "unstick_count_after": 0,
     "unstick_count_before": 0
+  },
+  "home_key_diagnostic": {
+    "parent_source": "6d5a1e2d690654ef8085b9a4d50a33babec17837",
+    "file": "tests/smoke_f18_earned_loop.gd",
+    "source_review": "APPROVE independent GPT-6.1 Sol read-only",
+    "observations": "actual HomeKey completion receipt around exactly one existing travel.home_key call, raw scalar IDs/phases/scene readiness/input owner/arrival seating/journal/contact generation and positions; no WeakRefs/scene objects/materials serialized",
+    "invariants": "same7200processframebudget/failurebranch/ordinaryinput; noadditionalawait or gameplaystate/pose/production mutation",
+    "native_status": "UNPROVEN; next earned run should wait for coordinated shared lifecycle fixes"
   }
 }
