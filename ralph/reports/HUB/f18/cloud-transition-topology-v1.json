@@ -12,5 +12,7 @@
   "ownership": "Coordinator explicitly authorizes isolated Cloud transition-only correction; root worktree not mutated.",
   "source_review": "Independent GPT-6.1 Sol APPROVE; engine4.7 Geometry2D CCW winding verified; actualnative pending.",
   "scope": "Only flat transition ledges, same irregular perimeter/height/yaw/UV/skirt; one triangulation index array shared by visible top and collision. Other mesa callers default unchanged. Saturated-contact predicate remains unchanged.",
-  "runtime_status": "Actual canonical Cloud entry plus all four stones dispatched exact source; no main acceptance claim."
+  "runtime_status": "ActualnativeR4 67checks5fails retained. All4Cloudstones PASS; entrytransitionfan now1contact butsecondoverlappingroutehub contributes31samecontacts/saturated, hencefirstentry stillfails. Exactmeshparity alsofails because engineTriangleMesh snaps0.1mm; directrawConcave corrective prepared. DoNOTadoptorclaimwholeentryfixed.",
+  "runtime_run_id": 37097080196,
+  "original_results": "native-followups/receipt.json"
 }
