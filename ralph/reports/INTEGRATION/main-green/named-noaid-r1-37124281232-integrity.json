@@ -1,0 +1,245 @@
+{
+  "run_id": 37124281232,
+  "artifact_id": 11275575558,
+  "checkout_ref": "3c27dd1eb81b0373749e3e62d0e0f1ec74a2b059",
+  "result": "FAIL all4: host participant1/optimistic admission, terminal round unresolved/no verdict; original all0errors. No selfaid privilege failure now.",
+  "archive_sha256": "5341a7469e9991a0d351a91145d01bdb5f4d58e37b3db4380e74a56dc781b5f5",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "named-noaid-r1-37124281232-0-MANIFEST.txt.gz",
+      "sha256": "a335fa3c65274a67bb33106cbe6bc28a89fbb9c80cc4b589260efba18faf1e84"
+    },
+    "run.log": {
+      "retained_file": "named-noaid-r1-37124281232-1-run.log.gz",
+      "sha256": "cb648d5f91502097acce196708ee790d59f4f889152ff8ddd747d2dc269fa955"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/NET_RUN.json": {
+      "retained_file": "named-noaid-r1-37124281232-2-NET_RUN.json.gz",
+      "sha256": "30b8664cc20f63eab8dc140e2ce7ca469f6d34fc9cfa38dfbd96297fdb51eb5f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/SUMMARY.md": {
+      "retained_file": "named-noaid-r1-37124281232-3-SUMMARY.md.gz",
+      "sha256": "ce1d85b00aa8b12266742582c9952c93422387cbc64bfbecdcf4778584342295"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-4-boot_log.txt.gz",
+      "sha256": "2d7325cb3456c9c3a3905e149e3334cba46618dd5f74cd270f4db1340073a596"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-6861e04c21e443ee378344c8b22eedc9/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-7-character.json.gz",
+      "sha256": "5b4747606bbb8c6e1cf87a018de8dab50b8b2daebd7a6848429070dc7a7d8334"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-8-godot.log.gz",
+      "sha256": "60a7552f8efdd2a3f4dc003054f652ee23ed3c57ee0822e03ce0ffffbaf83168"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-9-world.json.gz",
+      "sha256": "6e21d5e32582ba1a37f49e77d33aa4b26cf9bed48e59d6981e36c3da67776fb9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-10-boot_log.txt.gz",
+      "sha256": "7ed53a269a958ae16c9fdede528155567f6d71201a47b71b6b998f4d26ee9107"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-13-godot.log.gz",
+      "sha256": "c84485a0250743f777a7bb8abbfd60de82bd37437837e138f45edf6760926e0f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-14-world.json.gz",
+      "sha256": "e364b28bf4947c5d9344bf74ad15307c47c0a2b18ab363048d6766057de9b5b4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/peer-0.log": {
+      "retained_file": "named-noaid-r1-37124281232-15-peer-0.log.gz",
+      "sha256": "4dd2a7ad62365623396e0c968371a6172babac2931f56f425cdc6b09c0236e9a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-boss_rewards_each_participant-20261003T131005Z/peer-1.log": {
+      "retained_file": "named-noaid-r1-37124281232-16-peer-1.log.gz",
+      "sha256": "a0cd0e297b80f32d74225a81b81de7c6c70d701745da253ac628079337521ab9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/NET_RUN.json": {
+      "retained_file": "named-noaid-r1-37124281232-17-NET_RUN.json.gz",
+      "sha256": "4c5a1f32c380b909450ed8fddcdb92fe1f2c8ad0e4f9c95dc81770fb2447be74"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/SUMMARY.md": {
+      "retained_file": "named-noaid-r1-37124281232-18-SUMMARY.md.gz",
+      "sha256": "d6dc3ecf3b21b95238b626e78654413127d5916b790811bc6a5c4aa1a398fe5d"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-19-boot_log.txt.gz",
+      "sha256": "b606b36ea9cca3d3f7c82fae67a453b962783714374f7f0cf41b12b7875d0144"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-2d496da50b0b424148676ebddeb23928/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-22-character.json.gz",
+      "sha256": "0f0f9b4a95b1f43fbdb270d9795d775fafe3ac39b2fbaca5f72e8a65133197d2"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-23-godot.log.gz",
+      "sha256": "373b57c10349c5e1811861cbe45e28506d14823a6c8b534707eada59388c03e9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-24-boot_log.txt.gz",
+      "sha256": "b5b3e2dc9230808e74a89e813a437f5035a5fd7bf84efd39aeca7f39c87bc73b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-25-world.json.gz",
+      "sha256": "f97524b7cb235127081a882e0c52449551bacdc642bfedf99dfcadffb19852d3"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-553fea806ae5182ac976dc14eb08eb32/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-28-character.json.gz",
+      "sha256": "13d959bc8a0b52cdd4652523105e1bc52202c96cfb396d6b16d168f040e71180"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-29-godot.log.gz",
+      "sha256": "131ec28b4dad5686b79f79a43289060deef3a32e8e4f1683bd78041ffd13342f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-30-world.json.gz",
+      "sha256": "97def124d063a02e4bc18819f146b81ea85e54f71b3d480c18763b37100d0ce0"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/peer-0.log": {
+      "retained_file": "named-noaid-r1-37124281232-31-peer-0.log.gz",
+      "sha256": "c344c2f062930ca674b2dd36ca0dc1669bdca13c401484042862a8d555653cfa"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/NET_RUN.json": {
+      "retained_file": "named-noaid-r1-37124281232-32-NET_RUN.json.gz",
+      "sha256": "bbe7134549504c075e877b27aa888db64d7a8eabeb05bfa1943aa87886eee3a3"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-shared_boss-20261003T125909Z/peer-1.log": {
+      "retained_file": "named-noaid-r1-37124281232-33-peer-1.log.gz",
+      "sha256": "2cb9d4db2692d7c62487e234f70b597395079ad8faa2a93f1f6c708398a0fd6e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/SUMMARY.md": {
+      "retained_file": "named-noaid-r1-37124281232-34-SUMMARY.md.gz",
+      "sha256": "1373c49b9004eadc5bdd2c123e1c09d775fb4997cccf75a820d65518c909f024"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-35-boot_log.txt.gz",
+      "sha256": "62c5972d49e8b8bfcbbb744bda887906a1ee0c805ce6ea1af2f5a39e9b85ebe5"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-d7ddd39cb5ee8a54fe7e4a818e247855/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-38-character.json.gz",
+      "sha256": "8d12678fb73b47d065a2e1789668082c0afc7e413f5be29b9228c0a3b79ca473"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-39-godot.log.gz",
+      "sha256": "677050f9ae6bfcfc38f8fdfde9bbec24f8ae9286a26d1e4ce59a418fb16b7e72"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "named-noaid-r1-37124281232-40-slot_0.json.gz",
+      "sha256": "74243778f9fca2b59e035b46999f210d4712c8bbe4560f4b8f06eeed4fb1f897"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-41-world.json.gz",
+      "sha256": "9f6b6db8fdbc936a1ef51acc583457669a51293bf9c0f4e4d136385a03a2f189"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-42-boot_log.txt.gz",
+      "sha256": "8bd962b1842acfb10072c3021904e5c67835b8106e974f2039362a703c598d05"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-6fcdd18f42bf27efa1378fea4e1095ed/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-45-character.json.gz",
+      "sha256": "b5d060b6e32b0d677ac67a113d450ab9f162d0e4b0b6c34c04ee7e029e71b84b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-46-godot.log.gz",
+      "sha256": "01fde4f2341aba0c0324531142aa6178bc1ff823fee38b61df4f4a851462383e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-1/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "named-noaid-r1-37124281232-47-slot_0.json.gz",
+      "sha256": "dcea099a4d1bc6a5eb693ed015e628695a1e6f7999ccf863af2e3676d14b90eb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-48-world.json.gz",
+      "sha256": "71e7d722e01a4c0b5f0d963d7f003ade0db84643619670db59233befd5ee2821"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/peer-0.log": {
+      "retained_file": "named-noaid-r1-37124281232-49-peer-0.log.gz",
+      "sha256": "9bd8eb4dc7312b3259f9f4c112be714794014bc5a3984b62a18dedaf2481dfc4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_choices-20261003T130222Z/peer-1.log": {
+      "retained_file": "named-noaid-r1-37124281232-50-peer-1.log.gz",
+      "sha256": "3881b4693aa66348288bcf33909e27879fdb9634b2f3e4953ce83b6e293da2a7"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/NET_RUN.json": {
+      "retained_file": "named-noaid-r1-37124281232-51-NET_RUN.json.gz",
+      "sha256": "f62bce3d98e16c2295c0f1a9daeb3aef7f0cfdb0890562512914df44d76640da"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/SUMMARY.md": {
+      "retained_file": "named-noaid-r1-37124281232-52-SUMMARY.md.gz",
+      "sha256": "f89aae0562c27396a1eda8c499765f6987c765bb3b476a1a8d9bf155d0c3ee94"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-53-boot_log.txt.gz",
+      "sha256": "42c41ebe4dea93ec28279c92f263a55ee9362a94f5b0166be79bf61b695d5d47"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-42d5be58f6e221481b57f854dd8eeb24/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-56-character.json.gz",
+      "sha256": "5e3b68537a38c0111ae004dec9728c245865c502b65c94714474c321efa42997"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-57-godot.log.gz",
+      "sha256": "1732d32a46e03d0dece19546d9e373d4254fdbe156292a4903e19d695cbf3428"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "named-noaid-r1-37124281232-58-slot_0.json.gz",
+      "sha256": "3241810917039d0a14642514be3f5b5e1d044dee561138a41584d7dba71ab385"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-59-world.json.gz",
+      "sha256": "0fd7c8d1eee2942b6edeafea35ee5248def938df595f56a2a9f0fd351db09adb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-60-boot_log.txt.gz",
+      "sha256": "3e5f5b2fe4304a4ac52b93c76eb58c067db5b41a04cca72bb1a56471ad76d96a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-30afefe0f8c6c3527dfc1476bd85770b/character.json": {
+      "retained_file": "named-noaid-r1-37124281232-63-character.json.gz",
+      "sha256": "0dc9292f8d5195572b2848bd2f87c32753a3bf068f68ad0b8be55f96d60958e1"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-64-godot.log.gz",
+      "sha256": "7273247a74be82d793e271237322fc83f7c25d1cf4f789e31c6a75ae54ebe12c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-1/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "named-noaid-r1-37124281232-65-slot_0.json.gz",
+      "sha256": "6286f27cd2a1e93b8e1448fd3a80078cc20c422b58db9256e668e661e3581674"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "named-noaid-r1-37124281232-66-world.json.gz",
+      "sha256": "e83536e54076a525516bbe3f827dbb9008acce83a38d49874396111fa9f36087"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/peer-0.log": {
+      "retained_file": "named-noaid-r1-37124281232-67-peer-0.log.gz",
+      "sha256": "30c2f039d8162e803003df1d64d4dc32f96dbecc61e3f2901b1446bfa20be13e"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "named-noaid-r1-37124281232-68-boot_log.txt.gz",
+      "sha256": "61532ae589b721314cda6ab65f1cab1163a36594f9a9518eddf4f3814f93d121"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/named-noaid-r1/net-veridian_relic_key-20261003T130612Z/peer-1.log": {
+      "retained_file": "named-noaid-r1-37124281232-69-peer-1.log.gz",
+      "sha256": "a80a460bde0f685708b80aa181fbbbb368982d6d807f9b2b6191ff99f7427c96"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "named-noaid-r1-37124281232-70-godot.log.gz",
+      "sha256": "eef6afd5908fadfee3aafb8cc7f6057208f4a74d1e2e0acf7f6210b68debf102"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T12.59.09.log": {
+      "retained_file": "named-noaid-r1-37124281232-71-godot2026-10-03T12.59.09.log.gz",
+      "sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.02.22.log": {
+      "retained_file": "named-noaid-r1-37124281232-72-godot2026-10-03T13.02.22.log.gz",
+      "sha256": "7a06fbae4ab706905db6a80ec63a0696ac7e8903e071c7f880a17981f6952491"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.06.12.log": {
+      "retained_file": "named-noaid-r1-37124281232-73-godot2026-10-03T13.06.12.log.gz",
+      "sha256": "8ceaa1b1587092fa8fc6fd8b8043c6a80de482b44f35c4d48bc8cfadc71e742f"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.10.05.log": {
+      "retained_file": "named-noaid-r1-37124281232-74-godot2026-10-03T13.10.05.log.gz",
+      "sha256": "0698e3b6a0ea3db083eac3f5c82a21d69b62dc4d8529482eb117ff0e832f8d64"
+    }
+  }
+}

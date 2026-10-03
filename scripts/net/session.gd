@@ -5517,6 +5517,8 @@ func home_key_refusal() -> String:
 
 func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> void:
 	if is_host() or not is_active() or producer != get_node_or_null(^"FoundationComposition/TravelLifecycle") \
+		or _peer == null or _peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED \
+		or not snapshot_ready() \
 		or not preload("res://scripts/net/foundation_travel_lifecycle.gd").valid_sample(sample): return
 	rpc_id(HOST_PEER_ID, "_rpc_travel_lifecycle", sample)
 

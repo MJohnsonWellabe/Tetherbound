@@ -2738,18 +2738,17 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # 7-way measured-cost matrix. Run 34158919494 is the last complete green
-    # seven-shard run before the four-biome merge; its artifact timestamps are
-    # the costs used below. Longest-processing-time-first assignment replaces
-    # the alphabetical index split that stacked `split_realms` behind three
-    # other smokes in run 34163799085 and let that regression consume shard 5's
-    # 30-minute job ceiling. `split_realms` owns shard 7 alone: its successful
-    # measurement is kept in the table, while isolation ensures a future realm
-    # build stall cannot discard otherwise-green smoke results.
+    # Twelve-way scheduling: eight ordinary LPT bins, then split_realms and
+    # each of the three F48 suites alone. Completed case timestamps from
+    # run 37120921415 replace stale weights; failed elapsed times are only
+    # scheduling lower bounds, never successful runtime measurements.
+    # The original 1200-second smoke budget and 30-minute job limit remain.
+    # Unmeasured F48 suites reserve a whole bin so missing prerequisites or
+    # long execution cannot discard another smoke's result.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     timeout-minutes: 30
     needs:
       - changes
@@ -2773,7 +2772,7 @@ jobs:
         env:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 7
+          SHARD_COUNT: 12
           # Smoke wall time only. This leaves ten minutes of the unchanged
           # 30-minute job for checkout, Godot setup, upload and runner drift.
           MEASURED_SHARD_BUDGET_SECONDS: 1200
@@ -2783,95 +2782,140 @@ jobs:
           import os
           import sys
 
-          # Seconds measured from completed run 34158919494's artifact start
-          # names and NET_RUN.json completion timestamps. The one smoke merged
-          # after that run has its completed local harness measurement.
-          costs = {
-              "tests/smoke_net_behind_character_joins_ahead_world.gd": 92,
+          # Ceil seconds from original wrapper group start through return in
+          # run 37120921415. Nine cases lacking a new successful completion keep
+          # their earlier successful 34158919494/local measurement. Raw timing
+          # provenance is retained in the existing main-green PROOF directory.
+          successful_costs = {
+              "tests/smoke_net_behind_character_joins_ahead_world.gd": 110,
               "tests/smoke_net_boss_rewards_each_participant.gd": 110,
               "tests/smoke_net_catch_race.gd": 118,
-              "tests/smoke_net_deploy_two_creatures.gd": 72,
-              "tests/smoke_net_farm_race.gd": 89,
-              "tests/smoke_net_fly.gd": 117,
-              "tests/smoke_net_fog_is_personal.gd": 96,
-              "tests/smoke_net_gate_opens_for_both.gd": 88,
-              "tests/smoke_net_hearts.gd": 92,
-              "tests/smoke_net_host_exit_saves.gd": 88,
-              "tests/smoke_net_host_join_leave.gd": 67,
-              "tests/smoke_net_join_by_address.gd": 80,
-              "tests/smoke_net_late_join_modified_world.gd": 81,
-              "tests/smoke_net_menu_does_not_freeze_peer.gd": 146,
-              "tests/smoke_net_movement_two_peers.gd": 97,
-              "tests/smoke_net_peer_death.gd": 81,
-              "tests/smoke_net_pickup_race.gd": 89,
-              "tests/smoke_net_realm_owner_disconnect_mid_fight.gd": 117,
-              "tests/smoke_net_reconnect_keeps_character.gd": 83,
-              "tests/smoke_net_revive.gd": 92,
-              "tests/smoke_net_riding.gd": 168,
+              "tests/smoke_net_client_trainer_rewards.gd": 225,
+              "tests/smoke_net_deploy_two_creatures.gd": 111,
+              "tests/smoke_net_farm_race.gd": 96,
+              "tests/smoke_net_fly.gd": 109,
+              "tests/smoke_net_fog_is_personal.gd": 100,
+              "tests/smoke_net_gate_opens_for_both.gd": 130,
+              "tests/smoke_net_hearts.gd": 112,
+              "tests/smoke_net_host_exit_saves.gd": 137,
+              "tests/smoke_net_host_join_leave.gd": 102,
+              "tests/smoke_net_identity_admission.gd": 128,
+              "tests/smoke_net_join_by_address.gd": 127,
+              "tests/smoke_net_join_version_mismatch.gd": 123,
+              "tests/smoke_net_late_join_modified_world.gd": 124,
+              "tests/smoke_net_meadows_identity_fresh_join.gd": 169,
+              "tests/smoke_net_menu_does_not_freeze_peer.gd": 160,
+              "tests/smoke_net_movement_two_peers.gd": 136,
+              "tests/smoke_net_peer_death.gd": 99,
+              "tests/smoke_net_pickup_race.gd": 115,
+              "tests/smoke_net_realm_owner_disconnect_mid_fight.gd": 306,
+              "tests/smoke_net_reconnect_keeps_character.gd": 171,
+              "tests/smoke_net_revive.gd": 164,
+              "tests/smoke_net_riding.gd": 153,
               "tests/smoke_net_shared_boss.gd": 117,
-              "tests/smoke_net_shared_building.gd": 87,
+              "tests/smoke_net_shared_building.gd": 129,
               "tests/smoke_net_shared_wild_fight.gd": 89,
-              "tests/smoke_net_sleep_vote.gd": 75,
-              "tests/smoke_net_split_realms.gd": 116,
-              "tests/smoke_net_storage_concurrency.gd": 91,
+              "tests/smoke_net_sleep_vote.gd": 94,
+              "tests/smoke_net_split_realms.gd": 409,
+              "tests/smoke_net_storage_concurrency.gd": 135,
               "tests/smoke_net_stormwood_hosted_trainers.gd": 122,
               "tests/smoke_net_stormwood_realms.gd": 116,
-              "tests/smoke_net_trade.gd": 92,
+              "tests/smoke_net_trade.gd": 140,
               "tests/smoke_net_two_peers_boot.gd": 83,
+              "tests/smoke_net_veridian_full_refusal.gd": 132,
+              "tests/smoke_net_veridian_mixed.gd": 100,
               "tests/smoke_net_water_alpha.gd": 86,
-              "tests/smoke_net_water_mounted_swimming.gd": 58,
+              "tests/smoke_net_water_local_chains.gd": 74,
+              "tests/smoke_net_water_mounted_swimming.gd": 85,
               "tests/smoke_net_water_swim_stone_late_join.gd": 63,
-              "tests/smoke_net_water_swimming.gd": 69,
+              "tests/smoke_net_water_swimming.gd": 95,
           }
+          # Completed FAILED attempts from 37120921415: lower bounds only.
+          # The three F48 prerequisite failures (~0.1s) did not execute suites
+          # and supply no runtime estimate; they get capacity reservations below.
+          failed_elapsed_lower_bounds = {
+              "tests/smoke_net_boss_rewards_each_participant.gd": 108,
+              "tests/smoke_net_catch_race.gd": 202,
+              "tests/smoke_net_cloudreach_riding.gd": 127,
+              "tests/smoke_net_foundations.gd": 234,
+              "tests/smoke_net_session_host_first_realm.gd": 133,
+              "tests/smoke_net_shared_boss.gd": 153,
+              "tests/smoke_net_shared_wild_fight.gd": 159,
+              "tests/smoke_net_stormwood_finalized_death.gd": 122,
+              "tests/smoke_net_stormwood_glass_for_bryn.gd": 128,
+              "tests/smoke_net_stormwood_hosted_trainers.gd": 123,
+              "tests/smoke_net_stormwood_livewire.gd": 123,
+              "tests/smoke_net_stormwood_realms.gd": 99,
+              "tests/smoke_net_veridian_choices.gd": 110,
+              "tests/smoke_net_veridian_relic_key.gd": 137,
+              "tests/smoke_net_veridian_same_five.gd": 473,
+              "tests/smoke_net_water_alpha.gd": 86,
+              "tests/smoke_net_water_deep_watch_chart.gd": 104,
+              "tests/smoke_net_water_return.gd": 228,
+          }
+          # Slowest successful ordinary smoke, excluding isolated split_realms.
+          # An unknown discovery gets this explicit reservation until measured.
+          ordinary_fallback = 306
+          isolated = [
+              "tests/smoke_net_split_realms.gd",
+              "tests/smoke_net_f48_behind.gd",
+              "tests/smoke_net_f48_loop.gd",
+              "tests/smoke_net_f48_transactions.gd",
+          ]
           files = os.environ["ALL_FILES"].split()
           shard = int(os.environ["SHARD"])
           shard_count = int(os.environ["SHARD_COUNT"])
           budget = int(os.environ["MEASURED_SHARD_BUDGET_SECONDS"])
-          reserved = "tests/smoke_net_split_realms.gd"
-          if shard_count < 2 or not 1 <= shard <= shard_count:
+          ordinary_count = shard_count - len(isolated)
+          if ordinary_count < 1 or not 1 <= shard <= shard_count:
               sys.exit("invalid shard configuration")
-          if reserved not in files:
-              sys.exit(f"{reserved} was not discovered")
+          missing = sorted(set(isolated) - set(files))
+          if missing:
+              sys.exit(f"required isolated net smokes were not discovered: {missing}")
 
-          # A new smoke gets the slowest measured cost until its first green
-          # artifact replaces that conservative value. Existing smokes must
-          # never silently disappear from the plan.
-          fallback = max(costs.values())
-          unknown = sorted(set(files) - costs.keys())
+          unknown = sorted(set(files) - successful_costs.keys() - set(isolated))
           for path in unknown:
-              print(f"::warning::{path} has no completed measurement; reserving {fallback}s")
+              print(f"::warning::{path} has no successful measurement; reserving at least {ordinary_fallback}s")
+          weights = {
+              path: max(successful_costs.get(path, ordinary_fallback),
+                        failed_elapsed_lower_bounds.get(path, 0))
+              for path in files
+          }
+          for path in isolated[1:]:
+              weights[path] = budget  # Capacity reservation, NOT measured wall time.
 
           bins = [[] for _ in range(shard_count)]
           loads = [0 for _ in range(shard_count)]
-          bins[-1].append(reserved)
-          loads[-1] = costs[reserved]
+          for offset, path in enumerate(isolated, start=ordinary_count):
+              bins[offset].append(path)
+              loads[offset] = weights[path]
           weighted = sorted(
-              (path for path in files if path != reserved),
-              key=lambda path: (-costs.get(path, fallback), path),
+              (path for path in files if path not in isolated),
+              key=lambda path: (-weights[path], path),
           )
           for path in weighted:
-              target = min(range(shard_count - 1), key=lambda i: (loads[i], i))
+              target = min(range(ordinary_count), key=lambda i: (loads[i], i))
               bins[target].append(path)
-              loads[target] += costs.get(path, fallback)
+              loads[target] += weights[path]
 
-          # Deterministic assignment/budget contract: complete cover, no
-          # duplicates, split_realms isolated, and every measured load leaves
-          # the job-level setup/teardown reserve intact.
+          # Deterministic complete one-time cover, unchanged setup/teardown
+          # reserve, and no other case sharing an isolated suite's bin.
           assigned = [path for group in bins for path in group]
           if sorted(assigned) != sorted(files) or len(assigned) != len(set(assigned)):
               sys.exit("net-shard plan is not an exact one-time cover")
-          if bins[-1] != [reserved]:
-              sys.exit("split_realms must be the only smoke on its shard")
+          for offset, path in enumerate(isolated, start=ordinary_count):
+              if bins[offset] != [path]:
+                  sys.exit(f"{path} must be the only smoke on its shard")
           overloaded = [i + 1 for i, load in enumerate(loads) if load > budget]
           if overloaded:
-              sys.exit(f"measured net-shard budget exceeded by shard(s) {overloaded}: {loads}")
+              sys.exit(f"net-shard scheduling budget exceeded by shard(s) {overloaded}: {loads}")
 
           for index, (group, load) in enumerate(zip(bins, loads), start=1):
-              print(f"plan shard {index}/{shard_count}: measured={load}s files={' '.join(group)}")
+              print(f"plan shard {index}/{shard_count}: scheduling_weight={load}s files={' '.join(group)}")
           mine = " ".join(bins[shard - 1])
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
               output.write(f"files={mine}\n")
-              output.write(f"measured_seconds={loads[shard - 1]}\n")
+              output.write(f"scheduling_weight_seconds={loads[shard - 1]}\n")
           PY
       - name: Provision immutable actual F48 inputs
         if: ${{ !cancelled() && contains(steps.select.outputs.files, 'tests/smoke_net_f48_') }}

@@ -3,6 +3,10 @@ extends "res://tests/test_case.gd"
 const PROOF := preload("res://tools/net/proof_steps_f48.gd")
 const RECORDS := preload("res://scripts/net/character_record_rules.gd")
 const PORTAL := preload("res://scripts/net/portal_delivery.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
+const FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
+const ITEM_DB := preload("res://autoload/item_db.gd")
+const DOCUMENT := preload("res://scripts/save/save_document.gd")
 
 var memory: Dictionary
 var edge: Dictionary
@@ -93,3 +97,90 @@ func test_portal_observation_retains_explicit_live_transport_epoch() -> void:
 	assert_true(PROOF._boundary_epochs_match({"session_id": "transport"}, row, "transport", "transport", "transport"))
 	assert_false(PROOF._boundary_epochs_match({"session_id": "journal"}, row, "transport", "transport", "transport"))
 	assert_false(PROOF._boundary_epochs_match({"session_id": "transport"}, row, "transport", "transport", "replacement"))
+
+func test_actual_locked_fallback_full_receipt_matches_frozen_request_and_rejects_tampering() -> void:
+	var directory: String = "user://test_f48_fallback_receipt_" + Crypto.new().generate_random_bytes(12).hex_encode() + "/"
+	var game: RefCounted = FIXTURE.game(ITEM_DB.new(),false)
+	var saver: RefCounted = SAVE.new(directory)
+	var request: Dictionary = saver.call("_prepare_snapshot",game,0)
+	assert_false(request.is_empty())
+	assert_true(saver.call("write_snapshot_observed",request) == true)
+	var receipt: Dictionary = saver.call("fallback_write_receipt")
+	var paths := {"slot":saver.call("slot_path",0),
+		"character":saver.get("_characters").call("path_for",str(request.character_id)),
+		"world":saver.get("_worlds").call("path_for",str(request.world_id))}
+	var files: Dictionary = PROOF._fallback_receipt_files(request,receipt,paths,saver.get_instance_id())
+	assert_eq(files.size(),3,"Actual writer full byte receipts, not synthetic certificates")
+	assert_eq(files.get("character",{}),receipt.get("files",{}).get("character",{}).get("payload"))
+	assert_eq(files.get("slot",{}).get("satiety"),request.data.satiety)
+	var changed_request: Dictionary = request.duplicate(true)
+	changed_request.data.satiety -= 1.0
+	assert_true(PROOF._fallback_receipt_files(changed_request,receipt,paths,saver.get_instance_id()).is_empty())
+	assert_true(PROOF._fallback_receipt_files(request,receipt,paths,saver.get_instance_id()+1).is_empty(),"Another source writer cannot certify this request")
+	var foreign_paths: Dictionary = paths.duplicate(true)
+	foreign_paths.character += ".foreign"
+	assert_true(PROOF._fallback_receipt_files(request,receipt,foreign_paths,saver.get_instance_id()).is_empty())
+	for field: String in ["sha256","bytes_base64"]:
+		var altered: Dictionary = receipt.duplicate(true)
+		altered.files.character[field] = "changed"
+		assert_true(PROOF._fallback_receipt_files(request,altered,paths,saver.get_instance_id()).is_empty(),field+" mismatch")
+	var changed_payload: Dictionary = receipt.duplicate(true)
+	changed_payload.files.character.payload.last_played = "replaced"
+	assert_true(PROOF._fallback_receipt_files(request,changed_payload,paths,saver.get_instance_id()).is_empty(),"Complete metadata must still equal its original raw bytes")
+	var changed_full_card: Dictionary = receipt.duplicate(true)
+	changed_full_card.files.character.payload.satiety -= 1.0
+	var bytes: PackedByteArray = DOCUMENT.stringify(changed_full_card.files.character.payload).to_utf8_buffer()
+	var hasher: HashingContext = HashingContext.new()
+	hasher.start(HashingContext.HASH_SHA256)
+	hasher.update(bytes)
+	changed_full_card.files.character.bytes_base64 = Marshalls.raw_to_base64(bytes)
+	changed_full_card.files.character.sha256 = hasher.finish().hex_encode()
+	assert_true(PROOF._fallback_receipt_files(request,changed_full_card,paths,saver.get_instance_id()).is_empty(),"Even internally valid changed full bytes must match every frozen request field")
+	FIXTURE.wipe(directory)
+
+func test_descendant_keeps_original_full_canonical_parent_and_exact_replayed_party() -> void:
+	edge.row.status = "pending"
+	edge.row.receipt = "original-receipt"
+	var accepted: Dictionary = edge.row.duplicate(true)
+	accepted.status = "accepted"
+	assert_true(PROOF._fallback_parent_matches(edge,accepted))
+	var changed: Dictionary = accepted.duplicate(true)
+	changed.receipt = "foreign-receipt"
+	assert_false(PROOF._fallback_parent_matches(edge,changed))
+	changed = accepted.duplicate(true)
+	changed.after.party[0].attack += 1.0
+	assert_false(PROOF._fallback_parent_matches(edge,changed),"Accepted status cannot hide a changed original full after")
+	changed = accepted.duplicate(true)
+	changed.status = "pending"
+	assert_false(PROOF._fallback_parent_matches(edge,changed),"A pending original has no actual accepted ACK")
+	var replayed: Array = memory.party.duplicate(true)
+	replayed[0].nourishment -= 0.25
+	var personal: Dictionary = memory.duplicate(true)
+	personal.party = replayed.duplicate(true)
+	var request := {"character_id":"owner","character_data":personal}
+	assert_true(PROOF._fallback_request_carrier_matches(edge,request,replayed),"Pure comparator requires an independently supplied complete replay; live observer separately authenticates it")
+	assert_false(PROOF._fallback_request_carrier_matches(edge,request,memory.party))
+	for field: String in ["inventory","redesign_character","equipment","realm_hearts","satchel_escrow"]:
+		var altered: Dictionary = request.duplicate(true)
+		altered.character_data[field] = {"foreign":true}
+		assert_false(PROOF._fallback_request_carrier_matches(edge,altered,replayed),"Complete carrier " + field)
+	request.character_id = "foreign-owner"
+	assert_false(PROOF._fallback_request_carrier_matches(edge,request,replayed))
+
+func test_false_completion_and_lost_source_lifetime_cannot_make_a_descendant() -> void:
+	var request := {"character_id":"owner"}
+	var bound := {"jobs":{"original":{"request":request}}}
+	PROOF._fallback_request_completed(bound,"original",request,false,{"source":"SaveGame_locked_fallback_write_TRUE_BOOL"})
+	assert_true(bound.jobs.is_empty(),"Failed BOOL retires this submitted job without reading/certifying a current file")
+	var dead_tree: RefCounted = RefCounted.new()
+	var dead_game: RefCounted = RefCounted.new()
+	var dead_saver: RefCounted = RefCounted.new()
+	var dead_writer: RefCounted = RefCounted.new()
+	bound = {"tree":weakref(dead_tree),"game":weakref(dead_game),"saver":weakref(dead_saver),
+		"jobs":{"original":{"request":request,"writer_ref":weakref(dead_writer)}}}
+	dead_tree = null
+	dead_game = null
+	dead_saver = null
+	dead_writer = null
+	PROOF._fallback_request_completed(bound,"original",request,true,{})
+	assert_true(bound.jobs.is_empty(),"A once retained source that expired cannot certify a successful-looking completion")

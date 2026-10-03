@@ -13,6 +13,9 @@ const PASSIVE := preload("res://tools/net/f48_passive_witness.gd")
 const PORTAL_DELIVERY := preload("res://scripts/net/portal_delivery.gd")
 const PROOF_FILES := preload("res://tools/net/proof_steps.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
+const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
+const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
 class ButtonActivationObservation extends RefCounted:
 	var count: int = 0
@@ -124,6 +127,7 @@ static func _owner_transport_matches(game: Node, writer: Node, bound: Dictionary
 
 static func _watch_owner_saves(tree: SceneTree) -> bool:
 	_watch_fallback_completions(tree)
+	_watch_fallback_requests(tree)
 	if tree.has_meta("f48_owner_save_watch"): return true
 	var game := tree.root.get_node_or_null(^"Game")
 	var writer := tree.root.get_node_or_null(^"Game/Session/LedgerRpc")
@@ -191,6 +195,165 @@ static func _watch_owner_saves(tree: SceneTree) -> bool:
 	writer.connect("transaction_boundary", observer)
 	tree.set_meta("f48_owner_save_watch", observer)
 	return true
+
+## A natural fallback can persist later observed care. Its certificate remains
+## a descendant of the original transaction, never a replacement ledger edge.
+static func _watch_fallback_requests(tree: SceneTree) -> void:
+	if tree.has_meta("f48_fallback_request_watch"): return
+	var game: Node = tree.root.get_node_or_null(^"Game")
+	var saver: RefCounted = game.get("save_system") as RefCounted if game != null else null
+	if saver == null or saver.get_script() == null or saver.get_script().resource_path != "res://scripts/save/save_game.gd" \
+		or not saver.has_signal("fallback_submitted") or not saver.has_signal("fallback_request_completed"): return
+	var bound := {"tree":weakref(tree),"game":weakref(game),"saver":weakref(saver),"jobs":{}}
+	var submitted := func(id: String, request: Dictionary) -> void: _fallback_submitted(bound,id,request)
+	var completed := func(id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void: _fallback_request_completed(bound,id,request,success,receipt)
+	saver.connect("fallback_submitted",submitted)
+	saver.connect("fallback_request_completed",completed)
+	tree.set_meta("f48_fallback_request_watch",[submitted,completed])
+
+static func _fallback_parent_matches(edge: Dictionary, current: Variant) -> bool:
+	if edge.is_empty() or not current is Dictionary or current.get("status") != "accepted" \
+		or not edge.get("row") is Dictionary or not _saved_edge_errors(edge).is_empty(): return false
+	var accepted: Dictionary = current.duplicate(true)
+	accepted["status"] = edge.row.get("status")
+	return _json_equal(accepted,edge.row)
+
+static func _fallback_request_carrier_matches(edge: Dictionary, request: Dictionary, replayed_party: Variant) -> bool:
+	if not request.get("character_data") is Dictionary or not replayed_party is Array: return false
+	var personal: Dictionary = request.character_data.duplicate(true)
+	personal["character_id"] = request.get("character_id")
+	var expected: Dictionary = RECORD_RULES.portable_projection(edge.get("files",{}).get("disk",{})).duplicate(true)
+	expected["party"] = replayed_party
+	return _json_equal(RECORD_RULES.portable_projection(personal),expected) \
+		and _json_equal(personal.get("party"),replayed_party) \
+		and _json_equal(personal.get("satchel_escrow"),edge.get("files",{}).get("disk",{}).get("satchel_escrow"))
+
+static func _fallback_submitted(bound: Dictionary, id: String, request: Dictionary) -> void:
+	var tree: SceneTree = bound.tree.get_ref() as SceneTree
+	var game: Node = bound.game.get_ref() as Node
+	var saver: RefCounted = bound.saver.get_ref() as RefCounted
+	if saver == null or not is_instance_valid(tree) or not is_instance_valid(game) or not game.is_inside_tree() \
+		or game.is_queued_for_deletion() or tree.root.get_node_or_null(^"Game") != game or game.get("save_system") != saver: return
+	var worker: RefCounted = saver.get("_fallback") as RefCounted
+	var writer: RefCounted = saver.get("_fallback_writer") as RefCounted
+	if worker == null or writer == null or worker.get_script() == null or writer.get_script() == null \
+		or worker.get_script().resource_path != "res://scripts/save/fallback_save_worker.gd" \
+		or writer.get_script().resource_path != "res://scripts/save/save_game.gd": return
+	# Actual mailbox has only active/latest pending jobs; discard superseded
+	# submissions without inventing a completion or retaining an unbounded list.
+	var active: Dictionary = worker.get("_active_job")
+	var pending: Dictionary = worker.get("_pending_job")
+	var source: Dictionary = active if active.get("id") == id else pending
+	if source.get("id") != id or not is_same(source.get("request"),request): return
+	for prior: String in bound.jobs.keys():
+		if prior != active.get("id") and prior != id: bound.jobs.erase(prior)
+	var session: Node = game.get("session") as Node
+	if not is_instance_valid(session) or not session.is_inside_tree() or session.is_queued_for_deletion(): return
+	var ledger: Node = session.get_node_or_null(^"LedgerRpc")
+	var authority: Dictionary = _owner_transport(game,ledger)
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save",{})
+	if authority.is_empty() or edge.is_empty() or not _owner_transport_matches(game,ledger,edge.get("authority",{})) \
+		or not request.is_read_only() or id.is_empty() or bound.jobs.has(id) \
+		or request.get("character_id") != game.get("local").get("character_id") \
+		or request.get("world_id") != game.get("world").get("world_id") \
+		or request.get("world_instance_id") != game.get("world").get("reward_delivery_namespace") \
+		or request.get("host") != (game.call("world_save_owned") == true) \
+		or not _fallback_parent_matches(edge,game.get("world").get("reward_deliveries").get(edge.get("identity"))) \
+		or not _fallback_parent_matches(edge,request.get("world_data",{}).get("reward_deliveries",{}).get(edge.get("identity"))) \
+		or _digest(str(edge.get("path",""))) != edge.get("sha256") \
+		or not _fallback_request_carrier_matches(edge,request,request.get("character_data",{}).get("party")) \
+		or not PASSIVE.matches(tree,str(edge.get("anchor","")),request.character_data.party): return
+	bound.jobs[id] = {"request":request,"authority":authority,"edge":edge,"writer_ref":weakref(writer),"saver_ref":weakref(saver),
+		"worker_ref":weakref(worker),"submitted_ms":Time.get_ticks_msec(),"passive":PASSIVE.evidence(tree,str(edge.anchor))}
+
+## Validate every frozen payload key plus the store's explicit envelope. Raw
+## complete envelopes/bytes remain in the certificate, including timestamps.
+static func _fallback_receipt_files(request: Dictionary, receipt: Dictionary, paths: Dictionary, writer_id: int) -> Dictionary:
+	if receipt.size() != 6 or receipt.get("version") != 1 or receipt.get("source") != "SaveGame_locked_fallback_write_TRUE_BOOL" \
+		or receipt.get("writer_instance_id") != writer_id or receipt.get("writer_script") != "res://scripts/save/save_game.gd" \
+		or receipt.get("request_sha256") != SAVE_DOCUMENT.stringify(request).sha256_text() \
+		or not receipt.get("files") is Dictionary or receipt.files.size() != paths.size(): return {}
+	var decoded := {}
+	for kind: String in paths:
+		var file: Variant = receipt.files.get(kind)
+		if not file is Dictionary or file.size() != 4 or file.get("path") != paths[kind] or not file.get("bytes_base64") is String: return {}
+		var bytes: PackedByteArray = Marshalls.base64_to_raw(file.bytes_base64)
+		var hasher: HashingContext = HashingContext.new()
+		hasher.start(HashingContext.HASH_SHA256)
+		hasher.update(bytes)
+		var payload: Variant = SAVE_DOCUMENT.parse(bytes.get_string_from_utf8())
+		if bytes.is_empty() or hasher.finish().hex_encode() != file.get("sha256") \
+			or not payload is Dictionary or not _json_equal(payload,file.get("payload")): return {}
+		var expected: Dictionary = request.get(kind + "_data",{}).duplicate(true) if kind != "slot" else request.data.duplicate(true)
+		var envelope: Array[String] = CHARACTER_SAVE.ENVELOPE_KEYS if kind == "character" else WORLD_SAVE.ENVELOPE_KEYS
+		if kind == "slot":
+			if request.write_split and request.host: expected["split_locator"]={"world_id":request.world_id,"character_id":request.character_id}
+			if not _json_equal(payload,expected): return {}
+		else:
+			if payload.size() != expected.size() + envelope.size(): return {}
+			for field: String in expected:
+				if not _json_equal(payload.get(field),expected[field]): return {}
+			for field: String in envelope:
+				if not payload.has(field) or (field != "version" and not payload[field] is String): return {}
+			if payload.version != (CHARACTER_SAVE.VERSION if kind == "character" else WORLD_SAVE.VERSION) \
+				or payload.display_name != request.display_name or str(payload.created_at).is_empty() or str(payload.last_played).is_empty(): return {}
+			if kind == "character" and (payload.character_id != request.character_id \
+				or payload.last_world_id != request.world_id or payload.last_world_instance_id != request.world_instance_id): return {}
+			if kind == "world" and payload.world_id != request.world_id: return {}
+		decoded[kind]=payload
+	return decoded
+
+static func _fallback_request_completed(bound: Dictionary, id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void:
+	var job: Dictionary = bound.jobs.get(id,{})
+	bound.jobs.erase(id)
+	if not success or job.is_empty() or not _json_equal(job.request,request): return
+	var tree: SceneTree = bound.tree.get_ref() as SceneTree
+	var game: Node = bound.game.get_ref() as Node
+	var saver: RefCounted = bound.saver.get_ref() as RefCounted
+	var writer: RefCounted = job.writer_ref.get_ref() as RefCounted
+	if saver == null or not is_instance_valid(tree) or not is_instance_valid(game) or not game.is_inside_tree() or game.is_queued_for_deletion() \
+		or tree.root.get_node_or_null(^"Game") != game or game.get("save_system") != saver or writer == null \
+		or saver.get("_fallback_writer") != writer or saver.get("_fallback") != job.worker_ref.get_ref(): return
+	var session: Node = game.get("session") as Node
+	if not is_instance_valid(session) or not session.is_inside_tree() or session.is_queued_for_deletion(): return
+	var ledger: Node = session.get_node_or_null(^"LedgerRpc")
+	var edge: Dictionary = tree.get_meta("f48_latest_owner_save",{})
+	if not is_same(edge,job.edge) or not _owner_transport_matches(game,ledger,job.authority) \
+		or _digest(str(edge.get("path",""))) != edge.get("sha256") \
+		or not _fallback_parent_matches(edge,game.get("world").get("reward_deliveries").get(edge.get("identity"))): return
+	var characters: RefCounted = saver.get("_characters")
+	var worlds: RefCounted = saver.get("_worlds")
+	if characters == null or worlds == null: return
+	var paths := {"character":characters.call("path_for",str(request.character_id))}
+	if not request.character_only:
+		paths.slot=saver.call("slot_path",int(request.slot))
+		if request.host: paths.world=worlds.call("path_for",str(request.world_id))
+	var decoded: Dictionary = _fallback_receipt_files(request,receipt,paths,writer.get_instance_id())
+	if decoded.is_empty(): return
+	var certificate := {"source":"actual_request_bound_natural_fallback_TRUE_BOOL_descendant","job_id":id,
+		"submitted_ms":job.submitted_ms,"completed_ms":Time.get_ticks_msec(),"request":request,"receipt":receipt,
+		"original_edge_path":edge.path,"original_edge_sha256":edge.sha256,"original_ledger_row":edge.row,
+		"session_epoch":job.authority.epoch,"submission_passive":job.passive}
+	var dir: String = OS.get_environment("TB_PROOF_OUT").path_join("f48-fallback-requests").path_join(str(request.character_id))
+	if OS.get_environment("TB_PROOF_OUT").is_empty(): return
+	DirAccess.make_dir_recursive_absolute(dir)
+	var path: String = dir.path_join(id + ".json")
+	if not DETACHED.publish(path,certificate): return
+	tree.set_meta("f48_latest_fallback_descendant",{"job_id":id,"job":job,"receipt":receipt,"files":decoded,"path":path,"sha256":_digest(path)})
+
+static func _fallback_descendant_matches(tree: SceneTree, now: Dictionary, edge: Dictionary) -> bool:
+	var descendant: Dictionary = tree.get_meta("f48_latest_fallback_descendant",{})
+	var game: Node = tree.root.get_node_or_null(^"Game")
+	var session: Node = game.get("session") as Node if game != null else null
+	var saver: RefCounted = game.get("save_system") as RefCounted if game != null else null
+	if descendant.is_empty() or game == null or session == null or not is_same(descendant.job.edge,edge) \
+		or saver == null or saver != descendant.job.saver_ref.get_ref() \
+		or saver.get("_fallback_writer") != descendant.job.writer_ref.get_ref() or saver.get("_fallback") != descendant.job.worker_ref.get_ref() \
+		or not _owner_transport_matches(game,session.get_node_or_null(^"LedgerRpc"),descendant.job.authority) \
+		or _digest(str(descendant.path)) != descendant.sha256: return false
+	return now.get("character_path") == descendant.receipt.files.character.path \
+		and now.get("character_sha256") == descendant.receipt.files.character.sha256 \
+		and _json_equal(now.get("disk"),descendant.files.character)
 
 ## Diagnostic only: completed(bool) carries no frozen request identity. Never
 ## promote this current-file observation into a ledger edge or snapshot source.
@@ -352,7 +515,8 @@ static func _snapshot_errors(tree: SceneTree, now: Dictionary) -> Array[String]:
 		or game.session.call("_altar_current_epoch") != edge.epoch or now.character_id != edge.files.character_id \
 		or now.world_namespace != edge.files.world_namespace or _digest(str(edge.path)) != edge.sha256:
 		errors.append("Actual saved owner/world/session/immutable edge changed")
-	if now.character_sha256 != edge.files.character_sha256 or not _json_equal(now.disk, edge.files.disk):
+	if (now.character_sha256 != edge.files.character_sha256 or not _json_equal(now.disk, edge.files.disk)) \
+		and (original_source or not _fallback_descendant_matches(tree,now,edge)):
 		errors.append("Actual complete owner file changed after the latest observed edge")
 	for field: String in ["inventory", "redesign_character", "satchel_escrow"]:
 		if not _json_equal(now.memory.get(field), now.disk.get(field)):
@@ -396,8 +560,14 @@ static func _assert_snapshot(tree: SceneTree) -> Dictionary:
 	var now := _observe(tree)
 	var errors := _snapshot_errors(tree, now)
 	now.passive_evidence = PASSIVE.evidence(tree, _snapshot_anchor(tree))
+	if not errors.is_empty() or not _fallback_descendant_matches(tree,now,tree.get_meta("f48_latest_owner_save",{})):
+		now.fallback_descendant = {}
+	else:
+		var descendant: Dictionary = tree.get_meta("f48_latest_fallback_descendant")
+		now.fallback_descendant = {"path":descendant.path,"sha256":descendant.sha256,"job_id":descendant.job_id,"request_bound":true}
 	var original_source: bool = not tree.has_meta("f48_latest_owner_save")
 	now.snapshot_source = "unchanged_original_admitted_disk_no_initial_memory_disk_convergence_or_saved_live_care_bond_claim" if original_source else "actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK"
+	if not now.fallback_descendant.is_empty(): now.snapshot_source += "_and_separate_request_bound_natural_fallback_descendant"
 	return _result(errors.is_empty(), "Read-only explicit input source " + str(now.snapshot_source) + ": " + "; ".join(errors), now)
 
 static func _capture_durable(tree: SceneTree, args: Dictionary) -> Dictionary:

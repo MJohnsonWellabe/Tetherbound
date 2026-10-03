@@ -2,44 +2,31 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
-## F05 (ACCEPTANCE §6.1, card M4): "the gate opens ... and the SAME five enter
-## Cloudreach through the physical crossing", for two peers in one session.
+## Two actual network peers retain the SAME five when entering Cloudreach.
+## WORLD/RD-17 and F18 replace the historical F05 physical crossing with the
+## Crossing Hall portal; the retired far trigger is no longer an entry source.
 ##
 ## Real host and guest processes (tools/net/run_net_smoke.sh). Each peer holds
 ## five creatures; the host commits the Warden's world facts through the story
 ## ledger (`defeated_warden`, `legendary_freed`, `realm_key_cloudreach` -- all
-## world-scope), so the rift collapses and the span appears on BOTH peers. Each
-## peer then WALKS (peer_runner `move_to`: the navigator drives the player's own
-## movement input, no teleport) from the storm road onto the span and on into
-## the far trigger, whose `body_entered` is the only caller of
-## `Game.enter_realm("cloudreach", ...)` on this path. After the realm changes,
+## world-scope). Each peer uses the actual authored Hall arch request, owner
+## BOOL-save, consumed host permit and saved grounded arrival ACK. Afterward,
 ## each peer's party UIDs (`creature_instance.uid`, minted at random, so equal
 ## lists mean the same creatures, not look-alikes) are compared with the ones it
-## held before the walk: same five, same order, no sixth, nothing lost.
+## held before entry: same five, same order, no sixth, nothing lost.
 ##
 ## Disclosed staging: the fight itself is not played (smoke_net_veridian_choices
-## plays it); the parties are granted with `party_grant`; each peer is placed on
-## the storm road 20 m short of the span with `teleport`, then walks. The span's
-## coordinates are the production scene's own (RiftCrossing near/far anchors and
-## trigger, read from the built scene; see NEAR/FAR/TRIGGER), and the proof that
-## the walk went THROUGH the trigger is the realm change it alone causes.
+## plays it); parties are granted before initial Hall placement and opening the
+## canonical route, then saved before host/join admission. These initial
+## mechanics fixtures claim no earned chapter credit. No admitted owner pose or
+## party is changed to obtain a portal permit. The original 6000-frame crossing
+## budget includes initial placement cost and the actual saved transition.
 
 const FIVE := ["terrapup", "bramblebun", "trailpup", "mudsnout", "brooktail"]
 const WORLD_FACTS := ["defeated_warden", "legendary_freed", "realm_key_cloudreach"]
 const GUEST_NAME := "Same Five Guest"
-## RiftCrossing on meadows_playground (headless build, flags set): near anchor
-## (-33.38, 7523.14), far anchor (-34.78, 7548.10), trigger (-35.34, 7558.09).
-const NEAR := Vector2(-33.38, 7523.14)
-const FAR := Vector2(-34.78, 7548.10)
-const TRIGGER := Vector2(-35.34, 7558.09)
-## 20 m back down the span's own axis from the near anchor.
-const ROAD := Vector2(-32.26, 7503.17)
-## Past the far anchor: the trigger box's near edge (7 m) plus 0.3 m.
-const EDGE_IN_M := 7.3
+const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
 const SPAN_WAIT_FRAMES := 1200
-## A client's crossing is a coordinated transition (scripts/net/realm_transition.gd
-## begin_client: a host grant, then the load) with a 120 s TIMEOUT_MS; poll past it.
-const REALM_POLLS := 180
 
 var _port := 0
 
@@ -83,6 +70,13 @@ func _run() -> void:
 			var granted: Dictionary = await step(peer, "party_grant", {"species": species, "level": 18})
 			check(str(granted.get("verdict", "")) == "PASS",
 				"FIXTURE: peer %d received a level-18 %s" % [peer, species])
+	for peer in 2:
+		var prepared: Dictionary = await step(peer, "enter_realm", {"realm": "cloudreach",
+			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "veridian_same_five", "portal_prepare_only": true})
+		check(prepared.get("verdict") == "PASS", "Disclosed initial Hall placement/open canonical route after five-party fixture and before save/admission")
+		if prepared.get("verdict") != "PASS":
+			quit(await finish())
+			return
 	var host_saved: Dictionary = await step(0, "save_character_here", {})
 	var guest_saved: Dictionary = await step(1, "save_character_here", {})
 	var host_id := str((host_saved.get("data", {}) as Dictionary).get("character_id", ""))
@@ -112,57 +106,29 @@ func _run() -> void:
 		# The rift collapses and the span appears (hold + dissipate + appear).
 		await step(peer, "wait", {"frames": SPAN_WAIT_FRAMES})
 
-	# 4. Before the walk: each peer's five UIDs, in the Meadows.
+	# 4. Before entry: each peer's five UIDs, in the Meadows.
 	var before: Array = [[], []]
 	for peer in 2:
 		var who: Variant = await probe(peer, "player_identity")
 		var realm := str((who as Dictionary).get("realm", "")) if who is Dictionary else ""
-		check(realm == "meadows", "peer %d stands in the Meadows before the walk ('%s')" % [peer, realm])
+		check(realm == "meadows", "peer %d stands in the Meadows before portal entry ('%s')" % [peer, realm])
 		before[peer] = await _uids(peer)
 		check((before[peer] as Array).size() == 5 and not (before[peer] as Array).has(""),
-			"peer %d holds five creatures with UIDs before the walk: %s" % [peer, str(before[peer])])
+			"peer %d holds five creatures with UIDs before portal entry: %s" % [peer, str(before[peer])])
 	check(before[0] != before[1], "the two peers' parties are different creatures (distinct UIDs)")
 
-	# 5. Each peer walks over the span into the far trigger -- the guest first.
-	# A client's crossing needs the host's grant (realm_transition.gd); a host
-	# that crossed first spends ~65 s standing a Meadows shell up for the peer
-	# still there, and a request landing mid-build went ungranted (run 4).
+	# 5. The guest enters first while the host owns the destination shell.
+	# The helper uses only the actual public arch transaction after admission.
 	for peer: int in [1, 0]:
-		var placed: Dictionary = await step(peer, "teleport", {"at": [ROAD.x, 2.0, ROAD.y], "settle": 60})
-		print("[same-five] peer %d teleport: %s" % [peer, str(placed.get("detail", ""))])
-		var leg1: Dictionary = await step(peer, "move_to", {"x": NEAR.x, "z": NEAR.y, "close_enough": 1.5, "budget_frames": 1800})
-		# The host builds the crossed guest's Cloudreach shell after the guest
-		# goes over (~65 s, longer on a loaded CI runner); a walk that starts
-		# while that build still runs can find the host moved back to its
-		# spawn (CI 6c0a543c: "7536.88 m short", no step taken). Wait the
-		# build out, put the host back on the road and walk once more -- the
-		# crossing itself is still walked, not fixtured.
-		if str(leg1.get("verdict", "")) != "PASS" and str(leg1.get("detail", "")).contains(" m short") \
-				and float(str(leg1.get("detail", "")).get_slice(": ", 1).get_slice(" m short", 0)) > 100.0:
-			print("[same-five] peer %d started the walk far from the road (%s); waiting out the host's shell build, then again" % [peer, str(leg1.get("detail", ""))])
-			await step(peer, "wait", {"frames": 1200})
-			placed = await step(peer, "teleport", {"at": [ROAD.x, 2.0, ROAD.y], "settle": 60})
-			print("[same-five] peer %d re-teleport: %s" % [peer, str(placed.get("detail", ""))])
-			leg1 = await step(peer, "move_to", {"x": NEAR.x, "z": NEAR.y, "close_enough": 1.5, "budget_frames": 1800})
-		check(str(leg1.get("verdict", "")) == "PASS", "peer %d walked the storm road onto the span (%s)" % [peer, str(leg1.get("detail", ""))])
-		var leg2: Dictionary = await step(peer, "move_to", {"x": FAR.x, "z": FAR.y, "close_enough": 1.5, "budget_frames": 1800})
-		check(str(leg2.get("verdict", "")) == "PASS", "peer %d walked the span to the far rim (%s)" % [peer, str(leg2.get("detail", ""))])
-		# Into the trigger. Its box (rift_crossing.gd::_build_trigger) is
-		# `trigger_length_m` 6 m long, centred `trigger_depth_m` 10 m past the
-		# far anchor, so its near edge is 7 m past it. A move_to still walking
-		# when the realm changes loses its player mid-step (an ERROR the harness
-		# treats as fatal), so this leg ends just across the edge: the step
-		# returns on arrival and the body's own overlap fires `body_entered`.
-		var into := FAR + (TRIGGER - FAR).normalized() * EDGE_IN_M
-		await step(peer, "move_to", {"x": into.x, "z": into.y, "close_enough": 0.6, "budget_frames": 900})
-		var realm := ""
-		for i in REALM_POLLS:
-			var who: Variant = await probe(peer, "player_identity")
-			realm = str((who as Dictionary).get("realm", "")) if who is Dictionary else ""
-			if realm == "cloudreach":
-				break
-			await step(peer, "wait", {"frames": 60})
-		check(realm == "cloudreach", "peer %d entered Cloudreach through the far trigger (realm '%s')" % [peer, realm])
+		var entered: Dictionary = await step(peer, "enter_realm", {"realm": "cloudreach",
+			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "veridian_same_five"}, 6000)
+		check(entered.get("verdict") == "PASS", "peer %d completed actual Hall portal owner-save/permit/grounded arrival (%s)" % [peer, str(entered.get("detail", ""))])
+		if entered.get("verdict") != "PASS":
+			quit(await finish())
+			return
+		var who: Variant = await probe(peer, "player_identity")
+		var realm: String = str((who as Dictionary).get("realm", "")) if who is Dictionary else ""
+		check(realm == "cloudreach", "peer %d entered Cloudreach through its actual Hall portal (realm '%s')" % [peer, realm])
 
 	# 6. After: the same five, each peer.
 	for peer in 2:

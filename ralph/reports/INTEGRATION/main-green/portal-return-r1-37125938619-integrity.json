@@ -1,0 +1,109 @@
+{
+  "run_id": 37125938619,
+  "artifact_id": 11275551524,
+  "checkout_ref": "fff7bc51740f71009ac75805706e0f1c5ed72326",
+  "result": "FAIL BEFORE all3 smokes: same actual strict typing errors; no runtime conclusion.",
+  "archive_sha256": "e4b22656953aba1b3318eb92e935c98a3ff00356b9ca8a60e4f0b5358fb84aa1",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "portal-return-r1-37125938619-0-MANIFEST.txt.gz",
+      "sha256": "cbd94845299873b472f02553e32d1ee660765e14bd4a2476e266ab00129a8bc8"
+    },
+    "run.log": {
+      "retained_file": "portal-return-r1-37125938619-1-run.log.gz",
+      "sha256": "9f70ea82279f95e16ef3d9ffb6f29c0c2eb42aaf05882349d531496299182147"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-cloudreach_riding-20261003T132502Z/NET_RUN.json": {
+      "retained_file": "portal-return-r1-37125938619-2-NET_RUN.json.gz",
+      "sha256": "932453915d8b62f830c88c104858b378c7dcfc02ef0528d2635e88d78838747e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-cloudreach_riding-20261003T132502Z/SUMMARY.md": {
+      "retained_file": "portal-return-r1-37125938619-3-SUMMARY.md.gz",
+      "sha256": "9ef101587eae3019097afd33b1cf5490738dd2f8e7b0a2a8a8871491c0f455f9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-cloudreach_riding-20261003T132502Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-4-godot.log.gz",
+      "sha256": "6fae58e7448e618b1e8c90dfd2aa176d784c2a798c281dc8d091e608e49d8f19"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-cloudreach_riding-20261003T132502Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-5-godot.log.gz",
+      "sha256": "6fae58e7448e618b1e8c90dfd2aa176d784c2a798c281dc8d091e608e49d8f19"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-cloudreach_riding-20261003T132502Z/peer-0.log": {
+      "retained_file": "portal-return-r1-37125938619-6-peer-0.log.gz",
+      "sha256": "99166a1c88d3e32e1505b2b8768785652636d1eb24927d0229f780418aa2a4bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-cloudreach_riding-20261003T132502Z/peer-1.log": {
+      "retained_file": "portal-return-r1-37125938619-7-peer-1.log.gz",
+      "sha256": "99166a1c88d3e32e1505b2b8768785652636d1eb24927d0229f780418aa2a4bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-stormwood_realms-20261003T132508Z/NET_RUN.json": {
+      "retained_file": "portal-return-r1-37125938619-8-NET_RUN.json.gz",
+      "sha256": "9f6f894e3d0ea2653a97c4812f7921f08a79611ba22637dc38adff31aa321767"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-stormwood_realms-20261003T132508Z/SUMMARY.md": {
+      "retained_file": "portal-return-r1-37125938619-9-SUMMARY.md.gz",
+      "sha256": "f213e69c79f5634882515604fe0daffba91bc8a4f6df638d3c20fec8c2db95f8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-stormwood_realms-20261003T132508Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-10-godot.log.gz",
+      "sha256": "6fae58e7448e618b1e8c90dfd2aa176d784c2a798c281dc8d091e608e49d8f19"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-stormwood_realms-20261003T132508Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-11-godot.log.gz",
+      "sha256": "6fae58e7448e618b1e8c90dfd2aa176d784c2a798c281dc8d091e608e49d8f19"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-stormwood_realms-20261003T132508Z/peer-0.log": {
+      "retained_file": "portal-return-r1-37125938619-12-peer-0.log.gz",
+      "sha256": "99166a1c88d3e32e1505b2b8768785652636d1eb24927d0229f780418aa2a4bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-stormwood_realms-20261003T132508Z/peer-1.log": {
+      "retained_file": "portal-return-r1-37125938619-13-peer-1.log.gz",
+      "sha256": "99166a1c88d3e32e1505b2b8768785652636d1eb24927d0229f780418aa2a4bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-water_return-20261003T132514Z/NET_RUN.json": {
+      "retained_file": "portal-return-r1-37125938619-14-NET_RUN.json.gz",
+      "sha256": "cdbd0407c1a8e882e43f405e7557e40ba41340091e366923ae2b243369898db0"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-water_return-20261003T132514Z/SUMMARY.md": {
+      "retained_file": "portal-return-r1-37125938619-15-SUMMARY.md.gz",
+      "sha256": "ea98cfe7566905407e8729d87a9e31069935e8612ee2c13b75165e0bd3a63f7e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-water_return-20261003T132514Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-16-godot.log.gz",
+      "sha256": "6fae58e7448e618b1e8c90dfd2aa176d784c2a798c281dc8d091e608e49d8f19"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-water_return-20261003T132514Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-17-godot.log.gz",
+      "sha256": "6fae58e7448e618b1e8c90dfd2aa176d784c2a798c281dc8d091e608e49d8f19"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-water_return-20261003T132514Z/peer-1.log": {
+      "retained_file": "portal-return-r1-37125938619-18-peer-1.log.gz",
+      "sha256": "99166a1c88d3e32e1505b2b8768785652636d1eb24927d0229f780418aa2a4bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/portal-return-r1/net-water_return-20261003T132514Z/peer-0.log": {
+      "retained_file": "portal-return-r1-37125938619-19-peer-0.log.gz",
+      "sha256": "99166a1c88d3e32e1505b2b8768785652636d1eb24927d0229f780418aa2a4bc"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "portal-return-r1-37125938619-20-boot_log.txt.gz",
+      "sha256": "35e437efa9bc5a2604d4d14cd3f38a215c562985a3603d2a4eb7e27066ef4683"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "portal-return-r1-37125938619-21-godot.log.gz",
+      "sha256": "923953c3291ff5d700868d8d41d5a83b9a24a6981d9e84921537d97e9c4b361e"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.25.08.log": {
+      "retained_file": "portal-return-r1-37125938619-22-godot2026-10-03T13.25.08.log.gz",
+      "sha256": "5cec7f24a2e5917c7378b77461cd7b5b567eb42d5348872a513aa39bb13fa1be"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.25.02.log": {
+      "retained_file": "portal-return-r1-37125938619-23-godot2026-10-03T13.25.02.log.gz",
+      "sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.25.14.log": {
+      "retained_file": "portal-return-r1-37125938619-24-godot2026-10-03T13.25.14.log.gz",
+      "sha256": "f17a471c258b3a7242310a7e0838032dbccd0b1f5d16d30e3ac66085ea0fd50c"
+    }
+  }
+}

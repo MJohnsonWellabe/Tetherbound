@@ -5,7 +5,8 @@ extends RefCounted
 const DISCLOSURE := "initial_hall_position_and_open_route_no_earned_credit"
 const ROUTES := {"session_host_first_realm": "cloudreach", "water_alpha": "tidewake",
 	"stormwood_livewire": "stormwood", "stormwood_finalized_death": "stormwood", "stormwood_hosted_trainers": "stormwood",
-	"cloudreach_riding": "cloudreach", "stormwood_realms": "stormwood", "water_return": "stormwood"}
+	"cloudreach_riding": "cloudreach", "stormwood_realms": "stormwood", "water_return": "stormwood",
+	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "cloudreach"}
 const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return"]
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const HOME_KEY := preload("res://scripts/world/home_key.gd")

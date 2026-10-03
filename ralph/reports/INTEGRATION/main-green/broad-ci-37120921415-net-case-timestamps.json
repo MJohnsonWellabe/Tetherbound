@@ -1,0 +1,601 @@
+{
+  "run_id": 37120921415,
+  "measure": "original workflow group start through wrapper end includes original log printing and process cleanup",
+  "files": [
+    "tests/smoke_net_client_trainer_rewards.gd",
+    "tests/smoke_net_identity_admission.gd",
+    "tests/smoke_net_stormwood_glass_for_bryn.gd",
+    "tests/smoke_net_veridian_same_five.gd",
+    "tests/smoke_net_realm_owner_disconnect_mid_fight.gd",
+    "tests/smoke_net_revive.gd",
+    "tests/smoke_net_gate_opens_for_both.gd",
+    "tests/smoke_net_two_peers_boot.gd",
+    "tests/smoke_net_water_swim_stone_late_join.gd",
+    "tests/smoke_net_cloudreach_riding.gd",
+    "tests/smoke_net_join_version_mismatch.gd",
+    "tests/smoke_net_stormwood_livewire.gd",
+    "tests/smoke_net_water_deep_watch_chart.gd",
+    "tests/smoke_net_shared_boss.gd",
+    "tests/smoke_net_trade.gd",
+    "tests/smoke_net_host_exit_saves.gd",
+    "tests/smoke_net_late_join_modified_world.gd",
+    "tests/smoke_net_water_swimming.gd",
+    "tests/smoke_net_f48_behind.gd",
+    "tests/smoke_net_meadows_identity_fresh_join.gd",
+    "tests/smoke_net_veridian_choices.gd",
+    "tests/smoke_net_water_local_chains.gd",
+    "tests/smoke_net_stormwood_realms.gd",
+    "tests/smoke_net_hearts.gd",
+    "tests/smoke_net_shared_wild_fight.gd",
+    "tests/smoke_net_peer_death.gd",
+    "tests/smoke_net_host_join_leave.gd",
+    "tests/smoke_net_f48_loop.gd",
+    "tests/smoke_net_riding.gd",
+    "tests/smoke_net_veridian_full_refusal.gd",
+    "tests/smoke_net_water_return.gd",
+    "tests/smoke_net_boss_rewards_each_participant.gd",
+    "tests/smoke_net_behind_character_joins_ahead_world.gd",
+    "tests/smoke_net_pickup_race.gd",
+    "tests/smoke_net_reconnect_keeps_character.gd",
+    "tests/smoke_net_deploy_two_creatures.gd",
+    "tests/smoke_net_f48_transactions.gd",
+    "tests/smoke_net_session_host_first_realm.gd",
+    "tests/smoke_net_veridian_mixed.gd",
+    "tests/smoke_net_menu_does_not_freeze_peer.gd",
+    "tests/smoke_net_fly.gd",
+    "tests/smoke_net_fog_is_personal.gd",
+    "tests/smoke_net_farm_race.gd",
+    "tests/smoke_net_water_alpha.gd",
+    "tests/smoke_net_sleep_vote.gd",
+    "tests/smoke_net_foundations.gd",
+    "tests/smoke_net_stormwood_finalized_death.gd",
+    "tests/smoke_net_veridian_relic_key.gd",
+    "tests/smoke_net_stormwood_hosted_trainers.gd",
+    "tests/smoke_net_catch_race.gd",
+    "tests/smoke_net_movement_two_peers.gd",
+    "tests/smoke_net_storage_concurrency.gd",
+    "tests/smoke_net_shared_building.gd",
+    "tests/smoke_net_join_by_address.gd",
+    "tests/smoke_net_water_mounted_swimming.gd",
+    "tests/smoke_net_split_realms.gd"
+  ],
+  "rows": [
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_client_trainer_rewards.gd",
+      "start": "2026-10-03T12:05:05.7961466",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:08:50.1082903",
+      "seconds": 224.312144
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_identity_admission.gd",
+      "start": "2026-10-03T12:08:50.1096089",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:10:58.0645472",
+      "seconds": 127.954939
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_stormwood_glass_for_bryn.gd",
+      "start": "2026-10-03T12:10:58.0656329",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:13:05.1807411",
+      "seconds": 127.115109
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_veridian_same_five.gd",
+      "start": "2026-10-03T12:13:05.1819699",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:20:57.2485495",
+      "seconds": 472.06658
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_realm_owner_disconnect_mid_fight.gd",
+      "start": "2026-10-03T12:20:57.2496275",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:26:03.1447035",
+      "seconds": 305.895076
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_revive.gd",
+      "start": "2026-10-03T12:26:03.1459421",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:28:46.2365334",
+      "seconds": 163.090591
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_gate_opens_for_both.gd",
+      "start": "2026-10-03T12:28:46.2375349",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:30:55.9515313",
+      "seconds": 129.713997
+    },
+    {
+      "shard": 1,
+      "file": "tests/smoke_net_two_peers_boot.gd",
+      "start": "2026-10-03T12:30:55.9525867",
+      "status": "incomplete",
+      "green_summary": false,
+      "cancelled": true,
+      "end": "2026-10-03T12:32:48.1144947",
+      "seconds": 112.161908
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_cloudreach_riding.gd",
+      "start": "2026-10-03T12:08:01.8926894",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:10:08.3977143",
+      "seconds": 126.505025
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_join_version_mismatch.gd",
+      "start": "2026-10-03T12:10:08.3992169",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:12:11.2558321",
+      "seconds": 122.856616
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_stormwood_livewire.gd",
+      "start": "2026-10-03T12:12:11.2571675",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:14:13.5575550",
+      "seconds": 122.300388
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_water_deep_watch_chart.gd",
+      "start": "2026-10-03T12:14:13.5588428",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:15:56.8908709",
+      "seconds": 103.332028
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_shared_boss.gd",
+      "start": "2026-10-03T12:15:56.8923596",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:18:29.4945786",
+      "seconds": 152.602219
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_trade.gd",
+      "start": "2026-10-03T12:18:29.4959491",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:20:49.0982535",
+      "seconds": 139.602304
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_host_exit_saves.gd",
+      "start": "2026-10-03T12:20:49.0995296",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:23:05.5347442",
+      "seconds": 136.435215
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_late_join_modified_world.gd",
+      "start": "2026-10-03T12:23:05.5364543",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:25:08.9421836",
+      "seconds": 123.405729
+    },
+    {
+      "shard": 2,
+      "file": "tests/smoke_net_water_swimming.gd",
+      "start": "2026-10-03T12:25:08.9434410",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:26:43.1560896",
+      "seconds": 94.212648
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_f48_behind.gd",
+      "start": "2026-10-03T12:07:05.2947635",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:07:05.3865923",
+      "seconds": 0.091829
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_meadows_identity_fresh_join.gd",
+      "start": "2026-10-03T12:07:05.3878685",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:09:53.5686603",
+      "seconds": 168.180792
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_veridian_choices.gd",
+      "start": "2026-10-03T12:09:53.5697297",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:11:43.3717137",
+      "seconds": 109.801984
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_water_local_chains.gd",
+      "start": "2026-10-03T12:11:43.3728139",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:12:56.8232355",
+      "seconds": 73.450422
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_stormwood_realms.gd",
+      "start": "2026-10-03T12:12:56.8242614",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:14:35.2879464",
+      "seconds": 98.463685
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_hearts.gd",
+      "start": "2026-10-03T12:14:35.2890035",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:16:26.6814779",
+      "seconds": 111.392474
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_shared_wild_fight.gd",
+      "start": "2026-10-03T12:16:26.6825590",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:19:05.3908762",
+      "seconds": 158.708317
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_peer_death.gd",
+      "start": "2026-10-03T12:19:05.3919691",
+      "status": "success_negative_control",
+      "green_summary": false,
+      "end": "2026-10-03T12:20:43.7694429",
+      "seconds": 98.377473
+    },
+    {
+      "shard": 3,
+      "file": "tests/smoke_net_host_join_leave.gd",
+      "start": "2026-10-03T12:20:43.7704964",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:22:25.2206144",
+      "seconds": 101.450118
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_f48_loop.gd",
+      "start": "2026-10-03T12:06:01.1939655",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:06:01.2854397",
+      "seconds": 0.091474
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_riding.gd",
+      "start": "2026-10-03T12:06:01.2866425",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:08:33.4924137",
+      "seconds": 152.205771
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_veridian_full_refusal.gd",
+      "start": "2026-10-03T12:08:33.4934891",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:10:45.0639472",
+      "seconds": 131.570458
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_water_return.gd",
+      "start": "2026-10-03T12:10:45.0648653",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:14:32.3990500",
+      "seconds": 227.334185
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_boss_rewards_each_participant.gd",
+      "start": "2026-10-03T12:14:32.4000355",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:16:19.4205260",
+      "seconds": 107.020491
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_behind_character_joins_ahead_world.gd",
+      "start": "2026-10-03T12:16:19.4217610",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:18:09.1417849",
+      "seconds": 109.720023
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_pickup_race.gd",
+      "start": "2026-10-03T12:18:09.1429412",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:20:03.8711223",
+      "seconds": 114.728181
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_reconnect_keeps_character.gd",
+      "start": "2026-10-03T12:20:03.8722943",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:22:54.3092268",
+      "seconds": 170.436932
+    },
+    {
+      "shard": 4,
+      "file": "tests/smoke_net_deploy_two_creatures.gd",
+      "start": "2026-10-03T12:22:54.3104532",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:24:45.2402010",
+      "seconds": 110.929748
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_f48_transactions.gd",
+      "start": "2026-10-03T12:04:53.0795279",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:04:53.1844076",
+      "seconds": 0.10488
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_session_host_first_realm.gd",
+      "start": "2026-10-03T12:04:53.1855340",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:07:05.4681277",
+      "seconds": 132.282593
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_veridian_mixed.gd",
+      "start": "2026-10-03T12:07:05.4691187",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:08:44.8449178",
+      "seconds": 99.375799
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_menu_does_not_freeze_peer.gd",
+      "start": "2026-10-03T12:08:44.8458631",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:11:24.8298231",
+      "seconds": 159.98396
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_fly.gd",
+      "start": "2026-10-03T12:11:24.8308247",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:13:13.6896566",
+      "seconds": 108.858832
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_fog_is_personal.gd",
+      "start": "2026-10-03T12:13:13.6905944",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:14:52.8765068",
+      "seconds": 99.185912
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_farm_race.gd",
+      "start": "2026-10-03T12:14:52.8774283",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:16:27.8838021",
+      "seconds": 95.006374
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_water_alpha.gd",
+      "start": "2026-10-03T12:16:27.8849153",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:17:53.2428132",
+      "seconds": 85.357898
+    },
+    {
+      "shard": 5,
+      "file": "tests/smoke_net_sleep_vote.gd",
+      "start": "2026-10-03T12:17:53.2440614",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:19:26.7842301",
+      "seconds": 93.540169
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_foundations.gd",
+      "start": "2026-10-03T12:04:28.5116787",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:08:21.7706573",
+      "seconds": 233.258979
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_stormwood_finalized_death.gd",
+      "start": "2026-10-03T12:08:21.7722373",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:10:23.6100810",
+      "seconds": 121.837844
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_veridian_relic_key.gd",
+      "start": "2026-10-03T12:10:23.6114643",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:12:40.2308201",
+      "seconds": 136.619356
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_stormwood_hosted_trainers.gd",
+      "start": "2026-10-03T12:12:40.2322420",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:14:42.9171568",
+      "seconds": 122.684914
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_catch_race.gd",
+      "start": "2026-10-03T12:14:42.9186472",
+      "status": "failed",
+      "green_summary": false,
+      "end": "2026-10-03T12:18:04.3388852",
+      "seconds": 201.420238
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_movement_two_peers.gd",
+      "start": "2026-10-03T12:18:04.3402267",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:20:20.0247416",
+      "seconds": 135.684515
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_storage_concurrency.gd",
+      "start": "2026-10-03T12:20:20.0261031",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:22:34.1335839",
+      "seconds": 134.10748
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_shared_building.gd",
+      "start": "2026-10-03T12:22:34.1349350",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:24:42.5808303",
+      "seconds": 128.445895
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_join_by_address.gd",
+      "start": "2026-10-03T12:24:42.5821678",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:26:49.1612248",
+      "seconds": 126.579057
+    },
+    {
+      "shard": 6,
+      "file": "tests/smoke_net_water_mounted_swimming.gd",
+      "start": "2026-10-03T12:26:49.1625860",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:28:13.3383802",
+      "seconds": 84.175794
+    },
+    {
+      "shard": 7,
+      "file": "tests/smoke_net_split_realms.gd",
+      "start": "2026-10-03T12:04:59.3762832",
+      "status": "success",
+      "green_summary": true,
+      "end": "2026-10-03T12:11:47.7982614",
+      "seconds": 408.421978
+    },
+    {
+      "file": "tests/smoke_net_water_swim_stone_late_join.gd",
+      "status": "not_run"
+    }
+  ],
+  "original_job_log_sources": {
+    "1": {
+      "file": "broad-net1.log",
+      "sha256": "8913602c7a4837c8c7ca6550e734e8c36594748485f3d8d260214d51794c6968",
+      "bytes": 505838
+    },
+    "2": {
+      "file": "broad-net2.log",
+      "sha256": "41efe28ea9c4c99af4bb01bc6bb4b2b6614fbadb0546188a8e89d451a2a58fe0",
+      "bytes": 536170
+    },
+    "3": {
+      "file": "broad-net3.log",
+      "sha256": "4a15587491138d30936191bd04734d4d73cced1b3ca56492ef136b22eb10d517",
+      "bytes": 560445
+    },
+    "4": {
+      "file": "broad-net4.log",
+      "sha256": "f2a600e27b9ca30fd4143b59f9e6b335eca51615a1e6126015a7037938866dff",
+      "bytes": 531095
+    },
+    "5": {
+      "file": "broad-net5.log",
+      "sha256": "e0f311167406dcf92a25c1981dbc91696960d78739d3a3b4edecee63f2293575",
+      "bytes": 551473
+    },
+    "6": {
+      "file": "broad-net6.log",
+      "sha256": "d4031a357c5a7d5ef5b5ceba49b683b3d44387e322b546692d060f6041c0bb2f",
+      "bytes": 538697
+    },
+    "7": {
+      "file": "broad-net7.log",
+      "sha256": "83491d99f0cf3f77bd08ee13bdc92b54c0f6f4b077ab4a9b7cef2833a72aa0a2",
+      "bytes": 473253
+    }
+  }
+}

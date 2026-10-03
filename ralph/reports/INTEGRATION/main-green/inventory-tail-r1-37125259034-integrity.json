@@ -1,0 +1,105 @@
+{
+  "run_id": 37125259034,
+  "artifact_id": 11274602090,
+  "checkout_ref": "3c27dd1eb81b0373749e3e62d0e0f1ec74a2b059",
+  "result": "PASS both original two_peers_boot and water_swim_stone_late_join / both NET failures[] / all original logs0errors / wrapper exit0 213s",
+  "archive_sha256": "567942e753651343693007904058a1253dcce67581df9888d328f4ea8d12f831",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "inventory-tail-r1-37125259034-0-MANIFEST.txt.gz",
+      "sha256": "904ada521e85be8a11b38b14a2791d2ca8e70da45e4f434756b1b62b458dd1f5"
+    },
+    "run.log": {
+      "retained_file": "inventory-tail-r1-37125259034-1-run.log.gz",
+      "sha256": "053494c9c61999a96066dcb59827b26d393e7349cd5b51eb5d7bb91c9795f356"
+    },
+    "exit_code": {
+      "retained_file": "inventory-tail-r1-37125259034-2-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/NET_RUN.json": {
+      "retained_file": "inventory-tail-r1-37125259034-3-NET_RUN.json.gz",
+      "sha256": "98d0a645b0d26cbc0b0e19d04102b921e156347c80991e6304d2cc6d46f44652"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/SUMMARY.md": {
+      "retained_file": "inventory-tail-r1-37125259034-4-SUMMARY.md.gz",
+      "sha256": "9688c89604fa69a718cfa1b439067401b099f82229ddae41b69fec5f47c01470"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "inventory-tail-r1-37125259034-5-boot_log.txt.gz",
+      "sha256": "233921ce29f89cf7ebd292754eb7baa20fce20e63b48642f7b5d1f84debe4130"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "inventory-tail-r1-37125259034-8-godot.log.gz",
+      "sha256": "f1aef39799f394a708f9130861c954f7c0fdf16489121b18abdf5fd7a5213343"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "inventory-tail-r1-37125259034-9-world.json.gz",
+      "sha256": "cb5caf6f11ada75aa33952407d29f9443721e6fbe876c7b67e61d877f56b6cfd"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "inventory-tail-r1-37125259034-10-boot_log.txt.gz",
+      "sha256": "b2d9ee8e2d65139c8e0abf60ac7444f3ad3ab40fe6353d7363a63585f30176e6"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "inventory-tail-r1-37125259034-13-godot.log.gz",
+      "sha256": "4232b3035ba236e7704360d351740f1002e0a8536da2ceb7ab4b9cac852506cb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/home-1/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "inventory-tail-r1-37125259034-14-world.json.gz",
+      "sha256": "05020f46401369f6872b59830902a51fd459c19dbe04e4be02b508edfafb2bc4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/peer-0.log": {
+      "retained_file": "inventory-tail-r1-37125259034-15-peer-0.log.gz",
+      "sha256": "5cbf39aa6edc5f3227c9feb8cbbd8055ea3e6f506be854cd89b4a9562eee8364"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-two_peers_boot-20261003T131206Z/peer-1.log": {
+      "retained_file": "inventory-tail-r1-37125259034-16-peer-1.log.gz",
+      "sha256": "85316fdf5f1b8edfd767108ccdb3fb7c434c49158b73a4b014f96397fba4aa4b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/NET_RUN.json": {
+      "retained_file": "inventory-tail-r1-37125259034-17-NET_RUN.json.gz",
+      "sha256": "88001911910890464b323815ba19b3042b69995f169ecd705e67108a763aec1d"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/SUMMARY.md": {
+      "retained_file": "inventory-tail-r1-37125259034-18-SUMMARY.md.gz",
+      "sha256": "9c8303ac8d33e1a53fabe42782294700ed30e77422fc155be8ed276d37778dfa"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "inventory-tail-r1-37125259034-19-boot_log.txt.gz",
+      "sha256": "aa7fd782e59cc2f71b43fe845f7b2b04544a538f268b8d012373414e045137df"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/net-water-swim-stone-late-join/world.json": {
+      "retained_file": "inventory-tail-r1-37125259034-22-world.json.gz",
+      "sha256": "482ce173213874fb20230dec3fa15ffe7853e12a26db9448fac5a15340de85d1"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "inventory-tail-r1-37125259034-23-boot_log.txt.gz",
+      "sha256": "aa7fd782e59cc2f71b43fe845f7b2b04544a538f268b8d012373414e045137df"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/peer-0.log": {
+      "retained_file": "inventory-tail-r1-37125259034-26-peer-0.log.gz",
+      "sha256": "0e8e829ed3365f43d68ac9b27b38bbba9b7835788b7a861f27a1d8578c955e63"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/inventory-tail-r1/net-water_swim_stone_late_join-20261003T131420Z/peer-1.log": {
+      "retained_file": "inventory-tail-r1-37125259034-27-peer-1.log.gz",
+      "sha256": "884903da1879b65761ec40f3f80502a8dac757dbf6251fd7e5198f6bf9bd7523"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "inventory-tail-r1-37125259034-28-boot_log.txt.gz",
+      "sha256": "500a83a37499cf0242cdadf1b250d1cae61de85e5418d223a6b736313df9bbaf"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "inventory-tail-r1-37125259034-29-godot.log.gz",
+      "sha256": "bd495d37272ecfdd6108c28d992855c608e20c6dbc94e7fcb2b3157a775d6096"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.12.06.log": {
+      "retained_file": "inventory-tail-r1-37125259034-30-godot2026-10-03T13.12.06.log.gz",
+      "sha256": "037dd8b42ca7058b62b5555724cff76b748c651cb2252ee73dac52a938d0ecd2"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot2026-10-03T13.14.20.log": {
+      "retained_file": "inventory-tail-r1-37125259034-31-godot2026-10-03T13.14.20.log.gz",
+      "sha256": "9cb75bc7534a75aaa846ecbcd0b6d68560282e6f1f983f61b64aeb487dece63d"
+    }
+  }
+}
