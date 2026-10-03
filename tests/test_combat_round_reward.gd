@@ -54,13 +54,20 @@ func _duty(before: Dictionary, phase: String = "round") -> Dictionary:
 		var card: Dictionary = before.party[index]
 		vitals.append({"uid": card.uid, "hp": float(card.hp) * 0.5 if index == 0 else card.hp,
 			"max_hp": card.max_hp, "fainted": card.fainted, "actor_generation": 7 if index == 0 else 0})
-	var enemy := {"uid": "actual-enemy-round-1", "species_id": "burrowback", "level": 21, "hp": 0.0, "fainted": true}
+	var enemy_species := "burrowback"
+	var enemy_level := 21
 	var round_number := 1
 	if phase == "completion":
 		var spec: Dictionary = preload("res://scripts/world/trainer_npc.gd").trainer("warden_aldis")
 		round_number = spec.team.size()
-		enemy.species_id = spec.team.back().species
-		enemy.level = spec.team.back().level
+		enemy_species = str(spec.team.back().species)
+		enemy_level = int(spec.team.back().level)
+	var actual_enemy: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn(enemy_species)
+	actual_enemy.set("level", enemy_level)
+	actual_enemy.set("hp", 0.0)
+	actual_enemy.set("fainted", true)
+	var enemy: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(actual_enemy)
+	assert_false(enemy.is_empty(), "terminal fixture freezes the actual species card and canonical types")
 	var binding := {"peer_id": 2, "character_id": DATA.CHARACTER, "active_uid": before.party[0].uid,
 		"actor_generation": 7, "settled_vitals": vitals}
 	return ROUND.make_duty("resource-namespace", "resource-epoch", "meadows", "warden_aldis",
@@ -114,7 +121,7 @@ func test_actual_settled_HP_and_reduced_round_award_keep_all_five_original_cards
 func test_terminal_source_and_complete_owner_baseline_refuse_forged_fields() -> void:
 	var before := RECORD.portable_projection(_player().save_data())
 	var duty := _duty(before)
-	for defect: String in ["peer", "character", "generation", "round", "enemy", "epoch", "world", "realm", "HP", "fainted", "participant", "phase"]:
+	for defect: String in ["peer", "character", "generation", "round", "enemy", "enemy_type", "enemy_secondary_type", "epoch", "world", "realm", "HP", "fainted", "participant", "phase"]:
 		var bad: Dictionary = duty.duplicate(true)
 		match defect:
 			"peer": bad.context.binding.peer_id = 99
@@ -122,6 +129,8 @@ func test_terminal_source_and_complete_owner_baseline_refuse_forged_fields() -> 
 			"generation": bad.context.binding.actor_generation += 1
 			"round": bad.intent.round += 1
 			"enemy": bad.context.enemy_record.uid = "forged-enemy"
+			"enemy_type": bad.context.enemy_record.creature_type = "forged-type"
+			"enemy_secondary_type": bad.context.enemy_record.secondary_type = "forged-type"
 			"epoch": bad.context.session_id = "foreign-epoch"
 			"world": bad.context.world_namespace = "foreign-world"
 			"realm": bad.context.realm = "water"
@@ -129,6 +138,8 @@ func test_terminal_source_and_complete_owner_baseline_refuse_forged_fields() -> 
 			"fainted": bad.context.settled_vitals[0].fainted = true
 			"participant": bad.context.participants = []
 			"phase": bad.intent.phase = "completion"
+		if defect in ["enemy_type", "enemy_secondary_type"]:
+			bad.context.source_key = ROUND.source_id(bad.intent, bad.context)
 		assert_false(ROUND.source_valid(bad.intent, bad.context, bad.character_id), defect)
 	var bench: Dictionary = duty.context.duplicate(true)
 	bench.settled_vitals[1].hp -= 1.0

@@ -218,7 +218,12 @@ func test_completion_replays_exact_accepted_round_actor_promotion_without_new_bo
 	var builder: RefCounted = ROUND_FIXTURE.new()
 	var initial: Dictionary = RECORD.portable_projection(builder.call("_player").call("save_data"))
 	var template: Dictionary = builder.call("_duty", initial)
+	assert_false(initial.is_empty(), "canonical five-card fixture must be present")
+	assert_false(template.is_empty(), "canonical round duty fixture must be constructed before any promotion test")
+	if initial.is_empty() or template.is_empty(): return
 	var before: Dictionary = ROUND.settled_before(initial, template.intent, template.context)
+	assert_false(before.is_empty(), "canonical original terminal HP projection must validate")
+	if before.is_empty(): return
 	var character: String = str(before.character_id)
 	var uid: String = str(before.party[0].uid)
 	var host: RefCounted = ACCEPTED.new()
@@ -234,6 +239,9 @@ func test_completion_replays_exact_accepted_round_actor_promotion_without_new_bo
 	var duty: Dictionary = ROUND.make_duty("resource-namespace", "resource-epoch", "meadows", "warden_aldis",
 		id, 1, template.context.enemy_record, binding, [{"peer_id": 2, "character_id": character}])
 	assert_false(duty.is_empty())
+	if duty.is_empty():
+		body.free()
+		return
 	record.ordinary_combat_reward_owner = duty.context.reward_scope.duplicate(true)
 	host.call("set_phase", id, "done")
 	var terminal: Dictionary = {"settled_record": host.call("record", id).duplicate(true)}

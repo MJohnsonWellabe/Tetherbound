@@ -11,7 +11,7 @@ const SCOPE_FIELDS := ["world_namespace", "session_id", "realm", "trainer_id", "
 const PARTICIPANT_FIELDS := ["peer_id", "character_id"]
 const BINDING_FIELDS := ["peer_id", "character_id", "active_uid", "actor_generation"]
 const VITAL_FIELDS := ["uid", "hp", "max_hp", "fainted", "actor_generation"]
-const ENEMY_FIELDS := ["uid", "species_id", "level", "hp", "fainted"]
+const ENEMY_FIELDS := ["uid", "species_id", "creature_type", "secondary_type", "level", "hp", "fainted"]
 
 static func scope(namespace_id: String, epoch: String, realm: String,
 		trainer_id: String, encounter_id: String) -> Dictionary:
