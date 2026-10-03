@@ -55,6 +55,15 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 ## Approach this actual provider closely through the original capsule walker;
 ## preserve range/LOS/winner/input checks without editing either prompt.
 func activate_endgame_rematch(prompt: Node3D) -> bool:
+	var failures_before := failures.size()
+	await _continue_navigation_lesson()
+	tree.process_frame.connect(_continue_navigation_lesson)
+	var passed := await _activate_endgame_rematch(prompt)
+	tree.process_frame.disconnect(_continue_navigation_lesson)
+	while _lesson_busy: await tree.process_frame
+	return passed and failures.size() == failures_before
+
+func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	if prompt == null or prompt.get("label") != "Endgame rematch" or not _bind():
 		return _fail("F20 rematch requires its actual enabled world provider")
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")
