@@ -31,7 +31,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"f20_revisit": passed = await f20.revisit_completed(self, game)
 		"f20_fifth": passed = await f20.fifth(self, game)
 		"f20_inspect":
-			return {"verdict": "PASS", "data": {"retained": f20.retained(game),
+			var retained := f20.retained(game)
+			if not f20.check(f20.retained_valid(retained), "peer inspection retains a complete detached character snapshot"):
+				return {"verdict": "FAIL", "detail": str(f20.failures)}
+			return {"verdict": "PASS", "data": {"retained": retained,
 				"context": F20.HOME.journey_context(game), "checks": f20.checks,
 				"credits_open": _f20_credits_open()}}
 		_:

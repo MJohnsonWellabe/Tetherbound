@@ -334,14 +334,29 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 
 func retained(game: Node) -> Dictionary:
 	var names := HOME.party_names(game.party)
-	return {"character": game.local.character_id, "names": names,
+	var uids: Array[String] = []
+	for companion: RefCounted in game.party.members(): uids.append(str(companion.get("uid")))
+	# Inventory exposes slots, not save_data(). Read the same detached stack
+	# array as the actual SaveGame writer, including empty slots and quantities.
+	var inventory: Array = game.save_system.call("_inventory_to_array", game.local.inventory)
+	return {"character": game.local.character_id, "names": names, "uids": uids,
 		"receipts": game.local.redesign_character.transaction_receipts.duplicate(),
-		"inventory": game.local.inventory.call("save_data"), "world": game.world.reward_delivery_namespace}
+		"inventory": inventory.duplicate(true), "world": game.world.reward_delivery_namespace}
+
+func retained_valid(value: Dictionary) -> bool:
+	return value.get("character") is String and not str(value.character).is_empty() \
+		and value.get("world") is String and not str(value.world).is_empty() \
+		and value.get("names") is Array and value.names.size() > 0 and value.names.size() <= 5 \
+		and value.get("uids") is Array and value.uids.size() == value.names.size() \
+		and value.get("receipts") is Array and value.get("inventory") is Array and not value.inventory.is_empty()
 
 func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
+	if not check(retained_valid(before), "reload proof starts with a complete detached character snapshot"): return false
 	if not await ready(tree, game): return false
 	var now := retained(game)
-	if not check(now.character == before.character and now.names == before.names and now.world == before.world, "disk reload retains character, current five and host world"): return false
+	if not check(retained_valid(now), "reloaded character snapshot is complete"): return false
+	if not check(now.character == before.character and now.names == before.names and now.uids == before.uids \
+		and now.world == before.world, "disk reload retains character, current five identities and host world"): return false
 	for receipt: String in before.receipts:
 		if not check(now.receipts.has(receipt), "disk retains " + receipt): return false
 	if not check(now.inventory == before.inventory, "disk reload preserves inventory without duplicate rewards"): return false
