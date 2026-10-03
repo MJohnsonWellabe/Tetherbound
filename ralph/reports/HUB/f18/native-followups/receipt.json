@@ -3738,6 +3738,1905 @@
         ]
       },
       "outcome": "Actual paid Workbench placement and exact10wood/4stone spend pass; catalogue ID correction works. Next ordinary grounded deepwalk fails nearvillage beforeTrailCamp touch; HomeKey loop/save/reload/return unproven. Original nullMaterial engineerror retained, observer not present on this source."
+    },
+    {
+      "id": 37100730912,
+      "display_title": "render f18-native-stones-water-r5 @ d0fed65e80f37efb12626bbec469af5cfa280f4a",
+      "head_sha": "46d4602500ac2091d7182c96fc26aa07fe0c075b",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37100730912",
+      "checkout": "d0fed65e80f37efb12626bbec469af5cfa280f4a",
+      "artifact_id": 11265709732,
+      "raw_artifact": "native-water-r5-remote.zip",
+      "sha256": "c48793e7c73822f47da20f5d31d7bc6d944c59d39942663c45522a4afddffe3f",
+      "bytes": 58729,
+      "native_exit_code": null,
+      "error_lines": [],
+      "script_error_lines": [],
+      "evidence_limit": "Original failed run preserved; source reviews/proposed corrections do not change its verdict or close F18 criteria.",
+      "native_summary": {
+        "checks": 74,
+        "failures": [
+          "water_arrival_from_stormwood actual Player full-capsule landing accepted",
+          "water_arrival_from_stormwood actual Player complete candidate capsule clear",
+          "water_arrival_from_stormwood actual existing Player controller stable walkable contact",
+          "water_arrival_from_stormwood actual Player final five-floor/full-capsule guard"
+        ],
+        "realm": "water"
+      },
+      "seam_diagnostic": {
+        "actor_transform_unchanged": true,
+        "collision_mode": 3,
+        "native_shapes": {
+          "RID(10587094384642):1": {
+            "body_shape_count": 31,
+            "heightmap": {
+              "depth": 513,
+              "height_count": 263169,
+              "keys": [
+                "width",
+                "depth",
+                "min_height",
+                "max_height",
+                "heights"
+              ],
+              "width": 513
+            },
+            "local_basis": [
+              [
+                -4.37113882867379e-08,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0,
+                -4.37113882867379e-08
+              ]
+            ],
+            "local_origin": [
+              -256.0,
+              0.0,
+              256.0
+            ],
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              256.0
+            ]
+          },
+          "RID(10587094384642):8": {
+            "body_shape_count": 31,
+            "heightmap": {
+              "depth": 513,
+              "height_count": 263169,
+              "keys": [
+                "width",
+                "depth",
+                "min_height",
+                "max_height",
+                "heights"
+              ],
+              "width": 513
+            },
+            "local_basis": [
+              [
+                -4.37113882867379e-08,
+                0.0,
+                -1.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                1.0,
+                0.0,
+                -4.37113882867379e-08
+              ]
+            ],
+            "local_origin": [
+              256.0,
+              0.0,
+              256.0
+            ],
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              256.0
+            ]
+          }
+        },
+        "native_tiles": [
+          {
+            "shape": 0,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              -256.0
+            ]
+          },
+          {
+            "heightmap": {
+              "depth": 513,
+              "height_count": 263169,
+              "width": 513
+            },
+            "shape": 1,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              256.0
+            ]
+          },
+          {
+            "shape": 2,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              768.0
+            ]
+          },
+          {
+            "shape": 3,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              2304.0
+            ]
+          },
+          {
+            "shape": 4,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              2816.0
+            ]
+          },
+          {
+            "shape": 5,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              3840.0
+            ]
+          },
+          {
+            "shape": 6,
+            "shape_type": 8,
+            "world_origin": [
+              -256.0,
+              0.0,
+              4352.0
+            ]
+          },
+          {
+            "shape": 7,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              -256.0
+            ]
+          },
+          {
+            "heightmap": {
+              "depth": 513,
+              "height_count": 263169,
+              "width": 513
+            },
+            "shape": 8,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              256.0
+            ]
+          },
+          {
+            "shape": 9,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              768.0
+            ]
+          },
+          {
+            "shape": 10,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              1280.0
+            ]
+          },
+          {
+            "shape": 11,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              1792.0
+            ]
+          },
+          {
+            "shape": 12,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              2304.0
+            ]
+          },
+          {
+            "shape": 13,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              2816.0
+            ]
+          },
+          {
+            "shape": 14,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              3328.0
+            ]
+          },
+          {
+            "shape": 15,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              3840.0
+            ]
+          },
+          {
+            "shape": 16,
+            "shape_type": 8,
+            "world_origin": [
+              256.0,
+              0.0,
+              4352.0
+            ]
+          },
+          {
+            "shape": 17,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              256.0
+            ]
+          },
+          {
+            "shape": 18,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              768.0
+            ]
+          },
+          {
+            "shape": 19,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              1280.0
+            ]
+          },
+          {
+            "shape": 20,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              1792.0
+            ]
+          },
+          {
+            "shape": 21,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              2304.0
+            ]
+          },
+          {
+            "shape": 22,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              2816.0
+            ]
+          },
+          {
+            "shape": 23,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              3328.0
+            ]
+          },
+          {
+            "shape": 24,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              3840.0
+            ]
+          },
+          {
+            "shape": 25,
+            "shape_type": 8,
+            "world_origin": [
+              768.0,
+              0.0,
+              4352.0
+            ]
+          },
+          {
+            "shape": 26,
+            "shape_type": 8,
+            "world_origin": [
+              1280.0,
+              0.0,
+              1792.0
+            ]
+          },
+          {
+            "shape": 27,
+            "shape_type": 8,
+            "world_origin": [
+              1280.0,
+              0.0,
+              2304.0
+            ]
+          },
+          {
+            "shape": 28,
+            "shape_type": 8,
+            "world_origin": [
+              1280.0,
+              0.0,
+              2816.0
+            ]
+          },
+          {
+            "shape": 29,
+            "shape_type": 8,
+            "world_origin": [
+              1280.0,
+              0.0,
+              3328.0
+            ]
+          },
+          {
+            "shape": 30,
+            "shape_type": 8,
+            "world_origin": [
+              1280.0,
+              0.0,
+              3840.0
+            ]
+          }
+        ],
+        "radius": 0.400000005960464,
+        "region_size": 512,
+        "rows": [
+          {
+            "accepted_support": true,
+            "at": [
+              -1.0,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -1.0,
+                2.38181114196777,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000328800117131323,
+                0.994309365749359,
+                0.106531083583832
+              ],
+              "point": [
+                -1.0,
+                1.98180949687958,
+                161.5
+              ],
+              "shape": 1,
+              "to": [
+                -1.0,
+                1.58181118965149,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98181116580963,
+            "sampled_height": 1.98181116580963,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -1.0,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000328800117131323,
+                0.994309365749359,
+                0.106531083583832
+              ],
+              "point": [
+                -1.0,
+                1.98180961608887,
+                161.5
+              ],
+              "shape": 1,
+              "to": [
+                -1.0,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              -0.400000005960464,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.400000005960464,
+                2.38201022148132,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000330933602526784,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.400009155273438,
+                1.98200821876526,
+                161.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.400000005960464,
+                1.58201026916504,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98201024532318,
+            "sampled_height": 1.98201024532318,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.400000005960464,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000330933602526784,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.400009155273438,
+                1.98200821876526,
+                161.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.400000005960464,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              -0.00999999977648258,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.00999999977648258,
+                2.38213968276978,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000330933602526784,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.010009765625,
+                1.98213791847229,
+                161.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.00999999977648258,
+                1.5821396112442,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98213958740234,
+            "sampled_height": 1.98213958740234,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.00999999977648258,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000330933602526784,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.010009765625,
+                1.98213791847229,
+                161.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.00999999977648258,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.0,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.0,
+                2.38214302062988,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                1.52587890625e-05,
+                1.98214292526245,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                0.0,
+                1.58214294910431,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98214292526245,
+            "sampled_height": 1.98214292526245,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.0,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                1.52587890625e-05,
+                1.98214316368103,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                0.0,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.00999999977648258,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.00999999977648258,
+                2.38213968276978,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.010009765625,
+                1.98213958740234,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                0.00999999977648258,
+                1.5821396112442,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98213958740234,
+            "sampled_height": 1.98213958740234,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.00999999977648258,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.010009765625,
+                1.98213982582092,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                0.00999999977648258,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.400000005960464,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.400000005960464,
+                2.38201022148132,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.400009155273438,
+                1.98201060295105,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                0.400000005960464,
+                1.58201026916504,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98201024532318,
+            "sampled_height": 1.98201024532318,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.400000005960464,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.400009155273438,
+                1.98201084136963,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                0.400000005960464,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              1.0,
+              2.07857155799866,
+              161.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                1.0,
+                2.38181114196777,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000986418570391834,
+                0.994308948516846,
+                0.106531031429768
+              ],
+              "point": [
+                1.00001525878906,
+                1.98181104660034,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                1.0,
+                1.58181118965149,
+                161.5
+              ]
+            },
+            "raw_data_height": 1.98181116580963,
+            "sampled_height": 1.98181116580963,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                1.0,
+                5.93102359771729,
+                161.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000986418570391834,
+                0.994308948516846,
+                0.106531031429768
+              ],
+              "point": [
+                1.00001525878906,
+                1.98181104660034,
+                161.5
+              ],
+              "shape": 8,
+              "to": [
+                1.0,
+                -2.06897616386414,
+                161.5
+              ]
+            }
+          },
+          {
+            "accepted_support": false,
+            "at": [
+              -1.0,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "from": [
+                -1.0,
+                2.32824087142944,
+                162.0
+              ],
+              "hit": false,
+              "to": [
+                -1.0,
+                1.52824079990387,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92824077606201,
+            "sampled_height": 1.92824077606201,
+            "wide": {
+              "from": [
+                -1.0,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": false,
+              "to": [
+                -1.0,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": false,
+            "at": [
+              -0.400000005960464,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "from": [
+                -0.400000005960464,
+                2.32843923568726,
+                162.0
+              ],
+              "hit": false,
+              "to": [
+                -0.400000005960464,
+                1.52843916416168,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92843914031982,
+            "sampled_height": 1.92843914031982,
+            "wide": {
+              "from": [
+                -0.400000005960464,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": false,
+              "to": [
+                -0.400000005960464,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": false,
+            "at": [
+              -0.00999999977648258,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "from": [
+                -0.00999999977648258,
+                2.32857155799866,
+                162.0
+              ],
+              "hit": false,
+              "to": [
+                -0.00999999977648258,
+                1.52857148647308,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92856824398041,
+            "sampled_height": 1.92857146263123,
+            "wide": {
+              "from": [
+                -0.00999999977648258,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": false,
+              "to": [
+                -0.00999999977648258,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.0,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.0,
+                2.32857155799866,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                1.52587890625e-05,
+                1.92857146263123,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                0.0,
+                1.52857148647308,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92857146263123,
+            "sampled_height": 1.92857146263123,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.0,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                1.52587890625e-05,
+                1.9285717010498,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                0.0,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.00999999977648258,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.00999999977648258,
+                2.32857155799866,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.010009765625,
+                1.92856812477112,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                0.00999999977648258,
+                1.52857148647308,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92856824398041,
+            "sampled_height": 1.92857146263123,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.00999999977648258,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.010009765625,
+                1.9285683631897,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                0.00999999977648258,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.400000005960464,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.400000005960464,
+                2.32843923568726,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.400009155273438,
+                1.92843914031982,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                0.400000005960464,
+                1.52843916416168,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92843914031982,
+            "sampled_height": 1.92843914031982,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.400000005960464,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000328809343045577,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.400009155273438,
+                1.92843961715698,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                0.400000005960464,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              1.0,
+              2.07857155799866,
+              162.0
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                1.0,
+                2.32824087142944,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000986418570391834,
+                0.994308948516846,
+                0.106531031429768
+              ],
+              "point": [
+                1.00001525878906,
+                1.92824077606201,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                1.0,
+                1.52824079990387,
+                162.0
+              ]
+            },
+            "raw_data_height": 1.92824077606201,
+            "sampled_height": 1.92824077606201,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                1.0,
+                5.93102359771729,
+                162.0
+              ],
+              "hit": true,
+              "normal": [
+                0.000986418570391834,
+                0.994308948516846,
+                0.106531031429768
+              ],
+              "point": [
+                1.00001525878906,
+                1.92824077606201,
+                162.0
+              ],
+              "shape": 8,
+              "to": [
+                1.0,
+                -2.06897616386414,
+                162.0
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              -1.0,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -1.0,
+                2.27467036247253,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.00032678505522199,
+                0.994309306144714,
+                0.106531195342541
+              ],
+              "point": [
+                -1.0,
+                1.87466871738434,
+                162.5
+              ],
+              "shape": 1,
+              "to": [
+                -1.0,
+                1.47467029094696,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.8746702671051,
+            "sampled_height": 1.8746702671051,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -1.0,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.00032678505522199,
+                0.994309306144714,
+                0.106531195342541
+              ],
+              "point": [
+                -1.0,
+                1.87466859817505,
+                162.5
+              ],
+              "shape": 1,
+              "to": [
+                -1.0,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              -0.400000005960464,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.400000005960464,
+                2.27486824989319,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000328800029819831,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.400009155273438,
+                1.87486600875854,
+                162.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.400000005960464,
+                1.47486817836761,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.87486815452576,
+            "sampled_height": 1.87486815452576,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.400000005960464,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000328800029819831,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.400009155273438,
+                1.87486600875854,
+                162.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.400000005960464,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              -0.00999999977648258,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.00999999977648258,
+                2.27499675750732,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000328800029819831,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.010009765625,
+                1.87499499320984,
+                162.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.00999999977648258,
+                1.47499680519104,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.87499678134918,
+            "sampled_height": 1.87499678134918,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                -0.00999999977648258,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                -0.000328800029819831,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                -0.010009765625,
+                1.87499523162842,
+                162.5
+              ],
+              "shape": 1,
+              "to": [
+                -0.00999999977648258,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.0,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.0,
+                2.27500009536743,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000326794310240075,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                1.52587890625e-05,
+                1.875,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                0.0,
+                1.47500002384186,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.875,
+            "sampled_height": 1.875,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.0,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000326794310240075,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                1.52587890625e-05,
+                1.875,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                0.0,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.00999999977648258,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.00999999977648258,
+                2.27499675750732,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000326794310240075,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.010009765625,
+                1.87499666213989,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                0.00999999977648258,
+                1.47499668598175,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.87499666213989,
+            "sampled_height": 1.87499666213989,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.00999999977648258,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000326794310240075,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.010009765625,
+                1.87499666213989,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                0.00999999977648258,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              0.400000005960464,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.400000005960464,
+                2.27486824989319,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000326794310240075,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.400009155273438,
+                1.87486851215363,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                0.400000005960464,
+                1.47486817836761,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.87486815452576,
+            "sampled_height": 1.87486815452576,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                0.400000005960464,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000326794310240075,
+                0.99430912733078,
+                0.106533192098141
+              ],
+              "point": [
+                0.400009155273438,
+                1.87486839294434,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                0.400000005960464,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          },
+          {
+            "accepted_support": true,
+            "at": [
+              1.0,
+              2.07857155799866,
+              162.5
+            ],
+            "original": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                1.0,
+                2.27467036247253,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000980254844762385,
+                0.994308888912201,
+                0.106531143188477
+              ],
+              "point": [
+                1.00001525878906,
+                1.8746702671051,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                1.0,
+                1.47467029094696,
+                162.5
+              ]
+            },
+            "raw_data_height": 1.8746702671051,
+            "sampled_height": 1.8746702671051,
+            "wide": {
+              "collider": {
+                "class": "Terrain3D",
+                "instance_id": 407820569943,
+                "path": "/root/WaterArchipelago/Terrain",
+                "rid": "RID(10587094384642)"
+              },
+              "from": [
+                1.0,
+                5.93102359771729,
+                162.5
+              ],
+              "hit": true,
+              "normal": [
+                0.000980254844762385,
+                0.994308888912201,
+                0.106531143188477
+              ],
+              "point": [
+                1.00001525878906,
+                1.87467002868652,
+                162.5
+              ],
+              "shape": 8,
+              "to": [
+                1.0,
+                -2.06897616386414,
+                162.5
+              ]
+            }
+          }
+        ],
+        "target": [
+          0.0,
+          2.07857155799866,
+          162.0
+        ],
+        "terrain_collision_rid": "RID(10587094384642)",
+        "vertex_spacing": 1.0
+      },
+      "outcome": "74checks/4fail; all5actualstonesPASS, actualentryfailsunchangedguards. Raw vertical rays atnegativeX miss only exactZ162; rowsZ161.5/162.5 accepted. Actual31heightmaps exist, nearby2tiles513\u00b2. Finitecachedsamples agree with physical hits. Zeroengineerrors; no nativeexitfile.",
+      "independent_source_inference": "Exact Godot5b4e0cb0f heightmap -90Yfloat32basis makes negative-tile vertical ray localX93.9999923706; adding cell origin256 rounds350 then selects edge94, rejecting ray7.629e-6outside selected cell with strict barycentric test. Pure f32 reproduction matches3negative misses/4nonnegativehits. Not bakedhole/regionabsence. R6 must prove candidate shifted actual footprint."
+    },
+    {
+      "id": 37100334560,
+      "display_title": "render f18-earned-headless-r8 @ 9cde1be4b041b400b3b56959e60c0db2c8005721",
+      "head_sha": "46d4602500ac2091d7182c96fc26aa07fe0c075b",
+      "status": "completed",
+      "conclusion": "failure",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37100334560",
+      "checkout": "9cde1be4b041b400b3b56959e60c0db2c8005721",
+      "artifact_id": 11266335990,
+      "raw_artifact": "earned-r8-remote.zip",
+      "sha256": "e6beff046e199c96c3732f79f132cce6ede7e16b8527a4372cd3bbc75df1a9be",
+      "bytes": 983158,
+      "native_exit_code": null,
+      "error_lines": [
+        "ERROR: Signal 'tree_exiting' is already connected to given callable 'RefCounted::_f18_resource_exit' in that object.",
+        "ERROR: Signal 'tree_exited' is already connected to given callable 'RefCounted::_f18_resource_exit' in that object.",
+        "ERROR: Signal 'tree_exiting' is already connected to given callable 'RefCounted::_f18_resource_exit' in that object.",
+        "ERROR: Signal 'tree_exited' is already connected to given callable 'RefCounted::_f18_resource_exit' in that object.",
+        "ERROR: natural controller travel could not reach the authored stone node (player=(21.67585, 0.936064, -37.22944) target=(47.0, -2.967638, -34.5) distance=25.47 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Terrain\"])"
+      ],
+      "script_error_lines": [],
+      "evidence_limit": "Original failed run preserved; source reviews/proposed corrections do not change its verdict or close F18 criteria.",
+      "earned_summary": {
+        "failures": [
+          "earned village/tools: [\"natural controller travel could not reach the authored stone node (player=(21.67585, 0.936064, -37.22944) target=(47.0, -2.967638, -34.5) distance=25.47 colliders=[\\\"/root/MeadowsPlayground/Terrain\\\", \\\"/root/MeadowsPlayground/Terrain\\\"])\"]"
+        ],
+        "receipt_phases": [
+          "opening",
+          "earned_key_starting_bindings",
+          "protected_drop",
+          "key_binding",
+          "combat_key_refusal",
+          "cutscene_key_refusal",
+          "settings_home_key_replay",
+          "dialogue_key_refusal",
+          "earned_shop_input_handoff",
+          "shop_key_offer_absent",
+          "earned_tool_bindings"
+        ],
+        "resource_lifetime_events": [
+          {
+            "event": "watch",
+            "instance_id": 34880469829259,
+            "path": "/root/MeadowsPlayground/@Node3D@63535",
+            "physics_frame": 5082,
+            "process_frame": 2055,
+            "role": "harvest:wood"
+          },
+          {
+            "event": "watch",
+            "instance_id": 34880771819151,
+            "path": "/root/MeadowsPlayground/@Node3D@63535/@Node3D@63536/DeadTree_22/DeadTree_2",
+            "physics_frame": 5082,
+            "process_frame": 2055,
+            "role": "harvest:wood"
+          },
+          {
+            "event": "watch",
+            "instance_id": 60166368381244,
+            "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2",
+            "physics_frame": 5082,
+            "process_frame": 2055,
+            "role": "outgoing:axe"
+          },
+          {
+            "event": "watch",
+            "instance_id": 60166384953919,
+            "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2/Axe_Bronze",
+            "physics_frame": 5082,
+            "process_frame": 2055,
+            "role": "outgoing:axe"
+          },
+          {
+            "event": "watch",
+            "instance_id": 34873524061667,
+            "path": "/root/MeadowsPlayground/@Node3D@63481",
+            "physics_frame": 5797,
+            "process_frame": 2253,
+            "role": "harvest:stone"
+          },
+          {
+            "event": "watch",
+            "instance_id": 34873591170534,
+            "path": "/root/MeadowsPlayground/@Node3D@63481/@Node3D@63482/Rock_Medium_22/Rock_Medium_2",
+            "physics_frame": 5797,
+            "process_frame": 2253,
+            "role": "harvest:stone"
+          },
+          {
+            "event": "watch",
+            "instance_id": 60166368381244,
+            "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2",
+            "physics_frame": 5797,
+            "process_frame": 2253,
+            "role": "outgoing:axe"
+          },
+          {
+            "event": "watch",
+            "instance_id": 60166384953919,
+            "path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/ToolAttachment/Axe_Bronze2/Axe_Bronze",
+            "physics_frame": 5797,
+            "process_frame": 2253,
+            "role": "outgoing:axe"
+          }
+        ]
+      },
+      "outcome": "Fails earlieractualStonewalk withinunchanged1800budget, Terrainonly at[21.67585,.936064,-37.22944] vs[47,-2.967638,-34.5]. ObserverrevisitsactualsameoutgoingAxe and4signalduplicateconnecterrors; sourcefixaddsint-IDidempotence. PaidWorkbench/deepwalk not reached; no runtime validation of guided route; original nullMaterialcause stillunproven becauseStone swingnotreached."
     }
   ],
   "acceptance": {
@@ -3758,26 +5657,5 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": [
-    {
-      "id": 37100334560,
-      "label": "f18-earned-headless-r8",
-      "checkout": "9cde1be4b041b400b3b56959e60c0db2c8005721",
-      "workflow_head": "46d4602500ac2091d7182c96fc26aa07fe0c075b",
-      "mode": "headless",
-      "timeout_minutes": 60,
-      "status_at_recording": "in_progress",
-      "scope": "Original earned loop with actual open TrailGate+authored road headings, same total budget/watchdog/floor/unstick guards, scalar resource-lifetime observer. Source independently APPROVED; no runtime result yet."
-    },
-    {
-      "id": 37100730912,
-      "label": "f18-native-stones-water-r5",
-      "checkout": "d0fed65e80f37efb12626bbec469af5cfa280f4a",
-      "workflow_head": "46d4602500ac2091d7182c96fc26aa07fe0c075b",
-      "mode": "headless",
-      "timeout_minutes": 15,
-      "status_at_recording": "in_progress",
-      "scope": "Original strict Water native geometry checks, plus bounded read-only seam diagnostic; original R4 entry failure retained, no production correction or runtime result yet."
-    }
-  ]
+  "pending_dispatches": []
 }

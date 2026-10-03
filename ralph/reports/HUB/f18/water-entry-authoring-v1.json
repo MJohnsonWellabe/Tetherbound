@@ -1,0 +1,35 @@
+{
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "outcome": "APPROVE source only; runtime pending",
+  "coordinator_authorization": "Reserve only relevant water_world.json transition coordinate; smallest supported authored coordinate within First Shore dry bounds; original ID, permits, physical guards preserved; do not edit root or import until requested.",
+  "production_change": {
+    "path": "data/config/water_world.json",
+    "json_pointer": "/entry_anchors/from_stormwood/position/2",
+    "before": 162.0,
+    "after": 162.5,
+    "only_one_value_changed": true,
+    "inside_original_departure_safe_radius_m": 3,
+    "move_m": 0.5,
+    "terrain_bake_heightfield_and_other_anchors_unchanged": true
+  },
+  "harness_change": {
+    "path": "tests/smoke_f18_earned_loop.gd",
+    "scope": "scalar int instanceID-to-bool registry to connect resource lifetime observer once per actual instance; no Node/Material retention, await, inherited route/budget/NAV or production cleanup changes"
+  },
+  "original_failures_retained": [
+    37100730912,
+    37100334560
+  ],
+  "runtime_requirements": [
+    "actual shifted target full capsule clear",
+    "all five shifted footprint floor witnesses",
+    "actual Player60consecutivefloorframes/final strict support",
+    "all five Water stones unchanged",
+    "zero engine/script errors"
+  ],
+  "primary_sources": [
+    "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_shape_3d.cpp",
+    "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/math/geometry_3d.h"
+  ],
+  "all_six_f18_criteria": "UNPROVEN"
+}

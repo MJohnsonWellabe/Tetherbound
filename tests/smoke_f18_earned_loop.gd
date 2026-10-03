@@ -40,6 +40,7 @@ class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 	var dialogue_proven := false
 	var _f18_assigning_tools := false
 	var _f18_assignment_trace: Array[Dictionary] = []
+	var _f18_resource_watch_ids: Dictionary = {}
 	func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: StringName) -> bool:
 		# Observe the actual resource and outgoing prop without retaining any
 		# Material references or changing the inherited gather/input timing.
@@ -54,8 +55,12 @@ class VillageDriver extends "res://tests/helpers/gate_a_npc_gather_segment.gd":
 		var nodes: Array[Node] = [node]
 		nodes.append_array(node.find_children("*", "MeshInstance3D", true, false))
 		for observed: Node in nodes:
-			var path := str(observed.get_path())
 			var instance_id := observed.get_instance_id()
+			# The held axe can still be the same actual prop when the next
+			# resource approach begins. Connect its lifetime observer once.
+			if _f18_resource_watch_ids.has(instance_id): continue
+			_f18_resource_watch_ids[instance_id] = true
+			var path := str(observed.get_path())
 			observed.tree_exiting.connect(_f18_resource_exit.bind("exiting", role, path, instance_id), CONNECT_ONE_SHOT)
 			observed.tree_exited.connect(_f18_resource_exit.bind("exited", role, path, instance_id), CONNECT_ONE_SHOT)
 			_f18_resource_exit("watch", role, path, instance_id)
