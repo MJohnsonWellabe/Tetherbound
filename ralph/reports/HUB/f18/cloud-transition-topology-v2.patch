@@ -1,0 +1,161 @@
+diff --git a/scripts/world/cloudreach_world.gd b/scripts/world/cloudreach_world.gd
+index 9903b687d0..94f961cb37 100644
+--- a/scripts/world/cloudreach_world.gd
++++ b/scripts/world/cloudreach_world.gd
+@@ -1426,7 +1426,7 @@ func _build_transition_ledges() -> void:
+ 		var at := _vec3((raw as Dictionary).get("position", []))
+ 		_mesa(root, _safe_name(str((raw as Dictionary).get("id", "Transition"))),
+ 			at - Vector3.UP * 8.0, Vector3(42.0, 16.0, 42.0), _materials["cliff"],
+-			_materials["upland"], true, int(absf(at.x + at.z)))
++			_materials["upland"], true, int(absf(at.x + at.z)), false, 0.0, -1.0, {}, true)
+ 		_surfaces.append({"kind": "rect", "centre": Vector2(at.x, at.z), "half": Vector2(21.0, 21.0), "height": at.y})
+ 		_cover_patches.append({"kind": "ellipse", "centre": at, "half": Vector2(17.0, 17.0),
+ 			"seed": int(absf(at.x + at.z)) + 501, "dry": false})
+@@ -5240,7 +5240,8 @@ func _mesa(
+ 		rugged_crown: bool = false,
+ 		flat_top_radius_m: float = 0.0,
+ 		cap_radius_m: float = -1.0,
+-		crown_cut: Dictionary = {}
++		crown_cut: Dictionary = {},
++		transition_flat_top: bool = false
+ 	) -> Node3D:
+ 	var root := Node3D.new()
+ 	root.name = label
+@@ -5367,6 +5368,23 @@ func _mesa(
+ 		bottom_ring.append(Vector3(top_point.x * (1.55 + 0.22 * sin(angle * 3.0 + seed_value)),
+ 			-size.y * 0.5, top_point.z * (1.55 + 0.20 * cos(angle * 5.0 - seed_value))))
+ 
++	# Only the flat transition ledges opt in. Their old fan put every triangle
++	# at the arrival centre, saturating native capsule contacts with duplicates.
++	# Triangulate the same irregular perimeter once for BOTH render and physics.
++	var transition_indices := PackedInt32Array()
++	if transition_flat_top:
++		if rugged_crown or eroded_crown or not flat_rings.is_empty() or not crown_cut.is_empty():
++			push_error("Transition triangulation requires an unmodified flat crown: " + label)
++			return root
++		var polygon := PackedVector2Array()
++		for point: Vector3 in top_ring:
++			polygon.append(Vector2(point.x, point.z))
++		transition_indices = Geometry2D.triangulate_polygon(polygon)
++		if transition_indices.size() != (sides - 2) * 3:
++			push_error("Transition crown triangulation failed: " + label)
++			return root
++		root.set_meta(&"transition_crown_polygon", polygon)
++
+ 	var mesh := ArrayMesh.new()
+ 	var crown := Vector3(0.0, size.y * 0.5 + 0.03, 0.0)
+ 	if rugged_crown:
+@@ -5388,7 +5406,7 @@ func _mesa(
+ 		top_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+ 		top_tool.set_material(top_material)
+ 		if flat_rings.is_empty():
+-			_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring)
++			_emit_mesa_top(top_tool, sides, eroded_crown, crown, core_ring, top_ring, transition_indices)
+ 		else:
+ 			_emit_flat_crown(top_tool, sides, crown, flat_rings, top_ring)
+ 		top_tool.generate_normals()
+@@ -5464,9 +5482,12 @@ func _mesa(
+ 		var collision_tool := SurfaceTool.new()
+ 		collision_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
+ 		if flat_rings.is_empty():
+-			_emit_mesa_top(collision_tool, sides, eroded_crown, crown, core_ring, top_ring)
++			_emit_mesa_top(collision_tool, sides, eroded_crown, crown, core_ring, top_ring, transition_indices)
+ 		else:
+-			_emit_flat_crown(collision_tool, sides, crown, flat_rings, top_ring)
++			var include_hub := true
++			if label == "ArrivalGateRoad_Ledge0":
++				include_hub = not _transition_covers_arrival_hub(root, crown, flat_rings[0])
++			_emit_flat_crown(collision_tool, sides, crown, flat_rings, top_ring, include_hub)
+ 		# A bare, zero-thickness crown edge is a known character-controller trap:
+ 		# approaching from a slightly lower, similar-height surface (a bridge
+ 		# deck or ramp meeting this mesa) can wall against the paper-thin rim
+@@ -5489,7 +5510,15 @@ func _mesa(
+ 		var body := StaticBody3D.new()
+ 		body.name = "Collision"
+ 		var shape_node := CollisionShape3D.new()
+-		shape_node.shape = collision_mesh.create_trimesh_shape()
++		if not transition_indices.is_empty():
++			# create_trimesh_shape's TriangleMesh snaps vertices to 0.1 mm.
++			# These raw, unindexed triangles keep the transition's collision
++			# exactly on its visible top and skirt, including the perimeter.
++			var exact_shape := ConcavePolygonShape3D.new()
++			exact_shape.set_faces(collision_mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX])
++			shape_node.shape = exact_shape
++		else:
++			shape_node.shape = collision_mesh.create_trimesh_shape()
+ 		body.add_child(shape_node)
+ 		root.add_child(body)
+ 	return root
+@@ -5617,7 +5646,15 @@ func _emit_mesa_skirt(tool: SurfaceTool, sides: int, top_ring: Array[Vector3], d
+ ## intermediate contour). Shared by the visible top mesh and its collision
+ ## copy so the two can never drift apart.
+ func _emit_mesa_top(tool: SurfaceTool, sides: int, eroded_crown: bool, crown: Vector3,
+-		core_ring: Array[Vector3], top_ring: Array[Vector3]) -> void:
++		core_ring: Array[Vector3], top_ring: Array[Vector3], transition_indices: PackedInt32Array = PackedInt32Array()) -> void:
++	if not transition_indices.is_empty():
++		# Geometry2D returns counterclockwise XZ triangles; reversing b/c gives
++		# the upward cross product expected by _add_surface_triangle's recipe.
++		for i in range(0, transition_indices.size(), 3):
++			_add_surface_triangle(tool, top_ring[transition_indices[i]] + Vector3.UP * 0.03,
++				top_ring[transition_indices[i + 2]] + Vector3.UP * 0.03,
++				top_ring[transition_indices[i + 1]] + Vector3.UP * 0.03)
++		return
+ 	for i in sides:
+ 		var next := (i + 1) % sides
+ 		if eroded_crown:
+@@ -5629,20 +5666,51 @@ func _emit_mesa_top(tool: SurfaceTool, sides: int, eroded_crown: bool, crown: Ve
+ 				top_ring[i] + Vector3.UP * 0.03)
+ 
+ 
++## A coincident transition can own the arrival road's redundant 2 m hub.
++## Prove containment and exact height from actual built geometry before
++## omitting ONLY that fan from collision. All outer strips/skirt stay solid.
++func _transition_covers_arrival_hub(route: Node3D, crown: Vector3, inner: Array) -> bool:
++	var pad := get_node_or_null(^"RealmTransitionLedges/CloudreachArrivalFromMeadows") as Node3D
++	if pad == null or not pad.has_meta(&"transition_crown_polygon"): return false
++	var mesh := pad.get_node_or_null(^"StratifiedCliffBody") as MeshInstance3D
++	var body := pad.get_node_or_null(^"Collision") as StaticBody3D
++	if mesh == null or mesh.mesh == null or body == null or body.get_child_count() != 1: return false
++	var shape_node := body.get_child(0) as CollisionShape3D
++	if shape_node == null or shape_node.disabled or not shape_node.shape is ConcavePolygonShape3D: return false
++	var top: PackedVector3Array = mesh.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
++	var faces := (shape_node.shape as ConcavePolygonShape3D).get_faces()
++	if top.is_empty() or faces.size() < top.size() or inner.size() < 3: return false
++	var at := route.to_global(crown)
++	if at.x != pad.global_position.x or at.z != pad.global_position.z: return false
++	for i in top.size():
++		if faces[i] != top[i] or pad.to_global(top[i]).y != at.y: return false
++	var boundary: PackedVector2Array = pad.get_meta(&"transition_crown_polygon")
++	var polygon := PackedVector2Array()
++	for point: Vector2 in boundary:
++		var world_point := pad.to_global(Vector3(point.x, top[0].y, point.y))
++		polygon.append(Vector2(world_point.x, world_point.z))
++	var hub := PackedVector2Array()
++	for point: Vector3 in inner:
++		var world_point := route.to_global(point + Vector3.UP * 0.03)
++		if world_point.y != at.y: return false
++		hub.append(Vector2(world_point.x, world_point.z))
++	return Geometry2D.clip_polygons(hub, polygon).is_empty()
++
+ ## A flat pad/landmark crown: an apex fan to the innermost (cap) ring, then
+ ## quad strips ring to ring out to `top_ring` (the rim). Shared by the visible
+ ## top mesh and its collision copy (R1). Every ring vertex already carries its
+ ## `_crown_height_at` height (R2), so the strips reproduce a road's slope
+ ## piecewise-linearly across the disc instead of stepping at the rim.
+ func _emit_flat_crown(tool: SurfaceTool, sides: int, crown: Vector3, rings: Array,
+-		top_ring: Array[Vector3]) -> void:
++		top_ring: Array[Vector3], include_hub: bool = true) -> void:
+ 	var lift := Vector3.UP * 0.03
+ 	var chain: Array = rings.duplicate()
+ 	chain.append(top_ring)
+ 	var inner: Array = chain[0]
+-	for i in sides:
+-		var next := (i + 1) % sides
+-		_add_surface_triangle(tool, crown, inner[next] + lift, inner[i] + lift)
++	if include_hub:
++		for i in sides:
++			var next := (i + 1) % sides
++			_add_surface_triangle(tool, crown, inner[next] + lift, inner[i] + lift)
+ 	for ring_index in chain.size() - 1:
+ 		var a_ring: Array = chain[ring_index]
+ 		var b_ring: Array = chain[ring_index + 1]
