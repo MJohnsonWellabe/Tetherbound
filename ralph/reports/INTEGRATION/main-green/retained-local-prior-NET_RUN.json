@@ -1,0 +1,37 @@
+{
+	"budgets": {},
+	"failures": [
+		"Empty button target: feast_cook_0",
+		"Empty button target: feast_cook_1"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [],
+	"proxies": [],
+	"run_id": "",
+	"scene": "",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}
