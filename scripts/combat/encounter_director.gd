@@ -7055,18 +7055,35 @@ func _present_trainer_victory(spec: Dictionary, speaker: Node3D = null) -> void:
 		if shown != null and panel.has_signal("line_presented"):
 			# F04#6 (judge r5): hand the tokens over while the last line is up,
 			# inside the victory shot, not on a timer after it.
-			var player := _player
 			var delay := float(TRAINER_AFTERMATH.config().get("handover_after_last_line_s", 1.4))
-			var on_line := func(_id: String, is_last: bool) -> void:
-				if is_last and is_instance_valid(shown):
-					shown.get_tree().create_timer(delay).timeout.connect(func() -> void:
-						if is_instance_valid(shown):
-							TRAINER_AFTERMATH.hand_over(shown, player))
-			panel.connect("line_presented", on_line)
-			panel.connect("finished", func(_id: String) -> void:
-				if panel.is_connected("line_presented", on_line):
-					panel.disconnect("line_presented", on_line), CONNECT_ONE_SHOT)
+			_bind_victory_aftermath(panel, shown, _player, delay)
 	panel.call("start", conversation)
+
+
+## The token fallback can finish before the dialogue. Bound callbacks retain
+## weak references, so later line/finish signals never capture deleted Nodes.
+func _bind_victory_aftermath(panel: Node, shown: Node3D, player: Node3D, delay: float) -> void:
+	var panel_ref := weakref(panel)
+	var player_ref: WeakRef = weakref(player) if is_instance_valid(player) else null
+	var on_line := _on_victory_aftermath_line.bind(weakref(shown), player_ref, delay)
+	panel.connect("line_presented", on_line)
+	panel.connect("finished", _on_victory_aftermath_finished.bind(panel_ref, on_line), CONNECT_ONE_SHOT)
+
+
+func _on_victory_aftermath_line(_id: String, is_last: bool, shown_ref: WeakRef,
+		player_ref: WeakRef, delay: float) -> void:
+	var shown := shown_ref.get_ref() as Node3D
+	if is_last and is_instance_valid(shown) and shown.is_inside_tree():
+		# hand_over's untyped, validity-checked arguments already support tokens
+		# disappearing before this timer (including the ordinary fallback timer).
+		shown.get_tree().create_timer(delay).timeout.connect(
+			TRAINER_AFTERMATH.hand_over.bind(shown, player_ref.get_ref() if player_ref != null else null))
+
+
+func _on_victory_aftermath_finished(_id: String, panel_ref: WeakRef, on_line: Callable) -> void:
+	var panel := panel_ref.get_ref() as Node
+	if is_instance_valid(panel) and panel.is_connected("line_presented", on_line):
+		panel.disconnect("line_presented", on_line)
 
 
 ## F04#3/#6 (judge r2 17a80aa4: the player's own creature hid Vess, crowded

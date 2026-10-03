@@ -495,6 +495,13 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var target_name := str(args.get("target", ""))
 	if scene == null or target_name not in ["master_t1", "master_t1_chest", "warden_aldis", "forge", "kitchen", "altar", "home_arch", "tidewake_arch", "meadows_pedestal"]:
 		return _result(false, "Unknown authored mechanics approach")
+	var world_input_before: Dictionary = {}
+	if target_name == "forge":
+		world_input_before = _capture_input_state(tree)
+		if INPUT_OWNER.current(tree) != null or world_input_before.get("context") != "world":
+			return _result(false, "Forge approach requires actual world input after the preceding ordinary panel close; context=%s owner=%s"
+				% [str(world_input_before.get("context")), str(world_input_before.get("owner_path"))],
+				{"target": target_name, "world_input_before": world_input_before, "acceptance_credit": false})
 	var game := tree.root.get_node_or_null(^"Game")
 	var target: Node3D
 	var altar_interaction: Node3D
@@ -562,6 +569,12 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var actor_before := player.global_position
 	var ally_before := ally.global_position
 	var requested := target.global_position + Vector3(2.0, 2.0, 0.0)
+	if target_name == "forge":
+		# The east side competes with the actual paid Altar prompt. Stand west
+		# of the Forge's front prompt, keeping the shipping LOS outside its body.
+		var forge_origin: Vector3 = target.call("interaction_origin")
+		requested = forge_origin - target.global_basis.x.normalized() * 2.0
+		requested.y = target.global_position.y + 2.0
 	if target_name in ["home_arch", "tidewake_arch", "meadows_pedestal"]:
 		requested = target.global_position + Vector3(0.0, 2.0, 0.0)
 	var ally_requested := target.global_position + Vector3(2.0, 0.0, 1.0)
@@ -577,6 +590,12 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"ally_before": [ally_before.x, ally_before.y, ally_before.z], "ally_requested": [ally_requested.x, ally_requested.y, ally_requested.z],
 		"ally_after": [actual_ally.x, actual_ally.y, actual_ally.z], "ally_placement_accepted": ally_placed,
 		"fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
+	var forge_world_input: bool = true
+	if target_name == "forge":
+		var world_input_after: Dictionary = _capture_input_state(tree)
+		data["world_input_before"] = world_input_before
+		data["world_input_after"] = world_input_after
+		forge_world_input = INPUT_OWNER.current(tree) == null and world_input_after.get("context") == "world"
 	if target_name == "altar":
 		data["altar_binding"] = altar_binding
 		if not is_instance_valid(altar_interaction) or altar_interaction.call("_live_binding") != true:
@@ -587,8 +606,9 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 	DirAccess.make_dir_recursive_absolute(folder)
 	if not DETACHED.publish(folder.path_join(str(OS.get_process_id()) + "-" + target_name + "-" + str(Time.get_ticks_usec()) + ".json"), data):
 		return _result(false, "Could not retain disclosed actual position fixture", data)
-	return _result(ally_placed and player.is_on_floor() and actual.distance_to(target.global_position) <= 3.0,
-		"Disclosed authored-site placement; actual actor floor/proximity required before ordinary prompt", data)
+	return _result(ally_placed and player.is_on_floor() and actual.distance_to(target.global_position) <= 3.0 and forge_world_input,
+		"Disclosed authored-site placement; actual actor floor/proximity required before ordinary prompt"
+			+ ("; actual world input required at Forge" if target_name == "forge" else ""), data)
 
 static func _fixture_join_boss(tree: SceneTree, args: Dictionary) -> Dictionary:
 	if args.get("fixture_disclosure") != "named_mechanics_actual_announced_boss_join_no_earned_credit":
