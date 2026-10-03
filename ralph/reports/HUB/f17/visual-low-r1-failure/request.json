@@ -1,0 +1,12 @@
+{
+  "ref": "main",
+  "inputs": {
+    "timeout_minutes": "60",
+    "mode": "render",
+    "resolution": "1920x1080",
+    "script": "tools/capture_f17_visual.gd",
+    "args": "--preset=Low --source-commit=1a7a390cc5eeead8685a42094cedc683648c3e59 --output=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/HUB/f17/visual-low-r1",
+    "label": "f17-visual-low-r1",
+    "checkout_ref": "1a7a390cc5eeead8685a42094cedc683648c3e59"
+  }
+}

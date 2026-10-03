@@ -1,0 +1,12 @@
+{
+  "inputs": {
+    "timeout_minutes": "15",
+    "resolution": "1920x1080",
+    "checkout_ref": "ae511965c39bd606e7557d1547ab1803f38f1d00",
+    "mode": "render",
+    "label": "f17-farm-light-diagnostic-r1",
+    "script": "tools/capture_f17_visual.gd",
+    "args": "--preset=Low --farm-diagnostic-only --source-commit=ae511965c39bd606e7557d1547ab1803f38f1d00 --output=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/HUB/f17/farm-light-diagnostic-r1"
+  },
+  "ref": "main"
+}
