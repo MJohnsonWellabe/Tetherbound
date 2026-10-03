@@ -111,6 +111,21 @@ func _run() -> void:
 	await _frames(60)
 	_check(probe.is_on_floor() and probe.velocity.length() < .1 and probe.global_position.distance_to(before) < .1,
 		"dynamic bubble overlap does not shove the body or lose contact")
+	var diagnostic_query := PhysicsShapeQueryParameters3D.new()
+	diagnostic_query.shape = probe.get_node(^"Collision").shape
+	diagnostic_query.transform = probe.get_node(^"Collision").global_transform
+	diagnostic_query.exclude = [probe.get_rid()]
+	var overlap: Array[Dictionary] = probe.get_world_3d().direct_space_state.intersect_shape(diagnostic_query, 8)
+	var colliders: Array[String] = []
+	for hit: Dictionary in overlap:
+		var collider: Object = hit.get("collider")
+		colliders.append(str(collider.get("name")) if collider is Node else str(collider))
+	var support_samples: Array[float] = []
+	for offset: Vector2 in [Vector2.ZERO, Vector2(-.4, 0), Vector2(.4, 0), Vector2(0, -.4), Vector2(0, .4)]:
+		support_samples.append(arrival._landing_height(world, probe, target + Vector3(offset.x, 0, offset.y), .4))
+	print("F18_SUPPORT_CONTACT_DIAGNOSTIC " + JSON.stringify({"position": str(probe.global_position),
+		"safe_margin": probe.safe_margin, "query_margin": diagnostic_query.margin, "floor": str(probe.get_floor_normal()),
+		"samples": support_samples, "overlap": colliders}))
 	_check(arrival._supported_capsule(world, probe, target, .4), "final production support/capsule guard accepts actual supported body")
 	probe.set_physics_process(false)
 	var wall := StaticBody3D.new()

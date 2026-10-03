@@ -42,13 +42,20 @@ static func mount(world: Node3D, stone: Node3D) -> bool:
 	stone.add_child(body)
 	# If terrain data changes, stale triangles cannot remain physical support.
 	# The normal mount poll can recreate them from the new native data.
-	var invalidate := func() -> void:
-		if is_instance_valid(body) and not body.is_queued_for_deletion() and body.get_parent() == stone:
-			stone.remove_child(body)
-			body.queue_free()
+	var invalidate := _invalidate.bind(weakref(body), weakref(stone))
 	for signal_name: String in ["height_maps_changed", "control_maps_changed", "region_map_changed"]:
 		data.connect(signal_name, invalidate, CONNECT_ONE_SHOT)
 	return true
+
+static func _invalidate(body_ref: WeakRef, stone_ref: WeakRef) -> void:
+	# Signal argument captures must never retain freed Node values: Godot
+	# validates captures before a lambda's own validity guard can execute.
+	var body := body_ref.get_ref() as Node
+	var stone := stone_ref.get_ref() as Node
+	if is_instance_valid(body) and is_instance_valid(stone) \
+		and not body.is_queued_for_deletion() and body.get_parent() == stone:
+		stone.remove_child(body)
+		body.queue_free()
 
 static func native_faces(data: Object, spacing: float, center: Vector3) -> PackedVector3Array:
 	var empty := PackedVector3Array()
