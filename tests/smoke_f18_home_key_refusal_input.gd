@@ -51,6 +51,14 @@ func _press(action: String) -> void:
 
 func _run() -> void:
 	await process_frame
+	await process_frame
+	var actual_game := root.get_node(^"Game")
+	var composition := actual_game.get_node(^"Session/FoundationComposition")
+	var mounted := actual_game.get_node_or_null(^"HomeKey")
+	_check(mounted != null and mounted.get_script() == KEY and mounted.get("_phase") == "idle",
+		"actual composition installs the persistent key observer before any successful use")
+	composition.call("_mount_home_key")
+	_check(actual_game.get_node_or_null(^"HomeKey") == mounted, "composition retry retains the same presentation owner")
 	var world := Node3D.new()
 	root.add_child(world)
 	current_scene = world

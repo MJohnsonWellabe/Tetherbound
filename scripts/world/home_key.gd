@@ -70,12 +70,17 @@ func _input(event: InputEvent) -> void:
 	var combat := scene.get_node_or_null(^"CombatManager")
 	var fighting: bool = combat != null and combat.has_method("presenting_fight") and combat.call("presenting_fight") == true
 	var aiming: bool = combat != null and combat.has_method("is_aiming") and combat.call("is_aiming") == true
-	if not refusal_binding(event, _game.get("hotbar"), fighting, aiming): return
+	var hud := scene.get_node_or_null(^"PlaygroundHUD")
+	var aim_latched := false
+	if hud != null and hud.get_script() != null \
+		and hud.get_script().resource_path == "res://scripts/ui/playground_hud.gd":
+		aim_latched = hud.get("_aim_hotbar_latch") == true
+	if not refusal_binding(event, _game.get("hotbar"), fighting, aiming, aim_latched): return
 	var reason := str(_game.call("home_key_refusal"))
 	if not reason.is_empty(): _refuse(reason)
 
-static func refusal_binding(event: InputEvent, slots: Array, fighting: bool, aiming: bool) -> bool:
-	if event == null or aiming: return false
+static func refusal_binding(event: InputEvent, slots: Array, fighting: bool, aiming: bool, aim_latched: bool = false) -> bool:
+	if event == null or aiming or aim_latched: return false
 	for i in mini(slots.size(), 5):
 		if slots[i] != "home_key": continue
 		var action: String = "combat_item_1" if fighting and i == 0 else "hotbar_%d" % (i + 1)

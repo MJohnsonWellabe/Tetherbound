@@ -35,6 +35,7 @@ func test_assigned_key_refusal_binding_preserves_modal_and_aim_input() -> void:
 	press.pressed = true
 	press.action = "combat_item_1"
 	assert_true(key_script.refusal_binding(press, ["home_key", ""], true, false), "slot1 uses actual combat mapping")
+	assert_false(key_script.refusal_binding(press, ["home_key", ""], true, false, true), "HUD aim-release latch preserves the cancel press")
 	assert_false(key_script.refusal_binding(press, ["home_key", ""], false, false))
 	press.action = "hotbar_1"
 	assert_false(key_script.refusal_binding(press, ["home_key", ""], true, false), "shared combat cancel mapping is untouched")
