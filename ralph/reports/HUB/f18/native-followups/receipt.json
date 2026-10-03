@@ -7216,5 +7216,23 @@
     "outcome": "Both actual Home Key lessons confirmed through parsed input before fixture save; admission/source safety pass. First Cloudreach arrival obstructed. Outer artifact lacks actual peer RID diagnostics; not geometry PASS.",
     "fixtures": "Explicit split transport fixture, not earned portal unlock acceptance."
   },
-  "pending_dispatches": []
+  "pending_dispatches": [
+    {
+      "id": 37107358897,
+      "display_title": "render f18-flying-water-refusal-pixels-r3 @ 4a7684011340cc025deff3fc685c93d992224b78",
+      "head_branch": "tb/integration",
+      "head_sha": "67a4522aab4ebdb16a140f5c9249b33cf9f35207",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37107358897",
+      "checkout": "4a7684011340cc025deff3fc685c93d992224b78",
+      "label": "f18-flying-water-refusal-pixels-r3",
+      "mode": "render",
+      "script": "tests/smoke_net_f18_traversal_refusal.gd",
+      "args": "--native-peer=0 --f18-draw-on-request --flying --f18-flight-water",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Actual Water Player grounded double Jump/midflight key refusal/native requested-draw pixels only. Disclosed Water/dry stage/fly_setup fixtures; previous Meadows failures retained. No performance/audio/earned/unlock/crossing/raise/co-op/fullcriteria credit."
+    }
+  ]
 }

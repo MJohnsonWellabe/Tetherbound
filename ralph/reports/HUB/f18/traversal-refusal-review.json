@@ -1005,6 +1005,23 @@
     "scope": "Optional --flying --f18-flight-water direct actual Water fixture, existing dry lesson staging before existing fly_setup, actual Water Player grounded double Jump thereafter. Previous Meadows native failures remain unproven. No earned Water/Fly unlock or crossing credit.",
     "invariants": "Same actual mountedFly/offfloor/preciseLandfirst/keybinding/owner/inventory/request/channel/context/recovery/release guards and original deadlines; no gameplaystate/posewrites beyond disclosed priorfixtures; defaultflyingMeadowsunchanged.",
     "native_phase_trace": "Read-only originalguardreceipt beforecapture and passed/captured/monotonic fields aftercapture; noawait/inputchanges",
-    "native_status": "UNPROVEN"
+    "native_status": "IN_PROGRESS; original/native/pixel review pending",
+    "dispatch": {
+      "id": 37107358897,
+      "display_title": "render f18-flying-water-refusal-pixels-r3 @ 4a7684011340cc025deff3fc685c93d992224b78",
+      "head_branch": "tb/integration",
+      "head_sha": "67a4522aab4ebdb16a140f5c9249b33cf9f35207",
+      "status": "in_progress",
+      "conclusion": null,
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37107358897",
+      "checkout": "4a7684011340cc025deff3fc685c93d992224b78",
+      "label": "f18-flying-water-refusal-pixels-r3",
+      "mode": "render",
+      "script": "tests/smoke_net_f18_traversal_refusal.gd",
+      "args": "--native-peer=0 --f18-draw-on-request --flying --f18-flight-water",
+      "resolution": "1280x720",
+      "timeout_minutes": "15",
+      "scope": "Actual Water Player grounded double Jump/midflight key refusal/native requested-draw pixels only. Disclosed Water/dry stage/fly_setup fixtures; previous Meadows failures retained. No performance/audio/earned/unlock/crossing/raise/co-op/fullcriteria credit."
+    }
   }
 }
