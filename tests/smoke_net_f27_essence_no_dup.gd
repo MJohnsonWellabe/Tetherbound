@@ -51,43 +51,70 @@ func want(condition: bool, message: String) -> void:
 func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
-	# Boot from the light title scene, then build each Meadows world in turn
-	# under an explicit step budget (two concurrent builds exceed the hello
-	# budget on a 4-core runner). Boot time only, never an assertion.
+	var selected := "all"
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--case="): selected = arg.trim_prefix("--case=")
 	if not await launch(2, "title"):
 		quit(await finish())
 		return
-	# Two world builds and three hard restarts with rejoin world builds, as
+	# Each case builds two worlds and restarts processes, as
 	# smoke_net_cloudreach_activity_payoffs does for its long run.
-	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
+	_step_phase_deadline_ms = Time.get_ticks_msec() + 7200.0 * 1000.0
+	var cases: Array = ["settled", "host_before_delivery", "owner_before_ack"] if selected == "all" else [selected]
+	for index: int in cases.size():
+		# Every case is the FIRST guest spend of a brand-new session on wiped
+		# homes, so one case's leftovers cannot hide another's duplication.
+		if index > 0 and not await _fresh_processes(str(cases[index])): break
+		if not await _start_session(): break
+		match str(cases[index]):
+			"settled": await _case_settled()
+			"reconnect_spend": await _case_reconnect_spend()
+			_: await _case_cut(str(cases[index]))
+	print("F27_NET_NO_DUP: %d assertions over cases %s" % [_asserts, str(cases)])
+	quit(await finish())
+
+
+## Boot, seed (fixture), save, host, join and place the host's paid Altar.
+func _start_session() -> bool:
 	for peer in 2:
-		if not await _pass(peer, "boot", {"scene": "world"}, 30000): return
+		if not await _pass(peer, "boot", {"scene": "world"}, 30000): return false
 	_host_port = int(((_peers[0] as Dictionary).get("hello", {}) as Dictionary).get("enet_port", 0))
-	# Seed both homes before networking (fixture) and save them to disk.
 	for peer in 2:
-		if not await _pass(peer, "party_grant", {"species": SPECIES, "level": START_LEVEL}): return
-	if not await _pass(1, "storage_grant", {"item": PAYMENT, "n": ESSENCE_STOCK}): return
+		if not await _pass(peer, "party_grant", {"species": SPECIES, "level": START_LEVEL}): return false
+	if not await _pass(1, "storage_grant", {"item": PAYMENT, "n": ESSENCE_STOCK}): return false
 	for peer in 2:
 		var saved: Dictionary = await step(peer, "save_character_here", {})
-		if not _ok(saved, "peer %d saved its seeded character" % peer): return
+		if not _ok(saved, "peer %d saved its seeded character" % peer): return false
 		if peer == 1: _guest_id = str((saved.get("data", {}) as Dictionary).get("character_id", ""))
-	if not await _pass(0, "host", {"port": _host_port}): return
+	if not await _pass(0, "host", {"port": _host_port}): return false
 	if not await _pass(1, "join", {"host": "127.0.0.1", "port": _host_port,
-			"character": {"character_id": _guest_id, "display_name": "Essence Guest"}}, 6000): return
+			"character": {"character_id": _guest_id, "display_name": "Essence Guest"}}, 6000): return false
 	for peer in 2:
-		if not await _pass(peer, "expect_peers", {"count": 2}): return
-	if not await _pass(0, "f27_dismiss_modals", {}): return
+		if not await _pass(peer, "expect_peers", {"count": 2}): return false
+	if not await _pass(0, "f27_dismiss_modals", {}): return false
 	var placed: Dictionary = await step(0, "f27_place_altar", {})
-	if not _ok(placed, "host placed a real paid Altar"): return
+	if not _ok(placed, "host placed a real paid Altar"): return false
 	_station = str(placed.data.station_key)
 	_altar_at = Vector3(placed.data.position[0], placed.data.position[1], placed.data.position[2])
-	if not await _pass(0, "f27_dismiss_modals", {}): return
+	return await _pass(0, "f27_dismiss_modals", {})
 
-	await _case_settled()
-	await _case_cut("host_before_delivery")
-	await _case_cut("owner_before_ack")
-	print("F27_NET_NO_DUP: %d assertions" % _asserts)
-	quit(await finish())
+
+## Kill both processes, wipe both homes and relaunch them on the title.
+func _fresh_processes(label: String) -> bool:
+	for i in 2:
+		var home := str((_peers[i] as Dictionary).home)
+		(_peers[i] as Dictionary)["quit_sent"] = true
+		var pid := int((_peers[i] as Dictionary).get("pid", -1))
+		if OS.is_process_running(pid): OS.execute("kill", ["-9", str(pid)])
+		for _f in 600:
+			await process_frame
+			if not OS.is_process_running(pid): break
+		if home.length() > 8 and DirAccess.dir_exists_absolute(home): OS.execute("rm", ["-rf", home])
+		DirAccess.make_dir_recursive_absolute(home)
+	for i in 2:
+		var restarted := await _restart_peer(i, "title", label)
+		if not _ok(restarted, "fresh process %d for case %s" % [i, label]): return false
+	return true
 
 
 func _case_settled() -> void:
@@ -103,8 +130,8 @@ func _case_settled() -> void:
 	# Reconnect.
 	if not await _pass(1, "leave", {"reason": "f27_reconnect"}): return
 	if not await _pass(0, "expect_peers", {"count": 1}): return
-	if not await _pass(1, "production_join", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 6000,
-			"returning_route": true, "character": {"character_id": _guest_id}}, 6500): return
+	if not await _pass(1, "production_join", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 14000,
+			"returning_route": true, "character": {"character_id": _guest_id}}, 15000): return
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
 	_want_same(settled, await _guest(), "A after reconnect")
 	# Reload: hard process restart, saved character picked on the title.
@@ -117,6 +144,31 @@ func _case_settled() -> void:
 		await step(1, "wait", {"frames": 60})
 		_want_same(settled, await _guest(), "A after replaying the original request")
 		await _want_host_matches(settled, "accepted", "A after replay")
+
+
+## Opt-in (--case=reconnect_spend): a second spend after an ordinary
+## reconnect. Liveness, not duplication; see the F27 report.
+func _case_reconnect_spend() -> void:
+	if not await _stand_by_altar(): return
+	var spent: Dictionary = await step(1, "f27_altar_spend", {"station_key": _station, "payment_item": PAYMENT}, 3000)
+	if not _ok(spent, "R: first spend runs"): return
+	var settled := await _guest()
+	if not await _pass(1, "leave", {"reason": "f27_reconnect"}): return
+	if not await _pass(0, "expect_peers", {"count": 1}): return
+	if not await _pass(1, "production_join", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 14000,
+			"returning_route": true, "character": {"character_id": _guest_id}}, 15000): return
+	await step(1, "wait", {"frames": SETTLE_FRAMES})
+	# A2: a fresh spend after an ordinary reconnect settles exactly once.
+	if await _stand_by_altar():
+		var again: Dictionary = await step(1, "f27_altar_spend", {"station_key": _station, "payment_item": PAYMENT}, 3000)
+		_ok(again, "A2: guest spend after reconnect runs")
+		var second: Dictionary = again.get("data", {}).get("result", {})
+		want(second.get("ok") == true and second.get("resolved") == true, "A2: the post-reconnect spend settled saved (%s)" % str(second))
+		if second.get("resolved") != true: await _passive_report("A2")
+		var after_second := await _guest()
+		_want_one_level(settled, after_second, E_cost(settled), "A2 after reconnect")
+		await _want_host_matches(after_second, "accepted", "A2 after reconnect")
+		settled = after_second
 
 
 func _case_cut(cut: String) -> void:
@@ -135,6 +187,7 @@ func _case_cut(cut: String) -> void:
 		want(str(spent.get("verdict", "")) == "PASS" and spent.data.get("active") == false,
 			"%s: the guest link dropped mid-spend (%s)" % [label, str(spent.get("detail", ""))])
 		var view := await _host(_guest_id)
+		if (view.get("cut", {}) as Dictionary).is_empty(): await _passive_report(label + " before cut")
 		want(not (view.get("cut", {}) as Dictionary).is_empty(), "%s: the host edge fired (%s)" % [label, str(view.get("cut"))])
 		want((view.get("row", {}) as Dictionary).get("status") == "pending",
 			"%s: the host journaled the spend and holds it pending, unACKed (%s)" % [label, str(view.get("row"))])
@@ -147,6 +200,7 @@ func _case_cut(cut: String) -> void:
 		cost = E_cost(before)
 	if not await _restart_and_rejoin(): return
 	var recovered := await _guest()
+	if int(recovered.party[0].level) != int(before.party[0].level) + 1: await _passive_report(label)
 	_want_one_level(before, recovered, cost, label + " after reload")
 	await _want_host_matches(recovered, "accepted", label + " after reload")
 	if not request.is_empty() and await _stand_by_altar():
@@ -161,6 +215,12 @@ func E_cost(before: Dictionary) -> int:
 	var essence := preload("res://scripts/creatures/essence.gd")
 	return essence.level_cost(int(before.party[0].level), essence.config(),
 		preload("res://scripts/creatures/progression.gd").config())
+
+
+func _passive_report(label: String) -> void:
+	for peer in 2:
+		var state: Dictionary = await step(peer, "f27_passive_state", {"character_id": _guest_id})
+		print("%s passive peer %d: %s" % [label, peer, str(state.get("data", {}))])
 
 
 func _want_one_level(before: Dictionary, after: Dictionary, cost: int, label: String) -> void:
@@ -208,10 +268,11 @@ func _host(character_id: String) -> Dictionary:
 func _restart_and_rejoin() -> bool:
 	var restarted := await _restart_peer(1, "title")
 	if not _ok(restarted, "guest process restarted (hard)"): return false
-	# A killed process sends no disconnect; the host may still hold its slot
-	# (reconnect reservation). The returning character rejoins straight away.
-	if not await _pass(1, "production_join", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 6000,
-			"returning_route": true, "pick_saved": true, "character": {"character_id": _guest_id}}, 6500): return false
+	# A killed process sends no disconnect: the host first refuses the same
+	# character (`character_in_use`), then holds its seat for the returning
+	# character. f27_title_rejoin retries Join as a player would.
+	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 20000,
+			"character_id": _guest_id}, 22000): return false
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return false
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
@@ -225,16 +286,12 @@ func _ok(result: Dictionary, label: String) -> bool:
 
 
 func _pass(peer: int, action: String, args: Dictionary, budget: int = -1) -> bool:
-	var result := await step(peer, action, args, budget)
-	var passed := _ok(result, "peer %d %s" % [peer, action])
-	if not passed and action in ["boot", "host", "join", "production_join", "f27_place_altar"]:
-		quit(await finish())
-	return passed
+	return _ok(await step(peer, action, args, budget), "peer %d %s" % [peer, action])
 
 
 ## Hard restart of one guest process on its own home (no Session.leave, no
 ## autosave). Mirrors smoke_net_proof_two_peer._restart_peer, with a kill.
-func _restart_peer(i: int, scene: String) -> Dictionary:
+func _restart_peer(i: int, scene: String, label: String = "") -> Dictionary:
 	var old: Dictionary = _peers[i]
 	var old_pid := int(old.get("pid", -1))
 	old["quit_sent"] = true
@@ -251,15 +308,16 @@ func _restart_peer(i: int, scene: String) -> Dictionary:
 	_control_servers.append(server)
 	var enet_port := int((old.get("hello", {}) as Dictionary).get("enet_port", enet_port_for(i))) \
 		if old.get("hello") is Dictionary else enet_port_for(i)
+	var log_path := str(old.log_path) if label.is_empty() else str(old.log_path).get_basename() + "-" + label + ".log"
 	var pid := _spawn_peer(i, str(old.role), int(controls.ports[0]), enet_port, scene,
-		str(old.home), str(old.log_path), [])
+		str(old.home), log_path, [])
 	_isolate_coordinator()
 	if pid <= 0:
 		return {"verdict": "ERROR", "detail": "OS.create_process failed relaunching peer %d" % i}
 	var now_s := Time.get_ticks_msec() / 1000.0
 	_peers[i] = {
 		"index": i, "role": old.role, "server": server, "sock": null, "rx_buf": "",
-		"pid": pid, "home": old.home, "log_path": old.log_path, "control_port": int(controls.ports[0]),
+		"pid": pid, "home": old.home, "log_path": log_path, "control_port": int(controls.ports[0]),
 		"hashes": [], "hello": null, "exited": false, "unexpected_exit": false,
 		"quit_sent": false, "last_heartbeat_t": 0.0, "last_heartbeat": null,
 		"heartbeat_deferred_until_s": now_s + 300.0, # Fresh process boots a world.

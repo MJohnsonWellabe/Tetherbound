@@ -25,6 +25,8 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
 		"f27_arm_host_cut": return _arm_host_cut(runner, str(args.get("character_id", "")))
 		"f27_altar_spend": return await _altar_spend(runner, args)
 		"f27_altar_replay": return await _altar_replay(runner, args)
+		"f27_title_rejoin": return await _title_rejoin(runner, args)
+		"f27_passive_state": return _passive_state(runner, str(args.get("character_id", "")))
 	return {"verdict": "ERROR", "detail": "unknown F27 action '%s'" % action}
 
 
@@ -259,3 +261,73 @@ static func _altar_replay(runner: SceneTree, args: Dictionary) -> Dictionary:
 		await runner.physics_frame
 	session.disconnect("altar_essence_spend_completed", completed)
 	return _ok("replayed %s -> %s" % [request.spend_id, str(box.result)], {"result": box.result})
+
+
+## A restarted guest process rejoins exactly as a returning player does: the
+## real title's direct join (`_join_via`), which loads this home's own slot-0
+## save before joining. No live identity is preselected; the joined id must be
+## the original character or the step fails.
+static func _title_rejoin(runner: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(runner)
+	var wanted := str(args.get("character_id", ""))
+	if game == null or wanted.is_empty(): return _fail("Game and the original character id required")
+	var session: Node = game.get("session")
+	var budget := int(args.get("budget_frames", 6000))
+	var used := 0
+	var attempts := 0
+	while used < budget:
+		attempts += 1
+		if runner.current_scene == null or not runner.current_scene.is_in_group(&"title_screen"):
+			if runner.change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK: return _fail("could not enter the title")
+		var title: Node = null
+		for i in 240:
+			await runner.physics_frame
+			used += 1
+			if runner.current_scene != null and runner.current_scene.is_in_group(&"title_screen"):
+				title = runner.current_scene
+				break
+		if title == null: return _fail("the title did not become current")
+		title.call("_join_via", str(args.get("host", "127.0.0.1")), int(args.get("port", 0)))
+		var started := false
+		while used < budget:
+			await runner.physics_frame
+			used += 1
+			var driver := game.get_node_or_null(^"JoinDriver")
+			if driver != null and bool(driver.call("is_running")): started = true
+			if (driver == null or not bool(driver.call("is_running"))) and session.call("is_active") == true \
+					and session.call("snapshot_ready") == true:
+				var joined := str(game.get("local").get("character_id"))
+				if joined != wanted: return _fail("title rejoin joined as '%s', expected '%s'" % [joined, wanted])
+				return _ok("title rejoin as %s after %d frames, %d attempt(s)" % [joined, used, attempts])
+			# Refused (e.g. character_in_use while the host still holds the
+			# dead link): the driver stops and the game returns to the title.
+			if started and (driver == null or not bool(driver.call("is_running"))) and session.call("is_active") != true \
+					and runner.current_scene != null and runner.current_scene.is_in_group(&"title_screen"):
+				break
+		for i in 600:
+			await runner.physics_frame
+			used += 1
+	return _fail("title rejoin did not complete in %d frames (%d attempts)" % [budget, attempts])
+
+
+## Diagnostic only: the owner-passive stream both sides hold for a character.
+static func _passive_state(runner: SceneTree, character_id: String) -> Dictionary:
+	var game := _game(runner)
+	var session: Node = game.get("session") if game != null else null
+	var service: Variant = session.get("_owner_passive") if session != null else null
+	if service == null: return _ok("no owner passive service", {})
+	var local: Dictionary = service.get("local")
+	var data := {"is_host": session.call("is_host"), "recording_active": service.call("recording_active"),
+		"local": {"error": local.get("error"), "admission_pending": local.get("admission_pending"),
+			"sequence": local.get("sequence"), "acked": local.get("acked"), "inputs": (local.get("inputs", []) as Array).size(),
+			"rebase": not (local.get("rebase", {}) as Dictionary).is_empty()},
+		"pending": (service.get("pending") as Dictionary).keys(), "committing": not (service.get("committing") as Dictionary).is_empty(),
+		"saving": service.get("saving"), "altar_original": not (session.get("_owner_passive_altar_original") as Dictionary).is_empty()}
+	var hosts: Dictionary = service.get("hosts")
+	if hosts.has(character_id):
+		var stream: Dictionary = hosts[character_id]
+		var checkpoint: Dictionary = stream.get("checkpoint", {})
+		data["host_stream"] = {"error": stream.get("error"), "checkpoint": checkpoint.get("source_kind", ""),
+			"checkpoint_keys": checkpoint.keys(), "cursor_sequence": (stream.get("cursor", {}) as Dictionary).get("sequence"),
+			"keys": stream.keys()}
+	return _ok("owner passive state", data)
