@@ -1,0 +1,27 @@
+CODE-BLIND CAMERA JUDGE — fight-camera size matrix (fresh sub-agent; pixels only; no source, git, config, docs or ralph/ read)
+Frames: the 36 PNGs in this directory, each viewed individually at full 1920x1080, plus palworld-01, palworld-03 and tetherbound-meadows-keyart references.
+Note from the judge: its image viewer hit request limits on many calls. Every frame eventually loaded and was judged. Its enlarged crops of the dithered regions never loaded, so those regions were judged at full-frame scale only.
+
+PER-PAIRING
+| Pairing | Verdict | Failing frames / defect |
+| 00 small/small (Mudsnout v Mudsnout) | PASS | none. Both boars are fully framed with a clear gap and feet visible. In 060/071 the trainer stands under the left HUD panel, but they are not a combatant. |
+| 01 small/normal (Mudsnout v Terrapup) | PASS | none. Gap of about 80-130 px. Mudsnout faces away in 036-071 (pose self-occlusion). |
+| 02 small/giant (Mudsnout v Veridian Stag) | PASS | none. The antlers stay inside the frame. Closest gap is about 15-80 px in 060/071: tight, no overlap. |
+| 03 normal/small (Terrapup v Mudsnout) | PASS | none. Gap of about 70-100 px. Terrapup faces away in 036-071 (self-occlusion). |
+| 04 normal/normal (Terrapup v Terrapup) | PASS | none. Gap of at least 90 px. The opponent is marked by a chevron, so the identical species does not confuse. |
+| 05 normal/giant (Terrapup v Stag) | PASS | none. Gap of about 90-130 px. A background boulder is tangent to Terrapup's head (behind it, not covering it). |
+| 06 giant/small (Stag v Mudsnout) | PASS | none. The stag faces away and is foreshortened (self-occlusion). The trainer stands beside the stag's legs without covering them. |
+| 07 giant/normal (Stag v Terrapup) | PASS | none. Gap of about 100-150 px. |
+| 08 giant/giant (Stag v Stag) | PASS | none. Gap of about 90-130 px between the antler masses. Each stag is about 300x350 px, so the frame is not over-wide. |
+
+DEFECTS / WEAKNESSES (none breaks the criterion)
+1. 03-060/071, around x390-500, y700-900, and small patches in 07-071/08-071: a stippled dithered patch that appears to be the faded trainer. It is not in front of a combatant, but it reads as a bug: a speckled smear. Fix: fade more smoothly or keep the trainer out of the near zone. (Addressed after this round: the fade decision now uses inset envelopes and the fade is 0.65; see r4.)
+2. 08-036: a background antlered bunny sits inside the opponent's antler cluster. The trainer touches the opponent's tail tip. Body and feet remain readable.
+3. 02/05-060/071: the small-to-giant gap is narrow but passes.
+4. The trainer sometimes stands under a HUD panel. The trainer is not a combatant.
+5. 02-012/05-012: wild creatures show through the semi-transparent opponent panel.
+6. The player's creature often faces away (self-occlusion, not a camera failure).
+
+OVERALL VERDICT FOR THE CRITERION: PASS. All 9 pairings pass in all 4 sampled frames.
+
+CRAFT NOTES (not part of the verdict): the high three-quarter angle makes giants loom less than the low Palworld camera does. The magenta telegraph does not fit the palette. Lighting is flat midday with hard shadows and the horizon is out of frame. Mudsnout's texture is noisy. Stag antlers read as clumpy. One boulder mesh repeats. The HUD is clean but generic.
