@@ -998,7 +998,8 @@ func _run_chapter_handoff() -> void:
 	# claim, and the spine before THAT belongs to the earned-segment tests.
 	for peer in 2:
 		await step(peer, "explore_at",
-			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2]), float(arena[1])],
+				"settle": 60})
 
 	# 1. The Warden, shared.
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
@@ -1261,7 +1262,8 @@ func _run_client_chapter_handoff() -> void:
 		return
 	for peer in 2:
 		await step(peer, "explore_at",
-			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2]), float(arena[1])],
+				"settle": 60})
 
 	# 1. The GUEST fights the Warden; the host does not join.
 	var began: Dictionary = await step(1, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
@@ -1458,7 +1460,8 @@ func _run_hall_approach() -> void:
 	for peer in 2:
 		# Disclosed: seated at the entrance, not walked from the Mill.
 		var seated: Dictionary = await step(peer, "explore_at",
-			{"at": [float(entrance[0]) + (2.0 if peer == 1 else -2.0), float(entrance[2])], "settle": 60})
+			{"at": [float(entrance[0]) + (2.0 if peer == 1 else -2.0), float(entrance[2]), float(entrance[1])],
+				"settle": 60})
 		check(str(seated.get("verdict", "")) == "PASS",
 			"peer %d stood at the Hall entrance (%s)" % [peer, str(seated.get("detail", ""))])
 

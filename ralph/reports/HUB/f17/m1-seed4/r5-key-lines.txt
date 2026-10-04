@@ -1,0 +1,3 @@
+[meadows_earned_team] {"beat":"wild_boundary_route","gate":"TrailGate","points":["(14.08042, 19.01243)","(13.79, 22.4)","(13.49958, 25.78757)"],"target":"Wild_mudsnout_1006_1"}
+[meadows_earned_team] FAIL: Native opening refused: actual production walk lost grounded floor
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":[],"counts_as_proof":false,"cumulative_elapsed_seconds":380.061,"dry_run":false,"elapsed_seconds":380.061,"failures":["Native opening refused: actual production walk lost grounded floor"],"local_chains":[],"reached":"village","requested_prefix_passed":false,"resume":{},"resumed_from":"","scratch":"user://four_biome_fresh_2500_10554"}

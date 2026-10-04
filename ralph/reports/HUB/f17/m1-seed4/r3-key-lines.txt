@@ -1,0 +1,3 @@
+[meadows_earned_team] {"beat":"wild_boundary_route","gate":"","points":["(34.29591, -22.98314)"],"target":"Wild_bramblebun_0_1"}
+[meadows_earned_team] FAIL: The actual village gate closed during the selected wild's approach
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":[],"counts_as_proof":false,"cumulative_elapsed_seconds":284.072,"dry_run":false,"elapsed_seconds":284.072,"failures":["The actual village gate closed during the selected wild's approach"],"local_chains":[],"reached":"village","requested_prefix_passed":false,"resume":{},"resumed_from":"","scratch":"user://four_biome_fresh_2490_9332"}

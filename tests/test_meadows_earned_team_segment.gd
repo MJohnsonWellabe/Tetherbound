@@ -376,3 +376,27 @@ func test_level_matched_never_empties_the_pool() -> void:
 	var levels: Array[int] = [5, 4]
 	assert_eq(SEGMENT.level_matched(levels, 2), [0, 1] as Array[int])
 	assert_eq(SEGMENT.level_matched([] as Array[int], 3).size(), 0)
+
+
+func test_logged_inside_wild_beyond_the_road_gate_notch_walks_round_inside_the_fence() -> void:
+	# CI render 37222128574: from the re-planned east street (after Bram) to a
+	# practice-meadow bramblebun, both inside, the chord crossed the outside
+	# notch at RoadGate twice and the planner refused the wild.
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(SEGMENT.BOUNDARY_CONFIG))
+	var polygon := PackedVector2Array()
+	for raw: Array in config.outline.points:
+		polygon.append(Vector2(float(raw[0]), float(raw[1])))
+	var start := Vector2(44.0, 9.52)
+	var target := Vector2(40.75, -42.27)
+	assert_true(Geometry2D.is_point_in_polygon(start, polygon) and Geometry2D.is_point_in_polygon(target, polygon))
+	assert_true(SEGMENT.crosses_boundary(start, target, polygon), "the direct chord crosses the fence")
+	var route := SEGMENT.boundary_approach(config, start, target, [])
+	assert_true(route.required)
+	assert_true(route.points.size() > 0, "an inside detour exists without any open gate")
+	var previous := start
+	for point: Vector2 in route.points + [target]:
+		assert_true(Geometry2D.is_point_in_polygon(point, polygon), "every waypoint is inside the fence")
+		assert_false(SEGMENT.crosses_boundary(previous, point, polygon), "no leg crosses the fence")
+		previous = point
+	var reverse := SEGMENT.boundary_approach(config, target, start, [])
+	assert_true(reverse.points.size() > 0, "the same detour exists back to the street")

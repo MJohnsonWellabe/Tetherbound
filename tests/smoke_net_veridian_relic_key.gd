@@ -2,6 +2,13 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
+## LEGACY PATH: asserts the shipped portal-off behaviour (world-scoped
+## `realm_key_cloudreach` and a world-scoped earned Heart from the Warden).
+## Superseded by RD-10/RD-20/RD-21 (the Warden now grants each participant their
+## own Tidewake key item and relic, F19#2) once F18 turns
+## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
+## point.
+##
 ## F05 (ACCEPTANCE §6.1; card M4 "relic/key are durable"), two real peers.
 ##
 ##   GODOT_BIN=$HOME/godot-bin/godot tools/net/run_net_smoke.sh veridian_relic_key
@@ -108,7 +115,8 @@ func _run() -> void:
 		return
 	for peer in 2:
 		await step(peer, "explore_at",
-			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2]), float(arena[1])],
+				"settle": 60})
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
 	check(str(began.get("verdict", "")) == "PASS", "host challenged the Warden (%s)" % str(began.get("detail", "")))
 	if str(began.get("verdict", "")) != "PASS":
