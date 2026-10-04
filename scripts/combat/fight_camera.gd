@@ -136,6 +136,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 	var distance_scale := clampf(float(config.get("separation_distance_scale",1.2)),1.01,2.0)
 	var best: Dictionary = {}
 	var nearest_safe: Dictionary = {}
+	var failed: Array[Dictionary] = []
 	var near_slack: float = clampf(float(config.get("safe_fit_distance_slack_m",0.75)),0.0,3.0)
 	# Reserve separation beyond the exact measured edge so the live tracker can
 	# ease toward its chosen angle without spending its dead zone in overlap.
@@ -191,6 +192,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 			if not constraint_info.is_empty():
 				candidate["world_room"] = constraint_info.get("world_room",null)
 				candidate["model_room"] = constraint_info.get("model_room",INF)
+			failed.append(candidate)
 			if best.is_empty() or (framed and not bool(best.framed)) \
 					or (framed == bool(best.framed) and (overlap < float(best.overlap)
 						or (overlap == float(best.overlap) and float(visibility.get("penalty",0.0))
@@ -204,6 +206,7 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 				break # First passing distance on this angle; no larger zoom needed.
 			if distance >= maximum: break
 	if not nearest_safe.is_empty(): return nearest_safe
+	best = nearest_fallback(best, failed, config)
 	# A coarse orbit can straddle a narrow clear interval: one neighbour is
 	# body-blocked and the other overlaps in projection. Refine only after the
 	# complete coarse search fails, keeping the same constrained lens query.
@@ -231,12 +234,33 @@ static func solve(ally: AABB, foe: AABB, yaw: float, pitch: float,
 		refined_config,apply_pitch_offset,ally_points,foe_points,constrain_pose,visibility_score)
 	if not refined_fit.is_empty() and (bool(refined_fit.get("pass",false)) \
 		or (bool(refined_fit.framed) and not bool(best.framed)) \
-		or (bool(refined_fit.framed)==bool(best.framed) and float(refined_fit.overlap)<float(best.overlap))):
+		or (bool(refined_fit.framed)==bool(best.framed) and float(refined_fit.overlap) \
+			<float(best.overlap)-maxf(0.0,float(config.get("fallback_overlap_tolerance",0.0))))):
 		refined_fit["orbit_refined"] = true
 		refined_fit["coarse_yaw_offset_deg"] = best.yaw_offset_deg
 		refined_fit["refinement_candidate_count"] = refined_offsets.size()
 		return refined_fit
 	return best
+
+
+## F21#4 strict judge (over-wide frames): at contact range no angle separates
+## the two boxes, and ranking failures by raw overlap pulled the lens to the
+## distance cap for a fraction of a percent. Among framed failures within
+## `fallback_overlap_tolerance` of the least overlap, the nearest lens wins.
+static func nearest_fallback(best: Dictionary, failed: Array[Dictionary], config: Dictionary) -> Dictionary:
+	var tolerance := float(config.get("fallback_overlap_tolerance", 0.0))
+	if best.is_empty() or not is_finite(tolerance) or tolerance <= 0.0: return best
+	var limit := float(best.overlap) + tolerance
+	var chosen := best
+	for candidate: Dictionary in failed:
+		if bool(candidate.framed) != bool(best.framed) or float(candidate.overlap) > limit: continue
+		# A HUD-covered view never replaces a clear one; cover alone does not rank.
+		var clear := bool((candidate.get("visibility", {}) as Dictionary).get("hud_clear", true))
+		var chosen_clear := bool((chosen.get("visibility", {}) as Dictionary).get("hud_clear", true))
+		if chosen_clear and not clear: continue
+		if (clear and not chosen_clear) or float(candidate.distance) < float(chosen.distance) - 0.01:
+			chosen = candidate
+	return chosen
 
 
 ## Project the convex oriented envelope, preserving actual perspective/depth.

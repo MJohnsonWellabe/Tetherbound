@@ -89,6 +89,8 @@
     "separation_distance_scale": 1.2,
     "separation_guard_m": 0.15,
     "safe_fit_distance_slack_m": 0.75,
+    "_comment_fallback_tolerance": "F21#4 strict judge (over-wide frames): when no constrained lens separates the two boxes (contact range), the nearest framed, HUD-clear lens within this much of the least overlap wins, instead of the distance cap for a fraction of a percent.",
+    "fallback_overlap_tolerance": 0.05,
     "_comment_orbit_refinement": "Only after every coarse constrained view fails, refine around its best angle. Same pitch, measured model guard and world sweeps; manual-look grace disables it. At most12 extra candidates and the existing distance cap remain enforced.",
     "orbit_refinement_step_deg": 2.5,
     "orbit_refinement_span_deg": 15.0,

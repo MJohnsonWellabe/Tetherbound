@@ -217,3 +217,18 @@ func test_foreground_cover_is_faded_not_escaped_and_restores_when_clear() -> voi
 	assert_eq(mesh.get_surface_override_material(0),original,"camera release restores every faded body")
 	model.free()
 	manager.free()
+
+
+## F21#4 strict judge: a contact-range failure must not drift to the distance
+## cap for a marginally smaller box overlap.
+func test_failed_fit_takes_the_nearest_lens_within_overlap_tolerance() -> void:
+	var near := {"framed":true,"overlap":0.03,"distance":12.0,"visibility":{"hud_clear":true}}
+	var far := {"framed":true,"overlap":0.016,"distance":39.5,"visibility":{"hud_clear":true}}
+	var hud_covered := {"framed":true,"overlap":0.02,"distance":9.0,"visibility":{"hud_clear":false}}
+	var unframed := {"framed":false,"overlap":0.0,"distance":6.0,"visibility":{"hud_clear":true}}
+	var failed: Array[Dictionary] = [far, near, hud_covered, unframed]
+	var chosen := FIT.nearest_fallback(far, failed, {"fallback_overlap_tolerance":0.05})
+	assert_eq(float(chosen.distance), 12.0, "nearest framed, HUD-clear lens within tolerance")
+	assert_eq(float(FIT.nearest_fallback(far, failed, {}).distance), 39.5, "tolerance 0 keeps the least-overlap rule")
+	var tight := FIT.nearest_fallback(far, failed, {"fallback_overlap_tolerance":0.01})
+	assert_eq(float(tight.distance), 39.5, "a materially larger overlap is never taken for distance")

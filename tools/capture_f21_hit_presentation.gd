@@ -18,6 +18,15 @@ extends SceneTree
 ## the crit shot breaks the foe's poise through `apply_poise_damage` instead
 ## of fighting for it. Every hit itself is an ordinary input press resolved by
 ## the shipping combat path. `receipts.json` records each receipt and frame.
+##
+## F21#5 matched A/B: `--sequence` saves seven frames per hit (contact -2 ..
+## +24 process frames) instead of two, and `--baseline` turns the F21 impact
+## layer off in memory before the world boots (weighted knockback, reaction
+## recoil, damage numbers, class flash/shake styling), keeping the legacy
+## hitstop and plain impact flash. Same build, seed, route and inputs, so the
+## only difference between the two runs is that layer. `frame_times` records
+## live drawn fight process-frame intervals (300, or 60 with `--fast`)
+## before the first shot.
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
@@ -34,11 +43,25 @@ var _log: Array[Dictionary] = []
 var _failures: Array[String] = []
 var _last_impact: Dictionary = {}
 var _missed := false
+var _baseline := false
+var _sequence := false
+var _frame_times: Array[float] = []
+var _timing := false
+var _last_tick := 0
+var _fast := false
 
 
 func _init() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
+		elif arg == "--baseline": _baseline = true
+		elif arg == "--sequence": _sequence = true
+		elif arg == "--fast": _fast = true
+	# In-container software GL: run with `--fixed-fps 60` so every frame is
+	# 1/60 s of game time, and `--fast` so frames outside a capture or timing
+	# window are simulated without being drawn.
+	if _fast: RenderingServer.render_loop_enabled = false
+	if _baseline: _disable_impact_layer()
 	if _out.is_empty(): _out = ProjectSettings.globalize_path("res://shots/_diag/f21")
 	_run()
 
@@ -82,6 +105,15 @@ func _run() -> void:
 		_finish()
 		return
 	_wild = _manager.get("_wild") as Node3D
+	# Frame time: live drawn fight frames before any PNG readback can stall one.
+	RenderingServer.render_loop_enabled = true
+	await process_frame
+	_timing = true
+	_last_tick = Time.get_ticks_usec()
+	process_frame.connect(_tick_timing)
+	for i in (60 if _fast else 300): await process_frame
+	_timing = false
+	if _fast: RenderingServer.render_loop_enabled = false
 
 	await _strike("quick", "combat_quick")
 	_prime_energy()
@@ -91,6 +123,30 @@ func _run() -> void:
 	await _strike("crit", "combat_quick")
 	await _incoming()
 	_finish()
+
+
+func _tick_timing() -> void:
+	if not _timing: return
+	var now := Time.get_ticks_usec()
+	_frame_times.append(float(now - _last_tick) / 1000.0)
+	_last_tick = now
+
+
+## The F21 layer off, in the cached config every reader shares. Hitstop keeps
+## its pre-F21 values (COMBAT-1: quick 30 ms, charged 70 ms, crit 120 ms).
+func _disable_impact_layer() -> void:
+	var feedback: Dictionary = MATH.config().get("impact", {}).get("feedback", {})
+	for spec: Dictionary in (feedback.get("weights", {}) as Dictionary).values():
+		for key: String in ["knockback_m", "recoil_m", "recoil_up_m", "recoil_degrees"]:
+			spec[key] = 0.0
+	(feedback.get("numbers", {}) as Dictionary)["enabled"] = false
+	for style: Dictionary in (feedback.get("flashes", {}) as Dictionary).values():
+		style.erase("colour")
+		for key: String in ["radius_scale", "strength_scale", "duration_scale"]:
+			style[key] = 1.0
+	var shake: Dictionary = feedback.get("shake_scale", {})
+	for key: String in shake: shake[key] = 1.0 if key == "heavy" else 0.0
+	feedback["rumble"] = {}
 
 
 func _leave_the_farmhouse() -> void:
@@ -157,16 +213,28 @@ func _incoming() -> void:
 func _capture_contact(label: String) -> void:
 	var row := {"shot": label, "contact_frame": int(_last_impact.frame),
 		"on_enemy": bool(_last_impact.on_enemy), "receipt": _plain(_last_impact.receipt)}
-	for i in 2: await process_frame
-	row["contact_png"] = await _save("%s-contact" % label)
-	for i in 12: await process_frame
-	row["rise_png"] = await _save("%s-rise" % label)
+	RenderingServer.render_loop_enabled = true
+	if _sequence:
+		# contact frame is already past; offsets are frames after it.
+		var shots: Array[String] = []
+		var at := 0
+		for offset: int in [0, 2, 4, 6, 10, 16, 24]:
+			for i in offset - at: await process_frame
+			at = offset
+			shots.append(await _save("%s-%02d" % [label, offset]))
+		row["sequence_png"] = shots
+	else:
+		for i in 2: await process_frame
+		row["contact_png"] = await _save("%s-contact" % label)
+		for i in 12: await process_frame
+		row["rise_png"] = await _save("%s-rise" % label)
 	var hud := _world.get_node_or_null(^"CombatHUD")
 	var texts: Array[String] = []
 	if hud != null:
 		for number: Label in hud.get("_damage_numbers"):
 			if is_instance_valid(number): texts.append("%s@%d" % [number.text, number.get_theme_font_size("font_size")])
 	row["live_numbers"] = texts
+	if _fast: RenderingServer.render_loop_enabled = false
 	_log.append(row)
 	print("[f21] %s %s" % [label, JSON.stringify(row)])
 
@@ -193,7 +261,18 @@ func _save(name: String) -> String:
 func _finish() -> void:
 	var file := FileAccess.open(_out.path_join("receipts.json"), FileAccess.WRITE)
 	if file != null:
+		var sorted := _frame_times.duplicate()
+		sorted.sort()
+		var summary := {}
+		if not sorted.is_empty():
+			var total := 0.0
+			for ms: float in sorted: total += ms
+			summary = {"frames": sorted.size(), "mean_ms": total / sorted.size(),
+				"p50_ms": sorted[sorted.size() / 2], "p95_ms": sorted[int(sorted.size() * 0.95)],
+				"p99_ms": sorted[int(sorted.size() * 0.99)], "max_ms": sorted[-1]}
 		file.store_string(JSON.stringify({"renderer": RenderingServer.get_current_rendering_method(),
+			"baseline": _baseline, "video_adapter": RenderingServer.get_video_adapter_name(),
+			"frame_time_summary": summary, "frame_times_ms": _frame_times,
 			"shots": _log, "failures": _failures}, "  "))
 	for failure in _failures: printerr("[f21] FAIL ", failure)
 	quit(1 if not _failures.is_empty() else 0)
