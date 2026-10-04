@@ -1,0 +1,31 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+F20 PASS fixture has a real saved stable character
+F20 PASS fixture current companion terrapup
+F20 PASS fixture current companion brooktail
+F20 PASS fixture current companion mosshell
+F20 PASS fixture current companion bramblebun
+F20 PASS fixture current companion trailpup
+F20 PASS post-finale fixture saves through production schema
+[water vegetation] 4145 instances in 549 model batches; layers={"groundcover":2801,"rocks":515,"shrubs":373,"trees":456} islands={"brine_steps":304,"deep_watch":228,"drowned_garden":405,"first_shore":432,"gull_rest":225,"lantern_cove":311,"reedhaven":477,"salt_crown":413,"shellwatch":435,"sluice_isle":356,"tidal_cradle":552,"veilfall":7}
+[water vegetation] sheltered grove counts={"brine_steps":{"accepted":4,"attempts":256,"requested":6,"shrubs":18,"trees":20},"deep_watch":{"accepted":5,"attempts":105,"requested":5,"shrubs":22,"trees":31},"drowned_garden":{"accepted":7,"attempts":30,"requested":7,"shrubs":31,"trees":45},"first_shore":{"accepted":11,"attempts":73,"requested":11,"shrubs":49,"trees":64},"gull_rest":{"accepted":6,"attempts":86,"requested":6,"shrubs":27,"trees":37},"lantern_cove":{"accepted":5,"attempts":212,"requested":5,"shrubs":23,"trees":35},"reedhaven":{"accepted":8,"attempts":141,"requested":8,"shrubs":35,"tre …[cut]
+[grass_field] grass ring: 32748 instances over 9 lattice layers (tuft_count asked for 30000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2024 instances over 1 lattice layers (count 280)
+[grass_field] cover tier strand_flowers 1868 instances over 1 lattice layers (count 100)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 32748 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+F20 PASS Tidewake chapter and actual Mara are ready
+F20 PASS actual restored-current dock afterword is selected
+F20 PASS actual restored-current dock afterword is selected
+F20 PASS actual restored-current dock afterword is selected
+F20 PASS actual restored-current dock afterword is selected
+F20 PASS actual restored-current dock afterword is selected
+F20 PASS natural dock afterword makes civilian departure ready
+F20 PASS dock action stays anchored while Mara turns to the approaching player
+F20 PASS ordinary capsule walk selects the adjacent dock provider
+F20 PASS dock closes Tidewake with its own saved character and world conclusion
+F20 PASS Tidewake conclusion offers no homecoming or credits
+F20 PASS no credits screen opened at the dock
+F20 PASS no credits screen opened at the dock
+F20 PASS Tidewake chapter conclusion persists through production save
+F20 TIDEWAKE: 21 checks, 0 failures; disclosed restored-current fixture then actual dock exchange

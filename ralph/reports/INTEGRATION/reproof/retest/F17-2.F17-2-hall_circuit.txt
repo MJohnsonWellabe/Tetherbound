@@ -1,0 +1,202 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1286 reorder[16 layers]=3506
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=5075 mark_harvestable=193 group_by_model=604 register_mesh_assets=65 build_batches_total=7275 (of which harvest_points[56283 nodes]=4793, initial_collision_stream[51210 solid]=245) update_mmis=1272
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 266/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66281
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66282
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66283
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66284
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66285
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66286
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+F17 shortcuts: authored post-opening flags/starter; one initial farmhouse floor placement; inherited parsed joypad/camera inputs; renderer=headless; no earned tutorial/device/visual claim
+F17 world: terrain64regions actualdoor=(8.3, 0.9, 14.0) Hall=(107.0, 0.85, 14.0) path=[(5.8, 14.0), (8.3, 14.0), (91.0, 14.0), (107.0, 14.0)]
+[village-walk] CAPTURE 001 label="actual farmhouse doorway" pos=(8.35,0.90,14.14) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 002 label="travel" pos=(12.57,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 003 label="travel" pos=(20.15,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 004 label="travel" pos=(27.74,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 005 label="travel" pos=(35.32,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 006 label="travel" pos=(42.90,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 007 label="travel" pos=(50.49,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 008 label="travel" pos=(58.07,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 009 label="travel" pos=(65.65,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 010 label="travel" pos=(73.24,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 011 label="travel" pos=(80.82,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 012 label="travel" pos=(88.40,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 013 label="Main Street end / Hall approach" pos=(91.07,0.90,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 014 label="travel" pos=(95.98,0.91,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 015 label="travel" pos=(103.57,0.91,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 016 label="inside Hall nave" pos=(106.57,0.91,14.17) heading_deg=90.0 image=headless
+[village-walk] CAPTURE 017 label="end" pos=(106.57,0.91,14.17) heading_deg=90.0 image=headless
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5668, 0.910754, 14.17091) Halllocal=(-0.170907, 0.060754, -0.433189) maximum_offroad=0.000
+F17 Hall circuit structure: one home, three live-capable, four sealed signed arches; eight signed installed pedestals. Node visibility is structural, not a screenshot judgment.
+[village-walk] CAPTURE 018 label="travel" pos=(100.13,0.91,14.23) heading_deg=268.7 image=headless
+[village-walk] CAPTURE 019 label="arch meadows" pos=(97.47,0.91,14.20) heading_deg=280.2 image=headless
+[village-walk] CAPTURE 020 label="end" pos=(97.47,0.91,14.20) heading_deg=280.2 image=headless
+F17 Hall circuit reached arch meadows: player=(97.4684, 0.910843, 14.20329) distance=0.511 floor=true
+[village-walk] CAPTURE 021 label="travel" pos=(103.83,0.91,14.18) heading_deg=89.0 image=headless
+[village-walk] CAPTURE 022 label="travel" pos=(101.65,0.91,15.71) heading_deg=248.7 image=headless
+[village-walk] CAPTURE 023 label="arch tidewake" pos=(98.47,0.91,16.94) heading_deg=248.7 image=headless
+[village-walk] CAPTURE 024 label="end" pos=(98.47,0.91,16.94) heading_deg=248.7 image=headless
+F17 Hall circuit reached arch tidewake: player=(98.46812, 0.910843, 16.94497) distance=0.493 floor=true
+[village-walk] CAPTURE 025 label="travel" pos=(104.50,0.91,14.74) heading_deg=74.5 image=headless
+[village-walk] CAPTURE 026 label="arch cloudreach" pos=(104.26,0.91,16.74) heading_deg=229.0 image=headless
+[village-walk] CAPTURE 027 label="end" pos=(104.26,0.91,16.74) heading_deg=229.0 image=headless
+F17 Hall circuit reached arch cloudreach: player=(104.2599, 0.91083, 16.73797) distance=0.446 floor=true
+[village-walk] NOTE sidestep 1 at (103.6,17.3)
+[village-walk] CAPTURE 028 label="travel" pos=(106.88,0.91,14.59) heading_deg=113.2 image=headless
+[village-walk] CAPTURE 029 label="arch stormwood" pos=(109.71,0.91,16.75) heading_deg=137.3 image=headless
+[village-walk] CAPTURE 030 label="end" pos=(109.71,0.91,16.75) heading_deg=137.3 image=headless
+F17 Hall circuit reached arch stormwood: player=(109.7068, 0.91083, 16.74671) distance=0.459 floor=true
+[village-walk] CAPTURE 031 label="travel" pos=(110.22,0.91,15.27) heading_deg=90.2 image=headless
+[village-walk] CAPTURE 032 label="arch biome5" pos=(115.60,0.91,16.98) heading_deg=109.4 image=headless
+[village-walk] CAPTURE 033 label="end" pos=(115.60,0.91,16.98) heading_deg=109.4 image=headless
+F17 Hall circuit reached arch biome5: player=(115.5999, 0.910843, 16.97973) distance=0.418 floor=true
+[village-walk] CAPTURE 034 label="travel" pos=(109.71,0.91,15.17) heading_deg=287.4 image=headless
+[village-walk] CAPTURE 035 label="travel" pos=(102.65,0.91,12.40) heading_deg=291.5 image=headless
+[village-walk] CAPTURE 036 label="arch biome6" pos=(98.53,0.91,10.81) heading_deg=283.5 image=headless
+[village-walk] CAPTURE 037 label="end" pos=(98.53,0.91,10.81) heading_deg=283.5 image=headless
+F17 Hall circuit reached arch biome6: player=(98.52894, 0.910843, 10.81379) distance=0.536 floor=true
+[village-walk] CAPTURE 038 label="travel" pos=(104.08,0.91,12.79) heading_deg=112.2 image=headless
+[village-walk] CAPTURE 039 label="arch biome7" pos=(104.27,0.91,11.23) heading_deg=314.6 image=headless
+[village-walk] CAPTURE 040 label="end" pos=(104.27,0.91,11.23) heading_deg=314.6 image=headless
+F17 Hall circuit reached arch biome7: player=(104.2723, 0.91083, 11.23145) distance=0.429 floor=true
+[village-walk] CAPTURE 041 label="travel" pos=(109.03,0.91,11.77) heading_deg=47.3 image=headless
+[village-walk] CAPTURE 042 label="arch biome8" pos=(109.64,0.91,11.21) heading_deg=47.3 image=headless
+[village-walk] CAPTURE 043 label="end" pos=(109.64,0.91,11.21) heading_deg=47.3 image=headless
+F17 Hall circuit reached arch biome8: player=(109.6386, 0.91083, 11.20662) distance=0.474 floor=true
+[village-walk] CAPTURE 044 label="travel" pos=(107.18,0.91,10.19) heading_deg=5.7 image=headless
+[village-walk] CAPTURE 045 label="shrine doorway before meadows" pos=(107.13,0.91,7.44) heading_deg=357.9 image=headless
+[village-walk] CAPTURE 046 label="end" pos=(107.13,0.91,7.44) heading_deg=357.9 image=headless
+F17 Hall circuit reached shrine doorway before meadows: player=(107.1303, 0.91083, 7.444805) distance=0.464 floor=true
+[village-walk] CAPTURE 047 label="travel" pos=(104.25,0.91,2.68) heading_deg=254.8 image=headless
+[village-walk] CAPTURE 048 label="pedestal meadows" pos=(102.96,0.91,3.03) heading_deg=254.8 image=headless
+[village-walk] CAPTURE 049 label="end" pos=(102.96,0.91,3.03) heading_deg=254.8 image=headless
+F17 Hall circuit reached pedestal meadows: player=(102.9588, 0.91083, 3.026053) distance=0.460 floor=true
+[village-walk] CAPTURE 050 label="travel" pos=(105.79,0.91,6.57) heading_deg=177.2 image=headless
+[village-walk] CAPTURE 051 label="travel" pos=(106.77,0.91,12.81) heading_deg=2.2 image=headless
+[village-walk] CAPTURE 052 label="shrine doorway before tidewake" pos=(106.98,0.91,7.48) heading_deg=2.2 image=headless
+[village-walk] CAPTURE 053 label="end" pos=(106.98,0.91,7.48) heading_deg=2.2 image=headless
+F17 Hall circuit reached shrine doorway before tidewake: player=(106.9765, 0.910842, 7.483339) distance=0.484 floor=true
+[village-walk] CAPTURE 054 label="pedestal tidewake" pos=(105.95,0.91,2.91) heading_deg=259.4 image=headless
+[village-walk] CAPTURE 055 label="end" pos=(105.95,0.91,2.91) heading_deg=259.4 image=headless
+F17 Hall circuit reached pedestal tidewake: player=(105.9521, 0.91083, 2.913322) distance=0.460 floor=true
+[village-walk] CAPTURE 056 label="travel" pos=(106.67,0.91,9.50) heading_deg=179.3 image=headless
+[village-walk] CAPTURE 057 label="travel" pos=(106.95,0.91,9.46) heading_deg=357.5 image=headless
+[village-walk] CAPTURE 058 label="shrine doorway before cloudreach" pos=(106.87,0.91,7.46) heading_deg=357.5 image=headless
+[village-walk] CAPTURE 059 label="end" pos=(106.87,0.91,7.46) heading_deg=357.5 image=headless
+F17 Hall circuit reached shrine doorway before cloudreach: player=(106.8671, 0.91083, 7.457685) distance=0.477 floor=true
+[village-walk] CAPTURE 060 label="pedestal cloudreach" pos=(108.01,0.91,2.96) heading_deg=96.9 image=headless
+[village-walk] CAPTURE 061 label="end" pos=(108.01,0.91,2.96) heading_deg=96.9 image=headless
+F17 Hall circuit reached pedestal cloudreach: player=(108.0087, 0.910779, 2.958339) distance=0.493 floor=true
+[village-walk] CAPTURE 062 label="travel" pos=(107.65,0.91,9.58) heading_deg=184.7 image=headless
+[village-walk] CAPTURE 063 label="travel" pos=(106.85,0.91,9.36) heading_deg=356.8 image=headless
+[village-walk] CAPTURE 064 label="shrine doorway before stormwood" pos=(106.82,0.91,7.45) heading_deg=7.3 image=headless
+[village-walk] CAPTURE 065 label="end" pos=(106.82,0.91,7.45) heading_deg=7.3 image=headless
+F17 Hall circuit reached shrine doorway before stormwood: player=(106.8176, 0.91083, 7.445608) distance=0.481 floor=true
+[village-walk] CAPTURE 066 label="travel" pos=(109.19,0.91,2.90) heading_deg=99.2 image=headless
+[village-walk] CAPTURE 067 label="pedestal stormwood" pos=(111.02,0.91,2.96) heading_deg=91.5 image=headless
+[village-walk] CAPTURE 068 label="end" pos=(111.02,0.91,2.96) heading_deg=91.5 image=headless
+F17 Hall circuit reached pedestal stormwood: player=(111.0203, 0.910842, 2.955288) distance=0.482 floor=true
+[village-walk] CAPTURE 069 label="travel" pos=(108.65,0.91,6.58) heading_deg=173.5 image=headless
+[village-walk] CAPTURE 070 label="travel" pos=(107.06,0.91,12.71) heading_deg=350.6 image=headless
+[village-walk] CAPTURE 071 label="shrine doorway before biome5" pos=(107.18,0.91,7.47) heading_deg=350.5 image=headless
+[village-walk] CAPTURE 072 label="end" pos=(107.18,0.91,7.47) heading_deg=350.5 image=headless
+F17 Hall circuit reached shrine doorway before biome5: player=(107.1829, 0.91083, 7.470908) distance=0.505 floor=true
+[village-walk] CAPTURE 073 label="travel" pos=(104.39,0.91,1.66) heading_deg=287.3 image=headless
+[village-walk] CAPTURE 074 label="pedestal biome5" pos=(102.96,0.91,1.21) heading_deg=287.3 image=headless
+[village-walk] CAPTURE 075 label="end" pos=(102.96,0.91,1.21) heading_deg=287.3 image=headless
+F17 Hall circuit reached pedestal biome5: player=(102.9558, 0.91083, 1.214671) distance=0.504 floor=true
+[village-walk] CAPTURE 076 label="travel" pos=(104.92,0.91,6.37) heading_deg=157.4 image=headless
+[village-walk] CAPTURE 077 label="travel" pos=(106.77,0.91,13.02) heading_deg=47.6 image=headless
+[village-walk] CAPTURE 078 label="shrine doorway before biome6" pos=(107.09,0.91,7.43) heading_deg=5.6 image=headless
+[village-walk] CAPTURE 079 label="end" pos=(107.09,0.91,7.43) heading_deg=5.6 image=headless
+F17 Hall circuit reached shrine doorway before biome6: player=(107.0889, 0.91083, 7.434712) distance=0.444 floor=true
+[village-walk] CAPTURE 080 label="pedestal biome6" pos=(105.70,0.91,1.45) heading_deg=314.5 image=headless
+[village-walk] CAPTURE 081 label="end" pos=(105.70,0.91,1.45) heading_deg=314.5 image=headless
+F17 Hall circuit reached pedestal biome6: player=(105.703, 0.91083, 1.453733) distance=0.497 floor=true
+[village-walk] CAPTURE 082 label="travel" pos=(106.30,0.91,6.10) heading_deg=181.7 image=headless
+[village-walk] CAPTURE 083 label="travel" pos=(106.86,0.91,13.13) heading_deg=4.6 image=headless
+[village-walk] NOTE sidestep 1 at (106.9,11.8)
+[village-walk] CAPTURE 084 label="shrine doorway before biome7" pos=(107.37,0.91,7.49) heading_deg=305.0 image=headless
+[village-walk] CAPTURE 085 label="end" pos=(107.37,0.91,7.49) heading_deg=305.0 image=headless
+F17 Hall circuit reached shrine doorway before biome7: player=(107.3664, 0.91083, 7.488595) distance=0.611 floor=true
+[village-walk] CAPTURE 086 label="pedestal biome7" pos=(108.25,0.91,1.48) heading_deg=43.0 image=headless
+[village-walk] CAPTURE 087 label="end" pos=(108.25,0.91,1.48) heading_deg=43.0 image=headless
+F17 Hall circuit reached pedestal biome7: player=(108.2535, 0.910843, 1.481503) distance=0.541 floor=true
+[village-walk] CAPTURE 088 label="travel" pos=(107.28,0.91,6.24) heading_deg=167.4 image=headless
+[village-walk] CAPTURE 089 label="travel" pos=(107.01,0.91,13.21) heading_deg=334.4 image=headless
+[village-walk] CAPTURE 090 label="shrine doorway before biome8" pos=(107.18,0.91,7.43) heading_deg=4.8 image=headless
+[village-walk] CAPTURE 091 label="end" pos=(107.18,0.91,7.43) heading_deg=4.8 image=headless
+F17 Hall circuit reached shrine doorway before biome8: player=(107.1816, 0.91083, 7.434819) distance=0.471 floor=true
+[village-walk] CAPTURE 092 label="travel" pos=(108.74,0.91,1.91) heading_deg=60.6 image=headless
+[village-walk] CAPTURE 093 label="pedestal biome8" pos=(111.07,0.91,1.07) heading_deg=78.1 image=headless
+[village-walk] CAPTURE 094 label="end" pos=(111.07,0.91,1.07) heading_deg=78.1 image=headless
+F17 Hall circuit reached pedestal biome8: player=(111.0705, 0.91083, 1.073324) distance=0.436 floor=true
+F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup, visual/device/progression/co-op claim.
