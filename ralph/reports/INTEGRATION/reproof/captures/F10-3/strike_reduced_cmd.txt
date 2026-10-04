@@ -1,0 +1,1 @@
+CMD: xvfb-run -a -s "-screen 0 1280x720x24" godot --path .  --rendering-driver opengl3 --audio-driver Dummy --resolution 1280x720 --script tools/vis_capture_strike_motion.gd -- --motion=reduced --hours=12 --out=/tmp/claude-0/cap/F10-3sr/frames --label=seqR --only=quick
