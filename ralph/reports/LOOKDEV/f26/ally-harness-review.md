@@ -108,3 +108,21 @@ Author's focused Windows PowerShell 5.1 checks: 28 receipt cases and five
 actual package hash cases passed; [CPU receipt](uncapped-harness-preflight.json).
 These checks do not prove fresh exported or native execution. Those remain
 required before owner delivery; the owner Ally result remains separate.
+
+## Windows child-process exit status
+
+The first far-floor packaged Meadows route completed, but its launcher rejected
+a null child exit status. That attempt remains INCOMPLETE and is preserved.
+A real exported GUI headless-refusal probe reproduced the PowerShell 5.1 issue:
+without caching the process handle, ExitCode was null; retaining Handle before
+WaitForExit returned the expected refusal code 2, also after Refresh.
+[Probe receipt and raw bundle](native-exit-preflight.json).
+
+The corrected launcher caches Handle before waiting, explicitly refuses null
+or nonzero exits, and records/hashes each exit JSON. PowerShell 5.1 parser:
+zero errors. Independent read-only review by `/root/f26_lookbar_review`: **PASS**.
+The reviewer also approved reusing unchanged a799297b2 EXE/PCK/DLL bytes in a
+fresh assembled package: runtime source_commit and launcher_source_commit must
+remain distinct, runtime hashes must match, and manifest/ZIP must be regenerated.
+Actual assembly verification and all four corrected native routes are still
+required. This external-launcher fix establishes no Ally result.

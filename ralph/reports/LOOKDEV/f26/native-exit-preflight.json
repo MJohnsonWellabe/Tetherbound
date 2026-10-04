@@ -1,0 +1,93 @@
+{
+  "scope": "Actual exported Windows GUI process headless refusal only; no GPU timing or Ally acceptance.",
+  "runtime_source_commit": "a799297b21001c84bef6f941230b24297dace6bc",
+  "probe_results": [
+    {
+      "before_refresh": null,
+      "after_refresh": null,
+      "pid": 19656,
+      "case": "original-handle",
+      "cached_handle": false,
+      "expected": 2
+    },
+    {
+      "before_refresh": 2,
+      "after_refresh": 2,
+      "pid": 14552,
+      "case": "cached-handle",
+      "cached_handle": true,
+      "expected": 2
+    }
+  ],
+  "raw_bundle": "native-exit-probe.zip",
+  "raw_bundle_sha256": "b4cb278eb0680eb5868aad8e1320107356d3bf46ae49a42bfd9f4d9ff9dab32b",
+  "release_export": [
+    {
+      "name": "export-release",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--export-release",
+        "Windows Desktop",
+        "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\package\\Tetherbound.exe"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 630.561999999918,
+      "log": "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\export-release.log",
+      "log_sha256": "0744f09a405a0c8de9f0e6e56eb23b23431ce7aef031fe4ce579091ff0d045b5",
+      "pass": true
+    },
+    {
+      "name": "exported-route-refusal",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\package\\Tetherbound.exe",
+        "--headless",
+        "--",
+        "--f26-route",
+        "--biome=meadows",
+        "--preset=Medium",
+        "--source-commit=a799297b21001c84bef6f941230b24297dace6bc",
+        "--output=D:/tetherbound/.artifacts/f26-ally-a799297b2-20261004T225752Z/refused-headless-route"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 3.8280000000959262,
+      "log": "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\exported-route-refusal.log",
+      "log_sha256": "ad1ddc995414448704df1830a57e36276953c67f51d83800e2348cfa04afa20c",
+      "pass": true
+    },
+    {
+      "name": "package-integrity",
+      "command": [
+        "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\package\\f26_ally.ps1",
+        "-PackageRoot",
+        "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\package",
+        "-VerifyOnly"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 6.468999999924563,
+      "log": "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\package-integrity.log",
+      "log_sha256": "c06c303c7f097b199229bddbe1dbf4dd9da4318e0394210baa42d26837c5345c",
+      "pass": true
+    }
+  ],
+  "old_native_attempt": "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\desktop-preflight-20261004T231048Z.receipt.json",
+  "old_native_attempt_status": "Preserved INCOMPLETE: Meadows receipt complete, launcher null exit status refused; not counted as preflight pass.",
+  "launcher_fix": "Cache Process.Handle before WaitForExit; refuse null/nonzero status; record exit.json."
+}

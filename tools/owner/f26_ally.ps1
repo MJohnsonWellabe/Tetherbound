@@ -150,20 +150,27 @@ try {
     # The owner watches this interactive measurement window; engine logs are
     # explicit and do not depend on the Windows console subsystem.
     $process = Start-Process -FilePath (Join-Path $PackageRoot "Tetherbound.exe") -ArgumentList $argumentText -WorkingDirectory $PackageRoot -WindowStyle Normal -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+    # Retain the OS process handle before waiting. Windows PowerShell 5.1 can
+    # otherwise return a null ExitCode after a redirected GUI process exits.
+    $nativeProcessHandle = $process.Handle
     if (-not $process.WaitForExit(1800000)) {
       # End only this owned wrapper's process tree. Preserve the partial evidence.
       & taskkill.exe /PID $process.Id /T /F | Out-Null
       throw "$biome exceeded its 30-minute startup/route deadline."
     }
     $process.Refresh()
+    $nativeExitCode = $process.ExitCode
+    $exitPath = Join-Path $Output ($biome + ".exit.json")
+    Write-Json @{ pid = $process.Id; exit_code = $nativeExitCode } $exitPath
     $nativeLog = (Get-Content -LiteralPath $stdout -Raw) + (Get-Content -LiteralPath $stderr -Raw) + (Get-Content -LiteralPath $engineLog -Raw)
-    if ($process.ExitCode -ne 0 -or $nativeLog -match 'SCRIPT ERROR:|ERROR:') {
+    if ($null -eq $nativeExitCode -or $nativeExitCode -ne 0 -or $nativeLog -match 'SCRIPT ERROR:|ERROR:') {
       throw "$biome native process failed; inspect its retained logs."
     }
     $receipt = Get-Content -LiteralPath (Join-Path $casePath "route.json") -Raw | ConvertFrom-Json
     $result = Read-RouteResult $receipt $manifest $biome
+    $result.native_exit_code = $nativeExitCode
     $result.raw_files = @()
-    foreach ($rawPath in @($stdout, $stderr, $engineLog, (Join-Path $casePath "route.json"), (Join-Path $casePath "start.png"), (Join-Path $casePath "end.png"))) {
+    foreach ($rawPath in @($stdout, $stderr, $engineLog, $exitPath, (Join-Path $casePath "route.json"), (Join-Path $casePath "start.png"), (Join-Path $casePath "end.png"))) {
       if (-not (Test-Path -LiteralPath $rawPath -PathType Leaf)) { throw "Missing raw evidence: $rawPath" }
       $result.raw_files += @{ path = $rawPath.Substring($Output.Length + 1).Replace([char]92,[char]47); sha256 = (Get-FileHash -LiteralPath $rawPath -Algorithm SHA256).Hash.ToLowerInvariant() }
     }
