@@ -15,6 +15,11 @@ const MAX_EDGE := 180.0
 const FRAME_QUERY_US := 10000 # Cooperative; cannot interrupt a slow native call.
 const CONTACTS := 8
 const THRESHOLD_RADIUS := 0.25
+## An intermediate heading the trainer came within this distance of (the same cap
+## as set_approach_radius) and then failed to close on for CIRCLE_FRAMES driven
+## frames (the same length as the unchanged 90-frame stall cap) is released.
+const CIRCLE_RADIUS := 1.65
+const CIRCLE_FRAMES := 90
 const CONTACT_EPS := 0.00001 # Numerical comparison only, never a smaller shape.
 
 class NativeTick extends Node:
@@ -81,6 +86,9 @@ var _house_pose := Transform3D.IDENTITY
 var _completed_house: Node3D
 var _progress_at := Vector3.ZERO
 var _stalled := 0
+var _circle_at := Vector2.INF
+var _circle_best := INF
+var _circle_frames := 0
 var _checked_start := false
 
 
@@ -202,9 +210,35 @@ func reset() -> void:
 	_avoid_tangent = Vector3.ZERO
 	_avoid_retry = 0
 	_checked_start = false
+	_circle_at = Vector2.INF
 	if is_instance_valid(_player):
 		_progress_at = _player.global_position
 	_drive.call(0.0, 0.0)
+
+
+## A peaceful wild stops and watches while the trainer is within notice range
+## (wild_creature.gd::_tick_peaceful). One standing on an intermediate road
+## heading puts that heading inside its body; tangent avoidance then circles it,
+## and circling reads as displacement progress, so stall/retry never fires (CI
+## gate-b-core: 7 failing attempts in 6 runs, the trainer circling (21,-37.5) or
+## (30,-40) beside Wild_bramblebun_0 / Wild_mudsnout_1070 until its budget or the
+## lifetime request cap ran out). Release a heading the trainer came within
+## CIRCLE_RADIUS of and then failed to close on. Final targets are never released.
+func heading_circled(at: Vector2) -> bool:
+	if not is_instance_valid(_player):
+		return false
+	var gap := _xz(_player.global_position).distance_to(at)
+	if at != _circle_at:
+		_circle_at = at
+		_circle_best = gap
+		_circle_frames = 0
+		return false
+	if gap < _circle_best - PROGRESS:
+		_circle_best = gap
+		_circle_frames = 0
+		return false
+	_circle_frames += 1
+	return _circle_best <= CIRCLE_RADIUS and _circle_frames >= CIRCLE_FRAMES
 
 
 func set_approach_radius(value: float) -> void:
@@ -796,6 +830,8 @@ func _native_tick_impl(_delta: float) -> void:
 			_route[_route.size() - 1] = point # Live target, still checked locally.
 		if not _route.is_empty() and _xz(_player.global_position).distance_to(_route[0]) <= THRESHOLD_RADIUS:
 			_route.pop_front()
+		elif _production_steering and _departure.is_empty() and _route.size() > 1 and heading_circled(_route[0]):
+			_route.pop_front() # Intermediate road heading only; the live target stays last.
 		if _production_steering and _departure.is_empty() and _stalled >= _retry_at:
 			_observed_choice += 1
 			_retry_at += STALL_FRAMES # Does not reset the unchanged 90-frame stall cap.

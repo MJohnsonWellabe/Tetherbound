@@ -1073,7 +1073,7 @@ func _one_approach(target: Node3D, budget: int, headings: Array[Vector2] = []) -
 		# authored bend is reached by observed real motion before the next one.
 		if heading_index < headings.size() and not _nav.departure_pending(target.global_position):
 			var at := Vector2(_player.global_position.x, _player.global_position.z)
-			if at.distance_to(headings[heading_index]) <= 0.8:
+			if at.distance_to(headings[heading_index]) <= 0.8 or _nav.heading_circled(headings[heading_index]):
 				heading_index += 1
 				_nav.reset()
 				_nav.set_approach_radius(1.65 if heading_index == headings.size() else 0.8)
