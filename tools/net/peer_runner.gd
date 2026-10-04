@@ -3650,10 +3650,15 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "no live Player to stand anywhere"}
 	var at: Array = args.get("at", []) as Array
 	if at.size() < 2:
-		return {"verdict": "ERROR", "detail": "explore_at needs at:[x,z]"}
+		return {"verdict": "ERROR", "detail": "explore_at needs at:[x,z] or at:[x,z,floor_y]"}
 	var world: Node = _probe.call("world") as Node
 	var y := player.global_position.y
-	if world != null and world.has_method("ground_height_at"):
+	if at.size() >= 3:
+		# An authored floor above the terrain (the Hall's rooms stand on a
+		# slab ~6 m over the ground). Terrain height there is inside the slab,
+		# and depenetration may then settle the body under the floor.
+		y = float(at[2]) + 1.0
+	elif world != null and world.has_method("ground_height_at"):
 		y = float(world.call("ground_height_at", float(at[0]), float(at[1]))) + 1.0
 	player.global_position = Vector3(float(at[0]), y, float(at[1]))
 	if player is CharacterBody3D:
