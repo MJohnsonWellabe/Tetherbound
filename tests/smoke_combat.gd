@@ -515,10 +515,24 @@ func _a_swing_at_the_enemy_connects() -> void:
 	# is correct combat and was this step's intermittent failure (main CI
 	# 430fddaa, and once locally: the enemy's hit landed on the same beat and
 	# the quick dealt nothing). Wait out the wind-up, as a player would.
+	# A creature still staggered by that blow cannot swing either (CI
+	# 37179276640: the enemy landed first and both attempts read
+	# 106.2 -> 106.2), and the blow can knock it back out of reach, so close
+	# in again once it has recovered.
 	for i in 150:
-		if not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("quick_ready")):
+		if not bool(_manager.call("enemy_is_winding_up")) and bool(_manager.call("quick_ready")) \
+				and not bool(_manager.call("player_is_staggered")):
 			break
 		await physics_frame
+	for i in 120:
+		var gap := _wild.global_position - _ally.global_position
+		gap.y = 0.0
+		if gap.length() <= reach * 0.55:
+			break
+		_aim_camera_along(gap)
+		Input.action_press("move_forward")
+		await physics_frame
+	Input.action_release("move_forward")
 
 	var hp_before: float = foe.hp
 	var energy_before: float = creature.energy
