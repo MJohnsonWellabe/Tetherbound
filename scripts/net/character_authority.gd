@@ -344,7 +344,13 @@ func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
 	# projection is not an equip CAS and cannot refresh a command profile on a
 	# later hit. Future host-authorized gear changes need their typed doorway.
 	candidate["equipment"] = current.equipment.duplicate(true)
-	candidate["realm_hearts"] = current.realm_hearts.duplicate(true)
+	# The Heart selection is this host's own pressed choice, already validated
+	# below by heart_selection_errors. Keeping the admission value instead left
+	# every later reward staged against a stale selection, so the owner apply
+	# never matched and the host could not save again (smoke_net_veridian_relic_key:
+	# realm_hearts/active_id 'meadows' live vs '' staged). Combat power still
+	# reads actor_stat_state(), which exposes no selection.
+	candidate["realm_hearts"] = raw.get("realm_hearts", current.realm_hearts).duplicate(true)
 	# A failed owner settlement still leaves the durable world debit committed.
 	# Preserve its host entitlement while the actual local key remains pending
 	# for atomic personal retry, rather than minting a second host-owned key.
