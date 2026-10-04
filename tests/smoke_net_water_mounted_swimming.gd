@@ -76,8 +76,15 @@ func _run() -> void:
 	if not _pass(await step(1,"water_mount_fixture",{"exhausted":true}),"SETUP exhausted owned swim resource"):
 		quit(await finish())
 		return
-	await step(0,"wait",{"frames":60})
-	var drowning: Dictionary=await probe(0,"water_mounted")
+	# The owner's exhausted state reaches the host on its next aquatic packet;
+	# wait (bounded) for that arrival rather than one fixed-delay read
+	# (main CI 37200178770 shard 1 read the host before it landed).
+	var drowning: Dictionary={}
+	for _poll in 8:
+		await step(0,"wait",{"frames":30})
+		drowning=await probe(0,"water_mounted")
+		if bool(drowning.remote_mounts.get(owner,{}).get("applied_aquatic",{}).get("drowning",false)):
+			break
 	check(bool(drowning.remote_mounts.get(owner,{}).get("applied_aquatic",{}).get("drowning",false)),"host observes mount drowning")
 	if not _pass(await step(1,"ride_dismount",{"settle":8}),"production deepwater dismount"):
 		quit(await finish())
