@@ -418,7 +418,7 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 			else:
 				_nav.step(Vector3(at.x, _player.global_position.y, at.y))
 		elif waypoint < points.size():
-			if not _open_boundary_gate(str(boundary.gate)):
+			if not str(boundary.gate).is_empty() and not _open_boundary_gate(str(boundary.gate)):
 				_stick(0, 0)
 				return _fail("The actual village gate closed during the selected wild's approach")
 			var at: Vector2 = points[waypoint]
