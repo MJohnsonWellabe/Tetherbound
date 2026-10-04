@@ -1,0 +1,1 @@
+source 61a6b5e4c92457e836e60f342a31af9187998329 (camera code identical to 3cf26456; later commits docs/evidence only)
