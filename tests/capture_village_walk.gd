@@ -992,6 +992,9 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 	var until_road := leg.size() - 1 if road.size() > 0 else -1
 	var stop := at
 	var through := _indoor_approach(t)
+	if INDOOR_HOUSES.has(str(t.label)) and through.is_empty():
+		_failed = "visiting %s: no actual %s house Door to approach through" % [t.label, INDOOR_HOUSES[str(t.label)]]
+		return
 	if not through.is_empty():
 		for i in through.size() - 1:
 			leg.append(through[i])

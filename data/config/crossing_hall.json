@@ -206,7 +206,7 @@
     0.15,
     -15
   ],
-  "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools without covering any arch. Lanterns show an emissive flame so the light has a visible source.",
+  "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
   "interior_lights": [
     {"at": [-6.4, 3.4, -6], "yaw_deg": 90},
     {"at": [6.4, 3.4, -6], "yaw_deg": -90},
