@@ -30,6 +30,7 @@ var pending: Dictionary = {}
 var committing: Dictionary = {}
 var saving := false
 var _left := 0.0
+var _reported_error := ""
 
 class NavigationFlags extends RefCounted:
 	var flags: Dictionary = {}
@@ -960,6 +961,10 @@ func tick(delta: float) -> void:
 	if _left > 0.0: return
 	_left = 0.25
 	if owner() == null or owner().call("is_host") == true: return
+	if not local.is_empty() and str(local.get("error", "")) != _reported_error:
+		_reported_error = str(local.get("error", ""))
+		if not _reported_error.is_empty():
+			push_warning("owner passive stream stopped on this owner: " + _reported_error)
 	if pending.is_empty(): _flush()
 	else: _retry_owner()
 

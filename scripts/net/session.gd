@@ -927,6 +927,7 @@ func _retry_foundation_events() -> void:
 			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
 				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
 				if ready.get("ok") != true:
+					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
 					handled[duty.character_id] = true
 					continue
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
@@ -943,7 +944,21 @@ func _retry_foundation_events() -> void:
 		if duty.action == "research_event" and result.get("code") == "combat_still_active":
 			combat_held[duty.character_id] = true
 			continue
-		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
+		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
+			_note_duty_hold(duty, str(result.get("code", "unresolved")))
+			handled[duty.character_id] = true
+
+## Logged once per character/action/code: a held duty retries every frame,
+## and a fight's next round can wait on it without any other trace.
+var _duty_holds: Dictionary = {}
+
+
+func _note_duty_hold(duty: Dictionary, code: String) -> void:
+	var key := "%s %s" % [str(duty.character_id), str(duty.action)]
+	if _duty_holds.get(key) == code:
+		return
+	_duty_holds[key] = code
+	print("[session] %s duty for %s held: %s" % [str(duty.action), str(duty.character_id), code])
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)

@@ -1231,7 +1231,9 @@ func _process_creature_training(row: Dictionary) -> void:
 		return
 	# Bootstrap installs the real world before this arm. It intentionally does
 	# not require handshake_snapshot_applied, which waits on this owner save.
-	if session.call("_altar_current_epoch") == "": return
+	if session.call("_altar_current_epoch") == "":
+		_note_training_stall("no session epoch yet for the owner apply")
+		return
 	var outcome: Dictionary
 	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
 	elif preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
