@@ -242,11 +242,16 @@ func _stage_fresh_through_hall(game: Node) -> bool:
 	var village := VILLAGE.new()
 	# Carried care, bought with Mira's earned opening
 	# float through her first actual shop. No restock flag or direct trade call.
-	if not OS.get_cmdline_user_args().has("--legacy-order-diagnostic"):
-		# Actual fresh r6 exhausted seven total potions before its last training
-		# fight. Spend the remaining authored28coin on one more at this same
-		# ordinary first visit; no grants or combat/readiness budget changes.
-		village.care_basket_purchases = 5
+	# Actual fresh r6 exhausted seven total potions before its last training
+	# fight. Spend the remaining authored28coin on one more at this same
+	# ordinary first visit; no grants or combat/readiness budget changes.
+	# The legacy-order diagnostic buys the same basket: Mira's shop is open
+	# only on this first visit (village_npcs.json routes every later greeting
+	# to her challenge while she is unbeaten), and practice wilds pay no coin,
+	# so a player who skips it reaches training with 140 unspent coin and no
+	# way to restock (re-proof 2026-10-04: F02#0/#6 lost practice fights at
+	# 1-25% HP after three potions ran out).
+	village.care_basket_purchases = 5
 	var village_failures: Array[String] = await village.run(self,
 		live["world"], live["game"], live["player"], live["rig"])
 	failures.append_array(village_failures)
