@@ -9,7 +9,7 @@
   "_arrival_arch_camera_stops_note": "Measured from WallEntranceBricks.obj scaled to arrival_arch_size_m: the aperture spans the middle half of the width and tops out at 64% of the height. Piers and lintel get occlusion-only camera stops (camera_rig OCCLUSION_ONLY_LAYER); traversal collision is unchanged.",
   "compass_outer_radii_m": [6.35, 6.55],
   "compass_inner_radii_m": [2.0, 2.35],
-  "banner_blue": "#315f9a",
+  "banner_blue": "#2f527d",
   "banner_gold": "#d6ad52",
   "signal_colour": "#f1aa63",
   "signal_light_energy": 2.25,

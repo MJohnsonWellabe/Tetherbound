@@ -33,10 +33,6 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	global_position = Vector3(float(raw[0]), y, float(raw[2]))
 	_build_arena()
 	if str(_definition.access) == "fly_only": _build_fly_supports()
-	# Presentation only: a realm may re-skin the generic pad in its own families
-	# (Cloudreach seats a fly-only pad on a rooted rock islet). Collision,
-	# position and every interaction below are unchanged.
-	if world.has_method("dress_master_site"): world.call("dress_master_site", self, _definition)
 	var npc := NPC.new()
 	npc.name = "Master"
 	add_child(npc)
@@ -51,6 +47,7 @@ func mount(world: Node3D, player: Node3D) -> bool:
 		_definition.species_id.capitalize(), "/".join(_definition.creature_types), _definition.profile, _definition.combat.question]
 	reveal.font_size = 44
 	reveal.position = Vector3(0, 3, -4)
+	reveal.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	add_child(reveal)
 	var chest := Node3D.new()
 	chest.name = "RecipeChest"
@@ -68,6 +65,10 @@ func mount(world: Node3D, player: Node3D) -> bool:
 		var radius := float(_definition.arena_radius_m)
 		world.call("register_runtime_surface", {"kind": "ellipse", "centre": Vector2(global_position.x, global_position.z),
 			"half": Vector2(radius, radius), "height": global_position.y + 0.2})
+	# Presentation only: a realm may re-skin the generic pad and signpost in
+	# its own families (Cloudreach seats a fly-only pad on a rooted rock islet).
+	# Collision and every interaction above are unchanged.
+	if world.has_method("dress_master_site"): world.call("dress_master_site", self, _definition)
 	_mounted = true
 	return true
 
@@ -116,6 +117,7 @@ func _build_sign(world: Node3D) -> void:
 	words.text = str(_definition.sign_text) + "\nFollow the side path →"
 	words.font_size = 48
 	words.position.y = 2.5
+	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	sign.add_child(words)
 	var lead := NPC.new()
 	lead.name = "MasterLead"

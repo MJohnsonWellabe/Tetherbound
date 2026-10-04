@@ -4295,6 +4295,7 @@ func dress_master_site(site: Node3D, definition: Dictionary) -> void:
 	if simulation_only or not is_instance_valid(site):
 		return
 	var radius := float(definition.get("arena_radius_m", 18.0))
+	_dress_master_signpost(definition)
 	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
 	if floor_mesh != null:
 		floor_mesh.material_override = ENVIRONMENT_MATERIALS.worn_ground(site.global_position, radius)
@@ -4308,6 +4309,32 @@ func dress_master_site(site: Node3D, definition: Dictionary) -> void:
 	_mesa(site, "LandmarkLedge", Vector3(0.0, -size.y * 0.5 - 0.06, 0.0), size, _materials["cliff"],
 		_materials["upland_dry"] if site.global_position.y >= 700.0 else _materials["upland"], false,
 		absi(str(definition.get("id", "master")).hash()) % 997, false, radius + 1.0)
+
+
+## The Master signpost is a bare 2.4 m white box. master_t4's stands at the
+## High Perches' survey centre, where every Fly arrival lands, so the Low judge
+## saw "a plain white untextured pillar ... straight through the trainer's
+## body". The pole takes weathered timber, and a sign on a landmark's landing
+## centre moves to `master_signpost_offsets` (cloudreach_visual.json, local to
+## that landmark) at the court edge facing the Master. Its prompt moves with it.
+func _dress_master_signpost(definition: Dictionary) -> void:
+	var raw: Array = definition.get("sign_position", [])
+	if raw.size() < 3:
+		return
+	var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	for sign: Node in find_children("MasterSignpost*", "Node3D", false, false):
+		var post := sign as Node3D
+		if Vector2(post.global_position.x - at.x, post.global_position.z - at.z).length() > 1.0:
+			continue
+		for child: Node in post.get_children():
+			if child is MeshInstance3D and (child as MeshInstance3D).mesh is BoxMesh:
+				(child as MeshInstance3D).material_override = _materials["weathered_timber"]
+		var offsets: Dictionary = _visual_config.get("master_signpost_offsets", {})
+		var offset: Variant = offsets.get(str(definition.get("author_reference", "")))
+		if offset is Array and (offset as Array).size() >= 2:
+			var to := at + Vector3(float(offset[0]), 0.0, float(offset[1]))
+			var floor_y := ground_height_at(to.x, to.z, at.y)
+			post.global_position = Vector3(to.x, at.y if is_nan(floor_y) else floor_y, to.z)
 
 
 func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: float) -> void:

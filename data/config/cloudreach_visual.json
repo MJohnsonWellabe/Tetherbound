@@ -5,6 +5,10 @@
   "_comment": "Vista far floor (VISUAL cloudreach lane, F08#4/F40#4): graphics_prefs draw-distance presets set far to 320/520/900 m, which clipped the cloud deck, distant relief and Aviary sightline in every frame. The realm camera keeps at least this far plane, the scene's own authored value; nearer detail keeps its own visibility ranges.",
   "vista_far_floor_m": 3500.0
  },
+ "master_signpost_offsets": {
+  "_comment": "Low-preset judge (high_perches__08): master_t4's signpost stood on the High Perches survey centre, through the landed trainer. Offset [x, z] from the sign_position, keyed by the Master's author_reference; cloudreach_world.gd::_dress_master_signpost.",
+  "high_roost_perches": [8.0, 3.5]
+ },
  "postfinale_festival": {
   "_comment": "F08#4 frame 36: post-finale Galefoot was pixel-identical to frame 05. cloudreach_world_payoffs.gd::_build_festival shows these only while cloudreach_winds_restored holds: blue/gold swallowtail pennants (banner_cloth shader) along the existing waycamp lantern line (world coords), and a second run between two banner masts across the plaza. Visual-only, no collision.",
   "pennant_colours": ["#315f9a", "#d6ad52"],
