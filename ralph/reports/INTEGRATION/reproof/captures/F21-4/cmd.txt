@@ -1,0 +1,1 @@
+CMD: xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --fullscreen --rendering-driver opengl3 --audio-driver Dummy --resolution 1920x1080 --script tests/smoke_combat_camera.gd -- --matrix-live --matrix-preset=Low --matrix-dir=/tmp/claude-0/cap/F21-4/frames --source-commit=826d273c3dbdcb1002034812041b1dfb59d84120

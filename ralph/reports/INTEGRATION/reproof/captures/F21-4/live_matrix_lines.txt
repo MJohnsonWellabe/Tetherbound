@@ -1,0 +1,29 @@
+FAIL: live matrix small/small ended or exceeded its 30s budget at physics boundary 24
+FAIL: live matrix small/small failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix small/normal ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix small/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix small/giant ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix small/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix normal/small ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix normal/small failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix normal/normal ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix normal/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix normal/giant ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix normal/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix giant/small ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix giant/small failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix giant/normal ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix giant/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: live matrix giant/giant ended or exceeded its 30s budget at physics boundary 32
+FAIL: live matrix giant/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0
+FAIL: the rig did not follow the moving active creature
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-1.602859, 765.3624) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-250.2751, 763.6866) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (48.11399, 569.8791) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-187.2688, 566.9392) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-149.9254, 727.762) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-440.891, 725.4902) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-83.7109, 504.4452) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_1006_3 render corner at (-356.651, 500.5269) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]
+FAIL: cancelled aim did not return camera follow to the active creature
+exit=1
