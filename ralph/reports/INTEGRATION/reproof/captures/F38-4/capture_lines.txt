@@ -1,0 +1,33 @@
+CATALOGUE BOOT meadows load begin t=25611
+CATALOGUE BOOT meadows instantiate begin t=38343
+CATALOGUE BOOT meadows attach begin t=38351
+CATALOGUE BOOT meadows attached t=39905
+CATALOGUE CAPTURE farm_to_hall__day__clear__reverse -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__day__clear__reverse.jpg
+CATALOGUE CAPTURE farm_to_hall__day__clear__detail -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__day__clear__detail.jpg
+CATALOGUE CAPTURE farm_to_hall__day__rain__reverse -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__day__rain__reverse.jpg
+CATALOGUE CAPTURE farm_to_hall__day__rain__detail -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__day__rain__detail.jpg
+CATALOGUE CAPTURE farm_to_hall__night__clear__reverse -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__night__clear__reverse.jpg
+CATALOGUE CAPTURE farm_to_hall__night__clear__detail -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__night__clear__detail.jpg
+CATALOGUE CAPTURE farm_to_hall__night__rain__reverse -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__night__rain__reverse.jpg
+CATALOGUE CAPTURE farm_to_hall__night__rain__detail -> /tmp/claude-0/cap/F38-4/frames/farm_to_hall__night__rain__detail.jpg
+CATALOGUE CAPTURE village_road__day__clear__approach -> /tmp/claude-0/cap/F38-4/frames/village_road__day__clear__approach.jpg
+CATALOGUE CAPTURE village_road__day__rain__approach -> /tmp/claude-0/cap/F38-4/frames/village_road__day__rain__approach.jpg
+CATALOGUE CAPTURE village_road__night__clear__approach -> /tmp/claude-0/cap/F38-4/frames/village_road__night__clear__approach.jpg
+CATALOGUE CAPTURE village_road__night__rain__approach -> /tmp/claude-0/cap/F38-4/frames/village_road__night__rain__approach.jpg
+CATALOGUE CAPTURE hall_front__day__clear__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_front__day__clear__reverse.jpg
+CATALOGUE CAPTURE hall_front__day__rain__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_front__day__rain__reverse.jpg
+CATALOGUE CAPTURE hall_front__night__clear__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_front__night__clear__reverse.jpg
+CATALOGUE CAPTURE hall_front__night__rain__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_front__night__rain__reverse.jpg
+CATALOGUE CAPTURE hall_nave__day__clear__gameplay -> /tmp/claude-0/cap/F38-4/frames/hall_nave__day__clear__gameplay.jpg
+CATALOGUE CAPTURE hall_nave__day__clear__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_nave__day__clear__reverse.jpg
+CATALOGUE CAPTURE hall_nave__day__clear__detail -> /tmp/claude-0/cap/F38-4/frames/hall_nave__day__clear__detail.jpg
+CATALOGUE CAPTURE hall_nave__day__rain__gameplay -> /tmp/claude-0/cap/F38-4/frames/hall_nave__day__rain__gameplay.jpg
+CATALOGUE CAPTURE hall_nave__day__rain__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_nave__day__rain__reverse.jpg
+CATALOGUE CAPTURE hall_nave__day__rain__detail -> /tmp/claude-0/cap/F38-4/frames/hall_nave__day__rain__detail.jpg
+CATALOGUE CAPTURE hall_nave__night__clear__gameplay -> /tmp/claude-0/cap/F38-4/frames/hall_nave__night__clear__gameplay.jpg
+CATALOGUE CAPTURE hall_nave__night__clear__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_nave__night__clear__reverse.jpg
+CATALOGUE CAPTURE hall_nave__night__clear__detail -> /tmp/claude-0/cap/F38-4/frames/hall_nave__night__clear__detail.jpg
+CATALOGUE CAPTURE hall_nave__night__rain__gameplay -> /tmp/claude-0/cap/F38-4/frames/hall_nave__night__rain__gameplay.jpg
+CATALOGUE CAPTURE hall_nave__night__rain__reverse -> /tmp/claude-0/cap/F38-4/frames/hall_nave__night__rain__reverse.jpg
+CATALOGUE CAPTURE hall_nave__night__rain__detail -> /tmp/claude-0/cap/F38-4/frames/hall_nave__night__rain__detail.jpg
+CATALOGUE SURVEY FAILED: 28/64 frames in /tmp/claude-0/cap/F38-4/frames
