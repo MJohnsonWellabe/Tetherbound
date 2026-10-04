@@ -253,3 +253,34 @@ static func _integer(value: Variant, minimum: int) -> bool:
 
 static func _deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code}
+
+
+## Player-facing sentence for a resource refusal. Host and session refusals
+## carry the bare code as their reason; the HUD never shows a code.
+static func refusal_text(code: String) -> String:
+	# stale_stock means the node's stock moved since this view (a teammate, or
+	# a lagging view of one's own gather); it is gathered, not lost.
+	var messages := {"stale_stock": "This was just gathered. It will grow back in a few days.",
+		# The host's generic "context unavailable" (range, held tool, gate, phase,
+		# a changed record): never claim a competitor when none may exist.
+		"source_or_revision_changed": "That can't be gathered right now. Try again in a moment.",
+		"regrowing": "This has been gathered. It will grow back in a few days.",
+		"equipped_tool_required": "You need the right tool in hand to gather this.",
+		"working_tool_required": "You need a working tool to gather this.",
+		"inventory_full": "Your satchel is full.",
+		"source_unavailable": "This can't be gathered right now.",
+		"transaction_busy": "Your last action is still being saved.",
+		"resource_busy": "Wait for the current gathering to finish.",
+		"training_journal_failed": "That couldn't be saved. Try again.",
+		"world_save_failed": "That couldn't be saved. Try again.",
+		"world_not_prepared": "The world is still saving. Try again."}
+	return str(messages.get(code, "That resource is unavailable right now."))
+
+
+## A refusal's reason when it is already a sentence, else its code's sentence.
+static func refusal_reason(verdict: Dictionary, fallback: String) -> String:
+	var reason := str(verdict.get("reason", ""))
+	var code := str(verdict.get("code", ""))
+	if reason.is_empty() and code.is_empty(): return fallback
+	if reason.is_empty() or reason == code or not reason.contains(" "): return refusal_text(code if not code.is_empty() else reason)
+	return reason

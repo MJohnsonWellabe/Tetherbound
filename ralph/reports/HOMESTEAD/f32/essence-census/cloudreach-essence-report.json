@@ -1,0 +1,5565 @@
+{
+	"checks": [
+		{
+			"label": "production Game and selected realm exist",
+			"ok": true
+		},
+		{
+			"label": "canonical production source registry is valid",
+			"ok": true
+		},
+		{
+			"label": "request actual baked realm scene",
+			"ok": true
+		},
+		{
+			"label": "actual realm procedural build completed",
+			"ok": true
+		},
+		{
+			"label": "production player and resource adapter mounted",
+			"ok": true
+		},
+		{
+			"label": "existing physical controller driver resolves production camera and arbiter",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-245.0, 390.0, 1588.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ground_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-268.3, 463.895, 3123.5), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_water_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_water_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_water_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_water_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_water_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_water_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_water_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_water_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_water_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-274.3, 462.8752, 3117.5), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_air_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_air_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_air_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_air_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_air_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_air_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_air_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_air_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_air_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-211.2, 1119.868, 5327.4), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_electric_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_electric_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_electric_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_electric_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_electric_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_electric_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_electric_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_electric_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_electric_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-1089.4, 381.0486, 1489.1), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_fire_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_fire_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_fire_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_fire_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_fire_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_fire_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_fire_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_fire_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_fire_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (188.6358, 246.2154, 632.5203), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_dark_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_dark_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_dark_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_dark_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_dark_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_dark_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_dark_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_dark_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_dark_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-354.5, 990.03, 5011.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ice_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ice_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ice_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_ice_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ice_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ice_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ice_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_ice_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_ice_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-515.5, 1080.03, 5301.5), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_psychic_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_psychic_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_psychic_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_cloudreach_psychic_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_psychic_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_psychic_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_psychic_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_cloudreach_psychic_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_cloudreach_psychic_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "selected at least one authored candidate",
+			"ok": true
+		},
+		{
+			"label": "production source bytes and proof gates unchanged",
+			"ok": true
+		}
+	],
+	"earned_campaign": false,
+	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+	"mode": "essence",
+	"ok": true,
+	"realm": "cloudreach",
+	"sites": [
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-245.0,
+				1588.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-245.0, 390.0309, 1594.0)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 0,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.929401937173679,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_gale_fiber_causeway",
+						"offset_xz_m": [
+							0.0,
+							6.0
+						]
+					},
+					"at": [
+						-245.0,
+						1588.0
+					],
+					"authored_height": 390.0,
+					"id": "essence_cloudreach_ground_01",
+					"item": "essence_ground",
+					"label": "Gather Ground Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:ground:01",
+					"outputs": {
+						"attuned_ground": 1.0,
+						"essence_ground": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 124.483,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "broken_causeways",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_ground"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "ground"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_ground_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_ground_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_ground_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-245.0, 390.0, 1588.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "76d9d1ebaf50799ad9a0f25244b79cd6eddd1c7b6dd24e58581f03ff2ce88c63",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 4.32836937904358,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9945677083333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9601631944445,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 4.32836937904358,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9945677083333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9601631944445,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 2,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 1,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.929401937173679,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_gale_fiber_causeway",
+							"offset_xz_m": [
+								0.0,
+								6.0
+							]
+						},
+						"at": [
+							-245.0,
+							1588.0
+						],
+						"authored_height": 390.0,
+						"id": "essence_cloudreach_ground_01",
+						"item": "essence_ground",
+						"label": "Gather Ground Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:ground:01",
+						"outputs": {
+							"attuned_ground": 1.0,
+							"essence_ground": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 124.483,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "broken_causeways",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_ground"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "ground"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_ground_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_ground_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "1df604502c4834095f4c32f221570e60",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_ground_01"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_ground_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "1df604502c4834095f4c32f221570e60",
+				"verdict": {
+					"character_revision": 2,
+					"durable": true,
+					"journal_revision": 1,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-245.0001, 390.0308, 1589.588)",
+			"walk_start": "(-245.0, 390.0309, 1594.0)",
+			"walked_metres": 4.4117431640625
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-268.3,
+				3123.5
+			],
+			"controller_approach": true,
+			"fixture_start": "(-268.3, 464.3248, 3129.5)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 3,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.037306948332116,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_cliffglass_ravine",
+						"offset_xz_m": [
+							0.0,
+							6.0
+						]
+					},
+					"at": [
+						-268.3,
+						3123.5
+					],
+					"authored_height": 463.5,
+					"id": "essence_cloudreach_water_01",
+					"item": "essence_water",
+					"label": "Gather Water Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:water:01",
+					"outputs": {
+						"attuned_water": 1.0,
+						"essence_water": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 186.59,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "windscar_ravine",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_water"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "water"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_water_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_water_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_water_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-268.3, 463.895, 3123.5)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "0c29e6835d3c65280f5b44464775c8427a4c680abb337b9e67747ae02bf1a8c0",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 7.6042360663414,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.990084745,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9272881300002,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 7.6042360663414,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.990084745,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9272881300002,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 5,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 4,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.037306948332116,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_cliffglass_ravine",
+							"offset_xz_m": [
+								0.0,
+								6.0
+							]
+						},
+						"at": [
+							-268.3,
+							3123.5
+						],
+						"authored_height": 463.5,
+						"id": "essence_cloudreach_water_01",
+						"item": "essence_water",
+						"label": "Gather Water Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:water:01",
+						"outputs": {
+							"attuned_water": 1.0,
+							"essence_water": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 186.59,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "windscar_ravine",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_water"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "water"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_water_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_water_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "5bb4b6ae95a27cdb4a62e59f7efe95a0",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_water_01"
+					}
+				},
+				"journal_revision": 2,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_water_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "5bb4b6ae95a27cdb4a62e59f7efe95a0",
+				"verdict": {
+					"character_revision": 5,
+					"durable": true,
+					"journal_revision": 2,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-268.3022, 464.0287, 3125.024)",
+			"walk_start": "(-268.3, 464.3248, 3129.5)",
+			"walked_metres": 4.47631883621216
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-274.3,
+				3117.5
+			],
+			"controller_approach": true,
+			"fixture_start": "(-274.3001, 463.3111, 3123.5)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 6,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.554871432483196,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_cliffglass_ravine",
+						"offset_xz_m": [
+							-6.0,
+							0.0
+						]
+					},
+					"at": [
+						-274.3,
+						3117.5
+					],
+					"authored_height": 463.5,
+					"id": "essence_cloudreach_air_01",
+					"item": "essence_air",
+					"label": "Gather Air Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:air:01",
+					"outputs": {
+						"attuned_air": 1.0,
+						"essence_air": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 206.764,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "windscar_ravine",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_air"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "air"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_air_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_air_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_air_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-274.3, 462.8752, 3117.5)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "4c797186d450a28808a473958da05888e0ca9c15420710da4bb2e01a25bbb28d",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 19.2111610770226,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9851329325,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8909748383335,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 19.2111610770226,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9851329325,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8909748383335,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 8,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 7,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.554871432483196,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_cliffglass_ravine",
+							"offset_xz_m": [
+								-6.0,
+								0.0
+							]
+						},
+						"at": [
+							-274.3,
+							3117.5
+						],
+						"authored_height": 463.5,
+						"id": "essence_cloudreach_air_01",
+						"item": "essence_air",
+						"label": "Gather Air Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:air:01",
+						"outputs": {
+							"attuned_air": 1.0,
+							"essence_air": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 206.764,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "windscar_ravine",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_air"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "air"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_air_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_air_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "580a36738386e9984b2c77c6052f0813",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_air_01"
+					}
+				},
+				"journal_revision": 3,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_air_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "580a36738386e9984b2c77c6052f0813",
+				"verdict": {
+					"character_revision": 8,
+					"durable": true,
+					"journal_revision": 3,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-274.3024, 463.0107, 3119.024)",
+			"walk_start": "(-274.3001, 463.3111, 3123.5)",
+			"walked_metres": 4.47631883621216
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-211.2,
+				5327.4
+			],
+			"controller_approach": true,
+			"fixture_start": "(-211.2, 1119.948, 5333.4)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 9,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.679026140132919,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_cliffglass_summit",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-211.2,
+						5327.4
+					],
+					"authored_height": 1119.1,
+					"id": "essence_cloudreach_electric_01",
+					"item": "essence_electric",
+					"label": "Gather Electric Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:electric:01",
+					"outputs": {
+						"attuned_electric": 1.0,
+						"essence_electric": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 312.02,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "summit_final_stronghold",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_electric"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "electric"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_electric_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_electric_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_electric_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-211.2, 1119.868, 5327.4)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "01079bd53071580d3b9b6fd3e440189ade6b2921b2f5c3b796194a0388ad4a8f",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 23.8609251379967,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9798165339394,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8519879155557,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 23.8609251379967,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9798165339394,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8519879155557,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 11,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 10,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.679026140132919,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_cliffglass_summit",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-211.2,
+							5327.4
+						],
+						"authored_height": 1119.1,
+						"id": "essence_cloudreach_electric_01",
+						"item": "essence_electric",
+						"label": "Gather Electric Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:electric:01",
+						"outputs": {
+							"attuned_electric": 1.0,
+							"essence_electric": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 312.02,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "summit_final_stronghold",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_electric"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "electric"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_electric_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_electric_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "7642fdd937875e5f53ec3dc6be96c062",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_electric_01"
+					}
+				},
+				"journal_revision": 4,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_electric_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "7642fdd937875e5f53ec3dc6be96c062",
+				"verdict": {
+					"character_revision": 11,
+					"durable": true,
+					"journal_revision": 4,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-211.2035, 1119.915, 5328.99)",
+			"walk_start": "(-211.2, 1119.948, 5333.4)",
+			"walked_metres": 4.40966939926147
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-1089.4,
+				1489.1
+			],
+			"controller_approach": true,
+			"fixture_start": "(-1089.4, 381.9778, 1495.1)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 12,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.822836592560634,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_heartwood_west",
+						"offset_xz_m": [
+							0.0,
+							-6.0
+						]
+					},
+					"at": [
+						-1089.4,
+						1489.1
+					],
+					"authored_height": 382.0,
+					"id": "essence_cloudreach_fire_01",
+					"item": "essence_fire",
+					"label": "Gather Fire Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:fire:01",
+					"outputs": {
+						"attuned_fire": 1.0,
+						"essence_fire": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 584.424,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "broken_causeways",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_fire"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "fire"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_fire_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_fire_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_fire_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-1089.4, 381.0486, 1489.1)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "9ce7711c1e5b20198e5b28109bd2c68be89f9f6a7231d7795bc6e172fa9fc1db",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 29.7959687113762,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9751577450001,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8178234633334,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 29.7959687113762,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9751577450001,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8178234633334,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 14,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 13,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.822836592560634,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_heartwood_west",
+							"offset_xz_m": [
+								0.0,
+								-6.0
+							]
+						},
+						"at": [
+							-1089.4,
+							1489.1
+						],
+						"authored_height": 382.0,
+						"id": "essence_cloudreach_fire_01",
+						"item": "essence_fire",
+						"label": "Gather Fire Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:fire:01",
+						"outputs": {
+							"attuned_fire": 1.0,
+							"essence_fire": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 584.424,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "broken_causeways",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_fire"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "fire"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_fire_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_fire_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "7fecf5a0feb211da96727eda1bc6a459",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_fire_01"
+					}
+				},
+				"journal_revision": 5,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_fire_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "7fecf5a0feb211da96727eda1bc6a459",
+				"verdict": {
+					"character_revision": 14,
+					"durable": true,
+					"journal_revision": 5,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-1089.4, 381.3157, 1490.649)",
+			"walk_start": "(-1089.4, 381.9778, 1495.1)",
+			"walked_metres": 4.450927734375
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				186.0,
+				620.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(188.6358, 246.0815, 638.5203)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 15,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.079483084147796,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_gale_fiber_gate",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						186.0,
+						620.0
+					],
+					"authored_height": 210.0,
+					"id": "essence_cloudreach_dark_01",
+					"item": "essence_dark",
+					"label": "Gather Dark Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:dark:01",
+					"outputs": {
+						"attuned_dark": 1.0,
+						"essence_dark": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 316.285,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "gate_lower_cliffs",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_dark"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "dark"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_dark_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_dark_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_dark_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(188.6358, 246.2154, 632.5203)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "4e2cc970c5cb8f4f0561962cdb106529fb149cfa084bb37666889e3c4bb8a0bc",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 34.68813174963,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9701603200001,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7811756800001,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+							"craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 34.68813174963,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9701603200001,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7811756800001,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 17,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 16,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.079483084147796,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_gale_fiber_gate",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							186.0,
+							620.0
+						],
+						"authored_height": 210.0,
+						"id": "essence_cloudreach_dark_01",
+						"item": "essence_dark",
+						"label": "Gather Dark Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:dark:01",
+						"outputs": {
+							"attuned_dark": 1.0,
+							"essence_dark": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 316.285,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "gate_lower_cliffs",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_dark"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "dark"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_dark_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_dark_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "b12331c05b078a4061f0a6f9f1066de3",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_dark_01"
+					}
+				},
+				"journal_revision": 6,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_dark_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "b12331c05b078a4061f0a6f9f1066de3",
+				"verdict": {
+					"character_revision": 17,
+					"durable": true,
+					"journal_revision": 6,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(188.6324, 246.2045, 634.1138)",
+			"walk_start": "(188.6358, 246.0815, 638.5203)",
+			"walked_metres": 4.40655660629272
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-354.5,
+				5011.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-354.5, 990.3425, 5017.0)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 18,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.840798651333898,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_cliffglass_latch_landing",
+						"offset_xz_m": [
+							-6.0,
+							0.0
+						]
+					},
+					"at": [
+						-354.5,
+						5011.0
+					],
+					"authored_height": 990.0,
+					"id": "essence_cloudreach_ice_01",
+					"item": "essence_ice",
+					"label": "Gather Ice Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:ice:01",
+					"outputs": {
+						"attuned_ice": 1.0,
+						"essence_ice": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 324.088,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "summit_final_stronghold",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_ice"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "ice"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_ice_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_ice_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_ice_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-354.5, 990.03, 5011.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "d4d6eb45a76daca4c247da596998a66a82e9f5712d4eb4abca811c19ea76bd7a",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						{
+							"id": "essence_ice",
+							"n": 3
+						},
+						{
+							"id": "attuned_ice",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 39.319947168231,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9649372061111,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.742872844815,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+							"craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364",
+							"craft:f32-site-owner:f32:984fceab62c84a3aee63cb23ef2d1f36e5cf9c89a825ef5200b1813851389379"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 39.319947168231,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9649372061111,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.742872844815,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+							"craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 20,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 19,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.840798651333898,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_cliffglass_latch_landing",
+							"offset_xz_m": [
+								-6.0,
+								0.0
+							]
+						},
+						"at": [
+							-354.5,
+							5011.0
+						],
+						"authored_height": 990.0,
+						"id": "essence_cloudreach_ice_01",
+						"item": "essence_ice",
+						"label": "Gather Ice Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:ice:01",
+						"outputs": {
+							"attuned_ice": 1.0,
+							"essence_ice": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 324.088,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "summit_final_stronghold",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_ice"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "ice"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_ice_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_ice_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "55e282585abdfda77ef7e4d5c89e72ed",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_ice_01"
+					}
+				},
+				"journal_revision": 7,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:984fceab62c84a3aee63cb23ef2d1f36e5cf9c89a825ef5200b1813851389379",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_ice_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "55e282585abdfda77ef7e4d5c89e72ed",
+				"verdict": {
+					"character_revision": 20,
+					"durable": true,
+					"journal_revision": 7,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:984fceab62c84a3aee63cb23ef2d1f36e5cf9c89a825ef5200b1813851389379",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-354.5003, 990.0317, 5012.521)",
+			"walk_start": "(-354.5, 990.3425, 5017.0)",
+			"walked_metres": 4.478515625
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/CloudreachCliffs/EncounterDirector",
+						"script": "res://scripts/world/cloudreach_scene_encounters.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/CloudreachCliffs/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-58860d2886632d7e9415d0db2298c97c"
+				],
+				"local_peer_id": 1,
+				"realm": "cloudreach",
+				"registered_realm": "cloudreach",
+				"session_active": false
+			},
+			"authored_at": [
+				-515.5,
+				5301.5
+			],
+			"controller_approach": true,
+			"fixture_start": "(-515.5, 1080.209, 5307.5)",
+			"host_context_before": {
+				"actor_realm": "cloudreach",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 21,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "cloudreach",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.313569591380656,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/cloudreach_chapter.json",
+						"id": "cr_node_cliffglass_latch_head",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-515.5,
+						5301.5
+					],
+					"authored_height": 1080.0,
+					"id": "essence_cloudreach_psychic_01",
+					"item": "essence_psychic",
+					"label": "Gather Psychic Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:cloudreach:psychic:01",
+					"outputs": {
+						"attuned_psychic": 1.0,
+						"essence_psychic": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 617.408,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "cloudreach",
+					"region_id": "summit_final_stronghold",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_psychic"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "psychic"
+				},
+				"source_generation": "1",
+				"source_id": "essence_cloudreach_psychic_01",
+				"source_key": "resource:cloudreach:essence_cloudreach_psychic_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"id": "essence_cloudreach_psychic_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "e355b36c01d6e64ecf1007b2660a990a1ff97389aa72e21336f3a41cd038b3af",
+				"passive_clock_active": true,
+				"realm": "cloudreach",
+				"session_epoch": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-515.5, 1080.03, 5301.5)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "f364317b5a489b0d1539abba6e506241f55bd60bce105fbdb064cc87dd76e0fe",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						{
+							"id": "essence_ice",
+							"n": 3
+						},
+						{
+							"id": "attuned_ice",
+							"n": 1
+						},
+						{
+							"id": "essence_psychic",
+							"n": 3
+						},
+						{
+							"id": "attuned_psychic",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 44.3336378782988,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9600361349999,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7069316566667,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+							"craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364",
+							"craft:f32-site-owner:f32:984fceab62c84a3aee63cb23ef2d1f36e5cf9c89a825ef5200b1813851389379",
+							"craft:f32-site-owner:f32:109044b287cffbbf24dd9207cefe4d024b3bbe3aad2970c04ab477e9b3795c20"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "seed_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						{
+							"id": "essence_ice",
+							"n": 3
+						},
+						{
+							"id": "attuned_ice",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 44.3336378782988,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9600361349999,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7069316566667,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-58860d2886632d7e9415d0db2298c97c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-58860d2886632d7e9415d0db2298c97c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:0c1436a7735f2168d43ef034181c8998916765554fabdca12d0ef0665c181a18",
+							"craft:f32-site-owner:f32:0d4bfe30dd218882cee9c60a5c2fe0f5c9ce1b21ab79aa26ec8550cd54aafed9",
+							"craft:f32-site-owner:f32:cfd5c8b926a80517f72583dfe9cd9053c81f208396df0deb1d851977e05a2cf2",
+							"craft:f32-site-owner:f32:5447bc2f1ab61714ea809cd993ff66d4f8e8a4b0268dce8a72fdabc55358bb29",
+							"craft:f32-site-owner:f32:ee22a335b702fbc867f3e489704e87535ee51c4e811e7c0137bf90e214353367",
+							"craft:f32-site-owner:f32:7d259e9732120eea41113790255b79fb700742530348506884730d03efc5f364",
+							"craft:f32-site-owner:f32:984fceab62c84a3aee63cb23ef2d1f36e5cf9c89a825ef5200b1813851389379"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 23,
+				"delivery_id": "creature_training:e2b547a52b78136e224018d90a9e55c036c6f91e9418d212e24a7a8b5f066fbb",
+				"host_context": {
+					"actor_realm": "cloudreach",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 22,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "cloudreach",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.313569591380656,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/cloudreach_chapter.json",
+							"id": "cr_node_cliffglass_latch_head",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-515.5,
+							5301.5
+						],
+						"authored_height": 1080.0,
+						"id": "essence_cloudreach_psychic_01",
+						"item": "essence_psychic",
+						"label": "Gather Psychic Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:cloudreach:psychic:01",
+						"outputs": {
+							"attuned_psychic": 1.0,
+							"essence_psychic": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 617.408,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "cloudreach",
+						"region_id": "summit_final_stronghold",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_psychic"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "psychic"
+					},
+					"source_generation": "1",
+					"source_id": "essence_cloudreach_psychic_01",
+					"source_key": "resource:cloudreach:essence_cloudreach_psychic_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "0c192bf28bb412adc638221a36b77110",
+						"expected_stock_revision": 0,
+						"site_id": "essence_cloudreach_psychic_01"
+					}
+				},
+				"journal_revision": 8,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:109044b287cffbbf24dd9207cefe4d024b3bbe3aad2970c04ab477e9b3795c20",
+				"session_id": "e25dc67a6fb4bfc2afd6eb464d031555",
+				"source_key": "resource:cloudreach:essence_cloudreach_psychic_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "93d8905d001da77cf8072ee446ab9f56"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "0c192bf28bb412adc638221a36b77110",
+				"verdict": {
+					"character_revision": 23,
+					"durable": true,
+					"journal_revision": 8,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:109044b287cffbbf24dd9207cefe4d024b3bbe3aad2970c04ab477e9b3795c20",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-515.5, 1080.054, 5303.091)",
+			"walk_start": "(-515.5, 1080.209, 5307.5)",
+			"walked_metres": 4.40869140625
+		}
+	],
+	"source_path": "res://data/config/cloudreach_resources.json",
+	"source_runtime_enabled": null,
+	"source_sha256": "fc97a5b77ef3375d91bc29ea093b3fbbd392de74ca91b7776aee10fc03b48bb7",
+	"two_peer_rejoin": false,
+	"user_data_dir": "/root/.local/share/godot/app_userdata/Tetherbound"
+}

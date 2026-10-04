@@ -551,11 +551,18 @@ func _reload_at_three_bed_readiness() -> bool:
 
 func _save_and_reload(when: String, flags: Array, after_tournament: bool) -> bool:
 	var before := _snapshot(flags)
-	if not bool(_game.call("save_game", RELOAD_SLOT)):
-		_fail("save_game(%d) refused %s" % [RELOAD_SLOT, when])
+	# The live world's own slot: since the v28 split saves a world's transaction
+	# journal stays bound to the slot it lives in, and save_game refuses a manual
+	# slot that would rebind it ("target slot conflicts with retained world
+	# transactions"). The old fixed RELOAD_SLOT is used only if no slot is known.
+	var slot := int(_game.call("autosave_slot")) if _game.has_method("autosave_slot") else RELOAD_SLOT
+	if slot < 0:
+		slot = RELOAD_SLOT
+	if not bool(_game.call("save_game", slot)):
+		_fail("save_game(%d) refused %s" % [slot, when])
 		return false
-	if not bool(_game.call("load_game", RELOAD_SLOT)):
-		_fail("load_game(%d) refused the slot it had just written %s" % [RELOAD_SLOT, when])
+	if not bool(_game.call("load_game", slot)):
+		_fail("load_game(%d) refused the slot it had just written %s" % [slot, when])
 		return false
 	# Let the rebuilt buildings, the restored clock and the tournament's own
 	# party watch settle before reading anything back.
