@@ -1,0 +1,5 @@
+SHOT cam=(472.1021, 16.0, 1922.528) /tmp/claude-0/cap/F14-2b/frames/S1_live_t0.jpg vis_time=100.00 ms_since_t0=8196 calm_scale=1.000 flag=false size=1920x1080
+SHOT cam=(472.1021, 16.0, 1922.528) /tmp/claude-0/cap/F14-2b/frames/S1_live_t1.jpg vis_time=100.50 ms_since_t0=14427 calm_scale=1.000 flag=false size=1920x1080
+SHOT cam=(472.1021, 16.0, 1922.528) /tmp/claude-0/cap/F14-2b/frames/S1_restored_t0.jpg vis_time=100.00 ms_since_t0=8133 calm_scale=0.500 flag=true size=1920x1080
+SHOT cam=(472.1021, 16.0, 1922.528) /tmp/claude-0/cap/F14-2b/frames/S1_restored_t1.jpg vis_time=100.50 ms_since_t0=14291 calm_scale=0.500 flag=true size=1920x1080
+F14_2 CURRENT CAPTURE OK failures=0
