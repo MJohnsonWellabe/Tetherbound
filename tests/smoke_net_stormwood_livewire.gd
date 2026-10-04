@@ -304,10 +304,33 @@ func _run_livewire() -> void:
 		release_accepted += 2
 	check(_safe_early(before_release_deadline),
 		"released baseline reached a safe pre-deadline host window")
-	var release_early := await _charged(release_accepted + 1, charged, after_release_first, 8)
+	# The same late-arrival case as the inactive block (CI 37185453746 shard
+	# 8): an early action the host accepted at or past its old deadline is an
+	# inconclusive sample, not a missing refusal. It becomes the next baseline
+	# and the window is sampled again.
+	var release_early: Dictionary = {}
+	var after_release_early: Dictionary = {}
+	var release_conclusive := false
+	for attempt in RELEASE_WINDOW_ATTEMPTS:
+		release_early = await _charged(release_accepted + 1, charged, after_release_first, 8)
+		after_release_early = await _await_host_time(
+			int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
+		var late_authority := _authority(after_release_early)
+		var arrived_ms := int(late_authority.get("deadline_ms", 0)) - AUTHORED_CHARGED_COOLDOWN_MS
+		if int(late_authority.get("last_accepted_action", 0)) != release_accepted + 1 \
+				or arrived_ms + 1 < int(release_authority.get("deadline_ms", 0)):
+			release_conclusive = true
+			break
+		print("released baseline: the early action reached the host %dms after its deadline (attempt %d of %d); re-arming"
+			% [arrived_ms - int(release_authority.get("deadline_ms", 0)), attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+		release_accepted += 1
+		after_release_first = after_release_early
+		release_authority = late_authority
+		before_release_deadline = await _await_before_host_deadline(
+			int(release_authority.get("deadline_ms", 0)))
+	check(release_conclusive, "a released early action reached the host before its deadline within %d attempt(s)"
+		% RELEASE_WINDOW_ATTEMPTS)
 	check(str(release_early.get("verdict", "")) == "PASS", "sent a fresh action after release")
-	var after_release_early := await _await_host_time(
-		int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
 	check(_hp(after_release_early) == _hp(after_release_first)
 		and _seq(after_release_early) == _seq(after_release_first),
 		"releasing Livewire restored the host's authored deadline refusal")
