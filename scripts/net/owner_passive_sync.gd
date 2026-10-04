@@ -310,7 +310,9 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			stream.error = "owner_passive_host_buffer_full"; return
 		if input.get("op") == "discovery" and (stream.cursor.travel_valid != true or stream.cursor.realm != context.realm):
 			var at: Variant = input.get("to")
-			if not context.get("initial_position") is Vector3: return # Realm body has not arrived; retry this exact prefix.
+			if not context.get("initial_position") is Vector3:
+				_note_host(stream, "input %d waits: no host body for this owner in %s" % [sequence, str(context.realm)])
+				return # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
 				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
 				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
@@ -327,13 +329,18 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			if input.get("travel_valid") == true and from.distance_to(to) > 30.0:
 				# A real host-observed discontinuity can establish a new endpoint,
 				# never walking credit. Wait for replication instead of inventing it.
-				if not context.get("initial_position") is Vector3 or context.initial_position.distance_to(to) > 2.0: return
+				if not context.get("initial_position") is Vector3 or context.initial_position.distance_to(to) > 2.0:
+					_note_host(stream, "input %d waits: discontinuity to %s, host body at %s" % [sequence, str(to),
+						str(context.get("initial_position", "none"))])
+					return
 				input_context.discontinuity_authorized = true
 		var applied: Dictionary
 		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
 			if not owner().has_method("_owner_passive_actor_vitals_context"): return
 			var proof: Dictionary = owner().call("_owner_passive_actor_vitals_context", peer, input)
-			if proof.is_empty(): return # Exact saved op waits the existing authenticated world ACK.
+			if proof.is_empty():
+				_note_host(stream, "input %d waits: %s has no host vitals proof yet" % [sequence, str(input.op)])
+				return # Exact saved op waits the existing authenticated world ACK.
 			if input.op == "actor_vitals_applied" and proof.get("revision_before") != stream.revision:
 				stream.error = "owner_passive_vitals_revision_conflict"; return
 			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
