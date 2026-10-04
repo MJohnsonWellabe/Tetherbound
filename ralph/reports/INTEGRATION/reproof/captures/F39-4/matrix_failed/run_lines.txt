@@ -1,0 +1,24 @@
+CATALOGUE BOOT water load begin t=5681
+CATALOGUE BOOT water instantiate begin t=9979
+CATALOGUE BOOT water attach begin t=9981
+CATALOGUE BOOT water attached t=10188
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable
+ERROR: F39 production weather service unavailable

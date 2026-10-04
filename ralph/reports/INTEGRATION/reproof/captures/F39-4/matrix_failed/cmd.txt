@@ -1,0 +1,1 @@
+CMD: xvfb-run -a -s "-screen 0 1920x1080x24" godot --path .  --rendering-driver opengl3 --audio-driver Dummy --resolution 1920x1080 --script tools/capture_f39_catalogue.gd -- --biome=water --times=day,night --preset=Low --source-commit=826d273c3dbdcb1002034812041b1dfb59d84120 --seed=2042 --f39-weather=clear --subset=veilfall --output=/tmp/claude-0/cap/F39-4/frames

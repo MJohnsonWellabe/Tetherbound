@@ -1,0 +1,120 @@
+{
+	"acceptance_scope": "Production-camera catalogue frame matrix with explicit staged poses and day/night clock. Visual evidence only; no earned campaign, frame-time route, Hall or owner Ally claim.",
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 413776480355,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 413793257578,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-04T22:37:56",
+	"capture_started_utc": "2026-10-04T22:30:18",
+	"captured_frame_count": 0,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": false,
+	"display_server": "X11",
+	"f39_candidate": false,
+	"f39_heading_offsets_deg": [
+		0.0,
+		-45.0,
+		45.0,
+		90.0,
+		180.0
+	],
+	"f39_isolated_save_fixture": "user://f39_capture_1791153018_91393_3443/",
+	"f39_limitations": "Teleported stands and camera headings; no earned route, close detail, actual fight, device or judge proof. Candidate overrides are process-local material uniforms; production gates remain false.",
+	"f39_seed": 2042,
+	"f39_weather": "clear",
+	"failures": [
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable",
+		"F39 production weather service unavailable"
+	],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [],
+	"graphics_capture": {
+		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "Low",
+		"renderer": "gl_compatibility",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "826d273c3dbdcb1002034812041b1dfb59d84120"
+	},
+	"planned_frame_count": 20,
+	"planned_frame_ids": [
+		"water__veilfall__15__the_veilfall_cascade__day__heading_0.0",
+		"water__veilfall__15__the_veilfall_cascade__day__heading_minus45.0",
+		"water__veilfall__15__the_veilfall_cascade__day__heading_45.0",
+		"water__veilfall__15__the_veilfall_cascade__day__heading_90.0",
+		"water__veilfall__15__the_veilfall_cascade__day__heading_180.0",
+		"water__veilfall__15__the_veilfall_cascade__night__heading_0.0",
+		"water__veilfall__15__the_veilfall_cascade__night__heading_minus45.0",
+		"water__veilfall__15__the_veilfall_cascade__night__heading_45.0",
+		"water__veilfall__15__the_veilfall_cascade__night__heading_90.0",
+		"water__veilfall__15__the_veilfall_cascade__night__heading_180.0",
+		"water__veilfall__16__veilfall_mountain_crown__day__heading_0.0",
+		"water__veilfall__16__veilfall_mountain_crown__day__heading_minus45.0",
+		"water__veilfall__16__veilfall_mountain_crown__day__heading_45.0",
+		"water__veilfall__16__veilfall_mountain_crown__day__heading_90.0",
+		"water__veilfall__16__veilfall_mountain_crown__day__heading_180.0",
+		"water__veilfall__16__veilfall_mountain_crown__night__heading_0.0",
+		"water__veilfall__16__veilfall_mountain_crown__night__heading_minus45.0",
+		"water__veilfall__16__veilfall_mountain_crown__night__heading_45.0",
+		"water__veilfall__16__veilfall_mountain_crown__night__heading_90.0",
+		"water__veilfall__16__veilfall_mountain_crown__night__heading_180.0"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 413793257578,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"subsets": [
+		"veilfall"
+	]
+}
