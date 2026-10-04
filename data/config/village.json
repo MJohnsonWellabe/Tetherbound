@@ -302,6 +302,12 @@
     }
   ],
   "_comment_vp5": "VP5 (visual-parity village lane), 2026-09-02: the entries after `inn` are daylight dressing -- three door thresholds, two garden rails plus a yard rail, two carts and three edge oaks -- placed against the BUILT scene's collider extents (a scratch layout probe printing every structure's world AABB, door node, marker and NPC), not against the recipe comments. The owner's standing constraint applies: not one more object than the yard needs, no new villagers.",
+  "home_creature_bed": {
+    "_why": "Owner ruling 2026-10-04 (PROGRESSION-6 pre-camp healing, tb/reproof-earned d5fedd00: 8 potions for 10-12 pre-camp practice fights, zero slack): Grandpa's home gets one free creature bed so home heals creatures. The installed creature_bed.gd nest (2.40 x 2.05 m), built exactly as rest_point.gd builds an authored camp bed (build_real(false), so the tournament's 'Build a Creature Bed' rung is still the player's own), on the reserved authored index range (<= -10; -40 is unused). South of the farmhouse, clear of the door lane, road, berry beds and work yard (collider probe at (3,8) empty); stations.json homestead_plot excludes it. TUNABLE.",
+    "at": [2.5, 8.0],
+    "yaw_deg": 0.0,
+    "bed_index": -40
+  },
   "road_plan": {
     "home_centre": [
       2,
