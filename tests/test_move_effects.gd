@@ -128,3 +128,24 @@ func test_stages_do_not_change_arrival_or_travel() -> void:
 		var grown := LIBRARY.resolve({"archetype": id}, 5)
 		assert_eq(base.arrival, grown.arrival, id)
 		assert_almost_eq(LIBRARY.travel_seconds(Vector3.ZERO, Vector3.ONE * 4.0, {"archetype": id}, {"travel_seconds": 0.31, "mastery_rank": 5}), 0.31)
+
+## Owner-directed ultimate overrides (water reads as a wave or a water ball)
+## must resolve through this library at every breakthrough tier and keep the
+## ultimate's frozen timing (arrival unchanged by the override).
+func test_ultimate_overrides_resolve_to_staged_presentations() -> void:
+	var overrides: Dictionary = LIBRARY.config().get("ultimate_overrides", {})
+	var count := 0
+	for move_id: String in overrides:
+		if move_id.begins_with("_"): continue
+		count += 1
+		var visual := LIBRARY.ultimate_override(move_id)
+		for rank in range(1, 6):
+			var row := LIBRARY.resolve(visual, rank)
+			assert_false(row.is_empty(), move_id + " resolves at tier %d" % rank)
+			if row.is_empty(): continue
+			assert_true(not str((row.impact as Dictionary).get("shape", "")).is_empty(), move_id + " has an impact")
+		assert_eq(LIBRARY.resolve(visual, 1).arrival, LIBRARY.resolve(visual, 5).arrival, move_id)
+	assert_true(count >= 7, "every water ultimate has an authored wave or water-ball presentation")
+	var ball := LIBRARY.resolve({"archetype": "bubble_volley", "presentation_variant": "water_ball"}, 3)
+	assert_eq(str(ball.body.get("surface_material", "")), "water_stream", "water ball uses the flowing-water surface")
+	assert_true(LIBRARY.resolve({"archetype": "bubble_volley", "presentation_variant": "missing"}, 1).is_empty(), "unknown variants refuse")

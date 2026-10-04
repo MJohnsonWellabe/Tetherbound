@@ -86,6 +86,9 @@ func _ready() -> void:
 		if bool(profile.get("air_surface", false)): body.material_override = GEOMETRY.authored_material("wind_surface", profile, _colour)
 		if bool(profile.get("shadow_surface", false)): body.material_override = GEOMETRY.authored_material("shadow_surface", profile, _colour)
 		if bool(profile.get("root_stone_surface", false)): body.material_override = GEOMETRY.authored_material("root_stone_surface", profile, _colour)
+		# Any body may take another authored surface (a water ball is a sphere
+		# drawn with the flowing-water material).
+		if profile.has("surface_material"): body.material_override = GEOMETRY.authored_material(str(profile.surface_material), profile, _colour)
 		_bodies.append(body)
 		var history: Array[Vector3] = []
 		_histories.append(history)
@@ -93,7 +96,7 @@ func _ready() -> void:
 			var component := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), float(_params.size) * float(layer.get("size_scale", 0.5)), layer),
 				Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.8)))
 			component.reparent(body, false)
-			if str(layer.get("shape", "")) in ["flame_orb", "fire_bloom", "flame_tongue"]:
+			if str(layer.get("shape", "")) in ["flame_orb", "fire_bloom", "flame_tongue", "soft_foam", "soft_dust"]:
 				component.material_override = GEOMETRY.authored_material(str(layer.shape), layer, Color(str(layer.get("colour", _params.colour))))
 			var offset: Array = layer.get("offset", [0.0, 0.0, 0.0])
 			component.position = Vector3(float(offset[0]), float(offset[1]), float(offset[2])) * float(_params.size)

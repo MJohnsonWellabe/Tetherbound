@@ -152,6 +152,96 @@
     },
     "fallback": "mesh_compatibility",
     "scene_light_cap": 4,
+    "ultimate_overrides": {
+      "_comment": "Owner direction 2026-10-04: water ultimates read as a crashing wave or a water ball (like the fireball) depending on the move, drawn by this library through ultimate_library.launch. Breakthroughs select the growth tier.",
+      "ultimate_abyssal_guardian": {
+        "archetype": "tidal_wave",
+        "count": 1,
+        "size": 2.4,
+        "colour": "#2f86c8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_ripplet": {
+        "archetype": "tidal_wave",
+        "count": 1,
+        "size": 1.8,
+        "colour": "#3c9ad8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_current": {
+        "archetype": "tidal_wave",
+        "count": 1,
+        "size": 1.6,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_wall": {
+        "archetype": "tidal_wave",
+        "count": 1,
+        "size": 1.8,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_cannonback": {
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
+        "count": 4,
+        "size": 0.55,
+        "colour": "#3c9ad8",
+        "arc": 0.9,
+        "speed": 22.0,
+        "spread": 0.7,
+        "trail": 1.4,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_charger": {
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
+        "count": 1,
+        "size": 0.85,
+        "colour": "#3c9ad8",
+        "arc": 0.2,
+        "speed": 22.0,
+        "spread": 0.0,
+        "trail": 1.4,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_diver": {
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
+        "count": 1,
+        "size": 0.85,
+        "colour": "#3c9ad8",
+        "arc": 2.2,
+        "speed": 22.0,
+        "spread": 0.0,
+        "trail": 1.4,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      }
+    },
     "archetypes": {
       "stone_throw": {
         "launch": {
@@ -1797,6 +1887,153 @@
         }
       },
       "bubble_volley": {
+        "presentation_variants": {
+          "water_ball": {
+            "body": {
+              "shape": "bubble",
+              "surface_material": "water_stream",
+              "foam_colour": "#e8fbff",
+              "opacity": 0.94,
+              "flow_speed": 3.4,
+              "lit": true,
+              "layers": [
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 1.35,
+                  "card_extent_scale": 2.6,
+                  "colour": "#dff6ff",
+                  "opacity": 0.55,
+                  "flow_speed": 2.6,
+                  "spin_rate": 1.4,
+                  "offset": [
+                    0,
+                    0.05,
+                    0
+                  ]
+                },
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 1.0,
+                  "card_extent_scale": 2.4,
+                  "colour": "#bfe8fb",
+                  "opacity": 0.5,
+                  "flow_speed": 3.0,
+                  "spin_rate": -1.1,
+                  "yaw_offset_deg": 60,
+                  "offset": [
+                    -0.35,
+                    0.1,
+                    0.08
+                  ]
+                }
+              ]
+            },
+            "trail": {
+              "style": "foam",
+              "width": 0.7,
+              "opacity": 0.72,
+              "colour": "#d8f3ff",
+              "wave_amplitude": 0.1,
+              "wave_frequency": 2.5,
+              "wave_speed": 6.0,
+              "sample_spacing_m": 0.12,
+              "max_length_m": 2.4
+            },
+            "impact": {
+              "shape": "soft_foam",
+              "duration": 0.8,
+              "grow": 1.7,
+              "initial_grow": 0.3,
+              "growth_power": 0.45,
+              "fade_hold_power": 2.0,
+              "heat": 0.1,
+              "opacity": 0.85,
+              "card_extent_scale": 2.6,
+              "layers": [],
+              "mote_shape": "bubble",
+              "mote_size": 0.09,
+              "speed": 5.2,
+              "gravity": 10.0,
+              "mote_backscatter": 0.5,
+              "settle_on_ground": false,
+              "puff_count": 8,
+              "puff_shape": "soft_foam",
+              "puff_colour": "#eefbff",
+              "puff_radius_scale": 1.0,
+              "target_envelope_scale": 0,
+              "puff_start_radius_scale": 0.3,
+              "puff_end_radius_scale": 1.7,
+              "puff_size_scale": 1.25,
+              "puff_opacity": 0.78,
+              "puff_lift_m": 0.5,
+              "puff_grow": 1.6,
+              "puff_initial_scale": 0.4,
+              "puff_reveal_power": 0.2,
+              "puff_backscatter": 0.4,
+              "visual_anchor": "contact_surface",
+              "stages": {
+                "flash": {
+                  "size_scale": 2.0,
+                  "min_m": 0.5,
+                  "max_m": 1.4,
+                  "duration": 0.1,
+                  "core_colour": "#ffffff",
+                  "edge_colour": "#9fdcf5",
+                  "opacity": 0.75,
+                  "streaks": 8,
+                  "streak_strength": 0.4
+                },
+                "shockwave": {
+                  "style": "shockwave",
+                  "radius_scale": 5.5,
+                  "min_m": 1.2,
+                  "max_m": 3.8,
+                  "duration": 0.45,
+                  "colour": "#d6f1fb",
+                  "glow_colour": "#57b6e8",
+                  "glow_strength": 0.4,
+                  "opacity": 0.55,
+                  "ring_width": 0.14,
+                  "lift_m": 0.035,
+                  "hold": 0.0,
+                  "fade_in": 0.02,
+                  "initial_scale": 1.0
+                },
+                "mark": {
+                  "style": "dust",
+                  "radius_scale": 3.4,
+                  "min_m": 0.9,
+                  "max_m": 2.6,
+                  "duration": 1.9,
+                  "colour": "#344a3a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.62,
+                  "hold": 0.6,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.4,
+                  "initial_scale": 0.5,
+                  "spread_time": 0.2,
+                  "crack_count": 7
+                }
+              }
+            },
+            "launch": {
+              "flash": {
+                "size_scale": 1.6,
+                "min_m": 0.35,
+                "max_m": 1.0,
+                "duration": 0.16,
+                "core_colour": "#ffffff",
+                "edge_colour": "#9fdcf5",
+                "opacity": 0.8,
+                "streaks": 6,
+                "streak_strength": 0.35,
+                "forward_scale": 0.5
+              }
+            }
+          }
+        },
         "body": {
           "shape": "bubble",
           "motion": "projectile",

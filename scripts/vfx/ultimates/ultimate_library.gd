@@ -5,6 +5,7 @@ extends RefCounted
 ## No caller of this library can earn a hit, mastery, meter or control lease.
 const CONFIG_PATH := "res://data/moves/ultimates.json"
 const EFFECT := preload("res://scripts/vfx/ultimates/ultimate_effect.gd")
+const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 static var _config: Dictionary = {}
 
 static func config() -> Dictionary:
@@ -85,6 +86,15 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	for node: Node in parent.get_tree().get_nodes_in_group("move_effect_presentation"):
 		if is_instance_valid(node) and not node.is_queued_for_deletion() and node.has_method("action_id") \
 				and str(node.call("action_id")) == action: return null
+	var override := MOVE_LIBRARY.ultimate_override(str(spec.get("move_id", "")))
+	if not override.is_empty():
+		# Owner direction: some signatures draw as the move library's staged
+		# effect (a wave, a water ball). Breakthroughs select its growth tier.
+		var staged := frozen.duplicate(true)
+		staged["mastery_rank"] = clampi(1 + int(count), 1, 5)
+		staged["ultimate"] = true
+		staged["impact_audio_owner"] = "receipt"
+		return MOVE_LIBRARY.launch_presentation(parent, from, to, override, staged)
 	var effect := EFFECT.new()
 	effect.configure(from, to, row, frozen, data)
 	parent.add_child(effect)
