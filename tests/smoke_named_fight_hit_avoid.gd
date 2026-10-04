@@ -40,6 +40,8 @@ const FIGHT_FRAME_LIMIT := 60 * 120
 ## A player reacting to the tell they can see: ~0.2 s, not a frame-perfect input.
 const DODGE_REACTION_S := 0.2
 const WITNESS_DODGE_TAIL_S := 0.25
+## Floor a DODGE strike needs behind the creature before the arena boundary.
+const DODGE_ROOM_M := 4.0
 const POLICIES := ["stand", "dodge"]
 const WITNESS_ATTACK_EVERY_FRAMES := 20
 
@@ -134,6 +136,14 @@ func _witness_one() -> bool:
 					and since >= DODGE_REACTION_S:
 				stick = _stick_away_from_opponent()
 				stick = _steer_around_obstacle(stick)
+		# Between tells, ahead of a DODGE strike, keep room to back into: a
+		# creature already pinned on the arena's edge cannot back out of
+		# anything, and a player who means to step out of the next swing does
+		# not wait for it there (re-proof F04-4: after its first dodge the
+		# Warden's witness sat at arena_off 11.00 for every later strike, ~7 m
+		# from a WALL whose reach is 7.47 m).
+		if not in_tell and POLICIES[_strikes.size() % POLICIES.size()] == "dodge":
+			stick = _stick_toward_arena_centre()
 		_left_stick(stick)
 		# The gap and the opponent's own travel on the last tick BEFORE the
 		# outcome: `gap_at_strike` is read after the blow's knockback has
@@ -294,6 +304,27 @@ func _opponent_label() -> String:
 	if enemy == null:
 		return "?"
 	return "%s_L%d" % [str(enemy.get("species_id")), int(enemy.get("level"))]
+
+
+## Camera-space stick toward the arena's centre while the creature has less
+## than DODGE_ROOM_M of floor behind it before the boundary; zero otherwise.
+func _stick_toward_arena_centre() -> Vector2:
+	var arena := _manager.get("_arena") as Node3D
+	if arena == null or not is_instance_valid(arena) or _camera == null:
+		return Vector2.ZERO
+	var radius := float(arena.get("radius")) if arena.get("radius") != null else -1.0
+	if radius <= 0.0 or _arena_offset() < radius - DODGE_ROOM_M:
+		return Vector2.ZERO
+	var inward := arena.global_position - _ally_pos()
+	inward.y = 0.0
+	if inward.length() < 0.01:
+		return Vector2.ZERO
+	inward = inward.normalized()
+	var right := _camera.global_transform.basis.x
+	right.y = 0.0
+	var forward := -_camera.global_transform.basis.z
+	forward.y = 0.0
+	return Vector2(inward.dot(right.normalized()), -inward.dot(forward.normalized())).normalized()
 
 
 func _arena_offset() -> float:
