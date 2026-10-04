@@ -1,0 +1,11 @@
+lost_creature Later trace: ["send@2833 in_physics=true", "2834:jp=false p=false open=true skip=false guard=0", "2835:jp=false p=false open=true skip=false guard=0", "2836:jp=false p=false open=true skip=false guard=0", "2837:jp=false p=false open=true skip=false guard=0", "2838:jp=true p=true open=true skip=false guard=0", "2839:jp=false p=true open=false skip=false guard=0", "2840:jp=false p=true open=false skip=false guard=0", "2841:jp=false p=true open=false skip=false guard=0", "2842:jp=false p=true open=false skip=false guard=0", "2843:jp=false p=true open=false skip=false guard=0", "2844:jp=false p=true open=false skip=false guard=0", "2845:jp=false p=false open=false skip=false guard=0", "2846:jp=false p=false open=false skip=false guard=0", "2847:jp=false p=false open=false skip=false guard=0", "2848:jp=false p=false open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:12:11Z duration_s=162
+lost_creature Later trace: ["send@2832 in_physics=true", "2833:jp=true p=true open=true skip=false guard=0", "2834:jp=false p=true open=false skip=false guard=0", "2835:jp=false p=true open=false skip=false guard=0", "2836:jp=false p=true open=false skip=false guard=0", "2837:jp=false p=false open=false skip=false guard=0", "2838:jp=false p=false open=false skip=false guard=0", "2839:jp=false p=false open=false skip=false guard=0", "2840:jp=false p=false open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:14:53Z duration_s=157
+lost_creature Later trace: ["send@2901 in_physics=true", "2902:jp=false p=false open=true skip=false guard=0", "2903:jp=false p=false open=true skip=false guard=0", "2904:jp=true p=true open=true skip=false guard=0", "2905:jp=false p=true open=false skip=false guard=0", "2906:jp=false p=true open=false skip=false guard=0", "2907:jp=false p=true open=false skip=false guard=0", "2908:jp=false p=true open=false skip=false guard=0", "2909:jp=false p=true open=false skip=false guard=0", "2910:jp=false p=false open=false skip=false guard=0", "2911:jp=false p=false open=false skip=false guard=0", "2912:jp=false p=false open=false skip=false guard=0", "2913:jp=false p=false open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:17:30Z duration_s=165
+
+[exited with code 0]

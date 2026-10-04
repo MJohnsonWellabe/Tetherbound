@@ -1,0 +1,102 @@
+run id:  net-20261004T185155Z-3207
+run dir: /tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f07/net-cloudreach_activity_payoffs-20261004T185155Z
+PASS: disclosed retired crossing fixture enabled
+PASS: disclosed retired crossing fixture enabled
+PASS: SETUP: peer 0 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 1 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 0 holds the world -- SETUP: no dialogue box was open; locomotion now true
+PASS: SETUP: peer 0's own world holds the Cloudreach key -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 0 owns a terrapup -- 'terrapup' at level 20 joined the party (1 member(s))
+PASS: SETUP: peer 1 holds the world -- SETUP: no dialogue box was open; locomotion now true
+PASS: SETUP: peer 1's own world holds the Cloudreach key -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 1 owns a terrapup -- 'terrapup' at level 20 joined the party (1 member(s))
+PASS: SETUP: peer 0 crosses into Cloudreach -- crossed 'meadows' -> 'cloudreach' after 271 observed physics frames / 154737 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: SETUP: peer 1 crosses into Cloudreach -- crossed 'meadows' -> 'cloudreach' after 271 observed physics frames / 153799 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: peer 0 hosts from Cloudreach -- hosting udp/35321 as peer 1
+PASS: peer 1 joins the host -- joined 127.0.0.1:35321 as peer 1232587086 after 13 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0's registry holds both players -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1's registry holds both players -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: both peers stand in the production Cloudreach scene (CloudreachCliffs / CloudreachCliffs)
+PASS: host and guest are distinct characters (character-610ca6f2ece0da8ca8af1741afe98f2a / character-e17a0c08925ba87b9639360eeca93cbd)
+PASS: SETUP: host commits world fact cloudreach_chapter_started -- cloudreach_chapter_started: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact cloudreach_crisis_learned -- cloudreach_crisis_learned: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact causeway_survivors_reconnected -- causeway_survivors_reconnected: ok=true pending=false code='' reason=''
+PASS: SETUP: host commits world fact side_courier_pack_recovered -- side_courier_pack_recovered: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 0 received the seeded chain steps before the delivery -- flag side_courier_pack_recovered (world) set after 0 frames
+PASS: SETUP: peer 1 received the seeded chain steps before the delivery -- flag side_courier_pack_recovered (world) set after 0 frames
+PASS: peer 0: the thanks is not offered before the medicine reaches the shelter ({"aerie_rests":0.0,"character_id":"character-610ca6f2ece0da8ca8af1741afe98f2a","claimed":false,"claims_paid":0.0,"markers":{"high_perches":false,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":1.0,"people_returned":{"shelter_courier":false,"shelter_traveler":false,"waycamp_carter":false,"waycamp_mender":false},"potions":0.0,"realm":"cloudreach","refusals":[],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":false,"side_a
+PASS: peer 1: the thanks is not offered before the medicine reaches the shelter ({"aerie_rests":0.0,"character_id":"character-e17a0c08925ba87b9639360eeca93cbd","claimed":false,"claims_paid":-1.0,"markers":{"high_perches":false,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":false,"peer_id":1232587086.0,"people_returned":{"shelter_courier":false,"shelter_traveler":false,"waycamp_carter":false,"waycamp_mender":false},"potions":0.0,"realm":"cloudreach","refusals":[],"reward_exists":false,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perches_surveyed":fa
+PASS: SETUP: host commits world fact side_courier_medicine_delivered -- side_courier_medicine_delivered: ok=true pending=false code='' reason=''
+PASS: SETUP: peer 0 received the delivery step -- flag side_courier_medicine_delivered (world) set after 0 frames
+PASS: SETUP: peer 1 received the delivery step -- flag side_courier_medicine_delivered (world) set after 0 frames
+PASS: peer 0: its own thanks is offered at the shelter once the medicine is delivered, before Neri's report ({"aerie_rests":0.0,"character_id":"character-610ca6f2ece0da8ca8af1741afe98f2a","claimed":false,"claims_paid":0.0,"markers":{"high_perches":false,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":true,"peer_id":1.0,"people_returned":{"shelter_courier":false,"shelter_traveler":false,"waycamp_carter":false,"waycamp_mender":false},"potions":0.0,"realm":"cloudreach","refusals":[],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_high_perc
+PASS: peer 1: its own thanks is offered at the shelter once the medicine is delivered, before Neri's report ({"aerie_rests":0.0,"character_id":"character-e17a0c08925ba87b9639360eeca93cbd","claimed":false,"claims_paid":0.0,"markers":{"high_perches":false,"observatory":false,"waterward":false},"max_stamina":100.0,"offered":true,"peer_id":1232587086.0,"people_returned":{"shelter_courier":false,"shelter_traveler":false,"waycamp_carter":false,"waycamp_mender":false},"potions":0.0,"realm":"cloudreach","refusals":[],"reward_exists":true,"scene":"CloudreachCliffs","stamina":100.0,"world":{"side_aerie_
+PASS: the GUEST reports to Neri through the dialogue guard -- Neri's report effect through the dialogue guard: accepted=true
+PASS: peer 0 sees the WORLD chain completion committed once by the host -- flag side_stranded_couriers_complete (world) set after 9 frames
+PASS: peer 1 sees the WORLD chain completion committed once by the host -- flag side_stranded_couriers_complete (world) set after 0 frames
+PASS: peer 0: its own couriers' thanks is offered after the shared completion
+PASS: peer 0: the shared world consequence shows (stranded pair returned to Galefoot)
+FAIL: peer 1: its own couriers' thanks is offered after the shared completion
+PASS: peer 1: the shared world consequence shows (stranded pair returned to Galefoot)
+FAIL: guest stands beside the thanks -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: guest's live prompt is the couriers' thanks ('')
+FAIL: guest presses interact at the thanks -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: guest's OWN player-scoped receipt arrives -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: guest received exactly two small potions (0 -> -1)
+FAIL: the thanks is no longer offered to the guest ({})
+FAIL: the guest's OWN character file holds its receipt and +2 potions, written by the production delivery (no explicit save): {}
+FAIL: NEGATIVE CONTROL: the host holds NO receipt from the guest's claim
+FAIL: NEGATIVE CONTROL: the host's potions are unchanged (0 -> -1)
+FAIL: the host's own thanks is still offered (independent)
+FAIL: NEGATIVE CONTROL: 'host holds the claimed flag' is asserted and must FAIL (ERROR: peer 1 reported ERROR: no couriers' thanks node or player here)
+FAIL: a repeat interact press pays the guest nothing more
+FAIL: NEGATIVE CONTROL: a forged second reward_grant from the guest is refused 'already_taken' and pays nothing (ERROR: peer 1 reported ERROR: no couriers' thanks node or player here)
+FAIL: host stands beside the thanks -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: host presses interact at the thanks -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: host's OWN player-scoped receipt arrives -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: host received its own two small potions (0 -> -1)
+FAIL: the thanks is no longer offered to the host
+FAIL: NEGATIVE CONTROL: the host's claim did not pay the guest again (-1)
+FAIL: NEGATIVE CONTROL: a forged second reward_grant from the host is refused and pays nothing (ERROR: peer 1 reported ERROR: no couriers' thanks node or player here)
+FAIL: SETUP: host commits the High Perches survey (world) -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: peer 0 received the survey -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: peer 1 received the survey -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: peer 0 draws the surveyed High Perches landing and not the unsurveyed Observatory ({})
+FAIL: peer 1 draws the surveyed High Perches landing and not the unsurveyed Observatory ({})
+FAIL: CONTROL: a landing ON the UNSURVEYED Observatory aerie rests nobody (ERROR: peer 1 reported ERROR: no couriers' thanks node or player here)
+FAIL: the GUEST's landing on the surveyed aerie restores the guest's stamina (ERROR: peer 1 reported ERROR: no couriers' thanks node or player here)
+PASS: NEGATIVE CONTROL: the guest's landing gave the HOST no rest (host rests -1 -> -1)
+FAIL: the HOST's own landing on the same aerie rests the host (ERROR: peer 1 reported ERROR: no couriers' thanks node or player here)
+PASS: NEGATIVE CONTROL: the host's landing gave the guest no rest
+FAIL: host saves (world + its character) -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: guest saves its own character -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+HOST DISK: {}
+FAIL: exactly one host world file holds the chain completion (0)
+FAIL: the host world journals exactly one couriers' delivery per character, host and guest ([])
+PASS: no GUEST-side world file holds the shared activity state (the host saves the world once)
+FAIL: peer 0's OWN character file: its receipt and exactly +2 potions ({})
+FAIL: peer 0's character file carries no world activity state
+PASS: peer 0 holds no file for the other character
+FAIL: peer 1's OWN character file: its receipt and exactly +2 potions ({})
+FAIL: peer 1's character file carries no world activity state
+PASS: peer 1 holds no file for the other character
+FAIL: guest leaves -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: host sees the guest gone -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: guest rejoins -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: peer 0 sees both after the rejoin -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: peer 1 sees both after the rejoin -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: the guest rejoined as the same character
+FAIL: after reconnect: guest keeps its receipt, exactly +2 potions, no new offer ({})
+FAIL: after reconnect: the rejoined guest still sees the shared world state
+FAIL: guest re-applies its character FILE -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: after character reload: guest keeps exactly one payment and no offer ({})
+FAIL: host reloads its autosave (world + character) -- ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+FAIL: after host reload: host keeps exactly one payment and no offer ({})
+FAIL: after host reload: the world still holds the chain completion and the survey
+FAIL: the host's reload re-delivered nothing to the guest
+FAIL: ERROR: peer 1 reported ERROR: no couriers' thanks node or player here
+- peer 0 (host) pid=3323 exited=false unexpected_exit=false
+- peer 1 (client) pid=3324 exited=false unexpected_exit=false
+- peer 0 (host) pid=3323 exited=false unexpected_exit=false
+- peer 1 (client) pid=3324 exited=false unexpected_exit=false
+exit=2 start=2026-10-04T18:51:55Z duration_s=602

@@ -13,7 +13,7 @@ const OWNER_PASSIVE := preload("res://scripts/net/owner_passive_sync.gd")
 var _owner_passive: RefCounted
 var _owner_passive_altar_original: Dictionary = {}
 var _altar_traits_transport: Node
-const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
+const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd", "res://scripts/world/cloudreach_scene_encounters.gd"]
 const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
 ## Joined in each script's _enter_tree (encounter_director.gd, combat_manager.gd).
 const FOUNDATION_DIRECTOR_GROUP := &"foundation_portal_directors"
@@ -5661,7 +5661,10 @@ func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> void:
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_travel_lifecycle(sample: Dictionary) -> void:
-	if not is_host() or not portal_runtime_ready(): return
+	# Resources, the Forge and rematches read this lifecycle too, so it is not
+	# gated on portals; accept() still checks the admitted sender's character,
+	# epoch, world and sequence. Portal/Home Key decisions keep their own gate.
+	if not is_host(): return
 	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 	if lifecycle != null: lifecycle.call("accept", multiplayer.get_remote_sender_id(), sample)
 
