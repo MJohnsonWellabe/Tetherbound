@@ -324,13 +324,19 @@ func run(tree: SceneTree) -> Dictionary:
 	if str(_wild.get("species_id")) != "bramblebun":
 		_fail("opening's natural tutorial creature is '%s', not Bramblebun" % str(_wild.get("species_id")))
 		return _result()
-	if not await _walk_to_and_engage_wild(_wild, 2600):
-		_fail("natural travel did not reach and engage the tutorial Bramblebun")
-		return _result()
-	for _i in 180:
-		if bool(_combat.call("is_fighting")):
+	# A press can land as the creature steps past the offer's edge (CI
+	# 37193298231: offered at 4.84 m, no fight). A player presses again, so one
+	# more approach and press is allowed; the fight must still start from it.
+	for _attempt in 2:
+		if not await _walk_to_and_engage_wild(_wild, 2600):
+			_fail("natural travel did not reach and engage the tutorial Bramblebun")
+			return _result()
+		for _i in 180:
+			if bool(_combat.call("is_fighting")):
+				break
+			await _tree.physics_frame
+		if bool(_combat.call("is_fighting")) or not is_instance_valid(_wild):
 			break
-		await _tree.physics_frame
 	if not bool(_combat.call("is_fighting")):
 		_fail("Interact at the natural Bramblebun did not enter real combat")
 		return _result()

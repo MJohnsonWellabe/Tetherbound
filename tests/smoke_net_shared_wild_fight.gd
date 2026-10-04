@@ -2,6 +2,8 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
+## How many 15-frame waits the host's fight announcement may take to arrive.
+const ANNOUNCE_POLLS := 16
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -424,7 +426,15 @@ func _run() -> void:
 	check(full_hp > 0.0, "the record carries the opponent's hit points (%.1f)" % full_hp)
 
 	# --- peer 1 joins it (§6) -------------------------------------------------
+	# The host's announcement is a reliable RPC that may still be in flight
+	# when the engage step returns (CI 37196626495 read an empty list once);
+	# wait for its arrival, never for a different answer.
 	var guest_before: Dictionary = await _encounter(1)
+	for _wait in ANNOUNCE_POLLS:
+		if (guest_before.get("joinable", []) as Array).has(encounter_id):
+			break
+		await step(1, "wait", {"frames": 15})
+		guest_before = await _encounter(1)
 	check((guest_before.get("joinable", []) as Array).has(encounter_id),
 		"peer 1 was told the fight exists and can be joined (announced ids: %s)"
 			% str(guest_before.get("joinable", [])))

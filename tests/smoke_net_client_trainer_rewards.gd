@@ -75,7 +75,13 @@ func _run() -> void:
 	var host_during = await probe(0, "trainer_reward", {"trainer": TRAINER})
 	check(not bool((host_during as Dictionary).get("battle_active", true)),
 		"the host is not running a trainer battle of its own")
-	var won: Dictionary = await step(1, "win_trainer_battle", {}, 6000)
+	# The peer's own driver stops at ~2160 PHYSICS frames and answers; the
+	# coordinator's deadline is WALL time at a nominal 60 Hz. A loaded CI runner
+	# stepped the guest at ~18 physics frames a second (CI 37196626495), so a
+	# 6000-frame (105 s) coordinator wait cut the fight off at driver frame 1584,
+	# one swing from the win, as "no verdict". 9000 (155 s) outlasts the peer's
+	# own budget at that rate, so the peer always answers first.
+	var won: Dictionary = await step(1, "win_trainer_battle", {}, 9000)
 	check(str(won.get("verdict", "")) == "PASS", "peer 1 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())

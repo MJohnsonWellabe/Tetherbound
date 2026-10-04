@@ -201,6 +201,8 @@ const APART_Z := 1.5
 ## other lever and is the named next step if this ever exhausts, but it would
 ## change what the passing runs exercised, and a cap that is never reached cannot.
 const FRIENDLY_TRIES := 12
+## How many FRIENDLY_SETTLE waits a swing's refusal may take to arrive.
+const REFUSAL_POLLS := 12
 ## A short settle for that staging, for the same reason: a long one gives each
 ## manager time to pull its creature back.
 const FRIENDLY_SETTLE := 8
@@ -752,7 +754,11 @@ func _run() -> void:
 		staged += 1
 		guest_at = await _host_view_of_guest_creature()
 		if guest_at == Vector3.INF:
-			break
+			# Between rounds a guest's party update can briefly put its creature
+			# away and send it out again. Wait for the host to hold it once more
+			# rather than giving up on the first read.
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE * 4})
+			continue
 		var stand := guest_at + Vector3(0.0, 0.0, APART_Z)
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
@@ -774,6 +780,8 @@ func _run() -> void:
 		victim_hp = float(pre.get("my_creature_hp", -1.0))
 		var at_teammate := host_creature_at - guest_at
 		at_teammate.y = 0.0
+		if at_teammate.length() < 0.05:
+			continue
 		friendly = await step(1, "strike",
 			{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
@@ -782,6 +790,17 @@ func _run() -> void:
 		boss_after = float((post.get("record", {}) as Dictionary).get("hp", -1.0))
 		victim_after = float(post.get("my_creature_hp", -1.0))
 		refusal = (await _boss(1)).get("refusal", {}) as Dictionary
+		# On the move-commit path the swing reaches the host as a move start,
+		# then a strike after the wind-up, and only then the refusal travels
+		# back -- longer than STRIKE_SETTLE under CI load (CI 37179276640: the
+		# guest logged friendly_target after this read had come back empty, and
+		# the next swing went stale). The HP and tally reads above stay inside
+		# the window; only the refusal's arrival is waited for.
+		for _wait in REFUSAL_POLLS:
+			if not str(refusal.get("code", "")).is_empty():
+				break
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
+			refusal = (await _boss(1)).get("refusal", {}) as Dictionary
 		# The refusal's ARRIVAL is part of `clean`, not merely something read
 		# once the swing looked good. Without this the loop exits the moment the
 		# swing lands cleanly, and if the host's answer has not made the round
