@@ -1545,10 +1545,18 @@ func _press(action: String) -> void:
 	# When the first edge dismissed Doss's thanks, the late second edge could
 	# land after the release and greet him again (the repeat-greeting flake:
 	# the same conversation reopened on line 0 with no press from this smoke).
+	# A parsed event waits in Input's buffer until the next main-loop iteration
+	# flushes it, and after a slow frame (a screenshot capture) one iteration
+	# can run several physics ticks: the six-tick press then ended before the
+	# press was ever delivered (re-proof F03-3, Juno's Later; per-tick trace on
+	# tb/reproof-fixes showed delivery 1-4 ticks late). Waiting for an idle
+	# frame after each send puts the flush before the ticks are counted.
 	_send(action, true)
+	await process_frame
 	await physics_frame
 	await physics_frame
 	_send(action, false)
+	await process_frame
 	for i in 4:
 		await physics_frame
 

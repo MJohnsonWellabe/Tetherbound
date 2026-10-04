@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+warrens walk stopped: local=(-0.904053, 0.35, 40.04883) target=(1.955078, 0.350789, 44.58691) velocity=(0.0, 0.0, 0.0) floor=true floor_normal=(0.0, 1.0, 0.0) walked=21.55 frames=204
+warrens walk collision: /root/MeadowsPlayground/BurrowWarrens/@StaticBody3D@64033 at=(1.192383, 0.35, 35.90039) normal=(0.0, 1.0, 0.0)
+warrens walk collision: /root/MeadowsPlayground/BurrowWarrens/@StaticBody3D@64033 at=(1.199341, 0.35, 35.98096) normal=(0.0, 1.0, 0.0)
+warrens guardian reward witness passed
+exit=0 start=2026-10-04T19:55:23Z duration_s=348
