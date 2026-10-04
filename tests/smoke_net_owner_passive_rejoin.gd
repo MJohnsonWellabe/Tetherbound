@@ -30,6 +30,9 @@ var _guest_character := ""
 
 
 func _initialize() -> void:
+	# Building the Meadows world blocks a peer's heartbeat for minutes on the
+	# 4-core container (smoke_net_cloudreach_veyra_reconnect.gd's reason).
+	heartbeat_silence_tolerance_s = 420.0
 	_run()
 
 
