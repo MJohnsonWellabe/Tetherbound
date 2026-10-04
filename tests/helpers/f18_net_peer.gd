@@ -382,11 +382,19 @@ func _f18_home_key(game: Node) -> Dictionary:
 	var ok: bool = reply.get("ok") == true and reply.get("durable") == true and reply.get("saved") == true \
 		and reply.get("character_id") == after.character_id and after.realm == "meadows" \
 		and after.home_key_count == 1 and before.home_key_count == 1 and target.is_finite() \
-		and _f18_vector(after.position).distance_to(target) < 1.0 \
+		and _f18_at_arrival_slot(_f18_vector(after.position), target) \
 		and _f18_disk_pose_at(after, "meadows", _f18_vector(after.position))
 	after.observed_reply = reply
 	after.before_position = before.position
 	return _f18_verdict(ok, "production Satchel Use requires saved authoritative HomeKey return at actual Hall", after)
+
+## The anchor itself, or (co-op, occupied anchor) one of its authored slots.
+## Same 1 m arrival tolerance as before; a slot is never an arbitrary point.
+func _f18_at_arrival_slot(at: Vector3, anchor: Vector3) -> bool:
+	if not at.is_finite() or not anchor.is_finite(): return false
+	for slot: Vector3 in preload("res://scripts/net/foundation_portal_arrival.gd").arrival_slots(anchor):
+		if at.distance_to(slot) < 1.0: return true
+	return false
 
 func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 	var id := str(args.get("arch", ""))
@@ -432,9 +440,7 @@ func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 				# arrival, at the anchor or one of its authored co-op slots.
 				var at_hall := false
 				for hall: Node in get_nodes_in_group("crossing_halls"):
-					var home: Vector3 = hall.call("home_arrival")
-					for slot: Vector3 in preload("res://scripts/net/foundation_portal_arrival.gd").arrival_slots(home):
-						if Vector2(slot.x, slot.z).distance_to(Vector2(_f18_vector(state.position).x, _f18_vector(state.position).z)) < 1.0: at_hall = true
+					if _f18_at_arrival_slot(_f18_vector(state.position), hall.call("home_arrival")): at_hall = true
 				ok = ok and at_hall
 		state.observed_reply = reply
 		return _f18_verdict(ok, "actual prompt " + mode + " requires bound durable reply and exact portable outcome", state)
