@@ -1450,6 +1450,7 @@ func _body_lateral_extent(body: Node3D, right: Vector3) -> float:
 ## current camera direction.
 func _update_combat_camera_framing(delta: float) -> void:
 	if _camera_rig == null or _ally_body == null or not is_instance_valid(_ally_body):
+		_clear_foreground_fades()
 		return
 	# Only while the rig is actually following the piloted creature. Throw aim
 	# re-points it at the trainer (`throw_aim.gd::arm()`) and the catch
@@ -1457,9 +1458,13 @@ func _update_combat_camera_framing(delta: float) -> void:
 	# both already own the shot for as long as they hold the target, and this
 	# must not fight either of them for `_distance`.
 	if _camera_rig.get("_target") != _ally_body:
+		# The fight composer is gone (aim, resolve close-up): no lens is
+		# scoring cover any more, so hand every dithered body back at once.
+		_clear_foreground_fades()
 		return
 	if _update_fight_camera_matrix(delta):
 		return
+	_clear_foreground_fades()
 	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var base_distance := float(cfg.get("distance", 6.0))
 	var framing: Dictionary = cfg.get("framing", {}) as Dictionary
@@ -5018,6 +5023,7 @@ func _finish() -> void:
 		fought_at = aftermath_focus.global_position
 	aftermath_focus = null
 	if hold:
+		_clear_foreground_fades()
 		# The fallen body is freed during the beat; stop tracking it.
 		if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_tracking_target"):
 			_camera_rig.call("set_tracking_target", null, {})
@@ -5525,11 +5531,13 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	var radius: float = clampf(float(cfg.get("occluder_radius_m",80.0)),1.0,200.0)
 	var cap: int = clampi(int(cfg.get("occluder_limit",32)),1,64)
 	var candidates: Array[Node] = get_tree().get_nodes_in_group(&"creature_voice")
-	# The trainer is a real foreground body too. Never hide/move it to obtain
-	# a clear frame, and never substitute a capsule for its authored Model.
+	# The trainer is a real foreground body too. Never move or hide it to obtain
+	# a clear frame (it is only locally dithered while covering, see
+	# `_update_foreground_fades`), and never substitute a capsule for its Model.
 	if is_instance_valid(_player) and not candidates.has(_player): candidates.append(_player)
 	# Nearest first: the cap may drop a distant body, never the one at the feet.
-	candidates = candidates.filter(func(node: Node) -> bool: return node is Node3D and node.is_inside_tree())
+	candidates = candidates.filter(func(node: Node) -> bool: return node is Node3D and node.is_inside_tree() \
+		and (node as Node3D).global_position.distance_squared_to(centre) <= radius * radius)
 	candidates.sort_custom(func(a: Node, b: Node) -> bool:
 		return (a as Node3D).global_position.distance_squared_to(centre) < (b as Node3D).global_position.distance_squared_to(centre))
 	for candidate: Node in candidates:
@@ -5600,14 +5608,16 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
 	# With the foreground fade on, a covering non-combatant is dithered at the
 	# chosen lens rather than escaped by pulling the camera back (the strict
-	# judge's over-wide giant frames). Cover still ranks a view lower.
+	# judge's over-wide giant frames). Cover no longer fails a view; it only
+	# adds to `penalty`, which ranks the failed-fit fallbacks.
 	var soft_cover: bool = bool(context.get("fade_foreground",false))
 	var sight_clear: bool = bool(context.geometry_valid) and (soft_cover or (not bool(context.overflow) and hidden==0))
+	var foreground_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
 	var occupied_records: Array = []
 	for rect: Rect2 in context.hud_rects:
 		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
 	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
-		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
+		"hud_overlap":hud_overlap,"foreground_clear":foreground_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
 		"cover_faded":soft_cover and hidden>0,
 		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
@@ -5627,12 +5637,27 @@ func _update_foreground_fades(lens: Transform3D, context: Dictionary, cfg: Dicti
 	var speed: float = maxf(float(cfg.get("foreground_fade_speed",6.0)),0.01)
 	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),1.0)
 	var inset: float = float(cfg.get("foreground_fade_inset",0.15))
+	# A combatant's own meshes belong to the ally fade alone: a body that just
+	# became the ally or the target is handed back at once, so the two fades
+	# never record each other's dithered copy as an original.
+	for body: Variant in [_ally_body,_wild]:
+		if not is_instance_valid(body): continue
+		var body_id: int = (body as Object).get_instance_id()
+		if _foreground_fades.has(body_id):
+			OCCLUSION_FADE.restore((_foreground_fades[body_id] as Dictionary).state)
+			_foreground_fades.erase(body_id)
+	# A subject straddling the near plane has no hull; the solver treats that
+	# as hidden, but it must not dither every body in range.
+	var subjects: Array[Dictionary] = []
+	for subject: Dictionary in context.subjects:
+		if FIGHT_CAMERA.envelope_in_front(lens,subject,float(context.near)):
+			subjects.append(FIGHT_CAMERA.inset_envelope(subject,inset))
 	var covering: Dictionary = {}
 	if enabled:
 		for occluder: Dictionary in context.occluders:
 			var narrow: Dictionary = FIGHT_CAMERA.inset_envelope(occluder,inset)
-			for subject: Dictionary in context.subjects:
-				if FIGHT_CAMERA.bounds_occlude(lens,FIGHT_CAMERA.inset_envelope(subject,inset),narrow,
+			for subject: Dictionary in subjects:
+				if FIGHT_CAMERA.bounds_occlude(lens,subject,narrow,
 						float(context.fov),aspect,float(context.near)):
 					covering[int(occluder.body_id)] = int(occluder.model_id)
 					break

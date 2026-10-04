@@ -64,7 +64,7 @@
         "_orb_cluster",
         "_effect_banner"
       ],
-      "_comment_fade": "F21#4 strict judge (trainer head over the ally's feet, herd boars over the target's legs, giant frames pulled over-wide to escape them): a non-combatant whose whole render envelope covers a combatant from the drawn lens is screen-door dithered to `foreground_fade` (0 opaque, 0.95 max) and eased back at `foreground_fade_speed` per second once clear. Cover then ranks a view lower instead of failing it, so the solver keeps the nearest framed, separated, HUD-clear lens. Local presentation; bodies, collision and scale never change.",
+      "_comment_fade": "F21#4 strict judge (trainer head over the ally's feet, herd boars over the target's legs, giant frames pulled over-wide to escape them): a non-combatant whose whole render envelope covers a combatant from the drawn lens is screen-door dithered to `foreground_fade` (0 opaque, 0.95 max) and eased back at `foreground_fade_speed` per second once clear. Cover then no longer fails a view (it only adds to the penalty that ranks failed-fit fallbacks), so the solver keeps the nearest framed, separated, HUD-clear lens. Local presentation; bodies, collision and scale never change.",
     "fade_foreground": true,
     "foreground_fade": 0.65,
     "foreground_fade_speed": 6.0,

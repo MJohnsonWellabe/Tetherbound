@@ -49,8 +49,11 @@ func _init() -> void:
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--frames="): _frames = maxi(60, int(arg.trim_prefix("--frames=")))
 		elif arg == "--no-fade":
-			# Matched "before": the pre-fix rule, cover fails a view and is never dithered.
+			# Nearest to the pre-fix rule: cover fails a view, nothing is
+			# dithered and failed fits rank by raw overlap. The nearest-first
+			# occluder order is not reverted (it changes no verdict).
 			(FIGHT.config().get("readability", {}) as Dictionary)["fade_foreground"] = false
+			FIGHT.config()["fallback_overlap_tolerance"] = 0.0
 	if _out.is_empty(): _out = ProjectSettings.globalize_path("res://shots/_diag/f21-matrix")
 	# Run with `--fixed-fps 60`: each frame is 1/60 s of game time however long
 	# the software draw takes. Frames between stills are simulated undrawn.

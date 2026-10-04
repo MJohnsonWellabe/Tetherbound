@@ -362,8 +362,10 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				# bounded interval; its live manager releases the same bodies.
 				# A held actor, faint, stale binding or stopped manager still fails.
 				var stop_left := float(_manager.get("_hitstop_left"))
-				var stop_max := maxf(float(_manager.call("_hitstop_seconds",true,false)),
-					maxf(float(_manager.call("_hitstop_seconds",false,false)),float(_manager.call("_hitstop_seconds",true,true))))
+				var feedback: Dictionary = MATH.config().get("impact",{}).get("feedback",{})
+				var stop_max := float(feedback.get("critical_hitstop_seconds",0.12))
+				for weight: Variant in (feedback.get("weights",{}) as Dictionary).values():
+					stop_max = maxf(stop_max,float((weight as Dictionary).get("hitstop_seconds",0.0)))
 				var manager_live: bool = _manager.is_physics_processing() and int(_manager.get("state"))==1
 				var bounded_stop: bool = manager_live and is_finite(stop_left) and stop_left>0.0 and stop_left<=stop_max+0.000001 \
 					and _manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild
@@ -477,7 +479,7 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 	else:
 		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
 			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
-			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap/full frame plus actual HUD exclusion and approximate foreground head/torso sight; inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
+			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap/full frame plus actual HUD exclusion; foreground cover is dithered (camera.json fight.readability.fade_foreground) and reported as foreground_clear/cover_faded, not failed; inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
 			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; physical quick trigger at120, release122, buffered-event flush at both trigger edges before manager physics. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
 			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
 			"cases":cases,"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))

@@ -276,6 +276,14 @@ static func inset_envelope(envelope: Dictionary, fraction: float) -> Dictionary:
 	return out
 
 
+## Every corner of the envelope lies beyond the lens near plane.
+static func envelope_in_front(lens: Transform3D, envelope: Dictionary, near_plane: float) -> bool:
+	var inverse := lens.affine_inverse()
+	for point: Vector3 in (envelope.points as PackedVector3Array):
+		if -(inverse * point).z <= near_plane: return false
+	return true
+
+
 ## Project the convex oriented envelope, preserving actual perspective/depth.
 ## A near-plane crossing is unavailable rather than silently a clear view.
 static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,

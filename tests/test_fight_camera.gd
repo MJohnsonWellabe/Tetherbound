@@ -248,3 +248,67 @@ func test_fade_inset_ignores_corner_grazes_but_keeps_real_cover() -> void:
 	assert_true(bool(hit.call(actor,front,0.15)),"real foreground cover still fades")
 	var narrowed := FIT.inset_envelope(actor,0.15)
 	assert_almost_eq((narrowed.box as AABB).size.y,2.0,0.0001,"full height kept, so feet still count")
+
+
+## Review B1/N1/N2: every dithered body is handed back when the rig stops
+## following the ally mid-fight (throw aim, resolve close-up); a subject that
+## straddles the near plane dithers nothing; a faded body that becomes the
+## ally is handed back at once.
+func test_foreground_fades_clear_when_the_fight_lens_is_given_up() -> void:
+	var manager: Node = preload("res://scripts/combat/combat_manager.gd").new()
+	var model := Node3D.new()
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = BoxMesh.new()
+	var original := StandardMaterial3D.new()
+	mesh.set_surface_override_material(0,original)
+	model.add_child(mesh)
+	var rig := Node3D.new()
+	rig.set_meta("unused",true)
+	var ally := Node3D.new()
+	var actor := _envelope(AABB(Vector3(-1,0,-1),Vector3(2,2,2)),Transform3D(Basis.IDENTITY,Vector3(0,0,-8)))
+	var cover := _envelope(AABB(Vector3(-0.35,0,-0.3),Vector3(0.7,0.6,0.6)),Transform3D(Basis.IDENTITY,Vector3(0,0,-4)),model)
+	var context := {"occluders":[cover],"subjects":[actor],"geometry_valid":true,
+		"viewport":Vector2(1920,1080),"fov":68.0,"near":0.05}
+	var cfg := {"fade_foreground":true,"foreground_fade":0.65,"foreground_fade_speed":100.0,"foreground_fade_inset":0.0}
+	assert_eq(int(manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1)),1)
+	assert_ne(mesh.get_surface_override_material(0),original)
+	# Aim re-targets the rig at the trainer: the physics framing tick clears.
+	var aim_rig := CameraTarget.new()
+	aim_rig.target = model
+	manager.set("_camera_rig",aim_rig)
+	manager.set("_ally_body",ally)
+	manager.call("_update_combat_camera_framing",1.0/60.0)
+	assert_eq(mesh.get_surface_override_material(0),original,"aim/resolve hands every dithered body back")
+	# Near-plane straddle: the subject has no hull, nothing is dithered.
+	var straddle := _envelope(AABB(Vector3(-1,0,-1),Vector3(2,2,2)),Transform3D(Basis.IDENTITY,Vector3(0,0,-0.5)))
+	context.subjects = [straddle]
+	assert_eq(int(manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1)),0,
+		"a subject straddling the near plane dithers nothing")
+	assert_eq(mesh.get_surface_override_material(0),original)
+	# A faded body that becomes the ally is handed back immediately.
+	context.subjects = [actor]
+	manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1)
+	assert_ne(mesh.get_surface_override_material(0),original)
+	cover["body_id"] = ally.get_instance_id()
+	context.occluders = [cover]
+	manager.call("_clear_foreground_fades")
+	manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1)
+	assert_ne(mesh.get_surface_override_material(0),original,"fading under the ally's id")
+	assert_eq(int(manager.call("_update_foreground_fades",Transform3D.IDENTITY,{"occluders":[],"subjects":[actor],
+		"geometry_valid":true,"viewport":Vector2(1920,1080),"fov":68.0,"near":0.05},cfg,0.0)),0)
+	assert_eq(mesh.get_surface_override_material(0),original,"a body that became the ally is handed back at once")
+	manager.call("_clear_foreground_fades")
+	manager.set("_camera_rig",null)
+	manager.set("_ally_body",null)
+	aim_rig.free()
+	rig.free()
+	ally.free()
+	model.free()
+	manager.free()
+
+
+class CameraTarget extends Node3D:
+	var _target: Node = null
+	var target: Node:
+		set(value): _target = value
+		get: return _target
