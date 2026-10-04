@@ -4733,6 +4733,8 @@ func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
 	for zone: Dictionary in _wild_keep_clear_zones():
 		if here.distance_to(zone.at) < float(zone.radius):
 			return false
+	if not _clear_of_village_fence(here):
+		return false
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
@@ -4749,6 +4751,32 @@ func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
 ## through the same checks as a named trainer's ground.
 var _keep_clear: Array[Dictionary] = []
 var _keep_clear_read := false
+
+
+## A wild fought against the village fence pinned the tutorial fight (F02#3 r4:
+## 2 hits dealt, 39 taken at the south fence corner). Wild bodies neither spawn
+## nor settle a wander target within `arena.wild_fence_clear_m` of the village
+## boundary outline (village_boundary.json), on either side of it.
+var _fence_segments: Array[PackedVector2Array] = []
+var _fence_read := false
+
+
+func _clear_of_village_fence(here: Vector2) -> bool:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
+	if clear <= 0.0:
+		return true
+	if not _fence_read:
+		_fence_read = true
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village_boundary.json"))
+		var points: Array = ((raw as Dictionary).get("outline", {}) as Dictionary).get("points", []) if raw is Dictionary else []
+		for index in points.size():
+			var a: Array = points[index]
+			var b: Array = points[(index + 1) % points.size()]
+			_fence_segments.append(PackedVector2Array([Vector2(float(a[0]), float(a[1])), Vector2(float(b[0]), float(b[1]))]))
+	for segment: PackedVector2Array in _fence_segments:
+		if here.distance_to(Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])) < clear:
+			return false
+	return true
 
 
 func _wild_keep_clear_zones() -> Array[Dictionary]:
@@ -4779,6 +4807,18 @@ func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
 			away = Vector2(1.0, 0.0)
 		var moved := centre + away.normalized() * (float(zone.radius) + 1.0)
 		out = Vector3(moved.x, out.y, moved.y)
+	var fence_clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
+	if fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
+		for segment: PackedVector2Array in _fence_segments:
+			var here := Vector2(out.x, out.z)
+			var nearest := Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])
+			var away := here - nearest
+			if away.length() >= fence_clear:
+				continue
+			if away.length() < 0.01:
+				away = (segment[1] - segment[0]).orthogonal()
+			var moved := nearest + away.normalized() * (fence_clear + 0.5)
+			out = Vector3(moved.x, out.y, moved.y)
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
