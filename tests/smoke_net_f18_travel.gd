@@ -156,7 +156,8 @@ func _run() -> void:
 		"guest Tidewake crossing leaves second host in Meadows at original position with its own key")
 	# A player who quits mid-settlement is fenced (the save is refused, the
 	# arrival is already durable). End the witness only after it settles.
-	if await _f18_action(1, "f18_settled", {}, 3000).is_empty(): return
+	var settled: Dictionary = await _f18_action(1, "f18_settled", {}, 3000)
+	if settled.is_empty(): return
 	print("F18_NET_FIXTURES: starter/free-play flags; one HomeKey per peer + guest Tidewake key; one pre-evidence grounded staging teleport. No earned opening/normal-loop/visual acceptance claimed.")
 	var file := FileAccess.open(_run_dir.path_join("F18_WITNESSES.json"), FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(_f18_witnesses, "\t"))
