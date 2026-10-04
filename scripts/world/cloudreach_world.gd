@@ -2973,6 +2973,17 @@ func _inside_nature_tree_exclusion(at: Vector3) -> bool:
 		if not raw is Dictionary:
 			continue
 		var exclusion := raw as Dictionary
+		# A sightline: no route tree within half_width_m of the from->to segment
+		# (F40#4: the Aviary seen from the finale road at 400 m).
+		if exclusion.has("from_xz") and exclusion.has("to_xz"):
+			var from_raw := exclusion.get("from_xz") as Array
+			var to_raw := exclusion.get("to_xz") as Array
+			var from := Vector2(float(from_raw[0]), float(from_raw[1]))
+			var to := Vector2(float(to_raw[0]), float(to_raw[1]))
+			var nearest := Geometry2D.get_closest_point_to_segment(Vector2(at.x, at.z), from, to)
+			if nearest.distance_to(Vector2(at.x, at.z)) < float(exclusion.get("half_width_m", 0.0)):
+				return true
+			continue
 		var centre_raw: Variant = exclusion.get("centre_xz", [])
 		if not centre_raw is Array or (centre_raw as Array).size() < 2:
 			continue

@@ -491,7 +491,8 @@
         "id": "windscar_beacon_aperture",
         "centre_xz": [-248.64766, 2689.80420],
         "radius_m": 7.0
-      }
+      },
+    {"id": "aviary_finale_road_sightline", "_comment": "F40#4: the Sky Aviary must read from the finale road at ~400 m (frame-matrix row 33 stand) -- three route trees stood on that line. Route trees within half_width_m of the segment are not planted.", "from_xz": [353.9, 5040.8], "to_xz": [100.0, 5350.0], "half_width_m": 9.0}
     ]
   }
 }
