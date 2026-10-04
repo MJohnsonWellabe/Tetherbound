@@ -1,0 +1,525 @@
+{
+  "cases": [
+    {
+      "ally": "mudsnout",
+      "ally_height_m": 1.99999988079071,
+      "foe": "mudsnout",
+      "foe_height_m": 1.99999988079071,
+      "pair": "small/small",
+      "shots": [
+        {
+          "cover_faded": true,
+          "distance": 9.5,
+          "faded_foreground": 2,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "00-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 9.5,
+          "faded_foreground": 1,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "00-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 9.5,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "00-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 9.5,
+          "faded_foreground": 0,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "00-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "mudsnout",
+      "ally_height_m": 1.99999988079071,
+      "foe": "terrapup",
+      "foe_height_m": 3.84999990463257,
+      "pair": "small/normal",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 13.814787878118,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "01-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 12.6,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "01-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 12.7679544017843,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "01-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 12.8947729151236,
+          "faded_foreground": 0,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "01-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "mudsnout",
+      "ally_height_m": 1.99999988079071,
+      "foe": "veridian",
+      "foe_height_m": 5.80000019073486,
+      "pair": "small/giant",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 15.5804148444337,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "02-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 13.8414836943582,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "02-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 15.8286050224711,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "02-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 16.1384194874265,
+          "faded_foreground": 0,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "02-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "terrapup",
+      "ally_height_m": 3.84999990463257,
+      "foe": "mudsnout",
+      "foe_height_m": 1.99999988079071,
+      "pair": "normal/small",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 13.7945291634605,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "03-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 12.0901467805555,
+          "faded_foreground": 1,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "03-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 12.6,
+          "faded_foreground": 2,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "03-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 12.6,
+          "faded_foreground": 2,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "03-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "terrapup",
+      "ally_height_m": 3.84999990463257,
+      "foe": "terrapup",
+      "foe_height_m": 3.84999990463257,
+      "pair": "normal/normal",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 15.1454392444229,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "04-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 13.9505065390907,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "04-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 16.1095490327941,
+          "faded_foreground": 2,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "04-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 16.1777972683403,
+          "faded_foreground": 2,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "04-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "terrapup",
+      "ally_height_m": 3.84999990463257,
+      "foe": "veridian",
+      "foe_height_m": 5.80000019073486,
+      "pair": "normal/giant",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 19.0598077526967,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "05-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 17.970624438341,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "05-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 15.8444474828997,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "05-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 15.8737993651833,
+          "faded_foreground": 0,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "05-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "veridian",
+      "ally_height_m": 5.80000019073486,
+      "foe": "mudsnout",
+      "foe_height_m": 1.99999988079071,
+      "pair": "giant/small",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 14.5465463286063,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "06-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 14.2123936476594,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "06-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 14.9127917667993,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "06-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 14.9190628262609,
+          "faded_foreground": 0,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "06-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "veridian",
+      "ally_height_m": 5.80000019073486,
+      "foe": "terrapup",
+      "foe_height_m": 3.84999990463257,
+      "pair": "giant/normal",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 19.7840705476243,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "07-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 19.0792876639288,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "07-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 19.2187296396938,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "07-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 17.7155078046804,
+          "faded_foreground": 1,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "07-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    },
+    {
+      "ally": "veridian",
+      "ally_height_m": 5.80000019073486,
+      "foe": "veridian",
+      "foe_height_m": 5.80000019073486,
+      "pair": "giant/giant",
+      "shots": [
+        {
+          "cover_faded": false,
+          "distance": 23.8623978464747,
+          "faded_foreground": 0,
+          "frame": 12,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "08-012.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 21.3374497522389,
+          "faded_foreground": 0,
+          "frame": 36,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "08-036.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": false,
+          "distance": 20.4738634553706,
+          "faded_foreground": 0,
+          "frame": 60,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "08-060.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        },
+        {
+          "cover_faded": true,
+          "distance": 20.6787958376692,
+          "faded_foreground": 1,
+          "frame": 71,
+          "framed": true,
+          "hud_clear": true,
+          "overlap": 0.0,
+          "png": "08-071.png",
+          "solver_pass": true,
+          "yaw_offset_deg": 0.0
+        }
+      ]
+    }
+  ],
+  "failures": [],
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "video_adapter": "llvmpipe (LLVM 20.1.2, 256 bits)"
+}
