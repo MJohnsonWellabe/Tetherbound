@@ -92,8 +92,8 @@ func _run() -> void:
 	if _args.has("ordinary"):
 		# Disclosed fixture, granted before admission like the Terrapup: one of
 		# each gathering tool, so tier sites can be gathered with the right tool.
-		for tool: String in ["axe", "pickaxe", "sickle", "hoe"]:
-			if _game.get("items").call("has", tool): _game.get("inventory").call("add", tool, 1)
+		for tool: Variant in _game.get("items").call("tool_ids"):
+			_game.get("inventory").call("add", str(tool), 1)
 	var source_path: String = CONFIGS[_realm]
 	_report.source_path = source_path
 	_report.source_sha256 = FileAccess.get_sha256(source_path)
@@ -262,6 +262,8 @@ func _site(raw: Dictionary, source_path: String) -> bool:
 	if not _check(result.controller_approach, id + " actual controller approach moved at least 3m and remained grounded"): return false
 	if not _check(await _driver.call("_prompt_holds_the_line", prompt.get_instance_id()), id + " exact candidate prompt wins ordinary interaction"): return false
 	var tool: String = str(_game.get("items").call("gathered_with", str(raw.get("item", ""))))
+	if tool.is_empty() and _soft:
+		_game.set("equipped_tool", "")
 	if not tool.is_empty():
 		# Disclosed fixture: equip the item's gathering tool (granted at setup). The host
 		# rule that refuses an unequipped tier gather is unchanged.
@@ -282,6 +284,8 @@ func _site(raw: Dictionary, source_path: String) -> bool:
 		if _settled.has(id): break
 		await physics_frame
 	result.settlement = _settled.get(id, {})
+	if not ADAPTER.saved_decision(result.settlement.get("verdict", {})):
+		result.baseline_diagnostic = _baseline_diagnostic()
 	if not _check(ADAPTER.saved_decision(result.settlement.get("verdict", {})), id + " ordinary gather reaches real owner save and ACK"): return false
 	var after_disk := _disk("after_" + id.replace(":", "_"))
 	var row: Dictionary = {}
@@ -335,6 +339,26 @@ func _actor_baseline_diagnostic() -> Dictionary:
 			row.encounter_count = host.get("encounters").size()
 		result.directors.append(row)
 	return result
+
+## Read-only: the session's own actor-baseline verdict for each pending
+## creature_training row, so a refusal names its inner reason in the report.
+func _baseline_diagnostic() -> Array:
+	var out: Array = []
+	var session: Node = _game.get("session")
+	var character := str(_game.get("local").character_id)
+	for node: Node in session.call("_foundation_directors_under", session.call("_foundation_realm_roots")):
+		var host: Variant = node.get("_encounter_host")
+		var row := {"director": str(node.get_path()), "host": host.get_script().resource_path if host is RefCounted else "none",
+			"fence": host.has_method("move_action_publication_pending") if host is RefCounted else false, "mine": []}
+		if host is RefCounted:
+			var encounters: Dictionary = host.get("encounters")
+			for id: String in encounters:
+				for key: String in ["participants", "retained_actor_participants"]:
+					for participant: Variant in (encounters[id].get(key, {}) as Dictionary).values():
+						if participant is Dictionary and participant.get("character_id") == character:
+							row.mine.append({"id": id, "set": key, "phase": encounters[id].get("phase")})
+		out.append(row)
+	return out
 
 func _disk(label: String) -> Dictionary:
 	_saver.call("finish_fallback")
