@@ -21,6 +21,11 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
 
+**Feature status (batch landings):**
+- **F32:** #0, #1, #2, #3 PASS; #5 PASS for 2 characters (4-claimant nightly still open). #4: lexicon and Den sheds PASS; win sheds await F27 patch C. Evidence: ralph/reports/HOMESTEAD/f32/.
+- **F17:** #2, #3, #5 and F01#2 PASS. #4 waits on the earned-team rest fix. #6 Bars A/B depend on F26 plus Codex hero assets. Evidence: ralph/reports/HUB/f17/.
+- **Re-proof fixes (#529):** F06#4, F07#1, F08#2 and F03#3 PASS.
+
 **Owner rulings 2026-10-04:**
 - Visual cards judge High/Medium for the target look and confirm Low/Compatibility for no breakage until the Ally test passes.
 - The second UI check is 1280×720.

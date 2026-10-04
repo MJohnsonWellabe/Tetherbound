@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T19:51:17.591411+00:00",
+ "generated_at": "2026-10-04T20:41:05.771237+00:00",
  "main_sha": "b4e4897d5 (PR #525 head; consolidated F17-F21, F25/F35 landing)",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
@@ -51,18 +51,18 @@
     },
     {
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
-     "status": "partial",
-     "evidence": "smoke_gate_b_continuous.gd --gate-b-full-chain --starter=X @8c6657a5e (runs 36269170273/36269360016/36269361827)",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F01-4.md",
      "gap": "Re-run smoke_gate_b_continuous.gd --gate-b-full-chain --starter= for terrapup, ripplet and galewisp. Folds into F17#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The full chain runs only in continue-on-error known-red CI, and the gated core stops at tournament readiness. Save/progression/combat changed since 8c6657a5e.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 4
     },
     {
      "text": "Opening/tournament state survives save/reload",
-     "status": "partial",
-     "evidence": "smoke_gate_b_continuous.gd full chain reload checks @8c6657a5e",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F01-5.md",
      "gap": "Same three full-chain starter runs; confirm each in-chain reload passes on the v28 save. Folds into F17#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The reload checks sit inside the ungated full chain. Since then the save was reset (v28, scripts/save: 1707+ lines) and game_state/world_state changed.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 5
     },
     {
@@ -589,10 +589,10 @@
     },
     {
      "text": "Solmane freed after Veyra volunteers to each finale participant like Meadows’ Veridian; never wild or catchable",
-     "status": "partial",
-     "evidence": "ralph/reports/CLOUDREACH/b/f08-5-solmane/@45ef17fd (smoke_cloudreach_solmane_offer_choice.gd + two-peer run3)",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F08-5.md",
      "gap": "Re-run smoke_cloudreach_solmane_offer_choice.gd (6 solo cases) and the two-peer accept/refuse/rejoin run. Folds into F19#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The offer smokes are not in CI. The gated unit test_cloudreach_no_legendary_offer.gd covers only no-wild-Solmane and the config shape. Save/net changed.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 5
     }
    ],
@@ -627,10 +627,10 @@
     },
     {
      "text": "Lawful Surge phases, grounded paths, rod safe radii",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/b/f09_1/PROOF.md@406f6f9f (smoke_stormwood_b_surge_phase_traversal, not CI)",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F09-1.md",
      "gap": "Re-run smoke_stormwood_b_surge_phase_traversal on b4e4897d5; consider wiring it into verify-regions-shard Folds into F49#0.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Changed since: stormwood_surge.json (46 lines), stormwood_lightning.gd (+371). CI test_stormwood_surge.gd is policy-only by its own header.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 1
     },
     {
@@ -707,10 +707,10 @@
     },
     {
      "text": "Forest, rod line and restored-sky views pass visual matrix / Bars A/B",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f10_4/r7/@e5e450fd",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F10-4/VERDICT.md",
      "gap": "Re-capture Deepwood, rod line and aftermath matrix; code-blind judge against the new §4 bar Folds into F41#3, F41#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual verdict. stormheart_tree.gd (+266), shaders, Stormwood world/scatter changed (11 files) since; §4 bar raised (Palworld/Valheim).",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
     {
