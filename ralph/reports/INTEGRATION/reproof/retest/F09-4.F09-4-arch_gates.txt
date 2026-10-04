@@ -1,0 +1,30 @@
+proof:    stormwood_f09_arch_gates_two_peer_reload
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/stormwood_f09_arch_gates_two_peer_reload.json
+out:      /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates
+run id:  net-20261004T201547Z-3019
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3051 control_port=33991 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/peer-0.log
+coordinator: launched peer 1 (client) pid=3052 control_port=44429 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":30421.0,"godot_version":"4.7-stable (official)","main_sha":"cc52f218128d","peer":0.0,"pid":3051.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":30422.0,"godot_version":"4.7-stable (official)","main_sha":"cc52f218128d","peer":1.0,"pid":3052.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+FAIL: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+FAIL: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/net/net-proof_two_peer-20261004T201547Z/SUMMARY.md ===
+# Net smoke run net-20261004T201547Z-3019
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=3051 exited=true unexpected_exit=false
+- peer 1 (client) pid=3052 exited=true unexpected_exit=false
+
+FAILURES:
+- #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+PROOF.md: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F09-4-arch_gates/PROOF.md (exit 1)
