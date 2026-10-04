@@ -21,7 +21,7 @@ const THRESHOLD_RADIUS := 0.25
 const CIRCLE_RADIUS := 1.65
 const CIRCLE_FRAMES := 90
 const CONTACT_EPS := 0.00001 # Numerical comparison only, never a smaller shape.
-const LOW_PROP_RISE := 0.15
+const LOW_PROP_RISE := 0.05
 
 class NativeTick extends Node:
 	var navigator: WeakRef
@@ -473,9 +473,16 @@ func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dicti
 		_contact_hit = hit
 		_contact_blocked = blocked
 	# Check AFTER each native call too; one call can exceed the cooperative cap.
-	if not _registered_body_contract() or Time.get_ticks_usec() > _deadline \
-			or hit.get_collision_count() >= CONTACTS:
-		_stop_geometry("native query body identity/deadline/contact saturation")
+	# Same three refusals as before, reported separately so a failing run says
+	# which one fired (F02#3 r3 could not tell a slow host from a crowd).
+	if not _registered_body_contract():
+		_stop_geometry("native query body identity changed")
+		return {"blocked": true, "hit": null}
+	if Time.get_ticks_usec() > _deadline:
+		_stop_geometry("native query cooperative frame deadline exceeded")
+		return {"blocked": true, "hit": null}
+	if hit.get_collision_count() >= CONTACTS:
+		_stop_geometry("native query contact saturation (%d contacts)" % hit.get_collision_count())
 		return {"blocked": true, "hit": null}
 	var safe := hit.get_collision_safe_fraction()
 	var unsafe := hit.get_collision_unsafe_fraction()
@@ -1508,11 +1515,13 @@ func _production_wall_normals(hit: PhysicsTestMotionResult3D) -> Array[Vector3]:
 	return walls
 
 
-## A contact rising above the walking foot by more than a floor-cone capsule
-## contact can (r(1 - cos 45deg) ~= 0.12 m for the trainer): something the
-## controller would climb rather than walk on. No upper bound: the woodpile's
-## box is exactly STEP_HEIGHT tall, so its edge sits on any step-height cut.
-## Pure seam; `step_height` must still be a real positive step.
+## A prop contact rising above the walking foot by more than numerical skin:
+## clutter the controller would climb rather than walk on. Only Props colliders
+## reach this (terrain never does; walkable treads are excluded by meta), so
+## the floor-cone allowance terrain needs does not apply: the trainer_camp
+## campfire stone ring is lower than 0.15 m and was climbed, then stepped off
+## (gate B galewisp, CI render 37239859189). No upper bound: the woodpile's box
+## is exactly STEP_HEIGHT tall. `step_height` must still be a real positive step.
 static func is_low_prop_climb(rise: float, step_height: float) -> bool:
 	return is_finite(rise) and is_finite(step_height) and step_height > 0.0 and rise > LOW_PROP_RISE
 
