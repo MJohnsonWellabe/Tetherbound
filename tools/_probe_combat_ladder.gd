@@ -57,8 +57,12 @@ const BATTLE_FRAME_LIMIT := 30000
 
 ## Somewhere flat with room, away from the authored clusters. Trainer creatures
 ## are sent out in front of the player (`_send_out_spot` with no trainer body),
-## so this is where every rung is fought.
-const STAGE := Vector3(48.0, 0.0, -58.0)
+## so this is where every rung is fought. The practice trainer's own authored
+## spot (band1 trainers.json): the old (48, -58) put the send-out spot across
+## the OP-0830 village boundary fence corner at (46, -63), so the piloted
+## creature stood pinned on FenceCornerGuard_20 while the foe hit it from the
+## far side (2 hits dealt / 39 taken on every rung-1 run).
+const STAGE := Vector3(78.0, 0.0, 44.0)
 
 ## The ladder, in the order a player meets it. `band` keys into
 ## `chapter_curve.json`; `step` is this rung's position through that band's own
