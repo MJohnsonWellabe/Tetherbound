@@ -438,7 +438,10 @@ jobs:
         # Two shards (2026-09-25): four measured 3m02-4m29 each including ~2m
         # setup; two keep ~5m of tests per shard under the 12-minute ceiling
         # and free two runner slots for the split verify jobs.
-        shard: [1, 2]
+        # Three (2026-10-04): shard 2 of two had grown to 10-12 min against
+        # the 12-minute ceiling and was cancelled by it twice (CI 37183813895,
+        # 37187293215) with every test passing; shard 1 took ~6 min.
+        shard: [1, 2, 3]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -571,7 +574,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/2 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
+            -- --shard=${{ matrix.shard }}/3 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
 
   # test_veg_corridor.gd, alone, in its own job with its own ceiling.
   #
