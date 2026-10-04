@@ -6,8 +6,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## `realm_key_cloudreach` and a world-scoped earned Heart from the Warden).
 ## Superseded by RD-10/RD-20/RD-21 (the Warden now grants each participant their
 ## own Tidewake key item and relic, F19#2) once F18 turns
-## redesign_portal_runtime_enabled on; retire this test or give it a
-## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
 ## point.
 ##
 ## F05 (ACCEPTANCE §6.1; card M4 "relic/key are durable"), two real peers.

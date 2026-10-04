@@ -5,8 +5,7 @@ extends "res://tests/test_case.gd"
 ## realm, not an inventory key item). Superseded by RD-10/RD-20/RD-21 (the
 ## Warden now grants each participant their own Tidewake portal key as a real
 ## item, F19#2) once F18 turns redesign_portal_runtime_enabled on; retire this
-## test or give it a requires-flag hold (inverted, so it runs only while that
-## flag is off) at that point.
+## test or rewrite it to the redesign rule at that point.
 
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")

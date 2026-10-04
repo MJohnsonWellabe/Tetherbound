@@ -208,8 +208,7 @@ func test_durable_world_unlock_routes_to_existing_stormwood_destination_without_
 	# -> Stormwood return gate behind a world-scoped unlock). Superseded by
 	# RD-10/RD-17/RD-22 (biomes connect only through the Crossing Hall portals and
 	# the Home Key, F18#2) once F18 turns redesign_portal_runtime_enabled on;
-	# retire this test or give it a requires-flag hold (inverted, so it runs only
-	# while that flag is off) at that point.
+	# retire this test or rewrite it to the redesign rule at that point.
 	BIOME_ORDER.clear_test_overrides()
 	var mounted := _mounted_gate()
 	var water: Node3D = mounted.world

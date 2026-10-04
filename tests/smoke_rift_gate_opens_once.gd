@@ -9,8 +9,7 @@ extends SceneTree
 ## LEGACY PATH: asserts the shipped portal-off behaviour (the old Meadows ->
 ## Cloudreach physical crossing). Superseded by RD-10/RD-17 (Meadows now leads
 ## to Tidewake through the Crossing Hall portals, F18#2/F19) once F18 turns
-## redesign_portal_runtime_enabled on; retire this test or give it a
-## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
 ## point.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 

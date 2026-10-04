@@ -10,8 +10,7 @@ extends SceneTree
 ## Water physical gate and its world-scoped Water key). Superseded by
 ## RD-10/RD-17/RD-22 (Stormwood is now the last chapter: its finale grants a
 ## fifth portal key and the Home Key homecoming follows, F19#2/F20) once F18
-## turns redesign_portal_runtime_enabled on; retire this test or give it a
-## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## turns redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
 ## point.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 

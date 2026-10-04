@@ -6,8 +6,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## Cloudreach physical crossing behind a world-scoped `realm_key_cloudreach`).
 ## Superseded by RD-10/RD-17/RD-21 (the same five now reach Tidewake through the
 ## portal their own key unlocks, F18/F19) once F18 turns
-## redesign_portal_runtime_enabled on; retire this test or give it a
-## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
 ## point.
 ##
 ## F05 (ACCEPTANCE §6.1, card M4): "the gate opens ... and the SAME five enter
