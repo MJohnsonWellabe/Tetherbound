@@ -23,6 +23,13 @@ static func resolve(spec: Dictionary, mastery_rank: int = 1) -> Dictionary:
 		var variants: Dictionary = resolved.get("body_variants", {})
 		if not variants.has(str(spec.body_variant)): return {}
 		resolved["body"] = variants[str(spec.body_variant)].duplicate(true)
+	if spec.has("presentation_variant"):
+		# A presentation variant deep-merges authored body/trail/impact/launch
+		# overrides over the archetype (e.g. a water ball built on the water
+		# projectile). Timing, arrival and budgets keep their archetype rules.
+		var named: Dictionary = resolved.get("presentation_variants", {})
+		if not named.has(str(spec.presentation_variant)): return {}
+		_deep_merge(resolved, named[str(spec.presentation_variant)])
 	var params: Dictionary = resolved.get("parameters", {}).duplicate(true)
 	for key: String in ["count", "size", "colour", "arc", "speed", "spread", "trail", "impact_scale"]:
 		if spec.has(key): params[key] = spec[key]
@@ -86,6 +93,34 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	var effect := EFFECT.new()
 	effect.configure(from, to, row, frozen_copy(frozen), float(frozen.travel_seconds), config())
 	parent.add_child(effect)
+	return effect
+
+static func _deep_merge(base: Dictionary, over: Dictionary) -> void:
+	for key: Variant in over:
+		if base.get(key) is Dictionary and over[key] is Dictionary:
+			_deep_merge(base[key], over[key])
+		else:
+			base[key] = over[key].duplicate(true) if (over[key] is Dictionary or over[key] is Array) else over[key]
+
+## Authored replacement presentation for a whole ultimate, keyed by move id
+## (owner direction: water ultimates read as a wave or a water ball). Empty
+## when the ultimate keeps its own composition.
+static func ultimate_override(move_id: String) -> Dictionary:
+	return (config().get("ultimate_overrides", {}) as Dictionary).get(move_id, {}).duplicate(true)
+
+## Draw an already-validated ultimate (ultimate_library.launch checked its
+## binding, duration and grounds) with this library's staged effect. The
+## caller's frozen context is kept; no gameplay value is read or written.
+static func launch_presentation(parent: Node, from: Vector3, to: Vector3, visual: Dictionary,
+		frozen: Dictionary) -> Node3D:
+	if parent == null or not parent.is_inside_tree(): return null
+	if not from.is_finite() or not to.is_finite(): return null
+	var row := resolve(visual, int(frozen.get("mastery_rank", 1)))
+	if row.is_empty(): return null
+	var effect := EFFECT.new()
+	effect.configure(from, to, row, frozen_copy(frozen), float(frozen.get("travel_seconds", 0.0)), config())
+	parent.add_child(effect)
+	effect.add_to_group("ultimate_presentation")
 	return effect
 
 static func frozen_copy(value: Variant) -> Variant:

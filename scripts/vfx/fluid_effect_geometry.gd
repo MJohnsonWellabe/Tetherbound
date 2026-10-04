@@ -51,6 +51,46 @@ static func _wave_vertex(u: float, v: float, size: float, half_width: float) -> 
 	var radius := size*taper*(0.95-0.33*v)
 	return Vector3(lerpf(-half_width,half_width,u), size*0.75 + sin(angle)*radius, -cos(angle)*radius)
 
+## A splash crown: curved sheets of water thrown up and outward around the
+## contact point (UV.y runs base to lip, so the water shader foams the lips).
+static func splash_crown(size: float, profile: Dictionary) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	var petals := clampi(int(profile.get("crown_petals", 9)), 4, 16)
+	var rows := clampi(int(profile.get("crown_rows", 6)), 3, 10)
+	var height := size * float(profile.get("crown_height_ratio", 1.4))
+	var flare := size * float(profile.get("crown_flare_ratio", 1.1))
+	var gap := clampf(float(profile.get("crown_gap", 0.18)), 0.0, 0.45)
+	# 0 keeps straight-sided petals; toward 1 each petal narrows into a
+	# thrown jet of water instead of a flat fin.
+	var taper := clampf(float(profile.get("crown_taper", 0.0)), 0.0, 0.92)
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for k in petals:
+		var centre := TAU * (float(k) + 0.5) / float(petals)
+		var half := TAU * (0.5 - gap * 0.5) / float(petals)
+		# Each petal has its own height and lean so the crown reads as thrown water.
+		var tall := 0.72 + 0.28 * sin(float(k) * 2.39 + 1.3)
+		var lean := half * 0.6 * taper * sin(float(k) * 1.7 + 0.4)
+		for r in rows:
+			var v0 := float(r) / float(rows)
+			var v1 := float(r + 1) / float(rows)
+			var w0 := half * (1.0 - taper * pow(v0, 1.3))
+			var w1 := half * (1.0 - taper * pow(v1, 1.3))
+			var c0 := centre + lean * v0
+			var c1 := centre + lean * v1
+			var p00 := _crown_point(c0 - w0, v0, size, height * tall, flare)
+			var p10 := _crown_point(c0 + w0, v0, size, height * tall, flare)
+			var p11 := _crown_point(c1 + w1, v1, size, height * tall, flare)
+			var p01 := _crown_point(c1 - w1, v1, size, height * tall, flare)
+			_surface_quad(mesh, [p00, p10, p11, p01], [Vector2(0.0, v0), Vector2(1.0, v0), Vector2(1.0, v1), Vector2(0.0, v1)])
+	mesh.surface_end()
+	return mesh
+
+static func _crown_point(angle: float, v: float, size: float, height: float, flare: float) -> Vector3:
+	# Radius widens toward the lip (a flared cup) and the lip curls outward.
+	var radius := size * 0.35 + flare * pow(v, 1.6)
+	var y := height * sin(v * PI * 0.5)
+	return Vector3(cos(angle) * radius, y, sin(angle) * radius)
+
 static func ice_crystal(size: float, profile: Dictionary) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()
 	var sides := clampi(int(profile.get("segments", 6)), 4, 8)

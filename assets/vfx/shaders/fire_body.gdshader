@@ -11,6 +11,9 @@ uniform bool billboard = true;
 uniform bool dust = false;
 // 0 burning body, 1 continuous trail, 2 expanding burst, 3 ember.
 uniform int effect_mode = 0;
+// Foam/spray can be authored brighter than dust: unshaded and half
+// transparent over a bright meadow, an unscaled pale foam reads as grey mist.
+uniform float brightness = 1.0;
 varying float phase_seed;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
@@ -59,6 +62,7 @@ void fragment() {
     vec3 colour = mix(ember_colour.rgb, flame_colour.rgb, smoothstep(0.06, 0.62, heat));
     colour = mix(colour, hot_colour.rgb, smoothstep(0.63, 0.96, heat));
     if (dust) colour = flame_colour.rgb * mix(0.75, 1.07, billow);
+    colour *= brightness;
     ALBEDO = colour;
     EMISSION = dust ? vec3(0.0) : colour * 0.20;
     ALPHA = clamp(mask * opacity, 0.0, 1.0);
