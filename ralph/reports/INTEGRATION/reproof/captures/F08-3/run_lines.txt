@@ -1,0 +1,26 @@
+6:ERROR: unscoped chapter flag: fly_tutorial_completed
+56:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-arrival-far-day.png
+57:HIGH PERCH LIVE high-perches-arrival-far-day at (903.0452, 1028.817, 2651.27) (48.8 m from crown)
+58:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-arrival-lip-day.png
+59:HIGH PERCH LIVE high-perches-arrival-lip-day at (901.2991, 1025.318, 2679.212) (20.8 m from crown)
+69:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-arrival-landed-day.png
+70:HIGH PERCH LIVE high-perches-arrival-landed-day at (899.334, 1020.131, 2710.738) (10.8 m from crown)
+71:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-crown-rim-out-day.png
+72:HIGH PERCH LIVE high-perches-crown-rim-out-day at (912.3986, 1020.131, 2688.045) (17.2 m from crown)
+73:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-crown-court-day.png
+74:HIGH PERCH LIVE high-perches-crown-court-day at (912.3986, 1020.131, 2688.045) (17.2 m from crown)
+75:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-departure-lookback-day.png
+76:HIGH PERCH LIVE high-perches-departure-lookback-day at (902.2799, 1018.527, 2736.06) (36.1 m from crown)
+77:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-arrival-far-night.png
+78:HIGH PERCH LIVE high-perches-arrival-far-night at (903.0452, 1028.851, 2651.27) (48.8 m from crown)
+79:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-arrival-lip-night.png
+80:HIGH PERCH LIVE high-perches-arrival-lip-night at (901.2991, 1025.352, 2679.212) (20.8 m from crown)
+90:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-arrival-landed-night.png
+91:HIGH PERCH LIVE high-perches-arrival-landed-night at (899.7062, 1020.131, 2708.169) (8.2 m from crown)
+92:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-crown-rim-out-night.png
+93:HIGH PERCH LIVE high-perches-crown-rim-out-night at (912.3849, 1020.131, 2687.98) (17.3 m from crown)
+94:CAPTURE wrote /tmp/claude-0/cap/F08-3/frames/high-perches-crown-court-night.png
+95:HIGH PERCH LIVE high-perches-crown-court-night at (912.3849, 1020.131, 2687.98) (17.3 m from crown)
+96:ERROR: HIGH PERCH LIVE: night departure: second Jump did not launch (Find a clear launch with room for your companion overhead.)
+101:CAPTURE sheet /tmp/claude-0/cap/F08-3/frames/_sheet.png (11 frames)
+102:HIGH PERCH LIVE FAIL: 11/12 frames, 1 failures

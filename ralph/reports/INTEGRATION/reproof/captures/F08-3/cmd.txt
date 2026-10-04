@@ -1,0 +1,1 @@
+CMD: xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --fixed-fps 60 --rendering-driver opengl3 --audio-driver Dummy --resolution 1920x1080 --script tools/capture_cloudreach_high_perch_live.gd -- --output=/tmp/claude-0/cap/F08-3/frames
