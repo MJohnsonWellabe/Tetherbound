@@ -1,0 +1,113 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+STORMWOOD BUILD shell=false elapsed_ms=398 terrain attached
+STORMWOOD BUILD shell=false elapsed_ms=3117 terrain regions loaded
+STORMWOOD BUILD shell=false elapsed_ms=3371 collision configured
+STORMWOOD BUILD shell=false elapsed_ms=3377 texture 1
+STORMWOOD BUILD shell=false elapsed_ms=3378 texture 2
+STORMWOOD BUILD shell=false elapsed_ms=3379 texture 3
+STORMWOOD BUILD shell=false elapsed_ms=3379 texture 4
+STORMWOOD BUILD shell=false elapsed_ms=3379 texture 5
+STORMWOOD BUILD shell=false elapsed_ms=3380 texture 6
+STORMWOOD BUILD shell=false elapsed_ms=3381 assigning terrain assets
+STORMWOOD BUILD shell=false elapsed_ms=3655 terrain assets assigned
+STORMWOOD BUILD shell=false elapsed_ms=3678 materials configured
+STORMWOOD BUILD shell=false elapsed_ms=3678 terrain physics settled
+[scatter bake] load phases (ms): read[108 regions, 43161 placements, 0 skipped]=148 reorder[8 layers]=57
+[vegetation] grass field is on; 0 placements across 2 layers left unbuilt (grass, flowers)
+WARNING: TwistedTree_2.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+WARNING: TwistedTree_4.gltf is in both 'storm_canopy' and 'giant_canopy'; only one layer's retint can apply
+[vegetation] boot phases (ms): placements=254 mark_harvestable=77 group_by_model=59 register_mesh_assets=19 build_batches_total=1577 (of which harvest_points[15940 nodes]=1322, initial_collision_stream[16002 solid]=64) update_mmis=188
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[village] placed 15 structures
+[village_npcs] placed 19 of 19
+STORMWOOD TRAINERS READY count=26
+STORMWOOD BUILD 
+STORMWOOD READY realm=stormwood shell=false terrain_regions=108
+  PASS: production Stormwood built
+  PASS: production player, camera, surge and strike runtime mounted
+  PASS: route end lies in the Conductor Run (got conductor_run)
+  PASS: cycle at 0.5 s is calm for 240 s (got calm 240.0)
+  PASS: cycle at 240.5 s is building for 90 s (got building 90.0)
+  PASS: cycle at 330.5 s is break for 120 s (got break 120.0)
+  PASS: cycle at 450.5 s is fading for 60 s (got fading 60.0)
+  PASS: cycle wraps to Calm after 510 s
+  PASS: gentle Cinder Verge Calm is 240 x 1.35 = 324 s
+  PASS: disabled Deepwood rod: Calm 360 s, Break 72 s
+  PASS: probe point lies in the Deepwood
+  PASS: live node, Deepwood rod flag set: Calm 360 s, Break 72 s (want 360, 72)
+  PASS: aftermath Break is 45 s after a 2400 s Calm
+WARNING: wild cluster 1365603512 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+WARNING: wild cluster 1365603540 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+WARNING: wild cluster 43985556 member 2 cannot fit 1.25m body spacing inside its authored 3.00m radius; kept the best deterministic candidate
+STORMWOOD ENCOUNTERS READY wild=808
+  PASS: host storm clock advances with game time (4.08 s over 4.00 s)
+  calm leg: arrived=true travelled=457 m, phases=["calm"], exposed samples=23, attempts=16 (exposed 5), warnings=0, impacts=0
+  PASS: calm: the player walks the Conductor Run road by stick (457 m)
+  PASS: calm: the live phase stayed calm for the whole leg (saw ["calm"])
+  PASS: calm: the strike runtime made 16 attempts, 5 with the player exposed (want >= 8, >= 1)
+  PASS: calm: no strike warning anywhere on the road (0)
+  building leg: arrived=true travelled=467 m, phases=["building"], exposed samples=24, attempts=15 (exposed 4), warnings=0, impacts=0
+  PASS: building: the player walks the Conductor Run road by stick (467 m)
+  PASS: building: the live phase stayed building for the whole leg (saw ["building"])
+  PASS: building: the strike runtime made 15 attempts, 4 with the player exposed (want >= 8, >= 1)
+  PASS: building: no strike warning anywhere on the road (0)
+  break leg: arrived=true travelled=464 m, phases=["break"], exposed samples=22, attempts=14 (exposed 4), warnings=5, impacts=5
+  PASS: break: the player walks the Conductor Run road by stick (464 m)
+  PASS: break: the live phase stayed break for the whole leg (saw ["break"])
+  PASS: break: the strike runtime made 14 attempts, 4 with the player exposed (want >= 8, >= 1)
+  PASS: break: the road has exposed ground (non-vacuous)
+  PASS: break: the host issued strike warnings on the road (5)
+  PASS: break: warning at (-284, 2632) is outside every safe zone and rod radius
+  PASS: break: warning carries the 1.2 s telegraph
+  PASS: break: warning ground (-284, 2632) was exposed when issued
+  PASS: break: warning at (-372, 2584) is outside every safe zone and rod radius
+  PASS: break: warning carries the 1.2 s telegraph
+  PASS: break: warning ground (-372, 2584) was exposed when issued
+  PASS: break: warning at (-405, 2566) is outside every safe zone and rod radius
+  PASS: break: warning carries the 1.2 s telegraph
+  PASS: break: warning ground (-405, 2566) was exposed when issued
+  PASS: break: warning at (-457, 2537) is outside every safe zone and rod radius
+  PASS: break: warning carries the 1.2 s telegraph
+  PASS: break: warning ground (-457, 2537) was exposed when issued
+  PASS: break: warning at (-557, 2481) is outside every safe zone and rod radius
+  PASS: break: warning carries the 1.2 s telegraph
+  PASS: break: warning ground (-557, 2481) was exposed when issued
+  PASS: break: warnings 0 and 1 are 20.25 game s apart (>= 4)
+  PASS: break: warnings 1 and 2 are 7.47 game s apart (>= 4)
+  PASS: break: warnings 2 and 3 are 12.00 game s apart (>= 4)
+  PASS: break: warnings 3 and 4 are 25.60 game s apart (>= 4)
+  PASS: break: at least one warning resolved to an impact (5)
+  PASS: break: warning 1 resolved to an impact
+  PASS: break: warning 2 resolved to an impact
+  PASS: break: warning 3 resolved to an impact
+  PASS: break: warning 4 resolved to an impact
+  PASS: break: impact 1 landed 1.333 game s after its warning
+  PASS: break: impact 2 landed 1.333 game s after its warning
+  PASS: break: impact 3 landed 1.333 game s after its warning
+  PASS: break: impact 4 landed 1.333 game s after its warning
+  PASS: break: impact 5 landed 1.333 game s after its warning
+  fading leg: arrived=true travelled=474 m, phases=["fading"], exposed samples=15, attempts=16 (exposed 3), warnings=0, impacts=0
+  PASS: fading: the player walks the Conductor Run road by stick (474 m)
+  PASS: fading: the live phase stayed fading for the whole leg (saw ["fading"])
+  PASS: fading: the strike runtime made 16 attempts, 3 with the player exposed (want >= 8, >= 1)
+  PASS: fading: no strike warning anywhere on the road (0)
+  PASS: Still Grove safe zone: the safe-zone rule alone shelters it (no canopy, no rods)
+  PASS: break: Still Grove safe zone draws no warning over 30 strike attempts (0)
+  PASS: Rodline Post camp safe zone: the safe-zone rule alone shelters it (no canopy, no rods)
+  PASS: break: Rodline Post camp safe zone draws no warning over 30 strike attempts (0)
+  PASS: an exposed Conductor Run road point exists for the rod check
+  PASS: control: the exposed point (-252, 2650) draws warnings without a rod (30 of 30)
+  PASS: rod 6 m away: no warning over 30 attempts (0)
+  PASS: rule edge: 11.9 m from a rod is sheltered
+  PASS: rule edge: 12.1 m from a rod is exposed
+STORMWOOD B SURGE PHASE TRAVERSAL OK: 69 passed, 0 failed
