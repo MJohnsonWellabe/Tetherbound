@@ -34,6 +34,9 @@ const ENDPOINT_VERTICAL_M := 6.0
 var _session: WeakRef
 var local: Dictionary = {}
 var hosts: Dictionary = {}
+## Host: a rejoined stream refused for a real conflict, by character, so the
+## reason is re-sent to that owner rather than left as silence.
+var refused: Dictionary = {}
 var pending: Dictionary = {}
 var committing: Dictionary = {}
 var saving := false
@@ -155,9 +158,80 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	if hosts.get(character, {}).get("departed") == true:
 		_recovery_admitted(peer, summary, hosts[character])
 		return
-	if not E._equivalent(before, summary.get("portable_authority")) \
-		or HASH.fingerprint(before) != declaration.get("baseline_hash"): return
-	_add_host(peer, character, str(declaration.id), before, authority.call("discovered_landmarks", character))
+	# A stream still bound to an earlier transport for this character is that
+	# departed connection's, never the rejoined owner's (peer_departed normally
+	# removed it already; a late disconnect must not shadow the new stream).
+	if hosts.has(character) and int(hosts[character].get("peer", 0)) != peer:
+		_drop_host(character)
+	refused.erase(character)
+	var declared: Variant = summary.get("portable_authority")
+	var discoveries: Dictionary = authority.call("discovered_landmarks", character)
+	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash"):
+		_add_host(peer, character, str(declaration.id), before, discoveries)
+		return
+	# Rejoin: the owner kept ticking care/travel drift the host never
+	# acknowledged, so the declaration differs from the host's recovered
+	# authority. Re-admit against that authority when the difference is ONLY
+	# in the passive fields owner-passive replay itself governs
+	# (owner_passive_replay.gd `_core`); the owner adopts the host's values
+	# (`readmit`). Any other difference is a real conflict: refuse it with a
+	# reason the owner receives, never silently.
+	var core_matches: bool = declared is Dictionary and HASH.fingerprint(declared) == declaration.get("baseline_hash") \
+		and E._equivalent(REPLAY._core(before), REPLAY._core(declared))
+	if not core_matches:
+		var reason := "owner_passive_admission_conflict: %s" % ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))
+		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
+		push_warning("[owner-passive] refused rejoined stream for %s: %s" % [character.left(18), reason])
+		_send_refusal(peer, character)
+		return
+	if not _add_host(peer, character, str(declaration.id), before, discoveries): return
+	hosts[character].readmit = {"op": "readmit", "baseline": before.duplicate(true),
+		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries})}
+	print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
+	_send_owner(peer, hosts[character], hosts[character].readmit)
+
+
+## Host, on a transport leaving: its streams end with it. A portal-departed
+## stream stays for `_recovery_admitted`; anything else would shadow the
+## owner's next stream forever (re-proof: rejoin left admission pending).
+func peer_departed(peer: int) -> void:
+	for character: String in hosts.keys():
+		var stream: Dictionary = hosts[character]
+		if int(stream.get("peer", 0)) == peer and stream.get("departed") != true:
+			_drop_host(character)
+	for character: String in refused.keys():
+		if int(refused[character].get("peer", 0)) == peer: refused.erase(character)
+
+
+func _drop_host(character: String) -> void:
+	var stream: Dictionary = hosts.get(character, {})
+	var authority: RefCounted = owner().get("_character_authority") if owner() != null else null
+	if authority != null and (stream.get("checkpoint", {}) as Dictionary).has("prepared"):
+		authority.call("cancel_owner_passive_checkpoint", character, stream.checkpoint.prepared.hash)
+	hosts.erase(character)
+
+
+func _send_refusal(peer: int, character: String) -> void:
+	var row: Dictionary = refused.get(character, {})
+	if row.is_empty(): return
+	var world: RefCounted = _game().get("world")
+	_send_owner(peer, {"character": character, "world_id": world.world_id,
+		"world_namespace": world.reward_delivery_namespace, "epoch": owner().call("_altar_current_epoch"),
+		"id": row.id}, {"op": "admission_refused", "reason": row.reason})
+
+
+static func _differing_paths(path: String, a: Variant, b: Variant, depth: int, out: Array) -> Array:
+	if out.size() >= 16 or E._equivalent(a, b): return out
+	if depth < 6 and a is Dictionary and b is Dictionary:
+		for key: Variant in (a as Dictionary).keys() + (b as Dictionary).keys():
+			if not out.has(path + "/" + str(key)):
+				_differing_paths(path + "/" + str(key), (a as Dictionary).get(key), (b as Dictionary).get(key), depth + 1, out)
+		return out
+	if depth < 6 and a is Array and b is Array and (a as Array).size() == (b as Array).size():
+		for i in (a as Array).size(): _differing_paths(path + "[%d]" % i, a[i], b[i], depth + 1, out)
+		return out
+	out.append(path if not path.is_empty() else "/")
+	return out
 
 func _recovery_admitted(peer: int, summary: Dictionary, original_stream: Dictionary) -> void:
 	var checkpoint: Dictionary = original_stream.checkpoint
@@ -237,11 +311,20 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 	if packet.get("op") == "rebase":
 		_rebase_host(peer, packet)
 		return
-	if not hosts.has(character): return
+	if not hosts.has(character):
+		if refused.get(character, {}).get("id") == packet.get("stream_id"): _send_refusal(peer, character)
+		return
 	var stream: Dictionary = hosts[character]
 	if stream.get("departed") == true:
 		stream = stream.get("recovery", {})
 		if stream.is_empty(): return
+	if stream.has("readmit") and stream.peer == peer and stream.id == packet.get("stream_id"):
+		if packet.get("op") == "readmitted" and packet.get("baseline_hash") == stream.readmit.baseline_hash:
+			stream.erase("readmit")
+			_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
+		else:
+			_send_owner(peer, stream, stream.readmit) # inputs on the old base wait for the owner
+		return
 	if stream.peer != peer or stream.id != packet.get("stream_id") or stream.epoch != packet.session_epoch: return
 	if packet.get("op") == "saved" and stream.get("recovered", {}).get("id") == packet.get("id") \
 		and stream.recovered.hash == packet.get("hash") and packet.get("saved") == true:
@@ -885,6 +968,17 @@ func receive_owner(packet: Dictionary) -> void:
 		"rebase_ack":
 			local.rebase = {}
 			local.admission_pending = false
+		"readmit":
+			_readmit_owner(packet)
+		"admission_refused":
+			var reason := str(packet.get("reason", "owner_passive_admission_conflict"))
+			if local.get("admission_refused") == reason: return
+			local.admission_refused = reason
+			local.error = reason # stops recording and flushing: nothing more to ask
+			push_warning("owner passive stream refused by the host: " + reason)
+			var game := _game()
+			if game != null and game.has_method("push_world_message"):
+				game.call("push_world_message", "This world's record of your companions differs from yours. Their care and Altar actions are paused until you rejoin.")
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
 			local.admission_pending = false
@@ -986,6 +1080,46 @@ func _retry_owner() -> void:
 		pending.phase = "saved"
 	if pending.phase == "saved":
 		_send_host({"op": "saved", "id": pending.id, "hash": pending.prepared.hash, "saved": true})
+
+## Owner: the host re-admitted this stream on its recovered authority (see
+## `admitted`). Adopt the host's passive values, which are the only fields that
+## may differ, and restart this stream's cursor on that baseline. Inputs
+## recorded on the old base since joining are dropped with it.
+func _readmit_owner(packet: Dictionary) -> void:
+	var baseline: Variant = packet.get("baseline")
+	if not baseline is Dictionary or HASH.fingerprint(baseline) != packet.get("baseline_hash"): return
+	if local.get("readmitted_hash") == packet.baseline_hash:
+		_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
+		return
+	var game := _game()
+	if not pending.is_empty() or game == null \
+		or HASH.fingerprint({"discovered": _discoveries()}) != packet.get("discoveries_hash") \
+		or not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
+		_note_ignored("readmit whose core no longer matches this owner")
+		return
+	var members: Dictionary = {}
+	for member: RefCounted in game.get("party").call("members"): members[str(member.get("uid"))] = member
+	for card: Dictionary in baseline.party:
+		var member: RefCounted = members.get(str(card.get("uid", "")))
+		if member == null: return
+		for field: String in REPLAY.PASSIVE_FIELDS:
+			if card.has(field) and field in member: member.set(field, card[field])
+	if not E._equivalent(_projection(), baseline):
+		local.admission_refused = "owner_passive_readmit_mismatch"
+		local.error = local.admission_refused
+		push_warning("owner passive readmit did not reproduce the host's baseline")
+		return
+	var cursor := REPLAY.begin(baseline, _discoveries())
+	if cursor.is_empty(): return
+	local.base_hash = packet.baseline_hash
+	local.sequence = 0
+	local.prefix_hash = cursor.prefix_hash
+	local.inputs = []
+	local.acked = 0
+	local.vitals_seen = {}
+	local.readmitted_hash = packet.baseline_hash
+	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
+
 
 func _flush() -> void:
 	if local.is_empty() or not str(local.error).is_empty(): return
@@ -1111,6 +1245,7 @@ func reset() -> void:
 					authority.call("cancel_owner_passive_checkpoint", stream.character, stream.checkpoint.prepared.hash)
 	local.clear()
 	hosts.clear()
+	refused.clear()
 	pending.clear()
 	committing.clear()
 	saving = false
