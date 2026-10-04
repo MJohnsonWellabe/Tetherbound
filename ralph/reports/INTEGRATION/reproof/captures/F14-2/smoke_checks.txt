@@ -1,0 +1,88 @@
+PASS: Config declares a calmer restored_calm_scale (0.50)
+PASS: Production Water world builds
+PASS: Fixture does not pre-set water_currents_restored
+PASS: Unrestored current foam runs at calm_scale 1.0
+PASS: Unrestored Tidal Cradle -> Salt Crown current pushes at authored strength
+PASS: before: current foam view present
+PASS: before: uniform calm_scale = 1.000 (live set)
+PASS: before: calm_scale differs between live and restored
+PASS: before: uniform opacity = 0.950 (live set)
+PASS: before: opacity differs between live and restored
+PASS: before: uniform lane_opacity = 0.220 (live set)
+PASS: before: lane_opacity differs between live and restored
+PASS: before: uniform streak_density = 1.000 (live set)
+PASS: before: streak_density differs between live and restored
+PASS: before: uniform dash_fill = 0.850 (live set)
+PASS: before: dash_fill differs between live and restored
+PASS: before: uniform fleck_amount = 0.500 (live set)
+PASS: before: fleck_amount differs between live and restored
+PASS: before: uniform speed_scale = 2.400 (live set)
+PASS: before: speed_scale differs between live and restored
+PASS: before: uniform min_speed_m_s = 0.600 (live set)
+PASS: before: min_speed_m_s differs between live and restored
+PASS: before: uniform brightness = 1.150 (live set)
+PASS: before: brightness differs between live and restored
+PASS: before: uniform comet_opacity = 1.000 (live set)
+PASS: before: comet_opacity differs between live and restored
+PASS: Captured /tmp/claude-0/cap/F14-2/frames/overview_before.png
+PASS: Captured /tmp/claude-0/cap/F14-2/frames/shore_before.png
+PASS: Freed Guardian chamber offers its Decline interaction
+PASS: First press only arms the decline
+PASS: Confirmed Guardian decline settles the world: water_currents_restored set by water_guardian_reward.refuse()
+PASS: World journal persists water_currents_restored at settlement
+PASS: Restored foam switches calm_scale to 0.50
+PASS: Restored physics current is calmer at the same point
+PASS: after: current foam view present
+PASS: after: uniform calm_scale = 0.500 (restored set)
+PASS: after: calm_scale differs between live and restored
+PASS: after: uniform opacity = 0.400 (restored set)
+PASS: after: opacity differs between live and restored
+PASS: after: uniform lane_opacity = 0.040 (restored set)
+PASS: after: lane_opacity differs between live and restored
+PASS: after: uniform streak_density = 0.250 (restored set)
+PASS: after: streak_density differs between live and restored
+PASS: after: uniform dash_fill = 0.200 (restored set)
+PASS: after: dash_fill differs between live and restored
+PASS: after: uniform fleck_amount = 0.050 (restored set)
+PASS: after: fleck_amount differs between live and restored
+PASS: after: uniform speed_scale = 0.650 (restored set)
+PASS: after: speed_scale differs between live and restored
+PASS: after: uniform min_speed_m_s = 0.150 (restored set)
+PASS: after: min_speed_m_s differs between live and restored
+PASS: after: uniform brightness = 0.850 (restored set)
+PASS: after: brightness differs between live and restored
+PASS: after: uniform comet_opacity = 0.300 (restored set)
+PASS: after: comet_opacity differs between live and restored
+PASS: Completed chain saved through production Game.save_game(0)
+PASS: Previous Water world destroyed before the reload
+PASS: Fresh reset_for_new_game state holds none of the chain's results
+PASS: Production Game.load_game(0) restores the save
+PASS: Reload resumes the same character in Water
+PASS: Fresh production Water world rebuilt from the loaded save
+PASS: Reloaded world keeps water_currents_restored
+PASS: Rebuilt current foam starts calm after reload
+PASS: Rebuilt physics current stays calm after reload
+PASS: reload: current foam view present
+PASS: reload: uniform calm_scale = 0.500 (restored set)
+PASS: reload: calm_scale differs between live and restored
+PASS: reload: uniform opacity = 0.400 (restored set)
+PASS: reload: opacity differs between live and restored
+PASS: reload: uniform lane_opacity = 0.040 (restored set)
+PASS: reload: lane_opacity differs between live and restored
+PASS: reload: uniform streak_density = 0.250 (restored set)
+PASS: reload: streak_density differs between live and restored
+PASS: reload: uniform dash_fill = 0.200 (restored set)
+PASS: reload: dash_fill differs between live and restored
+PASS: reload: uniform fleck_amount = 0.050 (restored set)
+PASS: reload: fleck_amount differs between live and restored
+PASS: reload: uniform speed_scale = 0.650 (restored set)
+PASS: reload: speed_scale differs between live and restored
+PASS: reload: uniform min_speed_m_s = 0.150 (restored set)
+PASS: reload: min_speed_m_s differs between live and restored
+PASS: reload: uniform brightness = 0.850 (restored set)
+PASS: reload: brightness differs between live and restored
+PASS: reload: uniform comet_opacity = 0.300 (restored set)
+PASS: reload: comet_opacity differs between live and restored
+PASS: Captured /tmp/claude-0/cap/F14-2/frames/overview_after_reload.png
+PASS: Captured /tmp/claude-0/cap/F14-2/frames/shore_after_reload.png
+exit=0
