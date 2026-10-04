@@ -13,7 +13,7 @@ const OWNER_PASSIVE := preload("res://scripts/net/owner_passive_sync.gd")
 var _owner_passive: RefCounted
 var _owner_passive_altar_original: Dictionary = {}
 var _altar_traits_transport: Node
-const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd"]
+const FOUNDATION_DIRECTORS := ["res://scripts/combat/encounter_director.gd", "res://scripts/combat/stormwood_encounter_director.gd", "res://scripts/combat/cloudreach_encounter_director.gd", "res://scripts/combat/water_encounter_director.gd", "res://scripts/world/cloudreach_scene_encounters.gd"]
 const FOUNDATION_COMBAT_MANAGERS := ["res://scripts/combat/combat_manager.gd", "res://scripts/combat/cloudreach_combat_manager.gd", "res://scripts/combat/stormwood_combat_manager.gd"]
 ## Joined in each script's _enter_tree (encounter_director.gd, combat_manager.gd).
 const FOUNDATION_DIRECTOR_GROUP := &"foundation_portal_directors"
