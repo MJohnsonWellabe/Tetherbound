@@ -1033,7 +1033,7 @@ func _stow_hammer() -> bool:
 		return false
 	await _tap(HOTBAR_ACTIONS[slot])
 	await _settle(8)
-	if str(_game.get("equipped_tool")) == "hammer":
+	if not await _tool_in_hand_becomes("hammer", false):
 		_fail("the quick-slot press did not put the hammer away")
 		return false
 	return true
@@ -1169,7 +1169,7 @@ func _hammer_in_hand() -> bool:
 			return false
 	await _tap(HOTBAR_ACTIONS[slot])
 	await _settle(8)
-	if str(_game.get("equipped_tool")) != "hammer":
+	if not await _tool_in_hand_becomes("hammer", true):
 		_fail("the quick-bar press did not put the hammer in hand")
 		return false
 	return true
@@ -1342,6 +1342,7 @@ func _tap(action: StringName) -> void:
 		press.button_index = (binding as InputEventJoypadButton).button_index
 		press.pressed = true
 		Input.parse_input_event(press)
+		await _edge_reaches_process()
 		await _settle(2)
 		var release := press.duplicate() as InputEventJoypadButton
 		release.pressed = false
@@ -1351,11 +1352,36 @@ func _tap(action: StringName) -> void:
 		press.axis = (binding as InputEventJoypadMotion).axis
 		press.axis_value = (binding as InputEventJoypadMotion).axis_value
 		Input.parse_input_event(press)
+		await _edge_reaches_process()
 		await _settle(2)
 		var release := press.duplicate() as InputEventJoypadMotion
 		release.axis_value = 0.0
 		Input.parse_input_event(release)
+	await _edge_reaches_process()
 	await _settle(3)
+
+
+## A parsed edge is flushed at the start of the NEXT main-loop iteration, and
+## within an iteration every physics step runs before the one idle frame. Under
+## a slow host (~5-6 physics steps per idle frame, spikes beyond) a tap plus an
+## 8-physics-frame settle could finish inside one iteration's physics steps, so
+## the caller checked the result before the HUD's _process (where the quick bar
+## is polled) had seen the press at all: "the quick-bar press did not put the
+## hammer in hand", then the HUD equipped it one frame after the failure. Two
+## idle frames guarantee the flush and one poll after it, as a held button does
+## for a player (gate_a_opening_drive.gd::_tap_action, same finding).
+func _edge_reaches_process() -> void:
+	for _i in 2:
+		await _tree.process_frame
+
+
+## Wait, bounded in idle frames, for a quick-bar tool press to land.
+func _tool_in_hand_becomes(tool: String, want: bool) -> bool:
+	for _i in 30:
+		if (str(_game.get("equipped_tool")) == tool) == want:
+			return true
+		await _tree.process_frame
+	return (str(_game.get("equipped_tool")) == tool) == want
 
 
 func _resolve_move_bindings() -> void:
