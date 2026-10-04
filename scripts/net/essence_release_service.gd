@@ -9,6 +9,11 @@ extends Node
 ## and only then does the newcomer take the freed holder. No balance, receipt
 ## or creature snapshot is supplied by this service.
 ##
+## A Tidewake Water capture claim the host's own claim service presented
+## (scripts/net/water_capture_claims.gd) is routed the same way: the typed
+## release pays and frees the holder, then the claim settles the newcomer
+## through its own durable receipt. A Guardian offer keeps its own path.
+##
 ## Scope: the solo/host owner only. A guest's ordinary catch is not admitted by
 ## the host (catches are untyped), so a guest keeps the legacy release with no
 ## payout until typed catches land; this service never claims a guest's catch.
@@ -62,8 +67,17 @@ func owns_pending_capture(pending: RefCounted) -> bool:
 	for key: String in _requests:
 		if _requests[key].pending.get_ref() == pending: return true
 	# Only the full-belt ceremony; a free-slot catch keeps its ordinary path.
+	if pending.has_meta(&"water_capture_claim"):
+		var water := _water(pending)
+		if water == null or water.call("is_guardian_offer", pending) == true: return false
 	var party: RefCounted = _game.get("party")
 	return party != null and party.call("is_full") == true and not str(pending.get("uid")).is_empty()
+
+
+## Tidewake's capture claim service, only while it owns this pending catch.
+func _water(pending: RefCounted) -> Node:
+	var water := _game.get_node_or_null(^"Session/LedgerRpc/WaterCaptureClaims") if is_instance_valid(_game) else null
+	return water if water != null and water.call("owns_pending", pending) == true else null
 
 
 func _admitted() -> Dictionary:
@@ -109,8 +123,12 @@ func submit_release(request: Dictionary) -> void:
 		release_completed.emit(id, {"ok": false, "resolved": true, "code": "release_unavailable"})
 		return
 	var released := str(request.get("released_uid", ""))
+	var holder := -1
+	var party: RefCounted = _game.get("party")
+	for i: int in int(party.call("size")) if party != null else 0:
+		if str((party.call("at", i) as RefCounted).get("uid")) == released: holder = i
 	_requests[id] = {"intent": {"release_id": id, "creature_uid": released}, "pending": weakref(pending),
-		"pending_uid": str(pending.get("uid")), "released_uid": released,
+		"pending_uid": str(pending.get("uid")), "released_uid": released, "holder": holder,
 		"expected_revision": int(request.get("expected_character_revision", -1)), "submitted": false}
 	reconcile_release(id)
 
@@ -159,6 +177,18 @@ func reconcile_release(id: String) -> void:
 	reconcile_release(id)
 
 
+## The Water ceremony seats the newcomer in the holder the player freed, as
+## its legacy settle did. Order only: a failed save just keeps the appended
+## order, which is still the same five owned creatures.
+func _seat_in_released_holder(newcomer: RefCounted, holder: int) -> void:
+	var party: RefCounted = _game.get("party")
+	var from: int = party.call("members").find(newcomer) if party != null else -1
+	if from < 0 or holder < 0 or holder >= int(party.call("size")) or from == holder: return
+	party.call("move", from, holder)
+	var saver: RefCounted = _game.get("save_system")
+	if saver != null and saver.has_method("save_character"): saver.call("save_character", _game, str(_game.get("local").get("character_id")))
+
+
 func _process(_delta: float) -> void:
 	for id: String in _requests.keys(): reconcile_release(id)
 
@@ -175,10 +205,20 @@ func _finish(id: String, decision: Dictionary) -> void:
 		_requests.erase(id)
 		release_completed.emit(id, {"ok": false, "resolved": true, "code": "newcomer_unavailable"})
 		return
-	if not request.released_uid.is_empty():
+	var water := _water(pending)
+	if water != null:
 		if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return
-		if not party.call("add", pending): return # Retried next frame; never a sixth.
-	_game.set("pending_catch", null)
+		# Released: the newcomer takes the freed holder under the claim's own
+		# saved receipt. Declined: the claim saves the refusal (index 5 is the
+		# newcomer). A failed save keeps the claim; retried next frame.
+		var settled: Dictionary = water.call("complete_pending_capture", PARTY.MAX_CREATURES if request.released_uid.is_empty() else -1)
+		if settled.get("ok") != true: return
+		_seat_in_released_holder(pending, int(request.get("holder", -1)))
+	else:
+		if not request.released_uid.is_empty():
+			if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return
+			if not party.call("add", pending): return # Retried next frame; never a sixth.
+		_game.set("pending_catch", null)
 	_requests.erase(id)
 	var result := decision.duplicate(true)
 	result.ok = true

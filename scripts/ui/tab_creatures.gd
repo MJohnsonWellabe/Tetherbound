@@ -1973,7 +1973,7 @@ func _maybe_begin_release() -> void:
 			say("%s joins the belt." % str(pending.call("label")))
 		return
 
-	if capture_service == null: _bind_ordinary_release(pending)
+	_bind_ordinary_release(pending)
 	_release_stage = "choose"
 	_release_for = pending
 	_release_target = -1
