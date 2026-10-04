@@ -1,0 +1,41 @@
+[village-walk] OPENING title interactive
+[village-walk] OPENING answered the character-choice step
+[village-walk] OPENING confirmed the configured trainer-name prefill
+[village-walk] OPENING new game world entered
+[village-walk] OPENING wake/Get Up complete
+[village-walk] OPENING Grandpa briefing and pack complete
+[village-walk] OPENING starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+[village-walk] OPENING starter selected and named (terrapup, uid creature-3e2b52894eb0cf4cdde1a0d15ef4e7af)
+[village-walk] OPENING Grandpa's first-catch supplies received (50 Basic Orbs)
+[village-walk] OPENING usable house/front doorway exited
+[village-walk] OPENING played: starter=terrapup at (7.982977, 0.900843, 14.03946)
+[village-walk] OPENING companion put away: true
+[village-walk] START route=visits time=day capture_dir=/tmp/claude-0/cap/F01-2 headless=false path_m=2.5 road_arcs=[inf,-inf] events=0
+[village-walk] CAPTURE 001 label="start-after-opening" pos=(8.19,0.90,14.04) heading_deg=360.0 image=visits_day_001_start-after-opening.png
+[village-walk] VISITS Grandpa, Mira, Oskar, Tam, Bram, Nessa, Maren, the old key, Practice Meadow camp, gate RoadGate, gate PondGate, gate TrailGate
+[village-walk] CAPTURE 002 label="travel" pos=(1.50,1.02,14.78) heading_deg=253.8 image=visits_day_002_travel.png
+[village-walk] CAPTURE 003 label="end" pos=(1.07,1.02,14.91) heading_deg=253.8 image=visits_day_003_end.png
+[village-walk] CAPTURE 004 label="reached Grandpa" pos=(1.07,1.02,14.91) heading_deg=211.0 image=visits_day_004_reached-grandpa.png
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.50 prompt="Talk to Grandpa"
+[village-walk] CAPTURE 005 label="travel" pos=(7.80,0.90,14.19) heading_deg=82.0 image=visits_day_005_travel.png
+[village-walk] CAPTURE 006 label="travel" pos=(14.80,0.90,14.10) heading_deg=95.4 image=visits_day_006_travel.png
+[village-walk] CAPTURE 007 label="travel" pos=(21.73,0.90,13.87) heading_deg=86.0 image=visits_day_007_travel.png
+[village-walk] CAPTURE 008 label="travel" pos=(28.65,0.90,14.19) heading_deg=92.4 image=visits_day_008_travel.png
+[village-walk] CAPTURE 009 label="travel" pos=(35.93,0.90,13.96) heading_deg=87.8 image=visits_day_009_travel.png
+[village-walk] CAPTURE 010 label="travel" pos=(40.04,0.90,17.00) heading_deg=181.9 image=visits_day_010_travel.png
+[village-walk] CAPTURE 011 label="travel" pos=(34.29,0.90,19.30) heading_deg=267.5 image=visits_day_011_travel.png
+[village-walk] CAPTURE 012 label="travel" pos=(27.11,0.95,19.06) heading_deg=272.3 image=visits_day_012_travel.png
+[village-walk] CAPTURE 013 label="end" pos=(26.50,0.95,19.03) heading_deg=272.3 image=visits_day_013_end.png
+[village-walk] CAPTURE 014 label="reached Tam" pos=(26.14,0.95,19.02) heading_deg=152.8 image=visits_day_014_reached-tam.png
+[village-walk] VISIT Tam kind=villager dist_m=0.99 prompt="Greet Tam"
+[village-walk] CAPTURE 015 label="travel" pos=(32.94,0.90,19.05) heading_deg=92.7 image=visits_day_015_travel.png
+[village-walk] CAPTURE 016 label="travel" pos=(39.68,0.90,18.30) heading_deg=9.5 image=visits_day_016_travel.png
+[village-walk] CAPTURE 017 label="travel" pos=(36.16,0.90,13.97) heading_deg=276.6 image=visits_day_017_travel.png
+[village-walk] CAPTURE 018 label="travel" pos=(28.89,0.90,13.93) heading_deg=269.1 image=visits_day_018_travel.png
+[village-walk] CAPTURE 019 label="travel" pos=(21.69,0.90,14.05) heading_deg=269.1 image=visits_day_019_travel.png
+[village-walk] CAPTURE 020 label="travel" pos=(20.12,0.90,7.64) heading_deg=356.3 image=visits_day_020_travel.png
+[village-walk] CAPTURE 021 label="travel" pos=(18.67,0.90,2.23) heading_deg=237.7 image=visits_day_021_travel.png
+[village-walk] CAPTURE 022 label="travel" pos=(16.70,0.90,4.41) heading_deg=51.6 image=visits_day_022_travel.png
+[village-walk] CAPTURE 023 label="end" pos=(17.32,0.90,3.92) heading_deg=51.6 image=visits_day_023_end.png
+[village-walk] CAPTURE 024 label="failure" pos=(17.32,0.90,3.92) heading_deg=51.6 image=visits_day_024_failure.png
+[village-walk] FAIL route=visits time=day: ended 9.29m from Mira (needs 3.0m) (captures=24)
