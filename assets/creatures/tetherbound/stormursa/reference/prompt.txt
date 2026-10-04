@@ -4,6 +4,8 @@ Use case: stylized-concept. Create ONE clean game creature modeling reference im
 
 The generation prompt proposed 3.6 m adult shoulder height and incorrectly described the base as 2.90 m. The inspected current species configuration actually declares Staticub height 3.25 m. The image is scale-free: measure the installed base mesh in engine, then grow the candidate above the actual base and 1.80 m trainer; never shrink either. Proposed adult target: at least 3.90 m, subject to the actual scale check. No image or written target substitutes for that check.
 
+Preparation correction, 2026-10-04: the existing F29 source/reference_brief.json and species_candidate.json author the adult at 4.10 m. Use that target, superseding the historical 3.90 m minimum above. Original generation notes are retained for provenance; neither the reference pixels nor this target proves fitted in-engine scale.
+
 Draft inspection: complete adult bear, four separate grounded paws, visible face and blue eyes, no props/text. Fine fur and lightning detail need simplification in the model. Glass accents are not clearly established and must be inspected in the candidate material pass.
 Image SHA-256: de2ef0cbe55b546dacb950b8e1e793d60c82d35149192b0324e89b901892fc49
 Owner authority: RD-28 storm bear; current handoff F29#3. No Meshy task submitted during reference drafting.

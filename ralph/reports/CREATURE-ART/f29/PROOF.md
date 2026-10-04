@@ -44,6 +44,21 @@ reference directory is excluded from Godot import; the model remains uncreated.
 - Independent implementation review `/root/stormursa_reference_review`: PASS,
   no scoped blocker. The guard was unchanged and outside this review. Actual
   balance delta, generated model quality and all model gates remain open.
+- Restored the exact Stormursa reference into this sparse art checkout after
+  merge, and re-inspected the matching PNG. Actual guarded CLI help preflight
+  exit 0: bounded subject, in-checkout reference and SHA, stored Windows user
+  credential propagation and generation options are reachable. [Receipt](guard-preflight.json).
+  This help-only process makes no network request; ledger bytes unchanged,
+  zero tasks. A fresh shell must propagate `MESHY_API_KEY` from the Windows
+  user environment before calling the existing guard; no credential is saved
+  in Git or receipts. Authoritative asset provenance now records the proved
+  reference-only gate; task/model/rig/animation/scale/full-bar gates stay open.
+- Separate scoped provenance/preflight review `/root/stormursa_reference_review`:
+  PASS. Reviewer matched reference/hash/paths/current ledger and checked the
+  CLI help cannot submit a task. Credential presence is not authentication or
+  billing; option availability is not a successful generation request. The
+  earlier license/balance read remains separate evidence. Stale PROMPT_ONLY
+  brief status was corrected to the proved reference-only disposition.
 
 ## Attended nightly submission
 
