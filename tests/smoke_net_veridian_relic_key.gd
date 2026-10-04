@@ -2,6 +2,13 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
+## LEGACY PATH: asserts the shipped portal-off behaviour (world-scoped
+## `realm_key_cloudreach` and a world-scoped earned Heart from the Warden).
+## Superseded by RD-10/RD-20/RD-21 (the Warden now grants each participant their
+## own Tidewake key item and relic, F19#2) once F18 turns
+## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
+## point.
+##
 ## F05 (ACCEPTANCE §6.1; card M4 "relic/key are durable"), two real peers.
 ##
 ##   GODOT_BIN=$HOME/godot-bin/godot tools/net/run_net_smoke.sh veridian_relic_key

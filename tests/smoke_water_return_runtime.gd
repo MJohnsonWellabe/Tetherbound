@@ -2,7 +2,9 @@ extends SceneTree
 
 ## Retired-path regression fixture: RD-35 redesign saves are current schema,
 ## but this probe deliberately enables the single legacy physical-crossing
-## flag. Production remains default-off; this is not portal-loop acceptance.
+## flag. The legacy_physical_crossings key itself is off, but legacy crossings
+## still ship while redesign_portal_runtime_enabled is false
+## (biome_order.legacy_physical_crossings); this is not portal-loop acceptance.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 ## Focused fixture-only Water return proof. This mounts the production Water
