@@ -15,12 +15,12 @@ extends "res://tools/art_pipeline/capture_named_fight.gd"
 ##   away from the opponent, out of reach, steering round anything it is
 ##   stuck on (combat_manager.gd `_drive_player_creature`), from
 ##   DODGE_REACTION_S into the tell until WITNESS_DODGE_TAIL_S after it, and
-##   taps the combat burst (pad A, `jump`) once on the way, which is how
-##   COMBAT §12.2 answers a WALL's quake ring; an
-##   `attack_missed(by_player=false)` is the strike avoided. A ring connects
-##   while the target's centre is within range + its own radius
-##   (combat_ai.gd `pattern_contains`), so `reach` in a row is the ring's
-##   range, not the distance to clear.
+##   on a role PATTERN strike taps the combat burst (pad A, `jump`) once on
+##   the way, which is how COMBAT §12.2 answers a WALL's ring or slam; an
+##   `attack_missed(by_player=false)` is the strike avoided. A pattern strike
+##   connects while the target's centre is within range + its own radius
+##   (combat_ai.gd `pattern_contains`), so `reach` in a pattern row is the
+##   pattern's range, not the distance to clear.
 ##
 ## Ordinary quicks track the target live through the tell, so stepping
 ## sideways does not escape them; reach is the only way out.
@@ -140,11 +140,15 @@ func _witness_one() -> bool:
 					and since >= DODGE_REACTION_S:
 				stick = _stick_away_from_opponent()
 				stick = _steer_around_obstacle(stick)
-				# COMBAT §12.2: a WALL's quake ring is answered by bursting out
-				# of it, and the burst is pad A (`jump`) in a fight
-				# (combat_manager.gd `_read_player_input`, COMBAT-3). One tap
-				# per dodged strike, with the stick already held away.
-				if not bool(s.get("burst_sent", false)) and stick != Vector2.ZERO:
+				# COMBAT §12.2: a role PATTERN strike (the Warden WALL's quake
+				# ring or slam) is answered by bursting out of it, and the burst
+				# is pad A (`jump`) in a fight (combat_manager.gd
+				# `_read_player_input`, COMBAT-3). One tap per dodged pattern
+				# strike, stick already held away. Ordinary strikes keep the
+				# walk-only dodge, so the reach mutation (in_hit_cone) still
+				# fails the captains' witness.
+				if bool(s.get("pattern", false)) and not bool(s.get("burst_sent", false)) \
+						and stick != Vector2.ZERO:
 					s["burst_sent"] = true
 					_left_stick(stick)
 					await _pad_tap("jump")
@@ -199,13 +203,14 @@ func _witness_one() -> bool:
 	var dodge_miss := 0
 	var dodged := 0
 	for s in _strikes:
-		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f gap_pre=%.2f foe_moved=%.2f centre_gap_pre=%.2f reach_at_strike=%.2f" % [
+		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f gap_pre=%.2f foe_moved=%.2f centre_gap_pre=%.2f reach_at_strike=%.2f pattern=%s shape=%s" % [
 			_tid, str(s.opponent), int(s.n), str(s.move), float(s.seconds), str(s.policy),
 			str(s.get("outcome", "none")), float(s.get("damage", 0.0)),
 			float(s.get("gap_at_tell", -1.0)), float(s.get("gap_at_strike", -1.0)),
 			float(s.get("moved", -1.0)), float(s.reach), float(s.cone), int(s.action),
 			float(s.arena_off), float(s.get("gap_pre", -1.0)), float(s.get("foe_moved", -1.0)),
-			float(s.get("centre_gap_pre", -1.0)), float(s.get("reach_at_strike", -1.0))])
+			float(s.get("centre_gap_pre", -1.0)), float(s.get("reach_at_strike", -1.0)),
+			str(s.get("pattern", false)), str(s.get("shape", ""))])
 		if str(s.policy) == "stand" and str(s.get("outcome", "")) == "hit":
 			stand_hit += 1
 		if str(s.policy).begins_with("dodge"):
@@ -252,6 +257,8 @@ func _on_witness_tell(seconds: float) -> void:
 		"foe_at_tell": (_body as Node3D).global_position if _body != null and is_instance_valid(_body) else Vector3.ZERO,
 		"reach": float(cfg.get("range", -1.0)),
 		"cone": float(cfg.get("cone_degrees", -1.0)),
+		"pattern": cfg.has("pattern_attack_id"),
+		"shape": str(cfg.get("telegraph_shape", "")),
 		"action": int(_manager.get("_action")),
 		"arena_off": _arena_offset(),
 	})
