@@ -1,7 +1,11 @@
 {
   "_comment": "Tunable Phase 2 visual language for Cloudreach. It deliberately reuses the Meadows terrain textures and generated ground-cover meshes: one nature family, a different high-altitude composition.",
   "schema_version": 1,
-  "settlement_dressing": [
+  "camera": {
+  "_comment": "Vista far floor (VISUAL cloudreach lane, F08#4/F40#4): graphics_prefs draw-distance presets set far to 320/520/900 m, which clipped the cloud deck, distant relief and Aviary sightline in every frame. The realm camera keeps at least this far plane, the scene's own authored value; nearer detail keeps its own visibility ranges.",
+  "vista_far_floor_m": 3500.0
+ },
+ "settlement_dressing": [
     {"asset": "workbench", "at": [-17.5, 0.14, -6], "height": 1.15, "yaw": 18},
     {"asset": "bucket", "at": [-17, 0.14, -8], "height": 0.48},
     {"asset": "apples", "at": [-15, 0.14, -6], "height": 0.55, "yaw": -12},
