@@ -27,9 +27,9 @@
   },
 
   "_comment_burst_keys": "`heat` is how white-hot a particle is born before cooling to its tint (0 none, 1 fully white at birth); `halo` the opacity of a darker, larger disc drawn behind each mote so it keeps an edge on bright ground (0 off). Shared by hit_spark, ko_puff and catch_burst (all scripts/vfx/vfx_burst.gd): `up_bias` tilts every particle's direction upward before normalising (0 isotropic, 1 mostly up); `grow` is how much a particle swells over its life (0 none, 1.2 more than doubles); `alpha` the peak opacity; `core_*` the bright flash at the origin that dies fast.",
-  "_comment_hit_spark": "The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
+  "_comment_hit_spark": "OFF by owner decision (2026-10-04): the shared spray read as a grey-brown haze burying every hit, and each move's own impact (move_library) now carries the contact. The block stays so the switch is data-only. The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
   "hit_spark": {
-    "enabled": true,
+    "enabled": false,
     "count": 22,
     "duration": 0.65,
     "speed": 7.5,

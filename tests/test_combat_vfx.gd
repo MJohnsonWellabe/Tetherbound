@@ -214,7 +214,9 @@ func test_glow_tolerates_model_mesh_freed_before_suspension_and_finish() -> void
 
 # --- the damage path ---------------------------------------------------------
 
-func test_a_landed_blow_spawns_a_spark_and_a_body_flash_that_live_and_free() -> void:
+func test_a_landed_blow_flashes_the_body_without_a_shared_spark() -> void:
+	# Owner decision (2026-10-04): the shared hit spark is off; each move's
+	# own impact carries the contact. The body flash still lives and frees.
 	var mgr := _manager_in_a_fight(200.0)
 	var landed: Array = []
 	mgr.connect("hit_landed", func(on_enemy: bool, amount: float) -> void: landed.append([on_enemy, amount]))
@@ -225,36 +227,18 @@ func test_a_landed_blow_spawns_a_spark_and_a_body_flash_that_live_and_free() -> 
 	assert_eq(landed.size(), 1, "the foe's swing must have connected for this test to mean anything")
 	assert_eq(_ally.hits, 1, "the struck body played its hit reaction")
 
-	var sparks := _children_named(_arena, VFX.NAME_HIT_SPARK)
-	assert_eq(sparks.size(), 1, "no HitSpark under the arena after a landed blow")
+	assert_eq(_children_named(_arena, VFX.NAME_HIT_SPARK).size(), 0, "the shared HitSpark is switched off")
 	assert_eq(_children_named(_arena, VFX.NAME_KO_PUFF).size(), 0, "a blow that left the bar standing must not puff")
 	var glows := _glows_on(_ally)
 	assert_eq(glows.size(), 1, "the struck body did not get its flash")
-	if sparks.is_empty() or glows.is_empty():
+	if glows.is_empty():
 		return
 
-	var spark: Node3D = sparks[0]
 	var glow: Node = glows[0]
-	assert_true(spark.get_script() == BURST, "the spark is a vfx_burst.gd node")
 	assert_true(_ally.mesh_node.material_overlay != null, "the flash is drawn as a material overlay on the body's mesh")
 	assert_eq(_ally.mesh_node.material_overlay, glow.get("_material"), "the overlay is the flash's own material")
-
-	# It lives: a fifth of a second in, the spark is still alive and the flash
-	# has faded but not finished.
-	for i in 12:
-		spark.call("advance", TICK)
+	for i in 60:
 		glow.call("advance", TICK)
-	assert_false(bool(spark.call("finished")), "the spark died inside 0.2 s; it has to outlive combat.json's 0.26 s ring")
-	assert_false(spark.is_queued_for_deletion(), "the spark was freed before its life ran out")
-
-	# It frees: past its duration the spark queues itself, and the flash puts
-	# the mesh back exactly as it found it.
-	var budget := int(ceil(float(spark.call("duration")) / TICK)) + 4
-	for i in budget:
-		spark.call("advance", TICK)
-		glow.call("advance", TICK)
-	assert_true(bool(spark.call("finished")), "the spark never finished")
-	assert_true(spark.is_queued_for_deletion(), "a finished spark must free its node")
 	assert_true(bool(glow.call("finished")), "the flash never finished")
 	assert_true(glow.is_queued_for_deletion(), "a finished flash must free its node")
 	assert_eq(_ally.mesh_node.material_overlay, null, "the flash left its overlay on the body's mesh")
@@ -268,7 +252,7 @@ func test_the_blow_that_empties_the_bar_adds_a_ko_puff() -> void:
 
 	assert_eq(_ally.faints, 1, "a 1 HP creature taking a real blow must faint")
 	assert_eq(outcome, "lost", "a wild fight ends when the piloted creature faints")
-	assert_eq(_children_named(_arena, VFX.NAME_HIT_SPARK).size(), 1, "the killing blow still sparks")
+	assert_eq(_children_named(_arena, VFX.NAME_HIT_SPARK).size(), 0, "the shared spark stays off on the killing blow too")
 	var puffs := _children_named(_arena, VFX.NAME_KO_PUFF)
 	assert_eq(puffs.size(), 1, "no KoPuff after the blow that emptied the bar")
 	if puffs.is_empty():
@@ -294,38 +278,19 @@ func test_the_layer_switched_off_spawns_nothing_and_the_fight_still_resolves() -
 
 # --- sizing and tint --------------------------------------------------------
 
-func test_a_heavy_blow_bursts_bigger_than_a_light_one() -> void:
-	var light: Node3D = VFX.hit(_arena, Vector3.ZERO, null, false, _wild, 0.02)
-	var heavy: Node3D = VFX.hit(_arena, Vector3.ZERO, null, false, _wild, 0.5)
-	var charged: Node3D = VFX.hit(_arena, Vector3.ZERO, null, true, _wild, 0.5)
-	assert_true(light != null and heavy != null and charged != null, "every hit spawns a spark")
-	if light == null or heavy == null or charged == null:
-		return
-	assert_true(float(heavy.call("burst_scale")) > float(light.call("burst_scale")) * 1.3,
-		"damage must scale the spark (light %.2f, heavy %.2f)" % [float(light.call("burst_scale")), float(heavy.call("burst_scale"))])
-	assert_true(float(charged.call("burst_scale")) > float(heavy.call("burst_scale")),
-		"the charged move bursts bigger than a quick one of the same bite")
+func test_no_hit_spawns_the_shared_spark_whatever_its_bite() -> void:
+	for args: Array in [[null, false, 0.02], [null, false, 0.5], [null, true, 0.5]]:
+		assert_eq(VFX.hit(_arena, Vector3.ZERO, args[0], args[1], _wild, args[2]), null, "the shared hit spark is off")
+	assert_eq(_children_named(_arena, VFX.NAME_HIT_SPARK).size(), 0)
 
 
-func test_the_spark_is_tinted_by_the_moves_type() -> void:
+func test_move_types_map_to_their_vfx_colours() -> void:
 	var water: Variant = VFX.tint_for_type("water")
 	assert_true(water is Color, "water is a mapped type")
 	assert_eq(VFX.tint_for_type(""), null, "no type, no tint")
 	assert_eq(VFX.tint_for_type("no_such_type"), null, "an unmapped type falls back to the caller's default")
 	var expected := Color(str(VFX.config().get("type_colours", {}).get("water", "")))
 	assert_eq(water, expected, "the tint is the colour vfx.json maps for the type")
-	# The spark carries the move's HUE, saturated for the field (vfx.json
-	# `tint_saturation`): a water hit is a bluer blue, never a different colour.
-	var spark: Node3D = VFX.hit(_arena, Vector3.ZERO, water, false, _wild, 0.1)
-	assert_true(spark != null, "a tinted hit spawns a spark")
-	if spark != null:
-		var got: Color = spark.call("colour")
-		assert_almost_eq(got.h, (water as Color).h, 0.02, "the spark keeps the move's hue")
-		assert_true(got.s >= (water as Color).s - 0.001, "saturation is boosted, never washed out")
-	var plain: Node3D = VFX.hit(_arena, Vector3.ZERO, null, false, _wild, 0.1)
-	assert_true(plain != null, "an untinted hit spawns a spark")
-	if plain != null:
-		assert_almost_eq((plain.call("colour") as Color).h, VFX.default_colour().h, 0.02, "no tint means the default hue")
 
 
 func test_a_sealed_catch_bursts() -> void:
