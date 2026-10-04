@@ -121,6 +121,13 @@
     }
   },
   "display_overrides": {
+    "skyplume": {
+      "blurb": "A naturally shed highland plume, gathered after a won encounter or gentle grooming.",
+      "description": "A naturally shed highland plume, gathered after a won encounter or gentle grooming. Bind it with Gale Fiber into soft camp bedding."
+    },
+    "sparkfur": {
+      "description": "Naturally shed, static-bright fur collected after a won encounter or gentle grooming. It pads insulated gear."
+    },
     "hide_helm": {
       "name": "Padded Helm",
       "blurb": "Woven padding over the crown. Softens a bad fall.",
