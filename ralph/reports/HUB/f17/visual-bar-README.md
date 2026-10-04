@@ -10,7 +10,7 @@ plus its reverse. Each station is shot at day, golden and night; five stations a
 |---|---|---|---|
 | r1 | 09efb3b4 (base) | `visual-bar-r1/frames`, `sheets` | Bar A NO, Bar B NO; destination NO day, NO night (`visual-bar-r1/codeblind-review.md`) |
 | r2 | 53e3e0f5 | `visual-bar-r2/sheets` only (intermediate) | not judged; the far gable was still open |
-| r3 | 5d093a77 (scene at 3e3c2f1… building_prefabs gables), frames committed fe31d6db | `visual-bar-r3/frames`, `sheets` | Bar A NO, Bar B NO; destination YES (weak) day and night; the nave is not yet an enclosed lit interior (`visual-bar-r3/codeblind-review.md`) |
+| r3 | scene at ae495e7d (gables) + later test-only commits; frames committed fe31d6db | `visual-bar-r3/frames`, `sheets` | Bar A NO, Bar B NO; destination YES (weak) day and night; the nave is not yet an enclosed lit interior (`visual-bar-r3/codeblind-review.md`) |
 
 F17 fixes between r1 and r3 (scene-level, installed MegaKit families only):
 - Stone crossing tower over the Hall entrance (~17.5 m). The Hall is now the tallest roofline seen from the farm door.
