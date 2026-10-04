@@ -12,7 +12,8 @@ const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark
 ## (flash, ground kick, contact flash, shockwave, ground mark). They are not
 ## particles and never draw from the particle lease.
 const MAX_STAGE_MESHES := 6
-const SPARK_SHADER := preload("res://assets/vfx/shaders/smash_spark.gdshader")
+const SPARK_SHADER := preload("res://assets/vfx/shaders/spark_streak.gdshader")
+const SPARK_GLOW_SHADER := preload("res://assets/vfx/shaders/spark_streak_glow.gdshader")
 
 signal arrived()
 signal presentation_arrived(receipt: Dictionary)
@@ -474,7 +475,7 @@ func _build_impact() -> void:
 			_motes.material_override = GEOMETRY.authored_material(mote_material, profile, Color(str(profile.get("mote_colour", _params.colour))))
 		if str(profile.get("mote_shape", "")) == "spark":
 			var spark_material := ShaderMaterial.new()
-			spark_material.shader = SPARK_SHADER
+			spark_material.shader = SPARK_GLOW_SHADER if bool(profile.get("spark_glow", false)) else SPARK_SHADER
 			spark_material.set_shader_parameter("core_colour", Color(str(profile.get("spark_core_colour", "#fffbe8"))))
 			spark_material.set_shader_parameter("rim_colour", Color(str(profile.get("mote_colour", _params.colour))))
 			spark_material.set_shader_parameter("intensity", float(profile.get("spark_intensity", 1.8)))

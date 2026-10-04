@@ -180,6 +180,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("foam_colour", Color(str(profile.get("foam_colour", "#d1edf2"))))
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.76)))
 		out.set_shader_parameter("wave", kind in ["rolling_wave", "splash_crown"])
+		out.set_shader_parameter("splash", kind == "splash_crown")
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.0)))
 		return out
 	if kind == "ice_crystal":

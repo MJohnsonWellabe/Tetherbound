@@ -1,6 +1,5 @@
 shader_type spatial;
-// Stylized glowing spark streak for velocity-stretched debris (Smash-style
-// sparks/embers/droplets): unshaded, white-hot along the spine; alpha-blended
+// Spark streak for velocity-stretched debris (embers, droplets): unshaded, white-hot along the spine; alpha-blended
 // so the saturated edge holds against a bright sky.
 render_mode blend_mix, unshaded, depth_draw_never, cull_disabled, shadows_disabled;
 

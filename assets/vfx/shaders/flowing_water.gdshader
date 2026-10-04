@@ -12,6 +12,8 @@ uniform vec4 foam_colour : source_color = vec4(0.82,0.94,0.97,1.0);
 uniform float opacity = 0.76;
 uniform float flow_speed = 3.0;
 uniform bool wave = false;
+// Splash jets: soft broken sides and a foaming, spray-torn tip.
+uniform bool splash = false;
 
 float hash(vec2 p) {
     return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
@@ -71,5 +73,15 @@ void fragment() {
     // Mostly opaque body; the soft edge fades only at the very base and the
     // thin lip, plus a little transparency in the deep part for a water read.
     float edge = smoothstep(0.0, 0.08, UV.y) * (1.0 - smoothstep(0.96, 1.0, UV.y));
+    if (splash) {
+        float tear = fbm(vec2(UV.x * 7.0, UV.y * 5.0 - TIME * flow_speed * 0.4));
+        float sides = smoothstep(0.0, 0.22, UV.x) * smoothstep(1.0, 0.78, UV.x);
+        float tip = smoothstep(0.55, 1.0, UV.y);
+        ALBEDO = mix(ALBEDO, foam_colour.rgb, clamp(tip * 0.85 + (1.0 - sides) * 0.35, 0.0, 1.0));
+        EMISSION += foam_colour.rgb * tip * 0.12;
+        // The lip tears into spray instead of ending on a clean edge.
+        edge = smoothstep(0.0, 0.08, UV.y) * smoothstep(0.0, 0.35, sides + tear * 0.3 - 0.15)
+            * (1.0 - smoothstep(0.72, 0.98, UV.y + (tear - 0.5) * 0.35));
+    }
     ALPHA = opacity * edge * mix(0.86, 1.0, max(foam, rim));
 }
