@@ -31,6 +31,7 @@ var committing: Dictionary = {}
 var saving := false
 var _left := 0.0
 var _reported_error := ""
+var _reported_ignore := ""
 
 class NavigationFlags extends RefCounted:
 	var flags: Dictionary = {}
@@ -855,12 +856,17 @@ func receive_owner(packet: Dictionary) -> void:
 				if not packet.get("request") is Dictionary or HASH.fingerprint(packet.request) != packet.get("request_hash") \
 					or owner().call("_owner_passive_request_matches", packet.source_kind, packet.request) != true: return
 			elif packet.has("source_kind") or not HASH._hex(packet.get("duty_hash"), 64): return
-			if not pending.is_empty() and pending.id != packet.id: return
+			if not pending.is_empty() and pending.id != packet.id:
+				_note_ignored("freeze %s while %s is pending" % [str(packet.id).left(8), str(pending.id).left(8)])
+				return
 			if pending.is_empty():
 				var saver: RefCounted = _game().get("save_system")
 				if saver == null: return
 				saver.call("finish_fallback") # Complete reentrant save callbacks before freezing any owner state.
-				if saver.call("fallback_busy") == true or _scope() != scope or local.is_empty() or local.id != packet.stream_id: return
+				if saver.call("fallback_busy") == true or _scope() != scope or local.is_empty() or local.id != packet.stream_id:
+					_note_ignored("freeze %s: fallback_busy=%s scope_changed=%s stream=%s" % [str(packet.id).left(8),
+						str(saver.call("fallback_busy")), str(_scope() != scope), str(local.get("id", "")).left(8)])
+					return
 				pending = {"id": packet.id, "scope": scope, "retained_event": packet.get("retained_event"),
 					"duty_hash": packet.get("duty_hash", ""), "sequence": local.sequence, "prefix_hash": local.prefix_hash,
 					"hash": HASH.fingerprint(_projection()), "phase": "frozen"}
@@ -955,6 +961,14 @@ func _flush() -> void:
 		if pending.is_empty() and local.admission_pending: _send_host({"op": "resume"})
 		return
 	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
+
+## Diagnostic only, once per distinct reason: a packet this owner drops is
+## otherwise invisible, and the host simply resends it forever.
+func _note_ignored(reason: String) -> void:
+	if reason == _reported_ignore:
+		return
+	_reported_ignore = reason
+	print("[owner-passive] ignored " + reason)
 
 func tick(delta: float) -> void:
 	_left -= delta

@@ -945,8 +945,10 @@ func _retry_foundation_events() -> void:
 			combat_held[duty.character_id] = true
 			continue
 		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
-			_note_duty_hold(duty, str(result.get("code", "unresolved")))
+			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
 			handled[duty.character_id] = true
+		elif result.get("resolved") == true:
+			_note_duty_released(duty)
 
 ## Logged once per character/action/code: a held duty retries every frame,
 ## and a fight's next round can wait on it without any other trace.
@@ -958,7 +960,13 @@ func _note_duty_hold(duty: Dictionary, code: String) -> void:
 	if _duty_holds.get(key) == code:
 		return
 	_duty_holds[key] = code
-	print("[session] %s duty for %s held: %s" % [str(duty.action), str(duty.character_id), code])
+	print("[session] %s duty for %s held: %s (t=%dms)" % [str(duty.action), str(duty.character_id), code, Time.get_ticks_msec()])
+
+
+func _note_duty_released(duty: Dictionary) -> void:
+	var key := "%s %s" % [str(duty.character_id), str(duty.action)]
+	if _duty_holds.erase(key):
+		print("[session] %s duty for %s released (t=%dms)" % [str(duty.action), str(duty.character_id), Time.get_ticks_msec()])
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
