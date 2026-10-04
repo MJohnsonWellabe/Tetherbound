@@ -60,6 +60,16 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		var session: Node = root.get_node(^"Game").get("session")
 		(session.get("_config") as Dictionary)["redesign_portal_runtime_enabled"] = true
 		return {"verdict": "PASS", "detail": "DIAGNOSTIC: host in-memory redesign_portal_runtime_enabled=true (portal_runtime_ready=%s)" % str(session.call("portal_runtime_ready"))}
+	if action == "f32_portal_refused":
+		# Accepting guest travel samples must not open portals: with the shipped
+		# flag off, the Home Key and every portal action still refuse.
+		var session: Node = root.get_node(^"Game").get("session")
+		var ready: bool = session.call("portal_runtime_ready") == true
+		var key := str(session.call("home_key_refusal"))
+		var action_reply: Dictionary = session.call("request_portal_action", {"kind": "home_key_finish"})
+		var ok: bool = not ready and key == "The Home Key is not ready yet." and action_reply.get("ok") != true
+		return {"verdict": "PASS" if ok else "FAIL",
+			"detail": "portal_runtime_ready=%s home_key='%s' portal_action=%s" % [str(ready), key, str(action_reply)]}
 	if action == "f32_press":
 		var at := float(args.get("at_unix_ms", 0.0))
 		if at > 0.0:
@@ -309,6 +319,11 @@ func _run() -> void:
 	if not await _race(SITE_GUEST_FIRST, 400.0, "guest-first", 1):
 		quit(await finish())
 		return
+	if OS.get_environment("TB_F32_DIAG_PORTAL_FLAG") != "1":
+		for i in 2:
+			if not await _pass(i, "f32_portal_refused", {}):
+				quit(await finish())
+				return
 	print("F32 CONTENTION verdict: two-character node races, one commit each (four-character run is owner-kit/nightly scope, not this smoke)")
 	quit(await finish())
 
@@ -400,9 +415,11 @@ func _race(site: String, lead_ms: float, label: String, expected_winner: int) ->
 		check(lost.size() == 1 and lost[0].verdict.get("ok") != true and lost[0].verdict.get("terminal_refusal") == true
 			and not str(lost[0].verdict.get("reason", "")).is_empty(),
 			"loser's in-flight press was refused terminally with a reason (%s)" % str(lost))
-		# harvest_node.gd shows `verdict.reason` on the HUD verbatim, so the
-		# reason must be a player sentence, not the machine code.
-		var told := str(lost[0].verdict.get("reason", "")) if lost.size() > 0 else ""
+		# harvest_node.gd shows F32 refusal_reason(verdict) on the HUD (the same
+		# call it makes when the settled refusal arrives); that must be a player
+		# sentence, never the machine code.
+		var told := preload("res://scripts/world/f32_source_actions.gd").refusal_reason(lost[0].verdict,
+			"Gathering is awaiting settlement.") if lost.size() > 0 else ""
 		check(not told.is_empty() and told != str(lost[0].verdict.get("code", "")) and told.contains(" "),
 			"loser's on-screen refusal is a player sentence, not the raw code (shown: '%s')" % told)
 		print("F32 CONTENTION [" + label + "] loser shape A: refused '%s' (%s)" % [str(lost[0].verdict.get("code", "")) if lost.size() > 0 else "", str(lost[0].verdict.get("reason", "")) if lost.size() > 0 else ""])

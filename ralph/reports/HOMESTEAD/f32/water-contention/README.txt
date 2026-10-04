@@ -125,3 +125,13 @@ LIMITATION: four characters
   node only. It does not show four simultaneous claimants producing one
   commit and three clean refusals. That needs a peers:4 variant on the
   nightly/owner kit, and it is blocked by FAIL 1 anyway.
+
+== Re-run after a898ca39 (guest travel samples decoupled from the portal flag) ==
+Command: GODOT_BIN=/usr/local/bin/godot tools/net/run_net_smoke.sh f32_node_contention --out=<dir>
+Shipped config (redesign_portal_runtime_enabled=false), no diagnostic flag. Exit 0, 68 PASS, 0 FAIL.
+- [simultaneous] host wins; guest refused stale_stock, HUD sentence "Someone else gathered this first."
+- [guest-first] guest wins with its own save/receipt/disk gain; host's later press finds the node depleted.
+- New check: on both peers portal_runtime_ready=false, home_key_refusal "The Home Key is not ready yet.",
+  request_portal_action -> {ok:false, "Travel is not ready yet."}.
+- The loser HUD check now asserts the text harvest_node.gd actually pushes (f32 refusal_reason(verdict)).
+Verdict: F32#5 PASS for two characters. Four-claimant run remains owner-kit/nightly scope (MULTIPLAYER §9).
