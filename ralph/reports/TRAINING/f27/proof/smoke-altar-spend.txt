@@ -1,0 +1,9 @@
+paid Altar placed at (-16.0, 1.143825, 10.0) as b1
+dismissing modal /root/Game/OnboardingLessons/@CanvasLayer@67102
+before spend: ripplet L3, water essence 120, cost 6
+walked to 0.66m of the target; input owner <null>
+focused payment: Water Essence · Cost 6 · Have 120
+panel status 'Level raised and saved.', pending '', message ''
+after spend: L4, water essence 114, new receipts ["essence_spend:character-f3cc9e7e6ac016b0d8678219735348fc:c5e51b1874c2c4705267da55617f6523:creature-960cae30dac8543e5560b815f19ca50a:3:essence_water:6:16"]
+F27_ALTAR_SPEND: PASS controller-path Altar level-up L3->L4 for 6 Water Essence
+exit 0
