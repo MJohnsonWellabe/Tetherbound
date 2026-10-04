@@ -75,7 +75,7 @@ try {
       throw "Package integrity failed: $($file.path). Re-extract the complete zip."
     }
   }
-  foreach ($required in @("Tetherbound.exe", "Tetherbound.console.exe", "Tetherbound.pck")) {
+  foreach ($required in @("Tetherbound.exe", "Tetherbound.pck", "F26_ALLY.cmd", "f26_ally.ps1")) {
     if (@($manifest.files | Where-Object { $_.path -ceq $required }).Count -ne 1) {
       throw "Package manifest must identify $required exactly once."
     }
@@ -121,26 +121,30 @@ try {
     $casePath = Join-Path $Output $biome
     $stdout = Join-Path $Output ($biome + ".stdout.log")
     $stderr = Join-Path $Output ($biome + ".stderr.log")
+    $engineLog = Join-Path $Output ($biome + ".engine.log")
     # Start-Process needs an explicitly quoted argument string on Windows, even
     # when ArgumentList is an array. These paths are parameters, never shell code.
     if ($casePath.Contains('"')) { throw "Output cannot contain a quote." }
-    $argumentText = '--rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_lookdev_route.gd -- --biome=' +
+    $argumentText = '--rendering-method forward_plus --resolution 1920x1080 --log-file "' + $engineLog + '" --script res://tools/capture_lookdev_route.gd -- --biome=' +
       $biome + ' --preset=Medium --source-commit=' + $manifest.source_commit + ' "--output=' + $casePath.Replace([char]92,[char]47) + '"'
-    $process = Start-Process -FilePath (Join-Path $PackageRoot "Tetherbound.console.exe") -ArgumentList $argumentText -WorkingDirectory $PackageRoot -WindowStyle Hidden -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
+    # The release preset exports the GUI executable without a console wrapper.
+    # The owner watches this interactive measurement window; engine logs are
+    # explicit and do not depend on the Windows console subsystem.
+    $process = Start-Process -FilePath (Join-Path $PackageRoot "Tetherbound.exe") -ArgumentList $argumentText -WorkingDirectory $PackageRoot -WindowStyle Normal -PassThru -RedirectStandardOutput $stdout -RedirectStandardError $stderr
     if (-not $process.WaitForExit(1800000)) {
       # End only this owned wrapper's process tree. Preserve the partial evidence.
       & taskkill.exe /PID $process.Id /T /F | Out-Null
       throw "$biome exceeded its 30-minute startup/route deadline."
     }
     $process.Refresh()
-    $nativeLog = (Get-Content -LiteralPath $stdout -Raw) + (Get-Content -LiteralPath $stderr -Raw)
+    $nativeLog = (Get-Content -LiteralPath $stdout -Raw) + (Get-Content -LiteralPath $stderr -Raw) + (Get-Content -LiteralPath $engineLog -Raw)
     if ($process.ExitCode -ne 0 -or $nativeLog -match 'SCRIPT ERROR:|ERROR:') {
       throw "$biome native process failed; inspect its retained logs."
     }
     $receipt = Get-Content -LiteralPath (Join-Path $casePath "route.json") -Raw | ConvertFrom-Json
     $result = Read-RouteResult $receipt $manifest $biome
     $result.raw_files = @()
-    foreach ($rawPath in @($stdout, $stderr, (Join-Path $casePath "route.json"), (Join-Path $casePath "start.png"), (Join-Path $casePath "end.png"))) {
+    foreach ($rawPath in @($stdout, $stderr, $engineLog, (Join-Path $casePath "route.json"), (Join-Path $casePath "start.png"), (Join-Path $casePath "end.png"))) {
       if (-not (Test-Path -LiteralPath $rawPath -PathType Leaf)) { throw "Missing raw evidence: $rawPath" }
       $result.raw_files += @{ path = $rawPath.Substring($Output.Length + 1).Replace([char]92,[char]47); sha256 = (Get-FileHash -LiteralPath $rawPath -Algorithm SHA256).Hash.ToLowerInvariant() }
     }

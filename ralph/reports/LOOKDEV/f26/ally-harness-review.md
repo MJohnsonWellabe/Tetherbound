@@ -36,3 +36,21 @@ Local check inputs: `D:/tetherbound/.artifacts/check_f26_owner.ps1` and
 
 Owner hardware result, exported native route, full visual matrices and all other
 open F26 criteria remain unproven. Compatibility remains the authored default.
+
+## Release-package correction
+
+The actual release preset provides a GUI EXE without a console wrapper. The
+launcher now uses `Tetherbound.exe`, an explicit `--log-file "<path>"` argument
+pair and a visible interactive measurement window. Native errors are checked in
+engine log plus stdout/stderr; all three are hashed. Mandatory EXE/PCK/CMD/PS1
+entries appear exactly once in the manifest. No export-preset/default change.
+
+Separate review of this correction: **PASS**, same read-only reviewer. One
+intermediate `--log-file=<path>` CLI bug was found and fixed; latest reviewed
+harness SHA-256:
+`70f7b92dc754d598b2452b0acd5cfdedbb72dcefe6e81c700cff792a86659db5`.
+Windows PowerShell 5.1 parser: zero errors. Reviewer independently ran five real
+release integrity fixtures with no console wrapper: valid package PASS; modified
+PCK, missing CMD, parent-directory escape and duplicate EXE all refused.
+The prior 19 receipt checks remain passing. Bundle parity and actual exported
+native runs remain separate; no owner result is established by source review.
