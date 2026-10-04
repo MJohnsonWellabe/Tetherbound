@@ -1894,7 +1894,8 @@
         "presentation_variants": {
           "water_ball": {
             "body": {
-              "volley_stagger_m": 0.7,
+              "volley_separation_scale": 3.6,
+              "volley_stagger_m": 1.1,
               "volley_vertical_ratio": 0.3,
               "shape": "bubble",
               "surface_material": "water_stream",
