@@ -10,7 +10,7 @@ Branch: `tb/lookdev`. The coordinator integrates this lane; no lane PR.
 | F26#2 authored look bar | CURRENT | Independent criterion-only MET on `311e97078`; [look-bar-review.md](look-bar-review.md). No runtime full-bar claim. |
 | F26#3 full bar on High/Medium | MISSING | Fresh complete biome matrices and independent code-blind Bars A/B verdicts required. |
 | F26#4 twelve scripted routes | STALE | Fresh Low/Medium/High route timing at 1920x1080 required. |
-| F26#5 Ally performance | BLOCKED_OWNER | Package and one-page Medium/15 W checklist pending; owner must measure >=30 fps, 40 preferred. |
+| F26#5 Ally performance | BLOCKED_OWNER | Owner harness and [one-page checklist](ALLY_CHECKLIST.md) implemented/reviewed; package preflight pending. Owner must measure >=30 fps, 40 preferred. |
 
 No new acceptance credit. Compatibility remains the default.
 
@@ -22,6 +22,7 @@ No new acceptance credit. Compatibility remains the default.
 - Pushed `tb/lookdev` at the baseline. GitHub accepted the branch.
 - Ran one serialized import and the named native Settings/reload proofs under `D:/tetherbound/RENDER_LOCK.json`, with isolated device preferences. All three exit 0 with zero native errors; Settings/reload pass 21 checks. Raw local artifacts and log hashes: `D:/tetherbound/.artifacts/f26-initial-826d273c3/`, [native-settings.json](native-settings.json). Generated UID/import support files are retained locally; no generated source changes were committed.
 - Started the full Tidewake Medium material census on `311e97078`. It produced 24 native 1920x1080 catalogue PNGs, but the owner announced Valheim play before completion. The owned renderer was stopped and the lock released. The manifest was interrupted during its rewrite and is empty; these partial frames cannot certify the census. Logs and unmodified images remain at `D:/tetherbound/.artifacts/f26-census-311e97078/water-medium/`. Repeat into a fresh directory after the game exits; preserve this attempt.
+- Implemented the packaged Ally Medium/1080p four-route launcher, isolated device profile, hardware/power declarations, raw evidence hashes and fail-closed result summary. Independent implementation review PASS; [ally-harness-review.md](ally-harness-review.md). Windows PowerShell 5.1: 19 focused receipt checks and four actual package-integrity fixtures passed without launching a game. Export/native route/device performance remain separate gates.
 
 ## Coordinator exchange
 
