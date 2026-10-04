@@ -19,6 +19,10 @@ static var _reduced := false
 ## (the charged-hit roll is 0.65°). Reduced motion overrides it to nothing.
 static var _shake_percent := 100
 static var _rumble_percent := 100
+## UX §18 / COMBAT §11: damage numbers On / Own only / Off. "own" hides only
+## peers' hits; the local player's own hits and hits on their creature stay.
+const DAMAGE_NUMBER_MODES: Array[String] = ["on", "own", "off"]
+static var _damage_numbers := "on"
 
 
 static func reduced_motion() -> bool:
@@ -62,6 +66,16 @@ static func rumble_scale() -> float:
 	return float(_rumble_percent) / 100.0
 
 
+static func damage_numbers_mode() -> String:
+	return _damage_numbers
+
+static func set_damage_numbers_mode(value: String) -> void:
+	_damage_numbers = value if value in DAMAGE_NUMBER_MODES else "on"
+
+static func next_damage_numbers_mode() -> String:
+	return DAMAGE_NUMBER_MODES[(DAMAGE_NUMBER_MODES.find(_damage_numbers) + 1) % DAMAGE_NUMBER_MODES.size()]
+
+
 ## Read from the settings object's `accessibility` section. A missing or
 ## malformed section leaves the default (off).
 static func load_from(prefs: RefCounted) -> void:
@@ -73,6 +87,7 @@ static func load_from(prefs: RefCounted) -> void:
 	_reduced = bool((stored as Dictionary).get("reduced_motion", false))
 	set_camera_shake_percent(int((stored as Dictionary).get("camera_shake_percent", 100)))
 	set_rumble_percent(int((stored as Dictionary).get("rumble_percent", 100)))
+	set_damage_numbers_mode(str((stored as Dictionary).get("damage_numbers", "on")))
 
 
 ## Write back into `prefs.accessibility`. The caller saves.
@@ -84,4 +99,5 @@ static func store_to(prefs: RefCounted) -> void:
 	out["reduced_motion"] = _reduced
 	out["camera_shake_percent"] = _shake_percent
 	out["rumble_percent"] = _rumble_percent
+	out["damage_numbers"] = _damage_numbers
 	prefs.set("accessibility", out)

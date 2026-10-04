@@ -146,9 +146,40 @@ func _check_the_look_rows() -> void:
 	if int(motion.call("camera_shake_percent")) != shake_before:
 		_fail("D-pad right did not put camera shake back")
 		return
+	# F21#3: controller rumble sits under camera shake and moves the same way.
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_rumble_button"):
+		_fail("D-pad down from camera shake did not reach controller rumble")
+		return
+	var rumble_before: int = motion.call("rumble_percent")
+	await _tap_pad(JOY_BUTTON_DPAD_LEFT)
+	if int(motion.call("rumble_percent")) >= rumble_before:
+		_fail("D-pad left on controller rumble did not lower it")
+		return
+	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
+	if int(motion.call("rumble_percent")) != rumble_before:
+		_fail("D-pad right did not put controller rumble back")
+		return
+	# F21#0: the damage-number row cycles on A and comes back round to where it was.
+	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
+	if _focused() != _tab.get("_numbers_button"):
+		_fail("D-pad down from controller rumble did not reach damage numbers")
+		return
+	var numbers_before: String = motion.call("damage_numbers_mode")
+	await _tap_pad(JOY_BUTTON_A)
+	if str(motion.call("damage_numbers_mode")) == numbers_before:
+		_fail("A on damage numbers did not change the mode")
+		return
+	for _i in 4:
+		if str(motion.call("damage_numbers_mode")) == numbers_before:
+			break
+		await _tap_pad(JOY_BUTTON_A)
+	if str(motion.call("damage_numbers_mode")) != numbers_before:
+		_fail("A on damage numbers did not cycle back to '%s'" % numbers_before)
+		return
 	await _tap_pad(JOY_BUTTON_DPAD_DOWN)
 	if _focused() != sensitivity:
-		_fail("D-pad down from reduced motion did not reach look sensitivity")
+		_fail("D-pad down from damage numbers did not reach look sensitivity")
 		return
 	var before: int = look.call("sensitivity_percent")
 	await _tap_pad(JOY_BUTTON_DPAD_RIGHT)
@@ -220,7 +251,9 @@ func _check_the_look_rows() -> void:
 	if int(text.call("background_percent")) != bg_before:
 		_fail("D-pad right did not put dialogue background back")
 		return
-	for i in 7:
+	# Dialogue background up to reduced motion: text size, aim assist, both
+	# inversions, look sensitivity, damage numbers, rumble, shake, reduced motion.
+	for i in 9:
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 	if _focused() != _tab.get("_reduced_motion_button"):
 		_fail("D-pad up from the inversion rows did not return to reduced motion")
@@ -508,11 +541,12 @@ func _check_the_dpad_reaches_the_audio_rows() -> void:
 		return
 
 	# Accessibility sits between Audio and the Gameplay toggles, drawn and
-	# linked in that order: reduced motion, look sensitivity, both inversions.
+	# linked in that order: reduced motion, camera shake, controller rumble,
+	# damage numbers, look sensitivity, both inversions.
 	var lane: Array = [_tab.get("_dialogue_bg_button"), _tab.get("_text_size_button"),
 		_tab.get("_aim_assist_button"), _tab.get("_invert_y_button"), _tab.get("_invert_x_button"),
-		_tab.get("_look_sensitivity_button"), _tab.get("_shake_button"),
-		_tab.get("_reduced_motion_button")]
+		_tab.get("_look_sensitivity_button"), _tab.get("_numbers_button"), _tab.get("_rumble_button"),
+		_tab.get("_shake_button"), _tab.get("_reduced_motion_button")]
 	for expected: Variant in lane:
 		await _tap_pad(JOY_BUTTON_DPAD_UP)
 		if _focused() != expected:
