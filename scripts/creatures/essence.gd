@@ -415,7 +415,7 @@ static func host_wild_defeat_event(admitted: Dictionary, character_id: String,
 		"world_namespace": world_namespace, "encounter_id": host_record.encounter_id,
 		"enemy_uid": actual_dead_enemy.uid, "enemy_record": actual_dead_enemy.duplicate(true),
 		"active_uid": host_active_uid, "eligible_uids": eligible, "kind": "wild_defeat",
-		"xp_mode": cfg.wild_victory_xp_mode}
+		"xp_mode": cfg.wild_victory_xp_mode, "realm": host_record.realm}
 	return {"ok": true, "intent": event, "source_identity": identity}
 
 
@@ -508,9 +508,14 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 			or not _baseline_errors(admitted, character_id).is_empty() \
 			or not configuration_errors(cfg).is_empty(): return _refuse("invalid_defeat")
 	var keys := ["event_id", "world_namespace", "encounter_id", "enemy_uid", "enemy_record", "active_uid", "eligible_uids", "kind", "xp_mode"]
-	if host_event.size() != keys.size(): return _refuse("invalid_defeat_event")
+	# A tenth "realm" key (F32#4 shed) is optional: a nine-key legacy row
+	# still validates, computes no shed and keeps its receipt signature.
+	var has_realm := host_event.size() == keys.size() + 1 and host_event.has("realm")
+	if host_event.size() != keys.size() and not has_realm: return _refuse("invalid_defeat_event")
 	for key: String in keys:
 		if not host_event.has(key): return _refuse("invalid_defeat_event")
+	if has_realm and (not host_event.realm is String or not BIOMES.runtime_ids(false).has(host_event.realm)):
+		return _refuse("invalid_defeat_identity")
 	for key: String in ["event_id", "world_namespace", "encounter_id"]:
 		if not _opaque_id(host_event[key]): return _refuse("invalid_defeat_identity")
 	for key: String in ["enemy_uid", "active_uid"]:
@@ -564,6 +569,14 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	for stack: Dictionary in payout:
 		if not RULES.db().has(str(stack.id)) or inventory.add(str(stack.id), int(stack.n)) != 0:
 			return _refuse("inventory_full")
+	var shed_outputs := _defeat_shed(host_event, character_id) if has_realm else {}
+	if not shed_outputs.is_empty():
+		var with_shed := RULES.inventory_from(RULES.slots(inventory))
+		for item: String in shed_outputs:
+			if not RULES.db().has(item) or with_shed.add(item, int(shed_outputs[item])) != 0:
+				shed_outputs = {} # Never refuse the victory XP/essence for a full bag.
+				break
+		if not shed_outputs.is_empty(): inventory = with_shed
 	var next := admitted.duplicate(true)
 	next.party = xp.party.duplicate(true)
 	next.inventory = RULES.slots(inventory).duplicate(true)
@@ -573,7 +586,23 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("defeat_schema_or_candidate_unavailable")
 	return {"ok": true, "duplicate": false, "before": admitted.duplicate(true), "state": next,
 		"expected_character_revision": character_revision, "receipt": receipt,
-		"payout": payout, "xp_awards": xp.awards.duplicate(true)}
+		"payout": payout, "xp_awards": xp.awards.duplicate(true), "shed_outputs": shed_outputs.duplicate(true)}
+
+
+## F32#4 win shed for one participant of one host wild defeat. The roll is
+## derived from host identity only, so retries and row recompute reproduce
+## it; the defeat receipt above makes the whole candidate once-only.
+static func _defeat_shed(host_event: Dictionary, character_id: String) -> Dictionary:
+	var shed := preload("res://scripts/world/shed_drop_rules.gd")
+	var runtime: Variant = DATA.json("res://data/config/f32_runtime.json")
+	if not runtime is Dictionary or runtime.get("runtime_enabled") != true: return {}
+	var digest := JSON.stringify([host_event.world_namespace, host_event.event_id, host_event.enemy_uid, character_id]).sha256_text()
+	var roll := float(("0x" + digest.substr(0, 8)).hex_to_int()) / 4294967296.0
+	var outcome := {"world_instance_id": host_event.world_namespace, "encounter_id": host_event.encounter_id,
+		"realm": host_event.realm, "kind": "wild", "won": true, "settled": true, "participants": [character_id],
+		"defeated": [{"uid": host_event.enemy_uid, "species": host_event.enemy_record.species_id}]}
+	var candidate: Dictionary = shed.wild_win_candidate(outcome, character_id, {}, {host_event.enemy_uid: roll}, shed.read())
+	return (candidate.outputs as Dictionary).duplicate(true) if candidate.get("ok") == true else {}
 
 
 static func stage_core_defeat(admitted: Dictionary, character_id: String, host_event: Dictionary,
