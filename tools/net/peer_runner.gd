@@ -8034,7 +8034,18 @@ func _step_save_reload_here(_args: Dictionary) -> Dictionary:
 	var host_owned := session == null or not (session as Node).has_method("is_host") \
 		or bool((session as Node).call("is_host"))
 	if host_owned:
-		if not bool(game.call("autosave_here")):
+		# A host save is refused while one of its own reward installs is still
+		# saving (session _owner_training_snapshot_allowed), which is routine
+		# right after a boss fight. A player's autosave simply runs again; give
+		# the in-flight saves a bounded window to settle the same way.
+		var host_saved := false
+		for _attempt in 40:
+			if bool(game.call("autosave_here")):
+				host_saved = true
+				break
+			for _frame in 15:
+				await physics_frame
+		if not host_saved:
 			return {"verdict": "FAIL", "detail": "host autosave_here refused"}
 		if not bool((save_system as RefCounted).call("load_slot", game, int(game.call("autosave_slot")))):
 			return {"verdict": "FAIL", "detail": "host load_slot refused the autosave"}
