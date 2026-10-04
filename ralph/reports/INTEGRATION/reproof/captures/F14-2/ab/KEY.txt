@@ -1,0 +1,4 @@
+P1: A=restored B=live
+P2: A=live B=restored
+P3: A=restored B=live
+P4: A=restored B=live
