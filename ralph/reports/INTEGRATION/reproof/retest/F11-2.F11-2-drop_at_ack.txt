@@ -1,0 +1,30 @@
+proof:    f11_stormheart_drop_at_ack
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/f11_stormheart_drop_at_ack.json
+out:      /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack
+run id:  net-20261004T201816Z-4553
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=4583 control_port=46057 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/peer-0.log
+coordinator: launched peer 1 (client) pid=4584 control_port=33059 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":29202.0,"godot_version":"4.7-stable (official)","main_sha":"4777baecfd20","peer":1.0,"pid":4584.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":29201.0,"godot_version":"4.7-stable (official)","main_sha":"4777baecfd20","peer":0.0,"pid":4583.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+FAIL: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+FAIL: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/net/net-proof_two_peer-20261004T201816Z/SUMMARY.md ===
+# Net smoke run net-20261004T201816Z-4553
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=4583 exited=true unexpected_exit=false
+- peer 1 (client) pid=4584 exited=true unexpected_exit=false
+
+FAILURES:
+- #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+PROOF.md: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-2-drop_at_ack/PROOF.md (exit 1)

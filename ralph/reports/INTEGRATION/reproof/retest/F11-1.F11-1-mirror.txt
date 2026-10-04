@@ -1,0 +1,40 @@
+proof:    stormwood_f11_mirror_host_refuses_guest_accepts
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/stormwood_f11_mirror_host_refuses_guest_accepts.json
+out:      /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror
+run id:  net-20261004T201637Z-3611
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3768 control_port=43499 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/peer-0.log
+coordinator: launched peer 1 (client) pid=3769 control_port=33685 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/peer-1.log
+coordinator: peer 1 hello: {"enet_port":33582.0,"godot_version":"4.7-stable (official)","main_sha":"015922b38bdc","peer":1.0,"pid":3769.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":33581.0,"godot_version":"4.7-stable (official)","main_sha":"015922b38bdc","peer":0.0,"pid":3768.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+FAIL: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+FAIL: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=3768 exited=true unexpected_exit=false
+- peer 1 (client) pid=3769 exited=true unexpected_exit=false
+
+FAILURES:
+- #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/net/net-proof_two_peer-20261004T201637Z/SUMMARY.md ===
+# Net smoke run net-20261004T201637Z-3611
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=3768 exited=true unexpected_exit=false
+- peer 1 (client) pid=3769 exited=true unexpected_exit=false
+
+FAILURES:
+- #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> FAIL; data did not match {"character_id":"character-f41f4a49223483d6bfdf56715944bb7b","form":"captured directory (split path)","realm":"meadows"} -- Game.load_game(0) refused /home/user/Tetherbound/tools/net/proof_saves/host_meadows_stormwood_route_open
+
+PROOF.md: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror/PROOF.md (exit 1)
