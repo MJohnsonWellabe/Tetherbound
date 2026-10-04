@@ -1633,7 +1633,7 @@ func _run_tournament_round(round: Dictionary) -> bool:
 		check(landed, "peer %d reduced '%s' shared opponent HP%s"
 			% [peer, trainer, "" if landed else " -- " + _tournament_hit_detail])
 	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
-	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s'" % trainer)
+	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s' (%s)" % [trainer, str(won.get("detail", ""))])
 	if str(won.get("verdict", "")) != "PASS":
 		return false
 	for peer in 2:
