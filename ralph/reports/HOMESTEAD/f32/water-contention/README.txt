@@ -135,3 +135,10 @@ Shipped config (redesign_portal_runtime_enabled=false), no diagnostic flag. Exit
   request_portal_action -> {ok:false, "Travel is not ready yet."}.
 - The loser HUD check now asserts the text harvest_node.gd actually pushes (f32 refusal_reason(verdict)).
 Verdict: F32#5 PASS for two characters. Four-claimant run remains owner-kit/nightly scope (MULTIPLAYER §9).
+
+== Scope note (review) ==
+This closes the two-character PR evidence MULTIPLAYER §9 asks for. The four-claimant run (one commit, three
+clean refusals) stays OPEN for the owner kit/nightly, as a peers:4 variant of this smoke. Real host-side
+contention (stale_stock) is shown in the simultaneous race; the guest-first race shows local refusal after
+the winner's delta. HUD wording for stale_stock is now "This was just gathered. It will grow back in a few
+days." (it also covers a lagging view of one's own gather). Re-run after that change: exit 0, 69 PASS.

@@ -8,7 +8,7 @@ func test_contention_refusals_read_as_sentences() -> void:
 		var text := ACTIONS.refusal_reason({"ok": false, "code": code, "reason": code}, "fallback")
 		assert_ne(text, code, code + " is replaced")
 		assert_true(text.contains(" ") and text.ends_with("."), code + " reads as a sentence: " + text)
-	assert_eq(ACTIONS.refusal_reason({"ok": false, "code": "stale_stock"}, "x"), "Someone else gathered this first.")
+	assert_eq(ACTIONS.refusal_reason({"ok": false, "code": "stale_stock"}, "x"), "This was just gathered. It will grow back in a few days.")
 
 func test_existing_sentences_and_pending_fallbacks_are_kept() -> void:
 	assert_eq(ACTIONS.refusal_reason({"ok": false, "code": "unregistered_source", "reason": "That resource is unavailable."}, "x"),

@@ -2,10 +2,10 @@ meadows    ground         2.8 m  ON-ROUTE
 meadows    water          4.5 m  ON-ROUTE
 meadows    air           69.2 m  off
 meadows    electric     205.1 m  off
-meadows    fire         333.0 m  off
-meadows    dark         452.3 m  off
-meadows    ice          515.1 m  off
-meadows    psychic      568.0 m  off
+meadows    fire          50.2 m  off
+meadows    dark          65.2 m  off
+meadows    ice          251.8 m  off
+meadows    psychic      462.9 m  off
 cloudreach ground        18.3 m  off
 cloudreach water        205.4 m  off
 cloudreach air          197.0 m  off

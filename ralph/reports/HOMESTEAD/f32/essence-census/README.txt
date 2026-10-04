@@ -25,3 +25,9 @@ Real path: tests/smoke_f32_material_sites.gd --realm=<realm> --essence. Every on
   both rules.
 Regression: contention smoke still exit 0 / 68 PASS on the relocated psychic node; 65 related unit tests pass.
 Verdict F32#2: PASS.
+
+== Review follow-up ==
+Meadows main routes now also include terrain_playground spokes.routes[].road (the roads out across the
+bands). Recomputed: fire 50.2 m, dark 65.2 m, ice 251.8 m, psychic 462.9 m; Meadows still 6/8 off-route.
+All 32 nodes' placement.terrain_and_player_path_proven and the catalogue status now record the
+real-path proof above.

@@ -7106,7 +7106,7 @@
         },
         "requires_dive": false,
         "terrain_and_player_path_proven": true,
-        "candidate_refinement": "Authored-radius planning moved the unmounted offset inward from reef-stone anchor; no baked-height/body/water-depth/player-path proof. Keep unmounted until actual validated placement."
+        "candidate_refinement": "Authored-radius planning moved the offset inward from the reef-stone anchor; the moved bed passed real baked-height/body/dry-bed placement, controller approach and a saved gather (ralph/reports/HOMESTEAD/f32/material-census/)."
       }
     ],
     "runtime_enabled": true,

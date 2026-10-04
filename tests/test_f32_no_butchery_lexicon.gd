@@ -5,7 +5,7 @@ extends "res://tests/test_case.gd"
 ## overrides) and the authored shed wording. A creature's own living hide,
 ## shell or feather is not butchery and is deliberately not a banned term.
 const SHED := preload("res://scripts/world/shed_drop_rules.gd")
-const BANNED := "\\b(hunt\\w*|butcher\\w*|slaughter\\w*|carcass\\w*|pelts?|skinn(ed|ing)|flay\\w*|gutt(ed|ing)|meat|flesh\\w*|trophy|trophies)\\b"
+const BANNED := "\\b(hunt\\w*|butcher\\w*|slaughter\\w*|carcass\\w*|pelts?|skinn(ed|ing)|flay\\w*|gutt(ed|ing)|meat|flesh\\w*|trophy|trophies|leather\\w*)\\b"
 
 func _banned() -> RegEx:
 	var pattern := RegEx.new()
@@ -45,7 +45,7 @@ func test_shed_items_are_registered_and_described_as_naturally_shed() -> void:
 
 func test_the_scan_catches_butchery_wording() -> void:
 	var pattern := _banned()
-	for bad: String in ["Hunting trophy", "butchered remains", "a fresh pelt", "skinned hide", "raw meat"]:
+	for bad: String in ["Hunting trophy", "butchered remains", "a fresh pelt", "skinned hide", "raw meat", "tanned leather"]:
 		assert_true(pattern.search(bad) != null, "detects: " + bad)
 	for fine: String in ["a permanent thickening of hide, shell or feather", "naturally shed fur", "gale fiber"]:
 		assert_true(pattern.search(fine) == null, "allows: " + fine)

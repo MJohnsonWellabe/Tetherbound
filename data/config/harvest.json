@@ -24,7 +24,7 @@
   },
   "additional_material_node_candidates": {
     "status": "runtime_mounted_placement_and_approach_proven",
-    "_comment": "F32#0: Meadows Sunleaf supply, using its existing Cloudreach nature-family plant model. Source anchors are existing fibre patches;8m offsets are unproven candidates. Not part of BandContent nodes, so old merged entries, orders and positions remain unchanged. World-owner mounting and typed host stock follow actual body/path validation.",
+    "_comment": "F32#0: Meadows Sunleaf supply, using its existing Cloudreach nature-family plant model. Source anchors are existing fibre patches;8m offsets passed real placement, controller approach and a saved gather (ralph/reports/HOMESTEAD/f32/material-census/). Not part of BandContent nodes, so old merged entries, orders and positions remain unchanged. World-owner mounting and typed host stock follow actual body/path validation.",
     "nodes": [
       {
         "id": "meadows:sunleaf:patch:01",

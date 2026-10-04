@@ -33,15 +33,17 @@ func test_every_node_is_a_registered_site_on_the_configured_host_day_timer() -> 
 			assert_true((site.get("outputs", {}) as Dictionary).has("essence_" + str(node.type)), str(node.id) + " yields its type essence")
 
 ## Main routes per realm, as ralph/reports/HOMESTEAD/f32/essence-census/route_distance.py
-## measures them: authored Meadows streets/approaches, Tidewake main_path spines,
+## measures them: authored Meadows streets/approaches and spoke roads, Tidewake main_path spines,
 ## Cloudreach region-to-region roads plus the arrival road, Stormwood critical roads.
 func _main_routes(realm: String) -> Array:
 	var read := func(path: String) -> Dictionary: return JSON.parse_string(FileAccess.get_file_as_string(path))
 	var lines: Array = []
 	match realm:
 		"meadows":
-			var paths: Dictionary = read.call("res://data/config/terrain_playground.json").paths
-			for row: Dictionary in paths.routes + paths.approaches: lines.append(row.points)
+			var playground: Dictionary = read.call("res://data/config/terrain_playground.json")
+			for row: Dictionary in playground.paths.routes + playground.paths.approaches: lines.append(row.points)
+			for row: Dictionary in playground.spokes.routes:
+				if row.get("road") is Array and not row.road.is_empty(): lines.append(row.road)
 		"water":
 			for row: Dictionary in read.call("res://data/config/water_world.json").land_routes:
 				if row.get("main_path") == true: lines.append(row.polyline)

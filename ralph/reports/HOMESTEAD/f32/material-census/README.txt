@@ -50,3 +50,12 @@ All runs exit 0 on the same final smoke; the reports in this folder replace the 
   Shed-only: skyplume (galecrest, Cloudreach), sparkfur (sparkit/staticub, Stormwood).
 Unit census (CI): tests/test_f32_material_census.gd, 2 tests / 30 assertions pass.
 Verdict F32#0: PASS (all four tier sets gatherable in their biome; both flags ON).
+
+== Lock-out cascade root cause (fixed) ==
+foundation_resources.host_context returned an empty context, refused as source_or_revision_changed, for
+EVERY gather, tool-less ones included, whenever the held tool was not a working tool in the admitted bag.
+In play that happens when a held tool wears out (the HUD keeps a worn tool equipped by design) or leaves the
+bag (dropped, traded, left in a death satchel). Fix: foundation_resources.effective_tool() treats such a
+tool as bare hands. Nothing is granted, and tool-gated sites refuse with equipped_tool_required ("You need
+the right tool in hand to gather this."). Unit proof: tests/test_f32_held_tool.gd. An engine staging of an
+unowned tool was not possible: the authority record restores the starting kit after a local removal.

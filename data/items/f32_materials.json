@@ -125,6 +125,12 @@
       "blurb": "A naturally shed highland plume, gathered after a won encounter or gentle grooming.",
       "description": "A naturally shed highland plume, gathered after a won encounter or gentle grooming. Bind it with Gale Fiber into soft camp bedding."
     },
+    "saddle_frame": {
+      "blurb": "A rootstone-braced skeleton. Wants woven padding and a creature's back, in that order."
+    },
+    "insulated_boots": {
+      "description": "A found pair with dry insulating layers under a waxed canvas shell. While worn, it cuts lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only."
+    },
     "sparkfur": {
       "description": "Naturally shed, static-bright fur collected after a won encounter or gentle grooming. It pads insulated gear."
     },

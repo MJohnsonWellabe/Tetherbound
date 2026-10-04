@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "authored_candidates_not_runtime_mounted",
+  "status": "runtime_mounted_placement_and_approach_proven",
   "_comment": "F32#2: one attuned essence node per type in each live biome. Stable realm/site IDs; world stock and host in-game-day respawn, character inventory outputs. Coordinates offset existing authored resource pockets by 6m; horizontal distance is planning geometry only. Terrain, footprint clearance and real body reach require the serialized engine pass before acceptance. Existing harvest positions, IDs and bakes are untouched. Host data owns yields and seed rolls; clients submit identity/revision only. No timers or offline yield.",
   "clock": "host_world_day",
   "scope": "world",
@@ -44,7 +44,7 @@
       "placement": {
         "off_route": false,
         "main_route_distance_m": 2.828,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -84,7 +84,7 @@
       "placement": {
         "off_route": false,
         "main_route_distance_m": 4.472,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -124,7 +124,7 @@
       "placement": {
         "off_route": true,
         "main_route_distance_m": 69.171,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -164,7 +164,7 @@
       "placement": {
         "off_route": true,
         "main_route_distance_m": 205.08,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -203,8 +203,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": 332.979,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 50.21,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -243,8 +243,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": 452.279,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 65.226,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -283,8 +283,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": 515.147,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 251.766,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -323,8 +323,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": 568.037,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 462.9,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -364,7 +364,7 @@
       "placement": {
         "main_route_distance_m": 18.336,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -403,7 +403,7 @@
       "placement": {
         "main_route_distance_m": 205.429,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -442,7 +442,7 @@
       "placement": {
         "main_route_distance_m": 197.049,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -481,7 +481,7 @@
       "placement": {
         "main_route_distance_m": 312.02,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -520,7 +520,7 @@
       "placement": {
         "main_route_distance_m": 587.846,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -559,7 +559,7 @@
       "placement": {
         "main_route_distance_m": 316.285,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -598,7 +598,7 @@
       "placement": {
         "main_route_distance_m": 339.31,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -637,7 +637,7 @@
       "placement": {
         "main_route_distance_m": 617.408,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -676,7 +676,7 @@
       "placement": {
         "main_route_distance_m": 35.538,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -715,7 +715,7 @@
       "placement": {
         "main_route_distance_m": 42.792,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -754,7 +754,7 @@
       "placement": {
         "main_route_distance_m": 107.909,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -793,7 +793,7 @@
       "placement": {
         "main_route_distance_m": 37.834,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -832,7 +832,7 @@
       "placement": {
         "main_route_distance_m": 61.844,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -871,7 +871,7 @@
       "placement": {
         "main_route_distance_m": 425.06,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -910,7 +910,7 @@
       "placement": {
         "main_route_distance_m": 60.275,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -949,7 +949,7 @@
       "placement": {
         "main_route_distance_m": 136.0,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -988,7 +988,7 @@
       "placement": {
         "main_route_distance_m": 34.024,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1027,7 +1027,7 @@
       "placement": {
         "main_route_distance_m": 33.032,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1066,7 +1066,7 @@
       "placement": {
         "main_route_distance_m": 32.827,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1105,7 +1105,7 @@
       "placement": {
         "main_route_distance_m": 38.524,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1144,7 +1144,7 @@
       "placement": {
         "main_route_distance_m": 41.776,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1183,7 +1183,7 @@
       "placement": {
         "main_route_distance_m": 26.426,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1222,7 +1222,7 @@
       "placement": {
         "main_route_distance_m": 54.233,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1261,7 +1261,7 @@
       "placement": {
         "main_route_distance_m": 69.424,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     }
   ],
@@ -1271,7 +1271,7 @@
     "body_ground_clearance_m": 0.06,
     "requires_actual_trainer_collision_shape": true,
     "requires_registered_host_site": true,
-    "player_path_proven": false,
+    "player_path_proven": true,
     "maximum_elevation_resolution_m": 45.0
   },
   "presentation_candidate": {

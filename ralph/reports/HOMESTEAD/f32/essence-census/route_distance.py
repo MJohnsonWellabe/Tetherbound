@@ -1,7 +1,8 @@
 """F32#2 off-route census: XZ distance from each essence node to its realm's
 MAIN route. Main routes:
 - Meadows: terrain_playground paths.routes + paths.approaches (the authored
-  village street/approach network, including the Stronghold road);
+  village street/approach network, including the Stronghold road) plus every
+  spokes.routes[].road (the roads out across the bands);
 - Tidewake: water_world land_routes with main_path;
 - Cloudreach: cloudreach_world region-to-region roads plus the arrival road
   (loops, circuits, links and the optional observatory latch are detours);
@@ -18,7 +19,8 @@ load = lambda p: json.load(open(p))
 paths = load("data/config/terrain_playground.json")["paths"]
 cloud = load("data/config/cloudreach_world.json")["routes"]
 routes = {
-    "meadows": [[xz(p) for p in r["points"]] for r in paths["routes"] + paths["approaches"]],
+    "meadows": [[xz(p) for p in r["points"]] for r in paths["routes"] + paths["approaches"]]
+               + [[xz(p) for p in r["road"]] for r in load("data/config/terrain_playground.json")["spokes"]["routes"] if r.get("road")],
     "water": [[xz(p) for p in r["polyline"]] for r in load("data/config/water_world.json")["land_routes"] if r.get("main_path")],
     "cloudreach": [[xz(p) for p in r["polyline"]] for r in cloud
                    if (r["from_region_id"] != r["to_region_id"] or r["id"] == "arrival_gate_road") and r["id"] != "observatory_latch_descent"],

@@ -258,7 +258,9 @@ static func _deny(code: String) -> Dictionary:
 ## Player-facing sentence for a resource refusal. Host and session refusals
 ## carry the bare code as their reason; the HUD never shows a code.
 static func refusal_text(code: String) -> String:
-	var messages := {"stale_stock": "Someone else gathered this first.",
+	# stale_stock means the node's stock moved since this view (a teammate, or
+	# a lagging view of one's own gather); it is gathered, not lost.
+	var messages := {"stale_stock": "This was just gathered. It will grow back in a few days.",
 		# The host's generic "context unavailable" (range, held tool, gate, phase,
 		# a changed record): never claim a competitor when none may exist.
 		"source_or_revision_changed": "That can't be gathered right now. Try again in a moment.",
@@ -267,9 +269,6 @@ static func refusal_text(code: String) -> String:
 		"working_tool_required": "You need a working tool to gather this.",
 		"inventory_full": "Your satchel is full.",
 		"source_unavailable": "This can't be gathered right now.",
-		"crop_not_ripe": "This crop isn't ripe yet.",
-		"crop_locked_or_plot_busy": "That crop needs a Greenhouse here.",
-		"insufficient_items": "You don't have what that needs.",
 		"transaction_busy": "Your last action is still being saved.",
 		"resource_busy": "Wait for the current gathering to finish.",
 		"training_journal_failed": "That couldn't be saved. Try again.",
