@@ -901,6 +901,12 @@ func autosave_here() -> bool:
 			return false
 		return save_game(autosave_slot())
 	if session != null:
+		# An in-flight owner transaction (e.g. the portal arrival that is
+		# completing this realm entry) writes the character itself; the save
+		# fence would only refuse this transition autosave.
+		if session.has_method("_owner_training_mutation_blocked") \
+			and session.call("_owner_training_mutation_blocked", local) == true:
+			return false
 		session.call("_save_character_here")
 	return false
 
