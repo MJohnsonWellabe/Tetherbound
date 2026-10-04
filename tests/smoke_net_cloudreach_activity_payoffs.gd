@@ -153,17 +153,32 @@ func _run() -> void:
 	check(not _character[0].is_empty() and not _character[1].is_empty() and _character[0] != _character[1],
 		"host and guest are distinct characters (%s / %s)" % [_character[0], _character[1]])
 
-	for flag: String in SETUP_WORLD_FLAGS:
+	# Coordinator ruling (a), #356 13:20 (data/config/cloudreach_physical_runtime.json
+	# `activity_rewards`, requires_unlock side_courier_medicine_delivered): the
+	# thanks waits at the Windscar shelter once the medicine is delivered, not
+	# after Neri's report -- the solo smoke_cloudreach_activity_rewards.gd order.
+	var before_delivery: Array = SETUP_WORLD_FLAGS.slice(0, SETUP_WORLD_FLAGS.size() - 1)
+	for flag: String in before_delivery:
 		_ok(await step(0, "story_flag", {"flag": flag, "scope": "world"}), "SETUP: host commits world fact %s" % flag)
 	for i in 2:
+		_ok(await step(i, "wait_flag", {"flag": before_delivery[-1], "scope": "world", "budget_frames": 600}),
+			"SETUP: peer %d received the seeded chain steps before the delivery" % i)
+	await step(0, "wait", {"frames": 30})
+	for i in 2:
+		var st := await _state(i)
+		check(not bool(st.get("offered", true)) and not bool(st.get("claimed", true)),
+			"peer %d: the thanks is not offered before the medicine reaches the shelter (%s)" % [i, JSON.stringify(st)])
+	_ok(await step(0, "story_flag", {"flag": SETUP_WORLD_FLAGS[-1], "scope": "world"}),
+		"SETUP: host commits world fact %s" % SETUP_WORLD_FLAGS[-1])
+	for i in 2:
 		_ok(await step(i, "wait_flag", {"flag": SETUP_WORLD_FLAGS[-1], "scope": "world", "budget_frames": 600}),
-			"SETUP: peer %d received the seeded chain steps" % i)
+			"SETUP: peer %d received the delivery step" % i)
 	await step(0, "wait", {"frames": 30})
 	for i in 2:
 		var st := await _state(i)
 		_base_potions[i] = int(st.get("potions", 0))
-		check(not bool(st.get("offered", true)) and not bool(st.get("claimed", true)),
-			"peer %d: the thanks is not offered before Neri hears the report (%s)" % [i, JSON.stringify(st)])
+		check(bool(st.get("offered", false)) and not bool(st.get("claimed", true)),
+			"peer %d: its own thanks is offered at the shelter once the medicine is delivered, before Neri's report (%s)" % [i, JSON.stringify(st)])
 
 	await _couriers()
 	await _aeries()
@@ -198,7 +213,7 @@ func _couriers() -> void:
 	var g := await _state(1)
 	check(int(g.get("potions", -1)) == _base_potions[1] + 2,
 		"guest received exactly two small potions (%d -> %d)" % [_base_potions[1], int(g.get("potions", -1))])
-	check(not bool(g.get("offered", true)), "the thanks is no longer offered to the guest")
+	check(not bool(g.get("offered", true)), "the thanks is no longer offered to the guest (%s)" % JSON.stringify(g))
 	var gd := await _disk(1)
 	var gfile: Dictionary = (gd.get("characters", {}) as Dictionary).get(_character[1], {}) as Dictionary
 	check(bool((gfile.get("flags", {}) as Dictionary).get(CLAIMED, false)) and int(gfile.get("potions", -1)) == _base_potions[1] + 2,
