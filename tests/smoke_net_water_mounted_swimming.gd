@@ -84,8 +84,18 @@ func _run() -> void:
 		return
 	await step(0,"wait",{"frames":60})
 	var off: Dictionary=await probe(0,"water_mounted")
-	var owner_after: Dictionary=await probe(1,"water_mounted")
 	var remote_after: Dictionary=off.remote.get(owner,{})
+	# The host can hold the owner's newer swimmer state before its proxy has
+	# applied it (CI 37189095290: net revision 493 swimming, applied 347 still
+	# the mount's drowning). Give the application a bounded window rather than
+	# one fixed read; the assertion below is unchanged.
+	for _settle in 8:
+		if int(remote_after.get("applied_aquatic",{}).get("mode",-1))==1:
+			break
+		await step(0,"wait",{"frames":30})
+		off=await probe(0,"water_mounted")
+		remote_after=off.remote.get(owner,{})
+	var owner_after: Dictionary=await probe(1,"water_mounted")
 	check(not bool(off.riding.remote.get(owner,{}).get("riding",true)),"host clears rider mounting state")
 	check(int(remote_after.get("applied_aquatic",{}).get("mode",-1))==1,
 		"host reconstructs dismounted HUMAN swimmer: host net=%s applied=%s host_position=%s owner=%s outbound=%s riding=%s" % [

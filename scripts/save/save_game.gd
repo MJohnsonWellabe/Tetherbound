@@ -303,6 +303,7 @@ var _characters: RefCounted = null
 var _fallback: RefCounted = null
 var _fallback_writer: RefCounted = null
 var _fallback_write_receipt: Dictionary = {}
+var _last_refusal := ""
 ## Typed outcome for UI and tools; refused loads never apply live state.
 var last_load_result: Dictionary = {}
 
@@ -435,9 +436,12 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 	var session: Variant = game.get("session")
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_vitals_snapshot_allowed") \
 			and not bool(session.call("_owner_vitals_snapshot_allowed", portal_owner, owner_guard_data)):
+		_note_refusal("owner vitals retry does not match the live party")
 		return {} # Refuse before identity generation or any live/disk mutation.
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
 			and session.call("_owner_training_snapshot_allowed", portal_owner, owner_guard_data) != true:
+		_note_refusal("owner training state is mid-transaction (%s)" % str(session.call("_owner_snapshot_block_reason", portal_owner)) \
+			if session.has_method("_owner_snapshot_block_reason") else "owner training state is mid-transaction")
 		return {}
 	# The merged slot payload keeps file identity in its split locator. Typed
 	# journals still require the actual live world during pre-identity checks;
@@ -513,6 +517,15 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		push_warning("save: refusing snapshot containing a live object")
 		return {}
 	return _immutable_copy(request)
+
+
+## A refused snapshot is otherwise silent: every caller sees only `false`.
+## Logged once per distinct reason so a heartbeat probe cannot flood the log.
+func _note_refusal(reason: String) -> void:
+	if reason == _last_refusal:
+		return
+	_last_refusal = reason
+	push_warning("save refused: " + reason)
 
 
 static func _snapshot_values_only(value: Variant) -> bool:

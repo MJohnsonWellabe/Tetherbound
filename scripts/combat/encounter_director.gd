@@ -5015,6 +5015,11 @@ func _sync_active_creature() -> void:
 		return  # Never mid-fight — `_start_fight` already snapshotted who is in it.
 	if trainer_battle_active():
 		return  # Nor between its rounds; the next round re-deploys the same body.
+	# Nor while this peer is a participant in a shared fight. Its round rewards
+	# change the party between rounds; a dismiss and re-summon there leaves the
+	# host with no body for this pilot mid-fight.
+	if not _shared_active_id.is_empty():
+		return
 	var active_creature: RefCounted = party.call("active")
 	if _ally != null and bool(_ally.get("resting")):
 		dismiss_active_creature()
@@ -5220,6 +5225,10 @@ func interaction_activate() -> void:
 
 
 func _process(delta: float) -> void:
+	if _catch_waiting_for_owner != null:
+		var waiting := _catch_waiting_for_owner
+		_catch_waiting_for_owner = null
+		_resolve_catch(waiting)
 	_retry_ordinary_actor_vitals()
 	_retry_research_sources()
 	_tick_pending_shared_join()
@@ -6715,6 +6724,12 @@ func _resolve_catch(kept: RefCounted) -> void:
 	if int(kept.get("caught_on_day")) <= 0:
 		kept.set("caught_on_day", int(game.get("day")))
 
+	# An owner save still in flight refuses every party write. Hold the catch
+	# and retry from _process rather than spend it on a refused add.
+	if party.has_method("owner_mutation_blocked") and bool(party.call("owner_mutation_blocked")):
+		_catch_waiting_for_owner = kept
+		return
+
 	if not bool(party.call("is_full")):
 		if not bool(party.call("add", kept)):
 			push_error("the caught %s never reached the party" % str(kept.get("species_id")))
@@ -6736,6 +6751,8 @@ func _resolve_catch(kept: RefCounted) -> void:
 
 
 var _catch_skill_activity: RefCounted
+## A won catch waiting for the owner's in-flight save to settle.
+var _catch_waiting_for_owner: RefCounted = null
 
 
 func _award_catching_skill(kept: RefCounted) -> void:

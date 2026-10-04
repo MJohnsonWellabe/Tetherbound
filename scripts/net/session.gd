@@ -872,6 +872,7 @@ func _retry_foundation_events() -> void:
 	var handled := {}
 	var research_no_progress := {}
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
+	var combat_held := {}
 	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
@@ -881,6 +882,7 @@ func _retry_foundation_events() -> void:
 			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 		var peer := int(_registry.call("peer_for_character", duty.character_id))
 		if peer < 1 or handled.has(duty.character_id): continue
+		if combat_held.has(duty.character_id) and duty.action != "combat_round_reward": continue
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty)
@@ -925,6 +927,7 @@ func _retry_foundation_events() -> void:
 			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
 				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
 				if ready.get("ok") != true:
+					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
 					handled[duty.character_id] = true
 					continue
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
@@ -934,7 +937,36 @@ func _retry_foundation_events() -> void:
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
 			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
-		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
+		# Research from a fight waits for that fight to end, and the fight's next
+		# round waits on this character's round reward behind it. Only that
+		# round reward may pass a research duty held by combat; every other
+		# later duty keeps waiting in order, as before.
+		if duty.action == "research_event" and result.get("code") == "combat_still_active":
+			combat_held[duty.character_id] = true
+			continue
+		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]:
+			_note_duty_hold(duty, str(result.get("code", "unresolved %s" % JSON.stringify(result).left(160))))
+			handled[duty.character_id] = true
+		elif result.get("resolved") == true:
+			_note_duty_released(duty)
+
+## Logged once per character/action/code: a held duty retries every frame,
+## and a fight's next round can wait on it without any other trace.
+var _duty_holds: Dictionary = {}
+
+
+func _note_duty_hold(duty: Dictionary, code: String) -> void:
+	var key := "%s %s" % [str(duty.character_id), str(duty.action)]
+	if _duty_holds.get(key) == code:
+		return
+	_duty_holds[key] = code
+	print("[session] %s duty for %s held: %s (t=%dms)" % [str(duty.action), str(duty.character_id), code, Time.get_ticks_msec()])
+
+
+func _note_duty_released(duty: Dictionary) -> void:
+	var key := "%s %s" % [str(duty.character_id), str(duty.action)]
+	if _duty_holds.erase(key):
+		print("[session] %s duty for %s released (t=%dms)" % [str(duty.action), str(duty.character_id), Time.get_ticks_msec()])
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
@@ -4482,6 +4514,20 @@ func _owner_training_mutation_blocked(player: RefCounted) -> bool:
 	if row.is_empty(): return not _owner_training_retry.is_empty() # Missing recovery truth cannot unlock.
 	if row.status == "pending": return true
 	return not _owner_training_retry.is_empty()
+
+
+## Diagnostic only: which of `_owner_training_mutation_blocked`'s holds is set.
+func _owner_snapshot_block_reason(player: RefCounted) -> String:
+	if _groom_passive != null and _groom_passive.call("blocked", player) == true: return "groom passive pending"
+	if _owner_passive != null and _owner_passive.call("blocked", player) == true:
+		return "owner passive pending phase=%s" % str(_owner_passive.get("pending").get("phase"))
+	if _pending_portal_for(str(player.get("character_id"))): return "portal pending"
+	if is_host() and _character_authority.call("creature_training_is_pending", str(player.get("character_id"))) == true:
+		return "host creature training pending: " + str(_character_authority.call("training_lock_reason", str(player.get("character_id"))))
+	var row := _owner_training_row()
+	if not row.is_empty() and row.get("status") == "pending": return "training row pending"
+	if not _owner_training_retry.is_empty(): return "training retry unsaved"
+	return "training row does not match the live record"
 
 
 ## Compose the existing input-owner and story-modal graph; closing Altar UI

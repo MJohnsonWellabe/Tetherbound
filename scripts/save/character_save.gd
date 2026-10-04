@@ -186,15 +186,21 @@ static func _flag_ids(raw: Variant) -> Array:
 func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if character_id.is_empty():
 		return false
-	if not preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id).is_empty() \
-			or not preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id).is_empty():
+	var escrow_errors: Array = preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id)
+	escrow_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id))
+	if not escrow_errors.is_empty():
+		push_warning("character save refused for '%s': escrow %s" % [character_id, str(escrow_errors)])
 		return false
-	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(payload.get("party",[]),payload.get("redesign_character",{})).is_empty():
+	var loadout_errors: Array = preload("res://scripts/creatures/teaching.gd").party_loadout_errors(payload.get("party",[]),payload.get("redesign_character",{}))
+	if not loadout_errors.is_empty():
+		push_warning("character save refused for '%s': party loadout %s" % [character_id, str(loadout_errors)])
 		return false
 	payload = payload.duplicate(true)
 	payload["redesign_character"] = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(payload.get("party",[]),payload.get("redesign_character",preload("res://scripts/data/redesign_state.gd").defaults("character")))
 	var contract := preload("res://scripts/data/redesign_state.gd")
-	if not contract.validate("character", payload.get("redesign_character", contract.defaults("character")), contract.uids(payload.get("party", []))).is_empty():
+	var character_errors: Array = contract.validate("character", payload.get("redesign_character", contract.defaults("character")), contract.uids(payload.get("party", [])))
+	if not character_errors.is_empty():
+		push_warning("character save refused for '%s': redesign character %s" % [character_id, str(character_errors)])
 		return false
 	var dir := dir_for(character_id)
 	if DirAccess.make_dir_recursive_absolute(dir) != OK:

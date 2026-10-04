@@ -86,7 +86,7 @@ void fragment() {
 		// Thin line along each sector's centre, wider near the strike point.
 		float crack_line = 1.0 - smoothstep(0.015, 0.045 + 0.05 * (1.0 - r), abs(fract(sector) - 0.5));
 		float wiggle = fbm(vec2(r * 9.0, floor(sector) + seed));
-		float reach = smoothstep(edge * (0.55 + 0.35 * wiggle), edge * (0.35 + 0.2 * wiggle), r);
+		float reach = 1.0 - smoothstep(edge * (0.35 + 0.2 * wiggle), edge * (0.55 + 0.35 * wiggle), r);
 		float cracks = crack_line * reach * step(0.08, r);
 		alpha = clamp(core * 0.85 + cracks * 0.9, 0.0, 1.0);
 		albedo = mark_colour.rgb;
