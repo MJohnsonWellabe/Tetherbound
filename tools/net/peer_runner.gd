@@ -865,7 +865,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"heart_place":
 			out = _step_heart_place(args)
 		"heart_activate":
-			out = _step_heart_activate(args)
+			out = await _step_heart_activate(args)
 		"present_publish":
 			out = _step_present_publish(args)
 		"present_damage":
@@ -3438,6 +3438,18 @@ func _step_heart_activate(args: Dictionary) -> Dictionary:
 	var hearts: Variant = game.get("realm_hearts")
 	if hearts == null:
 		return {"verdict": "ERROR", "detail": "no Game.realm_hearts"}
+	# A player presses the shrine prompt through input, which the session owns
+	# while this character's record is mid-transaction (a round reward still
+	# settling after a fight). Wearing or releasing a Heart then would part the
+	# live record from that reward's baseline for good, so wait behind the same
+	# gate.
+	var session: Variant = game.get("session")
+	var waited := 0
+	while session is Node and (session as Node).has_method("owns_input") and (session as Node).call("owns_input") == true:
+		if waited >= 1200:
+			return {"verdict": "FAIL", "detail": "the session still owned input after %d frames" % waited}
+		await physics_frame
+		waited += 1
 	if bool(args.get("release", false)):
 		(hearts as RefCounted).call("clear_active")
 		return {"verdict": "PASS", "detail": "released"}
