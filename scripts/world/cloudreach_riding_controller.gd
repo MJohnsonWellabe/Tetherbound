@@ -72,6 +72,10 @@ extends "res://scripts/world/riding_controller.gd"
 const PROBE_UP_M := 2.0
 const PROBE_DOWN_M := 3.0
 const SETTLE_LIFT_M := 0.05
+## How far above the floor hit the trainer's capsule is lowered from when it is
+## settled onto a dismount spot (`_settled_spot`): enough to clear the rounded
+## base on a walkable (45 degree) slope, under a step.
+const SETTLE_PROBE_M := 0.5
 ## Fallback only; the live cap is the trainer's own `movement.json` jump.
 const TRAINER_JUMP_APEX_M := 1.35
 const ORDINARY_CLIMB_DEG := 45.0
@@ -458,10 +462,10 @@ func _verified_ground(candidate: Vector3, body: Node3D) -> Vector3:
 	var floor_y := _supported_floor(candidate, candidate.y, body)
 	if is_nan(floor_y):
 		return Vector3.INF
-	var spot := Vector3(candidate.x, floor_y + SETTLE_LIFT_M, candidate.z)
-	if spot.distance_to(base) > REMEMBERED_SPOT_REACH_M:
+	var spot := _settled_spot(Vector3(candidate.x, floor_y, candidate.z), body)
+	if spot == Vector3.INF or spot.distance_to(base) > REMEMBERED_SPOT_REACH_M:
 		return Vector3.INF
-	if not _capsule_fits(spot, body) or not _line_clear(base, spot, body):
+	if not _line_clear(base, spot, body):
 		return Vector3.INF
 	return spot
 
@@ -501,12 +505,17 @@ func _find_clear_spot(body: Node3D, in_air: bool = false) -> Vector3:
 		for direction: Vector3 in directions:
 			var candidate := base + direction * reach
 			var spot := candidate
-			if not in_air:
+			if in_air:
+				if not _capsule_fits(spot, body):
+					continue
+			else:
 				var floor_y := _supported_floor(candidate, base.y, body)
 				if is_nan(floor_y):
 					continue
-				spot = Vector3(candidate.x, floor_y + SETTLE_LIFT_M, candidate.z)
-			if _capsule_fits(spot, body) and _line_clear(base, spot, body):
+				spot = _settled_spot(Vector3(candidate.x, floor_y, candidate.z), body)
+				if spot == Vector3.INF:
+					continue
+			if _line_clear(base, spot, body):
 				return spot
 	return Vector3.INF
 
@@ -526,6 +535,36 @@ func _supported_floor(at: Vector3, level: float, body: Node3D) -> float:
 	if hit.is_empty() or (hit["normal"] as Vector3).y < cos(_player.floor_max_angle):
 		return NAN
 	return (hit["position"] as Vector3).y
+
+
+## Where the trainer stands on the floor point `floor_at`: its capsule lowered
+## from SETTLE_PROBE_M above until it rests on the collision there, plus the
+## settle lift. On flat ground that is the floor plus the lift; on a slope or
+## beside a lip, the rounded base rests a little higher, so the placed capsule
+## is never inside the ground (re-proof F06-4: the lower Cloudreach ledge).
+## INF when the capsule does not fit even above the floor, or would overlap
+## the mount.
+func _settled_spot(floor_at: Vector3, body: Node3D) -> Vector3:
+	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	if collision == null or collision.shape == null:
+		return floor_at + Vector3.UP * SETTLE_LIFT_M
+	var start := floor_at + Vector3.UP * SETTLE_PROBE_M
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = collision.shape
+	query.collision_mask = _standing_mask
+	query.exclude = _excluded(body)
+	query.transform = Transform3D(Basis.IDENTITY, start + collision.position)
+	var space := _player.get_world_3d().direct_space_state
+	if not space.intersect_shape(query, 1).is_empty():
+		return Vector3.INF
+	query.motion = Vector3.DOWN * (SETTLE_PROBE_M + SETTLE_LIFT_M)
+	var fractions := space.cast_motion(query)
+	if fractions.size() < 1:
+		return Vector3.INF
+	var spot := start + query.motion * float(fractions[0]) + Vector3.UP * SETTLE_LIFT_M
+	if not _capsule_fits(spot, body):
+		return Vector3.INF
+	return spot
 
 
 ## The trainer's capsule at `spot` touches no world collision (the mount's
