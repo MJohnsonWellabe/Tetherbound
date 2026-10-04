@@ -1,0 +1,3336 @@
+{
+	"checks": [
+		{
+			"label": "production Game and selected realm exist",
+			"ok": true
+		},
+		{
+			"label": "canonical production source registry is valid",
+			"ok": true
+		},
+		{
+			"label": "request actual baked realm scene",
+			"ok": true
+		},
+		{
+			"label": "actual realm procedural build completed",
+			"ok": true
+		},
+		{
+			"label": "production player and resource adapter mounted",
+			"ok": true
+		},
+		{
+			"label": "existing physical controller driver resolves production camera and arbiter",
+			"ok": true
+		},
+		{
+			"label": "order:0 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "order:0 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (16.0, 0.894065, -28.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "order:0 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "order:0 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "order:0 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "order:0 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "order:0 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "order:0 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "order:0 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_order_0 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_0 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_order_0 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_0 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:0 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_order_0 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_0 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_order_0 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_0 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:0 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "order:0 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "census: wood has a mountable, controller-reachable, saved gather",
+			"ok": true
+		},
+		{
+			"label": "order:1003 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "order:1003 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (370.0, -0.952286, 940.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "order:1003 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "order:1003 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "order:1003 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "order:1003 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "order:1003 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "order:1003 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "order:1003 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_order_1003 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_1003 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_order_1003 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_1003 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:1003 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_order_1003 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_1003 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_order_1003 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_1003 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:1003 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "order:1003 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "census: stone has a mountable, controller-reachable, saved gather",
+			"ok": true
+		},
+		{
+			"label": "order:1000 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "order:1000 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-5.0, -3.020276, 141.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "order:1000 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "order:1000 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "order:1000 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "order:1000 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "order:1000 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "order:1000 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "order:1000 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_order_1000 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_1000 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_order_1000 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_1000 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:1000 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_order_1000 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_1000 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_order_1000 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_1000 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:1000 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "order:1000 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "census: fiber has a mountable, controller-reachable, saved gather",
+			"ok": true
+		},
+		{
+			"label": "order:12 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "order:12 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (394.0, -0.5, 1797.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "order:12 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "order:12 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "order:12 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "order:12 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "order:12 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "order:12 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "order:12 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_order_12 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_12 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_order_12 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_12 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:12 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_order_12 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_12 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_order_12 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_12 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:12 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "order:12 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "census: rootstone has a mountable, controller-reachable, saved gather",
+			"ok": true
+		},
+		{
+			"label": "order:17 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "order:17 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-321.5, 0.288592, 2616.3), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "order:17 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "order:17 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "order:17 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "order:17 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "order:17 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "order:17 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "order:17 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_order_17 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_17 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_order_17 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_order_17 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:17 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_order_17 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_17 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_order_17 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_order_17 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "order:17 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "order:17 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "census: ironwood has a mountable, controller-reachable, saved gather",
+			"ok": true
+		},
+		{
+			"label": "selected at least one authored candidate",
+			"ok": true
+		},
+		{
+			"label": "production source bytes and proof gates unchanged",
+			"ok": true
+		}
+	],
+	"earned_campaign": false,
+	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+	"mode": "ordinary",
+	"ok": true,
+	"ordinary_census": {
+		"fiber": "order:1000",
+		"ironwood": "order:17",
+		"rootstone": "order:12",
+		"stone": "order:1003",
+		"sunleaf": "",
+		"wood": "order:0"
+	},
+	"realm": "meadows",
+	"sites": [
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/MeadowsPlayground/EncounterDirector",
+						"script": "res://scripts/combat/encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/MeadowsPlayground/CombatManager",
+					"script": "res://scripts/combat/combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"local_peer_id": 1,
+				"realm": "meadows",
+				"registered_realm": "meadows",
+				"session_active": false
+			},
+			"authored_at": [
+				16.0,
+				-28.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(16.0, 0.900943, -22.0)",
+			"fixture_tool": "axe",
+			"host_context_before": {
+				"actor_realm": "meadows",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "axe",
+				"expected_revision": 0,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "meadows",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.68681334820576,
+				"source_available": true,
+				"source_definition": {
+					"amount": 4,
+					"at": [
+						16.0,
+						-28.0
+					],
+					"id": "order:0",
+					"item": "wood",
+					"label": "Gather deadwood",
+					"legacy_flag": "harvest_node:order:0.0",
+					"legacy_flag_alias": "harvest_node:order:0",
+					"model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+					"model_scale": 0.22,
+					"order": 0.0,
+					"outputs": {
+						"wood": 4
+					},
+					"realm": "meadows",
+					"respawn_days": 2,
+					"source_config": "res://data/config/bands/band1_lower_meadows/harvest.json"
+				},
+				"source_generation": "1",
+				"source_id": "order:0",
+				"source_key": "resource:meadows:order:0",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"id": "order:0",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 1,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "axe",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"passive_clock_active": true,
+				"realm": "meadows",
+				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(16.0, 0.894065, -28.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "b38349b38532a16a566be0ec723623b16da76e6fec55d3c1491c3143172094be",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 34.1836597435176,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9902083333333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9281944444444,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 34.1836597435176,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9902083333333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9281944444444,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 2,
+				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "axe",
+					"expected_revision": 1,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.68681334820576,
+					"source_available": true,
+					"source_definition": {
+						"amount": 4,
+						"at": [
+							16.0,
+							-28.0
+						],
+						"id": "order:0",
+						"item": "wood",
+						"label": "Gather deadwood",
+						"legacy_flag": "harvest_node:order:0.0",
+						"legacy_flag_alias": "harvest_node:order:0",
+						"model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+						"model_scale": 0.22,
+						"order": 0.0,
+						"outputs": {
+							"wood": 4
+						},
+						"realm": "meadows",
+						"respawn_days": 2,
+						"source_config": "res://data/config/bands/band1_lower_meadows/harvest.json"
+					},
+					"source_generation": "1",
+					"source_id": "order:0",
+					"source_key": "resource:meadows:order:0",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "e7f2ef58a2e442f2702d1a6efdd88dea",
+						"expected_stock_revision": 0,
+						"site_id": "order:0"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"source_key": "resource:meadows:order:0",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "e7f2ef58a2e442f2702d1a6efdd88dea",
+				"verdict": {
+					"character_revision": 2,
+					"durable": true,
+					"journal_revision": 1,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(16.0, 0.899722, -26.41005)",
+			"walk_start": "(16.0, 0.900943, -22.0)",
+			"walked_metres": 4.41004943847656
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/MeadowsPlayground/EncounterDirector",
+						"script": "res://scripts/combat/encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/MeadowsPlayground/CombatManager",
+					"script": "res://scripts/combat/combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"local_peer_id": 1,
+				"realm": "meadows",
+				"registered_realm": "meadows",
+				"session_active": false
+			},
+			"authored_at": [
+				370.0,
+				940.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(370.0, -0.0134, 946.0)",
+			"fixture_tool": "pickaxe",
+			"host_context_before": {
+				"actor_realm": "meadows",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "pickaxe",
+				"expected_revision": 3,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "meadows",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.468587031355128,
+				"source_available": true,
+				"source_definition": {
+					"_why_d1": "BAND1-D1. Second corridor stop, roughly midway between the pond and South Bridge, paired with the trail_camp prop cluster (props.json order 1000) at the same bend -- a reason to slow down that lands with the rest stop rather than in open field. tools/_probe_band1_cadence.py: ~30m lateral from the spine.",
+					"amount": 3,
+					"at": [
+						370.0,
+						940.0
+					],
+					"id": "order:1003",
+					"item": "stone",
+					"label": "Prise loose stones",
+					"legacy_flag": "harvest_node:order:1003.0",
+					"legacy_flag_alias": "harvest_node:order:1003",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+					"model_scale": 1.0,
+					"order": 1003.0,
+					"outputs": {
+						"stone": 3
+					},
+					"realm": "meadows",
+					"respawn_days": 2,
+					"source_config": "res://data/config/bands/band1_lower_meadows/harvest.json"
+				},
+				"source_generation": "1",
+				"source_id": "order:1003",
+				"source_key": "resource:meadows:order:1003",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"id": "order:1003",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 1,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "pickaxe",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"passive_clock_active": true,
+				"realm": "meadows",
+				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(370.0, -0.952286, 940.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "13dab90ced8a40456116e218e2f42e0cabf36ee0cb325a56b88f77df989f56df",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 39.2838297151029,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9819583333333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8676944444444,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 39.2838297151029,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9819583333333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8676944444444,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 5,
+				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "pickaxe",
+					"expected_revision": 4,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.468587031355128,
+					"source_available": true,
+					"source_definition": {
+						"_why_d1": "BAND1-D1. Second corridor stop, roughly midway between the pond and South Bridge, paired with the trail_camp prop cluster (props.json order 1000) at the same bend -- a reason to slow down that lands with the rest stop rather than in open field. tools/_probe_band1_cadence.py: ~30m lateral from the spine.",
+						"amount": 3,
+						"at": [
+							370.0,
+							940.0
+						],
+						"id": "order:1003",
+						"item": "stone",
+						"label": "Prise loose stones",
+						"legacy_flag": "harvest_node:order:1003.0",
+						"legacy_flag_alias": "harvest_node:order:1003",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+						"model_scale": 1.0,
+						"order": 1003.0,
+						"outputs": {
+							"stone": 3
+						},
+						"realm": "meadows",
+						"respawn_days": 2,
+						"source_config": "res://data/config/bands/band1_lower_meadows/harvest.json"
+					},
+					"source_generation": "1",
+					"source_id": "order:1003",
+					"source_key": "resource:meadows:order:1003",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "519cdcd014faa39fa820d25814e903ba",
+						"expected_stock_revision": 0,
+						"site_id": "order:1003"
+					}
+				},
+				"journal_revision": 2,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"source_key": "resource:meadows:order:1003",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "519cdcd014faa39fa820d25814e903ba",
+				"verdict": {
+					"character_revision": 5,
+					"durable": true,
+					"journal_revision": 2,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(369.9965, -0.679641, 941.5498)",
+			"walk_start": "(370.0, -0.0134, 946.0)",
+			"walked_metres": 4.45019626617432
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/MeadowsPlayground/EncounterDirector",
+						"script": "res://scripts/combat/encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/MeadowsPlayground/CombatManager",
+					"script": "res://scripts/combat/combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"local_peer_id": 1,
+				"realm": "meadows",
+				"registered_realm": "meadows",
+				"session_active": false
+			},
+			"authored_at": [
+				-5.0,
+				141.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-5.0, -2.907463, 147.0)",
+			"fixture_tool": "knife",
+			"host_context_before": {
+				"actor_realm": "meadows",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "knife",
+				"expected_revision": 6,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "meadows",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.631836133543402,
+				"source_available": true,
+				"source_definition": {
+					"_why_gate_a": "Gate A natural paid-build evidence: an ordinary meadow-grass stop beside the open spine between the village and the pond route, far enough off the dirt to reward a short gathering detour without obstructing the critical trail. Together with the later pond-approach stop, this closes the fresh-session fiber shortfall without changing yields, costs, vendors, or global vegetation. Position is ground-probed and TUNABLE.",
+					"amount": 4,
+					"at": [
+						-5.0,
+						141.0
+					],
+					"id": "order:1000",
+					"item": "fiber",
+					"label": "Strip meadow grass",
+					"legacy_flag": "harvest_node:order:1000.0",
+					"legacy_flag_alias": "harvest_node:order:1000",
+					"model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+					"model_scale": 1.3,
+					"order": 1000.0,
+					"outputs": {
+						"fiber": 4
+					},
+					"realm": "meadows",
+					"respawn_days": 2,
+					"source_config": "res://data/config/bands/band1_lower_meadows/harvest.json"
+				},
+				"source_generation": "1",
+				"source_id": "order:1000",
+				"source_key": "resource:meadows:order:1000",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"id": "order:1000",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 1,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "knife",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"passive_clock_active": true,
+				"realm": "meadows",
+				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-5.0, -3.020276, 141.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "66dd8b88118cf0ce708456d296ad4c5ce7085a2d6552df8a063a1ca8f96b1255",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						{
+							"id": "fiber",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 44.3785491548479,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.97425,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8111666666666,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 44.3785491548479,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.97425,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8111666666666,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 8,
+				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "knife",
+					"expected_revision": 7,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.631836133543402,
+					"source_available": true,
+					"source_definition": {
+						"_why_gate_a": "Gate A natural paid-build evidence: an ordinary meadow-grass stop beside the open spine between the village and the pond route, far enough off the dirt to reward a short gathering detour without obstructing the critical trail. Together with the later pond-approach stop, this closes the fresh-session fiber shortfall without changing yields, costs, vendors, or global vegetation. Position is ground-probed and TUNABLE.",
+						"amount": 4,
+						"at": [
+							-5.0,
+							141.0
+						],
+						"id": "order:1000",
+						"item": "fiber",
+						"label": "Strip meadow grass",
+						"legacy_flag": "harvest_node:order:1000.0",
+						"legacy_flag_alias": "harvest_node:order:1000",
+						"model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+						"model_scale": 1.3,
+						"order": 1000.0,
+						"outputs": {
+							"fiber": 4
+						},
+						"realm": "meadows",
+						"respawn_days": 2,
+						"source_config": "res://data/config/bands/band1_lower_meadows/harvest.json"
+					},
+					"source_generation": "1",
+					"source_id": "order:1000",
+					"source_key": "resource:meadows:order:1000",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "0277b8bc52559a07d2daecab0df05b4d",
+						"expected_stock_revision": 0,
+						"site_id": "order:1000"
+					}
+				},
+				"journal_revision": 3,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
+				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"source_key": "resource:meadows:order:1000",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "0277b8bc52559a07d2daecab0df05b4d",
+				"verdict": {
+					"character_revision": 8,
+					"durable": true,
+					"journal_revision": 3,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-5.003079, -2.979703, 142.591)",
+			"walk_start": "(-5.0, -2.907463, 147.0)",
+			"walked_metres": 4.4089822769165
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/MeadowsPlayground/EncounterDirector",
+						"script": "res://scripts/combat/encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/MeadowsPlayground/CombatManager",
+					"script": "res://scripts/combat/combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"local_peer_id": 1,
+				"realm": "meadows",
+				"registered_realm": "meadows",
+				"session_active": false
+			},
+			"authored_at": [
+				394.0,
+				1797.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(395.7187, -0.498958, 1801.657)",
+			"fixture_tool": "pickaxe",
+			"host_context_before": {
+				"actor_realm": "meadows",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "pickaxe",
+				"expected_revision": 9,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "meadows",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.0810394508298486,
+				"source_available": true,
+				"source_definition": {
+					"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
+					"_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
+					"amount": 2,
+					"at": [
+						394.0,
+						1797.0
+					],
+					"id": "order:12",
+					"item": "rootstone",
+					"label": "Prise out rootstone",
+					"legacy_flag": "harvest_node:order:12.0",
+					"legacy_flag_alias": "harvest_node:order:12",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 1.15,
+					"order": 12.0,
+					"outputs": {
+						"rootstone": 2
+					},
+					"realm": "meadows",
+					"respawn_days": 2,
+					"source_config": "res://data/config/bands/band2_stone_and_root/harvest.json"
+				},
+				"source_generation": "1",
+				"source_id": "order:12",
+				"source_key": "resource:meadows:order:12",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"id": "order:12",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 1,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "pickaxe",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"passive_clock_active": true,
+				"realm": "meadows",
+				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(394.0, -0.5, 1797.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "c2fa2a06701b1bdd646f06e2f58ca2dd5e828226cc4a2c6e91dfa06e042ed79d",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 38,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						{
+							"id": "fiber",
+							"n": 4
+						},
+						{
+							"id": "rootstone",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 49.7306182943285,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9670416666667,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7583055555555,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
+							"craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						{
+							"id": "fiber",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 49.7306182943285,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9670416666667,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7583055555555,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 11,
+				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "pickaxe",
+					"expected_revision": 10,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.0810394508298486,
+					"source_available": true,
+					"source_definition": {
+						"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
+						"_comment_sd16": "SD16, spec §3 Band 2 and §10: the Rootstone deposits on the Old Quarry's floor, reachable only past the South Bridge. Pickaxe-gated the same way stone is -- `gathered_with` on the ITEM (data/items/items.json), never on the node, so the rule lives in one place and a bare-handed player is told what they need rather than silently refused (OF20). Five deposits at 2 each: enough that a first visit is worth the walk, few enough that the quarry is a place you go back to rather than a vending machine. Amounts and positions TUNABLE; every one of them stands on the quarry pad (terrain_playground.json `flats`, centre [23,158] r8) and is clear of both foundations, the prop cluster and the conduit head by at least 4m so no two interact prompts contest.",
+						"amount": 2,
+						"at": [
+							394.0,
+							1797.0
+						],
+						"id": "order:12",
+						"item": "rootstone",
+						"label": "Prise out rootstone",
+						"legacy_flag": "harvest_node:order:12.0",
+						"legacy_flag_alias": "harvest_node:order:12",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 1.15,
+						"order": 12.0,
+						"outputs": {
+							"rootstone": 2
+						},
+						"realm": "meadows",
+						"respawn_days": 2,
+						"source_config": "res://data/config/bands/band2_stone_and_root/harvest.json"
+					},
+					"source_generation": "1",
+					"source_id": "order:12",
+					"source_key": "resource:meadows:order:12",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "d4bcfc848db24b5caa661ecc8dd8a2ff",
+						"expected_stock_revision": 0,
+						"site_id": "order:12"
+					}
+				},
+				"journal_revision": 4,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930",
+				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"source_key": "resource:meadows:order:12",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "d4bcfc848db24b5caa661ecc8dd8a2ff",
+				"verdict": {
+					"character_revision": 11,
+					"durable": true,
+					"journal_revision": 4,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(394.5378, -0.49915, 1798.456)",
+			"walk_start": "(395.7187, -0.498958, 1801.657)",
+			"walked_metres": 3.41155433654785
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/MeadowsPlayground/EncounterDirector",
+						"script": "res://scripts/combat/encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/MeadowsPlayground/CombatManager",
+					"script": "res://scripts/combat/combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-959df38e506c53cf304afd4b79eae54b"
+				],
+				"local_peer_id": 1,
+				"realm": "meadows",
+				"registered_realm": "meadows",
+				"session_active": false
+			},
+			"authored_at": [
+				-321.5,
+				2616.3
+			],
+			"controller_approach": true,
+			"fixture_start": "(-321.5, -0.117347, 2622.3)",
+			"fixture_tool": "axe",
+			"host_context_before": {
+				"actor_realm": "meadows",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "axe",
+				"expected_revision": 12,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "meadows",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.280071379849687,
+				"source_available": true,
+				"source_definition": {
+					"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-357,2610), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+63,+140) -- and then were RE-ARRANGED, because the blind visual pass found what a uniform translation had done: one ironwood stood inside the knoll, and three more stood in the doorway corridor, the nearest 8.5m dead in front of the mouth. The frame the critic saw was a full-canopy red tree filling the cave entrance. They are now a stand ringing the site at 34-46m, 26m or more off the doorway axis and outside the authored clearing, so the player walks past ironwood on the way in instead of through it.",
+					"amount": 3,
+					"at": [
+						-321.5,
+						2616.3
+					],
+					"id": "order:17",
+					"item": "ironwood",
+					"label": "Fell an ironwood",
+					"legacy_flag": "harvest_node:order:17.0",
+					"legacy_flag_alias": "harvest_node:order:17",
+					"model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+					"model_scale": 0.28,
+					"order": 17.0,
+					"outputs": {
+						"ironwood": 3
+					},
+					"realm": "meadows",
+					"respawn_days": 2,
+					"source_config": "res://data/config/bands/band2_stone_and_root/harvest.json"
+				},
+				"source_generation": "1",
+				"source_id": "order:17",
+				"source_key": "resource:meadows:order:17",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"id": "order:17",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 1,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "axe",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"passive_clock_active": true,
+				"realm": "meadows",
+				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-321.5, 0.288592, 2616.3)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "f7db47398a58fe2b0ccb478af221898723c271d4472db823ecb33232e28c0d28",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 38,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 38,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						{
+							"id": "fiber",
+							"n": 4
+						},
+						{
+							"id": "rootstone",
+							"n": 2
+						},
+						{
+							"id": "ironwood",
+							"n": 3
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 55.0712380968034,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9582916666667,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.6941388888888,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
+							"craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930",
+							"craft:f32-site-owner:f32:8b2a5978fc333901ce66d5ce631b490b78987b6ccbf2c849a5261e6df39b1a27"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"durability": 39,
+							"id": "axe",
+							"n": 1
+						},
+						{
+							"durability": 38,
+							"id": "pickaxe",
+							"n": 1
+						},
+						{
+							"id": "hammer",
+							"n": 1
+						},
+						{
+							"durability": 39,
+							"id": "knife",
+							"n": 1
+						},
+						{
+							"id": "hoe",
+							"n": 1
+						},
+						{
+							"id": "fishing_rod",
+							"n": 1
+						},
+						{
+							"id": "torch",
+							"n": 1
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 3
+						},
+						{
+							"id": "fiber",
+							"n": 4
+						},
+						{
+							"id": "rootstone",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 55.0712380968034,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9582916666667,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.6941388888888,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-959df38e506c53cf304afd4b79eae54b": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
+							"craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 14,
+				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "axe",
+					"expected_revision": 13,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.280071379849687,
+					"source_available": true,
+					"source_definition": {
+						"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-357,2610), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+63,+140) -- and then were RE-ARRANGED, because the blind visual pass found what a uniform translation had done: one ironwood stood inside the knoll, and three more stood in the doorway corridor, the nearest 8.5m dead in front of the mouth. The frame the critic saw was a full-canopy red tree filling the cave entrance. They are now a stand ringing the site at 34-46m, 26m or more off the doorway axis and outside the authored clearing, so the player walks past ironwood on the way in instead of through it.",
+						"amount": 3,
+						"at": [
+							-321.5,
+							2616.3
+						],
+						"id": "order:17",
+						"item": "ironwood",
+						"label": "Fell an ironwood",
+						"legacy_flag": "harvest_node:order:17.0",
+						"legacy_flag_alias": "harvest_node:order:17",
+						"model": "res://assets/environment/stylized_nature/TwistedTree_1.gltf",
+						"model_scale": 0.28,
+						"order": 17.0,
+						"outputs": {
+							"ironwood": 3
+						},
+						"realm": "meadows",
+						"respawn_days": 2,
+						"source_config": "res://data/config/bands/band2_stone_and_root/harvest.json"
+					},
+					"source_generation": "1",
+					"source_id": "order:17",
+					"source_key": "resource:meadows:order:17",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "ea622ef873ad543172f6c53f23792a63",
+						"expected_stock_revision": 0,
+						"site_id": "order:17"
+					}
+				},
+				"journal_revision": 5,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:8b2a5978fc333901ce66d5ce631b490b78987b6ccbf2c849a5261e6df39b1a27",
+				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"source_key": "resource:meadows:order:17",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "ea622ef873ad543172f6c53f23792a63",
+				"verdict": {
+					"character_revision": 14,
+					"durable": true,
+					"journal_revision": 5,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:8b2a5978fc333901ce66d5ce631b490b78987b6ccbf2c849a5261e6df39b1a27",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-321.5003, 0.246266, 2617.827)",
+			"walk_start": "(-321.5, -0.117347, 2622.3)",
+			"walked_metres": 4.473388671875
+		}
+	],
+	"source_path": "res://data/config/harvest.json",
+	"source_runtime_enabled": true,
+	"source_sha256": "8f8fe5465730a53ce542a5d08bc75c2e03258cfa9580ab2ebd88896f6dfacd83",
+	"two_peer_rejoin": false,
+	"user_data_dir": "/root/.local/share/godot/app_userdata/Tetherbound"
+}

@@ -23,3 +23,15 @@ Cloudreach: FAIL, training_actor_baseline_not_ready on every tool gather (cloudr
 Observation: equipping a tool the character doesn't own made every later gather in that run refuse with
   source_or_revision_changed, including tool-less ones. The fixture now grants all tools; the cascade itself
   is not yet root-caused.
+
+== Flags ON (harvest.json / water_pickups.json additional candidates; water and stormwood renewable) ==
+Resolver bug found on enabling: renewable_site_catalog compared JSON outputs {item: 3.0} against
+{item: 3} with Dictionary !=, which is always unequal, so no candidate could ever register (the registry went
+invalid for the whole realm). Fixed with a type-tolerant _single_output check; outputs normalized to ints.
+Registered path, no registry fixture (<realm>-additional-registered-report.json): exit 0 for Meadows Sunleaf
+  patches 01-03 and Tide Pearl reef beds first_shore/reedhaven/brine_steps. Each has terrain/body placement,
+  a controller approach >= 3 m, the prompt, the host transaction, owner save + ACK, exact disk gain, receipt and
+  consumed stock.
+Ordinary census, flags on (<realm>-ordinary-report.json): Meadows exit 0 (wood, stone, fiber, rootstone,
+  ironwood); Tidewake exit 0 (driftwood, reed_fiber, reef_stone, sluice_metal, tide_bloom).
+Regression: 24 related unit files, 236 tests, 0 failed; both terrain bake freshness checks pass.

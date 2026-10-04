@@ -1,0 +1,1900 @@
+{
+	"checks": [
+		{
+			"label": "production Game and selected realm exist",
+			"ok": true
+		},
+		{
+			"label": "canonical production source registry is valid",
+			"ok": true
+		},
+		{
+			"label": "request actual baked realm scene",
+			"ok": true
+		},
+		{
+			"label": "actual realm procedural build completed",
+			"ok": true
+		},
+		{
+			"label": "production player and resource adapter mounted",
+			"ok": true
+		},
+		{
+			"label": "existing physical controller driver resolves production camera and arbiter",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (80.0, 23.33944, -24.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 actual water plane establishes a dry bed",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_first_shore_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_first_shore_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_first_shore_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_first_shore_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_first_shore_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_first_shore_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_first_shore_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_first_shore_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:first_shore:01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-154.0, 3.459164, 506.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 actual water plane establishes a dry bed",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_reedhaven_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_reedhaven_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_reedhaven_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_reedhaven_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_reedhaven_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_reedhaven_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_reedhaven_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_reedhaven_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:reedhaven:01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (544.0, 3.304412, 534.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 actual water plane establishes a dry bed",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_brine_steps_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_brine_steps_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_brine_steps_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_water_tide_pearl_reef_bed_brine_steps_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_brine_steps_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_brine_steps_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_brine_steps_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_water_tide_pearl_reef_bed_brine_steps_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "water:tide_pearl:reef_bed:brine_steps:01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "selected at least one authored candidate",
+			"ok": true
+		},
+		{
+			"label": "production source bytes and proof gates unchanged",
+			"ok": true
+		}
+	],
+	"earned_campaign": false,
+	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+	"mode": "additional_candidates",
+	"ok": true,
+	"realm": "water",
+	"sites": [
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c59222a0d39f2383460166f45494c55c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/WaterArchipelago/EncounterDirector",
+						"script": "res://scripts/combat/water_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/WaterArchipelago/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c59222a0d39f2383460166f45494c55c"
+				],
+				"local_peer_id": 1,
+				"realm": "water",
+				"registered_realm": "water",
+				"session_active": false
+			},
+			"authored_at": [
+				80.0,
+				-24.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(80.0, 23.78698, -18.0)",
+			"host_context_before": {
+				"actor_realm": "water",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 0,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "water",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.478035068139434,
+				"source_available": true,
+				"source_definition": {
+					"amount": 2,
+					"anchor": {
+						"id": "water:first_shore:harvest:005",
+						"offset_xz_m": [
+							8.0,
+							0.0
+						]
+					},
+					"at": [
+						80.0,
+						-24.0
+					],
+					"id": "water:tide_pearl:reef_bed:first_shore:01",
+					"item": "tide_pearl",
+					"label": "Gather Tide Pearls",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.4,
+					"order": "material:water:tide_pearl:reef_bed:first_shore:01",
+					"outputs": {
+						"tide_pearl": 2
+					},
+					"realm": "water",
+					"region_id": "first_shore",
+					"requires_dive": false,
+					"respawn_days": 2,
+					"source_additional_material": true,
+					"source_config": "res://data/config/water_pickups.json",
+					"terrain_and_player_path_proven": true
+				},
+				"source_generation": "1",
+				"source_id": "water:tide_pearl:reef_bed:first_shore:01",
+				"source_key": "resource:water:water:tide_pearl:reef_bed:first_shore:01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"id": "water:tide_pearl:reef_bed:first_shore:01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "0cac0476e9ca0a0b2ac240a0bef578656c58e80434e7bd61048ad906b294ec3e",
+				"passive_clock_active": true,
+				"realm": "water",
+				"session_epoch": "d075d7572c2a4e1ad63954fb79fd06d7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(80.0, 23.33944, -24.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "b04582b19ef333fb3ce5380559d2c88865e3d9a1efeee2475d53184c047689e7",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "tide_pearl",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 4.02233028411865,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9940526775,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9563863016666,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c59222a0d39f2383460166f45494c55c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c59222a0d39f2383460166f45494c55c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 4.02233028411865,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9940526775,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9563863016666,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c59222a0d39f2383460166f45494c55c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c59222a0d39f2383460166f45494c55c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 2,
+				"delivery_id": "creature_training:fb98b229da6c4b623233e87c3154cd239c4d0447e259979ceabeaeff13d5cfd6",
+				"host_context": {
+					"actor_realm": "water",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 1,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "water",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.478035068139434,
+					"source_available": true,
+					"source_definition": {
+						"amount": 2,
+						"anchor": {
+							"id": "water:first_shore:harvest:005",
+							"offset_xz_m": [
+								8.0,
+								0.0
+							]
+						},
+						"at": [
+							80.0,
+							-24.0
+						],
+						"id": "water:tide_pearl:reef_bed:first_shore:01",
+						"item": "tide_pearl",
+						"label": "Gather Tide Pearls",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.4,
+						"order": "material:water:tide_pearl:reef_bed:first_shore:01",
+						"outputs": {
+							"tide_pearl": 2
+						},
+						"realm": "water",
+						"region_id": "first_shore",
+						"requires_dive": false,
+						"respawn_days": 2,
+						"source_additional_material": true,
+						"source_config": "res://data/config/water_pickups.json",
+						"terrain_and_player_path_proven": true
+					},
+					"source_generation": "1",
+					"source_id": "water:tide_pearl:reef_bed:first_shore:01",
+					"source_key": "resource:water:water:tide_pearl:reef_bed:first_shore:01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "89a77b28686a83002ad2eb7c79165f45",
+						"expected_stock_revision": 0,
+						"site_id": "water:tide_pearl:reef_bed:first_shore:01"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066",
+				"session_id": "d075d7572c2a4e1ad63954fb79fd06d7",
+				"source_key": "resource:water:water:tide_pearl:reef_bed:first_shore:01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "89a77b28686a83002ad2eb7c79165f45",
+				"verdict": {
+					"character_revision": 2,
+					"durable": true,
+					"journal_revision": 1,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": true,
+			"walk_end": "(80.00581, 23.47361, -22.40215)",
+			"walk_start": "(80.0, 23.78698, -18.0)",
+			"walked_metres": 4.40215682983398
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c59222a0d39f2383460166f45494c55c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/WaterArchipelago/EncounterDirector",
+						"script": "res://scripts/combat/water_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/WaterArchipelago/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c59222a0d39f2383460166f45494c55c"
+				],
+				"local_peer_id": 1,
+				"realm": "water",
+				"registered_realm": "water",
+				"session_active": false
+			},
+			"authored_at": [
+				-154.0,
+				506.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-154.0, 2.793045, 512.0)",
+			"host_context_before": {
+				"actor_realm": "water",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 3,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "water",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.752465386409312,
+				"source_available": true,
+				"source_definition": {
+					"amount": 2,
+					"anchor": {
+						"id": "water:reedhaven:harvest:006",
+						"offset_xz_m": [
+							8.0,
+							0.0
+						]
+					},
+					"at": [
+						-154.0,
+						506.0
+					],
+					"id": "water:tide_pearl:reef_bed:reedhaven:01",
+					"item": "tide_pearl",
+					"label": "Gather Tide Pearls",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.4,
+					"order": "material:water:tide_pearl:reef_bed:reedhaven:01",
+					"outputs": {
+						"tide_pearl": 2
+					},
+					"realm": "water",
+					"region_id": "reedhaven",
+					"requires_dive": false,
+					"respawn_days": 2,
+					"source_additional_material": true,
+					"source_config": "res://data/config/water_pickups.json",
+					"terrain_and_player_path_proven": true
+				},
+				"source_generation": "1",
+				"source_id": "water:tide_pearl:reef_bed:reedhaven:01",
+				"source_key": "resource:water:water:tide_pearl:reef_bed:reedhaven:01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"id": "water:tide_pearl:reef_bed:reedhaven:01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "0cac0476e9ca0a0b2ac240a0bef578656c58e80434e7bd61048ad906b294ec3e",
+				"passive_clock_active": true,
+				"realm": "water",
+				"session_epoch": "d075d7572c2a4e1ad63954fb79fd06d7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-154.0, 3.459164, 506.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "e0a7426cf1b36f7b06145db0274dcbe3f88b0ae8545f656f54c2b97afa38ad19",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "tide_pearl",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 9.31121832132339,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9876902555555,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9097285407407,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c59222a0d39f2383460166f45494c55c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c59222a0d39f2383460166f45494c55c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066",
+							"craft:f32-site-owner:f32:00a8b0bffcfd7f48c31d404788850dad9d1f71c998e45e101cea7614271e005a"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "tide_pearl",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 9.31121832132339,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9876902555555,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9097285407407,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c59222a0d39f2383460166f45494c55c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c59222a0d39f2383460166f45494c55c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 5,
+				"delivery_id": "creature_training:fb98b229da6c4b623233e87c3154cd239c4d0447e259979ceabeaeff13d5cfd6",
+				"host_context": {
+					"actor_realm": "water",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 4,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "water",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.752465386409312,
+					"source_available": true,
+					"source_definition": {
+						"amount": 2,
+						"anchor": {
+							"id": "water:reedhaven:harvest:006",
+							"offset_xz_m": [
+								8.0,
+								0.0
+							]
+						},
+						"at": [
+							-154.0,
+							506.0
+						],
+						"id": "water:tide_pearl:reef_bed:reedhaven:01",
+						"item": "tide_pearl",
+						"label": "Gather Tide Pearls",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.4,
+						"order": "material:water:tide_pearl:reef_bed:reedhaven:01",
+						"outputs": {
+							"tide_pearl": 2
+						},
+						"realm": "water",
+						"region_id": "reedhaven",
+						"requires_dive": false,
+						"respawn_days": 2,
+						"source_additional_material": true,
+						"source_config": "res://data/config/water_pickups.json",
+						"terrain_and_player_path_proven": true
+					},
+					"source_generation": "1",
+					"source_id": "water:tide_pearl:reef_bed:reedhaven:01",
+					"source_key": "resource:water:water:tide_pearl:reef_bed:reedhaven:01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "5e7a925766c8afab5229d79cd721d376",
+						"expected_stock_revision": 0,
+						"site_id": "water:tide_pearl:reef_bed:reedhaven:01"
+					}
+				},
+				"journal_revision": 2,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:00a8b0bffcfd7f48c31d404788850dad9d1f71c998e45e101cea7614271e005a",
+				"session_id": "d075d7572c2a4e1ad63954fb79fd06d7",
+				"source_key": "resource:water:water:tide_pearl:reef_bed:reedhaven:01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "5e7a925766c8afab5229d79cd721d376",
+				"verdict": {
+					"character_revision": 5,
+					"durable": true,
+					"journal_revision": 2,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:00a8b0bffcfd7f48c31d404788850dad9d1f71c998e45e101cea7614271e005a",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": true,
+			"walk_end": "(-154.0054, 3.303588, 507.5386)",
+			"walk_start": "(-154.0, 2.793045, 512.0)",
+			"walked_metres": 4.46142911911011
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c59222a0d39f2383460166f45494c55c"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/WaterArchipelago/EncounterDirector",
+						"script": "res://scripts/combat/water_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/WaterArchipelago/CombatManager",
+					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c59222a0d39f2383460166f45494c55c"
+				],
+				"local_peer_id": 1,
+				"realm": "water",
+				"registered_realm": "water",
+				"session_active": false
+			},
+			"authored_at": [
+				544.0,
+				534.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(544.0, 4.373126, 540.0)",
+			"host_context_before": {
+				"actor_realm": "water",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 6,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "water",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.279289670521393,
+				"source_available": true,
+				"source_definition": {
+					"amount": 2,
+					"anchor": {
+						"id": "water:brine_steps:harvest:017",
+						"offset_xz_m": [
+							-8.0,
+							0.0
+						]
+					},
+					"at": [
+						544.0,
+						534.0
+					],
+					"candidate_refinement": "Authored-radius planning moved the unmounted offset inward from reef-stone anchor; no baked-height/body/water-depth/player-path proof. Keep unmounted until actual validated placement.",
+					"id": "water:tide_pearl:reef_bed:brine_steps:01",
+					"item": "tide_pearl",
+					"label": "Gather Tide Pearls",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.4,
+					"order": "material:water:tide_pearl:reef_bed:brine_steps:01",
+					"outputs": {
+						"tide_pearl": 2
+					},
+					"realm": "water",
+					"region_id": "brine_steps",
+					"requires_dive": false,
+					"respawn_days": 2,
+					"source_additional_material": true,
+					"source_config": "res://data/config/water_pickups.json",
+					"terrain_and_player_path_proven": true
+				},
+				"source_generation": "1",
+				"source_id": "water:tide_pearl:reef_bed:brine_steps:01",
+				"source_key": "resource:water:water:tide_pearl:reef_bed:brine_steps:01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"id": "water:tide_pearl:reef_bed:brine_steps:01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "0cac0476e9ca0a0b2ac240a0bef578656c58e80434e7bd61048ad906b294ec3e",
+				"passive_clock_active": true,
+				"realm": "water",
+				"session_epoch": "d075d7572c2a4e1ad63954fb79fd06d7",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(544.0, 3.304412, 534.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "c97adfb18d3ca9b2be0e88aef810fc41dd6259c6d5d3190728300516a5e493d7",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "tide_pearl",
+							"n": 6
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 12.3795445561409,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9827407407407,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8734320987654,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c59222a0d39f2383460166f45494c55c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c59222a0d39f2383460166f45494c55c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066",
+							"craft:f32-site-owner:f32:00a8b0bffcfd7f48c31d404788850dad9d1f71c998e45e101cea7614271e005a",
+							"craft:f32-site-owner:f32:f60af9d68f19fe816b8c9cee92d1847efd3338dfdf82b3f7b35c41074a4c0eb0"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "tide_pearl",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 12.3795445561409,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9827407407407,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8734320987654,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c59222a0d39f2383460166f45494c55c",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c59222a0d39f2383460166f45494c55c": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:40c76f2676f61ff1dc2c14e9cbd843e657c01a0d35a53d43eedde5399f1a1066",
+							"craft:f32-site-owner:f32:00a8b0bffcfd7f48c31d404788850dad9d1f71c998e45e101cea7614271e005a"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 8,
+				"delivery_id": "creature_training:fb98b229da6c4b623233e87c3154cd239c4d0447e259979ceabeaeff13d5cfd6",
+				"host_context": {
+					"actor_realm": "water",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 7,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "water",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.279289670521393,
+					"source_available": true,
+					"source_definition": {
+						"amount": 2,
+						"anchor": {
+							"id": "water:brine_steps:harvest:017",
+							"offset_xz_m": [
+								-8.0,
+								0.0
+							]
+						},
+						"at": [
+							544.0,
+							534.0
+						],
+						"candidate_refinement": "Authored-radius planning moved the unmounted offset inward from reef-stone anchor; no baked-height/body/water-depth/player-path proof. Keep unmounted until actual validated placement.",
+						"id": "water:tide_pearl:reef_bed:brine_steps:01",
+						"item": "tide_pearl",
+						"label": "Gather Tide Pearls",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.4,
+						"order": "material:water:tide_pearl:reef_bed:brine_steps:01",
+						"outputs": {
+							"tide_pearl": 2
+						},
+						"realm": "water",
+						"region_id": "brine_steps",
+						"requires_dive": false,
+						"respawn_days": 2,
+						"source_additional_material": true,
+						"source_config": "res://data/config/water_pickups.json",
+						"terrain_and_player_path_proven": true
+					},
+					"source_generation": "1",
+					"source_id": "water:tide_pearl:reef_bed:brine_steps:01",
+					"source_key": "resource:water:water:tide_pearl:reef_bed:brine_steps:01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "1d366ec23ae60233c6d26f814c9d087a",
+						"expected_stock_revision": 0,
+						"site_id": "water:tide_pearl:reef_bed:brine_steps:01"
+					}
+				},
+				"journal_revision": 3,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:f60af9d68f19fe816b8c9cee92d1847efd3338dfdf82b3f7b35c41074a4c0eb0",
+				"session_id": "d075d7572c2a4e1ad63954fb79fd06d7",
+				"source_key": "resource:water:water:tide_pearl:reef_bed:brine_steps:01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "eb31dafd1cf9d5b07b95b2eb137aae0d"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 3,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "1d366ec23ae60233c6d26f814c9d087a",
+				"verdict": {
+					"character_revision": 8,
+					"durable": true,
+					"journal_revision": 3,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:f60af9d68f19fe816b8c9cee92d1847efd3338dfdf82b3f7b35c41074a4c0eb0",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": true,
+			"walk_end": "(544.0035, 3.594962, 535.5657)",
+			"walk_start": "(544.0, 4.373126, 540.0)",
+			"walked_metres": 4.43426609039307
+		}
+	],
+	"source_path": "res://data/config/water_pickups.json",
+	"source_runtime_enabled": true,
+	"source_sha256": "489d004abc276d8a4f14340e854a90a42ebaff1347c0a50088aa3a3297058928",
+	"two_peer_rejoin": false,
+	"user_data_dir": "/root/.local/share/godot/app_userdata/Tetherbound"
+}

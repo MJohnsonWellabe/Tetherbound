@@ -4614,6 +4614,6 @@
       "glowmoss",
       "voltcap"
     ],
-    "runtime_enabled": false
+    "runtime_enabled": true
   }
 }
