@@ -3354,6 +3354,9 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		return
 	var lost_character := str((_registry.call("row", peer_id) as Dictionary).get("character_id", ""))
 	if _groom_passive != null: _groom_passive.call("departed", lost_character)
+	# The departed transport's owner-passive stream ends with it, so the
+	# character's next stream is admitted instead of shadowed (re-proof).
+	if _owner_passive != null: _owner_passive.call("peer_departed", peer_id)
 	if bool(_registry.call("remove", peer_id)):
 		if not departed and _closing_frames == 0 and peer_id != HOST_PEER_ID:
 			var window_ms := int(1000.0 * float(_cfg("reconnect_window_s", 120.0)))
