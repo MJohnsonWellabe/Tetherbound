@@ -2750,6 +2750,9 @@ const DEBUG_TELEPORT_DEDUPE_RADIUS := 15.0
 ## autoload has no guaranteed world node to read it from except at teleport
 ## time itself, by which point a plain literal is simpler than reaching for one.
 const DEBUG_TELEPORT_CLEARANCE := 2.0
+## Half-span, in metres, of the height samples `_debug_teleport_walkable` reads
+## either side of a destination to measure its slope.
+const DEBUG_TELEPORT_SLOPE_SPAN_M := 1.0
 
 ## OF26 debug scaffolding. Every place the pause menu's debug teleport list
 ## can send the player, in file order — `map.regions()`, then
@@ -2939,7 +2942,7 @@ func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: Stri
 	if world == null:
 		return false
 	var ground: float = float(world.call("ground_height_at", x, z))
-	if is_nan(ground):
+	if is_nan(ground) or not _debug_teleport_walkable(world, player, x, z):
 		return false
 	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
 	_clear_debug_teleport_recovery_anchor(player)
@@ -2947,6 +2950,27 @@ func debug_teleport_to(x: float, z: float, realm_id: String = "", entry_id: Stri
 		(player as CharacterBody3D).velocity = Vector3.ZERO
 	_apply_debug_teleport_view(player, view_heading_deg)
 	return true
+
+
+## A destination the player could stand on: built floor there, or terrain no
+## steeper than the player's own `floor_max_angle`, measured from
+## `ground_height_at` samples (never a raycast, as above). A curated spot on a
+## cliff face set the trainer sliding down it, and captures recorded the slide
+## as the landmark (re-proof: Stormwood Crown Arch at (459, 2700), a 76 degree
+## outer wall). Refusing keeps the caller's failure honest.
+func _debug_teleport_walkable(world: Node, player: Node3D, x: float, z: float) -> bool:
+	if not is_nan(preload("res://scripts/world/built_floor.gd").height_at(player, x, z)):
+		return true
+	var span := DEBUG_TELEPORT_SLOPE_SPAN_M
+	var heights: Array[float] = []
+	for offset: Vector2 in [Vector2(span, 0.0), Vector2(-span, 0.0), Vector2(0.0, span), Vector2(0.0, -span)]:
+		var h := float(world.call("ground_height_at", x + offset.x, z + offset.y))
+		if is_nan(h):
+			return true # an edge sample says nothing about the slope here
+		heights.append(h)
+	var gradient := Vector2((heights[0] - heights[1]) / (2.0 * span), (heights[2] - heights[3]) / (2.0 * span)).length()
+	var max_angle := (player as CharacterBody3D).floor_max_angle if player is CharacterBody3D else deg_to_rad(45.0)
+	return atan(gradient) <= max_angle
 
 
 func _clear_debug_teleport_recovery_anchor(player: Node3D) -> void:
@@ -2987,7 +3011,7 @@ func _debug_teleport_cross_realm(x: float, z: float, realm_id: String, entry_id:
 	if world == null:
 		return false
 	var ground: float = float(world.call("ground_height_at", x, z))
-	if is_nan(ground):
+	if is_nan(ground) or not _debug_teleport_walkable(world, player, x, z):
 		return false
 	player.global_position = Vector3(x, ground + DEBUG_TELEPORT_CLEARANCE, z)
 	_clear_debug_teleport_recovery_anchor(player)

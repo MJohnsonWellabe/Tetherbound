@@ -1,0 +1,74 @@
+{
+  "source_head": "98ee75844cc5ff4ecb72d1a2ae0705ec89d61846",
+  "scope": "Uncommitted source CPU dispatch preflight, not GPU/acceptance evidence",
+  "source_sha256": {
+    "scripts/ui/title_screen.gd": "bdac26ab69aa2e6de3205d636aad8c989c059cfbf0d27f117336ad2a3cf96f4a",
+    "tools/f26_export_bootstrap.gd": "3a9899d20c9a899099d65a7bc2d54503c68b8e929fbc87678b80aa9263b91b59",
+    "tools/owner/f26_ally.ps1": "573d2b8a578221cb7b4449efdfb2dff21b543e9b4d39e1108615ccc5d35f9ae4"
+  },
+  "steps": [
+    {
+      "name": "normal-title",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--quit-after",
+        "2"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "errors": [],
+      "pass": true,
+      "elapsed_seconds": 11.125,
+      "log": "D:\\tetherbound\\.artifacts\\f26-entry-source-20261004T181606Z\\normal-title.log",
+      "log_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "name": "f26-dispatch-refusal",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--",
+        "--f26-route",
+        "--biome=meadows",
+        "--preset=Medium",
+        "--source-commit=98ee75844cc5ff4ecb72d1a2ae0705ec89d61846",
+        "--output=D:/tetherbound/.artifacts/f26-entry-source-20261004T181606Z/refused-route"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "timed_out": false,
+      "errors": [],
+      "pass": true,
+      "elapsed_seconds": 11.280999999959022,
+      "log": "D:\\tetherbound\\.artifacts\\f26-entry-source-20261004T181606Z\\f26-dispatch-refusal.log",
+      "log_sha256": "ad1ddc995414448704df1830a57e36276953c67f51d83800e2348cfa04afa20c"
+    },
+    {
+      "name": "front-door-unit",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_gate_a_front_door_and_world.gd"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "errors": [],
+      "pass": true,
+      "elapsed_seconds": 11.702999999979511,
+      "log": "D:\\tetherbound\\.artifacts\\f26-entry-source-20261004T181606Z\\front-door-unit.log",
+      "log_sha256": "81023d008215193b9ed75f23bdfb951eb3294c856fdb2d161eb9cea432909686"
+    }
+  ]
+}

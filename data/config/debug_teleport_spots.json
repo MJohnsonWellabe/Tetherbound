@@ -139,7 +139,7 @@
           "id": "hollow_crown",
           "display_name": "Region 4 — The Hollow Crown",
           "spots": [
-            { "display_name": "The Crown Arch", "position": [459.0, 2700.0], "view_heading_deg": 90.0, "_comment": "Ordinary west-side Crown arrival, 26 m before the occupied arch/Senn seat. Faces east through the complete arch instead of placing the camera inside it." },
+            { "display_name": "The Crown Arch", "position": [511.0, 2700.0], "view_heading_deg": -90.0, "_comment": "Crown-floor arrival side, 26 m east of the occupied arch/Senn seat, facing west back through the complete arch. The Crown has only a linked-arch entry; the former west-side spot (459, 2700) is on the Crown's 76-80 degree outer wall, where the trainer slid down the face (re-proof, F26 Low hollow_crown__07)." },
             { "display_name": "The Crown Heartstone", "position": [650.0, 2700.0], "view_heading_deg": 76.5, "_comment": "Ordinary Crown interior approach from the arch, 50 m west of the guardian seat and facing the heartstone at (700, 2712). Avoids spawning inside the named encounter." }
           ]
         },

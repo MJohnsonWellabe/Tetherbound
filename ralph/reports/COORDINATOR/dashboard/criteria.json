@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T20:41:05.771237+00:00",
+ "generated_at": "2026-10-04T22:18:00.685824+00:00",
  "main_sha": "b4e4897d5 (PR #525 head; consolidated F17-F21, F25/F35 landing)",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
@@ -35,10 +35,10 @@
     },
     {
      "text": "Normal-controller DAY walk reaches every opening NPC, camp and gate",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F01-2/VERDICT.md",
+     "status": "met",
+     "evidence": "PR #530: village day visits walk, all 12 targets (HUB/f17/f01-2-visits-day-r2)",
      "gap": "Re-run tests/capture_village_walk.gd --route=visits --time=day --from-title; redo code-blind judge. Folds into F17#3.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: PR #530: village day visits walk, all 12 targets (HUB/f17/f01-2-visits-day-r2)",
      "audit_index": 2
     },
     {
@@ -195,11 +195,11 @@
     },
     {
      "text": "Saved completion survives reload",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F03-3.md",
+     "status": "met",
+     "evidence": "PR #529: Warrens/Alpha/Local Requests with disk round trip (reproof-fixes/F03-3)",
      "gap": "Re-run the three smokes with their activity flags, including the disk round trip, on v28. Folds into F49.",
      "missing": "",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: PR #529: Warrens/Alpha/Local Requests with disk round trip (reproof-fixes/F03-3)",
      "audit_index": 3
     },
     {
@@ -286,10 +286,10 @@
     },
     {
      "text": "Real hit/avoidance witness per fight",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F04-4.md",
+     "status": "met",
+     "evidence": "PR #531: smoke_named_fight_hit_avoid passes all four fights; reach mutant fails 0/4 (reproof-fixes F04#4)",
      "gap": "Re-run smoke_named_fight_hit_avoid.gd and its mutation check. Folds into F22#4.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: PR #531: smoke_named_fight_hit_avoid passes all four fights; reach mutant fails 0/4 (reproof-fixes F04#4)",
      "audit_index": 4
     },
     {
@@ -455,10 +455,10 @@
     },
     {
      "text": "Remount works (owner report) with no gate bypass",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F06-4.md",
+     "status": "met",
+     "evidence": "PR #529: smoke_cloudreach_saddle_remount 331/0 (INTEGRATION/reproof-fixes/F06-4)",
      "gap": "Re-run smoke_cloudreach_saddle_remount.gd. Folds into F49.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: PR #529: smoke_cloudreach_saddle_remount 331/0 (INTEGRATION/reproof-fixes/F06-4)",
      "audit_index": 4
     },
     {
@@ -509,10 +509,10 @@
     },
     {
      "text": "Each payoff useful to retained five with saved state",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F07-1.md",
+     "status": "met",
+     "evidence": "PR #529: cloudreach_activity_payoffs 96 PASS (reproof-fixes/F07-1)",
      "gap": "Run tools/net/run_net_smoke.sh cloudreach_activity_payoffs on b4. Folds into F48.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: PR #529: cloudreach_activity_payoffs 96 PASS (reproof-fixes/F07-1)",
      "audit_index": 1
     },
     {
@@ -565,10 +565,10 @@
     },
     {
      "text": "Same persist through two-peer reload/reconnect without double grants",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F08-2.md",
+     "status": "met",
+     "evidence": "PR #529: cloudreach_veyra_reconnect 56 PASS (reproof-fixes/F08-2)",
      "gap": "Run tools/net/run_net_smoke.sh cloudreach_veyra_reconnect; per-participant keys go to F19#2. Folds into F48.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: PR #529: cloudreach_veyra_reconnect 56 PASS (reproof-fixes/F08-2)",
      "audit_index": 2
     },
     {
@@ -699,10 +699,10 @@
     },
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f10_3/r6/@9adc99f1",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F10-3/VERDICT.md",
      "gap": "Redo phase/strike capture plus code-blind judge (incl. reduced motion, photosensitivity) Folds into F41#3, F25#2.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual judge verdict. stormwood_lightning.gd, stormwood_surge.json and shaders changed (10 files, +393) since 9adc99f1.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 3
     },
     {
@@ -890,10 +890,10 @@
     },
     {
      "text": "Eight reward pockets reachable and paid",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/full/f13_2_pockets/SUMMARY.md@dd9f504a (smoke_water_pocket_walk_claim, not CI)",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F13-2.md",
      "gap": "Re-run smoke_water_pocket_walk_claim and the reed-recipe two-character proof Folds into F49#0.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. CI test_water_reward_pockets is analytic only. water_pickups.json and water_world.json changed (+574/−409) since.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 2
     },
     {
@@ -1085,10 +1085,10 @@
     },
     {
      "text": "New game from the title reaches Grandpa's opening on the new schema with an empty satchel apart from authored gifts; the full unit suite is green.",
-     "status": "partial",
-     "evidence": "ralph/reports/FOUNDATIONS/f16/title-grandpa-final.txt, unit-membership-reuse.json (pre-582b2f13)",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F16-4.md",
      "gap": "Re-run title→Grandpa witness asserting v28 autosave; record one green verify-unit-tests run at b4e4897d5 Folds into F16 (own row).",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. save_game.gd, save_document.gd and title_screen.gd changed after the evidence (8 files, +313). CI smoke_title_new_game/smoke_opening skip the schema-on-autosave check. Green unit run at b4e4897d5 unknown.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 4
     }
    ]
@@ -1126,34 +1126,34 @@
     },
     {
      "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",
-     "status": "partial",
-     "evidence": "HUB/f17/recheck-f17-2.md, runtime/hall-circuit-r1.txt @1d34b8d3bd",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F17-2.md",
      "gap": "Re-run smoke_crossing_hall_circuit.gd (all 16 approaches, no snag) and add it to CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. crossing_hall.gd/.json changed after the walk: frontage modules, catalog props, relic-hang prompts, gated PortalAction mount.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 2
     },
     {
      "text": "Every house has a named resident or lived-in dressing; shop, workshop, inn, tournament board and research keeper are reachable on a controller day and night walk.",
-     "status": "partial",
-     "evidence": "HUB/f17/recheck-f17-3.txt, runtime/services-day-night-r3.txt @360ee7a6cd",
+     "status": "met",
+     "evidence": "PR #530: smoke_village_services_redesign day+night (HUB/f17/reproof-r1)",
      "gap": "Re-run smoke_village_services_redesign.gd for the day and night walk; get an independent recheck.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. village.gd adds catalog presentation; village_npcs.gd now lifts villagers onto interior floors. Both change what the walk exercised.",
+     "note": "Landed: PR #530: smoke_village_services_redesign day+night (HUB/f17/reproof-r1)",
      "audit_index": 3
     },
     {
      "text": "The M1 opening chain (starter, practice catch, camp, three-bed readiness, three tournament rounds) still completes on the new layout.",
-     "status": "failing",
-     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F17-4.md",
+     "status": "met",
+     "evidence": "PR #531: M1 seed-4 chain PASS on CI render 37232841924, independent review PASS (HUB/f17/m1-seed4)",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-tournament --world-seed=4 at b4e4897d5; get an independent review.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
+     "note": "Landed: PR #531: M1 seed-4 chain PASS on CI render 37232841924, independent review PASS (HUB/f17/m1-seed4)",
      "audit_index": 4
     },
     {
      "text": "Host and guest see the same layout, arch states and shrine states after join and reload.",
-     "status": "partial",
-     "evidence": "HUB/f17/hall-agreement-finalizer-r1/ (R4 ENet producer, pre-4ecaded22a)",
+     "status": "met",
+     "evidence": "PR #530: smoke_net_crossing_hall_agreement 266 PASS",
      "gap": "Re-run the two-peer Hall agreement producer plus finalizer; make it a peers:2 net smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. session.gd and the save/join paths changed heavily since. No CI net smoke covers Hall agreement.",
+     "note": "Landed: PR #530: smoke_net_crossing_hall_agreement 266 PASS",
      "audit_index": 5
     },
     {
@@ -1313,10 +1313,10 @@
    "criteria": [
     {
      "text": "Tidewake's dock exchange completes as Tidewake's chapter resolution and no longer rolls credits.",
-     "status": "partial",
-     "evidence": "F20/ending-runtime/evidence.json tidewake-r7 PASS @687732d0b2",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F20-0.md",
      "gap": "Re-run smoke_f20_tidewake_close.gd at b4e4897d5 and add it to CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The ending flag is on. session.gd and the save writers changed after the run. smoke_f20_tidewake_close.gd is not in CI.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 0
     },
     {
@@ -2069,34 +2069,34 @@
    "criteria": [
     {
      "text": "The four tier material sets (Meadows rootstone/ironwood…, Tidewake driftwood/reef stone/sluice metal/tide bloom/Tide Pearl, Cloudreach heartwood/cliffglass/gale fiber/skyplume, Stormwood thunderwood/stormglass/conductor vine/glowmoss/sparkfur/voltcap) are gatherable in their biome.",
-     "status": "in_progress",
-     "evidence": "data/schema/material_tiers.json; smoke_f32_material_sites.gd (not in CI)",
+     "status": "met",
+     "evidence": "PR #530: smoke_f32_material_sites per realm + test_f32_material_census (ralph/reports/HOMESTEAD/f32/material-census/)",
      "gap": "Pass placement and approach proofs, flip both flags, then add a per-biome gather census test to CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. harvest.json `additional_material_node_candidates.runtime_enabled=false` (Meadows sunleaf). stormwood_harvests.json `renewable.runtime_enabled=false`. Whether legacy finite sources cover these is unknown.",
+     "note": "Landed: PR #530: smoke_f32_material_sites per realm + test_f32_material_census (ralph/reports/HOMESTEAD/f32/material-census/)",
      "audit_index": 0
     },
     {
      "text": "The Forge refines Rootiron, Tidesteel, Skyglass and Stormglass plate.",
-     "status": "not_started",
-     "evidence": "partial: tests/test_foundation_forge_units.gd::test_exact_refining_recipe_is_typed_only_and_cannot_be_crafted_without_completed_ticket",
+     "status": "met",
+     "evidence": "PR #530: smoke_f32_forge_plates exit 0 (f32/forge-plates/)",
      "gap": "Engine smoke: real mounted Forge refines all four plates with exact debits and yields.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Recipes and ticket gating are unit-tested. No real Forge produces any of the four plates.",
+     "note": "Landed: PR #530: smoke_f32_forge_plates exit 0 (f32/forge-plates/)",
      "audit_index": 1
     },
     {
      "text": "One or two type-essence nodes per type sit in each biome, mostly off-route, and respawn on a configured timer.",
-     "status": "not_started",
-     "evidence": "partial: tests/test_foundation_resources.gd (one node yield and next_ready_day)",
+     "status": "met",
+     "evidence": "PR #530: test_f32_essence_census, Meadows 6/8 others 8/8 off-route (f32/essence-census/)",
      "gap": "Unit census of essence_nodes.json counts per type and biome, plus a route-distance check.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Respawn is tested for one site. No count-per-type-per-biome or off-route test.",
+     "note": "Landed: PR #530: test_f32_essence_census, Meadows 6/8 others 8/8 off-route (f32/essence-census/)",
      "audit_index": 2
     },
     {
      "text": "Eight type crops grow on homestead plots; the Greenhouse (a Farm buildable, not an attachment) grows off-biome crops; every harvest is by hand.",
-     "status": "not_started",
-     "evidence": "partial: test_farming.gd (legacy berries); test_foundation_resources::test_authored_farm_till_uses_same_world_and_owner_commit",
+     "status": "met",
+     "evidence": "PR #530: test_f32_type_crops 6/6 + smoke (f32/type-crops/)",
      "gap": "Unit tests for type crops and the Greenhouse rule, plus an engine smoke of manual sow and harvest.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test of growing the eight type crops, the Greenhouse off-biome rule or manual harvest.",
+     "note": "Landed: PR #530: test_f32_type_crops 6/6 + smoke (f32/type-crops/)",
      "audit_index": 3
     },
     {
@@ -2109,10 +2109,10 @@
     },
     {
      "text": "The ten Tidewake water_crafting proposals are registered at runtime; four-character node contention follows MULTIPLAYER.",
-     "status": "not_started",
-     "evidence": "none (f32_catalogue_registration.gd water_registration_errors is uncalled by tests)",
+     "status": "met",
+     "evidence": "PR #530: f32_node_contention 69 PASS, 2 characters (4-claimant nightly open)",
      "gap": "Unit test that runs water_registration_errors against the runtime ItemDB, plus a contention net smoke (peers:2 now, more peers nightly).",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test calls the water registration census. No four-character contention net test.",
+     "note": "Landed: PR #530: f32_node_contention 69 PASS, 2 characters (4-claimant nightly open)",
      "audit_index": 5
     }
    ]

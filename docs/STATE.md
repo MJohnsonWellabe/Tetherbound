@@ -23,13 +23,17 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Feature status (batch landings):**
 - **F32:** #0, #1, #2, #3 PASS; #5 PASS for 2 characters (4-claimant nightly still open). #4: lexicon and Den sheds PASS; win sheds await F27 patch C. Evidence: ralph/reports/HOMESTEAD/f32/.
-- **F17:** #2, #3, #5 and F01#2 PASS. #4 waits on the earned-team rest fix. #6 Bars A/B depend on F26 plus Codex hero assets. Evidence: ralph/reports/HUB/f17/.
-- **Re-proof fixes (#529):** F06#4, F07#1, F08#2 and F03#3 PASS.
+- **F17:** #2, #3, #4 (M1 seed-4 chain, CI render 37232841924; margin fragile) #5 and F01#2 PASS. #6 Bars A/B depend on F26 plus Codex hero assets. Evidence: ralph/reports/HUB/f17/.
+- **Re-proof fixes (#529):** F06#4, F07#1, F08#2 and F03#3 PASS. Batch 531: F04#4 hit/avoid witness passes all four named fights (reach mutant fails 0/4); debug travel refuses unwalkable ground (Crown Arch). Guest rejoin: a rejoined guest's owner-passive stream is re-admitted on the host's recovered authority, a conflicting guest state is refused with the differing paths, and its clocks reset (owner_passive_rejoin smoke green twice).
+- **F26 Low:** every realm camera keeps its authored far plane as a draw-distance floor under every preset (was cut to 320 m); blinded A/B 18 after-better, 0 before-better (ralph/reports/LOOKDEV/f26-low/ab-far-floor/). Labels, Veilfall spray and lure smoke fixes await their verification run.
+- **Fixtures:** `host_meadows_stormwood_route_open` proof save rebuilt at v28 from a declarative spec (`tools/net/build_proof_save.sh`); earned F49 checkpoints stay v27 until F49 regenerates them.
 
 **Owner rulings 2026-10-04:**
 - Visual cards judge High/Medium for the target look and confirm Low/Compatibility for no breakage until the Ally test passes.
 - The second UI check is 1280×720.
 - F36#0 may regenerate NPC faces only as identity-preserving refinements of the installed cast.
+- Pre-camp creature healing (PROGRESSION §6, earned-run finding: 8 potions for 10–12 practice fights, zero slack): Grandpa's house gets one free creature bed using the existing camp `creature_bed` component, so home heals creatures. Meadows ordinary-wild tuning toward COMBAT §7's 15–30% lead cost waits on that bed and an F02#6 re-run.
+- F22#1 reading (coordinator, from COMBAT §7): the band sweep runs each band's ordinary trainer fights; pass needs reader win ≥0.9, masher lead-faint rate ≥0.25 above the reader's, and reader median lead HP cost ≤0.55× the masher's. Wilds keep their own §7 floor.
 - The card-closing F49 run uses no shortcuts.
 
 ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.

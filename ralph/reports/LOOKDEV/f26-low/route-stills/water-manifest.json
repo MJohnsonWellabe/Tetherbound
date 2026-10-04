@@ -1,0 +1,1347 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome_id": "water",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 411847100511,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 411863877734,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-04T20:50:36",
+	"capture_started_utc": "2026-10-04T20:46:50",
+	"captured_frame_count": 6,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "X11",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"biome_id": "water",
+			"bytes": 1953063,
+			"camera_player_distance_m": 5.82120180130005,
+			"camera_position": [
+				13.4241781234741,
+				6.29396820068359,
+				145.117095947266
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.960000038146973,
+					0.0,
+					-0.279999971389771
+				],
+				"basis_y": [
+					-0.0582152754068375,
+					0.978147625923157,
+					0.199595257639885
+				],
+				"basis_z": [
+					0.273881316184998,
+					0.207911714911461,
+					-0.93902176618576
+				],
+				"origin": [
+					12.0,
+					5.21282768249512,
+					150.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.960000038146973,
+					0.0000000182194188624862,
+					-0.279999971389771
+				],
+				"basis_y": [
+					-0.0582152716815472,
+					0.978147625923157,
+					0.19959531724453
+				],
+				"basis_z": [
+					0.273881316184998,
+					0.207911789417267,
+					-0.93902176618576
+				],
+				"origin": [
+					13.4241781234741,
+					6.29396820068359,
+					145.117095947266
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/water/water__route_00__day.png",
+			"frame_id": "water__route_00__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-90.0240020751953,
+						1.82727193832397,
+						147.572998046875
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						40.1590003967285,
+						1.65617477893829,
+						159.664001464844
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3145065307617,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-10.3430738449097,
+						11.22864818573,
+						101.668212890625
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-27.4179992675781,
+						-0.423823356628418,
+						179.365997314453
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						101.346000671387,
+						-0.40415221452713,
+						150.509002685547
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 200.132798666667,
+				"hour": 8.00531194666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				12.0,
+				3.4628279209137,
+				150.0
+			],
+			"position_xz": [
+				12.0,
+				150.0
+			],
+			"resolved_ground_y": 3.45006728172302,
+			"route_point": [
+				12.0,
+				150.0
+			],
+			"route_point_index": 0,
+			"terrain_ground_y": 3.45006728172302,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -16.2602051181233,
+			"view_heading_xz": [
+				-0.280000001192093,
+				0.959999978542328
+			]
+		},
+		{
+			"biome_id": "water",
+			"bytes": 1969202,
+			"camera_player_distance_m": 5.82120180130005,
+			"camera_position": [
+				13.4241781234741,
+				6.29396820068359,
+				145.117095947266
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.960000038146973,
+					0.0,
+					-0.279999971389771
+				],
+				"basis_y": [
+					-0.0582152754068375,
+					0.978147625923157,
+					0.199595257639885
+				],
+				"basis_z": [
+					0.273881316184998,
+					0.207911714911461,
+					-0.93902176618576
+				],
+				"origin": [
+					12.0,
+					5.21282768249512,
+					150.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.960000038146973,
+					0.0000000364388377249725,
+					-0.279999971389771
+				],
+				"basis_y": [
+					-0.0582152754068375,
+					0.978147625923157,
+					0.199595391750336
+				],
+				"basis_z": [
+					0.273881286382675,
+					0.20791183412075,
+					-0.939021646976471
+				],
+				"origin": [
+					13.4241781234741,
+					6.29396820068359,
+					145.117095947266
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/water/water__route_00__night.png",
+			"frame_id": "water__route_00__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-90.0240020751953,
+						1.82727193832397,
+						147.572998046875
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						39.8638458251953,
+						1.71567761898041,
+						159.171768188477
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3145065307617,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-10.9410676956177,
+						10.9237957000732,
+						101.60563659668
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						0.999999582767487,
+						1.0,
+						0.999999582767487
+					],
+					"position": [
+						-27.9241943359375,
+						-0.415100485086441,
+						179.264862060547
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						101.397735595703,
+						-0.509201884269714,
+						150.837875366211
+					],
+					"species_id": "water_cannonback"
+				}
+			],
+			"nearby_creatures_160m": 6,
+			"observed_clock": {
+				"elapsed_seconds": 575.119854333333,
+				"hour": 23.0047941733333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				12.0,
+				3.4628279209137,
+				150.0
+			],
+			"position_xz": [
+				12.0,
+				150.0
+			],
+			"resolved_ground_y": 3.45006728172302,
+			"route_point": [
+				12.0,
+				150.0
+			],
+			"route_point_index": 0,
+			"terrain_ground_y": 3.45006728172302,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -16.2602051181233,
+			"view_heading_xz": [
+				-0.280000001192093,
+				0.959999978542328
+			]
+		},
+		{
+			"biome_id": "water",
+			"bytes": 2208972,
+			"camera_player_distance_m": 5.8212103843689,
+			"camera_position": [
+				0.203603744506836,
+				3.46968936920166,
+				175.692840576172
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058750152588,
+					0.978147625923157,
+					-0.0691972002387047
+				],
+				"basis_z": [
+					-0.922383785247803,
+					0.207911714911461,
+					0.325547218322754
+				],
+				"origin": [
+					5.0,
+					2.38854718208313,
+					174.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0000000364388377249725,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058854460716,
+					0.978147625923157,
+					-0.0691972821950912
+				],
+				"basis_z": [
+					-0.922383725643158,
+					0.20791183412075,
+					0.325547188520432
+				],
+				"origin": [
+					0.203603744506836,
+					3.46968936920166,
+					175.692840576172
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/water/water__route_01__day.png",
+			"frame_id": "water__route_01__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-90.2764511108398,
+						1.7054055929184,
+						147.992599487305
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						0.999999821186066,
+						1.0,
+						0.999999821186066
+					],
+					"position": [
+						39.6936988830566,
+						1.74951040744781,
+						158.888076782227
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3145065307617,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999999403953552,
+						1.0,
+						0.999999403953552
+					],
+					"position": [
+						-10.8730325698853,
+						10.999095916748,
+						101.505851745605
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						0.999999582767487,
+						1.0,
+						0.999999582767487
+					],
+					"position": [
+						-27.9241943359375,
+						-0.415100485086441,
+						179.264862060547
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						101.397735595703,
+						-0.509201884269714,
+						150.837875366211
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-17.0750007629395,
+						0.844861149787903,
+						268.657012939453
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_026_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						28.1200008392334,
+						-0.43686056137085,
+						260.742004394531
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.138694333333,
+				"hour": 8.00554777333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				5.0,
+				0.63854718208313,
+				174.0
+			],
+			"position_xz": [
+				5.0,
+				174.0
+			],
+			"resolved_ground_y": 0.635161697864532,
+			"route_point": [
+				5.0,
+				174.0
+			],
+			"route_point_index": 1,
+			"terrain_ground_y": 0.635161697864532,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": 109.44003425987,
+			"view_heading_xz": [
+				0.942990362644196,
+				-0.332820117473602
+			]
+		},
+		{
+			"biome_id": "water",
+			"bytes": 2138351,
+			"camera_player_distance_m": 5.8212103843689,
+			"camera_position": [
+				0.203603744506836,
+				3.46968936920166,
+				175.692840576172
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058750152588,
+					0.978147625923157,
+					-0.0691972002387047
+				],
+				"basis_z": [
+					-0.922383785247803,
+					0.207911714911461,
+					0.325547218322754
+				],
+				"origin": [
+					5.0,
+					2.38854718208313,
+					174.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0000000364388377249725,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058854460716,
+					0.978147625923157,
+					-0.0691972821950912
+				],
+				"basis_z": [
+					-0.922383725643158,
+					0.20791183412075,
+					0.325547188520432
+				],
+				"origin": [
+					0.203603744506836,
+					3.46968936920166,
+					175.692840576172
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/water/water__route_01__night.png",
+			"frame_id": "water__route_01__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-90.3566207885742,
+						1.66655278205872,
+						148.125839233398
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						40.4179420471191,
+						1.6505411863327,
+						159.658355712891
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3145065307617,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999999344348907,
+						1.0,
+						0.999999344348907
+					],
+					"position": [
+						-10.8790283203125,
+						10.9988956451416,
+						101.498626708984
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						0.999999463558197,
+						1.0,
+						0.999999463558197
+					],
+					"position": [
+						-27.8048286437988,
+						-0.561342000961304,
+						179.706024169922
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						0.999999642372131,
+						1.0,
+						0.999999642372131
+					],
+					"position": [
+						101.669952392578,
+						-0.392589002847672,
+						150.252243041992
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_007_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-17.0750007629395,
+						0.844861149787903,
+						268.657012939453
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_026_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						28.1200008392334,
+						-0.43686056137085,
+						260.742004394531
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 575.139286333333,
+				"hour": 23.0055714533333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				5.0,
+				0.63854718208313,
+				174.0
+			],
+			"position_xz": [
+				5.0,
+				174.0
+			],
+			"resolved_ground_y": 0.635161697864532,
+			"route_point": [
+				5.0,
+				174.0
+			],
+			"route_point_index": 1,
+			"terrain_ground_y": 0.635161697864532,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": 109.44003425987,
+			"view_heading_xz": [
+				0.942990362644196,
+				-0.332820117473602
+			]
+		},
+		{
+			"biome_id": "water",
+			"bytes": 2327328,
+			"camera_player_distance_m": 5.821204662323,
+			"camera_position": [
+				17.2036151885986,
+				3.96655941009521,
+				169.692855834961
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058750152588,
+					0.978147625923157,
+					-0.0691972002387047
+				],
+				"basis_z": [
+					-0.922383785247803,
+					0.207911714911461,
+					0.325547218322754
+				],
+				"origin": [
+					22.0,
+					2.88541889190674,
+					168.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0000000364388377249725,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058854460716,
+					0.978147625923157,
+					-0.0691972821950912
+				],
+				"basis_z": [
+					-0.922383725643158,
+					0.20791183412075,
+					0.325547188520432
+				],
+				"origin": [
+					17.2036151885986,
+					3.96655941009521,
+					169.692855834961
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/water/water__route_02__day.png",
+			"frame_id": "water__route_02__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-90.3566207885742,
+						1.66655278205872,
+						148.125839233398
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						40.9423370361328,
+						1.57918429374695,
+						160.212677001953
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3145065307617,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999998986721039,
+						1.0,
+						0.999998986721039
+					],
+					"position": [
+						-10.8847799301147,
+						10.9986219406128,
+						101.491889953613
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						0.999999463558197,
+						1.0,
+						0.999999463558197
+					],
+					"position": [
+						-27.8048286437988,
+						-0.561342000961304,
+						179.706024169922
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						0.999999642372131,
+						1.0,
+						0.999999642372131
+					],
+					"position": [
+						101.669952392578,
+						-0.392589002847672,
+						150.252243041992
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_007_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-16.9740810394287,
+						0.857831001281738,
+						268.762542724609
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_026_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						28.336763381958,
+						-0.373400777578354,
+						260.961029052734
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 200.120747666667,
+				"hour": 8.00482990666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				22.0,
+				1.13541901111603,
+				168.0
+			],
+			"position_xz": [
+				22.0,
+				168.0
+			],
+			"resolved_ground_y": 1.13203358650208,
+			"route_point": [
+				22.0,
+				168.0
+			],
+			"route_point_index": 2,
+			"terrain_ground_y": 1.13203358650208,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": 109.44003425987,
+			"view_heading_xz": [
+				0.942990362644196,
+				-0.332820117473602
+			]
+		},
+		{
+			"biome_id": "water",
+			"bytes": 2302525,
+			"camera_player_distance_m": 5.821204662323,
+			"camera_position": [
+				17.2036151885986,
+				3.96655941009521,
+				169.692855834961
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058750152588,
+					0.978147625923157,
+					-0.0691972002387047
+				],
+				"basis_z": [
+					-0.922383785247803,
+					0.207911714911461,
+					0.325547218322754
+				],
+				"origin": [
+					22.0,
+					2.88541889190674,
+					168.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					0.332820117473602,
+					0.0000000364388377249725,
+					0.942990362644196
+				],
+				"basis_y": [
+					0.196058854460716,
+					0.978147625923157,
+					-0.0691972821950912
+				],
+				"basis_z": [
+					-0.922383725643158,
+					0.20791183412075,
+					0.325547188520432
+				],
+				"origin": [
+					17.2036151885986,
+					3.96655941009521,
+					169.692855834961
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/water/water__route_02__night.png",
+			"frame_id": "water__route_02__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_002_0",
+					"node_scale": [
+						0.999999761581421,
+						1.0,
+						0.999999761581421
+					],
+					"position": [
+						-90.3566207885742,
+						1.66655278205872,
+						148.125839233398
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_009_0",
+					"node_scale": [
+						0.999999701976776,
+						1.0,
+						0.999999701976776
+					],
+					"position": [
+						40.9423370361328,
+						1.57918429374695,
+						160.212677001953
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_013_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						58.6839981079102,
+						17.3145065307617,
+						70.8880004882812
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_017_0",
+					"node_scale": [
+						0.999998688697815,
+						1.0,
+						0.999998688697815
+					],
+					"position": [
+						-10.8903818130493,
+						10.9983577728271,
+						101.485328674316
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_first_shore_wild_021_0",
+					"node_scale": [
+						0.999999225139618,
+						1.0,
+						0.999999225139618
+					],
+					"position": [
+						-27.5499935150146,
+						-0.483912527561188,
+						179.52131652832
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 4.15,
+					"body_radius_m": 1.73114262,
+					"node_path": "water_first_shore_wild_025_0",
+					"node_scale": [
+						0.999999642372131,
+						1.0,
+						0.999999642372131
+					],
+					"position": [
+						101.669952392578,
+						-0.392589002847672,
+						150.252243041992
+					],
+					"species_id": "water_cannonback"
+				},
+				{
+					"body_height_m": 3.7,
+					"body_radius_m": 1.40341822222222,
+					"node_path": "water_reedhaven_wild_007_0",
+					"node_scale": [
+						0.999999940395355,
+						1.0,
+						0.999999940395355
+					],
+					"position": [
+						-16.9740810394287,
+						0.857831001281738,
+						268.762542724609
+					],
+					"species_id": "water_torrentoad"
+				},
+				{
+					"body_height_m": 3.55,
+					"body_radius_m": 1.18230355813953,
+					"node_path": "water_reedhaven_wild_026_0",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						28.336763381958,
+						-0.373400777578354,
+						260.961029052734
+					],
+					"species_id": "water_mirejaw"
+				}
+			],
+			"nearby_creatures_160m": 8,
+			"observed_clock": {
+				"elapsed_seconds": 575.120277666667,
+				"hour": 23.0048111066667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				22.0,
+				1.13541901111603,
+				168.0
+			],
+			"position_xz": [
+				22.0,
+				168.0
+			],
+			"resolved_ground_y": 1.13203358650208,
+			"route_point": [
+				22.0,
+				168.0
+			],
+			"route_point_index": 2,
+			"terrain_ground_y": 1.13203358650208,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": 109.44003425987,
+			"view_heading_xz": [
+				0.942990362644196,
+				-0.332820117473602
+			]
+		}
+	],
+	"graphics_capture": {
+		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "Low",
+		"renderer": "gl_compatibility",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "445098afaa092eb6dea28b4baa3deefb321cfc77"
+	},
+	"planned_frame_count": 6,
+	"planned_frame_ids": [
+		"water__route_00__day",
+		"water__route_00__night",
+		"water__route_01__day",
+		"water__route_01__night",
+		"water__route_02__day",
+		"water__route_02__night"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 411863877734,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"route": {
+		"description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+		"height_mode": "ground",
+		"source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+		"start": [
+			12.0,
+			150.0
+		],
+		"waypoints": [
+			[
+				5.0,
+				174.0
+			],
+			[
+				22.0,
+				168.0
+			]
+		]
+	},
+	"route_stills_scope": "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim.",
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema_version": 1,
+	"subsets": []
+}
