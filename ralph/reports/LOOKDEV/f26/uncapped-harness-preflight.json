@@ -1,0 +1,19 @@
+{
+  "scope": "Focused CPU receipt and actual package hash fixtures; no native or Ally evidence.",
+  "steps": [
+    {
+      "name": "receipt-checks",
+      "exit_code": 0,
+      "pass": true,
+      "log": "D:\\tetherbound\\.artifacts\\f26-uncapped-harness-20261004T225632Z\\receipt-checks.log",
+      "log_sha256": "dc4c50f0cbcba02ca7c3cb77cf33dfadac7ebd2a4256c740ca0e494de9dfe4a3"
+    },
+    {
+      "name": "package-checks",
+      "exit_code": 0,
+      "pass": true,
+      "log": "D:\\tetherbound\\.artifacts\\f26-uncapped-harness-20261004T225632Z\\package-checks.log",
+      "log_sha256": "370012f6f39de7980c3aef020ab528e04125f7bb9ad0af27f8a6e0b2b3c81c6e"
+    }
+  ]
+}

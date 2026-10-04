@@ -89,3 +89,22 @@ These are author-executed CPU proofs, separate from the scoped independent
 source review above. Native packaged routes, full visual bar and actual Ally
 results remain open; the candidate has not been published as a development
 download. Earlier failed attempts remain in `ally-export-preflight.json`.
+
+## Far-floor package and desktop preflight
+
+Owner GPU-free handoff resumes item 1 on integration `648643576` or later.
+The desktop switch runs the same four packaged Medium routes without claiming
+Ally identity or 15 W; it records `DESKTOP_PREFLIGHT_COMPLETE` separately from
+the default owner gate. A desktop below-target result remains a reported
+desktop measurement, rather than an Ally verdict.
+
+Independent read-only implementation review by `/root/f26_lookbar_review`:
+**PASS**, including its timing follow-up. Route-only uncapping disables VSync
+and the software FPS cap; fixed FPS, disabled rendering, changed time scale
+and non-60 Hz physics are refused. Receipts preserve those conditions and
+the production camera far value; the harness checks the package's four
+declared vista floors. Min/average/1% low formulas match the checklist.
+Author's focused Windows PowerShell 5.1 checks: 28 receipt cases and five
+actual package hash cases passed; [CPU receipt](uncapped-harness-preflight.json).
+These checks do not prove fresh exported or native execution. Those remain
+required before owner delivery; the owner Ally result remains separate.

@@ -29,6 +29,7 @@ var _navigation: RefCounted
 var _clock_start: Dictionary = {}
 var _clock_end: Dictionary = {}
 var _timed_out := false
+var _fixed_fps_requested := false
 
 
 func _prepare_character_fixture(game: Node) -> void:
@@ -80,7 +81,18 @@ func _run() -> void:
 		print("F26 route refused renderer/preset mismatch; launch with --rendering-method " + required_renderer)
 		quit(2)
 		return
+	for argument: String in OS.get_cmdline_args():
+		_fixed_fps_requested = _fixed_fps_requested or argument.begins_with("--fixed-fps")
+	if _fixed_fps_requested or not RenderingServer.render_loop_enabled \
+			or not is_equal_approx(Engine.time_scale, 1.0) or Engine.physics_ticks_per_second != 60:
+		print("F26 route requires ordinary continuously drawn time; acceleration and hidden rendering refused.")
+		quit(2)
+		return
 	root.size = Vector2i(int(_capture.resolution[0]), int(_capture.resolution[1]))
+	# Evidence-only route: do not let a software cap or VSync hide the
+	# available rate. Ordinary title/game preferences are not changed.
+	Engine.max_fps = 0
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(_output_dir)):
 		print("F26 route requires a fresh output directory; existing evidence kept.")
 		quit(2)
@@ -280,6 +292,10 @@ func _write_route_receipt(complete: bool) -> void:
 			"fov": _camera.fov if _camera != null else 0.0,
 			"far": _camera.far if _camera != null else 0.0,
 			"near": _camera.near if _camera != null else 0.0},
+		"frame_limit": {"max_fps": Engine.max_fps,
+			"vsync_mode": DisplayServer.window_get_vsync_mode(),
+			"fixed_fps_requested": _fixed_fps_requested, "render_loop_enabled": RenderingServer.render_loop_enabled,
+			"physics_ticks_per_second": Engine.physics_ticks_per_second, "time_scale": Engine.time_scale},
 		"waypoints_reached": _waypoints_reached, "samples": _samples, "failures": _failures,
 		"environment_start": _clock_start, "environment_end": _clock_end,
 		"elapsed_ms": maxf(0.0, (_route_finished_usec - _route_started_usec) / 1000.0),

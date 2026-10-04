@@ -5,6 +5,7 @@ param(
   [string]$Output = "",
   [string]$HardwareVariant = "",
   [int]$PowerWatts = 0,
+  [switch]$DesktopPreflight,
   [switch]$VerifyOnly
 )
 $ErrorActionPreference = "Stop"
@@ -30,6 +31,11 @@ function Read-RouteResult($Receipt, $Manifest, [string]$Biome) {
       [string]::IsNullOrWhiteSpace($Receipt.adapter) -or $Receipt.resolution.Count -ne 2 -or
       $Receipt.resolution[0] -ne 1920 -or $Receipt.resolution[1] -ne 1080 -or
       @($Receipt.failures).Count -ne 0 -or
+      $Receipt.frame_limit.max_fps -ne 0 -or $Receipt.frame_limit.vsync_mode -ne 0 -or
+      $Receipt.frame_limit.fixed_fps_requested -ne $false -or $Receipt.frame_limit.render_loop_enabled -ne $true -or
+      $Receipt.frame_limit.physics_ticks_per_second -ne 60 -or $Receipt.frame_limit.time_scale -ne 1 -or
+      $Manifest.vista_far_floors_m.$Biome -le 0 -or
+      $Receipt.camera.far -lt $Manifest.vista_far_floors_m.$Biome -or
       $Receipt.waypoints_reached -ne $Manifest.routes.$Biome.waypoint_count -or
       @($Receipt.samples).Count -lt $Manifest.minimum_timed_frames) {
     throw "$Biome receipt is incomplete or differs from the packaged source, route or Medium profile."
@@ -42,11 +48,16 @@ function Read-RouteResult($Receipt, $Manifest, [string]$Biome) {
   }
   $mean = ($samples | Measure-Object -Average).Average
   $p95 = Get-Percentile $samples .95
+  $slowestCount = [Math]::Max(1, [Math]::Ceiling($samples.Count * .01))
+  $slowestMean = ($samples | Sort-Object -Descending | Select-Object -First $slowestCount | Measure-Object -Average).Average
   return [ordered]@{
     biome = $Biome; route_complete = $true; timed_frames = $samples.Count
     mean_ms = $mean; p50_ms = (Get-Percentile $samples .5); p95_ms = $p95
     p99_ms = (Get-Percentile $samples .99); maximum_ms = ($samples | Measure-Object -Maximum).Maximum
-    average_fps = 1000 / $mean; hitches_over_100ms = @($samples | Where-Object { $_ -gt 100 }).Count
+    average_fps = 1000 / $mean; minimum_fps = 1000 / ($samples | Measure-Object -Maximum).Maximum
+    one_percent_low_fps = 1000 / $slowestMean
+    hitches_over_100ms = @($samples | Where-Object { $_ -gt 100 }).Count
+    camera_far_m = $Receipt.camera.far; required_vista_far_floor_m = $Manifest.vista_far_floors_m.$Biome
     meets_30fps_timing_target = ($mean -le (1000 / 30) -and $p95 -le (1000 / 30))
     meets_preferred_40fps_timing_target = ($mean -le 25 -and $p95 -le 25)
     adapter = $Receipt.adapter; renderer = $Receipt.renderer; receipt = "$Biome/route.json"
@@ -81,10 +92,14 @@ try {
     }
   }
   if ($VerifyOnly) { Write-Host "Package hashes verified: $($manifest.source_commit)"; exit 0 }
-  if (-not $HardwareVariant) { $HardwareVariant = Read-Host "Exact ROG Ally variant (Z1, Z1 Extreme, Ally X, etc.)" }
-  if (-not $PowerWatts) { $PowerWatts = [int](Read-Host "Set Armoury Crate to 15 W, then enter the selected watts") }
-  if ([string]::IsNullOrWhiteSpace($HardwareVariant) -or $PowerWatts -ne 15) {
-    throw "The owner F26 run requires an identified Ally variant at 15 W."
+  if ($DesktopPreflight) {
+    if ($PowerWatts -ne 0 -or $HardwareVariant) { throw "Desktop preflight cannot declare Ally hardware or power." }
+  } else {
+    if (-not $HardwareVariant) { $HardwareVariant = Read-Host "Exact ROG Ally variant (Z1, Z1 Extreme, Ally X, etc.)" }
+    if (-not $PowerWatts) { $PowerWatts = [int](Read-Host "Set Armoury Crate to 15 W, then enter the selected watts") }
+    if ([string]::IsNullOrWhiteSpace($HardwareVariant) -or $PowerWatts -ne 15) {
+      throw "The owner F26 run requires an identified Ally variant at 15 W."
+    }
   }
   if (Get-Process -Name valheim,Tetherbound -ErrorAction SilentlyContinue) {
     throw "Close Valheim and any other Tetherbound window before measuring."
@@ -110,11 +125,15 @@ try {
     result = "INCOMPLETE"; source_commit = $manifest.source_commit
     package_manifest_sha256 = (Get-FileHash -LiteralPath (Join-Path $PackageRoot "F26_PACKAGE.json")).Hash.ToLowerInvariant()
     started_utc = (Get-Date).ToUniversalTime().ToString("o"); cases = @()
-    device = @{ owner_declared_variant = $HardwareVariant; owner_declared_power_watts = $PowerWatts
+    evidence_kind = if ($DesktopPreflight) { "DESKTOP_PREFLIGHT" } else { "OWNER_ALLY_MEASUREMENT" }
+    device = @{ owner_declared_variant = if ($DesktopPreflight) { $null } else { $HardwareVariant }
+      owner_declared_power_watts = if ($DesktopPreflight) { $null } else { $PowerWatts }
       manufacturer = $system.Manufacturer; model = $system.Model; os = $os.Caption; os_version = $os.Version
       graphics = @(Get-CimInstance Win32_VideoController | Select-Object Name,DriverVersion) }
     scope = "Four exported Medium native 1080p scripted render routes. Manual device/power verification required; no release endurance, earned campaign, combat or invitation co-op claim."
+    fps_definition = "Minimum=1000/max wall_ms; average=1000/mean wall_ms; 1% low=1000/mean slowest ceiling(1% of frames) wall_ms."
   }
+  if ($DesktopPreflight) { $summary.scope += " Desktop hardware only; no Ally hardware, 15 W or owner acceptance claim." }
   Write-Json $summary (Join-Path $Output "ALLY_RESULT.json")
   foreach ($biome in @("meadows", "water", "cloudreach", "stormwood")) {
     Write-Host "Running $biome / Medium. Keep the game window visible; do not run another game."
@@ -152,12 +171,13 @@ try {
     Write-Json $summary (Join-Path $Output "ALLY_RESULT.json")
   }
   $belowTarget = @($summary.cases | Where-Object { -not $_.meets_30fps_timing_target }).Count -gt 0
-  $summary.result = if ($belowTarget) { "BELOW_TARGET" } else { "OWNER_REVIEW_REQUIRED" }
+  $summary.result = if ($DesktopPreflight) { "DESKTOP_PREFLIGHT_COMPLETE" } elseif ($belowTarget) { "BELOW_TARGET" } else { "OWNER_REVIEW_REQUIRED" }
+  $summary.below_30fps_timing_target = $belowTarget
   $summary.finished_utc = (Get-Date).ToUniversalTime().ToString("o")
   Write-Json $summary (Join-Path $Output "ALLY_RESULT.json")
   Write-Host "Finished: $($summary.result). Evidence: $Output"
   Write-Host "Send the complete result folder to the coordinator. Confirm device/power and report visible faults."
-  if ($belowTarget) { exit 1 }
+  if ($belowTarget -and -not $DesktopPreflight) { exit 1 }
 } catch {
   if ($null -ne $summary) {
     $summary.result = "INCOMPLETE"
