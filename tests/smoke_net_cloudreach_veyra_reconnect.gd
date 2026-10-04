@@ -26,10 +26,18 @@ extends "res://tests/smoke_net_proof_two_peer.gd"
 ## local evidence, not internet/Steam acceptance.
 ##
 ## NEGATIVE CONTROLS: (1) before the win both peers read Veyra unbeaten; (2) the
-## same same-frame probe, run on main's unfixed client route for another trainer
-## (Ila), DOES see a local world-flag write -- so "no local write" for Veyra is a
-## check that can fail; (3) the host's saved world DOES name the flag, so the
-## guest character file's "does not name it" can fail.
+## host's saved world DOES name the flag, so the guest character file's "does
+## not name it" can fail. The same-frame read's sensitivity (it DOES see a local
+## write) is `test_cloudreach_director_client_veyra.gd::
+## test_solo_veyra_win_still_writes_locally_once`.
+##
+## Former control (retired 2026-10-04, re-proof F08-2): the shared base client
+## route (`encounter_director.gd::_record_trainer_defeat_for_the_session`) used
+## to write a local "note" of the world defeat flag, and this smoke ran it for
+## Ila expecting that write. The base route was fixed to MULTIPLAYER §2
+## ("Presentation cannot ... write a world flag"): it now writes nothing and
+## sends the win to the host, like Cloudreach's own route. The Ila step is kept
+## as a positive check of that shared route.
 
 const VEYRA := "captain_veyra_storm_anchor"
 const VEYRA_FLAG := "captain_veyra_defeated"
@@ -84,8 +92,9 @@ func _scenario() -> Dictionary:
 			"label": "CONTROL: guest reads Veyra unbeaten before the win"},
 		{"custom": "before"},
 		{"peer": 1, "action": "veyra_client_win", "args": {"trainer": CONTROL_TRAINER, "mode": "base"},
-			"expect_data": {"local_flag_same_frame": true, "had_flag": false},
-			"label": "NEGATIVE CONTROL: main's unfixed client route (Ila) writes the world flag locally in the same frame"},
+			"expect_data": {"had_flag": false, "local_flag_same_frame": false, "world_store_writes_same_frame": 0,
+				"sent_to_host": true},
+			"label": "the shared base client route (Ila) writes no world flag locally and asks the host (MULTIPLAYER §2)"},
 		{"peer": 1, "action": "veyra_client_win", "args": {"trainer": VEYRA},
 			"expect_data": {"had_flag": false, "local_flag_same_frame": false, "world_store_writes_same_frame": 0,
 				"sent_to_host": true, "victory_emits": 1},

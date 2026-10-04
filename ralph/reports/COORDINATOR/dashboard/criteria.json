@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T17:40:38.339166+00:00",
+ "generated_at": "2026-10-04T19:51:17.591411+00:00",
  "main_sha": "b4e4897d5 (PR #525 head; consolidated F17-F21, F25/F35 landing)",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
@@ -43,10 +43,10 @@
     },
     {
      "text": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate",
-     "status": "partial",
-     "evidence": "ralph/reports/MEADOWS/f01-walks/night_d41ff2f0@d41ff2f0 + code-blind judge",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F01-3/VERDICT.md",
      "gap": "Re-run capture_village_walk.gd --time=night; redo code-blind judge. Folds into F17#3.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Same village rebuild since d41ff2f0. Lighting and HUD paths also changed (project.godot, vfx.json, playground_hud.gd).",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 3
     },
     {
@@ -91,26 +91,26 @@
    "criteria": [
     {
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
-     "status": "partial",
-     "evidence": "ralph/reports/MEADOWS-PAYOFFS/earned-bridge/fresh-save-crosses-bridge-seed15.txt@749634d9",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-0.md",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-bridge from a fresh v28 save, TB_WORLD_SEED=15. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. smoke_four_biome_continuous.gd is not in CI. Bands, chapter_curve, save and combat changed (F19 Meadows 3→22).",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
-     "status": "partial",
-     "evidence": "earned-bridge/warrens-cleared-seed15.txt@45a506d01",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-1.md",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-warrens --reload-at-transitions. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Earned playthrough evidence. Route, progression, save and combat paths have all changed since.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 1
     },
     {
      "text": "Continues through Sela/relay crossing",
-     "status": "partial",
-     "evidence": "earned-bridge/relay-seed15.txt@74b789d87",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-2.md",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-relay --reload-at-transitions. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Earned playthrough. Band trainers/spawns, encounter_director (1063 lines) and save have changed since.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 2
     },
     {
@@ -123,10 +123,10 @@
     },
     {
      "text": "Each transition, reward and recovery survives reload on that route",
-     "status": "partial",
-     "evidence": "earned-bridge/rested-team-reload-seed15-rerun.txt@0c07bcbe; transitions @108705ca",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-4.md",
      "gap": "Re-run the --reload-at-transitions chain (through-tournament and through-hall) on the v28 save. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The save was reset to v28 and save_game/save_document/world_state changed since 0c07bcbe. No gated test covers this.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 4
     },
     {
@@ -139,10 +139,10 @@
     },
     {
      "text": "No repeated wilds required",
-     "status": "partial",
-     "evidence": "earned-bridge/practice-supply-seeds.txt@bb0b85e0+branch (3 seeds)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: ralph/reports/INTEGRATION/reproof/earned/F02-6.md",
      "gap": "Re-run earned team segment on 3 seeds; confirm repeated_wilds [] at the new level gates. Folds into F47.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not gated. F19 re-derived the band1 spawns/levels, and the trainers and spawns tables changed since.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 6
     },
     {
@@ -286,10 +286,10 @@
     },
     {
      "text": "Real hit/avoidance witness per fight",
-     "status": "partial",
-     "evidence": "tests/smoke_named_fight_hit_avoid.gd @c86258f3",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F04-4.md",
      "gap": "Re-run smoke_named_fight_hit_avoid.gd and its mutation check. Folds into F22#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. combat_manager (594 lines) and encounter_director changed since c86258f3.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 4
     },
     {
@@ -455,18 +455,18 @@
     },
     {
      "text": "Remount works (owner report) with no gate bypass",
-     "status": "partial",
-     "evidence": "tests/smoke_cloudreach_saddle_remount.gd (66/0, batch 1)",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F06-4.md",
      "gap": "Re-run smoke_cloudreach_saddle_remount.gd. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Not in CI. The Cloudreach world, player_controller and save changed since 582b2f13.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 4
     },
     {
      "text": "Save/reload keeps same five and closed gates",
-     "status": "partial",
-     "evidence": "earned c1_flight_trained solo/co-op runs @3dad15f41; test_cloudreach_rejoin_gate.gd (logic only)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: | F06#5 | FAIL | `F06-5.md` (unit PASS 6/13/0; solo v27 ERROR; two-peer step #9 enter_realm \"no verdict\", route order: scenario lacks the legacy_physical_crossings_fixture step) |",
      "gap": "Re-run the solo autosave/title-load proof and the two-peer reload on v28. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. No gated end-to-end test. Since 3dad15f41 the save was reset (v28) and save_document/world_state/session changed.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 5
     },
     {
@@ -501,18 +501,18 @@
    "criteria": [
     {
      "text": "Six WORLD §11 activities, one per principal region, pass §5",
-     "status": "partial",
-     "evidence": "ralph/reports/CLOUDREACH/b/f07-0-six-activities-witness/default-five/run-3-2d144ebd/@34502d97",
+     "status": "met",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F07-0.md",
      "gap": "Re-run smoke_cloudreach_b_f07_0_six_activities.gd at the F19 Cloudreach band. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. smoke_cloudreach_b_f07_0_six_activities.gd is not in CI. The Cloudreach data/world, save and combat changed since 34502d97.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 0
     },
     {
      "text": "Each payoff useful to retained five with saved state",
-     "status": "partial",
-     "evidence": "tests/smoke_net_cloudreach_activity_payoffs.gd @749634d9 (batch 13)",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F07-1.md",
      "gap": "Run tools/net/run_net_smoke.sh cloudreach_activity_payoffs on b4. Folds into F48.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The net smoke is marked by-hand and not discovered. Unit tests cover only the circuit pick and canonical facts. Session/save changed.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 1
     },
     {
@@ -565,10 +565,10 @@
     },
     {
      "text": "Same persist through two-peer reload/reconnect without double grants",
-     "status": "partial",
-     "evidence": "test_cloudreach_director_client_veyra.gd (gated unit); smoke_net_cloudreach_veyra_reconnect.gd (MANUAL) @749634d9",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F08-2.md",
      "gap": "Run tools/net/run_net_smoke.sh cloudreach_veyra_reconnect; per-participant keys go to F19#2. Folds into F48.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The unit test proves host journaling only. The reconnect witness is manual and not discovered. session.gd has changed heavily since.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 2
     },
     {
@@ -581,10 +581,10 @@
     },
     {
      "text": "Settlements and cliff identity pass C2 visual matrix",
-     "status": "partial",
-     "evidence": "ralph/reports/CLOUDREACH/f08-4-settlements/@1178e18a (judges 1 and 2)",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F08-4/VERDICT.md",
      "gap": "Re-capture the settlement/cliff frame matrix; redo the code-blind judge on Bars A/B. Folds into F40.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual verdict. cloudreach_world, route_verges, landmark_lighting, look and project.godot changed since 1178e18a.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
     {
@@ -619,10 +619,10 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f09_0/run9-d3414e84.txt@a7ea3647 (smoke_stormwood_continuous, not CI)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: | F09#0 | FAIL | `F09-0.md` (fixture-start continuous run: first charged Stormglass node did not set first_stormglass_gathered) |",
      "gap": "Re-run smoke_stormwood_continuous from the regenerated F19 earned checkpoint; disclose shortcuts; independent re-check Folds into F49#0, F19#5.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Stormwood logic diff a7ea3647..b4e4897d5: 39 files, +2052/−326. Covers trainers/encounters re-derived (F19), ending, water gate. Earned evidence.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
     {
@@ -747,10 +747,10 @@
    "criteria": [
     {
      "text": "Dynamo and Stormheart resolve from the earned route",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f11_0/head-1c977611/marrow_press.txt@1c977611 (smoke_stormwood_marrow_press, not CI)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: | F11#0 | FAIL | `F11-0.md` (marrow press PASS; earned Dynamo segment not reached because of the F09#0 failure) |",
      "gap": "Re-run smoke_stormwood_marrow_press and the earned Dynamo segment from the F19 checkpoint Folds into F19#2, F49#0.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/Dynamo/trainers diff since 1c977611: 35 files, +7360. stormwood_ending.gd reworked for F20. Earned evidence.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
     {
@@ -914,10 +914,10 @@
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/VERDICTS.md@811c3244",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F13-5/VERDICT.md",
      "gap": "Re-capture with tools/capture_tidewake_f13_5.gd; code-blind judge against the new §4 bar Folds into F39#3, F39#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual verdict. Veilfall silhouette, current view, dock and shader paths changed (12 files, +479); §4 bar raised.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 5
     }
    ]
@@ -954,10 +954,10 @@
     },
     {
      "text": "Water/current network visibly changes and persists",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/b/f14_2_visible_current/JUDGE_VERDICT.md (batch 57)",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F14-2/VERDICT.md",
      "gap": "Re-run smoke_tidewake_b_current_restore; redo randomized A/B capture plus code-blind judge Folds into F39#3.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual A/B verdict. Current-flow view/shader paths changed since. smoke_tidewake_b_current_restore is not in CI; CI unit only checks parameters.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 2
     },
     {
@@ -2378,10 +2378,10 @@
     },
     {
      "text": "The old Ripplet Teleport promise is removed from docs and UI.",
-     "status": "failing",
+     "status": "met",
      "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F37-3/VERDICT.md",
      "gap": "Rerun the static scan formally, or add a lint unit test that rejects a Ripplet+Teleport promise in docs/data/ui.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-captures.",
      "audit_index": 3
     },
     {
@@ -2573,10 +2573,10 @@
     },
     {
      "text": "The hero landmark (the Sky Aviary) reads at distance and up close.",
-     "status": "partial",
-     "evidence": "ralph/reports/CLOUDREACH/f08-4-settlements/r1/verdict-r2.md@22a20e516",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F40-4/VERDICT.md",
      "gap": "Recapture Aviary distance and close-up frames on High and Medium and run a fresh code-blind judge against the new bar.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. That was an old-bar distance read of the summit dome. Aviary crown and sanctuary scripts and cloudreach_f40_visual.json changed afterwards.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
     {

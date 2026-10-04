@@ -1,9 +1,10 @@
 {
-  "updated": "2026-10-04T17:45Z",
+  "updated": "2026-10-04T19:55Z",
   "headline": [
-    "PR #525 (F17-F20, F21, F25/F35) last full-CI run: 40/41 green; only the known-red job failed and one job is still running. It auto-merges on green. Three intermittent net smokes were root-caused and fixed (interrupted friendly strike, guest inventory guard after join, Hall floor staging).",
-    "Re-proofs so far: 2 criteria re-proven met, 8 failing. The failures went to owners: F17#4 and F01#2 to the F17 lane, F01#6 tournament to the F21 lane, F02#3/#7 walker and F03#3 activities to the re-proof sessions, F08#3 Cloudreach camera to Codex visual, F37#3 docs residual to the coordinator.",
-    "Five lanes active: F17, F21, F27, F32 (Claude) and F26 look-dev (Codex). Codex GPU captures are paused while the owner games; it is doing CPU-only work."
+    "Main a0f9e50b3 → #527 merged: ACCEPTANCE reconciled with owner decisions (23 live-text contradictions fixed; superseded clauses kept as numbered history), and 11 legacy-path tests relabelled for retirement when F18 turns portals on. 4 conflicts await the owner.",
+    "Re-proof: 38 verdicts. 24 failing; most are old evidence that no longer holds on current code. Fixes landing on lanes (not yet integrated): F06#4 remount, F07#1 courier scope (product bug), F08#2, F01#2 day walk, F02#3 walker (log prop), Warrens guardian and Elder rewards never paid (product bug).",
+    "Cloudreach grey void root-caused: draw-distance far plane clipped the cloud sea. Fixed with a declared 3500 m vista floor (Codex told, for perf).",
+    "Every earned save fixture is v27 (refused by RD-35). Earned re-proofs wait for v28 checkpoints from F49, after F18."
   ],
   "batches": [
     {
@@ -364,28 +365,43 @@
   "lanes": [
     {
       "lane": "tb/f17 (Claude)",
-      "now": "Fixing the F17#2/#3 walks (orchard wall line). Also routed F17#4 (hammer equip) and F01#2 (day walk stalls at the signpost).",
+      "now": "F01#2 day visits PASS on CI (stale door coords fixed). Navigator now steers round low props (F02#3 cause). F17#4 seed-4 rerun to the hammer stage; F17#6 r3 matrix (r1 judge Bar A/B NO).",
       "next": "Re-prove the stale criteria on current code, then build the missing proof. F18 portals follow immediately."
     },
     {
       "lane": "tb/f21 (Claude)",
-      "now": "F21#4 fallback lens within overlap tolerance. Also routed: F01#6 guest tournament strikes hitting the local stand-in.",
+      "now": "F21#4 judge PASS (in-container). F21#5 A/B after-hit sequences done; Medium frame time is on Codex GPU.",
       "next": "Fix camera occluders (trainer, foreground creatures), then the size matrix plus judge. F22 to F24 follow."
     },
     {
       "lane": "tb/lookdev (Codex)",
-      "now": "F26#2 independently MET. Settings persistence PASS on 3 native runs. Ally Medium route harness and owner checklist prepared. GPU captures paused (owner gaming).",
-      "next": "Forward+ presets and native GPU captures; High/Medium biome matrix judge; prepare the Ally test build."
+      "now": "F26#2 MET. Ally Medium harness and owner checklist ready. GPU captures paused (owner gaming); queued: F21 native matrix, F21#5 frame time, Cloudreach visual FAILs.",
+      "next": "GPU-only: Forward+ Medium/High census and matrices, all frame times, F21 live matrix and Medium frame time, Ally package, Stormursa Meshy."
     },
     {
       "lane": "tb/f27 (Claude)",
-      "now": "Fixed: wild victory no longer stacks legacy XP. Real-path proofs for essence/leveling in progress.",
+      "now": "Two-peer essence no-dup smoke and essence node witness added; applying F32 shed wiring.",
       "next": "Real-path and two-peer proofs; route ledger. F28 and F30 follow."
     },
     {
       "lane": "tb/f32 (Claude)",
-      "now": "Water node registration census and two-peer node contention test landed on the lane.",
+      "now": "All four tier material sets gather in their biome. Remaining: cloudberry site, Meadows nodes off-route, tool-refusal cascade root cause.",
       "next": "Per-biome node census, real-path harvest and refining proofs; switch on the Forge recipes."
+    },
+    {
+      "lane": "tb/reproof-fixes (Claude)",
+      "now": "F06#4 and F07#1 and F08#2 PASS. F03#3: Warrens guardian/Elder completion rewards never paid (spawn_wild product bug, isolated hot-file commit); Juno not reproducible; Alpha Galecrest smoke expectation fixed.",
+      "next": "Each fix gets its own commit plus evidence; integrated in the next batch."
+    },
+    {
+      "lane": "tb/visual-cloudreach (Claude)",
+      "now": "Grey void fixed (far-plane vista floor). Next: high-perch occlusion, companion in lens, cliffs, Sky Aviary.",
+      "next": "Root-cause the cloud-sea void first, then scene-level fixes and re-judge."
+    },
+    {
+      "lane": "tb/lookdev-low (Claude)",
+      "now": "Tooling pushed (Low persist smoke, route stills, frame scanner); Low census running.",
+      "next": "Receipts beside Codex's Forward+ census in the same schema."
     }
   ],
   "decisions": [

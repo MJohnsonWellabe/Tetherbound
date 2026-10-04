@@ -21,6 +21,14 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
 
+**Owner rulings 2026-10-04:**
+- Visual cards judge High/Medium for the target look and confirm Low/Compatibility for no breakage until the Ally test passes.
+- The second UI check is 1280×720.
+- F36#0 may regenerate NPC faces only as identity-preserving refinements of the installed cast.
+- The card-closing F49 run uses no shortcuts.
+
+ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.
+
 **Owner-blocked:** F26#5 ROG Ally test (Forward+ becomes the default only after it passes), plus the other `blocked` rows on the board.
 
 **Repo size:** owner proposal pending (archive `ralph/reports` images to a release; evidence images to CI artifacts).

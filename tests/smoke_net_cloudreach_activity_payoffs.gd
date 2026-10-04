@@ -96,6 +96,26 @@ func _ok(result: Dictionary, label: String) -> bool:
 	return passed
 
 
+## Physics frames until the host's remote_trainer body for the guest stands
+## within the ledger's claim reach of the thanks, or -1 within 900 frames.
+func _host_sees_guest_at_reward(stood: Dictionary) -> int:
+	var guest_peer := str(int((await _state(1)).get("peer_id", 0)))
+	var bag := Vector2(-292.0, 3108.0)
+	var waited := 0
+	while waited <= 900:
+		var seen: Variant = await probe(0, "remote_trainers")
+		var body: Dictionary = (seen as Dictionary).get(guest_peer, {}) if seen is Dictionary else {}
+		var pos: Array = body.get("pos", []) as Array
+		if pos.size() == 3 and Vector2(float(pos[0]), float(pos[2])).distance_to(bag) <= 8.0:
+			print("HOST VIEW: guest proxy at %s after %d frames (stood %s)" % [str(pos), waited, str(stood.get("detail", ""))])
+			return waited
+		if waited % 150 == 0:
+			print("HOST VIEW: guest proxy at %s after %d frames" % [str(pos), waited])
+		await step(0, "wait", {"frames": 10})
+		waited += 10
+	return -1
+
+
 func _state(peer: int) -> Dictionary:
 	var r := await step(peer, "cr_state")
 	return r.get("data", {}) as Dictionary
@@ -153,17 +173,32 @@ func _run() -> void:
 	check(not _character[0].is_empty() and not _character[1].is_empty() and _character[0] != _character[1],
 		"host and guest are distinct characters (%s / %s)" % [_character[0], _character[1]])
 
-	for flag: String in SETUP_WORLD_FLAGS:
+	# Coordinator ruling (a), #356 13:20 (data/config/cloudreach_physical_runtime.json
+	# `activity_rewards`, requires_unlock side_courier_medicine_delivered): the
+	# thanks waits at the Windscar shelter once the medicine is delivered, not
+	# after Neri's report -- the solo smoke_cloudreach_activity_rewards.gd order.
+	var before_delivery: Array = SETUP_WORLD_FLAGS.slice(0, SETUP_WORLD_FLAGS.size() - 1)
+	for flag: String in before_delivery:
 		_ok(await step(0, "story_flag", {"flag": flag, "scope": "world"}), "SETUP: host commits world fact %s" % flag)
 	for i in 2:
+		_ok(await step(i, "wait_flag", {"flag": before_delivery[-1], "scope": "world", "budget_frames": 600}),
+			"SETUP: peer %d received the seeded chain steps before the delivery" % i)
+	await step(0, "wait", {"frames": 30})
+	for i in 2:
+		var st := await _state(i)
+		check(not bool(st.get("offered", true)) and not bool(st.get("claimed", true)),
+			"peer %d: the thanks is not offered before the medicine reaches the shelter (%s)" % [i, JSON.stringify(st)])
+	_ok(await step(0, "story_flag", {"flag": SETUP_WORLD_FLAGS[-1], "scope": "world"}),
+		"SETUP: host commits world fact %s" % SETUP_WORLD_FLAGS[-1])
+	for i in 2:
 		_ok(await step(i, "wait_flag", {"flag": SETUP_WORLD_FLAGS[-1], "scope": "world", "budget_frames": 600}),
-			"SETUP: peer %d received the seeded chain steps" % i)
+			"SETUP: peer %d received the delivery step" % i)
 	await step(0, "wait", {"frames": 30})
 	for i in 2:
 		var st := await _state(i)
 		_base_potions[i] = int(st.get("potions", 0))
-		check(not bool(st.get("offered", true)) and not bool(st.get("claimed", true)),
-			"peer %d: the thanks is not offered before Neri hears the report (%s)" % [i, JSON.stringify(st)])
+		check(bool(st.get("offered", false)) and not bool(st.get("claimed", true)),
+			"peer %d: its own thanks is offered at the shelter once the medicine is delivered, before Neri's report (%s)" % [i, JSON.stringify(st)])
 
 	await _couriers()
 	await _aeries()
@@ -191,6 +226,12 @@ func _couriers() -> void:
 	_ok(stood, "guest stands beside the thanks")
 	check(str((stood.get("data", {}) as Dictionary).get("prompt", "")).contains("couriers"),
 		"guest's live prompt is the couriers' thanks ('%s')" % str((stood.get("data", {}) as Dictionary).get("prompt", "")))
+	# The stand is a teleport (disclosed fixture). The host judges a guest's
+	# claim from ITS copy of the guest (world_ledger.gd client_grant_refusal,
+	# 8 m reach), which a walking player keeps current; after a 3 km teleport
+	# the press waits until the host's copy has arrived, and the wait is logged.
+	var caught_up := await _host_sees_guest_at_reward(stood)
+	check(caught_up >= 0, "the host's copy of the guest reaches the thanks after the teleport (%d frames)" % caught_up)
 	_ok(await step(1, "press", {"action": "interact"}), "guest presses interact at the thanks")
 	_ok(await step(1, "wait_flag", {"flag": CLAIMED, "scope": "player", "budget_frames": 900}),
 		"guest's OWN player-scoped receipt arrives")
@@ -198,7 +239,7 @@ func _couriers() -> void:
 	var g := await _state(1)
 	check(int(g.get("potions", -1)) == _base_potions[1] + 2,
 		"guest received exactly two small potions (%d -> %d)" % [_base_potions[1], int(g.get("potions", -1))])
-	check(not bool(g.get("offered", true)), "the thanks is no longer offered to the guest")
+	check(not bool(g.get("offered", true)), "the thanks is no longer offered to the guest (%s)" % JSON.stringify(g))
 	var gd := await _disk(1)
 	var gfile: Dictionary = (gd.get("characters", {}) as Dictionary).get(_character[1], {}) as Dictionary
 	check(bool((gfile.get("flags", {}) as Dictionary).get(CLAIMED, false)) and int(gfile.get("potions", -1)) == _base_potions[1] + 2,
