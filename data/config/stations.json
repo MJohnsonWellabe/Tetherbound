@@ -86,6 +86,17 @@
           5.6,
           24.6
         ]
+      },
+      {
+        "id": "home_creature_bed",
+        "min": [
+          1.0,
+          6.7
+        ],
+        "max": [
+          4.0,
+          9.3
+        ]
       }
     ],
     "_comment": "HOMESTEAD section 2 starting 40x30m bound, centre 6m west/5m south of actual village road_plan.home_centre [2,14]. House exterior is 10x6m, road z14 width5.2m with shoulder. Existing crop beds retained. Exclusions keep authored house/road/crops clear; physics/terrain still decides legality. No geometry moves."

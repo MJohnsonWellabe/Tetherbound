@@ -41,6 +41,8 @@ extends Node3D
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
+const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
+const VILLAGE_CONFIG := "res://data/config/village.json"
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -170,6 +172,7 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_build_lights()
 	_build_interior_area()
 	_build_door_gate()
+	_build_home_creature_bed()
 
 	_markers["bed"] = _anchor(Vector3(-INNER_W * 0.5 + 1.3, FLOOR_H + 0.55, -INNER_D * 0.5 + 1.6))
 	_markers["grandpa"] = _anchor(Vector3(-2.4, 0.0, 1.2))
@@ -189,6 +192,41 @@ func build(camera_rig: Node, player: Node3D) -> void:
 	_markers["stairs_top"] = _anchor(Vector3(-INNER_W * 0.5 + LOFT_W - 0.7, LOFT_TOP,
 		-INNER_D * 0.5 + 0.6))
 	_markers["stairs_bottom"] = _anchor(Vector3(4.0, 0.12, -INNER_D * 0.5 + 0.6))
+
+
+## Owner ruling 2026-10-04: home heals creatures. One free creature bed beside
+## the farmhouse (village.json `home_creature_bed`), built exactly as
+## rest_point.gd builds an authored camp bed -- the installed creature_bed.gd
+## nest, `build_real(false)` so the tournament's own "Build a Creature Bed"
+## rung stays the player's, and a reserved authored index (<= -10) so it can
+## never collide with a player's own beds. Occupancy and overnight healing
+## follow the same party/Game path as every other bed.
+func _build_home_creature_bed() -> void:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(VILLAGE_CONFIG))
+	var spec: Dictionary = (raw as Dictionary).get("home_creature_bed", {}) if raw is Dictionary else {}
+	var at: Array = spec.get("at", [])
+	if at.size() < 2:
+		return
+	var index := int(spec.get("bed_index", -40))
+	if index > -10:
+		push_error("home creature bed index %d is outside the authored range (<= -10)" % index)
+		return
+	var x := float(at[0])
+	var z := float(at[1])
+	var ground := position.y
+	var world := get_parent()
+	if world != null and world.has_method("ground_height_at"):
+		var probed := float(world.call("ground_height_at", x, z))
+		if not is_nan(probed):
+			ground = probed
+	var bed := CREATURE_BED.new()
+	bed.name = "HomeCreatureBed"
+	# This node may not be in the tree yet; place in its own frame.
+	bed.position = Vector3(x, ground, z) - position
+	bed.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
+	add_child(bed)
+	bed.call("build_real", false)
+	bed.call("set_build_index", index)
 
 
 func _build_exterior_home_marker() -> void:
