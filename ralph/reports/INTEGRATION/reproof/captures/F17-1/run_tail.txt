@@ -1,0 +1,4 @@
+F17 shortcuts: authored post-opening flags/starter; one initial farmhouse floor placement; inherited parsed joypad/camera inputs; renderer=X11; no earned tutorial/device/visual claim
+F17 world: terrain64regions actualdoor=(8.3, 0.9, 14.0) Hall=(107.0, 0.85, 14.0) path=[(5.8, 14.0), (8.3, 14.0), (91.0, 14.0), (107.0, 14.0)]
+F17#1 native original farmhouse-door day/night frames saved: same ordinary body/camera pose, Compatibility1920x1080, no resizing. Literal destination judgment remains code-blind and separate.
+exit=0
