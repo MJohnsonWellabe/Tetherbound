@@ -1573,13 +1573,23 @@ func _run_tournament() -> void:
 		return
 	var hosted: Dictionary = await step(0, "host", {})
 	check(str(hosted.get("verdict", "")) == "PASS", "tournament host opened a world")
+	# The guest's five are a fixture grant on its own machine. The host fights a
+	# guest from the character it ADMITTED at join (session.gd
+	# admitted_character_state; encounter_director.gd _host_move_start), and in
+	# play a guest's party only changes through host-authoritative doors. So the
+	# guest prepares before it joins, as other two-peer smokes grant before
+	# joining; prepared after, the host refused every guest move_start as
+	# invalid_actor_move (re-proof F01-6: no owned row for the deployed uid).
+	var guest_setup: Dictionary = await step(1, "tournament_setup", {})
+	check(str(guest_setup.get("verdict", "")) == "PASS", "peer 1 prepared five ordinary creatures and registered three")
 	var session = await probe(0, "session")
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1",
 		"port": int((session as Dictionary).get("enet_port", 0)) if session is Dictionary else 0})
 	check(str(joined.get("verdict", "")) == "PASS", "second peer joined the tournament world")
 	for peer in 2:
-		var setup: Dictionary = await step(peer, "tournament_setup", {})
-		check(str(setup.get("verdict", "")) == "PASS", "peer %d prepared five ordinary creatures and registered three" % peer)
+		if peer == 0:
+			var setup: Dictionary = await step(peer, "tournament_setup", {})
+			check(str(setup.get("verdict", "")) == "PASS", "peer %d prepared five ordinary creatures and registered three" % peer)
 		var state = await probe(peer, "tournament")
 		check(state is Dictionary and bool((state as Dictionary).get("ready", false)) \
 			and ((state as Dictionary).get("selection_ids", []) as Array).size() == 3,
@@ -1616,14 +1626,14 @@ func _run_tournament_round(round: Dictionary) -> bool:
 	if opponent.size() == 3:
 		await step(1, "teleport", {"at": [float(opponent[0]) + 3.0, float(opponent[1]), float(opponent[2]) + 3.0]})
 	var joined: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
-	check(str(joined.get("verdict", "")) == "PASS", "peer 1 joined '%s' rather than opening another fight" % trainer)
+	check(str(joined.get("verdict", "")) == "PASS", "peer 1 joined '%s' rather than opening another fight (%s)" % [trainer, str(joined.get("detail", ""))])
 	for peer in 2:
 		_tournament_hit_detail = ""
 		var landed := await _tournament_hit(peer)
 		check(landed, "peer %d reduced '%s' shared opponent HP%s"
 			% [peer, trainer, "" if landed else " -- " + _tournament_hit_detail])
 	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
-	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s'" % trainer)
+	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s' (%s)" % [trainer, str(won.get("detail", ""))])
 	if str(won.get("verdict", "")) != "PASS":
 		return false
 	for peer in 2:
@@ -1699,6 +1709,13 @@ func _tournament_hit(peer: int) -> bool:
 			str(seated.get("detail", "(host)")), str(placed.get("detail", "")),
 			str(struck.get("verdict", "")) + " " + str(struck.get("detail", "")),
 			await _host_receipt_reason(after, peer)]
+		# The host's refusal as the striker received it: a refusal before
+		# validate_strike leaves no host receipt, so this is the only place
+		# its code shows (re-proof F01-6).
+		if peer != 0:
+			var mine: Variant = await probe(peer, "encounter")
+			_tournament_hit_detail += "; guest refusal=%s" % (str((mine as Dictionary).get("refusal", {})) \
+				if mine is Dictionary else "?")
 	return false
 
 
