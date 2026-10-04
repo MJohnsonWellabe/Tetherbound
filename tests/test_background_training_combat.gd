@@ -12,6 +12,21 @@ const DELIVERY := preload("res://scripts/net/character_action_delivery.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 
+const BOARD := preload("res://scripts/world/bounty_board.gd")
+const BOUNTIES_PATH := "res://data/config/bounties.json"
+
+## F43 ships off on main (bounties.json runtime_enabled false) until it
+## lands. These checks exercise the bounty host itself, so they run it on,
+## through the board's own config cache, and restore it afterwards.
+func before_each() -> void:
+	BOARD._cache = {}
+	var cfg: Dictionary = BOARD.config()
+	cfg.runtime_enabled = true
+	BOARD._cache = {"stamp": FileAccess.get_modified_time(BOUNTIES_PATH), "valid": cfg}
+
+func after_each() -> void:
+	BOARD._cache = {}
+
 class Source extends RefCounted:
 	var context: Dictionary
 	var event: Dictionary = {}
