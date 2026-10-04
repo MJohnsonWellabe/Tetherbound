@@ -761,7 +761,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"storage_bind":
 			out = await _step_storage_bind(args)
 		"storage_grant":
-			out = _step_storage_grant(args)
+			out = await _step_storage_grant(args)
 		"equipment_equip_from_satchel":
 			out = _step_equipment_equip_from_satchel(args)
 		"storage_transfer":
@@ -1020,8 +1020,17 @@ func _step_storage_grant(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "no Game.inventory"}
 	var item := str(args.get("item", ""))
 	var n := int(args.get("n", 0))
+	# Just after a join the owner's containers can be briefly guarded while a
+	# saved owner decision settles (inventory.gd add() refuses everything
+	# then). Wait for that guard as the storage fixture seed does.
+	var guard_frames := 0
+	while satchel.has_method("_owner_mutation_blocked") and satchel.call("_owner_mutation_blocked") == true \
+			and guard_frames < 900:
+		await physics_frame
+		guard_frames += 1
 	var leftover := int(satchel.call("add", item, n))
-	return {"verdict": "PASS", "detail": "granted %d %s (%d did not fit)" % [n - leftover, item, leftover]}
+	return {"verdict": "PASS", "detail": "granted %d %s (%d did not fit; waited %d guard frame(s))"
+		% [n - leftover, item, leftover, guard_frames]}
 
 
 ## Equip one carried armour item through the same atomic bag-facing transaction
