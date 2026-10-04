@@ -199,6 +199,10 @@ var _trainer_stand_anchor := Vector3.INF
 var _ally_fade: float = 0.0
 var _ally_faded_model: Node3D = null
 var _ally_fade_state: Dictionary = {}
+## F21#4: non-combatant foreground bodies (trainer, herd creatures) dithered
+## while they cover a combatant from the fight lens. body id -> {amount, state,
+## model}. Local presentation only, restored on release.
+var _foreground_fades: Dictionary = {}
 var _ally_hidden_for := 0.0
 ## Seconds the foe has been clear since the ally last hid it. The wider swing
 ## holds for `composition_hold_s` of that before easing back, so the tracker
@@ -1586,6 +1590,8 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		if bool(actual_a.get("valid",false)) and bool(actual_b.get("valid",false)) else 1.0
 	_fight_camera_solution["actual_visibility"] = _fight_visibility_score(camera.get_camera_transform(),
 		actual_a.get("rect",Rect2()),actual_b.get("rect",Rect2()),visibility_context)
+	_fight_camera_solution["faded_foreground"] = _update_foreground_fades(camera.get_camera_transform(),
+		visibility_context,fight.get("readability",{}) as Dictionary,delta)
 	_fight_camera_solution["clock"] = "final_idle_after_physics_follow_and_roll"
 	return true
 
@@ -2248,6 +2254,7 @@ func _release_camera(fought_at: Variant = null) -> void:
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_clearance_extra"):
 		_camera_rig.call("set_clearance_extra", 0.0)
 	_clear_ally_fade()
+	_clear_foreground_fades()
 	_framing_bounds_cache.clear()
 	if _camera_rig != null and is_instance_valid(_camera_rig) and _camera_rig.has_method("set_lens_lift"):
 		_camera_rig.call("set_lens_lift", 0.0)
@@ -2659,12 +2666,15 @@ func _play_combat_flinch(body: Node3D, away: Vector3) -> void:
 		body.call("play_hit")
 
 
+## Receipt-less fallback (legacy session payloads). One hitstop table:
+## `combat.json impact.feedback` weights, quick reading as light and charged
+## as heavy, and its critical value for a stagger crit.
 func _hitstop_seconds(is_quick: bool, stagger_crit: bool) -> float:
-	var cfg: Dictionary = MATH.config().get("hitstop", {})
+	var cfg: Dictionary = MATH.config().get("impact", {}).get("feedback", {})
 	if stagger_crit:
-		return maxf(0.0, float(cfg.get("stagger_crit_seconds", 0.12)))
-	return maxf(0.0, float(cfg.get("quick_seconds" if is_quick else "charged_seconds",
-		0.03 if is_quick else 0.07)))
+		return maxf(0.0, float(cfg.get("critical_hitstop_seconds", 0.12)))
+	var weight: Dictionary = (cfg.get("weights", {}) as Dictionary).get("light" if is_quick else "heavy", {})
+	return maxf(0.0, float(weight.get("hitstop_seconds", 0.03 if is_quick else 0.07)))
 
 
 func _set_bodies_hitstopped(active: bool) -> void:
@@ -3426,17 +3436,23 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage)
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
-	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
+	# F21#0/#1: a canonical host hit carries its frozen receipt; the legacy
+	# session payload gets one built here for presentation (flash class, own
+	# number, shake/rumble). Knockback is weighted from the same receipt as a
+	# solo hit; the old lunge fraction remains only when no receipt exists.
+	var incoming: Dictionary = payload.get("impact", {})
+	if incoming.is_empty():
+		incoming = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
+	var push_direction: Variant = incoming.get("direction")
+	if incoming.is_empty() or not push_direction is Vector3 or not (push_direction as Vector3).is_finite() \
+			or (push_direction as Vector3).is_zero_approx():
+		_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
+	else:
+		_ally_body.call("add_impulse", push_direction, float(_shared_hit_feedback().call("impulse_for", incoming)))
 	if killed:
 		_ally_body.call("play_faint")
 	else:
 		_play_combat_flinch(_ally_body, -facing)
-	# F21#0/#1: a canonical host hit carries its frozen receipt; the legacy
-	# session payload gets one built here for presentation (flash class, own
-	# number, shake/rumble). Displacement above stays the session's own.
-	var incoming: Dictionary = payload.get("impact", {})
-	if incoming.is_empty():
-		incoming = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
 		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp)), incoming, false)
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
@@ -5512,6 +5528,10 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 	# The trainer is a real foreground body too. Never hide/move it to obtain
 	# a clear frame, and never substitute a capsule for its authored Model.
 	if is_instance_valid(_player) and not candidates.has(_player): candidates.append(_player)
+	# Nearest first: the cap may drop a distant body, never the one at the feet.
+	candidates = candidates.filter(func(node: Node) -> bool: return node is Node3D and node.is_inside_tree())
+	candidates.sort_custom(func(a: Node, b: Node) -> bool:
+		return (a as Node3D).global_position.distance_squared_to(centre) < (b as Node3D).global_position.distance_squared_to(centre))
 	for candidate: Node in candidates:
 		if not candidate is Node3D or candidate==_ally_body or candidate==_wild \
 			or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
@@ -5535,7 +5555,8 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			geometry_valid = false
 			continue
 		occluders.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
-			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":candidate.get_instance_id()})
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":candidate.get_instance_id(),
+			"model_id":model.get_instance_id()})
 	# Conservative whole model envelopes replace the inscribed ellipsoid and
 	# sparse head/torso rays that missed feet. These bounds are not a claim of
 	# exact skinned pixels: blind review still owns whole-silhouette quality.
@@ -5555,6 +5576,7 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			"points":FIGHT_CAMERA.box_points(bounds,pose)})
 	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
+		"fade_foreground":bool(cfg.get("fade_foreground",false)),
 		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
 
 
@@ -5576,14 +5598,62 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 					hidden += 1
 					break
 	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
-	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
+	# With the foreground fade on, a covering non-combatant is dithered at the
+	# chosen lens rather than escaped by pulling the camera back (the strict
+	# judge's over-wide giant frames). Cover still ranks a view lower.
+	var soft_cover: bool = bool(context.get("fade_foreground",false))
+	var sight_clear: bool = bool(context.geometry_valid) and (soft_cover or (not bool(context.overflow) and hidden==0))
 	var occupied_records: Array = []
 	for rect: Rect2 in context.hud_rects:
 		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
 	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
 		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
+		"cover_faded":soft_cover and hidden>0,
 		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
 		"occluder_count":context.occluders.size(),"geometry_valid":bool(context.geometry_valid),
 		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}
+
+
+## F21#4 strict judge: the trainer's head over the ally's feet, herd boars over
+## the target's legs. Each non-combatant whose whole render envelope covers a
+## combatant from the drawn lens is dithered (the same screen-door fade the
+## ally uses) and eased back once clear. Bodies, collision, scale and every
+## peer are untouched. Returns how many bodies are fading this frame.
+func _update_foreground_fades(lens: Transform3D, context: Dictionary, cfg: Dictionary, delta: float) -> int:
+	var enabled: bool = bool(cfg.get("fade_foreground",false)) and bool(context.get("geometry_valid",false))
+	var amount: float = clampf(float(cfg.get("foreground_fade",0.75)),0.0,0.95)
+	var speed: float = maxf(float(cfg.get("foreground_fade_speed",6.0)),0.01)
+	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),1.0)
+	var covering: Dictionary = {}
+	if enabled:
+		for occluder: Dictionary in context.occluders:
+			for subject: Dictionary in context.subjects:
+				if FIGHT_CAMERA.bounds_occlude(lens,subject,occluder,float(context.fov),aspect,float(context.near)):
+					covering[int(occluder.body_id)] = int(occluder.model_id)
+					break
+	for body_id: int in covering:
+		if not _foreground_fades.has(body_id):
+			_foreground_fades[body_id] = {"amount":0.0,"state":{},"model":covering[body_id]}
+	var fading: int = 0
+	for body_id: int in _foreground_fades.keys():
+		var entry: Dictionary = _foreground_fades[body_id]
+		if covering.has(body_id) and int(covering[body_id]) != int(entry.model):
+			OCCLUSION_FADE.restore(entry.state)
+			entry.model = covering[body_id]
+		var model := instance_from_id(int(entry.model)) as Node3D
+		entry.amount = move_toward(float(entry.amount),amount if covering.has(body_id) else 0.0,speed*delta)
+		if model == null or not is_instance_valid(model) or float(entry.amount) <= 0.0:
+			OCCLUSION_FADE.restore(entry.state)
+			_foreground_fades.erase(body_id)
+			continue
+		OCCLUSION_FADE.apply(model,float(entry.amount),entry.state,lens.origin)
+		fading += 1
+	return fading
+
+
+func _clear_foreground_fades() -> void:
+	for entry: Dictionary in _foreground_fades.values():
+		OCCLUSION_FADE.restore(entry.state)
+	_foreground_fades.clear()

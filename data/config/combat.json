@@ -60,12 +60,6 @@
     "crit_scale": 1.5,
     "interrupt_on_charged_into_telegraph": true
   },
-  "hitstop": {
-    "_comment": "COMBAT-1 presentation. Freeze the two creature bodies and combat clocks only; the camera and the rest of the world keep running.",
-    "quick_seconds": 0.03,
-    "charged_seconds": 0.07,
-    "stagger_crit_seconds": 0.12
-  },
   "creature_movement": {
     "_comment": "How a creature moves while a fight is running. Faster than a walk and slower than the trainer's sprint: the fight should feel busy without turning into a foot race. TUNABLE and expected to change first if combat feels sluggish.",
     "speed": 5.6,

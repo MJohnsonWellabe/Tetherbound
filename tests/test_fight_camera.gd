@@ -167,3 +167,53 @@ func test_foreground_envelopes_cover_feet_but_bodies_behind_do_not_occlude() -> 
 	cover_pose.origin.z=-12.0
 	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
 	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a projected overlap behind the actor is not foreground cover")
+
+
+func _envelope(box: AABB, pose: Transform3D, owner: Node3D = null) -> Dictionary:
+	var out := {"box":box,"pose":pose,"inverse":pose.affine_inverse(),"points":FIT.box_points(box,pose)}
+	if owner != null:
+		out["body_id"] = owner.get_instance_id()
+		out["model_id"] = owner.get_instance_id()
+	return out
+
+
+## F21#4 strict judge: a covering non-combatant is dithered at the chosen lens
+## instead of failing every near view (the over-wide pull-back), and the fade
+## hands its material back once clear or when the camera is released.
+func test_foreground_cover_is_faded_not_escaped_and_restores_when_clear() -> void:
+	var manager: Node = preload("res://scripts/combat/combat_manager.gd").new()
+	var model := Node3D.new()
+	var mesh := MeshInstance3D.new()
+	mesh.mesh = BoxMesh.new()
+	var original := StandardMaterial3D.new()
+	mesh.set_surface_override_material(0,original)
+	model.add_child(mesh)
+	var actor := _envelope(AABB(Vector3(-1,0,-1),Vector3(2,2,2)),Transform3D(Basis.IDENTITY,Vector3(0,0,-8)))
+	var cover_box := AABB(Vector3(-0.35,0,-0.3),Vector3(0.7,0.6,0.6))
+	var cover := _envelope(cover_box,Transform3D(Basis.IDENTITY,Vector3(0,0,-4)),model)
+	var context := {"hud_rects":[] as Array[Rect2],"occluders":[cover],"subjects":[actor],"overflow":false,
+		"hud_available":true,"geometry_valid":true,"invalid_hud_paths":[],"viewport":Vector2(1920,1080),
+		"fov":68.0,"near":0.05,"fade_foreground":false}
+	var hard: Dictionary = manager.call("_fight_visibility_score",Transform3D.IDENTITY,Rect2(),Rect2(),context)
+	assert_false(bool(hard.pass),"without the fade, foreground cover still fails the view")
+	context.fade_foreground = true
+	var soft: Dictionary = manager.call("_fight_visibility_score",Transform3D.IDENTITY,Rect2(),Rect2(),context)
+	assert_true(bool(soft.pass) and bool(soft.cover_faded),"with the fade, cover is faded rather than escaped")
+	assert_true(float(soft.penalty) > 0.0,"cover still ranks a view below a clear one")
+	var cfg := {"fade_foreground":true,"foreground_fade":0.75,"foreground_fade_speed":100.0}
+	var fading := int(manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1))
+	assert_eq(fading,1,"the covering body fades")
+	var faded := mesh.get_surface_override_material(0) as BaseMaterial3D
+	assert_true(faded != original and faded.distance_fade_mode == BaseMaterial3D.DISTANCE_FADE_OBJECT_DITHER,
+		"screen-door dither, opaque pass")
+	# Clear: the body moves behind the actor, the fade eases out and restores.
+	context.occluders = [_envelope(cover_box,Transform3D(Basis.IDENTITY,Vector3(0,0,-12)),model)]
+	assert_eq(int(manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1)),0)
+	assert_eq(mesh.get_surface_override_material(0),original,"original material handed back once clear")
+	# Release mid-fade restores too.
+	context.occluders = [cover]
+	manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1)
+	manager.call("_clear_foreground_fades")
+	assert_eq(mesh.get_surface_override_material(0),original,"camera release restores every faded body")
+	model.free()
+	manager.free()

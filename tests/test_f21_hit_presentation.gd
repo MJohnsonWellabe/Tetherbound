@@ -13,6 +13,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 const MOTION := preload("res://scripts/ui/motion_prefs.gd")
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
+const TEXT := preload("res://scripts/ui/text_prefs.gd")
 const COMBAT_HUD_SCENE := preload("res://scenes/combat/combat_hud.tscn")
 const TEST_PATH := "user://__test_f21_hit_presentation.json"
 
@@ -34,6 +35,7 @@ class CombatBody extends Node3D:
 func after_each() -> void:
 	MOTION.set_damage_numbers_mode("on")
 	MOTION.set_rumble_percent(100)
+	TEXT.set_text_percent(100)
 	if FileAccess.file_exists(TEST_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(TEST_PATH))
 
@@ -106,6 +108,37 @@ func test_solo_hit_on_the_player_freezes_a_weighted_receipt_and_reaches_the_hud(
 		assert_almost_eq(float(manager.get("_hitstop_left")), float(receipt.hitstop_seconds), 0.0001)
 		assert_true((impacts[0].where as Vector3).is_finite())
 	_free(fight)
+
+
+func test_coop_host_hit_on_the_player_uses_the_weighted_receipt_impulse() -> void:
+	# Legacy session payload (no receipt): the hit builds one locally, and the
+	# knockback follows its move weight exactly as the solo path does.
+	var fight := _fight()
+	var manager: Node = fight.manager
+	var flash_was := bool(MATH.config().get("impact", {}).get("enabled", true))
+	MATH.config().get("impact", {})["enabled"] = false
+	manager.call("apply_host_enemy_hit", {"damage": 5.0, "move_id": "earth_fist", "lunge": 3.4, "type_mult": 1.0})
+	MATH.config().get("impact", {})["enabled"] = flash_was
+	var impacts: Array = fight.impacts
+	var impulses: Array[float] = (fight.ally_body as CombatBody).impulses
+	assert_eq(impacts.size(), 1, "the co-op incoming hit reached the HUD channel")
+	assert_eq(impulses.size(), 1, "one push per landed hit")
+	if impacts.size() == 1 and impulses.size() == 1:
+		var weight := str(impacts[0].receipt.weight)
+		assert_almost_eq(impulses[0], _expected_impulse(weight), 0.0001,
+			"co-op knockback comes from the receipt's weight, not lunge*0.4")
+	_free(fight)
+
+
+func test_receiptless_hitstop_reads_the_single_feedback_table() -> void:
+	var manager := COMBAT.new()
+	var weights: Dictionary = FEEDBACK.config().get("weights", {})
+	assert_false(MATH.config().has("hitstop"), "one hitstop table: impact.feedback only")
+	assert_almost_eq(float(manager.call("_hitstop_seconds", true, false)), float(weights.light.hitstop_seconds), 0.0001)
+	assert_almost_eq(float(manager.call("_hitstop_seconds", false, false)), float(weights.heavy.hitstop_seconds), 0.0001)
+	assert_almost_eq(float(manager.call("_hitstop_seconds", true, true)),
+		float(FEEDBACK.config().get("critical_hitstop_seconds", 0.0)), 0.0001)
+	manager.free()
 
 
 func test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop() -> void:
@@ -200,4 +233,23 @@ func test_hud_numbers_style_by_class_honour_own_only_and_fade_out() -> void:
 	assert_eq((hud.get("_damage_numbers") as Array).size(), 3)
 	hud.call("_tick_damage_numbers", float(FEEDBACK.config().get("numbers", {}).get("duration_seconds", 0.8)) + 0.01)
 	assert_eq((hud.get("_damage_numbers") as Array).size(), 0, "numbers fade out and free after their duration")
+	hud.free()
+
+
+func test_hud_numbers_follow_text_size_and_keep_fading_in_relay_mode() -> void:
+	var hud := _hud()
+	var ahead := Vector3(0.0, 0.0, -6.0)
+	hud.call("_on_impact_confirmed", true, _receipt({"target_uid": "a"}), ahead)
+	TEXT.set_text_percent(150)
+	hud.call("_on_impact_confirmed", true, _receipt({"target_uid": "b"}), ahead)
+	var numbers: Array = hud.get("_damage_numbers")
+	assert_eq(numbers.size(), 2)
+	if numbers.size() == 2:
+		var normal := (numbers[0] as Label).get_theme_font_size("font_size")
+		var large := (numbers[1] as Label).get_theme_font_size("font_size")
+		assert_eq(large, int(round(float(normal) * 1.5)), "UX §8 text size scales hit numbers")
+	# A relay objective takes the HUD mid-flight: numbers still age and free.
+	hud.call("set_world_presentation_mode", "relays")
+	hud.call("_process", float(FEEDBACK.config().get("numbers", {}).get("duration_seconds", 0.8)) + 0.01)
+	assert_eq((hud.get("_damage_numbers") as Array).size(), 0, "relay mode never freezes a number on screen")
 	hud.free()

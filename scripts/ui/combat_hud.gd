@@ -62,6 +62,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+const TEXT_PREFS := preload("res://scripts/ui/text_prefs.gd")
 ## F21 world-space damage numbers, oldest first. Read by
 ## `presentation_observer.gd`, which identifies each receipt's new label here.
 var _damage_numbers: Array[Label] = []
@@ -551,10 +552,12 @@ func _quiet_panel_box() -> StyleBoxFlat:
 
 func _process(delta: float) -> void:
 	_sync_feed_epoch()
+	# Numbers already in flight finish rising and fading in every mode; a relay
+	# objective must not leave a frozen hit number on screen.
+	_tick_damage_numbers(delta)
 	if _world_presentation_mode == "relays":
 		relinquish_result_presentation()
 		return
-	_tick_damage_numbers(delta)
 	_tick_outcome(delta)
 	_tick_xp(delta)
 	_tick_go_text(delta)
@@ -1487,7 +1490,8 @@ func _style_number(label: Label, receipt: Dictionary, on_enemy: bool) -> void:
 	label.set_meta("receipt", receipt)
 	label.set_meta("opacity", float(style.get("opacity", 1.0)))
 	label.text = str(style.get("text", ""))
-	label.add_theme_font_size_override("font_size", int(style.get("font_px", 22)))
+	# UX §8 text size applies to hit numbers too (authored size x 100/125/150%).
+	label.add_theme_font_size_override("font_size", int(round(float(style.get("font_px", 22)) * TEXT_PREFS.text_scale())))
 	label.add_theme_color_override("font_color", Color(str(style.get("colour", "#f2f0df"))))
 	var outline := Color(str(style.get("outline", "#151c23")))
 	var move_type := _move_type(str(receipt.get("move_id", "")), "") if _moves != null else ""

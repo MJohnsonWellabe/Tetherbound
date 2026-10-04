@@ -362,9 +362,8 @@ func _capture_live_size_matrix(directory: String, source: String, preset: String
 				# bounded interval; its live manager releases the same bodies.
 				# A held actor, faint, stale binding or stopped manager still fails.
 				var stop_left := float(_manager.get("_hitstop_left"))
-				var hitstop: Dictionary = MATH.config().get("hitstop",{})
-				var stop_max := maxf(float(hitstop.get("quick_seconds",0.03)),
-					maxf(float(hitstop.get("charged_seconds",0.07)),float(hitstop.get("stagger_crit_seconds",0.12))))
+				var stop_max := maxf(float(_manager.call("_hitstop_seconds",true,false)),
+					maxf(float(_manager.call("_hitstop_seconds",false,false)),float(_manager.call("_hitstop_seconds",true,true))))
 				var manager_live: bool = _manager.is_physics_processing() and int(_manager.get("state"))==1
 				var bounded_stop: bool = manager_live and is_finite(stop_left) and stop_left>0.0 and stop_left<=stop_max+0.000001 \
 					and _manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild
