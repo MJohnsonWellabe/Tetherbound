@@ -623,9 +623,13 @@ func _frozen_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	var checkpoint: Dictionary = stream.checkpoint
 	if checkpoint.is_empty() or packet.get("id") != checkpoint.id \
 		or not packet.get("sequence") is int or not HASH._hex(packet.get("hash"), 64) \
-		or not HASH._hex(packet.get("prefix_hash"), 64): return
+		or not HASH._hex(packet.get("prefix_hash"), 64):
+		_note_host(stream, "frozen ignored: checkpoint %s, packet %s" % [str(checkpoint.get("id", "")).left(8), str(packet.get("id", "")).left(8)])
+		return
 	var frozen := {"sequence": packet.sequence, "hash": packet.hash, "prefix_hash": packet.prefix_hash}
-	if checkpoint.has("frozen") and not E._equivalent(checkpoint.frozen, frozen): return
+	if checkpoint.has("frozen") and not E._equivalent(checkpoint.frozen, frozen):
+		_note_host(stream, "frozen ignored: owner refroze at sequence %d (was %d)" % [int(packet.sequence), int(checkpoint.frozen.sequence)])
+		return
 	checkpoint.frozen = frozen
 	_prepare_host(peer, stream)
 
@@ -633,7 +637,9 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 	var checkpoint: Dictionary = stream.checkpoint
 	if not str(stream.error).is_empty() or checkpoint.is_empty() or not checkpoint.has("frozen"): return
 	var frozen: Dictionary = checkpoint.frozen
-	if int(stream.cursor.sequence) < int(frozen.sequence): return
+	if int(stream.cursor.sequence) < int(frozen.sequence):
+		_note_host(stream, "prepare waits for inputs: cursor %d < frozen %d" % [int(stream.cursor.sequence), int(frozen.sequence)])
+		return
 	var projected: Dictionary = stream.cursor.state
 	if checkpoint.get("duty", {}).get("action") == "combat_round_reward":
 		projected = preload("res://scripts/net/combat_round_reward.gd").settled_before(projected, checkpoint.duty.intent, checkpoint.duty.context)
@@ -660,7 +666,12 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 		else:
 			prepared = PREP.make(checkpoint.retained, checkpoint.duty, before, stream.revision,
 				stream.epoch, stream.cursor, checkpoint.id)
-		if prepared.is_empty() or authority.call("reserve_owner_passive_checkpoint", stream.character, prepared, checkpoint.get("retained", {}), stream.cursor) != true: return
+		if prepared.is_empty():
+			_note_host(stream, "prepare produced no preparation")
+			return
+		if authority.call("reserve_owner_passive_checkpoint", stream.character, prepared, checkpoint.get("retained", {}), stream.cursor) != true:
+			_note_host(stream, "checkpoint reservation refused (%s)" % str(authority.call("training_lock_reason", stream.character)))
+			return
 		checkpoint.prepared = prepared
 	_send_owner(peer, stream, {"op": "prepared", "id": checkpoint.id, "prepared": checkpoint.prepared,
 		"retained": checkpoint.get("retained", {})})
@@ -773,10 +784,17 @@ func _completion(peer: int, stream: Dictionary) -> void:
 	_send_owner(peer, stream, {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result})
 
 func receive_owner(packet: Dictionary) -> void:
-	if local.is_empty(): return
+	if local.is_empty():
+		_note_ignored("%s before this owner armed a stream" % str(packet.get("op", "")))
+		return
 	var scope := _scope()
 	for field: String in scope:
-		if packet.get(field) != scope[field]: return
+		if packet.get(field) != scope[field]:
+			_note_ignored("%s for another %s" % [str(packet.get("op", "")), field])
+			return
+	if packet.get("stream_id") != local.id and packet.get("op") != "inputs_ack":
+		_note_ignored("%s for stream %s, this owner is on %s" % [str(packet.get("op", "")),
+			str(packet.get("stream_id", "")).left(8), str(local.id).left(8)])
 	if packet.get("stream_id") != local.id:
 		if packet.get("op") != "inputs_ack" or local.rebase.get("old_stream") != packet.get("stream_id") \
 			or not packet.get("sequence") is int or packet.sequence > int(local.rebase.get("old_sequence", -1)): return
@@ -961,6 +979,17 @@ func _flush() -> void:
 		if pending.is_empty() and local.admission_pending: _send_host({"op": "resume"})
 		return
 	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
+
+## Diagnostic only, once per character and reason: a host checkpoint that
+## silently waits leaves the fight's round reward held with no other trace.
+var _host_notes: Dictionary = {}
+
+func _note_host(stream: Dictionary, reason: String) -> void:
+	var character := str(stream.get("character", ""))
+	if _host_notes.get(character) == reason:
+		return
+	_host_notes[character] = reason
+	print("[owner-passive] host %s: %s (t=%dms)" % [character.left(18), reason, Time.get_ticks_msec()])
 
 ## Diagnostic only, once per distinct reason: a packet this owner drops is
 ## otherwise invisible, and the host simply resends it forever.
