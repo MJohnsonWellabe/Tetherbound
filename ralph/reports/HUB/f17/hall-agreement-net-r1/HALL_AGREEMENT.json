@@ -1,0 +1,1626 @@
+{
+	"exit_code": 0,
+	"failures": [],
+	"hall_leave_guest": {
+		"data": {
+			"character_disk_path": "user://characters/redesign-v28/character-ddd041113d6d04156cab93c968df6346/character.json",
+			"character_disk_sha256": "3d8112cd87eb6a2b90687db6908ef22e6ac7bce5c03e66f3b83134fb93568231",
+			"character_id": "character-ddd041113d6d04156cab93c968df6346",
+			"load_result": {
+				"code": "ok",
+				"message": "",
+				"ok": true
+			}
+		},
+		"detail": "production client leave saved its own portable character; production reader confirmed disk payload",
+		"frames_used": 0.0,
+		"id": "s6",
+		"type": "verdict",
+		"verdict": "PASS"
+	},
+	"hall_reload_host": {
+		"data": {
+			"disk_display_matches": true,
+			"load_result": {
+				"code": "ok",
+				"message": "",
+				"ok": true
+			},
+			"new_hall_instance": 60914044976963.0,
+			"new_scene_instance": 56615453824545.0,
+			"old_hall_instance": 4796455271394.0,
+			"old_scene_instance": 474946210154.0,
+			"rebuilt": true,
+			"same_world": true,
+			"saved_display": {
+				"alpha_cycles": {},
+				"bounty_day": 0.0,
+				"fifth_arch_stirred": false,
+				"node_cycles": {},
+				"portal_unlocks": [],
+				"rematch_cycles": {},
+				"shrine_display": {},
+				"station_tiers": {}
+			},
+			"slot": 0.0,
+			"world_disk_path": "user://worlds/redesign-v28/slot-0/world.json",
+			"world_disk_sha256": "2b116f193aa377f52171f80a98e411115e18ad504a3d90b323e14273ec034a05",
+			"world_id": "slot-0"
+		},
+		"detail": "production autosave + title Load; scene and Hall rebuilt from host save",
+		"frames_used": 0.0,
+		"id": "s8",
+		"type": "verdict",
+		"verdict": "PASS"
+	},
+	"pairs": {
+		"joined": {
+			"guest": {
+				"arches": [
+					{
+						"biome": "meadows",
+						"id": "home",
+						"material": {
+							"albedo": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"emission_enabled": true,
+							"emission_energy": 0.25,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "22ad8dfacc3356990091364595150181e9e42d3bd683833afcf54424d0f3577c",
+						"sign": "The Meadows",
+						"sign_visible": true,
+						"state": "open",
+						"state_sign": "Home arch",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "tidewake",
+						"id": "tidewake",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "6b8079c6e1c161e2884ac3cf56aecd841485fb95ec9b8bbd86fb9b9437b1cfff",
+						"sign": "Tidewake",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "cloudreach",
+						"id": "cloudreach",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "ceda64482f046ec653fa66798e43179c4c98abe0a9d841bada992f3b76e449a4",
+						"sign": "Cloudreach Cliffs",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "stormwood",
+						"id": "stormwood",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "fa6c8eddb78cdd65e26d0ad9318929b656885b18f5d713f8fe077a2036a5c97a",
+						"sign": "The Stormwood",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome5",
+						"id": "biome5",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "9fd59505c0e8a3c7a52e75a258d8658e75fa80c3495a4bddeee98a7fa98e97ab",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome6",
+						"id": "biome6",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "d6e6828aadd88a5cfeef51c1736d99050ba964c9e2f143f7c13ff2d31c86a746",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome7",
+						"id": "biome7",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "b36dff4f4d48e6ff57bc63a544d7f7eb2454dabd177c29129f37a3aea9effd4d",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome8",
+						"id": "biome8",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "3450f3f6f162c95bff290de39ccaa31afbb3399b675450e13bb11d601f82526e",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					}
+				],
+				"counts": {
+					"arches": 8.0,
+					"halls": 1.0,
+					"pedestals": 8.0,
+					"road_houses": 8.0,
+					"villages": 1.0
+				},
+				"digests": {
+					"all": "e1fccd1b57b5354cb09301071ee36599cdee6d2377793903f127950d3008a01a",
+					"hall": "af920b1ba84d9f7ae2c1963f4101c1292e0e812116e81e58d216021997a9bdf3",
+					"village": "901003b7723a33efe953684d75252a7fc8a1ecef01e44e0d02869db0e4a082b7"
+				},
+				"node_counts": {
+					"hall": 156.0,
+					"village": 3711.0
+				},
+				"peer_runtime_path": "res://tests/helpers/hall_agreement_net_peer.gd",
+				"phase": "joined",
+				"pin": {
+					"character_id": "character-ddd041113d6d04156cab93c968df6346",
+					"character_load_result": {
+						"code": "unreadable_save",
+						"message": "That character could not be loaded.",
+						"ok": false
+					},
+					"display": {
+						"alpha_cycles": {},
+						"bounty_day": 0.0,
+						"fifth_arch_stirred": false,
+						"node_cycles": {},
+						"portal_unlocks": [],
+						"rematch_cycles": {},
+						"shrine_display": {},
+						"station_tiers": {}
+					},
+					"hall_instance": 6262347742136.0,
+					"hosting": false,
+					"ledger_seq": 0.0,
+					"local_peer_id": 666565211.0,
+					"map_revision": 3.0,
+					"registry_rows": [
+						{
+							"appearance_id": "trainer",
+							"character_id": "character-884b5bc4229aaedea6b2a52b90e7d17e",
+							"display_name": "HallHost",
+							"downed": false,
+							"peer_id": 1.0,
+							"realm": "meadows",
+							"sleeping": false
+						},
+						{
+							"appearance_id": "lyra",
+							"character_id": "character-ddd041113d6d04156cab93c968df6346",
+							"display_name": "HallGuest",
+							"downed": false,
+							"peer_id": 666565211.0,
+							"realm": "meadows",
+							"sleeping": false
+						}
+					],
+					"scene_instance": 1972329514599.0,
+					"session_epoch": 1.0,
+					"world_id": "slot-0",
+					"world_instance": -9223371747699456000.0,
+					"world_revision": 3.0
+				},
+				"shrines": [
+					{
+						"biome": "meadows",
+						"nodes_sha256": "076e28652c60406d802abbecc7bb06c509104de67433d465beb180f7d40f95b1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "tidewake",
+						"nodes_sha256": "32e656168c524afa883ab10b9849b21e4b2e48455725028d576bd744fc4251cc",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "cloudreach",
+						"nodes_sha256": "5aba0a3488a9012ee83526bb7f7f4518ce7bfc7ba377ebaab8720cdd181f73c1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "stormwood",
+						"nodes_sha256": "8da0f453926a74bdb2b9b90581556dce1efe722e41e56c10d04ab7da91dfe1ee",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome5",
+						"nodes_sha256": "98b75bb8780f42478f19b0f3f4b14f79ecfbe05f19804a884903784010e21ddf",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome6",
+						"nodes_sha256": "4d5221f24b6d61f64b2cf1843ba733dcb8b45a1f19a1e4bd6889d0ad3056ecc0",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome7",
+						"nodes_sha256": "07cdb802b82354ba4b69041ee76c70ec10bd95d1ac473320f1b8c0796884f6a5",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome8",
+						"nodes_sha256": "3b176a0d5be4ef3fdcb56b7d8c8307de576a2cfe29b6da933a8efaf199a9c7eb",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					}
+				]
+			},
+			"host": {
+				"arches": [
+					{
+						"biome": "meadows",
+						"id": "home",
+						"material": {
+							"albedo": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"emission_enabled": true,
+							"emission_energy": 0.25,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "22ad8dfacc3356990091364595150181e9e42d3bd683833afcf54424d0f3577c",
+						"sign": "The Meadows",
+						"sign_visible": true,
+						"state": "open",
+						"state_sign": "Home arch",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "tidewake",
+						"id": "tidewake",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "6b8079c6e1c161e2884ac3cf56aecd841485fb95ec9b8bbd86fb9b9437b1cfff",
+						"sign": "Tidewake",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "cloudreach",
+						"id": "cloudreach",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "ceda64482f046ec653fa66798e43179c4c98abe0a9d841bada992f3b76e449a4",
+						"sign": "Cloudreach Cliffs",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "stormwood",
+						"id": "stormwood",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "fa6c8eddb78cdd65e26d0ad9318929b656885b18f5d713f8fe077a2036a5c97a",
+						"sign": "The Stormwood",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome5",
+						"id": "biome5",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "9fd59505c0e8a3c7a52e75a258d8658e75fa80c3495a4bddeee98a7fa98e97ab",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome6",
+						"id": "biome6",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "d6e6828aadd88a5cfeef51c1736d99050ba964c9e2f143f7c13ff2d31c86a746",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome7",
+						"id": "biome7",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "b36dff4f4d48e6ff57bc63a544d7f7eb2454dabd177c29129f37a3aea9effd4d",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome8",
+						"id": "biome8",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "3450f3f6f162c95bff290de39ccaa31afbb3399b675450e13bb11d601f82526e",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					}
+				],
+				"counts": {
+					"arches": 8.0,
+					"halls": 1.0,
+					"pedestals": 8.0,
+					"road_houses": 8.0,
+					"villages": 1.0
+				},
+				"digests": {
+					"all": "e1fccd1b57b5354cb09301071ee36599cdee6d2377793903f127950d3008a01a",
+					"hall": "af920b1ba84d9f7ae2c1963f4101c1292e0e812116e81e58d216021997a9bdf3",
+					"village": "901003b7723a33efe953684d75252a7fc8a1ecef01e44e0d02869db0e4a082b7"
+				},
+				"node_counts": {
+					"hall": 156.0,
+					"village": 3711.0
+				},
+				"peer_runtime_path": "res://tests/helpers/hall_agreement_net_peer.gd",
+				"phase": "joined",
+				"pin": {
+					"character_id": "character-884b5bc4229aaedea6b2a52b90e7d17e",
+					"character_load_result": {},
+					"display": {
+						"alpha_cycles": {},
+						"bounty_day": 0.0,
+						"fifth_arch_stirred": false,
+						"node_cycles": {},
+						"portal_unlocks": [],
+						"rematch_cycles": {},
+						"shrine_display": {},
+						"station_tiers": {}
+					},
+					"hall_instance": 4796455271394.0,
+					"hosting": true,
+					"ledger_seq": 0.0,
+					"local_peer_id": 1.0,
+					"map_revision": 3.0,
+					"registry_rows": [
+						{
+							"appearance_id": "trainer",
+							"character_id": "character-884b5bc4229aaedea6b2a52b90e7d17e",
+							"display_name": "HallHost",
+							"downed": false,
+							"peer_id": 1.0,
+							"realm": "meadows",
+							"sleeping": false
+						},
+						{
+							"appearance_id": "lyra",
+							"character_id": "character-ddd041113d6d04156cab93c968df6346",
+							"display_name": "HallGuest",
+							"downed": false,
+							"peer_id": 666565211.0,
+							"realm": "meadows",
+							"sleeping": false
+						}
+					],
+					"scene_instance": 474946210154.0,
+					"session_epoch": 1.0,
+					"world_id": "slot-0",
+					"world_instance": -9223371747699456000.0,
+					"world_revision": 2.0
+				},
+				"shrines": [
+					{
+						"biome": "meadows",
+						"nodes_sha256": "076e28652c60406d802abbecc7bb06c509104de67433d465beb180f7d40f95b1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "tidewake",
+						"nodes_sha256": "32e656168c524afa883ab10b9849b21e4b2e48455725028d576bd744fc4251cc",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "cloudreach",
+						"nodes_sha256": "5aba0a3488a9012ee83526bb7f7f4518ce7bfc7ba377ebaab8720cdd181f73c1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "stormwood",
+						"nodes_sha256": "8da0f453926a74bdb2b9b90581556dce1efe722e41e56c10d04ab7da91dfe1ee",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome5",
+						"nodes_sha256": "98b75bb8780f42478f19b0f3f4b14f79ecfbe05f19804a884903784010e21ddf",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome6",
+						"nodes_sha256": "4d5221f24b6d61f64b2cf1843ba733dcb8b45a1f19a1e4bd6889d0ad3056ecc0",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome7",
+						"nodes_sha256": "07cdb802b82354ba4b69041ee76c70ec10bd95d1ac473320f1b8c0796884f6a5",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome8",
+						"nodes_sha256": "3b176a0d5be4ef3fdcb56b7d8c8307de576a2cfe29b6da933a8efaf199a9c7eb",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					}
+				]
+			}
+		},
+		"reloaded": {
+			"guest": {
+				"arches": [
+					{
+						"biome": "meadows",
+						"id": "home",
+						"material": {
+							"albedo": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"emission_enabled": true,
+							"emission_energy": 0.25,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "22ad8dfacc3356990091364595150181e9e42d3bd683833afcf54424d0f3577c",
+						"sign": "The Meadows",
+						"sign_visible": true,
+						"state": "open",
+						"state_sign": "Home arch",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "tidewake",
+						"id": "tidewake",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "6b8079c6e1c161e2884ac3cf56aecd841485fb95ec9b8bbd86fb9b9437b1cfff",
+						"sign": "Tidewake",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "cloudreach",
+						"id": "cloudreach",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "ceda64482f046ec653fa66798e43179c4c98abe0a9d841bada992f3b76e449a4",
+						"sign": "Cloudreach Cliffs",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "stormwood",
+						"id": "stormwood",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "fa6c8eddb78cdd65e26d0ad9318929b656885b18f5d713f8fe077a2036a5c97a",
+						"sign": "The Stormwood",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome5",
+						"id": "biome5",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "9fd59505c0e8a3c7a52e75a258d8658e75fa80c3495a4bddeee98a7fa98e97ab",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome6",
+						"id": "biome6",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "d6e6828aadd88a5cfeef51c1736d99050ba964c9e2f143f7c13ff2d31c86a746",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome7",
+						"id": "biome7",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "b36dff4f4d48e6ff57bc63a544d7f7eb2454dabd177c29129f37a3aea9effd4d",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome8",
+						"id": "biome8",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "3450f3f6f162c95bff290de39ccaa31afbb3399b675450e13bb11d601f82526e",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					}
+				],
+				"counts": {
+					"arches": 8.0,
+					"halls": 1.0,
+					"pedestals": 8.0,
+					"road_houses": 8.0,
+					"villages": 1.0
+				},
+				"digests": {
+					"all": "e1fccd1b57b5354cb09301071ee36599cdee6d2377793903f127950d3008a01a",
+					"hall": "af920b1ba84d9f7ae2c1963f4101c1292e0e812116e81e58d216021997a9bdf3",
+					"village": "901003b7723a33efe953684d75252a7fc8a1ecef01e44e0d02869db0e4a082b7"
+				},
+				"node_counts": {
+					"hall": 156.0,
+					"village": 3711.0
+				},
+				"peer_runtime_path": "res://tests/helpers/hall_agreement_net_peer.gd",
+				"phase": "reloaded",
+				"pin": {
+					"character_id": "character-ddd041113d6d04156cab93c968df6346",
+					"character_load_result": {
+						"code": "ok",
+						"message": "",
+						"ok": true
+					},
+					"display": {
+						"alpha_cycles": {},
+						"bounty_day": 0.0,
+						"fifth_arch_stirred": false,
+						"node_cycles": {},
+						"portal_unlocks": [],
+						"rematch_cycles": {},
+						"shrine_display": {},
+						"station_tiers": {}
+					},
+					"hall_instance": 58392932728511.0,
+					"hosting": false,
+					"ledger_seq": 0.0,
+					"local_peer_id": 1274953851.0,
+					"map_revision": 8.0,
+					"registry_rows": [
+						{
+							"appearance_id": "trainer",
+							"character_id": "character-884b5bc4229aaedea6b2a52b90e7d17e",
+							"display_name": "HallHost",
+							"downed": false,
+							"peer_id": 1.0,
+							"realm": "meadows",
+							"sleeping": false
+						},
+						{
+							"appearance_id": "lyra",
+							"character_id": "character-ddd041113d6d04156cab93c968df6346",
+							"display_name": "HallGuest",
+							"downed": false,
+							"peer_id": 1274953851.0,
+							"realm": "meadows",
+							"sleeping": false
+						}
+					],
+					"scene_instance": 54122778724752.0,
+					"session_epoch": 2.0,
+					"world_id": "slot-0",
+					"world_instance": -9223371747699456000.0,
+					"world_revision": 4.0
+				},
+				"shrines": [
+					{
+						"biome": "meadows",
+						"nodes_sha256": "076e28652c60406d802abbecc7bb06c509104de67433d465beb180f7d40f95b1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "tidewake",
+						"nodes_sha256": "32e656168c524afa883ab10b9849b21e4b2e48455725028d576bd744fc4251cc",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "cloudreach",
+						"nodes_sha256": "5aba0a3488a9012ee83526bb7f7f4518ce7bfc7ba377ebaab8720cdd181f73c1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "stormwood",
+						"nodes_sha256": "8da0f453926a74bdb2b9b90581556dce1efe722e41e56c10d04ab7da91dfe1ee",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome5",
+						"nodes_sha256": "98b75bb8780f42478f19b0f3f4b14f79ecfbe05f19804a884903784010e21ddf",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome6",
+						"nodes_sha256": "4d5221f24b6d61f64b2cf1843ba733dcb8b45a1f19a1e4bd6889d0ad3056ecc0",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome7",
+						"nodes_sha256": "07cdb802b82354ba4b69041ee76c70ec10bd95d1ac473320f1b8c0796884f6a5",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome8",
+						"nodes_sha256": "3b176a0d5be4ef3fdcb56b7d8c8307de576a2cfe29b6da933a8efaf199a9c7eb",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					}
+				]
+			},
+			"host": {
+				"arches": [
+					{
+						"biome": "meadows",
+						"id": "home",
+						"material": {
+							"albedo": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.949019610881805,
+								0.811764717102051,
+								0.513725519180298,
+								1.0
+							],
+							"emission_enabled": true,
+							"emission_energy": 0.25,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "22ad8dfacc3356990091364595150181e9e42d3bd683833afcf54424d0f3577c",
+						"sign": "The Meadows",
+						"sign_visible": true,
+						"state": "open",
+						"state_sign": "Home arch",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "tidewake",
+						"id": "tidewake",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "6b8079c6e1c161e2884ac3cf56aecd841485fb95ec9b8bbd86fb9b9437b1cfff",
+						"sign": "Tidewake",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "cloudreach",
+						"id": "cloudreach",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "ceda64482f046ec653fa66798e43179c4c98abe0a9d841bada992f3b76e449a4",
+						"sign": "Cloudreach Cliffs",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "stormwood",
+						"id": "stormwood",
+						"material": {
+							"albedo": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.415686279535294,
+								0.498039215803146,
+								0.549019634723663,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "fa6c8eddb78cdd65e26d0ad9318929b656885b18f5d713f8fe077a2036a5c97a",
+						"sign": "The Stormwood",
+						"sign_visible": true,
+						"state": "locked",
+						"state_sign": "Locked",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome5",
+						"id": "biome5",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "9fd59505c0e8a3c7a52e75a258d8658e75fa80c3495a4bddeee98a7fa98e97ab",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome6",
+						"id": "biome6",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "d6e6828aadd88a5cfeef51c1736d99050ba964c9e2f143f7c13ff2d31c86a746",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome7",
+						"id": "biome7",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "b36dff4f4d48e6ff57bc63a544d7f7eb2454dabd177c29129f37a3aea9effd4d",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					},
+					{
+						"biome": "biome8",
+						"id": "biome8",
+						"material": {
+							"albedo": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"albedo_texture": "",
+							"class": "StandardMaterial3D",
+							"cull_mode": 2.0,
+							"emission": [
+								0.18823529779911,
+								0.223529413342476,
+								0.278431385755539,
+								1.0
+							],
+							"emission_enabled": false,
+							"emission_energy": 0.100000001490116,
+							"resource": "",
+							"roughness": 0.75,
+							"transparency": 0.0
+						},
+						"nodes_sha256": "3450f3f6f162c95bff290de39ccaa31afbb3399b675450e13bb11d601f82526e",
+						"sign": "Sealed",
+						"sign_visible": true,
+						"state": "sealed",
+						"state_sign": "Sealed",
+						"state_sign_visible": true,
+						"surface_visible": true
+					}
+				],
+				"counts": {
+					"arches": 8.0,
+					"halls": 1.0,
+					"pedestals": 8.0,
+					"road_houses": 8.0,
+					"villages": 1.0
+				},
+				"digests": {
+					"all": "e1fccd1b57b5354cb09301071ee36599cdee6d2377793903f127950d3008a01a",
+					"hall": "af920b1ba84d9f7ae2c1963f4101c1292e0e812116e81e58d216021997a9bdf3",
+					"village": "901003b7723a33efe953684d75252a7fc8a1ecef01e44e0d02869db0e4a082b7"
+				},
+				"node_counts": {
+					"hall": 156.0,
+					"village": 3711.0
+				},
+				"peer_runtime_path": "res://tests/helpers/hall_agreement_net_peer.gd",
+				"phase": "reloaded",
+				"pin": {
+					"character_id": "character-884b5bc4229aaedea6b2a52b90e7d17e",
+					"character_load_result": {
+						"code": "ok",
+						"message": "",
+						"ok": true
+					},
+					"display": {
+						"alpha_cycles": {},
+						"bounty_day": 0.0,
+						"fifth_arch_stirred": false,
+						"node_cycles": {},
+						"portal_unlocks": [],
+						"rematch_cycles": {},
+						"shrine_display": {},
+						"station_tiers": {}
+					},
+					"hall_instance": 60914044976963.0,
+					"hosting": true,
+					"ledger_seq": 0.0,
+					"local_peer_id": 1.0,
+					"map_revision": 8.0,
+					"registry_rows": [
+						{
+							"appearance_id": "trainer",
+							"character_id": "character-884b5bc4229aaedea6b2a52b90e7d17e",
+							"display_name": "HallHost",
+							"downed": false,
+							"peer_id": 1.0,
+							"realm": "meadows",
+							"sleeping": false
+						},
+						{
+							"appearance_id": "lyra",
+							"character_id": "character-ddd041113d6d04156cab93c968df6346",
+							"display_name": "HallGuest",
+							"downed": false,
+							"peer_id": 1274953851.0,
+							"realm": "meadows",
+							"sleeping": false
+						}
+					],
+					"scene_instance": 56615453824545.0,
+					"session_epoch": 2.0,
+					"world_id": "slot-0",
+					"world_instance": -9223371747699456000.0,
+					"world_revision": 2.0
+				},
+				"shrines": [
+					{
+						"biome": "meadows",
+						"nodes_sha256": "076e28652c60406d802abbecc7bb06c509104de67433d465beb180f7d40f95b1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "tidewake",
+						"nodes_sha256": "32e656168c524afa883ab10b9849b21e4b2e48455725028d576bd744fc4251cc",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "cloudreach",
+						"nodes_sha256": "5aba0a3488a9012ee83526bb7f7f4518ce7bfc7ba377ebaab8720cdd181f73c1",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "stormwood",
+						"nodes_sha256": "8da0f453926a74bdb2b9b90581556dce1efe722e41e56c10d04ab7da91dfe1ee",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome5",
+						"nodes_sha256": "98b75bb8780f42478f19b0f3f4b14f79ecfbe05f19804a884903784010e21ddf",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome6",
+						"nodes_sha256": "4d5221f24b6d61f64b2cf1843ba733dcb8b45a1f19a1e4bd6889d0ad3056ecc0",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome7",
+						"nodes_sha256": "07cdb802b82354ba4b69041ee76c70ec10bd95d1ac473320f1b8c0796884f6a5",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					},
+					{
+						"biome": "biome8",
+						"nodes_sha256": "3b176a0d5be4ef3fdcb56b7d8c8307de576a2cfe29b6da933a8efaf199a9c7eb",
+						"relic_displayed": false,
+						"visible_label": true,
+						"visible_mesh": true
+					}
+				]
+			}
+		}
+	}
+}

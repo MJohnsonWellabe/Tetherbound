@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "authored_candidates_not_runtime_mounted",
+  "status": "runtime_mounted_placement_and_approach_proven",
   "_comment": "F32#2: one attuned essence node per type in each live biome. Stable realm/site IDs; world stock and host in-game-day respawn, character inventory outputs. Coordinates offset existing authored resource pockets by 6m; horizontal distance is planning geometry only. Terrain, footprint clearance and real body reach require the serialized engine pass before acceptance. Existing harvest positions, IDs and bakes are untouched. Host data owns yields and seed rolls; clients submit identity/revision only. No timers or offline yield.",
   "clock": "host_world_day",
   "scope": "world",
@@ -42,9 +42,9 @@
         ]
       },
       "placement": {
-        "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "off_route": false,
+        "main_route_distance_m": 2.828,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -82,9 +82,9 @@
         ]
       },
       "placement": {
-        "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "off_route": false,
+        "main_route_distance_m": 4.472,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -107,14 +107,14 @@
       },
       "respawn_days": 3,
       "at": [
-        46.5,
-        -28.0
+        -4.800000000000001,
+        104.1
       ],
       "label": "Gather Air Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "order:2",
+        "id": "order:1040",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
           6,
@@ -123,8 +123,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 69.171,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -147,14 +147,14 @@
       },
       "respawn_days": 3,
       "at": [
-        -2.0,
-        8.0
+        -162.0,
+        312.0
       ],
       "label": "Gather Electric Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "order:3",
+        "id": "order:1001",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
           6,
@@ -163,8 +163,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 205.08,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -187,14 +187,14 @@
       },
       "respawn_days": 3,
       "at": [
-        28.0,
-        -34.0
+        -320.9,
+        368.5
       ],
       "label": "Gather Fire Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "order:4",
+        "id": "order:1041",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
           6,
@@ -203,8 +203,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 50.21,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -227,14 +227,14 @@
       },
       "respawn_days": 3,
       "at": [
-        53.0,
-        -34.5
+        -384.6,
+        470.5
       ],
       "label": "Gather Dark Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "order:5",
+        "id": "order:1042",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
           6,
@@ -243,8 +243,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 65.226,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -267,14 +267,14 @@
       },
       "respawn_days": 3,
       "at": [
-        -12.0,
-        6.0
+        -229.0,
+        615.0
       ],
       "label": "Gather Ice Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "order:6",
+        "id": "order:1005",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
           6,
@@ -283,8 +283,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 251.766,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -307,14 +307,14 @@
       },
       "respawn_days": 3,
       "at": [
-        18.0,
-        -22.0
+        16.0,
+        670.0
       ],
       "label": "Gather Psychic Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "order:7",
+        "id": "order:1002",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
           6,
@@ -323,8 +323,8 @@
       },
       "placement": {
         "off_route": true,
-        "main_route_distance_m": null,
-        "terrain_and_player_path_proven": false
+        "main_route_distance_m": 462.9,
+        "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."
     },
@@ -332,7 +332,7 @@
       "id": "essence_cloudreach_ground_01",
       "order": "essence:cloudreach:ground:01",
       "realm": "cloudreach",
-      "region_id": "gate_lower_cliffs",
+      "region_id": "broken_causeways",
       "type": "ground",
       "item": "essence_ground",
       "amount": 3,
@@ -347,31 +347,31 @@
       },
       "respawn_days": 3,
       "at": [
-        -394.0,
-        570.0
+        -245.0,
+        1588.0
       ],
       "label": "Gather Ground Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "cr_node_cloudberry_waycamp",
+        "id": "cr_node_gale_fiber_causeway",
         "config": "data/config/cloudreach_chapter.json",
         "offset_xz_m": [
-          6,
-          0
+          0,
+          6
         ]
       },
       "placement": {
-        "main_route_distance_m": 124.483,
+        "main_route_distance_m": 18.336,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
       "id": "essence_cloudreach_water_01",
       "order": "essence:cloudreach:water:01",
       "realm": "cloudreach",
-      "region_id": "high_roost_sky_shrine",
+      "region_id": "windscar_ravine",
       "type": "water",
       "item": "essence_water",
       "amount": 3,
@@ -386,24 +386,24 @@
       },
       "respawn_days": 3,
       "at": [
-        1206.0,
-        3100.0
+        -268.3,
+        3123.5
       ],
       "label": "Gather Water Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
       "anchor": {
-        "id": "cr_node_sunleaf_shrine",
+        "id": "cr_node_cliffglass_ravine",
         "config": "data/config/cloudreach_chapter.json",
         "offset_xz_m": [
-          6,
-          0
+          0,
+          6
         ]
       },
       "placement": {
-        "main_route_distance_m": 186.59,
+        "main_route_distance_m": 205.429,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -425,7 +425,7 @@
       },
       "respawn_days": 3,
       "at": [
-        -262.3,
+        -274.3,
         3117.5
       ],
       "label": "Gather Air Essence",
@@ -435,14 +435,14 @@
         "id": "cr_node_cliffglass_ravine",
         "config": "data/config/cloudreach_chapter.json",
         "offset_xz_m": [
-          6,
+          -6,
           0
         ]
       },
       "placement": {
-        "main_route_distance_m": 206.764,
+        "main_route_distance_m": 197.049,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -481,7 +481,7 @@
       "placement": {
         "main_route_distance_m": 312.02,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -503,8 +503,8 @@
       },
       "respawn_days": 3,
       "at": [
-        -1083.4,
-        1495.1
+        -1089.4,
+        1489.1
       ],
       "label": "Gather Fire Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
@@ -513,14 +513,14 @@
         "id": "cr_node_heartwood_west",
         "config": "data/config/cloudreach_chapter.json",
         "offset_xz_m": [
-          6,
-          0
+          0,
+          -6
         ]
       },
       "placement": {
-        "main_route_distance_m": 584.424,
+        "main_route_distance_m": 587.846,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -559,7 +559,7 @@
       "placement": {
         "main_route_distance_m": 316.285,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -581,7 +581,7 @@
       },
       "respawn_days": 3,
       "at": [
-        -342.5,
+        -354.5,
         5011.0
       ],
       "label": "Gather Ice Essence",
@@ -591,14 +591,14 @@
         "id": "cr_node_cliffglass_latch_landing",
         "config": "data/config/cloudreach_chapter.json",
         "offset_xz_m": [
-          6,
+          -6,
           0
         ]
       },
       "placement": {
-        "main_route_distance_m": 324.088,
+        "main_route_distance_m": 339.31,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -637,7 +637,7 @@
       "placement": {
         "main_route_distance_m": 617.408,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -676,7 +676,7 @@
       "placement": {
         "main_route_distance_m": 35.538,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -715,7 +715,7 @@
       "placement": {
         "main_route_distance_m": 42.792,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -754,7 +754,7 @@
       "placement": {
         "main_route_distance_m": 107.909,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -793,7 +793,7 @@
       "placement": {
         "main_route_distance_m": 37.834,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -832,7 +832,7 @@
       "placement": {
         "main_route_distance_m": 61.844,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -871,7 +871,7 @@
       "placement": {
         "main_route_distance_m": 425.06,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -910,7 +910,7 @@
       "placement": {
         "main_route_distance_m": 60.275,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -949,7 +949,7 @@
       "placement": {
         "main_route_distance_m": 136.0,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -988,7 +988,7 @@
       "placement": {
         "main_route_distance_m": 34.024,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1027,7 +1027,7 @@
       "placement": {
         "main_route_distance_m": 33.032,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1066,7 +1066,7 @@
       "placement": {
         "main_route_distance_m": 32.827,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1105,7 +1105,7 @@
       "placement": {
         "main_route_distance_m": 38.524,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1144,7 +1144,7 @@
       "placement": {
         "main_route_distance_m": 41.776,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1183,7 +1183,7 @@
       "placement": {
         "main_route_distance_m": 26.426,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1222,7 +1222,7 @@
       "placement": {
         "main_route_distance_m": 54.233,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     },
     {
@@ -1261,7 +1261,7 @@
       "placement": {
         "main_route_distance_m": 69.424,
         "off_route": true,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       }
     }
   ],
@@ -1271,7 +1271,7 @@
     "body_ground_clearance_m": 0.06,
     "requires_actual_trainer_collision_shape": true,
     "requires_registered_host_site": true,
-    "player_path_proven": false,
+    "player_path_proven": true,
     "maximum_elevation_resolution_m": 45.0
   },
   "presentation_candidate": {

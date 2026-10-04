@@ -66,6 +66,13 @@ static func _strings(value: Variant, allow_empty: bool = true) -> bool:
 	return true
 
 
+## JSON numbers parse as floats, so {item: 3.0} must match {item: 3}; a
+## Dictionary == on mixed int/float values never does.
+static func _single_output(outputs: Variant, item: String, amount: int) -> bool:
+	return outputs is Dictionary and outputs.size() == 1 and outputs.has(item) \
+		and _integer(outputs[item]) and int(outputs[item]) == amount
+
+
 static func _point(value: Variant, size: int) -> bool:
 	if not value is Array or value.size() != size:
 		return false
@@ -140,7 +147,7 @@ static func _ordinary(realm: String, row: Dictionary, policy: Dictionary,
 		_fail(realm, "Malformed material site: " + id)
 		return
 	if (row.has("realm") and row["realm"] != realm) \
-			or (row.has("outputs") and row["outputs"] != {item: int(amount)}) \
+			or (row.has("outputs") and not _single_output(row["outputs"], item, int(amount))) \
 			or (row.has("respawn_days") and row["respawn_days"] != policy["material_respawn_days"]):
 		_fail(realm, "Conflicting material definition: " + id)
 		return
@@ -307,7 +314,7 @@ static func _load_additional_materials(realm: String, config: Dictionary,
 				or raw["terrain_and_player_path_proven"] != true \
 				or not raw.get("item") is String or not (policy["materials"] as Array).has(raw["item"]) \
 				or not _integer(raw.get("amount")) \
-				or raw.get("outputs") != {raw["item"]: int(raw["amount"])} \
+				or not _single_output(raw.get("outputs"), raw["item"], int(raw["amount"])) \
 				or not _integer(raw.get("respawn_days")) \
 				or not _point(raw.get("at"), 2) \
 				or not raw.get("model") is String or raw["model"].is_empty() \
@@ -335,6 +342,9 @@ static func _load_additional_materials(realm: String, config: Dictionary,
 			_fail(realm, "Main-island material candidates cannot require Dive")
 			continue
 		var site: Dictionary = raw.duplicate(true)
+		site["amount"] = int(raw["amount"])
+		site["outputs"] = {raw["item"]: int(raw["amount"])}
+		site["respawn_days"] = int(raw["respawn_days"])
 		# Offsets never remove the anchor's host phase/route restrictions.
 		for key: String in ["requires_flag", "requires_world_flags", "availability"]:
 			if site.has(key) and site[key] != parent.get(key):
