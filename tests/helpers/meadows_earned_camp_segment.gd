@@ -213,7 +213,7 @@ func _hammer_in_hand() -> bool:
 	if str(_game.get("equipped_tool")) != "hammer":
 		await _tap(HOTBAR_ACTIONS[slot])
 		await _settle(8)
-	if str(_game.get("equipped_tool")) != "hammer":
+	if not await _tool_in_hand_becomes("hammer", true):
 		_fail("hammer hotbar input did not equip the earned tool")
 		return false
 	return true
