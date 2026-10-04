@@ -1,0 +1,29 @@
+# run 14: vitals proposals (host) and owner apply / host accept (both peers)
+peer0 DBGAV t=172989 owner apply actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 rev=1 result={ "ok": true, "duplicate": false, "creature_uid": "creature-48223a77113af0518923d931de80e175", "charac
+peer0 DBGAV t=172989 host accept id=actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 peer=1
+peer0 DBGPV t=173178 presented 1:1:enemy:1 peer=1
+peer0 DBGPV t=203404 unresolved 1:1:enemy:2 peer=1632934073 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "13eebebbb66353554cc079528a6376
+peer0 DBGAV t=204767 host accept id=actor_vitals:97375983f8f7b3c9466b4e2dd1929eb445020ba4a5aa799a7b891be433647a24 peer=1632934073
+peer0 DBGPV t=205315 presented 1:1:enemy:2 peer=1632934073
+peer0 DBGAV t=218831 owner apply actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 rev=2 result={ "ok": true, "duplicate": false, "creature_uid": "creature-48223a77113af0518923d931de80e175", "charac
+peer0 DBGAV t=218832 host accept id=actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 peer=1
+peer0 DBGPV t=219058 presented 1:1:enemy:3 peer=1
+peer0 DBGAV t=250670 owner apply actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 rev=3 result={ "ok": true, "duplicate": false, "creature_uid": "creature-48223a77113af0518923d931de80e175", "charac
+peer0 DBGAV t=250670 host accept id=actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 peer=1
+peer0 DBGPV t=250860 presented 1:1:enemy:4 peer=1
+peer0 DBGPV t=266994 unresolved 1:1:enemy:5 peer=1632934073 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "13eebebbb66353554cc079528a6376
+peer0 DBGAV t=267572 host accept id=actor_vitals:97375983f8f7b3c9466b4e2dd1929eb445020ba4a5aa799a7b891be433647a24 peer=1632934073
+peer0 DBGPV t=267982 presented 1:1:enemy:5 peer=1632934073
+peer0 DBGAV t=327290 owner apply actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 rev=4 result={ "ok": true, "duplicate": false, "creature_uid": "creature-48223a77113af0518923d931de80e175", "charac
+peer0 DBGAV t=327290 host accept id=actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 peer=1
+peer0 DBGPV t=327535 presented 1:2:enemy:6 peer=1
+peer0 DBGAV t=429235 owner apply actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 rev=5 result={ "ok": true, "duplicate": false, "creature_uid": "creature-48223a77113af0518923d931de80e175", "charac
+peer0 DBGAV t=429235 host accept id=actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 peer=1
+peer0 DBGPV t=429506 presented 1:3:enemy:7 peer=1
+peer0 DBGAV t=449208 owner apply actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 rev=6 result={ "ok": true, "duplicate": false, "creature_uid": "creature-48223a77113af0518923d931de80e175", "charac
+peer0 DBGAV t=449209 host accept id=actor_vitals:c2d2a60d0fb8f681d7bf6886f342d29765579d66c006b6fca2a4e61c73150787 peer=1
+peer0 DBGPV t=449503 presented 1:3:enemy:8 peer=1
+peer1 DBGAV t=203868 owner apply actor_vitals:97375983f8f7b3c9466b4e2dd1929eb445020ba4a5aa799a7b891be433647a24 rev=1 result={ "ok": true, "duplicate": false, "creature_uid": "creature-eb70c41741c464ea18d1d39db283d6a4", "charac
+peer1 DBGAV t=204533 owner apply actor_vitals:97375983f8f7b3c9466b4e2dd1929eb445020ba4a5aa799a7b891be433647a24 rev=1 result={ "ok": true, "duplicate": true, "creature_uid": "creature-eb70c41741c464ea18d1d39db283d6a4", "charact
+peer1 DBGAV t=267360 owner apply actor_vitals:97375983f8f7b3c9466b4e2dd1929eb445020ba4a5aa799a7b891be433647a24 rev=2 result={ "ok": true, "duplicate": false, "creature_uid": "creature-eb70c41741c464ea18d1d39db283d6a4", "charac
+peer1 DBGAV t=267571 owner apply actor_vitals:97375983f8f7b3c9466b4e2dd1929eb445020ba4a5aa799a7b891be433647a24 rev=2 result={ "ok": true, "duplicate": true, "creature_uid": "creature-eb70c41741c464ea18d1d39db283d6a4", "charact

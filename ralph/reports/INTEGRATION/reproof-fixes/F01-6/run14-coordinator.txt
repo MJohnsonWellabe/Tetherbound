@@ -1,0 +1,56 @@
+cmd: godot --headless --path . --script tests/smoke_net_shared_boss.gd -- --tournament (TB_NET_* as run_net_smoke.sh)
+commit: b9c9bbfdbb7152e009625114f2282ad960475bdb
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3742 control_port=41175 home=/tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f01/net-shared_boss-20261004T232617Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f01/net-shared_boss-20261004T232617Z/peer-0.log
+coordinator: launched peer 1 (client) pid=3743 control_port=40829 home=/tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f01/net-shared_boss-20261004T232617Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f01/net-shared_boss-20261004T232617Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29601.0,"godot_version":"4.7-stable (official)","main_sha":"b9c9bbfdbb71","peer":0.0,"pid":3742.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f01/net-shared_boss-20261004T232617Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29602.0,"godot_version":"4.7-stable (official)","main_sha":"b9c9bbfdbb71","peer":1.0,"pid":3743.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/99082b61-481d-524f-8580-2fb9d216b417/scratchpad/runs/f01/net-shared_boss-20261004T232617Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: tournament host opened a world
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+PASS: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (joined 1:1 beside 'bramblebun' at (-1.4, 6.7))
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: peer 1 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: both peers completed 'tournament_quarter_mira' (battle won in 676 frames / 3 swings against 2 of their creatures)
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+PASS: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-3ac2e608a5870139aba66a76ff4bce2f", "character-639657fb87281d22924ff93339c2d733"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+PASS: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-3ac2e608a5870139aba66a76ff4bce2f", "character-639657fb87281d22924ff93339c2d733"])
+PASS: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-3ac2e608a5870139aba66a76ff4bce2f", "character-639657fb87281d22924ff93339c2d733"])
+PASS: opened authored tournament round 'tournament_semi_tam'
+PASS: 'tournament_semi_tam' minted one shared encounter record
+FAIL: peer 1 joined 'tournament_semi_tam' rather than opening another fight (the join did not put this peer in a fight)
+PASS: peer 0 reduced 'tournament_semi_tam' shared opponent HP
+FAIL: peer 1 reduced 'tournament_semi_tam' shared opponent HP -- attempt 6: host hp 102.462 -> 102.462 at (-1.98, 1.85, 7.90); stand_in=this peer has no opponent body to move place=creature stands at (-0.89, 0.90, 6.79) strike=FAIL this peer is not in a networked fight; no host receipt for peer 1632934073; guest refusal={ "code": "unknown_encounter", "kind": "disengage", "reason": "That fight is over." }
+PASS: both peers completed 'tournament_semi_tam' (battle won in 266 frames / 1 swings against 1 of their creatures)
+FAIL: peer 0 received 'tournament_semi_won'
+FAIL: peer 0 received 'tournament_semi_tam' authored reward in full
+FAIL: peer 1 received 'tournament_semi_won'
+FAIL: peer 1 received 'tournament_semi_tam' authored reward in full
+PASS: 'tournament_semi_tam' reward proof names both stable participant character IDs (["character-3ac2e608a5870139aba66a76ff4bce2f", "character-639657fb87281d22924ff93339c2d733"])
+PASS: 'tournament_semi_tam' reward journal has one replicated durable world namespace
+PASS: 'tournament_semi_tam' reward journal is identical on host and guest
+FAIL: 'trainer:tournament_semi_tam:coins' has accepted durable receipts for both stable participants ([])
+FAIL: 'trainer:tournament_semi_tam:item:orb_basic' has accepted durable receipts for both stable participants ([])
+PASS: opened authored tournament round 'tournament_final_oskar'
+PASS: 'tournament_final_oskar' minted one shared encounter record
+PASS: peer 1 joined 'tournament_final_oskar' rather than opening another fight (joined 1:3 beside 'mudsnout' at (-1.4, 6.7))
+coordinator: ERROR: smoke budget exceeded
+FAIL: peer 0 reduced 'tournament_final_oskar' shared opponent HP -- attempt 1: host hp 154.000 -> -1.000 at (-3.32, 1.90, 7.60); stand_in=(host) place=ERROR: smoke budget exceeded strike=ERROR ERROR: smoke budget exceeded; no host encounter state
+FAIL: peer 1 reduced 'tournament_final_oskar' shared opponent HP -- 
+FAIL: both peers completed 'tournament_final_oskar' (ERROR: smoke budget exceeded)
+FAIL: ERROR: smoke budget exceeded
+exit=2 start=2026-10-04T23:26:17Z duration_s=466

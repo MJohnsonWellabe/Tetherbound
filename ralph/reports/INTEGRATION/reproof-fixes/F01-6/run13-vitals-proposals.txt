@@ -1,0 +1,12 @@
+# run 13: host vitals proposals, unresolved (throttled 3 s) and presented
+DBGPV t=168867 presented 1:1:enemy:1 peer=1
+DBGPV t=199902 presented 1:1:enemy:2 peer=1
+DBGPV t=214906 unresolved 1:1:enemy:3 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=218576 unresolved 1:1:enemy:3 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=222919 presented 1:1:enemy:3 peer=1750233239
+DBGPV t=247858 unresolved 1:1:enemy:4 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=251039 unresolved 1:1:enemy:4 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=254788 unresolved 1:1:enemy:4 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=258344 unresolved 1:1:enemy:4 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=261440 unresolved 1:1:enemy:4 peer=1750233239 committed=true result={ "ok": true, "durable": true, "resolved": false, "code": "actor_owner_save_pending", "receipt": { "receipt_id": "3eabf59ac6
+DBGPV t=266633 presented 1:1:enemy:4 peer=1750233239
