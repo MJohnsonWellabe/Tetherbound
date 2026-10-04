@@ -138,10 +138,14 @@ const VILLAGERS_PATH := "res://data/config/village_npcs.json"
 ## The lane is walked at z 4.8, not its 5.0 centre: the Cloudreach relic slot's
 ## plinth (realm_heart_shrine.gd, 1.41m radius at ~(16.1,6.7)) reaches into the
 ## doorway to z ~5.3, leaving the lane's southern ~0.9m clear for the body.
-const INDOOR_APPROACH := {
-	"Mira": [Vector2(13.87, 4.8), Vector2(16.5, 4.8), Vector2(17.5, 4.0)],
-	"Bram": [Vector2(3.6, -6.0), Vector2(0.5, -6.0), Vector2(-5.1, -6.0)],
-}
+## Indoor services are approached through their own shop/inn door: out on the
+## frontage, through the doorway, then a stand at the counter. Derived at run
+## time from the actual building's Door and facing (the village was re-planned
+## as one straight road, F17; fixed coordinates had kept the old interiors).
+const INDOOR_HOUSES := {"Mira": "mira_shop", "Bram": "bram_inn"}
+const INDOOR_OUTSIDE_M := 1.4
+const INDOOR_INSIDE_M := 1.0
+const INDOOR_STAND_M := 1.9
 ## A closed door on the way is opened the way a player opens it: when the walk
 ## stalls and the arbiter's actionable winner is an "Open ..." prompt (or a
 ## locked boundary leaf's "Try the gate", with the key in the satchel), one
@@ -987,11 +991,11 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 	var from_road := 1 if road.size() > 0 else -1
 	var until_road := leg.size() - 1 if road.size() > 0 else -1
 	var stop := at
-	if INDOOR_APPROACH.has(str(t.label)):
-		var through: Array = INDOOR_APPROACH[str(t.label)]
+	var through := _indoor_approach(t)
+	if not through.is_empty():
 		for i in through.size() - 1:
-			leg.append(through[i] as Vector2)
-		stop = through[through.size() - 1] as Vector2
+			leg.append(through[i])
+		stop = through[through.size() - 1]
 	elif kind in ["grandpa", "villager", "key", "camp"]:
 		var short := CAMP_STOP_M if kind == "camp" else NPC_STOP_M
 		var back := leg[leg.size() - 1] - at
@@ -1050,9 +1054,29 @@ func _visit(t: Dictionary, road: PackedVector2Array) -> void:
 			_failed = "stood %.2fm from %s but its prompt never won the arbiter" % [d, t.label]
 			return
 	_visited.append(str(t.label))
-	await _frame_for_photo(at, kind in ["grandpa", "villager"], INDOOR_APPROACH.has(str(t.label)))
+	await _frame_for_photo(at, kind in ["grandpa", "villager"], INDOOR_HOUSES.has(str(t.label)))
 	await _capture("reached %s" % t.label)
 	print("[village-walk] VISIT %s kind=%s dist_m=%.2f prompt=\"%s\"" % [t.label, kind, d, prompt])
+
+
+func _indoor_approach(t: Dictionary) -> PackedVector2Array:
+	var role := str(INDOOR_HOUSES.get(str(t.label), ""))
+	var npc := t.get("node") as Node3D
+	if role.is_empty() or npc == null:
+		return PackedVector2Array()
+	for raw: Node in get_nodes_in_group("village_road_houses"):
+		var house := raw as Node3D
+		if house == null or str(house.get_meta("village_role", "")) != role:
+			continue
+		var door := house.get_node_or_null(^"Door") as Node3D
+		if door == null:
+			return PackedVector2Array()
+		var out := house.global_basis.z.normalized()
+		var outer := door.global_position + out * INDOOR_OUTSIDE_M
+		var inner := door.global_position - out * INDOOR_INSIDE_M
+		var stand := npc.global_position + out * INDOOR_STAND_M
+		return PackedVector2Array([Vector2(outer.x, outer.z), Vector2(inner.x, inner.z), Vector2(stand.x, stand.z)])
+	return PackedVector2Array()
 
 
 ## Orbit the camera with the look stick to the first of PHOTO_ORBITS_DEG (off
