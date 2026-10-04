@@ -13,7 +13,13 @@ uniform float min_angular_size = 0.016;
 uniform float depth_pull_fraction = 0.004;
 uniform float depth_pull_max_m = 30.0;
 uniform float night_lift = 0.06;
+// A puff the camera stands inside covers the whole frame. Fade it by camera
+// distance / puff size: gone at near_fade_inside, full from near_fade_clear.
+// Far puffs (ratio >> 1, the 4 km read) are unaffected.
+uniform float near_fade_inside = 0.6;
+uniform float near_fade_clear = 1.6;
 varying float v_distance;
+varying float v_inside;
 // Own fog (copied from the live WorldEnvironment by water_veilfall_silhouette.gd):
 // the same colour at a reduced amount so the white water survives 4 km of haze.
 uniform vec3 fog_colour = vec3(0.38, 0.50, 0.60); // linear; set from the environment
@@ -39,6 +45,7 @@ void vertex() {
 	float distance_m = length(centre - camera);
 	v_distance = distance_m;
 	float size_m = max(COLOR.a * 100.0, distance_m * min_angular_size);
+	v_inside = distance_m / max(size_m, 0.001);
 	vec3 view = (VIEW_MATRIX * vec4(centre, 1.0)).xyz;
 	// Wider than tall: mist spreads across the plunge pool.
 	view.xy += UV2 * vec2(size_m, size_m * 0.62);
@@ -60,6 +67,7 @@ void fragment() {
 		* 0.6 + noise(p * 4.7 + vec2(-phase, TIME * drift_speed * 1.7)) * 0.4;
 	ALBEDO = mist_colour.rgb;
 	EMISSION = mist_colour.rgb * night_lift;
-	ALPHA = opacity * radial * smoothstep(0.2, 0.75, billow + radial * 0.35);
+	ALPHA = opacity * radial * smoothstep(0.2, 0.75, billow + radial * 0.35)
+		* smoothstep(near_fade_inside, near_fade_clear, v_inside);
 	FOG = vec4(fog_colour, fog_enabled ? (1.0 - exp(-fog_density * v_distance)) * fog_keep : 0.0);
 }
