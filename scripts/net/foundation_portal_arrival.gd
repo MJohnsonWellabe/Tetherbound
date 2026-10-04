@@ -114,15 +114,20 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 		_refuse("The arrival collision is not ready."); return
 	var radius := (collision.shape as CapsuleShape3D).radius
 	var body := actor as CharacterBody3D
-	var height := _landing_height(world_node, body, target, radius)
-	if not is_finite(height): _refuse("The arrival anchor has no supported ground."); return
-	var tolerance := tan(body.floor_max_angle) * radius
-	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
-		var support := _landing_height(world_node, body, target + Vector3(offset.x, 0, offset.y), radius)
-		if not is_finite(support) or absf(support - height) > tolerance: _refuse("The arrival anchor is not supported."); return
-	var landing := _capsule_landing(world_node, body, target, radius)
+	# Co-op: another trainer may already stand on the anchor (two Home Keys in
+	# a row). Take the first supported, unobstructed slot from the fixed,
+	# host-authored list around it; the host accepts contact only at a slot.
+	var landing := Vector3(INF, INF, INF)
+	var reason := "The arrival anchor is obstructed."
+	for slot: Vector3 in arrival_slots(target):
+		var checked := _slot_landing(world_node, body, slot, radius)
+		if checked.get("landing") is Vector3:
+			landing = checked.landing
+			target = slot
+			break
+		if slot == target: reason = str(checked.reason)
 	if not landing.is_finite():
-		_refuse("The arrival anchor is obstructed."); return
+		_refuse(reason); return
 	if not body.is_physics_processing() or body.get("_foundation_ground_contact_generation") == null:
 		_refuse("The ordinary arrival controller is not processing."); return
 	_pending.actor = weakref(body)
@@ -306,17 +311,22 @@ func _remote_binding(peer: int, original: Dictionary) -> bool:
 		or contact.get("body_instance_id") != actor.get_instance_id() or not contact.get("position") is Vector3: return false
 	var world_node: Node3D = session.call("_portal_world_node", str(permit.realm))
 	if world_node == null or not world_node.is_ancestor_of(actor): return false
-	var target := _arrival_target(world_node, permit)
-	if not target.is_finite() or not world_node.has_method("ground_height_at"): return false
+	var anchor := _arrival_target(world_node, permit)
+	if not anchor.is_finite() or not world_node.has_method("ground_height_at"): return false
 	var radius: float = float(contact.get("capsule_radius", 0.0))
 	if radius <= 0.0: return false
+	for target: Vector3 in arrival_slots(anchor):
+		if _remote_slot_contact(world_node, actor, target, radius, contact.position): return true
+	return false
+
+func _remote_slot_contact(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float, at: Vector3) -> bool:
 	var height: float = _landing_height(world_node, actor, target, radius)
 	if not is_finite(height): return false
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
 		var support: float = _landing_height(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
 		if not is_finite(support) or absf(support - height) > tan(actor.floor_max_angle) * radius: return false
 	var landing := Vector3(target.x, height + actor.safe_margin, target.z)
-	return contact.position.distance_to(landing) <= radius and _supported_capsule(world_node, actor, target, radius)
+	return at.distance_to(landing) <= radius and _supported_capsule(world_node, actor, target, radius)
 
 func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(original.envelope.world_instance_id, original.envelope.character_id)
@@ -408,6 +418,31 @@ func _contacts_on_support(world_node: Node3D, contacts: Array[Dictionary], surfa
 				and absf(surface.normal.dot(contact.point - surface.position)) <= margin: matched = true
 		if not matched: return false
 	return true
+
+## The anchor first, then the configured ring (portals.json arch.arrival_slots_m).
+## Offsets are authored data; no client coordinate ever enters this list.
+static func arrival_slots(anchor: Vector3) -> Array[Vector3]:
+	var slots: Array[Vector3] = [anchor]
+	var config: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
+	var offsets: Variant = config.get("arch", {}).get("arrival_slots_m", []) if config is Dictionary else []
+	if not offsets is Array: return slots
+	for offset: Variant in offsets:
+		if offset is Array and offset.size() == 2 and (offset[0] is float or offset[0] is int) \
+			and (offset[1] is float or offset[1] is int) and is_finite(float(offset[0])) and is_finite(float(offset[1])) \
+			and Vector2(float(offset[0]), float(offset[1])) != Vector2.ZERO:
+			slots.append(anchor + Vector3(float(offset[0]), 0.0, float(offset[1])))
+	return slots
+
+func _slot_landing(world_node: Node3D, body: CharacterBody3D, target: Vector3, radius: float) -> Dictionary:
+	var height := _landing_height(world_node, body, target, radius)
+	if not is_finite(height): return {"reason": "The arrival anchor has no supported ground."}
+	var tolerance := tan(body.floor_max_angle) * radius
+	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
+		var support := _landing_height(world_node, body, target + Vector3(offset.x, 0, offset.y), radius)
+		if not is_finite(support) or absf(support - height) > tolerance: return {"reason": "The arrival anchor is not supported."}
+	var landing := _capsule_landing(world_node, body, target, radius)
+	if not landing.is_finite(): return {"reason": "The arrival anchor is obstructed."}
+	return {"landing": landing}
 
 func _capsule_landing(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> Vector3:
 	var refused := Vector3(INF, INF, INF)

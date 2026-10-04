@@ -16,7 +16,12 @@ func _initialize() -> void:
 func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
-	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"], "F18 gameplay peer logs have no errors/warnings")
+	# The one exemption is Godot 4.7's compat notice raised inside the Terrain3D
+	# GDExtension when the Meadows terrain enters the tree; no project script
+	# calls it. Any other warning or error still fails.
+	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"],
+		"F18 gameplay peer logs have no errors/warnings",
+		["WARNING: instance_reset_physics_interpolation() is deprecated."])
 	# Title/control hello stays lightweight. Build the same actual fixture
 	# worlds sequentially before setup/admission; no simultaneous world writers.
 	if not await launch(3, "title", [], {1: ["--joiner"]}):
