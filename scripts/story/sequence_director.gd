@@ -282,6 +282,17 @@ var _fade_total: float = 0.0
 
 
 func _ready() -> void:
+	# A host-side simulation shell (realm_shells.gd) has no story of its own
+	# and strips this node in its root's _ready. Starting here would leave a
+	# suspended continuation and a ledger listener on a freed node, which
+	# leaked at exit; it would also suspend another player's opening starter.
+	if _in_simulation_shell():
+		# Same synchronous starter suspension the full path makes first, so a
+		# shell never adopts a sandbox starter; then nothing that can suspend.
+		var encounter := get_node_or_null(encounter_path)
+		if encounter != null and encounter.has_method("suspend_default_starter"):
+			encounter.call("suspend_default_starter")
+		return
 	add_to_group("progression_restore")
 	add_to_group("input_owner")
 	add_to_group("story_modal")
@@ -368,6 +379,14 @@ func _ready() -> void:
 	# yet, so `_player.global_position` is still whatever the scene said.
 	await get_tree().process_frame
 	await _spawn_the_cast()
+
+
+func _in_simulation_shell() -> bool:
+	var node: Node = get_parent()
+	while node != null:
+		if node.get("simulation_only") == true: return true
+		node = node.get_parent()
+	return false
 
 
 ## Fail at boot rather than at the beat.
