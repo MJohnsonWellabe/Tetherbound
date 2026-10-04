@@ -286,3 +286,70 @@ func test_altar_spend_id_replays_as_duplicate_and_conflicts_cannot_mint() -> voi
 	var conflict := E.stage_spend(spent.state, CHARACTER, uid, "once", 4, "essence_ground", 6,
 		E.config(), PROGRESSION.config())
 	assert_eq(conflict.get("code"), "receipt_conflict")
+
+
+# --- owner delivery across passive drift (reconnect/reload) ------------------
+
+func _spend_row(before: Dictionary) -> Dictionary:
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	var uid: String = before.party[0].uid
+	var intent := {"spend_id": "0123456789abcdef0123456789abcdef", "creature_uid": uid,
+		"expected_level": int(before.party[0].level), "payment_item": "essence_ground", "expected_character_revision": 0}
+	var proposal := E.stage_core_spend(before, CHARACTER, 0, intent, E.config(), PROGRESSION.config(),
+		teaching.available_moves, teaching.character_loadout_mirror)
+	assert_true(proposal.get("ok") == true, str(proposal))
+	var accepted := {"character_id": CHARACTER, "character_revision": 1, "before": before, "state": proposal.state,
+		"intent": intent, "action": "altar_spend", "action_id": intent.spend_id, "receipt": proposal.receipt}
+	var row := E.next_training_delivery("f27-world", "f27-namespace", "f27-session", accepted, null,
+		E.config(), PROGRESSION.config(), teaching.available_moves, teaching.character_loadout_mirror)
+	assert_false(row.is_empty(), "a real pending Altar spend row")
+	return row
+
+
+func _owner_stage(owner: Dictionary, row: Dictionary) -> Dictionary:
+	var teaching := preload("res://scripts/creatures/teaching.gd")
+	return E.stage_training_owner(owner, row, E.config(), PROGRESSION.config(),
+		teaching.available_moves, teaching.character_loadout_mirror)
+
+
+func _drift(record: Dictionary) -> Dictionary:
+	var drifted := record.duplicate(true)
+	for card: Dictionary in drifted.party:
+		card.nourishment = float(card.get("nourishment", 50.0)) - 3.25
+		card.happiness = float(card.get("happiness", 50.0)) - 1.5
+	return drifted
+
+
+func test_passive_care_fields_mirror_the_owner_passive_replay_list() -> void:
+	assert_eq(E.PASSIVE_CARE_FIELDS, preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS)
+
+
+func test_pending_spend_delivers_once_despite_passive_drift_before_rejoin() -> void:
+	var before := _stocked(_player([["terrapup", 4]]))
+	var row := _spend_row(before)
+	if row.is_empty(): return
+	var staged := _owner_stage(_drift(before), row)
+	assert_true(staged.get("ok") == true and staged.get("duplicate") == false, "drift is not a baseline conflict: " + str(staged))
+	assert_eq(int(_row(staged.state, before.party[0].uid).level), 5)
+	assert_eq(_count(staged.state, "essence_ground"), 200 - E.level_cost(4, E.config(), PROGRESSION.config()))
+	# Saved-before-ACK owner (marker present) that drifted again: a duplicate, never a second level.
+	var saved := _drift(staged.state)
+	var replay := _owner_stage(saved, row)
+	assert_true(replay.get("ok") == true and replay.get("duplicate") == true, str(replay))
+	assert_eq(int(_row(replay.state, before.party[0].uid).level), 5)
+	assert_eq(_count(replay.state, "essence_ground"), _count(staged.state, "essence_ground"))
+
+
+func test_real_conflicts_are_still_refused() -> void:
+	var before := _stocked(_player([["terrapup", 4]]))
+	var row := _spend_row(before)
+	if row.is_empty(): return
+	var richer := before.duplicate(true)
+	var inventory := RULES.inventory_from(richer.inventory)
+	inventory.add("essence_ground", 7)
+	richer.inventory = RULES.slots(inventory)
+	assert_eq(_owner_stage(richer, row).get("code"), "training_owner_baseline_conflict")
+	var applied: Dictionary = _owner_stage(before, row).state
+	var tampered := applied.duplicate(true)
+	tampered.party[0].level = 9
+	assert_eq(_owner_stage(tampered, row).get("code"), "training_marker_state_conflict")

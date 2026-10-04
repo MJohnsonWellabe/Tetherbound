@@ -171,7 +171,14 @@ static func _arm_host_cut(runner: SceneTree, character_id: String) -> Dictionary
 			if session.call("_authority_character", peer) == character_id: target = peer
 		runner.set_meta("f27_host_cut", {"observation": observation.duplicate(true), "peer": target})
 		var transport: MultiplayerPeer = runner.root.multiplayer.multiplayer_peer
-		if target > 0 and transport != null: transport.disconnect_peer.call_deferred(target, true)
+		if target > 0 and transport != null:
+			# A forced ENet drop discards the queued delivery but emits no
+			# peer_disconnected, so also deliver the transport's own signal:
+			# the host must see the link die exactly as a pulled cable does.
+			var drop := func() -> void:
+				transport.disconnect_peer(target, true)
+				transport.peer_disconnected.emit(target)
+			drop.call_deferred()
 	writer.connect("transaction_boundary", holder.callable)
 	return _ok("armed host cut for %s" % character_id)
 

@@ -697,17 +697,37 @@ static func stage_training_owner(actual_owner: Dictionary, incoming: Dictionary,
 	if not _baseline_errors(actual_owner, character).is_empty(): return _refuse("invalid_owner_baseline")
 	var current := training_projection(actual_owner)
 	var applied: bool = actual_owner.redesign_character.transaction_receipts.has(incoming.receipt)
+	# The owner's five keep accruing passive care (owner_passive_replay
+	# PASSIVE_FIELDS) between the host's stage, the owner save and a reload
+	# or rejoin. That drift is not a conflicting transaction; comparing it
+	# exactly stalled every reconnecting guest with a pending/saved row.
 	if applied:
-		if not _equivalent(current, incoming.after): return _refuse("training_marker_state_conflict")
+		if not _equivalent(_without_passive(current), _without_passive(incoming.after)):
+			return _refuse("training_marker_state_conflict")
 		return {"ok": true, "duplicate": true, "state": actual_owner.duplicate(true),
 			"requires_owner_save": true, "receipt": incoming.receipt, "journal_revision": incoming.journal_revision}
 	if incoming.status != "pending": return _refuse("accepted_training_history_is_not_a_new_award")
-	if not _equivalent(current, incoming.before): return _refuse("training_owner_baseline_conflict")
+	if not _equivalent(_without_passive(current), _without_passive(incoming.before)):
+		return _refuse("training_owner_baseline_conflict")
 	var next := actual_owner.duplicate(true)
 	for field: String in ["party", "inventory", "redesign_character"]:
 		next[field] = incoming.after[field].duplicate(true)
 	return {"ok": true, "duplicate": false, "state": next, "before": actual_owner.duplicate(true),
 		"requires_owner_save": true, "receipt": incoming.receipt, "journal_revision": incoming.journal_revision}
+
+
+## Mirrors owner_passive_replay.PASSIVE_FIELDS (which preloads this file, so
+## it cannot be preloaded here); test_f27_essence_rules pins the two equal.
+const PASSIVE_CARE_FIELDS := ["nourishment", "happiness", "rested_seconds_left", "rested", "distance_m_together", "landmarks_visited_together"]
+
+## Training projection with each party card's passive-care fields removed.
+static func _without_passive(projection: Dictionary) -> Dictionary:
+	var stripped := projection.duplicate(true)
+	if stripped.get("party") is Array:
+		for card: Variant in stripped.party:
+			if card is Dictionary:
+				for field: String in PASSIVE_CARE_FIELDS: card.erase(field)
+	return stripped
 
 
 ## Production owner path built on neutral c023's prepared bool writer. Shared
