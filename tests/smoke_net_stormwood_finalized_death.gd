@@ -20,9 +20,6 @@ func _run() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
-	if not await _prepare_initial_portal("stormwood_finalized_death"):
-		quit(await finish())
-		return
 	if not await _require_step(0, "host"):
 		quit(await finish())
 		return
@@ -38,8 +35,7 @@ func _run() -> void:
 		await _require_step(0, "story_flag", {"flag": flag, "scope": "world"})
 		for peer in 2:
 			await _require_step(peer, "wait_flag", {"flag": flag})
-	if not await _require_step(1, "enter_realm", {"realm": STORMWOOD,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_finalized_death"}, REALM_STEP_BUDGET):
+	if not await _require_step(1, "enter_realm", {"realm": STORMWOOD}, REALM_STEP_BUDGET):
 		quit(await finish())
 		return
 	await _await_stormwood_shell()

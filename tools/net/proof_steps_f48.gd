@@ -23,6 +23,10 @@ class ButtonActivationObservation extends RefCounted:
 		count += 1
 
 static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionary:
+	if action == "f48_diagnostic":
+		var diagnostic: Script = load("res://tools/net/f48_diagnostic_steps.gd") as Script
+		if diagnostic == null: return _result(false,"Diagnostic tools script unavailable")
+		return await diagnostic.call("run",tree,args)
 	match action:
 		"f48_witness": return await _witness(tree, args)
 		"f48_assert": return await _sealed_reply(tree, action, args, _assert(tree, args))
@@ -223,7 +227,7 @@ static func _fallback_request_carrier_matches(edge: Dictionary, request: Diction
 	var personal: Dictionary = request.character_data.duplicate(true)
 	personal["character_id"] = request.get("character_id")
 	var expected: Dictionary = RECORD_RULES.portable_projection(edge.get("files",{}).get("disk",{})).duplicate(true)
-	expected["party"] = replayed_party
+	expected["party"] = RECORD_RULES.portable_projection({"party": replayed_party}).party
 	return _json_equal(RECORD_RULES.portable_projection(personal),expected) \
 		and _json_equal(personal.get("party"),replayed_party) \
 		and _json_equal(personal.get("satchel_escrow"),edge.get("files",{}).get("disk",{}).get("satchel_escrow"))

@@ -420,7 +420,9 @@ func received_scene_reply(realm: String) -> void:
 	request_answered = true
 
 func _travel() -> void:
-	if not await _transport_permission(): return
+	# With F18's portal runtime off, a raw crossing is the shipping path and
+	# there is no portal permit to prove; the transport proof below still runs.
+	if session.call("portal_runtime_ready") == true and not await _transport_permission(): return
 	if cancellation_mode:
 		await _cancel_travel()
 		return
@@ -635,18 +637,21 @@ func _arrived() -> void:
 	if multiplayer.get_remote_sender_id() != int(ids.departing):
 		_fail("arrival identity")
 		return
-	var arrival: Node = session.get_node_or_null(^"FoundationComposition/PortalArrival")
-	var remote: Dictionary = arrival.get("_remote") if arrival != null else {}
-	var peer: int = multiplayer.get_remote_sender_id()
-	if not _check(not _fixture_original.is_empty() and is_same(remote.get(peer), _fixture_original) \
-		and _fixture_original.session.get_ref() == session and _fixture_original.world.get_ref() == get_node("/root/Game").get("world"),
-		"actual arrived milestone retires only the exact original transport-fixture permission"): return
-	var passive: RefCounted = _fixture_original.passive.get_ref()
-	var character: String = str(_fixture_original.passive_character)
-	var streams: Dictionary = passive.get("hosts") if passive != null else {}
-	if not _check(passive != null and is_same(streams.get(character, {}).get("checkpoint"), _fixture_original.passive_checkpoint),
-		"actual arrival retires only the exact disclosed component checkpoint"): return
-	if not _check(_retire_transport_fixture(), "transport fixture cleanup restores the original arrival producer processing"): return
+	# Portal permits exist only while F18's portal runtime is on; with it off
+	# the crossing above was the raw shipping path and there is none to retire.
+	if session.call("portal_runtime_ready") == true:
+		var arrival: Node = session.get_node_or_null(^"FoundationComposition/PortalArrival")
+		var remote: Dictionary = arrival.get("_remote") if arrival != null else {}
+		var peer: int = multiplayer.get_remote_sender_id()
+		if not _check(not _fixture_original.is_empty() and is_same(remote.get(peer), _fixture_original) \
+			and _fixture_original.session.get_ref() == session and _fixture_original.world.get_ref() == get_node("/root/Game").get("world"),
+			"actual arrived milestone retires only the exact original transport-fixture permission"): return
+		var passive: RefCounted = _fixture_original.passive.get_ref()
+		var character: String = str(_fixture_original.passive_character)
+		var streams: Dictionary = passive.get("hosts") if passive != null else {}
+		if not _check(passive != null and is_same(streams.get(character, {}).get("checkpoint"), _fixture_original.passive_checkpoint),
+			"actual arrival retires only the exact disclosed component checkpoint"): return
+		if not _check(_retire_transport_fixture(), "transport fixture cleanup restores the original arrival producer processing"): return
 	if latejoin_mode:
 		_check(not (transition.get("origins") as RefCounted).get("rows").is_empty(), "completed departure retains live origin policy")
 		departed_motion_before = _body(TARGET, int(ids.departing)).position.x

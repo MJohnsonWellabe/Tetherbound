@@ -23,6 +23,14 @@ const MAX_SPEED := 40.0
 ## This bounded initial allowance does not replace or extend those deadlines.
 const ADMISSION_ALLOWANCE_S := 80.0
 const INITIAL_POSE_LAG_S := 2.0
+## A live-body endpoint match is horizontal within this distance...
+const ENDPOINT_HORIZONTAL_M := 2.0
+## ...and vertical within this one. The owner can report an endpoint while its
+## body is still airborne (a placement, an arrival or a jump in the air) while
+## the host's copy has already settled on the floor below it (CI 37196626495:
+## endpoint 2.42 m above a host body 0.06 m away, never matched). Height gives
+## no walking credit; the horizontal bound is the one that guards travel.
+const ENDPOINT_VERTICAL_M := 6.0
 var _session: WeakRef
 var local: Dictionary = {}
 var hosts: Dictionary = {}
@@ -30,6 +38,8 @@ var pending: Dictionary = {}
 var committing: Dictionary = {}
 var saving := false
 var _left := 0.0
+var _reported_error := ""
+var _reported_ignore := ""
 
 class NavigationFlags extends RefCounted:
 	var flags: Dictionary = {}
@@ -102,6 +112,13 @@ func record_vitals(row: Dictionary, saved: bool) -> bool:
 	record_input({"op": op, "delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt_hash": receipt_hash})
 	seen[key] = true
 	local.vitals_seen = seen
+	return true
+
+## The owner applied a host-journaled payout to its satchel and saved it.
+func record_delivery(row: Dictionary) -> bool:
+	if not recording_active() or row.get("character_id") != local.character: return false
+	record_input({"op": "reward_delivery_applied", "delivery_id": str(row.get("delivery_id", "")),
+		"stacks_hash": HASH.fingerprint({"stacks": row.get("stacks")})})
 	return true
 
 func recording_active() -> bool:
@@ -282,7 +299,11 @@ func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: D
 		or not context.get("initial_position") is Vector3: return false
 	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
 	# Reuse the existing live-body discontinuity endpoint tolerance.
-	return context.initial_position.distance_to(at) <= 2.0
+	return _endpoint_matches(context.initial_position, at)
+
+static func _endpoint_matches(host_body: Vector3, endpoint: Vector3) -> bool:
+	var flat := Vector2(host_body.x - endpoint.x, host_body.z - endpoint.z)
+	return flat.length() <= ENDPOINT_HORIZONTAL_M and absf(host_body.y - endpoint.y) <= ENDPOINT_VERTICAL_M
 
 func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
@@ -301,7 +322,9 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			stream.error = "owner_passive_host_buffer_full"; return
 		if input.get("op") == "discovery" and (stream.cursor.travel_valid != true or stream.cursor.realm != context.realm):
 			var at: Variant = input.get("to")
-			if not context.get("initial_position") is Vector3: return # Realm body has not arrived; retry this exact prefix.
+			if not context.get("initial_position") is Vector3:
+				_note_host(stream, "input %d waits: no host body for this owner in %s" % [sequence, str(context.realm)])
+				return # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
 				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
 				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
@@ -318,18 +341,29 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			if input.get("travel_valid") == true and from.distance_to(to) > 30.0:
 				# A real host-observed discontinuity can establish a new endpoint,
 				# never walking credit. Wait for replication instead of inventing it.
-				if not context.get("initial_position") is Vector3 or context.initial_position.distance_to(to) > 2.0: return
+				if not context.get("initial_position") is Vector3 or not _endpoint_matches(context.initial_position, to):
+					_note_host(stream, "input %d waits: discontinuity to %s, host body at %s" % [sequence, str(to),
+						str(context.get("initial_position", "none"))])
+					return
 				input_context.discontinuity_authorized = true
 		var applied: Dictionary
 		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
 			if not owner().has_method("_owner_passive_actor_vitals_context"): return
 			var proof: Dictionary = owner().call("_owner_passive_actor_vitals_context", peer, input)
-			if proof.is_empty(): return # Exact saved op waits the existing authenticated world ACK.
+			if proof.is_empty():
+				_note_host(stream, "input %d waits: %s has no host vitals proof yet" % [sequence, str(input.op)])
+				return # Exact saved op waits the existing authenticated world ACK.
 			if input.op == "actor_vitals_applied" and proof.get("revision_before") != stream.revision:
 				stream.error = "owner_passive_vitals_revision_conflict"; return
 			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
 				stream.error = "owner_passive_vitals_saved_before_applied"; return
 			applied = REPLAY.apply_vitals(stream.cursor, input, proof)
+		elif input.get("op") == "reward_delivery_applied":
+			var row: Variant = _game().get("world").reward_deliveries.get(input.get("delivery_id"))
+			applied = REPLAY.apply_delivery(stream.cursor, input, row)
+			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
+				stream.character, stream.cursor.base, applied.cursor.base) != true:
+				stream.error = "owner_passive_delivery_authority_changed"; return
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
@@ -608,9 +642,13 @@ func _frozen_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	var checkpoint: Dictionary = stream.checkpoint
 	if checkpoint.is_empty() or packet.get("id") != checkpoint.id \
 		or not packet.get("sequence") is int or not HASH._hex(packet.get("hash"), 64) \
-		or not HASH._hex(packet.get("prefix_hash"), 64): return
+		or not HASH._hex(packet.get("prefix_hash"), 64):
+		_note_host(stream, "frozen ignored: checkpoint %s, packet %s" % [str(checkpoint.get("id", "")).left(8), str(packet.get("id", "")).left(8)])
+		return
 	var frozen := {"sequence": packet.sequence, "hash": packet.hash, "prefix_hash": packet.prefix_hash}
-	if checkpoint.has("frozen") and not E._equivalent(checkpoint.frozen, frozen): return
+	if checkpoint.has("frozen") and not E._equivalent(checkpoint.frozen, frozen):
+		_note_host(stream, "frozen ignored: owner refroze at sequence %d (was %d)" % [int(packet.sequence), int(checkpoint.frozen.sequence)])
+		return
 	checkpoint.frozen = frozen
 	_prepare_host(peer, stream)
 
@@ -618,7 +656,9 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 	var checkpoint: Dictionary = stream.checkpoint
 	if not str(stream.error).is_empty() or checkpoint.is_empty() or not checkpoint.has("frozen"): return
 	var frozen: Dictionary = checkpoint.frozen
-	if int(stream.cursor.sequence) < int(frozen.sequence): return
+	if int(stream.cursor.sequence) < int(frozen.sequence):
+		_note_host(stream, "prepare waits for inputs: cursor %d < frozen %d" % [int(stream.cursor.sequence), int(frozen.sequence)])
+		return
 	var projected: Dictionary = stream.cursor.state
 	if checkpoint.get("duty", {}).get("action") == "combat_round_reward":
 		projected = preload("res://scripts/net/combat_round_reward.gd").settled_before(projected, checkpoint.duty.intent, checkpoint.duty.context)
@@ -645,7 +685,12 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 		else:
 			prepared = PREP.make(checkpoint.retained, checkpoint.duty, before, stream.revision,
 				stream.epoch, stream.cursor, checkpoint.id)
-		if prepared.is_empty() or authority.call("reserve_owner_passive_checkpoint", stream.character, prepared, checkpoint.get("retained", {}), stream.cursor) != true: return
+		if prepared.is_empty():
+			_note_host(stream, "prepare produced no preparation")
+			return
+		if authority.call("reserve_owner_passive_checkpoint", stream.character, prepared, checkpoint.get("retained", {}), stream.cursor) != true:
+			_note_host(stream, "checkpoint reservation refused (%s)" % str(authority.call("training_lock_reason", stream.character)))
+			return
 		checkpoint.prepared = prepared
 	_send_owner(peer, stream, {"op": "prepared", "id": checkpoint.id, "prepared": checkpoint.prepared,
 		"retained": checkpoint.get("retained", {})})
@@ -758,10 +803,17 @@ func _completion(peer: int, stream: Dictionary) -> void:
 	_send_owner(peer, stream, {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result})
 
 func receive_owner(packet: Dictionary) -> void:
-	if local.is_empty(): return
+	if local.is_empty():
+		_note_ignored("%s before this owner armed a stream" % str(packet.get("op", "")))
+		return
 	var scope := _scope()
 	for field: String in scope:
-		if packet.get(field) != scope[field]: return
+		if packet.get(field) != scope[field]:
+			_note_ignored("%s for another %s" % [str(packet.get("op", "")), field])
+			return
+	if packet.get("stream_id") != local.id and packet.get("op") != "inputs_ack":
+		_note_ignored("%s for stream %s, this owner is on %s" % [str(packet.get("op", "")),
+			str(packet.get("stream_id", "")).left(8), str(local.id).left(8)])
 	if packet.get("stream_id") != local.id:
 		if packet.get("op") != "inputs_ack" or local.rebase.get("old_stream") != packet.get("stream_id") \
 			or not packet.get("sequence") is int or packet.sequence > int(local.rebase.get("old_sequence", -1)): return
@@ -841,12 +893,17 @@ func receive_owner(packet: Dictionary) -> void:
 				if not packet.get("request") is Dictionary or HASH.fingerprint(packet.request) != packet.get("request_hash") \
 					or owner().call("_owner_passive_request_matches", packet.source_kind, packet.request) != true: return
 			elif packet.has("source_kind") or not HASH._hex(packet.get("duty_hash"), 64): return
-			if not pending.is_empty() and pending.id != packet.id: return
+			if not pending.is_empty() and pending.id != packet.id:
+				_note_ignored("freeze %s while %s is pending" % [str(packet.id).left(8), str(pending.id).left(8)])
+				return
 			if pending.is_empty():
 				var saver: RefCounted = _game().get("save_system")
 				if saver == null: return
 				saver.call("finish_fallback") # Complete reentrant save callbacks before freezing any owner state.
-				if saver.call("fallback_busy") == true or _scope() != scope or local.is_empty() or local.id != packet.stream_id: return
+				if saver.call("fallback_busy") == true or _scope() != scope or local.is_empty() or local.id != packet.stream_id:
+					_note_ignored("freeze %s: fallback_busy=%s scope_changed=%s stream=%s" % [str(packet.id).left(8),
+						str(saver.call("fallback_busy")), str(_scope() != scope), str(local.get("id", "")).left(8)])
+					return
 				pending = {"id": packet.id, "scope": scope, "retained_event": packet.get("retained_event"),
 					"duty_hash": packet.get("duty_hash", ""), "sequence": local.sequence, "prefix_hash": local.prefix_hash,
 					"hash": HASH.fingerprint(_projection()), "phase": "frozen"}
@@ -942,11 +999,34 @@ func _flush() -> void:
 		return
 	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
 
+## Diagnostic only, once per character and reason: a host checkpoint that
+## silently waits leaves the fight's round reward held with no other trace.
+var _host_notes: Dictionary = {}
+
+func _note_host(stream: Dictionary, reason: String) -> void:
+	var character := str(stream.get("character", ""))
+	if _host_notes.get(character) == reason:
+		return
+	_host_notes[character] = reason
+	print("[owner-passive] host %s: %s (t=%dms)" % [character.left(18), reason, Time.get_ticks_msec()])
+
+## Diagnostic only, once per distinct reason: a packet this owner drops is
+## otherwise invisible, and the host simply resends it forever.
+func _note_ignored(reason: String) -> void:
+	if reason == _reported_ignore:
+		return
+	_reported_ignore = reason
+	print("[owner-passive] ignored " + reason)
+
 func tick(delta: float) -> void:
 	_left -= delta
 	if _left > 0.0: return
 	_left = 0.25
 	if owner() == null or owner().call("is_host") == true: return
+	if not local.is_empty() and str(local.get("error", "")) != _reported_error:
+		_reported_error = str(local.get("error", ""))
+		if not _reported_error.is_empty():
+			push_warning("owner passive stream stopped on this owner: " + _reported_error)
 	if pending.is_empty(): _flush()
 	else: _retry_owner()
 

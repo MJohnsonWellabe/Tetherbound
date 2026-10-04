@@ -267,6 +267,17 @@ func _research_other_transaction(character: String) -> bool:
 func _research_reserved(character: String) -> bool:
 	return _research_preparations.has(character) and _research_preparations[character].committed != true
 
+## An owner-applied reward payout, replayed exactly by the owner-passive
+## stream. Only satchel slots move; no revision CAS changes.
+func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary) -> bool:
+	if not _records.has(character) or not ESSENCE._equivalent(_records[character].state, before) \
+		or not after.get("inventory") is Array: return false
+	var next: Dictionary = _records[character].state.duplicate(true)
+	next.inventory = after.inventory.duplicate(true)
+	if not ESSENCE._equivalent(next, after): return false
+	_records[character].state = next
+	return true
+
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
 
@@ -333,7 +344,13 @@ func refresh_host_local(raw: Dictionary, character_id: String) -> Dictionary:
 	# projection is not an equip CAS and cannot refresh a command profile on a
 	# later hit. Future host-authorized gear changes need their typed doorway.
 	candidate["equipment"] = current.equipment.duplicate(true)
-	candidate["realm_hearts"] = current.realm_hearts.duplicate(true)
+	# The Heart selection is this host's own pressed choice, already validated
+	# below by heart_selection_errors. Keeping the admission value instead left
+	# every later reward staged against a stale selection, so the owner apply
+	# never matched and the host could not save again (smoke_net_veridian_relic_key:
+	# realm_hearts/active_id 'meadows' live vs '' staged). Combat power still
+	# reads actor_stat_state(), which exposes no selection.
+	candidate["realm_hearts"] = raw.get("realm_hearts", current.realm_hearts).duplicate(true)
 	# A failed owner settlement still leaves the durable world debit committed.
 	# Preserve its host entitlement while the actual local key remains pending
 	# for atomic personal retry, rather than minting a second host-owned key.
@@ -975,6 +992,16 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 
 func creature_training_is_pending(character: String) -> bool:
 	return _training_locked(character)
+
+
+## Diagnostic only: which of `_training_locked`'s fences holds `character`.
+func training_lock_reason(character: String) -> String:
+	if _training_stages.has(character): return "training staged"
+	if _training_pending.has(character): return "training awaiting owner ack"
+	if _groom_preparations.has(character): return "groom prepared"
+	if _research_reserved(character):
+		return "research reserved (%s)" % str(_research_preparations[character].get("kind", ""))
+	return ""
 
 
 func creature_training_pending_matches(character: String, row: Dictionary) -> bool:

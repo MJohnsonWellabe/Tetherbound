@@ -101,6 +101,8 @@ const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 ## Row 21's `party_grant`: the opening's own door into `Game.party`, and the
 ## level curve `adopt_starter()` reads for a starter.
 const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
@@ -863,7 +865,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"heart_place":
 			out = _step_heart_place(args)
 		"heart_activate":
-			out = _step_heart_activate(args)
+			out = await _step_heart_activate(args)
 		"present_publish":
 			out = _step_present_publish(args)
 		"present_damage":
@@ -2593,6 +2595,32 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			% bind_budget}
 
 
+## A harness placement is a jump no player can make. The host's owner-passive
+## replay accepts a long discontinuity only while its own copy of this body
+## stands within 2 m of the new spot (owner_passive_sync.gd _inputs_host), so a
+## step that places the player and moves on at once can strand that input for
+## good: CI 37189095290 client_trainer_rewards waited on 'discontinuity to
+## (80.0, 0.9, 46.0), host body at (81.06, 0.9, 50.45)' and every round reward
+## behind it stalled. On a client, give the discovery tick time to record the
+## jump, then wait (bounded) until the host has acknowledged every recorded
+## input, as a real arrival would before play continues.
+func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
+	var game := root.get_node_or_null(^"Game")
+	var session: Variant = game.get("session") if game != null else null
+	if not session is Node or not (session as Node).has_method("is_host") \
+			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
+		return
+	var passive: Variant = (session as Node).get("_owner_passive")
+	if passive == null:
+		return
+	for frame in budget_frames:
+		var local: Dictionary = passive.get("local")
+		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
+				or (local.get("inputs", []) as Array).is_empty()):
+			return
+		await physics_frame
+
+
 ## Stand the trainer at a point. The travel itself, not a game action.
 ##
 ## A joining player walks to the fight; a headless harness cannot, and must not
@@ -2615,6 +2643,7 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	player.velocity = Vector3.ZERO
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
+	await _await_owner_passive_caught_up()
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
@@ -3436,6 +3465,18 @@ func _step_heart_activate(args: Dictionary) -> Dictionary:
 	var hearts: Variant = game.get("realm_hearts")
 	if hearts == null:
 		return {"verdict": "ERROR", "detail": "no Game.realm_hearts"}
+	# A player presses the shrine prompt through input, which the session owns
+	# while this character's record is mid-transaction (a round reward still
+	# settling after a fight). Wearing or releasing a Heart then would part the
+	# live record from that reward's baseline for good, so wait behind the same
+	# gate.
+	var session: Variant = game.get("session")
+	var waited := 0
+	while session is Node and (session as Node).has_method("owns_input") and (session as Node).call("owns_input") == true:
+		if waited >= 1200:
+			return {"verdict": "FAIL", "detail": "the session still owned input after %d frames" % waited}
+		await physics_frame
+		waited += 1
 	if bool(args.get("release", false)):
 		(hearts as RefCounted).call("clear_active")
 		return {"verdict": "PASS", "detail": "released"}
@@ -4010,6 +4051,7 @@ func _step_trainer_battle(args: Dictionary) -> Dictionary:
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
+		await _await_owner_passive_caught_up()
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
 			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
@@ -4551,6 +4593,22 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	var party: Variant = game.get("party") if game != null else null
 	var size := int((party as RefCounted).call("size")) if party != null else -1
+	# A creature above the starting cap carries the breakthroughs its level
+	# implies, exactly as a caught one does (foundation_capture_rules.gd).
+	# Without them a level-18 grant sits above cap 10 and earns no round XP.
+	var local: Variant = game.get("local") if game != null else null
+	if local != null:
+		var saved: Dictionary = (local as RefCounted).call("save_data")
+		var personal: Dictionary = TEACHING.character_loadout_mirror(saved.get("party", []), (local as RefCounted).get("redesign_character"))
+		# Above the authored ceiling there is no cap to record; such fixtures
+		# (level 99) keep the record they had before this step.
+		if level <= int(BREAKTHROUGH.masters().get("ceiling", 60)):
+			for card: Variant in saved.get("party", []):
+				if card is Dictionary and card.get("uid") == creature.get("uid"):
+					personal = BREAKTHROUGH.initialize_caught(personal, card)
+			if personal.is_empty():
+				return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
+			(local as RefCounted).set("redesign_character", personal)
 	if not PARTY_SEAM.has_game_state():
 		return {"verdict": "FAIL",
 			"detail": "party_seam is running on its FALLBACK array, not Game.party -- "
@@ -4864,6 +4922,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
+	await _await_owner_passive_caught_up()
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
@@ -4874,20 +4933,40 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 		joined["data"] = fixture; return joined
 	var record: Dictionary = director.call("encounter_record")
 	var actual: Array = record.get("opponent", {}).get("position", [])
+	# The training journal has one current row per owner. Real catch research
+	# may replace it during the existing presentation wait. Observe the actual
+	# original BOOL edge and accepted delta before that replacement, not a
+	# reconstructed row or the later action's current carrier.
+	var session: Node = game.get("session")
+	var writer: Node = session.get_node_or_null(^"LedgerRpc") if session != null else null
+	if writer == null or writer.get_script() != preload("res://scripts/net/ledger_rpc.gd"):
+		return {"verdict": "FAIL", "detail": "Actual catch writer unavailable", "data": fixture}
+	var capture_source := {"game":weakref(game), "session":weakref(session), "world":weakref(game.get("world")),
+		"writer":weakref(writer), "epoch":str(session.call("_altar_current_epoch")),
+		"character":str(game.get("local").get("character_id")), "before":before, "edge":{}, "accepted":{}}
+	var save_observer: Callable = _f48_capture_saved_source.bind(capture_source)
+	var accepted_observer: Callable = _f48_capture_accepted_source.bind(capture_source)
+	writer.connect("transaction_boundary", save_observer)
+	writer.connect("delta_applied", accepted_observer)
 	var thrown: Dictionary = _step_catch_throw({"target": actual, "orb_id": "orb_basic"})
 	if thrown.get("verdict") != "PASS":
+		writer.disconnect("transaction_boundary", save_observer)
+		writer.disconnect("delta_applied", accepted_observer)
 		_fixture_capture_pose(fixture, player)
 		thrown["data"] = fixture; return thrown
 	for _frame: int in 600: await physics_frame
+	if is_instance_valid(writer):
+		writer.disconnect("transaction_boundary", save_observer)
+		writer.disconnect("delta_applied", accepted_observer)
 	_fixture_capture_pose(fixture, player)
 	var after: Dictionary = game.get("local").call("save_data")
 	fixture["owner_before"] = before
 	fixture["owner_after"] = after
 	fixture["finish_reply"] = director.get("_shared_catch_finish_reply")
-	# Read the original pending owner row without applying it or saving. A
-	# successful host catch can still be blocked by an earlier owner decision.
-	var session: Node = game.get("session")
-	var row: Dictionary = session.call("_owner_training_row") if session != null else {}
+	var row: Dictionary = capture_source.accepted
+	fixture["latest_owner_training_row"] = session.call("_owner_training_row") if is_instance_valid(session) else {}
+	fixture["capture_saved_edge"] = {"path":capture_source.edge.get("path"), "sha256":capture_source.edge.get("sha256"),
+		"row":capture_source.edge.get("row"), "accepted_delta":capture_source.get("accepted_delta",{})}
 	fixture["owner_training_row"] = row
 	fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
 	if not row.is_empty() and row.get("version") in [2, 3]:
@@ -4923,6 +5002,45 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 			and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
 	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch created one source companion with its accepted original receipt and normalized finish reply." if valid else "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
+
+func _f48_capture_source_live(source: Dictionary) -> bool:
+	var game: Node = source.game.get_ref() as Node
+	var session: Node = source.session.get_ref() as Node
+	var writer: Node = source.writer.get_ref() as Node
+	return is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(writer) \
+		and root.get_node_or_null(^"Game") == game and game.get("session") == session \
+		and game.get("world") == source.world.get_ref() and session.get_node_or_null(^"LedgerRpc") == writer \
+		and str(session.call("_altar_current_epoch")) == source.epoch \
+		and str(game.get("local").get("character_id")) == source.character
+
+func _f48_capture_saved_source(packet: Dictionary, source: Dictionary) -> void:
+	if not _f48_capture_source_live(source) or not source.edge.is_empty() \
+		or packet.get("phase") != "after_owner_write_before_ack" or packet.get("action") != "wild_capture" \
+		or packet.get("character_id") != source.character: return
+	var edge: Dictionary = get_meta("f48_latest_owner_save", {})
+	var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+	if edge.is_empty() or edge.get("packet") != packet or not edge.get("row") is Dictionary \
+		or edge.row.get("action") != "wild_capture" or edge.row.get("character_id") != source.character \
+		or source.before.get("redesign_character",{}).get("transaction_receipts",[]).has(edge.row.get("receipt")) \
+		or not proof.call("_saved_edge_errors",edge).is_empty() \
+		or FileAccess.get_sha256(str(edge.get("path",""))) != edge.get("sha256"): return
+	source.edge = edge.duplicate(true)
+
+func _f48_capture_accepted_source(delta: Dictionary, source: Dictionary) -> void:
+	if not _f48_capture_source_live(source) or source.edge.is_empty() or not source.accepted.is_empty(): return
+	var original: Dictionary = source.edge.row
+	var expected := {"op":"creature_training_accept", "scope":"world", "delivery_id":original.delivery_id,
+		"character_id":original.character_id, "journal_revision":original.journal_revision, "receipt":original.receipt}
+	var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+	var correlated: bool = false
+	for op: Variant in delta.get("ops",[]):
+		if proof.call("_json_equal",op,expected): correlated = true
+	if not correlated: return
+	var game: Node = source.game.get_ref() as Node
+	var current: Variant = game.get("world").get("reward_deliveries").get(source.edge.identity)
+	if not proof.call("_fallback_parent_matches",source.edge,current): return
+	source.accepted = current.duplicate(true)
+	source.accepted_delta = delta.duplicate(true)
 
 func _f48_owner_passive_diagnostic() -> Dictionary:
 	# Read existing state only: never construct a service, admit, stage or save.
@@ -7957,7 +8075,18 @@ func _step_save_reload_here(_args: Dictionary) -> Dictionary:
 	var host_owned := session == null or not (session as Node).has_method("is_host") \
 		or bool((session as Node).call("is_host"))
 	if host_owned:
-		if not bool(game.call("autosave_here")):
+		# A host save is refused while one of its own reward installs is still
+		# saving (session _owner_training_snapshot_allowed), which is routine
+		# right after a boss fight. A player's autosave simply runs again; give
+		# the in-flight saves a bounded window to settle the same way.
+		var host_saved := false
+		for _attempt in 40:
+			if bool(game.call("autosave_here")):
+				host_saved = true
+				break
+			for _frame in 15:
+				await physics_frame
+		if not host_saved:
 			return {"verdict": "FAIL", "detail": "host autosave_here refused"}
 		if not bool((save_system as RefCounted).call("load_slot", game, int(game.call("autosave_slot")))):
 			return {"verdict": "FAIL", "detail": "host load_slot refused the autosave"}

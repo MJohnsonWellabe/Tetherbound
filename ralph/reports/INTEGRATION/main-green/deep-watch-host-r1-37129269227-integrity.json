@@ -1,0 +1,9 @@
+{
+  "run_id": 37129269227,
+  "artifact_id": 11276177383,
+  "checkout_ref": "96ca088431a9c0aba6c8a6a0dd0b20d02489ad16",
+  "result": "PREEXECUTIONFAIL smoke coordinatorVariant ok cannotinferline167; explicitboolfix sourceonly pendingnative.",
+  "archive": "deep-watch-host-r1-37129269227-original-artifact.zip",
+  "archive_sha256": "44b4777202741b8bacf49a6aed113873477cd892ede2dd72190076854227597f",
+  "retention": "Complete original archive, no filtering, no error waivers."
+}

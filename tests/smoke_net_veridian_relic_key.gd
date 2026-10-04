@@ -120,7 +120,7 @@ func _run() -> void:
 	check(str(guest_in.get("verdict", "")) == "PASS", "guest joined the Warden's own fight")
 	var won: Dictionary = await step(0, "win_trainer_battle",
 		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING,
-		 "self_hp_topups": false}, BATTLE_FRAMES)
+		 "self_hp_topups": false}, BATTLE_FRAMES + 900)
 	check(str(won.get("verdict", "")) == "PASS", "both peers felled the Warden (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())

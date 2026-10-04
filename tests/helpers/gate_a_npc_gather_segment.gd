@@ -1228,6 +1228,12 @@ func _tap_action(action: StringName) -> void:
 	Input.parse_input_event(event)
 	for _i in 3:
 		await _tree.physics_frame
+	# Menus poll `is_action_just_pressed` from `_process`. On a slow runner the
+	# three physics ticks above can all fall inside one rendered frame, and a
+	# release parsed before any `_process` poll ran drops the tap entirely.
+	# Hold through two rendered frames as well, as a real finger does.
+	for _i in 2:
+		await _tree.process_frame
 	var released := event.duplicate() as InputEvent
 	if released is InputEventJoypadButton:
 		(released as InputEventJoypadButton).pressed = false

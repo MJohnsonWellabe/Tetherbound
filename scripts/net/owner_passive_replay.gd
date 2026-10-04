@@ -7,12 +7,14 @@ const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const E := preload("res://scripts/creatures/essence.gd")
 const HASH := preload("res://scripts/net/research_passive_preparation.gd")
+const SATCHEL := preload("res://scripts/world/death_satchel_rules.gd")
 const REALMS := ["meadows", "water", "cloudreach", "stormwood"]
 const PASSIVE_FIELDS := ["nourishment", "happiness", "rested_seconds_left", "rested", "distance_m_together", "landmarks_visited_together"]
 const CONDITION_FIELDS := ["version", "sequence", "op", "delta", "uids"]
 const DISCOVERY_FIELDS := ["version", "sequence", "op", "realm", "from", "to", "travel_valid", "new_landmarks"]
 const CURSOR_FIELDS := ["base", "state", "discovered", "sequence", "elapsed", "discovery_elapsed", "travel_valid", "position", "realm", "prefix_hash"]
 const VITAL_FIELDS := ["version", "sequence", "op", "delivery_id", "journal_revision", "receipt_hash"]
+const DELIVERY_FIELDS := ["version", "sequence", "op", "delivery_id", "stacks_hash"]
 
 ## The service supplies this context from an authenticated retained actual
 ## actor proposal and original typed world journal, never the input packet.
@@ -61,6 +63,30 @@ static func apply_vitals(cursor: Dictionary, packet: Dictionary, proof: Dictiona
 	next.sequence = int(packet.sequence)
 	next.prefix_hash = HASH.fingerprint({"previous": cursor.prefix_hash, "packet": packet})
 	return {"ok": true, "code": "ok", "cursor": next, "revision": int(row.character_revision)}
+
+## A host-journaled item/coin payout the owner applied to its satchel. The
+## service supplies the host's own journal row; the packet only names it. The
+## same slot placement as `satchel_escrow.gd::give_all` runs on base and state.
+static func apply_delivery(cursor: Dictionary, packet: Dictionary, row: Variant) -> Dictionary:
+	if not _cursor_valid(cursor): return _deny("invalid_cursor")
+	if not _fields(packet, DELIVERY_FIELDS) or not _integer(packet.get("version")) or packet.version != 1 \
+		or packet.get("op") != "reward_delivery_applied" or not packet.get("delivery_id") is String \
+		or not _integer(packet.get("sequence")) or packet.sequence != int(cursor.sequence) + 1: return _deny("invalid_delivery_input")
+	if not row is Dictionary or row.get("delivery_id") != packet.delivery_id \
+		or row.get("character_id") != cursor.base.character_id or not SATCHEL.valid_slots(row.get("stacks")) \
+		or packet.get("stacks_hash") != HASH.fingerprint({"stacks": row.get("stacks")}): return _deny("unproved_delivery_input")
+	var next := cursor.duplicate(true)
+	for name: String in ["base", "state"]:
+		var record: Dictionary = next[name]
+		if not record.get("inventory") is Array: return _deny("invalid_delivery_inventory")
+		var copy := SATCHEL.inventory_from(record.inventory)
+		for stack: Variant in row.stacks:
+			if stack is Dictionary and not SATCHEL.give_stack(copy, stack): return _deny("delivery_no_room")
+		record.inventory = SATCHEL.slots(copy)
+	if not _cursor_valid(next): return _deny("invalid_delivery_result")
+	next.sequence = int(packet.sequence)
+	next.prefix_hash = HASH.fingerprint({"previous": cursor.prefix_hash, "packet": packet})
+	return {"ok": true, "code": "ok", "cursor": next}
 
 class CareCard extends RefCounted:
 	var nourishment := 0.0
