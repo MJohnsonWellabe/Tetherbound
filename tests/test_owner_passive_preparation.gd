@@ -248,3 +248,43 @@ func test_same_revision_request_checkpoint_rejects_stale_before_and_other_transa
 		var separate := _action_fixture()
 		separate.authority.set(lock, {DATA.CHARACTER: {"fixture": true}})
 		assert_false(separate.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, separate.prepared, {}, separate.cursor), lock)
+
+func _waystone_parts(f: Dictionary) -> Dictionary:
+	var envelope := {"request_id": "current-epoch:7", "session_epoch": "current-epoch",
+		"world_instance_id": "resource-namespace", "character_id": DATA.CHARACTER,
+		"payload": {"kind": "waystone_touch", "waystone_id": "meadows_trail_camp"}}
+	var context := {"character_id": DATA.CHARACTER, "expected_revision": 0, "in_range": true, "in_combat": false,
+		"foundation_runtime_authorized": true, "validated_touch": true, "source_key": "waystone:meadows_trail_camp",
+		"touch_id": DATA.TXN, "realm": "meadows", "world_namespace": "resource-namespace"}
+	return {"request": PREP.waystone_request(envelope), "context": context}
+
+func test_waystone_touch_request_binds_its_own_envelope_and_frozen_host_context() -> void:
+	# F18: a guest's waystone touch is frozen/replayed like every other owner
+	# request, so its staged before is the owner's own drifted baseline.
+	var f := _action_fixture()
+	var parts := _waystone_parts(f)
+	var prepared := PREP.make_action(parts.request, parts.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "waystone_touch")
+	assert_false(prepared.is_empty(), "the exact touch envelope and host context prepare")
+	assert_true(PREP.valid_action_host(prepared, f.cursor))
+	assert_true(PREP.owner_plan(f.cursor.state, prepared, {}, {}).ok, "the owner's replayed state is the baseline")
+	assert_false(PREP.owner_plan(f.before, prepared, {}, {}).ok, "a stale owner record is still refused")
+	var conflicting: Dictionary = f.cursor.state.duplicate(true)
+	conflicting.party[0].xp += 1
+	assert_false(PREP.owner_plan(conflicting, prepared, {}, {}).ok, "a real conflicting edit is still refused")
+	for mutate: Callable in [
+		func(r: Dictionary, c: Dictionary) -> void: c.source_key = "waystone:another_stone",
+		func(r: Dictionary, c: Dictionary) -> void: c.touch_id = "not-hex",
+		func(r: Dictionary, c: Dictionary) -> void: c.validated_touch = false,
+		func(r: Dictionary, c: Dictionary) -> void: c.expected_revision = 1,
+		func(r: Dictionary, c: Dictionary) -> void: c.erase("realm"),
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.payload = {"kind": "portal_enter", "arch_id": "tidewake"},
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.request_id = "another-epoch:7",
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.character_id = "someone-else",
+	]:
+		var request: Dictionary = parts.request.duplicate(true)
+		var context: Dictionary = parts.context.duplicate(true)
+		mutate.call(request, context)
+		assert_true(PREP.make_action(request, context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "waystone_touch").is_empty(),
+			"a changed touch binding never prepares")
+	assert_true(PREP.make_action(parts.request, parts.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "foundation_request").is_empty(),
+		"a touch cannot masquerade as another request source")
