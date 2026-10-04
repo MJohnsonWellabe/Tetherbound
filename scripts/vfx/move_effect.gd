@@ -407,7 +407,9 @@ func _build_impact() -> void:
 	add_child(_impact)
 	_impact.position = _contact_position()
 	var profile: Dictionary = _row.impact
-	var scale_factor := float(_params.size) * float(_params.impact_scale)
+	# impact_size_boost (presentation only) lifts a small projectile's hit to a
+	# readable size; as a multiplier it keeps mastery's growth order intact.
+	var scale_factor := float(_params.size) * float(_params.impact_scale) * maxf(0.1, float(profile.get("impact_size_boost", 1.0)))
 	# Only child presentation geometry moves to the measured surface. The
 	# frozen contact endpoint, arrived clock and host gameplay stay unchanged.
 	var surface_offset := _impact_visual_origin(profile) - _contact_position()
