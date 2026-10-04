@@ -400,6 +400,9 @@ func _lost_creature() -> void:
 
 
 const RETURN_FLAG := "lost_creature_rue_returned"
+## Physics frames a prompt press may take to open its reply (see
+## `_activate_trainer_prompt`).
+const REPLY_WAIT_FRAMES := 60
 
 
 ## Stand beside the waiting Meadowhart and press the real interact action on
@@ -952,6 +955,15 @@ func _activate_trainer_prompt(body: Node3D, label: String) -> bool:
 			await process_frame
 			if arbiter.call("winning_provider") == prompt and INPUT_OWNER.current(self) == null:
 				await _press("interact")
+				# A reply can follow the press by a ledger delta rather than in
+				# the same frames (river_nest_clear.gd says its thanks when the
+				# claim's delta applies), so wait for the conversation this
+				# press caused before treating the press as missed: otherwise the
+				# late reply itself blocks every retry (re-proof F03-3 run 3).
+				for _reply in REPLY_WAIT_FRAMES:
+					if bool(_panel.call("is_open")):
+						return true
+					await physics_frame
 				if bool(_panel.call("is_open")):
 					return true
 	var winner: Variant = arbiter.call("winning_provider")
