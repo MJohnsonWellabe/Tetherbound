@@ -619,7 +619,8 @@
           "flicker": 0.12
         },
         "launch": {
-          "burst": {"size_scale": 1.4, "min_m": 0.35, "max_m": 0.9, "duration": 0.12, "core_colour": "#fffbe8", "rim_colour": "#ff7a1f", "opacity": 1.0, "points": 8, "inner_radius": 0.38, "sharpness": 4.0, "intensity": 2.0, "scale_from": 0.3, "scale_to": 1.0, "forward_scale": 0.6},
+          "burst": {
+          "spike_jitter": 0.3,"size_scale": 1.4, "min_m": 0.35, "max_m": 0.9, "duration": 0.12, "core_colour": "#fffbe8", "rim_colour": "#ff7a1f", "opacity": 1.0, "points": 8, "inner_radius": 0.38, "sharpness": 4.0, "intensity": 1.0, "scale_from": 0.3, "scale_to": 1.0, "forward_scale": 0.6},
           "flash": {
             "size_scale": 1.8,
             "min_m": 0.4,
@@ -766,12 +767,13 @@
         },
         "impact": {
           "spark_stretch": 0.1,
-          "spark_intensity": 2.2,
+          "spark_intensity": 1.0,
           "spark_core_colour": "#fff6d0",
           "fade_hold_power": 2.4,
           "stages": {
-            "ring": {"size_scale": 3.6, "min_m": 1.1, "max_m": 3.0, "duration": 0.3, "core_colour": "#fff3c4", "rim_colour": "#ffab3d", "opacity": 1.0, "ring_width": 0.05, "intensity": 2.0, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
-            "burst": {"size_scale": 3.0, "min_m": 0.9, "max_m": 2.4, "duration": 0.2, "core_colour": "#fffbe8", "rim_colour": "#ff6a12", "opacity": 1.0, "points": 10, "inner_radius": 0.34, "sharpness": 4.0, "intensity": 2.2, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
+            "ring": {"size_scale": 3.6, "min_m": 1.1, "max_m": 3.0, "duration": 0.3, "core_colour": "#fff3c4", "rim_colour": "#ff9a1f", "opacity": 1.0, "ring_width": 0.07, "intensity": 1.0, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
+            "burst": {
+            "spike_jitter": 0.4,"size_scale": 3.0, "min_m": 0.9, "max_m": 2.4, "duration": 0.2, "core_colour": "#fffbe8", "rim_colour": "#ff5a0a", "opacity": 1.0, "points": 8, "inner_radius": 0.34, "sharpness": 4.0, "intensity": 1.0, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
             "glow": {
               "size_scale": 2.6,
               "min_m": 0.8,
@@ -824,7 +826,7 @@
           "heat": 0.9,
           "opacity": 0.95,
           "mote_shape": "spark",
-          "mote_size": 0.2,
+          "mote_size": 0.26,
           "speed": 8.5,
           "gravity": 7.0,
           "width": 0.12,
@@ -833,7 +835,7 @@
           "rings": 12,
           "hot_colour": "#fff0a8",
           "ember_colour": "#85250a",
-          "mote_colour": "#ff8f1f",
+          "mote_colour": "#ff7a10",
           "layers": [
             {
               "shape": "fire_explosion",
@@ -2399,13 +2401,13 @@
             "impact": {
               "mote_end_scale": 0.35,
               "spark_stretch": 0.08,
-              "spark_intensity": 1.9,
+              "spark_intensity": 1.0,
               "spark_core_colour": "#ffffff",
               "crown_flare_ratio": 1.4,
               "crown_height_ratio": 1.6,
               "mote_backscatter": 0.3,
               "gravity": 14.0,
-              "mote_colour": "#4fb8ff",
+              "mote_colour": "#2f95ff",
               "mote_shape": "spark",
               "growth_power": 0.5,
               "initial_grow": 0.2,
@@ -2428,11 +2430,12 @@
               "puff_size_scale": 0.3,
               "puff_grow": 1.5,
               "puff_lift_m": 0.3,
-              "mote_size": 0.22,
+              "mote_size": 0.3,
               "speed": 7.5,
               "stages": {
-                "ring": {"size_scale": 3.0, "min_m": 1.6, "max_m": 3.8, "duration": 0.32, "core_colour": "#ffffff", "rim_colour": "#7fd2ff", "opacity": 1.0, "ring_width": 0.05, "intensity": 1.8, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
-                "burst": {"size_scale": 2.4, "min_m": 1.2, "max_m": 3.0, "duration": 0.2, "core_colour": "#ffffff", "rim_colour": "#2e9bff", "opacity": 1.0, "points": 12, "inner_radius": 0.4, "sharpness": 3.0, "intensity": 2.0, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
+                "ring": {"size_scale": 3.0, "min_m": 1.6, "max_m": 3.8, "duration": 0.32, "core_colour": "#ffffff", "rim_colour": "#39a8ff", "opacity": 1.0, "ring_width": 0.07, "intensity": 1.0, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
+                "burst": {
+                "spike_jitter": 0.4,"size_scale": 2.4, "min_m": 1.2, "max_m": 3.0, "duration": 0.2, "core_colour": "#ffffff", "rim_colour": "#1f7ff0", "opacity": 1.0, "points": 8, "inner_radius": 0.32, "sharpness": 2.5, "intensity": 1.0, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
                 "flash": {
                   "size_scale": 1.0,
                   "min_m": 0.6,

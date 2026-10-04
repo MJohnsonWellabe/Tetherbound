@@ -732,6 +732,8 @@ func _add_burst(profile: Dictionary, position: Vector3, scale: float, born: floa
 	material.set_shader_parameter("inner_radius", float(profile.get("inner_radius", 0.42)))
 	material.set_shader_parameter("sharpness", float(profile.get("sharpness", 3.0)))
 	material.set_shader_parameter("spin", _rng.randf() * TAU)
+	material.set_shader_parameter("seed", _rng.randf() * 100.0)
+	material.set_shader_parameter("spike_jitter", float(profile.get("spike_jitter", 0.35)))
 	material.set_shader_parameter("ring_width", float(profile.get("ring_width", 0.07)))
 	material.set_shader_parameter("intensity", float(profile.get("intensity", 1.6)))
 	var node := MeshInstance3D.new()
