@@ -849,7 +849,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 				and FOUNDATIONS_ORDER.set_test_overrides({"legacy_physical_crossings": true})
 			out = {"verdict": "PASS" if enabled else "FAIL", "detail": "disclosed retired crossing fixture: " + regression}
 		"save_character_here":
-			out = _step_save_character_here(args)
+			out = await _step_save_character_here(args)
 		"wipe_character":
 			out = _step_wipe_character(args)
 		"sleep_stand":
@@ -4638,11 +4638,26 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 ## disconnect makes. A step that called `save_character()` itself would be
 ## testing this file's idea of how a character is written rather than the
 ## game's.
+## Upper bound on frames `save_character_here` waits for a pending owner
+## transaction to clear before it saves (about 10 s at 60 fps).
+const SAVE_FENCE_WAIT_FRAMES := 600
+
 func _step_save_character_here(_args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
 		return {"verdict": "ERROR", "detail": "no /root/Game"}
 	var local: Variant = game.get("local")
+	# A guest that has just joined is still settling its owner-passive and
+	# grooming admission; the save fence correctly refuses a character write
+	# until that transaction lands (PR #531 CI: "groom passive pending").
+	# Wait for that asynchronous arrival, bounded by frames, then save once.
+	var session: Node = game.get("session") as Node
+	var waited := 0
+	while waited < SAVE_FENCE_WAIT_FRAMES and session != null and local != null \
+			and session.has_method("_owner_training_mutation_blocked") \
+			and session.call("_owner_training_mutation_blocked", local) == true:
+		await process_frame
+		waited += 1
 	var wrote_world := bool(game.call("autosave_here"))
 	# Ordinary slot saves mint the stable character id during autosave when this
 	# is a fresh home. Read it back after the production call so the setup probe
@@ -4655,11 +4670,11 @@ func _step_save_character_here(_args: Dictionary) -> Dictionary:
 		on_disk = characters != null and bool((characters as RefCounted).call("has", character_id))
 	if not on_disk:
 		return {"verdict": "FAIL",
-			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s)"
-				% [character_id, str(wrote_world)]}
+			"detail": "autosave_here() left no character file for '%s' (wrote_world=%s, waited %d frames for the save fence)"
+				% [character_id, str(wrote_world), waited]}
 	return {"verdict": "PASS", "data": {"character_id": character_id},
-		"detail": "character '%s' is on disk (wrote_world=%s)"
-		% [character_id, str(wrote_world)]}
+		"detail": "character '%s' is on disk (wrote_world=%s, waited %d frames for the save fence)"
+		% [character_id, str(wrote_world), waited]}
 
 
 ## Row 21. Install a BLANK character over the top of this process's own, in
@@ -8106,7 +8121,7 @@ func _step_save_reload_here(_args: Dictionary) -> Dictionary:
 			return {"verdict": "FAIL", "detail": "host load_slot refused the autosave"}
 	else:
 		var characters: Variant = (save_system as RefCounted).call("characters")
-		var saved: Dictionary = _step_save_character_here({})
+		var saved: Dictionary = await _step_save_character_here({})
 		var character_id := str((saved.get("data", {}) as Dictionary).get("character_id", ""))
 		if str(saved.get("verdict", "")) != "PASS" or character_id.is_empty() or characters == null:
 			return {"verdict": "FAIL", "detail": "client production character save refused: %s"
