@@ -33,6 +33,10 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	global_position = Vector3(float(raw[0]), y, float(raw[2]))
 	_build_arena()
 	if str(_definition.access) == "fly_only": _build_fly_supports()
+	# Presentation only: a realm may re-skin the generic pad in its own families
+	# (Cloudreach seats a fly-only pad on a rooted rock islet). Collision,
+	# position and every interaction below are unchanged.
+	if world.has_method("dress_master_site"): world.call("dress_master_site", self, _definition)
 	var npc := NPC.new()
 	npc.name = "Master"
 	add_child(npc)

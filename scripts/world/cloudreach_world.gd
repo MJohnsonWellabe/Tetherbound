@@ -4273,6 +4273,32 @@ func _build_high_perches(root: Node3D) -> void:
 		"half":Vector2(4.2,8.0), "rotation":0.0})
 
 
+## `master_site.gd` hook. The generic Master pad is a flat grey 0.35 m disc
+## (StandardMaterial #777969) and, when fly-only, bare 40 m cylinders: from the
+## High Perches it read as "a flat-shaded near-white disc platform on white
+## cylinder legs ... untextured, reads as placeholder" (F08#3 re-proof). Here the
+## floor takes the realm's worn-ground turf, and a fly-only pad sits on a rooted
+## stratified islet (the battle-yard / landmark-ledge mesa, no collision) in
+## place of its columns. The pad's own collision and interactions are untouched.
+func dress_master_site(site: Node3D, definition: Dictionary) -> void:
+	if simulation_only or not is_instance_valid(site):
+		return
+	var radius := float(definition.get("arena_radius_m", 18.0))
+	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
+	if floor_mesh != null:
+		floor_mesh.material_override = ENVIRONMENT_MATERIALS.worn_ground(site.global_position, radius)
+	if str(definition.get("access", "")) != "fly_only":
+		return
+	for child: Node in site.get_children():
+		if child is MeshInstance3D and child != floor_mesh and (child as MeshInstance3D).mesh is CylinderMesh:
+			(child as MeshInstance3D).visible = false
+	var depth := float(definition.get("support_depth_m", 40.0))
+	var size := Vector3(radius * 2.3, depth, radius * 2.3)
+	_mesa(site, "LandmarkLedge", Vector3(0.0, -size.y * 0.5 - 0.06, 0.0), size, _materials["cliff"],
+		_materials["upland_dry"] if site.global_position.y >= 700.0 else _materials["upland"], false,
+		absi(str(definition.get("id", "master")).hash()) % 997, false, radius + 1.0)
+
+
 func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: float) -> void:
 	var world_sample := root.to_global(Vector3(at.x, 0.0, at.y))
 	var floor_world := ground_height_at(world_sample.x, world_sample.z, root.global_position.y)
