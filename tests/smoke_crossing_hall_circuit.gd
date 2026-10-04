@@ -84,6 +84,9 @@ func _walk_to_target(hall: Node3D, target: Vector3, via_local: Vector3, label: S
 	_road_from_arc = _arcs[-1] + 1.0
 	_road_until_arc = -1.0
 	_events = [{"arc": _arcs[-1] - 0.5, "label": label}]
+	# Face the leg first, as a player would, so the walker's stall clock
+	# measures blocked movement rather than a reversal turn in place.
+	await _turn_to(_yaw_toward(_path[0], _path[1] if _path[0].distance_to(_path[1]) > .3 else _path[-1]))
 	await _walk()
 	_release_all()
 	if not _failed.is_empty():
@@ -93,6 +96,22 @@ func _walk_to_target(hall: Node3D, target: Vector3, via_local: Vector3, label: S
 		return _circuit_fail("physical approach refused at %s: distance %.3f floor %s" % [label, distance, _player.is_on_floor()])
 	print("F17 Hall circuit reached %s: player=%s distance=%.3f floor=true" % [label, _player.global_position, distance])
 	return true
+
+
+func _turn_to(target_yaw: float) -> void:
+	_release_all()
+	for _frame in 240:
+		var err := rad_to_deg(angle_difference(float(_rig.get("yaw")), target_yaw))
+		_pad_release("look_left")
+		_pad_release("look_right")
+		if absf(err) < 3.0:
+			break
+		_pad_press("look_left" if err > 0.0 else "look_right", clampf(absf(err) / 45.0, 0.25, 1.0))
+		await physics_frame
+	_pad_release("look_left")
+	_pad_release("look_right")
+	for _frame in 20:
+		await physics_frame
 
 
 func _gallery_route(hall: Node3D, stands: Dictionary) -> Dictionary:

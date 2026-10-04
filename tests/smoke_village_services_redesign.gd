@@ -118,7 +118,12 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 		var arena_at := _v(arena)
 		var halda_at := Vector2(halda.global_position.x, halda.global_position.z)
 		var halda_stop := halda_at + (arena_at - halda_at).normalized() * 1.9
-		if not await _service_leg([_xz(), _road_join(start, end), Vector2(arena_at.x, start.y), arena_at, halda_stop], time_name + " tournament keeper"):
+		# The arena centre's column runs along the orchard house's west wall;
+		# walk the nearest column that actual colliders leave clear instead.
+		var column := _clear_column(arena_at.x, start.y, arena_at.y)
+		if not is_finite(column):
+			return _services_fail("no actual collider-clear column from Main Street to the arena")
+		if not await _service_leg([_xz(), _road_join(start, end), Vector2(column, start.y), Vector2(column, arena_at.y), arena_at, halda_stop], time_name + " tournament keeper"):
 			return false
 		if (await _prompt_winner(halda)).is_empty():
 			return _services_fail("actual tournament keeper prompt is unreachable")
@@ -133,6 +138,38 @@ func _after_hall_arrival(_hall: Node3D) -> bool:
 
 func _road_join(start: Vector2, end: Vector2) -> Vector2:
 	return Geometry2D.get_closest_point_to_segment(_xz(), start, end)
+
+
+## Nearest x to `nominal` whose straight column from z0 to z1 has no static
+## collider within the player's capsule radius plus margin, probed with the
+## real physics space at waist height. INF when none within 4m.
+func _clear_column(nominal: float, z0: float, z1: float) -> float:
+	var radius := _capsule_radius(_player) + .25
+	if radius <= .25:
+		return INF
+	var space := _player.get_world_3d().direct_space_state
+	var probe := SphereShape3D.new()
+	probe.radius = radius
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = probe
+	query.collide_with_areas = false
+	query.exclude = [_player.get_rid()]
+	var y := _player.global_position.y + 1.0
+	var steps := int(ceil(absf(z1 - z0) / .5))
+	for offset: float in [0.0, -.5, .5, -1.0, 1.0, -1.5, 1.5, -2.0, 2.0, -2.5, 2.5, -3.0, 3.0, -3.5, 3.5, -4.0, 4.0]:
+		var clear := true
+		for index in steps + 1:
+			query.transform = Transform3D(Basis(), Vector3(nominal + offset, y, lerpf(z0, z1, float(index) / float(steps))))
+			for hit: Dictionary in space.intersect_shape(query, 4):
+				if hit.collider is StaticBody3D:
+					clear = false
+					break
+			if not clear:
+				break
+		if clear:
+			print("F17#3 collider-clear arena column x=%.2f (nominal %.2f)" % [nominal + offset, nominal])
+			return nominal + offset
+	return INF
 
 
 func _has_cottage_furnishings(interior: Node) -> bool:

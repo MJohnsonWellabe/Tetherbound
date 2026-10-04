@@ -18,7 +18,7 @@ extends "res://tests/smoke_crossing_hall_circuit.gd"
 ## Inert by default (not a test_*.gd); headless refuses.
 const TIMES := ["day", "golden", "night"]
 const SHOT_SETTLE_FRAMES := 10
-const RAIN_SETTLE_FRAMES := 45
+const RAIN_SETTLE_FRAMES := 14
 
 var _out := ""
 var _rows: Array[Dictionary] = []
@@ -156,18 +156,3 @@ func _station(name: String, with_rain: bool) -> void:
 	look.call("apply_time", "day")
 	root.get_viewport().disable_3d = true
 
-
-func _turn_to(target_yaw: float) -> void:
-	_release_all()
-	for _frame in 240:
-		var err := rad_to_deg(angle_difference(float(_rig.get("yaw")), target_yaw))
-		_pad_release("look_left")
-		_pad_release("look_right")
-		if absf(err) < 3.0:
-			break
-		_pad_press("look_left" if err > 0.0 else "look_right", clampf(absf(err) / 45.0, 0.25, 1.0))
-		await physics_frame
-	_pad_release("look_left")
-	_pad_release("look_right")
-	for _frame in 20:
-		await physics_frame
