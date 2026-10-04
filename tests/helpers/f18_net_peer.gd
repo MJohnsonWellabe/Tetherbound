@@ -51,6 +51,15 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"f18_traversal_refusal": result = await _f18_traversal_refusal(game, str(args.get("kind", "")))
 		"f18_stage": result = await _f18_stage(game, args)
 		"f18_inspect": result = _f18_verdict(true, "read-only production/disk witness", _f18_state(game, args))
+		"f18_settled":
+			# Read-only wait: the last owner transaction finishes its ordinary
+			# settlement (owner-passive fence and training row released).
+			var deadline := Time.get_ticks_msec() + 20000
+			while _session().call("_owner_training_mutation_blocked", game.get("local")) == true and Time.get_ticks_msec() < deadline:
+				await physics_frame
+			var blocked: bool = _session().call("_owner_training_mutation_blocked", game.get("local")) == true
+			result = _f18_verdict(not blocked, "owner transactions settled before the session ends",
+				{"reason": str(_session().call("_owner_snapshot_block_reason", game.get("local"))) if blocked else ""})
 		"f18_touch":
 			_f18_started = true
 			result = await _f18_touch(game, args)

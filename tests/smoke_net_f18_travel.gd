@@ -154,6 +154,9 @@ func _run() -> void:
 		"portable travel never unlocks second host world live or on disk")
 	check(_f18_position_same(host_b, travelled_b) and travelled_b.get("home_key_count") == 1,
 		"guest Tidewake crossing leaves second host in Meadows at original position with its own key")
+	# A player who quits mid-settlement is fenced (the save is refused, the
+	# arrival is already durable). End the witness only after it settles.
+	if await _f18_action(1, "f18_settled", {}, 3000).is_empty(): return
 	print("F18_NET_FIXTURES: starter/free-play flags; one HomeKey per peer + guest Tidewake key; one pre-evidence grounded staging teleport. No earned opening/normal-loop/visual acceptance claimed.")
 	var file := FileAccess.open(_run_dir.path_join("F18_WITNESSES.json"), FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(_f18_witnesses, "\t"))
@@ -231,6 +234,9 @@ func _f18_restart_guest() -> bool:
 	# truncation hiding the original run from finish()'s error scan.
 	var first_log := str(old.log_path)
 	var first_contents := FileAccess.get_file_as_string(first_log) if FileAccess.file_exists(first_log) else ""
+	# Same single exemption as the run-wide check: the Terrain3D GDExtension's
+	# Godot 4.7 compat notice. Any other warning still fails.
+	first_contents = first_contents.replace("WARNING: instance_reset_physics_interpolation() is deprecated.\n", "")
 	for pattern: String in ["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"]:
 		check(not first_contents.contains(pattern), "pre-restart guest log has no " + pattern)
 	var log_path := _run_dir.path_join("peer-1-rejoined.log")
