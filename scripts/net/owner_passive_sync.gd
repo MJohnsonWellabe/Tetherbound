@@ -23,6 +23,14 @@ const MAX_SPEED := 40.0
 ## This bounded initial allowance does not replace or extend those deadlines.
 const ADMISSION_ALLOWANCE_S := 80.0
 const INITIAL_POSE_LAG_S := 2.0
+## A live-body endpoint match is horizontal within this distance...
+const ENDPOINT_HORIZONTAL_M := 2.0
+## ...and vertical within this one. The owner can report an endpoint while its
+## body is still airborne (a placement, an arrival or a jump in the air) while
+## the host's copy has already settled on the floor below it (CI 37196626495:
+## endpoint 2.42 m above a host body 0.06 m away, never matched). Height gives
+## no walking credit; the horizontal bound is the one that guards travel.
+const ENDPOINT_VERTICAL_M := 6.0
 var _session: WeakRef
 var local: Dictionary = {}
 var hosts: Dictionary = {}
@@ -291,7 +299,11 @@ func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: D
 		or not context.get("initial_position") is Vector3: return false
 	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
 	# Reuse the existing live-body discontinuity endpoint tolerance.
-	return context.initial_position.distance_to(at) <= 2.0
+	return _endpoint_matches(context.initial_position, at)
+
+static func _endpoint_matches(host_body: Vector3, endpoint: Vector3) -> bool:
+	var flat := Vector2(host_body.x - endpoint.x, host_body.z - endpoint.z)
+	return flat.length() <= ENDPOINT_HORIZONTAL_M and absf(host_body.y - endpoint.y) <= ENDPOINT_VERTICAL_M
 
 func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
@@ -329,7 +341,7 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			if input.get("travel_valid") == true and from.distance_to(to) > 30.0:
 				# A real host-observed discontinuity can establish a new endpoint,
 				# never walking credit. Wait for replication instead of inventing it.
-				if not context.get("initial_position") is Vector3 or context.initial_position.distance_to(to) > 2.0:
+				if not context.get("initial_position") is Vector3 or not _endpoint_matches(context.initial_position, to):
 					_note_host(stream, "input %d waits: discontinuity to %s, host body at %s" % [sequence, str(to),
 						str(context.get("initial_position", "none"))])
 					return
