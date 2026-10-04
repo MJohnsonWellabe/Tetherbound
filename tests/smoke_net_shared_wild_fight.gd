@@ -88,6 +88,8 @@ const SWINGS := 5
 ## none ever arrives. Sized so the loop outlasts 7.A's jitter profile (150 ms
 ## delay / 30 ms jitter) rather than only loopback.
 const REFUSAL_POLLS := 40
+## Friendly-strike attempts; a retry needs a host-proven opponent interrupt.
+const FRIENDLY_ATTEMPTS := 3
 
 ## How many times to re-read both peers' opponent hp before calling them
 ## divergent. Replication of the record's hp is not instantaneous and this smoke
@@ -723,94 +725,124 @@ func _run() -> void:
 	check(str(s_placed.get("verdict", "")) == "PASS",
 		"peer 1's creature stood next to it (%s)" % str(s_placed.get("detail", "")))
 
-	var victim_before: Dictionary = await _encounter(0)
-	var victim_hp := float(victim_before.get("my_creature_hp", -1.0))
-	var opponent_hp_before_friendly := float(victim_before.get("opponent_hp", -1.0))
-	var friendly_not_before_ms := int(victim_before.get("host_now_ms", 0))
-	var victim_struck_before := _struck_count(victim_before, host_peer_id)
-	check(victim_hp > 0.0, "peer 0's creature is alive to be swung at (%.1f hp)" % victim_hp)
-	check(opponent_hp_before_friendly > 0.0,
-		"the shared opponent is alive before the friendly-strike check (%.1f hp)"
-			% opponent_hp_before_friendly)
-
-	# The facing is derived from where the two creatures ACTUALLY ended up, not
-	# from where they were asked to stand. Bodies settle onto sloping ground and
-	# slide while they do, and a swing aimed at the intended spot rather than
-	# the real one can miss its own target's cone -- which would fail this for
-	# the wrong reason, and would fail it by NOT refusing, i.e. in exactly the
-	# direction that looks like the feature working.
-	var victim_at := _vec(victim_before.get("my_creature_pos", []))
-	var striker_at := _vec((await _encounter(1)).get("my_creature_pos", []))
-	check(victim_at != Vector3.INF and striker_at != Vector3.INF,
-		"both creatures report where they are standing")
-	var at_teammate := victim_at - striker_at
-	at_teammate.y = 0.0
-	# A diagnostic bound, not the claim. Its only job is to make "the swing
-	# never reached the teammate" legible if the refusal assertion below fails:
-	# a swing that fell short would be refused by nothing, which reads exactly
-	# like the feature working. Ask the same body-size floor the host uses. The
-	# old fixed 4.0 m diagnostic became smaller than two non-overlapping
-	# road-scale Terrapups even though the production swing grew with them.
-	var radius := float(SPECIES.placeholder("terrapup").get("radius", 0.5))
-	var quick: Dictionary = COMBAT_MANAGER.floor_reach_for_bodies(
-		{"range": 2.6}, radius, radius)
-	var actual_reach := float(quick.get("range", 0.0))
-	check(at_teammate.length() <= actual_reach + 0.05,
-		"the two creatures are within the host's %.2f m swing reach (%.2f m apart)"
-			% [actual_reach, at_teammate.length()])
-
-	# Aim THROUGH the teammate: along the striker->teammate line, to a point
-	# beyond it. The strike helper derives facing from the local live origin, so
-	# a point beyond the victim keeps that vector aligned when the host's remote
-	# body has a small remaining proxy offset. The host still resolves the live
-	# teammate body and must refuse the action as friendly_target.
-	#
-	# It used to aim along the placement's outward radial instead. Once the
-	# victim slid off that radial while settling, the line passed beside it, and
-	# a quick move with a narrow cone missed its own teammate. CI 35955599022:
-	# pebble_toss has a 26 degree cone, the teammate stood 17 degrees off the
-	# facing at 1.52 m, the host scored an ordinary whiff, and the action id was
-	# spent. The rule under test was never exercised.
-	var friendly_target := victim_at + at_teammate.normalized() * 3.0
-	var friendly: Dictionary = await step(1, "strike",
-		{"target": [friendly_target.x, friendly_target.y, friendly_target.z], "slot": "quick",
-			"settle": STRIKE_SETTLE})
-	check(str(friendly.get("verdict", "")) == "PASS",
-		"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
-	check(int((friendly.get("data", {}) as Dictionary).get("submitted_action", 0)) == 9003,
-		"the friendly strike uses the next automatic action id after explicit authority/replay probes")
-
-	# POLLED, not read once after a fixed settle. This was a flake and a jitter
-	# failure and they were the same defect.
-	#
-	# The refusal is the HOST's answer and it comes back over the wire, so the
-	# only thing `STRIKE_SETTLE` frames buys is "probably long enough on
-	# loopback". Measured: this smoke ran 5 of 7 on one branch against 6 of 7 on
-	# its untouched base, and under 7.A's proxy at 150 ms delay / 30 ms jitter
-	# / 1 % loss it lost the refusal MESSAGE every time while the safety itself
-	# held (7.A finding F7, recorded and deliberately not tuned). Both were one
-	# read landing before the answer arrived.
-	#
-	# This is a fix at the cause and NOT a widened tolerance: the assertion
-	# still fails if the refusal never comes, if it comes with the wrong code,
-	# or if it comes without a sentence. What it no longer does is fail because
-	# a round trip took longer than a quarter of a second. Same shape as the
-	# `engage` binding poll in `peer_runner.gd::_step_engage` -- on a client,
-	# `submit()` answers `{"ok": false, "pending": true}` and the verdict
-	# follows a round trip later, so a single read of a host's answer is the
-	# "pending is not a refusal" trap wearing a different hat.
+	var victim_before: Dictionary = {}
+	var victim_hp := -1.0
+	var opponent_hp_before_friendly := -1.0
+	var friendly_not_before_ms := 0
+	var victim_struck_before := 0
+	var quick: Dictionary = {}
+	var friendly_target := Vector3.INF
+	var friendly: Dictionary = {}
 	var refusal: Dictionary = {}
 	var refusal_polls := 0
-	# The preceding replay proof deliberately leaves `replayed_action` in the
-	# client's last-refusal snapshot. Submission is asynchronous and does not
-	# clear that snapshot. Wait for this phase's expected host verdict, rather
-	# than treating the old non-empty response as the new strike's answer.
-	# The bounded poll still fails on a missing or wrong friendly verdict.
-	while refusal_polls < REFUSAL_POLLS:
-		refusal_polls += 1
-		refusal = ((await _encounter(1)).get("refusal", {}) as Dictionary)
-		if str(refusal.get("code", "")) == "friendly_target":
+	var friendly_action := 9003
+	# An opponent blow that lands on the striker during the friendly wind-up
+	# cancels the committed start (the host interrupt rule in
+	# `host_deliver_enemy_hit`); the strike then reads `move_start_required`.
+	# The opponent spreads its blows to the least-struck participant, which is
+	# often this striker. Retry with the next action id only when the host's
+	# own struck count proves such a blow landed during this attempt. Every
+	# assertion below still applies to the action that was not interrupted.
+	for _attempt in FRIENDLY_ATTEMPTS:
+		victim_before = await _encounter(0)
+		victim_hp = float(victim_before.get("my_creature_hp", -1.0))
+		opponent_hp_before_friendly = float(victim_before.get("opponent_hp", -1.0))
+		friendly_not_before_ms = int(victim_before.get("host_now_ms", 0))
+		victim_struck_before = _struck_count(victim_before, host_peer_id)
+		var striker_struck_before := _struck_count(victim_before, guest_peer_id)
+		check(victim_hp > 0.0, "peer 0's creature is alive to be swung at (%.1f hp)" % victim_hp)
+		check(opponent_hp_before_friendly > 0.0,
+			"the shared opponent is alive before the friendly-strike check (%.1f hp)"
+				% opponent_hp_before_friendly)
+
+		# The facing is derived from where the two creatures ACTUALLY ended up, not
+		# from where they were asked to stand. Bodies settle onto sloping ground and
+		# slide while they do, and a swing aimed at the intended spot rather than
+		# the real one can miss its own target's cone -- which would fail this for
+		# the wrong reason, and would fail it by NOT refusing, i.e. in exactly the
+		# direction that looks like the feature working.
+		var victim_at := _vec(victim_before.get("my_creature_pos", []))
+		var striker_at := _vec((await _encounter(1)).get("my_creature_pos", []))
+		check(victim_at != Vector3.INF and striker_at != Vector3.INF,
+			"both creatures report where they are standing")
+		var at_teammate := victim_at - striker_at
+		at_teammate.y = 0.0
+		# A diagnostic bound, not the claim. Its only job is to make "the swing
+		# never reached the teammate" legible if the refusal assertion below fails:
+		# a swing that fell short would be refused by nothing, which reads exactly
+		# like the feature working. Ask the same body-size floor the host uses. The
+		# old fixed 4.0 m diagnostic became smaller than two non-overlapping
+		# road-scale Terrapups even though the production swing grew with them.
+		var radius := float(SPECIES.placeholder("terrapup").get("radius", 0.5))
+		quick = COMBAT_MANAGER.floor_reach_for_bodies(
+			{"range": 2.6}, radius, radius)
+		var actual_reach := float(quick.get("range", 0.0))
+		check(at_teammate.length() <= actual_reach + 0.05,
+			"the two creatures are within the host's %.2f m swing reach (%.2f m apart)"
+				% [actual_reach, at_teammate.length()])
+
+		# Aim THROUGH the teammate: along the striker->teammate line, to a point
+		# beyond it. The strike helper derives facing from the local live origin, so
+		# a point beyond the victim keeps that vector aligned when the host's remote
+		# body has a small remaining proxy offset. The host still resolves the live
+		# teammate body and must refuse the action as friendly_target.
+		#
+		# It used to aim along the placement's outward radial instead. Once the
+		# victim slid off that radial while settling, the line passed beside it, and
+		# a quick move with a narrow cone missed its own teammate. CI 35955599022:
+		# pebble_toss has a 26 degree cone, the teammate stood 17 degrees off the
+		# facing at 1.52 m, the host scored an ordinary whiff, and the action id was
+		# spent. The rule under test was never exercised.
+		friendly_target = victim_at + at_teammate.normalized() * 3.0
+		friendly = await step(1, "strike",
+			{"target": [friendly_target.x, friendly_target.y, friendly_target.z], "slot": "quick",
+				"settle": STRIKE_SETTLE})
+		check(str(friendly.get("verdict", "")) == "PASS",
+			"peer 1's swing at its teammate reached the host (%s)" % str(friendly.get("detail", "")))
+		check(int((friendly.get("data", {}) as Dictionary).get("submitted_action", 0)) == friendly_action,
+			"the friendly strike uses the next automatic action id after explicit authority/replay probes")
+
+		# POLLED, not read once after a fixed settle. This was a flake and a jitter
+		# failure and they were the same defect.
+		#
+		# The refusal is the HOST's answer and it comes back over the wire, so the
+		# only thing `STRIKE_SETTLE` frames buys is "probably long enough on
+		# loopback". Measured: this smoke ran 5 of 7 on one branch against 6 of 7 on
+		# its untouched base, and under 7.A's proxy at 150 ms delay / 30 ms jitter
+		# / 1 % loss it lost the refusal MESSAGE every time while the safety itself
+		# held (7.A finding F7, recorded and deliberately not tuned). Both were one
+		# read landing before the answer arrived.
+		#
+		# This is a fix at the cause and NOT a widened tolerance: the assertion
+		# still fails if the refusal never comes, if it comes with the wrong code,
+		# or if it comes without a sentence. What it no longer does is fail because
+		# a round trip took longer than a quarter of a second. Same shape as the
+		# `engage` binding poll in `peer_runner.gd::_step_engage` -- on a client,
+		# `submit()` answers `{"ok": false, "pending": true}` and the verdict
+		# follows a round trip later, so a single read of a host's answer is the
+		# "pending is not a refusal" trap wearing a different hat.
+		refusal = {}
+		refusal_polls = 0
+		# The preceding replay proof deliberately leaves `replayed_action` in the
+		# client's last-refusal snapshot. Submission is asynchronous and does not
+		# clear that snapshot. Wait for this phase's expected host verdict, rather
+		# than treating the old non-empty response as the new strike's answer.
+		# The bounded poll still fails on a missing or wrong friendly verdict.
+		while refusal_polls < REFUSAL_POLLS:
+			refusal_polls += 1
+			refusal = ((await _encounter(1)).get("refusal", {}) as Dictionary)
+			if str(refusal.get("code", "")) == "friendly_target":
+				break
+		var striker_struck := _struck_count(await _encounter(0), guest_peer_id)
+		if str(refusal.get("code", "")) != "move_start_required" or striker_struck <= striker_struck_before:
 			break
+		print("friendly action %d was interrupted: an opponent blow landed on the striker during its wind-up (host struck_count %d -> %d); retrying with the next action id"
+			% [friendly_action, striker_struck_before, striker_struck])
+		friendly_action += 1
+		await _await_host_action_ready(guest_peer_id)
+		await step(1, "place_creature",
+			{"at": [striker_spot.x, striker_spot.y, striker_spot.z], "settle": PLACE_SETTLE})
+
 	# HALF ONE: the host said no, out loud, with the code §5 names.
 	check(str(refusal.get("code", "")) == "friendly_target",
 		"the host refused it with `friendly_target` after %d poll(s) (got code '%s', reason '%s')"
@@ -821,22 +853,22 @@ func _run() -> void:
 	# The client's last-refusal field above remains a player-facing acceptance
 	# requirement. The host receipt independently identifies the exact action it
 	# answered, so the preceding replayed_action snapshot cannot be mistaken for
-	# action 9003. This reuses the host read that already sampled victim HP below:
+	# the friendly action. This reuses the host read that already sampled victim HP below:
 	# no poll count, settle, placement, input or observation window is widened.
 	var host_verdict_view: Dictionary = await _encounter(0)
 	var host_receipt := _host_strike_receipt(host_verdict_view, encounter_id,
-		guest_peer_id, 9003, friendly_not_before_ms)
+		guest_peer_id, friendly_action, friendly_not_before_ms)
 	check(not host_receipt.is_empty(),
-		"the host retained a fresh encounter/action-correlated receipt for friendly action 9003 "
-			+ "(not_before=%d receipts=%s)" % [friendly_not_before_ms,
+		("the host retained a fresh encounter/action-correlated receipt for friendly action %d "
+			+ "(not_before=%d receipts=%s)") % [friendly_action, friendly_not_before_ms,
 				str(host_verdict_view.get("host_strike_receipts", []))])
 	check(str(host_receipt.get("outcome", "")) == "refused"
 		and not bool(host_receipt.get("ok", true))
 		and str(host_receipt.get("code", "")) == "friendly_target",
-		"the correlated host verdict refused action 9003 as friendly_target (%s)"
+		"the correlated host verdict refused the friendly action as friendly_target (%s)"
 			% str(host_receipt))
 	check(bool(host_receipt.get("geometry_available", false)),
-		"action 9003 reached host arbitration and carries its geometry")
+		"the friendly action reached host arbitration and carries its geometry")
 	var receipt_origin := _vec(host_receipt.get("host_origin", []))
 	var receipt_facing := _vec(host_receipt.get("facing", []))
 	var receipt_move: Dictionary = host_receipt.get("move", {}) as Dictionary
@@ -856,7 +888,7 @@ func _run() -> void:
 		and bool(opponent_candidate.get("eligible", false))
 		and not bool(opponent_candidate.get("connects", true))
 		and _vec(opponent_candidate.get("position", [])) != Vector3.INF,
-		"the host saw the live opponent outside friendly action 9003 (%s)"
+		"the host saw the live opponent outside the friendly action (%s)"
 			% str(host_receipt.get("candidates", [])))
 
 	# HALF TWO: the teammate took nothing. Asserted alongside the refusal and

@@ -162,7 +162,8 @@ func _run() -> void:
 		return
 	for peer in 2:
 		await step(peer, "explore_at",
-			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2]), float(arena[1])],
+				"settle": 60})
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
 	check(str(began.get("verdict", "")) == "PASS", "host challenged the Warden (%s)" % str(began.get("detail", "")))
 	if str(began.get("verdict", "")) != "PASS":
