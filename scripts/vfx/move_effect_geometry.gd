@@ -225,6 +225,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("dust", kind in ["soft_dust", "soft_foam", "mist_cone"] or bool(profile.get("dust", false)))
 		out.set_shader_parameter("effect_mode", 1 if kind in ["soft_trail", "flame_volume", "mist_cone"] else (2 if kind in ["fire_bloom", "soft_dust", "soft_foam"] else (3 if kind == "soft_ember" else 0)))
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.4)))
+		out.set_shader_parameter("brightness", float(profile.get("brightness", 1.0)))
 		return out
 	if kind == "stone":
 		out.shader = STONE_SHADER

@@ -528,6 +528,7 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 	_puffs.multimesh = multimesh
 	var puff_profile: Dictionary = profile.duplicate(true)
 	puff_profile["opacity"] = float(profile.get("puff_opacity", 0.72))
+	puff_profile["brightness"] = float(profile.get("puff_brightness", profile.get("brightness", 1.0)))
 	_puffs.material_override = GEOMETRY.authored_material(str(profile.get("puff_shape", "fire_bloom")), puff_profile, Color(str(profile.get("puff_colour", _params.colour))))
 	_puffs.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_impact.add_child(_puffs)
