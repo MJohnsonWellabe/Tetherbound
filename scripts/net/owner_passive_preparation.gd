@@ -76,6 +76,7 @@ static func _fields(value: Dictionary, fields: Array) -> bool:
 static func _action_request_valid(raw: Dictionary) -> bool:
 	var request: Dictionary = raw.request
 	if raw.source_kind == "portal_arrival": return _portal_request_valid(raw)
+	if raw.source_kind == "waystone_touch": return _waystone_request_valid(raw)
 	var fields := ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]
 	if raw.source_kind in ["foundation_request", "manual_refine"]: fields.append("revision")
 	if not _fields(request, fields) or not request.intent is Dictionary \
@@ -145,6 +146,37 @@ static func _portal_request_valid(raw: Dictionary) -> bool:
 	return _fields(context, ["character_id", "expected_revision", "source_key", "consumed_portal_permit"]) \
 		and context.character_id == raw.character_id and context.expected_revision == raw.revision \
 		and context.source_key == "arrival:" + permit.request_id and context.consumed_portal_permit == true
+
+## F18 waystone touch: the owner's own frozen portal envelope, plus the exact
+## host context _commit_waystone_touch stages. The host validated proximity
+## against its mounted stone before asking; this checks shape and binding only.
+static func waystone_request(envelope: Dictionary) -> Dictionary:
+	return {"op": "waystone_touch", "session_epoch": envelope.get("session_epoch"),
+		"world_namespace": envelope.get("world_instance_id"), "character_id": envelope.get("character_id"),
+		"envelope": envelope.duplicate(true)}
+
+static func _waystone_request_valid(raw: Dictionary) -> bool:
+	var request: Dictionary = raw.request
+	if not _fields(request, ["op", "session_epoch", "world_namespace", "character_id", "envelope"]) \
+		or request.op != "waystone_touch" or request.session_epoch != raw.session_epoch \
+		or request.world_namespace != raw.world_namespace or request.character_id != raw.character_id \
+		or not request.envelope is Dictionary: return false
+	var envelope: Dictionary = request.envelope
+	if not _fields(envelope, ["request_id", "session_epoch", "world_instance_id", "character_id", "payload"]) \
+		or envelope.session_epoch != raw.session_epoch or envelope.world_instance_id != raw.world_namespace \
+		or envelope.character_id != raw.character_id or not E._opaque_id(envelope.request_id) \
+		or not envelope.request_id.begins_with(raw.session_epoch + ":") \
+		or not envelope.payload is Dictionary or envelope.payload.get("kind") != "waystone_touch" \
+		or not preload("res://scripts/net/portal_action_policy.gd").valid_payload(envelope.payload): return false
+	var context: Dictionary = raw.host_context
+	return _fields(context, ["character_id", "expected_revision", "in_range", "in_combat",
+			"foundation_runtime_authorized", "validated_touch", "source_key", "touch_id", "realm", "world_namespace"]) \
+		and context.character_id == raw.character_id and context.expected_revision == raw.revision \
+		and context.in_range == true and context.in_combat == false \
+		and context.foundation_runtime_authorized == true and context.validated_touch == true \
+		and context.source_key == "waystone:" + str(envelope.payload.waystone_id) \
+		and BASE._hex(context.touch_id, 32) and context.realm is String and not str(context.realm).is_empty() \
+		and context.world_namespace == raw.world_namespace
 
 static func valid_action_host(raw: Variant, cursor: Variant) -> bool:
 	return valid_action(raw) and cursor is Dictionary \

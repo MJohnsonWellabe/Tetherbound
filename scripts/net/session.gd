@@ -58,6 +58,9 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 		return arrival != null and request.get("envelope") is Dictionary \
 			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
 			and arrival.call("owner_request_matches", request) == true
+	if source_kind == "waystone_touch":
+		return request.get("envelope") is Dictionary and request.envelope.get("payload", {}).get("kind") == "waystone_touch" \
+			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope)
 	if source_kind == "altar_spend":
 		return preload("res://scripts/net/owner_passive_preparation.gd").exact(_owner_passive_altar_original, request)
 	if source_kind == "altar_traits": return _altar_traits_service().call("owner_request_matches", request) == true
@@ -74,6 +77,7 @@ func _owner_passive_commit_request(peer: int, source_kind: String, request: Dict
 				result.terminal_refusal = true
 			return result
 		"foundation_request": return _foundation_handle(peer, request)
+		"waystone_touch": return _waystone_commit_prepared(peer, request.envelope, context)
 		"altar_spend": return _handle_altar_spend(peer, request)
 		"altar_traits": return _altar_traits_service().call("commit_prepared", peer, request)
 		"manual_refine":
@@ -84,11 +88,12 @@ func _owner_passive_commit_request(peer: int, source_kind: String, request: Dict
 func _owner_passive_request_terminal(source_kind: String, request: Dictionary, result: Dictionary) -> void:
 	if is_host() or result.get("terminal_refusal") != true or result.get("resolved") != true \
 		or result.get("durable") == true or not _owner_passive_request_matches(source_kind, request): return
-	if source_kind == "portal_arrival":
+	if source_kind in ["portal_arrival", "waystone_touch"]:
 		var reply := result.duplicate(true)
 		var envelope: Dictionary = request.envelope
 		for field: String in ["request_id", "character_id", "world_instance_id", "session_epoch"]: reply[field] = envelope[field]
 		reply.kind = envelope.payload.kind
+		if envelope.payload.kind == "waystone_touch": reply.waystone_id = envelope.payload.waystone_id
 		_receive_portal_reply(reply)
 	elif source_kind == "altar_traits":
 		var reply := result.duplicate(true)
@@ -691,6 +696,10 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 		if binding.get("source_kind") != "portal_arrival" or binding.get("character") != character \
 			or not preload("res://scripts/net/owner_passive_preparation.gd").exact(binding.get("envelope"), request):
 			return passive.call("portal_grounded", peer, request)
+	# The host's own record drifts (care, bond walking) through the raise, fade
+	# and load. Refresh it from the live save right before staging, as every
+	# other host-local request does, so the owner apply baseline matches.
+	elif admitted_character_state(peer).is_empty(): return FOUNDATION_ACTIONS.deny("character_unavailable")
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
 		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
@@ -5425,6 +5434,11 @@ func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
 
 func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	if not _portal_envelope_valid(peer, envelope): return
+	# Host-local: refresh the authority record from the live save first, so the
+	# staged baseline (and its revision) include this frame's care drift.
+	if peer == local_peer_id() and admitted_character_state(peer).is_empty():
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+		return
 	var character: String = envelope.character_id
 	var current: Dictionary = _character_authority.call("state", character)
 	var writer := get_node_or_null(^"LedgerRpc")
@@ -5446,19 +5460,46 @@ func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary)
 		_portal_reply(peer, envelope, {"ok": true, "durable": true, "waystone_id": stone.id, "first_activation": false})
 		return
 	var touch_id: String = Crypto.new().generate_random_bytes(16).hex_encode()
-	var intent := {"waystone_id": stone.id, "touch_id": touch_id}
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true,
 		"validated_touch": true, "source_key": "waystone:" + str(stone.id), "touch_id": touch_id,
 		"realm": str(stone.realm_id), "world_namespace": world.reward_delivery_namespace}
-	var receipt := "craft:waystone_%s:%s" % [touch_id.sha256_text(), character]
+	# A guest's portable record keeps drifting (care, bond walking) between host
+	# samples. Freeze and replay its exact owner inputs first, as every other
+	# owner request does, so the staged before equals the owner's own baseline.
+	# The touch itself commits from _owner_passive_commit_request; a retry with
+	# a new envelope while that original is pending gets no second mutation.
+	if peer != local_peer_id():
+		var request := preload("res://scripts/net/owner_passive_preparation.gd").waystone_request(envelope)
+		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "waystone_touch", request, context)
+		if ready.get("ok") != true:
+			if ready.get("code") not in ["owner_passive_checkpoint_pending", "owner_passive_original_pending"]:
+				_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+			return
+	var committed := _waystone_commit_prepared(peer, envelope, context)
+	if committed.get("durable") != true:
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+
+
+## Stages the frozen touch with exactly the context that was (for a guest)
+## checkpointed. The waiter replies to the original envelope once the owner
+## save is acknowledged (_waystone_delivery_accepted).
+func _waystone_commit_prepared(peer: int, envelope: Dictionary, context: Dictionary) -> Dictionary:
+	if not _portal_envelope_valid(peer, envelope): return FOUNDATION_ACTIONS.deny("waystone_envelope_changed")
+	var character: String = envelope.character_id
+	var current: Dictionary = _character_authority.call("state", character)
+	var writer := get_node_or_null(^"LedgerRpc")
+	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
+	if current.is_empty() or writer == null or not stones is Dictionary: return FOUNDATION_ACTIONS.deny("waystone_unavailable")
+	var stone: Dictionary = PORTAL_POLICY._find_stone(stones, str(envelope.payload.waystone_id))
+	if stone.is_empty(): return FOUNDATION_ACTIONS.deny("waystone_unavailable")
+	var receipt := "craft:waystone_%s:%s" % [str(context.touch_id).sha256_text(), character]
 	_portal_waiters[receipt] = {"peer": peer, "envelope": envelope.duplicate(true),
 		"first_activation": not current.redesign_character.waystones_activated.get(stone.biome, []).has(stone.id)}
 	var committed := FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, character,
-		context.expected_revision, "waystone_touch", intent, context)
-	if committed.get("durable") != true:
-		_portal_waiters.erase(receipt)
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+		int(context.expected_revision), "waystone_touch", {"waystone_id": stone.id, "touch_id": context.touch_id}, context)
+	if committed.get("durable") != true: _portal_waiters.erase(receipt)
+	return committed
 
 func _waystone_delivery_accepted(peer: int, row: Dictionary) -> void:
 	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})
