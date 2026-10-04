@@ -1,0 +1,784 @@
+{
+	"frames": [
+		{
+			"body": [
+				8.84821701049805,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				7.25872659683228,
+				2.98879861831665,
+				14.1745109558105
+			],
+			"image": "farm-door_day_clear.png",
+			"saved": true,
+			"station": "farm-door",
+			"time": "day",
+			"weather": "clear",
+			"yaw": -1.5707963267949
+		},
+		{
+			"body": [
+				8.84821701049805,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				7.25872659683228,
+				2.98879861831665,
+				14.1745109558105
+			],
+			"image": "farm-door_golden_clear.png",
+			"saved": true,
+			"station": "farm-door",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": -1.5707963267949
+		},
+		{
+			"body": [
+				8.84821701049805,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				7.25872659683228,
+				2.98879861831665,
+				14.1745109558105
+			],
+			"image": "farm-door_night_clear.png",
+			"saved": true,
+			"station": "farm-door",
+			"time": "night",
+			"weather": "clear",
+			"yaw": -1.5707963267949
+		},
+		{
+			"body": [
+				8.84821701049805,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				7.25872659683228,
+				2.98879861831665,
+				14.1745109558105
+			],
+			"image": "farm-door_day_rain.png",
+			"saved": true,
+			"station": "farm-door",
+			"time": "day",
+			"weather": "rain",
+			"yaw": -1.5707963267949
+		},
+		{
+			"body": [
+				8.84821701049805,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				7.25872659683228,
+				2.98879861831665,
+				14.1745109558105
+			],
+			"image": "farm-door_night_rain.png",
+			"saved": true,
+			"station": "farm-door",
+			"time": "night",
+			"weather": "rain",
+			"yaw": -1.5707963267949
+		},
+		{
+			"body": [
+				50.9626884460449,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				51.5621871948242,
+				3.73208236694336,
+				19.2254257202148
+			],
+			"image": "street-mid-left_day_clear.png",
+			"saved": true,
+			"station": "street-mid-left",
+			"time": "day",
+			"weather": "clear",
+			"yaw": 0.11813952372111
+		},
+		{
+			"body": [
+				50.9626884460449,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				51.5621871948242,
+				3.73208236694336,
+				19.2254257202148
+			],
+			"image": "street-mid-left_golden_clear.png",
+			"saved": true,
+			"station": "street-mid-left",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": 0.11813952372111
+		},
+		{
+			"body": [
+				50.9626884460449,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				51.5621871948242,
+				3.73208236694336,
+				19.2254257202148
+			],
+			"image": "street-mid-left_night_clear.png",
+			"saved": true,
+			"station": "street-mid-left",
+			"time": "night",
+			"weather": "clear",
+			"yaw": 0.11813952372111
+		},
+		{
+			"body": [
+				50.9626884460449,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				50.183235168457,
+				3.73208284378052,
+				9.14822006225586
+			],
+			"image": "street-mid-right_day_clear.png",
+			"saved": true,
+			"station": "street-mid-right",
+			"time": "day",
+			"weather": "clear",
+			"yaw": -2.98774303583841
+		},
+		{
+			"body": [
+				50.9626884460449,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				50.183235168457,
+				3.73208284378052,
+				9.14822006225586
+			],
+			"image": "street-mid-right_golden_clear.png",
+			"saved": true,
+			"station": "street-mid-right",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": -2.98774303583841
+		},
+		{
+			"body": [
+				50.9626884460449,
+				0.900941669940948,
+				14.1745109558105
+			],
+			"camera": [
+				50.183235168457,
+				3.73208284378052,
+				9.14822006225586
+			],
+			"image": "street-mid-right_night_clear.png",
+			"saved": true,
+			"station": "street-mid-right",
+			"time": "night",
+			"weather": "clear",
+			"yaw": -2.98774303583841
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				86.5628890991211,
+				3.7320818901062,
+				14.1567974090576
+			],
+			"image": "hall-approach_day_clear.png",
+			"saved": true,
+			"station": "hall-approach",
+			"time": "day",
+			"weather": "clear",
+			"yaw": -1.58839571034539
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				86.5628890991211,
+				3.7320818901062,
+				14.1567974090576
+			],
+			"image": "hall-approach_golden_clear.png",
+			"saved": true,
+			"station": "hall-approach",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": -1.58839571034539
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				86.5628890991211,
+				3.7320818901062,
+				14.1567974090576
+			],
+			"image": "hall-approach_night_clear.png",
+			"saved": true,
+			"station": "hall-approach",
+			"time": "night",
+			"weather": "clear",
+			"yaw": -1.58839571034539
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				86.5628890991211,
+				3.7320818901062,
+				14.1567974090576
+			],
+			"image": "hall-approach_day_rain.png",
+			"saved": true,
+			"station": "hall-approach",
+			"time": "day",
+			"weather": "rain",
+			"yaw": -1.58839571034539
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				86.5628890991211,
+				3.7320818901062,
+				14.1567974090576
+			],
+			"image": "hall-approach_night_rain.png",
+			"saved": true,
+			"station": "hall-approach",
+			"time": "night",
+			"weather": "rain",
+			"yaw": -1.58839571034539
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				96.716178894043,
+				3.73208427429199,
+				13.811071395874
+			],
+			"image": "hall-approach-reverse_day_clear.png",
+			"saved": true,
+			"station": "hall-approach-reverse",
+			"time": "day",
+			"weather": "clear",
+			"yaw": 1.65647040215507
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				96.716178894043,
+				3.73208427429199,
+				13.811071395874
+			],
+			"image": "hall-approach-reverse_golden_clear.png",
+			"saved": true,
+			"station": "hall-approach-reverse",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": 1.65647040215507
+		},
+		{
+			"body": [
+				91.6484680175781,
+				0.900941967964172,
+				14.2463083267212
+			],
+			"camera": [
+				96.716178894043,
+				3.73208427429199,
+				13.811071395874
+			],
+			"image": "hall-approach-reverse_night_clear.png",
+			"saved": true,
+			"station": "hall-approach-reverse",
+			"time": "night",
+			"weather": "clear",
+			"yaw": 1.65647040215507
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.347312927246,
+				3.74208354949951,
+				13.4076824188232
+			],
+			"image": "nave-forward_day_clear.png",
+			"saved": true,
+			"station": "nave-forward",
+			"time": "day",
+			"weather": "clear",
+			"yaw": -1.70684515943836
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.347320556641,
+				3.74208402633667,
+				13.4076833724976
+			],
+			"image": "nave-forward_golden_clear.png",
+			"saved": true,
+			"station": "nave-forward",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": -1.70684515943836
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.347312927246,
+				3.74208354949951,
+				13.4076814651489
+			],
+			"image": "nave-forward_night_clear.png",
+			"saved": true,
+			"station": "nave-forward",
+			"time": "night",
+			"weather": "clear",
+			"yaw": -1.70684515943836
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.347320556641,
+				3.74208402633667,
+				13.4076824188232
+			],
+			"image": "nave-forward_day_rain.png",
+			"saved": true,
+			"station": "nave-forward",
+			"time": "day",
+			"weather": "rain",
+			"yaw": -1.70684515943836
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.347320556641,
+				3.74208402633667,
+				13.4076824188232
+			],
+			"image": "nave-forward_night_rain.png",
+			"saved": true,
+			"station": "nave-forward",
+			"time": "night",
+			"weather": "rain",
+			"yaw": -1.70684515943836
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.397277832031,
+				3.7420871257782,
+				14.9723196029663
+			],
+			"image": "nave-arches-left_day_clear.png",
+			"saved": true,
+			"station": "nave-arches-left",
+			"time": "day",
+			"weather": "clear",
+			"yaw": 1.39795301085955
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.397277832031,
+				3.7420871257782,
+				14.9723196029663
+			],
+			"image": "nave-arches-left_golden_clear.png",
+			"saved": true,
+			"station": "nave-arches-left",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": 1.39795301085955
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.397277832031,
+				3.7420871257782,
+				14.9723196029663
+			],
+			"image": "nave-arches-left_night_clear.png",
+			"saved": true,
+			"station": "nave-arches-left",
+			"time": "night",
+			"weather": "clear",
+			"yaw": 1.39795301085955
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.489715576172,
+				3.74208354949951,
+				12.7224521636963
+			],
+			"image": "nave-arches-right_day_clear.png",
+			"saved": true,
+			"station": "nave-arches-right",
+			"time": "day",
+			"weather": "clear",
+			"yaw": -1.84455141038623
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.489715576172,
+				3.74208354949951,
+				12.7224521636963
+			],
+			"image": "nave-arches-right_golden_clear.png",
+			"saved": true,
+			"station": "nave-arches-right",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": -1.84455141038623
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				102.489715576172,
+				3.74208354949951,
+				12.7224521636963
+			],
+			"image": "nave-arches-right_night_clear.png",
+			"saved": true,
+			"station": "nave-arches-right",
+			"time": "night",
+			"weather": "clear",
+			"yaw": -1.84455141038623
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.358329772949,
+				3.74208450317383,
+				15.171763420105
+			],
+			"image": "nave-reverse_day_clear.png",
+			"saved": true,
+			"station": "nave-reverse",
+			"time": "day",
+			"weather": "clear",
+			"yaw": 1.35799826249299
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.358329772949,
+				3.74208450317383,
+				15.171763420105
+			],
+			"image": "nave-reverse_golden_clear.png",
+			"saved": true,
+			"station": "nave-reverse",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": 1.35799826249299
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.358329772949,
+				3.74208450317383,
+				15.171763420105
+			],
+			"image": "nave-reverse_night_clear.png",
+			"saved": true,
+			"station": "nave-reverse",
+			"time": "night",
+			"weather": "clear",
+			"yaw": 1.35799826249299
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.358329772949,
+				3.74208450317383,
+				15.171763420105
+			],
+			"image": "nave-reverse_day_rain.png",
+			"saved": true,
+			"station": "nave-reverse",
+			"time": "day",
+			"weather": "rain",
+			"yaw": 1.35799826249299
+		},
+		{
+			"body": [
+				107.386688232422,
+				0.910941660404205,
+				14.097544670105
+			],
+			"camera": [
+				112.358329772949,
+				3.74208450317383,
+				15.171763420105
+			],
+			"image": "nave-reverse_night_rain.png",
+			"saved": true,
+			"station": "nave-reverse",
+			"time": "night",
+			"weather": "rain",
+			"yaw": 1.35799826249299
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				101.929321289062,
+				3.7420825958252,
+				1.61397516727448
+			],
+			"image": "shrine-pedestals_day_clear.png",
+			"saved": true,
+			"station": "shrine-pedestals",
+			"time": "day",
+			"weather": "clear",
+			"yaw": -1.61630927544878
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				101.929321289062,
+				3.7420825958252,
+				1.61397516727448
+			],
+			"image": "shrine-pedestals_golden_clear.png",
+			"saved": true,
+			"station": "shrine-pedestals",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": -1.61630927544878
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				101.929321289062,
+				3.7420825958252,
+				1.61397516727448
+			],
+			"image": "shrine-pedestals_night_clear.png",
+			"saved": true,
+			"station": "shrine-pedestals",
+			"time": "night",
+			"weather": "clear",
+			"yaw": -1.61630927544878
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				101.929321289062,
+				3.7420825958252,
+				1.61397516727448
+			],
+			"image": "shrine-pedestals_day_rain.png",
+			"saved": true,
+			"station": "shrine-pedestals",
+			"time": "day",
+			"weather": "rain",
+			"yaw": -1.61630927544878
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				101.929321289062,
+				3.7420825958252,
+				1.61397516727448
+			],
+			"image": "shrine-pedestals_night_rain.png",
+			"saved": true,
+			"station": "shrine-pedestals",
+			"time": "night",
+			"weather": "rain",
+			"yaw": -1.61630927544878
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				112.043350219727,
+				3.7420859336853,
+				2.58079409599304
+			],
+			"image": "shrine-pedestals-reverse_day_clear.png",
+			"saved": true,
+			"station": "shrine-pedestals-reverse",
+			"time": "day",
+			"weather": "clear",
+			"yaw": 1.42570476395959
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				112.043350219727,
+				3.7420859336853,
+				2.58079409599304
+			],
+			"image": "shrine-pedestals-reverse_golden_clear.png",
+			"saved": true,
+			"station": "shrine-pedestals-reverse",
+			"time": "golden",
+			"weather": "clear",
+			"yaw": 1.42570476395959
+		},
+		{
+			"body": [
+				107.01042175293,
+				0.910943388938904,
+				1.84539115428925
+			],
+			"camera": [
+				112.043350219727,
+				3.7420859336853,
+				2.58079409599304
+			],
+			"image": "shrine-pedestals-reverse_night_clear.png",
+			"saved": true,
+			"station": "shrine-pedestals-reverse",
+			"time": "night",
+			"weather": "clear",
+			"yaw": 1.42570476395959
+		}
+	],
+	"method": "real farmhouse->Main Street->Hall walk on parsed joypad move/look and collision after one inherited initial farmhouse placement; camera turns by look stick only; WorldLook named times with the clock frozen; WorldWeather presets; HUD visible as played; no body/camera/model writes, no image resizing.",
+	"renderer": "gl_compatibility",
+	"window": [
+		1920,
+		1080
+	]
+}
