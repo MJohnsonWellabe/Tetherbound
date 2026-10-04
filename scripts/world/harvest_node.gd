@@ -30,6 +30,7 @@ const RULES := preload("res://scripts/world/scatter_rules.gd")
 ## D103 / Stage B lane 3.B. See `_on_gathered()`: this node is spent through the
 ## world ledger now, not by writing its own flag and its own satchel line.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const F32_ACTIONS := preload("res://scripts/world/f32_source_actions.gd")
 
 ## MAT-BLOCKOUT round 2. A blind critic, told nothing about the round-1
 ## retint, still flagged the rootstone deposits: no longer "mint/seafoam"
@@ -793,7 +794,7 @@ func _gather_registered_source() -> void:
 	if not result.get("ok", false) and not result.get("pending", false):
 		_claiming = false
 		_claim = {}
-		if game != null: game.call("push_world_message", str(result.get("reason", "Resource unavailable.")))
+		if game != null: game.call("push_world_message", F32_ACTIONS.refusal_reason(result, "Resource unavailable."))
 
 
 func _on_source_settled(op: String, source_id: String, action_id: String, verdict: Dictionary) -> void:
@@ -809,7 +810,7 @@ func _on_source_settled(op: String, source_id: String, action_id: String, verdic
 	_claim = {}
 	if game == null: return
 	if verdict.get("ok") != true or verdict.get("owner_saved") != true or verdict.get("owner_acknowledged") != true:
-		game.call("push_world_message", str(verdict.get("reason", "Gathering is awaiting settlement.")))
+		game.call("push_world_message", F32_ACTIONS.refusal_reason(verdict, "Gathering is awaiting settlement."))
 		return
 	HOME_PROGRESS.maybe_set_materials_gathered(game)
 	var items: RefCounted = game.get("items")

@@ -1,0 +1,96 @@
+CRPROBE ground off=(6.0, 0.0) ok=true drift=129.7 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(-6.0, 0.0) ok=true drift=140.6 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(0.0, 6.0) ok=true drift=137.7 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(0.0, -6.0) ok=true drift=132.7 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(4.0, 4.0) ok=true drift=133.3 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(-4.0, 4.0) ok=true drift=140.4 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(4.0, -4.0) ok=true drift=129.8 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(-4.0, -4.0) ok=true drift=137.1 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(10.0, 0.0) ok=true drift=126.1 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(-10.0, 0.0) ok=true drift=144.2 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(0.0, 10.0) ok=true drift=139.6 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE ground off=(0.0, -10.0) ok=true drift=131.2 pos=(-277.55, 180.0, 512.92) reason=
+CRPROBE water off=(6.0, 0.0) ok=true drift=2193.3 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(-6.0, 0.0) ok=true drift=2188.4 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(0.0, 6.0) ok=true drift=2185.3 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(0.0, -6.0) ok=true drift=2196.3 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(4.0, 4.0) ok=true drift=2188.8 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(-4.0, 4.0) ok=true drift=2185.5 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(4.0, -4.0) ok=true drift=2196.1 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(-4.0, -4.0) ok=true drift=2192.8 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(10.0, 0.0) ok=true drift=2194.9 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(-10.0, 0.0) ok=true drift=2186.7 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(0.0, 10.0) ok=true drift=2181.7 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE water off=(0.0, -10.0) ok=true drift=2199.9 pos=(302.1164, 1080.094, 5098.364) reason=
+CRPROBE ice off=(6.0, 0.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=No real route surface at the intended elevation.
+CRPROBE ice off=(-6.0, 0.0) ok=true drift=0.0 pos=(-354.5, 990.03, 5011.0) reason=
+CRPROBE ice off=(0.0, 6.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=No real route surface at the intended elevation.
+CRPROBE ice off=(0.0, -6.0) ok=true drift=0.0 pos=(-348.5, 990.03, 5005.0) reason=
+CRPROBE ice off=(4.0, 4.0) ok=true drift=0.0 pos=(-344.5, 990.03, 5015.0) reason=
+CRPROBE ice off=(-4.0, 4.0) ok=true drift=0.0 pos=(-352.5, 990.03, 5015.0) reason=
+CRPROBE ice off=(4.0, -4.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=Trainer capsule overlaps a terrain or prop collider.
+CRPROBE ice off=(-4.0, -4.0) ok=true drift=0.0 pos=(-352.5, 990.03, 5007.0) reason=
+CRPROBE ice off=(10.0, 0.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=No real route surface at the intended elevation.
+CRPROBE ice off=(-10.0, 0.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=No real route surface at the intended elevation.
+CRPROBE ice off=(0.0, 10.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=No real route surface at the intended elevation.
+CRPROBE ice off=(0.0, -10.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=No real route surface at the intended elevation.
+CRPROBE air off=(6.0, 0.0) ok=true drift=3.9 pos=(-264.4641, 464.099, 3120.746) reason=
+CRPROBE air off=(-6.0, 0.0) ok=true drift=0.0 pos=(-274.3, 462.8752, 3117.5) reason=
+CRPROBE air off=(0.0, 6.0) ok=true drift=0.0 pos=(-268.3, 463.895, 3123.5) reason=
+CRPROBE air off=(0.0, -6.0) ok=true drift=7.0 pos=(-267.8512, 463.6, 3118.488) reason=
+CRPROBE air off=(4.0, 4.0) ok=true drift=0.0 pos=(-264.3, 464.167, 3121.5) reason=
+CRPROBE air off=(-4.0, 4.0) ok=true drift=0.0 pos=(-272.3, 463.3511, 3121.5) reason=
+CRPROBE air off=(4.0, -4.0) ok=true drift=6.1 pos=(-267.6948, 463.623, 3118.592) reason=
+CRPROBE air off=(-4.0, -4.0) ok=true drift=6.7 pos=(-267.8512, 463.6, 3118.488) reason=
+CRPROBE air off=(10.0, 0.0) ok=true drift=6.1 pos=(-261.6948, 464.5069, 3122.592) reason=
+CRPROBE air off=(-10.0, 0.0) ok=true drift=0.0 pos=(-278.3, 462.4672, 3117.5) reason=
+CRPROBE air off=(0.0, 10.0) ok=true drift=7.7 pos=(-264.0025, 464.167, 3121.054) reason=
+CRPROBE air off=(0.0, -10.0) ok=true drift=11.0 pos=(-267.8512, 463.6, 3118.488) reason=
+CRPROBE electric off=(6.0, 0.0) ok=true drift=0.0 pos=(-211.2, 1119.868, 5327.4) reason=
+CRPROBE electric off=(-6.0, 0.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=Candidate slope is not walkable.
+CRPROBE electric off=(0.0, 6.0) ok=true drift=11.4 pos=(-216.2835, 1119.146, 5322.036) reason=
+CRPROBE electric off=(0.0, -6.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=Candidate slope is not walkable.
+CRPROBE electric off=(4.0, 4.0) ok=true drift=9.1 pos=(-212.4696, 1119.649, 5322.343) reason=
+CRPROBE electric off=(-4.0, 4.0) ok=true drift=9.7 pos=(-220.4179, 1118.602, 5321.702) reason=
+CRPROBE electric off=(4.0, -4.0) ok=true drift=0.0 pos=(-213.2, 1119.564, 5323.4) reason=
+CRPROBE electric off=(-4.0, -4.0) ok=true drift=0.0 pos=(-221.2, 1118.517, 5323.4) reason=
+CRPROBE electric off=(10.0, 0.0) ok=true drift=0.0 pos=(-207.2, 1120.392, 5327.4) reason=
+CRPROBE electric off=(-10.0, 0.0) ok=true drift=6.2 pos=(-226.6996, 1117.775, 5321.195) reason=
+CRPROBE electric off=(0.0, 10.0) ok=true drift=15.4 pos=(-215.963, 1119.189, 5322.062) reason=
+CRPROBE electric off=(0.0, -10.0) ok=true drift=4.5 pos=(-217.5655, 1118.978, 5321.932) reason=
+CRPROBE fire off=(6.0, 0.0) ok=true drift=5.3 pos=(-1088.09, 381.4727, 1492.632) reason=
+CRPROBE fire off=(-6.0, 0.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=Candidate slope is not walkable.
+CRPROBE fire off=(0.0, 6.0) ok=true drift=2.8 pos=(-1091.864, 382.8393, 1499.803) reason=
+CRPROBE fire off=(0.0, -6.0) ok=true drift=0.0 pos=(-1089.4, 381.0486, 1489.1) reason=
+CRPROBE fire off=(4.0, 4.0) ok=true drift=5.4 pos=(-1090.172, 382.2267, 1496.588) reason=
+CRPROBE fire off=(-4.0, 4.0) ok=true drift=0.0 pos=(-1093.4, 382.855, 1499.1) reason=
+CRPROBE fire off=(4.0, -4.0) ok=true drift=1.7 pos=(-1086.875, 381.0328, 1490.323) reason=
+CRPROBE fire off=(-4.0, -4.0) ok=false drift=-1.0 pos=(inf, inf, inf) reason=Candidate slope is not walkable.
+CRPROBE fire off=(10.0, 0.0) ok=true drift=8.8 pos=(-1087.222, 381.1585, 1490.983) reason=
+CRPROBE fire off=(-10.0, 0.0) ok=true drift=8.9 pos=(-1091.561, 382.7293, 1499.226) reason=
+CRPROBE fire off=(0.0, 10.0) ok=true drift=4.6 pos=(-1093.513, 383.4362, 1502.935) reason=
+CRPROBE fire off=(0.0, -10.0) ok=true drift=0.0 pos=(-1089.4, 380.4516, 1485.1) reason=
+CRPROBE psychic off=(6.0, 0.0) ok=true drift=0.0 pos=(-515.5, 1080.03, 5301.5) reason=
+CRPROBE psychic off=(-6.0, 0.0) ok=true drift=28.7 pos=(-514.7668, 1081.8, 5327.234) reason=
+CRPROBE psychic off=(0.0, 6.0) ok=true drift=20.9 pos=(-514.7668, 1081.8, 5327.234) reason=
+CRPROBE psychic off=(0.0, -6.0) ok=true drift=0.0 pos=(-521.5, 1080.03, 5295.5) reason=
+CRPROBE psychic off=(4.0, 4.0) ok=true drift=0.0 pos=(-517.5, 1080.03, 5305.5) reason=
+CRPROBE psychic off=(-4.0, 4.0) ok=true drift=0.0 pos=(-525.5, 1080.03, 5305.5) reason=
+CRPROBE psychic off=(4.0, -4.0) ok=true drift=0.0 pos=(-517.5, 1080.03, 5297.5) reason=
+CRPROBE psychic off=(-4.0, -4.0) ok=true drift=0.0 pos=(-525.5, 1080.03, 5297.5) reason=
+CRPROBE psychic off=(10.0, 0.0) ok=true drift=0.0 pos=(-511.5, 1080.297, 5301.5) reason=
+CRPROBE psychic off=(-10.0, 0.0) ok=true drift=30.7 pos=(-514.7668, 1081.8, 5327.234) reason=
+CRPROBE psychic off=(0.0, 10.0) ok=true drift=17.1 pos=(-514.7668, 1081.8, 5327.234) reason=
+CRPROBE psychic off=(0.0, -10.0) ok=true drift=36.4 pos=(-514.7668, 1081.8, 5327.234) reason=
+CRPROBE dark off=(6.0, 0.0) ok=true drift=12.8 pos=(188.6358, 246.2154, 632.5203) reason=
+CRPROBE dark off=(-6.0, 0.0) ok=true drift=15.3 pos=(177.1451, 244.6514, 634.9394) reason=
+CRPROBE dark off=(0.0, 6.0) ok=true drift=8.2 pos=(181.6809, 245.2688, 633.9845) reason=
+CRPROBE dark off=(0.0, -6.0) ok=true drift=19.9 pos=(184.1, 245.598, 633.4752) reason=
+CRPROBE dark off=(4.0, 4.0) ok=true drift=9.3 pos=(185.9144, 245.845, 633.0933) reason=
+CRPROBE dark off=(-4.0, 4.0) ok=true drift=10.9 pos=(178.2539, 244.8024, 634.706) reason=
+CRPROBE dark off=(4.0, -4.0) ok=true drift=17.1 pos=(187.5271, 246.0645, 632.7537) reason=
+CRPROBE dark off=(-4.0, -4.0) ok=true drift=18.8 pos=(179.8666, 245.0219, 634.3665) reason=
+CRPROBE dark off=(10.0, 0.0) ok=true drift=12.0 pos=(192.4661, 246.7367, 631.7139) reason=
+CRPROBE dark off=(-10.0, 0.0) ok=true drift=16.1 pos=(173.3149, 244.1301, 635.7458) reason=
+CRPROBE dark off=(0.0, 10.0) ok=true drift=4.2 pos=(180.8746, 245.159, 634.1542) reason=
+CRPROBE dark off=(0.0, -10.0) ok=true drift=23.8 pos=(184.9064, 245.7078, 633.3054) reason=
