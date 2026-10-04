@@ -988,6 +988,16 @@ func creature_training_is_pending(character: String) -> bool:
 	return _training_locked(character)
 
 
+## Diagnostic only: which of `_training_locked`'s fences holds `character`.
+func training_lock_reason(character: String) -> String:
+	if _training_stages.has(character): return "training staged"
+	if _training_pending.has(character): return "training awaiting owner ack"
+	if _groom_preparations.has(character): return "groom prepared"
+	if _research_reserved(character):
+		return "research reserved (%s)" % str(_research_preparations[character].get("kind", ""))
+	return ""
+
+
 func creature_training_pending_matches(character: String, row: Dictionary) -> bool:
 	var pending: Dictionary = _training_pending.get(character, {})
 	return not pending.is_empty() and pending.get("receipt") == row.get("receipt") \

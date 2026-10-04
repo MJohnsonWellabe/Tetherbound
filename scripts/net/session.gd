@@ -4493,6 +4493,20 @@ func _owner_training_mutation_blocked(player: RefCounted) -> bool:
 	return not _owner_training_retry.is_empty()
 
 
+## Diagnostic only: which of `_owner_training_mutation_blocked`'s holds is set.
+func _owner_snapshot_block_reason(player: RefCounted) -> String:
+	if _groom_passive != null and _groom_passive.call("blocked", player) == true: return "groom passive pending"
+	if _owner_passive != null and _owner_passive.call("blocked", player) == true:
+		return "owner passive pending phase=%s" % str(_owner_passive.get("pending").get("phase"))
+	if _pending_portal_for(str(player.get("character_id"))): return "portal pending"
+	if is_host() and _character_authority.call("creature_training_is_pending", str(player.get("character_id"))) == true:
+		return "host creature training pending: " + str(_character_authority.call("training_lock_reason", str(player.get("character_id"))))
+	var row := _owner_training_row()
+	if not row.is_empty() and row.get("status") == "pending": return "training row pending"
+	if not _owner_training_retry.is_empty(): return "training retry unsaved"
+	return "training row does not match the live record"
+
+
 ## Compose the existing input-owner and story-modal graph; closing Altar UI
 ## cannot unlock movement/menu/care while a real saved decision is pending.
 func owns_input() -> bool:
