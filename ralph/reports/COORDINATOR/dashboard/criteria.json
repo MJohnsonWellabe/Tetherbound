@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T19:01:50.548533+00:00",
+ "generated_at": "2026-10-04T19:51:17.591411+00:00",
  "main_sha": "b4e4897d5 (PR #525 head; consolidated F17-F21, F25/F35 landing)",
  "batch4_sha": "none in flight; all PRs merged",
  "rows": [
@@ -463,10 +463,10 @@
     },
     {
      "text": "Save/reload keeps same five and closed gates",
-     "status": "partial",
-     "evidence": "earned c1_flight_trained solo/co-op runs @3dad15f41; test_cloudreach_rejoin_gate.gd (logic only)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: | F06#5 | FAIL | `F06-5.md` (unit PASS 6/13/0; solo v27 ERROR; two-peer step #9 enter_realm \"no verdict\", route order: scenario lacks the legacy_physical_crossings_fixture step) |",
      "gap": "Re-run the solo autosave/title-load proof and the two-peer reload on v28. Folds into F49.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. No gated end-to-end test. Since 3dad15f41 the save was reset (v28) and save_document/world_state/session changed.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 5
     },
     {
@@ -619,10 +619,10 @@
    "criteria": [
     {
      "text": "Earned traversal demonstrates all six regions",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f09_0/run9-d3414e84.txt@a7ea3647 (smoke_stormwood_continuous, not CI)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: | F09#0 | FAIL | `F09-0.md` (fixture-start continuous run: first charged Stormglass node did not set first_stormglass_gathered) |",
      "gap": "Re-run smoke_stormwood_continuous from the regenerated F19 earned checkpoint; disclose shortcuts; independent re-check Folds into F49#0, F19#5.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Stormwood logic diff a7ea3647..b4e4897d5: 39 files, +2052/−326. Covers trainers/encounters re-derived (F19), ending, water gate. Earned evidence.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
     {
@@ -747,10 +747,10 @@
    "criteria": [
     {
      "text": "Dynamo and Stormheart resolve from the earned route",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD/f11_0/head-1c977611/marrow_press.txt@1c977611 (smoke_stormwood_marrow_press, not CI)",
+     "status": "failing",
+     "evidence": "tb/reproof-earned: | F11#0 | FAIL | `F11-0.md` (marrow press PASS; earned Dynamo segment not reached because of the F09#0 failure) |",
      "gap": "Re-run smoke_stormwood_marrow_press and the earned Dynamo segment from the F19 checkpoint Folds into F19#2, F49#0.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Combat/Dynamo/trainers diff since 1c977611: 35 files, +7360. stormwood_ending.gd reworked for F20. Earned evidence.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-earned.",
      "audit_index": 0
     },
     {
@@ -914,10 +914,10 @@
     },
     {
      "text": "Currents, inhabited docks and Veilfall distance read pass T2 matrix",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/VERDICTS.md@811c3244",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F13-5/VERDICT.md",
      "gap": "Re-capture with tools/capture_tidewake_f13_5.gd; code-blind judge against the new §4 bar Folds into F39#3, F39#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual verdict. Veilfall silhouette, current view, dock and shader paths changed (12 files, +479); §4 bar raised.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 5
     }
    ]
@@ -954,10 +954,10 @@
     },
     {
      "text": "Water/current network visibly changes and persists",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/b/f14_2_visible_current/JUDGE_VERDICT.md (batch 57)",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F14-2/VERDICT.md",
      "gap": "Re-run smoke_tidewake_b_current_restore; redo randomized A/B capture plus code-blind judge Folds into F39#3.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual A/B verdict. Current-flow view/shader paths changed since. smoke_tidewake_b_current_restore is not in CI; CI unit only checks parameters.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 2
     },
     {
