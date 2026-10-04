@@ -1,37 +1,31 @@
-# F37#3 — Old Ripplet Teleport promise removed from docs and UI
+# F37#3 — Old Ripplet Teleport promise removed from docs and UI (re-scan on main)
 
-- Commit under test: 826d273c3 (origin/tb/integration)
-- Method: formal static scan (no frames; no renderer involved)
-- Criterion (ACCEPTANCE F37 (3)): "The old Ripplet Teleport promise is removed from docs and UI."
+- Commit under test: **a0f9e50b3** (origin/main after PR #526). Earlier scan on 826d273c3: VERDICT_826d273c3.md (FAIL, one residual cell).
+- Method: formal static scan with `git grep` against `origin/main` (no frames, no renderer)
 
 ## Commands
 
 ```
-grep -rniE "ripplet[^.]{0,120}teleport|teleport[^.]{0,120}ripplet" docs data scripts/ui
-grep -rniI "teleport" data scripts/ui
-for f in $(grep -rliI teleport docs); do grep -qi ripplet $f && grep -noiI ".{0,110}teleport.{0,110}" $f; done
-grep -rniI "attune|ripplet.{0,60}(warp|blink|anchor)" data scripts/ui
+git grep -niE "ripplet[^.]{0,120}teleport|teleport[^.]{0,120}ripplet" origin/main -- docs data scripts/ui
+git grep -n "^| S4" origin/main -- docs/ACCEPTANCE.md
+git show origin/main:docs/ACCEPTANCE.md | grep -ci "fly/teleport"          # -> 0
+git grep -niI "teleport" origin/main -- data scripts/ui                     # reviewed every hit
+git grep -niI "ripplet" origin/main -- scripts/ui | grep -i "teleport|warp|blink"   # -> none
 ```
 
-## Hits
+## Hits on a0f9e50b3
 
-| Location | Text | Disposition |
-|---|---|---|
-| docs/ACCEPTANCE.md:45 (S4 row, status column) | "substantial traversal built; starter Fly/Teleport and no-hold climb integration incomplete." | **Residual promise.** Still lists starter (Ripplet) Teleport as pending integration work. Line 33 of the same file says S4's Ripplet Teleport promise is replaced by swim/dive (RD-32), but this cell was not updated. |
-| docs/ACCEPTANCE.md:33 | "S4's Ripplet Teleport promise is replaced by Ripplet swim/dive (RD-32)." | Removal notice, not a promise. OK. |
-| docs/ACCEPTANCE.md:176 | F37 (3) criterion text itself | OK. |
-| docs/TECHNICAL.md:37 | "planned Ripplet surface swim and L30 Dive (RD-32, F37; Ripplet Teleport dropped)" | Removal notice. OK. |
-| docs/TECHNICAL.md:97 | "Ripplet's attuned anchor/cooldown is dropped with Teleport (RD-32)." | Removal notice. OK. |
-| data/creatures/species.json:35, :389, :520 | `_comment_rideable` cites the archived spec filename `C1_RIDEABLE_ROSTER_FLY_TELEPORT.md` (now under archive/docs/specs-2026-09-19/) | JSON developer comment on Burrowback/Terrapup/Tuskroot riding; cites a filename only, no Ripplet teleport behaviour. Not player-facing. Informational. |
-| scripts/ui/* | Only debug-teleport settings list (tab_settings/tab_map/craft_panel comments) | Development scaffolding, unrelated to Ripplet. OK. |
-| data/config/menu.json:116-117 | "Debug teleport" settings label | Debug setting, unrelated to Ripplet. OK. |
+| Location | Disposition |
+|---|---|
+| docs/ACCEPTANCE.md:45 (S4 status) | Now reads "substantial traversal built; starter Fly, Ripplet swim/dive (RD-32) and no-hold climb integration incomplete." **Residual fixed.** |
+| docs/ACCEPTANCE.md:33 | "S4's Ripplet Teleport promise is replaced by Ripplet swim/dive (RD-32)" — removal notice. OK. |
+| docs/ACCEPTANCE.md:176 | F37 (3) criterion text. OK. |
+| docs/TECHNICAL.md:37, :97 | "Ripplet Teleport dropped" / "dropped with Teleport (RD-32)" — removal notices. OK. |
+| docs/design/SYSTEMS.md:183 | "world-map teleport-anywhere" out of scope; no Ripplet teleport. OK. |
+| data/creatures/species.json:35, :389, :520 | Developer comments citing the archived spec filename `C1_RIDEABLE_ROSTER_FLY_TELEPORT.md` for Burrowback/Terrapup/Tuskroot riding. Not player-facing, no Ripplet teleport behaviour. Informational. |
+| scripts/ui/tab_settings.gd (many lines) | Debug-teleport settings list (development scaffolding). Unrelated to Ripplet. OK. |
+| other data/ hits | "no teleport"/anti-teleport accounting/position comments. OK. |
 
-Other `teleport` hits in docs/design (SYSTEMS, WORLD, MULTIPLAYER, AUDIO, CREATURES, UX, COMBAT) and STATE are "no teleport-anywhere", anti-teleport accounting, debug-relocation or harness-teleport rules; none attributes Teleport to Ripplet.
+No Ripplet Teleport ability, move, anchor, cooldown, tooltip or promise remains in docs/, data/ or scripts/ui/.
 
-No Ripplet Teleport ability, move, anchor, cooldown or tooltip exists in `data/` or `scripts/ui/`.
-
-## Verdict: FAIL (one residual docs hit)
-
-UI and data are clean. One docs cell still carries the promise: `docs/ACCEPTANCE.md:45` S4 status "starter Fly/Teleport ... integration incomplete". Fix for the owning lane: change that cell to swim/dive (RD-32) wording. Optional hygiene: the species.json comments cite an archived spec whose filename contains TELEPORT.
-
-Replaces: no prior formal scan recorded for F37#3.
+## Verdict: PASS (on a0f9e50b3)
