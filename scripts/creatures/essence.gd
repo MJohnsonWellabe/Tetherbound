@@ -817,6 +817,13 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 				creature.set(field, int(row[field]))
 			for field: String in ["max_hp", "hp", "attack", "defence", "happiness"]:
 				creature.set(field, float(row[field]))
+			# Adopt the host's journaled passive care too, so the owner's saved
+			# record equals the accepted row exactly after drift across a rejoin.
+			if row.has("nourishment"): creature.set("nourishment", float(row.nourishment))
+			if row.has("rested_seconds_left"): creature.set("rested_seconds_left", float(row.rested_seconds_left))
+			if row.has("distance_m_together"): creature.set("distance_m_together", float(row.distance_m_together))
+			if row.has("rested"): creature.set("rested", bool(row.rested))
+			if row.has("landmarks_visited_together"): creature.set("landmarks_visited_together", int(row.landmarks_visited_together))
 			var known: Array[String] = []
 			for move: String in row.known_moves: known.append(move)
 			creature.set("known_moves", known)
@@ -827,7 +834,9 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 		player.set("redesign_character", incoming.after.redesign_character.duplicate(true))
 	session.call("_end_owner_training_install")
 	var installed: Variant = player.call("save_data")
-	if not installed is Dictionary or not _equivalent(training_projection(installed), incoming.after):
+	# A fresh install equals the row exactly; an already-applied duplicate keeps
+	# the owner's own later passive care, which is not a conflict.
+	if not installed is Dictionary or not _equivalent(_without_passive(training_projection(installed)), _without_passive(incoming.after)):
 		return {"ok": false, "code": "owner_training_install_conflict", "pending": true}
 	if saver.call("save_character_prepared", game, character) != true:
 		# World acceptance stays earned; keep the exact in-memory state/receipt
