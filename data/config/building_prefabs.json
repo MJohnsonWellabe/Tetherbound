@@ -2905,6 +2905,8 @@
             ]
           }
         ],
+        "retint": {"MI_RoundTiles": {"color": "#6f7884", "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}, "MI_WindowGlass": {"color": "#f0c684", "emission": "#f0c684", "energy": 0.85}},
+        "_why_retint": "F17#1/#6 judges: the Hall used the same terracotta roof as the houses (and, unretinted, redder than any of them, against the oxblood reservation), so it read as a big house. A cool slate roof over the RockTrim base sets the civic Hall apart from the warm-brown house roofs; window glass glows like every lit house window.",
         "_why_gables": "F17#6 r1/r2 judges: sky showed through the nave and light leaked onto walls and floor. Only the road end had a gable; the far nave gable, the clerestory end walls beside the frontage and the aisle and Shrine annex roof ends were open. Installed MegaKit end walls and brick gables close them. Render only; no collider, floor or route change.",
         "_why": "Installed native MegaKit modules; road-facing nave entrance is local z=-15, matching CrossingHall.entrance; east side-room doorway remains local x=7,z=0. Collider opening and rendered Wall_Arch share the entrance."
       },

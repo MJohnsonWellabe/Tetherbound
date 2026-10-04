@@ -206,6 +206,10 @@
     0.15,
     -15
   ],
+  "interior_ambient": {
+    "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
+    "night_ambient": 0.25
+  },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
   "interior_lights": [
     {"at": [-6.4, 3.4, -6], "yaw_deg": 90},
@@ -266,6 +270,7 @@
       {"module": "Roof_Front_Brick4", "at": [0, 15.6, -13], "yaw_deg": 180},
       {"module": "Roof_Front_Brick4", "at": [0, 15.6, -9], "yaw_deg": 0}
     ],
+    "retint": {"MI_RoundTiles": {"color": "#6f7884", "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}, "MI_WindowGlass": {"color": "#f0c684", "emission": "#f0c684", "energy": 0.85}},
     "sign": {
       "text": "CROSSING HALL",
       "at": [
