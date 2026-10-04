@@ -74,3 +74,18 @@ expected headless refusal exit 2, both zero errors; focused front-door tests
 This proves source dispatch, not exported native behavior or Ally performance.
 Actual release dispatch and packaged-route rendering still require their own
 checks before owner delivery.
+
+## Actual release CPU preflight
+
+Clean source `925821adc22527d3251c53df757a56d251b007a2`: release export exit 0,
+zero errors; actual packaged EXE reached the explicit route's intentional
+headless refusal exit 2 in 4.94 s. Ordinary release startup without that flag
+exited 0 with zero errors. Real package `-VerifyOnly` passed in Windows
+PowerShell 5.1. The candidate archive passed CRC and all seven embedded manifest
+SHA-256 comparisons. [Export receipt](ally-export-success.json),
+[follow-up receipt](ally-export-followup.json).
+
+These are author-executed CPU proofs, separate from the scoped independent
+source review above. Native packaged routes, full visual bar and actual Ally
+results remain open; the candidate has not been published as a development
+download. Earlier failed attempts remain in `ally-export-preflight.json`.

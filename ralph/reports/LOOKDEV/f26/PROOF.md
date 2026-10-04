@@ -10,7 +10,7 @@ Branch: `tb/lookdev`. The coordinator integrates this lane; no lane PR.
 | F26#2 authored look bar | CURRENT | Independent criterion-only MET on `311e97078`; [look-bar-review.md](look-bar-review.md). No runtime full-bar claim. |
 | F26#3 full bar on High/Medium | MISSING | Fresh complete biome matrices and independent code-blind Bars A/B verdicts required. |
 | F26#4 twelve scripted routes | STALE | Fresh Low/Medium/High route timing at 1920x1080 required. |
-| F26#5 Ally performance | BLOCKED_OWNER | Owner harness and [one-page checklist](ALLY_CHECKLIST.md) implemented/reviewed; package preflight pending. Owner must measure >=30 fps, 40 preferred. |
+| F26#5 Ally performance | BLOCKED_OWNER | Reviewed harness/checklist; CPU release export, actual EXE dispatch and archive integrity PASS. Native packaged routes remain MISSING; owner must measure >=30 fps, 40 preferred. |
 
 No new acceptance credit. Compatibility remains the default.
 
@@ -28,6 +28,8 @@ No new acceptance credit. Compatibility remains the default.
 - Release launcher correction uses the GUI EXE with explicit engine log and visible owner measurement window; independently re-reviewed PASS. Five actual release integrity fixtures PASS without a console wrapper. No project, renderer default, shipping preset or runtime gameplay behavior changed.
 - Added an exact `--f26-route` user-argument entry inside the normal title, reusing the existing production route and autoloads. The title is immediately disabled and detached before attaching the route. Independent scoped source review PASS; [ally-harness-review.md](ally-harness-review.md). Normal title startup and source route dispatch/refusal passed with zero errors; the focused front-door file passed 5 tests / 29 assertions. [CPU receipt](export-entry-source-preflight.json), raw logs at `D:/tetherbound/.artifacts/f26-entry-source-20261004T181606Z/`. Actual release dispatch and native/owner results remain open.
 - Merged the coordinator's main through `a0f9e50b3` into both lanes, preserving history. Current lane has no `docs/STATE.md` difference from main; the coordinator owns that board.
+- Fresh clean-source Windows release export on `925821adc22527d3251c53df757a56d251b007a2`: exit 0 / zero errors in 417.28 s. Actual release EXE reached the explicit route's headless refusal exit 2 / zero errors in 4.94 s. Windows PowerShell 5.1 verified the real package hashes. [Success receipt](ally-export-success.json). The earlier export's teardown leaks did not recur; retain that failed attempt separately, without claiming a demonstrated leak fix.
+- Actual release ordinary startup without the route flag: exit 0 / zero errors in 5.25 s. The 774,981,035-byte candidate ZIP passed CRC and all seven embedded manifest file SHA-256 checks; [follow-up receipt](ally-export-followup.json). Archive SHA-256 `30a4fbd1eb052c99f5f3aca474fb2b68047830c97f56c17c78f20959baeb07a8`. Local candidate: `D:/tetherbound/.artifacts/f26-ally-925821adc-20261004T181841Z/Tetherbound-F26-Ally-925821adc.zip`. This is a CPU-verified candidate, awaiting native packaged routes before owner delivery; no release/download publication or Ally performance claim. Imported metadata changed only line endings: archived 185 exact generated files before restoring, zero substantive deltas.
 
 ## Coordinator exchange
 
