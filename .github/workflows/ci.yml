@@ -2616,13 +2616,31 @@ jobs:
           set -uo pipefail
           files=""
           count=0
+          held=0
           for f in tests/smoke_net_*.gd; do
             [ -f "$f" ] || continue
             if head -5 "$f" | grep -qE '^#\s*peers:\s*2\s*$'; then
+              # A smoke for a feature that ships switched off declares the
+              # production flag it needs ("# requires-flag: <config file>
+              # <dotted.key>"). It is held off the gate only while that flag
+              # is false in data/config, and rejoins on its own the moment the
+              # feature is turned on (same treatment as the owner's F48 hold,
+              # 2026-10-03). The notice below names every held smoke.
+              need=$(head -8 "$f" | sed -nE 's/^#\s*requires-flag:\s*(\S+)\s+(\S+)\s*$/\1 \2/p')
+              if [ -n "$need" ]; then
+                cfg=${need%% *}; key=${need#* }
+                on=$(python3 -c "import json,sys; d=json.load(open('data/config/'+sys.argv[1])); [d := d.get(k, {}) if isinstance(d, dict) else {} for k in sys.argv[2].split('.')]; print('yes' if d is True else 'no')" "$cfg" "$key")
+                if [ "$on" != yes ]; then
+                  echo "::notice::held off the gate until ${cfg} ${key} is on: ${f}"
+                  held=$((held + 1))
+                  continue
+                fi
+              fi
               files="$files $f"
               count=$((count + 1))
             fi
           done
+          echo "held (${held}) smokes whose required production flag is off"
           echo "found (${count}):${files}"
           # Review item 6: a renamed/deleted header must not make this shard
           # go green without actually running a peer -- fewer than the smokes
@@ -2741,7 +2759,9 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Nine-way scheduling: eight ordinary LPT bins, then split_realms alone.
+    # Ten-way scheduling: nine ordinary LPT bins, then split_realms alone.
+    # (Nine-way overflowed the 1200-second budget once F17-F20 added its
+    # unmeasured smokes: eight bins at 1186-1228 s.)
     # Completed case timestamps from run 37120921415 replace stale weights;
     # failed elapsed times are only scheduling lower bounds, never successful
     # runtime measurements. The original 1200-second smoke budget and
@@ -2750,7 +2770,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     timeout-minutes: 30
     needs:
       - changes
@@ -2774,7 +2794,7 @@ jobs:
         env:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 9
+          SHARD_COUNT: 10
           # Smoke wall time only. This leaves ten minutes of the unchanged
           # 30-minute job for checkout, Godot setup, upload and runner drift.
           MEASURED_SHARD_BUDGET_SECONDS: 1200

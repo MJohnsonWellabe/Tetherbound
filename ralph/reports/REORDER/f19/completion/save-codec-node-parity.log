@@ -1,0 +1,1 @@
+{"test":"F19-production-save-codec-parity","golden":"save-codec-v1.json","exact_float_bits":4,"signed_int64_boundaries":2,"rejection_controls":23,"result":"PASS","scope":"Node reader matches production wire values; no earned progression claim"}

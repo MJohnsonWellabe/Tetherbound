@@ -32,6 +32,7 @@ const CATCH := preload("res://scripts/combat/catch_math.gd")
 const THROW_AIM := preload("res://scripts/combat/throw_aim.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const FLASH := preload("res://scripts/combat/impact_flash.gd")
+const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 ## W09-VFX (CL-A2): the hit spark, body flash, KO puff, catch sparkle and
 ## level-up flourish. One door; see scripts/vfx/combat_vfx.gd.
 const VFX := preload("res://scripts/vfx/combat_vfx.gd")
@@ -2188,9 +2189,13 @@ func _body_render_bounds(body: Node3D) -> AABB:
 	var model := body.call("model_pivot") as Node3D
 	if model == null:
 		return AABB()
+	# Stand-in bodies (fixtures, legacy opponents) may lack the creature size
+	# fields; float(null) is a script error, so an absent field reads as 0.
+	var height: Variant = body.get("_height")
+	var radius: Variant = body.get("_radius")
 	var signature: String = "%s|%.5f|%.5f|%d" % [
-		str(body.get("species_id")), float(body.get("_height")),
-		float(body.get("_radius")), model.get_child_count()]
+		str(body.get("species_id")), float(height) if height != null else 0.0,
+		float(radius) if radius != null else 0.0, model.get_child_count()]
 	var key: int = body.get_instance_id()
 	var cached: Dictionary = _framing_bounds_cache.get(key, {}) as Dictionary
 	if str(cached.get("signature", "")) == signature:
@@ -2866,6 +2871,13 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		if stagger_crit:
 			damage *= _poise_crit_scale()
 		killed = _enemy.take_damage(damage)
+	# F21#0: the solo path freezes the same receipt the host path does, so
+	# hitstop, knockback, flash class, shake, rumble and the number all read
+	# combat.json `impact.feedback` by move weight on every landed hit.
+	var local_impact: Dictionary = {}
+	if impact.is_empty():
+		local_impact = _new_impact(move_id, str(_pending_move.get("slot", "quick" if is_quick else "charged")),
+			damage, type_mult, stagger_crit, facing, _wild)
 	var stagger_triggered := stagger_triggered_override
 	if damage_override < 0.0 and not killed and _wild.has_method("apply_poise_damage"):
 		var force_interrupt := not is_quick and enemy_is_winding_up() \
@@ -2873,7 +2885,9 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
-	if impact.is_empty():
+	if not local_impact.is_empty():
+		_wild.call("add_impulse", local_impact.direction, float(_shared_hit_feedback().call("impulse_for", local_impact)))
+	elif impact.is_empty():
 		_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
 	if killed:
 		_wild.call("play_faint")
@@ -2908,10 +2922,10 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	if shot != null:
 		var landing: Vector3 = target
 		shot.connect("arrived", func() -> void:
-			if impact.is_empty(): _flash_at(landing, not is_quick, tint, _wild, hit_fraction)
+			if impact.is_empty(): _present_local_contact(landing, not is_quick, tint, hit_fraction, local_impact)
 			else: _flash_host_impact(landing, not is_quick, tint, _wild, hit_fraction, impact))
 	else:
-		if impact.is_empty(): _flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction)
+		if impact.is_empty(): _present_local_contact(_wild.call("centre"), not is_quick, tint, hit_fraction, local_impact)
 		else: _flash_host_impact(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction, impact)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
@@ -2923,12 +2937,13 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	if stagger_triggered:
 		_announce_stagger(true)
 	hit_landed.emit(true, damage)
-	if impact.is_empty():
+	if not local_impact.is_empty():
+		_begin_hitstop(float(local_impact.get("hitstop_seconds", 0.0)))
+	elif impact.is_empty():
 		_begin_hitstop(_hitstop_seconds(is_quick, stagger_crit))
 	else:
 		_begin_hitstop(float(impact.get("hitstop_seconds", 0.0)))
-		if str(impact.get("weight", "light")) in ["heavy", "ultimate"]:
-			_nudge_camera_on_landing(true)
+		_play_impact_feel(impact)
 		_emit_host_impact(true, impact, _wild)
 	state_changed.emit()
 	if killed:
@@ -3167,6 +3182,9 @@ func _emit_host_impact(on_enemy: bool, impact: Dictionary, target_body: Node3D, 
 	var cfg: Dictionary = feedback.call("config") if feedback != null else {}
 	var where := bounds.position + Vector3(bounds.size.x * 0.5,
 		bounds.size.y + float(cfg.get("numbers", {}).get("target_offset_m", 0.0)), bounds.size.z * 0.5)
+	if bounds.size.is_zero_approx() and is_instance_valid(target_body) and target_body.has_method("centre"):
+		# No measured render bounds (a stand-in body): rise from its centre.
+		where = target_body.call("centre") + Vector3.UP * float(cfg.get("numbers", {}).get("target_offset_m", 0.0))
 	var frozen := impact.duplicate()
 	if not own_hit: frozen["own_hit"] = false
 	frozen.make_read_only()
@@ -3413,8 +3431,14 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 		_ally_body.call("play_faint")
 	else:
 		_play_combat_flinch(_ally_body, -facing)
-	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+	# F21#0/#1: a canonical host hit carries its frozen receipt; the legacy
+	# session payload gets one built here for presentation (flash class, own
+	# number, shake/rumble). Displacement above stays the session's own.
+	var incoming: Dictionary = payload.get("impact", {})
+	if incoming.is_empty():
+		incoming = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
+	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
+		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp)), incoming, false)
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
 	if stagger_triggered:
 		_announce_stagger(false)
@@ -4281,20 +4305,25 @@ func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lu
 		damage *= _poise_crit_scale()
 	var killed: bool = creature.take_damage(damage)
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
-	_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
+	# F21#0: the foe's blow freezes a receipt too; weight comes from its move.
+	var incoming := _new_impact(move_id, "quick", damage, type_mult, stagger_crit, facing, _ally_body)
+	if incoming.is_empty():
+		_ally_body.call("add_impulse", facing, float(cfg.get("lunge", 3.4)) * 0.4)
+	else:
+		_ally_body.call("add_impulse", incoming.direction, float(_shared_hit_feedback().call("impulse_for", incoming)))
 	if killed:
 		_ally_body.call("play_faint")
 	else:
 		_play_combat_flinch(_ally_body, facing)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
-	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(move_id)),
-		_ally_body, damage / maxf(1.0, float(creature.max_hp)))
+	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
+		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp)), incoming, false)
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:
 		_announce_stagger(false)
 	hit_landed.emit(false, damage)
-	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
+	_begin_hitstop(float(incoming.hitstop_seconds) if not incoming.is_empty() else _hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		# RG19-spec/D68. A creature carried off the field is neither happy nor
@@ -4361,7 +4390,8 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	# burst was created correctly twelve times in a row and rendered none of
 	# them. The arena is a Node3D that already exists for exactly the length of
 	# the fight, so it also cleans these up on its way out.
-	var host: Node = _arena if _arena != null else _player.get_parent()
+	var host: Node = _arena if _arena != null else (_player.get_parent() if _player != null else null)
+	if host == null: return # no world to draw into (a bare manager under test)
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
 	if shake_camera and impact.is_empty(): _nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
@@ -4376,13 +4406,19 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var colour := Color(str(spec.get("colour", "#ffd27a")))
 	if tint != null:
 		colour = (tint as Color).lerp(colour, 0.35)
+	# F21#1: crit, super-effective and resisted receipts scale the flash by
+	# class (`impact.feedback.flashes`), so the flash is one of three channels.
+	var style: Dictionary = {}
+	var feedback := _shared_hit_feedback() if not impact.is_empty() else null
+	if feedback != null: style = feedback.call("flash_style", impact)
+	if style.has("colour"): colour = colour.lerp(Color(str(style.colour)), 0.6)
 	FLASH.burst(
 		host,
 		where,
 		colour,
-		float(spec.get("radius", 1.5)),
-		float(spec.get("duration", 0.34)),
-		float(spec.get("strength", 1.0)),
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
+		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
 		# N14: the attack path reads the same opt-in key from `combat.json`'s own
 		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
 		# in the game draws exactly the spike it always has.
@@ -4393,6 +4429,35 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 func _nudge_camera_on_landing(charged: bool) -> void:
 	if charged and _camera_rig != null and _camera_rig.has_method("nudge_combat_impact"):
 		_camera_rig.call("nudge_combat_impact", MATH.config().get("charged_camera_nudge", {}))
+
+
+## The visible contact of a hit this process resolved itself (solo, or the
+## host's own local strike): flash by class, shake/rumble, then the number --
+## never before the effect arrives (COMBAT §11, F25#3).
+func _present_local_contact(where: Vector3, charged: bool, tint: Variant, hit_fraction: float,
+		receipt: Dictionary, on_enemy: bool = true) -> void:
+	var struck := _wild if on_enemy else _ally_body
+	_flash_host_impact(where, charged, tint, struck, hit_fraction, receipt)
+	if receipt.is_empty() or state != State.ACTIVE: return
+	_play_impact_feel(receipt)
+	if is_instance_valid(struck): _emit_host_impact(on_enemy, receipt, struck)
+
+
+## F21#3 (COMBAT §11): heavy, stagger-crit and ultimate impacts in the local
+## player's own fight shake the camera and rumble the pad. Device-local
+## presentation only: peers' fights never call this, nothing reads it back.
+func _play_impact_feel(impact: Dictionary) -> void:
+	var feedback := _shared_hit_feedback()
+	if feedback == null: return
+	var shake := float(feedback.call("shake_scale", impact))
+	if shake > 0.0 and _camera_rig != null and _camera_rig.has_method("nudge_combat_impact"):
+		var nudge: Dictionary = (MATH.config().get("charged_camera_nudge", {}) as Dictionary).duplicate()
+		nudge["degrees"] = float(nudge.get("degrees", 0.65)) * shake
+		_camera_rig.call("nudge_combat_impact", nudge)
+	var rumble: Dictionary = feedback.call("rumble_spec", impact, MOTION_PREFS.rumble_scale())
+	if rumble.is_empty(): return
+	for device: int in Input.get_connected_joypads():
+		Input.start_joy_vibration(device, float(rumble.weak), float(rumble.strong), float(rumble.seconds))
 
 
 ## --- catching -------------------------------------------------------------

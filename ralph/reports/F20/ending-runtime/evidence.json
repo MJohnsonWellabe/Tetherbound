@@ -1,0 +1,1753 @@
+{
+  "feature": "F20",
+  "source_delta": "804a66388a,013fefff03,09df021bb9,82149156f5,33e35c253d,7095f07cf6,687732d0b2,231ad9ccc3,afde2bacc2,8a3ce18047,9d4a50d9e3,a507d6022d,769d93e9ba,72fde3eb14,65cbb1e878,c620ba4e9d,37b17d2917,7dc0283081,11aa0b1afe,29bc4f7145,c352e4979e,b066552af9",
+  "proof_dependency": {
+    "feature": "F18",
+    "original": "98ff2a89cc",
+    "local": "5a315cef84"
+  },
+  "source_review": "Production/input through9d4 independently reviewed; diagnostic a507 clearance WITHDRAWN;769d actual compile confirmed.72fde closing-press handoff and37b17 authored input sourcePASS, exercised by actualr10 homecoming/credits/Skip1ACK.65cbb/c620 capture sourcePASS compilesr6 but readyFAIL.7dc snapshot/phase guard and11aa peer identity assertions sourcePASS; actualsolo-r11 cleanending/reload partial confirms7dc; net-r4fails finaltap boundary, newpeerUIDinspectunexercised.29bc inputclock sourcePASS/net-r5live. Current Criteria0/1/3METcandidate (independentactualsolo-r20);2/4OPEN, main landing pending.",
+  "focused": {
+    "verdict": "PASS",
+    "log": "f20-f18-focused-r2.log.gz",
+    "tests": 31,
+    "assertions": 240,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": [
+      "test_ending_return_provenance.gd",
+      "test_foundation_travel_protocol.gd",
+      "test_regional_homecoming.gd",
+      "test_f18_waystones.gd"
+    ]
+  },
+  "pending_acknowledgement": {
+    "verdict": "PASS",
+    "log": "f20-pending.log.gz",
+    "cases": 2,
+    "assertions": 9
+  },
+  "synthetic_disk": {
+    "verdict": "PASS",
+    "log": "f20-synthetic-disk.log.gz",
+    "checks": 62,
+    "scope": "synthetic facade over actual split writer, Game, credits UI and disk; not earned gameplay"
+  },
+  "actual_world": {
+    "verdict": "OPEN",
+    "reason": "Criteria0/1/2/3 independently MET candidates/main pending. #4 actual matched fullpeer remains held until coordinator baseline release. No human verdict dependency remains.",
+    "scripts": [
+      "tests/smoke_f20_ending.gd",
+      "tests/smoke_f20_tidewake_close.gd",
+      "tests/smoke_net_f20_ending.gd",
+      "tests/smoke_f20_arch_presentation.gd"
+    ],
+    "attempts": [
+      {
+        "log": "f20-solo-r1.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-solo-r2.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-solo-r3.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-arch-render-r1.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r1.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r2.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r3.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r4.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-tidewake-r5.log.gz",
+        "verdict": "FAIL"
+      },
+      {
+        "log": "f20-arch-render-r2.log.gz",
+        "verdict": "FAIL",
+        "reason": "ordinary navigation stopped near fifth arch but exact grounded/actionable prompt ownership failed before key input; no valid capture"
+      },
+      {
+        "log": "f20-tidewake-r6.log.gz",
+        "verdict": "FAIL",
+        "checks": 21,
+        "failures": 2,
+        "reason": "after correct dock input and 30 second wait, pending owner_plan baseline conflicts in party; world journal exists, personal receipt/save absent"
+      },
+      {
+        "log": "f20-tidewake-r7.log.gz",
+        "verdict": "PASS",
+        "source": "687732d0b2",
+        "checks": 21,
+        "failures": 0,
+        "exit_code": 0,
+        "engine_errors": 0,
+        "warnings": "One pre-existing water_world instance_reset_physics_interpolation deprecation; retained in exact log.",
+        "scope": "Disclosed restored-current fixture, then real Mara afterword, ordinary capsule walk/exact dock X, durable world and personal receipt, production save0true, no homecoming or credits. No earned Nerissa/campaign claim."
+      },
+      {
+        "log": "f20-solo-r4-native.log.gz",
+        "workflow_log": "f20-solo-r4-workflow.log.gz",
+        "artifact": "f20-solo-r4-artifact.zip",
+        "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
+        "run": 37080411315,
+        "remote_artifact": 11258946535,
+        "artifact_sha256": "9b2e909078006c940f2d8b8ddf7c65b0c766c2d84907d2e5629da636f64a4450",
+        "verdict": "FAIL",
+        "checks": 11,
+        "failures": 1,
+        "workflow_step_exit": 1,
+        "scope": "Actual post-finale Stormwood Home Key -> saved/durable/grounded Meadows outcome-bound return PASS; real fifth-key input creates pending host row but owner character writer refuses invalid portal world receipt. No Grandpa/credits/reload reached.",
+        "engine_errors": "At least6 retained save-refusal ERROR lines; complete original count unavailable.",
+        "log_truncation": "Workflow retained first5MB and last20MB of original649299519-byte run.log with marker. Original expected exit-code artifact absent because old dispatch workflow shell exits on script failure; terminal workflow job records exit1."
+      },
+      {
+        "log": "f20-net-r1-native.log.gz",
+        "workflow_log": "f20-net-r1-workflow.log.gz",
+        "artifact": "f20-net-r1-artifact.zip",
+        "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
+        "run": 37081328188,
+        "remote_artifact": 11259022945,
+        "verdict": "FAIL",
+        "workflow_step_exit": 1,
+        "scope": "Both actual peer hellos, host/join, registry2 and host Home Key return PASS, then host f20_fifth no verdict.",
+        "limitations": "Original /tmp peer logs, NET_RUN and character files are outside workflow collection and absent from artifact. Cause and peer engine-error cleanliness unknown; no co-op acceptance. Corrected F20-only output path and single POSIX log writer in afde2bacc2; existing deadlines unchanged."
+      },
+      {
+        "run": 37083033029,
+        "job": 111087486384,
+        "artifact": 11260120674,
+        "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+        "verdict": "FAIL",
+        "checks": 16,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_terminal": "F20 SOLO: 16 checks, 1 failures",
+        "engine_script_errors": 0,
+        "native_bytes": 16974,
+        "native_sha256": "03199d1178e8f102cd84b1b967fed6c9180f82bcc7bcfc8d15f74fe5b6938dbc",
+        "artifact_bytes": 652226,
+        "artifact_sha256": "c53910b1a4da5608ee152637384e4cf5211c2409f6807ad411eb8204d25092fe",
+        "logs": [
+          "f20-solo-r5-native.log.gz",
+          "f20-solo-r5-workflow.log.gz",
+          "f20-solo-r5-artifact.zip"
+        ],
+        "passed": "Actual saved outcome-bound Home Key return; actual fifth key debit, sealed state, one durable bright glow/playing SFX source, exact not-ready line, no main quest change and repeat key refusal.",
+        "failure": "Unchanged ordinary navigator exhausts Grandpa walk budget when real onboarding lesson takes input midwalk (OnboardingLessons lesson_panel, player26.95059,0.900941,15.1673). No Grandpa/credits/reload reached.",
+        "limitations": "Disclosed post-finale state fixture. Hosted headless Dummy sound source is functional only; no visual or audible acceptance. No earned campaign or criteria1\u20134 closure.",
+        "independent_review": "PASS f20_review \u00a77.2: zero errors in native+user Godot logs; actual durable HomeKey/fifth functional partial valid; lesson input owner blocks unchanged navigator. F20#1\u20134 remainOPEN."
+      },
+      {
+        "run": 37083772545,
+        "job": 111089712050,
+        "artifact": 11260236648,
+        "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_coordinator_and_both_retained_peers": 0,
+        "artifact_bytes": 148612,
+        "artifact_sha256": "a2184ae4b8cdcb84dcd5e682ae11f1dc00e56df66f253e05789ff9e4d9dc0686",
+        "logs": [
+          "f20-net-r2-native.log.gz",
+          "f20-net-r2-workflow.log.gz",
+          "f20-net-r2-peer-0.log.gz",
+          "f20-net-r2-peer-1.log.gz",
+          "f20-net-r2-NET_RUN.json",
+          "f20-net-r2-artifact.zip"
+        ],
+        "passed": "Both actual ENet peer hellos/host/join/registry, host outcome-bound durable HomeKey, host fifth producer debit/sealed/glow+playing SFX/line/noquest/repeatrefusal. Strict retained peer error scan PASS.",
+        "failure": "Host f20_talk no verdict at unchanged205s command deadline (the historical300s label referred to total post-hello allowance). Retained heartbeat context panel:@CanvasLayer at exact solo-r5 stuck pose26.95059,0.90094,15.16730; host log ends before Grandpa input. A common lesson navigation blockage is strongly inferred from explicit solo owner path; net does not name panel script. Guest homecoming/credits/rejoin/reload not reached.",
+        "limits": "Post-finale fixtures, headless functional only. Original complete peer logs/homes/disk/NET_RUN preserved in ZIP. No F20#4 acceptance.",
+        "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: complete peer logs/homes/disk retained, exact ZIP hash, host producer passes, fresh284ms panel heartbeat at same solo stuck pose; net panel script not identified, shared lesson cause is strong inference from explicit solo observation. Zero errors in all3 logs. No guest ending/rejoin/reload reached, no exit_code artifact; workflowfailure authoritative."
+      },
+      {
+        "run": 37084560197,
+        "job": 111092043059,
+        "artifact": 11260612816,
+        "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_retained_native_and_peer_logs": 0,
+        "native_bytes": 17462,
+        "native_sha256": "c83c25dade1759fc7d72c4f445a089f511828b66c0532b6d920977faed70cabb",
+        "artifact_bytes": 652446,
+        "artifact_sha256": "ffeed5632443a9a40e4e5fe1b6d90540df1fbcc80b627e65ad37b1ea47f1aa3d",
+        "logs": [
+          "f20-solo-r6-native.log.gz",
+          "f20-solo-r6-workflow.log.gz",
+          "f20-solo-r6-artifact.zip"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: exact ZIP hashes, native solo+user/net host+guest+coordinatorzeroengine/script errors; real lesson Continue+personalack and reader checks pass, but dialogue-completed callback/rendered prose/ACKfailure cause notobserved. No criterion closure.",
+        "passed": "Actual durable HomeKey return and fifth producer; actual portal lesson rendered/continued with normalmenu_confirm and personal lesson acknowledgement. Ordinary navigation/Grandpa prompt activation succeeds, canonical own four-choice/starter/live-memory reader checks pass.",
+        "failure": "Natural Grandpa completion/acknowledgement check fails. Original proof does not record rendered dialogue/completed callback/result, so exact dialogue/input/transaction cause remains unknown; unchanged30s conversation budget.",
+        "limits": "Post-finale fixture; reader checks are not actual rendered Grandpa prose or completed ending proof. No credits/reload reached. Criteria1\u20134 OPEN.",
+        "checks": 19
+      },
+      {
+        "run": 37084565111,
+        "job": 111092058849,
+        "artifact": 11259898797,
+        "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_retained_native_and_peer_logs": 0,
+        "native_bytes": 1870,
+        "native_sha256": "6b170c2e43d97ae29f6b55ba09d66391001d99d1fcfc0a359ea276b1b435776e",
+        "artifact_bytes": 149174,
+        "artifact_sha256": "fa8ed665a5d09b7123bd3f0f539f810cb5d56f244fb5f533b4b72cdd82f8d520",
+        "logs": [
+          "f20-net-r3-NET_RUN.json",
+          "f20-net-r3-peer-0.log.gz",
+          "f20-net-r3-peer-1.log.gz",
+          "f20-net-r3-native.log.gz",
+          "f20-net-r3-workflow.log.gz",
+          "f20-net-r3-artifact.zip"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2 scoped failed evidence: exact ZIP hashes, native solo+user/net host+guest+coordinatorzeroengine/script errors; real lesson Continue+personalack and reader checks pass, but dialogue-completed callback/rendered prose/ACKfailure cause notobserved. No criterion closure.",
+        "passed": "Actual durable HomeKey return and fifth producer; actual portal lesson rendered/continued with normalmenu_confirm and personal lesson acknowledgement. Ordinary navigation/Grandpa prompt activation succeeds, canonical own four-choice/starter/live-memory reader checks pass.",
+        "failure": "Natural Grandpa completion/acknowledgement check fails. Original proof does not record rendered dialogue/completed callback/result, so exact dialogue/input/transaction cause remains unknown; unchanged30s conversation budget.",
+        "limits": "Post-finale fixture; reader checks are not actual rendered Grandpa prose or completed ending proof. No credits/reload reached. Criteria1\u20134 OPEN."
+      },
+      {
+        "run": 37084998254,
+        "job": 111093310987,
+        "artifact": 11260357016,
+        "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+        "verdict": "FAIL",
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "engine_script_errors_in_retained_native_and_peer_logs": 0,
+        "native_bytes": 10716,
+        "native_sha256": "d4b018ce1edea905ef8b0fb75fc3f34e749b40f878af6a6841677ffe0e4961cb",
+        "artifact_bytes": 942057,
+        "artifact_sha256": "48ed454b6d84eaf3d7d4084f8b63b007da943cea8c62cf902225605d2dde90d9",
+        "logs": [
+          "f20-arch-render-r3-native.log.gz",
+          "f20-arch-render-r3-workflow.log.gz",
+          "f20-arch-render-r3-artifact.zip"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2 failed evidence: exact ZIPhash10716-byte native,0engine/script errors in run+userlog, readinessfailure8checks1fail; no fifth PNG/WAV entries. Predicate/causeunknown.",
+        "checks": 8,
+        "renderer": "Compatibility OpenGL4.5 Mesa25.2.8 llvmpipe LLVM20.1.2",
+        "failure": "Production world/personal context readiness180s failure before key input. Exact failed predicate/cause unknown; no GL-warmup cause established. No fifth PNG/WAV captured.",
+        "limits": "Hosted software rendering and Dummy audio; zero acceptance advancement. Readiness diagnostic retains deadline/predicate."
+      },
+      {
+        "run": 37086096148,
+        "job": 111096610357,
+        "artifact": 11261155455,
+        "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+        "verdict": "FAIL compile; no gameplay exercised",
+        "workflow_conclusion": "failure",
+        "script_errors": 5,
+        "engine_errors": 1,
+        "native_bytes": 1095,
+        "native_sha256": "eeb88fea52f082786711969aff230c57e85a58ef59def0bdc4a2fc269e16e3d5",
+        "artifact_bytes": 1155,
+        "artifact_sha256": "8465ce2fe33728d9447ab810ed3a806f59a6ff8442176841beeaf5cb1a069803",
+        "logs": [
+          "f20-solo-r7-native.log.gz",
+          "f20-solo-r7-workflow.log.gz",
+          "f20-solo-r7-artifact.zip"
+        ],
+        "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
+        "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
+        "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
+      },
+      {
+        "run": 37086104045,
+        "job": 111096633169,
+        "artifact": 11260518286,
+        "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+        "verdict": "FAIL compile; no gameplay exercised",
+        "workflow_conclusion": "failure",
+        "script_errors": 5,
+        "engine_errors": 1,
+        "native_bytes": 1463,
+        "native_sha256": "aa9a790643a05ac5e930558cf8aa2b22db106de02428707678f5fdafac535599",
+        "artifact_bytes": 1572,
+        "artifact_sha256": "e42a645c5a9f6a1a070588281fa2bc1b98a18a925260f2c81ab06fa491971af5",
+        "logs": [
+          "f20-arch-render-r4-native.log.gz",
+          "f20-arch-render-r4-workflow.log.gz",
+          "f20-arch-render-r4-artifact.zip"
+        ],
+        "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
+        "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
+        "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
+      },
+      {
+        "run": 37086609484,
+        "job": 111098133365,
+        "artifact": 11260826417,
+        "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+        "verdict": "FAIL compile; no gameplay exercised",
+        "workflow_conclusion": "failure",
+        "script_errors": 1,
+        "engine_errors": 1,
+        "native_bytes": 401,
+        "native_sha256": "2e446cab4956760906d57b3430757a7f5d993af02ffab5db96b1513b5e3c641e",
+        "artifact_bytes": 1006,
+        "artifact_sha256": "b8065a15752eb242ea90979e3e6a3b864f6be606a53009627c107e3e50a3d483",
+        "logs": [
+          "f20-probe-parser-native.log.gz",
+          "f20-probe-parser-workflow.log.gz",
+          "f20-probe-parser-artifact.zip"
+        ],
+        "failure": "New diagnostic function-scope owner collided with existing credits-loop owner at helper229; primary direct-helper parser proves exact duplicate. Solo/render wrappers only show preload/inference cascades.",
+        "limits": "Diagnostic-only compile failure, no actual ending/readiness/key/PNG/WAV result. Direct RefCounted helper invocation was solely to expose primary error, not a MainLoop/acceptance test.",
+        "independent_review": "f20_review confirms primary1SCRIPT+1loadERROR and wrapper5SCRIPT+1loadERROR each; initiala507sourcePASSwithdrawn. Three-line corrected diagnostic variable769d sourcePASS; compilation/runtime pending."
+      },
+      {
+        "run": 37086997616,
+        "job": 111099263632,
+        "artifact": 11260888445,
+        "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
+        "checks": 28,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_bytes": 22578,
+        "native_sha256": "a4a59f7154a1ae0586b3dfa4bac61576cb6ef7b30ce21ee201bb969e8ea49fa1",
+        "user_log_bytes": 22420,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 654599,
+        "artifact_sha256": "c2bf5b8bb8c79c5e7f7d7f22f071808836d63fa9b5eb7feeafac1d11d301578a",
+        "logs": [
+          "f20-solo-r8-native.log.gz",
+          "f20-solo-r8-workflow.log.gz",
+          "f20-solo-r8-artifact.zip"
+        ],
+        "verdict": "FAIL credits ownership after real acknowledged homecoming",
+        "passed": "Actual HomeKey/fifth/ordinary portal lesson/navigation; actual completed(regional_homecoming_5), all5names/starter/one actual1landmark bond memory/four personal decisions rendered. Homecoming receipt independently found in actual character disk payload.",
+        "failure": "Production credits input owner never observed during unchanged600frame wait. No credits completion/reload/continuation. Original r6/r3 dialogue cause remains unknown; this r8 partial does not retroactively prove it.",
+        "independent_review": "PASS f20_review failed-evidence scope: native22578/user22420bytes zero engine/script errors;28checks1fail, actual rendering/completed/ACK proven;F20#1 remains OPEN."
+      },
+      {
+        "run": 37087002514,
+        "job": 111099278835,
+        "artifact": 11261033697,
+        "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
+        "checks": 16,
+        "failures": 0,
+        "workflow_conclusion": "success",
+        "native_bytes": 11794,
+        "native_sha256": "5976dc52990288b6fbdc05c1b3e3fed0a865c49a11c198325e6e1784e970d1ad",
+        "user_log_bytes": 11671,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 2502935,
+        "artifact_sha256": "2d1482b49bd9e376f209b12616942993a0d9197eb393fafeeda7fdd43ac2a967",
+        "logs": [
+          "f20-arch-render-r5-native.log.gz",
+          "f20-arch-render-r5-workflow.log.gz",
+          "f20-arch-render-r5-artifact.zip"
+        ],
+        "verdict": "PASS functional16checks; FAIL visible arch/stir acceptance",
+        "exit_code": 0,
+        "elapsed_seconds": 801,
+        "readiness": {
+          "elapsed_ms": 121444,
+          "physics_samples": 46,
+          "max_wait_ms": 82289,
+          "limit": "Interval includes loop work; no originalr3readiness cause established."
+        },
+        "passed": "Actual key debit/sealed/glow+playingSFXsource/one-line/noquest/repeatrefusal; actual framebuffer and mixed SFX file created.",
+        "renderer": "Compatibility OpenGL4.5 Mesa25.2.8 llvmpipe LLVM20.1.2;1280x720;Dummy audio",
+        "visual": "FAIL independent f20_review and root: actual PNG mostly lavender/sky with partial Hall beam; trainer, fifth arch and glow not visible. Not-ready line/quiet arch prompt visible. No visual acceptance.",
+        "audio_inspection": {
+          "channels": 2,
+          "sample_width": 2,
+          "rate": 44100,
+          "frames": 29179904,
+          "duration_seconds": 661.6758276643991,
+          "bytes": 116719660,
+          "sha256": "013b0af5664d35ef100021b682f73abbbbb04e49e6cc576ef96b63168ae742f2",
+          "nonzero_samples": 1013556,
+          "peak": 8320,
+          "rms": 120.38872188619091
+        },
+        "audio_limits": "661.676second stereo44.1kHz mixed file includes full navigation and unrelated SFX; nonzero PCM does not isolate or prove audible low hum. Hosted Dummy output cannot establish physical device/listener acceptance.",
+        "independent_review": "PASS f20_review functional/failedvisual scope:16checks0/exit0/took801s, native11794bytes0errors, readiness succeeds without deadline change. Independent WAV header/nonzero PCM/hash agree; no listening or individual hum attribution. Criterion2OPEN."
+      },
+      {
+        "run": 37088421507,
+        "job": 111103365982,
+        "artifact": 11261920562,
+        "source": "72fde3eb147de38c4fee900fd602ede300ad1efe",
+        "verdict": "FAIL proof conversation deadline before final line/completion; credits handoff not exercised",
+        "checks": 19,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_bytes": 20613,
+        "native_sha256": "acf50ea6e6b62f7fe48bbaad8f086aa91922e1822c81c46c10d5f2e47b59b034",
+        "user_log_bytes": 20455,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 653989,
+        "artifact_sha256": "16c15bdf31c05e6c27c8b550ff95b417c4c80fe5904ca70a2389b922757fa1cb",
+        "logs": [
+          "f20-solo-r9-native.log.gz",
+          "f20-solo-r9-workflow.log.gz",
+          "f20-solo-r9-artifact.zip"
+        ],
+        "actual_trace": "Dialogue remains open regional_homecoming_5 with actual DialoguePanel owning input; completed=[]; first10of11 authoredlines recorded by reader, stable safe own context, ACKintents empty, trainingaction stillportal_arrival. Final11 may already be displayed after lasttap but was not recorded/closed. Global30s reader loop ended before final closing press; no producerACKrefusal evidence.",
+        "limits": "HomeKey/fifth/lesson/navigation and healthy Grandpa line progression pass, but no completed callback/ACK/credits/reload. Does not validate or refute creditsclosingpressfix72fde because that path was not reached.",
+        "independent_review": "PASS f20_review: native20613/user20455bytes0errors; ZIP653989sha16c15bdf31c05e6c27c8b550ff95b417c4c80fe5904ca70a2389b922757fa1cb and nativeacf50ea6e6b62f7fe48bbaad8f086aa91922e1822c81c46c10d5f2e47b59b034 match. First10lines recorded; finalmayalreadydisplay; nocompleted/ACK/creditsfixexercise;criteria1\u20134OPEN."
+      },
+      {
+        "run": 37089044472,
+        "job": 111105247954,
+        "artifact": 11262350489,
+        "source": "c620ba4e9da42c76956c622bb67253799a8f8244",
+        "verdict": "FAIL readiness before key/capture",
+        "checks": 8,
+        "failures": 1,
+        "workflow_conclusion": "failure",
+        "native_bytes": 10960,
+        "native_sha256": "c7c58d39922f63442565fb489731e07940e227768de9f3e1adf9241c784947dc",
+        "user_log_bytes": 10854,
+        "engine_script_errors_in_retained_native_and_user_logs": 0,
+        "artifact_bytes": 942305,
+        "artifact_sha256": "08b46120b95b1e526a1444bcef0e4df3337a70361c1f4a35561754cc0b01bc4d",
+        "logs": [
+          "f20-arch-render-r6-native.log.gz",
+          "f20-arch-render-r6-workflow.log.gz",
+          "f20-arch-render-r6-artifact.zip"
+        ],
+        "readiness": {
+          "elapsed_ms": 182460,
+          "physics_samples": 17,
+          "max_wait_ms": 132569,
+          "scene": "/root/MeadowsPlayground",
+          "shell_complete": false,
+          "player_floor": false,
+          "player_position": [
+            0,
+            2.9,
+            0
+          ],
+          "journey_empty": false,
+          "paused": false,
+          "input_owner": "none"
+        },
+        "failure": "World readiness/release predicates false at original180s limit. Bootlog last phase02:17:47 says_readycomplete/waitingfirstframe; source waitsphysics+process before constructionhold release/_shell_ready. This identifies predicates, not exact cost/call cause or GLwarmup.",
+        "limits": "Newcapture source compiles; no actual fifth/recenter/result callback/PNG/WAV exercised. No sharedworld source changes or further blindrender retry. Criteria2OPEN.",
+        "independent_review": "PASS f20_review: native10960 sha c7c58d39922f63442565fb489731e07940e227768de9f3e1adf9241c784947dc/user10854bytes both0errors; ZIP942305 sha08b46120b95b1e526a1444bcef0e4df3337a70361c1f4a35561754cc0b01bc4d matches. Exact8checks1 readiness/release predicates verified; no fifthPNG/WAV or exit_code. Capture callbacks unexercised; no construction-stillrunning/GLwarmup cause claimed. Criterion2OPEN."
+      },
+      {
+        "run": 37089384568,
+        "job": 111106265599,
+        "artifact": 11262336400,
+        "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
+        "verdict": "FAIL script errors/aborted continuation despite workflow success",
+        "checks_reported": 34,
+        "failures_reported": 0,
+        "workflow_conclusion": "success",
+        "exit_code": 0,
+        "elapsed_seconds": 402,
+        "native_bytes": 33796,
+        "native_sha256": "50e5c28a34d8babfb2dc4385d0e4a21c57d6a565b5c3063ea439d99425feca4a",
+        "native_script_errors": 3,
+        "native_engine_errors": 0,
+        "user_log_bytes": 33420,
+        "user_log_sha256": "dd50b0abb8b25de4bf5fa8c059bb8d4d1e3b4cdc70f1e975ada865883df65577",
+        "user_script_errors": 3,
+        "user_engine_errors": 0,
+        "artifact_bytes": 660101,
+        "artifact_sha256": "144c6a898ea73c7b53509d6cdb64a770dafdf2416e80979fead1cc127d7d7ebe",
+        "logs": [
+          "f20-solo-r10-native.log.gz",
+          "f20-solo-r10-workflow.log.gz",
+          "f20-solo-r10-artifact.zip"
+        ],
+        "passed": "Actual11authoredpresses/completed(regional_homecoming_5)/all5names/starter/live1landmark/fourdecisions, durablehomecoming; productioncreditsopen/inputguard/Skip exactly1durableACK;completedworldsave. Actualdisk character holds both homecoming and credits receipt. Memoryreset andproductionload_game returnstrue.",
+        "failure": "F20proofretained calls nonexistentInventory.save_data before reset and after load; resumed reads character from resultingemptyDictionary. ThreeSCRIPTERRORs abort snapshot/reloadcomparison/continuation, but oldrunnerstill prints34checks0 andexit0. Neveraccepted as clean orcompletedcriterion evidence.",
+        "ending_receipts_found_in_actual_disk": [
+          "craft:regional_ending_homecoming_seen:character-58e89efb0f4b261b450c3fe5213c92ad",
+          "craft:regional_ending_regional_credits_seen:character-58e89efb0f4b261b450c3fe5213c92ad"
+        ],
+        "limits": "No verified sameparty/inventory/world comparison afterreload, no completedGrandparevisit/no-replay/safemovement/bounty/rematch/remainingactivity proof. Criteria1/3 remainOPEN; nopeercriterion4.",
+        "independent_review": "PASS f20_review failed-evidence audit: exact original ZIP/native/user logs and hashes verified; actual initial homecoming/credits/Skip1ACK/disk receipts passed, but 3 SCRIPT ERRORs abort retained snapshot/reload comparisons/continuation despite exit0 and34checks0. Overall acceptance FAIL; criteria1/3 OPEN."
+      },
+      {
+        "run": 37090792874,
+        "job": 111110505505,
+        "artifact": 11262079263,
+        "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+        "verdict": "FAIL",
+        "workflow_conclusion": "failure",
+        "failures": 1,
+        "artifact_bytes": 150263,
+        "artifact_sha256": "9f9dc00f6aa889dff94529273078f8d642388054c764ef98d61003b5becc0cde",
+        "native_bytes": 1746,
+        "native_sha256": "73e0b31fad012769ed2cde9a17a4b3c6f8cc5596f64cb9a09dda3e550c863cf3",
+        "coordinator_and_both_peer_engine_script_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 14903,
+            "sha256": "d1d517ddbc9fba44d672c82b7d63a5a653c11898e193e8cd0ea6c84383031637"
+          },
+          "peer-1.log": {
+            "bytes": 11395,
+            "sha256": "51c39a6ffe50ee6ba2e5979f5ccde0ded564eedc9fa8ca0ec75165a28b2939c5"
+          }
+        },
+        "logs": [
+          "f20-net-r4-native.log.gz",
+          "f20-net-r4-workflow.log.gz",
+          "f20-net-r4-peer-0.log.gz",
+          "f20-net-r4-peer-1.log.gz",
+          "f20-net-r4-NET_RUN.json",
+          "f20-net-r4-artifact.zip"
+        ],
+        "passed": "Two real ENet peers connect; host HomeKey durable personal finale return, fifth key debit/sealed/glow+playingSFX/line/noquest/repeatrefusal, real portal lesson Continue+personal ACK, navigation/Grandpa initial context and truthful prose prechecks. Actual host dialogue completed(regional_homecoming_5). Strict retained peer error scan PASS. Independent actual disk inspection confirms host homecoming_seen receipt and acceptedregional_ackrow; homecoming producer did succeed.",
+        "failure": "Host f20_talk has no verdict at unchanged205s command deadline; separate total post-hello cap300s. Last native F20 trace is completed signal, before final ordinary tap returns/inputcount/finalcontext. Alive narrative_modal heartbeat frame364/physics2669 at1.415535,1.020944,14.907784. Exact blocking/cost cause not proved; no timeout increase or blind rerun.",
+        "limits": "Disclosed post-finale/restored-world fixture; headless functional only. Host actualdisk homecomingreceipt proves durable ACK, but no actual rendered prose dump/credits open or Skip. Guest ending/rejoin/reload unreached; new UID/snapshot peer assertions unexercised. Criterion4 OPEN.",
+        "independent_review": "PASS f20_review failed-evidence audit: exact ZIP/coordinator/host/guest hashes and all native/user logs0ERROR/SCRIPT ERROR; both hello SHA11aa/registry2. Actualhost character disk contains homecoming_seen receipt and worldregional_ackaccepted. Actualcredits receipt absent; guestending receipts absent. No rendered prose dump/creditsopen/Skip/reload/UID/continuation reached. #4 OPEN.",
+        "next_action": "Reviewed F20-only clock/navigation/ordinarytap diagnostic29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da. Original inputs/assertions/300s remain; wait exactsolo-r11 before affected netdiagnostic. Read-only clocks locate signal waits, not completion of all node physics callbacks."
+      },
+      {
+        "run": 37090781811,
+        "job": 111110467978,
+        "artifact": 11262589115,
+        "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+        "verdict": "FAIL broader continuation; ending criterion1 MET on candidate",
+        "workflow_conclusion": "failure",
+        "workflow_exit_code": 1,
+        "artifact_exit_code_file": "absent; bash -e stops before explicit exit_code writer",
+        "checks": 58,
+        "failures": 2,
+        "native_bytes": 35254,
+        "native_sha256": "44a9d2c17a235122081051dca3700b3b57226598166b61f87ca659761d0ef516",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_log_bytes": 35000,
+        "user_log_sha256": "85cf1abdbdcf8ce9d0da9ac008d6a2acc1cdcbf9b48c14a562dd2c44db687f06",
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 660835,
+        "artifact_sha256": "11075481332abe6bfb826f66da2c9fa05f093b219f243401739f4ec7fbe8ab9e",
+        "logs": [
+          "f20-solo-r11-native.log.gz",
+          "f20-solo-r11-workflow.log.gz",
+          "f20-solo-r11-artifact.zip"
+        ],
+        "passed": "Actual post-finale Stormwood HomeKey durable personal outcome return, fifth key functional, ordinary portal lesson, 11authored Grandpa lines/currentfive/starter/live1landmark/fourchoices, productioncredits with guardednormalSkip exactly1durableACK, completed save/reset/productionload, samecharacter/world/ordered5UIDs/names/inventory/allreceipts, ordinary completedGrandparepeat/no credits/newreceipt, safe ordinarymovement, unfinishedlocaljournal/actualmountedand enabledEndgame rematches/mountedbountyboard.",
+        "failure": "Ordinary capsule walk toactualBountyInteractable fails at26.50522,.900843,28.93115 vs86.10589,1.8,48.82229; grounded/noinputowner/fightfalse/offerempty, arbiterwinnerEncounterDirector. Actualbountyopening/3activepersonalrows/close unreached. Explicit phase-completion guard records secondfailure; no abortedscript falsegreen.",
+        "ending_receipts_found_in_actual_disk": [
+          "craft:regional_ending_homecoming_seen:character-159c9621fd22176a836957247f2ee588",
+          "craft:regional_ending_regional_credits_seen:character-159c9621fd22176a836957247f2ee588"
+        ],
+        "independent_review": "PASS f20_review \u00a77.2: exact originalZIP/native/user hashes and0engine/SCRIPTERROR verified; actualcharacterdisk bothendingreceipts independentlyread. #1 METon candidate from cleanending+repeat/reload phase despiteoverallrunFAIL58checks2. #3OPEN becauseactualbountyavailabilityunproved; #2/#4OPEN, nooverall/mainclaim.",
+        "limits": "Disclosed restored post-finale/current fixture, no earnedboss/fullcampaign claim; Input.parse_input_event harness/controllerSkip/headless rendering/audio. No bounty producer defect inferred solely from navigation failure; no visual/audio/two-peer acceptance."
+      },
+      {
+        "run": 37091888883,
+        "job": 111113792048,
+        "artifact": 11262711289,
+        "source": "29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da",
+        "verdict": "FAIL global smoke total phase budget after host ending succeeds",
+        "workflow_conclusion": "failure",
+        "failures": 1,
+        "fatal": "ERROR: smoke budget exceeded",
+        "native_bytes": 1967,
+        "native_sha256": "01851605a9956faf2f51b9a2b589aefaddd81e0ab464814179fd6dde8aa566f7",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 57775,
+            "sha256": "654f940034e0ce5837cc9e0f744da788749806402cfe32ad8c88fa6f5505cd20",
+            "script_errors": 0,
+            "engine_errors": 0
+          },
+          "peer-1.log": {
+            "bytes": 12329,
+            "sha256": "52cadd72ba81eee2b9a0a5bdc1533c58020f16c7ec20bf71cfb9dc92ad22d1b5",
+            "script_errors": 0,
+            "engine_errors": 0
+          }
+        },
+        "artifact_bytes": 159156,
+        "artifact_sha256": "f9ae0c85d9ea775575130693c7703ff587b5417cf840ee1505adb4568d5d23a4",
+        "logs": [
+          "f20-net-r5-native.log.gz",
+          "f20-net-r5-workflow.log.gz",
+          "f20-net-r5-peer-0.log.gz",
+          "f20-net-r5-peer-1.log.gz",
+          "f20-net-r5-NET_RUN.json",
+          "f20-net-r5-artifact.zip"
+        ],
+        "passed": "BothrealENetpeersconnect; hostactualHomeKey/fifth/portal lesson/nav/11authoredlines/currentfive/starter/memory/choices/durablehomecoming/productioncredits/inputguard/Skip1durableACK/completedGrandpa repeat ALLPASS. Final normal interacttap returns; actualRegionalCredits owns input afterrelease. Guest actualHomeKeybegin succeeds before global deadline.",
+        "timing": {
+          "host_navigation_started_ms": 190273,
+          "host_navigation_completed_ms": 333576,
+          "host_navigation_elapsed_ms": 143303,
+          "authored_first_tap_started_ms": 334079,
+          "authored_last_tap_returned_ms": 372217,
+          "authored11_taps_elapsed_ms": 38138,
+          "final_tap_started_ms": 360532,
+          "final_tap_returned_ms": 372217,
+          "original_total_post_hello_smoke_budget_seconds": 300
+        },
+        "ending_receipts_found_in_actual_disk": {
+          "character-158c35113ac18993cc0c0e5b0ae79482": [
+            "craft:regional_ending_homecoming_seen:character-158c35113ac18993cc0c0e5b0ae79482",
+            "craft:regional_ending_regional_credits_seen:character-158c35113ac18993cc0c0e5b0ae79482"
+          ],
+          "character-8f23fb355f3b64c5b3455c668808cbb6": []
+        },
+        "failure": "Inherited300s is the ENTIRE post-hello smoke phase (_step_phase_deadline_ms set once in launch), not a per-command deadline. It expires while guestHomeKeyfinish pending after hostfullending/revisit. All guestending/rejoin/reload and peerUIDsnapshots unreached. Nativecoordinator ERRORtext is the explicit harnessfatal; peerengine/SCRIPTerrors0.",
+        "warnings": "Guest logs clientleave could notwritecharacter during forced teardown with HomeKeypending. Exactwarning retained; no character-loss/producer-cause claim inferred.",
+        "limits": "Disclosedpost-finale/restoredcurrent fixtures, headless functional, Input.parse_input_event/Skip. No#4 closure. One run doesnot prove cause of older r4 commandtimeout or anyrenderstartup failure.",
+        "independent_review": "PASS f20_review failed/partial evidence audit: exactZIP/native/host/guest hashes andalluserlogs verified,0engine/SCRIPTERROR whileexplicitharnessfatalglobalbudget/exit2 retained. Hostactualending/11spokenlines/truthfulprose/creditsguardedSkip1ACK/repeatPASS; diskhostbothendingreceipts/guestnone. Measurednavigation143303ms/11taps38138ms; finaltapreturns normally. Guestfailedcharacterwrite warningatshutdown remains failed-write evidence, no cleanlinessdismissal. Guestending/rejoin/reload/UIDchecks unreached, #4OPEN.",
+        "workflow_exit_code": 2
+      },
+      {
+        "run": 37092294181,
+        "job": 111115004043,
+        "artifact": 11262574266,
+        "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
+        "verdict": "FAIL bounty grounded/exact-provider gate; actual road walk succeeds",
+        "workflow_conclusion": "failure",
+        "checks": 58,
+        "failures": 2,
+        "native_bytes": 73102,
+        "native_sha256": "c64e91215d4941c291a51a8fcd608736e49521ea66729f63bc23da94fe11d9b8",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_log_bytes": 72848,
+        "user_log_sha256": "4028ac9560d4eac9adaed9d94f8645ba207406b86c879aff75b69975c2f9de2e",
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 670341,
+        "artifact_sha256": "60b20184c31795c3b68794c95065b3110556b78565d90374b11c86218e79a524",
+        "logs": [
+          "f20-solo-r12-native.log.gz",
+          "f20-solo-r12-workflow.log.gz",
+          "f20-solo-r12-artifact.zip"
+        ],
+        "passed": "Actualinitial ending/currentfive/starter/memory/choices/credits1ACK/realreset-reload/sameUIDs-inventory-world-receipts/completedGrandparepeat/no-replay/safemovement/unfinishedlocaljournal/enabledactualrematches/mountedbounty. AuthoredMainStreet headings8.3,14\u219291,14 carry oneexistingguidedcapsulewalk toactualbountyboard within originalbudget; unchangedentombment recoverycount passes.",
+        "failure": "After successfulwalk and8physicsframe wait, combined player.is_on_floor()/arbiter.winning_provider()==actualbounty gate fails. Existingbranchdoesnot printpose/floor/winner; exactfailedpredicate/LOS/radius/competingprovider/collider unknown. Actualbountyscreen/3activerows/close unreached. Explicitcompletionguard records secondfailure.",
+        "limits": "Disclosedpost-finale/restoredcurrent fixture andharnessinput/Skip/headless. #1 priorMETcandidate reused, #3OPEN. No proof bountyproducerbroken orspecificallyaLOS/radius/providercollision; originalwalk budget/input/capsule checks intact.",
+        "independent_review": "PASS f20_review exact artifact/native/user/hash and 58checks2 failed-scope audit; actual ending/reload and road walk pass, combined floor/exact-provider gate fails; #3OPEN."
+      },
+      {
+        "run": 37092788092,
+        "job": 111116479078,
+        "artifact": 11263577803,
+        "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
+        "verdict": "FAIL guest Home Key individual command timeout after host ending succeeds",
+        "workflow_conclusion": "failure",
+        "workflow_exit_code": 1,
+        "failures": 1,
+        "fatal": "",
+        "native_bytes": 1909,
+        "native_sha256": "7821d5eec8e6caffc2a3c271f881f78d69fc1b8c51f0835e0a08762cad5af505",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 57786,
+            "sha256": "79a3d08df61ce946b0f0c31a2cdb8e5e71f9af8c627b105d80a5806fcb9f4b23",
+            "script_errors": 0,
+            "engine_errors": 0
+          },
+          "peer-1.log": {
+            "bytes": 12339,
+            "sha256": "ea3d0fc1dfb900e0d98982beffc80337b8b523cc7f9e2cb286e614af689db359",
+            "script_errors": 0,
+            "engine_errors": 0
+          }
+        },
+        "artifact_bytes": 159325,
+        "artifact_sha256": "0250da65078658a9d0afe55a288856138dfba3f5f9e0ec8e06406782e7a54807",
+        "logs": [
+          "f20-net-r6-native.log.gz",
+          "f20-net-r6-workflow.log.gz",
+          "f20-net-r6-peer-0.log.gz",
+          "f20-net-r6-peer-1.log.gz",
+          "f20-net-r6-NET_RUN.json",
+          "f20-net-r6-artifact.zip"
+        ],
+        "passed": "Both real ENet peers connect; actual host Home Key/fifth/lesson/nav/11 rendered truthful lines/durable homecoming/production credits/input guard/Skip1durableACK/completedGrandpa repeat PASS. Guest actual HomeKeybegin succeeds; later Hall landing is granted.",
+        "failure": "Guest f20_return returns no verdict at unchanged205s command deadline. NET_RUN fatal empty, whole-proof1500s not exhausted. Fresh668ms heartbeat at timeout, physics7545/process975, panel:Session, player96.2,.911,14. Host world contains exact guest portal_arrival row PENDING with after-state home-return/outcome receipt; guest portable disk lacks those new receipts. Owner apply/save/ACK completion unproved; no specific failure/cause claim.",
+        "command_timeout_observation": {
+          "action": "f20_return",
+          "coordinator_deadline_ms": 643007.0,
+          "coordinator_observed_ms": 643009,
+          "heartbeat": {
+            "context": "panel:Session",
+            "frame": 975.0,
+            "physics_frame": 7545.0,
+            "pos": [
+              96.1999969482422,
+              0.910999953746796,
+              14.0
+            ],
+            "session_peers": [
+              1.0,
+              1687272102.0
+            ],
+            "state_hash": 2182759257.0,
+            "t": 636.738,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 668.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 642341.0,
+          "id": "s9",
+          "phase": "timeout_before_finish"
+        },
+        "ending_receipts_found_in_actual_disk": {
+          "character-946e3851cd8002384d1b994ab4243b05": [
+            "craft:portal_arrival_travel:456739bef3b0fd249b07c99b0e25d5b9:character-946e3851cd8002384d1b994ab4243b05:1:character-946e3851cd8002384d1b994ab4243b05",
+            "craft:ending_home_return_456739bef3b0fd249b07c99b0e25d5b9_44b234cb15638a2be2196e8d7ed959f7c9baf32a5f1c4262ea21918be0df0d79_travel:456739bef3b0fd249b07c99b0e25d5b9:character-946e3851cd8002384d1b994ab4243b05:1:character-946e3851cd8002384d1b994ab4243b05",
+            "craft:regional_ending_homecoming_seen:character-946e3851cd8002384d1b994ab4243b05",
+            "craft:regional_ending_regional_credits_seen:character-946e3851cd8002384d1b994ab4243b05"
+          ],
+          "character-924350a0f31ecb1846f713e27b3abb18": []
+        },
+        "host_disk_pending_arrival": [
+          {
+            "character_id": "character-924350a0f31ecb1846f713e27b3abb18",
+            "status": "pending",
+            "intent": {
+              "entry_id": "hall_home",
+              "permit_id": "travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3",
+              "realm": "meadows"
+            },
+            "receipt": "craft:portal_arrival_travel:456739bef3b0fd249b07c99b0e25d5b9:character-924350a0f31ecb1846f713e27b3abb18:3:character-924350a0f31ecb1846f713e27b3abb18"
+          }
+        ],
+        "warnings": "Exact guest clientleave could notwritecharacter warning during forced teardown retained. No character-loss or producer-cause inference.",
+        "limits": "Disclosedpost-finale/current fixtures, headless/harnessinput/Skip. Guestending/rejoin/reload/UID checks unreached. #4OPEN. Physical pose/hostpendingjournal do not prove completed personal return.",
+        "independent_review": "PASS f20_review exact artifact/hashes/native/peer/user/disk/fatal/timeout audit; host ending/credits pass, guest pending host journal/personal disk mismatch precisely scoped; #4OPEN."
+      },
+      {
+        "run": 37093720949,
+        "job": 111119255015,
+        "artifact": 11263549304,
+        "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
+        "verdict": "FAIL exact bounty provider is stored Halda prompt despite actionable current board offer",
+        "workflow_conclusion": "failure",
+        "checks": 58,
+        "failures": 2,
+        "native_bytes": 73697,
+        "native_sha256": "e3650e3d192c271a4c601ac9e9edfab17abbfdadc61c8e989359e8a282076d5c",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_log_bytes": 73443,
+        "user_log_sha256": "b692ebe41ec215a5efe8d65f98d3d567299fecd1da396ebc29bee88054449531",
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 670915,
+        "artifact_sha256": "616012cc998174d50f0fd1bd8a3e68265ac052486c38a51fc0009be118af736f",
+        "logs": [
+          "f20-solo-r13-native.log.gz",
+          "f20-solo-r13-workflow.log.gz",
+          "f20-solo-r13-artifact.zip"
+        ],
+        "passed": "Actual ending/currentfive/truthfulprose/credits1ACK/realreset-reload/sameUIDs-inventory-world-receipts/repeat/no-replay/safemovement/unfinishedlocaljournal/enabledactualrematches/mountedbounty PASS. Original singleauthoredroadwalk and recoverycount PASS. At failure actualplayer grounded, boardLOS true and boardoffer actionable/radius3.6/distance2.25243544578552/priority0; ordinaryworldowner none/fightfalse.",
+        "exact_provider_trace": "F20 BOUNTY provider trace player=(86.42404, 0.900942, 46.78172) floor=true prompt=(86.10589, 1.8, 48.82229) prompt_radius=3.6 expected=/root/MeadowsPlayground/Tournament/Board/BountyInteractable target_offer={ \"label\": \"Read Halda\\'s bounties\", \"distance\": 2.25243544578552, \"priority\": 0, \"actionable\": true } target_los=true winner=Interactable:<Node3D#82653156171792> winning_offer={ \"label\": \"Greet Halda\", \"distance\": 2.29207062721252, \"priority\": 0, \"actionable\": true } winner_path=/root/MeadowsPlayground/VillageNPCs/Halda/Interactable arbiter_enabled=true fight_owns=false owner=none",
+        "failure": "Storedarbiterwinningprovider /root/MeadowsPlayground/VillageNPCs/Halda/Interactable, Greet Halda actionable/priority0/distance2.29207062721252. Exactbounty-provider gateFAIL pluscomplete-sentinelFAIL. Actualbountyscreen/3rows/close unreached. Currentboard offer is nearer than storedHalda winningoffer; source._process publishes winner, previousharnesswait only8physics afterstop, so staleidlepublication is a supported inference, not an observed idle-callback timeline.",
+        "limits": "Disclosedpost-finale/restoredcurrent fixture/harnessinput/Skip/headless. #1 priorMETcandidate reused; #3OPEN. No productionarbiter/radius/priority/wall/LOS/budget bypass or gameplayfailure inferred.",
+        "independent_review": "PASS f20_review exactZIP/native/user hashes and58checks2/0errors failedscope. Actualground/LOS/actionableboard pass, storedHalda prompt wins. Sourceidlepublication race is supported inference, not proven; #3OPEN."
+      },
+      {
+        "run": 37093999890,
+        "job": 111120074500,
+        "artifact": 11263329745,
+        "source": "e39a361e7ceb816b47a31e49e2d7c5b4a99d07e8",
+        "verdict": "FAIL host Grandpa205s command no verdict before guest diagnostic reached",
+        "workflow_conclusion": "failure",
+        "failures": 1,
+        "fatal": "",
+        "native_bytes": 1747,
+        "native_sha256": "b080a0c74664bf30d192a9787e366f24f5b0c5a9c7be28d302afda32ea0743c1",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 58327,
+            "sha256": "1367b831e49ed3295973ecbf926e1ded926bdd8602a9226361deccf24259ccde",
+            "script_errors": 0,
+            "engine_errors": 0
+          },
+          "peer-1.log": {
+            "bytes": 11395,
+            "sha256": "60a4901b10cb0373236a06b6fc4b8d7b3209ea9dcaaa9d067432f6c2cc09dea5",
+            "script_errors": 0,
+            "engine_errors": 0
+          }
+        },
+        "artifact_bytes": 157059,
+        "artifact_sha256": "659d27ffc9016d4856ee7de25997eb2dcbb20b0aec3034b10ed4e50770f2d306",
+        "logs": [
+          "f20-net-r7-native.log.gz",
+          "f20-net-r7-workflow.log.gz",
+          "f20-net-r7-peer-0.log.gz",
+          "f20-net-r7-peer-1.log.gz",
+          "f20-net-r7-NET_RUN.json",
+          "f20-net-r7-artifact.zip"
+        ],
+        "passed": "BothENet peers connect; hostHomeKey/fifth accepted PASS. Rawboundedobserver compilesandexecutes hostpendingarrival/readowner fields. Hostnative later11press/currentfive/truthfulstarter-memory-choices/homecomingACK/creditsopen checks pass duringteardown; coordinator never accepted f20_talk verdict, so fullcommand notPASS.",
+        "failure": "Hostf20_talk individual205s noverdict, NET_RUNfatalempty/whole1500notexhausted/fresh1363msheartbeat narrative_modal/frame364/physics2671. Nav209220\u2192372392=163172ms, firsttap372992/finalreturn415190. Guestleft log precedes finaltapreturn/fullprosechecks, indicating nativecompleted duringforcedteardown. Peer andcoordinator tick clocks differ; absolutevalues cannotordercrossprocessboundary. GuestHomeKey/ownerobserver/ending/rejoin/reload unreached.",
+        "command_timeout_observation": {
+          "action": "f20_talk",
+          "coordinator_deadline_ms": 417796.0,
+          "coordinator_observed_ms": 417803,
+          "heartbeat": {
+            "context": "narrative_modal",
+            "frame": 364.0,
+            "physics_frame": 2671.0,
+            "pos": [
+              1.41553485393524,
+              1.02094388008118,
+              14.9077844619751
+            ],
+            "session_peers": [
+              1.0,
+              1643747160.0
+            ],
+            "state_hash": 2182759257.0,
+            "t": 410.912,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 1363.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 416440.0,
+          "id": "s5",
+          "phase": "timeout_before_finish"
+        },
+        "limits": "Disclosedpost-finale/current fixtures/headless/harnessinput. No#4closure or guestcause measured. Changeapproach to scoped2peer guestHome-onlydiagnostic onoriginalbudget rather than repeatinglonghostdialogue justtoreachguest. Full#4 proofstillrequired.",
+        "independent_review": "PASS f20_review exactZIP/coordinator/host/guest/native/user hashes/zeroerrors/fatalempty/205s commandtimeout audit. Hostnative11tap/prose/creditsopen duringforcedteardown do not constitute acceptedtalkverdict/Skip/ACK; guestHomeunreached. Peer/coordinator ticks notcomparable; #4OPEN."
+      },
+      {
+        "run": 37094641926,
+        "job": 111121964490,
+        "artifact": 11264480369,
+        "source": "31003a424b778ec869b8e80a6ea77e54fb34401b",
+        "workflow_conclusion": "failure",
+        "verdict": "FAIL",
+        "native_bytes": 73236,
+        "native_sha256": "cf974591fa768e781eb6543b2c94ffd488cb911c829a635224915048de45f5b0",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "artifact_bytes": 670749,
+        "artifact_sha256": "43d802b979c4f55d3efc1255db45902f8214af31c55a4d3132670b6187d06309",
+        "logs": [
+          "f20-solo-r14-native.log.gz",
+          "f20-solo-r14-workflow.log.gz",
+          "f20-solo-r14-artifact.zip"
+        ],
+        "passed": "Actual ending, truthful prose, guarded Skip1ACK, real save/reset/reload and exact UID/name/inventory/world/receipt retention, repeat/no replay, movement/journal/enabled rematches/road walk PASS.",
+        "failure": "Live ready/three-active-rows guard FAIL, completion sentinel FAIL; B close unreached. Exact screen input now PASS after idle-edge correction.",
+        "limits": "Post-finale/current fixture, headless and harness input disclosed. Disk personal board remains initial anchor_world empty/slots[]; world day1/bounty_day0. Source requires bounty_day>=1; fixture has not advanced first host morning. No live view printed yet. #3 OPEN.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/peer/user/disk failed-scope audit. r14 60checks2fail includes empty saved board, screenopenPASS/rowsFAIL; r8 explicit host combat refusal, no detachedownercomparison or END sentinel, savedworld deliveries empty. All0engine/script errors, original warnings retained. No full F20 closure.",
+        "user_log": {
+          "bytes": 72982,
+          "sha256": "3583cf455591e2e5fb26d3b3d7fcee81e2adfa7ba1b80682393a959ea3f4c4ff"
+        }
+      },
+      {
+        "run": 37094965898,
+        "job": 111122919883,
+        "artifact": 11262829807,
+        "source": "81318b919d28c099c511b2e8730feed18045b524",
+        "workflow_conclusion": "failure",
+        "verdict": "FAIL",
+        "native_bytes": 1908,
+        "native_sha256": "f42d78e9fbfc8f4ed82ecbaf2a4dc205f2be5628ee611b8a35ad647587dcd757",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "artifact_bytes": 145521,
+        "artifact_sha256": "92bd18e46490e6939e71cbf602061856534bd8d50a33478281dcdcca0ae11aca",
+        "logs": [
+          "f20-net-r8-NET_RUN.json",
+          "f20-net-r8-native.log.gz",
+          "f20-net-r8-workflow.log.gz",
+          "f20-net-r8-peer-0.log.gz",
+          "f20-net-r8-peer-1.log.gz",
+          "f20-net-r8-artifact.zip"
+        ],
+        "passed": "Two real isolated ENet peers host/join/registry PASS; readonly diagnostic compiles; all native/peer/user logs zero SCRIPT/engine errors.",
+        "failure": "Guest Home Key begin authority refusal reason Not during a fight.; no pending arrival/owner_plan comparison reached. Individual205s command noverdict, fatalempty; full proof budget not exhausted.",
+        "limits": "Guest-only diagnostic explicitly NOT#4 acceptance. Earlier full net6 guest pendingarrival remains unresolved; cannot infer ownerapply/save/ACK cause from this earlier combat refusal. No host ending before guest request in scoped run. #4 OPEN.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/peer/user/disk failed-scope audit. r14 60checks2fail includes empty saved board, screenopenPASS/rowsFAIL; r8 explicit host combat refusal, no detachedownercomparison or END sentinel, savedworld deliveries empty. All0engine/script errors, original warnings retained. No full F20 closure.",
+        "peer_logs": {
+          "peer-0.log": {
+            "bytes": 11439,
+            "sha256": "52140c1c55ba7f50d06b15c253f1f414ac82f7fa312c717b7c49ff3b6899045b"
+          },
+          "peer-1.log": {
+            "bytes": 12881,
+            "sha256": "f4dfe010a6eb721da3507ad5de6b3a5fcaf6d256ecf8e093759a2b436aeb6034"
+          }
+        },
+        "command_timeout_observation": {
+          "action": "f20_return",
+          "coordinator_deadline_ms": 325130.0,
+          "coordinator_observed_ms": 325135,
+          "heartbeat": {
+            "context": "world",
+            "frame": 571.0,
+            "physics_frame": 4320.0,
+            "pos": [
+              0.0,
+              0.900942385196686,
+              0.0
+            ],
+            "session_peers": [
+              1.0,
+              1288552260.0
+            ],
+            "state_hash": 2182759257.0,
+            "t": 319.941,
+            "type": "heartbeat"
+          },
+          "heartbeat_known": true,
+          "heartbeat_receive_age_ms": 960.0,
+          "heartbeat_receive_time_known": true,
+          "heartbeat_received_ms": 324175.0,
+          "id": "s4",
+          "phase": "timeout_before_finish"
+        }
+      },
+      {
+        "run": 37096201917,
+        "job": 111126541894,
+        "artifact": 11265040813,
+        "source": "50d9796995d05bf2030dbab5fb927c1aaf139fde",
+        "verdict": "PASS scoped actual ending/reload/bounty continuation; rematch admission still unproved",
+        "workflow_conclusion": "success",
+        "checks": 63,
+        "failures": 0,
+        "elapsed_seconds": 480,
+        "native_bytes": 73364,
+        "native_sha256": "a7ed22bd47e3a12944d315f04979820381264de1ebb21080945434fc1db0ca9f",
+        "user_log_bytes": 73093,
+        "user_log_sha256": "f3107e230f7536c7c8b89483d36be874ff4a307a3ca33697be2e63f551666567",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 671481,
+        "artifact_sha256": "f416d3ff1e8b643bf6d49cc9ba3fadc6e1dbd7f2fe054ec253d9c4bcee036ad4",
+        "logs": [
+          "f20-solo-r15-native.log.gz",
+          "f20-solo-r15-workflow.log.gz",
+          "f20-solo-r15-artifact.zip"
+        ],
+        "passed": "Disclosed first actualhost morning fixture; actualHomeKey/fifthfunctional/currentfive/starter/truthfulmemory/fourchoices/11proselines/creditsguardedSkip1ACK/realreset-diskreload/exactUIDs-names-inventory-world-allreceipts/repeat/no replay/safemovement/liveunfinishedjournal/enabledactualendgameprompts/normalbountyscreenopen/live3rows/Bclose/completionsentinel PASS. Savedbounties contain3uniqueinstances, anchorworldmatching namespace/anchorday1/cycle1 and realclockreceipt retained acrossresetreload.",
+        "limits": "Post-finale/current/firstmorningfixture/headless/harnessinput/Skip disclosed, noearnedcampaignwin. Liveadapter rows observed, renderedpanelrows not independentlyjudged. #1 priorMETcandidate corroborated; #2visual/listenersoundOPEN; #3OPENpending actualrematchadmission (enabledpromptalone insufficient); #4OPEN.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exactfullworkflowSHA/native/user/ZIP hashes/63PASS0fail0engine-script errors/losslesssaved3uniqueinstances/namespace-anchor-clockreceipt/day2-clock1. 22warnings perlog retained, notwarningfree. #3stillOPEN pending actualrematchadmission."
+      },
+      {
+        "run": 37096904861,
+        "job": 111128574981,
+        "artifact": 11264294867,
+        "source": "c18441cab560e5e770aab9e1b21c2f24d3a44dfc",
+        "verdict": "FAIL expected rematch provider activation not recorded",
+        "workflow_conclusion": "failure",
+        "checks": 65,
+        "failures": 2,
+        "native_bytes": 73739,
+        "native_sha256": "68cf32c1f92a08dc47e32475a33736ab5a2dc46780beb099b98364022490c35e",
+        "user_log_bytes": 73485,
+        "user_log_sha256": "da44cd7ffef795a88044f19de55605823a273fbb1028f58d462d935c5c8d9b90",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 671750,
+        "artifact_sha256": "26d323bbee0527ab9b73b858080edc6ba7f9b26a9662b28f9b006631f97853c8",
+        "logs": [
+          "f20-solo-r16-native.log.gz",
+          "f20-solo-r16-workflow.log.gz",
+          "f20-solo-r16-artifact.zip"
+        ],
+        "passed": "All original actual ending, guardedcredits1ACK, diskreset-reload/exactUID-name-inventory-world-receipts/repeat-no-replay/safemovement/unfinishedjournal/normalbountyinput3live rows/Bclose PASS. SelectedactualBryn practice_trainer enablednonmasterendgame prompt; ordinaryexploration preconditionsPASS. CapsuleNAV/recovery/ground/exactactionableprovider gate did not fail.",
+        "failure": "AfteroriginalnormalX, _activated !=expectedprompt, thencomplete-sentinelFAIL; actualactivationcouldbe null, original wording anotherprovider is not proof ofanotherprovider. Actualactivated/winner/inputowner/fightstate notprinted. Finalcanonicalfight/spec/tier assertion unreached. No producerrootcause inferred.",
+        "limits": "Disclosedpost-finale/current/firstmorning fixture/headless/harnessinput/Skip. #1METcandidate corroborated; #3OPEN. Failedpromptactivation is new substantive rematch-availability boundary, not F44win/reward proof.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exactworkflow source/native-user-ZIP bytes/hash/65checks2fail0errors; priorending/bounty gates PASS, selectedBryn, actual activated-or-null unknown. Sourcephysicsrecomputes onpress and checks owner/enabled/fight; prepresswinner alone insufficient, failure-only trace required."
+      },
+      {
+        "run": 37097937017,
+        "job": 111131593354,
+        "artifact": 11265336671,
+        "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
+        "verdict": "FAIL ordinary X activates original trainer conversation instead of endgame rematch",
+        "workflow_conclusion": "failure",
+        "checks": 65,
+        "failures": 2,
+        "native_bytes": 77296,
+        "native_sha256": "4a6c299b12d25b809dd1a4b4f9ac00cc1e411610d0e1b57d827189e16301f82b",
+        "user_log_bytes": 77042,
+        "user_log_sha256": "5f93ca6f64f0af427beb98813619a90b3be2e87d6ed8fbf5e5e0f1be4ac05321",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "warnings_per_log": 22,
+        "artifact_bytes": 672374,
+        "artifact_sha256": "d47d510d9919ed2fc94e52fc78f975a3b3be74bc3a1f86fd64e76a5f30d8c4b2",
+        "logs": [
+          "f20-solo-r17-native.log.gz",
+          "f20-solo-r17-workflow.log.gz",
+          "f20-solo-r17-artifact.zip"
+        ],
+        "passed": "Original ending, one guarded credits ACK, production save/reset/reload identity/inventory/world/receipts, completed repeat, safe movement, unfinished journal, actual bounty open/three live rows/B-close all PASS. Actual Bryn selected; prepress grounded exact actionable provider gate did not fail.",
+        "failure": "Normal X actually activates Bryn original Interactable. DialoguePanel owns input; director inactive, source none, spec empty, manager not fighting. Expected endgame activation and final completion sentinel fail; final canonical fight admission unreached.",
+        "diagnostic_limits": "Aftertap player is about2.20m from expected side prompt. No prepress pose/axis samples: player drift or queued stick remains inference. Source npc_body._process turns parent root toward player, so local side rematch children also orbit; translation-only anchor candidate under preparation, not runtime-proved.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user hashes and error counts; 65checks2fail/exit1/22warnings each. Actual original-talk identity now established, not null. No premature cause or F20#3 closure.",
+        "limits": "Disclosed post-finale/current/firstmorning fixture, headless, harness input and Skip. #1 MET candidate corroborated; #3 OPEN."
+      },
+      {
+        "run": 37099207884,
+        "job": 111135255404,
+        "artifact": 11265373622,
+        "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+        "verdict": "FAIL final canonical rematch fight predicate after successful expected provider activation",
+        "workflow_conclusion": "failure",
+        "checks": 66,
+        "failures": 2,
+        "native_bytes": 76426,
+        "native_sha256": "2b57b955317c7e30e82c5d75d9e013612c7f34937d62baced8280c9346c34bfb",
+        "user_log_bytes": 76172,
+        "user_log_sha256": "96670ac743b40fb7ee2b7aba951706694fa6344ffad5253436b4d91611f3c4a8",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 672121,
+        "artifact_sha256": "03f05053efea59ffb25835455bb11377b05db94d73ca56809c9e54e9600fba30",
+        "logs": [
+          "f20-solo-r18-native.log.gz",
+          "f20-solo-r18-workflow.log.gz",
+          "f20-solo-r18-artifact.zip"
+        ],
+        "passed": "All earlier actual ending/reload/identity/inventory/world/receipts/repeat/safe movement/journal/normal bounty3rows/B-close gates pass. Bryn normal X passes expected endgame provider activation gate; DialoguePanel remains closed and owner none through tap.",
+        "failure": "Final compound canonical fight assertion now reached and FAIL, plus completion sentinel. Which manager/director/source/spec/enemy/ownership predicate fails is not printed. Neither actual fight start nor admission refusal is inferred.",
+        "next_evidence": "F20-only candidate uses ordinary creature_recall if actual director reports undeployed, asserts actual owned visible ally and preserves original final fight predicate. Fresh load does not auto-deploy and can_challenge requires a deployed ally, but r18 undeployed cause not observed. Failure-only predicate snapshot prepared.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user bytes and suppliedSHA256/66checks2/zeroerrors. Expected rematch activation gate passes; actual finalfight outcome remains unknown. No F20#3 closure.",
+        "limits": "Disclosed post-finale/current/firstmorning fixture, headless/harnessinput/Skip. Production anchor advances real path past prior wrong-talk failure; full rematch admission remains required."
+      },
+      {
+        "run": 37100298947,
+        "job": 111138342282,
+        "artifact": 11266955108,
+        "source": "011964eff4fb9b2f5bcd3fe7f6b86e87a605228c",
+        "verdict": "FAIL final canonical rematch fight predicate after normal owned callout and expected prompt activation",
+        "workflow_conclusion": "failure",
+        "checks": 67,
+        "failures": 2,
+        "native_bytes": 80420,
+        "native_sha256": "d087aa5d0bf701c39b62371e91075905c70f42c1706c0e4e3e96e625f2a92d5f",
+        "user_log_bytes": 80166,
+        "user_log_sha256": "a8516918c861062f9c0c7131a72a8e50d5ee4558e40e0d96fbc207a07f67a9e6",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "native_warnings": 22,
+        "user_warnings": 22,
+        "artifact_bytes": 676223,
+        "artifact_sha256": "30dc38b78d16fc3842aa9bcd8568f7398b35a55d85065bebf0bbd4e68139149a",
+        "logs": [
+          "f20-solo-r19-native.log.gz",
+          "f20-solo-r19-workflow.log.gz",
+          "f20-solo-r19-artifact.zip"
+        ],
+        "passed": "All prior ending/reload/identity/inventory/world/receipts/repeat/safe movement/journal/normal bounty3rows/B-close gates pass. Actual undeployed blocker measured; ordinary callout yields conscious owned visible body; expected normalX endgame prompt activation passes.",
+        "failure": "No active fight/director/source/spec/enemy at final predicate. Ally blocker empty; can_challenge true; source_busy false; pending message empty. manager_enemy_matches true compares nulls and proves no enemy. Completion sentinel also fails.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol verifies exact workflow/source/ZIP/native/user hashes, 67/2, zero errors, 22 warnings each. Strict FAIL retained; #3 OPEN.",
+        "source_investigation": "Director begin_trainer_battle rematch guard uses _is_host requiring active network session, whereas Foundation mounting/host context uses Session.is_host which accepts solo. This fixture never hosts. Bound-service lifecycle is another source hazard; neither is yet a measured activation-time cause.",
+        "limits": "Disclosed post-finale/current/firstmorning fixture, headless/harnessinput/Skip. No F44 victory/reward/recovery claim; #2/#3/#4 OPEN."
+      },
+      {
+        "run": 37101560576,
+        "job": 111141951247,
+        "artifact": 11266362854,
+        "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+        "verdict": "PASS full actual solo ending/reload/continuation with canonical rematch admission",
+        "workflow_conclusion": "success",
+        "checks": 67,
+        "failures": 0,
+        "exit": 0,
+        "seconds": 529,
+        "native_bytes": 76618,
+        "native_sha256": "1df9d87b73976f85a106177e6b7705faa1aff6228178ac6c771c508923fca4c4",
+        "user_log_bytes": 76347,
+        "user_log_sha256": "f7aed1bf1e7a976e8719fda6188b7a23a73b602d1c9d6527a1bacc80f12f2ba1",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "native_warnings": 22,
+        "user_warnings": 22,
+        "artifact_bytes": 673096,
+        "artifact_sha256": "0d06bef3267af6c27c47bbd4dd5a67797b1533462302cb2573660841bea4f392",
+        "logs": [
+          "f20-solo-r20-native.log.gz",
+          "f20-solo-r20-workflow.log.gz",
+          "f20-solo-r20-artifact.zip"
+        ],
+        "passed": "All actual HomeKey/Grandpa/currentfive/starter/memory/fourchoices/creditsoneACK/reset/diskreload/identity/inventory/receipt/repeat/safemovement/journal/bounty3rows/Bclose checks pass. Normal owned callout and ordinaryX admit canonical nonmaster endgamefight. Unchanged final predicate checks active director+manager, exact trainer/source/spec, species/configured55level, manager enemy identity and enemy_owned.",
+        "disk_audit": "Independent lossless persistent envelope contains three production bounty instances with matching world namespace/anchor1/cycle1/clock receipt, ending acknowledgements; worldday2/bountyday1. Detached before/after identity/inventory/receipt comparisons pass.",
+        "authority": "Actual preX host=true active=false writer_valid=true; bound connection arguments not printed, so not claimed inspected. Successful fight proves service path worked in this run.",
+        "independent_review": "MET F20#3 GPT-6.1 Sol f20_review_sol exactsource/workflow/ZIP/native/user/hash/error/fullfinalpredicate/disk audit. 67/0/exit0/529s/zeroerrors; all22warnings retained eachlog.",
+        "limits": "Disclosed post-finale/restoredcurrent/firsthostmorning fixture, headless/harnessinput/controllerSkip. Isolated proof quits during admitted fight, no F44win/reward/recovery or earnedcampaign closure; #2/#4 remain OPEN and main landing pending."
+      },
+      {
+        "run": 37102097177,
+        "job": 111143496815,
+        "artifact": 11265839954,
+        "source": "fe6496ef607dc59f27950c7cd8ed0fed29031fa8",
+        "verdict": "Functional PASS; visible arch/glow FAIL; audible hum OPEN",
+        "workflow_conclusion": "success",
+        "checks": 16,
+        "failures": 0,
+        "exit": 0,
+        "seconds": 1484,
+        "native_bytes": 12470,
+        "native_sha256": "46fe2bc121c5931ce48c7cd297af8a3af65ddafdf3216e125f5a3370b2339f9c",
+        "user_log_bytes": 12346,
+        "user_log_sha256": "ee87a459e11f30d013b5df6d8c124d84c0e3ae0066b1e11e3b859e611779d1d9",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "native_warnings": 10,
+        "user_warnings": 10,
+        "artifact_bytes": 1407371,
+        "artifact_sha256": "678109e69515c019d861495301c0aee90587a35fada22a04c79826568eedb0e9",
+        "logs": [
+          "f20-arch-render-r7-native.log.gz",
+          "f20-arch-render-r7-workflow.log.gz",
+          "f20-arch-render-r7-artifact.zip"
+        ],
+        "startup": {
+          "ready_ms": 200081,
+          "physics_samples": 46,
+          "max_wait_ms": 132788,
+          "budget_ms": 600000,
+          "observed_ms": 203875,
+          "process_frames": 5,
+          "post_draw_frames": 6
+        },
+        "png": {
+          "file": "f20-arch-render-r7-fifth-stir.png",
+          "bytes": 252703,
+          "sha256": "7f949e06aea373175c90f0c8cc7fc51fa9b5c009ebcd0de8756ddedcc3613786",
+          "verdict": "FAIL independently viewed: dark foreground sealed surface plus Hall structure at right, no readable arch or glow; single not-ready line visible.",
+          "projection": "actual arch+UP projects701,1434 below720 viewport. Ordinary recenter yaw0 looks north while arch south of player."
+        },
+        "wav": {
+          "file": "f20-arch-render-r7-fifth-sfx.wav",
+          "bytes": 753708,
+          "sha256": "2870bd524a574b1b174e8c0707b6274f403b78cdd88006b2b50acee2d9b56a52",
+          "channels": 2,
+          "sample_width": 2,
+          "rate": 44100,
+          "frames": 188416,
+          "seconds": 4.272471655328798,
+          "interval": "Actual own durable fifth result starts mixed SFX recording, actual first postdraw ends after4303ms; clip4.27247s. Whole-travel recording contamination corrected.",
+          "verdict": "OPEN audible hum. Model audio-input attempt explicitly returned audio content omitted because audio input unsupported. No audibility inferred from PCM/state; original WAV unchanged."
+        },
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exactsource/workflow/ZIP/native/user/PNG/WAV hashes and functional16/0/zeroerrors; independently VIEWED visible-stir FAIL, audible verdict withheld. #2 OPEN.",
+        "limits": "Hosted llvmpipe OpenGL Compatibility and Dummy audio, ordinary harness camera/input and post-finale fixture. No physical-device/listener acceptance or earnedcampaign proof."
+      },
+      {
+        "run": 37104784649,
+        "job": 111151068714,
+        "artifact": 11267687918,
+        "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+        "verdict": "Functional, visible-stir and automatic low-hum PASS; F20#2 MET candidate",
+        "workflow_conclusion": "success",
+        "checks": 20,
+        "failures": 0,
+        "exit": 0,
+        "seconds": 1595,
+        "native_bytes": 12755,
+        "native_sha256": "886c6e95cedefb228cfa560de6c907e58d0c3c583c7ec806304a2c3b266aa43a",
+        "user_log_bytes": 12631,
+        "user_log_sha256": "55e12283efe59a2fceb6299adfd8659afea885163d9da2faf6d9d608301ea5e8",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "native_warnings": 10,
+        "user_warnings": 10,
+        "artifact_bytes": 2569100,
+        "artifact_sha256": "58f1e5b6d9bd605888ae50f42b5a7666ba955db2edda597c129542c7d6541469",
+        "logs": [
+          "f20-arch-render-r8-native.log.gz",
+          "f20-arch-render-r8-workflow.log.gz",
+          "f20-arch-render-r8-artifact.zip"
+        ],
+        "startup": {
+          "ready_ms": 193204,
+          "physics_samples": 46,
+          "max_wait_ms": 125927,
+          "budget_ms": 600000,
+          "observed_ms": 196824,
+          "process_frames": 5,
+          "post_draw_frames": 6
+        },
+        "ordinary_look": {
+          "motions": 8,
+          "projection_framed": true,
+          "retained": "Captured mouse/no owner, actual player floor/no recovery, exact actionable arch provider, zero queued relative motion before X."
+        },
+        "png": {
+          "file": "f20-arch-render-r8-fifth-stir.png",
+          "bytes": 1519699,
+          "sha256": "b3a0274a7c709181f435233b6d01e45af9f807cd70ad9b86984b3f8e096782f1",
+          "verdict": "PASS independently viewed by root and Sol reviewer: centered sealed opening, pale violet glow above player and visible dust ring; single not-ready line readable, existing fixture HomeKey/Grandpa quest unchanged."
+        },
+        "wav": {
+          "file": "f20-arch-render-r8-fifth-sfx.wav",
+          "bytes": 933932,
+          "sha256": "07b25f23a67c3475fc44d0c8b11315bd3663b3fbcd15706fa1d70b0e529c60d8",
+          "channels": 2,
+          "sample_width": 2,
+          "rate": 44100,
+          "frames": 233472,
+          "seconds": 5.294149659863946,
+          "interval": "Actual own durable result starts SFX recording, actual first postdraw after5384ms; mixed clip5.29414966s. Original bytes unchanged.",
+          "verdict": "PASS automatic waveform proof: configured98Hz and2.5s half-sine cue matches actual mixed output, no clipping and silent tail. Human verdict removed by explicit user direction; no listening/speaker claim."
+        },
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/ZIP/native/user/PNG/WAV sizes and SHA256,20checks0/exit0/1595s/zeroerrors. Independently VIEWED visible-stir PASS: sealed centered arch/paleviolet glow/dust/singleline, no new quest. Audible sound withheld; F20#2 OPEN.",
+        "limits": "Hosted llvmpipe Compatibility/Dummy audio, disclosed post-finale fixture and ordinary harness input; no physical-device performance, full visual-quality, supported-listener or earned-campaign claim.",
+        "automatic_audio_review": "MET GPT-6.1 Sol f20_review_sol independent concrete verifier review and Python-only execution on untouched hosted r8 WAV plus seven sensitivity controls. Production-source config/hash and original WAV/hash verified. Measured98Hz/active2.48236s vs configured2.5s, fixed-frequency/duration half-sine residual1.16126e-5, zero clipping and exact silent tail. Combined with actual20/0 runtime/result-edge and independent PNG glow/dust/sealed/singleline/unchangedquest proof, F20#2 MET candidate. No human/listening/speaker/subjective/device claim."
+      }
+    ],
+    "limitations": [
+      "solo-r1/r2: clamped simulation Home Key raise lagged monotonic host expiry; F18 clock fix applied before r3.",
+      "solo-r3: actual Home Key authorizes then canonical Hall footprint obstructed; no credits reached.",
+      "arch-render-r1: wrong proof selector targeted Hall shell marker, not actual portal_arches controller; proof corrected. Any audio from failed run is invalid.",
+      "Tidewake-r1: invalid authored Salt Crown dry support, corrected by F18.",
+      "Tidewake-r2/r3/r4: actual input selected Mara after turning shifted child dock prompt. F20 production anchor fix reviewed independently.",
+      "Tidewake-r5: correct dock input passes, immediate world flag visible but owner receipt/save failed. Smoke stopped before deferred owner handoff; corrected next replay awaits both with monotonic bound."
+    ]
+  },
+  "disclosures": [
+    "World proofs start from explicit saved post-finale/post-Nerissa fixtures; they do not claim earned boss fights or a complete campaign.",
+    "Fixture team, inventory, starter receipt, memories and personal chapter choices are supplied before the tested production inputs.",
+    "Credits completion uses ordinary controller Skip, not a full-duration credits viewing.",
+    "Source presence, compilation and synthetic tests do not satisfy actual-world or visible/audible acceptance."
+  ],
+  "setup_incident": {
+    "invalid_log": "f20-f18-focused.log.gz",
+    "reason": "Sparse Git merge followed F20 asset junctions and removed 3735 coordinator tracked assets/addons. Run invalid despite exit zero.",
+    "recovery": "Removed F20 junctions; restored only git ls-files --deleted -z -- assets addons paths via git restore --worktree --pathspec-from-file --pathspec-file-nul. Coordinator missing tracked assets count returned to zero. F17 independent local directories unaffected. F20 assets/addons now ordinary local directories."
+  },
+  "landing": "Handoff to coordinator; no direct main mutation or acceptance claim.",
+  "proof_dependencies": [
+    {
+      "feature": "F18",
+      "original": "98ff2a89cc",
+      "local": "5a315cef84"
+    },
+    {
+      "feature": "coordinator admission performance",
+      "original": "41dfee404b3ed8deafe9c04f84220f8a90a8159c",
+      "local": "7ca38cf4b99e859996429175f6813066f2dcdff7"
+    },
+    {
+      "feature": "F18 monotonic Home Key",
+      "original": "538c971f6fa9355113efdd0f4756aa34f889e210",
+      "local": "196a11c37f"
+    },
+    {
+      "feature": "F18 supported Salt Crown",
+      "original": "1c5baa6bda1911af15bdd20700dbc7e30c6315c2",
+      "local": "bf0b18655d"
+    },
+    {
+      "feature": "coordinator lossless save codec",
+      "original": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5",
+      "local": "0e2dba15eb"
+    },
+    {
+      "feature": "F18 physical floor and consumed-permit presentation",
+      "original": "cd272f5c5141e895c5b95b28941590054e497feb",
+      "local": "542d46d874"
+    },
+    {
+      "feature": "coordinator preidentity cross-slot guard / capture mirror / functional remote workflow",
+      "original": "fe40f752aca7ca51cb94d4a998be9a10fb7bad44",
+      "local": "822347d177"
+    }
+  ],
+  "home_anchor_probe": {
+    "source": "actual renderer r2 read-only production query",
+    "target": [
+      96.2,
+      1.15,
+      14.0
+    ],
+    "sampled_height": 0.89999997615814,
+    "blocker": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/Collision",
+    "actual_surface": [
+      96.2,
+      0.91,
+      14.0
+    ],
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "verdict": "F18 dependency OPEN; no capsule waiver"
+  },
+  "latest_focused": {
+    "verdict": "PASS",
+    "log": "f20-latest-focused.log.gz",
+    "tests": 27,
+    "assertions": 196,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": [
+      "ending_return_provenance",
+      "foundation_travel_protocol",
+      "regional_homecoming"
+    ]
+  },
+  "latest_synthetic_disk": {
+    "verdict": "PASS",
+    "log": "f20-latest-synthetic-disk.log.gz",
+    "checks": 62,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": "synthetic facade over real Game, credits UI, lossless split writer, reset and production disk reload; not actual world/campaign"
+  },
+  "actual_scripts_compile": {
+    "verdict": "PASS",
+    "scripts": [
+      "tests/smoke_f20_ending.gd",
+      "tests/smoke_f20_tidewake_close.gd",
+      "tests/smoke_net_f20_ending.gd",
+      "tests/smoke_f20_arch_presentation.gd"
+    ],
+    "method": "Godot4.7 --headless --check-only; all exit0; no runtime acceptance"
+  },
+  "arrival_integrated_focused": {
+    "verdict": "PASS",
+    "log": "f20-arrival-integrated-focused.log.gz",
+    "tests": 33,
+    "assertions": 350,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": [
+      "ending_return_provenance",
+      "foundation_travel_protocol",
+      "regional_homecoming",
+      "test_f18_arrival_lifecycle"
+    ]
+  },
+  "criteria": {
+    "0": {
+      "verdict": "MET on candidate; main landing pending",
+      "required": "actual Tidewake dock conclusion saves world and personal receipt, no credits",
+      "latest_runtime": "f20-tidewake-r7.log.gz PASS21checks0failures",
+      "source": "687732d0b2e76cbc701b4bcd618ef574a0ab0e53",
+      "independent_verdict": "f20_review \u00a77.2 MET: actual Mara afterword, ordinary capsule/exact grounded actionable dock input, both durable world and personal completion, production save0true, no credits/homecoming. Gzip matches raw log; zero engine/script errors; retained deprecation warning.",
+      "limitations": "Disclosed restored-current/post-Nerissa fixture, no earned campaign, co-op or reload claim. Does not claim main acceptance."
+    },
+    "1": {
+      "verdict": "MET on candidate; main landing pending",
+      "required": "actual Stormwood Home Key -> current five/starter/one truthful memory/four decisions -> durable credits once",
+      "latest_runtime": "Independent solo-r11 ending MET candidate corroborated by independently audited solo-r15 (63 checks/0 failures): actual Home Key, current five/starter/one truthful memory/four choices, credits exactly one durable acknowledgement, real reset/reload with exact identities/inventory/receipts, completed repeat with no replay. Post-finale and first-host-morning fixture/normal harness input/controller Skip disclosed. Fullactualsolo-r20 67/0 independently corroborates this ending scope and now completes required #3 rematch admission.",
+      "source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+      "independent_verdict": "MET f20_review \u00a77.2 exactartifact audit; ending criterion independently closed on candidate, main pending. Disclosed post-finale/restoredcurrent fixture, harnessinput/controllerSkip/headless; no earnedcampaign orpeer acceptance."
+    },
+    "2": {
+      "verdict": "MET on candidate; main landing pending",
+      "required": "actual key debit, sealed fifth arch, inspected glow and rendered low-hum SFX/one line, unchanged main quest",
+      "latest_runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending.",
+      "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+      "independent_verdict": "MET GPT-6.1 Sol f20_review_sol independent concrete verifier review and Python-only execution on untouched hosted r8 WAV plus seven sensitivity controls. Production-source config/hash and original WAV/hash verified. Measured98Hz/active2.48236s vs configured2.5s, fixed-frequency/duration half-sine residual1.16126e-5, zero clipping and exact silent tail. Combined with actual20/0 runtime/result-edge and independent PNG glow/dust/sealed/singleline/unchangedquest proof, F20#2 MET candidate. No human/listening/speaker/subjective/device claim.",
+      "sound_evidence_policy": "Automatic matched waveform proof per explicit user direction; no human verdict required."
+    },
+    "3": {
+      "verdict": "MET on candidate; main landing pending",
+      "required": "actual disk reset/reload, safe movement, active bounties/rematches/remaining activity and ordinary completed Grandpa revisit",
+      "indirect_only": "Synthetic/focused tests remain supplemental; actualsolo-r20 now directly proves all required continuation gates including actual rematch admission.",
+      "latest_runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
+      "limits": "Requires strengthened actual nonmaster rematch admission in addition to retained reload/safe movement/journal and normalbountyinput/live3rows/Bclose. Enabledprompts alone do not establish full admission. No F44win or allrepeatloop closure claimed.",
+      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+      "independent_verdict": "MET GPT-6.1 Sol f20_review_sol exact original artifact/source/workflow/fullpredicate/disk audit. Disclosed post-finale and firstmorning fixture; no earnedcampaign or F44outcome claim."
+    },
+    "4": {
+      "verdict": "OPEN",
+      "required": "two real peers separate acknowledgement and exactly-once credits through interrupted guest/title rejoin/disk apply/repeat dialogue",
+      "latest_runtime": "Full net-r6 actual host ending/credits1ACK/repeat PASS; guest host-side pending portal arrival and missing portable receipts, owner apply/save/ACK unproved. Full net-r7 host combined205s walk/reader command times out before guest path. Scoped net-r8 explicit home_key_begin refusal Not during a fight.; owner-plan comparison not reached and reason alone does not prove an actual combat encounter. Reviewed approach segmentation and refusal reporting pending full replay with coordinator arrival dependency. #4 OPEN.",
+      "coverage_addition": "Reviewed99e6fca560 adds host actualdiskreload/ordinaryrevisit, fullsnapshot/guestisolation and explicitbothstageflags/exactlyoneendingreceipt perpeer. Actual complete run remains required after then-green main baseline."
+    }
+  },
+  "delegated_locator_fix": {
+    "source": "231ad9ccc320986a97473d6d5cbfc3f18c0d6afc",
+    "independent_source_review": "PASS f20_review; detached actual-live/save-disk-locator projection, strict row validation, serialized schema and root fe40 preidentity guard preserved",
+    "runtime": "PASS remote37083030264 on8a3ce18047:12tests104assertions0failed nativeexit0/took6s; all3 dedicated disk regression cases and9 authoritative split slot load cases; zero engine/script errors; expected refusal warnings retained. Fixture-only save identity coverage, no actual ending acceptance.",
+    "selected": "f20_portal_save_identity,character_save_format,save_format,authoritative_split_load",
+    "scope": "Three dedicated typed-state fixtures with real owner/world/slot disk writers and loader; no actual world/input/campaign claim.",
+    "first_actual_existing_files": [
+      "test_character_save_format.gd",
+      "test_save_format.gd",
+      "test_world_save_format.gd"
+    ],
+    "first_unmatched_selector": "authoritative_split_load did not match actual test_authoritative_split_slot_load.gd; no authoritative split coverage claimed from r1.",
+    "second_selected": "f20_portal_save_identity,authoritative_split_slot_load",
+    "first_logs": [
+      "f20-portal-locator-r1-native.log.gz",
+      "f20-portal-locator-r1-workflow.log.gz",
+      "f20-portal-locator-r1-artifact.zip"
+    ],
+    "integration_candidate": "Coordinator independently reviewed and integrated production231 as ae690f2852; required integration CI pending, no main claim.",
+    "second_result": {
+      "run": 37083030264,
+      "job": 111087475920,
+      "artifact": 11259399403,
+      "source": "8a3ce18047fffcf1b03aa2370457cac180e41f74",
+      "verdict": "PASS",
+      "tests": 12,
+      "assertions": 104,
+      "failures": 0,
+      "exit_code": 0,
+      "engine_script_errors": 0,
+      "native_bytes": 4901,
+      "native_sha256": "2386545a5b936bc562454e13c8ac3520be4e2b2e5b97018b3d488db6448d2107",
+      "artifact_bytes": 2813,
+      "artifact_sha256": "97d94f00ce4ede98678356dd6280013544bcaf65ee7b4280bfb05804b9ca6f6f",
+      "logs": [
+        "f20-portal-locator-r2-native.log.gz",
+        "f20-portal-locator-r2-workflow.log.gz",
+        "f20-portal-locator-r2-artifact.zip"
+      ],
+      "independent_review": "PASS f20_review \u00a77.2: original ZIP/native hashes match, all3 new disk+9 split loader cases executed, native user godot.log corroborates; no engine/script errors in either. Expected refusal warnings retained. Source unchanged from8a3. No actual ending/input/campaign/visual/audio/two-peer acceptance.",
+      "limitations": "Typed pending/settled portal state fixtures with actual split disk writers/loader. No earned campaign or actual ending input/UI acceptance."
+    }
+  },
+  "remote_pending": {},
+  "lesson_input_driver": {
+    "source": "9d4a50d9e31f96a8fcd93d6c138881ef0e1cd361",
+    "independent_source_review": "PASS f20_review: typed lesson-only real menu_confirm input, guarded reentry, bounded actual personal flag read, no production/flag/pose/mask writes, original navigation/provider/capsule/entombment checks and budgets intact. Actual replay pending."
+  },
+  "diagnostic_probe": {
+    "source": "a507d6022d743be7bc92f10ad1511493812c314c",
+    "independent_review": "WITHDRAWN: initialsourcePASS missed duplicate localowner nativeconfirmed athelper229. Ready180s/dialogue30s unchanged; actualdiagnostic notexercised.",
+    "correction": {
+      "source": "769d93e9ba90f1ed000da3abc8855d8116440925",
+      "independent_source_review": "PASS f20_review: exact3-line newdiagnosticouterowner rename to dialogue_owner, confirmedduplicate removed, originalcreditsloop/behavior/deadlines unchanged. Fullcompilation/runtime awaitingreplay.",
+      "runtime": "Actual solo-r8 and arch-render-r5 compile/run; all native/user errors0. r8 real homecoming28checks1creditsfailure;archr5 functional16checks0 but visiblearchFAIL."
+    }
+  },
+  "credits_handoff_correction": {
+    "source": "72fde3eb147de38c4fee900fd602ede300ad1efe",
+    "independent_source_review": "PASS f20_review: retain frozen world/id/context, wait only own closed regionaldialogueheldpress, reject unrelatedowner/reopen/drift/removal; existingopen_forguardunchanged. Actualfixpending.",
+    "causal_limit": "Old deferred handoff has concrete source race with closinginteract owner and no retry. r8 raw trace does not directly log initialopen_for refusal, so source interpretation fits evidence but must be replayed.",
+    "runtime": "Actualsolo-r10 andr11 productioncredits open afterhomecoming; r11 clean guardedSkip exactly1durableACK, bothendingreceipts persist throughrealreset/reload, completedGrandpa ordinaryrepeat doesnotreplaycredits. #1 independentlyMETcandidate; #3/#4remainOPEN."
+  },
+  "arch_capture_correction": {
+    "source": "65cbb1e878c7363c8c84590490a1115bb26c6e42,c620ba4e9da42c76956c622bb67253799a8f8244",
+    "independent_source_review": "PASS f20_review: consumedonce ordinary camera_recenter callback after existing exactprovider navigation; no transforms assigned. Actualown durable result starts recording/firstpostdraw capture; in-flight capture joined before effect removal; real camera/arch framing diagnostics read-only. Compilation/artifact/visual/audio pendingr6.",
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending."
+  },
+  "dialogue_input_correction": {
+    "source": "37b17d2917c2c168d10f027c9303f8fc4dbd12d6",
+    "independent_source_review": "PASS f20_review: finite actualauthoredlinecount+2normalpress/releases andseparate30sACKobservation; noauthoritative writes/runneradvance/close/inputownership bypass or authoredcriterionwaiver. Runtimepending solo-r10.",
+    "change": "Bound ordinaryX input by actual authoredlinecount+2initialguard presses, then preserve30s distinctdurableACKobservation. Native r9 proves oldglobal30s inputdeadline endedwith healthyopenconversationbeforefinalpress. Alltruthful renderedprose/credits/receipts checks remain; no authoritativewrites or productiontiming changes. Net300s/readiness180s/globalremote caps unchanged.",
+    "runtime": "Actualsolo-r10 authored11lines/11normalpresses completesactualdialogue andalltruthfulprose checks. Source37driver change exercised; no productionACKrefusal."
+  },
+  "retained_inventory_correction": {
+    "source": "7dc028308166c18786db0f771ca351ef5304e2df",
+    "independent_source_review": "PASS f20_review: actual active SaveGame read-only slot serializer includes null slots/quantities; detached snapshots include companion UIDs; shape/type guards and explicit continuation/completion result fail closed if required phases abort. No producer or durable state mutation. Actual affected batch pending.",
+    "change": "F20-only uses actualactiveSaveGame._inventory_to_array slot serializer anddeepcopy; includescurrentcompanionUIDs. Snapshotshape/type gates protectsolo/peerinspect andbefore/afterreload; explicitVariantcontinuationresult andcompleted sentinel failclosed onabortedrequiredphases. No production state mutation or criterion weakening.",
+    "peer_identity_source": "11aa0b1afee037bdd7c06ca2352ee0bddf00a592",
+    "peer_identity_review": "PASS f20_review: returning guest compares ordered companion UIDs; final guest disk reload compares both names and ordered UIDs; proof assertions only, unchanged deadlines and production path.",
+    "runtime": "Actualsolo-r11 compiles/retains snapshot, compares samecharacter/currentfiveUIDs+names/inventory/world/allreceipts afterreset/reload and completesactualGrandparepeat/safemovement; noSCRIPTERROR. Explicitfinalphaseguard marks laterbountywalkfailure asoverallFAIL, notgreen. Peerinspect/rejoin assertions stillunexercised."
+  },
+  "input_clock_diagnostic": {
+    "source": "29bc4f71458b27d7c6dcd7d9caf93ab3b7b864da",
+    "independent_source_review": "PASS f20_review:21insertions read-only phase/tick/frame/held/panel/inputowner diagnostics around original navigation and existingpress/releasephysics/processawait. No type/scope/shadowing issue, no producer/state/assertion/budget change. Actualruntime pending.",
+    "limits": "Logging/read overhead remains real; afterphysics means the physics_frame signal edge, not proof all node callbacks have returned.",
+    "runtime": "Actualnet-r5 compiles and shows normalclosingpress returns, credits gains exact input ownership onrelease, hostallending/revisitPASS. Navigation143303ms/11taps38138ms; inheritedtotal300s expiredwhen guestHomeKeybegin succeeds. Earlier r4 specificcauseunproved; no deadlockclaim."
+  },
+  "bounty_navigation_correction": {
+    "source": "c352e4979eeb765943024ac5ecb12b7c2e71e1b3",
+    "independent_source_review": "PASS f20_review: exactmountedBountyInteraction._prompt identity; strictuniquefiniteauthored MainStreet pair; oneexistingNAV.walk_to_guided with ORIGINAL directdistanceframebudget/sharedwatchdog/capsule; samegrounding/recovery/arbiter/actionable/normalinput/activationchecks. No parser/type issue, production/F49/F17/sharednav change orwaiver. Actualsolo replay required.",
+    "reason": "r11 actualcapsulewalk fails near south-sidehouse row; source shows directdiagonalcrosses thatrow. Exactcolliderunproved; followexistingauthoredroad beforeturningtotournamentlawn, no target/player/floorpose assignment.",
+    "runtime": "Actualsolo-r12 sourcec352 compiles andsingleauthoredroadwalk/recoverycount pass, butfloor/exactprovider guardfailsafter8physicsframes; whichpredicate unknownbecauseoldcombinedguard lacks trace. No bountyopen/active3rows/close. #3OPEN."
+  },
+  "net_budget_clarification": {
+    "source": "tests/helpers/net_harness.gd::launch and step",
+    "correction": "Previous metadata describing300s as per-step/per-command was imprecise. It is the default TOTAL step phase for allsmoke commands afterhello. F20 ordinary12000frame commands individuallyallow205s (60Hz conversion+5s), unchanged. Historical originallogs/ZIP bytes unchanged. Net-r5 explicitlyprovesglobalphaseexpiry; r4 has noverdict atindividual commandtimeout.",
+    "independent_correction": "f20_review withdraws originalr4 numeric300s command claim; individual12000frames is205s, total300s separate. Exactr4 bytes unchanged; r4 individual noverdict and r5 explicitglobalfatal remain distinct."
+  },
+  "complete_peer_proof_budget": {
+    "source": "b066552af91c0b5a74010d045c00fcf98dfbf1dc",
+    "total_post_hello_budget_seconds": 1500,
+    "independent_source_review": "PASS f20_review: F20-only9line_init_budgets override superthen selects existinglong2peer1500s wholeproof allowance. Individualcommandframes/slack/hello180/heartbeat/inputguard/productionACK8s/remote30min unchanged. Necessarycomplete2person/disconnect/reloadproof allowance, not an authoredproduct timing waiver. Freshcompleteactual proof required, #4OPEN.",
+    "reason": "Actualnet-r5 cleanhostfullending/revisit consumesmost inherited300s total; guest onlyHomeKeybegin beforeglobalfatal. Other long2peer proofs alreadyselect1500. Oldr4 independentlyhadcommandtimeout; itscause notretrospectivelyresolved byglobalbudget diagnosis.",
+    "runtime": "Exactb066 actualnet-r6 compiles/total1500s retained, hostending/revisitPASS; guest HomeKey205s command noverdict with pendinghostportal_arrival and missingportablearrivalreceipts. No globalfatal; #4OPEN."
+  },
+  "bounty_provider_diagnostic": {
+    "source": "a9241db0dc9b5ca6b291604ce5cee66feb972907",
+    "independent_review": "PASS f20_review exact10 failure-only read/print lines, typednullablewinner path safe; no input/await/state/assertion/radius/budget changes.",
+    "runtime": "Actualsolo-r13 compiles/exactfailuretraceexercised: groundedtrue/LOStrue/actionableboardnearer than storedHaldaGreetwinner. #3OPEN; sourceclockpublication inference directs normalidle-frame proof correction."
+  },
+  "pending_arrival_diagnostic": {
+    "source": "e39a361e7ceb816b47a31e49e2d7c5b4a99d07e8",
+    "independent_review": "PASS f20_review exact51 F20-only raw-read diagnostic lines. Originalheartbeatfirst, <=10s frequency; remote_body identity lookup only; no foundation_ground_contact/admission/save/arrivalcache calls, input/waits/assertions/permits/deadline changes.",
+    "runtime": "Actualnet-r7 sourcee39 compiles/hostpendingobserverexecutes with0engine-script errors, buthostf20_talk205s noverdict preventsguestboundary. No guestownerapply/save/ACKcause measured. NarrowactualguestHome-onlydiagnostic planned; full#4 stillOPEN."
+  },
+  "pending_arrival_owner_comparison": {
+    "source": "cd7f80204aaf6397971aabc0641faa2b654f641c",
+    "source_delta": "e34c64f009 adds15 F20-only lines; cd7 replaces decimalJSON with originallosslessSaveDocumentcodec+ENDmarker.",
+    "independent_review": "PASS f20_review exacte34+cd7. Pure portableprojection/owner_plan/schema stage and losslesscodec operate on detachedrecords; no apply/save/ACK/input/deadline mutations. PlayerState.save_data may initialize absent map caches generally; exact F20 path has two prior production saves that initialize allmaps, so observer is read-only on this already-saved fixture path. Once per original nonempty local pending receipt.",
+    "runtime": "Actual net-r8 compiled but original guestHome refused before arrival pending; comparison unexercised. Earlier net6 persisted care differences remain observations only.",
+    "disk_lead": "Exact net-r6 PERSISTED guest portable projection differs from hostrow.before only by party0..4 happiness/nourishment (10fields). Disk is not livecurrent, so this is a lead, not an ownerplan/cause verdict.",
+    "derived_disk_diff": "f20-net-r6-disk-projection-diff.json"
+  },
+  "bounty_idle_publication_correction": {
+    "source": "31003a424b778ec869b8e80a6ea77e54fb34401b",
+    "change": "Preserveoriginal8physicssettling frames, thenawait2ordinaryprocessframeedges before originalrecovery/floor/exactprovider/actionable/inputactivation checks. One completedidle callbackpass occursbetweenedges. No_recompute calls/route/tolerance/radius/priority/input/budget/productchange.",
+    "reason": "r13 currentboardoffer priority0/distance2.2524 nearer than storedHaldaGreetpriority0/distance2.2921. Sourcearbiter publishes on_process while oldproofsettles physics only; stalepublication is supportedinference.",
+    "independent_review": "PASS f20_review exact31003a424b sixlines. Twoordinaryprocess edges afteroriginal8physics includeonecompletedidle pass; originalbudget/tolerance/recovery/floor/exactprovider/actionable/X+activated gates unchanged. No productionwrite or_recompute call.",
+    "runtime": "Actual solo-r14/r15 ordinaryboardinput opens realpanel; r15live3rows/BclosePASS. #3pending actualrematchadmission."
+  },
+  "scoped_guest_home_diagnostic": {
+    "source": "81318b919d28c099c511b2e8730feed18045b524",
+    "script": "tests/smoke_net_f20_home_diagnostic.gd",
+    "independent_review": "PASS f20_review exact18lines/dynamic_initialize/async/inheritedbudgets/spawn/isolation/cleanup. Two actualENetpeers host/join/registry thenoriginalguestf20_return only; explicit NOT#4acceptance and fullproof retained.",
+    "runtime": "Actual net-r8 FAIL guest HomeKey begin authority Not during a fight.; no pending arrival or ownerplan comparison reached. Not #4 acceptance.",
+    "reason": "Actualnet-r7 host205s command noverdict preventsguestobserver. Narrowto originalguestHome path to measure ownerplan/current/before/after, no timeoutincrease or sharedSession edit."
+  },
+  "resource_direction": {
+    "local": "AbsolutehumanValheim localGodot/render/import/GPU pause remains; norelease inferred.",
+    "conditional_usage": "Explicit owner direction save/push all sessions and wind down at <=10% remaining any reported core window. Latest read42%used/58%remaining weekly; other window unavailable, threshold not reached. No reset requested."
+  },
+  "grandpa_peer_command_segmentation": {
+    "source": "03829bfa3f84eb944b4f27a86354b87e3652814f",
+    "independent_review": "PASS f20_review exact source, no parser/cleanup/assertion issue.",
+    "change": "Complete two-peer proof now issues ordinary physical f20_approach before each f20_talk. Same capsule walk/maxframes/radius/unstick/provider/actionable gates; approach holds no dialogue. Original normal input/prose/ACK/credits/drop/rejoin/reload checks remain. Individual205s/total1500/hello180/heartbeat150/ACK8 unchanged.",
+    "runtime": "Complete affected peer replay pending, #4 OPEN."
+  },
+  "bounty_first_morning_fixture": {
+    "source": "50d9796995d05bf2030dbab5fb927c1aaf139fde",
+    "change": "Solo-only disclosed abbreviated post-finale fixture invokes existinghost Game.advance_day once, assertsday2/bountyday1 before originalsecondproductionfixture save. No direct board/slots/rotationcalls; productionhostpoll and realownerBOOL/save/ACK alone must issue rows. Existing ending/reload/screen/3rows/close gates unchanged. Failureonly existingview/localboard/day diagnostic.",
+    "reason": "Actualr14 saved fixture initialday1/bountyday0/emptyboard. Runtimeclock is deliberately separate/default0 and increments only actualhostadvance_day; BOARD requires>=1. Conceptualpostcampaign fixture had omittedfirstmorning. No firstdaygameplaybugclaimed.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact8lines: originalhostguardedadvance/fixtureday2-clock1/no row injection; syntax/runtime/assertions intact. Productionpoll stillmust issue/deliver; affectedactual proof required. Existing adapterview checks live rows afterrealpanelopens; renderedpanelrows not independently inspected.",
+    "runtime": "Actual solo-r15 PASS63checks0/480s/0engine-script errors. Productionpoll issued3realpersonalrows/clockreceipt, preservedthroughdiskresetreload; normalboardopen/live3rows/BclosePASS. #3stillOPEN pending strengthenedactualrematchadmission."
+  },
+  "rematch_admission_proof": {
+    "source": "c18441cab560e5e770aab9e1b21c2f24d3a44dfc",
+    "reason": "Independent strict F20#3 audit finds enabledprompt alone insufficient: sourcebusy/range/roster/challenge/director guards remain. Require one realnormalinput nonmasterendgame rematch admission afteractualreload. Not F44win/allloopproof.",
+    "change": "Afterallpriorreload/movement/journal/bountyinput/live3rows/Bclose checks, nearestactualenabledcanonicaltrainerprofile Endgameprompt walkedusingoriginalcapsule NAV/maxframes/recovery/ground/LOS/exactwinner/actionable checks. NormalX activatesproducer, bounded30s verifiesactualmanagerfighting/director/source/exactcanonicalendgamespec/liveopponentfirstspecies/configuredlevel/enemyidentity/trainerowned. ExistingordinarylessonContinue wrapper retained. No directactivation/challenge/resolve/HP/transform edits.",
+    "cleanup": "Terminalisolatedfixture quits duringgenuinelyadmittedtrainerfight; flee prohibitedbyproduction. No win/payout/recovery claim; safemovementprovedbeforeadmission.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact c184 plus e782: actualsource/spec/livebody/fight gates sound, existinglessonwrapper cleanup correctly retained. Original8/2clocksettling/NAV/recovery/input/admission bounded; affectedactualsolo required.",
+    "runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim."
+  },
+  "home_begin_refusal_proof": {
+    "source": "7fefaea2ed86a4328b537903a74c513a811b8f95",
+    "change": "F20-only portalresult override retainsoriginalsuper finish behavior. Explicit failedhome_key_begin matchingcurrentcharacter/world populates existingrefusalresult; inheritednormalUse loop reports terminalrefusal promptly. Acceptedbegin never satisfiesarrival; successfulfinish/readyworld/keycount/UID/budgets unchanged.",
+    "reason": "Actualnet-r8 emittedexplicitbeginrefusal Not during a fight but sharedhelperonlyobservedfinish; 7200idlewait yielded205snoverdict. Refusalreason doesnotprove actualcombatencounter: hostcombatguard alsofailcloseswhennohostdirector/retainedpendingstate.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact9lines/virtualsignalbinding/superfinishpreserved/ownidentity and productionfrozenrequest+kind+char+world+epochvalidation before signal. No falsegreen/type/parser issue.",
+    "runtime": "Affectedcompletepeer replay pending rootarrivaldependency; no runtimeclaim."
+  },
+  "rematch_activation_diagnostic": {
+    "source": "2a7f2eee6dedd6d32cd321892901f8dfa6287ba0",
+    "change": "Temporaryexistinginputclocktrace duringoriginalrematchtap/restoredafter; failureonly actualactivated/null/winner/offer/enabled/inputowner/pose/fight/director/spec/source. Accuratefailurewording no longerassertsanotherprovider whenactualnullunknown. Sameinput/NAV/provider/admission/budgets.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact2a7 plus663: existingclocktrace/restore/signaldisconnect/lessoncleanup/read-onlycast/getters, no recompute/input/budget/guard changes. Actualaffectedr17 required.",
+    "runtime": "Actual r17 FAIL65checks2/zeroerrors. X actually selects original Bryn talk prompt; no fight admission. Independent raw audit PASS narrow failed scope; #3 OPEN."
+  },
+  "arrival_checkpoint_dependency": {
+    "source": "fc91ff531f0980a90572f60d5cc9cdd68c57ea68",
+    "owner": "coordinator",
+    "status": "Coordinator reported native PASS68tests1765assertions0failed/exit0/39s/zeroengine-script errors on run37097557875/art11265155463. fc91 is a delta on integration owner-passive framework absent from this lane; not adopted alone. Coordinator directs merge of then-green main as established baseline after firstcut lands, retain F20 delta, then exact isolated full-peer proof. Main pending; #4 OPEN.",
+    "scope": "Bounded departure checkpoint, actualgroundedBOOL/CAS/rebase/repeatedlostACK recovery; no physics change."
+  },
+  "rematch_prompt_anchor": {
+    "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+    "production_files": [
+      "scripts/repeatables/rematch_prompt.gd",
+      "scripts/net/foundation_rematches.gd"
+    ],
+    "reason": "r17 normal X actually activated original Bryn talk. Source separately shows NPC root turns toward player while local side rematch children orbit. Fix removes that rotation inheritance while retaining translation and child lifetime; r17 rotation cause is not directly measured.",
+    "change": "Interactable subclass top_level side zones at fixed world +/-1.5X, following real trainer translation in idle callbacks. Inherited registration/reindex/exit/LOS/offer/input unchanged; mount keeps radius/disabled-first/configure/canonical-source/authority/admission binding. Halda boss prompts unchanged.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact working diff committed unchanged93e9: no parser/API/type concern; initial placement before inherited registration, notification reindex, child lifetime cleanup, all production guards preserved. Native synthetic fixture uses actual NPC-facing callback/arbiter ordinaryX both tiers, translation/free. Runtime still required. Original no-parser-concern clearance WITHDRAWN for fixture line67 after actual native parse failure; production portion has no runtime result from this check. One-line explicit WeakRef correction under fresh review.",
+    "limits": "Idle translation is not frame-atomic moving-trainer admission. Native empty fixture has no art, ground, campaign, fight or save proof. Original full F20 actual reload/canonical rematch admission remains required, #3 OPEN.",
+    "native": "Actual native-r2 PASS13checks0/exit0/4s/zeroengine-script errors. Original r1 failed fixture parse retained. Scope remains synthetic actual NPC/arbiter; fullsolo-r18 canonical encounter remains required.",
+    "actual": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
+    "native_attempts": [
+      {
+        "run": 37099206242,
+        "job": 111135250161,
+        "artifact": 11264769721,
+        "source": "93e9cacf14379edd0e6e3184f8a756b30e3c277c",
+        "verdict": "FAIL before native checks: fixture inferred Variant warning treated as parser error",
+        "workflow_conclusion": "failure",
+        "checks_reached": 0,
+        "native_bytes": 458,
+        "native_sha256": "b375db505fd77178af030aeecd840978f38bc0f81c64bcd66af4c327e3b67e11",
+        "user_bytes": 451,
+        "user_sha256": "418461615d302d6f7bcf4a0d1542e418b11c8b640cfe6bf260f1f8f70ecb1d74",
+        "native_script_errors": 1,
+        "native_engine_errors": 1,
+        "user_script_errors": 1,
+        "user_engine_errors": 1,
+        "artifact_bytes": 1060,
+        "artifact_sha256": "b87e70f698ac64e2ae3f5ada40bd108454e839b46a607f5dc460b6f247927d15",
+        "logs": [
+          "f20-anchor-r1-native.log.gz",
+          "f20-anchor-r1-workflow.log.gz",
+          "f20-anchor-r1-artifact.zip"
+        ],
+        "reason": "Fixture line67 weakref() return inferred with :=. Correction explicitly annotates WeakRef; no runtime or production correctness inferred from failed parse."
+      },
+      {
+        "run": 37099539943,
+        "job": 111136205156,
+        "artifact": 11265553037,
+        "source": "ba9bc255314701fd1b6f422103d153bb2e3f5a49",
+        "verdict": "PASS native synthetic anchor regression",
+        "workflow_conclusion": "success",
+        "checks": 13,
+        "failures": 0,
+        "exit": 0,
+        "seconds": 4,
+        "native_bytes": 1147,
+        "native_sha256": "47a0de1da6d638ebf7020c5946209a2cd1032e933c5f618c3f2ce8c263d2af4a",
+        "user_bytes": 1132,
+        "user_sha256": "2505a91636427263ac5a8f4a59a35dcb01b7d16447d581c69a2eaff4252efb6b",
+        "native_script_errors": 0,
+        "native_engine_errors": 0,
+        "user_script_errors": 0,
+        "user_engine_errors": 0,
+        "artifact_bytes": 1686,
+        "artifact_sha256": "3cc1a4bfa59b26ee5e338125e1ab709063469186c2c400229b045dcf0d478e29",
+        "logs": [
+          "f20-anchor-r2-native.log.gz",
+          "f20-anchor-r2-workflow.log.gz",
+          "f20-anchor-r2-artifact.zip"
+        ],
+        "scope": "Empty scene exercises actual NPC facing callback and ordinary arbiter X for R1/endgame side identity, trainer translation and child lifetime. No model/ground/campaign/fight/save proof or F20#3 closure.",
+        "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact workflow/source/artifact ZIP/native/user bytes and suppliedSHA256/exit0/4s/13checks0/zeroerrors. Actual NPC-facing callback, stable side offsets, normalarbiterX bothtiers, trainertranslation/childfree pass inemptyfixture. No canonicalfight/ground/campaign/save/F20#3acceptance claim."
+      }
+    ],
+    "fixture_type_correction": {
+      "source": "ba9bc255314701fd1b6f422103d153bb2e3f5a49",
+      "change": "One explicit WeakRef annotation on weakref() result; no assertions, scene, lifetime or production behavior changed.",
+      "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact one-line correction. Original r1 fixture syntax clearance withdrawn; raw1SCRIPT+1engine ERROR eachlog/zero checks verified. Actual native-r2 still required."
+    }
+  },
+  "rematch_callout_candidate": {
+    "change": "Before originalrematch NAV/X, only actualundeployed blocker gets normal creature_recall input andbounded30s deploymentwait. Require actualconsciousownedparty member/visiblebody/localowner. Original finalcanonicalfight predicate unchanged; failure-only reads expose each condition/source/spec/enemy/ownership and pure admissionqueries.",
+    "reason": "Freshload intentionallydoesnotauto deploy; can_challenge requires actualallybody. Earlier proof omittednormalcallout. Actualr18 blocker notprinted, so noobservedcauseclaim.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact4530 normalcallout +011964 asyncvisiblewait: onlyactualundeployed normalinput;30sboundedwait, visibleactualownedlocalbody requirement; no directdeployment/stat/pose/save orguard changes. Typedfinalpredicate unchanged. Purecan_challenge/rematch_source_busy/failurefields; affectedactualreplay required.",
+    "runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
+    "source": "011964eff4fb9b2f5bcd3fe7f6b86e87a605228c"
+  },
+  "rematch_solo_authority_candidate": {
+    "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+    "change": "Only begin_trainer_battle rematch authority guard now uses present Session.is_host, consistent with Foundation offline solo authority. Shared director _is_host unchanged; writer/runtime/normal trainer guards unchanged. Readonly preX host/active/director/writer/signal bindings diagnostic.",
+    "source_cause": "Session.is_host explicitly accepts offline solo; director _is_host requires active networking. This offline smoke never hosts. Prior first rematch guard therefore refuses the solo path; additional actual blockers not excluded.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete source: scoped guard preserves missingSession/client/preparingclient/writer/runtime/normal admission gates; focused actualSession/productionbegin guard test explicitly stubs only can_challenge/sendout; preX observer adds no mutations or input changes. Actual remote verification required.",
+    "runtime": "Actualsolo-r20 PASS67checks0/exit0/529s/zeroerrors; independently audited ending/diskreload/safemovement/journal/bounty3rows/Bclose/ordinaryownedcallout/canonical55endgamefight. #3 MET candidate; main pending; no F44win/reward/recovery claim.",
+    "focused_native": {
+      "run": 37101544118,
+      "job": 111141902304,
+      "artifact": 11266432027,
+      "source": "b61078613068d5a3ccd3b69c2b8b0f925a2ffafc",
+      "verdict": "PASS authority guard only",
+      "workflow_conclusion": "success",
+      "tests": 1,
+      "assertions": 10,
+      "failures": 0,
+      "exit": 0,
+      "seconds": 6,
+      "native_bytes": 279,
+      "native_sha256": "3df4f4535f5420267e1981373e4210874ab4c6d2fefd80eb82fcd3dc11b37b0a",
+      "user_log_bytes": 264,
+      "user_log_sha256": "63606e66d1edcc93c709384c6693fce2faa2cfdb381137b693f6b101468c4e11",
+      "native_script_errors": 0,
+      "native_engine_errors": 0,
+      "user_script_errors": 0,
+      "user_engine_errors": 0,
+      "artifact_bytes": 1320,
+      "artifact_sha256": "01b67683359dfa71beb8b6ee07b0652c860e06358cdc2827418622902510c062",
+      "logs": [
+        "f20-authority-r1-native.log.gz",
+        "f20-authority-r1-workflow.log.gz",
+        "f20-authority-r1-artifact.zip"
+      ],
+      "independent_review": "PASS GPT-6.1 Sol f20_review_sol exact source/workflow/native/user/ZIP bytes and hashes; 1test10assertions0failed/exit0/6s/zeroerrors. Narrow production guard and realSession mode scope.",
+      "limits": "Actual begin_trainer_battle with real Session offline/host/client/preparingclient and writer guard; can_challenge/sendout stubs explicit. No actualworld/enemy/fight/outcome proof; F20#3 still OPEN."
+    }
+  },
+  "arch_render_startup_measurement": {
+    "source": "fe6496ef607dc59f27950c7cd8ed0fed29031fa8",
+    "reason": "Actual r5 readiness121444ms/maxgap82289; r6 timeout182460ms/17physics/maxgap132569/shellfalse/playerheldfloorfalse, no capture. These observations justify accommodating slow software-render lifecycle; no GL warmup or exact engine-call cause inferred. Criterion2 has no startup-time requirement.",
+    "change": "Presentation-only600000ms readiness allowance; defaultsolo/net180000 unchanged. Full shell/floor/journey predicates unchanged. Process/postdraw observers connected before scene startup and disconnected on either readiness outcome; readonly counters/elapsed and actual budget logged.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol decision and concrete source. Typedtimeout/default and counters avoid inferredVariant concerns. No world/player/constructionhold/pose/input/assertion mutation; no physicaldevice/audibleacceptance claim. If bounded run still fails same predicates, investigate measured lifecycle rather than repeat render.",
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending."
+  },
+  "arch_ordinary_look_candidate": {
+    "source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+    "reason": "Actualr7 arch/glow projects belowviewport; player-root recenter bearing does not face actual arch. The camera must orbit the player through ordinary input to place the lens on the opposite side.",
+    "change": "Render-only preparation uses actual surface/player bearing and pure horizontal preference sensitivity, <=32 ordinary relative mouse motions/180s, real idle+physics settling; requires all8 actual opening AABB corners and glow point front/inset, zero queued motion, captured mouse, no UI owner, floor/no recovery and exact actionable provider. Explicit false callback suppresses X and records failure; null callback behavior retained. No transforms/settings/geometry or production camera changes.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol concrete diff, followed by requested final captured-mouse guard recheck. Sign/sensitivity matches production unhandled_input/apply_look; known types avoid inferredVariant. Projection is framing only, not occlusion/visible-glow proof. No engine/GPU execution.",
+    "runtime": "Actual arch-r8 37104784649 exact1a7b9ef PASS20checks0/exit0/1595s/zeroerrors; independently viewed PNG PASS sealed centered arch/paleviolet glow/dust/single notreadyline/unchanged quest. Offline c33d206 verifier on untouched own-result5.29415s WAV PASS6checks; independent review/execution and7negative/reference controls PASS. Configured98Hz/2.5s half-sine cue matches captured PCM, no clipping/silent tail. User forbids human verdicts; no listening claim. F20#2 MET candidate/main pending."
+  },
+  "two_peer_both_reload_candidate": {
+    "source": "99e6fca560fb09d416d5d8a10ae91c7635df00dc",
+    "reason": "Completion audit finds full peer proof genuinely disconnects/title-reloads interrupted guest credits and reloads completed guest, but only inspects host completion in memory. Explicitly prove both characters after disk reload.",
+    "change": "After original host preservation check, existing production host autosave/load_slot and normal Grandpa revisit; full retained host equality; unchanged completed guest retained/context and creditsclosed; explicit homecoming_seen/regional_credits_seen flags and exactly one matching production receipt for each character. All earlier guest disconnect/title rejoin/Skip/revisit assertions and budgets unchanged.",
+    "independent_review": "PASS GPT-6.1 Sol f20_review_sol design and concrete20-line diff. Receipt IDs match production foundation_actions; typed loops/string formatting avoid inferredVariant. Real load_slot validates disk pair. No engine execution.",
+    "disclosure": "Host shipping reload occurs within existing process, without memory reset. Guest exercises genuine interrupted disconnect/wipe/title rejoin plus completed portable disk reload. No fresh host-process restart claim.",
+    "runtime": "Pending actual full two-peer run after coordinator then-green main framework baseline. No dispatch or F20#4 acceptance claim."
+  },
+  "owner_verdict_policy": {
+    "date": "2026-10-03",
+    "instruction": "We're not doing human verdicts on anything",
+    "effect": "Human/listener gate withdrawn. F20 acceptance uses automatic/runtime evidence and independent agent review; do not require or claim human listening. Previous pending listener question is withdrawn."
+  },
+  "automatic_audio_verification": {
+    "source": "c33d20621031564034c7cd58fad218524f10e651",
+    "tested_runtime_source": "1a7b9ef72841e29c3637893f656833e7604810b5",
+    "runtime_run": 37104784649,
+    "analysis": "f20-arch-render-r8-audio-analysis.json",
+    "controls": "f20-audio-verifier-controls.json",
+    "command": "python tools/audio/verify_f20_stir.py --wav ralph/reports/F20/ending-runtime/f20-arch-render-r8-fifth-sfx.wav --config data/config/portals.json",
+    "test_command": "python tests/test_f20_audio_verifier.py -v",
+    "checks": 6,
+    "checks_failed": 0,
+    "tests": 7,
+    "tests_failed": 0,
+    "independent_review": "MET GPT-6.1 Sol f20_review_sol independent concrete verifier review and Python-only execution on untouched hosted r8 WAV plus seven sensitivity controls. Production-source config/hash and original WAV/hash verified. Measured98Hz/active2.48236s vs configured2.5s, fixed-frequency/duration half-sine residual1.16126e-5, zero clipping and exact silent tail. Combined with actual20/0 runtime/result-edge and independent PNG glow/dust/sealed/singleline/unchangedquest proof, F20#2 MET candidate. No human/listening/speaker/subjective/device claim.",
+    "scope": "Original result-window mixed PCM contains configured low hum. Frequency/duration/envelope fixed from production; gain/phase fitted perchannel, no artifact changes. No engine rerun/playback/GPU/UI use."
+  }
+}

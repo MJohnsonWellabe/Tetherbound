@@ -1,0 +1,17 @@
+MANIFEST.txt
+exit_code
+run.log
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key
+user/godot/app_userdata/Tetherbound/f49_campaign_2452_8665/characters/character-2908456aad7e87d80d8f7a05000aab0c/character.json
+user/godot/app_userdata/Tetherbound/f49_campaign_2452_8665/slot_0.json
+user/godot/app_userdata/Tetherbound/f49_campaign_2452_8665/worlds/slot-0/world.json
+user/godot/app_userdata/Tetherbound/f49_campaign_2452_8665_coverage.jsonl
+user/godot/app_userdata/Tetherbound/f49_campaign_2452_8665_ledger.jsonl
+user/godot/app_userdata/Tetherbound/four_biome_checkpoints/rested_team_2452/checkpoint.json
+user/godot/app_userdata/Tetherbound/four_biome_checkpoints/rested_team_2452/save/characters/character-2908456aad7e87d80d8f7a05000aab0c/character.json
+user/godot/app_userdata/Tetherbound/four_biome_checkpoints/rested_team_2452/save/slot_0.json
+user/godot/app_userdata/Tetherbound/four_biome_checkpoints/rested_team_2452/save/worlds/slot-0/world.json
+user/godot/app_userdata/Tetherbound/logs/godot.log
+user/godot/app_userdata/Tetherbound/settings.json

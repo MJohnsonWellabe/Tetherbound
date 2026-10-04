@@ -1,0 +1,112 @@
+CODE-BLIND VISUAL JUDGE REPORT, judge-r28 (attack effects, village meadow)
+
+What I looked at: all five palworld references, all three moong references, the meadows key art, all 12 strips, and individual frames. I opened launch, flight, contact, impact or aftermath frames for every group, and the flight, contact and impact frames for most sequences. For S04, S05, S09 (flight), S11 (flight/contact) and S01 (flight) I judged from the strip panels only. Many Read calls came back as "media removed: request limit". I retried them, and the final set of images I actually saw is listed at the end.
+
+Constant across all sequences: the same fixed camera. The attacker is left, the target is right: the same small brown boar with a mossy back, which never changes pose. A small human trainer is cut off at the far left edge. The background is a half-timbered village with a large red-tile barn.
+
+========================================================================
+1. IDENTIFICATION PER SEQUENCE
+========================================================================
+
+FIRE GROUP (attacker: dark brown fox-like creature with orange face markings)
+- S01: Fire. One small fireball (about the size of the fox's head, or smaller) forms at the fox's mouth and travels flat across to the boar with a short yellow streak. At contact there is a small orange spark burst at the boar's snout and a pale yellow-green ring on the ground under it. At impact a small orange puff and a crisp orange-rimmed scorch ellipse appear on the ground in front of the boar. Afterwards a dark scorch ellipse with an orange rim is left.
+- S05: Fire. The same kind of attack, larger. A fireball forms at the mouth, and in flight it trails a long yellow flame ribbon. At contact there is a flame burst at the snout plus the ground ring. At impact a taller flame plume (roughly the boar's height) rises over a glowing scorch ring. Afterwards a larger dark scorch with an orange rim remains.
+- S10: Fire. The largest. At launch a tall flame tongue appears at the mouth. In flight (S10-2) it is a fireball with flame licks and a long yellow trail. At contact (S10-3) a flame burst engulfs the boar's snout, with the yellow ground ring. At impact (S10-4) a billowing orange fire and smoke cloud about 1.5x the boar's height covers the boar's face, over a glowing scorch ring. Afterwards (S10-5) a large dark scorch patch with an orange edge is left in front of the boar.
+
+LIGHTNING GROUP (attacker: brown bear with glowing purple lightning-vein markings)
+- S02: Electric. At launch a white star flash appears at the bear's snout. Nothing visibly travels from the bear to the target. In flight (S02-2) a single thin yellow-white zigzag bolt appears at the top of the frame, over the barn roof, coming from the sky. At contact one thin white bolt column comes down onto the boar's back, with a white swirl ring on the ground around it. At impact (S02-4) there is a small pale-blue crackle/crack decal on the ground at the boar's front feet and a faint wisp on its back. Afterwards a dark crack mark remains on the ground.
+- S09: Electric, from the sky. The same sequence, with a larger branching bolt cluster over the roof in flight (S09-2). At contact (S09-3) there is a brighter bolt column with radial white spikes on the boar's back and the ground swirl ring. At impact (S09-4) a larger blue-white radial crack decal appears in front of the boar and faint smoke wisps rise from its back. Afterwards a dark crack decal remains.
+- S07: Electric, from the sky. The largest. In flight (S07-2) a big starburst of yellow-white streaks sits on the barn roof. At contact (S07-3) a broad white column of straight needle-like streaks covers the boar's whole upper body, with a bright white swirl ring on the ground. At impact (S07-4) a wide blue-white radial crack decal (about the boar's length) appears on the ground and smoky white tendrils rise behind the boar. Afterwards a dark crack mark remains.
+
+BIG ROCK GROUP (attacker: brown and white bear-cub creature with grey stone plates on its back)
+- S04: Earth/rock. One large faceted boulder, about the size of the attacker's head, appears in mid-air in front of the attacker at roof height. A faint ring appears on the ground by the attacker's paw. The boulder travels in an arc toward the boar and casts a ground shadow. At contact it meets the boar's face and a faint dust haze appears. At impact the boulder is broken into a lumpy rock mass covering the boar's front. Afterwards two or three low-poly rubble chunks lie on the ground at the boar's feet.
+- S06: Earth/rock. The same as S04, slightly larger. In S06-1 the boulder hangs in mid-air between the two creatures. At contact (S06-3) the boulder overlaps the boar's head. At impact a larger rock mass covers the boar's front half. Afterwards (S06-5) a low pile of three or four rubble chunks lies in front of the boar.
+- S08: Earth/rock. The largest. The boulder in flight (S08-2) is about the size of the boar's body. At contact (S08-3) it clips into the boar's head. At impact (S08-4) two large rock lumps, wider than the boar, completely cover its head and front half. Afterwards there is a rubble pile of two big chunks.
+
+SMALL ROCK / PEBBLE VOLLEY GROUP (same rock-backed attacker)
+- S03: Earth/rock. Three small stones (each about the size of the boar's ear) appear in a loose vertical column at the height of the background house and drift toward the boar. At contact (S03-3) the attacker rears up and pounces forward, and a single stone reaches the boar's face. At impact (S03-4) a small cluster of pebbles and grit sits at the boar's snout. Afterwards (strip) a few pebbles are scattered on the ground.
+- S12: Earth/rock. About five small to medium stones arrive in a vertical stacked line in front of the background house (S12-2). At contact (S12-3) one stone is at the boar's snout and there is light dust. At impact (S12-4) six to eight stones cluster around and into the boar's face. Afterwards there is a small scatter of pebbles.
+- S11: Earth/rock. Three or four medium rocks (bigger than S03/S12, each about the size of the boar's head) launch from beside the attacker's head. At contact one rock is at the boar's face, with dust. At impact (S11-4) a clump of rocks about the size of the boar's head is jammed against its face. Afterwards a scatter of six to eight rock fragments lies on the ground in front of the boar.
+
+========================================================================
+2. GROUPING AND STRENGTH ORDER (weakest to strongest)
+========================================================================
+Fire: S01 < S05 < S10. What changes: projectile size, the flame trail (none, then a long ribbon, then a long ribbon with flame licks), impact size (small puff, then a plume, then a billowing cloud larger than the target), and scorch size. The difference is clear and readable.
+
+Lightning: S02 < S09 < S07. What changes: the number and brightness of bolts (one thin zigzag, then a branching cluster, then a broad starburst and column), the size of the contact flash on the target, the size of the ground crack decal, and the smoke wisps at impact. The difference is readable, but S02 and S09 are close at the impact and aftermath phases.
+
+Big rock: S04 <= S06 < S08. What changes: boulder size and the size of the impact mass and rubble pile. I can barely tell S04 and S06 apart. S08 is clearly bigger at impact.
+
+Small rock: S03 < S12 < S11. What changes: stone count (3, then about 5, then 3–4 larger stones), stone size (S11 largest) and the aftermath scatter. S03 and S12 differ mainly in count. All three are small on screen.
+
+========================================================================
+3. FULL-BAR CRITIQUE PER GROUP (against palworld-01/-03)
+========================================================================
+
+Defects shared by every group
+- The target never reacts. The boar holds the same pose and position in every frame of every sequence: S10-3/S10-4, S08-3/S08-4, S07-3/S07-4 and S11-4 all show the same boar silhouette. There is no flinch, knockback, hit-flash or tint, and nothing else in frame reacts. palworld-01 and palworld-03 show the target lit up by sparks with debris flying.
+- Nothing lights anything. No effect casts light on the boar, the ground or the attacker. Fire and lightning have no bloom or glow halo, so they read as paint laid over the scene.
+- Particle density is very low compared with the dense hot spark showers in palworld-01.
+- The human trainer is cropped at the frame edge in every shot, so effect scale can only be judged against the creatures. Against those, effect scale is plausible.
+
+FIRE (S01, S05, S10)
+- Launch: reads well. The fireball forms at the fox's mouth (S10-1, S05-1, S01-1).
+- Flight: reads as fire in S05 and S10. There are flame licks and a yellow trail (S10-2). S01's projectile is small and simple.
+- Contact: distinct. A flame burst at the snout (S10-3, S05-3, S01-3). The pale yellow-green ground ring that appears at contact under the target (S01-3, S10-3) reads as a selection/target marker, not fire.
+- Impact: distinct from contact in S10-4 and S05-4 (a bigger cloud and a glowing scorch ring). In S01-4 the scorch ring is a crisp, hard-edged orange ellipse that looks like a flat decal.
+- Aftermath: good. A dark scorch with an ember-orange edge persists (S10-5, S05-5, S01-5).
+- Artefacts: in S10-4 the fire cloud is a semi-transparent, muddy orange-brown sprite rather than a hot, bright core. There is also a faint pale, straight-sided translucent column rising above the cloud against the barn wall (about x 1070–1345, y 150–370 in the 1600x900 frame), which reads as a card edge. The impact cloud covers the boar's face, which obscures the target briefly. That is acceptable for a big hit.
+- Verdict, best (S10): FAIL. It has the best structure of the four groups (launch, travel, contact, impact and aftermath are all present and distinct). It fails because the target does not react, the fire emits no light or glow, the impact cloud is low-contrast and translucent rather than hot, and a card edge is visible at S10-4.
+
+LIGHTNING (S02, S09, S07)
+- Launch: a white star flash at the bear's snout (S02-1, S07-1, S09-1). It reads as a spark, but nothing connects it to the bolt that later comes from the sky, so cause and effect are broken.
+- Flight: in S02-2, S09-2 and S07-2 the bolt or starburst appears at the top of frame, drawn over the barn roof. In S07-2 the yellow-white starburst sits on the roof tiles, so the barn reads as what was struck.
+- Contact: there is a moment (a column onto the boar's back plus a white swirl ring), but at S07-3 the bolt is a spray of straight, washed-out white needles. It is not a jagged, bright, high-contrast bolt, and against the white barn wall it nearly disappears. It also smothers the boar's upper body.
+- Impact: distinct from contact (a radial blue-white crack decal plus smoke wisps; S07-4, S09-4, S02-4). However, the crack decal is centred on the ground in front of the boar, about one boar-length to the left of where the bolt landed on its back (S07-4, S09-4). Contact point and ground mark disagree.
+- Aftermath: a faint dark crack mark (S07-5, S09-5, S02-5). It is weak and easy to miss.
+- Artefacts: the strike is drawn over background architecture. White-on-white contrast loss at S07-3. The decal is offset from the strike.
+- Verdict, best (S07): FAIL. The bolt does not read as electricity (pale straight streaks, no bright core or glow), the launch is not linked to the strike, the decal is offset, and the target does not react.
+
+BIG ROCK (S04, S06, S08)
+- Launch: the boulder appears out of nothing in mid-air (S06-1 shows it hanging between the creatures at roof height). There is no ground tearing, no lift-off debris, and no visible link to the attacker apart from a faint ground ring near its paw.
+- Flight: it reads as a rock in shape. The material is a low-poly faceted mesh with flat grey-tan shading. In S06-1 the boulder surface shows strong stepped, striped banding (shadow-acne-like stripes across the faces). It casts a large dark ground shadow, which helps placement.
+- Contact: the boulder clips into the boar's head (S06-3, S08-3), so it passes inside the target's geometry.
+- Impact: the rock mass engulfs and fully hides the boar's head and front half (S08-4, S06 strip panel 4). That is a distinct event from contact, but it obscures the target completely and reads as rocks merged with the boar, not rocks shattering against it. The dust is a faint brown haze.
+- Aftermath: the rubble chunks left on the ground read reasonably as rubble (S06-5, S08-5).
+- Verdict, best (S08): FAIL. The boulder spawns from nowhere, the material is flat and banded, it clips into and swallows the target at contact and impact, there are no shatter fragments or debris arcs, and the target does not react.
+
+SMALL ROCK VOLLEY (S03, S12, S11)
+- Launch: in S03 and S12 the stones first appear stacked in a vertical line against the background house (S12-2, S03-1). They read as objects floating in front of the house, not as something thrown by the attacker. S11 launches from beside the attacker's head, which reads better. The attacker's pounce at S03-3 is the only clear attacker body animation in any of the 12 sequences.
+- Flight: the stones are small, dull grey-tan and low contrast. They read as dirt clods or pebbles.
+- Contact: barely visible. One small stone at the snout (S03-3, S12-3).
+- Impact: the stones cluster into and around the boar's snout (S12-4, S11-4), with some inside the face geometry. Faint dust. There is little difference from contact.
+- Aftermath: a small pebble scatter (S11 strip panel 5 is the clearest).
+- Verdict, best (S11): FAIL. The stones are too small and too low-contrast to read at gameplay distance, contact and impact are barely different, the stones penetrate the target, and the target does not react.
+
+========================================================================
+4. THE THREE THINGS THAT MOST SEPARATE THESE FROM THE REFERENCES (ranked)
+========================================================================
+1. The target never reacts to any hit. The boar is frozen in the same pose through S10-4, S08-4, S07-3 and every other contact and impact frame. Palworld hits read through target response (sparks on the body, flinch, debris thrown off), as in palworld-01 and palworld-03.
+2. The effects have no energy: no emission or bloom, no light cast on the target or ground, few particles, low contrast. Examples: the muddy translucent fire cloud with a card edge at S10-4, the washed-out white needles against the white barn at S07-3, and the tiny contact puffs at S01-3 and S12-3. Compare the hot, dense, glowing spark showers in palworld-01.
+3. Rock projectiles are flat low-poly meshes that appear out of thin air and pass into the target rather than shattering on it: S06-1 (spawn in mid-air, banded shading), S08-3 (clipping into the head), S08-4 (the rock mass swallowing the target).
+(Runner-up: the lightning ground decal is offset from the strike point, S07-4 and S09-4.)
+
+========================================================================
+5. SCENE
+========================================================================
+Does it belong to the world of tetherbound-meadows-keyart.png? YES, in subject matter: a half-timbered village, meadow grass with wildflowers, dirt paths, green hills and blue sky, matching the key art's "starting settlement" panel. It falls short in rendering. There is no atmospheric depth or haze, the grass is very saturated yellow-green and made of sparse blade cards over a flat ground texture, the light is flat midday, and the large bright orange-red tile barn dominates the right half of every frame. The key art is softer and painterly, with depth layering. These are environment faults, not attack-effect faults.
+
+Would someone shown these beside the palworld references say they are the same kind of game? YES for genre: stylised monster creatures fighting each other with elemental moves in a sunny meadow. They would also see a clearly lower production tier, and the main reasons are the attack effects (items 1–3 above).
+- Attack-effect faults: no target reaction, no emissive glow or light, sparse particles, rocks that clip into the target, a washed-out lightning bolt.
+- Environment faults: flat lighting, no depth haze, sparse card grass.
+- Creature faults: the creatures mix texture styles (the rock-backed bear has posterised flat-colour toon shading, while the boar and fox have noisy painted textures), unlike Palworld's single consistent clean toon-PBR look. The creatures do not animate during the attack, except for the S03 pounce.
+
+========================================================================
+IMAGES I COULD NOT LOAD
+========================================================================
+Many reads returned "media removed: request limit" and I retried them. These are the images I actually saw:
+- References: all five palworld-0*.jpg, all three moong-0*.jpg, tetherbound-meadows-keyart.png.
+- Strips: all 12 (S01–S12).
+- Frames: S01-3, S01-4; S02-2, S02-4; S03-2, S03-3, S03-4; S06-1, S06-3, S06-5; S07-2, S07-3, S07-4; S08-2, S08-3, S08-4; S09-3, S09-4; S10-2, S10-3, S10-4, S10-5; S11-4; S12-2, S12-3, S12-4.
+- Two zoomed crops I made from those frames (S10-4, S07-3).
+Individual frames I never managed to view, so the judgement rests on the strip panel instead: every frame of S04 and S05; S01-1, S01-2, S01-5; S02-1, S02-3, S02-5; S03-1, S03-5; S06-2, S06-4; S07-1, S07-5; S08-1, S08-5; S09-1, S09-2, S09-5; S10-1; S11-1, S11-2, S11-3, S11-5; S12-1, S12-5.

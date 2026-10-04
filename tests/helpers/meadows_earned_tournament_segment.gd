@@ -120,6 +120,32 @@ func _fight_the_bracket() -> bool:
 	return true
 
 
+func _call_out_a_creature() -> bool:
+	# Halda's physical selection flow owns activation and deployment. The
+	# inherited fixture method writes set_active and dismisses followers, which
+	# cannot establish that the earned registration actually did those things.
+	var selected: Array = _party.call("tournament_selection")
+	var owned: Array = _party.call("members")
+	if selected.size() != TOURNAMENT_ENTRANT_COUNT or owned.find(selected[0]) < 0:
+		_fail("the registered tournament three disappeared before the bracket")
+		return false
+	if _party.call("active") != selected[0]:
+		_fail("Halda's physical registration did not activate the first entrant")
+		return false
+	if _director.call("ally_body") == null:
+		await _tap(&"creature_recall")
+		for _frame in 180:
+			if _director.call("ally_instance") == selected[0] and _director.call("ally_body") != null:
+				break
+			await _tree.physics_frame
+	if _director.call("ally_instance") != selected[0] or _director.call("ally_body") == null:
+		_fail("the physically selected first entrant has no body at the arena")
+		return false
+	transcript.append("verified Halda's active first entrant and its live body")
+	await _settle(30)
+	return true
+
+
 func _fight_and_win(spec: Dictionary) -> bool:
 	var trainer_id := str(spec["trainer"])
 	if not TOURNAMENT.condition_ready(_party):

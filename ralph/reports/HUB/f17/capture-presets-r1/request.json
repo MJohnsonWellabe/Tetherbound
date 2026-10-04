@@ -1,0 +1,11 @@
+{
+  "inputs": {
+    "args": "--only=test_f17_capture_presets.gd",
+    "mode": "headless",
+    "checkout_ref": "ec40283309c7fcc1513223bcea0c1fe208dec86c",
+    "label": "f17-capture-presets-r1",
+    "script": "tests/run_tests.gd",
+    "timeout_minutes": "10"
+  },
+  "ref": "main"
+}

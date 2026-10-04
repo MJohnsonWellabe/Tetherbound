@@ -42,11 +42,15 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 ## Measured on origin/main 835744b35 + the relay-capture merge (the tree before
 ## the travelling lunge) with this same harness, case 1. The ordinary wild must
 ## still end up exactly here. Wild/ally x,z 30 physics frames after the strike.
+## `ally_after` re-measured for F21#0 (knockback scaled by move weight,
+## COMBAT §11): the wild's blow now pushes the ally by its weighted receipt
+## impulse rather than the flat lunge*0.4 shove, 3.126248 -> 3.253054 (PR #525
+## CI 37211106762). The wild's own path is unchanged.
 const ORDINARY_GOLDEN := {
 	"hit": true,
 	"wild_at_strike": Vector2(0.0, 0.0),
 	"wild_after": Vector2(0.0, 0.319028),
-	"ally_after": Vector2(0.0, 3.126248),
+	"ally_after": Vector2(0.0, 3.253054),
 }
 const GOLDEN_TOLERANCE := 0.002
 const SIDESTEP_SPEED := 5.6

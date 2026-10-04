@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -34,6 +34,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 	var proposal: Dictionary
 	match action:
 		"combat_round_reward": proposal = preload("res://scripts/net/combat_round_reward.gd").stage(current, intent, context)
+		"home_key_owe", "home_key_deliver": proposal = preload("res://scripts/net/home_key_action.gd").stage(current, action, intent, context)
 		"waystone_touch": proposal = preload("res://scripts/net/waystone_action.gd").stage(current, intent, context)
 		"combat_mastery": proposal = _combat_mastery(current, intent, context)
 		"resource": proposal = resource_plan(current, revision, intent, context)
@@ -160,6 +161,11 @@ static func _acknowledgement(current: Dictionary, action: String, intent: Dictio
 	if action == "portal_arrival" and intent.realm == "meadows" and intent.entry_id == "hall_home":
 		var home := "craft:home_return_%s_%s:%s" % [context.get("world_namespace", ""), intent.permit_id, current.character_id]
 		if not next.redesign_character.transaction_receipts.has(home): next.redesign_character.transaction_receipts.append(home)
+		var ending := preload("res://scripts/story/regional_homecoming.gd")
+		var prefix := ending.return_prefix(str(context.get("world_namespace", "")), str(context.get("ending_outcome", "")))
+		if not prefix.is_empty():
+			var ending_home: String = prefix + str(intent.permit_id) + ":" + str(current.character_id)
+			if not next.redesign_character.transaction_receipts.has(ending_home): next.redesign_character.transaction_receipts.append(ending_home)
 	return {"ok": true, "state": next, "receipt": receipt}
 
 static func _relic(current: Dictionary, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
@@ -175,19 +181,29 @@ static func _relic(current: Dictionary, action: String, intent: Dictionary, cont
 		var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(intent.get("trainer_id", "")), str(context.get("realm", "")))
 		if intent.size() != 3 or grant.is_empty() or grant.relic_biome != intent.biome \
 			or context.get("validated_host_outcome") != "win" or context.get("encounter_id") != intent.get("encounter_id") \
-			or not context.get("participants") is Array or not context.participants.has(current.character_id): return deny("actual_boss_participant_required")
+			or not context.get("participants") is Array or not context.participants.has(current.character_id) \
+			or (context.has("world_namespace") and not ESSENCE._opaque_id(context.world_namespace)): return deny("actual_boss_participant_required")
 		if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(grant, context.get("boss_settlement_world_flags", [])):
 			return deny("boss_ceremony_pending")
-		receipt = "defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]
-		if next.redesign_character.relics_held.has(intent.biome) or next.redesign_character.relics_hung.has(intent.biome): return deny("reconcile_original_decision")
+		# Replay existing v3 snapshots with their original identity. The actual
+		# admitted registry requires a matching namespace for every new stage.
+		receipt = boss_receipt(context.world_namespace, intent.trainer_id, current.character_id) if context.has("world_namespace") \
+			else "defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]
+		# Older personal receipts lack world identity. Preserve their once-only
+		# decision conservatively; never repay a legacy save by changing its ID.
+		if next.redesign_character.transaction_receipts.has("defeat:boss_%s:%s" % [intent.trainer_id, current.character_id]): return deny("reconcile_original_decision")
 		var bag_rules := preload("res://scripts/world/death_satchel_rules.gd")
 		var bag := bag_rules.inventory_from(current.inventory)
 		if not bag_rules.give_stack(bag, {"id": grant.portal_key_item, "n": 1}): return deny("boss_handoff_make_satchel_room")
 		next.inventory = bag_rules.slots(bag)
-		next.redesign_character.relics_held.append(intent.biome)
+		if not next.redesign_character.relics_held.has(intent.biome) and not next.redesign_character.relics_hung.has(intent.biome):
+			next.redesign_character.relics_held.append(intent.biome)
 	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}
+
+static func boss_receipt(world_namespace: String, trainer: String, character: String) -> String:
+	return "defeat:boss_%s_%s:%s" % [trainer, world_namespace.sha256_text(), character]
 
 static func camp_plan(current: Dictionary, revision: int, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if context.get("foundation_runtime_authorized") != true or not context.get("world_before") is Array \

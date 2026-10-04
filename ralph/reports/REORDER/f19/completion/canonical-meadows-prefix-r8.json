@@ -1,0 +1,80 @@
+{
+  "kind": "f19_canonical_meadows_prefix_comparator",
+  "upstream_source": "6a13e6e44a2cfadd4c3488909bd656c4890e29f2",
+  "run": 37086098279,
+  "job": 111096616203,
+  "artifact": 11261227819,
+  "result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": false,
+    "cumulative_elapsed_seconds": 1550.647,
+    "dry_run": false,
+    "elapsed_seconds": 1550.647,
+    "failures": [],
+    "local_chains": [],
+    "reached": "tournament_won",
+    "requested_prefix_passed": true,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://f49_campaign_2452_8665"
+  },
+  "script_errors": 0,
+  "engine_errors": 1,
+  "tournament_results": [
+    "EARNED TOURNAMENT — tournament_quarter_mira won through 2 real opponent defeats and 22 landed attacks",
+    "EARNED TOURNAMENT — tournament_semi_tam won through 2 real opponent defeats and 28 landed attacks",
+    "EARNED TOURNAMENT — tournament_final_oskar won through 3 real opponent defeats and 64 landed attacks"
+  ],
+  "native_elapsed_seconds": 1550.647,
+  "wrapper_exit_line": "exit=0 took=1561s",
+  "raw_log": "ci-f17-m1-prefix-37086098279.log.gz",
+  "raw_log_sha256": "a0149c198fb6f926f42a5d258cde20280c3942b168837f1d858aa9ed887ca6bc",
+  "candidate_dependency": {
+    "path": "tests/helpers/meadows_earned_team_segment.gd",
+    "source_blob": "fe7e6ae9cd6cdf404e5bd33ad61b57e32749cadc",
+    "source_sha256": "bc9a0d6f87af976a5e97543a5cce3b3ae3a4ee02d2d42aa23493db7685cf8fcc",
+    "status": "Exact source snapshot now imported only into isolated F19, independently approved source SHA; same-branch native proof still required",
+    "delta": "22 lines awaiting actual catch-loss resolution inside existing240tick cleanup; no loss in R8 so branch unexercised",
+    "evidence": "reviewed-meadows-loss-wait-dependency.json"
+  },
+  "next_f19_scope": "Full fresh ordinary all-five-boundary route, unchanged eight-contact guard. Seed strategy must preserve and disclose actual saved-world identity; no inference that --world-seed=4 fixes the contact cap or pins terrain. Prepared seed4 dispatch is held.",
+  "exclusions": "Native boundedprefix success only; one engine error prohibits clean-engine claim. No five boundary receipts, full campaign, no earned saves promoted, no catch-loss-branch proof.",
+  "actual_encounter_seed_override": 4,
+  "saved_world_seed_coordinator_relay": 1434901555,
+  "seed_provenance": {
+    "source_paths": [
+      "tests/helpers/f49_campaign_journey.gd:run",
+      "scripts/combat/spawn_tables.gd:resolve_seed",
+      "autoload/game_state.gd:reset",
+      "scripts/combat/encounter_director.gd:world_seed"
+    ],
+    "facts": [
+      "--world-seed sets TB_WORLD_SEED only.",
+      "New game independently generates Game.world_seed from the normal roll policy.",
+      "The encounter director resolves environment override before persisted seed.",
+      "Neither this argument nor the observed director seed pins all terrain generation or changes the persisted world seed."
+    ],
+    "source_effect": "Matching encounter-roll seed only; saved-world identity and terrain/contact comparator not established.",
+    "persisted_snapshot_limit": "F17 earned-rested-team snapshot is before bracket; final scratch autosave is not terminal tournament_won persisted snapshot.",
+    "persisted_seed_independently_read": true
+  },
+  "actual_saved_world_seed_samples": [
+    {
+      "relative": "four_biome_checkpoints/rested_team_2452/save/worlds/slot-0/world.json",
+      "sha256": "f4ad777208255f03211d07555e7cc8d16ac6ea67b85943b06674e244abcfc2c6",
+      "version": 28,
+      "saved_world_seed": 1434901555,
+      "tournament_flags": []
+    },
+    {
+      "relative": "f49_campaign_2452_8665/worlds/slot-0/world.json",
+      "sha256": "329481c3bcb0079c24290ebd46f2bb9ef8053fe669671395d7f4ecdcee0583be",
+      "version": 28,
+      "saved_world_seed": 1434901555,
+      "tournament_flags": [
+        "tournament_quarter_won"
+      ]
+    }
+  ]
+}

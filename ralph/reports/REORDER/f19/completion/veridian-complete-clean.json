@@ -1,0 +1,28 @@
+{
+  "kind": "f19_actual_veridian_complete_native_choice_witness",
+  "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+  "run": 37101815341,
+  "job": 111142677312,
+  "artifact": 11266764847,
+  "process_exit": 0,
+  "elapsed_seconds": 1872,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "failures": [],
+  "cases": [
+    "space-accept",
+    "space-refuse",
+    "capacity-refuse-at-prompt",
+    "capacity-accept-then-let-newcomer-go",
+    "capacity-accept-release-one",
+    "save-while-choice-open"
+  ],
+  "scope": "Entire original six-case choice/save/reload driver; real X11 Compatibility, continuous drawing disabled. Original staged victory/party/pose fixtures remain disclosed. No diagnostic resource retention, modified assertions, selected case group, earned play, ENet or visual/device claim.",
+  "original_prompt_guards_passed": true,
+  "original_party_cap_guard_passed": true,
+  "choice_open_reload_marker": true,
+  "accepted_clean_choice_witness": true,
+  "earned_campaign": false,
+  "raw_log": "ci-veridian-full-clean-37101815341.log.gz",
+  "raw_log_sha256": "73520839a723fedfa7f30c9012694cedbd3816a4360a3f19cb26b499afe9dfd5"
+}

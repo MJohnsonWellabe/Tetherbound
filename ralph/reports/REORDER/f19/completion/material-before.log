@@ -1,0 +1,4 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PROBE START: burrowback x1.35 (same-frame): set_alpha then apply_size_multiplier
+PROBE END: has_model=true radius=1.587

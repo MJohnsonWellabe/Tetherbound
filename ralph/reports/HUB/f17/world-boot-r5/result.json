@@ -1,0 +1,18 @@
+{
+  "source": "18e29847b48b5f47aa4dd377600ef0653a76af08",
+  "run": 37082599406,
+  "job": 111086159969,
+  "artifact": 11259034226,
+  "passed": true,
+  "exit": 0,
+  "timed_out": false,
+  "scope": "mandatory native world boot; exactknown materialnull error preserved",
+  "hashes": {
+    "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "native.log": "0cb599c28504b47445193a93e7f7fcc7ac371463421f875a5c81ad9182d39cc6",
+    "request.json": "3d204e98e92fa0d353bda8d9b429b1d8d6a31493a2c2750a8782843cd36b8e33",
+    "runtime-artifact.zip": "e49c0d13bc3144bd0be4f6b60a9136610e69d8d5c21373b2cd7de5bd996a6ba5",
+    "workflow-artifacts.json": "0a7e58a597f83cf0b2137ed0a45a5622e5c8da49fb6074ca437e6a8da1358e24",
+    "workflow-jobs.json": "3df040d2c02f1629948880e9f5e62f97c36ffc865e2e98aea20b6371a184314d"
+  }
+}

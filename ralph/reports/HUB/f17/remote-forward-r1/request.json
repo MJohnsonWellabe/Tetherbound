@@ -1,0 +1,13 @@
+{
+  "ref": "tb/hub",
+  "inputs": {
+    "script": "tools/capture_f17_visual.gd",
+    "rendering_method": "forward_plus",
+    "args": "--preset=Medium --paired-high --farm-diagnostic-only --source-commit=1e143f77dd3bffa12b18e569895a34336d370e93 --output=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/HUB/f17/remote-forward-r1/native",
+    "checkout_ref": "1e143f77dd3bffa12b18e569895a34336d370e93",
+    "label": "f17-medium-high-farm-r1",
+    "mode": "render",
+    "timeout_minutes": "45",
+    "resolution": "1920x1080"
+  }
+}

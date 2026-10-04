@@ -1,0 +1,15 @@
+MANIFEST.txt
+run.log
+tree/ralph/reports/HUB/f17/earned-fight-low-r1/0000-earned-opening-low.jpg
+tree/ralph/reports/HUB/f17/earned-fight-low-r1/0001-earned-opening-low.jpg
+tree/ralph/reports/HUB/f17/earned-fight-low-r1/0002-earned-opening-low.jpg
+tree/ralph/reports/HUB/f17/earned-fight-low-r1/first-actual-live-fight-low.png
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key
+user/godot/app_userdata/Tetherbound/f49_campaign_2466_11403/characters/character-81d038e3909ff7e852684e8f88eaad92/character.json
+user/godot/app_userdata/Tetherbound/f49_campaign_2466_11403/worlds/slot-0/world.json
+user/godot/app_userdata/Tetherbound/f49_campaign_2466_11403_coverage.jsonl
+user/godot/app_userdata/Tetherbound/f49_campaign_2466_11403_ledger.jsonl
+user/godot/app_userdata/Tetherbound/graphics_override.cfg
+user/godot/app_userdata/Tetherbound/logs/godot.log

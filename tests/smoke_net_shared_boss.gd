@@ -187,6 +187,17 @@ const STRIKE_SETTLE := 30
 const NEAR_Z := 1.6
 ## The friendly-fire staging: how far along Z the striker stands off the victim.
 const APART_Z := 1.5
+## Which side of peer 1's creature peer 0's is stood on, in turn, one per
+## attempt. +Z first: every passing run so far used it. It is not always open
+## space. The shared-damage half leaves peer 1's creature at boss + NEAR_Z, and
+## the boss's contact spacing can push it on until it is flush with the Warden
+## Arena's +Z wall (inner face z 7663.2). Run net-20261004T141620Z had the host
+## holding it at z 7661.734 at x 4.16 and again at x 8.71. A stand APART_Z past
+## that is in the wall, and outside the host's wall-bounded arena circle, so the
+## host's own physics (`move_and_slide` / `combat_arena.hold_inside`) returns its
+## creature to the edge -- onto the teammate, 0.03 m apart on all 12 attempts.
+## The lateral sides come next. -Z is never used: it points at the boss.
+const FRIENDLY_SIDES := [Vector3(0.0, 0.0, 1.0), Vector3(1.0, 0.0, 0.0), Vector3(-1.0, 0.0, 0.0)]
 ## How many times the friendly-fire staging is re-attempted. Neither creature can
 ## be parked -- see that block's own comment -- so the placement is retried until
 ## the host holds them within reach of each other and the boss has left the window
@@ -759,7 +770,8 @@ func _run() -> void:
 			# rather than giving up on the first read.
 			await step(1, "wait", {"frames": FRIENDLY_SETTLE * 4})
 			continue
-		var stand := guest_at + Vector3(0.0, 0.0, APART_Z)
+		var side: Vector3 = FRIENDLY_SIDES[(staged - 1) % FRIENDLY_SIDES.size()]
+		var stand := guest_at + side * APART_Z
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
 			 "face": [guest_at.x, guest_at.y, guest_at.z], "settle": FRIENDLY_SETTLE})
@@ -769,6 +781,9 @@ func _run() -> void:
 		guest_at = await _host_view_of_guest_creature()
 		var mine: Dictionary = await _encounter(0)
 		host_creature_at = _vec(mine.get("my_creature_pos", []))
+		print("[shared-boss friendly] attempt=%d side=%s stand=%s guest=%s host=%s (%s)"
+			% [staged, str(side), str(stand), str(guest_at), str(host_creature_at),
+				str(placed.get("detail", ""))])
 		if guest_at == Vector3.INF or host_creature_at == Vector3.INF:
 			continue
 		if guest_at.distance_to(host_creature_at) >= SWING_REACH_M:
@@ -983,7 +998,8 @@ func _run_chapter_handoff() -> void:
 	# claim, and the spine before THAT belongs to the earned-segment tests.
 	for peer in 2:
 		await step(peer, "explore_at",
-			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2]), float(arena[1])],
+				"settle": 60})
 
 	# 1. The Warden, shared.
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
@@ -1246,7 +1262,8 @@ func _run_client_chapter_handoff() -> void:
 		return
 	for peer in 2:
 		await step(peer, "explore_at",
-			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2])], "settle": 60})
+			{"at": [float(arena[0]) + (2.0 if peer == 1 else -2.0), float(arena[2]), float(arena[1])],
+				"settle": 60})
 
 	# 1. The GUEST fights the Warden; the host does not join.
 	var began: Dictionary = await step(1, "trainer_battle", {"trainer": WARDEN_TRAINER, "settle": 45})
@@ -1443,7 +1460,8 @@ func _run_hall_approach() -> void:
 	for peer in 2:
 		# Disclosed: seated at the entrance, not walked from the Mill.
 		var seated: Dictionary = await step(peer, "explore_at",
-			{"at": [float(entrance[0]) + (2.0 if peer == 1 else -2.0), float(entrance[2])], "settle": 60})
+			{"at": [float(entrance[0]) + (2.0 if peer == 1 else -2.0), float(entrance[2]), float(entrance[1])],
+				"settle": 60})
 		check(str(seated.get("verdict", "")) == "PASS",
 			"peer %d stood at the Hall entrance (%s)" % [peer, str(seated.get("detail", ""))])
 

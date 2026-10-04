@@ -1,0 +1,37 @@
+{
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "outcome": "APPROVE diagnostic source only",
+  "files": [
+    "tests/helpers/f18_capsule_diagnostic.gd",
+    "tests/smoke_f18_native_stones.gd"
+  ],
+  "parent": "9cde1be4b041b400b3b56959e60c0db2c8005721",
+  "observations": {
+    "actual_R4_canonical_entry_target": [
+      0,
+      2.07857155799866,
+      162
+    ],
+    "missing_classifier_floor_x": -0.400000005960464,
+    "configured_neighbor_regions_present": true,
+    "independent_baked_samples": "In-memory RSCC/Zstd Godot binary Image decode: both[-1,0]/[0,0]512\u00b2RFheight/control; X[-2,-1,0,1,2] Z[161,162,163] finite, control0x08400000 holebit2clear. ExactX0Z162height1.92857146 matches nativeR4ray. Does not prove runtime physical support.",
+    "source_diagnosis": "Missing narrow support witness at seam; no production terrain or guard repair justified until raw R5 rays/height/actualcollision metadata establish cause."
+  },
+  "source_checks": {
+    "raw_grid_points": 21,
+    "original_query_endpoints_unchanged": true,
+    "raw_wide_ray_half_height_m": 4,
+    "same_actor_mask_and_exclusion": true,
+    "read_actual_Terrain3D_body_independently_of_hits": true,
+    "nearby_heightmap_arrays_logged_as_counts_only": true,
+    "no_pose_writes_setters_await_grants_or_guard_changes": true
+  },
+  "primary_sources": [
+    "https://raw.githubusercontent.com/TokisanGames/Terrain3D/v1.0.2-stable/src/terrain_3d_data.cpp",
+    "https://raw.githubusercontent.com/TokisanGames/Terrain3D/v1.0.2-stable/src/terrain_3d_collision.cpp",
+    "https://raw.githubusercontent.com/TokisanGames/Terrain3D/v1.0.2-stable/src/terrain_3d_util.h",
+    "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/io/resource_format_binary.cpp"
+  ],
+  "runtime_status": "UNPROVEN; bounded WaterR5 observations pending, original failure remains failure",
+  "all_six_f18_criteria": "UNPROVEN"
+}

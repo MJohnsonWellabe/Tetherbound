@@ -1,0 +1,23 @@
+{
+  "scope": "Read-only actual F20 SAVE_SNAPSHOT_REFUSAL plus shared mounted source; no shared edits or engine.",
+  "source": "D:/tetherbound/.tmp/f20-solo-r4-native.log",
+  "snapshot_sha": "Recomputed and matched by independent /root/f18_opening",
+  "receipt": "portal_unlock:46e32dd25f8a2eac6eb8e55ae6b789608283ce73379e8bcb3706237ab1d87bc8",
+  "receipt_fields": 10,
+  "status": "pending",
+  "version": 2,
+  "biome": "biome5",
+  "item": "fifth_portal_key",
+  "key_slot": 1,
+  "world_id": "slot-0",
+  "world_instance": "72054ff7ee06ad4b1b2357d9eae04dea",
+  "checks": {
+    "namespace_matches_snapshot": true,
+    "map_key_matches_receipt": true,
+    "receipt_sha256_recomputed": true,
+    "snapshot_world_id_present": false
+  },
+  "finding": "SaveGame merged snapshot omits split world_id, then pre-identity _redesign_errors compares valid legacy PortalDelivery row slot-0 against empty locator.",
+  "fix_owner": "Coordinator/F20 own trusted-live-world-ID projection into detached validation candidate. Keep strict validator, namespace, immutable row/hash and requested-slot guards.",
+  "related_source": "SaveGame/PortalDelivery identical to F20 687732d0b2."
+}

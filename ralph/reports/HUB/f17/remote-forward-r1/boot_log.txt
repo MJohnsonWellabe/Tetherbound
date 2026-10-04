@@ -1,0 +1,5 @@
+=== launch 2026-10-03T12:36:33 (Godot 4.7-stable (official)) ===
+[2026-10-03T12:36:33] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-03T12:36:34] Game autoload: _ready done, menu mounted
+[2026-10-03T12:36:41] playground: _ready start, building Terrain3D node  [first phase]
+[2026-10-03T12:36:41] playground: terrain node created, waiting for Terrain3DData  [+240 ms]

@@ -414,7 +414,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if quote.get("ok") != true: return _foundation_refusal(str(quote.get("code", "capture_choice_refused")))
 		return {"ok": true, "pending_uid": context.creature.uid, "released_uid": envelope.intent.released_uid,
 			"ceremony_id": context.offer_id, "expected_character_revision": context.expected_revision, "payout": quote.payout}
-	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "combat_round_reward", "waystone_touch"]: return _foundation_refusal("host_producer_required")
+	if envelope.op in ["portal_arrival", "boss_relic", "dock_conclusion", "combat_mastery", "combat_round_reward", "waystone_touch", "home_key_owe", "home_key_deliver"]: return _foundation_refusal("host_producer_required")
 	if envelope.op == "rematch_start":
 		if envelope.intent.size() != 4 or envelope.revision != -1 \
 			or not ESSENCE._component(envelope.intent.get("trainer_id")) or envelope.intent.get("tier") not in ["r1", "endgame"] \
@@ -650,8 +650,12 @@ func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionar
 	if original.get("character_id") != character or original.get("world_namespace") != world.reward_delivery_namespace: return FOUNDATION_ACTIONS.deny("dock_context_changed")
 	var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
 	if row.get("action") == "dock_conclusion" and row.get("intent") == original:
-		return _foundation_decision(local_peer_id(), row)
+		get_node(^"LedgerRpc").call("_process_creature_training", row)
+		return _foundation_decision(local_peer_id(), world.reward_deliveries.get(row.delivery_id, {}))
 	if source.call("dock_departure_ready") != true or _altar_peer_in_combat(local_peer_id()): return FOUNDATION_ACTIONS.deny("dock_departure_not_ready")
+	# The local five accumulate passive care and travel between offers. Freeze
+	# their current admitted record at this real producer, as station actions do.
+	if admitted_character_state(local_peer_id()).is_empty(): return FOUNDATION_ACTIONS.deny("character_busy")
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"source_key": original.dock_id, "world_namespace": world.reward_delivery_namespace, "realm": "water",
 		"in_range": true, "in_combat": false, "civilian_departure_ready": true, "foundation_runtime_authorized": true}
@@ -691,6 +695,8 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
 		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
 		"world_namespace": world.reward_delivery_namespace}
+	if envelope.get("payload", {}).get("kind") == "home_key_finish":
+		context.ending_outcome = preload("res://scripts/story/regional_homecoming.gd").personal_outcome(_foundation_flags(peer))
 	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, character, context.expected_revision, "portal_arrival", intent, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
@@ -885,7 +891,7 @@ func _retry_foundation_events() -> void:
 		if combat_held.has(duty.character_id) and duty.action != "combat_round_reward": continue
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
-		var receipt := _foundation_duty_receipt(duty)
+		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
 			and latest.status == "accepted" and latest.after.redesign_character.transaction_receipts.has(receipt): continue
 		if not receipt.is_empty() and TRAINING_WORLD.training_row_valid(latest, world.reward_delivery_namespace, world.world_id) \
@@ -908,8 +914,14 @@ func _retry_foundation_events() -> void:
 		# Project/recover authority only after those exclusions; a long fight
 		# can retain hundreds of mastery sources for this same character.
 		if admitted_character_state(peer).is_empty(): continue
+		if duty.action == "boss_relic" and (_character_authority.call("state", duty.character_id) as Dictionary).get("redesign_character", {}).get("transaction_receipts", []).has("defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]):
+			# Legacy personal decisions are complete; preserve their original
+			# identity without starving this character's later owed duties.
+			continue
 		var context: Dictionary = duty.context.duplicate(true)
-		if duty.action == "boss_relic": context.boss_settlement_world_flags = world.flags.all_set().duplicate()
+		if duty.action == "boss_relic":
+			context.boss_settlement_world_flags = world.flags.all_set().duplicate()
+			context.world_namespace = world.reward_delivery_namespace
 		context.character_id = duty.character_id
 		context.expected_revision = int(_character_authority.call("revision", duty.character_id))
 		context.in_range = true
@@ -968,12 +980,12 @@ func _note_duty_released(duty: Dictionary) -> void:
 	if _duty_holds.erase(key):
 		print("[session] %s duty for %s released (t=%dms)" % [str(duty.action), str(duty.character_id), Time.get_ticks_msec()])
 
-func _foundation_duty_receipt(duty: Dictionary) -> String:
+func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
-	if duty.action == "boss_relic": return "defeat:boss_%s:%s" % [duty.intent.trainer_id, duty.character_id]
+	if duty.action == "boss_relic": return FOUNDATION_ACTIONS.boss_receipt(world_namespace, duty.intent.trainer_id, duty.character_id)
 	if duty.action == "research_event":
 		var event: Dictionary = duty.context
 		return "research:event_%s:%s" % [JSON.stringify([event.world_namespace, event.session_id, event.event_id, event.species_id, event.kind]).sha256_text(), duty.character_id]
@@ -4457,6 +4469,7 @@ func _training_decision(peer: int, row: Dictionary) -> Dictionary:
 
 func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 	if not is_host(): return
+	OPENING_HOME_KEY.accepted(self, peer, row)
 	if row.get("action") == "waystone_touch": _waystone_delivery_accepted(peer, row)
 	if peer == local_peer_id():
 		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
@@ -5264,6 +5277,26 @@ func send_portal_owner_permit(producer: Node, peer: int, envelope: Dictionary, p
 		or peer == local_peer_id() or not _portal_envelope_valid(peer, envelope): return
 	rpc_id(peer, "_rpc_portal_owner_permit", envelope, permit)
 
+func portal_owner_travel_started(producer: Node, envelope: Dictionary, permit: Dictionary) -> bool:
+	# Presentation handoff only: the original request remains pending until
+	# ordinary supported contact, portable bool-save and accepted host ACK.
+	if producer == null or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope \
+		or not envelope.get("payload") is Dictionary \
+		or envelope.get("payload", {}).get("kind") != "home_key_finish" \
+		or producer.call("presentation_binding", envelope, permit) != true: return false
+	var key := _game().get_node_or_null(^"HomeKey")
+	if key != null: return await key.call("travel_started", str(envelope.request_id))
+	return false
+
+func portal_owner_save_waiting(producer: Node, envelope: Dictionary, permit: Dictionary) -> void:
+	if producer == null or producer != get_node_or_null(^"FoundationComposition/PortalArrival") \
+		or _portal_requests.get(envelope.get("request_id"), {}) != envelope \
+		or not envelope.get("payload") is Dictionary or envelope.payload.get("kind") != "home_key_finish" \
+		or producer.call("presentation_binding", envelope, permit, true) != true: return
+	var key := _game().get_node_or_null(^"HomeKey")
+	if key != null: key.call("save_waiting", str(envelope.request_id))
+
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_portal_owner_permit(envelope: Dictionary, permit: Dictionary) -> void:
 	if is_host() or not is_active() or not portal_runtime_ready() \
@@ -5321,10 +5354,17 @@ func _host_portal_action(peer: int, envelope: Dictionary) -> void:
 	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
 	if not cfg is Dictionary or not stones is Dictionary: return
 	_portal_policy.call("bind_world", envelope.world_instance_id)
+	var prior_channels: Array[Dictionary] = _portal_policy.call("open_channels")
 	var result: Dictionary = _portal_policy.call("evaluate", envelope.payload.duplicate(true), context, cfg, stones, Time.get_ticks_msec())
+	var channels := get_node_or_null(^"FoundationComposition/HomeKeyChannels")
 	if result.get("ok") != true:
+		if channels != null:
+			var remaining: Array[Dictionary] = _portal_policy.call("open_channels")
+			for row: Dictionary in prior_channels:
+				if row.character_id == envelope.character_id and not remaining.has(row): channels.call("ended", row)
 		_portal_reply(peer, envelope, result)
 		return
+	if channels != null: channels.call("approved", peer, envelope, result, str(context.realm))
 	match str(envelope.payload.kind):
 		"portal_unlock":
 			_commit_portal_unlock(peer, envelope, result.prepared)
@@ -5379,7 +5419,8 @@ func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
 	var canonical: Variant = game.get("world").reward_deliveries.get(row.receipt)
 	if row.status != "accepted" or not PORTAL_RECEIPT.equivalent(canonical, row): return
 	_portal_waiters.erase(row.receipt)
-	_portal_reply(peer, waiter.envelope, {"ok": true, "durable": true, "receipt": row.receipt, "biome": row.biome})
+	_portal_reply(peer, waiter.envelope, {"ok": true, "durable": true, "receipt": row.receipt,
+		"biome": row.biome, "arch_id": waiter.envelope.payload.arch_id})
 
 
 func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary) -> void:
@@ -5550,7 +5591,7 @@ func _host_portal_context(peer: int) -> Dictionary:
 		"peer_id": peer, "realm": realm, "position": player.global_position, "damage_revision": vitals.get("damage_revision"),
 		"combat": combat, "dialogue": dialogue, "cutscene": cutscene, "swimming": bool(swimming.swimming),
 		"flying": bool(fly.call("is_flying")), "downed": bool(downed.call("is_downed")),
-		"home_key_owned": game.get("local").inventory.count("home_key") == 1,
+		"home_key_owned": _home_key_authoritative_owned(peer),
 		"character_unlocks": personal.redesign_character.portal_unlocks.duplicate(),
 		"world_unlocks": game.get("world").redesign_world.portal_unlocks.duplicate(),
 		"character_stirred": _character_authority.call("character_fifth_stirred", admitted.character_id),
@@ -5734,3 +5775,58 @@ func _foundation_capture_context(peer: int, key: String) -> Dictionary:
 			context.retained_event = row.delivery_id
 			return context
 	return {}
+
+
+const OPENING_HOME_KEY := preload("res://scripts/net/opening_home_key.gd")
+
+func request_opening_home_key(source: Node) -> bool:
+	if not portal_runtime_ready() or source == null: return false
+	if is_host():
+		var transport := get_node_or_null(^"LedgerRpc")
+		if transport == null: return false
+		var decision: Dictionary = transport.call("journal_opening_home_key_prepared", local_peer_id(), source)
+		if decision.get("durable") != true or _owner_training_mutation_blocked(_game().get("local")): return false
+		for row: Variant in _game().get("local").satchel_escrow.values():
+			if preload("res://scripts/net/home_key_action.gd").valid_escrow(row, _local_character_id()): return true
+		return false
+	var game := _game()
+	if not is_active() or not handshake_snapshot_applied() or game == null or game.get("local") == null or game.get("world") == null: return false
+	var request := OPENING_HOME_KEY.envelope(game.get("local").character_id, game.get("world").reward_delivery_namespace, _altar_current_epoch())
+	if not OPENING_HOME_KEY.valid_envelope(request, game.get("local").character_id, game.get("world").reward_delivery_namespace, _altar_current_epoch()): return false
+	rpc_id(HOST_PEER_ID, "_rpc_opening_home_key", request)
+	return false # The saved portable owe/deliver CAS completes the spoken effect.
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_opening_home_key(request: Dictionary) -> void:
+	if is_host(): OPENING_HOME_KEY.host_grant(self, multiplayer.get_remote_sender_id(), request)
+
+
+var _home_key_delivery_retry_at: Dictionary = {}
+
+func _request_home_key_delivery(delivery: Dictionary) -> void:
+	var game := _game()
+	if not portal_runtime_ready() or game == null or game.get("local") == null or game.get("world") == null: return
+	var character: String = game.get("local").character_id
+	var id: String = str(delivery.get("delivery_id", ""))
+	var origin: String = str(delivery.get("world_namespace", ""))
+	if id.is_empty() or origin.is_empty() or delivery.get("character_id") != character: return
+	var epoch := _altar_current_epoch()
+	var retry_key := JSON.stringify([character, game.get("world").reward_delivery_namespace, epoch, id])
+	var now := Time.get_ticks_msec()
+	if now < int(_home_key_delivery_retry_at.get(retry_key, 0)): return
+	_home_key_delivery_retry_at[retry_key] = now + 3000
+	var request := OPENING_HOME_KEY.envelope(character, game.get("world").reward_delivery_namespace, epoch)
+	request.delivery_id = id
+	request.origin_namespace = origin
+	if is_host(): OPENING_HOME_KEY.host_reconcile(self, local_peer_id(), request)
+	elif is_active() and handshake_snapshot_applied(): rpc_id(HOST_PEER_ID, "_rpc_home_key_delivery", request)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_home_key_delivery(request: Dictionary) -> void:
+	if is_host(): OPENING_HOME_KEY.host_reconcile(self, multiplayer.get_remote_sender_id(), request)
+
+
+func _home_key_authoritative_owned(peer: int) -> bool:
+	return OPENING_HOME_KEY.authoritative_owned(self, peer)

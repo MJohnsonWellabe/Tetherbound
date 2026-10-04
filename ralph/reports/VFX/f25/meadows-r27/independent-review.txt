@@ -1,0 +1,135 @@
+CODE-BLIND VISUAL JUDGE REPORT - judge-r7 (attack effects, meadow clearing)
+
+Scope: I looked only at the judge-r7 strips and frames and at the docs/reference images (palworld-01..05, moong-01..03, tetherbound-meadows-keyart). Process note: for much of the session the image loader returned "media removed", so many reads came back empty. In the end I saw every A and B strip, and the full-resolution frames for S01A contact, S02A flight/contact/impact, S03B flight, S05A/S05B impact, S08A flight, S10A flight and S12A contact/impact. My earlier full-resolution reads of the other sequences returned nothing. For those sequences, the detail calls below rest on the 2880x1080 strips, which are enough to read the shapes clearly but not the finest texture. I saw palworld-01, -02 and -03, the keyart and moong-02. Palworld-04 and -05 and moong-01 and -03 never loaded.
+
+Cast seen in every sequence: the target on the right is always the same brown and green mossy boar-piglet, about knee-high to the attackers. There are three attackers on the left: a small dark-brown fox kit with orange accents (S01, S05, S10), a large brown bear with glowing violet vein markings (S02, S04, S07), and a raccoon or badger-like creature with a stone-slab back (S03, S06, S08, S09, S11, S12).
+
+======================================================================
+1. IDENTIFICATION (per sequence, judging the better of A and B)
+======================================================================
+
+S01 (fox): fire projectile. One orange, glassy sphere about the size of the fox's head, with a swirl of flame inside it. It appears just in front of the fox's muzzle and flies straight at the boar's snout, trailing a thin, wavy yellow-gold ribbon. Contact: a white-gold star flash at the snout and a thin gold ring on the ground. Impact: a small orange fire puff on the boar's face and a dark scorch decal with an orange rim on the ground. The scorch is still there in the aftermath. A and B agree on the projectile. B has no ring and no scorch.
+
+S05 (fox): the same fire projectile at a larger size. The sphere is bigger and wrapped in loose flame tongues, and its trail is a wider, whiter flame streak. B contact: a large white star flash and a gold ground ring. B impact: a large orange and amber fire burst, taller than the boar, with ember specks, over a big scorch decal. The scorch remains in the aftermath. A disagrees at impact: its burst is a brown-olive smoke cloud with no scorch, and its aftermath is empty.
+
+S10 (fox): the same fire projectile at its smallest. A small gold orb, barely flame-shaped, which reads almost like a coin, with a short yellow streak. Contact: a small star flash and a gold ring. Impact: a small flame lick at the snout and a scorch decal, which is still there in the aftermath. B is weaker, with no ring and only a faint yellow puff.
+
+S02 (bear): lightning strike from the sky. The bear does not throw anything. At launch only a tiny white sparkle appears in front of its nose. In flight, a branching pale-yellow bolt descends from the top of the frame, above and behind the target. Contact: the bolt touches the boar's back, with a bright white star burst there and a white ring around the boar's feet. Impact: a radial spray of thin cream-white crackle lines around the boar's back, wider than the boar, plus pale blue arc lines along the ground under it. The aftermath is clean, with no residue. One body: a thick bolt with many branches.
+
+S04 (bear): the same sky-lightning strike, thinner. One thin bolt with few branches. B contact: a star flash and a ring. Impact: a small tuft of crackle lines and faint ground arcs. A has no contact flash.
+
+S07 (bear): the same sky-lightning strike, thinnest. A very thin single bolt. A contact: a small flash and a ring. Impact: a few sparks and small ground arcs. B has no contact flash.
+
+S03 (stone-back): one thrown rock. A single boulder about the size of the attacker's head appears floating beside the attacker's face. It flies on a high arc, up past the tree trunk, then down to the boar's snout. Contact: a star flash and a white ground ring (A). Impact: a cluster of small rock fragments hanging in the air in front of and to the left of the boar, with a tan dust ring on the ground. Aftermath: small pebbles scattered on the ground between the two creatures. In A the rock is brown and earthy. In B it is pale grey and white.
+
+S06 (stone-back): one thrown boulder, larger than in S03. The same arc, contact, impact and aftermath pattern as S03.
+
+S12 (stone-back): one thrown boulder, the largest, roughly as big as the boar's whole body. A at full resolution: the contact frame shows a star flash, a white ring, and a much smaller rock at the boar's face. The impact frame shows about ten fist-sized rock chunks hanging in mid-air between the tree and the boar, with a dust ring and a faint dust haze.
+
+S09 (stone-back): volley of small pebbles. About three pebbles leave the attacker's face, each much smaller than its head, with thin grey streak trails. Contact: a tiny puff at the snout. Impact: a few fragments in the air. Aftermath: scattered fine pebbles. B (brown) is the better rendering here. A is grey.
+
+S08 (stone-back): volley of rocks, medium. Five head-sized rocks fly in a loose cluster on an arc. A at full resolution shows five separate brown rocks, each with a grey streak trail. Contact: a puff and a small ring. Impact: fragments and a dust ring. Aftermath: pebbles. A is brown and better. B is grey.
+
+S11 (stone-back): volley of rocks, largest. Five big rocks fly in a loose clump, each close to the size of the attacker's head or larger. Contact: a flash and a ring. Impact: fragments and a dust ring. Aftermath: pebbles. A is brown and better. B is grey.
+
+In all three element types, the attacker's pose never changes across the five phases: no wind-up, no throw, no recoil. The boar's pose never changes either: no flinch, no knockback, no hit flash on its body.
+
+======================================================================
+2. GROUPING AND STRENGTH ORDER (weakest to strongest)
+======================================================================
+
+Group FIRE (fox fireball): S10 < S01 < S05.
+  What changes: the orb grows from a coin-like gold disc (S10) to a glassy flame sphere (S01) to a flame-wrapped sphere (S05). The trail grows from a short streak to a wavy ribbon to a broad white-gold flame streak. The impact grows from a flame lick to a fire puff to a fire burst taller than the target. The scorch decal grows with each step. The ordering is clear.
+
+Group LIGHTNING (sky bolt onto target): S07 < S04 < S02.
+  What changes: the bolt thickens and gains branches, from a single thread to a few branches to a full branching fork. The contact flash grows, the impact crackle spray grows from a few sparks to a burst wider than the target, and only S02 has visible ground arcs. The ordering is clear.
+
+Group ROCK, single boulder: S03 < S06 < S12.
+  What changes: only the boulder's size, from attacker-head size to target-body size. The contact flash, ring, fragment cluster and dust ring look about the same in all three. Above the projectile itself, I can see little difference in the impact.
+
+Group ROCK, volley: S09 < S08 < S11.
+  What changes: the size of the rocks, from pebbles to head-sized to larger. The number looks similar in S08 and S11 (about five) and fewer in S09 (about three). The impact is similar in all three.
+  The two rock subgroups use the same material, launch point and impact language. They may be one element with two forms (single versus volley), or two moves. I cannot tell from the pictures which.
+
+======================================================================
+3. A/B COMPARISON (per sequence)
+======================================================================
+
+S01: A better. Contact: A has a star flash plus a gold ring, while B has a small flare only. Impact: A shows a fire puff and a scorch decal, while B shows a sooty puff with no decal. Aftermath: A keeps the scorch, B is empty.
+S05: B better. Contact: B has a sharp white star flash and a ring, while A has a soft orange cloud. Impact: B's burst is fire-coloured over a scorch, while A's is a muddy brown-olive smoke cloud that reads as dirt or poison, not fire (S05A-4-impact). Aftermath: B keeps the scorch, A is empty.
+S10: A better. A has a ring and flash at contact and a scorch at impact and aftermath. B has a faint puff only.
+S02: A better. Contact: A has a ring around the boar's feet, B does not. Impact: A has blue ground arcs, B does not. The bolts are near-identical.
+S04: B better. B has the contact flash, ring and ground arcs. A has none of these.
+S07: A better. A has the contact flash, ring and ground arcs. B has none of these.
+S03, S06, S08, S11, S12: A better. A rocks are brown and earthy and read as stone. B rocks are pale grey-white, with a stair-stepped, moire-like surface pattern (clearest at full resolution in S03B-2-flight). They read as untextured placeholder or plaster. A also has the contact star flash and ground ring, and a dust-ring decal at impact. B has neither (S12B contact shows a dust haze only).
+S09: B better, for the same reasons: B is brown, A is grey.
+
+Across all twelve sequences, the better rendering is the one with the contact flash, the ground ring and a persistent decal (scorch or dust ring), and earth-toned rock. A/B is not a fixed treatment: S05, S04 and S09 favour B, the rest favour A.
+
+======================================================================
+4. FULL-BAR CRITIQUE PER GROUP, AGAINST THE PALWORLD REFERENCES
+======================================================================
+
+--- FIRE (best: S05B) ---
+Launch: weak. The orb simply appears in front of the fox's muzzle. There is no mouth glow, no muzzle flash, no wind-up pose, and no ember spray at the attacker (S05B-1-launch, S01A-1-launch, S10A-1-launch).
+Material in flight: partly reads. At full resolution (S10A-2-flight) the orb is a translucent, glossy sphere with a flame swirl inside, so it reads more like a glass marble or bauble than a ball of fire. The S10 orb reads as a gold coin. The trail in S01A-2 and S10A-2 is a thin, wavy yellow ribbon that reads closer to a sparkler or electric streak than to fire. The S05 flame-wrapped orb is the only one that reads as fire.
+Contact vs flight: distinct in S01A, S05B and S10A (star flash plus ring).
+Impact vs contact: distinct in S05B (a fire burst replaces the flash) and in S01A (a fire puff). In S10A it is marginal.
+Aftermath: yes, a scorch decal (S01A-5, S05B-5, S10A-5). This is the strongest part of the group.
+Target silhouette: S05B-4-impact covers the boar's face and front quarter, but its outline still reads. The other sequences do not obscure the target.
+Scale: reasonable relative to the creatures.
+Artefacts: the ground ring at contact is a thin, flat, hard-edged circle laid on the grass, and it reads like a UI target marker more than an effect (S01A-3-contact). The scorch decal has a clean elliptical edge that looks like a stamp. The boar shows no hit reaction at all (S05B-4, S01A-4).
+Verdict for S05B: FAIL. The burst and scorch are close to the bar. It fails because the launch has no source or anticipation on the attacker, the flying orb reads as a glass bauble with a ribbon trail rather than fire, and the target does not react, so the hit has no weight. Palworld-01 and -03 show dense additive sparks, motion streaks and hits landing on the body. Here the hit sits in front of an unmoving target.
+
+--- LIGHTNING (best: S02A) ---
+Launch: does not read at the attacker. A tiny white sparkle at the bear's nose (S02A-1-launch) is the only link, and nothing connects the bear to the sky bolt: no charge-up on its violet veins, no upward arc, no cloud. A viewer cannot tell from the frames that the bear caused the strike.
+Material in flight: reads as lightning. In S02A-2-flight the bolt is a pale cream-yellow branching shape. It is low in saturation and contrast against the bright sky, with flat ribbon-like branches, and the upper branches overlap the tree canopy on the right. Lightning normally reads hotter (white core, saturated glow, a bloom halo). Here it looks drawn on with chalk. The S04 and S07 bolts are very thin and easy to miss.
+Contact vs flight: distinct in S02A-3-contact. The bolt touches the boar's back with a bright white starburst and a ring. This is the best contact moment in the whole set.
+Impact vs contact: distinct. In S02A-4-impact the bolt is gone and a radial spray of thin, straight, cream lines bursts from the boar's back, with blue ground arcs. But the spray lines are uniform-width, straight strokes that read as straw or scratches, not electrical arcs. They also extend over the rock behind the boar and past the right tree.
+Aftermath: none. S02A-5 is clean: no lingering sparks, no scorch, no smoke.
+Target silhouette: not obscured.
+Scale: the S02 bolt is large and appropriate. S04 and S07 are too thin to carry at gameplay distance.
+Artefacts: flat card-like branches in the descending bolt. The contact ring is a hard-edged white circle (S02A-3). No hit reaction on the boar.
+Verdict for S02A: FAIL. The contact moment is good. It fails on the missing link from the attacker, a pale, low-energy bolt colour, an impact spray that reads as straight hairline strokes, and an empty aftermath.
+
+--- ROCK, single boulder (best: S12A) ---
+Launch: the boulder appears floating next to the attacker's head (S03A-1, S06A-1, S12A-1), with no lifting, tearing up of the ground, or throw pose. A faint ground ring under the attacker in S03A-1 and S06A-1 is the only launch cue.
+Material in flight: A reads as brown stone. B does not (grey moire placeholder look, S03B-2-flight). The flight arc goes very high, up level with the tree trunk and above the target's head height, with only a thin grey streak behind it.
+Contact vs flight: distinct as a moment (a star flash plus a ring), but it breaks continuity. In S12A-3-contact the object at the boar's face is a much smaller rock than the target-sized boulder that was in flight. The big boulder seems to swap for a small one or shrink, so it never visibly hits.
+Impact vs contact: distinct, but wrong in placement. In S12A-4-impact about ten fragments hang motionless in mid-air between the tree and the boar, in front of and above the target, not breaking off the target or falling. They read as floating pieces. A tan dust ring decal sits on the ground.
+Aftermath: pebbles lie scattered on the ground between the two creatures, a long way short of the target (S03A-5, S06A-5). The debris ended up where the rock did not land.
+Target silhouette: not obscured.
+Scale: S12 is large, but the size is lost at contact (see above).
+Artefacts: the projectile swap, floating fragments, debris landing away from the impact point, the grey placeholder material in B, and no hit reaction.
+Verdict for S12A: FAIL. A heavy boulder needs weight at the moment of hit: a crash on the body, the target knocked or staggered, dust kicked up from the ground at the target. Instead the boulder shrinks, freezes as debris in mid-air, and the target does not move.
+
+--- ROCK, volley (best: S11A; for S09, B) ---
+Launch: as above, the rocks simply appear in front of the attacker's face.
+Material in flight: in the brown versions, the separate rocks with streak trails read as thrown stones (S08A-2-flight, full resolution). This is the best flight read in the rock groups. The trails are thin grey wisps and the rocks have no rotation blur.
+Contact vs flight: the contact is a small puff at the snout and is easy to miss. In S08 the five rocks reduce to one small puff, so the volley does not land as five hits.
+Impact vs contact: fragments in the air and a dust ring. Same issues as the single boulder: floating fragments, and debris landing in front of the target.
+Aftermath: scattered pebbles between the creatures.
+Target silhouette: not obscured.
+Scale: S09 pebbles are too small to read at this camera distance.
+Artefacts: grey placeholder material in S08B, S11B and S09A. No hit reaction.
+Verdict for S11A: FAIL. The flight is believable. It fails because contact and impact do not show several rocks striking, the debris floats, and the target does not react.
+
+======================================================================
+5. THE THREE THINGS THAT MOST SEPARATE THESE FRAMES FROM THE REFERENCES (ranked)
+======================================================================
+
+1. Nothing reacts. Attackers hold the same pose from launch to aftermath, and the boar never flinches, staggers, flashes or gets knocked back. Effects play in front of static models. In palworld-01 the hit sparks land on a creature mid-motion, and the impact reads through the body. Clearest example: S12A-4-impact, where a target-sized boulder hits and the boar is unchanged.
+
+2. Effects are thin, pale and low in energy. Palworld effects are dense, saturated and additive, with many sparks, bright streaks and bloom. Here they are single strokes. The cream-yellow lightning in S02A-2-flight looks chalk-drawn against the sky. The hairline crackle in S02A-4-impact reads as straw. The fire trail in S10A-2-flight is a thin ribbon, and the fireball reads as a glass bauble.
+
+3. Physical continuity breaks in the earth moves. The flying boulder turns into a smaller rock at contact (S12A-3-contact), fragments hang frozen in the air in front of the target (S12A-4-impact), and the leftover pebbles land midway between the creatures (S03A-5, S06A-5). The grey placeholder rock material in every B rock sequence (S03B-2-flight) adds to this.
+
+======================================================================
+6. SCENE
+======================================================================
+
+Does the clearing belong to the tetherbound-meadows-keyart world? No. The keyart shows rolling hills, dense oak groves, streams, wildflowers and depth layered to distant mountains. This clearing is a flat, endless green plane that meets a flat grey haze band at the horizon, with three isolated trees, two rocks and scattered grass tufts. There are no hills, path, flowers or background landmark. The creature and foliage styling broadly fits the palette, but the space reads as a test arena.
+
+Would someone shown these beside the Palworld references say they are the same kind of game? No. The creatures read as the right genre: stylised, readable and appealing, especially the bear and the stone-back. But the empty, flat ground with a horizon cut, sparse props, no ground variation or flowers, and static, low-energy effects put it at prototype level next to palworld-02 and -03.
+
+End of report.

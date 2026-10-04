@@ -50,6 +50,10 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			return FLUID.rolling_wave(size, profile)
 		"ice_crystal":
 			return FLUID.ice_crystal(size, profile)
+		"splash_crown":
+			return FLUID.splash_crown(size, profile)
+		"spark":
+			return spark(size, profile)
 		"stone":
 			return stone(size, profile)
 		"flame_orb", "fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam":
@@ -170,12 +174,13 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("trail", kind == "soft_trail")
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.1)))
 		return out
-	if kind in ["water_stream", "rolling_wave"]:
+	if kind in ["water_stream", "rolling_wave", "splash_crown"]:
 		out.shader = FLOW_SHADER
 		out.set_shader_parameter("water_colour", colour)
 		out.set_shader_parameter("foam_colour", Color(str(profile.get("foam_colour", "#d1edf2"))))
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.76)))
-		out.set_shader_parameter("wave", kind == "rolling_wave")
+		out.set_shader_parameter("wave", kind in ["rolling_wave", "splash_crown"])
+		out.set_shader_parameter("splash", kind == "splash_crown")
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.0)))
 		return out
 	if kind == "ice_crystal":
@@ -225,6 +230,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("dust", kind in ["soft_dust", "soft_foam", "mist_cone"] or bool(profile.get("dust", false)))
 		out.set_shader_parameter("effect_mode", 1 if kind in ["soft_trail", "flame_volume", "mist_cone"] else (2 if kind in ["fire_bloom", "soft_dust", "soft_foam"] else (3 if kind == "soft_ember" else 0)))
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.4)))
+		out.set_shader_parameter("brightness", float(profile.get("brightness", 1.0)))
 		return out
 	if kind == "stone":
 		out.shader = STONE_SHADER
@@ -235,6 +241,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("surface_scale", float(profile.get("surface_scale", 1.35)))
 		out.set_shader_parameter("texture_blend", float(profile.get("texture_blend", 0.52)))
 		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.88)))
+		out.set_shader_parameter("grain_strength", float(profile.get("grain_strength", 1.0)))
 		return out
 	return material(colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
 
@@ -274,11 +281,32 @@ static func _uv_quad(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3, d:
 		mesh.surface_set_color(Color.WHITE)
 		mesh.surface_add_vertex(points[i])
 
+## A narrow diamond along +Z for velocity-stretched glowing sparks.
+static func spark(size: float, profile: Dictionary = {}) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	var half := size * 0.5
+	var w := size * float(profile.get("spark_width_ratio", 0.16))
+	var tip := Vector3(0, 0, half)
+	var tail := Vector3(0, 0, -half)
+	var ring: Array[Vector3] = [Vector3(w, 0, 0), Vector3(0, w, 0), Vector3(-w, 0, 0), Vector3(0, -w, 0)]
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in 4:
+		var a := ring[i]
+		var b := ring[(i + 1) % 4]
+		_triangle(mesh, tip, a, b)
+		_triangle(mesh, tail, b, a)
+	mesh.surface_end()
+	return mesh
+
 ## Irregular geological chunks with face normals, not smoothly shaded balls.
 static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
 	var mesh := ImmediateMesh.new()
 	var segments := int(profile.get("segments", 12))
 	var rings := int(profile.get("rings", 7))
+	# 0 keeps one flat normal per facet; higher values blend each vertex
+	# normal toward the radial direction so shading and the triplanar
+	# surface flow across facets instead of banding facet by facet.
+	var smoothing := clampf(float(profile.get("stone_smoothing", 0.0)), 0.0, 1.0)
 	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	for y in rings:
 		for x in segments:
@@ -286,10 +314,26 @@ static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
 			var b := _stone_point(x + 1, y, segments, rings, size)
 			var c := _stone_point(x + 1, y + 1, segments, rings, size)
 			var d := _stone_point(x, y + 1, segments, rings, size)
-			_triangle(mesh, a, b, c)
-			_triangle(mesh, a, c, d)
+			if smoothing > 0.0:
+				_stone_triangle(mesh, a, b, c, smoothing)
+				_stone_triangle(mesh, a, c, d, smoothing)
+			else:
+				_triangle(mesh, a, b, c)
+				_triangle(mesh, a, c, d)
 	mesh.surface_end()
 	return mesh
+
+static func _stone_triangle(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3, smoothing: float) -> void:
+	var face := (b - a).cross(c - a)
+	if face.length_squared() < 0.000001: return
+	if face.dot(a + b + c) < 0.0:
+		var swap := b; b = c; c = swap
+		face = -face
+	face = face.normalized()
+	for point: Vector3 in [a, b, c]:
+		mesh.surface_set_normal(face.lerp(point.normalized(), smoothing).normalized())
+		mesh.surface_set_color(Color.WHITE)
+		mesh.surface_add_vertex(point)
 
 static func _stone_point(x: int, y: int, segments: int, rings: int, size: float) -> Vector3:
 	var latitude := PI * float(y) / float(rings)

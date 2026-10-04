@@ -1,0 +1,11 @@
+{
+  "ref": "main",
+  "inputs": {
+    "script": "tests/smoke_four_biome_continuous.gd",
+    "args": "--through-tournament --world-seed=4 --no-checkpoints --fight-log",
+    "checkout_ref": "38b655d684d4da586a964fae933a516b448e0b27",
+    "label": "f17-earned-m1-r7",
+    "timeout_minutes": "60",
+    "mode": "headless"
+  }
+}

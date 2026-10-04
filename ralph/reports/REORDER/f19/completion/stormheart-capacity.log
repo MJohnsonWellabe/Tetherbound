@@ -1,0 +1,69 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+F19 STORMHEART CAPACITY CASE {"case":"refuse-at-prompt","failures":[],"party":["creature-7c2803945bc3c495c96b784e773ca132","creature-f56591de872e6fe5ff01e60b02165764","creature-9aa4bb9690e4529b3bf460a2cdb70b48","creature-e7c497a5d828cc60be8ca1ceac60e983","creature-084a9cf707f1030c8893bb679e6214f1"],"pending":false}
+F19 STORMHEART CAPACITY CASE {"case":"accept-let-newcomer-go","failures":["declined pending newcomer never marks portable acceptance","character sends exactly its original decision to host stub"],"party":["creature-8296a2ef71fe45b73110ee3dcf301546","creature-6ccc064f85433ffcfe8d3afb2ed2c0f1","creature-810b8114845e68aa922658c455350d26","creature-fd2ce5dffb6cbe175b1d05acaaf5d056","creature-df290cd5c204690ad1ab303a68297624"],"pending":false}
+F19 STORMHEART CAPACITY CASE {"case":"accept-release-owned-holder","failures":["declined pending newcomer never marks portable acceptance","character sends exactly its original decision to host stub","kept Stormheart occupies the chosen holder with exactly five owned","other owned identity survives at holder1","other owned identity survives at holder2","other owned identity survives at holder3","other owned identity survives at holder4","keeping newcomer records portable acceptance","character sends exactly its original decision to host stub"],"party":["creature-fcebda48f8d73ad5a10c6e41cf302606","creature-c789495c99019469f7fda50ab5427aeb","creature-ba86ae03d7953009c89165a795782df1","creature-56c2ec32d19c976a9dcf1318d93b8abd","creature-1c1e933935476387ea3a9020db20489d"],"pending":false}
+ERROR: FAIL: declined pending newcomer never marks portable acceptance
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: character sends exactly its original decision to host stub
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: kept Stormheart occupies the chosen holder with exactly five owned
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: other owned identity survives at holder1
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: other owned identity survives at holder2
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: other owned identity survives at holder3
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: other owned identity survives at holder4
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: keeping newcomer records portable acceptance
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+ERROR: FAIL: character sends exactly its original decision to host stub
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _finish (res://tests/smoke_stormwood_stormheart_choice.gd:421)
+       [1] _run (res://tests/smoke_f19_stormheart_capacity.gd:69)
+       [2] _unmount (res://tests/smoke_stormwood_stormheart_choice.gd:335)
+       [3] _frames (res://tests/smoke_f19_stormheart_capacity.gd:92)
+STORMWOOD STORMHEART CHOICE FAILED: 77 assertions, 9 failures

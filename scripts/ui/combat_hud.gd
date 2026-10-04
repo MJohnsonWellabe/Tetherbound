@@ -61,6 +61,11 @@ const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 const PARTY_STRIP := preload("res://scripts/ui/party_strip.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const HIT_FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
+## F21 world-space damage numbers, oldest first. Read by
+## `presentation_observer.gd`, which identifies each receipt's new label here.
+var _damage_numbers: Array[Label] = []
+var _number_layer: Control = null
 var _world_presentation_mode := "exploration"
 
 ## The orb cluster's fallback icon/id (spec §10.4), used only if the combat
@@ -362,6 +367,8 @@ func _ready() -> void:
 		_manager.connect("creature_switched", _on_creature_switched)
 		_manager.connect("orb_shook", _on_orb_shook)
 		_manager.connect("staggered", _on_staggered)
+		if _manager.has_signal("impact_confirmed"):
+			_manager.connect("impact_confirmed", _on_impact_confirmed)
 	_show_fight(false)
 
 
@@ -547,6 +554,7 @@ func _process(delta: float) -> void:
 	if _world_presentation_mode == "relays":
 		relinquish_result_presentation()
 		return
+	_tick_damage_numbers(delta)
 	_tick_outcome(delta)
 	_tick_xp(delta)
 	_tick_go_text(delta)
@@ -1403,6 +1411,123 @@ func _tick_go_text(delta: float) -> void:
 		_go_text.text = ""
 		return
 	_go_left -= delta
+
+
+## --- F21 damage numbers (COMBAT §11, UX §18) ---------------------------------
+##
+## One label per confirmed receipt, born on the visible contact (the manager
+## emits `impact_confirmed` on arrival, never before), rising from the target's
+## rendered top and fading over `numbers.duration_seconds`. Styles come from
+## `hit_feedback.number_style`: crit gold and larger, super-effective larger
+## with the move's type-colour outline, resisted smaller and grey, own creature
+## 0.85x, peers 60% opacity at 0.8x. Hits on one target within
+## `numbers.merge_seconds` merge into one number. Presentation only.
+func _number_config() -> Dictionary:
+	return HIT_FEEDBACK.config().get("numbers", {})
+
+
+func _on_impact_confirmed(on_enemy: bool, receipt: Dictionary, where: Vector3) -> void:
+	var cfg := _number_config()
+	if not bool(cfg.get("enabled", true)) or not where.is_finite(): return
+	var mode := MOTION_PREFS.damage_numbers_mode()
+	if mode == "off" or (mode == "own" and not bool(receipt.get("own_hit", true))): return
+	var applied := float(receipt.get("applied_damage", receipt.get("damage", 0.0)))
+	var key := "%s|%s|%s" % [on_enemy, str(receipt.get("target_uid", "")), bool(receipt.get("own_hit", true))]
+	var now := Time.get_ticks_msec()
+	var merge_ms := int(round(maxf(0.0, float(cfg.get("merge_seconds", 0.15))) * 1000.0))
+	for label: Label in _damage_numbers:
+		if not is_instance_valid(label) or str(label.get_meta("merge_key", "")) != key \
+				or now - int(label.get_meta("born_ms", 0)) > merge_ms:
+			continue
+		var prior: Dictionary = label.get_meta("receipt", {})
+		var merged := receipt.duplicate()
+		merged["applied_damage"] = float(prior.get("applied_damage", 0.0)) + applied
+		# The stronger class wins a merge, so a crit inside a burst still reads.
+		if _number_class_rank(prior) > _number_class_rank(receipt):
+			merged["critical"] = prior.get("critical", false)
+			merged["type_mult"] = prior.get("type_mult", 1.0)
+			merged["move_id"] = prior.get("move_id", "")
+		_style_number(label, merged, on_enemy)
+		return
+	if _number_layer == null:
+		_number_layer = Control.new()
+		_number_layer.name = "DamageNumbers"
+		_number_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_number_layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+		add_child(_number_layer)
+	while _damage_numbers.size() >= maxi(1, int(cfg.get("max_live", 12))):
+		var oldest: Label = _damage_numbers.pop_front()
+		if is_instance_valid(oldest): oldest.queue_free()
+	var number := Label.new()
+	number.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	number.set_meta("merge_key", key)
+	number.set_meta("born_ms", now)
+	number.set_meta("age", 0.0)
+	number.set_meta("world", where)
+	var first := receipt.duplicate()
+	first["applied_damage"] = applied
+	_style_number(number, first, on_enemy)
+	_number_layer.add_child(number)
+	_damage_numbers.append(number)
+	_place_number(number, 0.0, _number_camera(), cfg)
+
+
+func _number_camera() -> Camera3D:
+	var viewport := get_viewport()
+	return viewport.get_camera_3d() if viewport != null else null
+
+
+static func _number_class_rank(receipt: Dictionary) -> int:
+	return ["resisted", "ordinary", "effective", "critical"].find(HIT_FEEDBACK.style_key(receipt))
+
+
+func _style_number(label: Label, receipt: Dictionary, on_enemy: bool) -> void:
+	var cfg := _number_config()
+	var style := HIT_FEEDBACK.number_style(receipt, on_enemy)
+	label.set_meta("receipt", receipt)
+	label.set_meta("opacity", float(style.get("opacity", 1.0)))
+	label.text = str(style.get("text", ""))
+	label.add_theme_font_size_override("font_size", int(style.get("font_px", 22)))
+	label.add_theme_color_override("font_color", Color(str(style.get("colour", "#f2f0df"))))
+	var outline := Color(str(style.get("outline", "#151c23")))
+	var move_type := _move_type(str(receipt.get("move_id", "")), "") if _moves != null else ""
+	if HIT_FEEDBACK.style_key(receipt) == "effective" and not move_type.is_empty():
+		outline = _type_color(move_type)
+	label.add_theme_color_override("font_outline_color", outline)
+	label.add_theme_constant_override("outline_size", int(cfg.get("outline_px", 3)))
+	label.size = label.get_minimum_size()
+
+
+func _place_number(label: Label, t: float, camera: Camera3D, cfg: Dictionary) -> void:
+	var world: Vector3 = label.get_meta("world", Vector3.ZERO)
+	if camera == null or camera.is_position_behind(world):
+		label.visible = false
+		return
+	label.visible = true
+	var screen := camera.unproject_position(world)
+	label.position = screen - Vector2(label.size.x * 0.5, label.size.y + float(cfg.get("rise_px", 56)) * t)
+	var hold := clampf(float(cfg.get("hold_fraction", 0.4)), 0.0, 0.95)
+	var fade := 1.0 if t <= hold else 1.0 - (t - hold) / (1.0 - hold)
+	label.modulate.a = float(label.get_meta("opacity", 1.0)) * clampf(fade, 0.0, 1.0)
+
+
+func _tick_damage_numbers(delta: float) -> void:
+	if _damage_numbers.is_empty(): return
+	var cfg := _number_config()
+	var duration := maxf(0.05, float(cfg.get("duration_seconds", 0.8)))
+	var camera := _number_camera()
+	for i: int in range(_damage_numbers.size() - 1, -1, -1):
+		var label := _damage_numbers[i]
+		if not is_instance_valid(label):
+			_damage_numbers.remove_at(i)
+			continue
+		var age := float(label.get_meta("age", 0.0)) + delta
+		label.set_meta("age", age)
+		if age >= duration:
+			_damage_numbers.remove_at(i)
+			label.queue_free()
+			continue
+		_place_number(label, age / duration, camera, cfg)
 
 
 ## --- moments (signal-driven) -------------------------------------------------

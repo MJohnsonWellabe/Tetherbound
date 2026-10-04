@@ -27,9 +27,9 @@
   },
 
   "_comment_burst_keys": "`heat` is how white-hot a particle is born before cooling to its tint (0 none, 1 fully white at birth); `halo` the opacity of a darker, larger disc drawn behind each mote so it keeps an edge on bright ground (0 off). Shared by hit_spark, ko_puff and catch_burst (all scripts/vfx/vfx_burst.gd): `up_bias` tilts every particle's direction upward before normalising (0 isotropic, 1 mostly up); `grow` is how much a particle swells over its life (0 none, 1.2 more than doubles); `alpha` the peak opacity; `core_*` the bright flash at the origin that dies fast.",
-  "_comment_hit_spark": "The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
+  "_comment_hit_spark": "OFF by owner decision (2026-10-04): the shared spray read as a grey-brown haze burying every hit, and each move's own impact (move_library) now carries the contact. The block stays so the switch is data-only. The spark: a spray of bright motes and streaks thrown out from the point of contact, falling under gravity and fading. Lives longer than combat.json's 0.26s ring on purpose -- the ring says 'contact', the spray is what is still on screen a third of a second later. `count` is per burst; `speed` metres/second; `spread_degrees` the cone around the camera plane the sprays leave in; `size` the mote radius in metres; `streak_fraction` how many of them are drawn as elongated streaks along their own motion rather than round motes.",
   "hit_spark": {
-    "enabled": true,
+    "enabled": false,
     "count": 22,
     "duration": 0.65,
     "speed": 7.5,
@@ -152,10 +152,233 @@
     },
     "fallback": "mesh_compatibility",
     "scene_light_cap": 4,
+    "ultimate_overrides": {
+      "ultimate_terrapup": {
+        "archetype": "root_stone_spikes",
+        "count": 6,
+        "size": 0.75,
+        "colour": "#a88a62",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 1.5,
+        "trail": 1.3,
+        "impact_scale": 1.6,
+        "mastery_owner": "f25"
+      },
+      "ultimate_tuskroot": {
+        "archetype": "quake_ring",
+        "count": 1,
+        "size": 1.4,
+        "colour": "#8a6b45",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.8,
+        "mastery_owner": "f25",
+        "presentation_variant": "rootquake"
+      },
+      "ultimate_veridian": {
+        "archetype": "root_stone_spikes",
+        "count": 5,
+        "size": 0.6,
+        "colour": "#5f9e45",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 1.2,
+        "trail": 1.3,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25",
+        "presentation_variant": "living_roots"
+      },
+      "ultimate_ashtusk": {
+        "archetype": "fireball",
+        "count": 3,
+        "size": 0.55,
+        "colour": "#ff7a1f",
+        "arc": 0.3,
+        "speed": 24.0,
+        "spread": 0.6,
+        "trail": 1.3,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_galewisp": {
+        "archetype": "tornado",
+        "count": 1,
+        "size": 1.3,
+        "colour": "#e6f3fb",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "ultimate_solmane": {
+        "archetype": "wind_blade",
+        "count": 5,
+        "size": 0.9,
+        "colour": "#ffd35a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.8,
+        "trail": 1.3,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25",
+        "presentation_variant": "solar_blades"
+      },
+      "ultimate_stormcapra": {
+        "archetype": "sky_lightning",
+        "count": 1,
+        "size": 0.6,
+        "colour": "#cfe8ff",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.6,
+        "mastery_owner": "f25"
+      },
+      "ultimate_fulgocobra": {
+        "archetype": "chain_lightning",
+        "count": 1,
+        "size": 0.55,
+        "colour": "#f5d24a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.6,
+        "mastery_owner": "f25"
+      },
+      "ultimate_stormursa": {
+        "archetype": "sky_lightning",
+        "count": 3,
+        "size": 0.45,
+        "colour": "#9fd0ff",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 1.4,
+        "trail": 1.3,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "_comment": "Owner direction 2026-10-04: signature ultimates draw as big element-true effects (water: a crashing wave or a water ball like the fireball; the other uniques as the owner approved) depending on the move, drawn by this library through ultimate_library.launch. Breakthroughs select the growth tier.",
+      "ultimate_abyssal_guardian": {
+        "archetype": "tidal_wave",
+        "presentation_variant": "great_wave",
+        "count": 1,
+        "size": 1.8,
+        "colour": "#2f86c8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_ripplet": {
+        "archetype": "tidal_wave",
+        "presentation_variant": "great_wave",
+        "count": 1,
+        "size": 1.4,
+        "colour": "#3c9ad8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_current": {
+        "archetype": "tidal_wave",
+        "presentation_variant": "great_wave",
+        "count": 1,
+        "size": 1.3,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_wall": {
+        "archetype": "tidal_wave",
+        "presentation_variant": "great_wave",
+        "count": 1,
+        "size": 1.45,
+        "colour": "#57b6e8",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.6,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_cannonback": {
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
+        "count": 4,
+        "size": 0.55,
+        "colour": "#2470b8",
+        "arc": 0.9,
+        "speed": 22.0,
+        "spread": 0.7,
+        "trail": 1.4,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_charger": {
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
+        "count": 1,
+        "size": 0.85,
+        "colour": "#2470b8",
+        "arc": 0.2,
+        "speed": 22.0,
+        "spread": 0.0,
+        "trail": 1.4,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "ultimate_water_diver": {
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
+        "count": 1,
+        "size": 0.85,
+        "colour": "#2470b8",
+        "arc": 2.2,
+        "speed": 22.0,
+        "spread": 0.0,
+        "trail": 1.4,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      }
+    },
     "archetypes": {
       "stone_throw": {
+        "launch": {
+          "ground": {
+            "style": "dust",
+            "radius_scale": 3.0,
+            "min_m": 0.6,
+            "max_m": 1.8,
+            "duration": 0.6,
+            "colour": "#b09670",
+            "opacity": 0.55,
+            "hold": 0.25,
+            "initial_scale": 0.35,
+            "spread_time": 0.3
+          }
+        },
         "body": {
+          "grain_strength": 0.5,
+          "min_body_size_m": 0.27,
+          "volley_vertical_ratio": 0.3,
           "shape": "stone",
+          "stone_smoothing": 0.62,
           "motion": "projectile",
           "lit": true,
           "opacity": 1.0,
@@ -170,11 +393,11 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "stone_colour": "#aa9981",
-          "mineral_colour": "#d1c1a2",
+          "stone_colour": "#5c4b3b",
+          "mineral_colour": "#9c8566",
           "authored_surface": true,
           "surface_scale": 1.35,
-          "texture_blend": 0.38,
+          "texture_blend": 0.58,
           "surface_roughness": 0.88,
           "volley_separation_scale": 4.2,
           "volley_stagger_m": 0.4
@@ -192,6 +415,52 @@
           "flow_speed": 2.4
         },
         "impact": {
+          "mote_max_growth": 6.0,
+          "mote_reference_scale": 0.5,
+          "stages": {
+            "flash": {
+              "size_scale": 2.0,
+              "min_m": 0.35,
+              "max_m": 1.1,
+              "duration": 0.08,
+              "core_colour": "#fffaf0",
+              "edge_colour": "#e3cb9d",
+              "opacity": 0.65,
+              "streaks": 8,
+              "streak_strength": 0.7
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.0,
+              "min_m": 1.0,
+              "max_m": 3.4,
+              "duration": 0.42,
+              "colour": "#bba57c",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.42,
+              "ring_width": 0.17,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.4,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.5,
+              "colour": "#7a6548",
+              "opacity": 0.8,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2
+            },
+            "mote_linger_seconds": 1.0
+          },
           "shape": "soft_dust",
           "duration": 0.72,
           "grow": 1.55,
@@ -201,8 +470,8 @@
           "card_extent_scale": 2.4,
           "mote_shape": "stone",
           "mote_size": 0.12,
-          "speed": 5.3,
-          "gravity": 13.0,
+          "speed": 6.2,
+          "gravity": 19.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16,
@@ -232,14 +501,14 @@
           "puff_reveal_power": 0.18,
           "visual_anchor": "contact_surface",
           "puff_ground_clearance_scale": 0.79,
-          "puff_backscatter": 1.0,
-          "mote_backscatter": 1.5,
+          "puff_backscatter": 0.5,
+          "mote_backscatter": 0.55,
           "mote_tumble_radians": 8.0,
-          "stone_colour": "#95836d",
-          "mineral_colour": "#bca67d",
+          "stone_colour": "#66543f",
+          "mineral_colour": "#95805f",
           "authored_surface": true,
           "surface_scale": 1.35,
-          "texture_blend": 0.52,
+          "texture_blend": 0.62,
           "surface_roughness": 0.88,
           "accent_count": 7,
           "accent_width_scale": 0.1
@@ -346,9 +615,23 @@
           "colour": "#ffb357",
           "body_range_m": 2.8,
           "body_energy": 1.1,
-          "impact_range_m": 4.0,
-          "impact_energy": 2.1,
+          "impact_range_m": 6.0,
+          "impact_energy": 5.0,
           "flicker": 0.12
+        },
+        "launch": {
+          "flash": {
+            "size_scale": 1.8,
+            "min_m": 0.4,
+            "max_m": 1.2,
+            "duration": 0.16,
+            "core_colour": "#fff3c4",
+            "edge_colour": "#ff7a1f",
+            "opacity": 1.0,
+            "streaks": 6,
+            "streak_strength": 0.45,
+            "forward_scale": 0.6
+          }
         },
         "body": {
           "shape": "burning_core",
@@ -463,14 +746,14 @@
           "card_extent_scale": 3.5,
           "flow_speed": 3.8,
           "surface_scale": 4.8,
-          "deformation": 0.22,
-          "edge_softness": 0.42,
-          "emission_strength": 0.9
+          "deformation": 0.34,
+          "edge_softness": 0.58,
+          "emission_strength": 1.25
         },
         "trail": {
           "style": "painted_flame",
-          "width": 0.64,
-          "opacity": 0.88,
+          "width": 0.86,
+          "opacity": 0.82,
           "wave_amplitude": 0.08,
           "wave_frequency": 1.5,
           "wave_speed": 6.0,
@@ -478,50 +761,96 @@
           "max_length_m": 2.3,
           "flow_speed": 4.0,
           "emission_strength": 0.75,
-          "breakup_strength": 0.72,
+          "breakup_strength": 0.55,
           "hot_colour": "#fff0a8"
         },
         "impact": {
+          "spark_glow": true,
+          "spark_width_ratio": 0.09,
+          "spark_stretch": 0.14,
+          "spark_intensity": 1.0,
+          "spark_core_colour": "#fff3c0",
+          "fade_hold_power": 2.4,
+          "stages": {
+            "glow": {
+              "size_scale": 3.4,
+              "min_m": 0.8,
+              "max_m": 2.6,
+              "duration": 0.55,
+              "core_colour": "#fff1c2",
+              "edge_colour": "#ff6a1a",
+              "opacity": 0.8,
+              "streaks": 0,
+              "streak_strength": 0.0
+            },
+            "flash": {
+              "size_scale": 2.0,
+              "min_m": 0.5,
+              "max_m": 1.4,
+              "duration": 0.11,
+              "core_colour": "#fff8de",
+              "edge_colour": "#ff8a2a",
+              "opacity": 1.0,
+              "streaks": 9,
+              "streak_strength": 0.6
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 2.8,
+              "min_m": 0.8,
+              "max_m": 2.2,
+              "duration": 1.9,
+              "colour": "#2b1d14",
+              "glow_colour": "#ff6a1a",
+              "glow_strength": 2.2,
+              "opacity": 0.88,
+              "hold": 0.65,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.45,
+              "initial_scale": 0.5,
+              "spread_time": 0.15
+            }
+          },
           "shape": "fire_explosion",
           "thermal_aftermath": true,
           "afterburn_strength": 1.0,
-          "afterburn_start": 0.04,
-          "afterburn_end": 0.32,
+          "afterburn_start": 0.3,
+          "afterburn_end": 0.68,
           "afterburn_colour": "#574c40",
           "emission_fade_power": 2.2,
           "afterburn_porosity": 0.55,
           "duration": 0.72,
-          "grow": 1.18,
+          "grow": 2.5,
           "heat": 0.9,
-          "opacity": 0.72,
-          "mote_shape": "soft_ember",
-          "mote_size": 0.07,
-          "speed": 5.4,
-          "gravity": 3.6,
+          "opacity": 0.95,
+          "mote_shape": "spark",
+          "mote_size": 0.32,
+          "speed": 8.5,
+          "gravity": 7.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 24,
           "rings": 12,
           "hot_colour": "#fff0a8",
           "ember_colour": "#85250a",
-          "mote_colour": "#ffd176",
+          "mote_colour": "#ff9a2a",
           "layers": [
             {
               "shape": "fire_explosion",
               "thermal_aftermath": true,
               "afterburn_strength": 1.0,
-              "afterburn_start": 0.04,
-              "afterburn_end": 0.32,
+              "afterburn_start": 0.3,
+              "afterburn_end": 0.68,
               "afterburn_colour": "#574c40",
               "emission_fade_power": 2.2,
               "afterburn_porosity": 0.55,
-              "size_scale": 0.55,
+              "size_scale": 0.85,
               "card_extent_scale": 2.6,
               "colour": "#ff681d",
               "hot_colour": "#ffe39a",
               "ember_colour": "#922409",
-              "opacity": 0.5,
-              "emission_strength": 0.42,
+              "opacity": 0.85,
+              "emission_strength": 1.1,
               "edge_breakup": 0.29,
               "porosity": 0.7,
               "curl_scale": 6.4,
@@ -537,18 +866,18 @@
               "shape": "fire_explosion",
               "thermal_aftermath": true,
               "afterburn_strength": 1.0,
-              "afterburn_start": 0.04,
-              "afterburn_end": 0.32,
+              "afterburn_start": 0.3,
+              "afterburn_end": 0.68,
               "afterburn_colour": "#574c40",
               "emission_fade_power": 2.2,
               "afterburn_porosity": 0.55,
-              "size_scale": 0.63,
+              "size_scale": 0.95,
               "card_extent_scale": 2.6,
               "colour": "#ff932c",
               "hot_colour": "#fff0b8",
               "ember_colour": "#9c2708",
-              "opacity": 0.54,
-              "emission_strength": 0.48,
+              "opacity": 0.88,
+              "emission_strength": 1.15,
               "edge_breakup": 0.24,
               "porosity": 0.66,
               "curl_scale": 5.8,
@@ -559,26 +888,13 @@
                 0.55,
                 -0.12
               ]
-            },
-            {
-              "shape": "soft_dust",
-              "size_scale": 0.4,
-              "card_extent_scale": 2.6,
-              "colour": "#635f59",
-              "opacity": 0.16,
-              "flow_speed": 1.7,
-              "offset": [
-                -0.12,
-                0.88,
-                0.08
-              ]
             }
           ],
           "initial_grow": 0.26,
           "growth_power": 0.42,
           "secondary_shape": "fire_explosion",
           "secondary_rotation_x": 0.0,
-          "mote_end_scale": 0.15,
+          "mote_end_scale": 0.2,
           "card_extent_scale": 2.6,
           "puff_count": 6,
           "puff_shape": "fire_explosion",
@@ -586,8 +902,8 @@
           "target_envelope_scale": 0,
           "puff_start_radius_scale": 0.15,
           "puff_end_radius_scale": 0.85,
-          "puff_size_scale": 0.48,
-          "puff_opacity": 0.42,
+          "puff_size_scale": 0.7,
+          "puff_opacity": 0.8,
           "puff_lift_m": 0.35,
           "puff_grow": 1.05,
           "puff_initial_scale": 0.42,
@@ -598,7 +914,7 @@
           "accent_count": 7,
           "accent_width_scale": 0.1,
           "flow_speed": 3.6,
-          "emission_strength": 0.5,
+          "emission_strength": 0.9,
           "edge_breakup": 0.26,
           "porosity": 0.62,
           "curl_scale": 6.0,
@@ -693,6 +1009,19 @@
         }
       },
       "flame_cone": {
+        "launch": {
+          "flash": {
+            "size_scale": 1.6,
+            "min_m": 0.3,
+            "max_m": 1.0,
+            "duration": 0.2,
+            "core_colour": "#fff3c4",
+            "edge_colour": "#ff7a1f",
+            "opacity": 0.9,
+            "streaks": 6,
+            "streak_strength": 0.4
+          }
+        },
         "body": {
           "shape": "flame_volume",
           "motion": "cone",
@@ -724,27 +1053,61 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "spark_stretch": 0.14,
+          "spark_width_ratio": 0.09,
+          "spark_glow": true,
+          "spark_core_colour": "#fff3c0",
+          "stages": {
+            "flash": {
+              "size_scale": 1.8,
+              "min_m": 0.3,
+              "max_m": 1.2,
+              "duration": 0.1,
+              "core_colour": "#fff8de",
+              "edge_colour": "#ff8a2a",
+              "opacity": 0.8,
+              "streaks": 8,
+              "streak_strength": 0.6
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 3.2,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.8,
+              "colour": "#2b1d14",
+              "glow_colour": "#ff6a1a",
+              "glow_strength": 2.0,
+              "opacity": 0.82,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.6,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "fire_bloom",
           "duration": 0.72,
           "grow": 3.4,
           "heat": 0.0,
           "opacity": 0.93,
-          "mote_shape": "soft_ember",
-          "mote_size": 0.075,
-          "speed": 5.2,
-          "gravity": 3.6,
+          "mote_shape": "spark",
+          "mote_size": 0.3,
+          "speed": 7.0,
+          "gravity": 6.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 24,
           "rings": 12,
           "hot_colour": "#fff0a0",
           "ember_colour": "#a85e05",
-          "mote_colour": "#ffd176",
+          "mote_colour": "#ff9a2a",
           "layers": [],
           "initial_grow": 1.0,
           "secondary_shape": "fire_bloom",
           "secondary_rotation_x": 0.0,
-          "mote_end_scale": 0.15,
+          "mote_end_scale": 0.2,
           "card_extent_scale": 3.6,
           "puff_count": 6,
           "puff_shape": "fire_bloom",
@@ -868,6 +1231,59 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 3.5,
+          "spark_stretch": 0.14,
+          "spark_width_ratio": 0.09,
+          "spark_glow": true,
+          "spark_core_colour": "#fff3c0",
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#fff1c2", "edge_colour": "#ff6a1a", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 2.2,
+              "min_m": 0.3,
+              "max_m": 1.4,
+              "duration": 0.12,
+              "core_colour": "#fff8de",
+              "edge_colour": "#ff8a2a",
+              "opacity": 0.8,
+              "streaks": 8,
+              "streak_strength": 0.6
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 6.0,
+              "min_m": 1.0,
+              "max_m": 3.6,
+              "duration": 0.38,
+              "colour": "#ffbf6a",
+              "glow_colour": "#ff7a1f",
+              "glow_strength": 1.4,
+              "opacity": 0.7,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 3.0,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.8,
+              "colour": "#2b1d14",
+              "glow_colour": "#ff6a1a",
+              "glow_strength": 2.0,
+              "opacity": 0.8,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.0,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "fire_explosion",
           "hot_colour": "#ffeabd",
           "ember_colour": "#8d3d14",
@@ -888,13 +1304,13 @@
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.62,
-          "mote_shape": "soft_ember",
-          "mote_colour": "#ffc97a",
-          "mote_end_scale": 0.12,
+          "mote_shape": "spark",
+          "mote_colour": "#ff8a1f",
+          "mote_end_scale": 0.2,
           "secondary_shape": "fire_explosion",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "mote_size": 0.28,
+          "speed": 7.5,
+          "gravity": 6.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16
@@ -980,12 +1396,44 @@
       "sky_lightning": {
         "light": {
           "enabled": true,
-          "colour": "#fff0bd",
+          "colour": "#d6ecff",
           "body_range_m": 2.4,
           "body_energy": 0.45,
-          "impact_range_m": 3.8,
-          "impact_energy": 2.4,
+          "impact_range_m": 5.5,
+          "impact_energy": 5.0,
           "flicker": 0.04
+        },
+        "launch": {
+          "sky_call": {
+            "height_m": 3.6,
+            "duration": 0.32,
+            "stroke_width_scale": 2.4,
+            "opacity": 1.0,
+            "branch_count": 3,
+            "branch_length_m": 0.5,
+            "core_width": 0.36,
+            "corona_width": 0.9,
+            "corona_opacity": 0.75,
+            "emission_strength": 2.6,
+            "emission_floor": 0.35,
+            "pulse_strength": 0.04,
+            "filament_sway": 0.015,
+            "corona_sway": 0.025,
+            "corona_power": 1.8,
+            "vein_strength": 0.18
+          },
+          "flash": {
+            "size_scale": 4.5,
+            "min_m": 0.35,
+            "max_m": 1.6,
+            "duration": 0.36,
+            "core_colour": "#f4fbff",
+            "edge_colour": "#8fd3ff",
+            "opacity": 1.0,
+            "streaks": 11,
+            "streak_strength": 0.9,
+            "forward_scale": 0.2
+          }
         },
         "body": {
           "shape": "beam",
@@ -1007,21 +1455,21 @@
           "contact_anchor": "target_ground",
           "contact_hold_seconds": 0.22,
           "contact_fade_power": 2.4,
-          "stroke_width_scale": 2.0,
-          "branch_length_m": 0.9,
-          "branch_count": 2,
+          "stroke_width_scale": 5.0,
+          "branch_length_m": 1.4,
+          "branch_count": 4,
           "branch_add_per_rank": 2,
           "branch_down_ratio": 0.5,
           "pulse_strength": 0.04,
-          "core_width": 0.28,
-          "corona_width": 0.74,
-          "corona_opacity": 0.28,
+          "core_width": 0.36,
+          "corona_width": 1.25,
+          "corona_opacity": 0.8,
           "filament_sway": 0.015,
           "corona_sway": 0.025,
           "corona_power": 1.8,
           "vein_strength": 0.18,
-          "emission_floor": 0.15,
-          "emission_strength": 1.25
+          "emission_floor": 0.35,
+          "emission_strength": 3.4
         },
         "trail": {
           "style": "ion",
@@ -1034,21 +1482,85 @@
           "max_length_m": 1.2
         },
         "impact": {
+          "mote_end_scale": 0.2,
+          "spark_stretch": 0.18,
+          "spark_width_ratio": 0.1,
+          "spark_core_colour": "#e8f6ff",
+          "spark_glow": true,
+          "stages": {
+            "glow": {
+              "size_scale": 5.0,
+              "min_m": 0.8,
+              "max_m": 1.6,
+              "duration": 0.4,
+              "core_colour": "#f2fbff",
+              "edge_colour": "#6fc4ff",
+              "opacity": 0.7,
+              "streaks": 0,
+              "streak_strength": 0.0,
+              "toward_source_scale": 0.0
+            },
+            "flash": {
+              "size_scale": 4.0,
+              "min_m": 0.6,
+              "max_m": 1.5,
+              "duration": 0.1,
+              "core_colour": "#ffffff",
+              "edge_colour": "#a6e4ff",
+              "opacity": 1.0,
+              "streaks": 12,
+              "streak_strength": 0.9,
+              "toward_source_scale": 0.0
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 10.0,
+              "min_m": 1.6,
+              "max_m": 4.0,
+              "duration": 0.32,
+              "colour": "#e2f7ff",
+              "glow_colour": "#8fd3ff",
+              "glow_strength": 2.0,
+              "opacity": 0.85,
+              "ring_width": 0.07,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "burn",
+              "toward_source_scale": 0.8,
+              "radius_scale": 8.0,
+              "min_m": 1.4,
+              "max_m": 3.0,
+              "duration": 1.7,
+              "colour": "#1d1918",
+              "glow_colour": "#9fe8ff",
+              "glow_strength": 2.4,
+              "opacity": 0.9,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "crack_count": 9,
+              "initial_scale": 0.4,
+              "spread_time": 0.12
+            }
+          },
           "shape": "electrical_splash",
           "duration": 0.48,
-          "grow": 1.8,
+          "grow": 1.25,
           "heat": 0.6,
           "opacity": 1.0,
-          "mote_shape": "soft_ember",
-          "mote_size": 0.06,
-          "speed": 7.0,
-          "gravity": 7.0,
+          "mote_shape": "spark",
+          "mote_size": 0.55,
+          "speed": 9.0,
+          "gravity": 2.5,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16,
           "rays": 10,
           "ray_width_ratio": 0.055,
-          "mote_colour": "#fff7c1",
+          "mote_colour": "#3f9cff",
           "initial_grow": 0.2,
           "growth_power": 0.5,
           "secondary_shape": "electrical_splash",
@@ -1069,8 +1581,8 @@
           "card_extent_scale": 3.4,
           "visual_anchor": "sky_surface",
           "visual_surface_lift_m": 0.03,
-          "accent_count": 6,
-          "accent_width_scale": 0.34,
+          "accent_count": 10,
+          "accent_width_scale": 0.3,
           "core_width": 0.28,
           "corona_width": 0.74,
           "corona_opacity": 0.28,
@@ -1079,7 +1591,7 @@
           "corona_power": 1.8,
           "vein_strength": 0.18,
           "emission_floor": 0.15,
-          "emission_strength": 1.25
+          "emission_strength": 2.0
         },
         "sound": {
           "launch": "vfx_sky_lightning_launch",
@@ -1165,6 +1677,19 @@
         }
       },
       "chain_lightning": {
+        "launch": {
+          "flash": {
+            "size_scale": 3.0,
+            "min_m": 0.3,
+            "max_m": 1.2,
+            "duration": 0.24,
+            "core_colour": "#f4fbff",
+            "edge_colour": "#8fd3ff",
+            "opacity": 1.0,
+            "streaks": 11,
+            "streak_strength": 0.9
+          }
+        },
         "body": {
           "shape": "beam",
           "motion": "chain",
@@ -1191,15 +1716,58 @@
           "wave_speed": 6.0
         },
         "impact": {
-          "shape": "orb",
+          "emission_strength": 2.0,
+          "ray_width_ratio": 0.055,
+          "rays": 10,
+          "secondary_shape": "electrical_splash",
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 2.5,
+          "mote_colour": "#3f9cff",
+          "mote_end_scale": 0.2,
+          "spark_stretch": 0.18,
+          "spark_width_ratio": 0.1,
+          "spark_glow": true,
+          "spark_core_colour": "#e8f6ff",
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#f2fbff", "edge_colour": "#6fc4ff", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 3.0,
+              "min_m": 0.3,
+              "max_m": 1.3,
+              "duration": 0.1,
+              "core_colour": "#ffffff",
+              "edge_colour": "#a6e4ff",
+              "opacity": 0.8,
+              "streaks": 12,
+              "streak_strength": 0.9
+            },
+            "mark": {
+              "style": "burn",
+              "radius_scale": 6.0,
+              "min_m": 0.9,
+              "max_m": 2.2,
+              "duration": 1.4,
+              "colour": "#1d1918",
+              "glow_colour": "#9fe8ff",
+              "glow_strength": 2.2,
+              "opacity": 0.85,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 1.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 8
+            }
+          },
+          "shape": "electrical_splash",
           "duration": 0.42,
           "grow": 1.8,
-          "heat": 0.35,
-          "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "heat": 0.6,
+          "opacity": 1.0,
+          "mote_shape": "spark",
+          "mote_size": 0.45,
+          "speed": 9.0,
+          "gravity": 2.5,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16
@@ -1320,23 +1888,89 @@
           "wave_speed": 6.0
         },
         "impact": {
-          "shape": "soft_foam",
-          "duration": 0.42,
-          "grow": 1.8,
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 3.0,
+          "mote_colour": "#8fd4ff",
+          "mote_end_scale": 0.35,
+          "spark_stretch": 0.12,
+          "spark_width_ratio": 0.1,
+          "spark_glow": false,
+          "spark_core_colour": "#ffffff",
+          "fade_hold_power": 2.2,
+          "growth_power": 0.5,
+          "initial_grow": 0.2,
+          "puff_brightness": 1.3,
+          "foam_colour": "#f4fdff",
+          "crown_taper": 0.55,
+          "crown_petals": 12,
+          "crown_rows": 6,
+          "crown_gap": 0.08,
+          "crown_height_ratio": 1.5,
+          "crown_flare_ratio": 1.3,
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#ffffff", "edge_colour": "#8fd3ff", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 1.8,
+              "min_m": 0.3,
+              "max_m": 1.1,
+              "duration": 0.1,
+              "core_colour": "#f4fcff",
+              "edge_colour": "#8fd0ec",
+              "opacity": 0.6,
+              "streaks": 6,
+              "streak_strength": 0.4
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 4.5,
+              "min_m": 1.0,
+              "max_m": 2.6,
+              "duration": 0.38,
+              "colour": "#d6f1fb",
+              "glow_colour": "#57b6e8",
+              "glow_strength": 0.4,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.2,
+              "min_m": 0.7,
+              "max_m": 2.2,
+              "duration": 1.8,
+              "colour": "#344a3a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.6,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.4,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
+          "shape": "splash_crown",
+          "duration": 0.85,
+          "grow": 1.2,
           "heat": 0.35,
-          "opacity": 0.82,
-          "mote_shape": "bubble",
-          "mote_size": 0.055,
-          "speed": 4.5,
-          "gravity": 10.0,
+          "opacity": 0.94,
+          "mote_shape": "spark",
+          "mote_size": 0.3,
+          "speed": 7.5,
+          "gravity": 14.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16,
           "secondary_shape": "soft_foam",
-          "puff_count": 8,
+          "puff_count": 3,
           "puff_shape": "soft_foam",
-          "puff_colour": "#d1e8ee",
-          "puff_opacity": 0.55,
+          "puff_colour": "#ffffff",
+          "puff_opacity": 0.4,
           "puff_at_ground": false,
           "puff_radius_scale": 1.5,
           "target_envelope_scale": 0.5,
@@ -1423,6 +2057,166 @@
         }
       },
       "bubble_volley": {
+        "presentation_variants": {
+          "water_ball": {
+            "body": {
+              "volley_separation_scale": 3.6,
+              "volley_stagger_m": 1.1,
+              "volley_vertical_ratio": 0.3,
+              "shape": "bubble",
+              "surface_material": "water_stream",
+              "foam_colour": "#f4fdff",
+              "opacity": 0.94,
+              "flow_speed": 3.4,
+              "lit": true,
+              "layers": [
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 1.35,
+                  "card_extent_scale": 2.6,
+                  "colour": "#dff6ff",
+                  "opacity": 0.55,
+                  "flow_speed": 2.6,
+                  "spin_rate": 1.4,
+                  "offset": [
+                    0,
+                    0.05,
+                    0
+                  ]
+                },
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 1.0,
+                  "card_extent_scale": 2.4,
+                  "colour": "#bfe8fb",
+                  "opacity": 0.5,
+                  "flow_speed": 3.0,
+                  "spin_rate": -1.1,
+                  "yaw_offset_deg": 60,
+                  "offset": [
+                    -0.35,
+                    0.1,
+                    0.08
+                  ]
+                }
+              ]
+            },
+            "trail": {
+              "style": "foam",
+              "width": 0.7,
+              "opacity": 0.72,
+              "colour": "#d8f3ff",
+              "wave_amplitude": 0.1,
+              "wave_frequency": 2.5,
+              "wave_speed": 6.0,
+              "sample_spacing_m": 0.12,
+              "max_length_m": 2.4
+            },
+            "impact": {
+              "crown_taper": 0.5,
+              "crown_flare_ratio": 1.6,
+              "crown_height_ratio": 1.8,
+              "mote_colour": "#eaf8ff",
+              "flow_speed": 3.0,
+              "foam_colour": "#f4fdff",
+              "crown_gap": 0.16,
+              "crown_rows": 6,
+              "crown_petals": 10,
+              "puff_brightness": 1.3,
+              "shape": "splash_crown",
+              "duration": 0.8,
+              "grow": 1.7,
+              "initial_grow": 0.2,
+              "growth_power": 0.5,
+              "fade_hold_power": 2.2,
+              "heat": 0.1,
+              "opacity": 0.94,
+              "card_extent_scale": 2.6,
+              "layers": [],
+              "mote_shape": "orb",
+              "mote_size": 0.07,
+              "speed": 6.5,
+              "gravity": 14.0,
+              "mote_backscatter": 0.3,
+              "settle_on_ground": false,
+              "puff_count": 3,
+              "puff_shape": "soft_foam",
+              "puff_colour": "#ffffff",
+              "puff_radius_scale": 1.0,
+              "target_envelope_scale": 0,
+              "puff_start_radius_scale": 0.3,
+              "puff_end_radius_scale": 1.7,
+              "puff_size_scale": 0.3,
+              "puff_opacity": 0.6,
+              "puff_lift_m": 0.5,
+              "puff_grow": 1.6,
+              "puff_initial_scale": 0.4,
+              "puff_reveal_power": 0.2,
+              "puff_backscatter": 0.4,
+              "visual_anchor": "contact_surface",
+              "stages": {
+                "flash": {
+                  "size_scale": 2.0,
+                  "min_m": 0.5,
+                  "max_m": 0.8,
+                  "duration": 0.1,
+                  "core_colour": "#ffffff",
+                  "edge_colour": "#9fdcf5",
+                  "opacity": 0.45,
+                  "streaks": 8,
+                  "streak_strength": 0.4
+                },
+                "shockwave": {
+                  "style": "shockwave",
+                  "radius_scale": 5.5,
+                  "min_m": 1.2,
+                  "max_m": 3.8,
+                  "duration": 0.45,
+                  "colour": "#d6f1fb",
+                  "glow_colour": "#57b6e8",
+                  "glow_strength": 0.4,
+                  "opacity": 0.35,
+                  "ring_width": 0.14,
+                  "lift_m": 0.035,
+                  "hold": 0.0,
+                  "fade_in": 0.02,
+                  "initial_scale": 1.0
+                },
+                "mark": {
+                  "style": "dust",
+                  "radius_scale": 3.4,
+                  "min_m": 0.9,
+                  "max_m": 2.6,
+                  "duration": 1.9,
+                  "colour": "#344a3a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.62,
+                  "hold": 0.6,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.4,
+                  "initial_scale": 0.5,
+                  "spread_time": 0.2,
+                  "crack_count": 7
+                }
+              }
+            },
+            "launch": {
+              "flash": {
+                "size_scale": 1.6,
+                "min_m": 0.35,
+                "max_m": 1.0,
+                "duration": 0.16,
+                "core_colour": "#ffffff",
+                "edge_colour": "#9fdcf5",
+                "opacity": 0.8,
+                "streaks": 6,
+                "streak_strength": 0.35,
+                "forward_scale": 0.5
+              }
+            }
+          }
+        },
         "body": {
           "shape": "bubble",
           "motion": "projectile",
@@ -1456,6 +2250,36 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 1.6,
+              "min_m": 0.3,
+              "max_m": 0.9,
+              "duration": 0.08,
+              "core_colour": "#f4fcff",
+              "edge_colour": "#8fd0ec",
+              "opacity": 0.55,
+              "streaks": 5,
+              "streak_strength": 0.3
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.0,
+              "min_m": 0.7,
+              "max_m": 1.8,
+              "duration": 1.6,
+              "colour": "#344a3a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.5,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.4,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "ring",
           "duration": 0.42,
           "grow": 1.8,
@@ -1564,6 +2388,150 @@
         }
       },
       "tidal_wave": {
+        "presentation_variants": {
+          "great_wave": {
+            "body": {
+              "width_ratio": 1.7,
+              "opacity": 0.92,
+              "flow_speed": 2.6,
+              "foam_colour": "#eefaff",
+              "layers": [
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 0.75,
+                  "card_extent_scale": 2.4,
+                  "colour": "#f2fbff",
+                  "opacity": 0.7,
+                  "flow_speed": 2.8,
+                  "spin_rate": 0.8,
+                  "offset": [
+                    -1.0,
+                    1.45,
+                    0.35
+                  ]
+                },
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 0.85,
+                  "card_extent_scale": 2.4,
+                  "colour": "#eaf8ff",
+                  "opacity": 0.72,
+                  "flow_speed": 3.1,
+                  "spin_rate": -0.9,
+                  "offset": [
+                    0.0,
+                    1.55,
+                    0.42
+                  ]
+                },
+                {
+                  "shape": "soft_foam",
+                  "size_scale": 0.75,
+                  "card_extent_scale": 2.4,
+                  "colour": "#f2fbff",
+                  "opacity": 0.7,
+                  "flow_speed": 2.6,
+                  "spin_rate": 1.0,
+                  "offset": [
+                    1.0,
+                    1.45,
+                    0.35
+                  ]
+                }
+              ]
+            },
+            "trail": {
+              "style": "foam",
+              "width": 0.9,
+              "opacity": 0.55,
+              "colour": "#d8f3ff"
+            },
+            "impact": {
+              "spark_glow": false,
+              "crown_taper": 0.55,
+              "spark_width_ratio": 0.1,
+              "mote_end_scale": 0.35,
+              "spark_stretch": 0.12,
+              "spark_intensity": 1.0,
+              "spark_core_colour": "#ffffff",
+              "crown_flare_ratio": 1.3,
+              "crown_height_ratio": 1.5,
+              "mote_backscatter": 0.3,
+              "gravity": 14.0,
+              "mote_colour": "#8fd4ff",
+              "mote_shape": "spark",
+              "growth_power": 0.5,
+              "initial_grow": 0.2,
+              "flow_speed": 3.0,
+              "foam_colour": "#f4fdff",
+              "crown_gap": 0.08,
+              "crown_rows": 6,
+              "crown_petals": 12,
+              "shape": "splash_crown",
+              "puff_brightness": 1.3,
+              "duration": 0.85,
+              "grow": 1.2,
+              "opacity": 0.94,
+              "fade_hold_power": 2.2,
+              "puff_count": 3,
+              "puff_colour": "#ffffff",
+              "puff_opacity": 0.4,
+              "puff_radius_scale": 0.6,
+              "target_envelope_scale": 0.3,
+              "puff_size_scale": 0.3,
+              "puff_grow": 1.5,
+              "puff_lift_m": 0.3,
+              "mote_size": 0.3,
+              "speed": 7.5,
+              "stages": {
+                "flash": {
+                  "size_scale": 1.0,
+                  "min_m": 0.6,
+                  "max_m": 0.8,
+                  "duration": 0.1,
+                  "core_colour": "#ffffff",
+                  "edge_colour": "#9fdcf5",
+                  "opacity": 0.45,
+                  "streaks": 7,
+                  "streak_strength": 0.35
+                },
+                "shockwave": {
+                  "style": "shockwave",
+                  "radius_scale": 2.0,
+                  "min_m": 1.6,
+                  "max_m": 4.0,
+                  "duration": 0.5,
+                  "colour": "#d6f1fb",
+                  "glow_colour": "#57b6e8",
+                  "glow_strength": 0.35,
+                  "opacity": 0.35,
+                  "ring_width": 0.16,
+                  "lift_m": 0.035,
+                  "hold": 0.0,
+                  "fade_in": 0.02,
+                  "initial_scale": 1.0
+                },
+                "mark": {
+                  "style": "dust",
+                  "radius_scale": 1.2,
+                  "min_m": 1.2,
+                  "max_m": 3.0,
+                  "duration": 2.0,
+                  "colour": "#30443a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.62,
+                  "hold": 0.6,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.3,
+                  "initial_scale": 0.5,
+                  "spread_time": 0.25,
+                  "crack_count": 7
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "rolling_wave",
           "motion": "projectile",
@@ -1593,6 +2561,52 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 2.2,
+              "min_m": 0.3,
+              "max_m": 1.3,
+              "duration": 0.1,
+              "core_colour": "#f4fcff",
+              "edge_colour": "#8fd0ec",
+              "opacity": 0.7,
+              "streaks": 7,
+              "streak_strength": 0.4
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 6.0,
+              "min_m": 1.2,
+              "max_m": 3.6,
+              "duration": 0.45,
+              "colour": "#d6f1fb",
+              "glow_colour": "#57b6e8",
+              "glow_strength": 0.4,
+              "opacity": 0.65,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.6,
+              "min_m": 0.9,
+              "max_m": 2.6,
+              "duration": 1.8,
+              "colour": "#344a3a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.6,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.3,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "soft_foam",
           "duration": 0.42,
           "grow": 1.8,
@@ -1696,6 +2710,49 @@
         }
       },
       "wind_blade": {
+        "presentation_variants": {
+          "solar_blades": {
+            "body": {
+              "crest_colour": "#fff2b8"
+            },
+            "impact": {
+              "visual_anchor": "contact_surface",
+              "gravity": 0.5,
+              "speed": 8.0,
+              "mote_end_scale": 0.15,
+              "spark_stretch": 0.2,
+              "spark_width_ratio": 0.06,
+              "mote_size": 0.4,
+              "spark_glow": false,
+              "spark_core_colour": "#ffffff",
+              "mote_shape": "spark",
+              "stages": {
+                "glow": {
+                  "size_scale": 3.0,
+                  "min_m": 0.9,
+                  "max_m": 1.8,
+                  "duration": 0.5,
+                  "core_colour": "#fff6cf",
+                  "edge_colour": "#ffb92e",
+                  "opacity": 0.75,
+                  "streaks": 0,
+                  "streak_strength": 0.0
+                },
+                "flash": {
+                  "size_scale": 2.4,
+                  "min_m": 0.6,
+                  "max_m": 1.4,
+                  "duration": 0.12,
+                  "core_colour": "#ffffff",
+                  "edge_colour": "#ffc94a",
+                  "opacity": 0.9,
+                  "streaks": 12,
+                  "streak_strength": 0.8
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "crescent",
           "air_surface": true,
@@ -1744,6 +2801,52 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "flash": {
+              "size_scale": 2.0,
+              "min_m": 0.3,
+              "max_m": 1.1,
+              "duration": 0.08,
+              "core_colour": "#f6fbff",
+              "edge_colour": "#cfe6f5",
+              "opacity": 0.6,
+              "streaks": 9,
+              "streak_strength": 0.75
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.5,
+              "min_m": 1.0,
+              "max_m": 3.0,
+              "duration": 0.34,
+              "colour": "#eaf5fb",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.55,
+              "ring_width": 0.06,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 2.8,
+              "min_m": 0.6,
+              "max_m": 1.8,
+              "duration": 1.0,
+              "colour": "#9fae7a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.4,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "crescent",
           "air_surface": true,
           "crest_colour": "#f2fff9",
@@ -1882,6 +2985,41 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 6.0,
+              "min_m": 1.0,
+              "max_m": 3.4,
+              "duration": 0.42,
+              "colour": "#eaf5fb",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.55,
+              "ring_width": 0.12,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.6,
+              "min_m": 0.7,
+              "max_m": 2.4,
+              "duration": 1.2,
+              "colour": "#9fae7a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.45,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.0,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "vortex",
           "duration": 0.42,
           "grow": 1.8,
@@ -2017,6 +3155,38 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 2.0,
+          "stages": {
+            "flash": {
+              "size_scale": 1.8,
+              "min_m": 0.3,
+              "max_m": 1.0,
+              "duration": 0.08,
+              "core_colour": "#ffffff",
+              "edge_colour": "#bfe8f7",
+              "opacity": 0.7,
+              "streaks": 9,
+              "streak_strength": 0.8
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.0,
+              "min_m": 0.7,
+              "max_m": 2.0,
+              "duration": 1.8,
+              "colour": "#dbeef5",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.7,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.4,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "soft_foam",
           "duration": 0.42,
           "grow": 1.8,
@@ -2154,6 +3324,25 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "mark": {
+              "style": "dust",
+              "radius_scale": 3.6,
+              "min_m": 0.7,
+              "max_m": 2.6,
+              "duration": 2.0,
+              "colour": "#dbeef5",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.6,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "soft_foam",
           "duration": 0.42,
           "grow": 1.8,
@@ -2303,6 +3492,60 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "impact_size_boost": 1.2,
+          "mote_colour": "#6a2fd8",
+          "mote_end_scale": 0.2,
+          "spark_stretch": 0.14,
+          "spark_width_ratio": 0.09,
+          "spark_glow": false,
+          "spark_core_colour": "#d9c6ff",
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#e6dcff", "edge_colour": "#6a2fd8", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 2.0,
+              "min_m": 0.3,
+              "max_m": 1.2,
+              "duration": 0.1,
+              "core_colour": "#e9dcff",
+              "edge_colour": "#785da0",
+              "opacity": 0.8,
+              "streaks": 7,
+              "streak_strength": 0.5
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.0,
+              "min_m": 1.0,
+              "max_m": 3.0,
+              "duration": 0.38,
+              "colour": "#4a3a66",
+              "glow_colour": "#9a7ad0",
+              "glow_strength": 0.9,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "scorch",
+              "radius_scale": 2.8,
+              "min_m": 0.7,
+              "max_m": 2.0,
+              "duration": 1.6,
+              "colour": "#1c1626",
+              "glow_colour": "#9a7ad0",
+              "glow_strength": 1.4,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "orb",
           "shadow_surface": true,
           "shadow_colour": "#261f3b",
@@ -2318,10 +3561,10 @@
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "mote_shape": "spark",
+          "mote_size": 0.32,
+          "speed": 6.5,
+          "gravity": 1.5,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16
@@ -2433,15 +3676,53 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 1.2,
+          "mote_colour": "#e05cc8",
+          "mote_end_scale": 0.2,
+          "spark_stretch": 0.14,
+          "spark_width_ratio": 0.09,
+          "spark_glow": false,
+          "spark_core_colour": "#ffe6fa",
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#ffe6fa", "edge_colour": "#e05cc8", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 2.2,
+              "min_m": 0.3,
+              "max_m": 1.3,
+              "duration": 0.1,
+              "core_colour": "#f6f3ff",
+              "edge_colour": "#a6b4ed",
+              "opacity": 0.7,
+              "streaks": 10,
+              "streak_strength": 0.5
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 7.0,
+              "min_m": 1.0,
+              "max_m": 3.8,
+              "duration": 0.45,
+              "colour": "#dfe5ff",
+              "glow_colour": "#a6b4ed",
+              "glow_strength": 1.2,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            }
+          },
           "shape": "ring",
           "duration": 0.42,
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "mote_shape": "spark",
+          "mote_size": 0.3,
+          "speed": 6.5,
+          "gravity": 1.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16
@@ -2525,6 +3806,49 @@
         }
       },
       "root_stone_spikes": {
+        "presentation_variants": {
+          "living_roots": {
+            "body": {
+              "stone_colour": "#3c6a2c",
+              "mineral_colour": "#9ccf62",
+              "texture_blend": 0.35
+            },
+            "impact": {
+              "stone_colour": "#3c6a2c",
+              "mineral_colour": "#9ccf62",
+              "stages": {
+                "flash": {
+                  "size_scale": 2.0,
+                  "min_m": 0.5,
+                  "max_m": 1.2,
+                  "duration": 0.12,
+                  "core_colour": "#f6ffd8",
+                  "edge_colour": "#8fd060",
+                  "opacity": 0.7,
+                  "streaks": 8,
+                  "streak_strength": 0.5
+                },
+                "mark": {
+                  "style": "dust",
+                  "radius_scale": 4.0,
+                  "min_m": 1.4,
+                  "max_m": 3.0,
+                  "duration": 2.0,
+                  "colour": "#3d5a2c",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.6,
+                  "hold": 0.6,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.0,
+                  "initial_scale": 0.4,
+                  "spread_time": 0.25,
+                  "crack_count": 7
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "spike",
           "root_stone_surface": true,
@@ -2559,6 +3883,42 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 6.0,
+              "min_m": 1.2,
+              "max_m": 3.4,
+              "duration": 0.42,
+              "colour": "#cbb68a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.65,
+              "ring_width": 0.08,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "burn",
+              "radius_scale": 6.0,
+              "min_m": 1.0,
+              "max_m": 2.6,
+              "duration": 1.8,
+              "colour": "#3e3226",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 1.2,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 8
+            },
+            "mote_linger_seconds": 0.8
+          },
           "shape": "spike",
           "root_stone_surface": true,
           "stone_colour": "#706451",
@@ -2663,6 +4023,47 @@
         }
       },
       "quake_ring": {
+        "presentation_variants": {
+          "rootquake": {
+            "impact": {
+              "stages": {
+                "shockwave": {
+                  "style": "shockwave",
+                  "radius_scale": 4.0,
+                  "min_m": 2.0,
+                  "max_m": 4.0,
+                  "duration": 0.55,
+                  "colour": "#cbb68a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.65,
+                  "ring_width": 0.16,
+                  "lift_m": 0.035,
+                  "hold": 0.0,
+                  "fade_in": 0.02,
+                  "initial_scale": 1.0
+                },
+                "mark": {
+                  "style": "burn",
+                  "radius_scale": 3.0,
+                  "min_m": 2.0,
+                  "max_m": 3.6,
+                  "duration": 2.2,
+                  "colour": "#2e241a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.8,
+                  "hold": 0.65,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.0,
+                  "initial_scale": 0.3,
+                  "spread_time": 0.25,
+                  "crack_count": 11
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "ring",
           "motion": "pulse",
@@ -2691,6 +4092,42 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 7.0,
+              "min_m": 1.4,
+              "max_m": 4.0,
+              "duration": 0.45,
+              "colour": "#cbb68a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.7,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "burn",
+              "radius_scale": 7.0,
+              "min_m": 1.2,
+              "max_m": 3.0,
+              "duration": 1.9,
+              "colour": "#3e3226",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.75,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.0,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 10
+            },
+            "mote_linger_seconds": 0.8
+          },
           "shape": "stone",
           "duration": 0.42,
           "grow": 1.8,
@@ -2811,15 +4248,53 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 1.3,
+          "mote_end_scale": 0.15,
+          "spark_stretch": 0.18,
+          "spark_width_ratio": 0.07,
+          "spark_glow": true,
+          "spark_core_colour": "#ffffff",
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#ffffff", "edge_colour": "#e8f0ff", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 2.4,
+              "min_m": 0.3,
+              "max_m": 1.2,
+              "duration": 0.08,
+              "core_colour": "#ffffff",
+              "edge_colour": "#f3e6c2",
+              "opacity": 0.8,
+              "streaks": 10,
+              "streak_strength": 0.9
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 2.4,
+              "min_m": 0.5,
+              "max_m": 1.4,
+              "duration": 1.0,
+              "colour": "#8b7a5a",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.45,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "crescent",
           "duration": 0.42,
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "mote_shape": "spark",
+          "mote_size": 0.35,
+          "speed": 8.0,
+          "gravity": 1.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16
@@ -2903,6 +4378,20 @@
         }
       },
       "charge_dash": {
+        "launch": {
+          "ground": {
+            "style": "dust",
+            "radius_scale": 3.0,
+            "min_m": 0.7,
+            "max_m": 1.8,
+            "duration": 0.6,
+            "colour": "#b09670",
+            "opacity": 0.5,
+            "hold": 0.25,
+            "initial_scale": 0.35,
+            "spread_time": 0.3
+          }
+        },
         "body": {
           "shape": "stream",
           "motion": "projectile",
@@ -2929,15 +4418,69 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "visual_anchor": "contact_surface",
+          "impact_size_boost": 2.2,
+          "mote_end_scale": 0.2,
+          "spark_stretch": 0.16,
+          "spark_width_ratio": 0.08,
+          "spark_glow": false,
+          "spark_core_colour": "#fffbe8",
+          "stages": {
+            "glow": {"size_scale": 2.6, "min_m": 0.7, "max_m": 1.6, "duration": 0.45, "core_colour": "#fffaf0", "edge_colour": "#ffd9a0", "opacity": 0.7, "streaks": 0, "streak_strength": 0.0},
+            "flash": {
+              "size_scale": 2.2,
+              "min_m": 0.3,
+              "max_m": 1.2,
+              "duration": 0.09,
+              "core_colour": "#fffaf0",
+              "edge_colour": "#ecd9a8",
+              "opacity": 0.75,
+              "streaks": 8,
+              "streak_strength": 0.7
+            },
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.0,
+              "min_m": 1.0,
+              "max_m": 3.0,
+              "duration": 0.4,
+              "colour": "#d6c094",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.6,
+              "ring_width": 0.08,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            },
+            "mark": {
+              "style": "dust",
+              "radius_scale": 2.6,
+              "min_m": 0.6,
+              "max_m": 1.8,
+              "duration": 1.2,
+              "colour": "#7d6a4c",
+              "glow_colour": "#000000",
+              "glow_strength": 0.0,
+              "opacity": 0.55,
+              "hold": 0.6,
+              "lift_m": 0.02,
+              "toward_source_scale": 0.5,
+              "initial_scale": 0.5,
+              "spread_time": 0.2,
+              "crack_count": 7
+            }
+          },
           "shape": "crescent",
           "duration": 0.42,
           "grow": 1.8,
           "heat": 0.35,
           "opacity": 0.82,
-          "mote_shape": "orb",
-          "mote_size": 0.065,
-          "speed": 4.5,
-          "gravity": 5.0,
+          "mote_shape": "spark",
+          "mote_size": 0.35,
+          "speed": 7.5,
+          "gravity": 4.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16
@@ -3021,6 +4564,23 @@
         }
       },
       "heal_pulse": {
+        "launch": {
+          "ground": {
+            "style": "shockwave",
+            "radius_scale": 6.0,
+            "min_m": 1.0,
+            "max_m": 3.0,
+            "duration": 0.6,
+            "colour": "#d8f7e6",
+            "glow_colour": "#98e1b8",
+            "glow_strength": 1.4,
+            "opacity": 0.7,
+            "ring_width": 0.1,
+            "hold": 0.0,
+            "fade_in": 0.02,
+            "initial_scale": 1.0
+          }
+        },
         "body": {
           "shape": "ring",
           "motion": "self",
@@ -3141,6 +4701,23 @@
         }
       },
       "buff_aura": {
+        "launch": {
+          "ground": {
+            "style": "shockwave",
+            "radius_scale": 6.0,
+            "min_m": 1.0,
+            "max_m": 3.0,
+            "duration": 0.6,
+            "colour": "#fbf2cf",
+            "glow_colour": "#ebdca0",
+            "glow_strength": 1.4,
+            "opacity": 0.7,
+            "ring_width": 0.1,
+            "hold": 0.0,
+            "fade_in": 0.02,
+            "initial_scale": 1.0
+          }
+        },
         "body": {
           "shape": "vortex",
           "motion": "self",
@@ -3295,6 +4872,24 @@
           "wave_speed": 6.0
         },
         "impact": {
+          "stages": {
+            "shockwave": {
+              "style": "shockwave",
+              "radius_scale": 5.0,
+              "min_m": 1.0,
+              "max_m": 3.0,
+              "duration": 0.5,
+              "colour": "#d9d4f2",
+              "glow_colour": "#b5afd5",
+              "glow_strength": 1.0,
+              "opacity": 0.6,
+              "ring_width": 0.1,
+              "lift_m": 0.035,
+              "hold": 0.0,
+              "fade_in": 0.02,
+              "initial_scale": 1.0
+            }
+          },
           "shape": "sigil",
           "duration": 0.42,
           "grow": 1.8,
@@ -3389,6 +4984,19 @@
         }
       },
       "guard_flash": {
+        "launch": {
+          "flash": {
+            "size_scale": 3.0,
+            "min_m": 0.5,
+            "max_m": 1.4,
+            "duration": 0.14,
+            "core_colour": "#ffffff",
+            "edge_colour": "#fff4d8",
+            "opacity": 0.9,
+            "streaks": 10,
+            "streak_strength": 0.7
+          }
+        },
         "body": {
           "shape": "glint",
           "motion": "self",

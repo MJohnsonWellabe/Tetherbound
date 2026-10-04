@@ -971,6 +971,9 @@ func _process_reward_delivery(delivery: Dictionary) -> void:
 	var id := str(delivery.get("delivery_id", ""))
 	if id.is_empty() or str(delivery.get("character_id", "")) != str(player.get("character_id")):
 		return
+	if delivery.get("source") == "home_key:grant:" + str(player.character_id):
+		game.get("session").call("_request_home_key_delivery", delivery)
+		return # Host-authored full inventory CAS; never generic reward.apply.
 	var before_slots := SATCHEL_RULES.slots(player.get("inventory"))
 	var flags: RefCounted = player.get("flags")
 	var before_flags: Dictionary = flags.call("save_data") if flags != null else {}
@@ -1679,32 +1682,10 @@ func reconcile_portal_deliveries() -> void:
 
 
 func journal_opening_home_key_prepared(peer: int, source: Node) -> Dictionary:
-	_ensure_ledger()
 	var game := _game()
-	if game == null or not bool(game.call("is_host")) or source == null or peer != _local_peer_id(): return {"durable": false}
+	if game == null or source == null or not bool(game.call("is_host")) or peer != _local_peer_id(): return {"durable": false}
 	var session: Node = game.get("session")
-	var world: RefCounted = game.get("world")
-	var player: RefCounted = game.get("local")
-	var saver: RefCounted = game.get("save_system")
-	if session == null or session.call("portal_runtime_ready") != true or world == null or player == null or saver == null or saver.call("fallback_busy") == true: return {"durable": false}
-	if source.get("_f18_opening_conversation_id") != "grandpa_first_catch" or game.call("original_starter_uid") == "" or _registered_character(peer) != player.character_id: return {"durable": false}
-	var row := REWARD_DELIVERY.make_record(world.world_id, world.reward_delivery_namespace, "home_key:grant:" + player.character_id, player.character_id, "home_key", 1, "home_key_given")
-	if row.is_empty(): return {"durable": false}
-	var prior: Variant = world.reward_deliveries.get(row.delivery_id)
-	if prior is Dictionary:
-		if prior.character_id != player.character_id or prior.source != row.source or prior.get("stacks") != row.stacks: return {"durable": false}
-		_process_reward_delivery(prior.duplicate(true))
-		return {"durable": true, "duplicate": true}
-	var before: Dictionary = world.save_data()
-	var revision := int(world.revision)
-	var sequence := int(ledger.seq)
-	var verdict: Dictionary = ledger.call("_commit", [{"op": "reward_delivery_journal", "scope": "world", "realm": "meadows", "delivery_id": row.delivery_id, "delivery": row}], "opening_home_key", peer, "meadows")
-	if verdict.get("ok") != true: return {"durable": false}
-	if saver.call("save_world_prepared", game, world.world_id) != true:
-		world.load_data(before)
-		world.revision = revision
-		ledger.seq = sequence
-		return {"durable": false}
-	publish_journaled_delta(verdict.delta)
-	_process_reward_delivery(row)
-	return {"durable": true, "duplicate": false}
+	var producer := preload("res://scripts/net/opening_home_key.gd")
+	if session == null or producer._opening_source(session, peer) != source or source.get("_f18_opening_conversation_id") != "grandpa_first_catch": return {"durable": false}
+	var request := producer.envelope(str(game.get("local").character_id), str(game.get("world").reward_delivery_namespace), str(session.call("_altar_current_epoch")))
+	return producer.host_grant(session, peer, request)

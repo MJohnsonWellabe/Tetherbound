@@ -1,0 +1,89 @@
+{
+  "kind": "f19_material_lifetime_primary_source_audit",
+  "scope": "Primary engine source facts informing full-world teardown diagnosis; no production fix or acceptance claim",
+  "sources": [
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/mesh_instance_3d.h",
+      "observed": "MeshInstance3D owns mesh and surface override Material references as members, with no declared custom destructor."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/visual_instance_3d.h",
+      "observed": "GeometryInstance3D owns override and overlay Material references; it derives from VisualInstance3D."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/visual_instance_3d.cpp",
+      "observed": "VisualInstance3D's destructor frees its rendering instance RID."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/servers/rendering/renderer_scene_cull.cpp",
+      "observed": "free(instance) processes all dirty instances before clearing the deleting instance's base and material bindings. Dirty geometry processing queries material shadows, animation, uniforms and dependency state."
+    },
+    {
+      "url": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/label_3d.cpp",
+      "observed": "Label3D owns raw material RIDs internally. Its destructor frees the mesh and then these materials; text reshaping clears mesh surfaces before freeing prior materials. MeshInstance active-Material retention does not retain these internal Label3D RIDs."
+    }
+  ],
+  "inference": "C++ member destruction precedes base destruction, so a last Material reference may disappear before the rendering instance is freed. That instance deletion can flush another pending instance as well. The current game's actual dangling owner remains unproven until its native counterfactual result is inspected.",
+  "interpretation": "Clean isolated body, marker and build-component probes do not certify the full world's deletion batch. Holding actual chamber active materials is a diagnostic counterfactual only; remaining errors may belong outside that retained set, including internal label resources.",
+  "actual_job": {
+    "run": 37084465536,
+    "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
+    "status": "Confirmed Run step live; no terminal result at this audit"
+  },
+  "exclusions": "No speculative product material patch, suppressed engine errors, changed graphics binary, clean witness, earned boundary or full campaign acceptance. Source URLs use official 4.7-stable tag; an exact binary-to-tag commit identity was not independently checked.",
+  "terrain_component_followup": {
+    "local_plugin_cfg_version": "1.0.2",
+    "upstream_tag": "v1.0.2-stable",
+    "upstream_commit": "0077405b52e353c5e5dc3a094e7ede49833ba6fe",
+    "source": "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d.cpp",
+    "facts": [
+      "Native _setup_mouse_picking creates MouseViewport/MouseCamera/MouseQuad and a surface override ShaderMaterial.",
+      "Native EXIT_TREE calls _destroy_mouse_picking, which deletes the quad, camera and viewport."
+    ],
+    "inference": "This native quad lies outside prior chamber-only observers; component lifecycle comparison may localize pending material dependency errors.",
+    "limitations": "The installed binary has not been independently mapped to the upstream tag commit. This is source-informed hypothesis, not native reproduction or a production patch."
+  },
+  "particle_followup": {
+    "sources": [
+      "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/cpu_particles_3d.cpp",
+      "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/gpu_particles_3d.cpp"
+    ],
+    "facts": [
+      "CPUParticles3D owns a draw Mesh and multimesh RID; destructor frees its multimesh.",
+      "GPUParticles3D owns draw-pass Mesh references and a particle RID; destructor frees its particle RID."
+    ],
+    "inference": "Draw Mesh surface Materials are outside the previous MeshInstance/MultiMeshInstance retention set. Actual owner and failure are unproven until the live full-world comparison.",
+    "terrain_source_correction": "Terrain3DMaterial::uninitialize only clears its terrain pointer; destroy frees its material RID. Explicit uninitialize does not establish material RID destruction.",
+    "result": "Actual full-world comparison 37090546213 is terminal negative; 219 refs retained, baseline and treatment both 16 post-choice errors."
+  },
+  "sprite_followup": {
+    "source": "https://github.com/godotengine/godot/blob/4.7-stable/scene/3d/sprite_3d.cpp",
+    "facts": [
+      "SpriteBase3D creates an internal material RID; its destructor frees its mesh and material RIDs before VisualInstance3D base destruction.",
+      "Sprite3D drawing restores its rendering base to its mesh when different."
+    ],
+    "actual_product_factory": "scripts/world/ironwood_grove_presentation.gd: LightningHeartAura Sprite3D, instantiated by playground_world.gd; prior choice census contains one Sprite3D.",
+    "inference": "Prior Mesh/Material Resource retention does not retain internal SpriteBase3D material RIDs. Observe actual scriptless Sprite3D path and compare PREDELETE base detachment before inferring a product fix.",
+    "limitations": "Counterfactual only. Exact native owner remains unproven; no independently verified binary-to-tag commit mapping.",
+    "result": "Native37091898727 terminal negative: actual LightningHeartAura confirmed, three deletion markers, baseline/treatment both16 post-choice errors; no production fix justified."
+  },
+  "populated_terrain_followup": {
+    "sources": [
+      "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d.cpp",
+      "https://github.com/TokisanGames/Terrain3D/blob/v1.0.2-stable/src/terrain_3d_mesher.cpp"
+    ],
+    "facts": [
+      "EXIT_TREE destroys native mesher and mouse picking, then uninitializes asset and material resources.",
+      "PREDELETE destroys mesher/instancer/collision, releases assets/material, then deletes region data and label/container nodes.",
+      "Mesher creates direct RenderingServer instances and binds terrain material RID to native meshes; these handles are outside a Node GeometryInstance3D census. Its destroy method frees clipmap instance RIDs before mesh RIDs."
+    ],
+    "inference": "An empty Terrain3D component does not cover actual committed region data and native populated mesher ownership. Reuse production factories in a disclosed component host, suppress unrelated world startup, and compare default versus authored material before any product change.",
+    "limitations": "Installed version1.0.2; exact binary-to-upstream commit not independently verified. Component counterfactual cannot close full-world or earned-save acceptance.",
+    "result": "37093187450 actual four populated cases terminal negative,64regions each,0errors/exit0; no terrain product fix justified."
+  },
+  "temporal_scope_followup": {
+    "observation": "Whole-world retention scans ran at world-ready and choice-ready. Original scenario then resolves choice, saves, resets state, and performs fresh/load/world rebuilds; actual full-world errors follow answered/reload markers. New or replaced resources after readiness were not necessarily retained by prior scans.",
+    "diagnostic": "Resample exposed geometry Meshes/MultiMeshes/Materials and particle draw Meshes/process Materials immediately before inherited world deletion and final teardown; retain through native deletion/new-world settle. Log newly retained Material owner samples, preserve original assertions and fixtures.",
+    "limitations": "This expands temporal and Mesh ownership coverage; no production state mutation or acceptance claim. Internal native RIDs, cached detached templates and resources outside the actual scene tree remain outside exposed Mesh/Material reference coverage."
+  }
+}

@@ -7,6 +7,7 @@ const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const REDESIGN := preload("res://scripts/data/redesign_state.gd")
 const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const PORTAL := preload("res://scripts/net/portal_escrow_validation.gd")
+const HOME_KEY := preload("res://scripts/net/home_key_action.gd")
 const EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 const BIOMES := preload("res://scripts/data/biome_order.gd")
 const FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
@@ -18,6 +19,12 @@ static func portable_projection(personal: Dictionary) -> Dictionary:
 	if escrow is Dictionary:
 		for key: Variant in escrow:
 			var row: Variant = escrow[key]
+			if HOME_KEY.candidate(row):
+				# Older reward delivery saved duplicate aliases as settled metadata.
+				# Keep the original save intact; aliases are no independent gift debt.
+				if key == row.get("delivery_id") and HOME_KEY.is_settled_alias(row, str(personal.get("character_id", ""))):
+					continue
+				rows[key] = row.duplicate(true)
 			if str(key).begins_with(PORTAL.KIND + ":") or (row is Dictionary and row.get("kind") == PORTAL.KIND):
 				rows[key] = row.duplicate(true) if row is Dictionary else row
 			if str(key).begins_with("actor_vitals:") or (row is Dictionary and row.get("kind") == "actor_vitals"):
@@ -129,6 +136,9 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 	else:
 		for key: Variant in raw.portal_escrow:
 			var row: Variant = raw.portal_escrow[key]
+			if HOME_KEY.candidate(row):
+				if not HOME_KEY.valid_escrow(row, expected_character) or key != row.get("delivery_id"): failures.append("invalid admitted finite Home Key journal")
+				continue
 			if not PORTAL.valid_row(row, expected_character) or str(key) != str(row.get("receipt", "")):
 				failures.append("invalid admitted portal journal")
 	failures.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(raw.get("vitals_escrow", {}), expected_character))

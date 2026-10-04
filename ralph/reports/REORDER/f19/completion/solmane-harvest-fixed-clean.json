@@ -1,0 +1,29 @@
+{
+  "kind": "f19_actual_solmane_full_harvest_fixed_choice_witness",
+  "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+  "run": 37108381309,
+  "job": 111161263274,
+  "artifact": 11269492847,
+  "process_exit": 0,
+  "elapsed_seconds": 2597,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "leak_warnings": [],
+  "failures": [],
+  "cases": [
+    "space-accept",
+    "space-refuse",
+    "capacity-refuse-at-prompt",
+    "capacity-accept-then-let-newcomer-go",
+    "capacity-accept-release-one",
+    "save-while-choice-open"
+  ],
+  "scope": "Entire original six-case native choice/save/reload driver on the Harvest cleanup source; X11 Compatibility/drawingfalse. Original staged victory/party/pose fixtures and original assertions/prompt/cap guards retained. No diagnostic resource retention, earned play, ENet or visual/device credit.",
+  "original_prompt_guards_passed": true,
+  "original_party_cap_guard_passed": true,
+  "choice_open_reload_marker": true,
+  "accepted_clean_choice_witness": true,
+  "earned_campaign": false,
+  "raw_log": "ci-solmane-full-harvest-fixed-37108381309.log.gz",
+  "raw_log_sha256": "5b26808496c2f108417c6828faf9b690c014fee72e3d640424d0eaaa9ddab766"
+}

@@ -1,0 +1,86 @@
+[
+ {
+  "sequence": "S01",
+  "case": "burning-orb",
+  "rank": 3,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S02",
+  "case": "descending-bolt",
+  "rank": 5,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S03",
+  "case": "large-stone",
+  "rank": 1,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S04",
+  "case": "descending-bolt",
+  "rank": 3,
+  "A": "baseline",
+  "B": "candidate"
+ },
+ {
+  "sequence": "S05",
+  "case": "burning-orb",
+  "rank": 5,
+  "A": "baseline",
+  "B": "candidate"
+ },
+ {
+  "sequence": "S06",
+  "case": "large-stone",
+  "rank": 3,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S07",
+  "case": "descending-bolt",
+  "rank": 1,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S08",
+  "case": "small-stones",
+  "rank": 3,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S09",
+  "case": "small-stones",
+  "rank": 1,
+  "A": "baseline",
+  "B": "candidate"
+ },
+ {
+  "sequence": "S10",
+  "case": "burning-orb",
+  "rank": 1,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S11",
+  "case": "small-stones",
+  "rank": 5,
+  "A": "candidate",
+  "B": "baseline"
+ },
+ {
+  "sequence": "S12",
+  "case": "large-stone",
+  "rank": 5,
+  "A": "candidate",
+  "B": "baseline"
+ }
+]

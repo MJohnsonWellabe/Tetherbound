@@ -1,0 +1,27 @@
+{
+  "kind": "f19_capacity_and_boundary_bytes",
+  "changes": [
+    "Exercise the real Stormheart dialogue and five-holder roster UI for prompt refusal, pending-newcomer refusal, and release-one acceptance.",
+    "Before promotion, cross-check observed entitlements, party identities and levels, inventory, flags, and scoped boss receipt against the actual immutable split-save bytes."
+  ],
+  "validation": {
+    "stormheart_capacity": {
+      "command": "Godot 4.7 --headless --script tests/smoke_f19_stormheart_capacity.gd",
+      "log": "stormheart-capacity-r2.log",
+      "cases": 3,
+      "assertions": 89,
+      "failures": 0,
+      "engine_errors": 0,
+      "scope": "Real dialogue, input events, pending-catch and roster UI. Inherited hub/chapter/Dynamo stubs, direct fixture roster and focus setup; no host ACK or earned-fight claim.",
+      "rejected_attempt": "stormheart-capacity.log failed nine assertions because the test did not close the pause menu and assumed slot replacement instead of the existing compact-and-append roster behavior. Correcting those assumptions required no product change."
+    },
+    "promotion_negative_controls": {
+      "command": "node tests/test_f19_earned_promotion.mjs",
+      "checks": 7,
+      "result": "PASS",
+      "scope": "Fabricated rejection controls only. A forged entitlement in receipt metadata cannot substitute for an actual saved owner. No earned fixture was generated."
+    }
+  },
+  "remaining": ["Actual full fresh continuous campaign and its five earned split-save boundaries.", "Independent coordinator review of world-scoped reward delivery and follow-up cuts."],
+  "resource_coordination": "Isolated APPDATA and warmed own cache; no local imports, Terrain3D world or GPU render. Four broader choice smokes are offloaded to GitHub Actions."
+}

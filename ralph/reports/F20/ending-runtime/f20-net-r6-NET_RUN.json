@@ -1,0 +1,155 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 1500.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"peer 1 f20_return: no verdict"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 34291,
+			"exited": true,
+			"hashes": [
+				2182759257,
+				2182759257,
+				2182759257
+			],
+			"hello": {
+				"enet_port": 33001.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "b066552af91c",
+				"peer": 0.0,
+				"pid": 2448.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F20/ending-runtime/net-run-local-5562104/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 685.0,
+				"physics_frame": 5233.0,
+				"pos": [
+					1.41553485393524,
+					1.02094388008118,
+					14.9077844619751
+				],
+				"session_peers": [
+					1.0,
+					1687272102.0
+				],
+				"state_hash": 2182759257.0,
+				"t": 637.697,
+				"type": "heartbeat"
+			},
+			"pid": 2448,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": {
+				"action": "f20_return",
+				"coordinator_deadline_ms": 643007.0,
+				"coordinator_observed_ms": 643009,
+				"heartbeat": {
+					"context": "panel:Session",
+					"frame": 975.0,
+					"physics_frame": 7545.0,
+					"pos": [
+						96.1999969482422,
+						0.910999953746796,
+						14.0
+					],
+					"session_peers": [
+						1.0,
+						1687272102.0
+					],
+					"state_hash": 2182759257.0,
+					"t": 636.738,
+					"type": "heartbeat"
+				},
+				"heartbeat_known": true,
+				"heartbeat_receive_age_ms": 668.0,
+				"heartbeat_receive_time_known": true,
+				"heartbeat_received_ms": 642341.0,
+				"id": "s9",
+				"phase": "timeout_before_finish"
+			},
+			"control_port": 38907,
+			"exited": false,
+			"hashes": [
+				2182759257,
+				2182759257,
+				2182759257
+			],
+			"hello": {
+				"enet_port": 33002.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "b066552af91c",
+				"peer": 1.0,
+				"pid": 2449.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F20/ending-runtime/net-run-local-5562104/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "panel:Session",
+				"frame": 980.0,
+				"physics_frame": 7585.0,
+				"pos": [
+					96.1999969482422,
+					0.910999953746796,
+					14.0
+				],
+				"session_peers": [
+					1.0,
+					1687272102.0
+				],
+				"state_hash": 2182759257.0,
+				"t": 640.605,
+				"type": "heartbeat"
+			},
+			"pid": 2449,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "local-5562104",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

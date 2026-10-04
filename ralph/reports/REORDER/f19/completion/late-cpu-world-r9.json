@@ -1,0 +1,22 @@
+{
+  "kind": "f19_only_late_cpu_world_material_counterfactual_r9",
+  "source_commit": "5ed2e306334e0d4df35db3dd5c92e13a6cb6ae52",
+  "run": 37097475220,
+  "job": 111130248583,
+  "artifact": 11264972822,
+  "process_exit": 0,
+  "elapsed_seconds": 664,
+  "engine_errors": 48,
+  "script_errors": 0,
+  "failures": [],
+  "baseline_errors": 16,
+  "retained_late_cpu_material_errors": 32,
+  "retained_materials": 10,
+  "material_owner": "MeadowHealing/PylonDust and anonymous duplicate CPUParticles3D dust nodes; no other Material/Mesh/MultiMesh/Terrain resources retained.",
+  "backend": "X11 real gl_compatibility, continuous drawing false",
+  "result": "Negative ownership isolation: only late dust Material retention did not remove baseline errors; no dust product fix justified. Full-world all-material retention R8 did remove errors, so next isolate masked mesh Materials not included by active-only scans.",
+  "prompt_trace": "Both original scenarios: player position and zero velocity unchanged before/after reading; both prompt distances 2.5627787..2.56277895m, neither live. Original intermittent baseline prompt assertion from R8 not reproduced and remains unclosed.",
+  "acceptance": false,
+  "raw_log": "ci-late-cpu-world-negative-37097475220.log.gz",
+  "raw_log_sha256": "ee7a5359fd29a0243a7f5548b4186ac21e00b9f89140a76f1bc7db91b22728f5"
+}

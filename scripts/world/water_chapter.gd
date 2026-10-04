@@ -43,6 +43,11 @@ func build(owner_world: Node3D) -> void:
 		_dock_prompt.name = "CivilianDeparture"
 		mara.add_child(_dock_prompt)
 		_dock_prompt.position = Vector3(1.5, 0.0, 0.0)
+		# This is a dock action beside Mara, not a point on her turning body.
+		# Keep its authored placement while she faces the approaching player.
+		var dock_anchor := _dock_prompt.global_transform
+		_dock_prompt.set_as_top_level(true)
+		_dock_prompt.global_transform = dock_anchor
 		_dock_prompt.call("configure", "Confirm civilian departures", float(mara.prompt_node().radius), false)
 		_dock_prompt.connect("activated", request_dock_conclusion)
 	# Edda's Guardian offer only for a character that may still answer.

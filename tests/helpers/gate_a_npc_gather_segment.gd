@@ -112,6 +112,10 @@ var _competing_activation := ""
 ## Travel. See `stick_navigator.gd` for why walking is no longer a straight
 ## line: the village has buildings in it and the game has no navmesh.
 var _nav = null  # stick_navigator.gd; untyped so its methods read as methods
+## Opt-in earned campaign care basket. Other village/capture callers retain
+## their original shopping behavior. Purchases occur only in Mira's actual
+## first open shop; returning before defeating her opens her trainer challenge.
+var care_basket_purchases := 0
 
 
 ## `include_vendors`: Oskar (the creature trader) and Bram (the innkeeper) are
@@ -269,6 +273,9 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 			if panel == null:
 				_fail("%s cycle %d did not hand off to %s" % [who, cycle + 1, expected_panel_suffix])
 				return false
+			if who == "Mira" and care_basket_purchases > 0:
+				if not await _buy_care_basket(panel):
+					return false
 			await _tap_action(&"menu_cancel")
 			if not await _wait_world_owned(45):
 				_fail("%s cycle %d left stale modal ownership after B" % [who, cycle + 1])
@@ -289,6 +296,152 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 				str(_player.global_position.round())])
 			return false
 	return true
+
+
+func _buy_care_basket(panel: Node) -> bool:
+	if care_basket_purchases > 5 or INPUT_OWNER.current(_tree) != panel \
+			or not bool(panel.call("is_open")) or str(panel.call("vendor_id")) != "mira":
+		_fail("care purchase refused: expected Mira's live owned shop and at most five purchases")
+		return false
+	var trade: RefCounted = panel.get("_trade")
+	var inventory: RefCounted = _game.get("inventory")
+	var db: RefCounted = _game.get("items")
+	var party: RefCounted = _game.get("party")
+	var stock: Array = trade.call("stocked_ids", "mira")
+	var index := stock.find("potion_small")
+	var price := int(trade.call("buy_price", "mira", "potion_small"))
+	var coin := str(trade.call("currency_id"))
+	if index < 0 or price <= 0 or int(inventory.call("count", coin)) < price * care_basket_purchases:
+		_fail("care purchase refused: authored potions or earned funds are unavailable")
+		return false
+	for purchase in care_basket_purchases:
+		# Production _refresh replaces the Buttons after every transaction.
+		var rows: Array = panel.get("_rows")
+		var column: VBoxContainer = panel.get("_buy_column")
+		if index >= column.get_child_count() or not column.get_child(index) is Button:
+			_fail("care purchase has no canonical visible potion row")
+			return false
+		var target: Button = column.get_child(index)
+		var labels := _shop_labels(target)
+		if target.disabled or not labels.has(str(db.call("item_name", "potion_small"))) or not labels.has(str(price)):
+			_fail("care purchase row disagrees with canonical potion name, price or affordability")
+			return false
+		for _step in rows.size() * 2:
+			if target.has_focus():
+				break
+			var focused := rows.find(_tree.root.gui_get_focus_owner())
+			if focused < 0:
+				_fail("care purchase lost real controller focus")
+				return false
+			await _tap_shop_action(&"ui_down" if focused < index else &"ui_up")
+		if not target.has_focus() or INPUT_OWNER.current(_tree) != panel:
+			_fail("care purchase controller did not reach the actual potion row")
+			return false
+		var before := _inventory_counts(inventory)
+		var party_before: Array = party.call("members")
+		var creature_states := _shop_party_states(party)
+		var party_revision := int(party.get("revision"))
+		var active_before := int(party.call("active_index"))
+		var before_coin := int(inventory.call("count", coin))
+		var before_potions := int(inventory.call("count", "potion_small"))
+		var binding := _event_for(&"menu_confirm", true)
+		if binding == null:
+			_fail("shop confirmation has no physical pad binding")
+			return false
+		var player_state: RefCounted = _game.get("local")
+		print("F17 SHOP INPUT PRE_EDGE " + JSON.stringify({"purchase": purchase + 1,
+			"ui_accept_held": Input.is_action_pressed("ui_accept"), "menu_confirm_held": Input.is_action_pressed("menu_confirm"),
+			"interact_held": Input.is_action_pressed("interact"), "target_focused": target.has_focus(),
+			"binding_device": binding.device, "binding": binding.as_text(),
+			"pressed_connections": target.get_signal_connection_list("pressed").size(),
+			"inventory_guard_blocked": bool(inventory.call("_owner_mutation_blocked")),
+			"same_panel_inventory": panel.call("_inventory") == inventory,
+			"same_player_inventory": player_state != null and player_state.get("inventory") == inventory,
+			"scope": "read-only live input, focus, identity and guard observation; no bypass"}))
+		var edges := [0, 0, 0]
+		target.button_down.connect(func() -> void: edges[0] += 1)
+		target.button_up.connect(func() -> void: edges[1] += 1)
+		target.pressed.connect(func() -> void: edges[2] += 1)
+		await _tap_shop_action(&"menu_confirm")
+		print("F17 SHOP INPUT OBSERVATION " + JSON.stringify({"purchase": purchase + 1,
+			"button_down": edges[0], "button_up": edges[1], "pressed": edges[2],
+			"coin_before": before_coin, "coin_after": int(inventory.call("count", coin)),
+			"potions_before": before_potions, "potions_after": int(inventory.call("count", "potion_small")),
+			"message": str((panel.get("_message") as Label).text), "paused": _tree.paused,
+			"menu_confirm_released": not Input.is_action_pressed("menu_confirm"),
+			"party_unchanged": _shop_party_states(party) == creature_states,
+			"scope": "read-only GUI event and actual paid-state observation"}))
+		if int(inventory.call("count", coin)) != before_coin - price \
+				or int(inventory.call("count", "potion_small")) != before_potions + 1 \
+				or party.call("members") != party_before or int(party.get("revision")) != party_revision \
+				or int(party.call("active_index")) != active_before or _shop_party_states(party) != creature_states:
+			_fail("care purchase did not spend exact earned coins for one potion with unchanged party")
+			return false
+		# Compare every other item against the real pre-purchase inventory.
+		var after := _inventory_counts(inventory)
+		for permitted: String in [coin, "potion_small"]:
+			before.erase(permitted)
+			after.erase(permitted)
+		if before != after:
+			_fail("care purchase unexpectedly changed another carried item")
+			return false
+		_checkpoint("paid Mira care purchase %d: potion_small +1, %s -%d, purse %d" % [purchase + 1, coin, price, before_coin - price])
+	return true
+
+
+func _shop_labels(node: Node) -> Array[String]:
+	var out: Array[String] = []
+	if node is Label:
+		out.append((node as Label).text)
+	for child: Node in node.get_children():
+		out.append_array(_shop_labels(child))
+	return out
+
+
+func _tap_shop_action(action: StringName) -> void:
+	var event := _event_for(action, true)
+	if event == null:
+		_fail("shop action has no physical pad binding: " + str(action))
+		return
+	Input.parse_input_event(event)
+	Input.flush_buffered_events()
+	# Buttons consume GUI input at idle delivery; separate press and release
+	# across process frames even when several physics ticks share one idle.
+	await _tree.process_frame
+	for _frame in 3:
+		await _tree.physics_frame
+	var released := event.duplicate() as InputEvent
+	if released is InputEventJoypadButton:
+		(released as InputEventJoypadButton).pressed = false
+	elif released is InputEventJoypadMotion:
+		(released as InputEventJoypadMotion).axis_value = 0.0
+	Input.parse_input_event(released)
+	Input.flush_buffered_events()
+	await _tree.process_frame
+	for _frame in 5:
+		await _tree.physics_frame
+
+
+func _inventory_counts(inventory: RefCounted) -> Dictionary:
+	var counts := {}
+	for index in int(inventory.call("slot_count")):
+		var stack: Dictionary = inventory.call("stack_at", index)
+		if not stack.is_empty():
+			var id := str(stack.get("id", ""))
+			counts[id] = int(counts.get(id, 0)) + int(stack.get("n", 0))
+	return counts
+
+
+func _shop_party_states(party: RefCounted) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for creature: RefCounted in (party.call("members") as Array):
+		var state := {}
+		for property: Dictionary in creature.get_property_list():
+			if int(property.get("usage", 0)) & PROPERTY_USAGE_SCRIPT_VARIABLE:
+				var value: Variant = creature.get(str(property.name))
+				state[str(property.name)] = value.duplicate(true) if value is Array or value is Dictionary else value
+		out.append(state)
+	return out
 
 
 func _assign_tools_in_satchel() -> bool:
@@ -920,7 +1073,7 @@ func _one_approach(target: Node3D, budget: int, headings: Array[Vector2] = []) -
 		# authored bend is reached by observed real motion before the next one.
 		if heading_index < headings.size() and not _nav.departure_pending(target.global_position):
 			var at := Vector2(_player.global_position.x, _player.global_position.z)
-			if at.distance_to(headings[heading_index]) <= 0.8:
+			if at.distance_to(headings[heading_index]) <= 0.8 or _nav.heading_circled(headings[heading_index]):
 				heading_index += 1
 				_nav.reset()
 				_nav.set_approach_radius(1.65 if heading_index == headings.size() else 0.8)

@@ -1,0 +1,33 @@
+{
+  "kind": "f19_held_tool_material_cleanup_lifecycle",
+  "source_commit": "6ad7445fb9a193f6f4b9e3ba4ae01f91cb4a8899",
+  "run": 37113450923,
+  "job": 111175627177,
+  "artifact": 11271011653,
+  "process_exit": 0,
+  "elapsed_seconds": 10,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "leak_warnings": [],
+  "result": {
+    "checks": 62,
+    "earned_campaign": false,
+    "failures": [],
+    "fixture": "Authored axe/pickaxe props assigned to shipping ToolHold; no Game/input/gather",
+    "observer_state": "IDs and WeakRefs only"
+  },
+  "cases": [
+    "replace axe",
+    "replace pickaxe",
+    "delete-owner axe",
+    "delete-owner pickaxe",
+    "delete-player-with-external-prop axe",
+    "delete-player-with-external-prop pickaxe"
+  ],
+  "scope": "Authored axe/pickaxe finish fixtures assigned to actual shipping ToolHold. Production replacement and PREDELETE paths, including earlier external mount under parent deletion. Active/source/mesh identity retained across removal/re-entry; all private finish WeakRefs expire after actual deletion. Observer holds IDs/WeakRefs only; no Game, equip input, gather or earned acceptance supplied.",
+  "actual_fresh_material_errors_closed": false,
+  "independent_review_pending": true,
+  "integration_pending": true,
+  "raw_log": "ci-held-tool-lifecycle-fixed-37113450923.log.gz",
+  "raw_log_sha256": "91d76608f8c7bbbd43cb1da772b9ac37539b0dc2f8949b270fcf8a910dda1f48"
+}

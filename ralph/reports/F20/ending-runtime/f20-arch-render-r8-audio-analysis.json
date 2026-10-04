@@ -1,0 +1,58 @@
+{
+  "verdict": "PASS",
+  "checks": {
+    "signal_above_quantisation_floor": true,
+    "no_clipped_samples": true,
+    "configured_frequency": true,
+    "configured_duration": true,
+    "configured_half_sine_envelope_and_tone": true,
+    "silence_after_cue": true
+  },
+  "wav_sha256": "07b25f23a67c3475fc44d0c8b11315bd3663b3fbcd15706fa1d70b0e529c60d8",
+  "config_sha256": "cf10730115c9c865730463a28d0c1ac18456a16f48457fc2490b1724f618f83f",
+  "pcm": {
+    "channels": 2,
+    "sample_width": 2,
+    "rate": 44100,
+    "frames": 233472,
+    "seconds": 5.294149659863946,
+    "clipped_samples": 0
+  },
+  "expected": {
+    "frequency_hz": 98.0,
+    "duration_seconds": 2.5,
+    "envelope": "sin(pi * t / duration)"
+  },
+  "measured": {
+    "frequency_hz": 97.99999999999989,
+    "active_seconds": 2.482358276643991,
+    "first_active_seconds": 0.012653061224489797,
+    "last_active_seconds": 2.494988662131519,
+    "reference_onset_seconds": 0.003820861678004439,
+    "residual_energy_fraction": 1.161261399462984e-05,
+    "tail_rms_lsb": 0.0,
+    "channels": [
+      {
+        "channel": 0,
+        "peak_pcm": 460,
+        "fitted_gain": 0.014032687256523927,
+        "fitted_phase_radians": 1.3567635374783977,
+        "residual_energy": 6.300775233114564e-05
+      },
+      {
+        "channel": 1,
+        "peak_pcm": 459,
+        "fitted_gain": 0.014009349606224865,
+        "fitted_phase_radians": 1.3567567863818275,
+        "residual_energy": 6.28393027790608e-05
+      }
+    ]
+  },
+  "tolerances": {
+    "frequency_hz": 0.5,
+    "duration_seconds": 0.05,
+    "residual_energy_fraction": 0.02,
+    "tail_rms_lsb": 1
+  },
+  "scope": "Configured low hum in mixed PCM output; no human listening, speaker or subjective quality verdict."
+}

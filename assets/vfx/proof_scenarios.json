@@ -8,9 +8,11 @@
     5
   ],
   "capture_phases": {
+    "launch": 0.12,
     "flight": 0.78,
     "contact": 1,
-    "impact": 1.14
+    "impact": 1.3,
+    "aftermath": 2.0
   },
   "identities": [
     {
@@ -89,5 +91,553 @@
     "maximum_fraction": 0.65,
     "minimum_fraction": 0.12,
     "non_transit_scope": "Sky/target/self/beam/radial effects retain the configured flight phase; this is not a horizontal projectile shutter."
+  },
+  "capture_phases_note": "r7 harness: launch at the attacker, flight before the measured envelope, contact at actual arrival, impact ~0.2 s and aftermath ~0.7 s after arrival (fractions of identity travel). Earlier r1-r6 used flight/contact/impact 0.78/1/1.14 only.",
+  "stage": {
+    "default": "meadows",
+    "scope": "Production Meadows day look through WorldLook, installed terrain texture and nature family, posed production attacker and target. Presentation context only; no world, encounter, HP or save state.",
+    "look_path": "res://data/config/meadows_look.json",
+    "time": "day",
+    "ground_albedo": "res://assets/environment/terrain/Grass004_Color.jpg",
+    "ground_normal": "res://assets/environment/terrain/Grass004_NormalGL.jpg",
+    "ground_uv_scale": 14.0,
+    "ground_size_m": 80.0,
+    "ground_tint": "#cfd8bc",
+    "attacker_species": "terrapup",
+    "attackers_by_type": {
+      "ground": "terrapup",
+      "fire": "cindercub",
+      "electric": "staticub",
+      "water": "ripplet",
+      "air": "galewisp",
+      "ice": "frostclaw",
+      "dark": "shadelet",
+      "psychic": "glimmermoth"
+    },
+    "muzzle_clearance_m": 0.12,
+    "muzzle_height_ratio": 0.62,
+    "camera": {
+      "position": [
+        0.4,
+        3.0,
+        11.2
+      ],
+      "look_at": [
+        0.4,
+        1.2,
+        0.0
+      ],
+      "fov": 46.0
+    },
+    "dressing": [
+      {
+        "scene": "res://assets/environment/stylized_nature/CommonTree_1.gltf",
+        "position": [
+          -9.0,
+          0,
+          -12.0
+        ],
+        "scale": 1.12,
+        "yaw_deg": 20
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/CommonTree_3.gltf",
+        "position": [
+          3.0,
+          0,
+          -15.0
+        ],
+        "scale": 1.0,
+        "yaw_deg": 75
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/CommonTree_2.gltf",
+        "position": [
+          11.0,
+          0,
+          -10.0
+        ],
+        "scale": 0.86,
+        "yaw_deg": 140
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+        "position": [
+          7.5,
+          0,
+          -4.5
+        ],
+        "scale": 1.15,
+        "yaw_deg": 30
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+        "position": [
+          -6.8,
+          0,
+          -3.6
+        ],
+        "scale": 1.1,
+        "yaw_deg": 60
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+        "position": [
+          -9.5,
+          0,
+          -5.5
+        ],
+        "scale": 0.22,
+        "yaw_deg": 10
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+        "position": [
+          5.8,
+          0,
+          -8.0
+        ],
+        "scale": 0.22,
+        "yaw_deg": 200
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Clover_1.gltf",
+        "position": [
+          -3.71,
+          0,
+          3.9
+        ],
+        "scale": 0.84,
+        "yaw_deg": 156
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "position": [
+          2.0,
+          0,
+          -9.36
+        ],
+        "scale": 0.76,
+        "yaw_deg": 289
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          -9.26,
+          0,
+          0.3
+        ],
+        "scale": 0.88,
+        "yaw_deg": 319
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "position": [
+          -5.06,
+          0,
+          3.78
+        ],
+        "scale": 0.88,
+        "yaw_deg": 268
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          -9.71,
+          0,
+          4.6
+        ],
+        "scale": 0.9,
+        "yaw_deg": 182
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          -2.88,
+          0,
+          -7.16
+        ],
+        "scale": 0.9,
+        "yaw_deg": 37
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          -10.45,
+          0,
+          -1.55
+        ],
+        "scale": 0.93,
+        "yaw_deg": 20
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          -0.07,
+          0,
+          -8.84
+        ],
+        "scale": 0.94,
+        "yaw_deg": 286
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          -2.17,
+          0,
+          2.07
+        ],
+        "scale": 0.9,
+        "yaw_deg": 247
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Clover_2.gltf",
+        "position": [
+          -2.27,
+          0,
+          2.3
+        ],
+        "scale": 0.86,
+        "yaw_deg": 24
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "position": [
+          9.72,
+          0,
+          2.45
+        ],
+        "scale": 0.91,
+        "yaw_deg": 234
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "position": [
+          -11.59,
+          0,
+          4.06
+        ],
+        "scale": 0.9,
+        "yaw_deg": 179
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          8.85,
+          0,
+          2.59
+        ],
+        "scale": 0.77,
+        "yaw_deg": 350
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          -7.88,
+          0,
+          -0.46
+        ],
+        "scale": 0.8,
+        "yaw_deg": 75
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          7.45,
+          0,
+          1.38
+        ],
+        "scale": 0.79,
+        "yaw_deg": 292
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "position": [
+          7.72,
+          0,
+          1.85
+        ],
+        "scale": 0.84,
+        "yaw_deg": 185
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "position": [
+          -1.12,
+          0,
+          -3.14
+        ],
+        "scale": 0.86,
+        "yaw_deg": 181
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Clover_2.gltf",
+        "position": [
+          -0.95,
+          0,
+          3.9
+        ],
+        "scale": 0.88,
+        "yaw_deg": 14
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          3.58,
+          0,
+          -1.51
+        ],
+        "scale": 0.89,
+        "yaw_deg": 90
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          4.42,
+          0,
+          -6.12
+        ],
+        "scale": 0.94,
+        "yaw_deg": 133
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          1.0,
+          0,
+          -9.51
+        ],
+        "scale": 0.93,
+        "yaw_deg": 16
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "position": [
+          -6.04,
+          0,
+          4.1
+        ],
+        "scale": 0.77,
+        "yaw_deg": 209
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          -5.98,
+          0,
+          -8.6
+        ],
+        "scale": 0.92,
+        "yaw_deg": 111
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          9.25,
+          0,
+          0.59
+        ],
+        "scale": 0.77,
+        "yaw_deg": 315
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          8.07,
+          0,
+          -5.1
+        ],
+        "scale": 0.88,
+        "yaw_deg": 117
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          -6.19,
+          0,
+          0.77
+        ],
+        "scale": 0.82,
+        "yaw_deg": 236
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          -3.96,
+          0,
+          -6.2
+        ],
+        "scale": 0.96,
+        "yaw_deg": 141
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "position": [
+          6.9,
+          0,
+          -9.41
+        ],
+        "scale": 0.75,
+        "yaw_deg": 146
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Tall.gltf",
+        "position": [
+          -10.49,
+          0,
+          -0.96
+        ],
+        "scale": 0.84,
+        "yaw_deg": 244
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Fern_1.gltf",
+        "position": [
+          8.8,
+          0,
+          -6.46
+        ],
+        "scale": 0.84,
+        "yaw_deg": 257
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Wide_Short.gltf",
+        "position": [
+          -10.91,
+          0,
+          -3.28
+        ],
+        "scale": 0.98,
+        "yaw_deg": 79
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          -4.08,
+          0,
+          -8.95
+        ],
+        "scale": 0.91,
+        "yaw_deg": 66
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          6.28,
+          0,
+          -4.1
+        ],
+        "scale": 0.78,
+        "yaw_deg": 71
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          9.47,
+          0,
+          3.63
+        ],
+        "scale": 0.77,
+        "yaw_deg": 191
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          9.66,
+          0,
+          -8.4
+        ],
+        "scale": 0.78,
+        "yaw_deg": 346
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Clover_1.gltf",
+        "position": [
+          4.71,
+          0,
+          1.24
+        ],
+        "scale": 0.96,
+        "yaw_deg": 37
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Grass_Common_Short.gltf",
+        "position": [
+          5.69,
+          0,
+          -7.0
+        ],
+        "scale": 0.87,
+        "yaw_deg": 91
+      },
+      {
+        "scene": "res://assets/environment/stylized_nature/Clover_2.gltf",
+        "position": [
+          4.67,
+          0,
+          1.72
+        ],
+        "scale": 0.95,
+        "yaw_deg": 346
+      }
+    ],
+    "attacker_front_x": -2.4,
+    "target_x": 4.6,
+    "world": {
+      "scene": "res://scenes/world/meadows_playground.tscn",
+      "scope": "Shipped Meadows world loaded read-only: real Terrain3D ground, vegetation, sky and WorldLook; clock/weather frozen, HUD hidden, player/camera rig/encounter/trainer/sequence systems disabled; no save or network state.",
+      "origin": [
+        78.0,
+        44.0
+      ],
+      "origin_why": "The practice trainer's fight ground (vegetation.json clearings[4]): an authored open clearing the game keeps for 11 m trainer arenas.",
+      "yaw_deg": 0.0,
+      "weather": "clear",
+      "settle_frames": 60,
+      "post_freeze_frames": 30,
+      "capture_fixed_fps": 20,
+      "clear_radius_m": 6.5,
+      "trainer_spot_x": -6.8,
+      "trainer_spot_z": 1.6,
+      "camera": {
+        "position": [
+          -1.2,
+          3.0,
+          7.4
+        ],
+        "look_at": [
+          -0.8,
+          1.1,
+          0.0
+        ],
+        "fov": 60.0
+      }
+    }
+  },
+  "capture_wall_watchdog_s": 5400.0,
+  "capture_wall_watchdog_note": "Hang safety net only. The authored lifetime allowance runs on the presentation clock; the full Meadows world renders at ~8 s per frame under llvmpipe.",
+  "ultimate_capture": {
+    "scope": "F35 actual ultimate presentation nodes via ULTIMATES.launch on the configured stage; not an earned meter/HP path.",
+    "travel_seconds": 0.7,
+    "breakthroughs": [
+      0,
+      5
+    ],
+    "shutters": {
+      "windup": 0.25,
+      "travel": 0.75,
+      "contact": 0.05,
+      "peak": 0.45,
+      "late": 0.35
+    },
+    "shutter_note": "windup/travel are fractions of travel; contact/peak are seconds after arrival; late is seconds before the presentation ends.",
+    "auto_frame": true,
+    "frame_margin_m": 0.6,
+    "frame_headroom": 1.5,
+    "frame_view_direction": [
+      0.05,
+      0.28,
+      1.0
+    ]
   }
 }

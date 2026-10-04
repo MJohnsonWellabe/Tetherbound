@@ -1,0 +1,11 @@
+{
+  "ref": "main",
+  "inputs": {
+    "label": "f17-circle-contracts-r1",
+    "args": "--only=test_tournament_ground_presentation.gd,test_realm_world_components.gd",
+    "mode": "headless",
+    "timeout_minutes": "15",
+    "script": "tests/run_tests.gd",
+    "checkout_ref": "18e29847b48b5f47aa4dd377600ef0653a76af08"
+  }
+}

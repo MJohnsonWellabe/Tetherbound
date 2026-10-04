@@ -1,0 +1,40 @@
+{
+  "kind": "f19_solmane_cold_masked_material_negative",
+  "source_commit": "ef33ae27f5738b40f64980047c0f2d9b7d018f56",
+  "baseline": {
+    "run": 37104723866,
+    "job": 111150900215,
+    "artifact": 11267063096,
+    "process_exit": 0,
+    "elapsed_seconds": 223,
+    "engine_errors": 8,
+    "script_errors": 0,
+    "original_transition_errors": 4,
+    "final_delete_errors": 4,
+    "raw_log": "ci-solmane-cold-baseline-37104723866.log.gz",
+    "raw_log_sha256": "1c6915c3cce8b6b38c7e21c1d3c766a9a26f5cb8231b77b69fe886538cc78b4f"
+  },
+  "masked_materials": {
+    "run": 37104725293,
+    "job": 111150904967,
+    "artifact": 11267692395,
+    "process_exit": 0,
+    "elapsed_seconds": 285,
+    "engine_errors": 8,
+    "script_errors": 0,
+    "original_transition_errors": 4,
+    "final_delete_errors": 4,
+    "held_peak": 132,
+    "raw_log": "ci-solmane-cold-masked-negative-37104725293.log.gz",
+    "raw_log_sha256": "b23ffb16dac33eab928a15f83f29b929240bd5bcdaa62660c655dd8885c9d51e"
+  },
+  "failures": [],
+  "acceptance": false,
+  "scope": "Original bootstrap/reset/reboot reproduces original first four errors, plus four during final diagnostic world deletion. Holding only actual non-active mesh Material refs across all root children does not reduce errors. No active, particle, Terrain, Mesh/MultiMesh resources retained.",
+  "actual_root_children_after_boot": [
+    "/root/Game",
+    "/root/CloudreachCliffs"
+  ],
+  "result": "Masked-material owner hypothesis rejected for cold Cloudreach. No inferred separate automatic Meadows root: observed roots are Game and CloudreachCliffs only. Village-npcs ready line origin remains unverified.",
+  "next": "Retain only active per-surface override Materials; exclude geometry override, mesh-base, particles and native Terrain refs."
+}

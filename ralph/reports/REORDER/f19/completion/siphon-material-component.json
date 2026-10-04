@@ -1,0 +1,21 @@
+{
+  "kind": "f19_actual_three_siphon_lifetime_component",
+  "source_commit": "193f5109bf544e7ba4143b4c29aea0e9c8d74950",
+  "run": 37101041988,
+  "job": 111140469987,
+  "artifact": 11265956855,
+  "process_exit": 0,
+  "elapsed_seconds": 11,
+  "engine_errors": 8,
+  "script_errors": 0,
+  "failures": [],
+  "before_withdrawal_errors": 0,
+  "baseline_withdrawal_errors": 8,
+  "retain_only_three_masked_surface_errors": 0,
+  "held_peak": 3,
+  "scope": "Actual Stronghold._load_prop, _reserve_tether_oxblood, _light_the_siphon and occupation._darken with authored three siphon specs. Shared imported mesh verified by IDs. Direct component fixture; real X11 Compatibility/drawingfalse.",
+  "result": "Native owner reproduced: active geometry override remains emissive while three hidden nonemissive surface copies produce the same eight-error teardown signature as one settled world. Holding only those three copies prevents errors. Bounded active-override correction justified.",
+  "acceptance": false,
+  "raw_log": "ci-siphon-material-baseline-37101041988.log.gz",
+  "raw_log_sha256": "3ba1980e4d0db98f190eda7c99f72fb88d8724229d948fee9110b9c2cc0f009b"
+}
