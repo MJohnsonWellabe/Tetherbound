@@ -1,0 +1,18 @@
+{
+ "quick": {
+  "A": "after",
+  "B": "before"
+ },
+ "charged": {
+  "A": "before",
+  "B": "after"
+ },
+ "crit": {
+  "A": "before",
+  "B": "after"
+ },
+ "incoming": {
+  "A": "after",
+  "B": "before"
+ }
+}
