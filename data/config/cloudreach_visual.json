@@ -5,6 +5,16 @@
   "_comment": "Vista far floor (VISUAL cloudreach lane, F08#4/F40#4): graphics_prefs draw-distance presets set far to 320/520/900 m, which clipped the cloud deck, distant relief and Aviary sightline in every frame. The realm camera keeps at least this far plane, the scene's own authored value; nearer detail keeps its own visibility ranges.",
   "vista_far_floor_m": 3500.0
  },
+ "postfinale_festival": {
+  "_comment": "F08#4 frame 36: post-finale Galefoot was pixel-identical to frame 05. cloudreach_world_payoffs.gd::_build_festival shows these only while cloudreach_winds_restored holds: blue/gold swallowtail pennants (banner_cloth shader) along the existing waycamp lantern line (world coords), and a second run between two banner masts across the plaza. Visual-only, no collision.",
+  "pennant_colours": ["#315f9a", "#d6ad52"],
+  "bunting_lines": [[[-291.0, 186.7, 523.0], [-272.0, 186.7, 523.0]]],
+  "masts": [[-290.0, 180.0, 511.0], [-268.0, 180.0, 531.0]],
+  "mast_height_m": 7.0,
+  "banner_yaw_deg": 35.0,
+  "pennants_per_metre": 0.8,
+  "sag_m": 1.15
+ },
  "settlement_dressing": [
     {"asset": "workbench", "at": [-17.5, 0.14, -6], "height": 1.15, "yaw": 18},
     {"asset": "bucket", "at": [-17, 0.14, -8], "height": 0.48},
