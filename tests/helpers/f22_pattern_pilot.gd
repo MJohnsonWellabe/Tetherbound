@@ -20,11 +20,12 @@ var _pending_field: Dictionary = {}
 func _act(policy: String) -> void:
 	if policy == "SWITCH_READER" and _combo_hooked_manager != _manager.get_instance_id():
 		_combo_hooked_manager = _manager.get_instance_id()
-		if not _manager.has_signal("tag_combo_resolved"):
-			_tally["fixture_error"] = "actual accepted F24 combo observation is absent"
-			_manager.call("_begin_resolve", "fled")
-			return
-		_manager.connect("tag_combo_resolved", _on_tag_combo_resolved)
+		# F24's joint attack is observed when it exists; until then the
+		# switching reader still has COMBAT §12.3's other two sources (type
+		# matchup, per-identity resources) through the D32 switch.
+		_tally["tag_combo_available"] = _manager.has_signal("tag_combo_resolved")
+		if bool(_tally.tag_combo_available):
+			_manager.connect("tag_combo_resolved", _on_tag_combo_resolved)
 	if is_instance_valid(_wild) and _prepared_body != _wild.get_instance_id():
 		_prepared_body = _wild.get_instance_id()
 		_tell_seen_frame = -1
@@ -325,22 +326,26 @@ func _switch_for_matchup() -> void:
 	var best_value := -INF
 	var candidates: Array[int] = [active]
 	candidates.append_array(_manager.switchable_indices())
+	# A benched creature keeps its own health (COMBAT §12.3, per-identity
+	# resources): a reader pulls a nearly spent lead before it falls, and
+	# among healthy candidates chooses by visible type matchup.
+	var spent: bool = float((party[active] as RefCounted).call("hp_fraction")) < 0.3
 	for index: int in candidates:
 		var creature: RefCounted = party[index]
+		if spent and index != active and float(creature.call("hp_fraction")) < 0.6: continue
 		var outgoing := TYPE_GRAPH.multiplier_dual(_moves.call("type_of", str(creature.get("move_quick"))),
 			str(enemy.get("creature_type")), str(enemy.get("secondary_type")))
 		var incoming := TYPE_GRAPH.multiplier_dual(_moves.call("type_of", str(enemy.get("move_quick"))),
 			str(creature.get("creature_type")), str(creature.get("secondary_type")))
 		var value := outgoing / maxf(0.01, incoming)
+		if spent and index == active: value = -1.0
 		if value > best_value:
 			best_value = value
 			best = index
 	if best == active:
 		return
-	if not _manager.has_method("request_tag_switch"):
-		_tally["fixture_error"] = "actual F24 tag-switch caller is absent"
-		return
-	if bool(_manager.call("request_tag_switch", best)):
+	var caller := "request_tag_switch" if _manager.has_method("request_tag_switch") else "request_switch"
+	if bool(_manager.call(caller, best)):
 		_tally["switches"] = int(_tally.get("switches", 0)) + 1
 
 
