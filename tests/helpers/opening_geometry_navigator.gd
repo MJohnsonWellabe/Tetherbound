@@ -1509,10 +1509,12 @@ func _production_wall_normals(hit: PhysicsTestMotionResult3D) -> Array[Vector3]:
 
 
 ## A contact rising above the walking foot by more than a floor-cone capsule
-## contact can (r(1 - cos 45deg) ~= 0.12 m for the trainer) but no more than a
-## step: something the controller would climb rather than walk on. Pure seam.
+## contact can (r(1 - cos 45deg) ~= 0.12 m for the trainer): something the
+## controller would climb rather than walk on. No upper bound: the woodpile's
+## box is exactly STEP_HEIGHT tall, so its edge sits on any step-height cut.
+## Pure seam; `step_height` must still be a real positive step.
 static func is_low_prop_climb(rise: float, step_height: float) -> bool:
-	return is_finite(rise) and is_finite(step_height) and rise > LOW_PROP_RISE and rise <= step_height + CONTACT_EPS
+	return is_finite(rise) and is_finite(step_height) and step_height > 0.0 and rise > LOW_PROP_RISE
 
 
 ## Only colliders under the world's authored Props root (clutter, never
