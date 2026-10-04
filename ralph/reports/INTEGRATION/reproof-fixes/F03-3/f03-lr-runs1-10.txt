@@ -1,0 +1,24 @@
+local requests smoke test passed
+exit=0 start=2026-10-04T19:27:59Z duration_s=222
+local requests smoke test passed
+exit=0 start=2026-10-04T19:32:41Z duration_s=173
+smoke FAIL: river_nest paid: exact prompt never became actionable at player=(-24.4, 5.25137, 4166.0) winner=<null> input_owner=/root/MeadowsPlayground/DialoguePanel open=true conversation=river_nest_doss_defeated line={ "speaker": "Doss", "portrait": "res://assets/ui/portraits/doss.png", "text": "Your wood braced the boards and your fiber lashed them. You and your companions have a safe perch beside the river again.", "is_last": false, "confirmation": false, "index": 0, "count": 2 } started=["night_watch_farro_challenge@315", "river_nest_doss_challenge@771"]
+exit=1 start=2026-10-04T19:35:34Z duration_s=215
+local requests smoke test passed
+exit=0 start=2026-10-04T19:39:09Z duration_s=165
+smoke FAIL: lost_creature: choosing Later did not close Juno's acknowledgement (conversation=pasture_drover_juno_reunited_challenge line={ "speaker": "Juno", "portrait": "res://assets/ui/portraits/juno.png", "text": "If you\'re heading for his team, try mine first. Our missing friend can watch this one. Friendly bout now, or later?", "is_last": true, "confirmation": true, "index": 2, "count": 3 } input_owner=/root/MeadowsPlayground/DialoguePanel log=["river_nest_doss_challenge@779", "river_nest_doss_defeated@887", "lost_creature_rue_challenge@915", "lost_creature_rue_returned@2633"])
+exit=1 start=2026-10-04T19:54:17Z duration_s=167
+local requests smoke test passed
+exit=0 start=2026-10-04T19:57:04Z duration_s=160
+lost_creature Later trace: ["send@2747 in_physics=true", "2748:jp=false p=false open=true skip=false guard=0", "2749:jp=false p=false open=true skip=false guard=0", "2750:jp=true p=false open=true skip=false guard=0", "2751:jp=false p=false open=false skip=false guard=0", "2752:jp=false p=false open=false skip=false guard=0", "2753:jp=false p=false open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:00:55Z duration_s=158
+lost_creature Later trace: ["send@2771 in_physics=true", "2772:jp=false p=false open=true skip=false guard=0", "2773:jp=true p=true open=true skip=false guard=0", "2774:jp=false p=true open=false skip=false guard=0", "2775:jp=false p=true open=false skip=false guard=0", "2776:jp=false p=true open=false skip=false guard=0", "2777:jp=false p=true open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:03:34Z duration_s=158
+lost_creature Later trace: ["send@2755 in_physics=true", "2756:jp=false p=false open=true skip=false guard=0", "2757:jp=true p=true open=true skip=false guard=0", "2758:jp=false p=true open=false skip=false guard=0", "2759:jp=false p=true open=false skip=false guard=0", "2760:jp=false p=true open=false skip=false guard=0", "2761:jp=false p=true open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:06:12Z duration_s=164
+lost_creature Later trace: ["send@2737 in_physics=true", "2738:jp=false p=false open=true skip=false guard=0", "2739:jp=false p=false open=true skip=false guard=0", "2740:jp=false p=false open=true skip=false guard=0", "2741:jp=true p=false open=true skip=false guard=0", "2742:jp=false p=false open=false skip=false guard=0", "2743:jp=false p=false open=false skip=false guard=0"]
+local requests smoke test passed
+exit=0 start=2026-10-04T20:08:56Z duration_s=160

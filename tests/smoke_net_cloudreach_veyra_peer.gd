@@ -14,10 +14,11 @@ extends "res://tools/net/proof_peer_runner.gd"
 ##   makes. Everything after it (route, wire, host journal, delta) is shipping
 ##   code. It reads, in the SAME frame (no network packet can land in between),
 ##   whether this peer's own flag store now says the trainer is beaten.
-##   `mode: "base"` is the NEGATIVE CONTROL: it calls main's unfixed client
-##   route (`encounter_director.gd::_record_trainer_defeat_for_the_session`,
-##   which Cloudreach reached on main) for another trainer, so the same
-##   same-frame read is shown to catch a local world-flag write.
+##   `mode: "base"` calls the shared base client route
+##   (`encounter_director.gd::_record_trainer_defeat_for_the_session`) for
+##   another trainer. It once wrote a local world-flag "note" and served as a
+##   negative control; since that route was fixed to MULTIPLAYER §2 it is a
+##   positive check that the shared route writes nothing and asks the host.
 ## * probe `veyra_state` -- flag reads (merged/world/player), this world's
 ##   journal rows for a trainer, satchel counts, and whether this peer's own
 ##   portable character FILE on disk mentions the flag.

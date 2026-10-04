@@ -1,9 +1,10 @@
 {
-  "updated": "2026-10-04T17:45Z",
+  "updated": "2026-10-04T20:45Z",
   "headline": [
-    "PR #525 (F17-F20, F21, F25/F35) last full-CI run: 40/41 green; only the known-red job failed and one job is still running. It auto-merges on green. Three intermittent net smokes were root-caused and fixed (interrupted friendly strike, guest inventory guard after join, Hall floor staging).",
-    "Re-proofs so far: 2 criteria re-proven met, 8 failing. The failures went to owners: F17#4 and F01#2 to the F17 lane, F01#6 tournament to the F21 lane, F02#3/#7 walker and F03#3 activities to the re-proof sessions, F08#3 Cloudreach camera to Codex visual, F37#3 docs residual to the coordinator.",
-    "Five lanes active: F17, F21, F27, F32 (Claude) and F26 look-dev (Codex). Codex GPU captures are paused while the owner games; it is doing CPU-only work."
+    "Main 5d10e6d73: #528 recorded the owner's four rulings. Batch PR #529 in full CI (re-proof fixes F06#4, F07#1, F08#2, F03#3; co-op, Stormwood and Cloudreach gathering; Cloudreach cloud sea).",
+    "F32 lane done and archived: #0, #1, #2, #3 and #5 pass (lands next batch); #4 win sheds move to F27.",
+    "Blockers: F18 portals not started (critical path); the combat test pilot barely attacks (blocks earned runs, F17#4); v27 proof saves (about 15 two-peer proofs; tb/fixture-regen rebuilding).",
+    "New lanes: F22 enemy patterns, fixture-regen. The fix lane moves on to F01#6 (tournament guest hits) and F04#4 (Warden reach)."
   ],
   "batches": [
     {
@@ -364,28 +365,48 @@
   "lanes": [
     {
       "lane": "tb/f17 (Claude)",
-      "now": "Fixing the F17#2/#3 walks (orchard wall line). Also routed F17#4 (hammer equip) and F01#2 (day walk stalls at the signpost).",
+      "now": "Woodpile walker fixed. F17#4 parked on the combat pilot. Doing #0 topology, #1 destination, #6 night interiors; hero assets requested from Codex.",
       "next": "Re-prove the stale criteria on current code, then build the missing proof. F18 portals follow immediately."
     },
     {
       "lane": "tb/f21 (Claude)",
-      "now": "F21#4 fallback lens within overlap tolerance. Also routed: F01#6 guest tournament strikes hitting the local stand-in.",
+      "now": "F21#4 judge PASS (in-container). F21#5 A/B after-hit sequences done; Medium frame time is on Codex GPU.",
       "next": "Fix camera occluders (trainer, foreground creatures), then the size matrix plus judge. F22 to F24 follow."
     },
     {
       "lane": "tb/lookdev (Codex)",
-      "now": "F26#2 independently MET. Settings persistence PASS on 3 native runs. Ally Medium route harness and owner checklist prepared. GPU captures paused (owner gaming).",
-      "next": "Forward+ presets and native GPU captures; High/Medium biome matrix judge; prepare the Ally test build."
+      "now": "F26#2 MET. Ally Medium harness and owner checklist ready. GPU captures paused (owner gaming); queued: F21 native matrix, F21#5 frame time, Cloudreach visual FAILs.",
+      "next": "GPU-only: Forward+ Medium/High census and matrices, all frame times, F21 live matrix and Medium frame time, Ally package, Stormursa Meshy."
     },
     {
       "lane": "tb/f27 (Claude)",
-      "now": "Fixed: wild victory no longer stacks legacy XP. Real-path proofs for essence/leveling in progress.",
+      "now": "Two-peer essence no-dup smoke and essence node witness added; applying F32 shed wiring.",
       "next": "Real-path and two-peer proofs; route ledger. F28 and F30 follow."
     },
     {
-      "lane": "tb/f32 (Claude)",
-      "now": "Water node registration census and two-peer node contention test landed on the lane.",
-      "next": "Per-biome node census, real-path harvest and refining proofs; switch on the Forge recipes."
+      "lane": "tb/reproof-fixes (Claude)",
+      "now": "All four done (in #529). Now F01#6 tournament guest strikes and F04#4 Warden reach.",
+      "next": "Each fix gets its own commit plus evidence; integrated in the next batch."
+    },
+    {
+      "lane": "tb/visual-cloudreach (Claude)",
+      "now": "Grey void fixed (far-plane vista floor). Next: high-perch occlusion, companion in lens, cliffs, Sky Aviary.",
+      "next": "Root-cause the cloud-sea void first, then scene-level fixes and re-judge."
+    },
+    {
+      "lane": "tb/lookdev-low (Claude)",
+      "now": "Tooling pushed (Low persist smoke, route stills, frame scanner); Low census running.",
+      "next": "Receipts beside Codex's Forward+ census in the same schema."
+    },
+    {
+      "lane": "tb/f22 (Claude)",
+      "now": "Started 20:34: enemy patterns, reader vs masher, role identity, named fights.",
+      "next": "Coordinate pilot with the earned session; named fights with the fix lane."
+    },
+    {
+      "lane": "tb/fixture-regen (Claude)",
+      "now": "Started 20:26: deterministic v28 builder for proof save host_meadows_stormwood_route_open.",
+      "next": "Unblocks F09#4, F10#1, F11#1–#3, F15#0 and others."
     }
   ],
   "decisions": [

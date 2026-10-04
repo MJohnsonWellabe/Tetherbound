@@ -3,7 +3,9 @@ extends Node
 ## Realm-local adapters, global Session transport. The host owns all trainer
 ## opponents even when its own player remains in another realm.
 const HOSTED := preload("res://scripts/combat/stormwood_hosted_trainer.gd")
-const AUTHORITY := preload("res://scripts/net/encounter_host.gd")
+# The director's sole host must carry the F22 action fence, as the director's
+# own default host does; training and resource baselines refuse without it.
+const AUTHORITY := preload("res://scripts/combat/accepted_action_host.gd")
 var world: Node3D
 var session: Node
 var director: Node
