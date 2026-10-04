@@ -62,7 +62,7 @@ timing. [Coordinator split](https://github.com/MJohnsonWellabe/Tetherbound/pull/
 
 ## GPU scheduling
 
-The persistent goal remains active. GPU captures and performance runs are deferred
+The persistent goal's full scope is retained. GPU captures and performance runs are deferred
 while the owner plays Valheim on this PC; continue CPU, reference and Meshy work.
 Resume native captures only after observing Valheim start and exit, or explicit
 owner notice that the PC is free. Concurrent gameplay invalidates frame-time
