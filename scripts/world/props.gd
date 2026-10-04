@@ -282,7 +282,10 @@ func place(into: Node3D, spec: Dictionary) -> void:
 	var signal_overlay: Node3D = null
 	if glow == "campfire":
 		var lit := CAMPFIRE_GLOW.ignite(root)
-		if lit == 0:
+		# `glow_light_only` (optional): the model is a lamp/torch with no flame
+		# surface by design (Torch_Metal), so the overlay's light and embers are
+		# the whole effect. Only an unlit prop that expected a Fire surface warns.
+		if lit == 0 and spec.get("glow_light_only") != true:
 			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
 		CAMPFIRE_GLOW.texture_logs(root)
 		# `glow_scale` (optional, default 1.0): E4-CAMP-CLUSTERING. Grows the

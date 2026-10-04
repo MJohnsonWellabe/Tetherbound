@@ -1160,6 +1160,7 @@
         {
           "name": "RiseTrailRoadEndTorch",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [77.6, -43.4],
           "yaw_deg": -24.0,
           "scale": 0.78,
@@ -1171,6 +1172,7 @@
         {
           "name": "RiseTrailForkTorch",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [59.8, -62.2],
           "yaw_deg": 31.0,
           "scale": 0.82,
@@ -1429,6 +1431,7 @@
         {
           "name": "RiseTrailCrownTorch",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [101.0, -58.7],
           "yaw_deg": 14.0,
           "scale": 0.78,
