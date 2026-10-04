@@ -4613,7 +4613,6 @@
       "conductor_vine",
       "glowmoss",
       "voltcap"
-    ],
-    "runtime_enabled": true
+    ]
   }
 }

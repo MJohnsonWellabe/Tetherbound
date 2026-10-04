@@ -32,3 +32,11 @@ func test_meadows_sunleaf_and_tidewake_pearl_candidates_are_live() -> void:
 	assert_eq(SITES.additional_materials_for("water").size(), 3)
 	for site: Dictionary in SITES.additional_materials_for("water"):
 		assert_eq(site.outputs, {"tide_pearl": 2})
+
+func test_f32_runtime_is_the_one_renewable_gate() -> void:
+	var runtime: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/f32_runtime.json"))
+	assert_eq(runtime.get("runtime_enabled"), true)
+	for path: String in ["res://data/config/harvest.json", "res://data/config/water_pickups.json",
+			"res://data/config/cloudreach_resources.json", "res://data/config/stormwood_harvests.json"]:
+		var policy: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path)).renewable
+		assert_false(policy.has("runtime_enabled"), path + " renewable policy carries no second, unread gate")

@@ -7019,8 +7019,7 @@
       "sluice_metal",
       "tide_bloom",
       "tide_pearl"
-    ],
-    "runtime_enabled": true
+    ]
   },
   "additional_material_node_candidates": {
     "status": "runtime_mounted_placement_and_approach_proven",

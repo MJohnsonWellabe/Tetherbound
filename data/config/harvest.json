@@ -19,8 +19,7 @@
       "ironwood",
       "sunleaf"
     ],
-    "essence_node_config": "res://data/config/essence_nodes.json",
-    "runtime_enabled": true
+    "essence_node_config": "res://data/config/essence_nodes.json"
   },
   "additional_material_node_candidates": {
     "status": "runtime_mounted_placement_and_approach_proven",
