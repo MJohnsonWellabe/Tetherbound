@@ -13,7 +13,7 @@ const REALMS := {
 	"cloudreach": {"scene": "res://scenes/world/cloudreach_cliffs.tscn",
 		"config": "res://data/config/cloudreach_visual.json", "key": ["camera", "vista_far_floor_m"]},
 	"stormwood": {"scene": "res://scenes/world/stormwood.tscn",
-		"config": "res://data/config/stormwood_world.json", "key": ["camera", "vista_far_floor_m"]},
+		"config": "res://data/config/stormwood_camera.json", "key": ["vista_far_floor_m"]},
 }
 var _saved := {}
 
