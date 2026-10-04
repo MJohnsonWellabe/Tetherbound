@@ -75,7 +75,7 @@ void fragment() {
     float edge = smoothstep(0.0, 0.08, UV.y) * (1.0 - smoothstep(0.96, 1.0, UV.y));
     if (splash) {
         float tear = fbm(vec2(UV.x * 7.0, UV.y * 5.0 - TIME * flow_speed * 0.4));
-        float sides = smoothstep(0.0, 0.22, UV.x) * smoothstep(1.0, 0.78, UV.x);
+        float sides = smoothstep(0.0, 0.22, UV.x) * (1.0 - smoothstep(0.78, 1.0, UV.x));
         float tip = smoothstep(0.55, 1.0, UV.y);
         ALBEDO = mix(ALBEDO, foam_colour.rgb, clamp(tip * 0.85 + (1.0 - sides) * 0.35, 0.0, 1.0));
         EMISSION += foam_colour.rgb * tip * 0.12;

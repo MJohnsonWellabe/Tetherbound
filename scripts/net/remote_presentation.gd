@@ -47,6 +47,7 @@ extends RefCounted
 ## the wire, and the viewer never listens to a local combat manager for it.
 
 const VFX := preload("res://scripts/vfx/combat_vfx.gd")
+const GLOW_SCRIPT := preload("res://scripts/vfx/body_glow.gd")
 
 ## The kinds a body may publish. Anything else is dropped rather than guessed
 ## at, so a typo is a missing picture and never a wrong one.
@@ -185,6 +186,10 @@ static func play(body: Node3D, kind: String, payload: Dictionary = {}) -> Node:
 	match kind:
 		KIND_HIT:
 			spawned = VFX.hit(host, at, null, false, body, float(payload.get("fraction", 0.0)))
+			if spawned == null:
+				# The shared hit spark is off (owner decision); the hit is drawn
+				# as the struck body's flash, which VFX.hit attaches to the body.
+				spawned = _latest_body_glow(body)
 		KIND_KNOCKOUT:
 			spawned = VFX.knockout(host, at, body)
 		KIND_CATCH:
@@ -209,6 +214,15 @@ static func play(body: Node3D, kind: String, payload: Dictionary = {}) -> Node:
 ## `SceneTree.call_group(companion_presence.GROUP, ...)` the way the local
 ## fight does: the group holds every companion in the process, so a group call
 ## would make the local player's creature celebrate a friend's win too.
+## The newest hit flash VFX.hit attached to this body, if any.
+static func _latest_body_glow(body: Node3D) -> Node:
+	for index in range(body.get_child_count() - 1, -1, -1):
+		var child: Node = body.get_child(index)
+		if child.get_script() == GLOW_SCRIPT and not child.is_queued_for_deletion():
+			return child
+	return null
+
+
 static func _react(body: Node3D, kind: String) -> void:
 	if kind != KIND_VICTORY and kind != KIND_LEVEL_UP:
 		return
