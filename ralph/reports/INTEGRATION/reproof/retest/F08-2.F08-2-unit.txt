@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_cloudreach_director_client_veyra: 1 of 768 test files
+  ok    test_cloudreach_director_client_veyra.gd :: test_client_veyra_win_writes_no_local_world_flag_and_lands_from_the_host_delta
+  ok    test_cloudreach_director_client_veyra.gd :: test_refused_client_win_leaves_the_world_unbeaten
+  ok    test_cloudreach_director_client_veyra.gd :: test_solo_veyra_win_still_writes_locally_once
+
+3 tests, 37 assertions, 0 failed

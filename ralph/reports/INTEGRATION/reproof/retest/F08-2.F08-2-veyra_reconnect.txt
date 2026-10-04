@@ -1,0 +1,47 @@
+run id:  net-20261004T180436Z-20079
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z
+smoke:   tests/smoke_net_cloudreach_veyra_reconnect.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=20238 control_port=45045 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/peer-0.log
+coordinator: launched peer 1 (client) pid=20239 control_port=37953 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31221.0,"godot_version":"4.7-stable (official)","main_sha":"8ba0fd05a47d","peer":0.0,"pid":20238.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31222.0,"godot_version":"4.7-stable (official)","main_sha":"8ba0fd05a47d","peer":1.0,"pid":20239.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 legacy_physical_crossings_fixture (disclosed retired crossing fixture; shipping default remains off) -> PASS -- disclosed retired crossing fixture: cloudreach_veyra_reconnect
+PASS: #1 peer 1 legacy_physical_crossings_fixture (disclosed retired crossing fixture; shipping default remains off) -> PASS -- disclosed retired crossing fixture: cloudreach_veyra_reconnect
+PASS: #2 peer 0 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+PASS: #2 peer 1 boot (each peer boots its own fresh Meadows world) -> PASS -- booted world (240 settle frames)
+PASS: #3 peer 0 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #3 peer 1 story_flag (setup: both worlds hold the Cloudreach key) -> PASS -- realm_key_cloudreach: ok=true pending=false code='' reason=''
+PASS: #4 peer 0 enter_realm (host enters Cloudreach) -> PASS -- crossed 'meadows' -> 'cloudreach' after 271 observed physics frames / 175459 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #5 peer 1 enter_realm (guest enters Cloudreach in its own world) -> PASS -- crossed 'meadows' -> 'cloudreach' after 272 observed physics frames / 174114 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs
+PASS: #6 peer 1 save_character_here (guest saves its portable character in Cloudreach) -> PASS -- character 'character-0f4e0bf3e6596f17dbcc9e02e2fbcbba' is on disk (wrote_world=true)
+PASS: #7 peer 0 host -> PASS -- hosting udp/31221 as peer 1
+PASS: #8 peer 1 production_join (guest continues its own save into the host's world) -> PASS -- title fresh entry built 'CloudreachCliffs' first, then JoinDriver joined 127.0.0.1:31221 as peer 914687770 after 46 frames
+PASS: #9 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #9 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #10 peer 1 probe player_identity (guest stands in Cloudreach) -> PASS -- {"appearance_id":"trainer","body":{"exists":true,"in_current_scene":true,"model_appearance_id":"trainer","model_exists":true,"model_has_art":true,"model_requested_appearance_id":"","position":[0.0,105.030944824219,-260.0]},"character_id":"character-0f4e0bf3e6596f17dbcc9e02e2fbcbba","display_name":""
+PASS: #11 peer 0 story_flag (setup (host world): Veyra prerequisite cloudreach_act_ii_complete) -> PASS -- cloudreach_act_ii_complete: ok=true pending=false code='' reason=''
+PASS: #12 peer 0 story_flag (setup (host world): Veyra prerequisite cloudreach_upper_anchors_disabled) -> PASS -- cloudreach_upper_anchors_disabled: ok=true pending=false code='' reason=''
+PASS: #13 peer 0 story_flag (setup (host world): Veyra prerequisite summit_extraction_engine_reached) -> PASS -- summit_extraction_engine_reached: ok=true pending=false code='' reason=''
+PASS: #14 peer 1 wait_flag (the guest reads the host's prerequisites) -> PASS -- flag summit_extraction_engine_reached (world) set after 9 frames
+PASS: #15 peer 0 assert (CONTROL: host world has Veyra unbeaten before the win) -> FAIL -- flag captain_veyra_defeated NOT set
+PASS: #16 peer 1 assert (CONTROL: guest reads Veyra unbeaten before the win) -> FAIL -- flag captain_veyra_defeated NOT set
+PASS: the guest has a stable character id (character-0f4e0bf3e6596f17dbcc9e02e2fbcbba)
+PASS: CONTROL: no Veyra journal rows anywhere before the win (host 0.0, guest 0.0)
+FAIL: #18 peer 1 veyra_client_win (NEGATIVE CONTROL: main's unfixed client route (Ila) writes the world flag locally in the same frame) -> PASS; data did not match {"had_flag":false,"local_flag_same_frame":true} -- {"flag":"defeated_cloudreach_ila","had_flag":false,"host":false,"local_flag_same_frame":false,"mode":"base","multi_peer":true,"sent_to_host":true,"trainer":"trainer_ila_lower_ring","victory_emits":0,"world_store_writes_same_frame":0}
+FAIL: #18 peer 1 veyra_client_win (NEGATIVE CONTROL: main's unfixed client route (Ila) writes the world flag locally in the same frame) -> PASS; data did not match {"had_flag":false,"local_flag_same_frame":true} -- {"flag":"defeated_cloudreach_ila","had_flag":false,"host":false,"local_flag_same_frame":false,"mode":"base","multi_peer":true,"sent_to_host":true,"trainer":"trainer_ila_lower_ring","victory_emits":0,"world_store_writes_same_frame":0}
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F08-2/net-cloudreach_veyra_reconnect-20261004T180436Z/SUMMARY.md ===
+# Net smoke run net-20261004T180436Z-20079
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=20238 exited=true unexpected_exit=false
+- peer 1 (client) pid=20239 exited=true unexpected_exit=false
+
+FAILURES:
+- #18 peer 1 veyra_client_win (NEGATIVE CONTROL: main's unfixed client route (Ila) writes the world flag locally in the same frame) -> PASS; data did not match {"had_flag":false,"local_flag_same_frame":true} -- {"flag":"defeated_cloudreach_ila","had_flag":false,"host":false,"local_flag_same_frame":false,"mode":"base","multi_peer":true,"sent_to_host":true,"trainer":"trainer_ila_lower_ring","victory_emits":0,"world_store_writes_same_frame":0}
