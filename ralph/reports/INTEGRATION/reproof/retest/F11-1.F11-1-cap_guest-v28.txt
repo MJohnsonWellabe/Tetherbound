@@ -1,0 +1,69 @@
+proof:    stormwood_f11_capacity_guest_full_releases_belt
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/stormwood_f11_capacity_guest_full_releases_belt.json
+out:      /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28
+run id:  net-20261004T225853Z-14152
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14182 control_port=45399 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/peer-0.log
+coordinator: launched peer 1 (client) pid=14183 control_port=43181 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":35341.0,"godot_version":"4.7-stable (official)","main_sha":"6237e1256687","peer":0.0,"pid":14182.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":35342.0,"godot_version":"4.7-stable (official)","main_sha":"6237e1256687","peer":1.0,"pid":14183.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> PASS -- loaded host_meadows_stormwood_route_open (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-f41f4a49223483d6bfdf56715944bb7b'
+PASS: #2 peer 1 boot (guest: a fresh trainer in the Meadows) -> PASS -- booted world (240 settle frames)
+PASS: #3 peer 0 host -> PASS -- hosting udp/35341 as peer 1
+PASS: #4 peer 1 join -> PASS -- joined 127.0.0.1:35341 as peer 649561504 after 21 frames; snapshot applied; 2 peer(s) in registry
+PASS: #5 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #5 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #6 peer 0 wait_flag (the route comes from the host's save) -> PASS -- flag realm_gate_stormwood_unlocked (any) set after 0 frames
+PASS: #6 peer 1 wait_flag (the route comes from the host's save) -> PASS -- flag realm_gate_stormwood_unlocked (any) set after 0 frames
+PASS: #7 peer 0 enter_realm -> PASS -- crossed 'meadows' -> 'stormwood' after 494 observed physics frames / 46306 ms (budget 6000 physics frames); current scene is /root/Stormwood
+coordinator: s17 enter_realm 'stormwood' attributes the existing bounded shell window to connected host peer 0
+PASS: #8 peer 1 enter_realm -> PASS -- crossed 'meadows' -> 'stormwood' after 523 observed physics frames / 35856 ms (budget 6000 physics frames); current scene is /root/Stormwood
+PASS: #9 peer 1 party_grant (SETUP: guest's belt member 1/5 (bramblebun) through party_seam.add) -> PASS -- 'bramblebun' at level 20 joined the party (1 member(s))
+PASS: #10 peer 1 party_grant (SETUP: guest's belt member 2/5 (terrapup) through party_seam.add) -> PASS -- 'terrapup' at level 20 joined the party (2 member(s))
+PASS: #11 peer 1 party_grant (SETUP: guest's belt member 3/5 (ripplet) through party_seam.add) -> PASS -- 'ripplet' at level 20 joined the party (3 member(s))
+PASS: #12 peer 1 party_grant (SETUP: guest's belt member 4/5 (galewisp) through party_seam.add) -> PASS -- 'galewisp' at level 20 joined the party (4 member(s))
+PASS: #13 peer 1 party_grant (SETUP: guest's belt member 5/5 (mudsnout) through party_seam.add) -> PASS -- 'mudsnout' at level 20 joined the party (5 member(s))
+PASS: #14 peer 1 party_grant (guest's belt is full: a sixth party_seam.add is refused (no sixth slot)) -> FAIL -- party_seam.add('trailpup') refused -- the party is full (five, and there is no sixth slot)
+PASS: #15 peer 0 stormheart_state (host: free slots before the offer) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "party": [], "has_stormheart": false, "freed": false, "world_accepted": false, "world_refused": false, "accepted_anywhere": false, "party_uids": [] }
+PASS: #16 peer 1 stormheart_state (guest: exactly five before the offer) -> PASS -- { "character_id": "character-58b41dc557923e24d858575175c7b123", "party": ["bramblebun", "terrapup", "ripplet", "galewisp", "mudsnout"], "has_stormheart": false, "freed": false, "world_accepted": false, "world_refused": false, "accepted_anywhere": false, "party_uids": ["creature-798117f5a5a08206ce415
+PASS: #17 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #17 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #18 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 3 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/peer-0/before
+PASS: #18 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-58b41dc557923e24d858575175c7b123' on disk=true; copied 2 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/peer-1/before
+PASS: #19 peer 0 stormheart_fixture (both fought the Dynamo (setup)) -> PASS -- Dynamo contributors [1, 649561504]; committed ["stormwood:act_ii_complete", "stormwood:marrow_defeated"]
+PASS: #20 peer 0 wait_flag -> PASS -- flag stormwood:legendary_freed (any) set after 0 frames
+PASS: #20 peer 1 wait_flag -> PASS -- flag stormwood:legendary_freed (any) set after 433 frames
+PASS: #21 peer 0 stormheart_answer (host (space) says Yes) -> PASS -- party holds the Stormheart=true; claim settled=true; answered accept by pressing the enabled prompt '' 0 time(s) (standing (2.0, 0.5, 0.0)), after 3 earlier line(s) and 3 offer line(s); headless peer: no frame to capture (run with --render)
+PASS: #22 peer 1 stormheart_answer (guest (five) says Yes: the claim does NOT settle on its own -- no sixth slot, nothing added, nothing recorded yet; the ceremony holds it) -> FAIL -- party holds the Stormheart=false; claim settled=false; answered accept by pressing the enabled prompt 'Accept the Stormheart's offer' 1 time(s) (standing (2.0, 0.5, 0.0)), after 3 earlier line(s) and 3 offer line(s); headless peer: no frame to capture (run with --render)
+PASS: #23 peer 1 probe input_context (the guest is now in the Team tab's ceremony, not the world) -> PASS -- "menu_creatures"
+PASS: #24 peer 1 screenshot (guest: the Team tab's release ceremony is on screen (newcomer row focused)) -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #25 peer 1 press (down from the newcomer row wraps to belt row 1) -> PASS -- pressed 'ui_down' x1
+PASS: #26 peer 1 press (A on belt row 1: this one goes free) -> PASS -- pressed 'ui_accept' x1
+PASS: #27 peer 1 screenshot (the farewell question (Keep focused first)) -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #28 peer 1 press (down to 'Let them go') -> PASS -- pressed 'ui_down' x1
+PASS: #29 peer 1 press (A: the one irreversible press) -> PASS -- pressed 'ui_accept' x1
+PASS: #30 peer 1 screenshot (the goodbye beat) -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #31 peer 1 press (A on the done button: the ceremony ends) -> PASS -- pressed 'ui_accept' x1
+PASS: #32 peer 0 wait_flag -> PASS -- flag stormwood:legendary_resolution:accepted:character-f41f4a49223483d6bfdf56715944bb7b (any) set after 0 frames
+PASS: #32 peer 1 wait_flag -> PASS -- flag stormwood:legendary_resolution:accepted:character-f41f4a49223483d6bfdf56715944bb7b (any) set after 0 frames
+FAIL: #33 peer 0 wait_flag -> FAIL -- flag stormwood:legendary_resolution:accepted:character-58b41dc557923e24d858575175c7b123 (any) never set within 1800 frames
+FAIL: #33 peer 0 wait_flag -> FAIL -- flag stormwood:legendary_resolution:accepted:character-58b41dc557923e24d858575175c7b123 (any) never set within 1800 frames
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/net/net-proof_two_peer-20261004T225853Z/SUMMARY.md ===
+# Net smoke run net-20261004T225853Z-14152
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=14182 exited=true unexpected_exit=false
+- peer 1 (client) pid=14183 exited=true unexpected_exit=false
+
+FAILURES:
+- #33 peer 0 wait_flag -> FAIL -- flag stormwood:legendary_resolution:accepted:character-58b41dc557923e24d858575175c7b123 (any) never set within 1800 frames
+
+PROOF.md: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-cap_guest-v28/PROOF.md (exit 1)

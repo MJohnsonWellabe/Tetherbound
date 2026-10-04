@@ -1,0 +1,252 @@
+proof:    stormwood_f10_side_chain_receipts
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/stormwood_f10_side_chain_receipts.json
+out:      /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28
+run id:  net-20261004T222552Z-11292
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=11323 control_port=42011 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/peer-0.log
+coordinator: launched peer 1 (client) pid=11324 control_port=43107 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":33961.0,"godot_version":"4.7-stable (official)","main_sha":"6237e1256687","peer":0.0,"pid":11323.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":33962.0,"godot_version":"4.7-stable (official)","main_sha":"6237e1256687","peer":1.0,"pid":11324.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> PASS -- loaded host_meadows_stormwood_route_open (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-f41f4a49223483d6bfdf56715944bb7b'
+PASS: #2 peer 1 boot (guest: a fresh trainer in the Meadows) -> PASS -- booted world (240 settle frames)
+PASS: #3 peer 0 host -> PASS -- hosting udp/33961 as peer 1
+PASS: #4 peer 1 join -> PASS -- joined 127.0.0.1:33961 as peer 728481120 after 31 frames; snapshot applied; 2 peer(s) in registry
+PASS: #5 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #5 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #6 peer 0 wait_flag (the route comes from the host's save) -> PASS -- flag realm_gate_stormwood_unlocked (any) set after 0 frames
+PASS: #6 peer 1 wait_flag (the route comes from the host's save) -> PASS -- flag realm_gate_stormwood_unlocked (any) set after 0 frames
+PASS: #7 peer 0 enter_realm -> PASS -- crossed 'meadows' -> 'stormwood' after 500 observed physics frames / 74150 ms (budget 6000 physics frames); current scene is /root/Stormwood
+coordinator: s17 enter_realm 'stormwood' attributes the existing bounded shell window to connected host peer 0
+PASS: #8 peer 1 enter_realm -> PASS -- crossed 'meadows' -> 'stormwood' after 556 observed physics frames / 43310 ms (budget 6000 physics frames); current scene is /root/Stormwood
+PASS: #9 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:ashfoot_arch_relit — reveals Dark Arches) -> PASS -- stormwood:ashfoot_arch_relit: ok=true pending=false code='' reason=''
+PASS: #10 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:rootgate_released — pairs C and D stand beyond it (Act II)) -> PASS -- stormwood:rootgate_released: ok=true pending=false code='' reason=''
+PASS: #11 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:lantern_pools_linked — reveals Pim's Parcels) -> PASS -- stormwood:lantern_pools_linked: ok=true pending=false code='' reason=''
+PASS: #12 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:crown_reached — reveals What the Crown Remembers) -> PASS -- stormwood:crown_reached: ok=true pending=false code='' reason=''
+PASS: #13 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:named:crown_guardian:cleared — Wen speaks only after the Crown guardian) -> PASS -- stormwood:named:crown_guardian:cleared: ok=true pending=false code='' reason=''
+PASS: #14 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:engine_truth_learned — Wen tells the main truth before the records report) -> PASS -- stormwood:engine_truth_learned: ok=true pending=false code='' reason=''
+PASS: #15 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:bryn_met — reveals Glass for Bryn) -> PASS -- stormwood:bryn_met: ok=true pending=false code='' reason=''
+PASS: #16 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:arch_recipe_known — reveals Raise a Road (Ondra's recipe)) -> PASS -- stormwood:arch_recipe_known: ok=true pending=false code='' reason=''
+PASS: #17 peer 0 wait_flag (fixture fact reached both peers: stormwood:ashfoot_arch_relit) -> PASS -- flag stormwood:ashfoot_arch_relit (any) set after 0 frames
+PASS: #17 peer 1 wait_flag (fixture fact reached both peers: stormwood:ashfoot_arch_relit) -> PASS -- flag stormwood:ashfoot_arch_relit (any) set after 550 frames
+PASS: #18 peer 0 wait_flag (fixture fact reached both peers: stormwood:rootgate_released) -> PASS -- flag stormwood:rootgate_released (any) set after 0 frames
+PASS: #18 peer 1 wait_flag (fixture fact reached both peers: stormwood:rootgate_released) -> PASS -- flag stormwood:rootgate_released (any) set after 0 frames
+PASS: #19 peer 0 wait_flag (fixture fact reached both peers: stormwood:lantern_pools_linked) -> PASS -- flag stormwood:lantern_pools_linked (any) set after 0 frames
+PASS: #19 peer 1 wait_flag (fixture fact reached both peers: stormwood:lantern_pools_linked) -> PASS -- flag stormwood:lantern_pools_linked (any) set after 0 frames
+PASS: #20 peer 0 wait_flag (fixture fact reached both peers: stormwood:crown_reached) -> PASS -- flag stormwood:crown_reached (any) set after 0 frames
+PASS: #20 peer 1 wait_flag (fixture fact reached both peers: stormwood:crown_reached) -> PASS -- flag stormwood:crown_reached (any) set after 0 frames
+PASS: #21 peer 0 wait_flag (fixture fact reached both peers: stormwood:bryn_met) -> PASS -- flag stormwood:bryn_met (any) set after 0 frames
+PASS: #21 peer 1 wait_flag (fixture fact reached both peers: stormwood:bryn_met) -> PASS -- flag stormwood:bryn_met (any) set after 0 frames
+PASS: #22 peer 0 wait_flag (fixture fact reached both peers: stormwood:arch_recipe_known) -> PASS -- flag stormwood:arch_recipe_known (any) set after 0 frames
+PASS: #22 peer 1 wait_flag (fixture fact reached both peers: stormwood:arch_recipe_known) -> PASS -- flag stormwood:arch_recipe_known (any) set after 0 frames
+PASS: #23 peer 0 capture_saves (BASELINE: both peers' saves with every prerequisite and no side-chain step) -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 5 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/peer-0/before
+PASS: #23 peer 1 capture_saves (BASELINE: both peers' saves with every prerequisite and no side-chain step) -> PASS -- client (character only): autosave_here()=false, character 'character-4123983c465de4df2f1642da69142a08' on disk=true; copied 2 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/peer-1/before
+PASS: #24 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #24 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #25 peer 0 storage_grant (SETUP (stands in for gathering): 12 Stormglass for four relights) -> PASS -- granted 12 stormglass (0 did not fit; waited 0 guard frame(s))
+PASS: #26 peer 0 explore_at (SETUP (debug travel): stand at dark arch c_rodline) -> PASS -- stood at (-720, 2257), settled at (-720.0, 2257.0), y=43.1
+PASS: #27 peer 0 press (host presses 'Relight' on dark arch c_rodline (tries it: the inspection; pays 3 Stormglass)) -> PASS -- pressed 'interact' x1
+PASS: #28 peer 0 wait_flag (c_rodline lit, for both peers) -> PASS -- flag stormwood:arch:c_rodline:lit (any) set after 0 frames
+PASS: #28 peer 1 wait_flag (c_rodline lit, for both peers) -> PASS -- flag stormwood:arch:c_rodline:lit (any) set after 0 frames
+PASS: #29 peer 0 explore_at (SETUP (debug travel): stand at dark arch c_lantern) -> PASS -- stood at (-420, 4013), settled at (-420.0, 4013.0), y=61.9
+PASS: #30 peer 0 press (host presses 'Relight' on dark arch c_lantern (tries it: the inspection; pays 3 Stormglass)) -> PASS -- pressed 'interact' x1
+PASS: #31 peer 0 wait_flag (c_lantern lit, for both peers) -> PASS -- flag stormwood:arch:c_lantern:lit (any) set after 0 frames
+PASS: #31 peer 1 wait_flag (c_lantern lit, for both peers) -> PASS -- flag stormwood:arch:c_lantern:lit (any) set after 0 frames
+PASS: #32 peer 0 explore_at (SETUP (debug travel): stand at dark arch d_hall) -> PASS -- stood at (-1120, 3867), settled at (-1120.0, 3867.0), y=37.3
+PASS: #33 peer 0 press (host presses 'Relight' on dark arch d_hall (tries it: the inspection; pays 3 Stormglass)) -> PASS -- pressed 'interact' x1
+PASS: #34 peer 0 wait_flag (d_hall lit, for both peers) -> PASS -- flag stormwood:arch:d_hall:lit (any) set after 0 frames
+PASS: #34 peer 1 wait_flag (d_hall lit, for both peers) -> PASS -- flag stormwood:arch:d_hall:lit (any) set after 0 frames
+PASS: #35 peer 0 explore_at (SETUP (debug travel): stand at dark arch d_giant) -> PASS -- stood at (-150, 4463), settled at (-150.0, 4463.0), y=61.2
+PASS: #36 peer 0 press (host presses 'Relight' on dark arch d_giant (tries it: the inspection; pays 3 Stormglass)) -> PASS -- pressed 'interact' x1
+PASS: #37 peer 0 wait_flag (d_giant lit, for both peers) -> PASS -- flag stormwood:arch:d_giant:lit (any) set after 0 frames
+PASS: #37 peer 1 wait_flag (d_giant lit, for both peers) -> PASS -- flag stormwood:arch:d_giant:lit (any) set after 0 frames
+PASS: #38 peer 0 wait_flag (Dark Arches step 1 (a dark arch inspected) on both) -> PASS -- flag stormwood:side_dark_arches_1 (any) set after 0 frames
+PASS: #38 peer 1 wait_flag (Dark Arches step 1 (a dark arch inspected) on both) -> PASS -- flag stormwood:side_dark_arches_1 (any) set after 0 frames
+PASS: #39 peer 0 wait_flag (Dark Arches step 2 (both dark pairs relit) on both, from the arch runtime) -> PASS -- flag stormwood:side_dark_arches_2 (any) set after 0 frames
+PASS: #39 peer 1 wait_flag (Dark Arches step 2 (both dark pairs relit) on both, from the arch runtime) -> PASS -- flag stormwood:side_dark_arches_2 (any) set after 0 frames
+PASS: #40 peer 0 await_probe (the four relights took all 12 of the host's Stormglass (3 each, host-committed)) -> PASS -- character_restore.live.satchel.stormglass == <null> after 0 polls
+PASS: #41 peer 0 explore_at (SETUP (debug travel): stand beside Rodkeeper Hesk) -> PASS -- stood at (-350, 448), settled at (-350.0, 448.0), y=30.2
+PASS: #42 peer 0 press (Interact with Rodkeeper Hesk) -> PASS -- pressed 'interact' x1
+PASS: #43 peer 0 await_probe (Rodkeeper Hesk opens 'stormwood_hesk_dark_arches_report') -> PASS -- relay_crossing.conversation_id == stormwood_hesk_dark_arches_report after 0 polls
+PASS: #44 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #45 peer 0 press (read both lines of 'stormwood_hesk_dark_arches_report' (the owed report)) -> PASS -- pressed 'interact' x2
+PASS: #46 peer 0 await_probe ('stormwood_hesk_dark_arches_report' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #47 peer 0 wait_flag (DARK ARCHES COMPLETE on both peers) -> PASS -- flag stormwood:side_dark_arches_complete (any) set after 0 frames
+PASS: #47 peer 1 wait_flag (DARK ARCHES COMPLETE on both peers) -> PASS -- flag stormwood:side_dark_arches_complete (any) set after 0 frames
+PASS: #48 peer 1 explore_at (SETUP (debug travel): stand beside Pim) -> PASS -- stood at (-380, 1398), settled at (-380.0, 1398.0), y=32.1
+PASS: #49 peer 1 press (Interact with Pim) -> PASS -- pressed 'interact' x1
+PASS: #50 peer 1 await_probe (Pim opens 'stormwood_pim_parcels_offer') -> PASS -- relay_crossing.conversation_id == stormwood_pim_parcels_offer after 0 polls
+PASS: #51 peer 1 press (read both lines of 'stormwood_pim_parcels_offer' (take the sealed parcels)) -> PASS -- pressed 'interact' x2
+PASS: #52 peer 1 await_probe ('stormwood_pim_parcels_offer' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #53 peer 0 wait_flag (Pim's step 1 on both) -> PASS -- flag stormwood:side_pims_parcels_1 (any) set after 0 frames
+PASS: #53 peer 1 wait_flag (Pim's step 1 on both) -> PASS -- flag stormwood:side_pims_parcels_1 (any) set after 0 frames
+PASS: #54 peer 1 explore_at (SETUP (debug travel): stand beside Marl) -> PASS -- stood at (-360, 441), settled at (-360.0, 441.0), y=30.7
+PASS: #55 peer 1 press (Interact with Marl) -> PASS -- pressed 'interact' x1
+PASS: #56 peer 1 await_probe (Marl opens 'stormwood_pim_parcel_cook_marl') -> PASS -- relay_crossing.conversation_id == stormwood_pim_parcel_cook_marl after 0 polls
+PASS: #57 peer 1 press (read both lines of 'stormwood_pim_parcel_cook_marl' (hand over a parcel)) -> PASS -- pressed 'interact' x2
+PASS: #58 peer 1 await_probe ('stormwood_pim_parcel_cook_marl' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #59 peer 0 wait_flag (parcel delivered to Marl, on both) -> PASS -- flag stormwood:side_pims_parcels_delivered:cook_marl (any) set after 0 frames
+PASS: #59 peer 1 wait_flag (parcel delivered to Marl, on both) -> PASS -- flag stormwood:side_pims_parcels_delivered:cook_marl (any) set after 0 frames
+PASS: #60 peer 1 explore_at (SETUP (debug travel): stand beside Oswin) -> PASS -- stood at (-680, 2308), settled at (-680.0, 2308.0), y=46.3
+PASS: #61 peer 1 press (Interact with Oswin) -> PASS -- pressed 'interact' x1
+PASS: #62 peer 1 await_probe (Oswin opens 'stormwood_pim_parcel_trader_oswin') -> PASS -- relay_crossing.conversation_id == stormwood_pim_parcel_trader_oswin after 0 polls
+PASS: #63 peer 1 press (read both lines of 'stormwood_pim_parcel_trader_oswin' (hand over a parcel)) -> PASS -- pressed 'interact' x2
+PASS: #64 peer 1 await_probe ('stormwood_pim_parcel_trader_oswin' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #65 peer 0 wait_flag (parcel delivered to Oswin, on both) -> PASS -- flag stormwood:side_pims_parcels_delivered:trader_oswin (any) set after 0 frames
+PASS: #65 peer 1 wait_flag (parcel delivered to Oswin, on both) -> PASS -- flag stormwood:side_pims_parcels_delivered:trader_oswin (any) set after 0 frames
+PASS: #66 peer 1 explore_at (SETUP (debug travel): stand beside Lio) -> PASS -- stood at (-350, 4048), settled at (-350.0, 4048.0), y=65.2
+PASS: #67 peer 1 press (Interact with Lio) -> PASS -- pressed 'interact' x1
+PASS: #68 peer 1 await_probe (Lio opens 'stormwood_pim_parcel_caretaker_lio') -> PASS -- relay_crossing.conversation_id == stormwood_pim_parcel_caretaker_lio after 0 polls
+PASS: #69 peer 1 press (read both lines of 'stormwood_pim_parcel_caretaker_lio' (hand over a parcel)) -> PASS -- pressed 'interact' x2
+PASS: #70 peer 1 await_probe ('stormwood_pim_parcel_caretaker_lio' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #71 peer 0 wait_flag (parcel delivered to Lio, on both) -> PASS -- flag stormwood:side_pims_parcels_delivered:caretaker_lio (any) set after 0 frames
+PASS: #71 peer 1 wait_flag (parcel delivered to Lio, on both) -> PASS -- flag stormwood:side_pims_parcels_delivered:caretaker_lio (any) set after 0 frames
+PASS: #72 peer 0 wait_flag (Pim's step 2 (three deliveries) on both) -> PASS -- flag stormwood:side_pims_parcels_2 (any) set after 0 frames
+PASS: #72 peer 1 wait_flag (Pim's step 2 (three deliveries) on both) -> PASS -- flag stormwood:side_pims_parcels_2 (any) set after 0 frames
+PASS: #73 peer 1 explore_at (SETUP (debug travel): stand beside Pim) -> PASS -- stood at (-380, 1398), settled at (-380.0, 1398.0), y=32.1
+PASS: #74 peer 1 press (Interact with Pim) -> PASS -- pressed 'interact' x1
+PASS: #75 peer 1 await_probe (Pim opens 'stormwood_pim_parcels_return') -> PASS -- relay_crossing.conversation_id == stormwood_pim_parcels_return after 0 polls
+PASS: #76 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #77 peer 1 press (read both lines of 'stormwood_pim_parcels_return' (return to Pim: completion and the guest's rate)) -> PASS -- pressed 'interact' x2
+PASS: #78 peer 1 await_probe ('stormwood_pim_parcels_return' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #79 peer 0 wait_flag (PIM'S PARCELS COMPLETE on both peers) -> PASS -- flag stormwood:side_pims_parcels_complete (any) set after 0 frames
+PASS: #79 peer 1 wait_flag (PIM'S PARCELS COMPLETE on both peers) -> PASS -- flag stormwood:side_pims_parcels_complete (any) set after 0 frames
+PASS: #80 peer 1 await_probe (guest paid the courier rate once: 2 Small Potions) -> PASS -- character_restore.live.satchel.potion_small == 2.0 after 0 polls
+PASS: #81 peer 0 explore_at (SETUP (debug travel): stand beside Pim) -> PASS -- stood at (-380, 1398), settled at (-380.0, 1398.0), y=32.1
+PASS: #82 peer 0 press (Interact with Pim) -> PASS -- pressed 'interact' x1
+PASS: #83 peer 0 await_probe (Pim opens 'stormwood_pim_parcels_thanks') -> PASS -- relay_crossing.conversation_id == stormwood_pim_parcels_thanks after 0 polls
+PASS: #84 peer 0 press (read both lines of 'stormwood_pim_parcels_thanks' (host's own thanks: the host's rate)) -> PASS -- pressed 'interact' x2
+PASS: #85 peer 0 await_probe ('stormwood_pim_parcels_thanks' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #86 peer 0 await_probe (host paid its own rate once: 2 Small Potions) -> PASS -- character_restore.live.satchel.potion_small == 2.0 after 0 polls
+PASS: #87 peer 0 explore_at (SETUP (debug travel): stand beside Crown record rain_ledger) -> PASS -- stood at (671, 2730), settled at (670.7, 2730.2), y=74.0
+PASS: #88 peer 0 press (Interact with Crown record rain_ledger) -> PASS -- pressed 'interact' x1
+PASS: #89 peer 0 await_probe (Crown record rain_ledger opens 'stormwood_crown_record_rain_ledger') -> PASS -- relay_crossing.conversation_id == stormwood_crown_record_rain_ledger after 0 polls
+PASS: #90 peer 0 press (read both lines of 'stormwood_crown_record_rain_ledger' (read the record)) -> PASS -- pressed 'interact' x2
+PASS: #91 peer 0 await_probe ('stormwood_crown_record_rain_ledger' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #92 peer 0 wait_flag (record rain_ledger read, on both) -> PASS -- flag stormwood:side_crown_remembers_record:rain_ledger (any) set after 0 frames
+PASS: #92 peer 1 wait_flag (record rain_ledger read, on both) -> PASS -- flag stormwood:side_crown_remembers_record:rain_ledger (any) set after 0 frames
+PASS: #93 peer 0 explore_at (SETUP (debug travel): stand beside Crown record root_census) -> PASS -- stood at (735, 2715), settled at (735.1, 2715.2), y=74.0
+PASS: #94 peer 0 press (Interact with Crown record root_census) -> PASS -- pressed 'interact' x1
+PASS: #95 peer 0 await_probe (Crown record root_census opens 'stormwood_crown_record_root_census') -> PASS -- relay_crossing.conversation_id == stormwood_crown_record_root_census after 0 polls
+PASS: #96 peer 0 press (read both lines of 'stormwood_crown_record_root_census' (read the record)) -> PASS -- pressed 'interact' x2
+PASS: #97 peer 0 await_probe ('stormwood_crown_record_root_census' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #98 peer 0 wait_flag (record root_census read, on both) -> PASS -- flag stormwood:side_crown_remembers_record:root_census (any) set after 0 frames
+PASS: #98 peer 1 wait_flag (record root_census read, on both) -> PASS -- flag stormwood:side_crown_remembers_record:root_census (any) set after 0 frames
+PASS: #99 peer 0 explore_at (SETUP (debug travel): stand beside Crown record reversal_mark) -> PASS -- stood at (689, 2686), settled at (689.2, 2686.1), y=74.0
+PASS: #100 peer 0 press (Interact with Crown record reversal_mark) -> PASS -- pressed 'interact' x1
+PASS: #101 peer 0 await_probe (Crown record reversal_mark opens 'stormwood_crown_record_reversal_mark') -> PASS -- relay_crossing.conversation_id == stormwood_crown_record_reversal_mark after 0 polls
+PASS: #102 peer 0 press (read both lines of 'stormwood_crown_record_reversal_mark' (read the record)) -> PASS -- pressed 'interact' x2
+PASS: #103 peer 0 await_probe ('stormwood_crown_record_reversal_mark' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #104 peer 0 wait_flag (record reversal_mark read, on both) -> PASS -- flag stormwood:side_crown_remembers_record:reversal_mark (any) set after 0 frames
+PASS: #104 peer 1 wait_flag (record reversal_mark read, on both) -> PASS -- flag stormwood:side_crown_remembers_record:reversal_mark (any) set after 0 frames
+PASS: #105 peer 0 wait_flag (Crown step 1 on both) -> PASS -- flag stormwood:side_crown_remembers_1 (any) set after 0 frames
+PASS: #105 peer 1 wait_flag (Crown step 1 on both) -> PASS -- flag stormwood:side_crown_remembers_1 (any) set after 0 frames
+PASS: #106 peer 0 wait_flag (Crown step 2 (all three read) on both) -> PASS -- flag stormwood:side_crown_remembers_2 (any) set after 0 frames
+PASS: #106 peer 1 wait_flag (Crown step 2 (all three read) on both) -> PASS -- flag stormwood:side_crown_remembers_2 (any) set after 0 frames
+PASS: #107 peer 0 explore_at (SETUP (debug travel): stand beside Archivist Wen) -> PASS -- stood at (700, 2698), settled at (700.0, 2697.5), y=74.0
+PASS: #108 peer 0 press (Interact with Archivist Wen) -> PASS -- pressed 'interact' x1
+PASS: #109 peer 0 await_probe (Archivist Wen opens 'stormwood_wen_crown_records_return') -> PASS -- relay_crossing.conversation_id == stormwood_wen_crown_records_return after 0 polls
+PASS: #110 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #111 peer 0 press (read both lines of 'stormwood_wen_crown_records_return' (bring the account to Wen)) -> PASS -- pressed 'interact' x2
+PASS: #112 peer 0 await_probe ('stormwood_wen_crown_records_return' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #113 peer 0 wait_flag (WHAT THE CROWN REMEMBERS COMPLETE on both peers) -> PASS -- flag stormwood:side_crown_remembers_complete (any) set after 0 frames
+PASS: #113 peer 1 wait_flag (WHAT THE CROWN REMEMBERS COMPLETE on both peers) -> PASS -- flag stormwood:side_crown_remembers_complete (any) set after 0 frames
+PASS: #114 peer 1 storage_grant (SETUP (stands in for gathering): 3 Stormglass) -> PASS -- granted 3 stormglass (0 did not fit; waited 0 guard frame(s))
+PASS: #115 peer 1 storage_grant (SETUP (stands in for gathering): 2 Conductor Vine) -> PASS -- granted 2 conductor_vine (0 did not fit; waited 0 guard frame(s))
+PASS: #116 peer 1 explore_at (SETUP (debug travel): stand beside Warden-Elect Bryn) -> PASS -- stood at (-700, 2298), settled at (-700.0, 2298.0), y=43.8
+PASS: #117 peer 1 press (Interact with Warden-Elect Bryn) -> PASS -- pressed 'interact' x1
+PASS: #118 peer 1 await_probe (Warden-Elect Bryn opens 'stormwood_bryn_glass_offer') -> PASS -- relay_crossing.conversation_id == stormwood_bryn_glass_offer after 0 polls
+PASS: #119 peer 1 press (read both lines of 'stormwood_bryn_glass_offer' (ask what the crews need)) -> PASS -- pressed 'interact' x2
+PASS: #120 peer 1 await_probe ('stormwood_bryn_glass_offer' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #121 peer 0 wait_flag (Bryn step 1 on both) -> PASS -- flag stormwood:side_glass_for_bryn_1 (any) set after 0 frames
+PASS: #121 peer 1 wait_flag (Bryn step 1 on both) -> PASS -- flag stormwood:side_glass_for_bryn_1 (any) set after 0 frames
+PASS: #122 peer 1 explore_at (SETUP (debug travel): stand beside Warden-Elect Bryn) -> PASS -- stood at (-700, 2298), settled at (-700.0, 2298.0), y=43.8
+PASS: #123 peer 1 press (Interact with Warden-Elect Bryn) -> PASS -- pressed 'interact' x1
+PASS: #124 peer 1 await_probe (Warden-Elect Bryn opens 'stormwood_bryn_glass_request') -> PASS -- relay_crossing.conversation_id == stormwood_bryn_glass_request after 0 polls
+PASS: #125 peer 1 press (read both lines of 'stormwood_bryn_glass_request' (hand over the materials)) -> PASS -- pressed 'interact' x2
+PASS: #126 peer 1 await_probe ('stormwood_bryn_glass_request' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #127 peer 0 wait_flag (Bryn step 2 (host-committed delivery) on both) -> PASS -- flag stormwood:side_glass_for_bryn_2 (any) set after 0 frames
+PASS: #127 peer 1 wait_flag (Bryn step 2 (host-committed delivery) on both) -> PASS -- flag stormwood:side_glass_for_bryn_2 (any) set after 0 frames
+PASS: #128 peer 1 await_probe (the host-owned delivery took the guest's 3 Stormglass) -> PASS -- character_restore.live.satchel.stormglass == <null> after 0 polls
+PASS: #129 peer 1 await_probe (and its 2 Conductor Vine, once) -> PASS -- character_restore.live.satchel.conductor_vine == <null> after 0 polls
+PASS: #130 peer 1 explore_at (SETUP (debug travel): stand at the repaired supplies) -> PASS -- stood at (-713, 2308), settled at (-713.2, 2308.3), y=47.2
+PASS: #131 peer 1 press (guest presses 'Inspect the repaired supplies') -> PASS -- pressed 'interact' x1
+PASS: #132 peer 0 wait_flag (GLASS FOR BRYN COMPLETE on both peers) -> PASS -- flag stormwood:side_glass_for_bryn_complete (any) set after 0 frames
+PASS: #132 peer 1 wait_flag (GLASS FOR BRYN COMPLETE on both peers) -> PASS -- flag stormwood:side_glass_for_bryn_complete (any) set after 0 frames
+PASS: #133 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #134 peer 0 explore_at (SETUP (debug travel): stand at the Verge Road footing prompt) -> PASS -- stood at (-630, 794), settled at (-630.0, 793.5), y=22.7
+PASS: #135 peer 0 press (host chooses the Verge Road footing) -> PASS -- pressed 'interact' x1
+PASS: #136 peer 0 wait_flag (Verge Road chosen, on both) -> PASS -- flag stormwood:side_raise_a_road_chosen:verge_road (any) set after 0 frames
+PASS: #136 peer 1 wait_flag (Verge Road chosen, on both) -> PASS -- flag stormwood:side_raise_a_road_chosen:verge_road (any) set after 0 frames
+PASS: #137 peer 0 explore_at (SETUP (debug travel): stand at the Hollows Road footing prompt) -> PASS -- stood at (-1050, 1744), settled at (-1050.0, 1743.5), y=29.9
+PASS: #138 peer 0 press (host chooses the Hollows Road footing) -> PASS -- pressed 'interact' x1
+PASS: #139 peer 0 wait_flag (Hollows Road chosen, on both) -> PASS -- flag stormwood:side_raise_a_road_chosen:hollows_road (any) set after 0 frames
+PASS: #139 peer 1 wait_flag (Hollows Road chosen, on both) -> PASS -- flag stormwood:side_raise_a_road_chosen:hollows_road (any) set after 0 frames
+PASS: #140 peer 0 wait_flag (Road step 1 on both) -> PASS -- flag stormwood:side_raise_a_road_1 (any) set after 0 frames
+PASS: #140 peer 1 wait_flag (Road step 1 on both) -> PASS -- flag stormwood:side_raise_a_road_1 (any) set after 0 frames
+PASS: #141 peer 0 explore_at (SETUP (debug travel): on the Verge Road footing) -> PASS -- stood at (-630, 797), settled at (-630.0, 797.0), y=22.4
+PASS: #142 peer 0 build_place (SETUP (free build: materials not charged): raise a Stormglass Arch on the Verge Road footing) -> PASS -- pressed Place for 'stormglass_arch' (ghost_ok=true); records 0 -> 1
+PASS: #143 peer 0 explore_at (SETUP (debug travel): on the Hollows Road footing) -> PASS -- stood at (-1050, 1747), settled at (-1050.0, 1747.0), y=29.7
+PASS: #144 peer 0 build_place (SETUP (free build): raise its twin on the Hollows Road footing) -> PASS -- pressed Place for 'stormglass_arch' (ghost_ok=true); records 1 -> 2
+PASS: #145 peer 0 wait_flag (Road step 2 (both built and bound) on both, from the arch runtime) -> PASS -- flag stormwood:side_raise_a_road_2 (any) set after 0 frames
+PASS: #145 peer 1 wait_flag (Road step 2 (both built and bound) on both, from the arch runtime) -> PASS -- flag stormwood:side_raise_a_road_2 (any) set after 9 frames
+PASS: #146 peer 0 explore_at (SETUP (debug travel): walk into the Verge Road arch) -> PASS -- stood at (-630, 800), settled at (-1050.0, 1753.5), y=29.7
+PASS: #147 peer 0 probe position (the host was carried to the Hollows Road twin) -> PASS -- [-1050.0,29.7033843994141,1753.5]
+PASS: #148 peer 0 explore_at (SETUP (debug travel): walk into the Hollows Road arch) -> PASS -- stood at (-1050, 1750), settled at (-630.0, 803.5), y=22.2
+PASS: #149 peer 0 probe position (the host was carried back to the Verge Road twin) -> PASS -- [-630.0,22.209716796875,803.5]
+PASS: #150 peer 0 wait_flag (Road step 3 (travelled both directions) on both) -> PASS -- flag stormwood:side_raise_a_road_3 (any) set after 0 frames
+PASS: #150 peer 1 wait_flag (Road step 3 (travelled both directions) on both) -> PASS -- flag stormwood:side_raise_a_road_3 (any) set after 0 frames
+PASS: #151 peer 0 explore_at (SETUP (debug travel): stand beside Keeper Ondra) -> PASS -- stood at (-160, 2698), settled at (-160.0, 2698.0), y=34.5
+PASS: #152 peer 0 press (Interact with Keeper Ondra) -> PASS -- pressed 'interact' x1
+PASS: #153 peer 0 await_probe (Keeper Ondra opens 'stormwood_ondra_raise_a_road_report') -> PASS -- relay_crossing.conversation_id == stormwood_ondra_raise_a_road_report after 0 polls
+PASS: #154 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #155 peer 0 press (read both lines of 'stormwood_ondra_raise_a_road_report' (report the new road)) -> PASS -- pressed 'interact' x2
+PASS: #156 peer 0 await_probe ('stormwood_ondra_raise_a_road_report' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #157 peer 0 wait_flag (RAISE A ROAD COMPLETE on both peers) -> PASS -- flag stormwood:side_raise_a_road_complete (any) set after 0 frames
+PASS: #157 peer 1 wait_flag (RAISE A ROAD COMPLETE on both peers) -> PASS -- flag stormwood:side_raise_a_road_complete (any) set after 0 frames
+PASS: #158 peer 0 story_flag (FIXTURE (main-route fact, no side-chain step): stormwood:lantern_hollow_reached — reveals the Deepwood Circuit (Lantern Hollow arrival)) -> PASS -- stormwood:lantern_hollow_reached: ok=true pending=false code='' reason=''
+PASS: #159 peer 0 wait_flag (fixture fact reached both peers) -> PASS -- flag stormwood:lantern_hollow_reached (any) set after 0 frames
+PASS: #159 peer 1 wait_flag (fixture fact reached both peers) -> PASS -- flag stormwood:lantern_hollow_reached (any) set after 0 frames
+PASS: #160 peer 0 explore_at (SETUP (debug travel): stand beside Rook) -> PASS -- stood at (-150, 4458), settled at (-150.0, 4458.0), y=61.2
+PASS: #161 peer 0 press (Interact with Rook) -> PASS -- pressed 'interact' x1
+PASS: #162 peer 0 await_probe (Rook opens 'stormwood_rook_circuit_offer') -> PASS -- relay_crossing.conversation_id == stormwood_rook_circuit_offer after 0 polls
+PASS: #163 peer 0 press (read both lines of 'stormwood_rook_circuit_offer' (accept the circuit)) -> PASS -- pressed 'interact' x2
+PASS: #164 peer 0 await_probe ('stormwood_rook_circuit_offer' closed) -> PASS -- relay_crossing.dialogue_open == false after 0 polls
+PASS: #165 peer 0 wait_flag (Circuit step 1 on both) -> PASS -- flag stormwood:side_deepwood_circuit_1 (any) set after 0 frames
+PASS: #165 peer 1 wait_flag (Circuit step 1 on both) -> PASS -- flag stormwood:side_deepwood_circuit_1 (any) set after 0 frames
+PASS: #166 peer 0 story_flag (FIXTURE (stands in for the hosted fight; hosted trainer wins are proven by smoke_net_stormwood_hosted_trainers): circuit_lena_giant defeated) -> PASS -- stormwood:trainer:circuit_lena_giant:defeated: ok=true pending=false code='' reason=''
+PASS: #167 peer 0 wait_flag (the chapter runtime credits circuit_lena_giant as a circuit win, on both) -> PASS -- flag stormwood:side_deepwood_circuit_win:circuit_lena_giant (any) set after 0 frames
+PASS: #167 peer 1 wait_flag (the chapter runtime credits circuit_lena_giant as a circuit win, on both) -> PASS -- flag stormwood:side_deepwood_circuit_win:circuit_lena_giant (any) set after 0 frames
+PASS: #168 peer 0 story_flag (FIXTURE (stands in for the hosted fight; hosted trainer wins are proven by smoke_net_stormwood_hosted_trainers): circuit_orin_blackwater defeated) -> PASS -- stormwood:trainer:circuit_orin_blackwater:defeated: ok=true pending=false code='' reason=''
+PASS: #169 peer 0 wait_flag (the chapter runtime credits circuit_orin_blackwater as a circuit win, on both) -> PASS -- flag stormwood:side_deepwood_circuit_win:circuit_orin_blackwater (any) set after 0 frames
+PASS: #169 peer 1 wait_flag (the chapter runtime credits circuit_orin_blackwater as a circuit win, on both) -> PASS -- flag stormwood:side_deepwood_circuit_win:circuit_orin_blackwater (any) set after 0 frames
+PASS: #170 peer 0 story_flag (FIXTURE (stands in for the hosted fight; hosted trainer wins are proven by smoke_net_stormwood_hosted_trainers): circuit_tavi_rodline defeated) -> PASS -- stormwood:trainer:circuit_tavi_rodline:defeated: ok=true pending=false code='' reason=''
+PASS: #171 peer 0 wait_flag (the chapter runtime credits circuit_tavi_rodline as a circuit win, on both) -> PASS -- flag stormwood:side_deepwood_circuit_win:circuit_tavi_rodline (any) set after 0 frames
+PASS: #171 peer 1 wait_flag (the chapter runtime credits circuit_tavi_rodline as a circuit win, on both) -> PASS -- flag stormwood:side_deepwood_circuit_win:circuit_tavi_rodline (any) set after 0 frames
+PASS: #172 peer 0 wait_flag (Circuit step 2 (three of five) on both) -> PASS -- flag stormwood:side_deepwood_circuit_2 (any) set after 0 frames
+PASS: #172 peer 1 wait_flag (Circuit step 2 (three of five) on both) -> PASS -- flag stormwood:side_deepwood_circuit_2 (any) set after 0 frames
+PASS: #173 peer 0 explore_at (SETUP (debug travel): stand beside Rook) -> PASS -- stood at (-150, 4458), settled at (-150.0, 4458.0), y=61.2
+PASS: #174 peer 0 press (Interact with Rook) -> PASS -- pressed 'interact' x1
+PASS: #175 peer 0 await_probe (Rook opens 'stormwood_rook_circuit_return') -> PASS -- relay_crossing.conversation_id == stormwood_rook_circuit_return after 0 polls
+PASS: #176 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #177 peer 0 press (read both lines of 'stormwood_rook_circuit_return' (return to Rook)) -> PASS -- pressed 'interact' x2
+FAIL: #178 peer 0 await_probe ('stormwood_rook_circuit_return' closed) -> FAIL -- relay_crossing.dialogue_open was true, not false, after 240 polls
+FAIL: #178 peer 0 await_probe ('stormwood_rook_circuit_return' closed) -> FAIL -- relay_crossing.dialogue_open was true, not false, after 240 polls
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/net/net-proof_two_peer-20261004T222552Z/SUMMARY.md ===
+# Net smoke run net-20261004T222552Z-11292
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=11323 exited=true unexpected_exit=false
+- peer 1 (client) pid=11324 exited=true unexpected_exit=false
+
+FAILURES:
+- #178 peer 0 await_probe ('stormwood_rook_circuit_return' closed) -> FAIL -- relay_crossing.dialogue_open was true, not false, after 240 polls
+
+PROOF.md: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F10-1-receipts-v28/PROOF.md (exit 1)

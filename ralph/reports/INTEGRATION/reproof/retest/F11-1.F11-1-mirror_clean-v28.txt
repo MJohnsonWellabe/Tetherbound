@@ -1,0 +1,80 @@
+proof:    stormwood_f11_mirror_clean_health
+scenario: /home/user/Tetherbound/tools/net/proof_scenarios/stormwood_f11_mirror_clean_health.json
+out:      /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28
+run id:  net-20261004T224338Z-12823
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z
+smoke:   tests/smoke_net_proof_two_peer.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=12854 control_port=44737 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/peer-0.log
+coordinator: launched peer 1 (client) pid=12855 control_port=39275 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":33421.0,"godot_version":"4.7-stable (official)","main_sha":"6237e1256687","peer":0.0,"pid":12854.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":33422.0,"godot_version":"4.7-stable (official)","main_sha":"6237e1256687","peer":1.0,"pid":12855.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 load_save (named save: Meadows, Stormwood route open, loaded like Continue) -> PASS -- loaded host_meadows_stormwood_route_open (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-f41f4a49223483d6bfdf56715944bb7b'
+PASS: #2 peer 1 boot (guest: a fresh trainer in the Meadows) -> PASS -- booted world (240 settle frames)
+PASS: #3 peer 0 host -> PASS -- hosting udp/33421 as peer 1
+PASS: #4 peer 1 join -> PASS -- joined 127.0.0.1:33421 as peer 535846382 after 40 frames; snapshot applied; 2 peer(s) in registry
+PASS: #5 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #5 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #6 peer 0 wait_flag (the route comes from the host's save) -> PASS -- flag realm_gate_stormwood_unlocked (any) set after 0 frames
+PASS: #6 peer 1 wait_flag (the route comes from the host's save) -> PASS -- flag realm_gate_stormwood_unlocked (any) set after 0 frames
+PASS: #7 peer 0 enter_realm -> PASS -- crossed 'meadows' -> 'stormwood' after 498 observed physics frames / 65631 ms (budget 6000 physics frames); current scene is /root/Stormwood
+coordinator: s17 enter_realm 'stormwood' attributes the existing bounded shell window to connected host peer 0
+PASS: #8 peer 1 enter_realm -> PASS -- crossed 'meadows' -> 'stormwood' after 1009 observed physics frames / 50332 ms (budget 6000 physics frames); current scene is /root/Stormwood
+PASS: #9 peer 0 probe downed (both trainers up on arrival) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"host_authority_attempts":[],"host_views":{"1":{"body_id":59203758820731.0,"position":[-300.0,32.271728515625,180.0],"realm":"stormwood","valid":true},"535846382":{"body_id":63967548468600.0,"p
+PASS: #9 peer 1 probe downed (both trainers up on arrival) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"interaction_arbiter":{"enabled":true,"input_context":"world","local_player_id":55146122022236.0,"prompt":"[img=36x36]res://assets/ui/input_prompts/keyboard_e.png[/img]   Take Good Candy","view
+PASS: #10 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #10 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #11 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 5 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/peer-0/before
+PASS: #11 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-f05b2266fe1f4437da68bdb4a4ffa0de' on disk=true; copied 2 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/peer-1/before
+PASS: #12 peer 0 stormheart_fixture (both fought the Dynamo (setup)) -> PASS -- Dynamo contributors [1, 535846382]; committed ["stormwood:act_ii_complete", "stormwood:marrow_defeated"]
+PASS: #13 peer 0 wait_flag -> PASS -- flag stormwood:legendary_freed (any) set after 0 frames
+PASS: #13 peer 1 wait_flag -> PASS -- flag stormwood:legendary_freed (any) set after 1004 frames
+PASS: #14 peer 0 probe downed (just before the answers: the host is up and, as the downed authority, knows no peer is down (the guest's own probe is not taken here: during its release conversation its interaction arbiter holds a freed winning_provider and the probe crashes on it; see the report)) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"host_authority_attempts":[],"host_views":{"1":{"body_id":59203758820731.0,"position":[-300.0,32.271728515625,180.0],"realm":"stormwood","valid":true},"535846382":{"body_id":6396754846 …[cut]
+PASS: #15 peer 0 stormheart_answer (host says No) -> PASS -- party holds the Stormheart=false; claim settled=true; answered refuse by pressing the enabled prompt '' 0 time(s) (standing (2.0, 0.5, 0.0)), after 3 earlier line(s) and 3 offer line(s); headless peer: no frame to capture (run with --render)
+PASS: #16 peer 0 probe downed (host up right after its answer) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"host_authority_attempts":[],"host_views":{"1":{"body_id":59203758820731.0,"position":[-98.0,262.06005859375,5480.5],"realm":"stormwood","valid":true},"535846382":{"body_id":63967548468600.0,"p
+PASS: #17 peer 0 probe downed (right before the guest's answer: the host (authority) sees no peer down) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"host_authority_attempts":[],"host_views":{"1":{"body_id":59203758820731.0,"position":[-98.0,262.06005859375,5480.5],"realm":"stormwood","valid":true},"535846382":{"body_id":63967548468600.0,"p
+PASS: #18 peer 1 stormheart_answer (guest says Yes) -> PASS -- party holds the Stormheart=true; claim settled=true; answered accept by pressing the enabled prompt 'Accept the Stormheart's offer' 1 time(s) (standing (2.0, 0.5, 0.0)), after 3 earlier line(s) and 3 offer line(s); headless peer: no frame to capture (run with --render)
+PASS: #19 peer 0 probe downed (both trainers up right after the answers) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"host_authority_attempts":[],"host_views":{"1":{"body_id":59203758820731.0,"position":[-98.0,262.06005859375,5480.5],"realm":"stormwood","valid":true},"535846382":{"body_id":63967548468600.0,"p
+PASS: #19 peer 1 probe downed (both trainers up right after the answers) -> PASS -- {"available":true,"carried":{},"downed_peers":[],"expired":0.0,"health":100.0,"hold_peer":0.0,"hold_s":0.0,"interaction_arbiter":{"enabled":true,"input_context":"world","local_player_id":55146122022236.0,"prompt":"[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Look beyond the bro
+PASS: #20 peer 0 wait_flag -> PASS -- flag stormwood:legendary_resolution:refused:character-f41f4a49223483d6bfdf56715944bb7b (any) set after 0 frames
+PASS: #20 peer 1 wait_flag -> PASS -- flag stormwood:legendary_resolution:refused:character-f41f4a49223483d6bfdf56715944bb7b (any) set after 0 frames
+PASS: #21 peer 0 wait_flag -> PASS -- flag stormwood:legendary_resolution:accepted:character-f05b2266fe1f4437da68bdb4a4ffa0de (any) set after 0 frames
+PASS: #21 peer 1 wait_flag -> PASS -- flag stormwood:legendary_resolution:accepted:character-f05b2266fe1f4437da68bdb4a4ffa0de (any) set after 0 frames
+PASS: #22 peer 0 stormheart_state (host refused, nothing granted) -> PASS -- { "character_id": "character-f41f4a49223483d6bfdf56715944bb7b", "party": [], "has_stormheart": false, "freed": true, "world_accepted": false, "world_refused": true, "accepted_anywhere": false, "party_uids": [] }
+PASS: #23 peer 1 stormheart_state (guest kept exactly one of its own) -> PASS -- { "character_id": "character-f05b2266fe1f4437da68bdb4a4ffa0de", "party": ["fulgocobra"], "has_stormheart": true, "freed": true, "world_accepted": true, "world_refused": false, "accepted_anywhere": true, "party_uids": ["creature-3ca2e09b491e76fc5b37808fe101e0c5"] }
+PASS: #24 peer 0 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #24 peer 1 screenshot -> PASS -- headless peer: no frame to capture (run with --render)
+PASS: #25 peer 0 capture_saves -> PASS -- host (world + character): autosave_here()=true, character 'character-f41f4a49223483d6bfdf56715944bb7b' on disk=true; copied 5 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/peer-0/after
+PASS: #25 peer 1 capture_saves -> PASS -- client (character only): autosave_here()=false, character 'character-f05b2266fe1f4437da68bdb4a4ffa0de' on disk=true; copied 2 files to /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/peer-1/after
+PASS: #26 peer 0 check_saved (host's pre-offer saved world held no answers (non-vacuous baseline)) -> PASS -- missing []; unexpectedly present []; read ["redesign-v28/slot-0/world.json"] under before/worlds
+PASS: #27 peer 1 check_saved (guest's pre-offer character held no answer) -> PASS -- missing []; unexpectedly present []; read ["redesign-v28/character-f05b2266fe1f4437da68bdb4a4ffa0de/character.json"] under before/characters
+PASS: #28 peer 0 check_saved (host's saved world holds each answer once, the right way round) -> PASS -- missing []; unexpectedly present []; read ["redesign-v28/slot-0/world.json"] under after/worlds
+PASS: #29 peer 0 check_saved (host's saved character refused and holds none) -> PASS -- missing []; unexpectedly present []; read ["redesign-v28/character-f41f4a49223483d6bfdf56715944bb7b/character.json"] under after/characters
+PASS: #30 peer 1 check_saved (guest's saved character keeps its Stormheart) -> PASS -- missing []; unexpectedly present []; read ["redesign-v28/character-f05b2266fe1f4437da68bdb4a4ffa0de/character.json"] under after/characters
+ALL CHECKS PASSED
+# Net smoke run net-20261004T224338Z-12823
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=12854 exited=true unexpected_exit=false
+- peer 1 (client) pid=12855 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+=== /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/net/net-proof_two_peer-20261004T224338Z/SUMMARY.md ===
+# Net smoke run net-20261004T224338Z-12823
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=12854 exited=true unexpected_exit=false
+- peer 1 (client) pid=12855 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
+
+PROOF.md: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F11-1-mirror_clean-v28/PROOF.md (exit 0)
