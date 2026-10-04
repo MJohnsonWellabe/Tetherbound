@@ -21,6 +21,13 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
 
+**Feature status (batch landings):**
+- **F32:** #0, #1, #2, #3 PASS; #5 PASS for 2 characters (4-claimant nightly still open). #4: lexicon and Den sheds PASS; win sheds await F27 patch C. Evidence: ralph/reports/HOMESTEAD/f32/.
+- **F17:** #2, #3, #4 (M1 seed-4 chain, CI render 37232841924; margin fragile) #5 and F01#2 PASS. #6 Bars A/B depend on F26 plus Codex hero assets. Evidence: ralph/reports/HUB/f17/.
+- **Re-proof fixes (#529):** F06#4, F07#1, F08#2 and F03#3 PASS. Batch 531: F04#4 hit/avoid witness passes all four named fights (reach mutant fails 0/4); debug travel refuses unwalkable ground (Crown Arch). Guest-rejoin owner-passive fix still in progress.
+- **F26 Low:** every realm camera keeps its authored far plane as a draw-distance floor under every preset (was cut to 320 m); blinded A/B 18 after-better, 0 before-better (ralph/reports/LOOKDEV/f26-low/ab-far-floor/). Labels, Veilfall spray and lure smoke fixes await their verification run.
+- **Fixtures:** `host_meadows_stormwood_route_open` proof save rebuilt at v28 from a declarative spec (`tools/net/build_proof_save.sh`); earned F49 checkpoints stay v27 until F49 regenerates them.
+
 **Owner rulings 2026-10-04:**
 - Visual cards judge High/Medium for the target look and confirm Low/Compatibility for no breakage until the Ally test passes.
 - The second UI check is 1280×720.

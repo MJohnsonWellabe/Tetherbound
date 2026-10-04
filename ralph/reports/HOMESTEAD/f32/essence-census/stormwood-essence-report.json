@@ -1,0 +1,5656 @@
+{
+	"checks": [
+		{
+			"label": "production Game and selected realm exist",
+			"ok": true
+		},
+		{
+			"label": "canonical production source registry is valid",
+			"ok": true
+		},
+		{
+			"label": "request actual baked realm scene",
+			"ok": true
+		},
+		{
+			"label": "actual realm procedural build completed",
+			"ok": true
+		},
+		{
+			"label": "production player and resource adapter mounted",
+			"ok": true
+		},
+		{
+			"label": "existing physical controller driver resolves production camera and arbiter",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-794.0, 61.93698, 4430.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ground_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-1144.0, 60.75841, 3160.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_water_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_water_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_water_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_water_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_water_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_water_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_water_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_water_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_water_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-986.0, 30.8576, 1857.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_air_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_air_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_air_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_air_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_air_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_air_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_air_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_air_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_air_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-344.0, 60.74096, 4430.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_electric_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_electric_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_electric_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_electric_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_electric_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_electric_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_electric_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_electric_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_electric_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-1144.0, 69.94182, 3030.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_fire_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_fire_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_fire_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_fire_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_fire_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_fire_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_fire_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_fire_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_fire_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-1324.0, 28.42154, 1750.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_dark_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_dark_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_dark_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_dark_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_dark_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_dark_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_dark_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_dark_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_dark_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-794.0, 62.80146, 4280.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ice_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ice_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ice_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_ice_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ice_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ice_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ice_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_ice_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_ice_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (-1144.0, 67.97187, 2900.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_psychic_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_psychic_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_psychic_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_stormwood_psychic_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_psychic_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_psychic_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_psychic_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_stormwood_psychic_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_stormwood_psychic_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "selected at least one authored candidate",
+			"ok": true
+		},
+		{
+			"label": "production source bytes and proof gates unchanged",
+			"ok": true
+		}
+	],
+	"earned_campaign": false,
+	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+	"mode": "essence",
+	"ok": true,
+	"realm": "stormwood",
+	"sites": [
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-794.0,
+				4430.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-794.0, 61.36774, 4436.0)",
+			"fixture_world_flag": "stormwood:rootgate_released",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 0,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.384128239471465,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_deepwood_169",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-794.0,
+						4430.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_ground_01",
+					"item": "essence_ground",
+					"label": "Gather Ground Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:ground:01",
+					"outputs": {
+						"attuned_ground": 1.0,
+						"essence_ground": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 35.538,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "deepwood",
+					"requires_flag": "stormwood:rootgate_released",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_ground"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "ground"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_ground_01",
+				"source_key": "resource:stormwood:essence_stormwood_ground_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_ground_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-794.0, 61.93698, 4430.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "bf59a8d1e0552a3731ce13c52fb63d14c122af125fb4be0025f17a96ca30e246",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 4.32398128509521,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9943895808333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9588569261111,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 4.32398128509521,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9943895808333,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9588569261111,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 2,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 1,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.384128239471465,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_deepwood_169",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-794.0,
+							4430.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_ground_01",
+						"item": "essence_ground",
+						"label": "Gather Ground Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:ground:01",
+						"outputs": {
+							"attuned_ground": 1.0,
+							"essence_ground": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 35.538,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "deepwood",
+						"requires_flag": "stormwood:rootgate_released",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_ground"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "ground"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_ground_01",
+					"source_key": "resource:stormwood:essence_stormwood_ground_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "9b1458aa2feacfa988a6cac78dfdc42c",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_ground_01"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_ground_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "9b1458aa2feacfa988a6cac78dfdc42c",
+				"verdict": {
+					"character_revision": 2,
+					"durable": true,
+					"journal_revision": 1,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-794.0019, 61.85178, 4431.536)",
+			"walk_start": "(-794.0, 61.36774, 4436.0)",
+			"walked_metres": 4.46435594558716
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-1144.0,
+				3160.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-1144.0, 60.50101, 3166.0)",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 3,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.92388662067242,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_conductor_run_105",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-1144.0,
+						3160.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_water_01",
+					"item": "essence_water",
+					"label": "Gather Water Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:water:01",
+					"outputs": {
+						"attuned_water": 1.0,
+						"essence_water": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 42.792,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "conductor_run",
+					"requires_flag": "",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_water"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "water"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_water_01",
+				"source_key": "resource:stormwood:essence_stormwood_water_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_water_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-1144.0, 60.75841, 3160.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "2000bb54881748a371bce0854501bf068f22ca9d7dec9118065099dc9e5e4622",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 9.01325851678848,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.98793356,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9115127733332,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 9.01325851678848,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.98793356,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9115127733332,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 5,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 4,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.92388662067242,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_conductor_run_105",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-1144.0,
+							3160.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_water_01",
+						"item": "essence_water",
+						"label": "Gather Water Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:water:01",
+						"outputs": {
+							"attuned_water": 1.0,
+							"essence_water": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 42.792,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "conductor_run",
+						"requires_flag": "",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_water"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "water"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_water_01",
+					"source_key": "resource:stormwood:essence_stormwood_water_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "04d966114c5dc5f078c7b7b836e15528",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_water_01"
+					}
+				},
+				"journal_revision": 2,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_water_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "04d966114c5dc5f078c7b7b836e15528",
+				"verdict": {
+					"character_revision": 5,
+					"durable": true,
+					"journal_revision": 2,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-1144.001, 60.6157, 3161.597)",
+			"walk_start": "(-1144.0, 60.50101, 3166.0)",
+			"walked_metres": 4.403076171875
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-986.0,
+				1857.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-986.0, 30.87069, 1863.0)",
+			"fixture_storm_elapsed": 414.0,
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 6,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.883734113536775,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_glowmoss_hollows_039",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-986.0,
+						1857.0
+					],
+					"availability": [
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_air_01",
+					"item": "essence_air",
+					"label": "Gather Air Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:air:01",
+					"outputs": {
+						"attuned_air": 1.0,
+						"essence_air": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 107.909,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "glowmoss_hollows",
+					"requires_flag": "",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_air"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "air"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_air_01",
+				"source_key": "resource:stormwood:essence_stormwood_air_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_air_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-986.0, 30.8576, 1857.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "4694fcee6c81fc7d8d4611341a47fbfecd2b4c1b5d70ea3de090f85f5d919b6c",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 14.1145309209824,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9829812766666,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8751960288888,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 14.1145309209824,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9829812766666,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8751960288888,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 8,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 7,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.883734113536775,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_glowmoss_hollows_039",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-986.0,
+							1857.0
+						],
+						"availability": [
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_air_01",
+						"item": "essence_air",
+						"label": "Gather Air Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:air:01",
+						"outputs": {
+							"attuned_air": 1.0,
+							"essence_air": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 107.909,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "glowmoss_hollows",
+						"requires_flag": "",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_air"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "air"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_air_01",
+					"source_key": "resource:stormwood:essence_stormwood_air_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "ea5bc50e1b43d546713ea98033c938ad",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_air_01"
+					}
+				},
+				"journal_revision": 3,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_air_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "ea5bc50e1b43d546713ea98033c938ad",
+				"verdict": {
+					"character_revision": 8,
+					"durable": true,
+					"journal_revision": 3,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-985.9997, 30.7799, 1858.588)",
+			"walk_start": "(-986.0, 30.87069, 1863.0)",
+			"walked_metres": 4.412353515625
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-344.0,
+				4430.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-344.0, 60.64065, 4436.0)",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 9,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.052433488657698,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_deepwood_170",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-344.0,
+						4430.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_electric_01",
+					"item": "essence_electric",
+					"label": "Gather Electric Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:electric:01",
+					"outputs": {
+						"attuned_electric": 1.0,
+						"essence_electric": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 37.834,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "deepwood",
+					"requires_flag": "stormwood:rootgate_released",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_electric"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "electric"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_electric_01",
+				"source_key": "resource:stormwood:essence_stormwood_electric_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_electric_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-344.0, 60.74096, 4430.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "2c6d03d9d2e356e2df43cd9a5689c031917588ceb08ad28dc3a1158c1eaec439",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 18.3938963711262,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9775682991666,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8355008605554,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 18.3938963711262,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9775682991666,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.8355008605554,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 11,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 10,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.052433488657698,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_deepwood_170",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-344.0,
+							4430.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_electric_01",
+						"item": "essence_electric",
+						"label": "Gather Electric Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:electric:01",
+						"outputs": {
+							"attuned_electric": 1.0,
+							"essence_electric": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 37.834,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "deepwood",
+						"requires_flag": "stormwood:rootgate_released",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_electric"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "electric"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_electric_01",
+					"source_key": "resource:stormwood:essence_stormwood_electric_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "b01f14ad06115231b9174de900795d3a",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_electric_01"
+					}
+				},
+				"journal_revision": 4,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_electric_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "b01f14ad06115231b9174de900795d3a",
+				"verdict": {
+					"character_revision": 11,
+					"durable": true,
+					"journal_revision": 4,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-343.9988, 60.8236, 4431.52)",
+			"walk_start": "(-344.0, 60.64065, 4436.0)",
+			"walked_metres": 4.47998046875
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-1144.0,
+				3030.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-1144.0, 70.00925, 3036.0)",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 12,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.994229874107987,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_conductor_run_100",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-1144.0,
+						3030.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_fire_01",
+					"item": "essence_fire",
+					"label": "Gather Fire Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:fire:01",
+					"outputs": {
+						"attuned_fire": 1.0,
+						"essence_fire": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 61.844,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "conductor_run",
+					"requires_flag": "",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_fire"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "fire"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_fire_01",
+				"source_key": "resource:stormwood:essence_stormwood_fire_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_fire_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-1144.0, 69.94182, 3030.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "6fb8ddba283604a510d374406dd41b58c73dbe93d2c426022de37af1da32a15a",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 23.1152655184269,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9723382533332,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.797147191111,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 23.1152655184269,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9723382533332,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.797147191111,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 14,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 13,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.994229874107987,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_conductor_run_100",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-1144.0,
+							3030.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_fire_01",
+						"item": "essence_fire",
+						"label": "Gather Fire Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:fire:01",
+						"outputs": {
+							"attuned_fire": 1.0,
+							"essence_fire": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 61.844,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "conductor_run",
+						"requires_flag": "",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_fire"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "fire"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_fire_01",
+					"source_key": "resource:stormwood:essence_stormwood_fire_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "31dd09702d7a99c3478fed88e9d06508",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_fire_01"
+					}
+				},
+				"journal_revision": 5,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_fire_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "31dd09702d7a99c3478fed88e9d06508",
+				"verdict": {
+					"character_revision": 14,
+					"durable": true,
+					"journal_revision": 5,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-1144.0, 69.9782, 3031.592)",
+			"walk_start": "(-1144.0, 70.00925, 3036.0)",
+			"walked_metres": 4.40771484375
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-1324.0,
+				1750.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-1324.0, 28.33519, 1756.0)",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 15,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.161469108657911,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_glowmoss_hollows_065",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-1324.0,
+						1750.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_dark_01",
+					"item": "essence_dark",
+					"label": "Gather Dark Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:dark:01",
+					"outputs": {
+						"attuned_dark": 1.0,
+						"essence_dark": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 425.06,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "glowmoss_hollows",
+					"requires_flag": "",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_dark"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "dark"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_dark_01",
+				"source_key": "resource:stormwood:essence_stormwood_dark_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_dark_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-1324.0, 28.42154, 1750.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "bcb135dcff7925e409e5bb71af04bc1cabebf42b5219e698041083c01600595d",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 28.6546242535114,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9674518449999,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7613135299999,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+							"craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 28.6546242535114,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9674518449999,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7613135299999,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 17,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 16,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.161469108657911,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_glowmoss_hollows_065",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-1324.0,
+							1750.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_dark_01",
+						"item": "essence_dark",
+						"label": "Gather Dark Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:dark:01",
+						"outputs": {
+							"attuned_dark": 1.0,
+							"essence_dark": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 425.06,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "glowmoss_hollows",
+						"requires_flag": "",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_dark"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "dark"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_dark_01",
+					"source_key": "resource:stormwood:essence_stormwood_dark_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "afbf27b3936fd6bbcf504d765c2dfb74",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_dark_01"
+					}
+				},
+				"journal_revision": 6,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_dark_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "afbf27b3936fd6bbcf504d765c2dfb74",
+				"verdict": {
+					"character_revision": 17,
+					"durable": true,
+					"journal_revision": 6,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-1324.0, 28.36948, 1751.587)",
+			"walk_start": "(-1324.0, 28.33519, 1756.0)",
+			"walked_metres": 4.4134521484375
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-794.0,
+				4280.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-794.0, 63.3923, 4286.0)",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 18,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.0277117290534079,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_deepwood_164",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-794.0,
+						4280.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_ice_01",
+					"item": "essence_ice",
+					"label": "Gather Ice Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:ice:01",
+					"outputs": {
+						"attuned_ice": 1.0,
+						"essence_ice": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 60.275,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "deepwood",
+					"requires_flag": "stormwood:rootgate_released",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_ice"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "ice"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_ice_01",
+				"source_key": "resource:stormwood:essence_stormwood_ice_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_ice_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-794.0, 62.80146, 4280.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "6a8b2df59322286a883c69a8fee87361ece76158ae8f417214cb4a8345f2abc3",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						{
+							"id": "essence_ice",
+							"n": 3
+						},
+						{
+							"id": "attuned_ice",
+							"n": 1
+						},
+						{
+							"id": "seed_ice",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 32.6975589394569,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9618948749999,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7205624166666,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+							"craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471",
+							"craft:f32-site-owner:f32:294f6614863cf726fed4dbf6947884273b578a1daa34724fa0f6a664b96284ec"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 32.6975589394569,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9618948749999,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.7205624166666,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+							"craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 20,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 19,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.0277117290534079,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_deepwood_164",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-794.0,
+							4280.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_ice_01",
+						"item": "essence_ice",
+						"label": "Gather Ice Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:ice:01",
+						"outputs": {
+							"attuned_ice": 1.0,
+							"essence_ice": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 60.275,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "deepwood",
+						"requires_flag": "stormwood:rootgate_released",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_ice"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "ice"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_ice_01",
+					"source_key": "resource:stormwood:essence_stormwood_ice_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "163880c66ade9346e8af1a04a2efd8dd",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_ice_01"
+					}
+				},
+				"journal_revision": 7,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:294f6614863cf726fed4dbf6947884273b578a1daa34724fa0f6a664b96284ec",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_ice_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "163880c66ade9346e8af1a04a2efd8dd",
+				"verdict": {
+					"character_revision": 20,
+					"durable": true,
+					"journal_revision": 7,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:294f6614863cf726fed4dbf6947884273b578a1daa34724fa0f6a664b96284ec",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-793.9996, 62.9811, 4281.531)",
+			"walk_start": "(-794.0, 63.3923, 4286.0)",
+			"walked_metres": 4.46923828125
+		},
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/Stormwood/EncounterDirector",
+						"script": "res://scripts/combat/stormwood_encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/Stormwood/CombatManager",
+					"script": "res://scripts/combat/stormwood_combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-c20357d6eb7c44812b6626dd5931a4cc"
+				],
+				"local_peer_id": 1,
+				"realm": "stormwood",
+				"registered_realm": "stormwood",
+				"session_active": false
+			},
+			"authored_at": [
+				-1144.0,
+				2900.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(-1144.0, 67.83183, 2906.0)",
+			"host_context_before": {
+				"actor_realm": "stormwood",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 21,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "stormwood",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.88000609097071,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/stormwood_harvests.json",
+						"id": "stormwood_harvest_conductor_run_095",
+						"offset_xz_m": [
+							6.0,
+							0.0
+						]
+					},
+					"at": [
+						-1144.0,
+						2900.0
+					],
+					"availability": [
+						"calm",
+						"building",
+						"break",
+						"fading"
+					],
+					"id": "essence_stormwood_psychic_01",
+					"item": "essence_psychic",
+					"label": "Gather Psychic Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:stormwood:psychic:01",
+					"outputs": {
+						"attuned_psychic": 1.0,
+						"essence_psychic": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 136.0,
+						"off_route": true,
+						"terrain_and_player_path_proven": false
+					},
+					"realm": "stormwood",
+					"region_id": "conductor_run",
+					"requires_flag": "",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_psychic"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "psychic"
+				},
+				"source_generation": "1",
+				"source_id": "essence_stormwood_psychic_01",
+				"source_key": "resource:stormwood:essence_stormwood_psychic_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"id": "essence_stormwood_psychic_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 0,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "626449df0409628d8f55f5ba4aae6ffe3ac5daad015a5663e219455f0152d262",
+				"passive_clock_active": true,
+				"realm": "stormwood",
+				"session_epoch": "02aba44369924c22bb5f614885d7d110",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(-1144.0, 67.97187, 2900.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "07d7edd36f280d51324fb8aeba21d175ee3ccffee1599846f5cf1a42a4456861",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						{
+							"id": "essence_ice",
+							"n": 3
+						},
+						{
+							"id": "attuned_ice",
+							"n": 1
+						},
+						{
+							"id": "seed_ice",
+							"n": 1
+						},
+						{
+							"id": "essence_psychic",
+							"n": 3
+						},
+						{
+							"id": "attuned_psychic",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 38.6874062418938,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9569806922221,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.6845250762962,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+							"craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471",
+							"craft:f32-site-owner:f32:294f6614863cf726fed4dbf6947884273b578a1daa34724fa0f6a664b96284ec",
+							"craft:f32-site-owner:f32:acf63fa4bbe560371c207968643591d365bf7425c9cae901d09ce1d39958fb46"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						{
+							"id": "essence_water",
+							"n": 3
+						},
+						{
+							"id": "attuned_water",
+							"n": 1
+						},
+						{
+							"id": "essence_air",
+							"n": 3
+						},
+						{
+							"id": "attuned_air",
+							"n": 1
+						},
+						{
+							"id": "essence_electric",
+							"n": 3
+						},
+						{
+							"id": "attuned_electric",
+							"n": 1
+						},
+						{
+							"id": "seed_electric",
+							"n": 1
+						},
+						{
+							"id": "essence_fire",
+							"n": 3
+						},
+						{
+							"id": "attuned_fire",
+							"n": 1
+						},
+						{
+							"id": "essence_dark",
+							"n": 3
+						},
+						{
+							"id": "attuned_dark",
+							"n": 1
+						},
+						{
+							"id": "seed_dark",
+							"n": 1
+						},
+						{
+							"id": "essence_ice",
+							"n": 3
+						},
+						{
+							"id": "attuned_ice",
+							"n": 1
+						},
+						{
+							"id": "seed_ice",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 38.6874062418938,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.9569806922221,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 0,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.6845250762962,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c20357d6eb7c44812b6626dd5931a4cc",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-c20357d6eb7c44812b6626dd5931a4cc": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:31e0205c64a939fbe57ea000de94f1a473f0d75593a6f00f5b356b9c61d7aac3",
+							"craft:f32-site-owner:f32:129b204fa6ce11dc0affa50873e44b2bcea6a8ee34355bfc762fdc44d7246ced",
+							"craft:f32-site-owner:f32:4dd03c11a343ca666d32436d941596590f0caf28994ae26fd3966b52030c3b65",
+							"craft:f32-site-owner:f32:8e2cdbd9fc2b1df386394d7cedb29a3e8d9812c02c10f27f6de957f06f600900",
+							"craft:f32-site-owner:f32:973f3943092a7bde693a873c3116e8f99a8ca1cfe4063d309560973da68c056e",
+							"craft:f32-site-owner:f32:1ff03470fbb1289ec003e766cd312bc6a1f0de4e00dd7cdf362ca7fbca98e471",
+							"craft:f32-site-owner:f32:294f6614863cf726fed4dbf6947884273b578a1daa34724fa0f6a664b96284ec"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 23,
+				"delivery_id": "creature_training:dab7c741bdf16dbf3fa083aae829bf3d92c866bb0e7932ed8305957c3c581996",
+				"host_context": {
+					"actor_realm": "stormwood",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 22,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "stormwood",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.88000609097071,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/stormwood_harvests.json",
+							"id": "stormwood_harvest_conductor_run_095",
+							"offset_xz_m": [
+								6.0,
+								0.0
+							]
+						},
+						"at": [
+							-1144.0,
+							2900.0
+						],
+						"availability": [
+							"calm",
+							"building",
+							"break",
+							"fading"
+						],
+						"id": "essence_stormwood_psychic_01",
+						"item": "essence_psychic",
+						"label": "Gather Psychic Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:stormwood:psychic:01",
+						"outputs": {
+							"attuned_psychic": 1.0,
+							"essence_psychic": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 136.0,
+							"off_route": true,
+							"terrain_and_player_path_proven": false
+						},
+						"realm": "stormwood",
+						"region_id": "conductor_run",
+						"requires_flag": "",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_psychic"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "psychic"
+					},
+					"source_generation": "1",
+					"source_id": "essence_stormwood_psychic_01",
+					"source_key": "resource:stormwood:essence_stormwood_psychic_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "f1c457e1a869271947f91d7387e26abf",
+						"expected_stock_revision": 0,
+						"site_id": "essence_stormwood_psychic_01"
+					}
+				},
+				"journal_revision": 8,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:acf63fa4bbe560371c207968643591d365bf7425c9cae901d09ce1d39958fb46",
+				"session_id": "02aba44369924c22bb5f614885d7d110",
+				"source_key": "resource:stormwood:essence_stormwood_psychic_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "5c1f69f590dfbc7dfe82e877db62da9f"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "f1c457e1a869271947f91d7387e26abf",
+				"verdict": {
+					"character_revision": 23,
+					"durable": true,
+					"journal_revision": 8,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:acf63fa4bbe560371c207968643591d365bf7425c9cae901d09ce1d39958fb46",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(-1144.0, 67.96256, 2901.594)",
+			"walk_start": "(-1144.0, 67.83183, 2906.0)",
+			"walked_metres": 4.405517578125
+		}
+	],
+	"source_path": "res://data/config/stormwood_harvests.json",
+	"source_runtime_enabled": null,
+	"source_sha256": "53978b9b5569ac1ccfd72846163238c34ca25a17e9764c8128fde5a587e38a1d",
+	"two_peer_rejoin": false,
+	"user_data_dir": "/root/.local/share/godot/app_userdata/Tetherbound"
+}

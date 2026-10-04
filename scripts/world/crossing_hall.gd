@@ -29,7 +29,11 @@ func build(config: Dictionary) -> bool:
 		_build_pedestal(entry)
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
+	for row: Dictionary in _config.get("interior_lights", []):
+		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
 	_build_frontage()
+	_close_shell()
+	_build_interior_ambient()
 	var catalog := CATALOG_PRESENTATION.new()
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
@@ -167,19 +171,109 @@ func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
 	return label
 
 
-func _add_light(at: Vector3) -> void:
+func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	var lantern := Node3D.new()
 	lantern.position = at
+	lantern.rotation.y = deg_to_rad(yaw_deg)
 	add_child(lantern)
 	_add_model(lantern, LANTERN_MODEL)
+	var settings: Dictionary = _config.get("light", {})
+	# A visible flame, so the lantern reads as the light's source.
+	var flame_material := StandardMaterial3D.new()
+	flame_material.albedo_color = Color(str(settings.get("colour", "#ffd7a4")))
+	flame_material.emission_enabled = true
+	flame_material.emission = flame_material.albedo_color
+	flame_material.emission_energy_multiplier = float(settings.get("flame_energy", 1.5))
+	var flame := MeshInstance3D.new()
+	var sphere := SphereMesh.new()
+	sphere.radius = float(settings.get("flame_radius_m", .07))
+	sphere.height = sphere.radius * 2
+	flame.mesh = sphere
+	flame.material_override = flame_material
+	flame.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	flame.position = _position(settings.get("flame_at", [0, .15, .12]))
+	lantern.add_child(flame)
 	var light := OmniLight3D.new()
 	light.position = at
-	var settings: Dictionary = _config.get("light", {})
 	light.light_color = Color(str(settings.get("colour", "#ffd7a4")))
 	light.light_energy = float(settings.get("energy", 1.15))
 	light.omni_range = float(settings.get("range_m", 8.5))
 	light.shadow_enabled = false
 	add_child(light)
+
+
+## The frontage and tower carry the same retint as the shell recipe
+## (building_prefabs.json crossing_hall_shell.retint): colour multiply, optional
+## albedo swap, optional glow. One copy per source material.
+func _retint(root: Node, retint: Dictionary) -> void:
+	if retint.is_empty():
+		return
+	var made: Dictionary = {}
+	for raw: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		for index in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(index) as StandardMaterial3D
+			if material == null or not retint.has(material.resource_name):
+				continue
+			if not made.has(material):
+				var spec: Dictionary = retint[material.resource_name]
+				var copy := material.duplicate() as StandardMaterial3D
+				copy.albedo_color = Color(str(spec.get("color", "#ffffff")))
+				if spec.has("texture"):
+					copy.albedo_texture = load(str(spec.texture)) as Texture2D
+				if spec.has("emission"):
+					copy.emission_enabled = true
+					copy.emission = Color(str(spec.emission))
+					copy.emission_energy_multiplier = float(spec.get("energy", .85))
+				made[material] = copy
+			mesh.set_surface_override_material(index, made[material])
+
+
+## The installed roof tiles are single-sided, so from the nave they were
+## culled and the sky showed between the rafters, and sun or moonlight fell
+## straight onto the floor. The Hall's own shell (its building's modules and
+## the frontage/tower) casts double-sided shadows and its roof tiles render
+## both faces. Materials are duplicated per surface: the kit's materials are
+## shared with every other house.
+func _close_shell() -> void:
+	var building := get_parent() as Node3D
+	if building == null:
+		return
+	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null or mesh.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+			continue
+		var roof := false
+		var walk: Node = mesh
+		while walk != null and walk != building:
+			if str(walk.name).begins_with("Roof_"):
+				roof = true
+				break
+			walk = walk.get_parent()
+		if not roof and not _is_shell_module(mesh, building):
+			continue
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+		if not roof:
+			continue
+		for index in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(index) as BaseMaterial3D
+			if material == null or material.cull_mode == BaseMaterial3D.CULL_DISABLED:
+				continue
+			var both := material.duplicate() as BaseMaterial3D
+			both.cull_mode = BaseMaterial3D.CULL_DISABLED
+			mesh.set_surface_override_material(index, both)
+
+
+func _is_shell_module(mesh: Node, building: Node) -> bool:
+	var walk: Node = mesh
+	while walk != null and walk != building:
+		var name := str(walk.name)
+		if name.begins_with("Wall_") or name.begins_with("Corner_") or name.begins_with("Floor_"):
+			return true
+		walk = walk.get_parent()
+	return false
 
 
 func _process(delta: float) -> void:
@@ -188,6 +282,74 @@ func _process(delta: float) -> void:
 		return
 	_elapsed = 0
 	refresh_from_game()
+	_refresh_interior_ambient()
+
+
+## The night sky ambient (art.json, energy ~2.3 to keep the outdoors readable)
+## also lit the enclosed nave and Shrine Room flat blue, brighter than outside
+## (F17#6 r1/r3 judges). The Warrens' interior ReflectionProbe ambient has no
+## effect under the shipped Compatibility renderer (measured: probe active,
+## frame unchanged), so the Hall uses material ambient occlusion instead: each
+## Hall surface material (duplicated; the kit's are shared) carries a uniform
+## AO map that scales AMBIENT light only (ao_light_affect 0), leaving the
+## lanterns' direct light alone. It is enabled only while WorldLook is dark,
+## because the Hall's walls are one shell seen from both sides: by day the
+## exterior keeps the ordinary sky ambient.
+var _night_materials: Array[BaseMaterial3D] = []
+var _night_ambient_on := false
+
+
+func _build_interior_ambient() -> void:
+	var cfg: Dictionary = _config.get("interior_ambient", {})
+	var building := get_parent() as Node3D
+	if cfg.is_empty() or building == null:
+		return
+	var image := Image.create(4, 4, false, Image.FORMAT_L8)
+	image.fill(Color.from_hsv(0, 0, clampf(float(cfg.get("night_ambient", .25)), 0.0, 1.0)))
+	var occlusion := ImageTexture.create_from_image(image)
+	var seen: Dictionary = {}
+	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		if mesh.material_override is BaseMaterial3D:
+			mesh.material_override = _night_material(mesh.material_override as BaseMaterial3D, occlusion, seen)
+			continue
+		for index in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(index) as BaseMaterial3D
+			if material != null:
+				mesh.set_surface_override_material(index, _night_material(material, occlusion, seen))
+	_refresh_interior_ambient()
+
+
+## One night copy per source material, so a material shared by many Hall
+## modules stays one material here too. A material that already carries its
+## own AO map is left alone.
+func _night_material(source: BaseMaterial3D, occlusion: Texture2D, seen: Dictionary) -> BaseMaterial3D:
+	if source.ao_enabled or source.ao_texture != null:
+		return source
+	if seen.has(source):
+		return seen[source]
+	var copy := source.duplicate() as BaseMaterial3D
+	copy.ao_texture = occlusion
+	copy.ao_light_affect = 0.0
+	copy.ao_enabled = false
+	seen[source] = copy
+	_night_materials.append(copy)
+	return copy
+
+
+func _refresh_interior_ambient() -> void:
+	if _night_materials.is_empty():
+		return
+	var tree := get_tree()
+	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
+	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
+	if dark == _night_ambient_on:
+		return
+	_night_ambient_on = dark
+	for material: BaseMaterial3D in _night_materials:
+		material.ao_enabled = dark
 
 
 func refresh_from_game() -> void:
@@ -282,6 +444,7 @@ func _build_frontage() -> void:
 		holder.rotation.y = deg_to_rad(float(row.get("yaw_deg", 0)))
 		frontage.add_child(holder)
 		_add_model(holder, "res://assets/buildings/quaternius_medieval/" + str(row.module) + ".gltf")
+	_retint(frontage, settings.get("retint", {}))
 	var sign_settings: Dictionary = settings.get("sign", {})
 	var sign := _label(frontage, str(sign_settings.get("text", "Crossing Hall")), _position(sign_settings.at))
 	sign.name = "HallDestinationSign"

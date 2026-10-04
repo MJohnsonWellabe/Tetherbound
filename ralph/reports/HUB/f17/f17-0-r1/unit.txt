@@ -1,0 +1,15 @@
+  ok    test_village_road_topology.gd :: test_every_junction_is_a_branch_off_the_through_road
+  ok    test_village_road_topology.gd :: test_every_lane_keeps_its_painted_band_off_every_building
+  ok    test_village_road_topology.gd :: test_every_side_lane_leaves_the_through_road_and_ends_in_its_subarea
+  ok    test_village_road_topology.gd :: test_every_subarea_is_named_by_a_fingerpost_on_its_road
+  ok    test_village_road_topology.gd :: test_every_village_road_leaves_the_fence_through_a_gate
+  ok    test_village_road_topology.gd :: test_no_harvest_prompt_sits_inside_a_village_door_prompt
+  ok    test_village_road_topology.gd :: test_no_road_centreline_runs_through_a_building
+  ok    test_village_road_topology.gd :: test_one_continuous_through_road_runs_from_grandpas_door_to_trailgate
+  ok    test_village_road_topology.gd :: test_the_three_named_subareas_exist_and_are_served_by_roads
+  ok    test_village_road_topology.gd :: test_the_through_road_continues_to_the_south_bridge
+  ok    test_village_road_topology.gd :: test_the_topology_block_names_real_roads_and_places
+  ok    test_village_road_topology.gd :: test_the_well_is_on_the_main_street_and_no_junction_crowds_the_green
+  ok    test_village_road_topology.gd :: test_village_door_prompt_radius_is_the_one_this_test_guards
+
+33 tests, 3691 assertions, 0 failed
