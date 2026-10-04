@@ -274,11 +274,23 @@ func _departure() -> void:
 	if bool(_fly.call("is_flying")):
 		await _capture("departure-lookback", CROWN)
 	else:
-		_fail("%s departure: the glide ended before 35 m" % _time_name)
+		_fail("%s departure: the glide ended before 35 m, at %s (%.1f m out) on %s" % [_time_name,
+			_player.global_position, _flat(_player.global_position, CROWN), _floor_collider()])
 	_release_all()
 
 
 ## --- helpers ------------------------------------------------------------------------
+
+## The collider straight under the trainer (evidence for an early touchdown).
+func _floor_collider() -> String:
+	var query := PhysicsRayQueryParameters3D.create(_player.global_position + Vector3.UP * 0.5,
+		_player.global_position + Vector3.DOWN * 3.0, _player.collision_mask, [_player.get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return "nothing within 3 m"
+	var collider := hit.get("collider") as Node
+	return "%s at y %.2f" % [str(collider.get_path()) if collider != null else "?", float((hit.position as Vector3).y)]
+
 
 ## What the launch's room-overhead query (fly_controller.gd `launch_blockers`)
 ## meets at the trainer, by node path: evidence for a refused launch.
