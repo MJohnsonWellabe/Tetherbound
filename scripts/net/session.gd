@@ -4651,7 +4651,7 @@ func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dict
 	if _owner_training_retry.is_empty() or _owner_training_retry.player.get_ref() != player \
 			or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt \
 			or not ESSENCE._equivalent(_owner_training_row(), row) \
-			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 	_owner_training_retry.saved = true
 	return true
 
@@ -4664,7 +4664,7 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 	if not _owner_training_mutation_blocked(player): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
-		and ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
+		and ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
 		and payload.redesign_character.transaction_receipts.has(row.receipt)
 
 
@@ -4676,7 +4676,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 	if not _owner_training_retry.is_empty():
 		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
-			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:

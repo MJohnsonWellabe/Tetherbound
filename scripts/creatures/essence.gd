@@ -415,7 +415,10 @@ static func host_wild_defeat_event(admitted: Dictionary, character_id: String,
 		"world_namespace": world_namespace, "encounter_id": host_record.encounter_id,
 		"enemy_uid": actual_dead_enemy.uid, "enemy_record": actual_dead_enemy.duplicate(true),
 		"active_uid": host_active_uid, "eligible_uids": eligible, "kind": "wild_defeat",
-		"xp_mode": cfg.wild_victory_xp_mode, "realm": host_record.realm}
+		"xp_mode": cfg.wild_victory_xp_mode, "realm": host_record.realm, "shed": {}}
+	# F32#4: the shed is decided ONCE here from host config and frozen in the
+	# event, so a later flag/table change never invalidates the journaled row.
+	event.shed = defeat_shed(event, character_id)
 	return {"ok": true, "intent": event, "source_identity": identity}
 
 
@@ -508,14 +511,14 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 			or not _baseline_errors(admitted, character_id).is_empty() \
 			or not configuration_errors(cfg).is_empty(): return _refuse("invalid_defeat")
 	var keys := ["event_id", "world_namespace", "encounter_id", "enemy_uid", "enemy_record", "active_uid", "eligible_uids", "kind", "xp_mode"]
-	# A tenth "realm" key (F32#4 shed) is optional: a nine-key legacy row
-	# still validates, computes no shed and keeps its receipt signature.
-	var has_realm := host_event.size() == keys.size() + 1 and host_event.has("realm")
-	if host_event.size() != keys.size() and not has_realm: return _refuse("invalid_defeat_event")
+	# F32#4 adds "realm" and the host-frozen "shed" outputs. A nine-key legacy
+	# row still validates, pays no shed and keeps its receipt signature.
+	var has_shed := host_event.size() == keys.size() + 2 and host_event.has("realm") and host_event.has("shed")
+	if host_event.size() != keys.size() and not has_shed: return _refuse("invalid_defeat_event")
 	for key: String in keys:
 		if not host_event.has(key): return _refuse("invalid_defeat_event")
-	if has_realm and (not host_event.realm is String or not BIOMES.runtime_ids(false).has(host_event.realm)):
-		return _refuse("invalid_defeat_identity")
+	if has_shed and (not host_event.realm is String or not _shed_outputs_valid(host_event.shed)):
+		return _refuse("invalid_defeat_event")
 	for key: String in ["event_id", "world_namespace", "encounter_id"]:
 		if not _opaque_id(host_event[key]): return _refuse("invalid_defeat_identity")
 	for key: String in ["enemy_uid", "active_uid"]:
@@ -569,7 +572,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	for stack: Dictionary in payout:
 		if not RULES.db().has(str(stack.id)) or inventory.add(str(stack.id), int(stack.n)) != 0:
 			return _refuse("inventory_full")
-	var shed_outputs := _defeat_shed(host_event, character_id) if has_realm else {}
+	var shed_outputs: Dictionary = (host_event.shed as Dictionary).duplicate(true) if has_shed else {}
 	if not shed_outputs.is_empty():
 		var with_shed := RULES.inventory_from(RULES.slots(inventory))
 		for item: String in shed_outputs:
@@ -592,14 +595,21 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 ## F32#4 win shed for one participant of one host wild defeat. The roll is
 ## derived from host identity only, so retries and row recompute reproduce
 ## it; the defeat receipt above makes the whole candidate once-only.
-static func _defeat_shed(host_event: Dictionary, character_id: String) -> Dictionary:
+static func _shed_outputs_valid(raw: Variant) -> bool:
+	if not raw is Dictionary or raw.size() > 8: return false
+	for item: Variant in raw:
+		if not _component(item) or not RULES.db().has(str(item)) or not _integer(raw[item], 1, 99): return false
+	return true
+
+
+static func defeat_shed(host_event: Dictionary, character_id: String) -> Dictionary:
 	var shed := preload("res://scripts/world/shed_drop_rules.gd")
 	var runtime: Variant = DATA.json("res://data/config/f32_runtime.json")
 	if not runtime is Dictionary or runtime.get("runtime_enabled") != true: return {}
 	var digest := JSON.stringify([host_event.world_namespace, host_event.event_id, host_event.enemy_uid, character_id]).sha256_text()
 	var roll := float(("0x" + digest.substr(0, 8)).hex_to_int()) / 4294967296.0
 	var outcome := {"world_instance_id": host_event.world_namespace, "encounter_id": host_event.encounter_id,
-		"realm": host_event.realm, "kind": "wild", "won": true, "settled": true, "participants": [character_id],
+		"realm": str(host_event.get("realm", "")), "kind": "wild", "won": true, "settled": true, "participants": [character_id],
 		"defeated": [{"uid": host_event.enemy_uid, "species": host_event.enemy_record.species_id}]}
 	var candidate: Dictionary = shed.wild_win_candidate(outcome, character_id, {}, {host_event.enemy_uid: roll}, shed.read())
 	return (candidate.outputs as Dictionary).duplicate(true) if candidate.get("ok") == true else {}
@@ -749,6 +759,13 @@ static func stage_training_owner(actual_owner: Dictionary, incoming: Dictionary,
 ## it cannot be preloaded here); test_f27_essence_rules pins the two equal.
 const PASSIVE_CARE_FIELDS := ["nourishment", "happiness", "rested_seconds_left", "rested", "distance_m_together", "landmarks_visited_together"]
 
+## Owner record vs an accepted training row, ignoring only passive care that
+## keeps accruing between the host's stage, the owner save and a rejoin.
+static func owner_matches_after(projection: Variant, after: Variant) -> bool:
+	return projection is Dictionary and after is Dictionary \
+		and _equivalent(_without_passive(projection), _without_passive(after))
+
+
 ## Training projection with each party card's passive-care fields removed.
 static func _without_passive(projection: Dictionary) -> Dictionary:
 	var stripped := projection.duplicate(true)
@@ -817,13 +834,6 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 				creature.set(field, int(row[field]))
 			for field: String in ["max_hp", "hp", "attack", "defence", "happiness"]:
 				creature.set(field, float(row[field]))
-			# Adopt the host's journaled passive care too, so the owner's saved
-			# record equals the accepted row exactly after drift across a rejoin.
-			if row.has("nourishment"): creature.set("nourishment", float(row.nourishment))
-			if row.has("rested_seconds_left"): creature.set("rested_seconds_left", float(row.rested_seconds_left))
-			if row.has("distance_m_together"): creature.set("distance_m_together", float(row.distance_m_together))
-			if row.has("rested"): creature.set("rested", bool(row.rested))
-			if row.has("landmarks_visited_together"): creature.set("landmarks_visited_together", int(row.landmarks_visited_together))
 			var known: Array[String] = []
 			for move: String in row.known_moves: known.append(move)
 			creature.set("known_moves", known)
@@ -834,9 +844,9 @@ static func apply_training_owner(game: Node, incoming: Dictionary,
 		player.set("redesign_character", incoming.after.redesign_character.duplicate(true))
 	session.call("_end_owner_training_install")
 	var installed: Variant = player.call("save_data")
-	# A fresh install equals the row exactly; an already-applied duplicate keeps
-	# the owner's own later passive care, which is not a conflict.
-	if not installed is Dictionary or not _equivalent(_without_passive(training_projection(installed)), _without_passive(incoming.after)):
+	# The owner keeps its own passive care (owner_passive_replay is its
+	# authority); everything else must equal the accepted row exactly.
+	if not installed is Dictionary or not owner_matches_after(training_projection(installed), incoming.after):
 		return {"ok": false, "code": "owner_training_install_conflict", "pending": true}
 	if saver.call("save_character_prepared", game, character) != true:
 		# World acceptance stays earned; keep the exact in-memory state/receipt

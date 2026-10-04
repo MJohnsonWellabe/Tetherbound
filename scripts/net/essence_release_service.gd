@@ -61,7 +61,9 @@ func owns_pending_capture(pending: RefCounted) -> bool:
 		if pending.has_meta(meta): return false
 	for key: String in _requests:
 		if _requests[key].pending.get_ref() == pending: return true
-	return not str(pending.get("uid")).is_empty() # Water claims never reach here (tab_creatures).
+	# Only the full-belt ceremony; a free-slot catch keeps its ordinary path.
+	var party: RefCounted = _game.get("party")
+	return party != null and party.call("is_full") == true and not str(pending.get("uid")).is_empty()
 
 
 func _admitted() -> Dictionary:
@@ -122,8 +124,11 @@ func reconcile_release(id: String) -> void:
 		return
 	var session := _session()
 	if session == null or not _host_owner():
-		release_completed.emit(id, {"ok": false, "resolved": false, "code": "release_host_unavailable"})
+		if request.get("reported_unavailable") != true:
+			request.reported_unavailable = true # Once per outage, not per frame.
+			release_completed.emit(id, {"ok": false, "resolved": false, "code": "release_host_unavailable"})
 		return
+	request.reported_unavailable = false
 	var world: RefCounted = _game.get("world")
 	var character: String = session.call("_authority_character", session.call("local_peer_id"))
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
@@ -164,11 +169,16 @@ func _finish(id: String, decision: Dictionary) -> void:
 	var request: Dictionary = _requests[id]
 	var pending: RefCounted = request.pending.get_ref()
 	var party: RefCounted = _game.get("party")
-	if pending != null and _game.get("pending_catch") == pending:
-		if not request.released_uid.is_empty():
-			if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return
-			if not party.call("add", pending): return # Retried next frame; never a sixth.
-		_game.set("pending_catch", null)
+	if pending == null or _game.get("pending_catch") != pending:
+		# The newcomer left the seam (the saved release stands): say so, never
+		# report a joined newcomer that is not there.
+		_requests.erase(id)
+		release_completed.emit(id, {"ok": false, "resolved": true, "code": "newcomer_unavailable"})
+		return
+	if not request.released_uid.is_empty():
+		if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return
+		if not party.call("add", pending): return # Retried next frame; never a sixth.
+	_game.set("pending_catch", null)
 	_requests.erase(id)
 	var result := decision.duplicate(true)
 	result.ok = true

@@ -43,9 +43,12 @@ func _event(record: Dictionary, event_id: String, realm: String, species: String
 	enemy.hp = 0
 	enemy.fainted = true
 	var uid: String = record.party[0].uid
-	return {"event_id": event_id, "world_namespace": NAMESPACE, "encounter_id": "enc-" + event_id,
+	var event := {"event_id": event_id, "world_namespace": NAMESPACE, "encounter_id": "enc-" + event_id,
 		"enemy_uid": enemy.uid, "enemy_record": enemy, "active_uid": uid, "eligible_uids": [uid],
-		"kind": "wild_defeat", "xp_mode": "hybrid", "realm": realm}
+		"kind": "wild_defeat", "xp_mode": "hybrid", "realm": realm, "shed": {}}
+	# As host_wild_defeat_event: the shed is decided once and frozen in the event.
+	event.shed = E.defeat_shed(event, CHARACTER)
+	return event
 
 
 ## Independent recomputation of the documented host roll.
@@ -97,9 +100,9 @@ func test_misses_wrong_realms_and_unlisted_species_shed_nothing() -> void:
 	assert_true(missed.get("ok") == true, str(missed))
 	assert_eq(missed.shed_outputs, {}, "a roll at or over the chance sheds nothing")
 	var hit := _find(before, true)
-	var meadows := hit.duplicate(true)
-	meadows.realm = "meadows"
-	assert_eq(_stage(before, meadows).shed_outputs, {}, "galecrest sheds only in its configured realms")
+	var meadows := _event(before, hit.event_id, "meadows")
+	assert_eq(meadows.shed, {}, "galecrest sheds only in its configured realms")
+	assert_eq(_stage(before, meadows).shed_outputs, {})
 	var bramble := _event(before, hit.event_id, "cloudreach", "bramblebun")
 	assert_eq(_stage(before, bramble).get("shed_outputs"), {}, "a species without a shed profile pays none")
 
@@ -109,13 +112,29 @@ func test_nine_key_legacy_event_validates_without_shed_and_keeps_its_receipt() -
 	var hit := _find(before, true)
 	var legacy := hit.duplicate(true)
 	legacy.erase("realm")
+	legacy.erase("shed")
 	var old := _stage(before, legacy)
 	assert_true(old.get("ok") == true, str(old))
 	assert_eq(old.shed_outputs, {})
 	assert_eq(old.receipt, _stage(before, hit).receipt, "realm is not part of the defeat receipt signature")
-	var bad := hit.duplicate(true)
-	bad.realm = "not-a-realm"
-	assert_eq(_stage(before, bad).get("code"), "invalid_defeat_identity")
+	# An unknown realm never refuses the win: it simply sheds nothing.
+	var unknown := _event(before, hit.event_id, "not-a-realm")
+	var paid := _stage(before, unknown)
+	assert_true(paid.get("ok") == true and paid.shed_outputs.is_empty(), str(paid))
+
+
+func test_frozen_shed_is_used_as_is_and_malformed_sheds_are_refused() -> void:
+	var before := _admitted(_player())
+	var hit := _find(before, true)
+	# A later config change cannot alter a frozen decision: the row pays what
+	# the host froze, even where a fresh roll would now differ.
+	var frozen := _find(before, false)
+	frozen.shed = {"skyplume": 1}
+	assert_eq(_stage(before, frozen).shed_outputs, {"skyplume": 1})
+	for bad: Variant in [{"skyplume": 1000}, {"not_an_item": 1}, {"skyplume": 0}, ["skyplume"]]:
+		var event := hit.duplicate(true)
+		event.shed = bad
+		assert_eq(_stage(before, event).get("code"), "invalid_defeat_event", "refuses frozen shed " + str(bad))
 
 
 func test_full_satchel_skips_the_shed_but_pays_victory_xp_and_essence() -> void:

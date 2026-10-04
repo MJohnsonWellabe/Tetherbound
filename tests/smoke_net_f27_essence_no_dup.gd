@@ -1,6 +1,6 @@
 extends "res://tests/helpers/net_harness.gd"
 
-# peers: 2
+# peers: 2 -- MANUAL until the owner-passive rejoin fix (#531) lands; run: tools/net/run_net_smoke.sh f27_essence_no_dup
 
 ## F27#4: a guest's Altar essence spend cannot duplicate, or lose its debit,
 ## through reconnect or reload. Two real ENet peers, the host's real paid
