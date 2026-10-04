@@ -16,7 +16,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **F18 candidate:** Ready-world waystone mounts, guest/local durable touch transactions, portal view fields and receiver permit enforcement have scoped passing evidence in `ralph/reports/HUB/f18/runtime-integration.json`. All six criteria remain UNPROVEN pending actual-world, earned-loop and live co-op proof; guest opening Home Key work is separate WIP.
 
-**F25 (`tb/vfx`, Claude):** effect craft only (`scripts/vfx/**`, vfx.json `move_library`, `assets/vfx/**`, F25 harness); no combat/net/data/moves edits. Harness repaired for the frozen-move contract; captures in-container (llvmpipe) on the shipped Meadows world. Staged launch/contact/aftermath, 23/24 archetypes. Blind r27: candidate 12/12 preferred, identities and rank order PASS, full craft FAIL; real-world rerun in progress. Library OFF; F25 open. `ralph/reports/VFX/f25/PROOF.md`.
+**F25 (`tb/vfx`, Claude):** effect craft (`scripts/vfx/**`, vfx.json `move_library`, `assets/vfx/**`, F25 harness). Captures in-container (llvmpipe) on the shipped Meadows world. Staged launch/contact/aftermath on 23/24 archetypes; 16 element-true ultimate overrides. Owner 2026-10-04: cartoon hit markers rejected; **shared combat `hit_spark` OFF** (vfx.json `hit_spark.enabled=false`, `test_combat_vfx.gd` updated): its spray buried every hit, each move's impact now carries contact. Library OFF; F25 open. `ralph/reports/VFX/f25/PROOF.md`.
 
 **CI baseline:** CI6181/36998880911 on e19d231f9 failed in units, catching, Tidewake, world aim, Stormwood, combat, traversal, gate-b-core, gate-a UI (cancelled) and multiplayer (hello timeouts, F48 provisioning, 30-min cancels). Known-red probes are `continue-on-error`.
 
