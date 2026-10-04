@@ -1205,6 +1205,25 @@ func publish_creature_training(peer: int, character: String, receipt: String) ->
 var _training_stall := ""
 
 
+## Diagnostic only: where two portable records part, a few levels deep.
+static func _differing_paths(left: Variant, right: Variant, at: String) -> Array:
+	if ESSENCE._equivalent(left, right): return []
+	if left is Dictionary and right is Dictionary and at.count("/") < 4:
+		var out: Array = []
+		var keys: Array = left.keys()
+		for key: Variant in right.keys():
+			if not left.has(key): keys.append(key)
+		for key: Variant in keys:
+			out.append_array(_differing_paths(left.get(key), right.get(key), "%s/%s" % [at, str(key)]))
+		return out
+	if left is Array and right is Array and left.size() == right.size() and at.count("/") < 4:
+		var out: Array = []
+		for index: int in left.size():
+			out.append_array(_differing_paths(left[index], right[index], "%s/%d" % [at, index]))
+		return out
+	return ["%s: %s != %s" % [at, str(left).left(60), str(right).left(60)]]
+
+
 ## Logged once per distinct reason: a stalled owner row retries every poll.
 func _note_training_stall(reason: String) -> void:
 	if reason == _training_stall:
@@ -1239,7 +1258,11 @@ func _process_creature_training(row: Dictionary) -> void:
 	elif preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
 	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if outcome.get("ok") != true or outcome.get("saved") != true:
-		_note_training_stall("owner apply %s" % str(outcome.get("code", outcome.get("reason", "unsaved"))))
+		var stall_detail := ""
+		if outcome.get("code") == "owner_action_baseline_conflict":
+			stall_detail = " " + str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").portable_projection(
+				player.call("save_data")), row.get("before", {}), ""))
+		_note_training_stall("owner apply %s%s" % [str(outcome.get("code", outcome.get("reason", "unsaved"))), stall_detail])
 		return
 	_observe_training_boundary(row, "after_owner_write_before_ack")
 	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
@@ -1271,7 +1294,12 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var session: Node = game.get("session")
 	if row.status == "accepted":
 		if session == null or session.call("host_ack_creature_training", peer, row) != true:
-			_note_training_stall("host ack of accepted row refused (pending matches %s)" % str(session.get("_character_authority").call("creature_training_pending_matches", character, row) if session != null else null))
+			var authority: RefCounted = session.get("_character_authority") if session != null else null
+			_note_training_stall("host ack of accepted row refused (pending matches %s; revision %s, row %s; differs %s)" % [
+				str(authority.call("creature_training_pending_matches", character, row) if authority != null else null),
+				str(authority.call("revision", character) if authority != null else null), str(row.get("character_revision")),
+				str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").training_projection(
+					authority.call("state", character), row, ESSENCE.training_projection), row.get("after", {}), "") if authority != null else [])])
 			return false
 		_publish_training_acceptance(peer, row)
 		session.call("_deliver_training_decision", peer, row)
