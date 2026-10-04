@@ -153,8 +153,11 @@ func _run() -> void:
 	for _i in 20:
 		await step(0, "wait", {"frames": 30})
 		walked = ((await _state(1)).get("local", {}) as Dictionary)
-		if int(walked.get("sequence", 0)) > int(before_walk.get("sequence", 0)) \
-				and int(walked.get("acked", 0)) >= int(walked.get("sequence", 0)) and str(walked.get("id", "")) == rejoined_id:
+		# The walking owner records inputs continuously, so the newest few
+		# are always in flight: the proof is that the host acknowledges
+		# inputs recorded AFTER the rejoin under the new stream id.
+		if int(walked.get("acked", 0)) > int(before_walk.get("sequence", 0)) \
+				and str(walked.get("id", "")) == rejoined_id and str(walked.get("error", "")).is_empty():
 			acked_ok = true
 			break
 	check(acked_ok, "rejoin: the walking guest's passive inputs are acknowledged by the host (%s -> %s)"

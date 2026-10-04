@@ -1,0 +1,11 @@
+      2 DBGOP admitted refused: equivalent=false hash_match=false decl_matches_portable=true existing=true
+      4 DBGOP diff /party[0]/attack host=29.7 guest=30.8
+      4 DBGOP diff /party[0]/defence host=27.0 guest=28.0
+      4 DBGOP diff /party[0]/distance_m_together host=0.0 guest=3.37712621688843
+      4 DBGOP diff /party[0]/happiness host=54.9991947266667 guest=54.9083378333334
+      4 DBGOP diff /party[0]/happiness host=54.9991947266667 guest=54.9953561808333
+      4 DBGOP diff /party[0]/hp host=170.4 guest=177.6
+      4 DBGOP diff /party[0]/level host=8 guest=9
+      4 DBGOP diff /party[0]/max_hp host=170.4 guest=177.6
+      4 DBGOP diff /party[0]/nourishment host=69.9940946622222 guest=69.3278107777779
+      4 DBGOP diff /party[0]/nourishment host=69.9940946622222 guest=69.9659453261111
