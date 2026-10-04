@@ -313,7 +313,10 @@ func _request(request: int, to: String) -> void:
 	if peer <= 1 or not _peers().has(peer):
 		return
 	var from := str(session().call("realm_of", peer))
-	if session().has_method("portal_runtime_ready") and session().call("portal_runtime_ready") == true:
+	# Retired physical crossings (RD-17) need a portal permit. The shipped
+	# config retires them whenever the portal runtime is on; only the explicit
+	# debug legacy-crossing regression fixture keeps the physical path.
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(get_node_or_null("/root/Game")):
 		var arrival := session().get_node_or_null(^"FoundationComposition/PortalArrival")
 		if arrival == null or arrival.call("transition_authorized", peer, to) != true:
 			_refused.rpc_id(peer, request, "Use the Crossing Hall portals.")
