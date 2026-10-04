@@ -15,6 +15,7 @@ const SAVE := preload("res://scripts/save/save_game.gd")
 const DRIVER := preload("res://tests/helpers/gate_a_material_route.gd")
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const ADAPTER := preload("res://scripts/net/foundation_resources.gd")
+const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const SCENES := {"meadows": "res://scenes/world/meadows_playground.tscn",
 	"water": "res://scenes/world/water_archipelago.tscn"}
 const CONFIGS := {"meadows": "res://data/config/harvest.json", "water": "res://data/config/water_pickups.json"}
@@ -263,7 +264,10 @@ func _disk(label: String) -> Dictionary:
 		var path: String = paths[kind]
 		var retained := directory.path_join(kind + ".json")
 		_check(FileAccess.file_exists(path) and DirAccess.copy_absolute(path, retained) == OK, label + " retains exact " + kind + " bytes")
-		result[kind] = _read(path)
+		# Saves are codec envelopes; decode exactly as the production loader does.
+		var decoded: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(path))
+		_check(decoded is Dictionary, label + " decodes " + kind + " save document")
+		result[kind] = decoded if decoded is Dictionary else {}
 	return result
 
 func _count(character: Dictionary, item: String) -> int:
