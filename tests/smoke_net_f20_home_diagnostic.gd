@@ -1,6 +1,7 @@
 extends "res://tests/smoke_net_f20_ending.gd"
 
 # peers: 2
+# requires-flag: multiplayer.json session.redesign_portal_runtime_enabled
 ## Affected guest-arrival diagnostic only. This cannot close F20#4: it does
 ## not exercise either ending, credits or disconnect/reload acceptance path.
 func _run() -> void:
