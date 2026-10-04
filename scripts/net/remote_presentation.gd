@@ -205,15 +205,6 @@ static func play(body: Node3D, kind: String, payload: Dictionary = {}) -> Node:
 	return spawned
 
 
-## The companion layer's half. A remote creature body carries its own `Presence`
-## (`remote_creature.gd` attaches one), and this is what tells it a fight was
-## won or a level was gained on the other side of the wire -- the events its
-## owner's `combat_manager.gd` would have called `on_event` for locally.
-##
-## Addressed to THIS body's own presence node, never through
-## `SceneTree.call_group(companion_presence.GROUP, ...)` the way the local
-## fight does: the group holds every companion in the process, so a group call
-## would make the local player's creature celebrate a friend's win too.
 ## The newest hit flash VFX.hit attached to this body, if any.
 static func _latest_body_glow(body: Node3D) -> Node:
 	for index in range(body.get_child_count() - 1, -1, -1):
@@ -223,6 +214,15 @@ static func _latest_body_glow(body: Node3D) -> Node:
 	return null
 
 
+## The companion layer's half. A remote creature body carries its own `Presence`
+## (`remote_creature.gd` attaches one), and this is what tells it a fight was
+## won or a level was gained on the other side of the wire -- the events its
+## owner's `combat_manager.gd` would have called `on_event` for locally.
+##
+## Addressed to THIS body's own presence node, never through
+## `SceneTree.call_group(companion_presence.GROUP, ...)` the way the local
+## fight does: the group holds every companion in the process, so a group call
+## would make the local player's creature celebrate a friend's win too.
 static func _react(body: Node3D, kind: String) -> void:
 	if kind != KIND_VICTORY and kind != KIND_LEVEL_UP:
 		return
