@@ -450,8 +450,8 @@
         "enabled": true,
         "merge_seconds": 0.15,
         "hold_fraction": 0.4,
-        "font_px": 28,
-        "min_font_px": 22,
+        "font_px": 36,
+        "min_font_px": 28,
         "own_target_scale": 0.85,
         "peer_size_scale": 0.8,
         "peer_opacity": 0.6,
@@ -459,7 +459,7 @@
         "rise_px": 56,
         "target_offset_m": 0.15,
         "max_live": 12,
-        "outline_px": 3,
+        "outline_px": 4,
         "styles": {
           "ordinary": {
             "colour": "#f2f0df",
