@@ -59,7 +59,7 @@ func _capture(label: String) -> void:
 			await _turn_to(heading - PI * 0.5)
 			await _station("street-mid-right", false)
 			await _turn_to(heading)
-		elif not _approach_done and x > 78.0:
+		elif not _approach_done and x > 66.0:
 			# Hall approach from the last houses, far enough back that the
 			# roofline and tower are in frame; then back down the road.
 			_approach_done = true
