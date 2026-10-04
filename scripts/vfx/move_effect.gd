@@ -602,6 +602,9 @@ func _update_impact(u: float, delta: float) -> void:
 		if child is Node3D and child != _motes and child != _puffs: child.scale = Vector3.ONE * growth
 	if _motes != null:
 		var mote_alpha := (1.0 - u) * float(profile.get("opacity", 0.82))
+		if str(profile.get("mote_shape", "")) == "spark":
+			# Sparks stay solid and shrink away instead of going glassy.
+			mote_alpha = 1.0 - pow(u, 4.0)
 		if _mote_linger > 0.0:
 			# Settled chips/embers stay as the visible aftermath, then fade
 			# over the last part of the authored linger.
