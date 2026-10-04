@@ -34,6 +34,9 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 - F36#0 may regenerate NPC faces only as identity-preserving refinements of the installed cast.
 - Pre-camp creature healing (PROGRESSION §6, earned-run finding: 8 potions for 10–12 practice fights, zero slack): Grandpa's house gets one free creature bed using the existing camp `creature_bed` component, so home heals creatures. Meadows ordinary-wild tuning toward COMBAT §7's 15–30% lead cost waits on that bed and an F02#6 re-run.
 - F22#1 reading (coordinator, from COMBAT §7): the band sweep runs each band's ordinary trainer fights; pass needs reader win ≥0.9, masher lead-faint rate ≥0.25 above the reader's, and reader median lead HP cost ≤0.55× the masher's. Wilds keep their own §7 floor.
+- Owner 2026-10-04: ROG Ally test deferred to the owner's own playtest once the game is built; Codex builds no Ally package for now. F26#5 stays owner-blocked; Compatibility stays default.
+- Owner 2026-10-04: lanes restructured. Four Claude feature lanes (now F17, F18, F22, F27), each takes one feature to done (every criterion PASS or BLOCKED with an ask, review passed) before the next in ROADMAP order. Re-proof folds into each lane. The re-proof, fix and extra visual sessions retire as their queues finish. Codex keeps GPU/Meshy.
+- Owner 2026-10-04: CI known-red probes run only on the scheduled full tier and manual dispatch; the multiplayer group skips presentation-only changes (ci.yml `net` output). Delivery plan: 13 eight-hour sprints across five lanes, tracked on the board's Delivery plan tab (ralph/reports/COORDINATOR/dashboard/plan.json). Times are reported in Chicago time.
 - The card-closing F49 run uses no shortcuts.
 
 ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.
