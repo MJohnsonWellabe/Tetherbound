@@ -422,7 +422,11 @@ func _run_hall_activity() -> void:
 		for _frame in 60:
 			await physics_frame
 	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != alpha:
-		_fail("hall activity: real road input did not reach and engage Alpha Galecrest (gap %.2f)" % gap)
+		var alpha_floor := float(world.call("ground_height_at", alpha.global_position.x, alpha.global_position.z)) if is_instance_valid(alpha) else NAN
+		_fail("hall activity: real road input did not reach and engage Alpha Galecrest (gap %.2f; trainer %s on_floor=%s vel=%s; alpha %s terrain_y=%.2f fighting=%s enemy=%s)" % [
+			gap, str(player.global_position), str(player.is_on_floor()), str(player.velocity),
+			str(alpha.global_position) if is_instance_valid(alpha) else "?", alpha_floor,
+			str(manager.call("is_fighting")), str(manager.call("enemy_body"))])
 		_report()
 		return
 	await _hall_capture(world, capture_dir, "hall-approach")
