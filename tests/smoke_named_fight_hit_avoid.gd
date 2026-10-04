@@ -13,10 +13,14 @@ extends "res://tools/art_pipeline/capture_named_fight.gd"
 ##   `hit_landed(on_enemy=false)` is the opponent's strike landing.
 ## - DODGE: on the other tells the left stick backs the creature straight
 ##   away from the opponent, out of reach, steering round anything it is
-##   stuck on (movement is the dodge -- combat_manager.gd `_drive_player_creature`,
-##   there is no dodge button), from DODGE_REACTION_S into the tell until
-##   WITNESS_DODGE_TAIL_S after it; an `attack_missed(by_player=false)` is the strike
-##   avoided.
+##   stuck on (combat_manager.gd `_drive_player_creature`), from
+##   DODGE_REACTION_S into the tell until WITNESS_DODGE_TAIL_S after it, and
+##   taps the combat burst (pad A, `jump`) once on the way, which is how
+##   COMBAT §12.2 answers a WALL's quake ring; an
+##   `attack_missed(by_player=false)` is the strike avoided. A ring connects
+##   while the target's centre is within range + its own radius
+##   (combat_ai.gd `pattern_contains`), so `reach` in a row is the ring's
+##   range, not the distance to clear.
 ##
 ## Ordinary quicks track the target live through the tell, so stepping
 ## sideways does not escape them; reach is the only way out.
@@ -136,6 +140,15 @@ func _witness_one() -> bool:
 					and since >= DODGE_REACTION_S:
 				stick = _stick_away_from_opponent()
 				stick = _steer_around_obstacle(stick)
+				# COMBAT §12.2: a WALL's quake ring is answered by bursting out
+				# of it, and the burst is pad A (`jump`) in a fight
+				# (combat_manager.gd `_read_player_input`, COMBAT-3). One tap
+				# per dodged strike, with the stick already held away.
+				if not bool(s.get("burst_sent", false)) and stick != Vector2.ZERO:
+					s["burst_sent"] = true
+					_left_stick(stick)
+					await _pad_tap("jump")
+					frames += 4
 		# Between tells, ahead of a DODGE strike, keep room to back into: a
 		# creature already pinned on the arena's edge cannot back out of
 		# anything, and a player who means to step out of the next swing does
