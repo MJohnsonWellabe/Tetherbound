@@ -1,0 +1,36 @@
+meadows    ground         2.8 m  ON-ROUTE
+meadows    water          4.5 m  ON-ROUTE
+meadows    air           69.2 m  off
+meadows    electric     205.1 m  off
+meadows    fire          50.2 m  off
+meadows    dark          65.2 m  off
+meadows    ice          251.8 m  off
+meadows    psychic      462.9 m  off
+cloudreach ground        18.3 m  off
+cloudreach water        205.4 m  off
+cloudreach air          197.0 m  off
+cloudreach electric     312.0 m  off
+cloudreach fire         587.8 m  off
+cloudreach dark         316.3 m  off
+cloudreach ice          339.3 m  off
+cloudreach psychic      617.4 m  off
+stormwood  ground        35.5 m  off
+stormwood  water         42.8 m  off
+stormwood  air          107.9 m  off
+stormwood  electric      37.8 m  off
+stormwood  fire          61.8 m  off
+stormwood  dark         425.1 m  off
+stormwood  ice           60.3 m  off
+stormwood  psychic      136.0 m  off
+water      ground        34.0 m  off
+water      water         33.0 m  off
+water      air           32.8 m  off
+water      electric      38.5 m  off
+water      fire          41.8 m  off
+water      dark          26.4 m  off
+water      ice           54.2 m  off
+water      psychic       69.4 m  off
+meadows    off-route 6/8  PASS (mostly off-route, >= 15 m)
+cloudreach off-route 8/8  PASS (mostly off-route, >= 15 m)
+stormwood  off-route 8/8  PASS (mostly off-route, >= 15 m)
+water      off-route 8/8  PASS (mostly off-route, >= 15 m)

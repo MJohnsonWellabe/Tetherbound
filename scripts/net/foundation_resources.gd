@@ -164,9 +164,7 @@ func host_context(peer: int, key: String, intent: Dictionary) -> Dictionary:
 	var authority: RefCounted = owner.get("_character_authority")
 	var current: Dictionary = authority.call("state", character)
 	var tool := str(safety.get("equipped_tool", ""))
-	if not tool.is_empty():
-		var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(current.inventory)
-		if HARVEST.tool_slot(tool, bag) < 0: return {}
+	tool = effective_tool(tool, current.inventory)
 	var context := {"character_id": character, "expected_revision": int(authority.call("revision", character)),
 		"source_key": key, "source_id": id, "world_id": world.world_id, "world_namespace": world.reward_delivery_namespace,
 		"realm": realm, "actor_realm": realm, "host_day": int(world.day), "in_range": true, "in_combat": false,
@@ -191,6 +189,15 @@ func host_context(peer: int, key: String, intent: Dictionary) -> Dictionary:
 			if building.get("id") == "greenhouse" and building.get("realm") == "meadows" and building.get("paid") == true:
 				context.greenhouse_built = true
 	return context
+
+## A held tool the character no longer owns (dropped, traded, left in a death
+## satchel) or has worn out gathers as bare hands: it grants nothing, and
+## tool-gated sites still refuse with equipped_tool_required. Refusing the whole
+## host context instead locked the player out of every later gather.
+static func effective_tool(held: String, admitted_inventory: Array) -> String:
+	if held.is_empty(): return ""
+	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(admitted_inventory)
+	return held if HARVEST.tool_slot(held, bag) >= 0 else ""
 
 func _available(peer: int, definition: Dictionary, world: RefCounted) -> bool:
 	var personal: Dictionary = session().call("_foundation_flags", peer)

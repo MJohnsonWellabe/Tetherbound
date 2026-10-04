@@ -1,0 +1,61 @@
+F32#0 per-biome gather census (tests/smoke_f32_material_sites.gd --ordinary)
+Command: godot --headless --path . --script tests/smoke_f32_material_sites.gd -- --realm=<realm> --ordinary --output=<dir>
+For each tier material in data/schema/material_tiers.json: the lowest-ID ungated registered renewable
+site, up to 4 candidates. A placement production refuses is SKIPPED and the next site of that material is
+tried. Real scene, production mount, controller walk >= 3 m, prompt, host transaction, owner save + ACK.
+The disk gain, journal, receipt and consumed stock are read from the decoded save.
+Fixture: every ItemDB tool granted at setup (before admission); the item's gathered_with tool equipped.
+
+Stormwood @ a898ca39 + fixture fix: exit 0 (stormwood-report.json)
+  thunderwood conductor_run_076, stormglass cinder_verge_003, conductor_vine cinder_verge_001,
+  glowmoss cinder_verge_002, voltcap glowmoss_hollows_042. sparkfur: shed-only (no node, by design).
+  Needed a81fea49 (hub hosts with the F22 action fence).
+Meadows / Tidewake additional candidates: 3/3 Sunleaf and 3/3 Tide Pearl pass (fixture-registered while
+  the flags are OFF). The ordinary census is still to run for both biomes.
+Cloudreach: FAIL, training_actor_baseline_not_ready on every tool gather (cloudreach-diagnostic-report.json:
+  actor_baseline_before.directors == []). Root cause: session.gd FOUNDATION_DIRECTORS matches exact script
+  paths, and Cloudreach's director is res://scripts/world/cloudreach_scene_encounters.gd (built by
+  cloudreach_world_runtime.gd:8), which is not listed. So _training_actor_baseline_proposals finds no host and
+  refuses. Fix: list that path (patch D, sent to the coordinator).
+  Separately, 3 sites are refused by production placement as "slope not walkable" (heartwood_upper,
+  cliffglass_observatory, cloudberry_cliffhold); 3 have no baked ground on a 6 m ring (gale_fiber_bridge,
+  gale_fiber_gate, cloudberry_waycamp).
+Observation: equipping a tool the character doesn't own made every later gather in that run refuse with
+  source_or_revision_changed, including tool-less ones. The fixture now grants all tools; the cascade itself
+  is not yet root-caused.
+
+== Flags ON (harvest.json / water_pickups.json additional candidates; water and stormwood renewable) ==
+Resolver bug found on enabling: renewable_site_catalog compared JSON outputs {item: 3.0} against
+{item: 3} with Dictionary !=, which is always unequal, so no candidate could ever register (the registry went
+invalid for the whole realm). Fixed with a type-tolerant _single_output check; outputs normalized to ints.
+Registered path, no registry fixture (<realm>-additional-registered-report.json): exit 0 for Meadows Sunleaf
+  patches 01-03 and Tide Pearl reef beds first_shore/reedhaven/brine_steps. Each has terrain/body placement,
+  a controller approach >= 3 m, the prompt, the host transaction, owner save + ACK, exact disk gain, receipt and
+  consumed stock.
+Ordinary census, flags on (<realm>-ordinary-report.json): Meadows exit 0 (wood, stone, fiber, rootstone,
+  ironwood); Tidewake exit 0 (driftwood, reed_fiber, reef_stone, sluice_metal, tide_bloom).
+Regression: 24 related unit files, 236 tests, 0 failed; both terrain bake freshness checks pass.
+
+== FINAL (after 20226255, patch D: Cloudreach's scene director is a Foundation director) ==
+Smoke start fixture: for Cloudreach, ring around the production-resolved site (_resource_position) using
+ground_height_near, the same resolver placement uses.
+All runs exit 0 on the same final smoke; the reports in this folder replace the earlier ones:
+  meadows-ordinary     wood order:0, stone order:1003, fiber order:1000, rootstone order:12, ironwood order:17
+  meadows-additional   sunleaf patches 01-03 (registered path, no fixture)
+  water-ordinary       driftwood, reed_fiber, reef_stone, tide_bloom (brine_steps), sluice_metal (deep_watch)
+  water-additional     tide_pearl reef beds first_shore/reedhaven/brine_steps (registered path)
+  cloudreach-ordinary  windworn_heartwood heartwood_west, cliffglass_ore latch_foot, gale_fiber anchor_picket,
+                       cloudberry waycamp
+  stormwood-ordinary   thunderwood, stormglass, conductor_vine, glowmoss, voltcap
+  Shed-only: skyplume (galecrest, Cloudreach), sparkfur (sparkit/staticub, Stormwood).
+Unit census (CI): tests/test_f32_material_census.gd, 2 tests / 30 assertions pass.
+Verdict F32#0: PASS (all four tier sets gatherable in their biome; both flags ON).
+
+== Lock-out cascade root cause (fixed) ==
+foundation_resources.host_context returned an empty context, refused as source_or_revision_changed, for
+EVERY gather, tool-less ones included, whenever the held tool was not a working tool in the admitted bag.
+In play that happens when a held tool wears out (the HUD keeps a worn tool equipped by design) or leaves the
+bag (dropped, traded, left in a death satchel). Fix: foundation_resources.effective_tool() treats such a
+tool as bare hands. Nothing is granted, and tool-gated sites refuse with equipped_tool_required ("You need
+the right tool in hand to gather this."). Unit proof: tests/test_f32_held_tool.gd. An engine staging of an
+unowned tool was not possible: the authority record restores the starting kit after a local removal.
