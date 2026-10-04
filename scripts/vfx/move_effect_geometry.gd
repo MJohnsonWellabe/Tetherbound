@@ -241,6 +241,7 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("surface_scale", float(profile.get("surface_scale", 1.35)))
 		out.set_shader_parameter("texture_blend", float(profile.get("texture_blend", 0.52)))
 		out.set_shader_parameter("surface_roughness", float(profile.get("surface_roughness", 0.88)))
+		out.set_shader_parameter("grain_strength", float(profile.get("grain_strength", 1.0)))
 		return out
 	return material(colour, float(profile.get("opacity", 1.0)), bool(profile.get("lit", false)))
 

@@ -12,6 +12,9 @@ uniform float surface_roughness = 0.88;
 // Texture tiles per metre of rock so a boulder gets real detail instead of
 // one stretched tile; 0 keeps the older size-independent mapping.
 uniform float texture_tiles_per_m = 1.6;
+// Strength of the procedural grain/crevice striping; a large thrown boulder
+// turns it down so its faces do not read as regular stripes.
+uniform float grain_strength = 1.0;
 varying vec3 stone_position;
 varying vec3 stone_direction;
 varying vec3 stone_normal;
@@ -31,7 +34,7 @@ void fragment() {
                 * sin(g.y * 5.3 + g.z * grain_scale * 0.35);
     float seams = smoothstep(0.72, 0.95, abs(sin(g.y * 2.2
                   + g.x * 1.3 + sin(g.z * 1.7))));
-    ALBEDO = mix(stone_colour.rgb * (0.86 + grain * 0.11), mineral_colour.rgb, seams * 0.31);
+    ALBEDO = mix(stone_colour.rgb * (0.86 + grain * 0.11 * grain_strength), mineral_colour.rgb, seams * 0.31);
     ROUGHNESS = 0.98;
     SPECULAR = 0.12;
     if (authored_surface) {
@@ -54,7 +57,7 @@ void fragment() {
         // ridges) instead of mixed toward the pale scree, which washed the
         // whole body out to grey-white under the Meadows sun.
         vec3 detailed = tinted * mix(1.0, 0.45 + luma * 1.25, clamp(texture_blend, 0.0, 1.0));
-        float crevice = smoothstep(0.55, 0.95, abs(grain)) * seams;
+        float crevice = smoothstep(0.55, 0.95, abs(grain)) * seams * grain_strength;
         ALBEDO = detailed * (1.0 - crevice * 0.35);
         ROUGHNESS = clamp(surface_roughness, 0.5, 1.0);
         SPECULAR = 0.19;

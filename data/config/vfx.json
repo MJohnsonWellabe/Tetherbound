@@ -374,6 +374,7 @@
           }
         },
         "body": {
+          "grain_strength": 0.15,
           "min_body_size_m": 0.27,
           "volley_vertical_ratio": 0.3,
           "shape": "stone",
@@ -395,8 +396,8 @@
           "stone_colour": "#6f5c48",
           "mineral_colour": "#9c8566",
           "authored_surface": true,
-          "surface_scale": 1.35,
-          "texture_blend": 0.62,
+          "surface_scale": 1.0,
+          "texture_blend": 0.38,
           "surface_roughness": 0.88,
           "volley_separation_scale": 4.2,
           "volley_stagger_m": 0.4
@@ -1384,24 +1385,24 @@
       "sky_lightning": {
         "light": {
           "enabled": true,
-          "colour": "#fff0bd",
+          "colour": "#d6ecff",
           "body_range_m": 2.4,
           "body_energy": 0.45,
-          "impact_range_m": 3.8,
-          "impact_energy": 2.4,
+          "impact_range_m": 5.5,
+          "impact_energy": 5.0,
           "flicker": 0.04
         },
         "launch": {
           "sky_call": {
             "height_m": 3.6,
             "duration": 0.32,
-            "stroke_width_scale": 1.6,
+            "stroke_width_scale": 2.4,
             "opacity": 1.0,
-            "branch_count": 2,
+            "branch_count": 3,
             "branch_length_m": 0.5,
             "core_width": 0.36,
             "corona_width": 0.9,
-            "corona_opacity": 0.5,
+            "corona_opacity": 0.75,
             "emission_strength": 2.6,
             "emission_floor": 0.35,
             "pulse_strength": 0.04,
@@ -1443,21 +1444,21 @@
           "contact_anchor": "target_ground",
           "contact_hold_seconds": 0.22,
           "contact_fade_power": 2.4,
-          "stroke_width_scale": 3.3,
-          "branch_length_m": 0.9,
-          "branch_count": 2,
+          "stroke_width_scale": 5.0,
+          "branch_length_m": 1.4,
+          "branch_count": 4,
           "branch_add_per_rank": 2,
           "branch_down_ratio": 0.5,
           "pulse_strength": 0.04,
           "core_width": 0.36,
-          "corona_width": 0.92,
-          "corona_opacity": 0.5,
+          "corona_width": 1.25,
+          "corona_opacity": 0.8,
           "filament_sway": 0.015,
           "corona_sway": 0.025,
           "corona_power": 1.8,
           "vein_strength": 0.18,
           "emission_floor": 0.35,
-          "emission_strength": 2.6
+          "emission_strength": 3.4
         },
         "trail": {
           "style": "ion",
@@ -1470,6 +1471,11 @@
           "max_length_m": 1.2
         },
         "impact": {
+          "mote_end_scale": 0.2,
+          "spark_stretch": 0.18,
+          "spark_width_ratio": 0.08,
+          "spark_core_colour": "#ffffff",
+          "spark_glow": true,
           "stages": {
             "glow": {
               "size_scale": 5.0,
@@ -1533,17 +1539,17 @@
           "duration": 0.48,
           "grow": 1.25,
           "heat": 0.6,
-          "opacity": 0.7,
-          "mote_shape": "soft_ember",
-          "mote_size": 0.06,
-          "speed": 7.0,
-          "gravity": 7.0,
+          "opacity": 1.0,
+          "mote_shape": "spark",
+          "mote_size": 0.35,
+          "speed": 9.0,
+          "gravity": 2.5,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 16,
           "rays": 10,
           "ray_width_ratio": 0.055,
-          "mote_colour": "#fff7c1",
+          "mote_colour": "#6fc4ff",
           "initial_grow": 0.2,
           "growth_power": 0.5,
           "secondary_shape": "electrical_splash",
@@ -1564,7 +1570,7 @@
           "card_extent_scale": 3.4,
           "visual_anchor": "sky_surface",
           "visual_surface_lift_m": 0.03,
-          "accent_count": 6,
+          "accent_count": 10,
           "accent_width_scale": 0.3,
           "core_width": 0.28,
           "corona_width": 0.74,
@@ -1574,7 +1580,7 @@
           "corona_power": 1.8,
           "vein_strength": 0.18,
           "emission_floor": 0.15,
-          "emission_strength": 1.25
+          "emission_strength": 2.0
         },
         "sound": {
           "launch": "vfx_sky_lightning_launch",
