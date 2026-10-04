@@ -1,0 +1,142 @@
+{
+  "scope": "Read-only single-thread CPU inspection of installed Staticub source model; raw bounds are not fitted in-engine scale, poses or visual acceptance. No render, asset change or Meshy task.",
+  "source_head": "925821adc22527d3251c53df757a56d251b007a2",
+  "model": "D:\\tetherbound\\redesign-lookdev\\assets\\creatures\\tetherbound\\staticub\\models\\creature_staticub_lod0.glb",
+  "model_sha256": "c2e42a53ebeb922b06564bd4ce210cb02b5d438bf0d816516cc327719d758c1a",
+  "inspector_sha256": "010a1e1125c28529e69211a911204fbe1f36b8a0064b8dc2cef7ef1ecdd03458",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-art/blender-4.2.9-windows-x64/blender.exe",
+    "--background",
+    "--threads",
+    "1",
+    "--python",
+    "D:\\tetherbound\\creature-art\\tools\\art_pipeline\\blender\\inspect_glb.py",
+    "--",
+    "D:\\tetherbound\\redesign-lookdev\\assets\\creatures\\tetherbound\\staticub\\models\\creature_staticub_lod0.glb",
+    "--out",
+    "D:\\tetherbound\\.artifacts\\f29-staticub-cpu-20261004T182246Z\\inspection.json"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 6.483999999938533,
+  "log": "D:\\tetherbound\\.artifacts\\f29-staticub-cpu-20261004T182246Z\\inspection.log",
+  "log_sha256": "99b065bb0101edafec83db83b259811e5f48c98443d1af4773cd285c9150202a",
+  "report": "D:\\tetherbound\\.artifacts\\f29-staticub-cpu-20261004T182246Z\\inspection.json",
+  "report_sha256": "52c151cdb644f69cbb806567e68f403b97fca59685b9ac05734480e4495a0186",
+  "raw_bounds": {
+    "min": [
+      -0.466,
+      -0.9363,
+      0.0
+    ],
+    "max": [
+      0.466,
+      0.946,
+      1.1079
+    ],
+    "size": [
+      0.932,
+      1.8822,
+      1.1079
+    ],
+    "height_m": 1.1079,
+    "longest_axis_m": 1.8822,
+    "sits_on_origin": true,
+    "centred_on_origin": true
+  },
+  "totals": {
+    "meshes": 1,
+    "triangles": 52886,
+    "vertices": 38318,
+    "materials": 1,
+    "animations": 6
+  },
+  "problems": [
+    "52,886 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+    "Mesh_0: 21692 non-manifold edges",
+    "Mesh_0: 11600 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 1240 microscopic disconnected components",
+    "Mesh_0: ~2579 inward-facing faces",
+    "Mesh_0: 132 faces with texel density 4.0x off the median",
+    "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+  ],
+  "armatures": [
+    {
+      "name": "Armature",
+      "bones": 15,
+      "bone_names": [
+        "root",
+        "pelvis",
+        "spine",
+        "neck",
+        "head",
+        "front_upper_l",
+        "front_lower_l",
+        "front_upper_r",
+        "front_lower_r",
+        "tail_1",
+        "tail_2",
+        "rear_upper_l",
+        "rear_lower_l",
+        "rear_upper_r",
+        "rear_lower_r"
+      ],
+      "roots": [
+        "root"
+      ],
+      "skinned_meshes": [
+        "Mesh_0"
+      ],
+      "max_depth": 4
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack_Armature",
+      "frames": [
+        0.0,
+        23.0
+      ],
+      "channels": 150
+    },
+    {
+      "name": "faint_Armature",
+      "frames": [
+        1.0,
+        37.0
+      ],
+      "channels": 150
+    },
+    {
+      "name": "hit_Armature",
+      "frames": [
+        1.0,
+        13.0
+      ],
+      "channels": 150
+    },
+    {
+      "name": "idle_Armature",
+      "frames": [
+        1.0,
+        73.0
+      ],
+      "channels": 150
+    },
+    {
+      "name": "run_Armature",
+      "frames": [
+        1.0,
+        19.0
+      ],
+      "channels": 150
+    },
+    {
+      "name": "walk_Armature",
+      "frames": [
+        1.0,
+        33.0
+      ],
+      "channels": 150
+    }
+  ]
+}

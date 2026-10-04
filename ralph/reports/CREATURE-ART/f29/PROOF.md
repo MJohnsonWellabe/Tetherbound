@@ -23,9 +23,20 @@ reference directory is excluded from Godot import; the model remains uncreated.
 - Installed Blender `4.2.9 LTS` confirmed by its executable. Local quadruped rig
   and animation pipeline is available; it still requires measured four-leg
   geometry, inspected weights and bent-pose renders on the actual candidate.
-- Current authored Staticub ladder height is 3.25 m, trainer 1.80 m. Candidate
-  adult target is at least 3.90 m, subject to actual mesh bounds and visible
-  differentiation. Grow the smaller side; never shrink Staticub or the adult.
+- Current authored Staticub ladder height is 3.25 m, trainer 1.80 m. The existing
+  F29 `stormursa/source/reference_brief.json` and species candidate set the adult
+  target to 4.10 m; use that target, superseding this receipt's earlier 3.90 m
+  minimum. Final mesh bounds and visible differentiation still require proof.
+  Grow the smaller side; never shrink Staticub or the adult. Reference pixels
+  contain no measured scale ruler and do not establish a final model height.
+- Read-only single-thread Blender CPU inspection of installed Staticub completed
+  in 6.48 s; [baseline receipt](staticub-cpu-inspection.json). Exact model SHA-256
+  `c2e42a53ebeb922b06564bd4ce210cb02b5d438bf0d816516cc327719d758c1a`.
+  Raw pre-fit mesh: 1.1079 m high, 52,886 triangles, one material, 15 bones and
+  six clips. This raw size is not the runtime 3.25 m fitted scale. The inspector
+  flags topology/duplicate/component issues; these are inspection heuristics,
+  not a visual rejection or permission to alter the accepted base. Preserve
+  this exact baseline for comparison; candidate joint/pose checks remain open.
 - Optional Meshy model pin, PBR maps and reference-preservation controls added
   without changing existing CLI request defaults. Five focused offline tests
   PASS, including one mocked Stormursa submission with the exact PNG data URI,
