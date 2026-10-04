@@ -1,0 +1,4 @@
+meadows exit=0 seconds=747
+water exit=0 seconds=236
+cloudreach exit=0 seconds=679
+stormwood exit=0 seconds=312

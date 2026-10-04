@@ -1,0 +1,63 @@
+{
+  "source_commit": "925821adc22527d3251c53df757a56d251b007a2",
+  "scope": "CPU actual-release ordinary startup and ZIP integrity only; no native route, floor witness, visuals, performance or owner acceptance.",
+  "normal_title": {
+    "command": [
+      "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package\\Tetherbound.exe",
+      "--headless",
+      "--quit-after",
+      "2"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "errors": [],
+    "elapsed_seconds": 5.25,
+    "log": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\followup-20261004T182824Z\\normal-title.log",
+    "log_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "pass": true
+  },
+  "archive_integrity": {
+    "archive": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\Tetherbound-F26-Ally-925821adc.zip",
+    "size_bytes": 774981035,
+    "crc_failure": null,
+    "files": [
+      {
+        "path": "addons/terrain_3d/bin/libterrain.windows.release.x86_64.dll",
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86",
+        "pass": true
+      },
+      {
+        "path": "ALLY_CHECKLIST.md",
+        "sha256": "035fcc8ea6e483e951305ceb066633677005340e07d4ae0d92332098424091c3",
+        "pass": true
+      },
+      {
+        "path": "F26_ALLY.cmd",
+        "sha256": "ddc69e26140dd616cbf8d53c6f107e37455a8d9a7f413073f1be7e8b9d713efd",
+        "pass": true
+      },
+      {
+        "path": "f26_ally.ps1",
+        "sha256": "573d2b8a578221cb7b4449efdfb2dff21b543e9b4d39e1108615ccc5d35f9ae4",
+        "pass": true
+      },
+      {
+        "path": "libterrain.windows.release.x86_64.dll",
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86",
+        "pass": true
+      },
+      {
+        "path": "Tetherbound.exe",
+        "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c",
+        "pass": true
+      },
+      {
+        "path": "Tetherbound.pck",
+        "sha256": "bde535c24e3640ab879afa77afbabe99cecb8b50f2a90ef087f553918df632b2",
+        "pass": true
+      }
+    ],
+    "pass": true
+  },
+  "pass": true
+}

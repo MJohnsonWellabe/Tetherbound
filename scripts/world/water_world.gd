@@ -73,6 +73,10 @@ func _ready() -> void:
 		var eye := camera.get_node_or_null("Camera3D") as Camera3D
 		if eye != null:
 			eye.far = float(_visual.view.camera_far_m)
+			# graphics_prefs.apply_camera sets the preset draw distance every
+			# frame (320-900 m); keep the authored far as its floor so the sea
+			# still reaches the horizon and Veilfall stays visible at ~4 km.
+			eye.set_meta(&"vista_far_floor_m", float(_visual.view.camera_far_m))
 			terrain.call("set_camera", eye)
 	# FULL_GAME supports the union of occupied islands independently of camera.
 	terrain.set("collision_mode", int(config.terrain.collision_mode))

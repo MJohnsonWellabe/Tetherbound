@@ -1,0 +1,375 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome_id": "cloudreach",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 442448742495,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 442465519718,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-04T21:01:49",
+	"capture_started_utc": "2026-10-04T20:50:45",
+	"captured_frame_count": 8,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "X11",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				1.31056189537048,
+				107.862091064453,
+				-264.914611816406
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_00__day.png",
+			"frame_id": "cloudreach__route_00__day",
+			"observed_clock": {
+				"elapsed_seconds": 200.121546,
+				"hour": 8.00486184,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				0.0,
+				105.030944824219,
+				-260.0
+			],
+			"position_xz": [
+				0.0,
+				-260.0
+			],
+			"route_point": [
+				0.0,
+				105.0,
+				-260.0
+			],
+			"route_point_index": 0,
+			"time": "day",
+			"view_heading_deg": -14.9314176181087
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				1.31056189537048,
+				107.862091064453,
+				-264.914611816406
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_00__night.png",
+			"frame_id": "cloudreach__route_00__night",
+			"observed_clock": {
+				"elapsed_seconds": 575.127765666667,
+				"hour": 23.0051106266667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				0.0,
+				105.030944824219,
+				-260.0
+			],
+			"position_xz": [
+				0.0,
+				-260.0
+			],
+			"route_point": [
+				0.0,
+				105.0,
+				-260.0
+			],
+			"route_point_index": 0,
+			"time": "night",
+			"view_heading_deg": -14.9314176181087
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				-75.8864669799805,
+				132.862106323242,
+				37.0083427429199
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_01__day.png",
+			"frame_id": "cloudreach__route_01__day",
+			"observed_clock": {
+				"elapsed_seconds": 200.140246333333,
+				"hour": 8.00560985333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				-80.0,
+				130.030960083008,
+				40.0
+			],
+			"position_xz": [
+				-80.0,
+				40.0
+			],
+			"route_point": [
+				-80.0,
+				130.0,
+				40.0
+			],
+			"route_point_index": 1,
+			"time": "day",
+			"view_heading_deg": -53.9726283724757
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				-75.8864669799805,
+				132.862106323242,
+				37.0083427429199
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_01__night.png",
+			"frame_id": "cloudreach__route_01__night",
+			"observed_clock": {
+				"elapsed_seconds": 575.116666666667,
+				"hour": 23.0046666666667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				-80.0,
+				130.030960083008,
+				40.0
+			],
+			"position_xz": [
+				-80.0,
+				40.0
+			],
+			"route_point": [
+				-80.0,
+				130.0,
+				40.0
+			],
+			"route_point_index": 1,
+			"time": "night",
+			"view_heading_deg": -53.9726283724757
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				-300.349945068359,
+				147.862121582031,
+				194.925689697266
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_02__day.png",
+			"frame_id": "cloudreach__route_02__day",
+			"observed_clock": {
+				"elapsed_seconds": 200.118087666667,
+				"hour": 8.00472350666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				-300.0,
+				145.030960083008,
+				200.0
+			],
+			"position_xz": [
+				-300.0,
+				200.0
+			],
+			"route_point": [
+				-300.0,
+				145.0,
+				200.0
+			],
+			"route_point_index": 2,
+			"time": "day",
+			"view_heading_deg": 3.94518617029615
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				-300.349945068359,
+				147.862121582031,
+				194.925689697266
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_02__night.png",
+			"frame_id": "cloudreach__route_02__night",
+			"observed_clock": {
+				"elapsed_seconds": 575.129213666667,
+				"hour": 23.0051685466667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				-300.0,
+				145.030960083008,
+				200.0
+			],
+			"position_xz": [
+				-300.0,
+				200.0
+			],
+			"route_point": [
+				-300.0,
+				145.0,
+				200.0
+			],
+			"route_point_index": 2,
+			"time": "night",
+			"view_heading_deg": 3.94518617029615
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				-280.349945068359,
+				182.862121582031,
+				484.925720214844
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_03__day.png",
+			"frame_id": "cloudreach__route_03__day",
+			"observed_clock": {
+				"elapsed_seconds": 200.131619666667,
+				"hour": 8.00526478666667,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_position": [
+				-280.0,
+				180.030960083008,
+				490.0
+			],
+			"position_xz": [
+				-280.0,
+				490.0
+			],
+			"route_point": [
+				-280.0,
+				180.0,
+				490.0
+			],
+			"route_point_index": 3,
+			"time": "day",
+			"view_heading_deg": 3.94518617029615
+		},
+		{
+			"biome_id": "cloudreach",
+			"camera_position": [
+				-280.349945068359,
+				182.862121582031,
+				484.925720214844
+			],
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/cloudreach/cloudreach__route_03__night.png",
+			"frame_id": "cloudreach__route_03__night",
+			"observed_clock": {
+				"elapsed_seconds": 575.133629333333,
+				"hour": 23.0053451733333,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_position": [
+				-280.0,
+				180.030960083008,
+				490.0
+			],
+			"position_xz": [
+				-280.0,
+				490.0
+			],
+			"route_point": [
+				-280.0,
+				180.0,
+				490.0
+			],
+			"route_point_index": 3,
+			"time": "night",
+			"view_heading_deg": 3.94518617029615
+		}
+	],
+	"graphics_capture": {
+		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "Low",
+		"renderer": "gl_compatibility",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "445098afaa092eb6dea28b4baa3deefb321cfc77"
+	},
+	"planned_frame_count": 8,
+	"planned_frame_ids": [
+		"cloudreach__route_00__day",
+		"cloudreach__route_00__night",
+		"cloudreach__route_01__day",
+		"cloudreach__route_01__night",
+		"cloudreach__route_02__day",
+		"cloudreach__route_02__night",
+		"cloudreach__route_03__day",
+		"cloudreach__route_03__night"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 442465519718,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"route": {
+		"_budget_scope": "Longest authored leg is about 311 m: over 3600 physics frames at the normal 5 m/s walk even without detours. Allow ordinary walking and collision avoidance, with the unchanged route wall deadline.",
+		"description": "Continuous authored arrival road toward Galefoot. XYZ heights select stacked floors; the production collider remains required.",
+		"height_mode": "authored",
+		"leg_budget_frames": 7200.0,
+		"source": "res://data/config/cloudreach_world.json arrival_gate_road; tools/capture_cloudreach_frame_matrix.gd MOTION_WAYPOINTS",
+		"start": [
+			0.0,
+			105.0,
+			-260.0
+		],
+		"waypoints": [
+			[
+				-80.0,
+				130.0,
+				40.0
+			],
+			[
+				-300.0,
+				145.0,
+				200.0
+			],
+			[
+				-280.0,
+				180.0,
+				490.0
+			]
+		]
+	},
+	"route_stills_scope": "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim.",
+	"scene": "res://scenes/world/cloudreach_cliffs.tscn",
+	"schema_version": 1,
+	"subsets": []
+}
