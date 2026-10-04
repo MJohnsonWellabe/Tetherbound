@@ -752,7 +752,11 @@ func _run() -> void:
 		staged += 1
 		guest_at = await _host_view_of_guest_creature()
 		if guest_at == Vector3.INF:
-			break
+			# Between rounds a guest's party update can briefly put its creature
+			# away and send it out again. Wait for the host to hold it once more
+			# rather than giving up on the first read.
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE * 4})
+			continue
 		var stand := guest_at + Vector3(0.0, 0.0, APART_Z)
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
@@ -774,6 +778,8 @@ func _run() -> void:
 		victim_hp = float(pre.get("my_creature_hp", -1.0))
 		var at_teammate := host_creature_at - guest_at
 		at_teammate.y = 0.0
+		if at_teammate.length() < 0.05:
+			continue
 		friendly = await step(1, "strike",
 			{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
