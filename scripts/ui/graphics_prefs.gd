@@ -249,4 +249,8 @@ static func apply_camera(camera: Camera3D) -> void:
 	if distances is Dictionary:
 		var distance: Variant = distances.get(cfg.get("draw_distance", "Normal"), {})
 		if distance is Dictionary:
-			camera.far = maxf(camera.near + 1.0, float(distance.get("far", camera.far)))
+			# A realm whose identity is its vista (Cloudreach: the cloud sea,
+			# far shelves and the Aviary sightline sit 300-900 m out) declares a
+			# floor on its own camera; the preset still sets every farther value.
+			var vista_floor := float(camera.get_meta(&"vista_far_floor_m", 0.0))
+			camera.far = maxf(camera.near + 1.0, maxf(float(distance.get("far", camera.far)), vista_floor))
