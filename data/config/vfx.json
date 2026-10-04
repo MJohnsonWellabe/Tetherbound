@@ -374,7 +374,7 @@
           }
         },
         "body": {
-          "grain_strength": 0.15,
+          "grain_strength": 0.5,
           "min_body_size_m": 0.27,
           "volley_vertical_ratio": 0.3,
           "shape": "stone",
@@ -393,11 +393,11 @@
           "marker_fraction": 0.65,
           "marker_scale": 2.0,
           "marker_opacity": 0.38,
-          "stone_colour": "#6f5c48",
+          "stone_colour": "#5c4b3b",
           "mineral_colour": "#9c8566",
           "authored_surface": true,
-          "surface_scale": 1.0,
-          "texture_blend": 0.38,
+          "surface_scale": 1.35,
+          "texture_blend": 0.58,
           "surface_roughness": 0.88,
           "volley_separation_scale": 4.2,
           "volley_stagger_m": 0.4
@@ -1473,8 +1473,8 @@
         "impact": {
           "mote_end_scale": 0.2,
           "spark_stretch": 0.18,
-          "spark_width_ratio": 0.08,
-          "spark_core_colour": "#ffffff",
+          "spark_width_ratio": 0.1,
+          "spark_core_colour": "#e8f6ff",
           "spark_glow": true,
           "stages": {
             "glow": {
@@ -1541,7 +1541,7 @@
           "heat": 0.6,
           "opacity": 1.0,
           "mote_shape": "spark",
-          "mote_size": 0.35,
+          "mote_size": 0.55,
           "speed": 9.0,
           "gravity": 2.5,
           "width": 0.12,
@@ -1549,7 +1549,7 @@
           "segments": 16,
           "rays": 10,
           "ray_width_ratio": 0.055,
-          "mote_colour": "#6fc4ff",
+          "mote_colour": "#3f9cff",
           "initial_grow": 0.2,
           "growth_power": 0.5,
           "secondary_shape": "electrical_splash",

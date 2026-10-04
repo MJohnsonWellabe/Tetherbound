@@ -1,5 +1,7 @@
 shader_type spatial;
-render_mode cull_disabled;
+// Thrown rock does not receive shadows: self-shadowing on its faceted hull
+// produced stair-step acne stripes under the Meadows sun. It still casts.
+render_mode cull_disabled, shadows_disabled;
 
 uniform vec4 stone_colour : source_color = vec4(0.36, 0.30, 0.23, 1.0);
 uniform vec4 mineral_colour : source_color = vec4(0.63, 0.56, 0.42, 1.0);
