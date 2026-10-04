@@ -2,9 +2,9 @@ extends SceneTree
 
 ## Retired-path regression fixture: RD-35 redesign saves are current schema,
 ## but this probe deliberately enables the single legacy physical-crossing
-## flag. The legacy_physical_crossings key itself is off, but legacy crossings
-## still ship while redesign_portal_runtime_enabled is false
-## (biome_order.legacy_physical_crossings); this is not portal-loop acceptance.
+## flag. Shipped config runs the portal runtime with legacy_physical_crossings
+## off, so retired crossings refuse in play (RD-17, F18#2); this keeps the
+## legacy toggle's scene path regression-tested. It is not portal-loop acceptance.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 ## Production Phase 1 route proof for Cloudreach -> Stormwood -> Cloudreach.
