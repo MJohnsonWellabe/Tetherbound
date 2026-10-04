@@ -35,7 +35,7 @@ Code under test: **826d273c3** (origin/tb/integration). The branch later merged 
 | CH-Stormwood#S3 | ERROR (blocked/incomplete) | CH-Stormwood-S3.md |
 | CH-Tidewake#T1 | PASS | CH-Tidewake-T1.md |
 
-**Totals (30 items): PASS 8, FAIL 11, ERROR 11.**
+**Totals (30 items): PASS 7, FAIL 12, ERROR 11.**
 
 ERROR = could not run, or did not finish. Causes: the v27 proof save refused under RD-35 (since regenerated on v28), container restarts, this lane's own run budget, and retirement of the lane before the long runs (the F13#0 route, the S1 continuous run and walks, the full unit shards, the F17#5 producer, the F37#2 per-route every-hop runs, and the F19 campaign/Stormheart/Guardian/Solmane functional runs).
 
