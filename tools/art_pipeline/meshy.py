@@ -1864,6 +1864,14 @@ def cmd_generate(args) -> None:
         "target_polycount": args.polycount,
         "symmetry_mode": "auto",
     }
+    # Pin new reference-backed candidates without changing older invocations.
+    # Current API contract: docs.meshy.ai/en/api/multi-image-to-3d.
+    if args.ai_model:
+        payload["ai_model"] = args.ai_model
+    if args.enable_pbr:
+        payload["enable_pbr"] = True
+    if args.preserve_reference:
+        payload["image_enhancement"] = False
 
     manifest = {
         "species": species,
@@ -1872,6 +1880,12 @@ def cmd_generate(args) -> None:
         "negative_prompt": negative_for(species),
         "views": {v: _manifest_path(p) for v, p in views.items()},
         "polycount": args.polycount,
+        "generation_options": {
+            "ai_model": payload.get("ai_model", "latest"),
+            "enable_pbr": payload.get("enable_pbr", False),
+            "image_enhancement": payload.get("image_enhancement", True),
+            "should_texture": payload["should_texture"],
+        },
         "tasks": [],
     }
 
@@ -2237,6 +2251,12 @@ def main() -> None:
     gen.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
     gen.add_argument("--image", default=None,
                      help="use one explicit local PNG instead of the species' authored view set")
+    gen.add_argument("--ai-model", choices=["meshy-6", "meshy-7.1"], default=None,
+                     help="pin the documented generation model; omitted keeps the service default")
+    gen.add_argument("--enable-pbr", action="store_true",
+                     help="request normal/roughness/metallic maps alongside the reference colour")
+    gen.add_argument("--preserve-reference", action="store_true",
+                     help="disable service image enhancement to retain inspected reference identity")
     gen.add_argument("--yes", action="store_true", help="proceed past the budget guard")
     gen.set_defaults(func=cmd_generate)
 
