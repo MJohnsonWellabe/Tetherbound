@@ -1605,6 +1605,18 @@ SPECIES_PROMPTS = {
         "muzzle and chest, big curious dark eyes, rounded youthful cub "
         "proportions, no armor, no accessories, consistent from every "
         "angle"),
+    # RD-28; inspected agent-drafted reference and independent concept review:
+    # assets/creatures/tetherbound/stormursa/reference/, CREATURE-ART/f29/.
+    "stormursa": (
+        "mature heavy quadruped storm bear, STORMURSA, Staticub grown up. "
+        "FOUR SEPARATE GROUNDED LEGS ONLY, natural bear anatomy, broad high "
+        "shoulders, deep chest, heavy paws and sturdy haunches. Preserve "
+        "ROUND BROWN EARS, EXPRESSIVE BLUE EYES, short tan muzzle and dark "
+        "nose. Large layered brown fur clumps with subtle copper tips and "
+        "restrained violet glass-like flecks at the shoulders. Thin "
+        "WHITE-VIOLET LIGHTNING woven into the fur texture across shoulders "
+        "and back, never detached bolts. Friendly readable adult face, "
+        "short bear tail, no armor, accessories, pedestal or extra limbs"),
     "tanglevolt": (
         "lean wolf creature, TANGLEVOLT the storm wolf, FOUR LEGS ONLY, "
         "natural wolf anatomy, no extra limbs. JAGGED LIGHTNING-BOLT "
