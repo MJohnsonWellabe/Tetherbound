@@ -1,0 +1,181 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1216 reorder[16 layers]=3536
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=5069 mark_harvestable=215 group_by_model=622 register_mesh_assets=43 build_batches_total=5785 (of which harvest_points[56283 nodes]=3485, initial_collision_stream[51210 solid]=204) update_mmis=485
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 266/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66281
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66282
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66283
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66284
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66285
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66286
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+trainer captain_riverwatch found under Trainers
+ground under captain_riverwatch after 1 frames at y=-1.90 (trainer y=-2.05)
+challenge: settle frame 0 at 7 ms, paused=false
+challenge: settle frame 10 at 256 ms, paused=false
+challenge: settle frame 20 at 429 ms, paused=false
+challenge: settle frame 30 at 564 ms, paused=false
+challenge: settle frame 40 at 738 ms, paused=false
+challenge: settle frame 50 at 958 ms, paused=false
+challenge: settled in 1066 ms
+challenge: press 1 at 1102 ms, panel open=true
+challenge: press 2 at 1301 ms, panel open=true
+challenge: press 3 at 1430 ms, panel open=true
+challenge: press 4 at 1730 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs captain_riverwatch
+dodge: blocked, steering +60 deg
+row captain_riverwatch opponent=mosshell_L15 strike=1 move=shell_bash tell=0.90s policy=stand outcome=hit damage=41.9 gap_tell=5.92 gap_strike=6.32 moved=0.00 reach=7.39 cone=70 action=1 arena_off=3.89
+row captain_riverwatch opponent=mosshell_L15 strike=2 move=tremor_roll tell=1.10s policy=dodge outcome=miss damage=0.0 gap_tell=6.61 gap_strike=10.62 moved=4.04 reach=7.39 cone=85 action=0 arena_off=4.16
+row captain_riverwatch opponent=mosshell_L15 strike=3 move=shell_bash tell=0.90s policy=stand outcome=hit damage=38.4 gap_tell=6.84 gap_strike=6.95 moved=0.00 reach=7.39 cone=70 action=1 arena_off=10.02
+row captain_riverwatch opponent=mosshell_L15 strike=4 move=tremor_roll tell=1.10s policy=dodge outcome=hit damage=29.3 gap_tell=6.86 gap_strike=7.37 moved=0.68 reach=7.39 cone=85 action=0 arena_off=10.35
+row captain_riverwatch opponent=mosshell_L15 strike=5 move=shell_bash tell=0.90s policy=stand outcome=hit damage=39.0 gap_tell=6.85 gap_strike=7.04 moved=0.00 reach=7.39 cone=70 action=1 arena_off=11.00
+row captain_riverwatch opponent=mosshell_L15 strike=6 move=tremor_roll tell=1.10s policy=dodge outcome=hit damage=26.4 gap_tell=6.88 gap_strike=8.71 moved=3.47 reach=7.39 cone=85 action=0 arena_off=11.00
+row captain_riverwatch opponent=mosshell_L15 strike=7 move=shell_bash tell=0.90s policy=stand outcome=hit damage=40.2 gap_tell=6.89 gap_strike=6.86 moved=0.00 reach=7.39 cone=70 action=1 arena_off=11.00
+row captain_riverwatch opponent=mosshell_L15 strike=8 move=tremor_roll tell=1.10s policy=dodge outcome=miss damage=0.0 gap_tell=6.76 gap_strike=9.43 moved=3.47 reach=7.39 cone=85 action=0 arena_off=11.00
+trainer captain_field found under Trainers
+ground under captain_field after 1 frames at y=-1.65 (trainer y=-1.43)
+challenge: settle frame 0 at 7 ms, paused=false
+challenge: settle frame 10 at 134 ms, paused=false
+challenge: settle frame 20 at 318 ms, paused=false
+challenge: settle frame 30 at 561 ms, paused=false
+challenge: settle frame 40 at 691 ms, paused=false
+challenge: settle frame 50 at 825 ms, paused=false
+challenge: settled in 954 ms
+challenge: press 1 at 1033 ms, panel open=true
+challenge: press 2 at 1226 ms, panel open=true
+challenge: press 3 at 1374 ms, panel open=true
+challenge: press 4 at 1659 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs captain_field
+row captain_field opponent=duskhush_L16 strike=1 move=quick_flit tell=1.00s policy=stand outcome=miss damage=0.0 gap_tell=5.60 gap_strike=3.22 moved=0.00 reach=7.00 cone=80 action=1 arena_off=3.89
+row captain_field opponent=duskhush_L16 strike=2 move=night_swoop tell=1.10s policy=dodge outcome=miss damage=0.0 gap_tell=6.12 gap_strike=4.25 moved=3.52 reach=7.00 cone=80 action=0 arena_off=4.74
+row captain_field opponent=duskhush_L16 strike=3 move=night_swoop tell=1.10s policy=stand outcome=hit damage=49.0 gap_tell=5.66 gap_strike=2.55 moved=0.00 reach=7.00 cone=80 action=2 arena_off=3.65
+row captain_field opponent=duskhush_L16 strike=4 move=quick_flit tell=1.00s policy=dodge outcome=miss damage=0.0 gap_tell=6.23 gap_strike=3.57 moved=4.15 reach=7.00 cone=80 action=0 arena_off=4.09
+row captain_field opponent=duskhush_L16 strike=5 move=night_swoop tell=1.10s policy=stand outcome=hit damage=43.5 gap_tell=6.25 gap_strike=2.68 moved=0.00 reach=7.00 cone=80 action=1 arena_off=7.61
+row captain_field opponent=duskhush_L16 strike=6 move=night_swoop tell=1.10s policy=dodge outcome=hit damage=46.5 gap_tell=4.32 gap_strike=2.63 moved=1.73 reach=7.00 cone=80 action=0 arena_off=9.25
+row captain_field opponent=duskhush_L16 strike=7 move=quick_flit tell=1.00s policy=stand outcome=hit damage=35.7 gap_tell=6.25 gap_strike=2.52 moved=0.00 reach=7.00 cone=80 action=2 arena_off=11.00
+row captain_field opponent=duskhush_L16 strike=8 move=night_swoop tell=1.10s policy=dodge outcome=miss damage=0.0 gap_tell=6.05 gap_strike=4.47 moved=4.95 reach=7.00 cone=80 action=0 arena_off=11.00
+trainer captain_ridge found under Trainers
+ground under captain_ridge after 1 frames at y=4.84 (trainer y=4.87)
+challenge: settle frame 0 at 7 ms, paused=false
+challenge: settle frame 10 at 137 ms, paused=false
+challenge: settle frame 20 at 323 ms, paused=false
+challenge: settle frame 30 at 486 ms, paused=false
+challenge: settle frame 40 at 880 ms, paused=false
+challenge: settle frame 50 at 1073 ms, paused=false
+challenge: settled in 1221 ms
+challenge: press 1 at 1265 ms, panel open=true
+challenge: press 2 at 1514 ms, panel open=true
+challenge: press 3 at 1656 ms, panel open=true
+challenge: press 4 at 1900 ms, panel open=false
+challenge: 4 presses, fighting=true
+fight live vs captain_ridge
+dodge: blocked, steering +60 deg
+dodge: blocked, steering -60 deg
+row captain_ridge opponent=trailpup_L16 strike=1 move=pack_bite tell=0.90s policy=stand outcome=hit damage=42.2 gap_tell=5.66 gap_strike=5.90 moved=0.00 reach=6.65 cone=70 action=1 arena_off=3.89
+row captain_ridge opponent=trailpup_L16 strike=2 move=pack_bite tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.13 gap_strike=3.96 moved=3.94 reach=7.00 cone=80 action=0 arena_off=4.18
+row captain_ridge opponent=trailpup_L16 strike=3 move=pack_bite tell=0.90s policy=stand outcome=hit damage=37.2 gap_tell=6.13 gap_strike=6.08 moved=0.00 reach=6.65 cone=70 action=1 arena_off=6.21
+row captain_ridge opponent=trailpup_L16 strike=4 move=pack_bite tell=0.90s policy=dodge outcome=hit damage=41.8 gap_tell=6.13 gap_strike=2.42 moved=1.59 reach=7.00 cone=80 action=0 arena_off=6.25
+row captain_ridge opponent=trailpup_L16 strike=5 move=pack_bite tell=0.90s policy=stand outcome=hit damage=38.3 gap_tell=6.09 gap_strike=6.26 moved=0.00 reach=6.65 cone=70 action=1 arena_off=5.95
+row captain_ridge opponent=trailpup_L16 strike=6 move=pack_bite tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.14 gap_strike=4.29 moved=4.18 reach=7.00 cone=80 action=0 arena_off=5.96
+row captain_ridge opponent=trailpup_L16 strike=7 move=pack_bite tell=0.90s policy=stand outcome=hit damage=42.2 gap_tell=6.10 gap_strike=6.36 moved=0.00 reach=6.65 cone=70 action=2 arena_off=3.28
+row captain_ridge opponent=trailpup_L16 strike=8 move=pack_bite tell=0.90s policy=dodge outcome=miss damage=0.0 gap_tell=6.11 gap_strike=3.51 moved=3.95 reach=7.00 cone=80 action=0 arena_off=3.26
+trainer warden_aldis found under WardenTrainer
+ground under warden_aldis after 0 frames at y=6.17 (trainer y=6.17)
+challenge: settle frame 0 at 6 ms, paused=false
+challenge: settle frame 10 at 267 ms, paused=false
+challenge: settle frame 20 at 377 ms, paused=false
+challenge: settle frame 30 at 542 ms, paused=false
+challenge: settle frame 40 at 712 ms, paused=false
+challenge: settle frame 50 at 874 ms, paused=false
+challenge: settled in 1102 ms
+challenge: press 1 at 1126 ms, panel open=true
+challenge: press 2 at 1304 ms, panel open=true
+challenge: press 3 at 1458 ms, panel open=true
+challenge: press 4 at 1620 ms, panel open=true
+challenge: press 5 at 1886 ms, panel open=false
+challenge: 5 presses, fighting=true
+fight live vs warden_aldis
+dodge: blocked, steering +60 deg
+dodge: blocked, steering +60 deg
+row warden_aldis opponent=burrowback_L21 strike=1 move=rock_throw tell=0.90s policy=stand outcome=hit damage=51.2 gap_tell=5.90 gap_strike=6.16 moved=0.00 reach=8.00 cone=60 action=1 arena_off=3.91
+row warden_aldis opponent=burrowback_L21 strike=2 move=tremor_roll tell=1.10s policy=dodge outcome=hit damage=43.8 gap_tell=6.95 gap_strike=10.91 moved=4.13 reach=8.00 cone=80 action=0 arena_off=4.15
+row warden_aldis opponent=burrowback_L21 strike=3 move=rock_throw tell=0.90s policy=stand outcome=hit damage=51.0 gap_tell=6.91 gap_strike=7.02 moved=0.00 reach=8.00 cone=60 action=1 arena_off=9.77
+row warden_aldis opponent=burrowback_L21 strike=4 move=tremor_roll tell=1.10s policy=dodge outcome=hit damage=41.8 gap_tell=6.95 gap_strike=8.03 moved=1.44 reach=8.00 cone=80 action=0 arena_off=10.02
+row warden_aldis opponent=burrowback_L21 strike=5 move=rock_throw tell=0.90s policy=stand outcome=hit damage=49.7 gap_tell=6.94 gap_strike=7.04 moved=0.00 reach=8.00 cone=60 action=1 arena_off=11.00
+row warden_aldis opponent=burrowback_L21 strike=6 move=tremor_roll tell=1.10s policy=dodge outcome=hit damage=43.9 gap_tell=6.95 gap_strike=6.35 moved=2.18 reach=8.00 cone=80 action=0 arena_off=11.00
+row warden_aldis opponent=burrowback_L21 strike=7 move=rock_throw tell=0.90s policy=stand outcome=hit damage=49.2 gap_tell=6.95 gap_strike=7.05 moved=0.00 reach=8.00 cone=60 action=1 arena_off=11.00
+row warden_aldis opponent=burrowback_L21 strike=8 move=tremor_roll tell=1.10s policy=dodge outcome=hit damage=42.2 gap_tell=6.95 gap_strike=6.58 moved=2.63 reach=8.00 cone=80 action=0 arena_off=11.00
+
+PASS captain_riverwatch: player_hits=12 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+PASS captain_field: player_hits=14 stand_strikes_landed=3 dodges_avoided=3/4 strikes=8
+PASS captain_ridge: player_hits=17 stand_strikes_landed=4 dodges_avoided=3/4 strikes=8
+FAIL warden_aldis: player_hits=11 stand_strikes_landed=4 dodges_avoided=0/4 strikes=8
+FAIL: 1 of 4 named fights lack a full hit/avoidance witness
