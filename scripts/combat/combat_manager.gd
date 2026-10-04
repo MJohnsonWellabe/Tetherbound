@@ -2189,9 +2189,13 @@ func _body_render_bounds(body: Node3D) -> AABB:
 	var model := body.call("model_pivot") as Node3D
 	if model == null:
 		return AABB()
+	# Stand-in bodies (fixtures, legacy opponents) may lack the creature size
+	# fields; float(null) is a script error, so an absent field reads as 0.
+	var height: Variant = body.get("_height")
+	var radius: Variant = body.get("_radius")
 	var signature: String = "%s|%.5f|%.5f|%d" % [
-		str(body.get("species_id")), float(body.get("_height")),
-		float(body.get("_radius")), model.get_child_count()]
+		str(body.get("species_id")), float(height) if height != null else 0.0,
+		float(radius) if radius != null else 0.0, model.get_child_count()]
 	var key: int = body.get_instance_id()
 	var cached: Dictionary = _framing_bounds_cache.get(key, {}) as Dictionary
 	if str(cached.get("signature", "")) == signature:
