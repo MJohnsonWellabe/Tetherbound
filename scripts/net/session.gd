@@ -872,6 +872,7 @@ func _retry_foundation_events() -> void:
 	var handled := {}
 	var research_no_progress := {}
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
+	var combat_held := {}
 	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
@@ -881,6 +882,7 @@ func _retry_foundation_events() -> void:
 			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 		var peer := int(_registry.call("peer_for_character", duty.character_id))
 		if peer < 1 or handled.has(duty.character_id): continue
+		if combat_held.has(duty.character_id) and duty.action != "combat_round_reward": continue
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty)
@@ -935,11 +937,13 @@ func _retry_foundation_events() -> void:
 			# record; remember its resulting revision, never a character state.
 			research_no_progress[research_signature] = int(_character_authority.call("revision", duty.character_id))
 		# Research from a fight waits for that fight to end, and the fight's next
-		# round waits on this character's round reward behind it. A research
-		# duty held only by combat must not block the duties after it.
-		var combat_wait: bool = duty.action == "research_event" and result.get("code") == "combat_still_active"
-		if result.get("resolved") != true and not combat_wait \
-			and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
+		# round waits on this character's round reward behind it. Only that
+		# round reward may pass a research duty held by combat; every other
+		# later duty keeps waiting in order, as before.
+		if duty.action == "research_event" and result.get("code") == "combat_still_active":
+			combat_held[duty.character_id] = true
+			continue
+		if result.get("resolved") != true and result.get("code") not in ["research_no_progress", "no_matching_bounty"]: handled[duty.character_id] = true
 
 func _foundation_duty_receipt(duty: Dictionary) -> String:
 	if duty.action == "combat_round_reward": return COMBAT_ROUND_REWARD.receipt(duty.character_id, duty.intent, duty.context)
