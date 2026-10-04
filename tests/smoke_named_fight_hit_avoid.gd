@@ -142,6 +142,11 @@ func _witness_one() -> bool:
 		if not _strikes.is_empty() and not (_strikes.back() as Dictionary).has("outcome"):
 			var open_strike: Dictionary = _strikes.back()
 			open_strike["gap_pre"] = _gap()
+			var ally_body := _director.call("ally_body") as Node3D
+			if ally_body != null and _body != null and is_instance_valid(_body) and ally_body.has_method("centre") and _body.has_method("centre"):
+				var c: Vector3 = (ally_body.call("centre") as Vector3) - (_body.call("centre") as Vector3)
+				c.y = 0.0
+				open_strike["centre_gap_pre"] = c.length()
 			if _body != null and is_instance_valid(_body):
 				open_strike["foe_moved"] = (_body as Node3D).global_position.distance_to(
 					open_strike.get("foe_at_tell", (_body as Node3D).global_position))
@@ -171,12 +176,13 @@ func _witness_one() -> bool:
 	var dodge_miss := 0
 	var dodged := 0
 	for s in _strikes:
-		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f gap_pre=%.2f foe_moved=%.2f" % [
+		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f gap_pre=%.2f foe_moved=%.2f centre_gap_pre=%.2f reach_at_strike=%.2f" % [
 			_tid, str(s.opponent), int(s.n), str(s.move), float(s.seconds), str(s.policy),
 			str(s.get("outcome", "none")), float(s.get("damage", 0.0)),
 			float(s.get("gap_at_tell", -1.0)), float(s.get("gap_at_strike", -1.0)),
 			float(s.get("moved", -1.0)), float(s.reach), float(s.cone), int(s.action),
-			float(s.arena_off), float(s.get("gap_pre", -1.0)), float(s.get("foe_moved", -1.0))])
+			float(s.arena_off), float(s.get("gap_pre", -1.0)), float(s.get("foe_moved", -1.0)),
+			float(s.get("centre_gap_pre", -1.0)), float(s.get("reach_at_strike", -1.0))])
 		if str(s.policy) == "stand" and str(s.get("outcome", "")) == "hit":
 			stand_hit += 1
 		if str(s.policy).begins_with("dodge"):
@@ -236,6 +242,8 @@ func _settle_outcome(outcome: String, amount: float) -> void:
 		s["outcome"] = outcome
 		s["damage"] = amount
 		s["gap_at_strike"] = _gap()
+		if _body != null and is_instance_valid(_body) and _body.has_method("combat_config"):
+			s["reach_at_strike"] = float((_body.call("combat_config") as Dictionary).get("range", -1.0))
 		s["moved"] = _ally_pos().distance_to(s.get("ally_at_tell", _ally_pos()))
 		break
 	var own: RefCounted = _manager.call("active_creature")
