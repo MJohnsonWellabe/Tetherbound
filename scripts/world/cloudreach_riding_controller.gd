@@ -76,6 +76,9 @@ const SETTLE_LIFT_M := 0.05
 ## settled onto a dismount spot (`_settled_spot`): enough to clear the rounded
 ## base on a walkable (45 degree) slope, under a step.
 const SETTLE_PROBE_M := 0.5
+## cast_motion's own step (its fraction resolves to 1/256 of the motion), so
+## a capsule on exactly the steepest walkable slope is not refused by rounding.
+const SETTLE_CAST_SLACK_M := 0.01
 ## Fallback only; the live cap is the trainer's own `movement.json` jump.
 const TRAINER_JUMP_APEX_M := 1.35
 const ORDINARY_CLIMB_DEG := 45.0
@@ -561,7 +564,16 @@ func _settled_spot(floor_at: Vector3, body: Node3D) -> Vector3:
 	var fractions := space.cast_motion(query)
 	if fractions.size() < 1:
 		return Vector3.INF
-	var spot := start + query.motion * float(fractions[0]) + Vector3.UP * SETTLE_LIFT_M
+	var rest := start + query.motion * float(fractions[0])
+	# On the floor under it, a capsule rests at most r(1/cos a - 1) above that
+	# point on the steepest walkable slope a. Resting higher, it sits on
+	# something else -- a post, a rock lip -- which is not a floor to stand
+	# on, so the spot is refused like any other blocked one.
+	var radius := (collision.shape as CapsuleShape3D).radius if collision.shape is CapsuleShape3D else 0.0
+	var max_rise := radius * (1.0 / cos(_player.floor_max_angle) - 1.0) + SETTLE_CAST_SLACK_M
+	if rest.y - floor_at.y > max_rise:
+		return Vector3.INF
+	var spot := rest + Vector3.UP * SETTLE_LIFT_M
 	if not _capsule_fits(spot, body):
 		return Vector3.INF
 	return spot
