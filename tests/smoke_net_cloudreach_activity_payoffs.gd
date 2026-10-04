@@ -96,6 +96,26 @@ func _ok(result: Dictionary, label: String) -> bool:
 	return passed
 
 
+## Physics frames until the host's remote_trainer body for the guest stands
+## within the ledger's claim reach of the thanks, or -1 within 900 frames.
+func _host_sees_guest_at_reward(stood: Dictionary) -> int:
+	var guest_peer := str(int((await _state(1)).get("peer_id", 0)))
+	var bag := Vector2(-292.0, 3108.0)
+	var waited := 0
+	while waited <= 900:
+		var seen: Variant = await probe(0, "remote_trainers")
+		var body: Dictionary = (seen as Dictionary).get(guest_peer, {}) if seen is Dictionary else {}
+		var pos: Array = body.get("pos", []) as Array
+		if pos.size() == 3 and Vector2(float(pos[0]), float(pos[2])).distance_to(bag) <= 8.0:
+			print("HOST VIEW: guest proxy at %s after %d frames (stood %s)" % [str(pos), waited, str(stood.get("detail", ""))])
+			return waited
+		if waited % 150 == 0:
+			print("HOST VIEW: guest proxy at %s after %d frames" % [str(pos), waited])
+		await step(0, "wait", {"frames": 10})
+		waited += 10
+	return -1
+
+
 func _state(peer: int) -> Dictionary:
 	var r := await step(peer, "cr_state")
 	return r.get("data", {}) as Dictionary
@@ -206,6 +226,12 @@ func _couriers() -> void:
 	_ok(stood, "guest stands beside the thanks")
 	check(str((stood.get("data", {}) as Dictionary).get("prompt", "")).contains("couriers"),
 		"guest's live prompt is the couriers' thanks ('%s')" % str((stood.get("data", {}) as Dictionary).get("prompt", "")))
+	# The stand is a teleport (disclosed fixture). The host judges a guest's
+	# claim from ITS copy of the guest (world_ledger.gd client_grant_refusal,
+	# 8 m reach), which a walking player keeps current; after a 3 km teleport
+	# the press waits until the host's copy has arrived, and the wait is logged.
+	var caught_up := await _host_sees_guest_at_reward(stood)
+	check(caught_up >= 0, "the host's copy of the guest reaches the thanks after the teleport (%d frames)" % caught_up)
 	_ok(await step(1, "press", {"action": "interact"}), "guest presses interact at the thanks")
 	_ok(await step(1, "wait_flag", {"flag": CLAIMED, "scope": "player", "budget_frames": 900}),
 		"guest's OWN player-scoped receipt arrives")
