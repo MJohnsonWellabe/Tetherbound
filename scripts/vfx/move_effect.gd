@@ -462,7 +462,10 @@ func _build_impact() -> void:
 		var mote_size := float(profile.get("mote_size", 0.045))
 		if profile.has("mote_reference_scale"):
 			mote_size *= clampf(scale_factor / maxf(0.01, float(profile.mote_reference_scale)), 1.0, float(profile.get("mote_max_growth", 4.0)))
-		multimesh.mesh = GEOMETRY.shape(str(profile.get("mote_shape", "orb")), mote_size)
+		var mote_kind := str(profile.get("mote_shape", "orb"))
+		# Only sparks read shape keys from the impact profile; other mote shapes
+		# keep their size-only meshes (the profile carries body segment counts).
+		multimesh.mesh = GEOMETRY.shape(mote_kind, mote_size, profile if mote_kind == "spark" else {})
 		multimesh.instance_count = count
 		_motes = MultiMeshInstance3D.new()
 		_motes.multimesh = multimesh

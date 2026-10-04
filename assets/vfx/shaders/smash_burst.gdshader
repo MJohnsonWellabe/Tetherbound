@@ -3,8 +3,8 @@ shader_type spatial;
 // white-hot core and a saturated rim (mode 0), or a crisp bright ring
 // (mode 1). Camera-facing, unshaded and alpha-blended rather than additive,
 // so the saturated rim survives a bright daytime background instead of
-// clipping to white. No soft haze. Compatibility.
-render_mode blend_mix, unshaded, depth_draw_never, cull_disabled, shadows_disabled;
+// clipping to white. Drawn over the struck body, like a fighting-game hit. No soft haze. Compatibility.
+render_mode blend_mix, unshaded, depth_draw_never, depth_test_disabled, cull_disabled, shadows_disabled;
 
 uniform int mode = 0;
 uniform vec4 core_colour : source_color = vec4(1.0, 1.0, 0.95, 1.0);

@@ -766,7 +766,8 @@
           "hot_colour": "#fff0a8"
         },
         "impact": {
-          "spark_stretch": 0.1,
+          "spark_width_ratio": 0.22,
+          "spark_stretch": 0.06,
           "spark_intensity": 1.0,
           "spark_core_colour": "#fff6d0",
           "fade_hold_power": 2.4,
@@ -826,7 +827,7 @@
           "heat": 0.9,
           "opacity": 0.95,
           "mote_shape": "spark",
-          "mote_size": 0.26,
+          "mote_size": 0.45,
           "speed": 8.5,
           "gravity": 7.0,
           "width": 0.12,
@@ -2399,8 +2400,9 @@
               "colour": "#d8f3ff"
             },
             "impact": {
+              "spark_width_ratio": 0.22,
               "mote_end_scale": 0.35,
-              "spark_stretch": 0.08,
+              "spark_stretch": 0.06,
               "spark_intensity": 1.0,
               "spark_core_colour": "#ffffff",
               "crown_flare_ratio": 1.4,
@@ -2430,12 +2432,12 @@
               "puff_size_scale": 0.3,
               "puff_grow": 1.5,
               "puff_lift_m": 0.3,
-              "mote_size": 0.3,
+              "mote_size": 0.55,
               "speed": 7.5,
               "stages": {
                 "ring": {"size_scale": 3.0, "min_m": 1.6, "max_m": 3.8, "duration": 0.32, "core_colour": "#ffffff", "rim_colour": "#39a8ff", "opacity": 1.0, "ring_width": 0.07, "intensity": 1.0, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
                 "burst": {
-                "spike_jitter": 0.4,"size_scale": 2.4, "min_m": 1.2, "max_m": 3.0, "duration": 0.2, "core_colour": "#ffffff", "rim_colour": "#1f7ff0", "opacity": 1.0, "points": 8, "inner_radius": 0.32, "sharpness": 2.5, "intensity": 1.0, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
+                "spike_jitter": 0.4,"size_scale": 3.0, "min_m": 1.2, "max_m": 3.4, "duration": 0.2, "core_colour": "#ffffff", "rim_colour": "#1f7ff0", "opacity": 1.0, "points": 8, "inner_radius": 0.32, "sharpness": 2.5, "intensity": 1.0, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
                 "flash": {
                   "size_scale": 1.0,
                   "min_m": 0.6,
