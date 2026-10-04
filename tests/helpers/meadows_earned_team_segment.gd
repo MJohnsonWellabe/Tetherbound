@@ -616,9 +616,16 @@ static func boundary_approach(config: Dictionary, from: Vector2, target: Vector2
 	var from_inside := Geometry2D.is_point_in_polygon(from, polygon)
 	var target_inside := Geometry2D.is_point_in_polygon(target, polygon)
 	if from_inside == target_inside:
-		# A same-side chord that crosses the fence twice needs an explicit
-		# multi-gate route, not a blind line through the settlement.
-		return refused if crosses_boundary(from, target, polygon) else {"required": false, "gate": "", "points": []}
+		if not crosses_boundary(from, target, polygon):
+			return {"required": false, "gate": "", "points": []}
+		# A same-side chord that crosses the fence twice (the re-planned
+		# village's east street and the practice meadow sit either side of
+		# the outside notch at RoadGate) walks round inside the fence instead;
+		# two outside points walk round outside it. Never a line through it.
+		var detour := interior_path(from, target, polygon) if from_inside else exterior_path(from, target, polygon)
+		if detour.is_empty():
+			return refused
+		return {"required": true, "gate": "", "points": detour.slice(0, detour.size() - 1)}
 	var clearance := float((config.get("wall", {}) as Dictionary).get("gate_clear_m", 0.0))
 	if clearance <= 1.0:
 		return refused
@@ -647,13 +654,9 @@ static func boundary_approach(config: Dictionary, from: Vector2, target: Vector2
 		var approach: Array[Vector2] = [first]
 		var departure: Array[Vector2] = [target]
 		if crosses_boundary(from, first, polygon):
-			if from_inside:
-				continue
-			approach = exterior_path(from, first, polygon)
+			approach = interior_path(from, first, polygon) if from_inside else exterior_path(from, first, polygon)
 		if crosses_boundary(last, target, polygon):
-			if target_inside:
-				continue
-			departure = exterior_path(last, target, polygon)
+			departure = interior_path(last, target, polygon) if target_inside else exterior_path(last, target, polygon)
 		if approach.is_empty() or departure.is_empty():
 			continue
 		var points: Array[Vector2] = approach.duplicate()
@@ -716,6 +719,70 @@ static func exterior_path(from: Vector2, target: Vector2,
 				distance[next] = candidate
 				parent[next] = current
 	return []
+
+
+## The inside mirror of `exterior_path`: shortest walk between two inside
+## points over vertices of the fence outline offset inward, using only legs
+## that stay inside and keep EXTERIOR_CLEARANCE from every fence segment.
+static func interior_path(from: Vector2, target: Vector2,
+		polygon: PackedVector2Array) -> Array[Vector2]:
+	var nodes: Array[Vector2] = [from, target]
+	for contour: PackedVector2Array in Geometry2D.offset_polygon(polygon, -3.2, Geometry2D.JOIN_MITER):
+		for point: Vector2 in contour:
+			if Geometry2D.is_point_in_polygon(point, polygon):
+				nodes.append(point)
+	var distance: Array[float] = []
+	var parent: Array[int] = []
+	var visited: Array[bool] = []
+	for _index in nodes.size():
+		distance.append(INF)
+		parent.append(-1)
+		visited.append(false)
+	distance[0] = 0.0
+	for _step in nodes.size():
+		var current := -1
+		for index in nodes.size():
+			if not visited[index] and (current < 0 or distance[index] < distance[current]):
+				current = index
+		if current < 0 or is_inf(distance[current]):
+			break
+		if current == 1:
+			var result: Array[Vector2] = []
+			while current != 0:
+				result.push_front(nodes[current])
+				current = parent[current]
+			return result
+		visited[current] = true
+		for next in nodes.size():
+			if visited[next] or not interior_edge_clear(nodes[current], nodes[next], polygon, current == 0 or next == 0, current == 1 or next == 1):
+				continue
+			var candidate := distance[current] + nodes[current].distance_to(nodes[next])
+			if candidate < distance[next]:
+				distance[next] = candidate
+				parent[next] = current
+	return []
+
+
+## A leg inside the fence that never crosses it and keeps clear of its
+## segments. The caller's own start and goal may sit close to the fence (a
+## gate's inside stand, a wild beside it); only the leg's interior is checked
+## against them.
+static func interior_edge_clear(from: Vector2, target: Vector2, polygon: PackedVector2Array,
+		from_is_endpoint := false, target_is_endpoint := false) -> bool:
+	if not Geometry2D.is_point_in_polygon(from, polygon) or not Geometry2D.is_point_in_polygon(target, polygon) \
+			or crosses_boundary(from, target, polygon):
+		return false
+	for index in polygon.size():
+		var a := polygon[index]
+		var b := polygon[(index + 1) % polygon.size()]
+		for pair: Array in [[from, from_is_endpoint], [target, target_is_endpoint]]:
+			var point: Vector2 = pair[0]
+			if not bool(pair[1]) and point.distance_to(Geometry2D.get_closest_point_to_segment(point, a, b)) < EXTERIOR_CLEARANCE:
+				return false
+		for point: Vector2 in [a, b]:
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, from, target)) < EXTERIOR_CLEARANCE:
+				return false
+	return true
 
 
 static func exterior_edge_clear(from: Vector2, target: Vector2,
