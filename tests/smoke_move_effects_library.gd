@@ -32,6 +32,10 @@ var _world: Node = null
 var _relocated: Array = []
 var _ultimate_filter: Array = []
 var _breakthrough_filter: Array = []
+## Diagnostic close-ups: --camera=px,py,pz:lx,ly,lz (arena-local position and
+## look-at) replaces the stage camera; --no-autoframe keeps it for ultimates.
+var _camera_override := ""
+var _no_autoframe := false
 var _moves: Dictionary
 var _scenarios: Dictionary
 var _records: Array[Dictionary] = []
@@ -52,6 +56,8 @@ func _run() -> void:
 		if arg == "--medium": _medium = true
 		if arg.begins_with("--identity="): _identity = arg.trim_prefix("--identity=")
 		if arg.begins_with("--stage="): _stage = arg.trim_prefix("--stage=")
+		if arg.begins_with("--camera="): _camera_override = arg.trim_prefix("--camera=")
+		if arg == "--no-autoframe": _no_autoframe = true
 		if arg.begins_with("--ultimates="): _ultimate_filter = Array(arg.trim_prefix("--ultimates=").split(","))
 		if arg.begins_with("--breakthroughs="):
 			for count: String in arg.trim_prefix("--breakthroughs=").split(","): _breakthrough_filter.append(int(count))
@@ -123,6 +129,12 @@ func _run() -> void:
 		if not _build_meadows_stage(floor, sun, world_environment, camera): return
 	if _stage == "world":
 		if not await _build_world_stage(floor, sun, world_environment, camera): return
+	if not _camera_override.is_empty():
+		var parts := _camera_override.split(":")
+		var at := parts[0].split_floats(",")
+		var look := parts[1].split_floats(",")
+		camera.position = Vector3(at[0], at[1], at[2])
+		camera.look_at(_arena.to_global(Vector3(look[0], look[1], look[2])), Vector3.UP)
 	if _batch in ["identities", "mastery", "ultimates"]:
 		# Production creature scene/script/model, with no encounter, AI or HP
 		# transaction. This establishes visible target coverage only.
@@ -745,7 +757,7 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
 	var from := _attacker_origin(case, move_id, 0.0)
 	if not from.is_finite(): _failures.append("Attacker model missing " + encounter); return
 	var to := _target.global_position + Vector3.UP * float(_target.call("body_height")) * 0.5
-	if bool(cfg.get("auto_frame", false)): _frame_fight(cfg)
+	if bool(cfg.get("auto_frame", false)) and not _no_autoframe: _frame_fight(cfg)
 	var binding := {"character_id": "f35-proof", "creature_uid": "f35-proof-attacker",
 		"encounter_id": encounter, "generation": 1, "action": 1}
 	var spec := {"slot": "ultimate", "move_id": move_id, "action_id": encounter + ":1",

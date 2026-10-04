@@ -50,6 +50,8 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			return FLUID.rolling_wave(size, profile)
 		"ice_crystal":
 			return FLUID.ice_crystal(size, profile)
+		"splash_crown":
+			return FLUID.splash_crown(size, profile)
 		"stone":
 			return stone(size, profile)
 		"flame_orb", "fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam":
@@ -170,12 +172,12 @@ static func authored_material(kind: String, profile: Dictionary, colour: Color) 
 		out.set_shader_parameter("trail", kind == "soft_trail")
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 2.1)))
 		return out
-	if kind in ["water_stream", "rolling_wave"]:
+	if kind in ["water_stream", "rolling_wave", "splash_crown"]:
 		out.shader = FLOW_SHADER
 		out.set_shader_parameter("water_colour", colour)
 		out.set_shader_parameter("foam_colour", Color(str(profile.get("foam_colour", "#d1edf2"))))
 		out.set_shader_parameter("opacity", float(profile.get("opacity", 0.76)))
-		out.set_shader_parameter("wave", kind == "rolling_wave")
+		out.set_shader_parameter("wave", kind in ["rolling_wave", "splash_crown"])
 		out.set_shader_parameter("flow_speed", float(profile.get("flow_speed", 3.0)))
 		return out
 	if kind == "ice_crystal":
