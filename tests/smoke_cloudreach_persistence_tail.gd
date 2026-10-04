@@ -4,6 +4,13 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## The fixture varies durable fields across all five members, then freezes only
 ## the observation window so real-time condition decay cannot race the reads.
 ##
+## LEGACY PATH: asserts the shipped portal-off behaviour (its F08 tail includes
+## the world-scoped Stormwood realm-key flag). Superseded by RD-20/RD-21 for
+## that key (Veyra now grants each participant their own Stormwood key item,
+## F19#2; F08#1 is history) once F18 turns redesign_portal_runtime_enabled on;
+## retire this test or rewrite it to the redesign rule at that point. The wind-road and Wings assertions are
+## not legacy.
+##
 ## F08 tail: the chapter's end-state -- restored wind roads, the Wings of
 ## Cloudreach with the Sky Shrine reached, and the Stormwood key -- must survive
 ## the same real disk reload. The live store is a set, so a reload cannot show a
@@ -27,7 +34,7 @@ const F08_DURABLE_FLAGS: Array[String] = ["cloudreach_winds_restored",
 
 
 func _run() -> void:
-	# Retired physical-gate regression only; shipping remains default-off.
+	# Legacy physical-gate regression; it ships while portals are off (see header).
 	if not BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}):
 		push_error("Legacy F08 tail fixture requires the debug-only test flag")
 		quit(1)
