@@ -6,8 +6,8 @@ Branch: `tb/lookdev`. The coordinator integrates this lane; no lane PR.
 | Criterion | Current label | Evidence / remaining proof |
 |---|---|---|
 | F26#0 materials and Low fallback | STALE | Native material census refresh pending for village, Hall and four biomes. |
-| F26#1 presets and persistence | STALE | Native `smoke_graphics_settings.gd -- --graphics-proof` and separate Forward+ reload queued; GPU ranges pending. |
-| F26#2 authored look bar | STALE | ART_DIRECTION sections 4.1/4.2 exist; current independent board re-read pending. |
+| F26#1 presets and persistence | STALE | Native Settings and separate Forward+ reload PASS, 21 checks; [native-settings.json](native-settings.json). GPU ranges and independent acceptance pending. |
+| F26#2 authored look bar | CURRENT | Independent criterion-only MET on `311e97078`; [look-bar-review.md](look-bar-review.md). No runtime full-bar claim. |
 | F26#3 full bar on High/Medium | MISSING | Fresh complete biome matrices and independent code-blind Bars A/B verdicts required. |
 | F26#4 twelve scripted routes | STALE | Fresh Low/Medium/High route timing at 1920x1080 required. |
 | F26#5 Ally performance | BLOCKED_OWNER | Package and one-page Medium/15 W checklist pending; owner must measure >=30 fps, 40 preferred. |
@@ -20,7 +20,8 @@ No new acceptance credit. Compatibility remains the default.
 - Native adapter inventory: NVIDIA GeForce GTX 1060 3GB. Desktop evidence cannot certify Ally performance.
 - Refreshed integration/main refs. Recovered the partial clone's 71 missing source blobs and verified every recovered byte sequence against its Git object SHA-1 before restoring it. Source checkout is now the exact integration baseline.
 - Pushed `tb/lookdev` at the baseline. GitHub accepted the branch.
-- Queued one serialized import and the named Settings/reload proofs under `D:/tetherbound/RENDER_LOCK.json`, with isolated device preferences. Raw local artifacts: `D:/tetherbound/.artifacts/f26-initial-826d273c3/`. Pending runs are not passing evidence.
+- Ran one serialized import and the named native Settings/reload proofs under `D:/tetherbound/RENDER_LOCK.json`, with isolated device preferences. All three exit 0 with zero native errors; Settings/reload pass 21 checks. Raw local artifacts and log hashes: `D:/tetherbound/.artifacts/f26-initial-826d273c3/`, [native-settings.json](native-settings.json). Generated UID/import support files are retained locally; no generated source changes were committed.
+- Started the full Tidewake Medium material census on `311e97078`. It produced 24 native 1920x1080 catalogue PNGs, but the owner announced Valheim play before completion. The owned renderer was stopped and the lock released. The manifest was interrupted during its rewrite and is empty; these partial frames cannot certify the census. Logs and unmodified images remain at `D:/tetherbound/.artifacts/f26-census-311e97078/water-medium/`. Repeat into a fresh directory after the game exits; preserve this attempt.
 
 ## Coordinator exchange
 
@@ -32,10 +33,22 @@ Baseline checkpoint:
 The coordinator may fetch `tb/lookdev` and read this receipt at its advertised SHA.
 Checkpoint comments include criterion labels/evidence paths, changed shared files,
 review status and required input. Requests and acknowledgments belong in replies
-on the same PR discussion. No confirmed coordinator acknowledgment yet.
+on the same PR discussion. [Claude acknowledged receipt](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-5982376444)
+and is incorporating checkpoints in the hourly board. Claude owns subsequent STATE
+updates; lane status stays here to avoid shared-file conflicts. F17 route/source and
+F21 camera-ready source pins are pending from the coordinator.
+
+## GPU scheduling
+
+The persistent goal remains active. GPU captures and performance runs are deferred
+while the owner plays Valheim on this PC; continue CPU, reference and Meshy work.
+Resume native captures only after observing Valheim start and exit, or explicit
+owner notice that the PC is free. Concurrent gameplay invalidates frame-time
+comparisons. No renderer or unrelated user process was left running by the stopped
+census. Local occupancy marker: `D:/tetherbound/.artifacts/GPU_OWNER_PLAY.json`.
 
 ## Review and shared files
 
-F26 independent acceptance review: pending current runtime evidence.
+F26#2 independent acceptance review: MET. Other F26 criteria remain open.
 Shared file touched by this checkpoint: `docs/STATE.md`, GPU resumption and F26 line only.
 Owner need: Ally test after the build and checklist are supplied. No new purchase or renderer-default change authorized by desktop results.
