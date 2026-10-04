@@ -26,4 +26,4 @@ Judge's readability note: trainer centred and clear, dirt paths legible, buildin
 
 ## Verdict: FAIL
 
-Owning-lane work: the visits route can no longer reach Mira from Tam on current village geometry/NPC placement (stall beside a lamppost and cottage corner at x≈17, z≈4). A confirming day re-run is queued at the end of this lane (see F01-2r if present).
+Owning-lane work: the visits route can no longer reach Mira from Tam on current village geometry/NPC placement (stall beside a lamppost and cottage corner at x≈17, z≈4). Reproduced by the independent night run (F01-3: 9.32 m from Mira); the separate day confirm re-run was cancelled.
