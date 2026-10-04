@@ -93,7 +93,7 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 		var instance: Variant = members[index]
 		var prior: Dictionary = current.party[index]
 		if not instance is RefCounted or instance.get("uid") != prior.uid: return _deny("owner_party_changed")
-		if ((row.action == "trait_release" and prior.uid == row.intent.creature_uid) or (row.action == "wild_capture" and prior.uid == row.intent.released_uid)) and not _has_uid(row.after.party, prior.uid):
+		if ((row.action in ["trait_release", "essence_release"] and prior.uid == row.intent.creature_uid) or (row.action == "wild_capture" and prior.uid == row.intent.released_uid)) and not _has_uid(row.after.party, prior.uid):
 			if release_index >= 0: return _deny("ambiguous_release")
 			release_index = index
 			release_instance = instance
@@ -131,7 +131,7 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 			capture_members.append(newcomer)
 			next_index += 1
 	if next_index != row.after.party.size(): return _deny("owner_roster_import_refused")
-	if row.action == "trait_release" and not ESSENCE._equivalent(current, row.after) \
+	if row.action in ["trait_release", "essence_release"] and not ESSENCE._equivalent(current, row.after) \
 		and (release_index < 0 or members.size() <= 1 or row.after.party.size() != members.size() - 1): return _deny("owner_release_changed")
 	return {"ok": true, "changes": changes, "traits": projections, "release_index": release_index, "release_instance": release_instance, "capture_members": capture_members}
 

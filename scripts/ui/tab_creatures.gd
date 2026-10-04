@@ -32,6 +32,7 @@ const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINING_READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const ORDINARY_RELEASE := preload("res://scripts/net/essence_release_service.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
@@ -1972,6 +1973,7 @@ func _maybe_begin_release() -> void:
 			say("%s joins the belt." % str(pending.call("label")))
 		return
 
+	if capture_service == null: _bind_ordinary_release(pending)
 	_release_stage = "choose"
 	_release_for = pending
 	_release_target = -1
@@ -2676,6 +2678,16 @@ func _typed_release_required(pending: RefCounted) -> bool:
 	if is_instance_valid(_release_service) and _release_service.has_method("owns_pending_capture"):
 		return _release_service.call("owns_pending_capture", pending) == true
 	return true
+
+## F27#1: an ordinary (untyped) catch overflow on the solo/host owner pays its
+## released creature's type essence through the typed essence_release action.
+func _bind_ordinary_release(pending: RefCounted) -> void:
+	if is_instance_valid(_release_service) and _release_service.has_method("owns_pending_capture") \
+			and _release_service.call("owns_pending_capture", pending) == true: return
+	var service: Node = ORDINARY_RELEASE.attach(state())
+	if service != null and service.call("owns_pending_capture", pending) == true:
+		configure_release_service(service)
+
 
 func configure_release_service(service: Node) -> bool:
 	if (_release_stage != "" and _release_request_id.is_empty()) or not is_instance_valid(service): return false

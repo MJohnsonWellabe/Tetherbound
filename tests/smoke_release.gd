@@ -25,6 +25,8 @@ const SETTLE_FRAMES := 240
 ## and open the menu. It acts on the first unpaused frame; this is slack, not
 ## a timing contract.
 const WATCH_FRAMES := 60
+## Bound for the typed release's journal/owner-save/ACK before the goodbye beat.
+const TYPED_RELEASE_FRAMES := 600
 
 var _failures: Array[String] = []
 var _game: Node = null
@@ -277,7 +279,17 @@ func _check_releasing_a_belt_member_resolves() -> void:
 	var keep_button := _tab.get("_farewell_keep") as Button
 	if absf(release_button.size.x - keep_button.size.x) > 0.5:
 		_fail("the destructive answer is %.0f px wide against Keep's %.0f; neither may be the bigger target" % [release_button.size.x, keep_button.size.x])
+	var essence_before := _essence_counts()
+	var expected_payout: Array = preload("res://scripts/creatures/essence.gd").release_payout(
+		preload("res://scripts/net/character_record_rules.gd").portable_projection(_game.get("local").save_data()).party[_released_index(released)],
+		preload("res://scripts/creatures/essence.gd").config())
 	await _press("ui_accept")
+	# F27#1: a release with an essence payout is a durable host transaction
+	# (journal, owner save, ACK) before the goodbye beat. Wait, bounded, for
+	# that asynchronous arrival; the beat and its words are asserted as before.
+	for i in TYPED_RELEASE_FRAMES:
+		if str(_tab.get("_release_stage")) != "waiting": break
+		await process_frame
 
 	if str(_tab.get("_release_stage")) != "done":
 		_fail("confirming the release did not reach the goodbye beat")
@@ -295,6 +307,17 @@ func _check_releasing_a_belt_member_resolves() -> void:
 		_fail("the newcomer is in the party but not in the freed last holder")
 	else:
 		print("releasing a belt member: released gone for good, newcomer on the belt, five exactly")
+	# F27#1: the released creature's type essence is paid, once, with its receipt.
+	var essence_after := _essence_counts()
+	for stack: Dictionary in expected_payout:
+		if int(essence_after.get(stack.id, 0)) - int(essence_before.get(stack.id, 0)) != int(stack.n):
+			_fail("release paid %d %s, expected %d" % [int(essence_after.get(stack.id, 0)) - int(essence_before.get(stack.id, 0)), stack.id, int(stack.n)])
+	if expected_payout.is_empty():
+		_fail("the released creature has no release payout to check")
+	elif not (_game.get("local").redesign_character.release_receipts as Array).has("release:" + str(released.get("uid"))):
+		_fail("the release left no release receipt")
+	else:
+		print("release paid %s with its receipt" % str(expected_payout))
 
 
 func _check_the_goodbye_beat_ends_on_the_new_belt() -> void:
@@ -324,6 +347,10 @@ func _check_the_goodbye_beat_ends_on_the_new_belt() -> void:
 ## The other honest answer: the newcomer was not worth a holder. The belt must
 ## come through unchanged.
 func _check_a_second_squeeze_can_release_the_newcomer() -> void:
+	# F27#1: the paid release wrote a release receipt, which makes Grandpa's
+	# "traits" lesson due. It opens as soon as the world is free beside him,
+	# exactly as for a player, who continues it before the next catch.
+	await _continue_open_lessons()
 	var second: RefCounted = _game.call("make_creature", "terrapup", "Second")
 	_game.set("pending_catch", second)
 	for i in WATCH_FRAMES:
@@ -358,6 +385,32 @@ func _check_a_second_squeeze_can_release_the_newcomer() -> void:
 		print("releasing the newcomer instead: the belt comes through untouched")
 	await _press("ui_accept")
 	await _press("menu_cancel")
+
+
+func _essence_counts() -> Dictionary:
+	var out := {}
+	for type_id: String in ["ground", "water", "air", "electric", "fire", "dark", "ice", "psychic"]:
+		out["essence_" + type_id] = int(_game.get("inventory").call("count", "essence_" + type_id))
+	return out
+
+
+func _released_index(released: RefCounted) -> int:
+	var members: Array = _party.call("members")
+	return members.find(released)
+
+
+func _continue_open_lessons() -> void:
+	for i in 30:
+		await process_frame
+	var lessons := root.get_node_or_null(^"Game/OnboardingLessons")
+	for attempt in 40:
+		var open := false
+		if lessons != null:
+			for child: Node in lessons.get_children():
+				if child is CanvasLayer and (child as CanvasLayer).visible: open = true
+		if not open: return
+		await _press("ui_accept")
+	_fail("an onboarding lesson stayed open after 40 confirm presses")
 
 
 func _press(action: String) -> void:

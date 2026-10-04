@@ -4607,7 +4607,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
 	var capture_originals: Variant = _owner_training_retry.get("capture_originals")
 	var released: Variant = _owner_training_retry.get("release_instance")
-	if preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] and row.get("action") == "trait_release" and released == null:
+	if preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] and row.get("action") in ["trait_release", "essence_release"] and released == null:
 		# Bind identity while the real original instance is still owned. A weak
 		# identity is not a sixth creature or a second authoritative roster.
 		if ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), row.before):
@@ -5705,7 +5705,7 @@ func _begin_owner_training_rollback(player: RefCounted, world: RefCounted, row: 
 func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bool:
 	var row := _owner_training_row()
 	if not _owner_training_install or _owner_training_install_rollback or preload("res://scripts/net/character_record_rules.gd").training_version(row) not in [2, 3] \
-		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or not row.get("action") in ["trait_release", "essence_release"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
 	var original: Variant = _owner_training_retry.get("release_instance")
 	var member: RefCounted = player.get("party").call("at", index)
@@ -5718,7 +5718,7 @@ func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefC
 	if _owner_training_install_rollback and _owner_training_row().get("action") == "wild_capture": return _capture_roster_allowed(snapshot.get("members", []), true, player)
 	var row := _owner_training_row()
 	if not _owner_training_install or not _owner_training_install_rollback or preload("res://scripts/net/character_record_rules.gd").training_version(row) not in [2, 3] \
-		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or not row.get("action") in ["trait_release", "essence_release"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt \
 		or not snapshot.get("members") is Array or snapshot.members.size() != row.before.party.size(): return false
 	var original: Variant = _owner_training_retry.get("release_instance")

@@ -353,3 +353,39 @@ func test_real_conflicts_are_still_refused() -> void:
 	var tampered := applied.duplicate(true)
 	tampered.party[0].level = 9
 	assert_eq(_owner_stage(tampered, row).get("code"), "training_marker_state_conflict")
+
+
+# --- ordinary ceremony release (essence_release character action) -----------
+
+func _release_context(record: Dictionary) -> Dictionary:
+	return {"character_id": CHARACTER, "expected_revision": 4, "source_key": "release_ceremony:wild-new",
+		"in_range": true, "in_combat": false, "release_ceremony": true, "foundation_runtime_authorized": true}
+
+
+func test_ceremony_release_action_pays_type_essence_and_removes_one() -> void:
+	var rules := preload("res://scripts/net/character_action_rules.gd")
+	var five := _admitted(_player([["terrapup", 5], ["frostclaw", 12], ["cindercub", 9], ["sparkit", 5], ["ripplet", 5]]))
+	var frost: String = five.party[1].uid
+	var intent := {"release_id": "0123456789abcdef0123456789abcdef", "creature_uid": frost}
+	var staged := rules.stage(five, 4, "essence_release", intent, _release_context(five), RECORD.errors)
+	assert_true(staged.get("ok") == true, str(staged))
+	assert_eq(staged.receipt, "release:" + frost)
+	assert_eq(staged.state.party.size(), 4)
+	assert_eq(_count(staged.state, "essence_ice"), _count(five, "essence_ice") + 9)
+	assert_true(staged.state.redesign_character.release_receipts.has("release:" + frost))
+	# Same release against the committed record is never a second payout.
+	assert_eq(rules.stage(staged.state, 5, "essence_release", intent, _release_context(staged.state), RECORD.errors).get("ok"), false)
+
+
+func test_ceremony_release_requires_the_ceremony_and_a_full_belt() -> void:
+	var rules := preload("res://scripts/net/character_action_rules.gd")
+	var four := _admitted(_player([["terrapup", 5], ["frostclaw", 12], ["cindercub", 9], ["sparkit", 5]]))
+	var intent := {"release_id": "0123456789abcdef0123456789abcdef", "creature_uid": four.party[1].uid}
+	assert_eq(rules.stage(four, 4, "essence_release", intent, _release_context(four), RECORD.errors).get("code"), "release_requires_full_party")
+	var five := _admitted(_player([["terrapup", 5], ["frostclaw", 12], ["cindercub", 9], ["sparkit", 5], ["ripplet", 5]]))
+	var no_ceremony := _release_context(five)
+	no_ceremony.erase("release_ceremony")
+	intent.creature_uid = five.party[1].uid
+	assert_eq(rules.stage(five, 4, "essence_release", intent, no_ceremony, RECORD.errors).get("code"), "actual_release_ceremony_required")
+	var bad := {"release_id": "x", "creature_uid": five.party[1].uid, "payout": 99}
+	assert_eq(rules.stage(five, 4, "essence_release", bad, _release_context(five), RECORD.errors).get("code"), "invalid_release_intent")
