@@ -5626,11 +5626,14 @@ func _update_foreground_fades(lens: Transform3D, context: Dictionary, cfg: Dicti
 	var amount: float = clampf(float(cfg.get("foreground_fade",0.75)),0.0,0.95)
 	var speed: float = maxf(float(cfg.get("foreground_fade_speed",6.0)),0.01)
 	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),1.0)
+	var inset: float = float(cfg.get("foreground_fade_inset",0.15))
 	var covering: Dictionary = {}
 	if enabled:
 		for occluder: Dictionary in context.occluders:
+			var narrow: Dictionary = FIGHT_CAMERA.inset_envelope(occluder,inset)
 			for subject: Dictionary in context.subjects:
-				if FIGHT_CAMERA.bounds_occlude(lens,subject,occluder,float(context.fov),aspect,float(context.near)):
+				if FIGHT_CAMERA.bounds_occlude(lens,FIGHT_CAMERA.inset_envelope(subject,inset),narrow,
+						float(context.fov),aspect,float(context.near)):
 					covering[int(occluder.body_id)] = int(occluder.model_id)
 					break
 	for body_id: int in covering:

@@ -263,6 +263,19 @@ static func nearest_fallback(best: Dictionary, failed: Array[Dictionary], config
 	return chosen
 
 
+## The fade decision's envelope: the measured box narrowed by `fraction` of its
+## width and depth on each side, full height kept so feet still count. A whole
+## box's empty corners otherwise dither a trainer standing beside the ally.
+static func inset_envelope(envelope: Dictionary, fraction: float) -> Dictionary:
+	var box: AABB = envelope.box
+	var cut := Vector3(box.size.x, 0.0, box.size.z) * clampf(fraction, 0.0, 0.45)
+	var inset := AABB(box.position + cut, box.size - cut * 2.0)
+	var out := envelope.duplicate()
+	out["box"] = inset
+	out["points"] = box_points(inset, envelope.pose as Transform3D)
+	return out
+
+
 ## Project the convex oriented envelope, preserving actual perspective/depth.
 ## A near-plane crossing is unavailable rather than silently a clear view.
 static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,

@@ -200,7 +200,7 @@ func test_foreground_cover_is_faded_not_escaped_and_restores_when_clear() -> voi
 	var soft: Dictionary = manager.call("_fight_visibility_score",Transform3D.IDENTITY,Rect2(),Rect2(),context)
 	assert_true(bool(soft.pass) and bool(soft.cover_faded),"with the fade, cover is faded rather than escaped")
 	assert_true(float(soft.penalty) > 0.0,"cover still ranks a view below a clear one")
-	var cfg := {"fade_foreground":true,"foreground_fade":0.75,"foreground_fade_speed":100.0}
+	var cfg := {"fade_foreground":true,"foreground_fade":0.75,"foreground_fade_speed":100.0,"foreground_fade_inset":0.0}
 	var fading := int(manager.call("_update_foreground_fades",Transform3D.IDENTITY,context,cfg,0.1))
 	assert_eq(fading,1,"the covering body fades")
 	var faded := mesh.get_surface_override_material(0) as BaseMaterial3D
@@ -232,3 +232,19 @@ func test_failed_fit_takes_the_nearest_lens_within_overlap_tolerance() -> void:
 	assert_eq(float(FIT.nearest_fallback(far, failed, {}).distance), 39.5, "tolerance 0 keeps the least-overlap rule")
 	var tight := FIT.nearest_fallback(far, failed, {"fallback_overlap_tolerance":0.01})
 	assert_eq(float(tight.distance), 39.5, "a materially larger overlap is never taken for distance")
+
+
+## Judge r3: a body beside a combatant whose whole box only grazes the actor's
+## empty box corner is not dithered; one squarely in front still is.
+func test_fade_inset_ignores_corner_grazes_but_keeps_real_cover() -> void:
+	var actor := _envelope(AABB(Vector3(-1,0,-1),Vector3(2,2,2)),Transform3D(Basis.IDENTITY,Vector3(0,0,-8)))
+	var cover_box := AABB(Vector3(-0.35,0,-0.3),Vector3(0.7,1.8,0.6))
+	var graze := _envelope(cover_box,Transform3D(Basis.IDENTITY,Vector3(0.8,0,-4)))
+	var front := _envelope(cover_box,Transform3D(Basis.IDENTITY,Vector3(0,0,-4)))
+	var hit := func(subject: Dictionary, cover: Dictionary, inset: float) -> bool:
+		return FIT.bounds_occlude(Transform3D.IDENTITY,FIT.inset_envelope(subject,inset),FIT.inset_envelope(cover,inset),68.0,16.0/9.0,0.05)
+	assert_true(bool(hit.call(actor,graze,0.0)),"the whole boxes graze")
+	assert_false(bool(hit.call(actor,graze,0.15)),"the inset envelopes do not")
+	assert_true(bool(hit.call(actor,front,0.15)),"real foreground cover still fades")
+	var narrowed := FIT.inset_envelope(actor,0.15)
+	assert_almost_eq((narrowed.box as AABB).size.y,2.0,0.0001,"full height kept, so feet still count")
