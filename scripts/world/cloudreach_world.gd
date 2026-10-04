@@ -87,6 +87,7 @@ const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach
 const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
 const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_flight_aerie_presentation.gd")
 const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_presentation.gd")
+const HIGH_PERCHES_VISUAL_PATH := "res://data/config/cloudreach_high_perches_visual.json"
 const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
 	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
 const STORMWARD_OVERLOOK_PRESENTATION := preload("res://scripts/world/cloudreach_stormward_overlook.gd")
@@ -4164,12 +4165,24 @@ func _build_flight_aerie(root: Node3D) -> void:
 func _build_high_perches(root: Node3D) -> void:
 	var perch_points: Array[Vector3] = []
 	var perch_radii: Array[float] = []
+	# F08#3: the six visual-only needles stood on the south Fly-arrival line,
+	# either side of the north landing (the production camera sat wedged between
+	# two of them) and on the NW vista line. Their feet are authored in
+	# cloudreach_high_perches_visual.json `needle_feet` ([x, z, radius]) so the
+	# arrival, landing and vista axes stay open; heights are unchanged.
+	var perch_cfg := _read_json(HIGH_PERCHES_VISUAL_PATH)
+	var feet := perch_cfg.get("needle_feet", []) as Array
 	for i in 6:
-		var angle := TAU * float(i) / 6.0 + 0.2
 		var height := 16.0 + float(posmod(i * 7, 5)) * 5.0
 		var radius := 1.8 + float(i % 2)
+		var angle := TAU * float(i) / 6.0 + 0.2
 		var foot := Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), 0.0,
 			sin(angle) * (7.0 + float((i + 1) % 2) * 5.0))
+		if i < feet.size() and (feet[i] as Array).size() >= 3:
+			var spec := feet[i] as Array
+			foot = Vector3(float(spec[0]), 0.0, float(spec[1]))
+			radius = float(spec[2])
+			angle = atan2(foot.z, foot.x)
 		var outward := Vector3(cos(angle), 0.0, sin(angle))
 		perch_points.append(foot)
 		perch_radii.append(radius)
@@ -4233,9 +4246,11 @@ func _build_high_perches(root: Node3D) -> void:
 	# measured top stays below the controller's 0.35 m step height, so these read
 	# and behave as low ground dressing rather than walk-through furniture.
 	var ground_roosts: Array[Dictionary] = [
-		{"at": Vector2(-6.2, 4.0), "yaw": -25.0},
-		{"at": Vector2(-0.7, 8.5), "yaw": 90.0},
-		{"at": Vector2(10.0, 7.5), "yaw": 25.0},
+		# F08#3: the racks stood across the landing lane and the south stands
+		# and read as "loose planks on grass" at the bottom of the production
+		# lens. They sit at the court's west and north edges now.
+		{"at": Vector2(-9.0, 1.5), "yaw": -10.0},
+		{"at": Vector2(-3.5, 13.5), "yaw": 80.0},
 	]
 	for i in ground_roosts.size():
 		var spec := ground_roosts[i]
