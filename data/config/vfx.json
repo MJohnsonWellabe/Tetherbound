@@ -619,6 +619,7 @@
           "flicker": 0.12
         },
         "launch": {
+          "burst": {"size_scale": 1.4, "min_m": 0.35, "max_m": 0.9, "duration": 0.12, "core_colour": "#fffbe8", "rim_colour": "#ff7a1f", "opacity": 1.0, "points": 8, "inner_radius": 0.38, "sharpness": 4.0, "intensity": 2.0, "scale_from": 0.3, "scale_to": 1.0, "forward_scale": 0.6},
           "flash": {
             "size_scale": 1.8,
             "min_m": 0.4,
@@ -764,8 +765,13 @@
           "hot_colour": "#fff0a8"
         },
         "impact": {
+          "spark_stretch": 0.1,
+          "spark_intensity": 2.2,
+          "spark_core_colour": "#fff6d0",
           "fade_hold_power": 2.4,
           "stages": {
+            "ring": {"size_scale": 3.6, "min_m": 1.1, "max_m": 3.0, "duration": 0.3, "core_colour": "#fff3c4", "rim_colour": "#ffab3d", "opacity": 1.0, "ring_width": 0.05, "intensity": 2.0, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
+            "burst": {"size_scale": 3.0, "min_m": 0.9, "max_m": 2.4, "duration": 0.2, "core_colour": "#fffbe8", "rim_colour": "#ff6a12", "opacity": 1.0, "points": 10, "inner_radius": 0.34, "sharpness": 4.0, "intensity": 2.2, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
             "glow": {
               "size_scale": 2.6,
               "min_m": 0.8,
@@ -773,7 +779,7 @@
               "duration": 0.55,
               "core_colour": "#fff1c2",
               "edge_colour": "#ff6a1a",
-              "opacity": 0.75,
+              "opacity": 0.5,
               "streaks": 0,
               "streak_strength": 0.0
             },
@@ -817,17 +823,17 @@
           "grow": 1.65,
           "heat": 0.9,
           "opacity": 0.95,
-          "mote_shape": "soft_ember",
-          "mote_size": 0.07,
-          "speed": 5.4,
-          "gravity": 3.6,
+          "mote_shape": "spark",
+          "mote_size": 0.2,
+          "speed": 8.5,
+          "gravity": 7.0,
           "width": 0.12,
           "height_ratio": 2.3,
           "segments": 24,
           "rings": 12,
           "hot_colour": "#fff0a8",
           "ember_colour": "#85250a",
-          "mote_colour": "#ffd176",
+          "mote_colour": "#ff8f1f",
           "layers": [
             {
               "shape": "fire_explosion",
@@ -888,7 +894,7 @@
           "growth_power": 0.42,
           "secondary_shape": "fire_explosion",
           "secondary_rotation_x": 0.0,
-          "mote_end_scale": 0.15,
+          "mote_end_scale": 0.3,
           "card_extent_scale": 2.6,
           "puff_count": 6,
           "puff_shape": "fire_explosion",
@@ -897,7 +903,7 @@
           "puff_start_radius_scale": 0.15,
           "puff_end_radius_scale": 0.85,
           "puff_size_scale": 0.48,
-          "puff_opacity": 0.7,
+          "puff_opacity": 0.55,
           "puff_lift_m": 0.35,
           "puff_grow": 1.05,
           "puff_initial_scale": 0.42,
@@ -2391,12 +2397,16 @@
               "colour": "#d8f3ff"
             },
             "impact": {
+              "mote_end_scale": 0.35,
+              "spark_stretch": 0.08,
+              "spark_intensity": 1.9,
+              "spark_core_colour": "#ffffff",
               "crown_flare_ratio": 1.4,
               "crown_height_ratio": 1.6,
               "mote_backscatter": 0.3,
               "gravity": 14.0,
-              "mote_colour": "#eaf8ff",
-              "mote_shape": "orb",
+              "mote_colour": "#4fb8ff",
+              "mote_shape": "spark",
               "growth_power": 0.5,
               "initial_grow": 0.2,
               "flow_speed": 3.0,
@@ -2412,15 +2422,17 @@
               "fade_hold_power": 2.2,
               "puff_count": 3,
               "puff_colour": "#ffffff",
-              "puff_opacity": 0.6,
+              "puff_opacity": 0.4,
               "puff_radius_scale": 0.6,
               "target_envelope_scale": 0.3,
               "puff_size_scale": 0.3,
               "puff_grow": 1.5,
               "puff_lift_m": 0.3,
-              "mote_size": 0.07,
+              "mote_size": 0.22,
               "speed": 7.5,
               "stages": {
+                "ring": {"size_scale": 3.0, "min_m": 1.6, "max_m": 3.8, "duration": 0.32, "core_colour": "#ffffff", "rim_colour": "#7fd2ff", "opacity": 1.0, "ring_width": 0.05, "intensity": 1.8, "scale_from": 0.25, "scale_to": 1.0, "toward_source_scale": 0.5},
+                "burst": {"size_scale": 2.4, "min_m": 1.2, "max_m": 3.0, "duration": 0.2, "core_colour": "#ffffff", "rim_colour": "#2e9bff", "opacity": 1.0, "points": 12, "inner_radius": 0.4, "sharpness": 3.0, "intensity": 2.0, "scale_from": 0.35, "scale_to": 1.0, "toward_source_scale": 0.5},
                 "flash": {
                   "size_scale": 1.0,
                   "min_m": 0.6,

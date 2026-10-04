@@ -105,9 +105,9 @@ func test_authored_stages_are_bounded_and_drawable() -> void:
 		authored += 1
 		var meshes := 0
 		var parts: Array[Dictionary] = []
-		for key: String in ["flash", "ground", "sky_call"]:
+		for key: String in ["flash", "ground", "sky_call", "burst"]:
 			if launch.get(key) is Dictionary: parts.append(launch[key]); meshes += 1
-		for key: String in ["flash", "glow", "shockwave", "mark"]:
+		for key: String in ["flash", "glow", "shockwave", "mark", "burst", "ring"]:
 			if stages.get(key) is Dictionary: parts.append(stages[key]); meshes += 1
 		assert_true(meshes <= EFFECT.MAX_STAGE_MESHES, id + " stage meshes within the fixed cap")
 		for part: Dictionary in parts:

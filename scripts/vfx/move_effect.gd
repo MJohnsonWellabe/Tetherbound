@@ -11,7 +11,9 @@ const GROUND_MARK_SHADER := preload("res://assets/vfx/shaders/impact_ground_mark
 ## Launch/contact/aftermath stage meshes are a fixed small set per effect
 ## (flash, ground kick, contact flash, shockwave, ground mark). They are not
 ## particles and never draw from the particle lease.
-const MAX_STAGE_MESHES := 6
+const MAX_STAGE_MESHES := 8
+const BURST_SHADER := preload("res://assets/vfx/shaders/smash_burst.gdshader")
+const SPARK_SHADER := preload("res://assets/vfx/shaders/smash_spark.gdshader")
 
 signal arrived()
 signal presentation_arrived(receipt: Dictionary)
@@ -468,6 +470,13 @@ func _build_impact() -> void:
 		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal", "bubble"]:
 			var mote_material := "root_stone_surface" if bool(profile.get("root_stone_surface", false)) else str(profile.mote_shape)
 			_motes.material_override = GEOMETRY.authored_material(mote_material, profile, Color(str(profile.get("mote_colour", _params.colour))))
+		if str(profile.get("mote_shape", "")) == "spark":
+			var spark_material := ShaderMaterial.new()
+			spark_material.shader = SPARK_SHADER
+			spark_material.set_shader_parameter("core_colour", Color(str(profile.get("spark_core_colour", "#fffbe8"))))
+			spark_material.set_shader_parameter("rim_colour", Color(str(profile.get("mote_colour", _params.colour))))
+			spark_material.set_shader_parameter("intensity", float(profile.get("spark_intensity", 1.8)))
+			_motes.material_override = spark_material
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
 	for i in count:
@@ -607,6 +616,15 @@ func _update_impact(u: float, delta: float) -> void:
 		if bool(profile.get("settle_on_ground", false)) and _mote_positions[i].y < floor_y:
 			_mote_positions[i].y = floor_y
 			_velocities[i] = Vector3.ZERO
+		if str(profile.get("mote_shape", "")) == "spark" and _velocities[i].length_squared() > 0.0001:
+			# Sparks stretch along their velocity and shrink as they cool.
+			var along := _velocities[i].normalized()
+			var up := Vector3.UP if absf(along.dot(Vector3.UP)) < 0.95 else Vector3.RIGHT
+			var spark_basis := Basis.looking_at(along, up)
+			var stretch := 1.0 + _velocities[i].length() * float(profile.get("spark_stretch", 0.18))
+			var thin := lerpf(1.0, float(profile.get("mote_end_scale", 0.2)), u)
+			_motes.multimesh.set_instance_transform(i, Transform3D(spark_basis.scaled(Vector3(thin, thin, stretch * thin)), _mote_positions[i]))
+			continue
 		_motes.multimesh.set_instance_transform(i, Transform3D(_mote_bases[i].scaled(Vector3.ONE * lerpf(1.0, float(profile.get("mote_end_scale", 0.05)), u)), _mote_positions[i]))
 
 func _set_opacity(material: Material, alpha: float) -> void:
@@ -637,6 +655,9 @@ func _build_launch_stages() -> void:
 	if launch.get("flash") is Dictionary:
 		var toward := (_to - _from).normalized()
 		_add_flash(launch.flash, _from + toward * scale * float((launch.flash as Dictionary).get("forward_scale", 0.4)), scale, 0.0)
+	if launch.get("burst") is Dictionary:
+		var forward := (_to - _from).normalized()
+		_add_burst(launch.burst, _from + forward * scale * float((launch.burst as Dictionary).get("forward_scale", 0.4)), scale, 0.0, 0)
 	if launch.get("sky_call") is Dictionary:
 		_add_sky_call(launch.sky_call, scale)
 	if launch.get("ground") is Dictionary:
@@ -655,6 +676,9 @@ func _build_impact_stages(profile: Dictionary, scale_factor: float, origin: Vect
 	back = back.normalized() if back.length_squared() > 0.0001 else Vector3.ZERO
 	if stages.get("flash") is Dictionary:
 		_add_flash(stages.flash, origin + back * scale_factor * float((stages.flash as Dictionary).get("toward_source_scale", 0.35)), scale_factor, _elapsed)
+	for kind: String in ["burst", "ring"]:
+		if stages.get(kind) is Dictionary:
+			_add_burst(stages[kind], origin + back * scale_factor * float((stages[kind] as Dictionary).get("toward_source_scale", 0.3)), scale_factor, _elapsed, 0 if kind == "burst" else 1)
 	if stages.get("glow") is Dictionary:
 		# A soft additive halo that outlives the flash: stands in for bloom on
 		# renderers without post-processing, so hot impacts carry energy.
@@ -689,6 +713,35 @@ func _add_sky_call(profile: Dictionary, scale: float) -> void:
 	add_child(node)
 	_stages.append({"node": node, "born": 0.0, "duration": maxf(0.05, float(profile.get("duration", 0.3))),
 		"kind": "call", "profile": profile})
+	_update_stage(_stages.back())
+
+## Stylized high-contrast burst (mode 0 star, mode 1 ring): camera-facing,
+## additive, crisp edges; punches out fast and snaps away.
+func _add_burst(profile: Dictionary, position: Vector3, scale: float, born: float, mode: int) -> void:
+	if _stages.size() >= MAX_STAGE_MESHES: return
+	var quad := QuadMesh.new()
+	var half := clampf(scale * float(profile.get("size_scale", 2.0)), float(profile.get("min_m", 0.3)), float(profile.get("max_m", 2.0)))
+	quad.size = Vector2.ONE * half * 2.0
+	var material := ShaderMaterial.new()
+	material.shader = BURST_SHADER
+	material.set_shader_parameter("mode", mode)
+	material.set_shader_parameter("core_colour", Color(str(profile.get("core_colour", "#fffbe8"))))
+	material.set_shader_parameter("rim_colour", Color(str(profile.get("rim_colour", _params.get("colour", "#ffb347")))))
+	material.set_shader_parameter("opacity", float(profile.get("opacity", 1.0)))
+	material.set_shader_parameter("points", int(profile.get("points", 8)))
+	material.set_shader_parameter("inner_radius", float(profile.get("inner_radius", 0.42)))
+	material.set_shader_parameter("sharpness", float(profile.get("sharpness", 3.0)))
+	material.set_shader_parameter("spin", _rng.randf() * TAU)
+	material.set_shader_parameter("ring_width", float(profile.get("ring_width", 0.07)))
+	material.set_shader_parameter("intensity", float(profile.get("intensity", 1.6)))
+	var node := MeshInstance3D.new()
+	node.mesh = quad
+	node.material_override = material
+	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(node)
+	node.position = position
+	_stages.append({"node": node, "born": born, "duration": maxf(0.03, float(profile.get("duration", 0.18))),
+		"kind": "burst", "profile": profile})
 	_update_stage(_stages.back())
 
 func _add_flash(profile: Dictionary, position: Vector3, scale: float, born: float) -> void:
@@ -756,6 +809,11 @@ func _update_stage(stage: Dictionary) -> void:
 	node.visible = _elapsed >= float(stage.born) and age < 1.0
 	var material := node.material_override as ShaderMaterial
 	material.set_shader_parameter("age", age)
+	if str(stage.kind) == "burst":
+		var profile_b: Dictionary = stage.profile
+		var punch := 1.0 - pow(1.0 - age, 3.0)
+		node.scale = Vector3.ONE * lerpf(float(profile_b.get("scale_from", 0.4)), float(profile_b.get("scale_to", 1.0)), punch)
+		return
 	if str(stage.kind) == "call":
 		material.set_shader_parameter("opacity", float((stage.profile as Dictionary).get("opacity", 1.0)) * pow(1.0 - age, 1.4))
 		return

@@ -52,6 +52,8 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 			return FLUID.ice_crystal(size, profile)
 		"splash_crown":
 			return FLUID.splash_crown(size, profile)
+		"spark":
+			return spark(size, profile)
 		"stone":
 			return stone(size, profile)
 		"flame_orb", "fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam":
@@ -276,6 +278,23 @@ static func _uv_quad(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3, d:
 		mesh.surface_set_uv(uvs[i])
 		mesh.surface_set_color(Color.WHITE)
 		mesh.surface_add_vertex(points[i])
+
+## A narrow diamond along +Z for velocity-stretched glowing sparks.
+static func spark(size: float, profile: Dictionary = {}) -> ImmediateMesh:
+	var mesh := ImmediateMesh.new()
+	var half := size * 0.5
+	var w := size * float(profile.get("spark_width_ratio", 0.16))
+	var tip := Vector3(0, 0, half)
+	var tail := Vector3(0, 0, -half)
+	var ring: Array[Vector3] = [Vector3(w, 0, 0), Vector3(0, w, 0), Vector3(-w, 0, 0), Vector3(0, -w, 0)]
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	for i in 4:
+		var a := ring[i]
+		var b := ring[(i + 1) % 4]
+		_triangle(mesh, tip, a, b)
+		_triangle(mesh, tail, b, a)
+	mesh.surface_end()
+	return mesh
 
 ## Irregular geological chunks with face normals, not smoothly shaded balls.
 static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
