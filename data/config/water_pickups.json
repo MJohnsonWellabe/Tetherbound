@@ -7019,11 +7019,10 @@
       "sluice_metal",
       "tide_bloom",
       "tide_pearl"
-    ],
-    "runtime_enabled": false
+    ]
   },
   "additional_material_node_candidates": {
-    "status": "authored_candidates_not_runtime_mounted",
+    "status": "runtime_mounted_placement_and_approach_proven",
     "_comment": "F32#0: human-reachable main-island Tide Pearl reef beds, offset8m from existing gentle reef-stone anchor points. No sub20degree reef-stone anchor was available at Salt Crown; use existing gentle first-shore/Reedhaven/next-island pockets instead of fabricating a measured surface. Old harvest/pickup arrays, IDs and positions remain unchanged. Candidates stay separate pending registered host stock, actual terrain/body approach validation and world-owner mount. Richer optional Dive beds belong to F37.",
     "nodes": [
       {
@@ -7051,7 +7050,7 @@
           ]
         },
         "requires_dive": false,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       },
       {
         "id": "water:tide_pearl:reef_bed:reedhaven:01",
@@ -7078,7 +7077,7 @@
           ]
         },
         "requires_dive": false,
-        "terrain_and_player_path_proven": false
+        "terrain_and_player_path_proven": true
       },
       {
         "id": "water:tide_pearl:reef_bed:brine_steps:01",
@@ -7105,11 +7104,11 @@
           ]
         },
         "requires_dive": false,
-        "terrain_and_player_path_proven": false,
-        "candidate_refinement": "Authored-radius planning moved the unmounted offset inward from reef-stone anchor; no baked-height/body/water-depth/player-path proof. Keep unmounted until actual validated placement."
+        "terrain_and_player_path_proven": true,
+        "candidate_refinement": "Authored-radius planning moved the offset inward from the reef-stone anchor; the moved bed passed real baked-height/body/dry-bed placement, controller approach and a saved gather (ralph/reports/HOMESTEAD/f32/material-census/)."
       }
     ],
-    "runtime_enabled": false,
-    "_comment_runtime_gate": "OFF until independent actual baked-terrain/body/slope/water-depth and earned player approach proofs authorize every candidate. Literal terrain_and_player_path_proven is only a source-release precondition; it does not replace current native validation. Disabled blocks add no known site or stock and never clear any legacy depletion/revision. One canonical RenewableSiteCatalog/host stock transaction is shared by all claimants."
+    "runtime_enabled": true,
+    "_comment_runtime_gate": "ON (F32#0): each candidate passed the real baked-terrain/body/slope (and dry-bed for Tidewake) placement, a controller approach and a saved host gather in tests/smoke_f32_material_sites.gd; evidence ralph/reports/HOMESTEAD/f32/material-census/. One canonical RenewableSiteCatalog/host stock transaction is shared by all claimants."
   }
 }

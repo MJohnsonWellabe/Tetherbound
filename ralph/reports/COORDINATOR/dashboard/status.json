@@ -1,11 +1,10 @@
 {
-  "updated": "2026-10-04T19:00Z",
+  "updated": "2026-10-04T21:45Z",
   "headline": [
-    "Main green at a0f9e50b3: #525 (F17–F20, F21, F25/F35) and #526 (audit, board, STATE, F37 docs fix) landed.",
-    "Re-proof: 22 verdicts in. 5 re-proven met (F07#0, F17#1, F26#2, F37#3 after the #526 docs fix, plus one more), 16 failing; each failure has an owner.",
-    "Every earned save fixture is v27, which RD-35 refuses. Earned 'from save' re-proofs are blocked until a fresh v28 chain regenerates them (F49, after F18).",
-    "F32 unblocked: coordinator applied three fixes (Stormwood hub action fence, guest travel samples without portal flag, Cloudreach director registration). Co-op node contention passes (68 checks); Stormwood all five and Cloudreach three of four materials gather.",
-    "Render re-split (owner, 19:00): Claude lanes take anything Compatibility/Low proves on llvmpipe. New lane tb/visual-cloudreach takes F08#3/#4 and F40#4 from Codex. Codex keeps GPU-only work: Forward+ Medium/High, frame times, F21 live matrix, Ally package, Meshy."
+    "Main green with #529 (re-proof fixes, co-op/Stormwood/Cloudreach gathering, Cloudreach cloud sea) and #530 (F32 #0–#3/#5, F17 #2/#3/#5, F01#2). Met 66 → 82.",
+    "F18 portals (critical path) in progress: co-op waystone and Home Key arrival bugs fixed; Warden now points at Tidewake; legacy tests rewritten. Portal flag still OFF pending proofs.",
+    "Found and being fixed: the shipping Low preset clipped every realm's world at 320 m (fixed on tb/lookdev-low, next batch); the hammer quick-bar equip blocks the M1/earned chain (F17 lane, top priority).",
+    "v27 proof save rebuilt on v28 (spec-driven builder); about 15 two-peer re-proofs are re-running. The earned-run training losses were a harness gap (care basket skipped); the potion margin is zero, so a balance write-up is coming."
   ],
   "batches": [
     {
@@ -366,12 +365,12 @@
   "lanes": [
     {
       "lane": "tb/f17 (Claude)",
-      "now": "F17#2 circuit, #3 day/night services, #5 two-peer Hall agreement (266 PASS) passing on lane. Fixing F17#4 hammer equip and F01#2 day walk; #6 matrix ~60%.",
+      "now": "#2/#3/#5 landed. Top priority: hammer hotbar equip (blocks F17#4, F02, F01#4/#5). Then #0/#1/#6.",
       "next": "Re-prove the stale criteria on current code, then build the missing proof. F18 portals follow immediately."
     },
     {
       "lane": "tb/f21 (Claude)",
-      "now": "F21#4 camera: occluders dither-fade; 9-pair matrix 0 overlap, code-blind judge PASS (llvmpipe). Camera-ready SHA 61a6b5e4c sent to Codex for native matrix and Medium frame time.",
+      "now": "F21#4 judge PASS (in-container). F21#5 A/B after-hit sequences done; Medium frame time is on Codex GPU.",
       "next": "Fix camera occluders (trainer, foreground creatures), then the size matrix plus judge. F22 to F24 follow."
     },
     {
@@ -381,28 +380,38 @@
     },
     {
       "lane": "tb/f27 (Claude)",
-      "now": "Fixes: wild victory no longer stacks legacy XP; solo Altar spend no longer refused as stale. Applying F32 shed wiring in essence.gd.",
+      "now": "Two-peer essence no-dup smoke and essence node witness added; applying F32 shed wiring.",
       "next": "Real-path and two-peer proofs; route ledger. F28 and F30 follow."
     },
     {
-      "lane": "tb/f32 (Claude)",
-      "now": "#1 Forge plates, #3 type crops, #4 no-butchery lexicon and #5 co-op contention passing. #0 cloudberry sites unplaceable. #2 Meadows nodes being relocated off-route.",
-      "next": "Per-biome node census, real-path harvest and refining proofs; switch on the Forge recipes."
-    },
-    {
       "lane": "tb/reproof-fixes (Claude)",
-      "now": "New: fixing re-proof regressions F06#4 (remount into collider), F07#1 (courier thanks scope), F08#2 (stale negative control) and F03#3 (3 activity smokes).",
+      "now": "All four done (in #529). Now F01#6 tournament guest strikes and F04#4 Warden reach.",
       "next": "Each fix gets its own commit plus evidence; integrated in the next batch."
     },
     {
       "lane": "tb/visual-cloudreach (Claude)",
-      "now": "New: Cloudreach C2 visuals. The cloud-sea void, placeholder cliff silhouettes, perch-camera occlusion, and the Sky Aviary landmark. Compatibility renders plus code-blind judge.",
+      "now": "Grey void fixed (far-plane vista floor). Next: high-perch occlusion, companion in lens, cliffs, Sky Aviary.",
       "next": "Root-cause the cloud-sea void first, then scene-level fixes and re-judge."
     },
     {
       "lane": "tb/lookdev-low (Claude)",
-      "now": "New: F26 Low/Compatibility. Material census for village, Hall and four biomes; Low selectable and persistent; Low route captures with code-blind judge. No frame times.",
+      "now": "F26#0 Low half PASS (58/58 frames, zero errors), Low persists. Far-plane floor in every realm (320 m bug). Mirrored labels and Veilfall fog fixed. Re-judge pending.",
       "next": "Receipts beside Codex's Forward+ census in the same schema."
+    },
+    {
+      "lane": "tb/f22 (Claude)",
+      "now": "Enemy patterns and reader/masher: in progress.",
+      "next": "Coordinate pilot with the earned session; named fights with the fix lane."
+    },
+    {
+      "lane": "tb/fixture-regen (Claude)",
+      "now": "Done and archived: v28 proof save + spec builder + guard test; 3 proofs pass.",
+      "next": "Unblocks F09#4, F10#1, F11#1–#3, F15#0 and others."
+    },
+    {
+      "lane": "tb/f18 (Claude)",
+      "now": "Co-op waystone touch, co-op arrival slots, home-arch config, Warden→Tidewake, legacy tests rewritten; units green with flag ON.",
+      "next": "Net travel smoke, the earned-loop gather conflict check, then the flag flip."
     }
   ],
   "decisions": [

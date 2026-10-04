@@ -1,0 +1,4 @@
+{
+  "_comment": "Draw-distance floor (F26): graphics_prefs presets set the camera far to 320-900 m. The gameplay camera keeps at least this far plane, the scene's own authored value, so the Stormheart and far canopy stay in view. Kept out of stormwood_world.json because that file is a scatter/terrain bake input; a camera tunable must not stale the bake.",
+  "vista_far_floor_m": 9000.0
+}

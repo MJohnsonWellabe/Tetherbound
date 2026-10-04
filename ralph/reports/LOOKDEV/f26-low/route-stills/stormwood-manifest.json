@@ -1,0 +1,1765 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome_id": "stormwood",
+	"bound_player_character": "trainer",
+	"camera_rig": {
+		"class": "SpringArm3D",
+		"has_shape": true,
+		"instance_id": 408793647226,
+		"margin": 0.600000023841858,
+		"path": "CameraRig",
+		"spring_length": 5.19999980926514
+	},
+	"capture_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 408810424444,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D",
+		"source": "production CameraRig/Camera3D"
+	},
+	"capture_finished_utc": "2026-10-04T21:07:06",
+	"capture_started_utc": "2026-10-04T21:02:04",
+	"captured_frame_count": 6,
+	"catalogue": "res://data/config/debug_teleport_spots.json",
+	"complete": true,
+	"display_server": "X11",
+	"failures": [],
+	"fixture_disclosure": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+	"frames": [
+		{
+			"biome_id": "stormwood",
+			"bytes": 2829998,
+			"camera_player_distance_m": 5.82119703292847,
+			"camera_position": [
+				-299.073791503906,
+				35.1037330627441,
+				174.998687744141
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.983281254768372,
+					0.0,
+					-0.182089179754257
+				],
+				"basis_y": [
+					-0.037858497351408,
+					0.978147625923157,
+					0.204435810446739
+				],
+				"basis_z": [
+					0.178110226988792,
+					0.207911685109138,
+					-0.961794912815094
+				],
+				"origin": [
+					-300.0,
+					34.0225944519043,
+					180.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.983282029628754,
+					0.0000000615931767811162,
+					-0.182089522480965
+				],
+				"basis_y": [
+					-0.0378585159778595,
+					0.978147566318512,
+					0.204436004161835
+				],
+				"basis_z": [
+					0.178110420703888,
+					0.207911863923073,
+					-0.961794853210449
+				],
+				"origin": [
+					-299.073791503906,
+					35.1037330627441,
+					174.998687744141
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/stormwood/stormwood__route_00__day.png",
+			"frame_id": "stormwood__route_00__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373652_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-399.017028808594,
+						28.3036975860596,
+						222.777526855469
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373652_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-415.359893798828,
+						27.9538917541504,
+						263.369812011719
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373653_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-241.694030761719,
+						25.2162227630615,
+						255.845275878906
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373653_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-213.583770751953,
+						25.5616340637207,
+						245.744140625
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-385.842803955078,
+						28.7607479095459,
+						296.851287841797
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-363.903900146484,
+						29.7514991760254,
+						305.416900634766
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373658_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-206.488845825195,
+						25.5409126281738,
+						279.822662353516
+					],
+					"species_id": "voltwig"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 200.129912333333,
+				"hour": 8.00519649333333,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-300.0,
+				32.2725944519043,
+				180.0
+			],
+			"position_xz": [
+				-300.0,
+				180.0
+			],
+			"resolved_ground_y": 32.2715516626835,
+			"route_point": [
+				-300.0,
+				180.0
+			],
+			"route_point_index": 0,
+			"terrain_ground_y": 32.2715516626835,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -10.4914770434242,
+			"view_heading_xz": [
+				-0.182089254260063,
+				0.983282029628754
+			]
+		},
+		{
+			"biome_id": "stormwood",
+			"bytes": 2815351,
+			"camera_player_distance_m": 5.82120990753174,
+			"camera_position": [
+				-299.073791503906,
+				35.1037330627441,
+				174.998672485352
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.983280420303345,
+					0.0,
+					-0.182089030742645
+				],
+				"basis_y": [
+					-0.037858497351408,
+					0.978147625923157,
+					0.204435810446739
+				],
+				"basis_z": [
+					0.178110226988792,
+					0.207911685109138,
+					-0.961794912815094
+				],
+				"origin": [
+					-300.0,
+					34.0225944519043,
+					180.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.983281970024109,
+					0.0000000588808717338907,
+					-0.182089909911156
+				],
+				"basis_y": [
+					-0.037858571857214,
+					0.978147625923157,
+					0.204435870051384
+				],
+				"basis_z": [
+					0.17811082303524,
+					0.207911744713783,
+					-0.961794793605804
+				],
+				"origin": [
+					-299.073791503906,
+					35.1037330627441,
+					174.998672485352
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/stormwood/stormwood__route_00__night.png",
+			"frame_id": "stormwood__route_00__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373652_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-399.017028808594,
+						28.3036975860596,
+						222.777526855469
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373652_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-415.359893798828,
+						27.9538917541504,
+						263.369812011719
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373653_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-241.694030761719,
+						25.2162227630615,
+						255.845275878906
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373653_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-213.583770751953,
+						25.5616340637207,
+						245.744140625
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-385.842803955078,
+						28.7607479095459,
+						296.851287841797
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-363.903900146484,
+						29.7514991760254,
+						305.416900634766
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373658_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-206.488845825195,
+						25.5409126281738,
+						279.822662353516
+					],
+					"species_id": "voltwig"
+				}
+			],
+			"nearby_creatures_160m": 7,
+			"observed_clock": {
+				"elapsed_seconds": 575.149961,
+				"hour": 23.00599844,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-300.0,
+				32.2725944519043,
+				180.0
+			],
+			"position_xz": [
+				-300.0,
+				180.0
+			],
+			"resolved_ground_y": 32.2715516626835,
+			"route_point": [
+				-300.0,
+				180.0
+			],
+			"route_point_index": 0,
+			"terrain_ground_y": 32.2715516626835,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -10.4914770434242,
+			"view_heading_xz": [
+				-0.182089254260063,
+				0.983282029628754
+			]
+		},
+		{
+			"biome_id": "stormwood",
+			"bytes": 2973574,
+			"camera_player_distance_m": 5.8211555480957,
+			"camera_position": [
+				-346.848297119141,
+				34.6430130004883,
+				446.007843017578
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.784881472587585,
+					0.0,
+					-0.619643151760101
+				],
+				"basis_y": [
+					-0.128831297159195,
+					0.978147625923157,
+					0.163186341524124
+				],
+				"basis_z": [
+					0.606103539466858,
+					0.207911714911461,
+					-0.767731308937073
+				],
+				"origin": [
+					-350.0,
+					33.561882019043,
+					450.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.784882426261902,
+					-0.0000000105293187502298,
+					-0.619644820690155
+				],
+				"basis_y": [
+					-0.128831446170807,
+					0.978147625923157,
+					0.163186267018318
+				],
+				"basis_z": [
+					0.606104075908661,
+					0.207911744713783,
+					-0.767730832099915
+				],
+				"origin": [
+					-346.848297119141,
+					34.6430130004883,
+					446.007843017578
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/stormwood/stormwood__route_01__day.png",
+			"frame_id": "stormwood__route_01__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373685_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-374.230499267578,
+						29.4751510620117,
+						349.896301269531
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373685_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-380.209106445312,
+						30.1404895782471,
+						336.947784423828
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373689_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-497.495330810547,
+						27.2755374908447,
+						389.917236328125
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373690_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-337.937927246094,
+						29.683048248291,
+						430.568969726562
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373690_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-360.525665283203,
+						29.843713760376,
+						423.183258056641
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373686_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-255.780960083008,
+						25.7822494506836,
+						336.957489013672
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373691_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-212.77033996582,
+						27.2996120452881,
+						377.486724853516
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373691_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-219.495712280273,
+						26.0886631011963,
+						431.580871582031
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373718_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-407.389526367188,
+						31.1610984802246,
+						503.883361816406
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373718_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-410.654052734375,
+						30.4959774017334,
+						514.647338867188
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373723_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-358.522247314453,
+						27.8739013671875,
+						561.332397460938
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373723_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-385.052734375,
+						28.8349189758301,
+						569.548706054688
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-385.842803955078,
+						28.7607479095459,
+						296.851287841797
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-363.903900146484,
+						29.7514991760254,
+						305.416900634766
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373719_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-230.668685913086,
+						26.8296432495117,
+						476.594390869141
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373719_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-268.680328369141,
+						26.7722415924072,
+						448.365753173828
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373724_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-225.707397460938,
+						24.3746604919434,
+						548.56103515625
+					],
+					"species_id": "voltwig"
+				}
+			],
+			"nearby_creatures_160m": 17,
+			"observed_clock": {
+				"elapsed_seconds": 200.15,
+				"hour": 8.006,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-350.0,
+				31.811882019043,
+				450.0
+			],
+			"position_xz": [
+				-350.0,
+				450.0
+			],
+			"resolved_ground_y": 30.1609394717765,
+			"route_point": [
+				-350.0,
+				450.0
+			],
+			"route_point_index": 1,
+			"terrain_ground_y": 30.1609394717765,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -38.2901623457855,
+			"view_heading_xz": [
+				-0.619644284248352,
+				0.784882783889771
+			]
+		},
+		{
+			"biome_id": "stormwood",
+			"bytes": 2973083,
+			"camera_player_distance_m": 5.8211555480957,
+			"camera_position": [
+				-346.848297119141,
+				34.6430130004883,
+				446.007843017578
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.784881472587585,
+					0.0,
+					-0.619643151760101
+				],
+				"basis_y": [
+					-0.128831297159195,
+					0.978147625923157,
+					0.163186341524124
+				],
+				"basis_z": [
+					0.606103539466858,
+					0.207911714911461,
+					-0.767731308937073
+				],
+				"origin": [
+					-350.0,
+					33.561882019043,
+					450.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.784882366657257,
+					-0.0000000480596824559143,
+					-0.619644820690155
+				],
+				"basis_y": [
+					-0.128831461071968,
+					0.978147625923157,
+					0.163186237215996
+				],
+				"basis_z": [
+					0.606104075908661,
+					0.207911744713783,
+					-0.767730832099915
+				],
+				"origin": [
+					-346.848297119141,
+					34.6430130004883,
+					446.007843017578
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/stormwood/stormwood__route_01__night.png",
+			"frame_id": "stormwood__route_01__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373685_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-374.230499267578,
+						29.4751510620117,
+						349.896301269531
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373685_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-380.209106445312,
+						30.1404895782471,
+						336.947784423828
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373689_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-497.495330810547,
+						27.2755374908447,
+						389.917236328125
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373690_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-338.005737304688,
+						29.6856575012207,
+						430.503265380859
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_142373690_2",
+					"node_scale": [
+						0.999999225139618,
+						1.0,
+						0.999999225139618
+					],
+					"position": [
+						-362.367462158203,
+						29.8675765991211,
+						422.618041992188
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373686_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-255.780960083008,
+						25.7822494506836,
+						336.957489013672
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373691_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-212.77033996582,
+						27.2996120452881,
+						377.486724853516
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373691_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-219.495712280273,
+						26.0886631011963,
+						431.580871582031
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373718_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-407.389526367188,
+						31.1610984802246,
+						503.883361816406
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373718_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-410.654052734375,
+						30.4959774017334,
+						514.647338867188
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373723_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-358.522247314453,
+						27.8739013671875,
+						561.332397460938
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 2.8,
+					"body_radius_m": 0.98,
+					"node_path": "Wild_thundertunnel_142373723_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-385.052734375,
+						28.8349189758301,
+						569.548706054688
+					],
+					"species_id": "thundertunnel"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-385.842803955078,
+						28.7607479095459,
+						296.851287841797
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373657_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-363.903900146484,
+						29.7514991760254,
+						305.416900634766
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373719_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-230.668685913086,
+						26.8296432495117,
+						476.594390869141
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373719_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-268.680328369141,
+						26.7722415924072,
+						448.365753173828
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373724_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-225.707397460938,
+						24.3746604919434,
+						548.56103515625
+					],
+					"species_id": "voltwig"
+				}
+			],
+			"nearby_creatures_160m": 17,
+			"observed_clock": {
+				"elapsed_seconds": 575.131706666667,
+				"hour": 23.0052682666667,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-350.0,
+				31.811882019043,
+				450.0
+			],
+			"position_xz": [
+				-350.0,
+				450.0
+			],
+			"resolved_ground_y": 30.1609394717765,
+			"route_point": [
+				-350.0,
+				450.0
+			],
+			"route_point_index": 1,
+			"terrain_ground_y": 30.1609394717765,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -38.2901623457855,
+			"view_heading_xz": [
+				-0.619644284248352,
+				0.784882783889771
+			]
+		},
+		{
+			"biome_id": "stormwood",
+			"bytes": 3029044,
+			"camera_player_distance_m": 5.82119274139404,
+			"camera_position": [
+				-646.848266601562,
+				23.6597900390625,
+				826.0078125
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.784881472587585,
+					0.0,
+					-0.619643151760101
+				],
+				"basis_y": [
+					-0.128831297159195,
+					0.978147625923157,
+					0.163186341524124
+				],
+				"basis_z": [
+					0.606103539466858,
+					0.207911714911461,
+					-0.767731308937073
+				],
+				"origin": [
+					-650.0,
+					22.5786590576172,
+					830.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.784882307052612,
+					-0.00000018543572366525,
+					-0.619644820690155
+				],
+				"basis_y": [
+					-0.128831550478935,
+					0.978147625923157,
+					0.163186118006706
+				],
+				"basis_z": [
+					0.606104135513306,
+					0.207911714911461,
+					-0.767730832099915
+				],
+				"origin": [
+					-646.848266601562,
+					23.6597900390625,
+					826.0078125
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/stormwood/stormwood__route_02__day.png",
+			"frame_id": "stormwood__route_02__day",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603507_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-623.609069824219,
+						22.3279590606689,
+						911.934020996094
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603507_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-624.143859863281,
+						22.578763961792,
+						906.505187988281
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603508_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-614.543212890625,
+						23.5923404693604,
+						978.920043945312
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603508_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-618.472595214844,
+						23.0956249237061,
+						977.499572753906
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_1365603506_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-649.975036621094,
+						20.7993469238281,
+						845.27734375
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_1365603506_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-654.137939453125,
+						20.5570640563965,
+						844.037719726562
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373783_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-544.151306152344,
+						28.6724586486816,
+						710.473815917969
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373783_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-586.247619628906,
+						27.2395267486572,
+						703.746643066406
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373788_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-526.785339355469,
+						28.5676803588867,
+						743.302368164062
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373816_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-554.539306640625,
+						24.4057712554932,
+						849.027893066406
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373816_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-579.698486328125,
+						25.0813102722168,
+						825.602661132812
+					],
+					"species_id": "voltwig"
+				}
+			],
+			"nearby_creatures_160m": 11,
+			"observed_clock": {
+				"elapsed_seconds": 200.132081,
+				"hour": 8.00528324,
+				"requested": "day",
+				"time_of_day": "day"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-650.0,
+				20.8286590576172,
+				830.0
+			],
+			"position_xz": [
+				-650.0,
+				830.0
+			],
+			"resolved_ground_y": 20.8278471112251,
+			"route_point": [
+				-650.0,
+				830.0
+			],
+			"route_point_index": 2,
+			"terrain_ground_y": 20.8278471112251,
+			"time": "day",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -38.2901623457855,
+			"view_heading_xz": [
+				-0.619644284248352,
+				0.784882783889771
+			]
+		},
+		{
+			"biome_id": "stormwood",
+			"bytes": 3030216,
+			"camera_player_distance_m": 5.82119274139404,
+			"camera_position": [
+				-646.848266601562,
+				23.6600208282471,
+				826.0078125
+			],
+			"camera_rig_spring_length": 5.19999980926514,
+			"camera_rig_transform": {
+				"basis_x": [
+					-0.784881472587585,
+					0.0,
+					-0.619643151760101
+				],
+				"basis_y": [
+					-0.128831297159195,
+					0.978147625923157,
+					0.163186341524124
+				],
+				"basis_z": [
+					0.606103539466858,
+					0.207911714911461,
+					-0.767731308937073
+				],
+				"origin": [
+					-650.0,
+					22.5788898468018,
+					830.0
+				]
+			},
+			"camera_transform": {
+				"basis_x": [
+					-0.784882426261902,
+					-0.000000277993677855193,
+					-0.619644820690155
+				],
+				"basis_y": [
+					-0.128831565380096,
+					0.978147625923157,
+					0.163186013698578
+				],
+				"basis_z": [
+					0.606104075908661,
+					0.207911655306816,
+					-0.767730891704559
+				],
+				"origin": [
+					-646.848266601562,
+					23.6600208282471,
+					826.0078125
+				]
+			},
+			"debug_travel": true,
+			"file": "/tmp/claude-0/f26low/stills/stormwood/stormwood__route_02__night.png",
+			"frame_id": "stormwood__route_02__night",
+			"nearby_creature_records_160m": [
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603507_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-623.609069824219,
+						22.3279590606689,
+						911.934020996094
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603507_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-624.143859863281,
+						22.578763961792,
+						906.505187988281
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603508_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-614.543212890625,
+						23.5923404693604,
+						978.920043945312
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.4,
+					"body_radius_m": 1.19,
+					"node_path": "Wild_stormraven_1365603508_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-618.472595214844,
+						23.0956249237061,
+						977.499572753906
+					],
+					"species_id": "stormraven"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_1365603506_1",
+					"node_scale": [
+						0.99999988079071,
+						1.0,
+						0.99999988079071
+					],
+					"position": [
+						-649.935485839844,
+						20.7992630004883,
+						845.343322753906
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_1365603506_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-654.137939453125,
+						20.5570640563965,
+						844.037719726562
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373783_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-544.151306152344,
+						28.6724586486816,
+						710.473815917969
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373783_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-586.247619628906,
+						27.2395267486572,
+						703.746643066406
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373788_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-526.785339355469,
+						28.5676803588867,
+						743.302368164062
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373816_1",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-554.539306640625,
+						24.4057712554932,
+						849.027893066406
+					],
+					"species_id": "voltwig"
+				},
+				{
+					"body_height_m": 3.25,
+					"body_radius_m": 1.1375,
+					"node_path": "Wild_voltwig_142373816_2",
+					"node_scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"position": [
+						-579.698486328125,
+						25.0813102722168,
+						825.602661132812
+					],
+					"species_id": "voltwig"
+				}
+			],
+			"nearby_creatures_160m": 11,
+			"observed_clock": {
+				"elapsed_seconds": 575.132953,
+				"hour": 23.00531812,
+				"requested": "night",
+				"time_of_day": "night"
+			},
+			"player_character": "trainer",
+			"player_position": [
+				-650.0,
+				20.8288898468018,
+				830.0
+			],
+			"position_xz": [
+				-650.0,
+				830.0
+			],
+			"resolved_ground_y": 20.8278471112251,
+			"route_point": [
+				-650.0,
+				830.0
+			],
+			"route_point_index": 2,
+			"terrain_ground_y": 20.8278471112251,
+			"time": "night",
+			"trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+			"trainer_visible_intent": true,
+			"view_heading_deg": -38.2901623457855,
+			"view_heading_xz": [
+				-0.619644284248352,
+				0.784882783889771
+			]
+		}
+	],
+	"graphics_capture": {
+		"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "Low",
+		"renderer": "gl_compatibility",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "445098afaa092eb6dea28b4baa3deefb321cfc77"
+	},
+	"planned_frame_count": 6,
+	"planned_frame_ids": [
+		"stormwood__route_00__day",
+		"stormwood__route_00__night",
+		"stormwood__route_01__day",
+		"stormwood__route_01__night",
+		"stormwood__route_02__day",
+		"stormwood__route_02__night"
+	],
+	"player_character": "trainer",
+	"production_camera": {
+		"far": 320.0,
+		"fov": 70.0,
+		"instance_id": 408810424444,
+		"near": 0.0500000007450581,
+		"path": "CameraRig/Camera3D"
+	},
+	"rendering_method": "gl_compatibility",
+	"requested_times": [
+		"day",
+		"night"
+	],
+	"resolution": [
+		1920,
+		1080
+	],
+	"route": {
+		"_budget_scope": "Longest authored leg is about 484 m: about 5811 physics frames at the normal 5 m/s walk. Allow ordinary walking and detours; no speedup or teleport correction, with the unchanged route wall deadline.",
+		"description": "Authored Cinder Verge arrival to Ashfoot, with the real Surge state observed and reported; no phase pin or day/night override.",
+		"height_mode": "ground",
+		"leg_budget_frames": 9000.0,
+		"source": "res://data/config/stormwood_world.json ash_road",
+		"start": [
+			-300.0,
+			180.0
+		],
+		"waypoints": [
+			[
+				-350.0,
+				450.0
+			],
+			[
+				-650.0,
+				830.0
+			]
+		]
+	},
+	"route_stills_scope": "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim.",
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema_version": 1,
+	"subsets": []
+}

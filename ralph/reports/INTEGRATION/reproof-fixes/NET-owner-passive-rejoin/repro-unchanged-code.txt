@@ -1,0 +1,37 @@
+PASS: SETUP: peer 0 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 0 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
+PASS: SETUP: peer 1 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 1 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
+PASS: peer 0 hosts -- hosting udp/33581 as peer 1
+PASS: peer 1 joins -- joined 127.0.0.1:33581 as peer 440052449 after 46 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: the guest has a character id
+OP first-join guest={"acked":22.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"19a4b5f3f3d6367a373beffb6b01bae3","sequence":25.0} host_stream={"departed":false,"error":"","id":"19a4b5f3f3d6367a373beffb6b01bae3","peer":440052449.0,"sequence":26.0}
+PASS: first join: the guest's owner-passive stream is admitted by the host
+PASS: rejoin: guest leaves -- client left cleanly after 0 frames
+PASS: rejoin: host sees the guest gone -- registry reports 1 peer(s) after 5 frames (0.1 s)
+PASS: rejoin: guest rejoins -- joined 127.0.0.1:33581 as peer 1923149925 after 37 frames; snapshot applied; 2 peer(s) in registry
+PASS: rejoin: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: rejoin: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+OP after-rejoin guest={"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"018bbc466a6cfc2130bab9ad9bca85e3","sequence":239.0} host_stream={"departed":false,"error":"","id":"19a4b5f3f3d6367a373beffb6b01bae3","peer":440052449.0,"sequence":26.0}
+PASS: rejoin: the guest armed a new stream
+FAIL: rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)
+FAIL: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"018bbc466a6cfc2130bab9ad9bca85e3","sequence":249.0} -> {"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"018bbc466a6cfc2130bab9ad9bca85e3","sequence":553.0})
+PASS: conflict: guest leaves -- client left cleanly after 0 frames
+PASS: conflict: host sees the guest gone -- registry reports 1 peer(s) after 5 frames (0.1 s)
+PASS: conflict: FIXTURE the guest's live character diverges from the host's admitted one -- owned creature 0 level 8 -> 9 on this peer only
+PASS: conflict: guest rejoins -- joined 127.0.0.1:33581 as peer 599626908 after 41 frames; snapshot applied; 2 peer(s) in registry
+OP conflict guest={"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"4270304674f2a4e42b4b503bf8eaec3e","sequence":242.0} host_stream={"departed":false,"error":"","id":"19a4b5f3f3d6367a373beffb6b01bae3","peer":440052449.0,"sequence":26.0}
+PASS: conflict: the diverged stream is NOT admitted
+FAIL: conflict: the refusal reaches the guest with a reason, not silence ({"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"4270304674f2a4e42b4b503bf8eaec3e","sequence":242.0})
+FAIL: rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)
+FAIL: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"018bbc466a6cfc2130bab9ad9bca85e3","sequence":249.0} -> {"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"018bbc466a6cfc2130bab9ad9bca85e3","sequence":553.0})
+FAIL: conflict: the refusal reaches the guest with a reason, not silence ({"acked":0.0,"admission_pending":true,"admission_refused":"","armed":true,"error":"","id":"4270304674f2a4e42b4b503bf8eaec3e","sequence":242.0})
+- peer 0 (host) pid=26700 exited=true unexpected_exit=false
+- peer 1 (client) pid=26701 exited=true unexpected_exit=false
+FAILURES:
+- peer 0 (host) pid=26700 exited=true unexpected_exit=false
+- peer 1 (client) pid=26701 exited=true unexpected_exit=false
+FAILURES:
+exit=1 start=2026-10-04T21:50:33Z duration_s=327

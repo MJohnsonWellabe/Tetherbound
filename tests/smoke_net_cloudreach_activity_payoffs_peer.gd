@@ -180,6 +180,7 @@ func _cr_stand(args: Dictionary) -> Dictionary:
 	var player := _probe.call("player") as CharacterBody3D
 	if reward == null or player == null:
 		return {"verdict": "ERROR", "detail": "no couriers' thanks node or player here"}
+	_cr_listen()
 	player.global_position = reward.global_position + Vector3(1.0, 0.3, 0.0)
 	player.velocity = Vector3.ZERO
 	for i in maxi(1, int(args.get("settle", 30))):

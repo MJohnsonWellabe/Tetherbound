@@ -1555,9 +1555,13 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 	var named_id := str(opts.get("encounter_id", ""))
 	if not named_id.is_empty():
 		wild.set_meta(&"named_encounter_id", named_id)
-		var completion_reward: Variant = opts.get("completion_reward", {})
-		if completion_reward is Dictionary:
-			_configure_once_completion_reward(wild, {"completion_reward": completion_reward})
+	# Any named once-only wild's receipt, not only Stormwood's encounter-id
+	# ones: Burrow Warrens' Elder and guardian pass `once_id` and
+	# `completion_reward` without an `encounter_id`, and nested under it their
+	# receipts were never attached, so neither paid (re-proof F03-3).
+	var completion_reward: Variant = opts.get("completion_reward", {})
+	if completion_reward is Dictionary:
+		_configure_once_completion_reward(wild, {"completion_reward": completion_reward})
 	return wild
 
 

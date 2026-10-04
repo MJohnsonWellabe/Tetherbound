@@ -1,0 +1,58 @@
+SLOPE cloudreach Realm Gate Crag walkable=true slope_deg=4.8
+SLOPE cloudreach Galefoot Waycamp walkable=true slope_deg=0.0
+SLOPE cloudreach Three Bells Bridge walkable=true slope_deg=0.0
+SLOPE cloudreach Broken Skyroad Arch walkable=true slope_deg=0.0
+SLOPE cloudreach Windscar Beacon walkable=true slope_deg=0.0
+SLOPE cloudreach Windscar Flight Aerie walkable=true slope_deg=0.0
+SLOPE cloudreach Sky Shrine walkable=true slope_deg=0.0
+SLOPE cloudreach The High Perches walkable=true slope_deg=0.0
+SLOPE cloudreach Cliffhold walkable=true slope_deg=0.0
+SLOPE cloudreach Old Wind Observatory walkable=true slope_deg=0.0
+SLOPE cloudreach Summit Eyrie walkable=true slope_deg=6.5
+SLOPE cloudreach Stormward Overlook walkable=true slope_deg=0.0
+SLOPE meadows Grandpa's Village walkable=true slope_deg=0.0
+SLOPE meadows The South Bridge walkable=true slope_deg=14.7
+SLOPE meadows The Old Quarry walkable=true slope_deg=0.6
+SLOPE meadows The Burrow Warrens walkable=true slope_deg=4.1
+SLOPE meadows The Tether Relay walkable=true slope_deg=15.5
+SLOPE meadows Old Mill Crossing walkable=true slope_deg=13.8
+SLOPE meadows The Ironwood Grove walkable=true slope_deg=8.8
+SLOPE meadows The Ridgeline Watch walkable=true slope_deg=4.2
+SLOPE meadows Stronghold Approach walkable=true slope_deg=12.6
+SLOPE meadows Meadows Hall walkable=true slope_deg=10.9
+SLOPE stormwood The Struck Sentinel walkable=true slope_deg=3.1
+SLOPE stormwood Verge Rod Station walkable=true slope_deg=4.8
+SLOPE stormwood The Lantern Pools walkable=true slope_deg=2.4
+SLOPE stormwood Crown Overlook walkable=true slope_deg=5.2
+SLOPE stormwood Rodline Post walkable=true slope_deg=6.7
+SLOPE stormwood The Capacitor Grove walkable=true slope_deg=3.2
+SLOPE stormwood The Crown Arch walkable=true slope_deg=0.0
+SLOPE stormwood The Crown Heartstone walkable=true slope_deg=0.0
+SLOPE stormwood Lantern Hollow walkable=true slope_deg=3.0
+SLOPE stormwood The Fallen Giant walkable=true slope_deg=6.9
+SLOPE stormwood The Glass Field walkable=true slope_deg=8.8
+SLOPE stormwood The Stormheart Tree walkable=true slope_deg=4.2
+SLOPE water First Shore Welcome Beacon walkable=true slope_deg=0.9
+SLOPE water First Shore Horizon Stones walkable=true slope_deg=19.8
+SLOPE water Reedhaven Woven Hall walkable=true slope_deg=0.6
+SLOPE water Reedhaven Root Walk walkable=true slope_deg=11.3
+SLOPE water The Tidal Stairstones walkable=true slope_deg=2.9
+SLOPE water Brine Steps East Beach walkable=true slope_deg=6.1
+SLOPE water Shellwatch Rescue Jetty walkable=true slope_deg=3.6
+SLOPE water Shellwatch Cradle Beach walkable=true slope_deg=6.1
+SLOPE water Aquaryn Tidal Basin walkable=true slope_deg=1.1
+SLOPE water Tidal Cradle Saddle Camp walkable=false slope_deg=46.8
+SLOPE water Salt Crown Tide Shrine walkable=true slope_deg=4.2
+SLOPE water Salt Crown Return Bell walkable=true slope_deg=27.2
+SLOPE water Sluice Isle Twin Pumps walkable=true slope_deg=1.3
+SLOPE water Sluice Channel Bridge walkable=true slope_deg=7.0
+SLOPE water The Veilfall Cascade walkable=true slope_deg=2.1
+SLOPE water Veilfall Mountain Crown walkable=true slope_deg=0.0
+SLOPE water Lantern Cove Drift Arch walkable=true slope_deg=2.7
+SLOPE water Lantern Cove Beach walkable=true slope_deg=6.1
+SLOPE water Gull Rest Signal Spire walkable=true slope_deg=1.6
+SLOPE water Gull Rest Beach walkable=true slope_deg=6.1
+SLOPE water Drowned Garden Terraces walkable=true slope_deg=6.0
+SLOPE water Drowned Garden Beach walkable=true slope_deg=6.1
+SLOPE water Deep Watch Lookout walkable=true slope_deg=1.6
+SLOPE water Deep Watch Beach walkable=true slope_deg=6.1

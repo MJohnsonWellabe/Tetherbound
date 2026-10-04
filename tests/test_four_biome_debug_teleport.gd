@@ -259,8 +259,10 @@ func test_stormwood_occupied_landmarks_use_authored_approach_arrivals() -> void:
 			"position": [-604.0, 772.0], "heading": -38.4,
 			"occupied_seat": Vector2(-650.0, 830.0), "minimum_clearance": 70.0,
 		},
+		# Crown-floor side: the former (459, 2700) west-side spot lies on the
+		# Crown's 76-80 degree outer wall (re-proof, F26 Low hollow_crown__07).
 		"The Crown Arch": {
-			"position": [459.0, 2700.0], "heading": 90.0,
+			"position": [511.0, 2700.0], "heading": -90.0,
 			"occupied_seat": Vector2(485.0, 2700.0), "minimum_clearance": 25.0,
 		},
 		"The Crown Heartstone": {

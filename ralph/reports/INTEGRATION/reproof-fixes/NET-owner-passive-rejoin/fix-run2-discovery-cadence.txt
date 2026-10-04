@@ -1,0 +1,32 @@
+PASS: SETUP: peer 0 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 0 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
+PASS: SETUP: peer 1 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 1 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
+PASS: peer 0 hosts -- hosting udp/29301 as peer 1
+PASS: peer 1 joins -- joined 127.0.0.1:29301 as peer 1608592977 after 29 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: the guest has a character id
+OP first-join guest={"acked":9.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"c55f84983781dee218adb596e4af0c39","sequence":13.0} host_stream={"departed":false,"error":"","id":"c55f84983781dee218adb596e4af0c39","peer":1608592977.0,"sequence":13.0}
+PASS: first join: the guest's owner-passive stream is admitted by the host
+PASS: rejoin: guest leaves -- client left cleanly after 0 frames
+PASS: rejoin: host sees the guest gone -- registry reports 1 peer(s) after 5 frames (0.1 s)
+PASS: rejoin: guest rejoins -- joined 127.0.0.1:29301 as peer 1964552222 after 25 frames; snapshot applied; 2 peer(s) in registry
+PASS: rejoin: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: rejoin: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+OP after-rejoin guest={"acked":0.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"f8e0daab6ea7f1e1f862ed9bfe38955f","sequence":13.0} host_stream={"departed":false,"error":"discovery_cadence","id":"f8e0daab6ea7f1e1f862ed9bfe38955f","peer":1964552222.0,"sequence":1.0}
+PASS: rejoin: the guest armed a new stream
+PASS: rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)
+FAIL: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":0.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"f8e0daab6ea7f1e1f862ed9bfe38955f","sequence":14.0} -> {"acked":0.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"f8e0daab6ea7f1e1f862ed9bfe38955f","sequence":279.0})
+PASS: conflict: guest leaves -- client left cleanly after 0 frames
+PASS: conflict: host sees the guest gone -- registry reports 1 peer(s) after 10 frames (0.2 s)
+PASS: conflict: FIXTURE the guest's live character diverges from the host's admitted one -- owned creature 0 level 8 -> 9 on this peer only
+PASS: conflict: guest rejoins -- joined 127.0.0.1:29301 as peer 839799359 after 33 frames; snapshot applied; 2 peer(s) in registry
+OP conflict guest={"acked":0.0,"admission_pending":true,"admission_refused":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","armed":true,"error":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","id":"0ee56b89f891743e9d8498761ca1751d","sequence":8.0} host_stream={}
+PASS: conflict: the diverged stream is NOT admitted
+PASS: conflict: the refusal reaches the guest with a reason, not silence ({"acked":0.0,"admission_pending":true,"admission_refused":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","armed":true,"error":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","id":"0ee56b89f891743e9d8498761ca1751d","sequence":8.0})
+FAIL: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":0.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"f8e0daab6ea7f1e1f862ed9bfe38955f","sequence":14.0} -> {"acked":0.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"f8e0daab6ea7f1e1f862ed9bfe38955f","sequence":279.0})
+- peer 0 (host) pid=29366 exited=true unexpected_exit=false
+- peer 1 (client) pid=29367 exited=true unexpected_exit=false
+FAILURES:
+exit=1 start=2026-10-04T22:09:55Z duration_s=319

@@ -206,8 +206,22 @@
     0.15,
     -15
   ],
+  "interior_ambient": {
+    "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
+    "night_ambient": 0.25
+  },
+  "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
+  "interior_lights": [
+    {"at": [-6.4, 3.4, -6], "yaw_deg": 90},
+    {"at": [6.4, 3.4, -6], "yaw_deg": -90},
+    {"at": [-6.4, 3.4, 0], "yaw_deg": 90},
+    {"at": [6.4, 3.4, 0], "yaw_deg": -90},
+    {"at": [-6.4, 3.4, 6], "yaw_deg": 90},
+    {"at": [6.4, 3.4, 6], "yaw_deg": -90}
+  ],
   "frontage": {
     "_why": "F17 destination r1 DAY NO/NIGHT NO: complete the installed central gable/clerestory at the existing road-facing end, identify the public threshold and put warm practical fixtures on that real facade. Native module scale; no new floor/collider, entrance, route or camera changes.",
+    "_why_tower": "F17#1/#6 code-blind judges: the Hall read as the road's end only because of the layout and was barely taller than the inn. A stone crossing tower (installed MegaKit UnevenBrick walls, 4x4 round-tile roof, brick gables) rises over the nave entrance to about 17.5 m so the Hall is the tallest village roofline and a stone mass against the timber houses. Visual only: no floor, collider, entrance or route change.",
     "modules": [
       {
         "module": "Wall_Plaster_Window_Wide_Flat",
@@ -235,8 +249,28 @@
           -15
         ],
         "yaw_deg": 180
-      }
+      },
+      {"module": "Wall_UnevenBrick_Straight", "at": [-1, 9.36, -13], "yaw_deg": 180},
+      {"module": "Wall_UnevenBrick_Straight", "at": [-1, 9.36, -9], "yaw_deg": 0},
+      {"module": "Wall_UnevenBrick_Straight", "at": [1, 9.36, -13], "yaw_deg": 180},
+      {"module": "Wall_UnevenBrick_Straight", "at": [1, 9.36, -9], "yaw_deg": 0},
+      {"module": "Wall_UnevenBrick_Straight", "at": [-2, 9.36, -12], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Straight", "at": [2, 9.36, -12], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Straight", "at": [-2, 9.36, -10], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Straight", "at": [2, 9.36, -10], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [-1, 12.48, -13], "yaw_deg": 180},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [-1, 12.48, -9], "yaw_deg": 0},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [1, 12.48, -13], "yaw_deg": 180},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [1, 12.48, -9], "yaw_deg": 0},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [-2, 12.48, -12], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [2, 12.48, -12], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [-2, 12.48, -10], "yaw_deg": 90},
+      {"module": "Wall_UnevenBrick_Window_Wide_Flat", "at": [2, 12.48, -10], "yaw_deg": 90},
+      {"module": "Roof_RoundTiles_4x4", "at": [0, 15.6, -11], "yaw_deg": 0},
+      {"module": "Roof_Front_Brick4", "at": [0, 15.6, -13], "yaw_deg": 180},
+      {"module": "Roof_Front_Brick4", "at": [0, 15.6, -9], "yaw_deg": 0}
     ],
+    "retint": {"MI_RoundTiles": {"color": "#6f7884", "texture": "res://assets/buildings/quaternius_medieval/T_RockTrim_BaseColor.png"}, "MI_WindowGlass": {"color": "#f0c684", "emission": "#f0c684", "energy": 0.85}},
     "sign": {
       "text": "CROSSING HALL",
       "at": [
