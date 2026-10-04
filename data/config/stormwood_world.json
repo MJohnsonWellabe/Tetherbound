@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "camera": {"_comment": "Draw-distance floor (F26): graphics_prefs presets set the camera far to 320-900 m. The gameplay camera keeps at least this far plane, the scene's own authored value, so the Stormheart and far canopy stay in view.", "vista_far_floor_m": 9000.0},
   "_comment": "Root-authored six-region layout. All positions are realm-local metres. Ordinary routes never enter the Glass Sink. The Crown has only a linked-arch entry. The Stormheart Tree is the Dynamo and must dominate neighbouring views. A `spur` route is one dead-end pocket's own lane: it leaves the road it `joins` and ends at the mouth of `pocket_id` (stormwood_pockets.json). The forest bake keeps every collider out of its corridor, like any route, but plants no roadside stand along it.",
   "realm": {"id": "stormwood", "display_name": "The Stormwood", "world_bounds": {"min_x": -2560, "max_x": 2048, "min_y": -100, "max_y": 360, "min_z": 0, "max_z": 6144}},
   "transition_points": {
