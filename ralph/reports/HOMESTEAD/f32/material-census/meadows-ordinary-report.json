@@ -472,7 +472,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -490,7 +490,7 @@
 					"script": "res://scripts/combat/combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"local_peer_id": 1,
 				"realm": "meadows",
@@ -516,7 +516,7 @@
 				"realm": "meadows",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.68681334820576,
+				"retained_seed_roll": 0.349456887459382,
 				"source_available": true,
 				"source_definition": {
 					"amount": 4,
@@ -548,7 +548,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"id": "order:0",
 			"lifecycle_before": {
@@ -561,13 +561,13 @@
 				"equipped_tool": "axe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"party_signature": "4d59d1a7a1aa3d80177c20b70c238a8b5785eb39dda2121acf5393684282e21a",
 				"passive_clock_active": true,
 				"realm": "meadows",
-				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"session_epoch": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+				"world_instance_id": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -577,7 +577,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "b38349b38532a16a566be0ec723623b16da76e6fec55d3c1491c3143172094be",
+				"action_id": "2976b7ed396b4612c206e0b62a6b36d4d298d155f2b4393a62b7f86d7c104cb0",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -653,10 +653,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 34.1836597435176,
+							"distance_m_together": 34.1013326048851,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9902083333333,
+							"happiness": 54.9908333333333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -679,7 +679,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9281944444444,
+							"nourishment": 69.9327777777778,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -691,7 +691,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -709,7 +709,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -748,7 +748,7 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c"
 						],
 						"waystones_activated": {}
 					},
@@ -825,10 +825,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 34.1836597435176,
+							"distance_m_together": 34.1013326048851,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9902083333333,
+							"happiness": 54.9908333333333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -851,7 +851,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9281944444444,
+							"nourishment": 69.9327777777778,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -863,7 +863,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -881,7 +881,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -926,7 +926,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 2,
-				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"delivery_id": "creature_training:61d579f66b53286e7930d2d41b0a2947ff629e23a8805c50c8c6c2e5d6045f78",
 				"host_context": {
 					"actor_realm": "meadows",
 					"character_id": "f32-site-owner",
@@ -940,7 +940,7 @@
 					"realm": "meadows",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.68681334820576,
+					"retained_seed_roll": 0.349456887459382,
 					"source_available": true,
 					"source_definition": {
 						"amount": 4,
@@ -972,25 +972,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+					"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "e7f2ef58a2e442f2702d1a6efdd88dea",
+						"action_id": "32e43a423b0bf92a6e9f9010c83d900f",
 						"expected_stock_revision": 0,
 						"site_id": "order:0"
 					}
 				},
 				"journal_revision": 1,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"receipt": "craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+				"session_id": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"source_key": "resource:meadows:order:0",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -998,7 +998,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "e7f2ef58a2e442f2702d1a6efdd88dea",
+				"action_id": "32e43a423b0bf92a6e9f9010c83d900f",
 				"verdict": {
 					"character_revision": 2,
 					"durable": true,
@@ -1006,7 +1006,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
+					"receipt": "craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
 					"resolved": true,
 					"saved": true,
 					"settled": true
@@ -1022,7 +1022,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -1040,7 +1040,7 @@
 					"script": "res://scripts/combat/combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"local_peer_id": 1,
 				"realm": "meadows",
@@ -1066,7 +1066,7 @@
 				"realm": "meadows",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.468587031355128,
+				"retained_seed_roll": 0.455307801254094,
 				"source_available": true,
 				"source_definition": {
 					"_why_d1": "BAND1-D1. Second corridor stop, roughly midway between the pond and South Bridge, paired with the trail_camp prop cluster (props.json order 1000) at the same bend -- a reason to slow down that lands with the rest stop rather than in open field. tools/_probe_band1_cadence.py: ~30m lateral from the spine.",
@@ -1099,7 +1099,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"id": "order:1003",
 			"lifecycle_before": {
@@ -1112,13 +1112,13 @@
 				"equipped_tool": "pickaxe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"party_signature": "4d59d1a7a1aa3d80177c20b70c238a8b5785eb39dda2121acf5393684282e21a",
 				"passive_clock_active": true,
 				"realm": "meadows",
-				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"session_epoch": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+				"world_instance_id": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -1128,7 +1128,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "13dab90ced8a40456116e218e2f42e0cabf36ee0cb325a56b88f77df989f56df",
+				"action_id": "39dd052a5a31e91df338bc0edcfeba531798bb52a4ba8a570e6e80b2f2588119",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -1208,10 +1208,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 39.2838297151029,
+							"distance_m_together": 39.4519688636065,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9819583333333,
+							"happiness": 54.981875,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1234,7 +1234,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8676944444444,
+							"nourishment": 69.8670833333333,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1246,7 +1246,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -1264,7 +1264,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1303,8 +1303,8 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5"
 						],
 						"waystones_activated": {}
 					},
@@ -1385,10 +1385,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 39.2838297151029,
+							"distance_m_together": 39.4519688636065,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9819583333333,
+							"happiness": 54.981875,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1411,7 +1411,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8676944444444,
+							"nourishment": 69.8670833333333,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1423,7 +1423,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -1441,7 +1441,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1480,7 +1480,7 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c"
 						],
 						"waystones_activated": {}
 					},
@@ -1488,7 +1488,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 5,
-				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"delivery_id": "creature_training:61d579f66b53286e7930d2d41b0a2947ff629e23a8805c50c8c6c2e5d6045f78",
 				"host_context": {
 					"actor_realm": "meadows",
 					"character_id": "f32-site-owner",
@@ -1502,7 +1502,7 @@
 					"realm": "meadows",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.468587031355128,
+					"retained_seed_roll": 0.455307801254094,
 					"source_available": true,
 					"source_definition": {
 						"_why_d1": "BAND1-D1. Second corridor stop, roughly midway between the pond and South Bridge, paired with the trail_camp prop cluster (props.json order 1000) at the same bend -- a reason to slow down that lands with the rest stop rather than in open field. tools/_probe_band1_cadence.py: ~30m lateral from the spine.",
@@ -1535,25 +1535,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+					"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "519cdcd014faa39fa820d25814e903ba",
+						"action_id": "dd6bf285d0e2ea11d2f4b555842ed5b0",
 						"expected_stock_revision": 0,
 						"site_id": "order:1003"
 					}
 				},
 				"journal_revision": 2,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
-				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"receipt": "craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
+				"session_id": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"source_key": "resource:meadows:order:1003",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -1561,7 +1561,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "519cdcd014faa39fa820d25814e903ba",
+				"action_id": "dd6bf285d0e2ea11d2f4b555842ed5b0",
 				"verdict": {
 					"character_revision": 5,
 					"durable": true,
@@ -1569,23 +1569,23 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
+					"receipt": "craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(369.9965, -0.679641, 941.5498)",
+			"walk_end": "(369.9964, -0.679668, 941.5497)",
 			"walk_start": "(370.0, -0.0134, 946.0)",
-			"walked_metres": 4.45019626617432
+			"walked_metres": 4.45031881332397
 		},
 		{
 			"accepted_disk_gather": true,
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -1603,7 +1603,7 @@
 					"script": "res://scripts/combat/combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"local_peer_id": 1,
 				"realm": "meadows",
@@ -1629,7 +1629,7 @@
 				"realm": "meadows",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.631836133543402,
+				"retained_seed_roll": 0.11057579703629,
 				"source_available": true,
 				"source_definition": {
 					"_why_gate_a": "Gate A natural paid-build evidence: an ordinary meadow-grass stop beside the open spine between the village and the pond route, far enough off the dirt to reward a short gathering detour without obstructing the critical trail. Together with the later pond-approach stop, this closes the fresh-session fiber shortfall without changing yields, costs, vendors, or global vegetation. Position is ground-probed and TUNABLE.",
@@ -1662,7 +1662,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"id": "order:1000",
 			"lifecycle_before": {
@@ -1675,13 +1675,13 @@
 				"equipped_tool": "knife",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"party_signature": "4d59d1a7a1aa3d80177c20b70c238a8b5785eb39dda2121acf5393684282e21a",
 				"passive_clock_active": true,
 				"realm": "meadows",
-				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"session_epoch": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+				"world_instance_id": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -1691,7 +1691,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "66dd8b88118cf0ce708456d296ad4c5ce7085a2d6552df8a063a1ca8f96b1255",
+				"action_id": "595a18610e63607fb53c21c0906c3e03c8765ac51d5404d2fb6581d8c19e3f03",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -1775,10 +1775,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 44.3785491548479,
+							"distance_m_together": 44.2543539553881,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.97425,
+							"happiness": 54.9740416666666,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1801,7 +1801,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8111666666666,
+							"nourishment": 69.8096388888888,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1813,7 +1813,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -1831,7 +1831,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1870,9 +1870,9 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
-							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
+							"craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe"
 						],
 						"waystones_activated": {}
 					},
@@ -1957,10 +1957,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 44.3785491548479,
+							"distance_m_together": 44.2543539553881,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.97425,
+							"happiness": 54.9740416666666,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1983,7 +1983,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8111666666666,
+							"nourishment": 69.8096388888888,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1995,7 +1995,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -2013,7 +2013,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2052,8 +2052,8 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5"
 						],
 						"waystones_activated": {}
 					},
@@ -2061,7 +2061,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 8,
-				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"delivery_id": "creature_training:61d579f66b53286e7930d2d41b0a2947ff629e23a8805c50c8c6c2e5d6045f78",
 				"host_context": {
 					"actor_realm": "meadows",
 					"character_id": "f32-site-owner",
@@ -2075,7 +2075,7 @@
 					"realm": "meadows",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.631836133543402,
+					"retained_seed_roll": 0.11057579703629,
 					"source_available": true,
 					"source_definition": {
 						"_why_gate_a": "Gate A natural paid-build evidence: an ordinary meadow-grass stop beside the open spine between the village and the pond route, far enough off the dirt to reward a short gathering detour without obstructing the critical trail. Together with the later pond-approach stop, this closes the fresh-session fiber shortfall without changing yields, costs, vendors, or global vegetation. Position is ground-probed and TUNABLE.",
@@ -2108,25 +2108,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+					"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "0277b8bc52559a07d2daecab0df05b4d",
+						"action_id": "f367925aef607790657f3e93dd2a5cfa",
 						"expected_stock_revision": 0,
 						"site_id": "order:1000"
 					}
 				},
 				"journal_revision": 3,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
-				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"receipt": "craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe",
+				"session_id": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"source_key": "resource:meadows:order:1000",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -2134,7 +2134,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "0277b8bc52559a07d2daecab0df05b4d",
+				"action_id": "f367925aef607790657f3e93dd2a5cfa",
 				"verdict": {
 					"character_revision": 8,
 					"durable": true,
@@ -2142,23 +2142,23 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
+					"receipt": "craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(-5.003079, -2.979703, 142.591)",
+			"walk_end": "(-5.003143, -2.979699, 142.591)",
 			"walk_start": "(-5.0, -2.907463, 147.0)",
-			"walked_metres": 4.4089822769165
+			"walked_metres": 4.40899753570557
 		},
 		{
 			"accepted_disk_gather": true,
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -2176,7 +2176,7 @@
 					"script": "res://scripts/combat/combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"local_peer_id": 1,
 				"realm": "meadows",
@@ -2202,7 +2202,7 @@
 				"realm": "meadows",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.0810394508298486,
+				"retained_seed_roll": 0.621039706515148,
 				"source_available": true,
 				"source_definition": {
 					"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
@@ -2236,7 +2236,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"id": "order:12",
 			"lifecycle_before": {
@@ -2249,13 +2249,13 @@
 				"equipped_tool": "pickaxe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"party_signature": "4d59d1a7a1aa3d80177c20b70c238a8b5785eb39dda2121acf5393684282e21a",
 				"passive_clock_active": true,
 				"realm": "meadows",
-				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"session_epoch": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+				"world_instance_id": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -2265,7 +2265,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "c2fa2a06701b1bdd646f06e2f58ca2dd5e828226cc4a2c6e91dfa06e042ed79d",
+				"action_id": "4c3c9aefc9aad20ee73084cfef2e8bab1d9b7c29577a63f9b2a2c63119a46890",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -2352,10 +2352,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 49.7306182943285,
+							"distance_m_together": 50.3106878548861,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9670416666667,
+							"happiness": 54.9664583333333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2378,7 +2378,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7583055555555,
+							"nourishment": 69.7540277777777,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2390,7 +2390,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -2408,7 +2408,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2447,10 +2447,10 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
-							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
-							"craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
+							"craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe",
+							"craft:f32-site-owner:f32:417b03a0587563a091eeb406bbe8f7e0f56fbf352f7e4bd978450527b02b303e"
 						],
 						"waystones_activated": {}
 					},
@@ -2539,10 +2539,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 49.7306182943285,
+							"distance_m_together": 50.3106878548861,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9670416666667,
+							"happiness": 54.9664583333333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2565,7 +2565,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7583055555555,
+							"nourishment": 69.7540277777777,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2577,7 +2577,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -2595,7 +2595,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2634,9 +2634,9 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
-							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
+							"craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe"
 						],
 						"waystones_activated": {}
 					},
@@ -2644,7 +2644,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 11,
-				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"delivery_id": "creature_training:61d579f66b53286e7930d2d41b0a2947ff629e23a8805c50c8c6c2e5d6045f78",
 				"host_context": {
 					"actor_realm": "meadows",
 					"character_id": "f32-site-owner",
@@ -2658,7 +2658,7 @@
 					"realm": "meadows",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.0810394508298486,
+					"retained_seed_roll": 0.621039706515148,
 					"source_available": true,
 					"source_definition": {
 						"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five rootstone deposits below move by the same uniform (+377,+1642) offset as the quarry itself (old anchor (23,158) -> new (400,1800), see old_quarry.json), preserving their relative layout on the quarry floor exactly.",
@@ -2692,25 +2692,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+					"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "d4bcfc848db24b5caa661ecc8dd8a2ff",
+						"action_id": "026af84dafd4b06b752ddc43e6cd9a0d",
 						"expected_stock_revision": 0,
 						"site_id": "order:12"
 					}
 				},
 				"journal_revision": 4,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930",
-				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"receipt": "craft:f32-site-owner:f32:417b03a0587563a091eeb406bbe8f7e0f56fbf352f7e4bd978450527b02b303e",
+				"session_id": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"source_key": "resource:meadows:order:12",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -2718,7 +2718,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "d4bcfc848db24b5caa661ecc8dd8a2ff",
+				"action_id": "026af84dafd4b06b752ddc43e6cd9a0d",
 				"verdict": {
 					"character_revision": 11,
 					"durable": true,
@@ -2726,7 +2726,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930",
+					"receipt": "craft:f32-site-owner:f32:417b03a0587563a091eeb406bbe8f7e0f56fbf352f7e4bd978450527b02b303e",
 					"resolved": true,
 					"saved": true,
 					"settled": true
@@ -2742,7 +2742,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -2760,7 +2760,7 @@
 					"script": "res://scripts/combat/combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-959df38e506c53cf304afd4b79eae54b"
+					"creature-324fe3fa8721bc44ee665707564c11ab"
 				],
 				"local_peer_id": 1,
 				"realm": "meadows",
@@ -2786,7 +2786,7 @@
 				"realm": "meadows",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.280071379849687,
+				"retained_seed_roll": 0.865523816319183,
 				"source_available": true,
 				"source_definition": {
 					"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-357,2610), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+63,+140) -- and then were RE-ARRANGED, because the blind visual pass found what a uniform translation had done: one ironwood stood inside the knoll, and three more stood in the doorway corridor, the nearest 8.5m dead in front of the mouth. The frame the critic saw was a full-canopy red tree filling the cave entrance. They are now a stand ringing the site at 34-46m, 26m or more off the doorway axis and outside the authored clearing, so the player walks past ironwood on the way in instead of through it.",
@@ -2819,7 +2819,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"id": "order:17",
 			"lifecycle_before": {
@@ -2832,13 +2832,13 @@
 				"equipped_tool": "axe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "15e0b5ce94ec00176d2a87e6ada59bdef9e0441f7acb1aee7ff02c3a273d7ece",
+				"party_signature": "4d59d1a7a1aa3d80177c20b70c238a8b5785eb39dda2121acf5393684282e21a",
 				"passive_clock_active": true,
 				"realm": "meadows",
-				"session_epoch": "30c235b8f39e8f36004be09993c890a7",
+				"session_epoch": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "88423ee2c57a1ea556c855333053d940"
+				"world_instance_id": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -2848,7 +2848,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "f7db47398a58fe2b0ccb478af221898723c271d4472db823ecb33232e28c0d28",
+				"action_id": "613b221857468f4a7b6565cda79e6db84277f7193ae377304a4c89c91497c202",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -2938,10 +2938,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 55.0712380968034,
+							"distance_m_together": 55.6883550733328,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9582916666667,
+							"happiness": 54.9581226483333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2964,7 +2964,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.6941388888888,
+							"nourishment": 69.692899421111,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2976,7 +2976,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -2994,7 +2994,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -3033,11 +3033,11 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
-							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
-							"craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930",
-							"craft:f32-site-owner:f32:8b2a5978fc333901ce66d5ce631b490b78987b6ccbf2c849a5261e6df39b1a27"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
+							"craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe",
+							"craft:f32-site-owner:f32:417b03a0587563a091eeb406bbe8f7e0f56fbf352f7e4bd978450527b02b303e",
+							"craft:f32-site-owner:f32:29ca2c502d2ee36c51a00957f54c8bfd9de31d56405077162c23170ad7402df6"
 						],
 						"waystones_activated": {}
 					},
@@ -3129,10 +3129,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 55.0712380968034,
+							"distance_m_together": 55.6883550733328,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9582916666667,
+							"happiness": 54.9581226483333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -3155,7 +3155,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.6941388888888,
+							"nourishment": 69.692899421111,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -3167,7 +3167,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-959df38e506c53cf304afd4b79eae54b",
+							"uid": "creature-324fe3fa8721bc44ee665707564c11ab",
 							"xp": 0
 						}
 					],
@@ -3185,7 +3185,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-959df38e506c53cf304afd4b79eae54b": {
+							"creature-324fe3fa8721bc44ee665707564c11ab": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -3224,10 +3224,10 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:1709b68e9bca1dbc9c5b3dd4b0ae3e090e1280d607387acabe782fc9a124350e",
-							"craft:f32-site-owner:f32:86712585fe4993dd11f08f802e6e19b03ead958fdafbd11c3df0688ee0c15fd9",
-							"craft:f32-site-owner:f32:84af80fa4c379981e4c5199ab92c818a0c06e66dcb1b062b7e81248352f6b006",
-							"craft:f32-site-owner:f32:684277acf0fc9576681c5763ba30ad1b457029cafa5c324553e001a1226b3930"
+							"craft:f32-site-owner:f32:42277fc58a20dc48336c092002d216bef10bb6b3baca05ad4d734241252c9a0c",
+							"craft:f32-site-owner:f32:c90ae309b686977c2a1c5bbb2db92e9e17fd176a2c2011997bdb949d033c33a5",
+							"craft:f32-site-owner:f32:016621d39e85a734379724fb1e696a2d1b472b0d1047925b7bd4f966255165fe",
+							"craft:f32-site-owner:f32:417b03a0587563a091eeb406bbe8f7e0f56fbf352f7e4bd978450527b02b303e"
 						],
 						"waystones_activated": {}
 					},
@@ -3235,7 +3235,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 14,
-				"delivery_id": "creature_training:201ae0e7103343d47e560fa01a023bb7f99937d5eeae7571056c2c366b30f12a",
+				"delivery_id": "creature_training:61d579f66b53286e7930d2d41b0a2947ff629e23a8805c50c8c6c2e5d6045f78",
 				"host_context": {
 					"actor_realm": "meadows",
 					"character_id": "f32-site-owner",
@@ -3249,7 +3249,7 @@
 					"realm": "meadows",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.280071379849687,
+					"retained_seed_roll": 0.865523816319183,
 					"source_available": true,
 					"source_definition": {
 						"_comment_ow5d": "OW5D, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: all five ironwood nodes below move by the same uniform (-490,+2610) offset as the Burrow Warrens' `site.at` (70,-140) -> (-420,2470), preserving their relative layout around the mouth exactly. BAND2-63-WARRENS then moved the cave again, (-420,2470) -> (-357,2610), because the OW5D site could not be walked through (burrow_warrens.json's `_comment_resiting`); these five moved with it by that same (+63,+140) -- and then were RE-ARRANGED, because the blind visual pass found what a uniform translation had done: one ironwood stood inside the knoll, and three more stood in the doorway corridor, the nearest 8.5m dead in front of the mouth. The frame the critic saw was a full-canopy red tree filling the cave entrance. They are now a stand ringing the site at 34-46m, 26m or more off the doorway axis and outside the authored clearing, so the player walks past ironwood on the way in instead of through it.",
@@ -3282,25 +3282,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "88423ee2c57a1ea556c855333053d940"
+					"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "ea622ef873ad543172f6c53f23792a63",
+						"action_id": "aefc56db82794c745c4ddbb56410f505",
 						"expected_stock_revision": 0,
 						"site_id": "order:17"
 					}
 				},
 				"journal_revision": 5,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:8b2a5978fc333901ce66d5ce631b490b78987b6ccbf2c849a5261e6df39b1a27",
-				"session_id": "30c235b8f39e8f36004be09993c890a7",
+				"receipt": "craft:f32-site-owner:f32:29ca2c502d2ee36c51a00957f54c8bfd9de31d56405077162c23170ad7402df6",
+				"session_id": "f0784d761b9b73e2ca4a199f3ed84c18",
 				"source_key": "resource:meadows:order:17",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "88423ee2c57a1ea556c855333053d940"
+				"world_namespace": "9382f7ddc20a363d8400c2d820037a98"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -3308,7 +3308,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "ea622ef873ad543172f6c53f23792a63",
+				"action_id": "aefc56db82794c745c4ddbb56410f505",
 				"verdict": {
 					"character_revision": 14,
 					"durable": true,
@@ -3316,7 +3316,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:8b2a5978fc333901ce66d5ce631b490b78987b6ccbf2c849a5261e6df39b1a27",
+					"receipt": "craft:f32-site-owner:f32:29ca2c502d2ee36c51a00957f54c8bfd9de31d56405077162c23170ad7402df6",
 					"resolved": true,
 					"saved": true,
 					"settled": true

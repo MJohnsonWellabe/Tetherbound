@@ -35,3 +35,18 @@ Registered path, no registry fixture (<realm>-additional-registered-report.json)
 Ordinary census, flags on (<realm>-ordinary-report.json): Meadows exit 0 (wood, stone, fiber, rootstone,
   ironwood); Tidewake exit 0 (driftwood, reed_fiber, reef_stone, sluice_metal, tide_bloom).
 Regression: 24 related unit files, 236 tests, 0 failed; both terrain bake freshness checks pass.
+
+== FINAL (after 20226255, patch D: Cloudreach's scene director is a Foundation director) ==
+Smoke start fixture: for Cloudreach, ring around the production-resolved site (_resource_position) using
+ground_height_near, the same resolver placement uses.
+All runs exit 0 on the same final smoke; the reports in this folder replace the earlier ones:
+  meadows-ordinary     wood order:0, stone order:1003, fiber order:1000, rootstone order:12, ironwood order:17
+  meadows-additional   sunleaf patches 01-03 (registered path, no fixture)
+  water-ordinary       driftwood, reed_fiber, reef_stone, tide_bloom (brine_steps), sluice_metal (deep_watch)
+  water-additional     tide_pearl reef beds first_shore/reedhaven/brine_steps (registered path)
+  cloudreach-ordinary  windworn_heartwood heartwood_west, cliffglass_ore latch_foot, gale_fiber anchor_picket,
+                       cloudberry waycamp
+  stormwood-ordinary   thunderwood, stormglass, conductor_vine, glowmoss, voltcap
+  Shed-only: skyplume (galecrest, Cloudreach), sparkfur (sparkit/staticub, Stormwood).
+Unit census (CI): tests/test_f32_material_census.gd, 2 tests / 30 assertions pass.
+Verdict F32#0: PASS (all four tier sets gatherable in their biome; both flags ON).

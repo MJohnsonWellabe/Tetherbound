@@ -197,9 +197,25 @@ func _site(raw: Dictionary, source_path: String) -> bool:
 	var start := at + Vector2(0, 6)
 	var ground := float(_world.call("ground_height_at", start.x, start.y))
 	var site_y := float(raw.get("authored_height", ground))
+	if raw.has("authored_height") and _world.has_method("_resource_position"):
+		# Production placement first binds a Cloudreach site to its real
+		# surface (essence_node_mount.placement_verdict); ring around that.
+		var resolved: Vector3 = _world.call("_resource_position", Vector3(at.x, site_y, at.y))
+		if resolved.is_finite():
+			at = Vector2(resolved.x, resolved.z)
+			site_y = resolved.y
 	for offset: Vector2 in [Vector2(0, 6), Vector2(6, 0), Vector2(-6, 0), Vector2(0, -6),
 			Vector2(4.5, 4.5), Vector2(-4.5, 4.5), Vector2(4.5, -4.5), Vector2(-4.5, -4.5)]:
 		var y := float(_world.call("ground_height_at", at.x + offset.x, at.y + offset.y))
+		if not (is_finite(y) and absf(y - site_y) <= 2.0) and _world.has_method("ground_height_near"):
+			# Same layered-surface resolver Cloudreach placement uses.
+			y = float(_world.call("ground_height_near", Vector3(at.x + offset.x, site_y, at.y + offset.y)))
+		if not (is_finite(y) and absf(y - site_y) <= 2.0):
+			# Built platforms (camps, decks) are meshes, not Terrain3D: ray down.
+			var from := Vector3(at.x + offset.x, site_y + 4.0, at.y + offset.y)
+			var hit := _world.get_world_3d().direct_space_state.intersect_ray(
+				PhysicsRayQueryParameters3D.create(from, from + Vector3.DOWN * 8.0, 1))
+			y = float(hit.position.y) if not hit.is_empty() else NAN
 		if is_finite(y) and absf(y - site_y) <= 2.0:
 			start = at + offset
 			ground = y

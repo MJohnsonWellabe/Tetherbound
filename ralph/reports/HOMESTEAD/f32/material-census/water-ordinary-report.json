@@ -492,7 +492,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -510,7 +510,7 @@
 					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"local_peer_id": 1,
 				"realm": "water",
@@ -536,7 +536,7 @@
 				"realm": "water",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.650511999148875,
+				"retained_seed_roll": 0.00825181510299444,
 				"source_available": true,
 				"source_definition": {
 					"amount": 3,
@@ -580,7 +580,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"id": "water:brine_steps:harvest:003",
 			"lifecycle_before": {
@@ -593,13 +593,13 @@
 				"equipped_tool": "axe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "006e94d4a88cee6fda7b6b567485a0bb568a66971f5ccf1a3cd012f06dec8b92",
+				"party_signature": "eb2bc15fd6787685ad6e9a5a301c379dbf3fbdd64ede5485ff8685d0484c225b",
 				"passive_clock_active": true,
 				"realm": "water",
-				"session_epoch": "47be08eed406892a6af95a1087c16ed0",
+				"session_epoch": "2e08e91f3cae93fd26612296f2d425f7",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_instance_id": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -609,7 +609,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "9ef5e93628d9393ccad8eb8a5c29d10d66841aacd70627c288e5f0b6a78cb593",
+				"action_id": "ac29d6a561c09d555bb8ce8c7e159057712482e53bf880d1fbf79abf28efbf4f",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -685,10 +685,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 4.84867012500763,
+							"distance_m_together": 4.84867036342621,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9926889466667,
+							"happiness": 54.9925059141667,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -711,7 +711,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9463856088888,
+							"nourishment": 69.9450433705556,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -723,7 +723,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -741,7 +741,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -780,7 +780,7 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233"
 						],
 						"waystones_activated": {}
 					},
@@ -857,10 +857,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 4.84867012500763,
+							"distance_m_together": 4.84867036342621,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9926889466667,
+							"happiness": 54.9925059141667,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -883,7 +883,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9463856088888,
+							"nourishment": 69.9450433705556,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -895,7 +895,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -913,7 +913,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -958,7 +958,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 2,
-				"delivery_id": "creature_training:2bac968b43f1c865ed725b7b6aecff038abc79ce103ec58998305cdd6cdafe50",
+				"delivery_id": "creature_training:f5d117e220963ceb32ff82959b2f2b23dce3bc9fcbbc084ba7365df29d886f4f",
 				"host_context": {
 					"actor_realm": "water",
 					"character_id": "f32-site-owner",
@@ -972,7 +972,7 @@
 					"realm": "water",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.650511999148875,
+					"retained_seed_roll": 0.00825181510299444,
 					"source_available": true,
 					"source_definition": {
 						"amount": 3,
@@ -1016,25 +1016,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+					"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "30838b6e5286ccd4860171e6ebbaf176",
+						"action_id": "8913f2e1bd857839e34a1b8c97e45def",
 						"expected_stock_revision": 0,
 						"site_id": "water:brine_steps:harvest:003"
 					}
 				},
 				"journal_revision": 1,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-				"session_id": "47be08eed406892a6af95a1087c16ed0",
+				"receipt": "craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+				"session_id": "2e08e91f3cae93fd26612296f2d425f7",
 				"source_key": "resource:water:water:brine_steps:harvest:003",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -1042,7 +1042,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "30838b6e5286ccd4860171e6ebbaf176",
+				"action_id": "8913f2e1bd857839e34a1b8c97e45def",
 				"verdict": {
 					"character_revision": 2,
 					"durable": true,
@@ -1050,23 +1050,23 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
+					"receipt": "craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(498.0018, 0.852696, 829.5609)",
+			"walk_end": "(498.0018, 0.852686, 829.5609)",
 			"walk_start": "(498.0, -0.219252, 834.0)",
-			"walked_metres": 4.43914842605591
+			"walked_metres": 4.43908739089966
 		},
 		{
 			"accepted_disk_gather": true,
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -1084,7 +1084,7 @@
 					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"local_peer_id": 1,
 				"realm": "water",
@@ -1110,7 +1110,7 @@
 				"realm": "water",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.869976270012558,
+				"retained_seed_roll": 0.174887153785676,
 				"source_available": true,
 				"source_definition": {
 					"amount": 3,
@@ -1154,7 +1154,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"id": "water:brine_steps:harvest:001",
 			"lifecycle_before": {
@@ -1167,13 +1167,13 @@
 				"equipped_tool": "knife",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "006e94d4a88cee6fda7b6b567485a0bb568a66971f5ccf1a3cd012f06dec8b92",
+				"party_signature": "eb2bc15fd6787685ad6e9a5a301c379dbf3fbdd64ede5485ff8685d0484c225b",
 				"passive_clock_active": true,
 				"realm": "water",
-				"session_epoch": "47be08eed406892a6af95a1087c16ed0",
+				"session_epoch": "2e08e91f3cae93fd26612296f2d425f7",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_instance_id": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -1183,7 +1183,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "7e900ba3e824edbc57f7e601cfd000e0b310170a395378c3259be77998475a24",
+				"action_id": "56df19b0333ed918468762a26e8b8c14f770c4e15d3eecc285bf601c09a5c5c4",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -1263,10 +1263,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 9.99426567554474,
+							"distance_m_together": 9.91673707962036,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9861865458333,
+							"happiness": 54.9859027391667,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1289,7 +1289,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8987013361111,
+							"nourishment": 69.8966200872222,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1301,7 +1301,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -1319,7 +1319,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1358,8 +1358,8 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc"
 						],
 						"waystones_activated": {}
 					},
@@ -1440,10 +1440,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 9.99426567554474,
+							"distance_m_together": 9.91673707962036,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9861865458333,
+							"happiness": 54.9859027391667,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1466,7 +1466,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8987013361111,
+							"nourishment": 69.8966200872222,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1478,7 +1478,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -1496,7 +1496,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1535,7 +1535,7 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233"
 						],
 						"waystones_activated": {}
 					},
@@ -1543,7 +1543,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 5,
-				"delivery_id": "creature_training:2bac968b43f1c865ed725b7b6aecff038abc79ce103ec58998305cdd6cdafe50",
+				"delivery_id": "creature_training:f5d117e220963ceb32ff82959b2f2b23dce3bc9fcbbc084ba7365df29d886f4f",
 				"host_context": {
 					"actor_realm": "water",
 					"character_id": "f32-site-owner",
@@ -1557,7 +1557,7 @@
 					"realm": "water",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.869976270012558,
+					"retained_seed_roll": 0.174887153785676,
 					"source_available": true,
 					"source_definition": {
 						"amount": 3,
@@ -1601,25 +1601,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+					"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "8e40b31ea88ae73291a4054f41cad0e8",
+						"action_id": "42610ed917a5be82fdb3bdfabeca1168",
 						"expected_stock_revision": 0,
 						"site_id": "water:brine_steps:harvest:001"
 					}
 				},
 				"journal_revision": 2,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
-				"session_id": "47be08eed406892a6af95a1087c16ed0",
+				"receipt": "craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
+				"session_id": "2e08e91f3cae93fd26612296f2d425f7",
 				"source_key": "resource:water:water:brine_steps:harvest:001",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -1627,7 +1627,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "8e40b31ea88ae73291a4054f41cad0e8",
+				"action_id": "42610ed917a5be82fdb3bdfabeca1168",
 				"verdict": {
 					"character_revision": 5,
 					"durable": true,
@@ -1635,23 +1635,23 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
+					"receipt": "craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(341.9981, 1.55113, 493.5193)",
+			"walk_end": "(341.9981, 1.551185, 493.5196)",
 			"walk_start": "(342.0, 2.562463, 498.0)",
-			"walked_metres": 4.48068284988403
+			"walked_metres": 4.48037767410278
 		},
 		{
 			"accepted_disk_gather": true,
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -1669,7 +1669,7 @@
 					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"local_peer_id": 1,
 				"realm": "water",
@@ -1695,7 +1695,7 @@
 				"realm": "water",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.413322984240949,
+				"retained_seed_roll": 0.402168709551916,
 				"source_available": true,
 				"source_definition": {
 					"amount": 2,
@@ -1739,7 +1739,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"id": "water:brine_steps:harvest:005",
 			"lifecycle_before": {
@@ -1752,13 +1752,13 @@
 				"equipped_tool": "pickaxe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "006e94d4a88cee6fda7b6b567485a0bb568a66971f5ccf1a3cd012f06dec8b92",
+				"party_signature": "eb2bc15fd6787685ad6e9a5a301c379dbf3fbdd64ede5485ff8685d0484c225b",
 				"passive_clock_active": true,
 				"realm": "water",
-				"session_epoch": "47be08eed406892a6af95a1087c16ed0",
+				"session_epoch": "2e08e91f3cae93fd26612296f2d425f7",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_instance_id": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -1768,7 +1768,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "9389972687e61ce188611809ffc2177042572ebe99ea70d90f431a9098112009",
+				"action_id": "1767ef52127400e3349ec49a2ae97a1b131450706f46643e16971f6e7b52d7d6",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -1852,10 +1852,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 15.0963708758354,
+							"distance_m_together": 14.7633834481239,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9785685575,
+							"happiness": 54.9782903558334,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1878,7 +1878,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8428360883334,
+							"nourishment": 69.8407959427777,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1890,7 +1890,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -1908,7 +1908,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1947,9 +1947,9 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
-							"craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
+							"craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea"
 						],
 						"waystones_activated": {}
 					},
@@ -2034,10 +2034,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 15.0963708758354,
+							"distance_m_together": 14.7633834481239,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9785685575,
+							"happiness": 54.9782903558334,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2060,7 +2060,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8428360883334,
+							"nourishment": 69.8407959427777,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2072,7 +2072,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -2090,7 +2090,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2129,8 +2129,8 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc"
 						],
 						"waystones_activated": {}
 					},
@@ -2138,7 +2138,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 8,
-				"delivery_id": "creature_training:2bac968b43f1c865ed725b7b6aecff038abc79ce103ec58998305cdd6cdafe50",
+				"delivery_id": "creature_training:f5d117e220963ceb32ff82959b2f2b23dce3bc9fcbbc084ba7365df29d886f4f",
 				"host_context": {
 					"actor_realm": "water",
 					"character_id": "f32-site-owner",
@@ -2152,7 +2152,7 @@
 					"realm": "water",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.413322984240949,
+					"retained_seed_roll": 0.402168709551916,
 					"source_available": true,
 					"source_definition": {
 						"amount": 2,
@@ -2196,25 +2196,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+					"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "bd9012e259230750e6c1dc33ccee3c84",
+						"action_id": "4b07d585b2db055e61ed2fea95a8b942",
 						"expected_stock_revision": 0,
 						"site_id": "water:brine_steps:harvest:005"
 					}
 				},
 				"journal_revision": 3,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862",
-				"session_id": "47be08eed406892a6af95a1087c16ed0",
+				"receipt": "craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea",
+				"session_id": "2e08e91f3cae93fd26612296f2d425f7",
 				"source_key": "resource:water:water:brine_steps:harvest:005",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -2222,7 +2222,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "bd9012e259230750e6c1dc33ccee3c84",
+				"action_id": "4b07d585b2db055e61ed2fea95a8b942",
 				"verdict": {
 					"character_revision": 8,
 					"durable": true,
@@ -2230,23 +2230,23 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862",
+					"receipt": "craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(432.0019, 77.13957, 667.5234)",
+			"walk_end": "(432.0017, 77.13958, 667.5233)",
 			"walk_start": "(432.0, 76.76675, 672.0)",
-			"walked_metres": 4.47662401199341
+			"walked_metres": 4.47668504714966
 		},
 		{
 			"accepted_disk_gather": true,
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -2264,7 +2264,7 @@
 					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"local_peer_id": 1,
 				"realm": "water",
@@ -2290,7 +2290,7 @@
 				"realm": "water",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.293580858036876,
+				"retained_seed_roll": 0.337735672947019,
 				"source_available": true,
 				"source_definition": {
 					"amount": 2,
@@ -2341,7 +2341,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"id": "water:deep_watch:harvest:008",
 			"lifecycle_before": {
@@ -2354,13 +2354,13 @@
 				"equipped_tool": "pickaxe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "006e94d4a88cee6fda7b6b567485a0bb568a66971f5ccf1a3cd012f06dec8b92",
+				"party_signature": "eb2bc15fd6787685ad6e9a5a301c379dbf3fbdd64ede5485ff8685d0484c225b",
 				"passive_clock_active": true,
 				"realm": "water",
-				"session_epoch": "47be08eed406892a6af95a1087c16ed0",
+				"session_epoch": "2e08e91f3cae93fd26612296f2d425f7",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_instance_id": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -2370,7 +2370,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "f05c106190190ebfb5d2b1a66ff3985ca8755f3b41cd0f4a1280bb58cd4e2f4e",
+				"action_id": "8a84919b2caa6b65f2353c5e7e5c06e642f385362e6e1b4ad944e5401ca8c260",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -2457,10 +2457,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 20.1302298009396,
+							"distance_m_together": 19.7990979850292,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9710416666667,
+							"happiness": 54.9708125000001,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2483,7 +2483,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.787638888889,
+							"nourishment": 69.7859583333333,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2495,7 +2495,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -2513,7 +2513,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2552,10 +2552,10 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
-							"craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862",
-							"craft:f32-site-owner:f32:5868f83c1136a44507121a768d5bff0f01cf1fa68d4a0787c3ad1307a1c818ff"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
+							"craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea",
+							"craft:f32-site-owner:f32:d85b24fe593b9910ba7c97f4166557fa5313bc60e30e9d61f7c91f1bdeb3ffa9"
 						],
 						"waystones_activated": {}
 					},
@@ -2644,10 +2644,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 20.1302298009396,
+							"distance_m_together": 19.7990979850292,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9710416666667,
+							"happiness": 54.9708125000001,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2670,7 +2670,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.787638888889,
+							"nourishment": 69.7859583333333,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2682,7 +2682,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -2700,7 +2700,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2739,9 +2739,9 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
-							"craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
+							"craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea"
 						],
 						"waystones_activated": {}
 					},
@@ -2749,7 +2749,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 11,
-				"delivery_id": "creature_training:2bac968b43f1c865ed725b7b6aecff038abc79ce103ec58998305cdd6cdafe50",
+				"delivery_id": "creature_training:f5d117e220963ceb32ff82959b2f2b23dce3bc9fcbbc084ba7365df29d886f4f",
 				"host_context": {
 					"actor_realm": "water",
 					"character_id": "f32-site-owner",
@@ -2763,7 +2763,7 @@
 					"realm": "water",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.293580858036876,
+					"retained_seed_roll": 0.337735672947019,
 					"source_available": true,
 					"source_definition": {
 						"amount": 2,
@@ -2814,25 +2814,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+					"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "2971e4f344183888294778583b892ed9",
+						"action_id": "8bbe937cff3850d4f05521eca804ddac",
 						"expected_stock_revision": 0,
 						"site_id": "water:deep_watch:harvest:008"
 					}
 				},
 				"journal_revision": 4,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:5868f83c1136a44507121a768d5bff0f01cf1fa68d4a0787c3ad1307a1c818ff",
-				"session_id": "47be08eed406892a6af95a1087c16ed0",
+				"receipt": "craft:f32-site-owner:f32:d85b24fe593b9910ba7c97f4166557fa5313bc60e30e9d61f7c91f1bdeb3ffa9",
+				"session_id": "2e08e91f3cae93fd26612296f2d425f7",
 				"source_key": "resource:water:water:deep_watch:harvest:008",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -2840,7 +2840,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "2971e4f344183888294778583b892ed9",
+				"action_id": "8bbe937cff3850d4f05521eca804ddac",
 				"verdict": {
 					"character_revision": 11,
 					"durable": true,
@@ -2848,14 +2848,14 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:5868f83c1136a44507121a768d5bff0f01cf1fa68d4a0787c3ad1307a1c818ff",
+					"receipt": "craft:f32-site-owner:f32:d85b24fe593b9910ba7c97f4166557fa5313bc60e30e9d61f7c91f1bdeb3ffa9",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(1256.944, 2.938303, 3418.7)",
+			"walk_end": "(1256.944, 2.938301, 3418.7)",
 			"walk_start": "(1256.948, 3.269853, 3423.167)",
 			"walked_metres": 4.46704244613647
 		},
@@ -2864,7 +2864,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -2882,7 +2882,7 @@
 					"script": "res://scripts/combat/cloudreach_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-d4d0f26afb028242f4dd8dafceb38b49"
+					"creature-e90760cd42c5b611f1487ab79ce9a0dc"
 				],
 				"local_peer_id": 1,
 				"realm": "water",
@@ -2907,7 +2907,7 @@
 				"realm": "water",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.541557286633179,
+				"retained_seed_roll": 0.545095181791112,
 				"source_available": true,
 				"source_definition": {
 					"amount": 2,
@@ -2951,7 +2951,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"id": "water:brine_steps:harvest:012",
 			"lifecycle_before": {
@@ -2964,13 +2964,13 @@
 				"equipped_tool": "",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "006e94d4a88cee6fda7b6b567485a0bb568a66971f5ccf1a3cd012f06dec8b92",
+				"party_signature": "eb2bc15fd6787685ad6e9a5a301c379dbf3fbdd64ede5485ff8685d0484c225b",
 				"passive_clock_active": true,
 				"realm": "water",
-				"session_epoch": "47be08eed406892a6af95a1087c16ed0",
+				"session_epoch": "2e08e91f3cae93fd26612296f2d425f7",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_instance_id": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -2980,7 +2980,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "cbdcd0e6d6becaa1d82260e012842880108ca804583e927dfafc3f48dce8309d",
+				"action_id": "c3b0a074f356abfa5674a9cedfb474b87f7c4c42a783a1f18ae3a5872b6985b0",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -3070,10 +3070,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 24.1078144013882,
+							"distance_m_together": 24.7439841926098,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9641250000001,
+							"happiness": 54.9640596911113,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -3096,7 +3096,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7369166666667,
+							"nourishment": 69.7364377348148,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -3108,7 +3108,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -3126,7 +3126,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -3165,11 +3165,11 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
-							"craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862",
-							"craft:f32-site-owner:f32:5868f83c1136a44507121a768d5bff0f01cf1fa68d4a0787c3ad1307a1c818ff",
-							"craft:f32-site-owner:f32:9eacf2fd6ed1ccbd5d7786040607706a4d4b6ab2e38966d36d24955ce1f9658b"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
+							"craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea",
+							"craft:f32-site-owner:f32:d85b24fe593b9910ba7c97f4166557fa5313bc60e30e9d61f7c91f1bdeb3ffa9",
+							"craft:f32-site-owner:f32:43f175c8d303b43a77004cae33eacd3018e64f6c3c429c0c58c16b4021b2dfc9"
 						],
 						"waystones_activated": {}
 					},
@@ -3261,10 +3261,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 24.1078144013882,
+							"distance_m_together": 24.7439841926098,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9641250000001,
+							"happiness": 54.9640596911113,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -3287,7 +3287,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7369166666667,
+							"nourishment": 69.7364377348148,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -3299,7 +3299,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-d4d0f26afb028242f4dd8dafceb38b49",
+							"uid": "creature-e90760cd42c5b611f1487ab79ce9a0dc",
 							"xp": 0
 						}
 					],
@@ -3317,7 +3317,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-d4d0f26afb028242f4dd8dafceb38b49": {
+							"creature-e90760cd42c5b611f1487ab79ce9a0dc": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -3356,10 +3356,10 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:026e14bcfeb05e303339347fc0f3b74fe765244bd2ee4a64a9fef52b7c5b187d",
-							"craft:f32-site-owner:f32:f50c0c585ccd8fa4d4cd522ef2d6ac7977f7d064fe968a93d4c5b9a32c0c7790",
-							"craft:f32-site-owner:f32:2fcb0d61f9eac66d2e2cd34452247d98dcab3e7e21a6f247e5b04a088d4ef862",
-							"craft:f32-site-owner:f32:5868f83c1136a44507121a768d5bff0f01cf1fa68d4a0787c3ad1307a1c818ff"
+							"craft:f32-site-owner:f32:b83058ede51cb4fafbab1bdef4dec10c0214e85160b5c2caf5eb0e414802f233",
+							"craft:f32-site-owner:f32:cbd67ca1c042a262d8f2655437fba09aeccdde8412ac5a4e3d3d3c6c571ae4fc",
+							"craft:f32-site-owner:f32:a0bca2650e8b327668d369a6f044dc975ac5a0d708a9c90fa824d666660eedea",
+							"craft:f32-site-owner:f32:d85b24fe593b9910ba7c97f4166557fa5313bc60e30e9d61f7c91f1bdeb3ffa9"
 						],
 						"waystones_activated": {}
 					},
@@ -3367,7 +3367,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 14,
-				"delivery_id": "creature_training:2bac968b43f1c865ed725b7b6aecff038abc79ce103ec58998305cdd6cdafe50",
+				"delivery_id": "creature_training:f5d117e220963ceb32ff82959b2f2b23dce3bc9fcbbc084ba7365df29d886f4f",
 				"host_context": {
 					"actor_realm": "water",
 					"character_id": "f32-site-owner",
@@ -3381,7 +3381,7 @@
 					"realm": "water",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.541557286633179,
+					"retained_seed_roll": 0.545095181791112,
 					"source_available": true,
 					"source_definition": {
 						"amount": 2,
@@ -3425,25 +3425,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+					"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "644f36e2c67b237d14edc35186df7acd",
+						"action_id": "086afa40c1ab400ddf2afd1c2cff8f0e",
 						"expected_stock_revision": 0,
 						"site_id": "water:brine_steps:harvest:012"
 					}
 				},
 				"journal_revision": 5,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:9eacf2fd6ed1ccbd5d7786040607706a4d4b6ab2e38966d36d24955ce1f9658b",
-				"session_id": "47be08eed406892a6af95a1087c16ed0",
+				"receipt": "craft:f32-site-owner:f32:43f175c8d303b43a77004cae33eacd3018e64f6c3c429c0c58c16b4021b2dfc9",
+				"session_id": "2e08e91f3cae93fd26612296f2d425f7",
 				"source_key": "resource:water:water:brine_steps:harvest:012",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "b1a9b73e74da999eda3f126d37ab4908"
+				"world_namespace": "76a2a8ce4902b8d62920458fe22cdaa0"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -3451,7 +3451,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "644f36e2c67b237d14edc35186df7acd",
+				"action_id": "086afa40c1ab400ddf2afd1c2cff8f0e",
 				"verdict": {
 					"character_revision": 14,
 					"durable": true,
@@ -3459,16 +3459,16 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:9eacf2fd6ed1ccbd5d7786040607706a4d4b6ab2e38966d36d24955ce1f9658b",
+					"receipt": "craft:f32-site-owner:f32:43f175c8d303b43a77004cae33eacd3018e64f6c3c429c0c58c16b4021b2dfc9",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(486.0102, 59.5433, 673.5433)",
+			"walk_end": "(486.0103, 59.54323, 673.5431)",
 			"walk_start": "(486.0, 59.01165, 678.0)",
-			"walked_metres": 4.45667695999146
+			"walked_metres": 4.45692110061646
 		}
 	],
 	"source_path": "res://data/config/water_pickups.json",

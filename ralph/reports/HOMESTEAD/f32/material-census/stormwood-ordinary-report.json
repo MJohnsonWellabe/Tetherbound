@@ -472,7 +472,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -490,7 +490,7 @@
 					"script": "res://scripts/combat/stormwood_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"local_peer_id": 1,
 				"realm": "stormwood",
@@ -516,7 +516,7 @@
 				"realm": "stormwood",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.00725904852151871,
+				"retained_seed_roll": 0.224612524267286,
 				"source_available": true,
 				"source_definition": {
 					"amount": 4,
@@ -561,7 +561,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"id": "stormwood_harvest_conductor_run_076",
 			"lifecycle_before": {
@@ -574,13 +574,13 @@
 				"equipped_tool": "axe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "4717edefc62252b8e68cd973d3da99808681c65bfe7edc1c4db82c75ee7e34fd",
+				"party_signature": "e23fd37a520ff0751c57ba49bf3fbec43767bf03e25e46736497ad6cc1a262f3",
 				"passive_clock_active": true,
 				"realm": "stormwood",
-				"session_epoch": "de94daf54b048ab73a323b92c3ab1ebb",
+				"session_epoch": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "40d6ea1690b4066b024b4898017148e7"
+				"world_instance_id": "8e7104335533e98a256254957464b141"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -590,7 +590,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "cfa3b784547b37e6f1c956696e0cf6057a7232dbd0cf97f3faeeefe6d8e5945a",
+				"action_id": "480be60111a800915fb47eb7412ae0f0a75b841228c087130d635d7294e714f3",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -666,10 +666,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 4.86927807331085,
+							"distance_m_together": 4.85603034496307,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9927425633333,
+							"happiness": 54.9930366691666,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -692,7 +692,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9467787977777,
+							"nourishment": 69.9489355738889,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -704,7 +704,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -722,7 +722,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -761,7 +761,7 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294"
 						],
 						"waystones_activated": {}
 					},
@@ -838,10 +838,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 4.86927807331085,
+							"distance_m_together": 4.85603034496307,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9927425633333,
+							"happiness": 54.9930366691666,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -864,7 +864,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9467787977777,
+							"nourishment": 69.9489355738889,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -876,7 +876,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -894,7 +894,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -939,7 +939,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 2,
-				"delivery_id": "creature_training:ddcd16dff44deca45f9b03bbff4437ca920200b3f1f05c91fa5f3d79bfb295fb",
+				"delivery_id": "creature_training:e5a03401b4fb50d9c1384bd9927de8ab12c0341f99aff450df883bc3c4e607b3",
 				"host_context": {
 					"actor_realm": "stormwood",
 					"character_id": "f32-site-owner",
@@ -953,7 +953,7 @@
 					"realm": "stormwood",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.00725904852151871,
+					"retained_seed_roll": 0.224612524267286,
 					"source_available": true,
 					"source_definition": {
 						"amount": 4,
@@ -998,25 +998,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+					"world_namespace": "8e7104335533e98a256254957464b141"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "0bfaa1a5ff6e0ef7f988f16944aa6e01",
+						"action_id": "ad7f151b73a6ff7a1e39d464bcef59b7",
 						"expected_stock_revision": 0,
 						"site_id": "stormwood_harvest_conductor_run_076"
 					}
 				},
 				"journal_revision": 1,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-				"session_id": "de94daf54b048ab73a323b92c3ab1ebb",
+				"receipt": "craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+				"session_id": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"source_key": "resource:stormwood:stormwood_harvest_conductor_run_076",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -1024,7 +1024,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "0bfaa1a5ff6e0ef7f988f16944aa6e01",
+				"action_id": "ad7f151b73a6ff7a1e39d464bcef59b7",
 				"verdict": {
 					"character_revision": 2,
 					"durable": true,
@@ -1032,7 +1032,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
+					"receipt": "craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
 					"resolved": true,
 					"saved": true,
 					"settled": true
@@ -1048,7 +1048,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -1066,7 +1066,7 @@
 					"script": "res://scripts/combat/stormwood_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"local_peer_id": 1,
 				"realm": "stormwood",
@@ -1092,7 +1092,7 @@
 				"realm": "stormwood",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.000618978636339307,
+				"retained_seed_roll": 0.0999838742427528,
 				"source_available": true,
 				"source_definition": {
 					"amount": 3,
@@ -1137,7 +1137,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"id": "stormwood_harvest_cinder_verge_003",
 			"lifecycle_before": {
@@ -1150,13 +1150,13 @@
 				"equipped_tool": "pickaxe",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "4717edefc62252b8e68cd973d3da99808681c65bfe7edc1c4db82c75ee7e34fd",
+				"party_signature": "e23fd37a520ff0751c57ba49bf3fbec43767bf03e25e46736497ad6cc1a262f3",
 				"passive_clock_active": true,
 				"realm": "stormwood",
-				"session_epoch": "de94daf54b048ab73a323b92c3ab1ebb",
+				"session_epoch": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "40d6ea1690b4066b024b4898017148e7"
+				"world_instance_id": "8e7104335533e98a256254957464b141"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -1166,7 +1166,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "9279447a8d21c91e92703072506b609ae06955b4eb19f819ba6d1152e2128e45",
+				"action_id": "bddfbbf499a206d69a4adb00632c319bab7ab46be4dc3af6e3606735055664e5",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -1246,10 +1246,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 9.84669172763824,
+							"distance_m_together": 9.75008320808411,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9863804999999,
+							"happiness": 54.9864583333333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1272,7 +1272,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9001236666666,
+							"nourishment": 69.9006944444444,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1284,7 +1284,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -1302,7 +1302,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1341,8 +1341,8 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea"
 						],
 						"waystones_activated": {}
 					},
@@ -1423,10 +1423,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 9.84669172763824,
+							"distance_m_together": 9.75008320808411,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9863804999999,
+							"happiness": 54.9864583333333,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1449,7 +1449,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.9001236666666,
+							"nourishment": 69.9006944444444,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1461,7 +1461,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -1479,7 +1479,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1518,7 +1518,7 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294"
 						],
 						"waystones_activated": {}
 					},
@@ -1526,7 +1526,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 5,
-				"delivery_id": "creature_training:ddcd16dff44deca45f9b03bbff4437ca920200b3f1f05c91fa5f3d79bfb295fb",
+				"delivery_id": "creature_training:e5a03401b4fb50d9c1384bd9927de8ab12c0341f99aff450df883bc3c4e607b3",
 				"host_context": {
 					"actor_realm": "stormwood",
 					"character_id": "f32-site-owner",
@@ -1540,7 +1540,7 @@
 					"realm": "stormwood",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.000618978636339307,
+					"retained_seed_roll": 0.0999838742427528,
 					"source_available": true,
 					"source_definition": {
 						"amount": 3,
@@ -1585,25 +1585,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+					"world_namespace": "8e7104335533e98a256254957464b141"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "aca6e6e69eaf0372509ea9a603e9801a",
+						"action_id": "21138732c1b9e2656325eff30f62b799",
 						"expected_stock_revision": 0,
 						"site_id": "stormwood_harvest_cinder_verge_003"
 					}
 				},
 				"journal_revision": 2,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
-				"session_id": "de94daf54b048ab73a323b92c3ab1ebb",
+				"receipt": "craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
+				"session_id": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"source_key": "resource:stormwood:stormwood_harvest_cinder_verge_003",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -1611,7 +1611,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "aca6e6e69eaf0372509ea9a603e9801a",
+				"action_id": "21138732c1b9e2656325eff30f62b799",
 				"verdict": {
 					"character_revision": 5,
 					"durable": true,
@@ -1619,7 +1619,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
+					"receipt": "craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
 					"resolved": true,
 					"saved": true,
 					"settled": true
@@ -1635,7 +1635,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -1653,7 +1653,7 @@
 					"script": "res://scripts/combat/stormwood_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"local_peer_id": 1,
 				"realm": "stormwood",
@@ -1679,7 +1679,7 @@
 				"realm": "stormwood",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.833475551567972,
+				"retained_seed_roll": 0.436847499106079,
 				"source_available": true,
 				"source_definition": {
 					"amount": 3,
@@ -1724,7 +1724,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"id": "stormwood_harvest_cinder_verge_001",
 			"lifecycle_before": {
@@ -1737,13 +1737,13 @@
 				"equipped_tool": "knife",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "4717edefc62252b8e68cd973d3da99808681c65bfe7edc1c4db82c75ee7e34fd",
+				"party_signature": "e23fd37a520ff0751c57ba49bf3fbec43767bf03e25e46736497ad6cc1a262f3",
 				"passive_clock_active": true,
 				"realm": "stormwood",
-				"session_epoch": "de94daf54b048ab73a323b92c3ab1ebb",
+				"session_epoch": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "40d6ea1690b4066b024b4898017148e7"
+				"world_instance_id": "8e7104335533e98a256254957464b141"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -1753,7 +1753,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "af7003990516b02c86fc66719f497bca2fc1fec8bc663f02a79260996ec0c80a",
+				"action_id": "89352403d93052b467a22fa4c8aafe83bc679f05b2f0efd39c5cb4b45997a9e2",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -1837,10 +1837,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 14.7232241034508,
+							"distance_m_together": 14.6831217259169,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9788792483333,
+							"happiness": 54.9790416666666,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -1863,7 +1863,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8451144877777,
+							"nourishment": 69.8463055555555,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -1875,7 +1875,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -1893,7 +1893,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -1932,9 +1932,9 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
-							"craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
+							"craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114"
 						],
 						"waystones_activated": {}
 					},
@@ -2019,10 +2019,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 14.7232241034508,
+							"distance_m_together": 14.6831217259169,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9788792483333,
+							"happiness": 54.9790416666666,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2045,7 +2045,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.8451144877777,
+							"nourishment": 69.8463055555555,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2057,7 +2057,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -2075,7 +2075,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2114,8 +2114,8 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea"
 						],
 						"waystones_activated": {}
 					},
@@ -2123,7 +2123,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 8,
-				"delivery_id": "creature_training:ddcd16dff44deca45f9b03bbff4437ca920200b3f1f05c91fa5f3d79bfb295fb",
+				"delivery_id": "creature_training:e5a03401b4fb50d9c1384bd9927de8ab12c0341f99aff450df883bc3c4e607b3",
 				"host_context": {
 					"actor_realm": "stormwood",
 					"character_id": "f32-site-owner",
@@ -2137,7 +2137,7 @@
 					"realm": "stormwood",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.833475551567972,
+					"retained_seed_roll": 0.436847499106079,
 					"source_available": true,
 					"source_definition": {
 						"amount": 3,
@@ -2182,25 +2182,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+					"world_namespace": "8e7104335533e98a256254957464b141"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "266ad52b5e317d0b37191a5963f085d8",
+						"action_id": "ce619b322556b48f38a45ab7c3505717",
 						"expected_stock_revision": 0,
 						"site_id": "stormwood_harvest_cinder_verge_001"
 					}
 				},
 				"journal_revision": 3,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196",
-				"session_id": "de94daf54b048ab73a323b92c3ab1ebb",
+				"receipt": "craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114",
+				"session_id": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"source_key": "resource:stormwood:stormwood_harvest_cinder_verge_001",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -2208,7 +2208,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "266ad52b5e317d0b37191a5963f085d8",
+				"action_id": "ce619b322556b48f38a45ab7c3505717",
 				"verdict": {
 					"character_revision": 8,
 					"durable": true,
@@ -2216,7 +2216,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196",
+					"receipt": "craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114",
 					"resolved": true,
 					"saved": true,
 					"settled": true
@@ -2232,7 +2232,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -2250,7 +2250,7 @@
 					"script": "res://scripts/combat/stormwood_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"local_peer_id": 1,
 				"realm": "stormwood",
@@ -2275,7 +2275,7 @@
 				"realm": "stormwood",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.545327455038205,
+				"retained_seed_roll": 0.302238832926378,
 				"source_available": true,
 				"source_definition": {
 					"amount": 3,
@@ -2320,7 +2320,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"id": "stormwood_harvest_cinder_verge_002",
 			"lifecycle_before": {
@@ -2333,13 +2333,13 @@
 				"equipped_tool": "",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "4717edefc62252b8e68cd973d3da99808681c65bfe7edc1c4db82c75ee7e34fd",
+				"party_signature": "e23fd37a520ff0751c57ba49bf3fbec43767bf03e25e46736497ad6cc1a262f3",
 				"passive_clock_active": true,
 				"realm": "stormwood",
-				"session_epoch": "de94daf54b048ab73a323b92c3ab1ebb",
+				"session_epoch": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "40d6ea1690b4066b024b4898017148e7"
+				"world_instance_id": "8e7104335533e98a256254957464b141"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -2349,7 +2349,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "0b629c2e84129a919c4fc7153c976a3ff1a9bf3beea02b2af1072290a1ae26ef",
+				"action_id": "1d1844bf53afc64d51459db2a33e49c2096d8a8ab91e938ba7c0ff34c987da87",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -2436,10 +2436,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 17.9317421317101,
+							"distance_m_together": 19.7749720662832,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9724566824999,
+							"happiness": 54.9723749999999,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2462,7 +2462,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7980156716665,
+							"nourishment": 69.7974166666666,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2474,7 +2474,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -2492,7 +2492,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2531,10 +2531,10 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
-							"craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196",
-							"craft:f32-site-owner:f32:e34a593f006e666ca8f758acea260ed8f3801c2d37d6ec1f2c29b09a9cf69849"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
+							"craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114",
+							"craft:f32-site-owner:f32:923c79b2b749595605f6e624c12ad77c03adc7be536bdd9d28f69fb814bfa152"
 						],
 						"waystones_activated": {}
 					},
@@ -2623,10 +2623,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 17.9317421317101,
+							"distance_m_together": 19.7749720662832,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9724566824999,
+							"happiness": 54.9723749999999,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -2649,7 +2649,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7980156716665,
+							"nourishment": 69.7974166666666,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -2661,7 +2661,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -2679,7 +2679,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -2718,9 +2718,9 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
-							"craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
+							"craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114"
 						],
 						"waystones_activated": {}
 					},
@@ -2728,7 +2728,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 11,
-				"delivery_id": "creature_training:ddcd16dff44deca45f9b03bbff4437ca920200b3f1f05c91fa5f3d79bfb295fb",
+				"delivery_id": "creature_training:e5a03401b4fb50d9c1384bd9927de8ab12c0341f99aff450df883bc3c4e607b3",
 				"host_context": {
 					"actor_realm": "stormwood",
 					"character_id": "f32-site-owner",
@@ -2742,7 +2742,7 @@
 					"realm": "stormwood",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.545327455038205,
+					"retained_seed_roll": 0.302238832926378,
 					"source_available": true,
 					"source_definition": {
 						"amount": 3,
@@ -2787,25 +2787,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+					"world_namespace": "8e7104335533e98a256254957464b141"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "582f6d413c677fb8a1073e1e836bfcd0",
+						"action_id": "73cc777cd11c0e19de7be3f504d3f0fe",
 						"expected_stock_revision": 0,
 						"site_id": "stormwood_harvest_cinder_verge_002"
 					}
 				},
 				"journal_revision": 4,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:e34a593f006e666ca8f758acea260ed8f3801c2d37d6ec1f2c29b09a9cf69849",
-				"session_id": "de94daf54b048ab73a323b92c3ab1ebb",
+				"receipt": "craft:f32-site-owner:f32:923c79b2b749595605f6e624c12ad77c03adc7be536bdd9d28f69fb814bfa152",
+				"session_id": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"source_key": "resource:stormwood:stormwood_harvest_cinder_verge_002",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -2813,7 +2813,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "582f6d413c677fb8a1073e1e836bfcd0",
+				"action_id": "73cc777cd11c0e19de7be3f504d3f0fe",
 				"verdict": {
 					"character_revision": 11,
 					"durable": true,
@@ -2821,7 +2821,7 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:e34a593f006e666ca8f758acea260ed8f3801c2d37d6ec1f2c29b09a9cf69849",
+					"receipt": "craft:f32-site-owner:f32:923c79b2b749595605f6e624c12ad77c03adc7be536bdd9d28f69fb814bfa152",
 					"resolved": true,
 					"saved": true,
 					"settled": true
@@ -2837,7 +2837,7 @@
 			"actor_baseline_before": {
 				"admitted_character_id": "f32-site-owner",
 				"admitted_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"character_id": "f32-site-owner",
 				"directors": [
@@ -2855,7 +2855,7 @@
 					"script": "res://scripts/combat/stormwood_combat_manager.gd"
 				},
 				"local_party_uids": [
-					"creature-bbab0d0d7147f48f9e5fa15e562beced"
+					"creature-ba602ef6d8c32bb5de4ba4826cd10168"
 				],
 				"local_peer_id": 1,
 				"realm": "stormwood",
@@ -2880,7 +2880,7 @@
 				"realm": "stormwood",
 				"registered_live_source": true,
 				"resource_runtime_authorized": true,
-				"retained_seed_roll": 0.210133906221017,
+				"retained_seed_roll": 0.605796256102622,
 				"source_available": true,
 				"source_definition": {
 					"amount": 3,
@@ -2925,7 +2925,7 @@
 					"revision": 0
 				},
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"id": "stormwood_harvest_glowmoss_hollows_042",
 			"lifecycle_before": {
@@ -2938,13 +2938,13 @@
 				"equipped_tool": "",
 				"flying": false,
 				"party_revision": 1,
-				"party_signature": "4717edefc62252b8e68cd973d3da99808681c65bfe7edc1c4db82c75ee7e34fd",
+				"party_signature": "e23fd37a520ff0751c57ba49bf3fbec43767bf03e25e46736497ad6cc1a262f3",
 				"passive_clock_active": true,
 				"realm": "stormwood",
-				"session_epoch": "de94daf54b048ab73a323b92c3ab1ebb",
+				"session_epoch": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"station_ack_only": false,
 				"swimming": false,
-				"world_instance_id": "40d6ea1690b4066b024b4898017148e7"
+				"world_instance_id": "8e7104335533e98a256254957464b141"
 			},
 			"placement": {
 				"body_clearance_proven": true,
@@ -2954,7 +2954,7 @@
 			},
 			"saved_action": {
 				"action": "resource",
-				"action_id": "e258389bc5fe1703060fe59d5749757816ea80415953861ea6fde15b507c1525",
+				"action_id": "edf9b9425032a95dc92758cd468d04f2844976b2ca6ce8353f06553efceff6b9",
 				"after": {
 					"character_id": "f32-site-owner",
 					"equipment": {
@@ -3044,10 +3044,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 23.0317722558975,
+							"distance_m_together": 22.8903265446424,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9671589408333,
+							"happiness": 54.9672980116665,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -3070,7 +3070,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7591655661109,
+							"nourishment": 69.7601854188888,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -3082,7 +3082,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -3100,7 +3100,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -3139,11 +3139,11 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
-							"craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196",
-							"craft:f32-site-owner:f32:e34a593f006e666ca8f758acea260ed8f3801c2d37d6ec1f2c29b09a9cf69849",
-							"craft:f32-site-owner:f32:e13f73ced1732d1904a65217856ffd25ffa6609d8ce5cced5a33a5e29bffb318"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
+							"craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114",
+							"craft:f32-site-owner:f32:923c79b2b749595605f6e624c12ad77c03adc7be536bdd9d28f69fb814bfa152",
+							"craft:f32-site-owner:f32:96b23317c9c375dfa04f30101a25e6c6140d3229748d3c9d1be7c7c85031dfd4"
 						],
 						"waystones_activated": {}
 					},
@@ -3235,10 +3235,10 @@
 							"creature_type": "ground",
 							"defence": 20.0,
 							"display_name": "Terrapup",
-							"distance_m_together": 23.0317722558975,
+							"distance_m_together": 22.8903265446424,
 							"fainted": false,
 							"feeds_together": 0,
-							"happiness": 54.9671589408333,
+							"happiness": 54.9672980116665,
 							"hp": 120.0,
 							"iv_attack": 0.5,
 							"iv_defence": 0.5,
@@ -3261,7 +3261,7 @@
 							"move_ultimate": "ultimate_terrapup",
 							"move_utility": "",
 							"nickname": "",
-							"nourishment": 69.7591655661109,
+							"nourishment": 69.7601854188888,
 							"rest_bed_index": -1,
 							"rest_nights_together": 0,
 							"rested": false,
@@ -3273,7 +3273,7 @@
 							"swim_stamina_fraction": 1.0,
 							"trait_primary": "",
 							"trait_secondary": "",
-							"uid": "creature-bbab0d0d7147f48f9e5fa15e562beced",
+							"uid": "creature-ba602ef6d8c32bb5de4ba4826cd10168",
 							"xp": 0
 						}
 					],
@@ -3291,7 +3291,7 @@
 						},
 						"bounty_receipts": [],
 						"creatures": {
-							"creature-bbab0d0d7147f48f9e5fa15e562beced": {
+							"creature-ba602ef6d8c32bb5de4ba4826cd10168": {
 								"best": false,
 								"breakthroughs": [],
 								"cap_level": 10,
@@ -3330,10 +3330,10 @@
 						},
 						"research_receipts": [],
 						"transaction_receipts": [
-							"craft:f32-site-owner:f32:7fdb3370296d120f219918d3043ad1506525c73b3bef892e796d0be85f1dab8e",
-							"craft:f32-site-owner:f32:79663d3782656486cb46f90f2248b3514ade22f4e2adea94a1f108cfd468214d",
-							"craft:f32-site-owner:f32:8a27fa19de7df8a27027df672fcb2b9b4a5282c93b839d221c6e01990678d196",
-							"craft:f32-site-owner:f32:e34a593f006e666ca8f758acea260ed8f3801c2d37d6ec1f2c29b09a9cf69849"
+							"craft:f32-site-owner:f32:0eac8640095dfdb2120147ae1f7809f1bb0bc4b62ab304ee11fc0263eec6f294",
+							"craft:f32-site-owner:f32:bc78fc65c68de5b64997278aa73bb8f1e22cf91c88d9e20c73d50546eda3e1ea",
+							"craft:f32-site-owner:f32:655722575392c149e1901902dceeac357ddd1be6b7d98e8da870c29ac441f114",
+							"craft:f32-site-owner:f32:923c79b2b749595605f6e624c12ad77c03adc7be536bdd9d28f69fb814bfa152"
 						],
 						"waystones_activated": {}
 					},
@@ -3341,7 +3341,7 @@
 				},
 				"character_id": "f32-site-owner",
 				"character_revision": 14,
-				"delivery_id": "creature_training:ddcd16dff44deca45f9b03bbff4437ca920200b3f1f05c91fa5f3d79bfb295fb",
+				"delivery_id": "creature_training:e5a03401b4fb50d9c1384bd9927de8ab12c0341f99aff450df883bc3c4e607b3",
 				"host_context": {
 					"actor_realm": "stormwood",
 					"character_id": "f32-site-owner",
@@ -3355,7 +3355,7 @@
 					"realm": "stormwood",
 					"registered_live_source": true,
 					"resource_runtime_authorized": true,
-					"retained_seed_roll": 0.210133906221017,
+					"retained_seed_roll": 0.605796256102622,
 					"source_available": true,
 					"source_definition": {
 						"amount": 3,
@@ -3400,25 +3400,25 @@
 						"revision": 0
 					},
 					"world_id": "f32-site-world",
-					"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+					"world_namespace": "8e7104335533e98a256254957464b141"
 				},
 				"intent": {
 					"operation": "node",
 					"request": {
-						"action_id": "a196da5a7d66f08d01c596f260bd9c39",
+						"action_id": "6082119c8a21c39a78c56cc0789959d0",
 						"expected_stock_revision": 0,
 						"site_id": "stormwood_harvest_glowmoss_hollows_042"
 					}
 				},
 				"journal_revision": 5,
 				"kind": "creature_training",
-				"receipt": "craft:f32-site-owner:f32:e13f73ced1732d1904a65217856ffd25ffa6609d8ce5cced5a33a5e29bffb318",
-				"session_id": "de94daf54b048ab73a323b92c3ab1ebb",
+				"receipt": "craft:f32-site-owner:f32:96b23317c9c375dfa04f30101a25e6c6140d3229748d3c9d1be7c7c85031dfd4",
+				"session_id": "19e76f5703f4beaa60aed2c2b8bd3306",
 				"source_key": "resource:stormwood:stormwood_harvest_glowmoss_hollows_042",
 				"status": "accepted",
 				"version": 3,
 				"world_id": "f32-site-world",
-				"world_namespace": "40d6ea1690b4066b024b4898017148e7"
+				"world_namespace": "8e7104335533e98a256254957464b141"
 			},
 			"saved_stock": {
 				"generation": 2,
@@ -3426,7 +3426,7 @@
 				"revision": 1
 			},
 			"settlement": {
-				"action_id": "a196da5a7d66f08d01c596f260bd9c39",
+				"action_id": "6082119c8a21c39a78c56cc0789959d0",
 				"verdict": {
 					"character_revision": 14,
 					"durable": true,
@@ -3434,21 +3434,21 @@
 					"ok": true,
 					"owner_acknowledged": true,
 					"owner_saved": true,
-					"receipt": "craft:f32-site-owner:f32:e13f73ced1732d1904a65217856ffd25ffa6609d8ce5cced5a33a5e29bffb318",
+					"receipt": "craft:f32-site-owner:f32:96b23317c9c375dfa04f30101a25e6c6140d3229748d3c9d1be7c7c85031dfd4",
 					"resolved": true,
 					"saved": true,
 					"settled": true
 				}
 			},
 			"source_evidence": null,
-			"walk_end": "(-1720.0, 24.15707, 1271.586)",
+			"walk_end": "(-1720.0, 24.15703, 1271.587)",
 			"walk_start": "(-1720.0, 24.04577, 1276.0)",
-			"walked_metres": 4.4139404296875
+			"walked_metres": 4.4132080078125
 		}
 	],
 	"source_path": "res://data/config/stormwood_harvests.json",
 	"source_runtime_enabled": null,
-	"source_sha256": "8a1743628b93fbca011ea6959c0b396c9194b709fe483be77944d16ebcd8d3d2",
+	"source_sha256": "53978b9b5569ac1ccfd72846163238c34ca25a17e9764c8128fde5a587e38a1d",
 	"two_peer_rejoin": false,
 	"user_data_dir": "/root/.local/share/godot/app_userdata/Tetherbound"
 }

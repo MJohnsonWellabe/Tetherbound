@@ -39,6 +39,6 @@
       "sunleaf",
       "cloudberry"
     ],
-    "runtime_enabled": false
+    "runtime_enabled": true
   }
 }
