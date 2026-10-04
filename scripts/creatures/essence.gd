@@ -280,7 +280,12 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 static func training_projection(record: Dictionary) -> Dictionary:
 	if not record.get("party") is Array or not record.get("inventory") is Array \
 			or not record.get("redesign_character") is Dictionary: return {}
-	return {"party": record.get("party", []).duplicate(true),
+	# Energy is the in-fight move meter, never owner authority; see
+	# character_record_rules.gd portable_projection.
+	var party: Array = record.get("party", []).duplicate(true)
+	for card: Variant in party:
+		if card is Dictionary: card.erase("energy")
+	return {"party": party,
 		"inventory": record.get("inventory", []).duplicate(true),
 		"redesign_character": record.get("redesign_character", {}).duplicate(true)}
 

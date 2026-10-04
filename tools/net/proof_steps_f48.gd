@@ -227,7 +227,7 @@ static func _fallback_request_carrier_matches(edge: Dictionary, request: Diction
 	var personal: Dictionary = request.character_data.duplicate(true)
 	personal["character_id"] = request.get("character_id")
 	var expected: Dictionary = RECORD_RULES.portable_projection(edge.get("files",{}).get("disk",{})).duplicate(true)
-	expected["party"] = replayed_party
+	expected["party"] = RECORD_RULES.portable_projection({"party": replayed_party}).party
 	return _json_equal(RECORD_RULES.portable_projection(personal),expected) \
 		and _json_equal(personal.get("party"),replayed_party) \
 		and _json_equal(personal.get("satchel_escrow"),edge.get("files",{}).get("disk",{}).get("satchel_escrow"))

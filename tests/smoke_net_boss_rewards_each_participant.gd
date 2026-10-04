@@ -99,6 +99,11 @@ func _run() -> void:
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
 	var host_session = await probe(0, "session")
 	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
+	# A real guest arrives with its party in its save; the host admits that
+	# party at join and never adopts later local-only party edits.
+	var adopted: Dictionary = await step(1, "deploy_creature", {"owned": true})
+	check(str(adopted.get("verdict", "")) == "PASS",
+		"peer 1 owns its creature before joining (%s)" % str(adopted.get("detail", "")))
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS",
 		"peer 1 joined peer 0's world on port %d (%s)" % [port, str(joined.get("detail", ""))])
@@ -160,8 +165,15 @@ func _run() -> void:
 		"peer 1 joined the trainer battle already in progress (%s)"
 			% str(joined_fight.get("detail", "")))
 
-	var during = await probe(0, "encounter")
-	var live: Dictionary = during if during is Dictionary else {}
+	# The guest's local join returns before its join RPC reaches the host;
+	# give the host record a bounded window to show both participants.
+	var live: Dictionary = {}
+	for _poll in 30:
+		var during = await probe(0, "encounter")
+		live = during if during is Dictionary else {}
+		if (live.get("participants", []) as Array).size() == 2:
+			break
+		await step(0, "wait", {"frames": 10})
 	check((live.get("participants", []) as Array).size() == 2,
 		"the host's record now holds 2 participants (got %d)"
 			% (live.get("participants", []) as Array).size())

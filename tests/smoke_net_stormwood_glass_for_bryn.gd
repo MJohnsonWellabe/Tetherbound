@@ -17,9 +17,6 @@ extends "res://tests/smoke_net_stormwood_hosted_trainers.gd"
 ## Bryn's Act-I facts and step 1 (the earned route is the continuous smoke's
 ## `--through-bryn` witness), the route-07 reward at Bryn's feet already taken,
 ## and satchel contents granted with `storage_grant`.
-## Initial Hall placement and the open canonical route are mechanics fixtures
-## before admission. The later entry uses the actual saved portal transaction;
-## these fixtures do not claim an earned chapter arrival.
 
 const GLASS := preload("res://scripts/world/stormwood_glass_for_bryn.gd")
 const ROUTE_07_TAKEN := "cache:stormwood:stormwood_pickup_route_07"
@@ -42,9 +39,6 @@ func _run_bryn() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
-	if not await _prepare_initial_portal("stormwood_glass_for_bryn"):
-		quit(await finish())
-		return
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	var session: Dictionary = await _session(0)
@@ -57,8 +51,7 @@ func _run_bryn() -> void:
 	check(_client_peer_id > 1, "client has a distinct real ENet peer id")
 	for flag in [STORMWOOD_KEY, STORMWOOD_GATE]:
 		await _world_flag(flag)
-	var entered := await step(1, "enter_realm", {"realm": STORMWOOD,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_glass_for_bryn"}, REALM_STEP_BUDGET)
+	var entered := await step(1, "enter_realm", {"realm": STORMWOOD}, REALM_STEP_BUDGET)
 	check(str(entered.get("verdict", "")) == "PASS", "client entered Stormwood")
 	if str(entered.get("verdict", "")) != "PASS":
 		quit(await finish())

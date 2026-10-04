@@ -438,7 +438,10 @@ jobs:
         # Two shards (2026-09-25): four measured 3m02-4m29 each including ~2m
         # setup; two keep ~5m of tests per shard under the 12-minute ceiling
         # and free two runner slots for the split verify jobs.
-        shard: [1, 2]
+        # Three (2026-10-04): shard 2 of two had grown to 10-12 min against
+        # the 12-minute ceiling and was cancelled by it twice (CI 37183813895,
+        # 37187293215) with every test passing; shard 1 took ~6 min.
+        shard: [1, 2, 3]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -571,7 +574,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/2 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
+            -- --shard=${{ matrix.shard }}/3 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
 
   # test_veg_corridor.gd, alone, in its own job with its own ceiling.
   #
@@ -2738,17 +2741,16 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Twelve-way scheduling: eight ordinary LPT bins, then split_realms and
-    # each of the three F48 suites alone. Completed case timestamps from
-    # run 37120921415 replace stale weights; failed elapsed times are only
-    # scheduling lower bounds, never successful runtime measurements.
-    # The original 1200-second smoke budget and 30-minute job limit remain.
-    # Unmeasured F48 suites reserve a whole bin so missing prerequisites or
-    # long execution cannot discard another smoke's result.
+    # Nine-way scheduling: eight ordinary LPT bins, then split_realms alone.
+    # Completed case timestamps from run 37120921415 replace stale weights;
+    # failed elapsed times are only scheduling lower bounds, never successful
+    # runtime measurements. The original 1200-second smoke budget and
+    # 30-minute job limit remain. The F48 co-op suites (owner, 2026-10-03)
+    # live on `tb/coop` until F48 itself is built; they return with it.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     timeout-minutes: 30
     needs:
       - changes
@@ -2772,7 +2774,7 @@ jobs:
         env:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 12
+          SHARD_COUNT: 9
           # Smoke wall time only. This leaves ten minutes of the unchanged
           # 30-minute job for checkout, Godot setup, upload and runner drift.
           MEASURED_SHARD_BUDGET_SECONDS: 1200
@@ -2831,8 +2833,6 @@ jobs:
               "tests/smoke_net_water_swimming.gd": 95,
           }
           # Completed FAILED attempts from 37120921415: lower bounds only.
-          # The three F48 prerequisite failures (~0.1s) did not execute suites
-          # and supply no runtime estimate; they get capacity reservations below.
           failed_elapsed_lower_bounds = {
               "tests/smoke_net_boss_rewards_each_participant.gd": 108,
               "tests/smoke_net_catch_race.gd": 202,
@@ -2858,9 +2858,6 @@ jobs:
           ordinary_fallback = 306
           isolated = [
               "tests/smoke_net_split_realms.gd",
-              "tests/smoke_net_f48_behind.gd",
-              "tests/smoke_net_f48_loop.gd",
-              "tests/smoke_net_f48_transactions.gd",
           ]
           files = os.environ["ALL_FILES"].split()
           shard = int(os.environ["SHARD"])
@@ -2917,17 +2914,6 @@ jobs:
               output.write(f"files={mine}\n")
               output.write(f"scheduling_weight_seconds={loads[shard - 1]}\n")
           PY
-      - name: Provision immutable actual F48 inputs
-        if: ${{ !cancelled() && contains(steps.select.outputs.files, 'tests/smoke_net_f48_') }}
-        run: |
-          set -euo pipefail
-          # ROOT commits this directory only after the genuine native producer
-          # and f48_profile_ready.py --require-complete produce every named start.
-          # No placeholder/profile synthesis, skipped suite or soft failure.
-          python3 tools/net/f48_relocate_profile.py \
-            --bundle "$PWD/tests/fixtures/f48-inputs" \
-            --output /tmp/net-ci/f48-relocated-profile.json
-          echo "TB_F48_PROFILE=/tmp/net-ci/f48-relocated-profile.json" >> "$GITHUB_ENV"
       - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:

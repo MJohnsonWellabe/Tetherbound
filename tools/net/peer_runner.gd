@@ -101,6 +101,8 @@ const NET_TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 ## Row 21's `party_grant`: the opening's own door into `Game.party`, and the
 ## level curve `adopt_starter()` reads for a starter.
 const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const NET_PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const NET_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
@@ -863,7 +865,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"heart_place":
 			out = _step_heart_place(args)
 		"heart_activate":
-			out = _step_heart_activate(args)
+			out = await _step_heart_activate(args)
 		"present_publish":
 			out = _step_present_publish(args)
 		"present_damage":
@@ -2593,6 +2595,32 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			% bind_budget}
 
 
+## A harness placement is a jump no player can make. The host's owner-passive
+## replay accepts a long discontinuity only while its own copy of this body
+## stands within 2 m of the new spot (owner_passive_sync.gd _inputs_host), so a
+## step that places the player and moves on at once can strand that input for
+## good: CI 37189095290 client_trainer_rewards waited on 'discontinuity to
+## (80.0, 0.9, 46.0), host body at (81.06, 0.9, 50.45)' and every round reward
+## behind it stalled. On a client, give the discovery tick time to record the
+## jump, then wait (bounded) until the host has acknowledged every recorded
+## input, as a real arrival would before play continues.
+func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
+	var game := root.get_node_or_null(^"Game")
+	var session: Variant = game.get("session") if game != null else null
+	if not session is Node or not (session as Node).has_method("is_host") \
+			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
+		return
+	var passive: Variant = (session as Node).get("_owner_passive")
+	if passive == null:
+		return
+	for frame in budget_frames:
+		var local: Dictionary = passive.get("local")
+		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
+				or (local.get("inputs", []) as Array).is_empty()):
+			return
+		await physics_frame
+
+
 ## Stand the trainer at a point. The travel itself, not a game action.
 ##
 ## A joining player walks to the fight; a headless harness cannot, and must not
@@ -2615,6 +2643,7 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	player.velocity = Vector3.ZERO
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
+	await _await_owner_passive_caught_up()
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
@@ -3436,6 +3465,18 @@ func _step_heart_activate(args: Dictionary) -> Dictionary:
 	var hearts: Variant = game.get("realm_hearts")
 	if hearts == null:
 		return {"verdict": "ERROR", "detail": "no Game.realm_hearts"}
+	# A player presses the shrine prompt through input, which the session owns
+	# while this character's record is mid-transaction (a round reward still
+	# settling after a fight). Wearing or releasing a Heart then would part the
+	# live record from that reward's baseline for good, so wait behind the same
+	# gate.
+	var session: Variant = game.get("session")
+	var waited := 0
+	while session is Node and (session as Node).has_method("owns_input") and (session as Node).call("owns_input") == true:
+		if waited >= 1200:
+			return {"verdict": "FAIL", "detail": "the session still owned input after %d frames" % waited}
+		await physics_frame
+		waited += 1
 	if bool(args.get("release", false)):
 		(hearts as RefCounted).call("clear_active")
 		return {"verdict": "PASS", "detail": "released"}
@@ -4010,6 +4051,7 @@ func _step_trainer_battle(args: Dictionary) -> Dictionary:
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
+		await _await_owner_passive_caught_up()
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
 			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
@@ -4551,6 +4593,22 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	var party: Variant = game.get("party") if game != null else null
 	var size := int((party as RefCounted).call("size")) if party != null else -1
+	# A creature above the starting cap carries the breakthroughs its level
+	# implies, exactly as a caught one does (foundation_capture_rules.gd).
+	# Without them a level-18 grant sits above cap 10 and earns no round XP.
+	var local: Variant = game.get("local") if game != null else null
+	if local != null:
+		var saved: Dictionary = (local as RefCounted).call("save_data")
+		var personal: Dictionary = TEACHING.character_loadout_mirror(saved.get("party", []), (local as RefCounted).get("redesign_character"))
+		# Above the authored ceiling there is no cap to record; such fixtures
+		# (level 99) keep the record they had before this step.
+		if level <= int(BREAKTHROUGH.masters().get("ceiling", 60)):
+			for card: Variant in saved.get("party", []):
+				if card is Dictionary and card.get("uid") == creature.get("uid"):
+					personal = BREAKTHROUGH.initialize_caught(personal, card)
+			if personal.is_empty():
+				return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
+			(local as RefCounted).set("redesign_character", personal)
 	if not PARTY_SEAM.has_game_state():
 		return {"verdict": "FAIL",
 			"detail": "party_seam is running on its FALLBACK array, not Game.party -- "
@@ -4864,6 +4922,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
+	await _await_owner_passive_caught_up()
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
@@ -8016,7 +8075,18 @@ func _step_save_reload_here(_args: Dictionary) -> Dictionary:
 	var host_owned := session == null or not (session as Node).has_method("is_host") \
 		or bool((session as Node).call("is_host"))
 	if host_owned:
-		if not bool(game.call("autosave_here")):
+		# A host save is refused while one of its own reward installs is still
+		# saving (session _owner_training_snapshot_allowed), which is routine
+		# right after a boss fight. A player's autosave simply runs again; give
+		# the in-flight saves a bounded window to settle the same way.
+		var host_saved := false
+		for _attempt in 40:
+			if bool(game.call("autosave_here")):
+				host_saved = true
+				break
+			for _frame in 15:
+				await physics_frame
+		if not host_saved:
 			return {"verdict": "FAIL", "detail": "host autosave_here refused"}
 		if not bool((save_system as RefCounted).call("load_slot", game, int(game.call("autosave_slot")))):
 			return {"verdict": "FAIL", "detail": "host load_slot refused the autosave"}

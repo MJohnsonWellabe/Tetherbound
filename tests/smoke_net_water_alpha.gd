@@ -4,7 +4,6 @@ extends "res://tests/helpers/net_harness.gd"
 ## Host remains Meadows; client enters Water through the real realm router.
 ## Position/owned level49 Mosshell are explicit fixtures. No damage or result
 ## fixture: the host shell's real Alpha attacks the actual remote participant.
-const PORTAL_FIXTURE := "initial_hall_position_and_open_route_no_earned_credit"
 
 func _initialize() -> void:
 	_run()
@@ -39,14 +38,6 @@ func _run() -> void:
 			quit(await finish())
 			return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 900000.0
-	if not water_only:
-		for fixture_peer in 2:
-			var prepared: Dictionary = await step(fixture_peer, "enter_realm", {"realm": "water",
-				"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "water_alpha", "portal_prepare_only": true})
-			check(prepared.get("verdict") == "PASS", "Disclosed initial Hall placement/open canonical route without earned chapter credit")
-			if prepared.get("verdict") != "PASS":
-				quit(await finish())
-				return
 	check((await step(0, "host")).get("verdict") == "PASS", "Host starts production session")
 	var session: Dictionary = await probe(0, "session")
 	check((await step(1, "join", {"host": "127.0.0.1", "port": session.enet_port})).get("verdict") == "PASS", "Client joins production session")
@@ -56,8 +47,7 @@ func _run() -> void:
 		for flag in ["realm_key_water", "realm_gate_water_unlocked"]:
 			check((await step(0, "story_flag", {"flag": flag, "scope": "world"})).get("verdict") == "PASS", "Host opens explicit Water entry fixture")
 			check((await step(1, "wait_flag", {"flag": flag})).get("verdict") == "PASS", "Client receives Water entry fixture")
-		var entered: Dictionary = await step(1, "enter_realm", {"realm": "water",
-			"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "water_alpha"}, 18000)
+		var entered: Dictionary = await step(1, "enter_realm", {"realm": "water"}, 18000)
 		check(entered.get("verdict") == "PASS", "Client enters Water through Game.enter_realm")
 		if entered.get("verdict") != "PASS":
 			quit(await finish())

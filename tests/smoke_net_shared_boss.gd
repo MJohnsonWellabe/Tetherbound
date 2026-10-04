@@ -201,6 +201,8 @@ const APART_Z := 1.5
 ## other lever and is the named next step if this ever exhausts, but it would
 ## change what the passing runs exercised, and a cap that is never reached cannot.
 const FRIENDLY_TRIES := 12
+## How many FRIENDLY_SETTLE waits a swing's refusal may take to arrive.
+const REFUSAL_POLLS := 12
 ## A short settle for that staging, for the same reason: a long one gives each
 ## manager time to pull its creature back.
 const FRIENDLY_SETTLE := 8
@@ -419,8 +421,16 @@ func _run() -> void:
 		"peer 1 joined the boss fight already in progress (%s)" % str(joined_fight.get("detail", "")))
 
 	# --- 1. ONE record, not two fights ----------------------------------------
-	var host_live: Dictionary = await _boss(0)
-	var host_rec: Dictionary = host_live.get("record", {}) as Dictionary
+	# The guest's local join returns before its join RPC reaches the host;
+	# give the host record a bounded window to show both participants.
+	var host_live: Dictionary = {}
+	var host_rec: Dictionary = {}
+	for _poll in 30:
+		host_live = await _boss(0)
+		host_rec = host_live.get("record", {}) as Dictionary
+		if (host_rec.get("participants", []) as Array).size() == 2:
+			break
+		await step(0, "wait", {"frames": 10})
 	check((host_rec.get("participants", []) as Array).size() == 2,
 		"the host's ONE record holds 2 participants (got %d)"
 			% (host_rec.get("participants", []) as Array).size())
@@ -744,7 +754,11 @@ func _run() -> void:
 		staged += 1
 		guest_at = await _host_view_of_guest_creature()
 		if guest_at == Vector3.INF:
-			break
+			# Between rounds a guest's party update can briefly put its creature
+			# away and send it out again. Wait for the host to hold it once more
+			# rather than giving up on the first read.
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE * 4})
+			continue
 		var stand := guest_at + Vector3(0.0, 0.0, APART_Z)
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
@@ -766,6 +780,8 @@ func _run() -> void:
 		victim_hp = float(pre.get("my_creature_hp", -1.0))
 		var at_teammate := host_creature_at - guest_at
 		at_teammate.y = 0.0
+		if at_teammate.length() < 0.05:
+			continue
 		friendly = await step(1, "strike",
 			{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
@@ -774,6 +790,17 @@ func _run() -> void:
 		boss_after = float((post.get("record", {}) as Dictionary).get("hp", -1.0))
 		victim_after = float(post.get("my_creature_hp", -1.0))
 		refusal = (await _boss(1)).get("refusal", {}) as Dictionary
+		# On the move-commit path the swing reaches the host as a move start,
+		# then a strike after the wind-up, and only then the refusal travels
+		# back -- longer than STRIKE_SETTLE under CI load (CI 37179276640: the
+		# guest logged friendly_target after this read had come back empty, and
+		# the next swing went stale). The HP and tally reads above stay inside
+		# the window; only the refusal's arrival is waited for.
+		for _wait in REFUSAL_POLLS:
+			if not str(refusal.get("code", "")).is_empty():
+				break
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
+			refusal = (await _boss(1)).get("refusal", {}) as Dictionary
 		# The refusal's ARRIVAL is part of `clean`, not merely something read
 		# once the swing looked good. Without this the loop exits the moment the
 		# swing lands cleanly, and if the host's answer has not made the round
@@ -807,11 +834,16 @@ func _run() -> void:
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate's creature reached the host (%s)"
 			% str(friendly.get("detail", "")))
-	# The client's own local answer is `pending`, and `pending` is the host being
-	# ASKED, not the host saying no. Asserted so nothing here can mistake the two.
+	# The client's own local answer never refuses: it is `pending` (the host
+	# being ASKED) on the legacy strike path, or the accepted local move start
+	# when F23's move commit is live (the swing then goes through the player's
+	# own input path and the host still decides). Either way no local refusal
+	# code, so nothing here can mistake the host saying no for the client.
 	var local_answer: Dictionary = (friendly.get("data", {}) as Dictionary)
-	check(bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true)),
-		"and the client's own local answer was `pending` -- the host being asked, not a refusal"
+	var asked_host := bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true))
+	var started_move := bool(local_answer.get("ok", false)) and not bool(local_answer.get("pending", false))
+	check((asked_host or started_move) and str(local_answer.get("code", "")).is_empty(),
+		"and the client's own local answer was not a refusal -- the host decides"
 		+ " (ok=%s pending=%s code='%s')" % [str(local_answer.get("ok", true)),
 			str(local_answer.get("pending", false)), str(local_answer.get("code", ""))])
 	# HALF ONE: the host said no, out loud, with §5's own code, and the sentence

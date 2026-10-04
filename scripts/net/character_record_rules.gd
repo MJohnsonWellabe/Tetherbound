@@ -29,7 +29,22 @@ static func portable_projection(personal: Dictionary) -> Dictionary:
 				rows[key] = row.duplicate(true) if row is Dictionary else row
 			if str(key).begins_with("actor_vitals:") or (row is Dictionary and row.get("kind") == "actor_vitals"):
 				vitals[key] = row.duplicate(true) if row is Dictionary else row
-	return {"character_id": personal.get("character_id"), "party": personal.get("party"),
+	# A creature's energy is the in-fight move meter. The host tracks it per
+	# encounter (encounter_host move_resources) and never reads it from the
+	# admitted record, and a guest's own fights change it without telling the
+	# host, so it stays out of the portable authority that both sides compare.
+	var party: Variant = personal.get("party")
+	if party is Array:
+		var cards: Array = []
+		for card: Variant in party:
+			if card is Dictionary and card.has("energy"):
+				var trimmed: Dictionary = card.duplicate(true)
+				trimmed.erase("energy")
+				cards.append(trimmed)
+			else:
+				cards.append(card)
+		party = cards
+	return {"character_id": personal.get("character_id"), "party": party,
 		"redesign_character": personal.get("redesign_character"), "inventory": personal.get("inventory"),
 		"portal_escrow": rows, "vitals_escrow": vitals,
 		"equipment": personal.get("equipment", empty_equipment()),

@@ -17,6 +17,10 @@ const EARLY_MINIMUM_MS := 180
 const RELEASE_WINDOW_ATTEMPTS := 3
 const ELAPSED_MARGIN_MS := 60
 const REJECTION_DELIVERY_MARGIN_MS := 250
+## The charged move's authored cooldown, which the host adds to an accepted
+## action's arrival to set its deadline (stormwood_hosted_trainer.gd _strike;
+## see the Arc Lash note below). Read back to 1ms, the host's ceil.
+const AUTHORED_CHARGED_COOLDOWN_MS := 1200
 
 
 func _initialize() -> void:
@@ -35,9 +39,6 @@ func _run_livewire() -> void:
 		if legacy.get("verdict") != "PASS":
 			quit(await finish())
 			return
-	if not await _prepare_initial_portal("stormwood_livewire"):
-		quit(await finish())
-		return
 	var hosted := await step(0, "host")
 	check(str(hosted.get("verdict", "")) == "PASS", "peer 0 started the real listen host")
 	if str(hosted.get("verdict", "")) != "PASS":
@@ -65,8 +66,7 @@ func _run_livewire() -> void:
 			check(str(seen.get("verdict", "")) == "PASS",
 				"peer %d received '%s'" % [peer, flag])
 
-	var entered := await step(1, "enter_realm", {"realm": STORMWOOD,
-		"actual_portal_fixture": PORTAL_FIXTURE, "portal_regression": "stormwood_livewire"}, REALM_STEP_BUDGET)
+	var entered := await step(1, "enter_realm", {"realm": STORMWOOD}, REALM_STEP_BUDGET)
 	check(str(entered.get("verdict", "")) == "PASS", "client entered Stormwood")
 	if str(entered.get("verdict", "")) != "PASS":
 		quit(await finish())
@@ -178,18 +178,47 @@ func _run_livewire() -> void:
 	check(str(inactive_authority.get("active_relic_id", "")).is_empty()
 		and is_equal_approx(float(inactive_authority.get("cooldown_multiplier", -1.0)), 1.0),
 		"host resolved the placed-but-inactive Spark to the authored cooldown")
-	var before_inactive_deadline := await _await_before_host_deadline(
-		int(inactive_authority.get("deadline_ms", 0)))
+	# The early action is sent once a host sample lands in the window, but a
+	# loaded host can still receive it after the deadline (CI 37175808221 shard
+	# 8: sampled 346ms before, accepted). The host's own new deadline says when
+	# it accepted: one authored cooldown after arrival. An acceptance at or past
+	# the old deadline is an inconclusive sample, so it becomes the next
+	# baseline and the window is sampled again. An acceptance before the old
+	# deadline is still the failure this block exists to catch.
+	var accepted_action := 801
+	var next_action := 802
+	var before_inactive_deadline: Dictionary = {}
+	var early: Dictionary = {}
+	var after_early: Dictionary = {}
+	var conclusive := false
+	for attempt in RELEASE_WINDOW_ATTEMPTS:
+		before_inactive_deadline = await _await_before_host_deadline(
+			int(inactive_authority.get("deadline_ms", 0)))
+		early = await _charged(next_action, charged, after_first, 8)
+		after_early = await _await_host_time(
+			int(inactive_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
+		var late_authority := _authority(after_early)
+		var arrived_ms := int(late_authority.get("deadline_ms", 0)) - AUTHORED_CHARGED_COOLDOWN_MS
+		if int(late_authority.get("last_accepted_action", 0)) != next_action \
+				or arrived_ms + 1 < int(inactive_authority.get("deadline_ms", 0)):
+			conclusive = true
+			break
+		print("inactive baseline: the early action reached the host %dms after its deadline (attempt %d of %d); re-arming"
+			% [arrived_ms - int(inactive_authority.get("deadline_ms", 0)), attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+		accepted_action = next_action
+		after_first = after_early
+		inactive_authority = late_authority
+		next_action += 1
+	check(conclusive, "an early action reached the host before its deadline within %d attempt(s)"
+		% RELEASE_WINDOW_ATTEMPTS)
 	check(_safe_early(before_inactive_deadline),
 		"coordinator reached a safe pre-deadline window on the host clock")
-	var early := await _charged(802, charged, after_first, 8)
 	check(str(early.get("verdict", "")) == "PASS", "sent a fresh pre-cooldown action")
-	var after_early := await _await_host_time(
-		int(inactive_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
 	check(_hp(after_early) == _hp(after_first) and _seq(after_early) == _seq(after_first),
 		"default host deadline refused the fresh early action")
-	check(int(_authority(after_early).get("last_accepted_action", 0)) == 801,
+	check(int(_authority(after_early).get("last_accepted_action", 0)) == accepted_action,
 		"the refused early action did not advance host authority")
+	next_action += 1
 
 	# Activate while the same creature remains deployed. EncounterDirector sees
 	# RealmHeartState.revision and refreshes the existing deployment card; the
@@ -198,9 +227,10 @@ func _run_livewire() -> void:
 	if not await _restage_for_strike("elapsed baseline"):
 		quit(await finish())
 		return
-	var baseline_ready := await _charged(803, charged, after_early, 2)
+	var baseline_action := next_action
+	var baseline_ready := await _charged(baseline_action, charged, after_early, 2)
 	check(str(baseline_ready.get("verdict", "")) == "PASS", "sent the elapsed baseline action")
-	var after_baseline := await _await_host_action(803)
+	var after_baseline := await _await_host_action(baseline_action)
 	check(_hp(after_baseline) < _hp(after_early), "default cooldown accepts after 1.2 s")
 	var activated := await step(1, "heart_activate", {"heart": "stormwood"})
 	check(str(activated.get("verdict", "")) == "PASS", "client personally activated Livewire")
@@ -212,9 +242,9 @@ func _run_livewire() -> void:
 	if not await _restage_for_strike("first Livewire"):
 		quit(await finish())
 		return
-	var livewire_first := await _charged(804, charged, after_baseline, 2)
+	var livewire_first := await _charged(baseline_action + 1, charged, after_baseline, 2)
 	check(str(livewire_first.get("verdict", "")) == "PASS", "sent the first Livewire action")
-	var after_livewire_first := await _await_host_action(804)
+	var after_livewire_first := await _await_host_action(baseline_action + 1)
 	check(_hp(after_livewire_first) < _hp(after_baseline), "the first Livewire action landed")
 	var livewire_authority := _authority(after_livewire_first)
 	check(str(livewire_authority.get("active_relic_id", "")) == "stormwood"
@@ -224,9 +254,9 @@ func _run_livewire() -> void:
 	if not await _restage_for_strike("second Livewire"):
 		quit(await finish())
 		return
-	var livewire := await _charged(805, charged, after_livewire_first, 8)
+	var livewire := await _charged(baseline_action + 2, charged, after_livewire_first, 8)
 	check(str(livewire.get("verdict", "")) == "PASS", "sent a fresh Livewire action")
-	var after_livewire := await _await_host_action(805)
+	var after_livewire := await _await_host_action(baseline_action + 2)
 	check(_hp(after_livewire) < _hp(after_livewire_first),
 		"host accepted the same charged move after its validated Livewire deadline (%s)"
 			% _geometry_detail(after_livewire.get("charged_geometry", {}) as Dictionary))
@@ -249,7 +279,7 @@ func _run_livewire() -> void:
 	# itself is unchanged; only a sample that actually lands in it counts.
 	# This is the last block in the smoke, so higher action ids collide with
 	# nothing after it.
-	var release_accepted := 806
+	var release_accepted := baseline_action + 3
 	var before_state := after_livewire
 	var after_release_first: Dictionary = {}
 	var release_authority: Dictionary = {}
@@ -274,10 +304,33 @@ func _run_livewire() -> void:
 		release_accepted += 2
 	check(_safe_early(before_release_deadline),
 		"released baseline reached a safe pre-deadline host window")
-	var release_early := await _charged(release_accepted + 1, charged, after_release_first, 8)
+	# The same late-arrival case as the inactive block (CI 37185453746 shard
+	# 8): an early action the host accepted at or past its old deadline is an
+	# inconclusive sample, not a missing refusal. It becomes the next baseline
+	# and the window is sampled again.
+	var release_early: Dictionary = {}
+	var after_release_early: Dictionary = {}
+	var release_conclusive := false
+	for attempt in RELEASE_WINDOW_ATTEMPTS:
+		release_early = await _charged(release_accepted + 1, charged, after_release_first, 8)
+		after_release_early = await _await_host_time(
+			int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
+		var late_authority := _authority(after_release_early)
+		var arrived_ms := int(late_authority.get("deadline_ms", 0)) - AUTHORED_CHARGED_COOLDOWN_MS
+		if int(late_authority.get("last_accepted_action", 0)) != release_accepted + 1 \
+				or arrived_ms + 1 < int(release_authority.get("deadline_ms", 0)):
+			release_conclusive = true
+			break
+		print("released baseline: the early action reached the host %dms after its deadline (attempt %d of %d); re-arming"
+			% [arrived_ms - int(release_authority.get("deadline_ms", 0)), attempt + 1, RELEASE_WINDOW_ATTEMPTS])
+		release_accepted += 1
+		after_release_first = after_release_early
+		release_authority = late_authority
+		before_release_deadline = await _await_before_host_deadline(
+			int(release_authority.get("deadline_ms", 0)))
+	check(release_conclusive, "a released early action reached the host before its deadline within %d attempt(s)"
+		% RELEASE_WINDOW_ATTEMPTS)
 	check(str(release_early.get("verdict", "")) == "PASS", "sent a fresh action after release")
-	var after_release_early := await _await_host_time(
-		int(release_authority.get("deadline_ms", 0)) + REJECTION_DELIVERY_MARGIN_MS)
 	check(_hp(after_release_early) == _hp(after_release_first)
 		and _seq(after_release_early) == _seq(after_release_first),
 		"releasing Livewire restored the host's authored deadline refusal")
