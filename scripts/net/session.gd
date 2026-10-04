@@ -5620,7 +5620,10 @@ func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> void:
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_travel_lifecycle(sample: Dictionary) -> void:
-	if not is_host() or not portal_runtime_ready(): return
+	# Resources, the Forge and rematches read this lifecycle too, so it is not
+	# gated on portals; accept() still checks the admitted sender's character,
+	# epoch, world and sequence. Portal/Home Key decisions keep their own gate.
+	if not is_host(): return
 	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 	if lifecycle != null: lifecycle.call("accept", multiplayer.get_remote_sender_id(), sample)
 
