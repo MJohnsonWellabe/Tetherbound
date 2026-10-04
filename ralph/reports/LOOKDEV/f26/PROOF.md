@@ -44,8 +44,19 @@ Checkpoint comments include criterion labels/evidence paths, changed shared file
 review status and required input. Requests and acknowledgments belong in replies
 on the same PR discussion. [Claude acknowledged receipt](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-5982376444)
 and is incorporating checkpoints in the hourly board. Claude owns subsequent STATE
-updates; lane status stays here to avoid shared-file conflicts. F17 route/source and
-F21 camera-ready source pins are pending from the coordinator.
+updates; lane status stays here to avoid shared-file conflicts. F17 route/source
+pins remain pending. F21 is pinned by the coordinator at
+`61a6b5e4c92457e836e60f342a31af9187998329`; CPU-only overlay evidence is under
+[LOOKDEV/handoffs/f21](../handoffs/f21/CPU_PREFLIGHT.md), without native acceptance.
+
+The coordinator's later split assigns Low/Compatibility visual-only census,
+Low selection/persistence and route images to `tb/lookdev-low`. That lane reuses
+the published census schema. This lane keeps Medium/High material/visual
+matrices, native per-preset ranges, **all hardware route timing including Low**,
+and the Ally package. Cloudreach scene fixes and Compatibility visual reproofs
+belong to Claude's `tb/visual-cloudreach`; this lane does not write that branch.
+The original complete F26 proof still requires both visual halves and hardware
+timing. [Coordinator split](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-5983334620).
 
 ## GPU scheduling
 

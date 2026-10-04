@@ -1,0 +1,64 @@
+{
+  "scope": "CPU-only overlay load and deliberate headless refusal on clean pinned F21 source and older lookdev parent; no world, native capture, timing or feature acceptance.",
+  "runtime_source_pin": "61a6b5e4c92457e836e60f342a31af9187998329",
+  "helper": "D:\\tetherbound\\redesign-lookdev\\tools\\capture_f21_native_hit.gd",
+  "helper_sha256": "68d788683f2733dd0d9b68fd99876223ae68b9b4a877ff7ee4660395f78dbb14",
+  "audit_helpers": {
+    "lookdev_capture_bootstrap.gd": "c24b97df0b60a75b37f9f2101073305fe6cafd60eb38f83096224f152ce413fd",
+    "capture_manifest_writer.gd": "f7fbf392061448a091dce0953ccbd3f281ad2626b56eaf7a507afab1b0e9adb1"
+  },
+  "steps": [
+    {
+      "name": "pinned-parent",
+      "source_commit": "61a6b5e4c92457e836e60f342a31af9187998329",
+      "parent_tool_sha256": "984a92765e65d6af525ccba4757336977e563524655a170efc127bd6ec28f806",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\f21-native-61a6b5e4",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\capture_f21_native_hit.gd",
+        "--",
+        "--preset=Medium",
+        "--source-commit=61a6b5e4c92457e836e60f342a31af9187998329",
+        "--out=D:/tetherbound/.artifacts/f21-native-entry-20261004T192602Z/pinned-parent-refused",
+        "--sequence"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 10.98499999998603,
+      "log": "D:\\tetherbound\\.artifacts\\f21-native-entry-20261004T192602Z\\pinned-parent.log",
+      "log_sha256": "fbbfe1fc92c09d7ceb7cb2319e466f44dfc339f66de1634513bf00aca6e88c83",
+      "pass": true
+    },
+    {
+      "name": "older-lookdev-parent",
+      "source_commit": "8593c48877b55d442578c59efec02a9f2ef7aaf3",
+      "parent_tool_sha256": "735722da0320bf72c870d136a19074e85cbc8cedd5e6dec2d841b6394ed67ebf",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\capture_f21_native_hit.gd",
+        "--",
+        "--preset=Medium",
+        "--source-commit=8593c48877b55d442578c59efec02a9f2ef7aaf3",
+        "--out=D:/tetherbound/.artifacts/f21-native-entry-20261004T192602Z/older-lookdev-parent-refused",
+        "--sequence"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 11.01500000001397,
+      "log": "D:\\tetherbound\\.artifacts\\f21-native-entry-20261004T192602Z\\older-lookdev-parent.log",
+      "log_sha256": "fbbfe1fc92c09d7ceb7cb2319e466f44dfc339f66de1634513bf00aca6e88c83",
+      "pass": true
+    }
+  ]
+}
