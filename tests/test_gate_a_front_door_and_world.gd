@@ -4,6 +4,15 @@ const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const TITLE_SCRIPT := preload("res://scripts/ui/title_screen.gd")
 const PREFABS_PATH := "res://data/config/building_prefabs.json"
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const F26_ENTRY := preload("res://tools/f26_export_bootstrap.gd")
+
+
+func test_only_exact_f26_test_flag_requests_exported_route() -> void:
+	assert_true(F26_ENTRY.requested(PackedStringArray(["--f26-route", "--biome=meadows"])))
+	assert_false(F26_ENTRY.requested(PackedStringArray()))
+	assert_false(F26_ENTRY.requested(PackedStringArray(["--f26-route-later"])))
+	assert_false(F26_ENTRY.requested(PackedStringArray(["--verify-export"])))
+	assert_false(F26_ENTRY.requested(PackedStringArray(["--mp-join", "127.0.0.1"])))
 
 
 func test_game_boots_to_lightweight_title_front_door() -> void:

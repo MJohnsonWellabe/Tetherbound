@@ -54,3 +54,23 @@ release integrity fixtures with no console wrapper: valid package PASS; modified
 PCK, missing CMD, parent-directory escape and duplicate EXE all refused.
 The prior 19 receipt checks remain passing. Bundle parity and actual exported
 native runs remain separate; no owner result is established by source review.
+
+## Embedded release entry
+
+Official pinned release templates disable CLI script/path overrides. The owner
+launcher now passes an exact `-- --f26-route` user argument. A small title entry
+attaches the existing production capture script to its SceneTree after disabling
+and detaching the unbuilt title; autoloads remain available. Normal title behavior
+is unchanged when the flag is absent. Missing/invalid/custom-loop cases fail closed.
+
+Independent scoped source review: **PASS**, same reviewer, 2026-10-04. An
+intermediate queued-but-active title lifecycle gap was found and fixed before
+commit. Reviewed bootstrap SHA-256:
+`3a9899d20c9a899099d65a7bc2d54503c68b8e929fbc87678b80aa9263b91b59`.
+
+Author source CPU checks: normal title exit 0, explicit route entry reaches the
+expected headless refusal exit 2, both zero errors; focused front-door tests
+5 / 29 assertions / zero failures. [Receipt](export-entry-source-preflight.json).
+This proves source dispatch, not exported native behavior or Ally performance.
+Actual release dispatch and packaged-route rendering still require their own
+checks before owner delivery.

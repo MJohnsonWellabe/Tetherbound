@@ -125,7 +125,7 @@ try {
     # Start-Process needs an explicitly quoted argument string on Windows, even
     # when ArgumentList is an array. These paths are parameters, never shell code.
     if ($casePath.Contains('"')) { throw "Output cannot contain a quote." }
-    $argumentText = '--rendering-method forward_plus --resolution 1920x1080 --log-file "' + $engineLog + '" --script res://tools/capture_lookdev_route.gd -- --biome=' +
+    $argumentText = '--rendering-method forward_plus --resolution 1920x1080 --log-file "' + $engineLog + '" -- --f26-route --biome=' +
       $biome + ' --preset=Medium --source-commit=' + $manifest.source_commit + ' "--output=' + $casePath.Replace([char]92,[char]47) + '"'
     # The release preset exports the GUI executable without a console wrapper.
     # The owner watches this interactive measurement window; engine logs are
