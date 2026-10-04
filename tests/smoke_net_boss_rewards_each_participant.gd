@@ -17,7 +17,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## the same call `trainer_npc.gd` makes when a player presses the challenge
 ## prompt). Peer 1 joins that fight already in progress (§6). Peer 0 then fights
 ## Bryn's whole team down with real `strike_intent` submissions, so the host
-## arbitrates every blow. Then:
+## arbitrates every blow. The driver supplies no self-HP top-ups. Then:
 ##
 ##   * **once for the world** -- Bryn's `defeat_flag` is set on BOTH peers, and
 ##     peer 1 never fought a trainer battle of its own: it has no
@@ -99,6 +99,11 @@ func _run() -> void:
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
 	var host_session = await probe(0, "session")
 	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
+	# A real guest arrives with its party in its save; the host admits that
+	# party at join and never adopts later local-only party edits.
+	var adopted: Dictionary = await step(1, "deploy_creature", {"owned": true})
+	check(str(adopted.get("verdict", "")) == "PASS",
+		"peer 1 owns its creature before joining (%s)" % str(adopted.get("detail", "")))
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS",
 		"peer 1 joined peer 0's world on port %d (%s)" % [port, str(joined.get("detail", ""))])
@@ -108,8 +113,12 @@ func _run() -> void:
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 	# --- end of the handshake block -------------------------------------------
 
+	# `owned`: the creature each peer fights with is in its own party, as it is
+	# for every real player. The host admits a move only from the striker's
+	# own party row (`encounter_director.gd::_host_move_start`); an unowned
+	# fixture body has every swing refused and Bryn is never beaten.
 	for i in 2:
-		var out: Dictionary = await step(i, "deploy_creature", {})
+		var out: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
 
@@ -156,8 +165,15 @@ func _run() -> void:
 		"peer 1 joined the trainer battle already in progress (%s)"
 			% str(joined_fight.get("detail", "")))
 
-	var during = await probe(0, "encounter")
-	var live: Dictionary = during if during is Dictionary else {}
+	# The guest's local join returns before its join RPC reaches the host;
+	# give the host record a bounded window to show both participants.
+	var live: Dictionary = {}
+	for _poll in 30:
+		var during = await probe(0, "encounter")
+		live = during if during is Dictionary else {}
+		if (live.get("participants", []) as Array).size() == 2:
+			break
+		await step(0, "wait", {"frames": 10})
 	check((live.get("participants", []) as Array).size() == 2,
 		"the host's record now holds 2 participants (got %d)"
 			% (live.get("participants", []) as Array).size())
@@ -170,7 +186,7 @@ func _run() -> void:
 		+ "so any defeat flag it ends up holding can only have come from the host")
 
 	# --- and peer 0 fights Bryn's team down ------------------------------------
-	var won: Dictionary = await step(0, "win_trainer_battle", {}, 6000)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false}, 6000)
 	check(str(won.get("verdict", "")) == "PASS",
 		"peer 0 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":

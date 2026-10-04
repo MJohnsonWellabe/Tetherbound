@@ -34,6 +34,8 @@ func _ready() -> void:
 ## first press consumes/key-opens atomically and the second enters through the
 ## already-authorised physical gate.
 func _on_water_activated() -> void:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return
 	var game := _game()
 	match state_for(game):
 		STATE_UNLOCKABLE:
@@ -48,7 +50,7 @@ func _on_water_activated() -> void:
 
 
 func try_unlock(game: Node) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	if is_unlocked(game):
 		return true
@@ -64,7 +66,7 @@ func try_unlock(game: Node) -> bool:
 
 
 func try_enter(game: Node) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	if game == null or not is_unlocked(game) or destination_realm.is_empty():
 		return false
@@ -80,9 +82,11 @@ func try_enter(game: Node) -> bool:
 
 ## Pure host-side proximity policy. The actor position comes from
 ## StormwoodEncounterHub.actor_for(peer), never from the request.
+## Explicit Game uses the same runtime mode as host_commit; ordinary callers
+## resolve the current root Game when this optional argument is omitted.
 static func request_allowed(flags: RefCounted, actor_position: Vector3,
-		gate_position: Vector3, radius_m: float) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		gate_position: Vector3, radius_m: float, game: Object = null) -> bool:
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	return flags != null and bool(flags.call("has", WATERWARD_FLAG)) \
 		and actor_position.is_finite() and gate_position.is_finite() \
@@ -95,7 +99,7 @@ static func request_allowed(flags: RefCounted, actor_position: Vector3,
 ## delta is published until both mutations have reached the world save. Any
 ## refusal or failed journal restores the whole world and sequence first.
 static func host_commit(game: Object, ledger: RefCounted) -> Dictionary:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return _refuse("legacy_physical_crossings_disabled", "Use the Crossing Hall portals.")
 	if game == null or not game.has_method("is_host") or not bool(game.call("is_host")):
 		return _refuse("not_host", "Only the host can open the Waterward gate.")

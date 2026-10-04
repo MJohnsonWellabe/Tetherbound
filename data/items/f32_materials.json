@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": true,
+  "items": {
+    "rootiron_ingot": {
+      "name": "Rootiron Ingot",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#a6a076",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Meadows metal refined at the Forge for Rootiron gear.",
+      "description": "Refined from Rootstone and Ironwood. A Meadows tier material used to craft gear at the homestead."
+    },
+    "tidesteel_ingot": {
+      "name": "Tidesteel Ingot",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#83b9ba",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Tidewake metal refined at the Forge for Tidesteel gear.",
+      "description": "Refined from Sluice Metal and Reef Stone. A Tidewake tier material used to craft gear at the homestead."
+    },
+    "skyglass_ingot": {
+      "name": "Skyglass Ingot",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#b4cadc",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Cloudreach glass refined at the Forge for Skyglass gear.",
+      "description": "Refined from Cliffglass Ore and Windworn Heartwood. A Cloudreach tier material used to craft gear at the homestead."
+    },
+    "stormglass_plate": {
+      "name": "Stormglass Plate",
+      "kind": "material",
+      "stack": 50,
+      "colour": "#b6add2",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "Stormwood glass refined at the Forge for Stormglass gear.",
+      "description": "Refined from Stormglass and Thunderwood. A Stormwood tier material used to craft gear at the homestead."
+    },
+    "tide_pearl": {
+      "name": "Tide Pearl",
+      "kind": "resource",
+      "stack": 30,
+      "colour": "#b4d6dc",
+      "icon": "res://assets/ui/icons/items/stone.png",
+      "blurb": "A smooth pearl gathered in Tidewake for homestead crafts.",
+      "description": "A pearl found in Tidewake's shallows. Used at the homestead to make Pearl charms. Gathered by hand."
+    },
+    "seed_ground": {
+      "name": "Rootbud Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#b39b68",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Rootbud at the Farm for ground ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Rootbud grows as in-game days pass; pick it by hand when ripe."
+    },
+    "seed_water": {
+      "name": "Tidebud Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#66b8d9",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Tidebud at the Farm for water ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Tidebud grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_air": {
+      "name": "Galebloom Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#b5d6b9",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Galebloom at the Farm for air ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Galebloom grows as in-game days pass; pick it by hand when ripe."
+    },
+    "seed_electric": {
+      "name": "Sparkstem Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#e5cb73",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Sparkstem at the Farm for electric ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Sparkstem grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_fire": {
+      "name": "Emberbloom Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#e79b60",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Emberbloom at the Farm for fire ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Emberbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_dark": {
+      "name": "Duskcap Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#9b88b8",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Duskcap at the Farm for dark ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Duskcap grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_ice": {
+      "name": "Frostbloom Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#a6d9dd",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Frostbloom at the Farm for ice ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Frostbloom grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    },
+    "seed_psychic": {
+      "name": "Mindleaf Seeds",
+      "kind": "resource",
+      "stack": 50,
+      "colour": "#c6a2d6",
+      "icon": "res://assets/ui/icons/items/berries.png",
+      "blurb": "Sow Mindleaf at the Farm for psychic ingredients and essence.",
+      "description": "Plant by hand in a tilled homestead plot. Mindleaf grows as in-game days pass; pick it by hand when ripe. Off-biome crops need the Greenhouse."
+    }
+  },
+  "display_overrides": {
+    "hide_helm": {
+      "name": "Padded Helm",
+      "blurb": "Woven padding over the crown. Softens a bad fall.",
+      "description": "Stiffened woven padding cushions accidental knocks and hard landings. The trainer never fights."
+    },
+    "hide_vest": {
+      "name": "Padded Vest",
+      "blurb": "Layered woven padding over the chest and back.",
+      "description": "Two woven layers cushion the ribs and shoulders against hard landings."
+    },
+    "hide_leggings": {
+      "name": "Padded Leggings",
+      "blurb": "Tough cloth padding over the thighs and knees.",
+      "description": "Woven pads cover the thighs and knees, cushioning hard landings on uneven ground."
+    },
+    "hide_boots": {
+      "name": "Padded Boots",
+      "blurb": "Thick woven soles cushion the ankles.",
+      "description": "Tough woven uppers and cushioned soles soften awkward landings."
+    },
+    "saddle_frame": {
+      "name": "Saddle Frame",
+      "blurb": "A rootstone-braced frame, ready for woven straps and a creature mount."
+    },
+    "insulated_boots": {
+      "description": "Dry insulating layers under tough cloth cut lightning strike damage by 15% and Static duration to 85%; all four insulated pieces turn a strike into stagger only."
+    },
+    "stoneguard_brew": {
+      "description": "A gritty brew helps the creature brace for a hard fight. Fur and feathers sit heavier on the drinker for a minute and a half."
+    },
+    "elixir_guard": {
+      "description": "A grey tonic permanently strengthens the creature\u2019s protective outer layers. Its benefit persists through rest."
+    }
+  },
+  "_comment": "F32 owned item overlay; Foundation alone adds its loader seam. F27 owns essence definitions and F28 owns attuned definitions: reuse their IDs and do not duplicate definitions."
+}

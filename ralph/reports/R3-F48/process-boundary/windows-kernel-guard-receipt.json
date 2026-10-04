@@ -1,0 +1,40 @@
+{
+  "source_cut": "0067c100e0919772b0edb5dff6f3403548403876",
+  "helper_sha256": "2722654af0ec2f6628609c6e44840eafcb9052f7b7bc5a7ead79ec2ad24493fd",
+  "platform": "Windows",
+  "owned_child_pid": 19316,
+  "actual_child_exit": 137,
+  "cases": [
+    {
+      "arguments": [],
+      "exit": 0,
+      "stdout": "{\"identity\": \"134353705628612072\", \"image\": \"C:\\\\Users\\\\mattj\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe\", \"exited\": false, \"witness\": \"Windows kernel process handle\", \"ok\": true, \"pid\": 19316, \"observed_monotonic_ns\": \"732681765000000\"}\n",
+      "stderr": "",
+      "child_poll_after": null
+    },
+    {
+      "arguments": [
+        "--identity",
+        "incorrect-creation-identity",
+        "--stop"
+      ],
+      "exit": 1,
+      "stdout": "{\"ok\": false, \"pid\": 19316, \"error\": \"PID reused: creation identity mismatch\"}\n",
+      "stderr": "",
+      "child_poll_after": null
+    },
+    {
+      "arguments": [
+        "--identity",
+        "134353705628612072",
+        "--stop"
+      ],
+      "exit": 0,
+      "stdout": "{\"identity\": \"134353705628612072\", \"image\": \"C:\\\\Users\\\\mattj\\\\.cache\\\\codex-runtimes\\\\codex-primary-runtime\\\\dependencies\\\\python\\\\python.exe\", \"exited\": true, \"witness\": \"Windows kernel process handle\", \"ok\": true, \"pid\": 19316, \"observed_monotonic_ns\": \"732681921000000\"}\n",
+      "stderr": "",
+      "child_poll_after": 137
+    }
+  ],
+  "result": "PASS",
+  "scope": "Actual kernel identity/refuse wrong identity/hard terminate/wait on a freshly owned Python child. Does not establish Godot F48 writer/ACK temporal proof or Linux behavior."
+}

@@ -1,0 +1,33 @@
+{
+  "classification": "ACTUAL CI6170 MULTIPLAYER SHARD3 AUTOSAVE FAILURE / RETURNED TO EXISTING FOUNDATION OWNER",
+  "head": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+  "run_id": 36882902951,
+  "job_id": 110443557525,
+  "job_conclusion": "failure",
+  "decoded_UTF8_log_characters": 529907,
+  "failures": [
+    "2026-10-01T15:35:09.9464898Z FAIL: peer 0 foundations_state roundtrip: host autosave_here refused",
+    "2026-10-01T15:35:11.8027569Z FAIL: peer 0 foundations_state roundtrip: host autosave_here refused",
+    "2026-10-01T15:35:11.9858672Z smoke_net_foundations.gd failed on attempt 1/1"
+  ],
+  "sealed_files": [
+    {
+      "file": "job-110443557525-decoded.log.gz",
+      "original_bytes": 529911,
+      "original_sha256": "ef839f14120d120ca62de6b67deab2a69466b317c0eb2e17994c77b33a72d915",
+      "compressed_sha256": "6e133a65b75cdc7b1954ea3364ca4d68a4e1efca51438bb9f2238c16a0e329db"
+    }
+  ],
+  "artifact": {
+    "id": 11174329186,
+    "name": "net-smoke-runs-3",
+    "upload_reported_zip_bytes": 14989307,
+    "upload_reported_zip_sha256": "915c3fa3d04eb97aa9aebea92d52bb2f6dcc4eec01a0bb10c3a8d98ef86da135",
+    "artifact_zip_downloaded_or_verified_here": false
+  },
+  "limits": [
+    "Decoded GitHub job log, not original compressed transport bytes. Artifact upload identity/hash copied from this log; ZIP not locally downloaded.",
+    "Two printed refusal lines do not prove two smoke attempts; log says attempt1/1. This failure is separate from local Warden49d.",
+    "CI6170 remains incomplete at snapshot. First-page jobs do not exhaust every gate; green unit/export does not close criteria."
+  ]
+}

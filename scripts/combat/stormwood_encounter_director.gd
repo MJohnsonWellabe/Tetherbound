@@ -80,6 +80,14 @@ func trainer_battle_active() -> bool:
 	return not _hosted_trainer.is_empty() or super.trainer_battle_active()
 
 
+## The hosted start is asynchronous: the challenge is sent to the host and the
+## round is admitted frames later. A wild fight in that window would make the
+## admission withdraw (`engaged_in_wild_fight`).
+func trainer_challenge_pending() -> bool:
+	var hub := get_parent().get_node_or_null("StormwoodEncounterHub") if get_parent() != null else null
+	return hub != null and hub.has_method("challenge_pending") and bool(hub.call("challenge_pending"))
+
+
 func _process(delta: float) -> void:
 	super._process(delta)
 	if not _hosted_trainer.is_empty() and _manager != null and _manager.is_fighting():

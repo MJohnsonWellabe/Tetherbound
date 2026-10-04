@@ -1,0 +1,1045 @@
+{
+  "_comment": "BAND-SPLIT. Band-local wild population for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. New entries take an unused order in this band's reserved range 3000-3999, which no other band can collide with.",
+  "_comment_aspect_variant_0830": "T3-CREATURES, from the owner's creature-expansion brief. This entry is an ASPECT VARIANT -- a rare individual whose environmental exposure changed its typing, authored as a species in data/creatures/species.json with a `variant_of` back-link. Read the brief's 'Spawn Protection Rules' section before touching count, gates or placement: its stated failure mode is exact -- 'Avoid a situation where the player walks through one clearing and sees Sparkit + Cindercub + Shadelet + Frostclaw + Nightburrow. That would destroy the rarity.' RARITY HERE IS HEADCOUNT, NOT PROBABILITY. This director does not roll a species per encounter; every cluster names its own and spawns it deterministically at load, so the brief's percentages are translated into how MANY individuals exist, WHERE, and behind WHICH gates. The chapter holds 881 wild creatures across 261 clusters, so one individual is 0.11% of the world. `respawn_seconds` overrides the table's global 45s so a rare encounter does not become a farmable resource a minute after it is beaten.",
+  "_comment_why_this_file_was_empty": "WILD-ECOLOGY. This file existed with an empty `spawns` array, which prompt 60 names directly: 'Current Band 3 spawns.json being empty is not acceptable for a finished region.' The consequence was not only an empty region. GATEC-CURVE had just authored this band a wild level range of [9, 12] in data/config/chapter_curve.json and wired encounter_director to resolve it from a cluster's world z -- and with no clusters here, that band was inert: a correctly-built escalation rule applied to nothing. Between the Burrow Warrens and the Upper Meadows the player crossed 1580m of river country in which no wild creature existed at all, which is also the stretch where the team is supposed to have reached its full five and be weighing them against each other.",
+  "_comment_habitat": "The region's identity is the gorge (data/config/terrain_playground.json's `river`, running east-west at z~4200, 10-15m deep, narrowing to a 3.6m half-width at the Old Mill Crossing) and Team Tether's occupation of the relay. Air species own the gorge because a 15m trench is where updraft lives and where a silhouette reads from a long way off; water species are sited at the crossing, the one place on the route where the water is actually reachable; ground species are pushed onto the spoil the relay dug rather than the drained ground itself. Levels are NOT set here -- encounter_director resolves them from chapter_curve.json's band for this z, so retuning the region retunes its field.",
+  "_comment_gate_d3_density": "GATE-D3, owner directive 2026-08-22: 'I think you're going to need a lot more than 24 creatures in a band. look at Pokemon density and palworld density. even valheim deer and boar density it's far more.' The original 8-cluster/18-creature population (one creature per ~79m) was built to prove the habitat logic above, not to be the finished density -- this pass keeps every original cluster and every rule in `_comment_habitat` unchanged (air owns the gorge, water sits at the reachable crossing, ground works the spoil) and adds 41 more clusters at that same logic, walked along the corridor roughly every 40-46m with lateral offsets so the route reads as inhabited country rather than a conveyor belt of named encounters -- on-route clusters at the spine itself, off-route pockets 18-36m to either side so leaving the road finds something too. Orders 3009-3049. `pipwing` (catch_rate 0.55, the region's commonest species) fills the gaps between the named habitat sites the way it already does in Bands 1 and 2. Every new cluster keeps clear of the four relay trainers' and Captain Oreth's own arenas (20m+) and of the existing hand-placed clusters (24m+), so nothing here contests a fight's footing. Fifty clusters, 155 creatures, one creature per ~10m of route -- inside the owner's 38-50 cluster / 140-210 creature target. `encounter_director.gd` currently instantiates and ticks every spawn in the whole corridor with no distance-based activation; the coordinator is dispatching a dedicated streaming lane for that (`_spawn_creatures`/`wild_creature.gd::_physics_process`) rather than this band owning it -- a boot/frame-time cost from this density is expected and not fixed here.",
+  "spawns": [
+    {
+      "order": 3000,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        -90.0,
+        0.0,
+        3300.0
+      ],
+      "radius": 20.0,
+      "_why": "The first wild creatures of the region, on the spine's own western swing out of Band 2 ((0,3180) -> (-110,3290) -> (-160,3420)). Common, readable, catch_rate 0.55 and the least dangerous thing here: a team arriving at the region's expected level 10 meets the band's new strength on something it can comfortably beat, which is what makes the galecrest at the gorge later land as a step up rather than a wall.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3001,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        -165.0,
+        0.0,
+        3430.0
+      ],
+      "radius": 18.0,
+      "time": "night",
+      "_why": "The wooded dip at the spine's westernmost point. A second nocturnal site: before this, the chapter's entire night ecology was two duskhush clusters in Bands 1 and 2, so a player travelling this region after dark saw exactly the same emptiness as by day. `time` gating is the existing schema (see the head file's _comment_conditions), not a new mechanism."
+    },
+    {
+      "order": 3002,
+      "species": "burrowback",
+      "count": 2,
+      "centre": [
+        275.0,
+        0.0,
+        3890.0
+      ],
+      "radius": 18.0,
+      "_why": "Behind the Tether Relay, on the leg out of it ((350,3760) -> (280,3900)). A digging ground species in the spoil banks the relay's own excavation left -- the ecology reacting to Team Tether's presence rather than ignoring it, which is prompt 60's 'wild presence affected by drained/occupied land'.",
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why_alpha": "The burrowback pair behind the relay at (275,3890). The relay leg is where the player first fights Team Tether in numbers, so an alpha here is the wild counterweight to that -- the meadow is not tame just because the road is contested."
+    },
+    {
+      "order": 3003,
+      "species": "mosshell",
+      "count": 2,
+      "centre": [
+        -40.0,
+        0.0,
+        4075.0
+      ],
+      "radius": 16.0,
+      "_why": "The south bank on the approach to the crossing ((-30,4060) is a spine point). The first water species of the region and the gentler of the two: catch_rate 0.40 against brooktail's 0.45 but a slower, more approachable animal, met before the player reaches the narrows."
+    },
+    {
+      "order": 3004,
+      "species": "brooktail",
+      "count": 3,
+      "centre": [
+        -195.0,
+        0.0,
+        4225.0
+      ],
+      "radius": 18.0,
+      "_why": "The Old Mill Crossing narrows (the course's own half_width minimum, 3.6m at (-152,4203)) -- the one point on the critical path where the river is close enough to reach. This is the region's team-building temptation in prompt 60's sense: the corridor's best available water type, standing at the crossing every player must use, at a level (band [9,12]) that is a real argument against a member of the five rather than a curiosity. Brooktail is also on captain_riverwatch's own team, so the player meets the species as opposition and as a candidate in the same region."
+    },
+    {
+      "order": 3005,
+      "species": "galecrest",
+      "table": "meadows_air",
+      "count": 2,
+      "centre": [
+        -70.0,
+        0.0,
+        4150.0
+      ],
+      "radius": 22.0,
+      "_why": "The gorge updraft immediately south of the crossing. Galecrest is the `aggressor` role (head file `roles`), so this is deliberately ungated and deliberately on the route: the crossing should be the moment the river country stops being scenery. Sited on the rim rather than in the trench -- the ambush happens on the approach, the same rule the head file's _comment_placement applies to the Band 1 rocky rise.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
+    },
+    {
+      "order": 3006,
+      "species": "reedwing",
+      "count": 2,
+      "centre": [
+        70.0,
+        0.0,
+        4260.0
+      ],
+      "radius": 20.0,
+      "weather": [
+        "rain"
+      ],
+      "_why": "The north bank downstream of the crossing, in rain only. Reedwing is the `weather_gated` role and had exactly one site in the whole chapter (Band 1's pond, z=507); a player who first saw rain north of the warrens had no weather ecology to discover. Rain over a river gorge is also the least arbitrary place in the Meadows to put it."
+    },
+    {
+      "order": 3007,
+      "species": "trailpup",
+      "table": "meadows_open",
+      "count": 2,
+      "centre": [
+        140.0,
+        0.0,
+        4560.0
+      ],
+      "radius": 18.0,
+      "_why": "The north leg out of the region ((160,4570) is a spine point), on the ground the player covers between the crossing and Band 4. Placed so the last 300m of the region is not the empty run-out that the whole band used to be.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
+    },
+    {
+      "order": 3008,
+      "species": "brooktail",
+      "table": "meadows_water",
+      "count": 2,
+      "centre": [
+        -70.0,
+        0.0,
+        4130.0
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3, the region's optional detour (prompt 64: 'at least one detour/special wild/discovery associated with river ecology or Team Tether occupation'). Sited directly on `near_bank_river_walk` (terrain_playground.json trail.loops), the authored spur that leaves the spine at the crossing's own approach ((-30,4060)) and walks the near bank downstream -- 'shows the far side you cannot reach yet, dead-ends at the crossing you have to earn,' in the loop's own words, and until this entry nothing actually lived on it. A second, smaller brooktail pocket rather than a new species: D24/CLAUDE.md forbid a new creature for one detour, and finding the crossing's own water type again downstream, away from the narrows crowd at order 3004, is what makes the loop worth the walk off the critical path instead of just a longer way to the same fight.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife at a waterline. Nothing authored depends on this cluster being brooktail -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_water`; at world seed 0 it stands up brooktail exactly as before."
+    },
+    {
+      "order": 3009,
+      "species": "bramblebun",
+      "table": "meadows_open",
+      "count": 2,
+      "centre": [
+        -16.3,
+        0.0,
+        3196.3
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground grazer, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
+    },
+    {
+      "order": 3010,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        -62.9,
+        0.0,
+        3214.6
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3011,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        -67.2,
+        0.0,
+        3275.5
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3012,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 4,
+      "centre": [
+        -145.6,
+        0.0,
+        3282.2
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3013,
+      "species": "duskhush",
+      "count": 4,
+      "centre": [
+        -94.9,
+        0.0,
+        3350.9
+      ],
+      "radius": 16.0,
+      "time": "night",
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). nocturnal -- gated to night, the western approach out of Band 2."
+    },
+    {
+      "order": 3014,
+      "species": "bramblebun",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        -145.0,
+        0.0,
+        3380.9
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground grazer, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
+    },
+    {
+      "order": 3015,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        -110.4,
+        0.0,
+        3441.3
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3016,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 3,
+      "centre": [
+        -117.5,
+        0.0,
+        3513.4
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3017,
+      "species": "bramblebun",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        -31.0,
+        0.0,
+        3531.0
+      ],
+      "radius": 12.0,
+      "_why": "STONEWATER-0912. The common ground grazers remain on the western approach but their circle now stays on the dry bank instead of overlapping Springhead water.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being bramblebun -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up bramblebun exactly as before."
+    },
+    {
+      "order": 3018,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        27.0,
+        0.0,
+        3584.0
+      ],
+      "radius": 12.0,
+      "_why": "STONEWATER-0912. The common ground foragers remain beside the western approach but their circle now stays east of the widened Springhead pool.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3019,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 2,
+      "centre": [
+        71.8,
+        0.0,
+        3567.6
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3020,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        87.1,
+        0.0,
+        3638.8
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the relay approach corridor, before Team Tether's own ground.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3021,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        160.4,
+        0.0,
+        3595.0
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the western approach out of Band 2.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3022,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 4,
+      "centre": [
+        185.5,
+        0.0,
+        3647.7
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the relay approach corridor, before Team Tether's own ground.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3023,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 4,
+      "centre": [
+        217.7,
+        0.0,
+        3686.2
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the relay approach corridor, before Team Tether's own ground.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3024,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 2,
+      "centre": [
+        279.0,
+        0.0,
+        3751.7
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the relay approach corridor, before Team Tether's own ground.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3025,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        298.0,
+        0.0,
+        3819.2
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3026,
+      "species": "trailpup",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        313.2,
+        0.0,
+        3878.2
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). ground, the pack species, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
+    },
+    {
+      "order": 3027,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 4,
+      "centre": [
+        252.8,
+        0.0,
+        3873.7
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3028,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 2,
+      "centre": [
+        246.0,
+        0.0,
+        3958.9
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3029,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        188.5,
+        0.0,
+        3948.8
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3030,
+      "species": "trailpup",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        138.5,
+        0.0,
+        3952.8
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). ground, the pack species, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being trailpup -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up trailpup exactly as before."
+    },
+    {
+      "order": 3031,
+      "species": "reedwing",
+      "count": 4,
+      "centre": [
+        116.0,
+        0.0,
+        4009.4
+      ],
+      "radius": 14.0,
+      "weather": [
+        "rain"
+      ],
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). weather-gated -- rain only, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3032,
+      "species": "galecrest",
+      "table": "meadows_air",
+      "count": 4,
+      "centre": [
+        49.8,
+        0.0,
+        3979.9
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the relay's back country, on the ground its own excavation disturbed.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being galecrest -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up galecrest exactly as before."
+    },
+    {
+      "order": 3033,
+      "species": "duskhush",
+      "count": 2,
+      "centre": [
+        -16.4,
+        0.0,
+        4053.2
+      ],
+      "radius": 14.0,
+      "time": "night",
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). nocturnal -- gated to night, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3034,
+      "species": "brooktail",
+      "table": "meadows_water",
+      "count": 3,
+      "centre": [
+        -66.3,
+        0.0,
+        4065.8
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). water, at a reachable bank, the river gorge and the Old Mill Crossing.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife at a waterline. Nothing authored depends on this cluster being brooktail -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_water`; at world seed 0 it stands up brooktail exactly as before."
+    },
+    {
+      "order": 3035,
+      "species": "paddlenewt",
+      "table": "meadows_water",
+      "count": 4,
+      "centre": [
+        -145.3,
+        0.0,
+        4115.5
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). water, first sighting of the species outside Band 1, the river gorge and the Old Mill Crossing.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife at a waterline. Nothing authored depends on this cluster being paddlenewt -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_water`; at world seed 0 it stands up paddlenewt exactly as before."
+    },
+    {
+      "order": 3036,
+      "species": "reedwing",
+      "count": 4,
+      "centre": [
+        -116.0,
+        0.0,
+        4174.5
+      ],
+      "radius": 16.0,
+      "weather": [
+        "rain"
+      ],
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). weather-gated -- rain only, the river gorge and the Old Mill Crossing."
+    },
+    {
+      "order": 3037,
+      "species": "galecrest",
+      "count": 4,
+      "centre": [
+        -152.0,
+        0.0,
+        4235.0
+      ],
+      "radius": 8.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the aggressor role, in the trench where a 15m gorge gives it real updraft, the river gorge and the Old Mill Crossing.",
+      "_comment_stranded_p3_deck_clearance": "STRANDED-P3, 2026-08-23. The original centre/radius (z=4220.5, r=18.0) put this cluster's own spawn disc up to 17.5-18.5m from the crossing's centre (4203) -- inside it, since the disc's radius exceeds that distance -- so a galecrest's home point could land directly on the deck (x=-152 is the crossing's own x), and `wild_creature.gd`'s wander_radius (7.0, data/config/combat.json) could carry it there even when home missed narrowly. Reproduced directly (`tools/_probe_mill_stall.gd`): `smoke_traversal.gd`'s Old Mill Crossing walk stopped dead at depth 7.06m/11.0m needed, blocked on `get_slide_collision()` by `Wild_galecrest_3037_1` standing on the deck -- the same `body-blocks-the-only-route` shape `WALL1` found at Captain Halder (`data/config/spawns.json`'s own `_comment_galecrest_wall1`). Deterministic per-boot spawn RNG (seeded from `order`) meant the four galecrest always start in the same places, but `wild_creature.gd::_wander()`'s own RNG advances on real elapsed frames, so how many wander decisions had fired by the time a test (or a player) reached the crossing varied run to run -- explaining why this only sometimes blocked the crossing rather than always. This crossing is Band 3's ONLY route across the river (D46); a wild creature blocking it is a real softlock risk, not just test flakiness. Moved deeper onto the far bank (same x, +14.5m z) and the radius shrunk from 18.0 to 8.0 so even worst-case home placement PLUS a full wander_radius excursion (18-8-7=... using the new numbers: 4235-8-7=4220) stays 9m clear of the far landing (4211) and 6m clear of the walk test's own target point (4214) -- same aggressor-guards-the-crossing intent GATE-D3 authored, now guaranteed clear of the one path across the river the way that pass already kept every new cluster 20m+/24m+ clear of trainer arenas and existing clusters for the same 'nothing here contests a fight's footing' reason."
+    },
+    {
+      "order": 3038,
+      "species": "meadowhart",
+      "table": "meadows_open",
+      "count": 2,
+      "centre": [
+        -90.0,
+        0.0,
+        4278.0
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being meadowhart -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up meadowhart exactly as before."
+    },
+    {
+      "order": 3039,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        -101.8,
+        0.0,
+        4297.4
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3040,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        -43.7,
+        0.0,
+        4350.5
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3041,
+      "species": "meadowhart",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        -9.6,
+        0.0,
+        4452.7
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being meadowhart -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up meadowhart exactly as before."
+    },
+    {
+      "order": 3042,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 2,
+      "centre": [
+        51.3,
+        0.0,
+        4451.9
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3043,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 3,
+      "centre": [
+        50.3,
+        0.0,
+        4524.3
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3044,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        131.9,
+        0.0,
+        4499.1
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3045,
+      "species": "meadowhart",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        132.0,
+        0.0,
+        4585.1
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being meadowhart -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up meadowhart exactly as before."
+    },
+    {
+      "order": 3046,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 4,
+      "centre": [
+        151.3,
+        0.0,
+        4643.0
+      ],
+      "radius": 18.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the region's commonest air species, filling in the gaps between the named clusters, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife overhead. Nothing authored depends on this cluster being pipwing -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_air`; at world seed 0 it stands up pipwing exactly as before."
+    },
+    {
+      "order": 3047,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 2,
+      "centre": [
+        81.9,
+        0.0,
+        4663.9
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). a digger, drawn to disturbed ground, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife in rock/quarry/warrens country. Nothing authored depends on this cluster being burrowback -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_rock`; at world seed 0 it stands up burrowback exactly as before."
+    },
+    {
+      "order": 3048,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        101.7,
+        0.0,
+        4737.9
+      ],
+      "radius": 16.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). common ground forager, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being mudsnout -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up mudsnout exactly as before."
+    },
+    {
+      "order": 3049,
+      "species": "meadowhart",
+      "table": "meadows_open",
+      "count": 4,
+      "centre": [
+        -6.0,
+        0.0,
+        4740.1
+      ],
+      "radius": 14.0,
+      "_why": "GATE-D3 density pass (owner directive, 2026-08-22: Valheim/Palworld-comparable wild density). the grazing herd species, the north bank run out toward Band 4.",
+      "_why_rolled": "T3-ENCOUNTER: ordinary ambient wildlife on open ground. Nothing authored depends on this cluster being meadowhart -- no alpha/elder block, no time/weather gate, no role, no test pin, no `_why` framing it as a designed encounter. Rolled from `meadows_open`; at world seed 0 it stands up meadowhart exactly as before."
+    },
+    {
+      "order": 3100,
+      "species": "stormtrail",
+      "count": 1,
+      "habitat": "tether_machinery",
+      "centre": [
+        318.0,
+        0.0,
+        3830.0
+      ],
+      "radius": 12.0,
+      "weather": [
+        "rain"
+      ],
+      "respawn_seconds": 600.0,
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.0
+      },
+      "_why": "Brief section 2, first of two. On Team Tether's own ground behind the Relay -- the brief's eligible list names 'old Tether machinery, damaged pylons or structures' directly, and the Burrowback cluster at (275,3890) is annotated 'Behind the Tether Relay'. Open ground, not forest, per 'Should not spawn deep inside forests'.",
+      "_why_weather": "THE BRIEF ASKS FOR STORMS AND THIS BUILD HAS NO STORM. data/config/weather.json declares exactly four presets -- clear, cloudy, fog, rain -- and scripts/world/world_weather.gd's own header states 'thunderstorms are explicitly out of scope here'. `rain` is the nearest thing that exists and it still delivers the mechanic the brief actually wants: 'extremely rare normally, considerably more likely during storms' becomes 'absent in clear weather, present in rain', so the player still learns that weather is worth going out in. It is NOT what the owner asked for and is flagged as such in ralph/reports/handover-T3-CREATURES-2026-08-30.md. When a storm preset exists, name it in this array and the creature needs no other edit.",
+      "_why_alpha": "Alpha variant per the brief. `scale` 1.0 for the same reason as Nightburrow: the 10-15% resize sheet 2 asks for is already in species.json's 1.45m against Trailpup's 1.28m."
+    },
+    {
+      "order": 3101,
+      "species": "riftfrill",
+      "count": 1,
+      "habitat": "still_pool",
+      "centre": [
+        -176.0,
+        0.0,
+        4098.0
+      ],
+      "radius": 8.0,
+      "time": "night",
+      "respawn_seconds": 600.0,
+      "_why": "Brief section 7. Night-gated, one individual, in the still water below the Old Mill Crossing beside the Paddlenewt cluster at (-145,4116) -- the brief wants 'secluded ponds, still pools... water near ancient ruins, water near Rift/Tether phenomena' and explicitly NOT 'every ordinary stream', and band 3 is the region Team Tether occupies, which is where the Rift association lives. Band 3 rather than the band 1 pond on purpose: this band's wild level range is [9,12] against band 1's low single digits, and a rare prize the player finds at level 3 is not a prize. NO `alpha` block -- the brief calls Riftfrill a 'Rare Variant' and names only Nightburrow and Stormtrail as alphas. Its 8m radius against the region's usual 14-16m keeps it in the pool rather than scattered up the bank.",
+      "_why_rarity": "The brief says '1% or less of qualifying Paddlenewt spawns'. Applied literally that is ZERO: the whole chapter holds SIX Paddlenewts, and 1% of six is 0.06. This is the clearest case in the expansion of a per-encounter percentage meeting an authored population and producing nothing at all, so the brief's own alternative is what is built -- 'Potentially higher around specifically authored mysterious pools': one authored individual at one authored pool."
+    },
+    {
+      "order": 3102,
+      "species": "brooktail",
+      "count": 1,
+      "centre": [
+        22.0,
+        0.0,
+        3561.0
+      ],
+      "radius": 3.0,
+      "alpha": {
+        "level_bonus": 4,
+        "scale": 1.3
+      },
+      "_why": "T5-CADENCE / STONEWATER-0912. The Springhead's own occupant still holds the source from its dry eastern bank, with a bounded circle that cannot place the large silhouette over the pool or intake aperture.",
+      "_why_alpha": "T4-REGIONS scored this band's team-building temptation PARTIAL and said why: its two new species, Stormtrail and Riftfrill, are 'conditional singletons ... gated behind weather and time the player does not control', so 'a player who crosses this band in clear weather by day sees ZERO new species.' This alpha is the unconditional answer -- not a new species, but a visibly larger, four-level individual of the band's own water type, standing alone at a spring pool on the route, catchable by anyone who walks past it in any weather at any hour. Fun-rebuild \u00a711's test is 'could a reasonable player see something here and think I might want that instead of one of mine', and a 1.3x Brooktail at the head of the river the region is named for is a yes that does not depend on the sky. Scale and level bonus match band 4's own solitary-elder convention (orders 4007, 4075) rather than inventing a third."
+    },
+    {
+      "order": 3103,
+      "species": "galecrest",
+      "count": 2,
+      "centre": [
+        152.0,
+        0.0,
+        4552.0
+      ],
+      "radius": 12.0,
+      "alpha": {
+        "level_bonus": 3,
+        "scale": 1.3
+      },
+      "_why": "T5-CADENCE. On the north-bank bluff at the spine's apex out of this band (arc 2097), inside T4-REGIONS' measured 519m dead run to the band 4 seam. Galecrest is already band 3's air animal (10 individuals) and band 4's dominant one (48) -- an alpha pair on the last high ground before the Upper Meadows is the ecological handover between the two bands, said in creatures rather than in a sign.",
+      "_why_alpha": "The band's exit stretch had no alpha, no elder and no trainer over 519m, in the chapter's back half where VISION \u00a73 asks the player to keep meeting creatures they want and cannot justify keeping. Sited on exposed high ground for the same reason band 4's own galecrest alpha is (order 4001's note: 'the aggressor role's presence in the high country, on open ground where a hostile silhouette reads across the long sightlines'), and one level bonus lower than the springhead's because the player meets this one later and better-prepared, so the escalation is in the setting rather than in the number.",
+      "_comment_alpha_scale_0901": "BACKLOG-VISUAL-ALPHA-SCALE. Dropped 1.3 -> 1.1 (2.73m -> 2.31m) on 2026-09-01, part of the same fix as band4_upper_meadows_ironwood/spawns.json order 4001 and band5_stronghold_approach/spawns.json order 5001, because ordinary Galecrest at 2.10m (D69) had put the old 1.3x alpha above the then-2.60m Veridian Stag legendary.",
+      "_comment_alpha_scale_0901_2": "OD-0901-1 restored this to 1.3 -> 2.73m the same day: the owner's correction is that the legendary should be raised to make room for a boss-sized alpha, not the other way round (archive/owner/OWNER_DIRECTIVES_2026-09-01.md). Veridian is now 3.6m (data/creatures/species.json), so 2.73m is again comfortably clear of it. This is the earliest of the three authored Galecrest alphas and stays at the bottom of the escalating ladder (band3 1.30 < band4 1.40 < band5 1.50)."
+    },
+    {
+      "order": 3060,
+      "species": "mosshell",
+      "table": "meadows_water",
+      "count": 2,
+      "centre": [
+        -190.0,
+        0.0,
+        3462.0
+      ],
+      "radius": 12.0,
+      "_why": "W17-DENSITY-B2-B3. The Stonewater Reach's west shelf above the lockwater overlook (props 3006 at (-130,3452)): the landmark where the gorge is read from above had no water species on it. Mosshell basking on the shelf's stone -- the Water body a Water/Air band should show first at its first water."
+    },
+    {
+      "order": 3061,
+      "species": "pipwing",
+      "table": "meadows_air",
+      "count": 3,
+      "centre": [
+        345.0,
+        0.0,
+        3852.0
+      ],
+      "radius": 12.0,
+      "_why": "W17-DENSITY-B2-B3. The relay approach loop's east leg ((340,3810)->(320,3890)) south of the compound: pipwing perched on the relay's outer pylon line, Air over Team Tether hardware, between Stormtrail's rain-only site at (318,3830) and the trainer ladder -- so the loop is populated in fair weather too."
+    },
+    {
+      "order": 3062,
+      "species": "galecrest",
+      "table": "meadows_air",
+      "count": 2,
+      "centre": [
+        495.0,
+        0.0,
+        4200.0
+      ],
+      "radius": 16.0,
+      "_why": "W17-DENSITY-B2-B3. The far-east orb pocket at (515,4225) is the band's deepest side walk (350m east of the spine on the east bank) and had nothing between the road and the crate. A galecrest pair on the open bank guards it: an aggressive species makes the deep walk a choice, and the Great Candy pickups.json sites beside the crate makes it a paid one."
+    },
+    {
+      "order": 3063,
+      "species": "brooktail",
+      "table": "meadows_water",
+      "count": 3,
+      "centre": [
+        -60.0,
+        0.0,
+        4318.0
+      ],
+      "radius": 12.0,
+      "_why": "W17-DENSITY-B2-B3. The far bank downstream of the crossing, between the mudsnout at (-44,4351) and the meadowhart at (-90,4278): the river's own species on the river's own bank where the far-bank walk to Oreth runs (P-3.3's brooktail bank beat, given its brooktail)."
+    },
+    {
+      "order": 3064,
+      "species": "meadowhart",
+      "table": "meadows_open",
+      "count": 2,
+      "centre": [
+        40.0,
+        0.0,
+        4612.0
+      ],
+      "radius": 14.0,
+      "_why": "W17-DENSITY-B2-B3. The north-bank pasture between the spine's (30,4460)->(160,4570) leg and the seam: open ground with meadowhart at (132,4585) and (-6,4740) 150m apart and nothing between; a pair here is seen from the road's last climb."
+    },
+    {
+      "order": 3065,
+      "species": "burrowback",
+      "table": "meadows_rock",
+      "count": 3,
+      "centre": [
+        -135.0,
+        0.0,
+        4392.0
+      ],
+      "radius": 12.0,
+      "_why": "W17-DENSITY-B2-B3. The draw's own rock behind Oreth's Riverwatch post (-100,4350): Oreth's Mosshell/Trailpup/Brooktail lesson is composition, and a Ground trio on the rock beside his post is the field he stands in."
+    },
+    {
+      "order": 3066,
+      "species": "bramblebun",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        -60.0,
+        0.0,
+        4702.0
+      ],
+      "radius": 14.0,
+      "_why": "W17-DENSITY-B2-B3. The band-4 seam verge at (0,4760): the last 100m of the band held the meadowhart at (-6,4740) and nothing common; bramblebun on the verge is the Meadows' signature species carrying across the seam the way the pipwing carry across band 2's."
+    },
+    {
+      "order": 3067,
+      "species": "duskhush",
+      "count": 3,
+      "centre": [
+        172.0,
+        0.0,
+        3738.0
+      ],
+      "radius": 12.0,
+      "time": "night",
+      "_why": "W17-DENSITY-B2-B3. The camp clearing's night edge, 40m south-west of the clearing at (210,3700) r11 and outside it: a player who rests at the band's only camp and wakes in the dark finds the clearing's edge is not empty -- night reveals, and the camp is not a hotel."
+    },
+    {
+      "order": 3068,
+      "species": "reedwing",
+      "count": 3,
+      "centre": [
+        60.0,
+        0.0,
+        4040.0
+      ],
+      "radius": 14.0,
+      "weather": [
+        "rain"
+      ],
+      "_why": "W17-DENSITY-B2-B3. The river's rain flats east of the near-bank walk's start at (-30,4060): reedwing (the weather_gated role) had two rain sites on the river; a third on the flats between them makes rain on the river a visible event rather than a single spot."
+    },
+    {
+      "order": 3069,
+      "species": "trailpup",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        285.0,
+        0.0,
+        4012.0
+      ],
+      "radius": 14.0,
+      "_why": "W17-DENSITY-B2-B3. The relay loop's rejoin at (130,3980) and the spine's next leg: the loop's south end had burrowback at (246,3959) and nothing east of it; a trailpup pack on the open ground east of the rejoin fills the loop's last 100m."
+    },
+    {
+      "order": 3070,
+      "species": "paddlenewt",
+      "table": "meadows_water",
+      "count": 3,
+      "centre": [
+        -215.0,
+        0.0,
+        4140.0
+      ],
+      "radius": 12.0,
+      "_why": "W17-DENSITY-B2-B3. The Long Water's west pool (landmark (-150,4200) r52), 50m from Riftfrill's night-only still pool at (-176,4098) so the rare site keeps its own ground: paddlenewt in the daylight pool is what a player who walks the Long Water's west shore sees when Riftfrill is not out."
+    },
+    {
+      "order": 3071,
+      "species": "mudsnout",
+      "table": "meadows_open",
+      "count": 3,
+      "centre": [
+        250.0,
+        0.0,
+        3600.0
+      ],
+      "radius": 14.0,
+      "_why": "W17-DENSITY-B2-B3. The relay road's east verge between the spring at (5,3558) and the camp at (210,3700): mudsnout on the open ground 90m east of the (160,3595) cluster, so the road's east side is inhabited on the approach to the checkpoint."
+    },
+    {
+      "order": 3910,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        -156.932,
+        0.0,
+        3396.701
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 3911,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        15.0,
+        0.0,
+        3542.0
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; shifted to the dry east shoulder so the pair remains forward-visible without crowding the Springhead pool or intake aperture."
+    },
+    {
+      "order": 3912,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        306.065,
+        0.0,
+        3733.924
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 3913,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        315.025,
+        0.0,
+        3842.248
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 3914,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        53.588,
+        0.0,
+        4012.057
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 3915,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        -36.563,
+        0.0,
+        4073.323
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 3916,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        9.671,
+        0.0,
+        4450.004
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    },
+    {
+      "order": 3917,
+      "species": "meadowhart",
+      "count": 2,
+      "centre": [
+        1.265,
+        0.0,
+        4765.714
+      ],
+      "radius": 3.0,
+      "habitat": "roadside_sightline",
+      "_why_road_visibility_0907": "ROAD CP-2 authored pair for band3_the_river_lock; forward-visible at the preceding 10m sample. Alternating 5.5m shoulder offset preserves the player line and existing off-road ecology."
+    }
+  ],
+  "_comment_alpha": "WILD-ECOLOGY (prompt 60): 'a handful of special encounters across the chapter' -- one per band from band 2 on, never in band 1, which is the tutorial meadow prompt 71 keeps gentle. The `alpha` block turns a cluster's FIRST member into a bigger, higher-level individual of a species the player already knows; the rest of the cluster is untouched. `level_bonus` is ADDED to whatever the band's own roll produced, so an alpha is always ahead of its neighbours instead of naming an absolute level that would drift when chapter_curve.json moves. Presentation is scale, per CLAUDE.md's rule that Meadows creatures are differentiated by materials, scale, behaviour and encounter context rather than by new meshes. TUNABLE."
+}

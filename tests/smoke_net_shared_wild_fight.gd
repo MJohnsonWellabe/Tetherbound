@@ -3,6 +3,7 @@ extends "res://tests/helpers/net_harness.gd"
 # peers: 2
 
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 
 ## Stage B Wave 4 lane 4.C. THE player-visible outcome of the lane: two people
@@ -115,6 +116,15 @@ func _run_guardian() -> void:
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
+	# Retained creatures are owned BEFORE the session: the host admits each
+	# character's party from its join snapshot, and a guest's later local-only
+	# party edit never reaches that admitted record (production guests gain
+	# creatures only through host-authorised grants), so the owned-loadout
+	# move admission would refuse every strike as an unowned creature.
+	for peer in 2:
+		for species: String in ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]:
+			var granted: Dictionary = await step(peer, "party_grant", {"species": species, "level": 16})
+			check(str(granted.get("verdict", "")) == "PASS", "peer %d received retained level-16 %s" % [peer, species])
 	var port := 0
 	var hosted: Dictionary = await step(0, "host", {})
 	if str(hosted.get("verdict", "")) == "PASS":
@@ -123,9 +133,6 @@ func _run_guardian() -> void:
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS", "guardian witness joined the hosted Meadows world")
 	for peer in 2:
-		for species: String in ["terrapup", "trailpup", "bramblebun", "burrowback", "meadowhart"]:
-			var granted: Dictionary = await step(peer, "party_grant", {"species": species, "level": 16})
-			check(str(granted.get("verdict", "")) == "PASS", "peer %d received retained level-16 %s" % [peer, species])
 		var deployed: Dictionary = await step(peer, "deploy_creature", {})
 		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its retained creature" % peer)
 		var staged: Dictionary = await step(peer, "warrens_guardian", {"mode": "stage"})
@@ -364,6 +371,14 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# Each player brings an owned creature into the session (see _run_guardian):
+	# the host admits a guest's party from its join snapshot, and an unowned
+	# fallback body is refused by the owned-loadout move admission.
+	for i in 2:
+		var granted: Dictionary = await step(i, "party_grant", {"species": "terrapup"})
+		check(str(granted.get("verdict", "")) == "PASS",
+			"peer %d owns a creature before the session (%s)" % [i, str(granted.get("detail", ""))])
+
 	var hosted: Dictionary = await step(0, "host", {})
 	check(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
@@ -571,6 +586,15 @@ func _run() -> void:
 	var prior_authority := await _await_host_action_ready(guest_peer_id)
 	check(int(prior_authority.get("host_now_ms", 0)) >= int(prior_authority.get("deadline_ms", 0)),
 		"the prior real move reached its host-owned deadline")
+	# Step the guest's creature well clear of the opponent first. An enemy blow
+	# landing during a committed wind-up cancels the start (the host's
+	# interrupt rule, `host_deliver_enemy_hit`), and this probe whiffs outward
+	# anyway, so it is staged out of the opponent's reach.
+	var clear_of: Vector3 = _vec((await _encounter(0)).get("opponent_pos", []))
+	if clear_of != Vector3.INF:
+		var clear_at := clear_of + Vector3(0.0, 0.0, NEAR_Z * 3.0)
+		await step(1, "place_creature", {"at": [clear_at.x, clear_at.y, clear_at.z],
+			"face": [clear_at.x, clear_at.y, clear_at.z + 4.0], "settle": PLACE_SETTLE})
 	var action_stage: Dictionary = await _encounter(0)
 	var action_target := _vec(action_stage.get("opponent_pos", []))
 	var action_origin := _vec((await _encounter(1)).get("my_creature_pos", []))
@@ -581,48 +605,70 @@ func _run() -> void:
 	action_facing.y = 0.0
 	check(action_target != Vector3.INF and action_origin != Vector3.INF
 		and action_facing.length_squared() > 0.0001,
-		"the authority strike has real host target and client body positions")
-	# Use the authored charged profile for the accepted action: its 1.2-second
-	# host lock is long enough to make this proof insensitive to coordinator and
-	# CI scheduling jitter. The next intent is submitted immediately, before any
-	# coordinator probe. Both travel reliable and ordered on CHANNEL_LEDGER, so
-	# the host must arbitrate 9001 before 9002 and must arbitrate both inside the
-	# same host-owned lock. The guest's forged zero cooldown remains the claim.
+		"the authority strike has real host target and client body positions (host view keys %s fighting=%s)"
+			% [str(action_stage.keys()), str(action_stage.get("fighting", "?"))])
+	# With move commit live (combat.json `move_commit.runtime_enabled`) a swing
+	# has two halves and the host arbitrates action freshness, replay and its
+	# lock on the FIRST: the move_start. One step sends the start for 9001 and,
+	# in the same frame, a second start for 9002. Both travel reliable and
+	# ordered on CHANNEL_LEDGER, so the host must arbitrate 9002 inside 9001's
+	# own lock -- its code for that is `recovering` -- whatever the coordinator
+	# or CI scheduling does. The quick slot needs no Energy, so this proof does
+	# not depend on first landing hits in a live fight. Only after the
+	# host-frozen wind-up does 9001's strike arrive (a strike before
+	# `strike_at_ms` is `stale_move_start`). The guest's forged zero cooldown
+	# and damage remain the claim.
+	var authority_not_before_ms := int((await _host_authority(guest_peer_id)).get("host_now_ms", 0))
 	var forged: Dictionary = await step(1, "strike", {
-		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "charged",
+		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
 		"action": 9001, "cooldown": 0.0, "cooldown_multiplier": 0.0,
-		"damage": 999999.0, "settle": 1,
+		"damage": 999999.0, "settle": 1, "start_only": true, "rapid_action": 9002,
 	})
 	check(str(forged.get("verdict", "")) == "PASS", "client sent a forged rapid-action payload")
-	var rapid: Dictionary = await step(1, "strike", {
-		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
-		"action": 9002, "cooldown": 0.0, "cooldown_multiplier": 0.0, "settle": 1,
-	})
-	check(str(rapid.get("verdict", "")) == "PASS", "client sent a fresh id before host cooldown")
-	var rapid_refusal := await _await_refusal("cooldown")
-	check(str(rapid_refusal.get("code", "")) == "cooldown",
+	check(int((forged.get("data", {}) as Dictionary).get("rapid_action", 0)) == 9002,
+		"client sent a fresh id before host cooldown")
+	var rapid_refusal := await _await_refusal("recovering")
+	check(str(rapid_refusal.get("code", "")) == "recovering",
 		"host refused a fresh rapid intent against its own deadline")
+	var landed_strike: Dictionary = await step(1, "strike", {
+		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
+		"action": 9001, "cooldown": 0.0, "cooldown_multiplier": 0.0,
+		"damage": 999999.0, "settle": 1, "move_start": false, "windup_wait": true,
+	})
+	check(str(landed_strike.get("verdict", "")) == "PASS", "client sent the committed strike after its wind-up")
 	var accepted_authority := await _await_host_action(guest_peer_id, 9001)
 	check(int(accepted_authority.get("last_action", 0)) == 9001,
 		"host accepted the fresh monotonic action")
-	# The authored charged cooldown is 1.2 s, scaled by combat.json `player_pace`
-	# (owner playtest 2026-09-29). The host must hold that resolved lock, not the
-	# forged zero; the bound follows the config so retuning the pace cannot
-	# silently turn this into a different claim.
-	var paced_lock_ms := int(1200.0 * float((load("res://scripts/combat/combat_math.gd").config().get(
-		"player_pace", {}) as Dictionary).get("cooldown_scale", 1.0)))
-	check(int(accepted_authority.get("cooldown_ms", 0)) >= paced_lock_ms,
-		"host retained its resolved charged-move lock instead of the forged zero cooldown")
+	# The host must hold the lock it resolved from its OWN move profile, not the
+	# forged zero: read that profile back from the host's receipt for 9001.
+	var authority_view: Dictionary = await _encounter(0)
+	var authority_receipt := _host_strike_receipt(authority_view, encounter_id,
+		guest_peer_id, 9001, authority_not_before_ms)
+	for _poll in REFUSAL_POLLS:
+		if not authority_receipt.is_empty(): break
+		authority_view = await _encounter(0)
+		authority_receipt = _host_strike_receipt(authority_view, encounter_id,
+			guest_peer_id, 9001, authority_not_before_ms)
+		accepted_authority = await _host_authority(guest_peer_id)
+	var resolved_move: Dictionary = authority_receipt.get("move", {}) as Dictionary
+	var resolved_lock_ms: int = ENCOUNTER_HOST.move_lock_ms(resolved_move) if not resolved_move.is_empty() else -1
+	check(not resolved_move.is_empty() and resolved_lock_ms > 0
+		and int(accepted_authority.get("cooldown_ms", 0)) == resolved_lock_ms,
+		"host retained its resolved move lock instead of the forged zero cooldown (cooldown_ms %d, resolved lock %d, receipt %s)"
+			% [int(accepted_authority.get("cooldown_ms", 0)), resolved_lock_ms, str(authority_receipt)])
 	var accepted_deadline := int(accepted_authority.get("deadline_ms", 0))
 
+	# Under move commit the host arbitrates replay on the start, so the replay
+	# is the start alone: a client whose start is refused never strikes.
 	var replayed: Dictionary = await step(1, "strike", {
 		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
-		"action": 9001, "cooldown": 0.0, "settle": 1,
+		"action": 9001, "cooldown": 0.0, "settle": 1, "start_only": true,
 	})
 	check(str(replayed.get("verdict", "")) == "PASS", "client replayed the accepted action id")
 	var replay_refusal := await _await_refusal("replayed_action")
 	check(str(replay_refusal.get("code", "")) == "replayed_action",
-		"host refused the replay even if its original cooldown elapsed")
+		"host refused the replay even if its original cooldown elapsed (%s; step %s)"
+			% [str(replay_refusal), str(replayed.get("detail", ""))])
 	var held_authority := await _host_authority(guest_peer_id)
 	check(int(held_authority.get("last_action", 0)) == 9001
 		and int(held_authority.get("deadline_ms", 0)) == accepted_deadline,
@@ -915,11 +961,20 @@ func _run() -> void:
 		# Use the player's ordinary combat input here. CombatManager aims at the
 		# currently rendered proxy at wind-up time, so a moving authority body
 		# cannot cross behind a cardinal direction captured before placement.
-		var guest_a_strike := await step(1, "press", {"action": "combat_quick"})
+		# The strike step waits for quick_ready before pressing, so a press can
+		# never sit in the input buffer and fire into a later read.
+		var guest_a_strike := await step(1, "strike", {"facing": [4.5, 0.0, 0.0], "slot": "quick", "settle": 45})
 		check(str(guest_a_strike.get("verdict", "")) == "PASS",
 			"guest swung at A while host was in B (%s)" % str(guest_a_strike.get("detail", "")))
-		await step(1, "wait", {"frames": 45})
+		# A projectile (pebble_toss) lands after travel. Watch for THIS swing's
+		# impact before swinging again, so no earlier blow is still in flight
+		# when the HP the rejoin must preserve is read.
 		a_after_guest_strike = await _runtime(0, encounter_id)
+		for _impact_poll in 16:
+			if float(a_after_guest_strike.get("hp", -1.0)) < a_hp_before_attempt - 0.001:
+				break
+			await step(1, "wait", {"frames": 15})
+			a_after_guest_strike = await _runtime(0, encounter_id)
 		if float(a_after_guest_strike.get("hp", -1.0)) < a_hp_before_attempt - 0.001:
 			guest_a_hit = true
 			break

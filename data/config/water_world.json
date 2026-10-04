@@ -3127,8 +3127,8 @@
         "lantern_cove"
       ],
       "name": "First Shores",
-      "team_level_exit": 45.0,
-      "team_level_start": 43.0
+      "team_level_exit": 22,
+      "team_level_start": 20
     },
     {
       "_comment": "Fixed authored levels, never player scaling.",
@@ -3140,8 +3140,8 @@
         "gull_rest"
       ],
       "name": "Marsh Channels",
-      "team_level_exit": 47.0,
-      "team_level_start": 45.0
+      "team_level_exit": 24,
+      "team_level_start": 22
     },
     {
       "_comment": "Fixed authored levels, never player scaling.",
@@ -3150,8 +3150,8 @@
         "tidal_cradle"
       ],
       "name": "Tidal Cradle",
-      "team_level_exit": 49.0,
-      "team_level_start": 47.0
+      "team_level_exit": 26,
+      "team_level_start": 24
     },
     {
       "_comment": "Fixed authored levels, never player scaling.",
@@ -3161,8 +3161,8 @@
         "drowned_garden"
       ],
       "name": "Outer Reaches",
-      "team_level_exit": 51.0,
-      "team_level_start": 49.0
+      "team_level_exit": 29,
+      "team_level_start": 26
     },
     {
       "_comment": "Fixed authored levels, never player scaling.",
@@ -3172,8 +3172,8 @@
         "deep_watch"
       ],
       "name": "Tether Current",
-      "team_level_exit": 53.0,
-      "team_level_start": 51.0
+      "team_level_exit": 31,
+      "team_level_start": 29
     },
     {
       "_comment": "Fixed authored levels, never player scaling.",
@@ -3182,8 +3182,8 @@
         "veilfall"
       ],
       "name": "Veilfall",
-      "team_level_exit": 55.0,
-      "team_level_start": 53.0
+      "team_level_exit": 33,
+      "team_level_start": 31
     }
   ],
   "return_shortcuts": [

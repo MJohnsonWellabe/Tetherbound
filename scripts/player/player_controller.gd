@@ -1,4 +1,7 @@
 extends CharacterBody3D
+## Read-only completion witness from the ordinary movement step.
+var _foundation_ground_contact_generation := 0
+var _foundation_ground_contact_position := Vector3(INF, INF, INF)
 
 ## Third-person locomotion: walk, sprint, jump, stamina, fall damage.
 ##
@@ -286,8 +289,11 @@ func _physics_process(delta: float) -> void:
 	apply_environment_velocity_modifiers(delta)
 	var falling_speed := -velocity.y
 	move_and_slide()
+	_foundation_ground_contact_generation += 1
+	_foundation_ground_contact_position = global_position
 	finish_environment_velocity_step()
 	_try_step_up(planned_motion)
+	_settle_skin_overlap()
 	_unwedge(planned_motion, before, delta)
 	_recover_if_entombed(delta)
 	_resolve_landing(falling_speed)
@@ -298,6 +304,34 @@ func _physics_process(delta: float) -> void:
 	if _skills_activity != null and _sprinting:
 		_skills_activity.record_movement("running", global_position - before, _wanted_dir, delta, _sprint_speed)
 	vitals.tick_satiety(delta)
+
+
+## Deepest penetration resolved here, in metres. Anything deeper is not a
+## skin graze but a body that is genuinely stuck, which `_recover_if_entombed`
+## owns (and counts).
+const SKIN_SETTLE_MAX_M := 0.02
+
+
+## Leave every frame outside the skin. Sliding along a sloped mesh top (the
+## trainer camp's log beside the village road, a 45-degree terrain bank) or a
+## step-up can end a frame a millimetre or two inside a concave shape, deeper
+## than `safe_margin`; the next frame then starts in contact and the body
+## catches. Apply the physics server's own zero-motion recovery -- the same
+## query every move starts from -- only when it exceeds the skin, and only by
+## that recovery vector, so nothing here can carry the body through anything.
+func _settle_skin_overlap() -> void:
+	var params := PhysicsTestMotionParameters3D.new()
+	params.from = global_transform
+	params.motion = Vector3.ZERO
+	params.margin = safe_margin
+	params.recovery_as_collision = true
+	var result := PhysicsTestMotionResult3D.new()
+	if not PhysicsServer3D.body_test_motion(get_rid(), params, result):
+		return
+	var travel := result.get_travel()
+	if travel.length() <= safe_margin or travel.length() > SKIN_SETTLE_MAX_M or not travel.is_finite():
+		return
+	global_position += travel
 
 
 func register_environment_velocity_modifier(id: StringName, owner: Node, modifier: Callable, order: int = 0) -> bool:
@@ -770,10 +804,16 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 	# Godot's floor-stop mode is for an idle body, but leaving it enabled while
 	# the player actively climbs can pin the capsule to a perfectly valid floor
 	# without any wall contact. Production Rise receipts reproduced this on
-	# 20-degree authored treads. Keep idle slope stability, and release the stop
-	# mode only while locomotion is actually requesting horizontal travel.
-	floor_stop_on_slope = direction == Vector3.ZERO
+	# 20-degree authored treads. Keep idle slope stability and retain native
+	# shallow recovery on flat floors; active movement releases the stop mode.
+	floor_stop_on_slope = idle_slope_stop(direction, get_floor_normal(), up_direction)
 	floor_constant_speed = direction != Vector3.ZERO
+	# A flat idle body needs native recovery, not the slope-holding -2 m/s bias.
+	# Reapplying that bias every dialogue frame sinks the capsule into a Box
+	# floor. Effective direction includes modal ownership and locomotion locks;
+	# moving/sloped/airborne gravity and the following jump step stay unchanged.
+	if is_on_floor() and direction == Vector3.ZERO and get_floor_normal().is_equal_approx(up_direction):
+		velocity.y = 0.0
 
 	var game := get_node_or_null(^"/root/Game")
 	var auto_running := game != null and bool(game.get("auto_run"))
@@ -797,6 +837,13 @@ func _apply_movement(delta: float, input_owned: bool) -> void:
 
 	velocity.x = horizontal.x
 	velocity.z = horizontal.z
+
+
+## On a flat floor the native idle slope-stop branch can undo a shallow
+## recovery by subtracting its travel. Keep that recovery in the one ordinary
+## move_and_slide pass; sloped floors still need their original idle stop.
+static func idle_slope_stop(direction: Vector3, floor_normal: Vector3, up: Vector3) -> bool:
+	return direction == Vector3.ZERO and not floor_normal.is_equal_approx(up)
 
 
 func _face(direction: Vector3, delta: float) -> void:

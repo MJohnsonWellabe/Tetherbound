@@ -271,9 +271,7 @@ static func show_victory(world: Node, speaker: Node3D, player: Node3D, id: Strin
 	# r5: no token was ever seen moving to the player); this timer is only
 	# the fallback for a speech that never reports its last line.
 	var seconds := float(show.get("seconds", 14.0))
-	node.get_tree().create_timer(seconds).timeout.connect(func() -> void:
-		if is_instance_valid(node):
-			hand_over(node, player))
+	node.get_tree().create_timer(seconds).timeout.connect(hand_over.bind(node, player))
 	return node
 
 

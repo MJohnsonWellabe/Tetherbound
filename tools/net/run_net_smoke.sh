@@ -102,7 +102,17 @@ kill_orphans # in the unlikely case a stale run shares this shell pid
 ) &
 tail_pid=$!
 
-"$godot" --headless --path "$repo_root" --script "$script"
+case "$smoke" in
+	f48_loop|f48_behind|f48_transactions|f48_boss_four)
+		# Original scripts/cuts still run. Their separately disclosed mechanics
+		# overlay is applied only after the complete immutable bundle validates,
+		# then restored by the reviewed runner. Missing inputs are a failure.
+		"${TB_F48_PROCESS_PYTHON:-python3}" "$repo_root/tools/net/f48_ci_runner.py" \
+			--godot "$godot" --profile "${TB_F48_PROFILE:-}" \
+			--script "tests/smoke_net_${smoke}.gd" --proof-out "$run_dir/f48-proof"
+		;;
+	*) "$godot" --headless --path "$repo_root" --script "$script" ;;
+esac
 code=$?
 
 kill "$tail_pid" 2>/dev/null || true

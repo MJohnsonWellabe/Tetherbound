@@ -7,6 +7,21 @@ extends "res://tests/test_case.gd"
 
 const AI := preload("res://scripts/combat/combat_ai.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
+var _fixture_root: Node3D
+const NATIVE_CASES := [
+	"host_cue_payload_carries_the_body_shape_and_a_guest_applies_it",
+	"host_route_cue_is_its_own_kind_with_a_fresh_serial",
+	"a_payload_without_shape_still_presents_the_ordinary_telegraph",
+	"proxy_draws_lane_and_guard_cone_then_releases_them_on_strike",
+	"route_lane_is_kept_into_the_tell_and_freed_at_the_strike",
+	"unset_or_malformed_shape_keys_draw_nothing_and_clear_stale_marks",
+	"wild_body_reports_its_shape_and_announces_a_route_cue",
+	"a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks",
+]
+
+class WildShell extends "res://scripts/creatures/wild_creature.gd":
+	func _ready() -> void:
+		pass # Cue methods use an initialized tree; no creature rig is needed.
 
 
 class ProxyShell extends "res://scripts/creatures/shared_opponent_proxy.gd":
@@ -92,6 +107,9 @@ func _director(shape: Dictionary) -> DirectorShell:
 	body.shape = shape
 	runtime.wild = body
 	director.runtime = runtime
+	_fixture_root.add_child(director)
+	director.add_child(runtime)
+	_fixture_root.add_child(body)
 	return director
 
 
@@ -104,7 +122,7 @@ func _free_director(director: DirectorShell) -> void:
 	director.free()
 
 
-func test_host_cue_payload_carries_the_body_shape_and_a_guest_applies_it() -> void:
+func _case_host_cue_payload_carries_the_body_shape_and_a_guest_applies_it() -> void:
 	var director := _director(LANE_SHAPE)
 	var payload := director._shared_cue_payload("enc_1", "telegraph", 0.9)
 	assert_eq(payload.get("shape", {}), LANE_SHAPE, "telegraph cue carries the body's lane shape")
@@ -122,7 +140,7 @@ func test_host_cue_payload_carries_the_body_shape_and_a_guest_applies_it() -> vo
 	_free_director(director)
 
 
-func test_host_route_cue_is_its_own_kind_with_a_fresh_serial() -> void:
+func _case_host_route_cue_is_its_own_kind_with_a_fresh_serial() -> void:
 	var shape := LANE_SHAPE.duplicate()
 	shape["lane_travels"] = false
 	shape["route_s"] = 1.1
@@ -141,7 +159,7 @@ func test_host_route_cue_is_its_own_kind_with_a_fresh_serial() -> void:
 	_free_director(director)
 
 
-func test_a_payload_without_shape_still_presents_the_ordinary_telegraph() -> void:
+func _case_a_payload_without_shape_still_presents_the_ordinary_telegraph() -> void:
 	var director := _director({})
 	var payload := director._shared_cue_payload("enc_1", "telegraph", 0.8)
 	assert_false(payload.has("shape"), "an empty body shape is not sent")
@@ -156,11 +174,27 @@ func _tree_proxy() -> ProxyShell:
 	var proxy := ProxyShell.new()
 	proxy.body_generation = 7
 	proxy._pose_received = true
-	# The unit runner has no live SceneTree; the lane draws outside one.
+	_mount_cue_body(proxy)
 	return proxy
 
 
-func test_proxy_draws_lane_and_guard_cone_then_releases_them_on_strike() -> void:
+func _mount_cue_body(body: Node3D) -> void:
+	# CreatureBody's required scene children initialize before the overridden
+	# _ready. Empty meshes disclose this as cue geometry, not an art witness.
+	var collision := CollisionShape3D.new()
+	collision.name = "Collision"
+	body.add_child(collision)
+	var model := Node3D.new()
+	model.name = "Model"
+	body.add_child(model)
+	for part: String in ["Body", "Head"]:
+		var mesh := MeshInstance3D.new()
+		mesh.name = part
+		body.add_child(mesh)
+	_fixture_root.add_child(body)
+
+
+func _case_proxy_draws_lane_and_guard_cone_then_releases_them_on_strike() -> void:
 	var proxy := _tree_proxy()
 	var shape := LANE_SHAPE.duplicate()
 	shape.merge(GUARD_SHAPE)
@@ -184,7 +218,7 @@ func test_proxy_draws_lane_and_guard_cone_then_releases_them_on_strike() -> void
 	proxy.free()
 
 
-func test_route_lane_is_kept_into_the_tell_and_freed_at_the_strike() -> void:
+func _case_route_lane_is_kept_into_the_tell_and_freed_at_the_strike() -> void:
 	var proxy := _tree_proxy()
 	var shape := LANE_SHAPE.duplicate()
 	shape["lane_travels"] = false
@@ -203,7 +237,7 @@ func test_route_lane_is_kept_into_the_tell_and_freed_at_the_strike() -> void:
 	proxy.free()
 
 
-func test_unset_or_malformed_shape_keys_draw_nothing_and_clear_stale_marks() -> void:
+func _case_unset_or_malformed_shape_keys_draw_nothing_and_clear_stale_marks() -> void:
 	var proxy := _tree_proxy()
 	assert_true(proxy.present_telegraph(1, 0.9, 1, {}))
 	assert_true(proxy.shape_lane() == null)
@@ -221,8 +255,9 @@ func test_unset_or_malformed_shape_keys_draw_nothing_and_clear_stale_marks() -> 
 	proxy.free()
 
 
-func test_wild_body_reports_its_shape_and_announces_a_route_cue() -> void:
-	var wild := WILD.new()
+func _case_wild_body_reports_its_shape_and_announces_a_route_cue() -> void:
+	var wild := WildShell.new()
+	_mount_cue_body(wild)
 	wild._combat_cfg = {"route_cue_seconds": 1.1, "lunge": 6.0, "guard_stance": true,
 		"range": 3.0, "cone_degrees": 80.0}
 	var routes: Array = []
@@ -250,7 +285,7 @@ func test_wild_body_reports_its_shape_and_announces_a_route_cue() -> void:
 	wild.free()
 
 
-func test_a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks() -> void:
+func _case_a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks() -> void:
 	# A catch pause ends a tell on the host with no strike cue to the guests.
 	var proxy := _tree_proxy()
 	var shape := LANE_SHAPE.duplicate()
@@ -277,3 +312,60 @@ func test_a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks() -> voi
 	assert_true(proxy.shape_lane() == null and proxy.shape_guard_cone() == null,
 		"the catch-absorb path clears every mark")
 	proxy.free()
+
+
+func run_initialized_cases(tree: SceneTree) -> Dictionary:
+	var completed: Array[String] = []
+	for name: String in NATIVE_CASES:
+		_fixture_root = Node3D.new()
+		_fixture_root.process_mode = Node.PROCESS_MODE_DISABLED
+		tree.root.add_child(_fixture_root)
+		call("_case_" + name)
+		completed.append(name)
+		_fixture_root.free()
+		_fixture_root = null
+	return {"cases": completed, "assertions": assertion_count, "failures": failures}
+
+
+func test_initialized_native_tree_preserves_all_shared_cue_assertions() -> void:
+	# The unit runner executes during SceneTree._init. These production cue
+	# methods need an initialized tree for transforms, marks and queued frees.
+	var suffix := "%d-%d" % [OS.get_process_id(), Time.get_ticks_usec()]
+	var path := "user://shared-cue-shape-" + suffix + ".gd"
+	var log_path := ProjectSettings.globalize_path("user://shared-cue-shape-" + suffix + ".log")
+	var runner := FileAccess.open(path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('''extends SceneTree
+func _initialize():
+	call_deferred("run")
+func run():
+	var test = load("res://tests/test_shared_opponent_cue_shape.gd").new()
+	var result = test.run_initialized_cases(self)
+	await process_frame
+	print("SHARED_CUE_SHAPE_RESULT=" + JSON.stringify(result))
+	quit(0 if result.failures.is_empty() and result.cases.size() == 8 and result.assertions == 66 else 1)
+''')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(path)
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	assert_true(FileAccess.file_exists(log_path), "retain the real child engine log")
+	if FileAccess.file_exists(log_path): combined += "\n" + FileAccess.get_file_as_string(log_path)
+	var result: Dictionary = {}
+	var result_count := 0
+	for line: String in "\n".join(output).split("\n"):
+		if line.begins_with("SHARED_CUE_SHAPE_RESULT="):
+			result_count += 1
+			var parsed: Variant = JSON.parse_string(line.trim_prefix("SHARED_CUE_SHAPE_RESULT="))
+			if parsed is Dictionary: result = parsed
+	assert_eq(result_count, 1, combined)
+	assert_eq(result.get("cases", []), NATIVE_CASES, "all eight original cases must run")
+	assert_eq(result.get("assertions", 0), 66, "preserve every original cue assertion")
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \
+		or combined.contains("RID allocations") or combined.contains("RIDs of type"), combined)
+	assert_eq(code, 0, combined)

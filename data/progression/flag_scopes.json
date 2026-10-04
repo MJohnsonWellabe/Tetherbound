@@ -1,5 +1,5 @@
 {
-  "_comment": "D99 / docs/specs/MP_STATE_SEAM.md \u00c2\u00a73. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
+  "_comment": "D99 / docs/specs/MP_STATE_SEAM.md §3. Every story flag id is world or player. A flag matching nothing here is a test failure (tests/test_flag_scopes.gd), never a default: defaulting an unknown id to world makes a friend's tutorial already done, and defaulting it to player leaves a gate closed for the friend who did not open it. Resolution is exact id first, then the LONGEST matching prefix, then nothing (autoload/progression_state.gd::scope_of).",
   "_comment_prefixes": "A prefix ends with ':' or '_' so it can never swallow an unrelated id. Longest-prefix wins, so 'opening:beat:' resolves ahead of 'opening:' even though both are player.",
   "_comment_rule": "world = something happened to THE WORLD once (a boss fell, a gate opened, a pickup was taken, a relay went dark, a shop opened, an NPC was met). player = a tutorial beat, a personal readiness check, or a personal payoff (items handed over, a saddle fitted on YOUR creature, YOUR camp, YOUR legendary). Home and creature-bed flags are player flags GRANTED TO EVERY CONNECTED PEER when the world gains the pieces (D99); until Wave 3's grant_player_flag exists, solo writes them to the local store exactly as today.",
   "_why_lost_creature_rue_returned": "F03: world scope. The player leads Juno's freed Meadowhart home; once she stands beside Juno that is true for every peer, and band4_lost_creature completes on it (data/config/lost_companion_reunion.json).",
@@ -154,10 +154,12 @@
       "stormward_route_revealed",
       "cloudreach_reward_retargeted_stormwood",
       "cloudreach:legendary_freed",
-      "cloudreach:legendary_settled"
+      "cloudreach:legendary_settled",
+      "water_civilian_departure_complete"
     ],
     "prefixes": [
       "reward:trainer:warrens_cleared:xp:",
+      "reward:trainer:warden_aldis:xp:",
       "water_claim:",
       "defeated_water_trainer_",
       "cache:",
@@ -209,7 +211,10 @@
       "homecoming_seen",
       "regional_credits_seen",
       "cloudreach:legendary_joined",
-      "cloudreach:legendary_refused"
+      "cloudreach:legendary_refused",
+      "home_key_given",
+      "water:legendary_joined",
+      "water:legendary_refused"
     ],
     "prefixes": [
       "legendary_answer_world:",
@@ -222,7 +227,8 @@
       "creature_bed_built_",
       "oskar_swap_taken_",
       "stormwood:legendary_answer:",
-      "cloudreach:legendary_answer_world:"
+      "cloudreach:legendary_answer_world:",
+      "stormwood:regional_outcome:"
     ]
   },
   "_why_cloudreach_solmane": "Owner ruling 2026-09-27 (#356 5858140459): Solmane is Cloudreach's freed legendary, offered to each Veyra participant through stronghold_climax.gd with cloudreach:-prefixed receipts (data/config/cloudreach_solmane_climax.json). World: the freeing and settle, and per-character resolution receipts. Player: each character's own joined/refused answer and the world it was given in.",
@@ -347,11 +353,23 @@
       "transaction": "domain:<character_id>:<sequence>; host validates; atomically debit/grant; replay no mutation",
       "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
     },
+    "redesign_character.research": {
+      "scope": "character",
+      "authority": "host-confirmed actual encounter sight/cast/catch/defeat; stable admitted participants",
+      "transaction": "research_event replay digest includes world namespace/session/original event/species/kind; research_claim pays canonical type essence and research:<species>:<task>:<character_id> in one existing character_action prepared journal; no release mutation",
+      "persistence": "optional additive v28 carrier; absent is empty; independent species history/event receipts/titles survives release, reload and other worlds; host bool-save, owner bool-save, exact ACK and accepted world save precede readiness"
+    },
     "redesign_character.research_receipts": {
       "scope": "character",
       "authority": "host validates; owning peer persists character",
       "transaction": "research:<species>:<task>:<character_id>; once character-global host-confirmed",
       "persistence": "atomic character document; rollback on failure; replay receipt on reconnect"
+    },
+    "redesign_character.bounties": {
+      "scope": "character",
+      "authority": "host-confirmed morning/encounter participants and actual Halda board; owning peer persists character",
+      "transaction": "bounty:clock_<world/day/cycle digest>:<character_id>, bounty:event_<world/event digest>:<character_id>, bounty:<instance>:<character_id>; board and payout share existing prepared character action journal",
+      "persistence": "optional additive v28 board; absent means empty; original instances, completion and clock anchor survive worlds/reload/reconnect; host bool-save, owner bool-save and exact ACK required"
     },
     "redesign_character.bounty_receipts": {
       "scope": "character",
@@ -423,6 +441,66 @@
       "scope": "character",
       "authority": "host confirmed creature owner",
       "transaction": "catch canonical card; feast/feed, teach or loadout sequence in atomic character write; mastery monotonic host-confirmed landed uses",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "reward_deliveries.creature_training:<sha256>": {
+      "scope": "world",
+      "authority": "host; stable transport-bound admitted character",
+      "transaction": "exact five-field altar_spend OR actual accepted wild_defeat nine-field immutable event including xp_mode; same full registry private stage; prepared bool world save before publication; exact owner revision/receipt ACK then second bool world save",
+      "persistence": "existing world reward_deliveries discriminator; latest absolute party/inventory/redesign projection, pending to accepted; no new save version/store"
+    },
+    "reward_deliveries.altar_building:<sha256>": {
+      "scope": "world",
+      "authority": "host; stable admitted owner of the paid placement",
+      "transaction": "existing place_building/dismantle; frozen txn ID plus paid building UID; canonical 10 stone/4 rootstone/2 ironwood; same full admitted record stage and prepared world bool write before publication",
+      "persistence": "immutable discriminated row in existing reward_deliveries, retained place/refund provenance; craft owner receipt in real bool character save, sender-bound exact ACK and second prepared world bool accept before unlocking"
+    },
+    "redesign_character.transaction_receipts.defeat:<character_id>:<source_hash>:<signature>": {
+      "scope": "character",
+      "authority": "host confirmed admitted stable character",
+      "transaction": "actual accepted wild defeat; immutable nine-field host event and original xp_mode; same typed creature_training journal, prepared world bool save, owner bool save and exact latest ACK",
+      "persistence": "save28 additive declared prefix; no inferred historical events or rewritten existing receipts"
+    },
+    "redesign_character.transaction_receipts.starter_choice:<character_id>:<uid>": {
+      "scope": "character",
+      "authority": "actual host accepted original starter adoption",
+      "transaction": "actual selected ally instance UID plus party add and opening:starter_granted in one bool character save; rollback all on failure",
+      "persistence": "global immutable original UID retained after release; absent/conflicting history stays unavailable"
+    },
+    "reward_deliveries.portal_unlock:<sha256>": {
+      "scope": "world",
+      "authority": "host admitted current character at actual configured arch",
+      "transaction": "world-instance frozen protected key debit; bool world save before owner bool save; exact sender/generation/row ACK then second bool world save",
+      "persistence": "v2 pending->accepted immutable row; existing v1 portable receipts retained; fifth never opens"
+    },
+    "satchel_escrow.portal_unlock:<sha256>": {
+      "scope": "character",
+      "authority": "accepted host portal journal",
+      "transaction": "same key debit plus personal unlock/stir receipt in bool owner save before exact ACK",
+      "persistence": "settled immutable row survives reload/hosts; retry never debits twice"
+    },
+    "home_key_given": {
+      "scope": "character",
+      "authority": "real Grandpa grandpa_first_catch opening effect",
+      "transaction": "finite reward-delivery journal then owner bool save, accepted escrow remains owed at capacity",
+      "persistence": "personal saved flag; no repeat gift"
+    },
+    "satchel_escrow.reward_delivery.finite_duplicate_of": {
+      "scope": "character",
+      "authority": "finite Home Key original portable entitlement",
+      "transaction": "secondary world row settles without item/flag mutation; points to existing original owed/settled row or existing home_key_given saved flag",
+      "persistence": "alias never becomes an original entitlement; original owed row retains the sole bag grant"
+    },
+    "redesign_character.creatures.<uid>.traits_initialized": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "Host spawn/catch admission; exact stable-character/current-generation same-record CAS; portable bool-save ACK; release removes UID atomically with F27 essence and one seed.",
+      "persistence": "character-global; same uid through evolution; rollback on failure"
+    },
+    "redesign_character.creatures.<uid>.captured_from": {
+      "scope": "character",
+      "authority": "host confirmed creature owner",
+      "transaction": "Host spawn/catch admission; exact stable-character/current-generation same-record CAS; portable bool-save ACK; release removes UID atomically with F27 essence and one seed.",
       "persistence": "character-global; same uid through evolution; rollback on failure"
     }
   }

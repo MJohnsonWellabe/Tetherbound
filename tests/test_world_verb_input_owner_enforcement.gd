@@ -277,6 +277,18 @@ const ACTION_CONTEXT := {
 	"combat_charged": "combat",
 	"combat_throw": "combat",
 	"combat_run": "combat",
+	# F23 piloting (`input_contexts.json` "combat"): B utility, RB arms the
+	# Ultimate (released, then a new face tap commits it), L3 is the interim
+	# ordinary item slot 1. All three are read only mid-fight, where the
+	# world's own B/RB/L3 readers stand down.
+	"combat_utility": "combat",
+	"combat_ultimate_arm": "combat",
+	"combat_item_1": "combat",
+	# F23 LT aim / X release: read only by `throw_aim.gd::_tick_aiming()`
+	# while an orb is being aimed (`input_contexts.json` "combat_aim"). That
+	# sub-state is mutually exclusive with ordinary combat verbs on X
+	# (`combat_quick`): the aim swallows X so it unambiguously releases.
+	"combat_orb_release": "combat_aim",
 
 	# build: read only while a ghost is armed (`build_placer.gd`:
 	# `pending_build != ""`), itself further gated by INPUT_OWNER --

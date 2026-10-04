@@ -1,0 +1,225 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+FRESH CAMPAIGN world_seed override=4
+FRESH CAMPAIGN scratch=D:/tetherbound/m1-production-steering-r1-user/APPDATA/Godot/app_userdata/Tetherbound/four_biome_fresh_10524_12462 slot=user://four_biome_fresh_10524_12462/slot_0.json checkpoints=D:/tetherbound/m1-production-steering-r1-user/APPDATA/Godot/app_userdata/Tetherbound/four_biome_checkpoints_10524_12462
+GATE A OPENING +0.20s — title interactive
+GATE A OPENING +0.55s — answered the character-choice step
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1172)
+       [1] _ready (res://scripts/world/playground_world.gd:798)
+GATE A OPENING +7.53s — confirmed the configured trainer-name prefill
+GATE A OPENING +7.57s — new game world entered
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=14702 reorder[16 layers]=3740
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=19613 mark_harvestable=332 group_by_model=327 register_mesh_assets=1971 build_batches_total=6047 (of which harvest_points[56283 nodes]=3727, initial_collision_stream[51210 solid]=177) update_mmis=542
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 266/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:281)
+       [1] build (res://scripts/world/props.gd:64)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
+       [3] _ready (res://scripts/world/playground_world.gd:855)
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66455
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66456
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66457
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66458
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66459
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66460
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+GATE A OPENING +171.00s — wake/Get Up complete
+GATE A OPENING +176.16s — Grandpa briefing and pack complete
+GATE A OPENING +176.22s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +180.29s — starter selected and named (terrapup, uid creature-2b5b39f3f3bb3ac41ca085ca132a453e)
+GATE A OPENING +181.62s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +183.25s — usable house/front doorway exited
+live farmhouse exit cleared by controller: door=(8.3, 0.9, 14.0) player=(9.478193, 0.900157, 14.06695) floor=true
+live catch uses authored Practice Meadow field approach: [(20.0, 0.900157, 14.0), (20.0, 0.900157, -12.0), (20.0, 0.900157, -18.0), (20.0, 0.900157, -26.0), (14.6, 0.900157, -31.0), (21.0, 0.900157, -37.5), (30.0, 0.900157, -40.0)]
+live catch field approach 1/7 reached by controller: (19.28712, 0.900805, 14.27274)
+live catch field approach 2/7 reached by controller: (19.98941, 0.900869, -11.23447)
+live catch field approach 3/7 reached by controller: (19.9989, 0.900933, -17.23443)
+live catch field approach 4/7 reached by controller: (19.99993, 0.894955, -25.2345)
+live catch field approach 5/7 reached by controller: (15.12826, 0.874226, -30.47104)
+live catch field approach 6/7 reached by controller: (20.49528, 0.995921, -36.95267)
+live catch field approach 7/7 reached by controller: (29.24877, 0.212789, -39.75691)
+live wild approach: exact offered target Wild_bramblebun_0_2
+GATE A OPENING +201.70s — engaged exact live target Wild_bramblebun_0_2 (bramblebun)
+GATE A OPENING +201.73s — tutorial Bramblebun combat entered
+GATE A OPENING +210.37s — Bramblebun naturally weakened to 30/106 HP
+GATE A OPENING +210.40s — live catch begins with 50 earned orbs; no HP or inventory fixture
+AIM READINESS convergence camera=(36.16814, 4.018255, -39.99592) forward=(-0.930378, -0.02907, -0.365447) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.5265639424324, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.5265639424324, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(36.24367, 3.865504, -41.42537) forward=(-0.930378, -0.02907, -0.365447) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.11581921577454, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.11581921577454, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS convergence camera=(36.24367, 3.865504, -41.42537) forward=(-0.930378, -0.02907, -0.365447) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.11581921577454, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.11581921577454, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(35.85268, 3.825433, -41.84097) forward=(-0.930378, -0.02907, -0.365448) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": false, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "reticle_outside_body", "in_front": true, "reticle_offset": 1.3467390537262, "reticle_radius": 1.132625, "inside_body": false } preview={ "eligible": false, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "reticle_outside_body", "in_front": true, "reticle_offset": 1.3467390537262, "reticle_radius": 1.132625, "inside_body": false, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS convergence camera=(35.39123, 4.467149, -45.43898) forward=(-0.986617, -0.077685, -0.143361) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.19229818880558, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.19229818880558, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(34.63795, 5.026716, -48.47767) forward=(-0.989603, -0.122183, 0.07588) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.88403850793839, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.88403850793839, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS input-commit camera=(34.63795, 5.026716, -48.47767) forward=(-0.989603, -0.122183, 0.07588) player=(21.38275, 1.604575, -46.0167) target=(16.64037, 2.961494, -47.97186) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.88403850793839, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.88403850793839, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.35017845034599, "trajectory_blocked": false, "trajectory_blocker": "" }
+catch launch: commit eligible=true reticle=0.835/1.133 first_hit=Wild_bramblebun_0_2 los=true reason=eligible
+catch launch: release assist=true predicted=(16.94, 2.94, -47.65) range=4.26 from=(20.82, 3.15, -46.22) dir=(-0.94, 0.08, -0.34)
+catch launch: placement closest=0.137 clamped=0.137 body_radius=0.666 orb_radius=0.60
+catch launch: strike assist=true predicted=(16.94, 2.94, -47.65) offset=0.137
+AIM READINESS convergence camera=(25.70081, 3.50119, -45.25773) forward=(-0.93732, -0.032878, -0.346916) player=(21.38275, 1.604575, -46.0167) target=(16.68641, 2.943984, -47.73565) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.84319430589676, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 1.09499526023865, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.22376947104931, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(25.84236, 3.515974, -45.6091) forward=(-0.93732, -0.032878, -0.346916) player=(21.38275, 1.604575, -46.0167) target=(16.64365, 2.944954, -47.73195) current={ "eligible": false, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "reticle_outside_body", "in_front": true, "reticle_offset": 1.23044526576996, "reticle_radius": 1.132625, "inside_body": false } preview={ "eligible": false, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "reticle_outside_body", "in_front": true, "reticle_offset": 1.22602713108063, "reticle_radius": 1.132625, "inside_body": false, "trajectory_hits_target": true, "trajectory_offset": 0.26045724749565, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS convergence camera=(25.61086, 3.650139, -46.62608) forward=(-0.978493, -0.066793, -0.195167) player=(21.38275, 1.604575, -46.0167) target=(16.62992, 2.940235, -47.65767) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.75263041257858, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.7457320690155, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.26152285933495, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(25.23362, 3.725308, -47.2134) forward=(-0.993799, -0.092106, -0.06229) player=(21.38275, 1.604575, -46.0167) target=(16.63431, 2.939553, -47.6498) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.10293884575367, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.09554122388363, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.25561568140984, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS convergence camera=(25.23362, 3.725308, -47.2134) forward=(-0.993799, -0.092106, -0.06229) player=(21.38275, 1.604575, -46.0167) target=(16.63431, 2.939553, -47.6498) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.10293884575367, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.09554122388363, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.25561568140984, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS post-settle camera=(24.88616, 3.698148, -47.24479) forward=(-0.993799, -0.092106, -0.06229) player=(21.38275, 1.604575, -46.0167) target=(16.65693, 2.936146, -47.60996) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.15033689141273, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.14262603223324, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.22618070244789, "trajectory_blocked": false, "trajectory_blocker": "" }
+AIM READINESS input-commit camera=(24.88616, 3.698148, -47.24479) forward=(-0.993799, -0.092106, -0.06229) player=(21.38275, 1.604575, -46.0167) target=(16.65693, 2.936146, -47.60996) current={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.15033689141273, "reticle_radius": 1.132625, "inside_body": true } preview={ "eligible": true, "first_hit": &"Wild_bramblebun_0_2", "line_of_sight": true, "reason": "eligible", "in_front": true, "reticle_offset": 0.14262603223324, "reticle_radius": 1.132625, "inside_body": true, "trajectory_hits_target": true, "trajectory_offset": 0.22618070244789, "trajectory_blocked": false, "trajectory_blocker": "" }
+catch launch: commit eligible=true reticle=0.201/1.133 first_hit=Wild_bramblebun_0_2 los=true reason=eligible
+catch launch: release assist=true predicted=(16.67, 2.93, -47.49) range=4.29 from=(20.81, 3.15, -46.20) dir=(-0.95, 0.08, -0.30)
+catch launch: placement closest=0.122 clamped=0.122 body_radius=0.666 orb_radius=0.60
+catch launch: strike assist=true predicted=(16.67, 2.93, -47.49) offset=0.122
+GATE A OPENING +227.43s — catch complete; exploration resumed with two-creature party
+FRESH PREFIX: title through first live catch; no seeded progress, HP pinning or reload
+earned prompt approach: target=/root/MeadowsPlayground/GateKey/Interactable target_position=(30.7, 1.080501, -15.9) player=(21.38275, 1.604575, -46.0167) budget=2600
+earned prompt approach: target=/root/MeadowsPlayground/VillageBoundary/RoadGate/Interactable target_position=(38.72, -1.455684, -19.85) player=(30.42212, 0.465983, -17.3942) budget=2600
+GATE A OPENING +237.64s — village key earned and consumed by the real gate
+OPENING_PRODUCTION_OBSERVATION {"acceptance":false,"actual_delta":[0.0,0.0,0.0],"ceiling_frames":0,"floor_angle":0.785399973392487,"frame":1,"live_contacts":[{"collider_rid":"RID(67778878898179)","collider_shape":41,"depth":0.0000639709760434926,"local_shape":0,"normal":[0.353315800428391,0.926852345466614,-0.126935988664627],"point":[37.1917419433594,-1.98308932781219,-19.3817768096924]}],"live_recovery_travel":[0.000034332275390625,0.0000882148742675781,-0.0000133514404296875],"mask":1,"on_ceiling":false,"on_floor":true,"on_wall":false,"plans":1,"player":[37.333366394043,-2.01156902313232,-19.4326572418213],"progress_m":0.0,"provisional_choice":0,"queries":2,"recoveries":0,"refusal":"","request":[27.0,0.849999964237213,7.59999990463257],"requests":1,"safe_margin":0.00100000004749745,"slide_contacts":[{"collider_rid":"RID(67778878898179)","collider_shape":41,"normal":[0.353315800428391,0.926852345466614,-0.126935988664627],"point":[37.1920394897461,-1.98321771621704,-19.3818836212158],"slide":0,"swept_depth":0.000908460060600191}],"slide_count":1,"slide_motion":[0.0,0.0,0.0],"snap":0.400000005960464,"stall_frames":1,"swept_depth":0.000908460060600191,"total_queries":2,"wall_frames":0}
+OPENING_PRODUCTION_OBSERVATION {"acceptance":false,"actual_delta":[0.0,0.0,0.0],"ceiling_frames":0,"floor_angle":0.785399973392487,"frame":1,"live_contacts":[{"collider_rid":"RID(67778878898179)","collider_shape":41,"depth":0.0000639709760434926,"local_shape":0,"normal":[0.353315800428391,0.926852345466614,-0.126935988664627],"point":[37.1917419433594,-1.98308932781219,-19.3817768096924]}],"live_recovery_travel":[0.000034332275390625,0.0000882148742675781,-0.0000133514404296875],"mask":1,"on_ceiling":false,"on_floor":true,"on_wall":false,"plans":1,"player":[37.333366394043,-2.01156902313232,-19.4326572418213],"progress_m":0.0,"provisional_choice":0,"queries":2,"recoveries":0,"refusal":"production observation cooperative callback deadline","request":[27.0,0.849999964237213,7.59999990463257],"requests":1,"safe_margin":0.00100000004749745,"slide_contacts":[{"collider_rid":"RID(67778878898179)","collider_shape":41,"normal":[0.353315800428391,0.926852345466614,-0.126935988664627],"point":[37.1920394897461,-1.98321771621704,-19.3818836212158],"slide":0,"swept_depth":0.000908460060600191}],"slide_count":1,"slide_motion":[0.0,0.0,0.0],"snap":0.400000005960464,"stall_frames":1,"swept_depth":0.000908460060600191,"total_queries":2,"wall_frames":0}
+ERROR: Native opening refused: production observation cooperative callback deadline
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_npc_gather_segment.gd:944)
+       [1] _walk_toward (res://tests/helpers/gate_a_npc_gather_segment.gd:761)
+       [2] walk_to (res://tests/helpers/opening_geometry_navigator.gd:225)
+       [3] step (res://tests/helpers/opening_geometry_navigator.gd:188)
+ERROR: could not reach actual door standoff: player=(37.33337, -2.011569, -19.43266) target=(27.0, 0.85, 5.0) distance=26.53 colliders=["/root/MeadowsPlayground/Terrain"]
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_npc_gather_segment.gd:944)
+       [1] _enter_through (res://tests/helpers/gate_a_npc_gather_segment.gd:493)
+       [2] _walk_toward (res://tests/helpers/gate_a_npc_gather_segment.gd:762)
+       [3] walk_to (res://tests/helpers/opening_geometry_navigator.gd:225)
+       [4] step (res://tests/helpers/opening_geometry_navigator.gd:188)
+ERROR: could not naturally enter Mira's building
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_npc_gather_segment.gd:944)
+       [1] _visit_villager (res://tests/helpers/gate_a_npc_gather_segment.gd:184)
+       [2] _enter_through (res://tests/helpers/gate_a_npc_gather_segment.gd:494)
+       [3] _walk_toward (res://tests/helpers/gate_a_npc_gather_segment.gd:762)
+       [4] walk_to (res://tests/helpers/opening_geometry_navigator.gd:225)
+       [5] step (res://tests/helpers/opening_geometry_navigator.gd:188)
+FRESH COVERAGE OBSERVATIONS {"below_two_samples":0,"camera_below_two_samples":6,"caveat":"below_two_samples grades only aligned <=5m road samples; camera_below_two_samples retains all observed-camera telemetry; unvisited routes and rendered silhouette readability remain unproved","complete_coverage":false,"failures":[],"graded_road_samples":0,"kind":"summary","observed_travel_m":161.763497304171,"off_route_samples":12,"samples":14,"unaligned_road_samples":2,"undersampled_intervals":0,"unusable_heading_samples":0}
+FRESH CAMPAIGN RESULT {"campaign_complete":false,"checkpoints":[],"counts_as_proof":true,"cumulative_elapsed_seconds":238.632,"dry_run":false,"elapsed_seconds":238.632,"failures":["Native opening refused: production observation cooperative callback deadline","could not reach actual door standoff: player=(37.33337, -2.011569, -19.43266) target=(27.0, 0.85, 5.0) distance=26.53 colliders=[\"/root/MeadowsPlayground/Terrain\"]","could not naturally enter Mira's building"],"local_chains":[],"reached":"road_gate","requested_prefix_passed":false,"resume":{},"resumed_from":"","scratch":"user://four_biome_fresh_10524_12462"}

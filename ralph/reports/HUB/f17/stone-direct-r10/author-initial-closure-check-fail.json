@@ -1,0 +1,1079 @@
+{
+  "classification": "SOURCEFAIL",
+  "acceptance": "F17#4 OPEN; original failed verdict retained; author-only/no native or independent proof",
+  "passed": 162,
+  "total": 172,
+  "manifest_sha256": "128e55f8dbba6063c2febd109727688f72f9be680150df752eec6098f078f172",
+  "geometry": {
+    "GrandpaHarvestTable": {
+      "corners": [
+        [
+          4.961560518741607,
+          8.635061373114585
+        ],
+        [
+          7.238439481258392,
+          8.635061373114585
+        ],
+        [
+          7.238439481258392,
+          9.073160368800163
+        ],
+        [
+          4.961560518741607,
+          9.073160368800163
+        ]
+      ],
+      "distance_m": 12.977108847066953,
+      "corridor_clearance_m": 10.776108847066952
+    },
+    "GrandpaFreshHarvest": {
+      "corners": [
+        [
+          4.419193808820323,
+          9.378941267595932
+        ],
+        [
+          4.9758605555551,
+          9.19806927734391
+        ],
+        [
+          5.080806191179677,
+          9.521058732404066
+        ],
+        [
+          4.5241394444449,
+          9.701930722656089
+        ]
+      ],
+      "distance_m": 12.495513350019683,
+      "corridor_clearance_m": 10.294513350019683
+    },
+    "GrandpaWashBucket": {
+      "corners": [
+        [
+          7.442042529114796,
+          9.221394389135684
+        ],
+        [
+          7.78804815679873,
+          9.361189737006548
+        ],
+        [
+          7.664513919668293,
+          9.666947703274904
+        ],
+        [
+          7.318508291984359,
+          9.52715235540404
+        ]
+      ],
+      "distance_m": 15.394443497840694,
+      "corridor_clearance_m": 13.193443497840693
+    },
+    "GrandpaYardStool": {
+      "corners": [
+        [
+          5.768907446151595,
+          7.599926720195156
+        ],
+        [
+          6.1495815719634415,
+          7.519011936895848
+        ],
+        [
+          6.230496360343675,
+          7.899686086611572
+        ],
+        [
+          5.849822234531829,
+          7.98060086991088
+        ]
+      ],
+      "distance_m": 13.774718541222635,
+      "corridor_clearance_m": 11.573718541222634
+    },
+    "wood_goal": [
+      -8.0,
+      8.0
+    ],
+    "stone_goal": [
+      -18.0,
+      6.0
+    ],
+    "length_m": 10.198039027185569,
+    "arrival_corridor_m": 2.201,
+    "house_distance_m": 5.556977595779922,
+    "fence_distance_m": 12.727922061357855,
+    "nominal5mps60fps_frames": 122.37646832622681,
+    "scope": "Static named house/yard/fence only; terrain/vegetation/native contact, actual path/time/save and earned acceptance unproved."
+  },
+  "terminal_actual_observation": {
+    "acceptance": false,
+    "actual_delta": [
+      0.0777935981750488,
+      -0.0333229303359985,
+      0.0298957824707031
+    ],
+    "authored_road_hint": "Practice Meadow",
+    "callback_own_us": 550,
+    "ceiling_frames": 0,
+    "checked_start": false,
+    "controller_observation_available": true,
+    "controller_wanted_dir": [
+      0.933448493480682,
+      0.0,
+      0.35871160030365
+    ],
+    "delivered_input": [
+      0.132365956902504,
+      0.991200923919678
+    ],
+    "diagnostic_output_outside_physics_cap": true,
+    "floor_angle": 0.785399973392487,
+    "frame": 1829,
+    "live_contacts": [],
+    "live_recovery_travel": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "live_state_phase": "post",
+    "mask": 1,
+    "on_ceiling": false,
+    "on_floor": false,
+    "on_wall": false,
+    "physics_frame": 5867,
+    "plans": 8,
+    "player": [
+      7.51008701324463,
+      1.2351667881012,
+      9.20029640197754
+    ],
+    "progress_m": 149.03925114125,
+    "provisional_choice": 0,
+    "provisional_steering": {
+      "acceptance": false,
+      "heading": [
+        0.933448433876038,
+        0.0,
+        0.358711570501328
+      ],
+      "prediction_motion": [
+        1.86689686775208,
+        0.0,
+        0.717423141002655
+      ],
+      "retry_choice": 0,
+      "source": "prospective_step",
+      "wall_normal": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "queries": 3,
+    "recoveries": 0,
+    "refusal": "actual production walk lost grounded floor",
+    "request": [
+      -18.0,
+      1.56652557849884,
+      6.0
+    ],
+    "requests": 1830,
+    "safe_margin": 0.00100000004749745,
+    "slide_contacts": [],
+    "slide_contacts_are_capped_prefix": true,
+    "slide_count": 0,
+    "slide_motion": [
+      0.0777935907244682,
+      -0.0333229303359985,
+      0.0298957824707031
+    ],
+    "slide_point_counts": [],
+    "snap": 0.400000005960464,
+    "stall_frames": 0,
+    "swept_depth": 0.0,
+    "timing": {
+      "between_callbacks": "controller and other nodes; excluded; not controller-only",
+      "between_callbacks_us": 4878,
+      "callback_cap_us": 10000,
+      "input_flush_us": 59,
+      "live_post_us": 59,
+      "live_pre_us": 97,
+      "movement_progress_us": 1,
+      "post_contract_us": 21,
+      "post_us": 119,
+      "pre_us": 353,
+      "provisional_steering_us": 83,
+      "serialization_and_print": "deferred; excluded; snapshot included",
+      "slide_validation_us": 10,
+      "snapshot_us": 27,
+      "stage": "post"
+    },
+    "total_queries": 5484,
+    "wall_frames": 23
+  },
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/Bench.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/Bench.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/Bucket_Wooden_1.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/FarmCrate_Apple.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/Stool.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_fantasy/Stool.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_survival/Bonfire_Fire.mtl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/assets/props/quaternius_survival/Bonfire_Fire.obj",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/movement.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scenes/player/player.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/props.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen originals/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/native.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/parser.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/receipt.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen proposal/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen repair.patch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen review-context.txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen root-actual/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen source-route-check.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/Bench.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/Bench.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/Bucket_Wooden_1.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/FarmCrate_Apple.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/Stool.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_fantasy/Stool.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_survival/Bonfire_Fire.mtl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live assets/props/quaternius_survival/Bonfire_Fire.obj",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/props.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scenes/player/player.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/movement.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT executed original exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposal equals live",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only gather function changed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function run",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _progression_has",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _visit_villager",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _assign_tools_in_satchel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _focus_satchel_slot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _wait_for_tool_idle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _nearest_authored_node",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _enter_through",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _exit_through",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _door_outward",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _nearest_door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _npc_prompt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _walk_to_and_activate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _one_approach",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _press_and_observe_activation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _on_arbiter_activated",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function activation_verdict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _walk_diagnosis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _walk_toward",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _prove_movement_resumed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _wait_dialogue_open",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _close_dialogue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _wait_open_panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _wait_world_owned",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _tap_action",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _event_for",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _required_pad_actions_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _send_axis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _send_stick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _stop_left_stick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _script_path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _descendants",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _checkpoint",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "original earned function _fail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "single functional line; all actions/assertions exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one1800/1.55 approach and wood prefix",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact failed source closure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/Bench.bin",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/Bench.gltf",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/Bucket_Wooden_1.bin",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/FarmCrate_Apple.bin",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/Stool.bin",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_fantasy/Stool.gltf",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_survival/Bonfire_Fire.mtl",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input assets/props/quaternius_survival/Bonfire_Fire.obj",
+      "passed": false,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input scripts/world/props.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input scenes/player/player.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual closure input data/config/movement.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior failure no credit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual unchanged stone goal/hint/floor refusal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual cap bounds preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "wood earned and no saver diagnostics",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "authored targets",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "house source pinned",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "arrival disk/capsule/probe clears house",
+      "passed": true,
+      "detail": 5.556977595779922
+    },
+    {
+      "name": "asset root untransformed Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "arrival corridor clears yard GrandpaHarvestTable",
+      "passed": true,
+      "detail": 12.977108847066953
+    },
+    {
+      "name": "asset root untransformed FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "arrival corridor clears yard GrandpaFreshHarvest",
+      "passed": true,
+      "detail": 12.495513350019683
+    },
+    {
+      "name": "asset root untransformed Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "arrival corridor clears yard GrandpaWashBucket",
+      "passed": true,
+      "detail": 15.394443497840694
+    },
+    {
+      "name": "asset root untransformed Stool",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Stool",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Stool",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "arrival corridor clears yard GrandpaYardStool",
+      "passed": true,
+      "detail": 13.774718541222635
+    },
+    {
+      "name": "path inside closed fence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "arrival corridor clears fence",
+      "passed": true,
+      "detail": 12.727922061357855
+    },
+    {
+      "name": "old first Practice heading east",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative old first leg crosses house",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "direct actual goal within180m scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "nominal original1800 budget",
+      "passed": true,
+      "detail": 122.37646832622681
+    },
+    {
+      "name": "stone stays nearest in planar wood arrival disk",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

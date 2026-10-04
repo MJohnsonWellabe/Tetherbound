@@ -1,0 +1,10 @@
+{
+  "head": "09cbbf981d12ef04b675d95662f5730b07c23d4e",
+  "exit": 1,
+  "timed_out": true,
+  "selection": "test_stormwood_road_surface.gd",
+  "summary": [],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-09cbbf981d12-f8065f5a\\tests.log",
+  "raw_log_sha256": "b89b958c6d80d26fa824b26fc380d891d3f49dc9749a2b516e0d18121683bb58",
+  "scope": "Exact local diagnostic only. Native errors and timeouts remain failures; main/criteria unchanged."
+}

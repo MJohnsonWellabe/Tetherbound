@@ -1,0 +1,44 @@
+{
+  "base": "09b836562f8b10cf69b15dce165de567fbd1ea73",
+  "final_source_head": "941591568066b379922e27e6ed358af7d053a7f0",
+  "source_sha256": {
+    "tests/helpers/f48_net_proof.gd": "7a7d1d7546fde708a5f32af2d5686336fb98e138cc50b31bbc28a06b03562438",
+    "tests/helpers/f49_campaign_journey.gd": "ff9f172f643b9a8dfef802b37bd63d1ecd2400eef4231691646e92a4ea964768",
+    "tools/net/f48_detached_file.gd": "ce9e8fa607caf2db6599ac33e380b0a44698e1f4f8bee9d67594b0f0a909907d",
+    "tools/net/f48_process_guard.py": "2722654af0ec2f6628609c6e44840eafcb9052f7b7bc5a7ead79ec2ad24493fd",
+    "tools/net/peer_runner.gd": "8ef7b328423a3a5e299864721af95abeef857742b0f3dd6d9f3bc40b7be82b59",
+    "tools/net/proof_steps.gd": "d932f5020f923a9fe2fffbd34301b2a6284ed7007e13fc1824ee625d4dfc1655",
+    "tools/net/proof_steps_f48.gd": "1eaeb43eb287b2faa4bae3997d4c24912b93fff095b8f56587f96657a5a7d635"
+  },
+  "independent_source_review": "ROOT/source_review SOURCE PASS through941591; no native acceptance credit",
+  "source_chain": [
+    "9f7e7db8faf37dc83b90ae2707aa265d1d543f99",
+    "0067c100e0919772b0edb5dff6f3403548403876",
+    "b5a26a5f0120bb6e2c02090c49783770f3ac5718",
+    "667d2a0b4b584fe09a72b7bc761e573b8bd53359",
+    "a43b7f1f75512b4f46d4f07a9708efcaaff7d320",
+    "e0e23696551b5571d61492cbe919a7e77ca80d17",
+    "eb019e2d3743a2c1f46cc494ea9fddad0e8b9184",
+    "941591568066b379922e27e6ed358af7d053a7f0"
+  ],
+  "standalone_checks": {
+    "gdtoolkit_grammar_files": 6,
+    "python_ast_files": 1,
+    "result": "PASS; no engine launched"
+  },
+  "reused_native_windows_primitive": {
+    "receipt": "ralph/reports/R3-F48/process-boundary/windows-kernel-guard-receipt.json",
+    "sha256": "c43564dd9ace2361e7f90766e7cc348f19da4ed0b431c4985ab554a44ff8dec4",
+    "scope": "Actual kernel identity/refuse wrong identity/hard terminate/wait on a freshly owned Python child. Does not establish Godot F48 writer/ACK temporal proof or Linux behavior.",
+    "result": "PASS"
+  },
+  "remaining_proof": [
+    "ROOT exact-source Godot compile and affected tests",
+    "Real earned/reviewed v28 route profiles and all4 distinct boss saved starts",
+    "Actual guest original-character admission/restart through title picker",
+    "Godot synchronous writer/kernel exit/ACK ordering on both phases and Linux pidfd primitive",
+    "All24 transaction cases under unchanged3600s total,300s build,10s boundary and CI outer caps; observed total may warrant dedicated parallel CI case matrix",
+    "Actual2peer full loop,4peer boss,separate receipts and honest behind guest permit-bound arrival; production success must include real permit_id"
+  ],
+  "acceptance": "F48#0-3 OPEN, no criterion marked MET; F49 only compiler annotation changed"
+}

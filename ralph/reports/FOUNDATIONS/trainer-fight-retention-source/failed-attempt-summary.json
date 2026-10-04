@@ -1,0 +1,112 @@
+{
+  "status": "ACTUAL_ORIGINAL_BUDGET_FAIL_NO_CAUSAL_FINDING",
+  "root_native_head": "83d9dada76b6127c26456767ec3b20c9c74fa8fd",
+  "native_exit": 1,
+  "elapsed_seconds": 256.5780000000959,
+  "source_before_after_count": 3250,
+  "source_maps_equal": true,
+  "raw_error_matches": [],
+  "engine_handles_after": "",
+  "failures": [
+    "both peers felled the Warden (no verdict)"
+  ],
+  "fatal": "",
+  "raw_files": [
+    {
+      "root_path": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/receipt.json",
+      "preserved_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/raw-receipt.json",
+      "bytes": 744971,
+      "sha256": "40422d2bf2d08b568c345da75dea9505d11f40f75b58af81cb260cb738fdafce"
+    },
+    {
+      "root_path": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/coordinator.log",
+      "preserved_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/raw-coordinator.log",
+      "bytes": 3069,
+      "sha256": "fbb316a73f99e39230210e211d8e668ffd7073691a070118eb4c5e9c593aab6f"
+    },
+    {
+      "root_path": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/net-run/NET_RUN.json",
+      "preserved_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/raw-net-run-NET_RUN.json",
+      "bytes": 8672,
+      "sha256": "f3e76bd1852a959e76cc0a24a6ced60a98ce7ab72d7f287dd68e67db11a1470a"
+    },
+    {
+      "root_path": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/net-run/peer-0.log",
+      "preserved_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/raw-net-run-peer-0.log",
+      "bytes": 12211,
+      "sha256": "b8770a84164489c8c42eac2be334d97b32f053911dfa8933993723a237287b9c"
+    },
+    {
+      "root_path": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/net-run/peer-1.log",
+      "preserved_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/raw-net-run-peer-1.log",
+      "bytes": 11326,
+      "sha256": "c653050ae40f3839ce5139cfc93cedd6a7c2a7acfe1c94a84c98c32c8f9e113d"
+    },
+    {
+      "root_path": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-net-83d9dada76b6-veridian_relic_key/initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "preserved_local_path": "D:/tetherbound/redesign-foundations/.tmp/trainer-fight-retention-source/raw-initial-home-Godot-app_userdata-Tetherbound-logs-godot.log",
+      "bytes": 3044,
+      "sha256": "4236ce120b87619937c46c0a3886a100ee5de80d1164d0a876b2f13d72d11391"
+    }
+  ],
+  "retained_late_samples": [
+    {
+      "elapsed_ms": 96301.0,
+      "native_since_start": 3743.0,
+      "driver_frames": 3064.0,
+      "native_minus_driver": 679.0,
+      "average_native_physics_hz": 38.867717,
+      "process_frames_since_start": 649.0,
+      "swings": 76.0,
+      "enemy_hp": 6.0,
+      "queued_opponents": 1.0,
+      "pre_peer_nominal_95s": false,
+      "actual_coordinator_deadline_known": false
+    },
+    {
+      "elapsed_ms": 97361.0,
+      "native_since_start": 3803.0,
+      "driver_frames": 3104.0,
+      "native_minus_driver": 699.0,
+      "average_native_physics_hz": 39.060815,
+      "process_frames_since_start": 657.0,
+      "swings": 78.0,
+      "enemy_hp": 6.0,
+      "queued_opponents": 1.0,
+      "pre_peer_nominal_95s": false,
+      "actual_coordinator_deadline_known": false
+    },
+    {
+      "elapsed_ms": 98324.0,
+      "native_since_start": 3863.0,
+      "driver_frames": 3150.0,
+      "native_minus_driver": 713.0,
+      "average_native_physics_hz": 39.288475,
+      "process_frames_since_start": 674.0,
+      "swings": 81.0,
+      "enemy_hp": 0.0,
+      "queued_opponents": 1.0,
+      "pre_peer_nominal_95s": false,
+      "actual_coordinator_deadline_known": false
+    },
+    {
+      "elapsed_ms": 99316.0,
+      "native_since_start": 3923.0,
+      "driver_frames": 3204.0,
+      "native_minus_driver": 719.0,
+      "average_native_physics_hz": 39.500181,
+      "process_frames_since_start": 702.0,
+      "swings": 83.0,
+      "enemy_hp": 0.0,
+      "queued_opponents": 1.0,
+      "pre_peer_nominal_95s": false,
+      "actual_coordinator_deadline_known": false
+    }
+  ],
+  "host_last_session_peers": [
+    1.0
+  ],
+  "guest_exited": true,
+  "original_warning_observed": "Host JSON.stringify NaN replaced with null, backtrace _send -> _handle_message probe-value reply; no causal inference. Fly too_far landing then granted; neither carries exact fight timing.",
+  "first_31e_observation_packet_unchanged": true
+}

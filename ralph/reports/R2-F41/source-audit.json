@@ -1,0 +1,70 @@
+{
+  "scope": "Non-engine structural checks; runtime/native/judge/audio acceptance pending",
+  "base": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "checks": [
+    {
+      "check": "tree and core candidate stay disabled",
+      "pass": true
+    },
+    {
+      "check": "road finish stays disabled",
+      "pass": true
+    },
+    {
+      "check": "ground profile stays disabled",
+      "pass": true
+    },
+    {
+      "check": "legacy scar candidate stays disabled",
+      "pass": true
+    },
+    {
+      "check": "Stormwood time grade remains pinned",
+      "pass": true
+    },
+    {
+      "check": "physical tree function _ring unchanged",
+      "pass": true
+    },
+    {
+      "check": "physical tree function _ascent unchanged",
+      "pass": true
+    },
+    {
+      "check": "physical tree function ascent_point unchanged",
+      "pass": true
+    },
+    {
+      "check": "physical tree function _ramp unchanged",
+      "pass": true
+    },
+    {
+      "check": "physical tree function _surface unchanged",
+      "pass": true
+    },
+    {
+      "check": "physical tree function add_approach unchanged",
+      "pass": true
+    },
+    {
+      "check": "no terrain/scatter/gameplay/save/shared look edits",
+      "pass": true
+    }
+  ],
+  "missing_audio": [
+    "assets/audio/stormwood/release_forest_sky_bed.wav",
+    "assets/audio/stormwood/strike_body.wav",
+    "assets/audio/stormwood/strike_crack.wav",
+    "assets/audio/stormwood/strike_decay.wav",
+    "assets/audio/stormwood/strike_warning.wav",
+    "assets/audio/stormwood/surge_break_bed.wav",
+    "assets/audio/stormwood/surge_building_bed.wav",
+    "assets/audio/stormwood/surge_calm_bed.wav",
+    "assets/audio/stormwood/surge_fading_decay.wav"
+  ],
+  "regional_config_sha256": {
+    "stormheart_presentation": "6c8c2e263e7a3d82e01f6c3a1042c0c6f0124bddd5c9bd8fcafec63c2cbb6911",
+    "stormwood_road_current": "1963b45a9abdaf9439c25d964b157a24f0d9901c97c1afbefcd2148b0c619b7d",
+    "stormwood_ground_finish": "e01e2c2ba2cecda2ecb85e0270ca10116ffd4d569d796454f1906c9268364b3c"
+  }
+}

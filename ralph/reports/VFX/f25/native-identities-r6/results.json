@@ -1,0 +1,750 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"batch": "identities",
+	"cases": [
+		{
+			"arrival_process_frames": [
+				311
+			],
+			"arrival_wall_seconds": [
+				1.569963
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 1.860645
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-1.256489, 1.668238, 0.748426)",
+						"(-0.900095, 2.316394, -0.374213)",
+						"(-0.543702, 1.020082, -0.374213)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.34866828918457,
+					"wall_seconds": 1.188728
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 1.942419
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 311,
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 3,
+			"resolved_size": 0.2,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.46,
+				"clear_transit_required": true,
+				"entry_fraction": 0.435835361480713,
+				"envelope_radius_m": 1.7,
+				"fraction": 0.34866828918457,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				1005
+			],
+			"arrival_wall_seconds": [
+				0.703586
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.784534
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-1.679053, 1.608556, 0.783821)",
+						"(-1.354489, 2.392377, 0.0)",
+						"(-1.029926, 1.608556, -0.783821)",
+						"(-0.705363, 0.824736, -0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.299201583862305,
+					"wall_seconds": 0.28853
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.875692
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 1005,
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 4,
+			"resolved_size": 0.23,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.505,
+				"clear_transit_required": true,
+				"entry_fraction": 0.374001979827881,
+				"envelope_radius_m": 2.071,
+				"fraction": 0.299201583862305,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				1755
+			],
+			"arrival_wall_seconds": [
+				0.699088
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.78288
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-1.797099, 1.573221, 0.83461)",
+						"(-1.491381, 2.407832, 0.0)",
+						"(-1.185663, 1.573221, -0.83461)",
+						"(-0.879945, 0.738611, -0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.276401583353678,
+					"wall_seconds": 0.271466
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.882307
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 1755,
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 4,
+			"resolved_size": 0.26,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.55,
+				"clear_transit_required": true,
+				"entry_fraction": 0.345501979192098,
+				"envelope_radius_m": 2.242,
+				"fraction": 0.276401583353678,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				2537
+			],
+			"arrival_wall_seconds": [
+				0.710609
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.799323
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.511363, 2.109024, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.414001592000325,
+					"wall_seconds": 0.372488
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.890998
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "large-stone",
+			"independent_schedule_process_frame": 2537,
+			"move_id": "rock_throw",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.7,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.21,
+				"clear_transit_required": true,
+				"entry_fraction": 0.517501990000407,
+				"envelope_radius_m": 1.21,
+				"fraction": 0.414001592000325,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				3331
+			],
+			"arrival_wall_seconds": [
+				0.702281
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.791095
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.633636, 2.087287, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.393001619974772,
+					"wall_seconds": 0.357123
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.888414
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "large-stone",
+			"independent_schedule_process_frame": 3331,
+			"move_id": "rock_throw",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 1,
+			"resolved_size": 0.805,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.3675,
+				"clear_transit_required": true,
+				"entry_fraction": 0.491252024968465,
+				"envelope_radius_m": 1.3675,
+				"fraction": 0.393001619974772,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				4156
+			],
+			"arrival_wall_seconds": [
+				0.706865
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.801012
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.767175, 2.058461, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.372001616160075,
+					"wall_seconds": 0.346023
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.900155
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "large-stone",
+			"independent_schedule_process_frame": 4156,
+			"move_id": "rock_throw",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 1,
+			"resolved_size": 0.91,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.525,
+				"clear_transit_required": true,
+				"entry_fraction": 0.465002020200094,
+				"envelope_radius_m": 1.525,
+				"fraction": 0.372001616160075,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				4873
+			],
+			"arrival_wall_seconds": [
+				1.169445
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 1.304927
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.421266, 1.078062, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.429501597086589,
+					"wall_seconds": 0.848155
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 1.38864
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "burning-orb",
+			"independent_schedule_process_frame": 4873,
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.45,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.09375000268221,
+				"clear_transit_required": true,
+				"entry_fraction": 0.536876996358236,
+				"envelope_radius_m": 1.09375000268221,
+				"fraction": 0.429501597086589,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				5707
+			],
+			"arrival_wall_seconds": [
+				0.702544
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.78427
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.528036, 1.076962, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.410826619466146,
+					"wall_seconds": 0.369021
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.875899
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "burning-orb",
+			"independent_schedule_process_frame": 5707,
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 1,
+			"resolved_size": 0.5175,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.23381250308454,
+				"clear_transit_required": true,
+				"entry_fraction": 0.513533274332682,
+				"envelope_radius_m": 1.23381250308454,
+				"fraction": 0.410826619466146,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				6546
+			],
+			"arrival_wall_seconds": [
+				0.695208
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.778446
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-0.636597, 1.075597, 0.0)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.392151610056559,
+					"wall_seconds": 0.360523
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.87501
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "burning-orb",
+			"independent_schedule_process_frame": 6546,
+			"move_id": "fireball",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 1,
+			"resolved_size": 0.585,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 1.37387500348687,
+				"clear_transit_required": true,
+				"entry_fraction": 0.490189512570699,
+				"envelope_radius_m": 1.37387500348687,
+				"fraction": 0.392151610056559,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				7287
+			],
+			"arrival_wall_seconds": [
+				0.775168
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.854885
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.756115
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.952087
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "descending-bolt",
+			"independent_schedule_process_frame": 7287,
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 1,
+			"resolved_size": 0.24,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				8006
+			],
+			"arrival_wall_seconds": [
+				0.691321
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.771907
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.626315
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.86982
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "descending-bolt",
+			"independent_schedule_process_frame": 8006,
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 3,
+			"resolved_count": 1,
+			"resolved_size": 0.276,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		},
+		{
+			"arrival_process_frames": [
+				8718
+			],
+			"arrival_wall_seconds": [
+				0.694436
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 0.775295
+				},
+				"flight": {
+					"arrivals": 0,
+					"nominal_travel_fraction": 0.78,
+					"wall_seconds": 0.631948
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 0.871954
+				}
+			},
+			"cpu_process_ms": [],
+			"end_slots": 0,
+			"id": "descending-bolt",
+			"independent_schedule_process_frame": 8718,
+			"move_id": "thunder_break",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 5,
+			"resolved_count": 1,
+			"resolved_size": 0.312,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"clear_transit_required": false,
+				"fraction": 0.78
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": []
+		}
+	],
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scope": "production_effect_nodes_synthetic_arena",
+	"target": {
+		"production_model": true,
+		"scope": "posed production body; no encounter or HP authority",
+		"species": "mudsnout"
+	}
+}

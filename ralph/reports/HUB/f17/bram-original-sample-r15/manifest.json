@@ -1,0 +1,116 @@
+{
+  "classification": "AUTHOR SOURCE ONLY; FAILURE-ONLY DIAGNOSTIC; F17#4 OPEN",
+  "base_commit": "9e16e1d9da07a8193820f9bbe5c7c00b6c980461",
+  "changed_path": "tests/helpers/opening_geometry_navigator.gd",
+  "root_failure_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "native-api/PhysicsDirectSpaceState3D.xml": {
+      "bytes": 6824,
+      "sha256": "a425439c1bb93006c927956d0c7b48f323a6a98904112272d4b8caedd11589ef"
+    },
+    "native-api/PhysicsServer3D.xml": {
+      "bytes": 95680,
+      "sha256": "d29aaf4bcd5708ee6e98888763a32777d8f9d5cc549db85225215726d8f1f04d"
+    },
+    "native-api/PhysicsShapeQueryParameters3D.xml": {
+      "bytes": 3807,
+      "sha256": "a69ea6bd9ae877c9d3e993985fed8591060349c323abe08c206365fa697bfa37"
+    },
+    "native-api/provenance.json": {
+      "bytes": 786,
+      "sha256": "e43b0d843a84ae04922fbd64bf566807304facc985b3328b5cf009ee9fed6600"
+    },
+    "originals/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 71351,
+      "sha256": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+    },
+    "prior-failure/native.log": {
+      "bytes": 142607,
+      "sha256": "83134c1592a40f597fd175b11b98458a3b0238145ecab7b23c7b8d426e94e856"
+    },
+    "prior-failure/parser.log": {
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    "prior-failure/receipt.json": {
+      "bytes": 498379,
+      "sha256": "d7bfca783aa1904f9428a0b5545ea9096301c7750e384edf198f14967bd7d094"
+    },
+    "proposal/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 76459,
+      "sha256": "884b18703d6a00cddea2fd65be568762cc987a196cc3148783795afc9b0725a2"
+    },
+    "repair.patch": {
+      "bytes": 6927,
+      "sha256": "3685821c89fbcbb4b4e5eb1b91ed87223c0e6b436d10944ede5cf1b42b1acba3"
+    },
+    "review-context.txt": {
+      "bytes": 4190,
+      "sha256": "1ce893b71f30ff99555c3bfeb3ca1b1fcabd5004e110883814e754fdcfb0f0dd"
+    },
+    "root-actual/data/config/building_prefabs.json": {
+      "bytes": 266862,
+      "sha256": "5e60ebd341184fe5946f115f6c9494c5d0163df08e69c5e0ae33d662f114c3b3"
+    },
+    "root-actual/data/config/village.json": {
+      "bytes": 12217,
+      "sha256": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b"
+    },
+    "root-actual/data/config/village_npcs.json": {
+      "bytes": 51308,
+      "sha256": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07"
+    },
+    "root-actual/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "root-actual/scripts/world/inn_interior.gd": {
+      "bytes": 42369,
+      "sha256": "57e8e51aa9aee52f81a932430dcee084b94f86e5d08aabf0d7e1d0513e14402f"
+    },
+    "root-actual/scripts/world/village.gd": {
+      "bytes": 17281,
+      "sha256": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b"
+    },
+    "root-actual/scripts/world/village_door.gd": {
+      "bytes": 4583,
+      "sha256": "498abf2ea10103001f68ed0f9dabf16141653ed8ff74476c142028967d90a6d9"
+    },
+    "root-actual/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 45256,
+      "sha256": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d"
+    },
+    "root-actual/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 71351,
+      "sha256": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+    },
+    "source-check.py": {
+      "bytes": 8228,
+      "sha256": "e583948a8ae3a0f079962f2392ff4ec1f01bc0d8d828cf064a6680f6102022e4"
+    }
+  },
+  "protected_hub_sha256": {
+    "tests/helpers/gate_a_npc_gather_segment.gd": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+    "tests/helpers/gate_a_opening_drive.gd": "f23eeb19bdebeeb97839d8bd85cdc217fc4c551f896babaa0eb944e15ace0e5f",
+    "tests/helpers/fresh_opening_segment.gd": "5bd2ea999b87d1071bc23ad1786be39c4e23f0f08d00bd34682cdcfeedd791fb",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/inn_interior.gd": "57e8e51aa9aee52f81a932430dcee084b94f86e5d08aabf0d7e1d0513e14402f",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946"
+  },
+  "root_executed_sha256": {
+    "data/config/building_prefabs.json": "5e60ebd341184fe5946f115f6c9494c5d0163df08e69c5e0ae33d662f114c3b3",
+    "data/config/village.json": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b",
+    "data/config/village_npcs.json": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/inn_interior.gd": "57e8e51aa9aee52f81a932430dcee084b94f86e5d08aabf0d7e1d0513e14402f",
+    "scripts/world/village.gd": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b",
+    "scripts/world/village_door.gd": "498abf2ea10103001f68ed0f9dabf16141653ed8ff74476c142028967d90a6d9",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d",
+    "tests/helpers/opening_geometry_navigator.gd": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+  }
+}

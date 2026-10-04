@@ -12,9 +12,14 @@ extends "res://scripts/creatures/creature_body.gd"
 ## clocks, and turning an intent into movement.
 
 const AI := preload("res://scripts/combat/combat_ai.gd")
+const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
+var _landed_utility_state: Dictionary = {}
+var _utility_clock_ms := 0.0
+var _ultimate_reaction_left := 0.0
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const LUNGE_LANE := preload("res://scripts/combat/lunge_lane.gd")
+const PATTERN_CUE := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
 
 signal fainted()
 ## An aggressive creature has closed on the trainer and is starting the fight itself.
@@ -87,6 +92,22 @@ var _selected_attack: Dictionary = {}
 var _selected_attack_attempts: int = 0
 var _selected_heading_locked: bool = false
 var _move_db: RefCounted = null
+var _patterns: Dictionary = {}
+var _pattern_context: Dictionary = {}
+var _pattern_observer: Callable
+var _pattern_cursor := 0
+var _pattern_geometry: Dictionary = {}
+var _pattern_cue: Node3D
+var _pattern_observed := ""
+var _pattern_observed_s := 0.0
+var _pattern_dodge_left := 0.0
+var _pattern_punish: Dictionary = {}
+var _pattern_repeat_left := 0
+var _pattern_repeating := false
+var _pattern_leap_active := false
+var _pattern_leap_elapsed := 0.0
+var _pattern_leap_duration := 0.45
+var _pattern_leap_model_y := 0.0
 var _poise: float = 0.0
 var _poise_quiet_left: float = 0.0
 var _staggered: bool = false
@@ -203,6 +224,11 @@ func _physics_process(delta: float) -> void:
 		_tick_combat(delta)
 	elif is_alive():
 		_tick_peaceful(delta)
+	if engaged and not protected_heavy_committed() and (utility_movement_multiplier() <= 0.0 or _ultimate_reaction_left > 0.0):
+		request_move(Vector3.ZERO)
+		velocity.x = 0.0
+		velocity.z = 0.0
+		_impulse = Vector3.ZERO
 	# The body integrates whatever was requested above. Calling super LAST is
 	# required: request_move is cleared every frame by design, so a request made
 	# after integration would be thrown away.
@@ -211,6 +237,8 @@ func _physics_process(delta: float) -> void:
 	# after collision, not where it was asked to go.
 	if _lunge_active:
 		_after_lunge_step(before, delta)
+	if _pattern_leap_active:
+		_after_pattern_leap_step(delta)
 
 
 ## --- peaceful -------------------------------------------------------------
@@ -372,6 +400,14 @@ func _tick_aggression(delta: float) -> bool:
 	return true
 
 
+## The director refused this creature's engagement for now (the player is in
+## a conversation or a trainer battle): ask again after `seconds` rather than
+## standing beside the player announced and silent until they walk away.
+func defer_engage(seconds: float) -> void:
+	_has_announced = false
+	_grace_left = maxf(_grace_left, seconds)
+
+
 func _wander(delta: float) -> void:
 	if _pause_left > 0.0:
 		_pause_left -= delta
@@ -506,8 +542,149 @@ func refresh_combat_profile() -> void:
 		_combat_cfg = _enemy_config_for_this_body()
 
 
+## The director supplies authored identity and measured visible actions. The
+## body owns selection, clocks and frozen geometry; it never decides damage.
+func configure_patterns(patterns: Dictionary, context: Dictionary, observe: Callable) -> void:
+	_patterns = patterns.duplicate(true) if patterns.get("runtime_enabled") == true else {}
+	_pattern_context = context.duplicate(true)
+	_pattern_observer = observe
+	_pattern_cursor = 0
+	_pattern_observed = ""
+	_pattern_observed_s = 0.0
+	_pattern_dodge_left = 0.0
+	_pattern_punish.clear()
+	_pattern_repeat_left = 0
+	_pattern_repeating = false
+	_clear_pattern_cue()
+	_pattern_geometry.clear()
+
+
+func pattern_geometry() -> Dictionary:
+	return _pattern_geometry.duplicate(true)
+
+
+func _current_pattern_context() -> Dictionary:
+	var context := _pattern_context.duplicate(true)
+	if instance != null:
+		context["hp_fraction"] = float(instance.get("hp")) / maxf(1.0, float(instance.get("max_hp")))
+		context["move_quick"] = str(instance.get("move_quick"))
+		context["move_charged"] = str(instance.get("move_charged"))
+	return context
+
+
+func _pattern_profile() -> Dictionary:
+	if _patterns.is_empty() or instance == null: return {}
+	return AI.select_pattern(_patterns, _combat_cfg, _current_pattern_context(), _pattern_cursor)
+
+
+func _clear_pattern_cue() -> void:
+	if is_instance_valid(_pattern_cue): _pattern_cue.queue_free()
+	_pattern_cue = null
+
+
+func _exit_tree() -> void:
+	_clear_pattern_cue()
+
+
+func _update_pattern_geometry() -> void:
+	if _pattern_geometry.is_empty() or _intent != AI.Intent.TELEGRAPH: return
+	if not _selected_heading_is_locked():
+		_pattern_geometry["heading"] = facing()
+	var fraction := clampf(float(_selected_attack.get("marker_tracks_fraction", 0.5)), 0.0, 1.0)
+	if _opponent != null and _beat_left > _lunge_tell_total * (1.0 - fraction):
+		_pattern_geometry["marker"] = _tracked_pattern_marker()
+	if is_instance_valid(_pattern_cue):
+		_pattern_cue.call("aim", _pattern_geometry.origin, _pattern_geometry.heading, _pattern_geometry.marker)
+
+
+func _begin_pattern_cue() -> void:
+	_clear_pattern_cue()
+	_pattern_geometry.clear()
+	if not _selected_attack.has("pattern_attack_id") or _opponent == null: return
+	_pattern_geometry = {"profile": _selected_attack.duplicate(true), "origin": global_position,
+		"heading": facing(), "marker": _tracked_pattern_marker(), "body": self}
+	# Travelling charges already own the same swept-width LungeLane cue.
+	if is_inside_tree() and str(_selected_attack.get("telegraph_shape", "")) != "lane":
+		_pattern_cue = PATTERN_CUE.begin(self, _selected_attack, global_position, facing(),
+			_pattern_geometry.marker, _patterns.get("presentation", {}),
+			Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))
+
+
+func _tracked_pattern_marker() -> Vector3:
+	var origin: Vector3 = _pattern_geometry.get("origin", global_position)
+	var offset := _opponent.global_position - origin
+	offset.y = 0.0
+	var reach := maxf(0.0, float(_selected_attack.get("range", 0.0)))
+	if offset.length() > reach: offset = offset.normalized() * reach
+	return origin + offset
+
+
+## A DIVER commits to the shown landing point. The existing collision-aware
+## burst moves the body; a blocked arrival cannot damage the distant marker.
+func _begin_pattern_leap() -> void:
+	var offset: Vector3 = _pattern_geometry.marker - global_position
+	offset.y = 0.0
+	_pattern_leap_duration = maxf(0.01, float(_patterns.get("casts", {}).get("leap_travel_s", 0.45)))
+	_pattern_leap_elapsed = 0.0
+	_pattern_leap_model_y = _model.position.y if is_instance_valid(_model) else 0.0
+	_pattern_leap_active = begin_combat_burst(offset, offset.length(), _pattern_leap_duration)
+	play_attack()
+	if not _pattern_leap_active: _finish_pattern_leap()
+
+
+func _after_pattern_leap_step(delta: float) -> void:
+	_pattern_leap_elapsed += delta
+	if is_instance_valid(_model):
+		var fraction := clampf(_pattern_leap_elapsed / _pattern_leap_duration, 0.0, 1.0)
+		_model.position.y = _pattern_leap_model_y + sin(fraction * PI) * float(_patterns.get("casts", {}).get("leap_height_m", 0.75))
+	if not combat_burst_active(): _finish_pattern_leap()
+
+
+func _finish_pattern_leap() -> void:
+	_pattern_leap_active = false
+	if is_instance_valid(_model): _model.position.y = _pattern_leap_model_y
+	var landing: Vector3 = _pattern_geometry.get("marker", global_position)
+	_pattern_geometry["blocked"] = Vector2(landing.x - global_position.x, landing.z - global_position.z).length() > maxf(0.15, body_radius())
+	_clear_pattern_cue()
+	strike_ready.emit()
+
+
+func _observe_pattern_reaction(delta: float) -> bool:
+	_pattern_dodge_left = maxf(0.0, _pattern_dodge_left - delta)
+	if _patterns.is_empty() or not _pattern_observer.is_valid(): return false
+	var raw: Variant = _pattern_observer.call()
+	if not raw is Dictionary: return false
+	var observation: Dictionary = raw.duplicate(true)
+	var label := str(observation.get("creature_uid", "")) + ":" + str(observation.get("action", "")) + ":" + str(observation.get("action_id", ""))
+	_pattern_observed_s = _pattern_observed_s + delta if label == _pattern_observed else 0.0
+	_pattern_observed = label
+	observation["visible_for_s"] = _pattern_observed_s
+	observation["dodge_cooldown_s"] = _pattern_dodge_left
+	observation["attack_cooldown_s"] = _cooldown
+	var reaction := AI.reaction(_intent, observation, _patterns)
+	if reaction == "dodge":
+		var cfg: Dictionary = _patterns.get("reactions", {})
+		var role := AI.context_role(_patterns, _pattern_context)
+		var key := "wild_dodge_cooldown_s" if not trainer_owned else (
+			"mobile_trainer_dodge_cooldown_s" if role in ["DIVER", "CHARGER"] else "trainer_dodge_cooldown_s")
+		_pattern_dodge_left = float(cfg.get(key, 6.0))
+		_side_sign = float(observation.get("side_sign", 1.0))
+		_enter(AI.Intent.DODGE)
+		return true
+	if reaction == "punish":
+		_pattern_punish = AI.punish_profile(_patterns, _combat_cfg, _current_pattern_context())
+		if not _pattern_punish.is_empty():
+			_enter(AI.Intent.TELEGRAPH)
+			return true
+	return false
+
+
 ## Called by the combat manager when a fight opens and closes.
 func set_engaged(value: bool, opponent: Node3D = null) -> void:
+	if not value:
+		_landed_utility_state.clear()
+		_utility_clock_ms = 0.0
+		_ultimate_reaction_left = 0.0
 	engaged = value
 	_opponent = opponent
 	# Engagement boundaries can occur while this body is stationary: ordinary
@@ -520,6 +697,12 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 	# A charge never survives an engagement boundary, and neither does its lane.
 	_cancel_lunge()
 	_lunge_outcome.clear()
+	_pattern_observed = ""
+	_pattern_observed_s = 0.0
+	_pattern_dodge_left = 0.0
+	_pattern_punish.clear()
+	_pattern_repeat_left = 0
+	_pattern_repeating = false
 	if value:
 		_combat_cfg = _enemy_config_for_this_body()
 		_selected_attack.clear()
@@ -558,14 +741,20 @@ func set_engaged(value: bool, opponent: Node3D = null) -> void:
 func _tick_combat(delta: float) -> void:
 	if not is_alive() or _opponent == null:
 		return
+	_utility_clock_ms += delta * 1000.0
+	_ultimate_reaction_left = maxf(0.0, _ultimate_reaction_left - delta)
+	# An already committed protected heavy still runs. Only this opponent's
+	# issuance/movement pauses; other hosted opponents keep their own clocks.
+	if _ultimate_reaction_left > 0.0 and not protected_heavy_committed(): return
 
 	_cooldown = maxf(0.0, _cooldown - delta)
 	# F04: the recovery beat starts when the charge stops, not when it starts,
 	# so the punish window after a travelling lunge is the profile's full one.
-	if not _lunge_active:
+	if not _lunge_active and not _pattern_leap_active:
 		_beat_left = maxf(0.0, _beat_left - delta)
 	_advance_route_cue(delta)
 	_tick_poise(delta)
+	if _pattern_leap_active: return
 	if _staggered:
 		if _beat_left <= 0.0:
 			_staggered = false
@@ -584,6 +773,11 @@ func _tick_combat(delta: float) -> void:
 
 	var spaced := _spaced_config()
 	var next: int = AI.decide(_intent, distance, _beat_left, _cooldown, spaced)
+	if _observe_pattern_reaction(delta): next = _intent
+	if next == AI.Intent.REPOSITION and _intent == AI.Intent.RECOVER and _pattern_repeat_left > 0:
+		_pattern_repeat_left -= 1
+		_pattern_repeating = true
+		next = AI.Intent.TELEGRAPH
 	if next != _intent:
 		_enter(next)
 		# Entering a beat can end the fight underneath us: a completed wind-up
@@ -604,11 +798,15 @@ func _tick_combat(delta: float) -> void:
 	if not _selected_heading_is_locked() and not _lunge_heading_is_locked():
 		face_towards(_opponent.global_position)
 	_aim_lunge_lane()
+	_update_pattern_geometry()
 
 	var waiting := distance <= float(spaced.get("preferred_range", 2.1))
 	var direction := AI.movement_for(_intent, to, _side_sign, waiting)
+	if utility_movement_multiplier() <= 0.0: direction = Vector3.ZERO
 	if direction != Vector3.ZERO:
-		var speed := AI.speed_for(_intent, _combat_cfg, waiting)
+		var movement_profile := spaced.duplicate()
+		if _intent == AI.Intent.DODGE: movement_profile.merge(_patterns.get("reactions", {}), true)
+		var speed := AI.speed_for(_intent, movement_profile, waiting)
 		if _catch_aim_active:
 			speed *= _catch_aim_slowdown_scale
 		request_move(_unstick(direction), speed)
@@ -632,6 +830,40 @@ func combat_config() -> Dictionary:
 	return _selected_attack if not _selected_attack.is_empty() else _spaced_config()
 
 
+func protected_heavy_committed() -> bool:
+	return _route_cue_left > 0.0 or ((_intent == AI.Intent.TELEGRAPH or _lunge_active or _pattern_leap_active) \
+		and (_selected_attack.get("heavy") == true or _selected_attack.get("protected") == true \
+		or _selected_attack.get("interruptible") == false))
+
+
+func named_combat_target() -> bool:
+	return trainer_owned or not str(get_meta(&"named_encounter_id", "")).is_empty() \
+		or not str(get_meta(&"water_named_encounter", "")).is_empty() \
+		or str(_pattern_context.get("pattern_id", "")).begins_with("named_")
+
+
+## The one host HP writer calls this after a positive landed debit. Utility
+## receipts and expiry use this opponent's clock, which pauses with hitstop.
+func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
+	if move.get("move_id") != "snare" or not engaged or not is_alive(): return false
+	if _landed_utility_state.is_empty():
+		_landed_utility_state = UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
+	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, "snare", move,
+		context, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
+	if staged.get("ok") != true: return false
+	_landed_utility_state = staged.state
+	return true
+
+
+func utility_movement_multiplier() -> float:
+	var where := global_position if is_inside_tree() else position
+	return UTILITY_EFFECTS.movement_multiplier(_landed_utility_state, str(instance.get("uid")), where, int(_utility_clock_ms)) if instance != null else 1.0
+
+
+func hold_ultimate_reaction(seconds: float) -> void:
+	_ultimate_reaction_left = maxf(_ultimate_reaction_left, clampf(seconds, 0.0, 3.0))
+
+
 func _selected_heading_is_locked() -> bool:
 	if _selected_attack.is_empty() or _selected_heading_locked:
 		return _selected_heading_locked
@@ -652,6 +884,15 @@ func _select_attack() -> Dictionary:
 	var profile := _combat_cfg.duplicate(true)
 	var mine := body_radius()
 	var theirs := float(_opponent.call("body_radius")) if _opponent != null and _opponent.has_method("body_radius") else 0.5
+	var pattern := _pattern_punish if not _pattern_punish.is_empty() else _pattern_profile()
+	_pattern_punish = {}
+	if not pattern.is_empty():
+		_pattern_cursor += 1
+		_pattern_repeat_left = maxi(0, int(pattern.get("repeat_count", 1)) - 1)
+		var selected := spaced_config_for(pattern, mine, theirs, _contact_need(), _contact_reach_need())
+		if str(selected.get("telegraph_shape", "")) == "lane":
+			selected["lane_half_width_m"] = _lunge_lane_half_width()
+		return selected
 	_selected_attack_attempts += 1
 	var cadence := maxi(1, int(_combat_cfg.get("charged_every", 1)))
 	if _selected_attack_attempts % cadence != 0:
@@ -698,6 +939,12 @@ func _select_attack() -> Dictionary:
 ## bodies occupy. A large creature stands further out than a small one for the
 ## same reason a person does.
 func _spaced_config() -> Dictionary:
+	if not _patterns.is_empty():
+		if not _selected_attack.is_empty(): return _selected_attack
+		var pattern := _pattern_profile()
+		if not pattern.is_empty() and _opponent != null:
+			var radius := float(_opponent.call("body_radius")) if _opponent.has_method("body_radius") else 0.5
+			return spaced_config_for(pattern, body_radius(), radius, _contact_need(), _contact_reach_need())
 	if _opponent == null:
 		return _combat_cfg
 	var mine: float = body_radius()
@@ -754,8 +1001,17 @@ func _enter(intent: int) -> void:
 		# A route cue or guard cone belongs to one tell and never outlives it.
 		_route_cue_left = 0.0
 		_hide_guard_cone()
-	var named_enabled := int(_combat_cfg.get("charged_every", 0)) > 0 and instance != null
-	if intent == AI.Intent.TELEGRAPH and named_enabled:
+		if not (previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER \
+			and str(_selected_attack.get("telegraph_shape", "")) == "marker"):
+			_clear_pattern_cue()
+	var named_enabled := (not _patterns.is_empty() or int(_combat_cfg.get("charged_every", 0)) > 0) and instance != null
+	if intent == AI.Intent.TELEGRAPH and _pattern_repeating:
+		_pattern_repeating = false
+		_selected_attack["telegraph"] = float(_selected_attack.get("repeat_telegraph_s", _selected_attack.get("telegraph", 1.1)))
+		_selected_attack["recovery"] = float(_selected_attack.get("repeat_recovery_s", _selected_attack.get("recovery", 0.6)))
+		_selected_heading_locked = false
+		_beat_left = float(_selected_attack.telegraph)
+	elif intent == AI.Intent.TELEGRAPH and named_enabled:
 		_selected_attack = _select_attack()
 		_selected_heading_locked = false
 		_beat_left = float(_selected_attack.get("telegraph", AI.duration_for(intent, _combat_cfg)))
@@ -771,8 +1027,10 @@ func _enter(intent: int) -> void:
 	elif intent == AI.Intent.RECOVER and previous == AI.Intent.TELEGRAPH and not _selected_attack.is_empty():
 		_beat_left = float(_selected_attack.get("recovery", AI.duration_for(intent, _combat_cfg)))
 	else:
-		_beat_left = AI.duration_for(intent, _combat_cfg)
-		if intent != AI.Intent.RECOVER:
+		_beat_left = AI.duration_for(intent, _attack_row())
+		if intent == AI.Intent.DODGE:
+			_beat_left = float(_patterns.get("reactions", {}).get("dodge_duration_s", 0.2))
+		if intent != AI.Intent.RECOVER and (intent != AI.Intent.REPOSITION or _patterns.is_empty()):
 			_selected_attack.clear()
 			_selected_heading_locked = false
 
@@ -781,6 +1039,7 @@ func _enter(intent: int) -> void:
 		_lunge_heading_locked = false
 		# The heading-lock clocks measure the tell proper, never the route cue.
 		_lunge_tell_total = _beat_left
+		_begin_pattern_cue()
 		# F10#2: an opted-in body shows its route for `route_cue_seconds` first;
 		# the ordinary tell (and its announcement) follows unchanged.
 		var cue := route_cue_seconds()
@@ -795,6 +1054,10 @@ func _enter(intent: int) -> void:
 			_announce_tell()
 		else:
 			route_cue_started.emit(cue)
+	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER \
+			and str(_selected_attack.get("telegraph_shape", "")) == "marker":
+		_cooldown = float(_selected_attack.get("attack_cooldown", _combat_cfg.get("attack_cooldown", 1.1)))
+		_begin_pattern_leap()
 	elif previous == AI.Intent.TELEGRAPH and intent == AI.Intent.RECOVER and lunge_travels():
 		# F04: the wind-up completed and the charge begins. The blow is not
 		# resolved yet: `strike_ready` follows when the body stops.
@@ -875,8 +1138,15 @@ func guard_stance() -> bool:
 ## Empty outside a tell, or for a tell that draws nothing.
 func presentation_shape() -> Dictionary:
 	var shape := {}
-	if _intent != AI.Intent.TELEGRAPH:
+	if _intent != AI.Intent.TELEGRAPH and not _pattern_leap_active:
 		return shape
+	if not _pattern_geometry.is_empty():
+		var origin: Vector3 = _pattern_geometry.origin
+		var heading: Vector3 = _pattern_geometry.heading
+		var marker: Vector3 = _pattern_geometry.marker
+		shape["pattern"] = {"profile": _pattern_geometry.profile.duplicate(true),
+			"origin": [origin.x, origin.y, origin.z], "heading": [heading.x, heading.y, heading.z],
+			"marker": [marker.x, marker.y, marker.z]}
 	var cue := route_cue_seconds()
 	if lunge_travels() or cue > 0.0:
 		var half := _lunge_lane_half_width()
@@ -886,7 +1156,7 @@ func presentation_shape() -> Dictionary:
 		shape["lane_travels"] = lunge_travels()
 		var lock_in := -1.0
 		if lunge_travels():
-			var fraction := clampf(float(_lunge_cfg().get("face_lock_fraction", 0.5)), 0.0, 1.0)
+			var fraction := clampf(float(_attack_row().get("face_lock_fraction", _lunge_cfg().get("face_lock_fraction", 0.5))), 0.0, 1.0)
 			if _lunge_heading_locked:
 				lock_in = 0.0
 			elif fraction > 0.0:
@@ -1005,7 +1275,7 @@ func _lunge_heading_is_locked() -> bool:
 		return _intent == AI.Intent.TELEGRAPH
 	if _intent != AI.Intent.TELEGRAPH or not lunge_travels():
 		return false
-	var fraction := clampf(float(_lunge_cfg().get("face_lock_fraction", 0.5)), 0.0, 1.0)
+	var fraction := clampf(float(_attack_row().get("face_lock_fraction", _lunge_cfg().get("face_lock_fraction", 0.5))), 0.0, 1.0)
 	if fraction <= 0.0:
 		return false
 	if _beat_left <= maxf(0.001, _lunge_tell_total) * (1.0 - fraction):
@@ -1126,9 +1396,16 @@ func _cancel_lunge() -> void:
 	# F10#2: every path that abandons a tell (stagger, faint, disengage) comes
 	# through here, so a route cue or guard cone never outlives its tell.
 	_route_cue_left = 0.0
+	_clear_pattern_cue()
+	_pattern_geometry.clear()
+	_pattern_repeat_left = 0
+	for child: Node in get_children():
+		if child.has_meta(&"enemy_pattern_cast"): child.queue_free()
 	_hide_guard_cone()
-	if _lunge_active:
+	if _lunge_active or _pattern_leap_active:
 		_lunge_active = false
+		if _pattern_leap_active and is_instance_valid(_model): _model.position.y = _pattern_leap_model_y
+		_pattern_leap_active = false
 		cancel_combat_burst()
 	if _lunge_lane != null and is_instance_valid(_lunge_lane):
 		_lunge_lane.queue_free()

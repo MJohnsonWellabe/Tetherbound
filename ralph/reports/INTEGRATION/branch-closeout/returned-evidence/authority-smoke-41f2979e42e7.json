@@ -1,0 +1,18 @@
+{
+  "head": "41f2979e42e7ed72f9805f412c5b151d9e237299",
+  "script": "tests/smoke_encounter_scaling.gd",
+  "exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 113.56200000003446,
+  "errors": [],
+  "known_dummy_renderer_material_diagnostics": 0,
+  "summary": [
+    "\u00a710 scaling: 66 assertion(s) run, 0 failure(s)",
+    "encounter scaling: OK -- \u00a710's multiplier reaches the creature, exactly once, at every row."
+  ],
+  "actual_smoke_ok": true,
+  "raw_log_sha256": "a10c7f2f67a97b0fdd1a5fa2c542efbff3dcc712b955ffa5ecae2a738993a1c5",
+  "source_closure_sha256": "cac671cc48b668fd3fa12e664887296fe85863dae8090b8c5832b2ec634d2cad",
+  "source_unchanged": true,
+  "scope": "Exact named source/selector only. Full CI/earned path/ENet acceptance still required; no main or criterion credit."
+}

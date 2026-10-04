@@ -12,6 +12,7 @@ var player: Node3D
 var _body: CharacterBody3D
 
 func mount(owner_world: Node3D, owner_dynamo: Node3D) -> void:
+	add_to_group(INPUT_OWNER.GROUP)
 	world = owner_world
 	dynamo = owner_dynamo
 	director = world.get_node("EncounterDirector")
@@ -45,7 +46,7 @@ func _process(_delta: float) -> void:
 		_release()
 
 func _physics_process(_delta: float) -> void:
-	if not is_instance_valid(_body) or INPUT_OWNER.current(get_tree()) != null:
+	if not is_instance_valid(_body) or _other_input_owner():
 		return
 	if not bool(world.get_node("InteractionArbiter").call("enabled")):
 		return
@@ -54,7 +55,7 @@ func _physics_process(_delta: float) -> void:
 	_body.call("request_move", basis * Vector3(axis.x, 0, axis.y))
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not is_instance_valid(_body) or INPUT_OWNER.current(get_tree()) != null:
+	if not is_instance_valid(_body) or _other_input_owner():
 		return
 	var slot := "quick" if event.is_action_pressed("combat_quick") else ("charged" if event.is_action_pressed("combat_charged") else "")
 	if slot.is_empty():
@@ -91,6 +92,17 @@ func _release() -> void:
 		if camera != null:
 			camera.call("set_target", player, {})
 		player.call("set_locomotion_enabled", true)
+
+
+func owns_input() -> bool:
+	return is_instance_valid(_body)
+
+
+func _other_input_owner() -> bool:
+	# This pilot owns world X/Y, but a real dialogue/menu can still take over.
+	for node: Node in get_tree().get_nodes_in_group(INPUT_OWNER.GROUP):
+		if node != self and INPUT_OWNER._owns(node): return true
+	return false
 
 func _exit_tree() -> void:
 	_release()

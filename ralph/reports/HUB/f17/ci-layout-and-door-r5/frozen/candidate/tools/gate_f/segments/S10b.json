@@ -1,0 +1,713 @@
+{
+  "id": "S10b",
+  "_comment_split": "SPLIT from the monolithic S10.json (2026-08-30, ralph/T2-S10-COST). See S10a.json's header for the full rationale. This is the SECOND of five sub-segments: the chapter's climax (the Warden fight), the legendary chamber, and the release ceremony -- the single most combat-dense block in the chapter, isolated into its own segment so a fight's own price spike cannot get charged against unrelated content ahead of it (which is exactly the mechanism that blocked the original monolithic S10 at step 26: a patrol fight repriced the scene to 0.097 s/frame and that price was then applied to the REMAINING 413,884 frames of a segment that still had the giant post-win walk-back ahead of it).",
+  "_comment_boundary": "Entry: seeded from S10a-exit (elite just beaten). Ends at 'the roster is settled' (original step S10-88), immediately before the walk-back objective is tracked. Frame budget at the worst MEASURED per-frame rate from the blocked run (0.097118 s/frame) is roughly 30,420 frames * 0.097 = ~2,951 s, 20% of the 14,400 s ceiling. Even at a hypothetically much worse combat cost for the single hardest fight in the game (0.2 s/frame, double the worst measured rate) this segment prices at ~6,084 s, 42% of ceiling -- comfortable margin either way.",
+  "record_hz": 0.5,
+  "title": "Finale II: Warden -> legendary -> release ceremony",
+  "lane": "journey",
+  "_comment": "Transcribed verbatim from the original S10.json (steps S10-51..S10-88, renumbered S10b-51..), which was itself transcribed from docs/acceptance/GATE_F_MASTER_PROTOCOL.md section B (span), section E.1 (CB-06), section E.5 (objectives `defeat_the_warden`, `shut_down_the_machine`, `settle_the_roster`), section G (GF-13-FINALE-02/03/04) and section H (the mandatory 0.5 Hz Warden capture_seq).",
+  "_comment_warden_coordinate": "RESOLVED, GATE-F-LEG-S10AB 2026-08-31. This file used to record an unreconciled ambiguity: section E.1 CB-06 and band5's trainers.json both give warden_aldis as (90.2,7569.4), while stronghold.json puts the `warden_arena` chamber at site.at (8,7560) plus local (0,90.2) -- and the two 'look like the same pair transposed'. They are: the trainers.json row is a stale pre-OW5D fallback written when the Hall's chambers ran along +x, and it says so itself (`_position_note`: \"FALLBACK ONLY\"). MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31). The Warden's body stands at world (8,7658.2); (90.2,7569.4) is 120 m away in open ground outside the building. The step-script now walks to the measured stand.",
+  "evidence_lane": "logic",
+  "capture_lane": "S10bC",
+  "_comment_evidence_lane": "§H/§G evidence split, owner decision 2026-08-27, docs/acceptance/GATE_F_MASTER_PROTOCOL.md §H.1. LOGIC lane: headless, mechanics/telemetry/step verdicts. Its own §G ids (GF-13-FINALE-02, the S10-SEQ-warden capture_seq, GF-13-FINALE-03, GF-13-FINALE-04) are DELEGATED to S10bC. The harness refuses to start this segment if S10bC does not exist, does not declare evidence_lane=capture, or does not accept every id handed to it.",
+  "steps": [
+    {
+      "id": "S10b-01",
+      "title": "how this segment is entered",
+      "action": "note",
+      "args": {
+        "text": "This is the SECOND of S10's five split sub-segments (S10a..S10e; see S10a.json's header). Its entry save is `S10a-exit`, a split-introduced handoff (the elite freshly beaten, shutter lifted) rather than one section B names in the original monolithic file. The three steps below are the standard handoff mechanics used at every S0n boundary: wipe, seed, boot, Load."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10b-02",
+      "title": "empty the live save directory",
+      "action": "wipe_saves",
+      "args": {
+        "keep_slots": []
+      },
+      "expected": "every slot file is gone, so the seeded slot 4 is the only thing the title's Load list can offer"
+    },
+    {
+      "id": "S10b-03",
+      "title": "seed slot 4 from the previous sub-segment's exit save",
+      "action": "seed_save",
+      "args": {
+        "slot": 4,
+        "from": "run://S10a-exit.json"
+      },
+      "expected": "Section B's handoff pattern, applied at this split-introduced boundary: the next segment boots fresh, restores S10a's exit file into `user://`, and loads it through the production title-screen Load path"
+    },
+    {
+      "id": "S10b-04",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": {
+        "scene": "title",
+        "settle_frames": 30
+      },
+      "expected": "the real title comes up with Start New Game focused and Load Game enabled, because a save now exists"
+    },
+    {
+      "id": "S10b-05",
+      "title": "the title focuses something",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "the title focuses its first button; without focus a controller cannot reach Load Game at all"
+    },
+    {
+      "id": "S10b-06",
+      "title": "move focus to Load Game",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "d-pad down moves focus from Start New Game to Load Game"
+    },
+    {
+      "id": "S10b-07",
+      "title": "open the slot list",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "Load Game opens the slot list and auto-focuses the first non-empty slot, which is the seeded slot 4"
+    },
+    {
+      "id": "S10b-08",
+      "title": "load the seeded slot",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the slot loads and the title transitions into the Meadows; section I.4 records the load duration"
+    },
+    {
+      "id": "S10b-09",
+      "title": "let the loaded world stand up",
+      "action": "wait",
+      "args": {
+        "seconds": 180
+      },
+      "expected": "a cold Meadows stand-up costs about 90 s of CPU on this container -- 466k scattered props and a terrain build -- and every assertion after this reads a live Player"
+    },
+    {
+      "id": "S10b-09a",
+      "title": "deploy the active creature after load",
+      "action": "press",
+      "args": {
+        "control": "creature_recall",
+        "hold": "tap"
+      },
+      "expected": "RIG-11: a load restores the party and deploys nothing -- encounter_director.gd::_engageable() returns null on a null ally before any distance check, so no combat assertion downstream of a load can mean anything without this. creature_recall (RB) summons the active creature so the Warden fight can actually start."
+    },
+    {
+      "id": "S10b-10",
+      "title": "the full belt survived the handoff",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "five of five, unchanged since S10a",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S10b-51",
+      "title": "the Warden is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "defeat_the_warden"
+      },
+      "expected": "Section E.5 objective 24/27 `defeat_the_warden`, 'Defeat the Meadows Warden.' -- surviving the S10a/S10b handoff is itself evidence that the flag S10a set persisted through a real save/load"
+    },
+    {
+      "id": "S10b-52",
+      "title": "Section E.5 nav note -- defeat_the_warden",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 24/27 `defeat_the_warden`. Wording: 'Defeat the Meadows Warden.' It names WHAT and no WHERE, inside a complex with one spine and no branches. Player-visible information: the shutter that lifted at the end of S10a, and the arena beyond it. Route decision: go through the door that just opened, because stronghold.json's passages are 'one spine, in route order, no branches'. Reasoned from GF-13-FINALE-01."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10b-52a",
+      "title": "square up with the arena door",
+      "action": "move_to",
+      "args": {
+        "at": [
+          8.0,
+          7630.0
+        ],
+        "budget_frames": 2400,
+        "close_enough": 2.0,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "the tether_approach side of the blast-shutter passage, on its own centreline (world x 8) and 3 m short of the wall. The shutter itself lifted when the elite fell -- `stronghold.json`'s passage carries `gated_by_flag: defeated_stronghold_elite` -- so this walks up to an opening, not a door.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31. `stronghold.json`'s passages give the tether_approach -> warden_arena door a width of 3.4 m -- the NARROWEST opening in the building, and it is the one into the boss arena -- centred on world x 8, while the elite fight can leave the player anywhere in a 16 m-wide room. Measured across two runs of this segment from two different S10a exits: from x=5.0 the walk to the Warden went straight through; from x=4.5 it did not, and the player spent all 3,000 frames sliding along the inside of the north wall between x=0.4 and x=3.3, 26 m short. The protocol's walker steers straight at its target and does not route around interior geometry, so a doorway narrower than the room's own spread has to be lined up with rather than aimed past. That is what a player does on sight of a door; this step makes the segment do it deliberately instead of depending on where the last fight happened to end."
+    },
+    {
+      "id": "S10b-53",
+      "title": "walk into the Warden's arena",
+      "action": "move_to",
+      "args": {
+        "at": [
+          8.0,
+          7658.2
+        ],
+        "budget_frames": 3000,
+        "close_enough": 3.0,
+        "held_budget_frames": 7200,
+        "answer_prompts": true
+      },
+      "expected": "warden_aldis, Warden Aldis, standing on stronghold.json's `warden_stand` mark at world (8,7658.2) -- the `warden_arena` chamber's centre (8,7650.2) plus the mark's own local (0,8). The walk in passes the Tether readout on `warden_challenge` (8,7642.2), which is the maintenance board objective 24/27's `how` line tells the player to read first.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "COORDINATE CORRECTION, GATE-F-LEG-S10AB 2026-08-31. This step's `at` was transcribed from data/config/bands/band5_stronghold_approach/trainers.json's `position` row -- which that same file labels, in its own `_position_note`, \"FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block\". Those fallback rows are still written in the pre-OW5D frame where the Hall's chambers ran along +x; the built Hall runs them along +z from site.at (8,7560). So every finale walk was aimed at open meadow rather than at the thing it names. MEASURED by tools/gate_f/probe_hall_geometry.gd against the booted world (GATE-F-LEG-S10AB, 2026-08-31)."
+    },
+    {
+      "id": "S10b-54",
+      "title": "face the Warden",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the chapter's climax"
+    },
+    {
+      "id": "S10b-55",
+      "title": "capture GF-13-FINALE-02",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-02",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "Warden pre-fight dialogue, Warden Arena",
+        "intended_proof": "climax staging"
+      },
+      "expected": "Section G: Warden pre-fight dialogue, Warden Arena -- climax staging"
+    },
+    {
+      "id": "S10b-56",
+      "title": "hear the Warden out",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 16,
+        "settle_frames": 60
+      },
+      "expected": "Advance only while dialogue owns input; stop when it closes so the trainer battle can stage without extra interaction presses."
+    },
+    {
+      "id": "S10b-57",
+      "title": "let the Warden fight stage",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "Section E.1 CB-06 and section L.6 T05's stronghold clause: the combat camera has to acquire both combatants at fight start including a teleport-staged fight"
+    },
+    {
+      "id": "S10b-58",
+      "title": "combat owns input",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "combat"
+      },
+      "expected": "input_context is 'combat'"
+    },
+    {
+      "id": "S10b-58f",
+      "title": "a fight is actually running",
+      "action": "assert",
+      "args": {
+        "check": "combat_running",
+        "equals": true
+      },
+      "expected": "CombatManager::is_fighting() is true -- the engage was received, not merely pressed",
+      "observation": "T2-GATEF-RUN6 / RIG-26, and the fix T5-FEEL's played-path evidence independently recommended: assert that a fight is RUNNING, not merely that combat-shaped input is owned. `input_context == \"combat\"` was the strongest claim these segments made after an engage, and it is not the same claim -- it is why two instrumented segments produced 128 events with zero `combat_start` and it read as a candidate GAME blocker for six runs."
+    },
+    {
+      "id": "S10b-59",
+      "title": "record the Warden fight continuously",
+      "action": "capture_seq",
+      "args": {
+        "id": "S10-SEQ-warden",
+        "class": "14",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "hz": 0.5,
+        "seconds": 60,
+        "trigger": "Section H mandatory continuous evidence: CB-06 + Warden (representative combat)",
+        "intended_proof": "a timed frame sequence over the chapter's climax, one manifest row per frame so a single missing frame is visible rather than averaged away"
+      },
+      "expected": "Section H: 'Frame-sequence recording: PNG every 2 s (0.5 Hz) ... Mandatory for the highest-risk segments: ... CB-06 + CB-07 + Warden (representative combat)'. Thirty frames over a minute of the fight"
+    },
+    {
+      "id": "S10b-60",
+      "title": "fight the Warden",
+      "action": "fight_until_resolved",
+      "args": {
+        "budget_frames": 20000,
+        "switch_below": 0.35,
+        "gap_frames": 18,
+        "until_flag": "defeated_warden"
+      },
+      "expected": "Section E.1 per-fight record. Aldis fields FIVE -- Burrowback L16, Brooktail L17, Galecrest L17, Meadowhart L18 and a Tuskroot L20 ace -- the only full belt the chapter ever puts against the player, and the one fight it is tuned to make EVEN: `tests/test_trainers_data.gd::test_the_critical_path_alone_pays_for_the_warden_ready_level` fails the build if the main line stops paying for a starter that arrives level with that ace.",
+      "_comment_rewritten": "REWRITTEN, GATE-F-LEG-S10AB 2026-08-31, from a run of counted `combat_quick` presses with `party_cycle` sprinkled between them to a single predicate-driven `fight_until_resolved`. The counted form was wrong in principle and measurably wrong in practice. In principle: a fight's length is a function of both levels, the type chart and a +/-10% roll per hit, none of which is knowable when a step-script is written -- the same argument the schema already makes for `advance_dialogue_until_closed` ('by predicate, never by a press count') and for `focus_item` ('a press count is only right for one arrangement of the bag'). In practice, across three runs of this segment: a water pilot against a water defender spent every press budgeted for the courtyard's THREE creatures on its first one (46.8 s for 247 HP); the switch presses then landed mid-round rather than between rounds and were refused by the commitment guard; and each fight was finally lost to a single faint with three untouched creatures still on the belt, because `encounter_director.gd::_on_trainer_round_ended()` ends the whole battle when the PILOTED creature falls. The action presses the same two production verbs -- quick attack, and LB when the pilot is spent -- reading the fight's own state between presses. It never opens the satchel, so a fight won under it is won on levels, types and the belt."
+    },
+    {
+      "id": "S10b-63",
+      "title": "a charged attack",
+      "action": "press",
+      "args": {
+        "control": "combat_charged",
+        "hold": "long"
+      },
+      "expected": "the charged verb's hold edge, driven immediately after the chapter's hardest fight",
+      "_comment_kept": "See S10a-33's own note: `fight_until_resolved` drives the quick verb and the switch, so the charged hold is kept as its own step."
+    },
+    {
+      "id": "S10b-66",
+      "title": "let the Warden fight end",
+      "action": "wait",
+      "args": {
+        "seconds": 14
+      },
+      "expected": "rewards and control return with no stuck modal"
+    },
+    {
+      "id": "S10b-67",
+      "title": "the Warden is beaten",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "defeated_warden"
+      },
+      "expected": "`defeated_warden` closes section E.5 objective 24/27"
+    },
+    {
+      "id": "S10b-68",
+      "title": "the machine is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "shut_down_the_machine"
+      },
+      "expected": "Section E.5 objective 25/27 `shut_down_the_machine`, 'Shut down what Team Tether built under the Hall.'"
+    },
+    {
+      "id": "S10b-69",
+      "title": "Section E.5 nav note -- shut_down_the_machine",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 25/27 `shut_down_the_machine`. Wording: 'Shut down what Team Tether built under the Hall.' It names WHAT and a WHERE relative to the building the player is standing in. Player-visible information: the Legendary Chamber opens off the Warden Arena, and the machine is the thing in it. Route decision: take the one remaining door. Reasoned from GF-13-FINALE-02."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10b-69a",
+      "title": "square up with the chamber door",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -1.0,
+          7650.2
+        ],
+        "budget_frames": 2400,
+        "close_enough": 2.5,
+        "held_budget_frames": 3600,
+        "answer_prompts": true
+      },
+      "expected": "the warden_arena side of the warden_arena -> legendary_chamber passage, on its own centreline (world z 7650.2). Same reason as S10b-52a: 5 m of opening in a 24 m-wide room.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31. `stronghold.json`'s passages give the tether_approach -> warden_arena door a width of 3.4 m -- the NARROWEST opening in the building, and it is the one into the boss arena -- centred on world x 8, while the elite fight can leave the player anywhere in a 16 m-wide room. Measured across two runs of this segment from two different S10a exits: from x=5.0 the walk to the Warden went straight through; from x=4.5 it did not, and the player spent all 3,000 frames sliding along the inside of the north wall between x=0.4 and x=3.3, 26 m short. The protocol's walker steers straight at its target and does not route around interior geometry, so a doorway narrower than the room's own spread has to be lined up with rather than aimed past. That is what a player does on sight of a door; this step makes the segment do it deliberately instead of depending on where the last fight happened to end."
+    },
+    {
+      "id": "S10b-56w",
+      "title": "the world owns input before this walk",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "world"
+      },
+      "expected": "no narrative modal is holding locomotion when this walk starts",
+      "observation": "T2-GATEF-RUN6 modal-holds-locomotion audit. A walk that begins while a narrative modal still owns input does not fail as 'a modal is open' -- it fails as 'did not reach', many steps and sometimes many minutes later, which is how X04 lost its whole combat block to 3601 held frames. This assert is diagnostic and changes no behaviour: it turns that silent cascade into one named cause at the point of origin. RIG-25's rule, applied to narrative modals rather than to shop panels."
+    },
+    {
+      "id": "S10b-70",
+      "title": "walk into the Legendary Chamber",
+      "action": "move_to",
+      "args": {
+        "at": [
+          -17.0,
+          7650.2
+        ],
+        "budget_frames": 6300,
+        "close_enough": 3.0,
+        "held_budget_frames": 10800,
+        "answer_prompts": true
+      },
+      "expected": "stronghold.json's `machine_foot` mark, world (-17,7650.2) -- the `legendary_chamber` chamber's centre (-24,7650.2) plus the mark's own local (+7,0), which puts it 1.4 m clear of the tether machine's 5.6 m base cylinder on the side the player walks in from. This is where stronghold_climax.gd hangs the 'Shut down the tether machine' prompt; close_enough 3.0 lands inside stronghold_climax.json's own `site.prompt_radius` of 4.2.",
+      "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all.",
+      "_comment_coordinate_fix": "RE-AIMED, GATE-F-LEG-S10AB 2026-08-31. This walk used to target (-24,7650.2), the machine's own axis, and stopped 7.2 m short against its face -- because the machine's base collider has radius 5.6 and nothing can stand there. The mark itself moved (see data/config/stronghold.json's `machine_foot` `_why`); this follows it."
+    },
+    {
+      "id": "S10b-71",
+      "title": "capture GF-13-FINALE-03",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-03",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "legendary chamber / tether machine, Legendary Chamber",
+        "intended_proof": "reveal lands visually"
+      },
+      "expected": "Section G: legendary chamber / tether machine, Legendary Chamber -- reveal lands visually"
+    },
+    {
+      "id": "S10b-72",
+      "title": "shut the machine down",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap"
+      },
+      "expected": "the rung's own verb; the tether machine is one of the Meshy hero objects the chapter reserved its generations for"
+    },
+    {
+      "id": "S10b-73",
+      "title": "see it through",
+      "action": "press",
+      "args": {
+        "control": "interact",
+        "hold": "tap",
+        "times": 14,
+        "settle_frames": 20
+      },
+      "expected": "record what the reveal actually does on screen"
+    },
+    {
+      "id": "S10b-74",
+      "title": "the legendary is freed",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "legendary_freed"
+      },
+      "expected": "`legendary_freed` closes section E.5 objective 25/27"
+    },
+    {
+      "id": "S10b-75",
+      "title": "the roster choice is tracked",
+      "action": "assert",
+      "args": {
+        "check": "objective_is",
+        "id": "settle_the_roster"
+      },
+      "expected": "Section E.5 objective 26/27 `settle_the_roster`, 'Settle who walks with you.'"
+    },
+    {
+      "id": "S10b-76",
+      "title": "Section E.5 nav note -- settle_the_roster",
+      "action": "note",
+      "args": {
+        "text": "Section E.5 navigation record, objective 26/27 `settle_the_roster`. Wording: 'Settle who walks with you.' It names WHAT and no WHERE, because the choice is on a screen rather than in a place. Player-visible information: the belt is at 5/5 and a sixth creature has just been freed. Route decision: none; the ceremony opens itself. This is the chapter's core choice and CLAUDE.md's hardest rule -- five creatures, ever, no storage, no hidden sixth slot -- meeting each other. Reasoned from GF-13-FINALE-03 and GF-19-UI-09 (S08)."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10b-77",
+      "title": "the belt was full when the legendary arrived",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "min": 5
+      },
+      "expected": "Section L.4: 'Release ceremony under full belt | S10: legendary join with 5/5 -> ceremony; verify three-beat ceremony, history shown, choice is real and permanent'. This assertion is what proves the ceremony was reached the way the design intends rather than into a free slot",
+      "observation": "RIG-15: equals -> min. Catching is probabilistic; a script's single throw can miss on a real, non-buggy roll, and a team that ends up BIGGER than the milestone is still a team that reached it. `equals` failed both directions for no reason a real player's outcome should fail on."
+    },
+    {
+      "id": "S10b-78",
+      "title": "let the ceremony open itself",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "The ceremony is not opened by a press. READ OFF THE SHIPPED UI, GATE-F-LEG-S10AB 2026-08-31, not guessed. `scripts/ui/tab_creatures.gd`: the ceremony opens ITSELF -- `game_state.gd::_watch_pending_catch()` opens the pause shell on the creatures tab the frame `Game.pending_catch` is set, and there is no prompt to press. `_maybe_begin_release()` then focuses the NEWCOMER's row, which `_fence_choose_focus()` fences so left/right point at themselves and down from the newcomer wraps to belt row 0. `_begin_farewell()` focuses \"Keep them\", and `_fence_farewell_buttons()` wraps Keep and \"Let them go\" onto each other vertically -- again with left/right pointing at themselves.",
+      "_comment_replaced": "WHAT THIS REPLACES. The shipped sequence was `press interact` (nothing in the ceremony answers interact), `focus_move right` (fenced to a no-op in every stage of the ceremony), `ui_accept` on the still-focused NEWCOMER row -- which asks 'let the legendary go?' rather than choosing any of the five -- and then `menu_confirm` on the focused button, which is \"Keep them\" and is wired to `_back_to_choosing()`. Driven faithfully it walks in a circle: nothing is ever released, `Game.pending_catch` is never cleared, and `legendary_settled` -- objective 26/27 -- is never set. The steps below make the choice the one section L.4 calls 'real and permanent': a creature off the belt, for the legendary."
+    },
+    {
+      "id": "S10b-79",
+      "title": "let the team screen settle",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the team screen takes input"
+    },
+    {
+      "id": "S10b-80",
+      "title": "capture GF-13-FINALE-04",
+      "action": "capture",
+      "args": {
+        "id": "GF-13-FINALE-04",
+        "class": "13",
+        "hud": "on",
+        "camera_kind": "gameplay",
+        "trigger": "release ceremony decision screen, team screen",
+        "intended_proof": "the chapter's core choice presented with ceremony"
+      },
+      "expected": "Section G: release ceremony decision screen, team screen -- the chapter's core choice presented with ceremony"
+    },
+    {
+      "id": "S10b-81",
+      "title": "the ceremony focuses a creature",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "a choice a controller cannot move through is not a choice. Focus lands on the newcomer's own row -- the legendary, below the five."
+    },
+    {
+      "id": "S10b-82",
+      "title": "step off the newcomer onto the belt",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "Down from the newcomer wraps to belt row 0 -- `_fence_choose_focus()`'s own wrap, written so 'the newcomer is one press away from anywhere'. READ OFF THE SHIPPED UI, GATE-F-LEG-S10AB 2026-08-31, not guessed. `scripts/ui/tab_creatures.gd`: the ceremony opens ITSELF -- `game_state.gd::_watch_pending_catch()` opens the pause shell on the creatures tab the frame `Game.pending_catch` is set, and there is no prompt to press. `_maybe_begin_release()` then focuses the NEWCOMER's row, which `_fence_choose_focus()` fences so left/right point at themselves and down from the newcomer wraps to belt row 0. `_begin_farewell()` focuses \"Keep them\", and `_fence_farewell_buttons()` wraps Keep and \"Let them go\" onto each other vertically -- again with left/right pointing at themselves."
+    },
+    {
+      "id": "S10b-82a",
+      "title": "look across the roster",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "Section L.4: 'history shown' -- four presses walk the whole belt past the detail column, which is what the ceremony puts there to be read, and land on the fifth holder."
+    },
+    {
+      "id": "S10b-83",
+      "title": "ask the question of one of the five",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "`_begin_farewell()`: the farewell panel, carrying that creature's level, bond and history -- Section L.4's 'history shown', at the press that spends it."
+    },
+    {
+      "id": "S10b-84",
+      "title": "let the ceremony's second beat run",
+      "action": "wait",
+      "args": {
+        "seconds": 3
+      },
+      "expected": "the three-beat ceremony section L.4 names"
+    },
+    {
+      "id": "S10b-84a",
+      "title": "the question focuses the safe answer",
+      "action": "assert",
+      "args": {
+        "check": "focus_owned"
+      },
+      "expected": "`_begin_farewell()` focuses \"Keep them\" deliberately -- its own comment: 'the permanent choice is one deliberate press DOWN from the safe one, never the default under a mashed A'. This asserts that safety exists."
+    },
+    {
+      "id": "S10b-84b",
+      "title": "take the deliberate press down",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 1
+      },
+      "expected": "\"Keep them\" -> \"Let them go\". One press, and it is the one the UI was built to make cost something."
+    },
+    {
+      "id": "S10b-85",
+      "title": "confirm the release",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "the permanent half of the choice; CLAUDE.md: never a sixth slot, never storage. `_do_release()` removes the chosen creature and the legendary takes the freed holder -- the belt is five before and five after."
+    },
+    {
+      "id": "S10b-86",
+      "title": "let the goodbye play",
+      "action": "wait",
+      "args": {
+        "seconds": 5
+      },
+      "expected": "the third beat: the released creature holds the viewport one last time while the belt settles into the final five"
+    },
+    {
+      "id": "S10b-86a",
+      "title": "back to the belt",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap",
+        "settle_frames": 30
+      },
+      "expected": "`_end_release()`, wired to the \"Back to the belt\" button, which is the only control the done beat leaves focusable"
+    },
+    {
+      "id": "S10b-86b",
+      "title": "close the team screen",
+      "action": "close_menu",
+      "args": {},
+      "expected": "The ceremony does NOT close the shell -- `_end_release()` only un-holds it and drops focus back on a belt row. The player closes it, and until they do the tree stays paused, which is why the two asserts below come after this step and not before it: `stronghold_climax.gd::_advance()` runs in `_process` and cannot see the ceremony resolve while the shell holds the tree.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31."
+    },
+    {
+      "id": "S10b-86c",
+      "title": "let the climax notice",
+      "action": "wait",
+      "args": {
+        "seconds": 4
+      },
+      "expected": "`_ceremony_pending()` reads `Game.pending_catch` back as null, records which way the choice went, and `_settle()` sets `legendary_settled`. Then `_advance()` leaves STAGE_CEREMONY for the machinery's own failure beat -- spec section 28's order, and the last thing this segment owes."
+    },
+    {
+      "id": "S10b-87",
+      "title": "the belt is still five, and not six",
+      "action": "assert",
+      "args": {
+        "check": "party_size",
+        "equals": 5
+      },
+      "expected": "five creatures, ever. A sixth here would be the single hardest rule in the project broken.",
+      "_comment_comparator": "COMPARATOR CORRECTED, GATE-F-LEG-S10AB 2026-08-31: `min: 5` -> `equals: 5`. RIG-15 moved every `party_size` check from `equals` to `min` because catching is probabilistic and a journey step that threw an orb could legitimately land on a bigger team. That reasoning does not reach THIS assert, and applying it here inverted the check's whole purpose: the step's own `expected` says a SIXTH creature would break the project's hardest rule, and `min: 5` passes a party of six without comment. Nothing probabilistic happens in the ceremony -- both endings (release one of the five, or let the legendary walk) leave exactly five -- so exact equality is the honest comparator, and RIG-15's own note says `equals` 'stays for a caller that genuinely wants exact equality'. This is that caller."
+    },
+    {
+      "id": "S10b-88",
+      "title": "the roster is settled",
+      "action": "assert",
+      "args": {
+        "check": "flag_set",
+        "flag": "legendary_settled"
+      },
+      "expected": "`legendary_settled` closes section E.5 objective 26/27. Set whichever way the choice went -- `stronghold_climax.gd::_settle()`'s own comment: a player who keeps their five has resolved the decision exactly as completely as one who kept the legendary."
+    },
+    {
+      "id": "S10b-89",
+      "title": "let the tether machinery fail",
+      "action": "advance_dialogue_until_closed",
+      "args": {
+        "max_presses": 20,
+        "settle_frames": 60
+      },
+      "expected": "Spec section 28's last beat, and this segment's real close: with the roster settled, `stronghold_climax.gd::_advance()` leaves STAGE_CEREMONY and starts `stronghold_machinery_fails`. Four lines. Driven by predicate rather than by a press count, the same way every other conversation in this protocol is.",
+      "_comment_added": "ADDED, GATE-F-LEG-S10AB 2026-08-31. Without it the segment walked into its own save handoff with the machinery's conversation still on screen: measured, S10b-112's `open_menu` reported 'map did not open the pause shell: context narrative_modal -> narrative_modal (owner=DialoguePanel)', every step after it failed against a shell that was never up, and S10b-118 correctly refused to copy out a slot 4 that was still byte-identical to what seed_save had written -- the handoff would otherwise have been S10a's save wearing S10b's name. The climax was not at fault: it had run section 28's order to the end and was speaking the last of it."
+    },
+    {
+      "id": "S10b-111",
+      "title": "Section B save handoff",
+      "action": "note",
+      "args": {
+        "text": "This is a SPLIT-introduced handoff point -- the roster ceremony has just concluded, a quiet state. The steps below save it, driven as a player drives it -- the pause shell (opened via the `map` shortcut, RIG-14's deterministic starting point), live controller RB navigation to the Save tab, focus down to slot 4, and the slot's own Save button. `save_out` afterwards only copies the artefact; it saves nothing itself."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    },
+    {
+      "id": "S10b-112",
+      "title": "open the pause shell",
+      "action": "open_menu",
+      "args": {
+        "tab": "map"
+      },
+      "expected": "the game_menu button, sent as a real physical event, opens the pause shell; the `map` shortcut is used because it is one of only two tabs with a shortcut in data/config/menu.json and is therefore a deterministic starting point regardless of whatever tab a previous menu use left open (RIG-14)"
+    },
+    {
+      "id": "S10b-113",
+      "title": "cycle right to the Save tab",
+      "action": "select_menu_tab",
+      "args": {
+        "tab": "save"
+      },
+      "expected": "Real controller RB transitions reach the live menu_save context, including Players and Skills when revealed; each transition settles before the next press."
+    },
+    {
+      "id": "S10b-114",
+      "title": "the Save tab is up",
+      "action": "assert",
+      "args": {
+        "check": "input_context",
+        "equals": "menu_save"
+      },
+      "expected": "input_context names the live tab: menu_save"
+    },
+    {
+      "id": "S10b-115",
+      "title": "move focus to slot 4's Save button",
+      "action": "focus_move",
+      "args": {
+        "direction": "down",
+        "times": 4
+      },
+      "expected": "focus starts on slot 0's Save button (tab_save.gd::first_focus) and four d-pad downs reach slot 4's"
+    },
+    {
+      "id": "S10b-116",
+      "title": "press Save",
+      "action": "press",
+      "args": {
+        "control": "ui_accept",
+        "hold": "tap"
+      },
+      "expected": "the focused Save button activates and writes slot 4 -- the handoff slot; autosave is slot 0 and slots 1-3 stay free for natural play coverage"
+    },
+    {
+      "id": "S10b-117",
+      "title": "give the write a moment",
+      "action": "wait",
+      "args": {
+        "seconds": 2
+      },
+      "expected": "the slot file is on disk and section I.4 has timed the save operation"
+    },
+    {
+      "id": "S10b-118",
+      "title": "copy slot 4 out into the run directory",
+      "action": "save_out",
+      "args": {
+        "slot": 4,
+        "name": "S10b-exit.json"
+      },
+      "expected": "the resulting `user://` slot file is copied into the run directory as `saves/S10b-exit.json`, for S10c to seed from"
+    },
+    {
+      "id": "S10b-119",
+      "title": "close the shell",
+      "action": "close_menu",
+      "args": {},
+      "expected": "closes the shell and hands the world back"
+    },
+    {
+      "id": "S10b-120",
+      "title": "this sub-segment is complete",
+      "action": "note",
+      "args": {
+        "text": "S10b-exit written and copied. The Warden is beaten, the machine is shut down and the roster is settled at 5/5 -- the chapter's core choice is made. S10c through S10e are the post-win walk-back."
+      },
+      "expected": "a note event carries this observation into events.jsonl"
+    }
+  ]
+}

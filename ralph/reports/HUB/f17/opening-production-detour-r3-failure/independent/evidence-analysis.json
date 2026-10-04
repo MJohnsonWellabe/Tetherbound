@@ -1,0 +1,65 @@
+{
+  "scope": "EVIDENCE_CONSTRAINTS_ONLY; no source gate or runtime completion disposition",
+  "head": "8189ef734addce12d446c6c9a0f9d4016a0d657d",
+  "freeze_sha256": "f9fcd6dfff8dc075f8f4acf823b1b8977d5836b5927c7c0f466ec9849dfc9498",
+  "verified_frozen_hashes": {
+    "native.txt": "3d7124bd986062c8b23ef1dae4053849341760e7ff42f8f6f6037840d158b3d6",
+    "parser.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "receipt.json": "4382ef99fa02e3dbab66c918ed16b604302ef827020f87574bf7fbd7084649cd",
+    "diagnostic.json": "7b3e0b57ea6cfb3250e1828dc3c8bab6f2a00ab40061849adc14efda5338372c",
+    "freeze-failure.py": "cbf97330e6bfa789de6dc1d0c1a0c547993d177584fb6a2d80e8a4e771824544"
+  },
+  "receipt_exit_codes": {
+    "parser": 0,
+    "native": 1
+  },
+  "receipt_elapsed_seconds": {
+    "parser": 17.655999999959022,
+    "native": 293.2030000000959
+  },
+  "campaign_elapsed_seconds": 277.246,
+  "requested_prefix_passed": false,
+  "exact_cached_contact_total": 12,
+  "cached_manifold_counts": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "logged_contact_prefix_count": 8,
+  "logged_contact_identities": [
+    [
+      "RID(5448982058764229)",
+      0
+    ],
+    [
+      "RID(67778878898179)",
+      33
+    ]
+  ],
+  "distinct_logged_points_excluding_slide": 8,
+  "live_recovery_travel_m": 0.000923335552215576,
+  "safe_margin": 0.00100000004749745,
+  "live_normals": [
+    [
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.930705428123474,
+      0.0,
+      0.365769594907761
+    ]
+  ],
+  "callback_own_us": 1117,
+  "on_floor": true,
+  "on_wall": true,
+  "recoveries": 0,
+  "road_hint": "",
+  "engine_executed_by_reviewer": false,
+  "tracked_or_git_writes_by_reviewer": false,
+  "analysis_script_sha256": "8a384df83b8785dba0c014acba3f3b5326ad87cbdafc52deb09f1ec106230bf9"
+}

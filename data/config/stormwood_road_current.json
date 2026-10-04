@@ -1,6 +1,17 @@
 {
   "_comment": "Owner direction on WO-F09-04: \"Can you make the path and roads electrified with yellow electricity flowing through them somehow in the ground.\" Every Stormwood road (not the pocket spurs; see excluded_kinds) carries yellow-gold current in its painted dirt lane: broken glowing veins like charge in cracks of the dirt, with pulses travelling along them toward the Dynamo. Built by scripts/world/stormwood_road_current.gd as terrain-conforming ribbon chunks (client presentation only; no colliders; no per-frame script) drawn by shaders/stormwood_road_current.gdshader, additive and unshaded. Kept apart from stormwood_road_surface.json so tuning the look never stales the terrain bake. Yellow/gold only: magenta #ff40e6 is the lightning strike telegraph and oxblood/red is reserved for Team Tether.",
   "schema_version": 1,
+  "finish_candidate": {
+    "enabled": false,
+    "_comment": "F41/P2-040: finer irregular gold fissures, less continuous glowing road coverage. Retains owner yellow current, flow direction, reduced motion and Surge semantics. Unjudged; default off.",
+    "core_energy": 1.25,
+    "edge_energy": 0.48,
+    "vein_width": 0.028,
+    "vein_breakup": 0.68,
+    "vein_wander": 0.19,
+    "pulse_spacing_m": 19.0,
+    "pulse_sharpness": 10.0
+  },
   "colour_core": "#fff4b0",
   "colour_edge": "#ffc21a",
   "core_energy": 1.9,

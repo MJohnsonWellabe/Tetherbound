@@ -1,0 +1,474 @@
+{
+  "source_head": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+  "ci": {
+    "id": 36904561755,
+    "head_sha": "9efce7ef28e8eb20d513c484e29d2b3aee7f8c6a",
+    "created_at": "2026-10-01T18:08:09Z",
+    "run_started_at": "2026-10-01T18:08:09Z",
+    "updated_at": "2026-10-01T19:05:15Z",
+    "status": "completed",
+    "conclusion": "failure"
+  },
+  "ci_counts": {
+    "success": 23,
+    "failure": 9,
+    "cancelled": 6,
+    "skipped": 1
+  },
+  "ci_elapsed_seconds": 3426,
+  "prior6170_elapsed_seconds": 3865,
+  "speed_limit": "Failed runs compared. Full green coverage/speed not demonstrated. Export sparse checkout reviewed but not yet measured. Four cancelled job logs unavailable as Azure BlobNotFound; cancellations are not diagnosed as code failures.",
+  "reviews": {
+    "f20_initial": "F29 SOURCE_PASS146",
+    "f20_followup": "F29 SOURCE_PASS134; bounded native PASS43",
+    "catching": "F29 SOURCE_PASS107; local240s world boot TIMEOUT before any catching verdict; original35min CI proof remains pending",
+    "r25": "F29 SOURCE_PASS344; bounded native UNIT_PASS128; not an original opening path verdict",
+    "export_checkout": "F29 SOURCE_PASS55; same exports/package witness/gate/15min budget",
+    "stormheart": "F29 SOURCE_PASS175; original120s strict native PASS44; independent bounded native PASS94"
+  },
+  "limits": "Source integration and sidebar archiving do not imply criterion acceptance or main landing. Retain all prior failures. R2/R3 code is separate next branch, no next-batch engine/CI.",
+  "receipts": {
+    "f20-failed": {
+      "head": "71d8065ef5aea5a43191d95ee76eb9d14e7a04ba",
+      "watchdog_seconds": 120,
+      "timed_out": false,
+      "script": "tests/smoke_regional_credits_reload.gd",
+      "exit": 0,
+      "errors": [
+        "SCRIPT ERROR: Invalid call. Nonexistent function 'is_host' in base 'Node (regional_credits_disk_owner.gd)'."
+      ],
+      "summary": [
+        "Regional credits reload smoke: 62 checks, 0 failures"
+      ],
+      "raw_log_sha256": "f804cd1d5a574581814c339a976aed7d2b7237fd41f09091690926cd9cb8270d",
+      "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-71d8065ef5ae-smoke_regional_credits_reload\\smoke.log"
+    },
+    "f20-pass": {
+      "head": "8c12b3edd255b74e3770f1d134535afcefef6f7a",
+      "watchdog_seconds": 120,
+      "timed_out": false,
+      "script": "tests/smoke_regional_credits_reload.gd",
+      "exit": 0,
+      "errors": [],
+      "summary": [
+        "Regional credits reload smoke: 62 checks, 0 failures"
+      ],
+      "raw_log_sha256": "0bd56de4d29bd9bca578a4d45746a08c505fcf455538f4a3b76414db15c2a3cc",
+      "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-8c12b3edd255-smoke_regional_credits_reload\\smoke.log"
+    },
+    "catching-timeout": {
+      "head": "078aa3a097fec263e739d6815a58333923ef0067",
+      "watchdog_seconds": 240,
+      "timed_out": true,
+      "script": "tests/smoke_catching.gd",
+      "exit": 1,
+      "errors": [],
+      "summary": [],
+      "raw_log_sha256": "4da9e31fb448d691a233d828ccb185099be05011693e351d3f09cd7d665a2e33",
+      "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-078aa3a097fe-smoke_catching\\smoke.log"
+    },
+    "r25-unit": {
+      "head": "8fe15358550cd0c0eed0d14fded4e359bd106ddd",
+      "exit": 0,
+      "timed_out": false,
+      "selection": "test_gate_a_npc_gather_segment_contract.gd",
+      "summary": [
+        "13 tests, 69 assertions, 0 failed"
+      ],
+      "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-8fe15358550c-dd5323eb\\tests.log",
+      "raw_log_sha256": "069d387dc14d3046f6e0ddaadaeffe9a5a859c81160126d46c813c7c8f90697e"
+    },
+    "stormheart-pass": {
+      "head": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "watchdog_seconds": 120,
+      "timed_out": false,
+      "script": "tests/smoke_stormwood_stormheart_choice.gd",
+      "exit": 0,
+      "errors": [],
+      "summary": [
+        "STORMWOOD STORMHEART CHOICE OK: 44 assertions, 0 failures"
+      ],
+      "raw_log_sha256": "a79fae38b714e004bbf1ae46b43460fbbad00845e19d9aea13f7b2de89ef6608",
+      "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-3fcc09a8c752-smoke_stormwood_stormheart_choice\\smoke.log"
+    }
+  },
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-71d8065ef5ae-smoke_regional_credits_reload\\result.json",
+      "sealed": "f20-failed-result.json.gz",
+      "bytes": 625,
+      "sha256": "f8f12744c0da6afde277332aab6a2e749a9d4725226b583751a17d70db7cd0d7"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-71d8065ef5ae-smoke_regional_credits_reload\\smoke.log",
+      "sealed": "f20-failed-smoke.log.gz",
+      "bytes": 11997,
+      "sha256": "f804cd1d5a574581814c339a976aed7d2b7237fd41f09091690926cd9cb8270d"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-8c12b3edd255-smoke_regional_credits_reload\\result.json",
+      "sealed": "f20-pass-result.json.gz",
+      "bytes": 506,
+      "sha256": "f368388dce4cb4e8dd05bcead5e88777a017a348c5aedc5ec037bbada329fb3f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-8c12b3edd255-smoke_regional_credits_reload\\smoke.log",
+      "sealed": "f20-pass-smoke.log.gz",
+      "bytes": 11707,
+      "sha256": "0bd56de4d29bd9bca578a4d45746a08c505fcf455538f4a3b76414db15c2a3cc"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-078aa3a097fe-smoke_catching\\result.json",
+      "sealed": "catching-timeout-result.json.gz",
+      "bytes": 411,
+      "sha256": "00320e71ec05fc8ef52b6a52a60be2bc57e2b28e02c4b3530997713333401be8"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-078aa3a097fe-smoke_catching\\smoke.log",
+      "sealed": "catching-timeout-smoke.log.gz",
+      "bytes": 1065913,
+      "sha256": "4da9e31fb448d691a233d828ccb185099be05011693e351d3f09cd7d665a2e33"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-8fe15358550c-dd5323eb\\result.json",
+      "sealed": "r25-unit-result.json.gz",
+      "bytes": 427,
+      "sha256": "2463e0f7898696cd185a6035d9d1a9e320d0481a51a1cfbe5b646ce2bbbf7e38"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-8fe15358550c-dd5323eb\\tests.log",
+      "sealed": "r25-unit-tests.log.gz",
+      "bytes": 20718,
+      "sha256": "069d387dc14d3046f6e0ddaadaeffe9a5a859c81160126d46c813c7c8f90697e"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-3fcc09a8c752-smoke_stormwood_stormheart_choice\\result.json",
+      "sealed": "stormheart-pass-result.json.gz",
+      "bytes": 519,
+      "sha256": "be3dd914bf1aa47cf48567923b4532e1383bee466251560aec328bc14fe018a1"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-3fcc09a8c752-smoke_stormwood_stormheart_choice\\smoke.log",
+      "sealed": "stormheart-pass-smoke.log.gz",
+      "bytes": 43982,
+      "sha256": "a79fae38b714e004bbf1ae46b43460fbbad00845e19d9aea13f7b2de89ef6608"
+    },
+    {
+      "source": "D:\\tetherbound\\feature-f20\\.tmp\\f20-credits-live-forwarding.patch",
+      "sealed": "f20-source.patch.gz",
+      "bytes": 880,
+      "sha256": "e5a4e2a72c9ff249c8af7357d23daa88aeebf534f000ae47450d636e911ebfed"
+    },
+    {
+      "source": "D:\\tetherbound\\feature-f20\\.tmp\\f20-credits-live-forwarding-source-pins.json",
+      "sealed": "f20-source-pins.json.gz",
+      "bytes": 7179,
+      "sha256": "8649ad06ff32b20051c59213099389d96f694499cd17b9a394b3978e2aaf2447"
+    },
+    {
+      "source": "D:\\tetherbound\\feature-f22\\.tmp\\f22-catching-miss-fixture-r1\\source-evidence.json",
+      "sealed": "catching-source.json.gz",
+      "bytes": 8077,
+      "sha256": "8219b5dd038e0bcdd02b65b468b303a8147fff260c15c8762053ce772a300942"
+    },
+    {
+      "source": "D:\\tetherbound\\feature-f22\\.tmp\\f22-catching-miss-fixture-r1\\candidate.patch",
+      "sealed": "catching-source.patch.gz",
+      "bytes": 2149,
+      "sha256": "2aaa9b21ea01dd66df16a1007ab9e779d7205fcb81356b5ac223644048c68610"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-timings.json",
+      "sealed": "ci6172-terminal-timing.json.gz",
+      "bytes": 82200,
+      "sha256": "2a888a996e0a5bda54c8af21fbe0d1db55a81bf09387eb051c644ffa177f040d"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-job-110511919518.log",
+      "sealed": "ci6172-job-110511919518.log.gz",
+      "bytes": 474318,
+      "sha256": "128619f3be337aaf34f8bdf3d9f29868a1c45b12046dbc872a29d8b7091f798b"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-job-110512543034.log",
+      "sealed": "ci6172-job-110512543034.log.gz",
+      "bytes": 506215,
+      "sha256": "4a7cb9f6e86f2d99931dad005a2b0cce15f0d495e91c3363f667f61f941aa32b"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-job-110512543070.log",
+      "sealed": "ci6172-job-110512543070.log.gz",
+      "bytes": 529169,
+      "sha256": "64837da466b98e21bd7ae816c4d7675b87c020de33136c39e8a5a3d652db1339"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-job-110512543105.log",
+      "sealed": "ci6172-job-110512543105.log.gz",
+      "bytes": 518732,
+      "sha256": "46968ca302f0ffd4e98cb7e158cde7191040d9a3d55b0264fb98b9cc82a38d18"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-job-110511919850.log",
+      "sealed": "ci6172-job-110511919850.log.gz",
+      "bytes": 3817531,
+      "sha256": "c26d66df0faa9ab583536222240a10bdc2b876b232acf4c4358444cd060b31ed"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6172-job-110511920160.log",
+      "sealed": "ci6172-job-110511920160.log.gz",
+      "bytes": 1757119,
+      "sha256": "15c05b75aa9a63a59915feb6bdf2296bc5675870f4301ca3468db80b5b300a92"
+    }
+  ],
+  "no_criterion_credit": true,
+  "workflow_validation": "Cached actionlint1.7.12 ci.yml PASS; shellcheck/pyflakes disabled because no embedded script changes; full required native/package checks remain pending CI.",
+  "f17_untracked_diagnostic_evidence_retained": [
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/.gitattributes",
+      "sealed": "f17-retained-r9-evidence-0.gz",
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/canonical/CODEX_START_HERE.md",
+      "sealed": "f17-retained-r9-evidence-1.gz",
+      "bytes": 92763,
+      "sha256": "4d397791e24c42fe3ff431d9be17536686aea24f4b9a3d46080753ea50b6cef2"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/canonical/docs/ACCEPTANCE.md",
+      "sealed": "f17-retained-r9-evidence-2.gz",
+      "bytes": 62824,
+      "sha256": "5c79e3420c5e2f509bab9c86cfe7d6f2676c16a666ba422712e3636b52bf7e58"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/canonical/docs/design/WORLD.md",
+      "sealed": "f17-retained-r9-evidence-3.gz",
+      "bytes": 96139,
+      "sha256": "cab4480e252b14df4d24ed4daad4fb97171d57917d737c38e37c82a60ec4c031"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/data/config/movement.json",
+      "sealed": "f17-retained-r9-evidence-4.gz",
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/project.godot",
+      "sealed": "f17-retained-r9-evidence-5.gz",
+      "bytes": 22187,
+      "sha256": "bf2ee2b20bcd71c46937868acc009ae85673748472bd30c90f3f3b4dcf80a147"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/scenes/player/player.tscn",
+      "sealed": "f17-retained-r9-evidence-6.gz",
+      "bytes": 1478,
+      "sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/scripts/combat/combat_manager.gd",
+      "sealed": "f17-retained-r9-evidence-7.gz",
+      "bytes": 244351,
+      "sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/scripts/combat/encounter_director.gd",
+      "sealed": "f17-retained-r9-evidence-8.gz",
+      "bytes": 355711,
+      "sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/scripts/player/player_controller.gd",
+      "sealed": "f17-retained-r9-evidence-9.gz",
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/scripts/world/environment_velocity_modifiers.gd",
+      "sealed": "f17-retained-r9-evidence-10.gz",
+      "bytes": 3986,
+      "sha256": "d7d6f78841e0e7e3bfa9bead35bf5049f7b945151a77c32bdf3feb38dd32f5ab"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/tests/helpers/fresh_opening_segment.gd",
+      "sealed": "f17-retained-r9-evidence-11.gz",
+      "bytes": 19706,
+      "sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/tests/helpers/gate_a_npc_gather_segment.gd",
+      "sealed": "f17-retained-r9-evidence-12.gz",
+      "bytes": 42994,
+      "sha256": "5807ae64deb8482e996aa5beb039746e5781f235e53aab6a4b949331110c7340"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/tests/helpers/meadows_earned_team_segment.gd",
+      "sealed": "f17-retained-r9-evidence-13.gz",
+      "bytes": 50044,
+      "sha256": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/inputs/tests/helpers/opening_geometry_navigator.gd",
+      "sealed": "f17-retained-r9-evidence-14.gz",
+      "bytes": 71351,
+      "sha256": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/manifest.json",
+      "sealed": "f17-retained-r9-evidence-15.gz",
+      "bytes": 3557,
+      "sha256": "dfb31f68681c633d7840a36dbb7252c76948a74440105cff7b22b2c595b85f0f"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/doc/classes/PhysicsDirectSpaceState3D.xml",
+      "sealed": "f17-retained-r9-evidence-16.gz",
+      "bytes": 6824,
+      "sha256": "a425439c1bb93006c927956d0c7b48f323a6a98904112272d4b8caedd11589ef"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_collision_solver_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-17.gz",
+      "bytes": 21337,
+      "sha256": "12842cbd7b31018d730f28045207f259ee03f983753131d5c2269889ba2512a6"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_collision_solver_3d_sat.cpp",
+      "sealed": "f17-retained-r9-evidence-18.gz",
+      "bytes": 80251,
+      "sha256": "537e909c5dae414f7551325dd7df6459e18e04e041d03bd5a06c34b0fe8e63d7"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_physics_server_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-19.gz",
+      "bytes": 58416,
+      "sha256": "3d0abb21d322589d7f6ffa5850e3a3ac75897ce66559a747e2297d15a721fe83"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_shape_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-20.gz",
+      "bytes": 63744,
+      "sha256": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_shape_3d.h",
+      "sealed": "f17-retained-r9-evidence-21.gz",
+      "bytes": 21434,
+      "sha256": "0bb868854b2038bfb229da2a605820b927873568cadb11864e68c0c31d5c2c6d"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_space_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-22.gz",
+      "bytes": 43185,
+      "sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/godot_physics_3d/godot_space_3d.h",
+      "sealed": "f17-retained-r9-evidence-23.gz",
+      "bytes": 9468,
+      "sha256": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/jolt_physics/jolt_project_settings.cpp",
+      "sealed": "f17-retained-r9-evidence-24.gz",
+      "bytes": 11050,
+      "sha256": "7247640aa2ae0b15055d26d5a05c6b97a9ee73bfa2da78f65b7819f50a573d0d"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-25.gz",
+      "bytes": 36522,
+      "sha256": "2aa03826e4807d6a87a2b1cc59f47d51a73b730a9ba1137287a477afd4e248f9"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/jolt_physics/spaces/jolt_query_collectors.h",
+      "sealed": "f17-retained-r9-evidence-26.gz",
+      "bytes": 7567,
+      "sha256": "22bdae2229c956c95d32052af944c2139fe3db95922411a8a6ee0d61264dac8a"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/modules/jolt_physics/spaces/jolt_query_filter_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-27.gz",
+      "bytes": 4431,
+      "sha256": "61b46de6b8ba0d49cfd59092c4d54fef39c863e29b6d31dd39f51e249cd49ae8"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/provenance.json",
+      "sealed": "f17-retained-r9-evidence-28.gz",
+      "bytes": 6604,
+      "sha256": "dbc4a1452c1de609c463d540d97c096b495a9e3a680ccc52091a206ba2172104"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/servers/physics_3d/physics_server_3d.cpp",
+      "sealed": "f17-retained-r9-evidence-29.gz",
+      "bytes": 69031,
+      "sha256": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Geometry/ClipPoly.h",
+      "sealed": "f17-retained-r9-evidence-30.gz",
+      "bytes": 7228,
+      "sha256": "f767b3fb64ca27939a8cc6ff97bc3e8ddcce6a725a741794841c28bbeddc2d66"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/Collision/CollideShape.h",
+      "sealed": "f17-retained-r9-evidence-31.gz",
+      "bytes": 5459,
+      "sha256": "7fe92fcbbe248512aba2556e2dd09d282b53505a577395f1d2ed40083421098d"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/Collision/CollisionDispatch.h",
+      "sealed": "f17-retained-r9-evidence-32.gz",
+      "bytes": 8399,
+      "sha256": "9fb1239d7e9fe3d3ff3ea571eeab58836f2a64204503ecce47152e3fc971f3ad"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.cpp",
+      "sealed": "f17-retained-r9-evidence-33.gz",
+      "bytes": 10373,
+      "sha256": "81d7204dc3300b6bb406129f3a0c0040b141d673c977a2fc6cae33b216721d4d"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.h",
+      "sealed": "f17-retained-r9-evidence-34.gz",
+      "bytes": 2607,
+      "sha256": "e55c98858904bc1138b7c10a302dfc1da5b63a9794514879b8772927343ea123"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/Collision/Shape/CapsuleShape.cpp",
+      "sealed": "f17-retained-r9-evidence-35.gz",
+      "bytes": 15129,
+      "sha256": "3acefa0928076d7935a1084e0e2d5915cc6639751e6e5b339f7e0cb367976d06"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/Collision/Shape/CapsuleShape.h",
+      "sealed": "f17-retained-r9-evidence-36.gz",
+      "bytes": 5589,
+      "sha256": "d10927dffe9552251d2190888cd91d08cdd2621cc59e63c9901ce319dfd0167c"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/native-source/thirdparty/jolt_physics/Jolt/Physics/PhysicsSettings.h",
+      "sealed": "f17-retained-r9-evidence-37.gz",
+      "bytes": 6816,
+      "sha256": "0f65d2251eaa7487a9c73cbe4cabac1683eb5302e12298492456600c0484a924"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/originals/scripts/player/player_controller.gd",
+      "sealed": "f17-retained-r9-evidence-38.gz",
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/prior-failure/receipt.json",
+      "sealed": "f17-retained-r9-evidence-39.gz",
+      "bytes": 495705,
+      "sha256": "bfbf19d766c3331dc8a517bfb10cce190cfda47fd963d6218d408e1962fc5c18"
+    },
+    {
+      "source": "ralph/reports/HUB/f17/idle-support-r9/source-math.json",
+      "sealed": "f17-retained-r9-evidence-40.gz",
+      "bytes": 2670,
+      "sha256": "727137c2ceb91e07000388a8d5e45e97ede122e959f2dab64ba89cf18c02a183"
+    }
+  ],
+  "f17_source_cleanup": "F17 exact6edcdd source contained in3fcc09; checkout tracked clean. Untracked R9 input/original/native-source diagnostic copies are losslessly retained as evidence here and in the unchanged original checkout. No outstanding owned production source."
+}

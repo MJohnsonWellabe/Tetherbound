@@ -1,0 +1,391 @@
+{
+  "checks": [
+    {
+      "name": "same original CI6173 ZIP",
+      "passed": true
+    },
+    {
+      "name": "unaltered original member net-shared_boss-20261001T195856Z/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "only original native error is protected starter refusal net-shared_boss-20261001T195856Z/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "no original SCRIPT ERROR exception net-shared_boss-20261001T195856Z/peer-0.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered original member net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "only original native error is protected starter refusal net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "no original SCRIPT ERROR exception net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "one original character file peer 0",
+      "passed": true
+    },
+    {
+      "name": "unaltered original character net-shared_boss-20261001T195856Z/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-53116d1e2a973f03b68542dc2833a11f/character.json",
+      "passed": true
+    },
+    {
+      "name": "actual original deployed fixture retained empty party peer 0",
+      "passed": true
+    },
+    {
+      "name": "no original starter choice receipt peer 0",
+      "passed": true
+    },
+    {
+      "name": "no original starter granted fact peer 0",
+      "passed": true
+    },
+    {
+      "name": "unaltered original member net-shared_boss-20261001T195856Z/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "only original native error is protected starter refusal net-shared_boss-20261001T195856Z/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "no original SCRIPT ERROR exception net-shared_boss-20261001T195856Z/peer-1.log",
+      "passed": true
+    },
+    {
+      "name": "unaltered original member net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "only original native error is protected starter refusal net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "no original SCRIPT ERROR exception net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "passed": true
+    },
+    {
+      "name": "one original character file peer 1",
+      "passed": true
+    },
+    {
+      "name": "unaltered original character net-shared_boss-20261001T195856Z/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-16c21ad29983ee6b7b95b29dac457d6f/character.json",
+      "passed": true
+    },
+    {
+      "name": "actual original deployed fixture retained empty party peer 1",
+      "passed": true
+    },
+    {
+      "name": "no original starter choice receipt peer 1",
+      "passed": true
+    },
+    {
+      "name": "no original starter granted fact peer 1",
+      "passed": true
+    },
+    {
+      "name": "one helper preload",
+      "passed": true
+    },
+    {
+      "name": "one before-admission setup",
+      "passed": true
+    },
+    {
+      "name": "one after-deploy check",
+      "passed": true
+    },
+    {
+      "name": "complete original smoke inverse: every original action/assertion/wait/budget unchanged",
+      "passed": true
+    },
+    {
+      "name": "preparation precedes original host and join",
+      "passed": true
+    },
+    {
+      "name": "ownership verification follows original deploy",
+      "passed": true
+    },
+    {
+      "name": "one new readonly probe case",
+      "passed": true
+    },
+    {
+      "name": "complete peer runner inverse; all original step handlers intact",
+      "passed": true
+    },
+    {
+      "name": "probe matches actual same instance",
+      "passed": true
+    },
+    {
+      "name": "probe reads actual personal starter fact",
+      "passed": true
+    },
+    {
+      "name": "probe uses actual host-held admitted roster",
+      "passed": true
+    },
+    {
+      "name": "probe does not refresh an inactive standalone admission",
+      "passed": true
+    },
+    {
+      "name": "probe does not mutate/save/mint/grant",
+      "passed": true
+    },
+    {
+      "name": "all existing multiplayer identity cases unchanged",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing physical-input step \"move_to\"",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing physical-input step \"interact\"",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing physical-input step \"dismiss_dialogue\"",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing physical-input step \"menu_confirm\"",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing physical-input step \"ui_right\"",
+      "passed": true
+    },
+    {
+      "name": "fixture uses existing physical-input step \"ui_down\"",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write call(\"adopt_starter\"",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write call(\"_adopt\"",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write party_grant",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write call(\"set_flag\"",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write .set(",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write commit_original_starter",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write _force_restore_beat",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write seed_admitted",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write _step_phase_deadline_ms",
+      "passed": true
+    },
+    {
+      "name": "fixture excludes mutation/bypass/budget write heartbeat_silence_tolerance_s",
+      "passed": true
+    },
+    {
+      "name": "fixture starts before active session with empty party AND absent body",
+      "passed": true
+    },
+    {
+      "name": "fixture never adopts an existing unowned body",
+      "passed": true
+    },
+    {
+      "name": "both typed names actually observed",
+      "passed": true
+    },
+    {
+      "name": "literal finite modal and cursor bounds",
+      "passed": true
+    },
+    {
+      "name": "new helper never raises original caps",
+      "passed": true
+    },
+    {
+      "name": "same UID compared after admission",
+      "passed": true
+    },
+    {
+      "name": "admitted character bound to actual local character",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/story/sequence_director.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/story/party_seam.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged autoload/party.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged autoload/game_state.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/net/session.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/net/character_authority.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged scripts/combat/combat_math.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged tests/helpers/net_harness.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged tests/test_stormwood_hosted_combat.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged tests/smoke_net_meadows_identity_fresh_join.gd",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged data/config/combat.json",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged data/config/multiplayer.json",
+      "passed": true
+    },
+    {
+      "name": "production/budget/guard unchanged data/config/opening.json",
+      "passed": true
+    },
+    {
+      "name": "protected refusal remains exact",
+      "passed": true
+    },
+    {
+      "name": "remote admitted baseline cannot be replaced",
+      "passed": true
+    },
+    {
+      "name": "real picker default is actual authored Terrapup",
+      "passed": true
+    },
+    {
+      "name": "ownership model actual one owned body accepted",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses actual original empty ownership hole",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses other UID",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses extra starter",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses unowned body",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses no UID",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses unknown species",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses unready body",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses no original grant fact",
+      "passed": true
+    },
+    {
+      "name": "ownership model refuses another name",
+      "passed": true
+    },
+    {
+      "name": "admission model mismatched UID fails",
+      "passed": true
+    },
+    {
+      "name": "admission model empty baseline fails",
+      "passed": true
+    },
+    {
+      "name": "ROOT selected immutable preimage tests/smoke_net_shared_boss.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT selected immutable preimage tools/net/peer_runner.gd",
+      "passed": true
+    },
+    {
+      "name": "ROOT selected immutable preimage tests/test_multiplayer_identity_0912.gd",
+      "passed": true
+    },
+    {
+      "name": "read-only ROOT apply check",
+      "passed": true
+    },
+    {
+      "name": "diff whitespace check",
+      "passed": true
+    }
+  ],
+  "passed": 96,
+  "failed": 0,
+  "native": "NOT RUN; ROOT owns validation."
+}

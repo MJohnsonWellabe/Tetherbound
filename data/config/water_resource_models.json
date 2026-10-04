@@ -1,0 +1,34 @@
+{
+  "resources": {
+    "reef_stone": {
+      "label": "Gather Reef Stone",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.35
+    },
+    "driftwood": {
+      "label": "Gather Driftwood",
+      "model": "res://assets/environment/nature/log_large.glb",
+      "model_scale": 0.5
+    },
+    "reed_fiber": {
+      "label": "Gather Reed Fiber",
+      "model": "res://assets/environment/stylized_nature/Grass_Wheat.gltf",
+      "model_scale": 0.7
+    },
+    "tide_bloom": {
+      "label": "Gather Tide Bloom",
+      "model": "res://assets/environment/stylized_nature/Flower_3_Group.gltf",
+      "model_scale": 0.7
+    },
+    "sluice_metal": {
+      "label": "Salvage Sluice Metal",
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.35
+    },
+    "tide_pearl": {
+      "label": "Gather Tide Pearl",
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 0.25
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "base_commit": "59456b3cd5119b304639662ebb450f5b1bc28a87",
+  "scope": "Stone Throw body material and impact presentation only; Fireball R9 retained",
+  "config_paths_changed": [
+    "/move_library/archetypes/stone_throw/body/authored_surface",
+    "/move_library/archetypes/stone_throw/body/mineral_colour",
+    "/move_library/archetypes/stone_throw/body/stone_colour",
+    "/move_library/archetypes/stone_throw/body/surface_roughness",
+    "/move_library/archetypes/stone_throw/body/surface_scale",
+    "/move_library/archetypes/stone_throw/body/texture_blend",
+    "/move_library/archetypes/stone_throw/impact/authored_surface",
+    "/move_library/archetypes/stone_throw/impact/card_extent_scale",
+    "/move_library/archetypes/stone_throw/impact/dust_colour",
+    "/move_library/archetypes/stone_throw/impact/grow",
+    "/move_library/archetypes/stone_throw/impact/heat",
+    "/move_library/archetypes/stone_throw/impact/initial_grow",
+    "/move_library/archetypes/stone_throw/impact/mote_size",
+    "/move_library/archetypes/stone_throw/impact/opacity",
+    "/move_library/archetypes/stone_throw/impact/secondary_shape",
+    "/move_library/archetypes/stone_throw/impact/shape",
+    "/move_library/archetypes/stone_throw/impact/speed",
+    "/move_library/archetypes/stone_throw/impact/stone_colour",
+    "/move_library/archetypes/stone_throw/impact/surface_roughness",
+    "/move_library/archetypes/stone_throw/impact/surface_scale",
+    "/move_library/archetypes/stone_throw/impact/texture_blend"
+  ],
+  "library_enabled": false,
+  "installed_texture": {
+    "path": "assets/environment/terrain/stylised/rock_scree_Color.png",
+    "sha256": "e213bc5576fe6a2c023f826f8cad982d6a239faa5467ffb01429d7ab226fc21c",
+    "source": "tools/art_pipeline/make_stylised_ground.py and stylised_ground_spec.py; installed original, no generation or import this slice"
+  },
+  "unproved": [
+    "shader compilation",
+    "visual craft",
+    "motion",
+    "integrated HP/audio and world",
+    "four-creature Medium performance",
+    "all F25 acceptance rows"
+  ]
+}

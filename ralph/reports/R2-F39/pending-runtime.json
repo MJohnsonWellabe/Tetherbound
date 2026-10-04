@@ -1,0 +1,38 @@
+{
+  "status": "PENDING shared ROOT engine queue; no criterion MET or visual PASS",
+  "base": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "source_scope": ["P2-010 distant waterfall continuity", "P2-066 current surface finish", "P2-067 restored current surface response"],
+  "commands_are_prepared_not_executed": true,
+  "launcher_precondition": "Run each native command with fresh per-run APPDATA/LOCALAPPDATA environment roots as tools/catalogue_survey.ps1 already does, restoring the caller environment afterwards. This isolates graphics preference writes and any autoload startup I/O. The new F39 recorder additionally swaps Game.save_system to a unique user:// capture folder before resetting or mounting the world.",
+  "source_sha_instruction": "Replace SOURCE_SHA with consolidated exact 40-character SHA; use fresh output directories per rerun. Execute only after prior batch is green on main and ROOT assigns the shared engine queue.",
+  "scoped_runtime_checks": [
+    "godot --headless --path . --script res://tests/run_tests.gd -- --only=test_water_current_flow_states,test_water_current_field,test_veilfall_fall_surface,test_veilfall_far_crag_presentation,test_tidewake_matrix_export",
+    "godot --headless --path . --script res://tests/smoke_tidewake_b_current_restore.gd"
+  ],
+  "matched_recapture": {
+    "template": "godot --path . --rendering-method forward_plus --resolution 1920x1080 --script res://tools/capture_f39_catalogue.gd -- --biome=water --times=day,night --preset=PRESET --source-commit=SOURCE_SHA --seed=2042 --f39-weather=WEATHER --output=res://ralph/reports/R2-F39/native/PRESET-WEATHER-PACK CANDIDATE_ARG",
+    "presets": ["High", "Medium"],
+    "weather": ["clear", "rain"],
+    "packs": {"baseline": "", "candidate": "--f39-candidate"},
+    "static_planned_frames_per_run": 240,
+    "required_validation": "Each manifest complete=true with all 240 images, native adapter, 1920x1080, correct observed weather, exact SHA/preset/seed, equal matched player poses and acceptable camera drift. No planned count counts as captured. Rescore all 44 Tidewake historical rows only from validated fresh sightings. Five camera headings are distinct orbit views; they do not substitute for required approach, close detail, motion or actual fight.",
+    "low_readability": "Repeat baseline/candidate clear runs with --rendering-method gl_compatibility --rendering-driver opengl3 --preset=Low and fresh Low outputs. Review direction at 7-inch equivalent display; no Ally performance claim."
+  },
+  "landmark_motion_command": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --write-movie .artifacts/phase2/f39-landmark-motion.avi --script res://tools/art_pipeline/capture_tidewake_matrix.gd -- --out=res://.artifacts/phase2/f39-landmark-motion --seed=2042 --hold-seconds=8 --only=veilfall-far-first-shore,veilfall-mid-salt-crown,veilfall-near-arrival,current-first-shore-reedhaven,current-sluice-veilfall",
+  "real_fight_command": "godot --path . --rendering-driver opengl3 --resolution 1920x1080 --script res://tests/capture_tidewake_named_fights.gd -- --trainer=water_trainer_venn,water_trainer_nerissa --out=res://ralph/reports/R2-F39/native/fights-low --interval=1.0 --max-frames=200 --level=33 --pilot=READER --cap-s=360",
+  "remaining_full_matrix": "ROOT queue must add matched High/Medium approach, reverse, close detail, real Venn/Nerissa fights and continuous current direction/restoration footage, and a two-peer restore/rejoin witness. The existing landmark/fight commands above are Low supplements; their default-off source does not establish candidate acceptance. Enable only process-local allowlisted material uniforms in queued native captures, recording exact overrides. No modifying gameplay, saves, flags or production candidate JSON to fake success.",
+  "judge": "Independent code-blind before/after verdicts for P2-010/066/067 plus full Bars A/B High/Medium matrix, clipping/floating/placeholder inspection; current direction at 7 inches remains OPEN. Source audit is not a fresh rescore. No new sessions or agents from this branch.",
+  "owner_stop": "P2-008 remains suspended. No shore/dune mask, terrain profile, grass or receiver changes made.",
+  "dependencies": ["F26 accepted look-dev and Ally renderer gate", "F36 creatures/poses/scale", "F37 swim/dive", "F34 camps", "F42 UI", "existing combat/camera/VFX owners for shared rows", "fresh P2-011 authored destination captures before judging further dressing"],
+  "overlap_seams": [
+    "data/config/water_current_flow_visual.json",
+    "scripts/world/water_current_flow_view.gd",
+    "scripts/world/water_veilfall_falls.gd",
+    "shaders/water_current_flow.gdshader",
+    "shaders/water_veilfall_fall.gdshader"
+  ],
+  "new_isolated_files": ["data/config/water_veilfall_falls_visual.json", "tools/capture_f39_catalogue.gd"],
+  "durable_state": "None added. Existing water_currents_restored replicated world fact drives live/restored uniforms on build/poll. Visual config uses local static false gates; reapplication is idempotent and disables candidates without geometry recreation. No save/autoload/schema/flag registry edits.",
+  "criteria": {"F39#0": "OPEN no native recapture/rescore", "F39#1": "OPEN no top20 PASS/main", "F39#2": "OPEN remaining over12 and dependencies", "F39#3": "OPEN High/Medium full matrix", "F39#4": "OPEN Veilfall native judge", "F39#5": "OPEN full matrix inspection"},
+  "balance": "Game: 72 presentation line additions and 2 removals plus the 13-line waterfall config; capture/audit/evidence support separate. No engine runs, CI, PR, merge or self-landing."
+}

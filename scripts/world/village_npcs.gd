@@ -188,6 +188,23 @@ static func model_config(spec: Dictionary) -> Dictionary:
 	return cfg
 
 
+## Only built support providers in this placement's actual village contribute.
+## The terrain height remains the lower bound; outside an interior's enabled
+## physical footprint its query returns NAN and cannot move a villager.
+func _interior_support_height(x: float, z: float, terrain_height: float) -> float:
+	var village := get_parent().get_node_or_null(^"Village") if get_parent() != null else null
+	var height := terrain_height
+	if village == null:
+		return height
+	for building: Node in village.get_children():
+		var interior := building.get_node_or_null(^"Interior")
+		if interior != null and interior.has_method("floor_top_world_at"):
+			var support: float = interior.call("floor_top_world_at", x, z)
+			if is_finite(support):
+				height = maxf(height, support)
+	return height
+
+
 func _spawn(spec: Dictionary, player: Node3D) -> void:
 	var config_key := str(spec.get("config_key", ""))
 	var display_name := str(spec.get("name", "Villager"))
@@ -210,6 +227,7 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 	if not bool(npc.call("stand_at", x, z, preferred_y)):
 		push_error("no ground under villager '%s' at %.0f, %.0f" % [display_name, x, z])
 		return
+	npc.global_position.y = _interior_support_height(x, z, npc.global_position.y)
 	npc.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
 
 	# "Greet <name>", built here rather than stored in the JSON, and never

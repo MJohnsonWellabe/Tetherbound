@@ -1,0 +1,627 @@
+{
+ "_comment": "BAND-SPLIT. Band-local nodes for band1_lower_meadows. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 1000-1999, which no other band can collide with; do not renumber an existing one.",
+ "nodes": [
+  {
+   "order": 0,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    16.0,
+    -28.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22
+  },
+  {
+   "order": 1,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    26.0,
+    -44.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22
+  },
+  {
+   "order": 2,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    40.5,
+    -28.0
+   ],
+   "_why_game_f1": "GAME-F1 (Gate F full run, candidate 453107fb). This node stood at (44, -24), 2.3 m OUTSIDE data/config/village_boundary.json's outline after that line was rerouted on 2026-08-30 (OP-0830-1 and the straddle fix the same day). The fence is a hard StaticBody3D, so the chapter's own first gathering lesson sent the player out through their own village gate and back for this stop, and a player who has not yet found the gate key could not reach it at all. Moved 4.3 m inward to the nearest point that is inside the line, at least 3 m clear of it, at least 4 m from every other node, and still outside the practice cluster's own 15 m disc. The item, amount, label, model and order are unchanged, so the village gathering budget is untouched -- which matters, because with this node and its sibling unreachable the reachable stone in the village (6) fell short of the 8 that progression.json's home.required_pieces actually costs. tests/test_village_boundary.gd now checks every village-area harvest node, so a future reroute of the fence fails a test instead of stranding a node.",
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22
+  },
+  {
+   "order": 3,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    -8.0,
+    8.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.12,
+   "_why_grandpas_village_r2_2026_09_11": "The R1 production square-arrival pair proved this exact persistent deadwood visual stands on the camera-to-well axis as a black foreground shrub, obscuring the civic square by day and night. A committed-bake audit found no deadfall scatter crossing that composition, so changing a scatter footprint would remove unrelated vegetation and would not touch the demonstrated obstruction. Keep the node, position, yield, order, model and interaction; reduce only its rendered scale 0.22 -> 0.12 so it remains a readable deadwood gatherable without blocking the well/path/NPC composition."
+  },
+  {
+   "order": 4,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    22.0,
+    -34.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_game_f5_stone": "GAME-F5, RESCOPED and measured on the played path 2026-08-31 (lane ralph/GATE-F-LEG-S03). GAME-F5 reported the village gathering budget as short against a camp+floor+wall+door+roof+3-bed bill the game stopped asking for; against the real bill (camp + one creature_bed = 18 wood / 8 stone / 18 fiber) wood and fiber clear comfortably. STONE does not. The village authors exactly three stone nodes at 3 each = 9, against a camp that costs 8 -- a one-node margin, and a real S03 run measured what that costs: two of the three nodes paid out, the sweep ended with 6 stone, the camp could not be armed (the run reported input_context=build_catalogue where it wanted build_placement, which reads like a build-menu defect and is an empty satchel), `home_built` never set, and the sleep and feed rungs never ran. Wood came in at 24 against 18 and fiber at 28 against 18 in the same sweep, so stone was the only binding constraint. 3 -> 4 puts the authored stone budget at 12 against 8, a margin proportionate to the other two, and survives a single missed node. Every number in this file is TUNABLE by its own header; this is the smallest change that makes the opening's build rung affordable in practice rather than only on paper. Mirrored into tests/fixtures/band_split_baseline/harvest.json per that fixture's TRACKED MIRROR policy."
+  },
+  {
+   "order": 5,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    47.0,
+    -34.5
+   ],
+   "_why_game_f1": "GAME-F1 (Gate F full run, candidate 453107fb). This node stood at (52, -30), 3.5 m OUTSIDE data/config/village_boundary.json's outline after that line was rerouted on 2026-08-30 (OP-0830-1 and the straddle fix the same day). The fence is a hard StaticBody3D, so the chapter's own first gathering lesson sent the player out through their own village gate and back for this stop, and a player who has not yet found the gate key could not reach it at all. Moved 7.1 m inward to the nearest point that is inside the line, at least 3 m clear of it, at least 4 m from every other node, and still outside the practice cluster's own 15 m disc. The item, amount, label, model and order are unchanged, so the village gathering budget is untouched -- which matters, because with this node and its sibling unreachable the reachable stone in the village (6) fell short of the 8 that progression.json's home.required_pieces actually costs. tests/test_village_boundary.gd now checks every village-area harvest node, so a future reroute of the fence fails a test instead of stranding a node.",
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_game_f5_stone": "GAME-F5, RESCOPED and measured on the played path 2026-08-31 (lane ralph/GATE-F-LEG-S03). GAME-F5 reported the village gathering budget as short against a camp+floor+wall+door+roof+3-bed bill the game stopped asking for; against the real bill (camp + one creature_bed = 18 wood / 8 stone / 18 fiber) wood and fiber clear comfortably. STONE does not. The village authors exactly three stone nodes at 3 each = 9, against a camp that costs 8 -- a one-node margin, and a real S03 run measured what that costs: two of the three nodes paid out, the sweep ended with 6 stone, the camp could not be armed (the run reported input_context=build_catalogue where it wanted build_placement, which reads like a build-menu defect and is an empty satchel), `home_built` never set, and the sleep and feed rungs never ran. Wood came in at 24 against 18 and fiber at 28 against 18 in the same sweep, so stone was the only binding constraint. 3 -> 4 puts the authored stone budget at 12 against 8, a margin proportionate to the other two, and survives a single missed node. Every number in this file is TUNABLE by its own header; this is the smallest change that makes the opening's build rung affordable in practice rather than only on paper. Mirrored into tests/fixtures/band_split_baseline/harvest.json per that fixture's TRACKED MIRROR policy."
+  },
+  {
+   "order": 6,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -18.0,
+    6.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_game_f5_stone": "GAME-F5, RESCOPED and measured on the played path 2026-08-31 (lane ralph/GATE-F-LEG-S03). GAME-F5 reported the village gathering budget as short against a camp+floor+wall+door+roof+3-bed bill the game stopped asking for; against the real bill (camp + one creature_bed = 18 wood / 8 stone / 18 fiber) wood and fiber clear comfortably. STONE does not. The village authors exactly three stone nodes at 3 each = 9, against a camp that costs 8 -- a one-node margin, and a real S03 run measured what that costs: two of the three nodes paid out, the sweep ended with 6 stone, the camp could not be armed (the run reported input_context=build_catalogue where it wanted build_placement, which reads like a build-menu defect and is an empty satchel), `home_built` never set, and the sleep and feed rungs never ran. Wood came in at 24 against 18 and fiber at 28 against 18 in the same sweep, so stone was the only binding constraint. 3 -> 4 puts the authored stone budget at 12 against 8, a margin proportionate to the other two, and survives a single missed node. Every number in this file is TUNABLE by its own header; this is the smallest change that makes the opening's build rung affordable in practice rather than only on paper. Mirrored into tests/fixtures/band_split_baseline/harvest.json per that fixture's TRACKED MIRROR policy."
+  },
+  {
+   "order": 7,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    12.0,
+    -22.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 8,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    34.0,
+    -46.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 9,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    -2.0,
+    -20.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 10,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -6.0,
+    -24.5
+   ],
+   "_why_f01_berry_field": "F01 (village road settlement): the cottage_b re-pose at (19,-18) left this bush INSIDE the cottage, 2.2m from its centre, and the day-walk judge found Berry Field reading as one bush. Moved into paths.village_topology's berry_field subarea (centre (-8.5,-23), r 6) beside order 1036, 2.9m from the centre and 6.3m from 1036, off the berry lane. Same item, yield, model and order.",
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 0.52,
+   "_why_village_visual_2026_09_11": "Grandpa's Village ordinary gameplay frame proved the six village berry bushes were each roughly 2.3m wide at the route-wide 1.2 scale and read as saturated purple creature-sized foreground masses. Keep position, interaction, yield and model; 0.52 preserves a readable ~1m berry bush without letting a gatherable outrank the village frontage. Applied consistently to village berries only; corridor and Pond berries retain their established 1.2 route scale."
+  },
+  {
+   "order": 11,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    38.0,
+    -36.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 0.52,
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+  },
+  {
+   "order": 1000,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    -5.0,
+    141.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3,
+   "_why_gate_a": "Gate A natural paid-build evidence: an ordinary meadow-grass stop beside the open spine between the village and the pond route, far enough off the dirt to reward a short gathering detour without obstructing the critical trail. Together with the later pond-approach stop, this closes the fresh-session fiber shortfall without changing yields, costs, vendors, or global vegetation. Position is ground-probed and TUNABLE."
+  },
+  {
+   "order": 1001,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    -168.0,
+    312.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3,
+   "_why_gate_a": "Gate A natural paid-build evidence: the second ordinary meadow-grass stop sits beside the authored spine as it turns toward the pond, so the player finds the final fiber in normal travel rather than by debug setup or an unreasonable search. It remains a short off-trail pull and does not densify the pond pocket itself. Position is ground-probed and TUNABLE."
+  },
+  {
+   "order": 1002,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    10.0,
+    670.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_d1": "BAND1-D1. The pond-to-bridge corridor (z 552-1314) had zero authored gatherables before this pass -- the 2026-08-21 owner playtest names that exact stretch 'long, bare and boring'. Sited beside the pipwing cluster (spawns.json order 1002) so the first corridor stop reads as a place, not a lone marker in a field. tools/_probe_band1_cadence.py: ~30m lateral from the spine."
+  },
+  {
+   "order": 1003,
+   "item": "stone",
+   "amount": 3,
+   "label": "Prise loose stones",
+   "at": [
+    370.0,
+    940.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_d1": "BAND1-D1. Second corridor stop, roughly midway between the pond and South Bridge, paired with the trail_camp prop cluster (props.json order 1000) at the same bend -- a reason to slow down that lands with the rest stop rather than in open field. tools/_probe_band1_cadence.py: ~30m lateral from the spine."
+  },
+  {
+   "order": 1004,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    335.0,
+    1070.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_d1": "BAND1-D1. Third corridor stop, past the mudsnout cluster (spawns.json order 1004) and short of the south_bridge_grunt checkpoint -- the last thing to notice before the gate fight, not another silent kilometre leading into it. tools/_probe_band1_cadence.py: ~30m lateral from the spine."
+  },
+  {
+   "order": 1005,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    -235.0,
+    615.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3,
+   "_why_d1": "BAND1-D1 remainder. tools/_probe_band1_cadence.py's own before/after run still showed a 388m gap right where the player leaves the pond -- the first corridor cluster (spawns.json order 1002) sits far enough south that the immediate post-pond stretch was still quiet. Closes it without touching the approved pond pocket itself (z=552-590, well north of this)."
+  },
+  {
+   "order": 1006,
+   "item": "stone",
+   "amount": 3,
+   "label": "Prise loose stones",
+   "at": [
+    195.0,
+    1175.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_d1": "BAND1-D1 remainder. The same probe's after-run left a 515m gap between the berries stop (order 1004) and the south_bridge_grunt checkpoint -- the run-in to the gate fight went quiet again. This sits past the spine's (330,1130)/(180,1200) bend, closing most of that gap while leaving the final stretch into the checkpoint itself alone; a gate fight should read as an arrival, not one more stop among several."
+  },
+  {
+   "order": 1010,
+   "item": "wood",
+   "amount": 3,
+   "label": "Gather deadfall",
+   "at": [
+    338.5,
+    929.0
+   ],
+   "model": "res://assets/environment/nature/log_large.glb",
+   "model_scale": 1.0,
+   "_why_d1": "Prompt 61's camp-siting criteria ask a camp-worthy space for 'nearby basic wood/stone/fiber availability', and the trail_camp had stone at 26m and nothing else authored -- wood and fibre came only from the shared scatter layers, which is availability by accident rather than by design. Deadfall 7m north-west of the fire: close enough to be the obvious answer to 'I want to build here', far enough that it is not inside the camp's own composition."
+  },
+  {
+   "order": 1011,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Cut long grass",
+   "at": [
+    349.5,
+    940.5
+   ],
+   "model": "res://assets/environment/stylized_nature/Grass_Wide_Tall.gltf",
+   "model_scale": 0.8,
+   "_why_d1": "The fibre half of the same requirement, on the opposite side of the camp from the deadfall so gathering both is a short walk around the fire rather than one stop. stylized_nature's tall grass, matching the tufts already authored at this camp -- environment/nature's grass models render as flat cyan through this path (ralph/BLOCKED.md)."
+  },
+  {
+   "order": 1020,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    7.0,
+    -24.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_early_camp_loop_2026_09_08": "EARLY-CAMP-LOOP 2026-09-08. Move the existing deadwood from [6,-34], exactly Garrick's authored standing position, onto the west shoulder of the Tam-to-practice gathering walk at [7,-24]. It is inside the village square's flat and vegetation clearing, 8.1m from Tam, 5.4m from the nearest other supply, and off the practice road. This keeps useful axe practice beside the tools lesson without contesting a villager prompt. Same order, installed prop, amount and verb; no extra resources."
+  },
+  {
+   "order": 1021,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    36.0,
+    -16.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22
+  },
+  {
+   "order": 1022,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    -14.0,
+    -8.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22
+  },
+  {
+   "order": 1023,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    24.0,
+    -24.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 1024,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    46.0,
+    -40.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 1025,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    2.0,
+    -30.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 1026,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    -10.0,
+    -14.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3
+  },
+  {
+   "order": 1027,
+   "item": "fiber",
+   "amount": 4,
+   "label": "Strip meadow grass",
+   "at": [
+    31.0,
+    -32.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+   "model_scale": 1.3,
+   "_why_early_camp_loop_2026_09_08": "EARLY-CAMP-LOOP 2026-09-08. Move this existing grass stop from the square's east edge [30,-8] to the cleared north edge of Practice Meadow [31,-32]. It completes the short tools-to-deadwood-to-stone-to-grass preparation walk toward the campsite clearing, with the existing southern grass and deadwood stops forming the return leg. The site is 8.1m from the practice clearing centre, outside the dirt path, clear of village fences, people and the trainer-camp prop cluster. Same order, installed grass model, knife verb and yield; later road resources remain in place."
+  },
+  {
+   "order": 1028,
+   "item": "potion_small",
+   "amount": 1,
+   "label": "A stashed potion",
+   "at": [
+    -478.0,
+    535.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_t3_pickups": "Owner directive 2026-08-29: scatter findable consumables off-path, 'enough that going off-path to find them is worth doing'. Sited in the same damp hollow as the band's own elder Mosshell (spawns.json order ~, centre (-490,555)) -- a potion beside the one fight in Band 1 that is 'a real fight and not a wall' per that entry's own comment. 43m off the spine, well past owner-direction's 30m notice radius, so this is a curiosity-driven find rather than a roadside pickup. Reuses harvest_node.gd's existing generic gather mechanism (respawns like any other resource -- fine for a stack:10 consumable, matching wood/stone/berries' own renewable convention) -- no new system."
+  },
+  {
+   "order": 1029,
+   "item": "orb_basic",
+   "amount": 2,
+   "label": "A cache of orbs",
+   "at": [
+    -245.0,
+    935.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_t3_pickups": "Owner directive 2026-08-29. Beside the bramblebun off-route pocket (spawns.json order 1047, centre (-260,950)) which 'rewards cutting the corner instead of following the road's own longer arc' -- the same corner-cut now pays twice, catch temptation and orb supply together."
+  },
+  {
+   "order": 1030,
+   "item": "travel_pack",
+   "amount": 1,
+   "label": "A dropped travel pack",
+   "at": [
+    515.0,
+    1035.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_t3_pickups": "T3-REWARD found `travel_pack` (items.json) fully modelled with zero acquisition path anywhere in the game. Placed beside the galecrest off-route pocket (spawns.json order 1048, centre (500,1050)), the 'upper ridge' aggressor sighting -- a pack left by whoever was here before, on the same detour. stack:1 gear, so a respawning crate is harmless: nothing is farmable that changes the equip once worn."
+  },
+  {
+   "order": 1031,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+     30,
+     8
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 0.52,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15, verbatim: 'There needs to be more berries in the village.' The village authored exactly two berry nodes (orders 10, 11; 3 each = 6), the thinnest of the four village resources against wood's 7 nodes, stone's 3 (raised to 4 each by GAME-F5), and fiber's 8 -- and berries are the one baseline resource with ongoing draws the other three do not carry: player/creature food (items.json), the 3-berries-for-4-seeds recipe and the farm crop itself (data/config/farm.json), and a 5-berry cost in the Band-4 stronghold potion (recipes_ironwood.json). Three new nodes (this one plus 1032, 1033) bring the village to five for +9, proportionate to the raise stone already got and short of flooding the square. Sited in the village's north quarter, inside the fence (data/config/village_boundary.json), >=4m clear of the boundary line and of every existing village node, and outside the practice cluster's 15m disc at (30,-40) -- unused ground: no harvest node previously stood north of z=-8. tests/test_village_boundary.gd's VILLAGE_HARVEST_NODES raised 20 -> 23 in the same commit, per that test's own instruction to confirm and update rather than silently drift.",
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+  },
+  {
+   "order": 1032,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    0.0,
+    18.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 0.52,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Second of the three new village berry stops, on the north side near the pond-road gate approach, >=4m clear of the boundary and of every existing node.",
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+  },
+  {
+   "order": 1033,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -32.0,
+    -1.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 0.52,
+   "_why_owner_playtest_0830b": "Owner playtest 2026-08-30B, item 15 (see order 1031's note for the full rationale). Third of the three new village berry stops, west of the farmhouse, >=4m clear of the boundary and of every existing node.",
+   "_why_village_visual_2026_09_11": "Same bounded village-berry scale correction as order 10; no content or interaction change."
+  },
+  {
+   "order": 1034,
+   "item": "revive",
+   "amount": 1,
+   "label": "A stashed revive",
+   "at": [
+    -30.0,
+    -24.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK, following the T3-REWARD pickup convention (orders 1028-1030) rather than inventing one. Both Gate F capstone playthroughs (CAP-1, CAP-2) found the opening's starting kit had regressed to near-nothing before both were fixed by restoring Grandpa's original gift; this is the deeper structural fix underneath: before `tam_tools_given`, the player holds no tool at all and item_db.gd's `harvest_yield()` halves every gathered amount, so a findable Revive that costs nothing to reach matters most in exactly the window CAP-1 found empty. Sited a few steps south-west of the farmhouse (village.json header, house at [-22,-16]), off the farm plots (farm.json, nearest bed [-24.4,-9.0]) and outside the house's own footprint -- the first thing a player who wanders off the doorway route finds, not something that requires already knowing the map. 42.4m from the village well, inside village_boundary.json's outline with 9.4m clearance from the fence line (tests/test_village_boundary.gd re-verifies this). Reuses harvest_node.gd's existing generic gather mechanism -- no new system, no new asset."
+  },
+  {
+   "order": 1035,
+   "item": "potion_small",
+   "amount": 1,
+   "label": "A stashed potion",
+   "at": [
+    34.0,
+    -28.0
+   ],
+   "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+   "model_scale": 0.85,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note for the full rationale). A second findable consumable, this one near the RoadGate (village_boundary.json entries.RoadGate, at [38.7,-19.9]) rather than the farmhouse, so a player who heads straight for the practice meadow and the gate without doubling back also crosses a find. 30.0m from the village well, inside the boundary with 7.2m clearance from the fence line, and clear (>=4m) of the trainer_camp prop cluster and the new wood node at order 1038."
+  },
+  {
+   "order": 1036,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -9.0,
+    -19.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 0.48,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Berries carry no `gathered_with` tool at all (items.json), so this is the one resource a fresh player gathers at full yield from the very first minute -- CLAUDE.md's light-satiety rule makes that the honest safety net, not a workaround of the knife gate this lane is told to leave alone. Sited on the walk from Grandpa's house toward the square (terrain_playground.json paths.routes 'Grandpa's House': [10,-10]->[-4,-13]->[-18,-15]).",
+   "_why_resited_2026_09_01": "LAND-MEGA-0901 fix: the original [-9,-9] was verified clear (>=4m) of the work_area prop cluster and every existing wood/fiber node, but nobody checked it against the village's PEOPLE -- it landed 3.11m from Bram [-5.89,-9] (village_npcs.json), inside Bram's own 3.8m Interactable radius, and 0.42m inside the inn building's own 7.08m circumscribed footprint (tools/_probe_civilian_placement.gd's BUILDINGS.inn). interaction_arbiter.gd has exactly one prompt slot and picks whichever offer is closer at equal priority (prompt_arbiter.gd::choose_index), so standing at Bram's own authored customer spot made the two prompts contest that slot -- reproduced 100% by tests/smoke_post_modal_control.gd's first Bram visit (bisected to this commit, df793bd5). Moved 10m further south along the same north-south line, still off every path (path_factor 0.00) and on flat ground (slope <5deg, tools/_probe_berries_1036_resite.gd): 10.47m from Bram (>=7.2m combined-radius-plus-margin), 5.42m clear of the inn footprint, and 5.10m clear of the nearest other harvest node (order 1026, fiber at [-10,-14]).",
+   "_why_grandpa_yard_visual_2026_09_11": "Production Grandpa-yard r1/r2 proved this exact persistent harvest node -- not vegetation scatter or the camera-relative decorative flower tier -- was the oversized saturated purple/black mass owning the lower-left foreground. Keep its established [-9,-19] interaction position, full early-game yield and prompt contract; reduce only its visual scale 1.2 -> 0.48. Bush_Common_Flowers' raw footprint is ~1.9m, so 0.48 keeps a readable ~0.9m berry bush while removing the 2.3m-wide focal competitor. This is one village node only; every other berry stop keeps the route-wide 1.2 convention."
+  },
+  {
+   "order": 1037,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    11.0,
+    -32.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Stone needs a pickaxe for full yield but still pays out at BAREHANDED_FRACTION (item_db.gd, 0.5x) with none held, same as wood and fiber -- an extra node before Tam widens that halved margin rather than opening a new resource. Sited on the square-to-practice-meadow route (terrain_playground.json paths.routes 'Practice Meadow': [10,-10]->[18,-24]->[30,-40]), clear (>=4m) of every existing wood/stone/fiber node in the same quadrant."
+  },
+  {
+   "order": 1038,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    33.0,
+    -23.0
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_early_game_slack": "EARLY-GAME-RESOURCE-SLACK (see order 1034's note). Same barehanded-yield reasoning as order 1037, for wood. Sited between the practice meadow and the RoadGate, clear (>=4m) of the trainer_camp prop cluster (props.json order 2) and the new potion pickup at order 1035."
+  },
+  {
+   "order": 1040,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -10.8,
+    104.1
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md ('no 250m of route without a gatherable', measured by tools/_probe_band1_content_spacing.py). Beyond the fiber node at arc 160 (order 1000) the next gatherable stood at arc 393, a 233m gap that already passed but left the immediate post-gate stretch (arc ~100-160) with only one node type -- this adds a stone option 10m off the road shoulder at arc 130, so the first 200m past the RoadGate offers wood, stone AND fiber rather than fiber alone."
+  },
+  {
+   "order": 1041,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    -326.9,
+    368.5
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_world_content": "WORLD-CONTENT. Closes the 566m gap the probe found between arc 393 and arc 960 (the longest gatherable-free stretch on the route): this stop, paired with the berries stop below, splits it into three legs of ~167/120/280m -- wait, see order 1043's own note for the final split. Sited 12m off the road at arc 560, on the road's approach to 'the Rise' place (docs/specs/BAND1_ROUTE_CONTRACT.md place 2), clear (>=28m) of the mudsnout cluster at arc 550 (spawns.json order 1015) and the pipwing cluster at arc 605 (order 1016)."
+  },
+  {
+   "order": 1042,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -390.6,
+    470.5
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT. A stone stop within sight of the road at arc 680, near the shepherd trainer (trainers.json order 1040, arc 650) so 'the Rise' reads as a place with something to do as well as someone to fight. Clear (>=30m) of the shepherd's own fight and every wild cluster in the window (bramblebun order 1018 at arc 715 is 44m away)."
+  },
+  {
+   "order": 1043,
+   "item": "berries",
+   "amount": 3,
+   "label": "Pick berries",
+   "at": [
+    -375.0,
+    579.6
+   ],
+   "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+   "model_scale": 1.2,
+   "_why_world_content": "WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 3 (the Pond pocket) names 'a fiber node and berries' explicitly; a fiber node already stands at the pocket's own edge (order 1005, arc 960) but berries did not exist anywhere in the pond stretch. Sited by a real ground scan of the pond's own shore (tools/_probe_world_content_0903b.gd -- the water is at level -17.0, and the first straight-line candidate off the road here came back underwater at -18.87): this point is dry (h=-14.65, 2.35m above the waterline), 20m off the road at arc 821, on the same shore as the fisher NPC and the camp prop below, clear (>=19m) of the mosshell/paddlenewt/brooktail wild clusters and the bridge_repair_site prop cluster already authored here -- the approved-lush reference is unthinned, this only adds a resource among content already there. With orders 1041/1042 above, the 566m gap between arc 393 and arc 960 is now four legs of 167m, 120m, 141m and 139m -- all under the 250m target."
+  },
+  {
+   "order": 1044,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    126.8,
+    762.8
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_world_content": "WORLD-CONTENT. Closes the 410m gap between arc 1207 (order 1002) and arc 1617 (order 1010): this wood stop at arc 1350 and the stone stop below at arc 1470 split it into 143/120/147m legs. Sited 14m off the road, matching docs/specs/BAND1_ROUTE_CONTRACT.md place 4's 'a stone node and a wood node every ~250m' for the Long Field. Clear (>=60m) of old_champion_bram's off-route fight at arc 1482."
+  },
+  {
+   "order": 1045,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    221.7,
+    841.5
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT. Paired with order 1044 above -- see its note. Sited 14m off the road at arc 1470, clear (>=69m) of old_champion_bram's fight and (>=48m) of the trailpup cluster at arc 1476 (spawns.json order 1058)."
+  },
+  {
+   "order": 1046,
+   "item": "wood",
+   "amount": 4,
+   "label": "Gather deadwood",
+   "at": [
+    107.5,
+    1236.8
+   ],
+   "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+   "model_scale": 0.22,
+   "_why_world_content": "WORLD-CONTENT. Closes the 358m gap between arc 2045 (order 1006) and the South Bridge (arc 2403), the Bridge approach's own stretch (docs/specs/BAND1_ROUTE_CONTRACT.md place 5). This wood stop at arc 2150 and the stone stop below split it into 105/150/103m legs. Sited 12m off the road, clear of the broken_cart local-request site (playground_world.gd BROKEN_CART_AT, 80,1240)."
+  },
+  {
+   "order": 1047,
+   "item": "stone",
+   "amount": 4,
+   "label": "Prise loose stones",
+   "at": [
+    -32.7,
+    1288.0
+   ],
+   "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+   "model_scale": 1.0,
+   "_why_world_content": "WORLD-CONTENT. Paired with order 1046 above -- see its note. Sited 12m off the road at arc 2300, clear (>=53m) of the south_bridge_grunt checkpoint (trainers.json order 1000, 14,1314) so the last stop before the gate reads as a stop, not a distraction from the fight."
+  }
+ ],
+ "_why_gate_b_three_beds_superseded_2026_08_31": "SUPERSEDED, kept because it is the record of why orders 1020-1027 exist and where they were sited. The arithmetic in the note below -- house 39 wood / 34 stone, THREE creature beds, camp, totalling 69 / 42 / 34 -- is the pre-FIRST-HOUR-FUN-REBUILD bill and the game no longer asks for any of it. data/config/progression.json home.required_pieces is now {camp: 1, creature_bed: 1}, and data/progression/objectives.json calls one bed the mandatory care lesson and tournament proof, with tests/test_quest_log.gd asserting the rung must not require one bed per entrant. The real bill, read through scripts/build/home_progress.gd::materials_threshold(), is 18 wood / 8 stone / 18 fiber, which the twenty village nodes cover in one pass at 28 / 9 / 32. The raise those orders made is therefore no longer load-bearing for the opening -- but it is NOT reverted here, because the surplus is what gives the ladder any margin at all, and because tools/gate_f/segments/S03.json measured the sweep against the OLD bill and reported a shortfall (GAME-F5) that only ever existed in the step script. The one number still worth watching is STONE: three authored nodes, 9 total, against a bill of 8. That is a one-node margin -- and until GAME-F1 was fixed one of those three stood outside the village fence, which put reachable stone at 6 and made the opening build rung unaffordable with no number anywhere being wrong. tests/helpers/gate_a_material_route.gd::TARGET_STOCK is still the old 69 / 42 / 34 and is stale in the same way.",
+ "_why_gate_b_three_beds": "OWNER DIRECTIVE 2026-08-23 §1: three creature beds must be affordable before tournament sign-up, and the gatherable budget is raised NEAR THE VILLAGE to pay for them rather than by sending the player further afield. Orders 1020-1027 are that raise: +12 wood and +20 fiber on the practice-path loop the first day already walks. The arithmetic it has to cover is house 39 wood / 34 stone, three creature beds 18 wood / 24 fiber (6 + 8 each, data/items/buildables.json), and the camp 12 wood / 8 stone / 10 fiber -- 69 / 42 / 34, which is tests/helpers/gate_a_material_route.gd's TARGET_STOCK. The old 57 / 42 / 18 bought exactly one bed against an entry gate that wants three rested entrants (tournament.gd::condition_ready, creature_bed.gd's single occupant)."
+}

@@ -44,7 +44,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	if not await launch(2, "world"):
+	if not await launch(2, "world", [], {1: ["--joiner"]}):
 		quit(await finish())
 		return
 

@@ -1628,8 +1628,8 @@ func _realm_map_state(realm_id: String) -> RefCounted:
 
 ## Every realm the player may currently VIEW on this tab. The map registry is
 ## the authority; this tab never assumes a two-realm world. Meadows remains
-## first and later configured realms stay alphabetic, so cycle order never
-## reshuffles as a player makes discoveries.
+## first and later realms follow biome_order, preserving chapter order as
+## portal unlocks add destinations.
 func _available_realms() -> Array[String]:
 	var out: Array[String] = []
 	for realm_id: String in _configured_map_realms():
@@ -1640,14 +1640,31 @@ func _available_realms() -> Array[String]:
 	return out
 
 
-## A configured realm becomes viewable when the player is there, has its
-## configured entry key, or already has personal discovery in its own map.
-## The last case preserves migrated/debug saves without leaking another
-## player's fog: `_realm_map_state()` only returns this local player's object.
+## Portal mode uses the same admitted destination predicate as real travel.
+## While that runtime is OFF, preserve the historical key/discovery reader.
+func _portal_runtime_ready() -> bool:
+	var game := state()
+	var session: Variant = game.get("session") if game != null else null
+	if not session is Node or not is_instance_valid(session) or not session.has_method("portal_runtime_ready"):
+		return false
+	var ready: Variant = session.call("portal_runtime_ready")
+	return ready is bool and ready == true
+
+
 func _realm_unlocked(realm_id: String) -> bool:
 	var game := state()
 	if game == null:
 		return false
+	if _portal_runtime_ready():
+		var order := preload("res://scripts/data/biome_order.gd")
+		if not order.ids(false).has(order.canonical_id(realm_id)):
+			return false
+		if _player_realm() == realm_id:
+			return true
+		if not game.has_method("can_enter_realm"):
+			return false
+		var permitted: Variant = game.call("can_enter_realm", realm_id)
+		return permitted is bool and permitted == true
 	if _player_realm() == realm_id:
 		return true
 	var key_flag := _realm_entry_key(realm_id)
@@ -1659,23 +1676,18 @@ func _realm_unlocked(realm_id: String) -> bool:
 		and float(map_state.call("discovered_fraction")) > 0.0
 
 
-## Cloudreach's historical helper remains public for callers/tests. Its three
-## old alternate flags remain valid until those old save paths age out.
+## Historical alternate Cloudreach flags remain valid only in legacy mode.
 func _cloudreach_unlocked() -> bool:
 	if _realm_unlocked("cloudreach"):
 		return true
-	var game := state()
-	if game == null:
+	if _portal_runtime_ready():
 		return false
-	var progression: RefCounted = game.get("progression")
+	var game := state()
+	var progression: RefCounted = game.get("progression") if game != null else null
 	if progression != null:
-		for flag in _realm_link_unlock_flags():
+		for flag: Variant in _realm_link_unlock_flags():
 			if bool(progression.call("has", str(flag))):
 				return true
-	var cloud_map := _realm_map_state("cloudreach")
-	if cloud_map != null and cloud_map.has_method("discovered_fraction") \
-			and float(cloud_map.call("discovered_fraction")) > 0.0:
-		return true
 	return false
 
 
@@ -1775,6 +1787,8 @@ func _realm_link_unlock_flags() -> Array:
 ## map may promise a way through before one exists); Cloudreach always shows
 ## the way back, since arriving there requires the way in to already exist.
 func _realm_link_visible() -> bool:
+	if _portal_runtime_ready():
+		return false
 	var realm_id := _display_realm()
 	if realm_id == "meadows":
 		return _cloudreach_unlocked()

@@ -1,0 +1,11 @@
+{
+  "root_immutable_head": "c7917ea506d44143c416cecc82d869edda1810c4",
+  "script": "tests/smoke_gate_b_continuous.gd",
+  "bytes": 1394919,
+  "sha256": "ee552a1fd9553539d6e33a3e14709756666e07067d38e236a763dfa9ca3cb7ef",
+  "native_exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 474.5,
+  "outer_watchdog_seconds": 1200,
+  "first_failure_retained": true
+}

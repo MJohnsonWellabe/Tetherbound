@@ -1,0 +1,966 @@
+diff --git a/data/config/village_npcs.json b/data/config/village_npcs.json
+index 1b465eafea..706bc0cb07 100644
+--- a/data/config/village_npcs.json
++++ b/data/config/village_npcs.json
+@@ -13,7 +13,7 @@
+         26,
+         0.6
+       ],
+-      "facing_deg": 180,
++      "facing_deg": 0,
+       "greeting": "village_mira",
+       "greeting_when": [
+         {
+@@ -244,7 +244,7 @@
+         44,
+         -2.39
+       ],
+-      "facing_deg": 180,
++      "facing_deg": 0,
+       "greeting": "village_bram",
+       "greeting_when": [
+         {
+diff --git a/tests/fixtures/band_split_baseline/props.json b/tests/fixtures/band_split_baseline/props.json
+index 733259e43f..7adea2d52a 100644
+--- a/tests/fixtures/band_split_baseline/props.json
++++ b/tests/fixtures/band_split_baseline/props.json
+@@ -66,8 +66,8 @@
+         {
+           "model": "Barrel_Apples",
+           "at": [
+-            -24.0,
+-            -25.0
++            0.0,
++            5.0
+           ],
+           "yaw_deg": 10.0,
+           "scale": 1.0,
+@@ -76,8 +76,8 @@
+         {
+           "model": "FarmCrate_Apple",
+           "at": [
+-            -24.9,
+-            -24.6
++            -0.9,
++            5.4
+           ],
+           "yaw_deg": -20.0,
+           "scale": 1.0,
+@@ -86,8 +86,8 @@
+         {
+           "model": "FarmCrate_Empty",
+           "at": [
+-            -23.3,
+-            -24.7
++            0.7,
++            5.3
+           ],
+           "yaw_deg": 50.0,
+           "scale": 1.0,
+@@ -96,8 +96,8 @@
+         {
+           "model": "Bucket_Wooden_1",
+           "at": [
+-            -24.3,
+-            -26.0
++            -0.3,
++            4.0
+           ],
+           "yaw_deg": 190.0,
+           "scale": 1.0,
+@@ -106,8 +106,8 @@
+         {
+           "model": "Crate_Wooden",
+           "at": [
+-            -23.2,
+-            -26.1
++            0.8,
++            3.9
+           ],
+           "yaw_deg": -30.0,
+           "scale": 1.0,
+diff --git a/tests/fixtures/band_split_baseline/vegetation.json b/tests/fixtures/band_split_baseline/vegetation.json
+index 9c0d1a2d9f..dc7208ee74 100644
+--- a/tests/fixtures/band_split_baseline/vegetation.json
++++ b/tests/fixtures/band_split_baseline/vegetation.json
+@@ -825,8 +825,8 @@
+       "_why": "the village square and its structures"
+     },
+     {
+-      "x": -22.0,
+-      "z": -16.0,
++      "x": 2.0,
++      "z": 14.0,
+       "radius": 16.0,
+       "_why": "Grandpa's house and its yard"
+     },
+@@ -837,8 +837,8 @@
+       "_why": "the practice meadow: the opening's bramblebun and the arena around it"
+     },
+     {
+-      "x": 13.0,
+-      "z": 9.0,
++      "x": 78.0,
++      "z": 44.0,
+       "radius": 14.0,
+       "_why": "R8.1: the practice trainer's ground north of the square (data/config/trainers.json). Same reason as the entries above -- a trainer battle's arena is 11m across and forms between the player and the creature their opponent just sent out, so without this the fight is watched through a tree. Most of it already falls inside the village square's own 22m clearing; this covers the northern edge that does not."
+     },
+@@ -881,8 +881,8 @@
+   "_comment_footprints": "R9.4-remainder-8: unlike clearings above, EVERY layer respects these, including grass/drygrass/flowers -- a footprint is the literal extent of a solid structure, not the wider 'keep the arena/yard readable' radius clearings exist for, so the grass/flowers exemption that avoids a bald ring around the yard has no reason to apply here. Found by real grass tufts standing on Grandpa's own interior floor and rug in a tools/capture_buildings.gd render. Radius is the building's half-diagonal plus a small margin, not a repeat of the wider yard clearing above.",
+   "footprints": [
+     {
+-      "x": -22.0,
+-      "z": -16.0,
++      "x": 2.0,
++      "z": 14.0,
+       "radius": 6.5,
+       "_why": "Grandpa's house, 9x7m inside plus walls -- grass was standing on the floor and the rug"
+     },
+@@ -920,8 +920,8 @@
+       "_why": "SC14: the South Bridge's deck and both stone landings -- the same treatment the mill's footbridge already gets, at this span's own half-length"
+     },
+     {
+-      "x": -2.5,
+-      "z": -6.0,
++      "x": 44.0,
++      "z": 2.0,
+       "radius": 7.8,
+       "_why": "R7.9 plus OWNER-0912 visual acceptance repair: the inn's 7.8m canopy-aware exclusion follows its corrected south-side frontage at [-1.5,-2], so grass and scatter cannot occupy the common room or public porch."
+     }
+diff --git a/tests/helpers/opening_geometry_navigator.gd b/tests/helpers/opening_geometry_navigator.gd
+index 66fea2bec6..643183cd81 100644
+--- a/tests/helpers/opening_geometry_navigator.gd
++++ b/tests/helpers/opening_geometry_navigator.gd
+@@ -1253,6 +1253,12 @@ func _production_heading(direction: Vector3) -> Vector3:
+ 				or _production_delta <= 0.0 or not is_finite(reach) or reach > MAX_EDGE:
+ 			_stop_geometry("invalid bounded provisional production step")
+ 			return Vector3.ZERO
++		# A position walk ends at the current route waypoint. Geometry beyond it
++		# cannot justify steering away from this leg (the shop counter is beyond
++		# the axial entry point). Raw directional requests retain their horizon.
++		# This caps an advisory cast only; actual pre/post validation is unchanged.
++		if not _raw:
++			reach = minf(reach, direction.length())
+ 		_production_prediction_motion = wanted * reach
+ 		var predicted: Dictionary = _motion(_body.global_transform, _production_prediction_motion)
+ 		_production_hint_source = &"prospective_step"
+diff --git a/tests/test_band_content.gd b/tests/test_band_content.gd
+index a129189767..2719a8d9a0 100644
+--- a/tests/test_band_content.gd
++++ b/tests/test_band_content.gd
+@@ -64,6 +64,9 @@ extends "res://tests/test_case.gd"
+ ##     different seeds, so a swap moves both clusters and rerolls every creature
+ ##     in them.
+ 
++## F17/RD-29 mirror catch-up: farmhouse-yard translation (+24,+30) is
++## already authored in the live band. The full entry/order/value comparison
++## stays strict, including every unchanged field and historical global.
+ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+ 
+ const BASELINE_DIR := "res://tests/fixtures/band_split_baseline"
+diff --git a/tests/test_band_vegetation.gd b/tests/test_band_vegetation.gd
+index ba01522d33..834ab4a4c5 100644
+--- a/tests/test_band_vegetation.gd
++++ b/tests/test_band_vegetation.gd
+@@ -27,6 +27,8 @@ extends "res://tests/test_case.gd"
+ ##     ranger station clearing, both radius-different so the swap is
+ ##     detectable) fails with "clearings[5].radius is 10.0, expected 15.0".
+ 
++## F17/RD-29 mirror catch-up: retain the exact house, tournament and inn
++## relocation pins from the live band without relaxing any identity check.
+ const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+ const SCATTER_RULES := preload("res://scripts/world/scatter_rules.gd")
+ 
+diff --git a/tests/test_farming.gd b/tests/test_farming.gd
+index 90aabc5bb9..4dc4378b33 100644
+--- a/tests/test_farming.gd
++++ b/tests/test_farming.gd
+@@ -228,29 +228,49 @@ func test_tool_slot_ignores_an_empty_tool_id() -> void:
+ func test_farm_json_places_beds_where_r7_6_allows() -> void:
+ 	var config := _json(FARM_CONFIG)
+ 	var plots: Array = config.get("plots", [])
+-	assert_true(plots.size() > 0, "farm.json places no beds at all")
++	assert_eq(plots.size(), 6, "F17 retains every indexed production bed")
+ 	assert_true(int(config.get("grow_days", 0)) >= 1, "grow_days must be at least a day")
+ 	assert_true(int(config.get("yield", 0)) >= 1, "a bed that yields nothing is not a farm")
+ 	assert_true(db.has(str(config.get("seed_item", ""))), "farm.json names an unknown seed item")
+ 	assert_true(db.has(str(config.get("crop_item", ""))), "farm.json names an unknown crop item")
+-
+-	# R7.6's stated constraints: beside Grandpa's house at [-22,-16], clear of
+-	# the square flat at [10,-10] r18 and of the fence run at [3,-18]. Also
+-	# inside the house pad's own full-flatten radius (r14), or a bed stands on
+-	# the skirt and tilts.
+-	var house := Vector2(-22.0, -16.0)
+-	var square := Vector2(10.0, -10.0)
+-	var fence := Vector2(3.0, -18.0)
++	var village := _json("res://data/config/village.json")
++	var plan: Dictionary = village.get("road_plan", {})
++	var home: Array = plan.get("home_centre", [])
++	assert_eq(home, [2.0, 14.0], "RD-29 pins the current farmhouse anchor")
++	if home.size() != 2:
++		return
++	var house := Vector2(float(home[0]), float(home[1]))
++	var terrain := _json("res://data/config/terrain_playground.json")
++	var pad: Dictionary = {}
++	for raw: Dictionary in terrain.get("flats", []):
++		var centre: Array = raw.get("centre", [])
++		if centre.size() == 2 and Vector2(float(centre[0]), float(centre[1])) == house:
++			pad = raw
++	assert_false(pad.is_empty(), "the current farmhouse has its actual full-flatten pad")
++	assert_true(float(pad.get("radius", 0.0)) >= 14.0, "the original full-flatten allowance remains")
++	assert_eq(float(pad.get("height", INF)), 0.9, "the farm joins the road at level ground")
++	var topology: Dictionary = terrain.get("paths", {}).get("village_topology", {})
++	var green: Dictionary = topology.get("green", {})
++	var green_at: Array = green.get("centre", [])
++	assert_eq(green_at.size(), 2, "the current public green is declared")
++	if green_at.size() != 2:
++		return
++	var square := Vector2(float(green_at[0]), float(green_at[1]))
+ 	for entry: Variant in plots:
+ 		var at: Array = (entry as Dictionary).get("at", [])
+ 		assert_eq(at.size(), 2, "a farm plot has no [x, z]")
++		if at.size() != 2:
++			continue
+ 		var here := Vector2(float(at[0]), float(at[1]))
+-		assert_true(here.distance_to(house) <= 14.0,
+-			"bed at %s is outside the house pad's flatten radius" % str(here))
+-		assert_true(here.distance_to(square) > 18.0,
+-			"bed at %s intrudes on the square flat" % str(here))
+-		assert_true(here.distance_to(fence) > 4.0,
+-			"bed at %s sits on the fence run" % str(here))
++		assert_true(here.distance_to(house) + Vector2(0.79, 0.79).length() <= float(pad.get("radius", 0.0)),
++			"the complete bed and its timber edging stay on the full-flatten pad")
++		assert_true(here.distance_to(square) > float(green.get("radius_m", 0.0)),
++			"bed at %s intrudes on the current public green" % here)
++		for structure: Dictionary in village.get("structures", []):
++			if str(structure.get("prefab", "")) == "fence_run":
++				var rail: Array = structure.get("at", [])
++				assert_true(here.distance_to(Vector2(float(rail[0]), float(rail[1]))) > 4.0,
++					"bed at %s sits on an authored yard fence run" % here)
+ 
+ 
+ ## Two beds close enough to share the arbiter's attention is fine (nearest
+diff --git a/tests/test_gate_f_village_passage.gd b/tests/test_gate_f_village_passage.gd
+index 7112c43df5..652e82acd6 100644
+--- a/tests/test_gate_f_village_passage.gd
++++ b/tests/test_gate_f_village_passage.gd
+@@ -34,9 +34,14 @@ func test_native_r14_inside_to_galecrest_and_reverse_use_open_passage() -> void:
+ 
+ func test_closed_gate_refuses_crossing_but_allows_outside_detour() -> void:
+ 	assert_false(ROUTE.plan(config(), Vector2(45.99, -42.67), Vector2(34.3026, -119.1532), gates(false)).ok)
+-	var around := check_route(Vector2(-60, -10), Vector2(70, -10), false)
++	# F17 extends the village to the Hall. x=70 is now inside its fence;
++	# retain the outside-to-outside chord case with an actual outside endpoint.
++	var outside := Vector2(150, -10)
++	assert_false(BOUNDARY.contains(BOUNDARY.outline(config()), Vector2(-60, -10)))
++	assert_false(BOUNDARY.contains(BOUNDARY.outline(config()), outside))
++	var around := check_route(Vector2(-60, -10), outside, false)
+ 	assert_true(around.waypoints.size() > 1, "Both endpoints outside does not make a fence-crossing chord valid")
+-	check_route(Vector2(-60, -10), Vector2(70, -10), true)
++	check_route(Vector2(-60, -10), outside, true)
+ 
+ func test_clear_same_side_walk_needs_no_detour_and_unrelated_open_gate_cannot_cut_fence() -> void:
+ 	var result := check_route(Vector2(0, 0), Vector2(5, 0), false)
+diff --git a/tests/test_grandpa_yard_visual_identity.gd b/tests/test_grandpa_yard_visual_identity.gd
+index 7b0d96e76a..03607123e6 100644
+--- a/tests/test_grandpa_yard_visual_identity.gd
++++ b/tests/test_grandpa_yard_visual_identity.gd
+@@ -3,7 +3,8 @@ extends "res://tests/test_case.gd"
+ const PROPS_PATH := "res://data/config/bands/band1_lower_meadows/props.json"
+ const VEGETATION_PATH := "res://data/config/bands/band1_lower_meadows/vegetation.json"
+ const CAPTURE_PATH := "res://tools/capture_grandpa_yard_identity.gd"
+-const DOOR := Vector2(-15.7, -16.0)
++## RD-29/F17 translates the farmhouse and its work yard by (+24,+30).
++const DOOR := Vector2(8.3, 14.0)
+ 
+ 
+ func _config(path: String) -> Dictionary:
+@@ -35,7 +36,7 @@ func test_grandpa_work_yard_has_one_coherent_domestic_cluster() -> void:
+ 		if at.size() != 2:
+ 			continue
+ 		var point := Vector2(float(at[0]), float(at[1]))
+-		assert_true(point.y <= -20.4,
++		assert_true(point.y <= 9.6,
+ 			"Grandpa-yard dressing drifted north into the house or door approach")
+ 		assert_true(point.distance_to(DOOR) >= 4.0,
+ 			"Grandpa-yard dressing blocks the opening/starter doorway lane")
+@@ -65,12 +66,12 @@ func test_grandpa_domestic_apron_is_bounded_off_progression_space() -> void:
+ 	var radius := float(footprint.get("radius", 0.0))
+ 	assert_between(radius, 2.8, 3.4,
+ 		"Grandpa's domestic apron is either too small to work or a broad bald clearing")
+-	assert_true(centre.distance_to(Vector2(-16.7, -21.2)) <= 0.1,
++	assert_true(centre.distance_to(Vector2(7.3, 8.8)) <= 0.1,
+ 		"Grandpa's apron drifted off the south-east work yard")
+ 	assert_true(centre.distance_to(DOOR) - radius >= 1.8,
+ 		"Grandpa's apron reaches the east-door opening/starter lane")
+-	for plot_z in [-9.0, -6.6]:
+-		for plot_x in [-24.4, -22.0, -19.6]:
++	for plot_z in [21.0, 23.4]:
++		for plot_x in [-0.4, 2.0, 4.4]:
+ 			assert_true(centre.distance_to(Vector2(plot_x, plot_z)) > radius,
+ 				"Grandpa's apron reaches an interactive farm plot")
+ 
+diff --git a/tests/test_inn_interior_visual_identity.gd b/tests/test_inn_interior_visual_identity.gd
+index 3733da6ea9..cc9b033b64 100644
+--- a/tests/test_inn_interior_visual_identity.gd
++++ b/tests/test_inn_interior_visual_identity.gd
+@@ -172,9 +172,8 @@ func test_bram_faces_the_customer_lane_instead_of_the_stock_wall() -> void:
+ 		return
+ 	# Pin the production-evidence correction directly. The installed male rig's
+ 	# visible face is local +Z, so Bram's world facing equals the Inn's yaw: the
+-	# Inn is placed at 90 degrees since OPTION-B (owner 2026-09-29; it was 180
+-	# on the old north-facing street), which faces him through the bar toward
+-	# arriving patrons.
++	# RD-29 rotates the inn to face the new road. Preserve the local-facing
++	# contract through that rotation, so he still faces arriving patrons.
+ 	assert_almost_eq(float(bram.get("facing_deg", 0.0)), float(_inn_yaw()), 0.01,
+ 		"Bram no longer uses the production-corrected patron-facing yaw")
+ 
+diff --git a/tests/test_meadows_south_trail_pulls_0912.gd b/tests/test_meadows_south_trail_pulls_0912.gd
+index 2642ed327b..bc0284ec9c 100644
+--- a/tests/test_meadows_south_trail_pulls_0912.gd
++++ b/tests/test_meadows_south_trail_pulls_0912.gd
+@@ -257,19 +257,25 @@ func test_village_lookback_is_a_separate_restrained_off_path_pull() -> void:
+ 
+ 
+ func test_nessa_makes_the_overlook_a_persisted_person_and_gift_pull() -> void:
++	# RD-29 gives Nessa the road's research-house role; the unchanged overlook
++	# supply cluster is still tested separately. Keep her actual one-time gift.
+ 	var nessa := _villager("Nessa")
+-	assert_false(nessa.is_empty(), "the look-back has no person")
++	assert_false(nessa.is_empty(), "the installed gift-giver remains in the cast")
+ 	var at := _point(nessa.get("position", []))
+-	assert_true(at.distance_to(VILLAGE_LOOKBACK_SITE) <= 4.0,
+-		"Nessa is no longer standing with the overlook supply load")
++	var village := _read("res://data/config/village.json")
++	var research: Dictionary = {}
++	for structure: Dictionary in village.get("structures", []):
++		if str(structure.get("id", "")) == "research_house":
++			research = structure
++	assert_false(research.is_empty(), "the road's research house is authored")
++	assert_true(at.distance_to(_point(research.get("at", [])) + Vector2(0.0, 5.0)) <= 4.0,
++		"Nessa remains at the current research-house public approach")
+ 	var branches := nessa.get("greeting_when", []) as Array
+-	assert_eq(branches.size(), 1, "the overlook gift needs one bounded branch")
++	assert_eq(branches.size(), 1, "the gift needs one bounded branch")
+ 	var branch := branches[0] as Dictionary
+ 	assert_eq(str(branch.get("unless_flag", "")), "nessa_overlook_gift_taken")
+ 	assert_eq(str(branch.get("conversation", "")), "village_nessa_overlook_gift")
+ 	var effects := _effects("village_nessa_overlook_gift")
+-	assert_eq(effects.count("give:berries:3"), 1, "the person does not pay the detour exactly once")
+-	assert_eq(effects.count("flag:nessa_overlook_gift_taken"), 1,
+-		"the gift cannot persist as spent")
+-	assert_eq(str(nessa.get("greeting", "")), "village_nessa_overlook",
+-		"Nessa should remain a person after the gift is taken")
++	assert_eq(effects.count("give:berries:3"), 1, "the person pays exactly once")
++	assert_eq(effects.count("flag:nessa_overlook_gift_taken"), 1, "the gift persists as spent")
++	assert_eq(str(nessa.get("greeting", "")), "village_nessa_overlook", "Nessa remains a person after the gift")
+diff --git a/tests/test_vegetation_human_prompt_height.gd b/tests/test_vegetation_human_prompt_height.gd
+index b41414d27f..36f1db96b7 100644
+--- a/tests/test_vegetation_human_prompt_height.gd
++++ b/tests/test_vegetation_human_prompt_height.gd
+@@ -1,22 +1,16 @@
+ extends "res://tests/test_case.gd"
+ 
+ const VEG := preload("res://scripts/world/vegetation.gd")
+-const BAKE := preload("res://scripts/world/scatter_bake.gd")
+-const TARGET := Vector3(45.44735, -0.188587, -62.50097)
++const TARGET := Vector3(45.44734573364258, -0.18858742713928223, -62.50096893310547)
+ 
+ func _exact_placement() -> Dictionary:
+-	var layers := {}
+-	BAKE._read_region(FileAccess.open("res://data/scatter/playground/region_0_-1.bin", FileAccess.READ), layers, {})
+-	for layer: String in layers:
+-		for record: Dictionary in layers[layer]:
+-			if record.placement.position.distance_to(TARGET) < 0.01:
+-				var placement: Dictionary = record.placement.duplicate(true)
+-				placement.harvest_layer = layer
+-				placement.harvest_index = int(record.order)
+-				placement.harvest_item = "wood"
+-				placement.harvest_amount = 2
+-				return placement
+-	return {}
++	# Preserve the exact failed producer input from bf0f38b203^'s bake, rather
++	# than requiring a retired tree to reappear in F17's scoped village rebake.
++	# The production spawner and both old/new contact distances still gate.
++	return {"model": "res://assets/environment/stylized_nature/CommonTree_2.gltf",
++		"position": TARGET, "yaw": 4.354415416717529, "scale": 1.598110499382019,
++		"harvest_layer": "trees", "harvest_index": 320,
++		"harvest_item": "wood", "harvest_amount": 2}
+ 
+ func test_exact_failed_baked_tree_spawns_reachable_prompt_without_radius_change() -> void:
+ 	var placement := _exact_placement()
+diff --git a/tests/test_village_street_0912.gd b/tests/test_village_street_0912.gd
+index 172afc379c..80a7e099fc 100644
+--- a/tests/test_village_street_0912.gd
++++ b/tests/test_village_street_0912.gd
+@@ -1,10 +1,9 @@
+ extends "res://tests/test_case.gd"
+ 
+-## OWNER-0912 / C3 village replan regression coverage. The opening settlement
+-## is a five-person street, not a ring of idle bodies around the well. The
+-## south-leg buildings require their own baked-terrain slice. This file pins
+-## the complete source authoring; the integration lane still owes that bake and
+-## production visual acceptance.
++## RD-29/F17 supersedes the 0912 two-leg street. Keep the named opening
++## functions, installed cast, door/road alignment, level collision footprints,
++## working-yard clearance and scatter exclusions on the accepted eastward road.
++## Existing test entrypoints remain; actual traversal/visual proof stays OPEN.
+ 
+ const BOUNDARY := preload("res://scripts/world/village_boundary.gd")
+ const VILLAGE_PATH := "res://data/config/village.json"
+@@ -16,6 +15,18 @@ const RELAY_DIALOGUE_PATH := "res://data/dialogue/relay.json"
+ const SHOP_INTERIOR_PATH := "res://scripts/world/shop_interior.gd"
+ 
+ const OPENING_FIVE := ["Mira", "Oskar", "Tam", "Bram", "Halda"]
++const VILLAGE_FUNCTIONS := ["Mira", "Oskar", "Tam", "Bram", "Halda", "Maren", "Nessa"]
++const PREFABS_PATH := "res://data/config/building_prefabs.json"
++const ROAD_HOUSES := {
++	"mira_shop": {"prefab": "cottage_a", "at": Vector2(26.0, 2.0), "yaw": 0.0, "threshold": Vector2(27.0, 7.9), "radius": 6.0},
++	"tam_workshop": {"prefab": "workshop", "at": Vector2(26.0, 26.0), "yaw": 180.0, "threshold": Vector2(26.0, 19.1), "radius": 7.5},
++	"bram_inn": {"prefab": "inn", "at": Vector2(44.0, 2.0), "yaw": 0.0, "threshold": Vector2(44.0, 10.6), "radius": 7.8},
++	"halda_house": {"prefab": "cottage_b", "at": Vector2(44.0, 26.0), "yaw": 180.0, "threshold": Vector2(43.0, 21.1), "radius": 5.3},
++	"research_house": {"prefab": "cottage_a", "at": Vector2(62.0, 2.0), "yaw": 0.0, "threshold": Vector2(63.0, 7.9), "radius": 5.37},
++	"oskar_house": {"prefab": "cottage_b", "at": Vector2(62.0, 26.0), "yaw": 180.0, "threshold": Vector2(61.0, 21.1), "radius": 4.61},
++	"alder_house": {"prefab": "cottage_b", "at": Vector2(80.0, 2.0), "yaw": 0.0, "threshold": Vector2(81.0, 6.9), "radius": 4.61},
++	"orchard_house": {"prefab": "cottage_a", "at": Vector2(80.0, 26.0), "yaw": 180.0, "threshold": Vector2(79.0, 20.1), "radius": 5.37},
++}
+ const ROUTE_ROLES := {
+ 	"Quarry Foreman": Vector2(392.0, 1792.0),
+ 	"Wilhelm": Vector2(341.0, 932.0),
+@@ -59,6 +70,13 @@ func _structure(prefab: String) -> Dictionary:
+ 	return {}
+ 
+ 
++func _structure_id(id: String) -> Dictionary:
++	for raw: Dictionary in _json(VILLAGE_PATH).get("structures", []):
++		if str(raw.get("id", "")) == id:
++			return raw
++	return {}
++
++
+ func _at(spec: Dictionary, key: String = "at") -> Vector2:
+ 	var raw: Array = spec.get(key, []) as Array
+ 	return Vector2(float(raw[0]), float(raw[1])) if raw.size() >= 2 else Vector2.INF
+@@ -98,16 +116,18 @@ func test_opening_village_keeps_exactly_five_functional_people_inside() -> void:
+ 			inside.append(str(spec.get("name", "")))
+ 	inside.sort()
+ 	var expected: Array[String] = []
+-	for name: String in OPENING_FIVE:
++	for name: String in VILLAGE_FUNCTIONS:
+ 		expected.append(name)
++		assert_false(_person(name).is_empty(), "%s retains a real village function" % name)
+ 	expected.sort()
+-	assert_eq(inside, expected,
+-		"the village boundary contains exactly its five opening functions, not an idle crowd")
++	assert_eq(inside, expected, "RD-29 retains the five opening functions and the named research-house residents")
++	for name: String in OPENING_FIVE:
++		assert_true(inside.has(name), "the original opening function %s remains inside the locked perimeter" % name)
+ 
+ 
+ func test_every_resited_villager_is_retained_at_their_authored_route_role() -> void:
+ 	assert_eq(_people().size(), 20,
+-		"the replan retains the installed cast and the 0912 overlook reuses Nessa outside the village")
++		"the replan retains the installed cast; RD-29 gives Nessa a village research-house role")
+ 	for name: String in ROUTE_ROLES:
+ 		var spec := _person(name)
+ 		assert_false(spec.is_empty(), "%s remains in the cast" % name)
+@@ -144,119 +164,152 @@ func test_selas_rescue_testimony_is_short_and_keeps_the_story_payload() -> void:
+ 
+ 
+ func test_both_street_legs_place_buildings_and_thresholds_at_their_authored_roles() -> void:
+-	var inn := _structure("inn")
+-	var cottage := _structure("cottage_b")
+-	var workshop := _structure("workshop")
+-	var shop := _structure("cottage_a")
+-	assert_eq(inn.get("at", []), [-2.5, -6.0], "OPTION-B: the inn stands west of the green, off the main street")
+-	assert_eq(float(inn.get("yaw_deg", 0.0)), 90.0, "the inn's public door faces east onto the green")
+-	assert_eq(cottage.get("at", []), [19.5, -6.0], "the stone cottage stands on the green's east side")
+-	assert_eq(float(cottage.get("yaw_deg", 0.0)), -90.0, "the cottage door faces west toward the street")
+-	assert_eq(workshop.get("at", []), [2.0, 12.0], "Tam's workshop stands west of the south leg")
+-	assert_eq(float(workshop.get("yaw_deg", 0.0)), 90.0, "the workshop bay faces east onto the street")
+-	assert_eq(shop.get("at", []), [18.0, 4.0], "Mira's shop stands east of the south leg")
+-	assert_eq(float(shop.get("yaw_deg", 0.0)), -90.0, "Mira's real door faces west onto the street")
+-	var doorstep_positions: Array[Vector2] = []
+-	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+-		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "doorstep":
+-			var at: Array = (raw as Dictionary).get("at", []) as Array
+-			doorstep_positions.append(Vector2(float(at[0]), float(at[1])))
+-	assert_true(Vector2(3.6, -6.0) in doorstep_positions, "the inn threshold moved with its green-facing door")
+-	assert_true(Vector2(16.37, -5.0) in doorstep_positions, "the cottage threshold moved with its door")
+-	assert_true(Vector2(13.87, 5.0) in doorstep_positions, "Mira's threshold moved with the shop door")
++	var count := 0
++	for raw: Dictionary in _json(VILLAGE_PATH).get("structures", []):
++		if bool(raw.get("road_house", false)):
++			count += 1
++	assert_eq(count, 8, "RD-29 retains its eight independently authored road houses")
++	for id: String in ROAD_HOUSES:
++		var expected: Dictionary = ROAD_HOUSES[id]
++		var house := _structure_id(id)
++		assert_false(house.is_empty(), "%s is present" % id)
++		assert_eq(str(house.get("prefab", "")), str(expected.prefab), "%s keeps its installed family and role" % id)
++		assert_eq(_at(house), expected.at, "%s occupies its RD-29 road parcel" % id)
++		assert_eq(float(house.get("yaw_deg", INF)), float(expected.yaw), "%s faces the public road" % id)
++		var yaw := deg_to_rad(float(house.get("yaw_deg", 0.0)))
++		var toward_road := (Vector2(_at(house).x, 14.0) - _at(house)).normalized()
++		assert_true(Vector2(sin(yaw), cos(yaw)).dot(toward_road) > 0.99, "the native front points toward the road")
++		var threshold := _structure_id(id + "_threshold")
++		assert_eq(str(threshold.get("prefab", "")), "doorstep", "each house has a physical threshold")
++		assert_eq(_at(threshold), expected.threshold, "the threshold follows the house's actual front")
++		assert_eq(float(threshold.get("yaw_deg", INF)), float(expected.yaw), "the threshold rotation follows its doorway")
+ 
+ 
+ func test_south_street_has_one_continuous_hidden_road_to_trailgate() -> void:
+ 	var paths := _json(TERRAIN_PATH).get("paths", {}) as Dictionary
+ 	var street: Dictionary = {}
+-	for raw: Variant in (paths.get("approaches", []) as Array):
+-		if raw is Dictionary and str((raw as Dictionary).get("id", "")) == "village_south_street":
+-			street = raw as Dictionary
+-	assert_false(street.is_empty(), "the well-to-TrailGate street is authored as painted ground")
+-	assert_eq(street.get("points", []), [[10.5, 2.0], [11.5, 2.0], [14.0, 20.0]],
+-		"the south street leaves the main street at z=2 and meets the existing TrailGate waypoint")
++	var main: Dictionary = {}
++	for raw: Dictionary in paths.get("approaches", []):
++		if str(raw.get("id", "")) == "village_south_street":
++			street = raw
++		if str(raw.get("id", "")) == "village_main_street":
++			main = raw
++	assert_false(street.is_empty(), "the road to TrailGate remains painted")
++	assert_eq(street.get("points", []), [[13.79, 14.0], [13.79, 22.4]], "the exit leg joins the current road and actual gate centre")
++	assert_eq(main.get("points", []), [[8.3, 14.0], [91.0, 14.0]], "one straight road leads from the farm door to the Hall")
+ 	var grandpa_route: Dictionary = {}
+ 	var inn_route: Dictionary = {}
+-	for raw: Variant in (paths.get("routes", []) as Array):
+-		if raw is Dictionary and str((raw as Dictionary).get("label", "")) == "Grandpa's House":
+-			grandpa_route = raw as Dictionary
+-		if raw is Dictionary and str((raw as Dictionary).get("label", "")) == "The Inn":
+-			inn_route = raw as Dictionary
+-	assert_false(grandpa_route.is_empty(), "the west street to Grandpa remains authored")
+-	assert_eq(grandpa_route.get("points", []), [[10.5, -16.0], [-16.5, -16.0]],
+-		"the cross lane runs straight along z=-16 from the main street to Grandpa's real door")
+-	# OPTION-B: the inn's path leaves the main street at the green's north edge
+-	# and ends on the doorstep that faces the green.
+-	assert_eq(inn_route.get("points", []), [[10.5, -10.0], [6.6, -7.0], [3.6, -6.0]],
+-		"the inn has a short path from the main street to its green-facing doorstep")
+-	assert_true(Vector2(10.5, -10.0).distance_to(Vector2(10.5, -6.0)) >= 4.0,
+-		"the inn path leaves the street at the green's edge, clear of the well canopy and bucket")
++	for raw: Dictionary in paths.get("routes", []):
++		if str(raw.get("label", "")) == "Grandpa's House":
++			grandpa_route = raw
++		if str(raw.get("label", "")) == "The Inn":
++			inn_route = raw
++	assert_false(grandpa_route.is_empty(), "Grandpa's actual door remains connected")
++	assert_eq(grandpa_route.get("points", []), [[8.3, 14.0], [13.79, 14.0]], "the house route starts at its translated production marker")
++	assert_eq(inn_route.get("points", []), [[46.0, 14.0], [46.0, 10.6], [44.0, 10.6]], "the inn approach reaches its actual threshold")
++	assert_true(Vector2(46.0, 14.0).distance_to(Vector2(34.0, 5.0)) >= 4.0, "the inn turn remains clear of the well canopy and bucket")
+ 
+ 
+ func test_south_street_buildings_share_level_ground_and_matching_aprons() -> void:
+-	var pad := _terrain_flat(Vector2(10.0, 8.0))
+-	assert_false(pad.is_empty(), "the shop/workshop street has a dedicated level pad")
+-	assert_true(float(pad.get("radius", 0.0)) >= 15.0, "the shared pad covers both rotated footprints")
+-	assert_eq(float(pad.get("height", INF)), 0.9, "the new pad shares the square's explicit height")
+-	var inn_pad := _terrain_flat(Vector2(-2.5, -6.0))
+-	assert_true(float(inn_pad.get("radius", 0.0)) >= 8.5,
+-		"the corrected long inn footprint has dedicated level ground")
+-	assert_eq(float(inn_pad.get("height", INF)), 0.9,
+-		"the inn pad cannot introduce a step into the village square")
+-	for expected: Dictionary in [
+-		{"centre": Vector2(2.0, 12.0), "yaw": 90.0},
+-		{"centre": Vector2(18.0, 4.0), "yaw": -90.0},
+-		{"centre": Vector2(19.5, -6.0), "yaw": -90.0},
+-		{"centre": Vector2(-2.5, -6.0), "yaw": 90.0},
+-	]:
+-		var apron := _apron(expected.centre)
+-		assert_false(apron.is_empty(), "the moved building at %s has a worked-soil apron" % expected.centre)
+-		assert_eq(float(apron.get("yaw_deg", INF)), float(expected.yaw),
+-			"the apron at %s mirrors the production building rotation" % expected.centre)
++	for centre: Vector2 in [Vector2(24.0, 14.0), Vector2(48.0, 14.0), Vector2(72.0, 14.0), Vector2(96.0, 14.0)]:
++		var pad := _terrain_flat(centre)
++		assert_false(pad.is_empty(), "the current road has its actual level pad")
++		assert_true(float(pad.get("radius", 0.0)) >= 20.0, "the level pads cover the road's two-sided buildings")
++		assert_eq(float(pad.get("height", INF)), 0.9, "buildings join the road without a terrain step")
++	var flats: Array = _json(TERRAIN_PATH).get("flats", [])
++	var prefabs: Dictionary = _json(PREFABS_PATH).get("prefabs", {})
++	for id: String in ROAD_HOUSES:
++		var expected: Dictionary = ROAD_HOUSES[id]
++		var house := _structure_id(id)
++		var apron := _apron(expected.at)
++		assert_false(apron.is_empty(), "%s has a worked-soil apron" % id)
++		assert_eq(float(apron.get("yaw_deg", INF)), float(expected.yaw), "the apron rotates with the building")
++		var rotation := Basis(Vector3.UP, deg_to_rad(float(expected.yaw)))
++		var checked := 0
++		var recipe: Dictionary = prefabs.get(str(expected.prefab), {})
++		for collider: Dictionary in recipe.get("colliders", []):
++			var at: Array = collider.get("at", [])
++			var size: Array = collider.get("size", [])
++			if at.size() != 3 or size.size() != 3 or float(at[1]) - float(size[1]) * 0.5 > 0.1:
++				continue
++			checked += 1
++			for x_sign: float in [-1.0, 1.0]:
++				for z_sign: float in [-1.0, 1.0]:
++					var local := Vector3(float(at[0]) + x_sign * float(size[0]) * 0.5, 0.0, float(at[2]) + z_sign * float(size[2]) * 0.5)
++					var offset := rotation * local
++					var corner: Vector2 = expected.at + Vector2(offset.x, offset.z)
++					var level := false
++					for flat: Dictionary in flats:
++						if float(flat.get("height", INF)) == 0.9 and corner.distance_to(_at(flat, "centre")) <= float(flat.get("radius", 0.0)):
++							level = true
++					assert_true(level, "%s ground collider corner %s stands on full-flatten ground" % [id, corner])
++		assert_true(checked >= 4, "the check covers each actual ground-level wall collider")
+ 
+ 
+ func test_fences_define_working_yards_without_cutting_the_street() -> void:
+ 	var fence_poses: Dictionary = {}
+-	for raw: Variant in (_json(VILLAGE_PATH).get("structures", []) as Array):
+-		if raw is Dictionary and str((raw as Dictionary).get("prefab", "")) == "fence_run":
+-			fence_poses[_at(raw as Dictionary)] = float((raw as Dictionary).get("yaw_deg", INF))
+-	assert_eq(fence_poses.get(Vector2(28.0, 4.0), INF), 90.0,
+-		"Oskar's pen has a rear rail parallel to the shop wall")
+-	assert_eq(fence_poses.get(Vector2(-10.0, 15.0), INF), 90.0,
+-		"Tam's rear yard has a west rail")
+-	assert_eq(fence_poses.get(Vector2(-7.0, 18.0), INF), 0.0,
+-		"Tam's rear rails meet as a readable L")
+-	assert_false(fence_poses.has(Vector2(-11.0, -9.5)),
+-		"the orphaned yard rail no longer cuts across the inn/Grandpa street composition")
+-	for at: Vector2 in [Vector2(28.0, 4.0), Vector2(-10.0, 15.0), Vector2(-7.0, 18.0)]:
+-		assert_true(at.distance_to(Vector2(12.0, at.y)) >= 11.0,
+-			"yard rail at %s remains outside the south-street walking lane" % at)
++	for raw: Dictionary in _json(VILLAGE_PATH).get("structures", []):
++		if str(raw.get("prefab", "")) == "fence_run":
++			fence_poses[_at(raw)] = float(raw.get("yaw_deg", INF))
++	assert_eq(fence_poses.get(Vector2(-9.0, -28.5), INF), 0.0, "the berry yard retains its north working rail")
++	assert_eq(fence_poses.get(Vector2(-12.0, -25.5), INF), 90.0, "the berry yard retains its west working rail")
++	assert_false(fence_poses.has(Vector2(-11.0, -9.5)), "the orphan rail cannot return across the public approach")
++	var road_start := Vector2(8.3, 14.0)
++	var road_end := Vector2(91.0, 14.0)
++	for at: Vector2 in fence_poses:
++		var rotation := Basis(Vector3.UP, deg_to_rad(float(fence_poses[at])))
++		for sign_value: float in [-1.0, 1.0]:
++			var offset := rotation * Vector3(sign_value * 3.075, 0.0, 0.0)
++			var endpoint := at + Vector2(offset.x, offset.z)
++			assert_true(endpoint.distance_to(Geometry2D.get_closest_point_to_segment(endpoint, road_start, road_end)) > 3.0,
++				"the complete yard rail stays outside the road and player capsule")
+ 
+ 
+ func test_the_five_villagers_belong_to_visible_street_functions() -> void:
+-	assert_eq(_point(_person("Mira")), Vector2(19.4, 4.0), "Mira remains inside her moved shop")
+-	assert_eq(float(_person("Mira").get("facing_deg", INF)), -90.0, "Mira faces her west street door")
+-	assert_eq(_point(_person("Oskar")), Vector2(25.0, 4.0), "Oskar stands in the visible creature pen")
+-	assert_eq(_point(_person("Tam")), Vector2(8.0, 12.0), "Tam stands at his workshop bay")
+-	assert_eq(_point(_person("Bram")), Vector2(-6.89, -6.0), "Bram remains at the moved inn bar")
+-	assert_eq(float(_person("Bram").get("facing_deg", INF)), 90.0,
+-		"Bram faces the inn's green-facing public door")
+-	assert_eq(_point(_person("Halda")), Vector2(23.5, 11.5), "Halda remains at the tournament board")
++	assert_eq(_point(_person("Mira")), Vector2(26.0, 0.6), "Mira stands behind her actual shop counter")
++	assert_eq(float(_person("Mira").get("facing_deg", INF)), float(_structure_id("mira_shop").get("yaw_deg", INF)), "Mira faces arriving patrons")
++	assert_eq(_point(_person("Oskar")), Vector2(62.0, 20.0), "Oskar stands on his road-facing parcel approach")
++	assert_eq(_point(_person("Tam")), Vector2(26.0, 20.0), "Tam stands at his actual workshop bay")
++	assert_eq(_point(_person("Bram")), Vector2(44.0, -2.39), "Bram remains at the installed bar")
++	assert_eq(float(_person("Bram").get("facing_deg", INF)), float(_structure_id("bram_inn").get("yaw_deg", INF)), "Bram faces the customer lane through the bar")
++	assert_eq(_point(_person("Halda")), Vector2(88.5, 46.5), "Halda stands at the current tournament lawn")
++	assert_eq(_point(_person("Nessa")), Vector2(62.0, 7.0), "Nessa retains the research-house gift role")
++	assert_eq(_point(_person("Maren")), Vector2(66.0, 7.0), "Maren retains the named research-house role")
+ 
+ 
+ func test_every_moved_building_has_scatter_and_ground_cover_exclusion() -> void:
+-	var clearing := _vegetation_entry("clearings", Vector2(10.0, 8.0))
+-	assert_true(float(clearing.get("radius", 0.0)) >= 17.0,
+-		"the south street clears random trees and rocks around its buildings")
+-	for expected: Dictionary in [
+-		{"centre": Vector2(-2.5, -6.0), "radius": 7.8},
+-		{"centre": Vector2(2.0, 12.0), "radius": 7.5},
+-		{"centre": Vector2(18.0, 4.0), "radius": 6.0},
+-		{"centre": Vector2(19.5, -6.0), "radius": 5.3},
+-	]:
+-		var footprint := _vegetation_entry("footprints", expected.centre)
+-		assert_true(float(footprint.get("radius", 0.0)) >= float(expected.radius),
+-			"the moved building at %s rejects even clearing-exempt ground cover" % expected.centre)
++	var clearings: Array = _json(VEGETATION_PATH).get("clearings", [])
++	var prefabs: Dictionary = _json(PREFABS_PATH).get("prefabs", {})
++	for centre: Vector2 in [Vector2(26.0, 14.0), Vector2(50.0, 14.0), Vector2(74.0, 14.0)]:
++		assert_true(float(_vegetation_entry("clearings", centre).get("radius", 0.0)) >= 22.0,
++			"the current road retains its full random-obstruction clearings")
++	for id: String in ROAD_HOUSES:
++		var expected: Dictionary = ROAD_HOUSES[id]
++		var footprint := _vegetation_entry("footprints", expected.at)
++		assert_true(float(footprint.get("radius", 0.0)) >= float(expected.radius), "%s rejects clearing-exempt ground cover" % id)
++		# Clearings and ground-cover footprints are different shapes. Check the
++		# actual wall footprint against the overlapping road clearings, rather
++		# than requiring each larger circular grass exclusion to fit one disk.
++		var rotation := Basis(Vector3.UP, deg_to_rad(float(expected.yaw)))
++		var recipe: Dictionary = prefabs.get(str(expected.prefab), {})
++		var checked := 0
++		for collider: Dictionary in recipe.get("colliders", []):
++			var at: Array = collider.get("at", [])
++			var size: Array = collider.get("size", [])
++			if at.size() != 3 or size.size() != 3 or float(at[1]) - float(size[1]) * 0.5 > 0.1:
++				continue
++			checked += 1
++			for x_sign: float in [-1.0, 1.0]:
++				for z_sign: float in [-1.0, 1.0]:
++					var offset := rotation * Vector3(float(at[0]) + x_sign * float(size[0]) * 0.5, 0.0, float(at[2]) + z_sign * float(size[2]) * 0.5)
++					var corner: Vector2 = expected.at + Vector2(offset.x, offset.z)
++					var cleared := false
++					for clearing: Dictionary in clearings:
++						var centre := Vector2(float(clearing.get("x", INF)), float(clearing.get("z", INF)))
++						if centre.distance_to(corner) <= float(clearing.get("radius", 0.0)):
++							cleared = true
++					assert_true(cleared, "%s ground wall corner rejects random trees and rocks" % id)
++		assert_true(checked >= 4, "scatter checks every actual ground wall")
+ 
+ 
+ func test_miras_shop_uses_an_installed_trade_crest_not_placeholder_text() -> void:
+diff --git a/tools/gate_f/segments/S03.json b/tools/gate_f/segments/S03.json
+index 272da33722..4e68c7f93e 100644
+--- a/tools/gate_f/segments/S03.json
++++ b/tools/gate_f/segments/S03.json
+@@ -4146,15 +4146,15 @@
+       "action": "move_to",
+       "args": {
+         "at": [
+-          13.6,
+-          5.0
++          27.0,
++          6.4
+         ],
+         "budget_frames": 3150,
+         "close_enough": 0.6,
+         "held_budget_frames": 7200,
+         "answer_prompts": true
+       },
+-      "expected": "Reach cottage_a local [1,4.4], transformed through the current shop pose [18,4], yaw -90 degrees: world [13.6,5]. The 0.6 m tolerance keeps the player outside the west-facing door."
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained."
+     },
+     {
+       "id": "S03-52a",
+@@ -4350,47 +4350,47 @@
+       "action": "move_to",
+       "args": {
+         "at": [
+-          13.6,
+-          5.0
++          27.0,
++          6.4
+         ],
+         "budget_frames": 1500,
+         "close_enough": 0.6,
+         "answer_prompts": true,
+         "held_budget_frames": 7200
+       },
+-      "expected": "Leave through the same current west-facing shop doorway used on entry, reaching world [13.6,5] within 0.6 m before routing around the building. A direct path from Mira to Oskar crosses the closed east wall."
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained."
+     },
+     {
+       "id": "S03-59b",
+-      "title": "clear the south-west shop corner on the public street",
++      "title": "clear Mira's east front corner on the public approach",
+       "action": "move_to",
+       "args": {
+         "at": [
+-          13.6,
+-          9.0
++          31.0,
++          6.4
+         ],
+         "close_enough": 0.6,
+         "budget_frames": 1500,
+         "held_budget_frames": 7200,
+         "answer_prompts": true
+       },
+-      "expected": "Clear the rotated cottage south wall before turning toward its rear pen; do not ask the walker to cross the shop interior walls."
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained."
+     },
+     {
+       "id": "S03-59c",
+-      "title": "walk around the south side of Mira's shop to Oskar's pen",
++      "title": "reach the main road before walking toward Oskar",
+       "action": "move_to",
+       "args": {
+         "at": [
+-          23.0,
+-          9.0
++          31.0,
++          14.0
+         ],
+         "close_enough": 0.6,
+         "budget_frames": 1500,
+         "held_budget_frames": 7200,
+         "answer_prompts": true
+       },
+-      "expected": "Reach [23,9] west of the tournament east bench at [26,9.6], clear of the shop south wall and the pen's x=28 rear rail, before approaching Oskar by live identity. R15's [25,9] waypoint ran into the bench; the physical diagnostic verifies this exterior route with the original walking budgets."
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained."
+     },
+     {
+       "id": "S03-60",
+diff --git a/tools/gate_f/segments/S03C.json b/tools/gate_f/segments/S03C.json
+index 4fe9df6fc3..f4a29ae445 100644
+--- a/tools/gate_f/segments/S03C.json
++++ b/tools/gate_f/segments/S03C.json
+@@ -4408,15 +4408,15 @@
+       "action": "move_to",
+       "args": {
+         "at": [
+-          13.6,
+-          5.0
++          27.0,
++          6.4
+         ],
+         "budget_frames": 3150,
+         "close_enough": 0.6,
+         "held_budget_frames": 7200,
+         "answer_prompts": true
+       },
+-      "expected": "Reach cottage_a local [1,4.4], transformed through the current shop pose [18,4], yaw -90 degrees: world [13.6,5]. The 0.6 m tolerance keeps the player outside the west-facing door.",
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained.",
+       "_derived_from": "S03-52"
+     },
+     {
+@@ -4622,49 +4622,49 @@
+       "action": "move_to",
+       "args": {
+         "at": [
+-          13.6,
+-          5.0
++          27.0,
++          6.4
+         ],
+         "budget_frames": 1500,
+         "close_enough": 0.6,
+         "answer_prompts": true,
+         "held_budget_frames": 7200
+       },
+-      "expected": "Leave through the same current west-facing shop doorway used on entry, reaching world [13.6,5] within 0.6 m before routing around the building. A direct path from Mira to Oskar crosses the closed east wall.",
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained.",
+       "_derived_from": "S03-59a"
+     },
+     {
+       "id": "S03C-59b",
+-      "title": "clear the south-west shop corner on the public street",
++      "title": "clear Mira's east front corner on the public approach",
+       "action": "move_to",
+       "args": {
+         "at": [
+-          13.6,
+-          9.0
++          31.0,
++          6.4
+         ],
+         "close_enough": 0.6,
+         "budget_frames": 1500,
+         "held_budget_frames": 7200,
+         "answer_prompts": true
+       },
+-      "expected": "Clear the rotated cottage south wall before turning toward its rear pen; do not ask the walker to cross the shop interior walls.",
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained.",
+       "_derived_from": "S03-59b"
+     },
+     {
+       "id": "S03C-59c",
+-      "title": "walk around the south side of Mira's shop to Oskar's pen",
++      "title": "reach the main road before walking toward Oskar",
+       "action": "move_to",
+       "args": {
+         "at": [
+-          23.0,
+-          9.0
++          31.0,
++          14.0
+         ],
+         "close_enough": 0.6,
+         "budget_frames": 1500,
+         "held_budget_frames": 7200,
+         "answer_prompts": true
+       },
+-      "expected": "Reach [23,9] west of the tournament east bench at [26,9.6], clear of the shop south wall and the pen's x=28 rear rail, before approaching Oskar by live identity. R15's [25,9] waypoint ran into the bench; the physical diagnostic verifies this exterior route with the original walking budgets.",
++      "expected": "F17/RD-29: walk the actual shop doorway and east front corner to the main road; original arrival and frame budgets retained.",
+       "_derived_from": "S03-59c"
+     },
+     {
+diff --git a/tools/gate_f/segments/S10e.json b/tools/gate_f/segments/S10e.json
+index 3d2e4dbf22..7a863e8314 100644
+--- a/tools/gate_f/segments/S10e.json
++++ b/tools/gate_f/segments/S10e.json
+@@ -128,36 +128,36 @@
+     },
+     {
+       "id": "S10e-98g",
+-      "title": "walk wide of the fence's northeast bulge, toward the road gate",
++      "title": "return from South Bridge to the actual outside TrailGate approach",
+       "action": "move_to",
+       "args": {
+         "at": [
+-          55.0,
+-          -10.0
++          13.44428,
++          26.38503
+         ],
+         "budget_frames": 54000,
+         "close_enough": 4.0,
+         "held_budget_frames": 10800,
+         "answer_prompts": true
+       },
+-      "expected": "GATE-F-LEG-S10CDE, corrected during GATEF-CONSOLIDATE-1. Split out of what was one straight move_to at (10,-10): approaching the village fence directly from this segment's own entry point (arrival from the South Bridge side, north/east of the village) does not cross the fence near a real opening, so the single-leg walk oscillated against the fence line for its entire budget without ever finding one, the same shape of stall diagnosed and fixed for the sigil-gate gorges earlier in this lane. `stick_navigator.gd` is a local wall-follower, not a pathfinder; it needs to be AIMED at the gate, the same way S05-19's own outbound leg is aimed at a real waypoint rather than straight at its final destination. S10CDE's own fix aimed at `playground_world.gd::GATE_AT` (27.5,-16.0), believing it 'the only hole in the fence' -- it is not: `GATE_AT` is a stale pre-OP-0830-1 constant nothing in the game actually builds or checks against any more. Aiming straight at the real gate, `village_boundary.json`'s `RoadGate` (38.7,-19.9), does not work either: a line from this segment's own far-north entry to that point still clips the outline's own [40,-16]->[37,-2] edge 11.5m before arrival (`test_gate_f_instrumentation.gd::test_no_journey_walk_crosses_the_village_fence_away_from_a_gate` catches exactly this -- the outline bulges northeast past the gate's own vertex). (55,-10) is outside the outline entirely and has clear line of sight both back to this segment's entry and forward to the gate (verified by the same polygon this test checks against), so this leg goes wide of the bulge instead of aiming at the gate directly; S10e-98h below closes the last short distance through the gate itself. `budget_frames` 15000 -> 54000 after a first attempt: splitting the original single 60750-frame leg into two 15000-frame ones threw away the budget for the actual LONG distance this leg covers (South Bridge back to the village, the bulk of the original leg) rather than giving the short gate-to-centre hop below its own small share -- this leg gets most of the original total, S10e-99 keeps a comfortable but much smaller one.",
++      "expected": "F17/RD-29: retain the actual South Bridge return, cross only the TrailGate gap, and use the translated farmhouse markers. All original frame and arrival budgets remain.",
+       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+     },
+     {
+       "id": "S10e-98h",
+-      "title": "through the road gate",
++      "title": "walk through the open TrailGate into the village",
+       "action": "move_to",
+       "args": {
+         "at": [
+-          38.7,
+-          -19.9
++          14.13572,
++          18.41497
+         ],
+         "budget_frames": 2400,
+         "close_enough": 2.0,
+         "held_budget_frames": 2400,
+         "answer_prompts": true
+       },
+-      "expected": "GATEF-CONSOLIDATE-1. The short closing hop from the wide-berth waypoint (S10e-98g) through `RoadGate` itself -- both gates are open from S02's key, and this is the only crossing on the two legs together, verified against the outline the same way S10e-98g's own comment is."
++      "expected": "F17/RD-29: retain the actual South Bridge return, cross only the TrailGate gap, and use the translated farmhouse markers. All original frame and arrival budgets remain."
+     },
+     {
+       "id": "S10e-99",
+@@ -222,15 +222,15 @@
+       "action": "move_to",
+       "args": {
+         "at": [
+-          -15.7,
+-          -16.0
++          8.3,
++          14.0
+         ],
+         "budget_frames": 6000,
+         "close_enough": 2.5,
+         "held_budget_frames": 3600,
+         "answer_prompts": true
+       },
+-      "expected": "GATE-F-LEG-S10CDE: intermediate waypoint at `grandpa_house.gd::marker(\"door\")`. Attempt 5 aimed the whole leg straight at Grandpa's interior marker (-24.4,-14.8) and `stick_navigator.gd` (a local wall-follower, not a pathfinder) walked around the OUTSIDE of the house instead of through the doorway, stalling 4.8m short at a north-west exterior corner (-27.0,-11.0) it could not route past -- the same 'aimed at the abstract destination instead of the real passage point' shape S10e-98g's own header already diagnosed for the village gate. Aiming at the doorway itself first, the same fix already applied there."
++      "expected": "F17/RD-29: retain the actual South Bridge return, cross only the TrailGate gap, and use the translated farmhouse markers. All original frame and arrival budgets remain."
+     },
+     {
+       "id": "S10e-103",
+@@ -238,15 +238,15 @@
+       "action": "move_to",
+       "args": {
+         "at": [
+-          -24.4,
+-          -14.8
++          -0.4,
++          15.2
+         ],
+         "budget_frames": 6000,
+         "close_enough": 2.0,
+         "held_budget_frames": 3600,
+         "answer_prompts": true
+       },
+-      "expected": "Section E.6.15: 'return home mid-chapter; verify Grandpa's dialogue state advances with the chapter (home-relevance check)'. Section L.5: 'Grandpa's post-win line'. GATE-F-LEG-S10CDE: budget_frames raised 3000 -> 6000 -> 12000, the target corrected from the house origin to Grandpa's real marker, THEN split behind a new S10e-103d door waypoint (see its own header) after a straight aim at this same target walked around the house exterior instead of through the door. Budget lowered back to 6000 now that this leg only covers the short interior distance (~8.8m from the door) rather than the whole village-to-house walk. `grandpa_house.gd::marker(\"grandpa\")` places him at the house's local (-2.4,0,1.2) -- world (-24.4,-14.8) -- and `sequence_director.gd`'s own `_grandpa_prompt` uses the same 3.8m default radius as a villager's, so a tight close_enough keeps the arrival point inside it by construction. The door itself is not the obstacle: `_refresh_door_gate()` holds it open for any beat at or after `walk_out`, which this post-victory seed always is.",
++      "expected": "F17/RD-29: retain the actual South Bridge return, cross only the TrailGate gap, and use the translated farmhouse markers. All original frame and arrival budgets remain.",
+       "observation": "answer_prompts turned ON for this journey walk. TRADE RECORDED EXPLICITLY: the schema says this flag must stay off in any segment whose subject is whether something blocks travel, so these segments can no longer evidence 'a narrative modal blocked the player from travelling'. That finding is already captured in full, un-answered, in S02-superseded-2/3/4 and S02/BLOCKER.md -- three press counts, identical 7201-frame holds. What it buys is everything downstream: measured in S03 and S04, an unanswered modal at a walk's end left input_context='narrative_modal' where the next step expected combat, so no fight started, no catch resolved, the team never reached three, and every tournament entry check then failed on team size. Without this the journey produces no combat, catching, building or progression evidence at all."
+     },
+     {

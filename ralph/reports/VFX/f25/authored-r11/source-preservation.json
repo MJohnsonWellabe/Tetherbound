@@ -1,0 +1,27 @@
+{
+  "base_commit": "73a9b4ad2aba1c1d78bb12ac551c76a422cccb07",
+  "scope": "Sky Lightning luminous width/material plus contact width/growth only; R9/R10 source retained",
+  "config_paths_changed": [
+    "/move_library/archetypes/sky_lightning/body/core_width",
+    "/move_library/archetypes/sky_lightning/body/corona_opacity",
+    "/move_library/archetypes/sky_lightning/body/corona_width",
+    "/move_library/archetypes/sky_lightning/body/emission_floor",
+    "/move_library/archetypes/sky_lightning/body/emission_strength",
+    "/move_library/archetypes/sky_lightning/body/stroke_width_scale",
+    "/move_library/archetypes/sky_lightning/impact/accent_width_scale",
+    "/move_library/archetypes/sky_lightning/impact/core_width",
+    "/move_library/archetypes/sky_lightning/impact/corona_opacity",
+    "/move_library/archetypes/sky_lightning/impact/corona_width",
+    "/move_library/archetypes/sky_lightning/impact/emission_floor",
+    "/move_library/archetypes/sky_lightning/impact/emission_strength",
+    "/move_library/archetypes/sky_lightning/impact/grow"
+  ],
+  "library_enabled": false,
+  "unproved": [
+    "shader compilation",
+    "visual craft and motion",
+    "integrated HP/audio and world",
+    "four-creature Medium performance",
+    "all F25 acceptance rows"
+  ]
+}

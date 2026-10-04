@@ -1,0 +1,95 @@
+{
+  "source_base": "8216aa3cfc90bdffd852544c7a7d41d0ead6042e",
+  "groups": {
+    "verify-regions-shard": {
+      "world": [
+        "Verify earned aim cancellation and native entry guard",
+        "Verify character texture binding and material cache isolation",
+        "Verify actual Game crossing and native scoped receiver lifecycle",
+        "Retain realm lifecycle first-attempt receipts",
+        "Verify warrens",
+        "Verify relay_station",
+        "Verify continuous Relay ramp and deck walk",
+        "Verify earned material prompt approach",
+        "Verify exact baked tree prompt at trunk contact",
+        "Verify live road coverage observation",
+        "Verify felled resource destruction",
+        "Verify earned material source selection",
+        "Verify cloudreach_arrival_walk",
+        "Verify Cloudreach persistence tail",
+        "Verify wild_streaming",
+        "Verify bramblebun_colourway_binding"
+      ],
+      "stormwood": [
+        "Verify Stormheart approach and open ramp entrance",
+        "Verify earned Stormwood input clocks",
+        "Verify Stormwood constructed arch journey",
+        "Verify solo Stormwood hosted rewards",
+        "Verify Stormwood Deepwood Circuit wiring",
+        "Verify Stormwood finalized death lifecycle",
+        "Verify Stormwood combat telemetry",
+        "Verify Relay cable socket supports",
+        "Verify Stormwood equipped lightning protection",
+        "Verify controller equipment and disk save",
+        "Verify Stormwood lightning warning cleanup",
+        "Verify Stormwood authoritative opponent teardown",
+        "Verify Stormwood heartstone interaction",
+        "Verify Stormwood Crown records side chain",
+        "Verify Stormwood per-participant Stormheart offers",
+        "Verify Stormwood Stormheart accept/refuse choice",
+        "Verify Stormwood Dynamo Break faint recovery",
+        "Verify Stormwood ordinary and electric TM pickups",
+        "Verify ordinary Stormwood to Water gate path",
+        "Verify Stormwood Surge audio observer",
+        "Verify Stormwood hosted encounter admission",
+        "Verify Stormwood Nysa press"
+      ],
+      "tidewake": [
+        "Verify Tidewake closed-gate tide-race seal",
+        "Verify Tidewake dismount leaves no mounted state",
+        "Verify Tidewake drowning and safe shore",
+        "Verify Tidewake drowned recovery",
+        "Verify Tidewake reload mid-water",
+        "Verify Tidewake mounted reload mid-water",
+        "Verify Tidewake combat pause while swimming",
+        "Verify Tidewake Guardian offer keeps controller focus across a drop",
+        "Verify Tidewake chain side_water_lantern_return",
+        "Verify Tidewake chain side_water_gull_research",
+        "Verify Tidewake chain side_water_cradle_care",
+        "Verify Tidewake chain side_water_garden_records",
+        "Verify Tidewake chain side_water_deep_watch_chart",
+        "Verify Tidewake chain side_water_lastlight_shelter",
+        "Verify regional credits survive a disk reload",
+        "Verify pending regional ending receipts and reconnect rejection"
+      ]
+    },
+    "verify-regions-relay": {
+      "meadows": [
+        "Verify relay",
+        "Verify stronghold",
+        "Verify art"
+      ],
+      "tidewake": [
+        "Verify Tidewake land loops walked (reed root, brine terrace)",
+        "Verify Tidewake land loops walked (salt shrine, sluice patrol)",
+        "Verify Tidewake return shortcuts closed then open and shorter"
+      ]
+    },
+    "verify-owner-regressions-shard": {
+      "catching": [
+        "Verify party_count_after_catches"
+      ],
+      "controls": [
+        "Verify title_load_game",
+        "Verify title_new_game",
+        "Verify satchel_owns_hotbar",
+        "Verify build_owns_creature_cycle",
+        "Verify trainer_battle_camera",
+        "Verify arena_contain",
+        "Verify menu_open_does_not_offer_to_drop"
+      ]
+    }
+  },
+  "named_check_payloads_preserved": true,
+  "required_gate_preserved": true
+}

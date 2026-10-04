@@ -1,0 +1,62 @@
+{
+  "head": "7a76a506beccd51aa04b81ab743b1140e33bfeb2",
+  "exit": 1,
+  "elapsed_seconds": 231.8279999999795,
+  "timed_out": false,
+  "strict_native_errors": [],
+  "logs": [
+    {
+      "path": "coordinator.log",
+      "bytes": 19483,
+      "sha256": "901bf58d35280fa3dddbf96dd40f7ddbeb1f92b8b6015cd35fc930fe384f6057",
+      "lossless_log": "native-0.log.gz"
+    },
+    {
+      "path": "initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 19266,
+      "sha256": "fb741bb101d69abc8e4eac632929b8be0f93e55fcf30f2cc1b8f7244341f41db",
+      "lossless_log": "native-1.log.gz"
+    },
+    {
+      "path": "net-run/peer-0.log",
+      "bytes": 12028,
+      "sha256": "b4b386aa50d184cd4001d5d178a08f90b758502c736b5dba7b2bf977c92f696e",
+      "lossless_log": "native-2.log.gz"
+    },
+    {
+      "path": "net-run/peer-1.log",
+      "bytes": 11738,
+      "sha256": "2c1fd1619ba5dfd7e02c95e2f86e20369e7f1a8bcf475dd06649795fb2599c39",
+      "lossless_log": "native-3.log.gz"
+    }
+  ],
+  "source_closure_count": 3253,
+  "source_before_after_equal": true,
+  "actual_failures": [
+    "peer 1's local stand-in was moved onto where the host holds the boss (this peer has no opponent body to move)",
+    "and both peers draw the same boss health bar after it (host 203.270, guest -1.000)",
+    "peer 1 swung at the boss (this peer is not in a networked fight)",
+    "peer 1 landed a blow on the SHARED boss: 203.3 -> 203.3 on the host, in 1 swing(s) over 5 placement attempt(s); the host last held its creature 2.90 m from the boss",
+    "and both peers draw the same boss health bar after it (host 203.270, guest -1.000)",
+    "peer 1's swing at its teammate's creature reached the host (this peer is not in a networked fight)",
+    "and the client's own local answer was `pending` -- the host being asked, not a refusal (ok=true pending=false code='')",
+    "the host refused it with `friendly_target` in the BOSS fight (got code '', reason '')",
+    "and the sentence a player can be shown travelled back to the striker",
+    "and it is measured over a window the boss itself did not act in -- `pick_struck` chose peer 1 2 time(s) before and 2 after, over 12 attempt(s)"
+  ],
+  "fatal": "",
+  "runtime_budgets": {
+    "desync_frames": 240.0,
+    "heartbeat_frames": 60.0,
+    "hello_budget_s": 180.0,
+    "near_tolerance_motion_m": 4.0,
+    "near_tolerance_rest_m": 1.5,
+    "smoke_step_budget_s_2peer": 300.0,
+    "smoke_step_budget_s_wide": 1500.0,
+    "step_budget_frames": 3000.0
+  },
+  "original_starter_setup": "Actual input preparation and same-UID admitted ownership checks pass; all four logs clean, original protected starter refusal absent in this run.",
+  "remaining_failure": "Guest loses actual opponent/networked fight binding after a shared boss round change. Cause not yet established; exact fresh evidence returned to the original source owner.",
+  "owner_restored": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+  "limits": "Original default shared-boss smoke FAIL. Clean logs do not turn failed assertions into PASS. Earlier controlled lifecycle units and pure ownership units remain scoped; no main/criterion credit."
+}

@@ -1,0 +1,364 @@
+{
+  "status": "PURE_PYTHON_POLICY_CONTROLS_NOT_GODOT_OR_NATIVE_TESTS",
+  "scope": "Retained ring/window arithmetic and diagnostic accounting, with synthetic scalar timestamps. The four existing actual late timestamps are included only as a rejection control; no missing pre-cutoff combat state is fabricated.",
+  "cases": [
+    {
+      "case": "freeze_before_cleanup",
+      "input_elapsed_ms": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        94000,
+        94999,
+        95000,
+        96301,
+        97361,
+        98324,
+        99316
+      ],
+      "command_budget_frames": 5400,
+      "nominal_allowance_ms": 95000.0,
+      "running": true,
+      "expected_retained_elapsed_ms": [
+        10,
+        11,
+        94000,
+        94999
+      ],
+      "actual_retained_elapsed_ms": [
+        10,
+        11,
+        94000,
+        94999
+      ],
+      "live_read_batches": 14,
+      "pass": true
+    },
+    {
+      "case": "actual_late_only_is_insufficient",
+      "input_elapsed_ms": [
+        96301,
+        97361,
+        98324,
+        99316
+      ],
+      "command_budget_frames": 5400,
+      "nominal_allowance_ms": 95000.0,
+      "running": true,
+      "expected_retained_elapsed_ms": [],
+      "actual_retained_elapsed_ms": [],
+      "live_read_batches": 0,
+      "pass": true
+    },
+    {
+      "case": "strict_95s_boundary",
+      "input_elapsed_ms": [
+        94999,
+        95000,
+        95001
+      ],
+      "command_budget_frames": 5400,
+      "nominal_allowance_ms": 95000.0,
+      "running": true,
+      "expected_retained_elapsed_ms": [
+        94999
+      ],
+      "actual_retained_elapsed_ms": [
+        94999
+      ],
+      "live_read_batches": 1,
+      "pass": true
+    },
+    {
+      "case": "default_command_budget",
+      "input_elapsed_ms": [
+        54999,
+        55000,
+        55001
+      ],
+      "command_budget_frames": 3000,
+      "nominal_allowance_ms": 55000.0,
+      "running": true,
+      "expected_retained_elapsed_ms": [
+        54999
+      ],
+      "actual_retained_elapsed_ms": [
+        54999
+      ],
+      "live_read_batches": 1,
+      "pass": true
+    },
+    {
+      "case": "fractional_nominal_window",
+      "input_elapsed_ms": [
+        91366,
+        91367
+      ],
+      "command_budget_frames": 5182,
+      "nominal_allowance_ms": 91366.66666666667,
+      "running": true,
+      "expected_retained_elapsed_ms": [
+        91366
+      ],
+      "actual_retained_elapsed_ms": [
+        91366
+      ],
+      "live_read_batches": 1,
+      "pass": true
+    },
+    {
+      "case": "not_running_no_live_reads",
+      "input_elapsed_ms": [
+        0,
+        1000,
+        94000
+      ],
+      "command_budget_frames": 5400,
+      "nominal_allowance_ms": 95000.0,
+      "running": false,
+      "expected_retained_elapsed_ms": [],
+      "actual_retained_elapsed_ms": [],
+      "live_read_batches": 0,
+      "pass": true
+    },
+    {
+      "case": "retained_memory_bounded",
+      "input_elapsed_ms": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ],
+      "command_budget_frames": 5400,
+      "nominal_allowance_ms": 95000.0,
+      "running": true,
+      "expected_retained_elapsed_ms": [
+        96,
+        97,
+        98,
+        99
+      ],
+      "actual_retained_elapsed_ms": [
+        96,
+        97,
+        98,
+        99
+      ],
+      "live_read_batches": 100,
+      "pass": true
+    },
+    {
+      "case": "new_step_clear",
+      "first_step_retained": [
+        10,
+        20,
+        30
+      ],
+      "second_step_retained": [
+        1
+      ],
+      "pass": true
+    },
+    {
+      "case": "observational_injection_tick_accounting",
+      "completed_actual_ticks": 31,
+      "unchanged_manual_plus3": 9,
+      "gap": 22,
+      "in_flight_example_ticks": 6,
+      "pass": true
+    },
+    {
+      "case": "same_bound_kill",
+      "running": true,
+      "scope": "1:1",
+      "incoming": "1:1",
+      "killed": true,
+      "expected_capture": true,
+      "actual_capture": true,
+      "pass": true
+    },
+    {
+      "case": "other_encounter_ignored",
+      "running": true,
+      "scope": "1:1",
+      "incoming": "1:2",
+      "killed": true,
+      "expected_capture": false,
+      "actual_capture": false,
+      "pass": true
+    },
+    {
+      "case": "non_killing_verdict_ignored",
+      "running": true,
+      "scope": "1:1",
+      "incoming": "1:1",
+      "killed": false,
+      "expected_capture": false,
+      "actual_capture": false,
+      "pass": true
+    },
+    {
+      "case": "unbound_unknown",
+      "running": true,
+      "scope": "",
+      "incoming": "1:1",
+      "killed": true,
+      "expected_capture": false,
+      "actual_capture": false,
+      "pass": true
+    },
+    {
+      "case": "returned_step_ignored",
+      "running": false,
+      "scope": "1:1",
+      "incoming": "1:1",
+      "killed": true,
+      "expected_capture": false,
+      "actual_capture": false,
+      "pass": true
+    },
+    {
+      "case": "missing_killed_unknown",
+      "running": true,
+      "scope": "1:1",
+      "incoming": "1:1",
+      "killed": null,
+      "expected_capture": false,
+      "actual_capture": false,
+      "pass": true
+    },
+    {
+      "case": "frozen_killing_row_detached_from_later_cleanup",
+      "frozen_action": 64,
+      "pass": true
+    },
+    {
+      "case": "coordinator_timeout_copy_survives_later_cleanup_heartbeat",
+      "saved_enemy_hp": 6,
+      "ordinary_latest_enemy_hp": 0,
+      "pass": true
+    },
+    {
+      "case": "coordinator_absent_heartbeat_remains_unknown",
+      "observation": {
+        "heartbeat_known": false,
+        "heartbeat": null,
+        "heartbeat_receive_age_ms": null
+      },
+      "pass": true
+    },
+    {
+      "case": "coordinator_receive_age_preserved_without_freshness_claim",
+      "receive_age_ms": 10000,
+      "peer_sample_age_known": false,
+      "pass": true
+    }
+  ],
+  "passed": 19,
+  "godot_execution": false
+}

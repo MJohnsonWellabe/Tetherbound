@@ -1,0 +1,13 @@
+INDEPENDENT BOUNDED SOURCE REVIEW — M1 FARMHOUSE EXIT
+Pin: 0c8fcb49ce795b242609767ca762867f72fecd44, D:/tetherbound/redesign-hub.
+Verdict: SOURCE PASS for the fresh_opening_segment.gd door-clear hunk only. No gameplay/acceptance MET verdict; native retry still required. Prior red log remains archived.
+
+Exact modified source is tests/helpers/fresh_opening_segment.gd (not tools/...). The remaining two commit files are the archived first native failure and its receipt. No production scene/controller/collider/speed or catch assertions change.
+
+Production world builds GrandpaHouse at HOUSE_AT=(2,14) with only a translation. House origin is its centre; door marker is local(INNER_W/2+WALL_T+1.2,0,0)=(6.3,0,0), hence world(8.3,house_ground,14), and the computed flattened normalized front is exactly +X. New target is world(10.1,house_ground,14). Actual east wall collider is centred at local x=4.89, thickness .45, so outside face world x=7.115. Actual player capsule radius .4. Existing _walk_toward .8m arrival tolerance implies endpoint x>=9.3; its capsule's west edge>=8.9 clears that wall by>=1.785m. This source bound establishes the axis/target are outside, not a teleport or an assertion that native navigation has succeeded.
+
+The first failing player(7.224845,1.000917,14.41322) is within4m of actual door and has negative front-dot offset, so the new conditional exit applies to the reported failure. It walks towards the outside target through _walk_toward->_drive_body_toward->physical parsed left-stick events using the actual camera planar_basis. It retains the inherited .8m arrival criterion plus requires actual is_on_floor(). Any exit failure returns false. It never writes player pose, velocity/speed or collider state.
+
+Actual physics frames spent on exit (including helper settle frames) are subtracted from the original caller budget before obstacle-aware target navigation. Catch-body exact match, real throws/orbs/HP rules and all subsequent assertions are unchanged. The inherited helper's successful arrival includes five settling frames; this is disclosed and is not a newly enlarged deadline.
+
+Limits: source-only inspection, no Godot/parser/import/GPU/unit/fullCI, no new run, no proof of how the full opening/tournament proceeds beyond the previous catch failure. Runtime collision, input timing and destination floor must still pass the same physical retry. Missing-house branch retains prior behavior; this bounded actual built-world path has GrandpaHouse. Source scope unchanged beyond requested hunk. No source, tracked evidence, board/STATE or git mutations by reviewer.

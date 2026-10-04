@@ -1,0 +1,108 @@
+{
+  "id": "selfcheck_record",
+  "title": "Harness self-check: the section H continuous recorder, device-named presses and the restoration checks",
+  "lane": "diag",
+  "record_hz": 0.5,
+  "record_hud": "on",
+  "_comment": "NOT a protocol segment. Evidence for the section 1.5 follow-up: record_start/record_stop, the device argument on press, and the four restoration assert checks. Boots the TITLE rather than the Meadows -- a cold world stand-up costs ~95 s on this container and nothing about whether the recorder writes PNGs at a cadence is answered better by a heavier scene. pin_clock is exercised by the DIAG world segments, since a title screen has no WorldLook to pin.",
+  "_comment_baseline": "record_hz is declared at 0.5 Hz here so the baseline itself is visible in frames/manifest.json before any record_start step runs. A journey segment would declare 0.1.",
+
+  "steps": [
+    {
+      "id": "SC-R-01",
+      "title": "boot the real title screen",
+      "action": "boot",
+      "args": { "scene": "title", "settle_frames": 30 },
+      "expected": "the real title comes up; the recorder is already running at the segment baseline of 0.5 Hz"
+    },
+    {
+      "id": "SC-R-02",
+      "title": "let the baseline record a few frames",
+      "action": "wait",
+      "args": { "seconds": 5 },
+      "expected": "about three background frames at 0.5 Hz, filed under frames/selfcheck_record/, with no step having asked for them"
+    },
+    {
+      "id": "SC-R-03",
+      "title": "raise the rate for a window",
+      "action": "record_start",
+      "args": { "hz": 4.0, "label": "focus walk" },
+      "expected": "the background rate goes to 4 Hz and recording continues across the steps below without blocking them"
+    },
+    {
+      "id": "SC-R-04",
+      "title": "move focus on the PAD while recording",
+      "action": "press",
+      "args": { "control": "ui_down", "hold": "tap", "times": 2, "device": "joypad" },
+      "expected": "the joypad binding is injected explicitly; frames keep being written underneath the presses"
+    },
+    {
+      "id": "SC-R-05",
+      "title": "move focus on the KEYBOARD",
+      "action": "press",
+      "args": { "control": "ui_up", "hold": "tap", "times": 1, "device": "key" },
+      "expected": "the keyboard binding is injected. Before `device` existed this action resolved to its pad binding and the KBM half of section L.1 was unreachable while the cell read as covered."
+    },
+    {
+      "id": "SC-R-06",
+      "title": "something still holds focus",
+      "action": "assert",
+      "args": { "check": "focus_owned" },
+      "expected": "the title still has a focused button after presses on two different devices"
+    },
+    {
+      "id": "SC-R-07",
+      "title": "a device the action does not bind",
+      "action": "press",
+      "args": { "control": "ui_down", "hold": "tap", "device": "mouse" },
+      "expected": "FAIL naming the verb and the device. Not a fallback to the pad: an unreachable verb on a device is a real answer for the matrix, and a silent fallback is how this stayed invisible."
+    },
+    {
+      "id": "SC-R-08",
+      "title": "the mouse is not captured at the title",
+      "action": "assert",
+      "args": { "check": "mouse_captured", "equals": false },
+      "expected": "the title screen is a mouse-visible surface. The same check verdicts section E.4's requirement that the pause shell RESTORES capture on close."
+    },
+    {
+      "id": "SC-R-09",
+      "title": "a capture step, mid-window",
+      "action": "capture",
+      "args": {
+        "id": "SC-R-prescribed",
+        "class": "context",
+        "hud": "as shipped",
+        "intended_proof": "a prescribed section G shot taken inside an open recording window: it lands in shots/, the recorder stands down for it, and `hud` is stored verbatim rather than coerced to on/off"
+      },
+      "expected": "one PNG in shots/ with hud recorded as \"as shipped\"; no frames/ file for the same instant"
+    },
+    {
+      "id": "SC-R-10",
+      "title": "keep recording after the shot",
+      "action": "wait",
+      "args": { "seconds": 3 },
+      "expected": "the window is still open at 4 Hz and the recorder resumes after the capture step"
+    },
+    {
+      "id": "SC-R-11",
+      "title": "end the window",
+      "action": "record_stop",
+      "args": {},
+      "expected": "back to the segment baseline of 0.5 Hz -- not off, because section H's record is continuous and a window ending is not the segment ending"
+    },
+    {
+      "id": "SC-R-12",
+      "title": "the baseline is still recording",
+      "action": "wait",
+      "args": { "seconds": 5 },
+      "expected": "background frames continue at 0.5 Hz after the window closed"
+    },
+    {
+      "id": "SC-R-13",
+      "title": "close the segment",
+      "action": "note",
+      "args": { "text": "frames/manifest.json holds the whole cadence: baseline rows, a 4 Hz window, event-forced rows, and no row sharing an instant with the shots/ capture" },
+      "expected": "a note event closes the segment, and forces a frame of its own"
+    }
+  ]
+}

@@ -57,10 +57,10 @@
     "enabled": true,
     "duration": 0.16,
     "colour": "#fff1d6",
-    "strength": 0.9,
-    "rim_power": 1.6,
-    "flat_mix": 0.3,
-    "charged_strength": 1.0
+    "strength": 0.3,
+    "rim_power": 2.8,
+    "flat_mix": 0.05,
+    "charged_strength": 0.4
   },
 
   "_comment_ko_puff": "The creature that just fainted lets out a soft cloud: slow, pale, mostly upward, bigger and longer than a hit. Fired from the same damage hook as the spark, on the blow that emptied the bar, so a trainer's second creature falling mid-battle puffs the same as a wild one ending the fight.",
@@ -138,5 +138,3513 @@
     "bench_on_trainer": false,
     "min_gap": 0.75,
     "no_depth_test": true
+  },
+  "move_library": {
+    "enabled": false,
+    "_comment": "F25 draft remains flag-off until real player paths, visual judgment and Medium frame-time proof pass. Presentation never owns damage; host receipt travel_seconds wins. Guard flash is visual only.",
+    "ordinary_particle_limit": 48,
+    "ultimate_particle_limit": 160,
+    "encounter_particle_cap": 384,
+    "max_body_count": 12,
+    "timing": {
+      "min_travel_seconds": 0.06,
+      "max_travel_seconds": 0.42
+    },
+    "fallback": "mesh_compatibility",
+    "scene_light_cap": 4,
+    "archetypes": {
+      "stone_throw": {
+        "body": {
+          "shape": "stone",
+          "motion": "projectile",
+          "lit": true,
+          "opacity": 1.0,
+          "segments": 13,
+          "rings": 7,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "stone_colour": "#aa9981",
+          "mineral_colour": "#d1c1a2",
+          "authored_surface": true,
+          "surface_scale": 1.35,
+          "texture_blend": 0.38,
+          "surface_roughness": 0.88,
+          "volley_separation_scale": 4.2,
+          "volley_stagger_m": 0.4
+        },
+        "trail": {
+          "style": "dust",
+          "width": 0.15,
+          "opacity": 0.48,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0,
+          "colour": "#b6a07c",
+          "sample_spacing_m": 0.12,
+          "max_length_m": 1.7,
+          "flow_speed": 2.4
+        },
+        "impact": {
+          "shape": "soft_dust",
+          "duration": 0.72,
+          "grow": 1.55,
+          "heat": 0.12,
+          "opacity": 0.45,
+          "dust_colour": "#b7a68d",
+          "card_extent_scale": 2.4,
+          "mote_shape": "stone",
+          "mote_size": 0.12,
+          "speed": 5.3,
+          "gravity": 13.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "rays": 8,
+          "ray_width_ratio": 0.075,
+          "mote_colour": "#78664b",
+          "secondary_shape": "soft_dust",
+          "secondary_rotation_x": 0.0,
+          "initial_grow": 0.18,
+          "growth_power": 0.45,
+          "mote_end_scale": 0.7,
+          "settle_on_ground": true,
+          "layers": [],
+          "puff_count": 3,
+          "puff_shape": "soft_dust",
+          "puff_at_ground": true,
+          "puff_colour": "#b5a17c",
+          "puff_radius_scale": 0.8,
+          "target_envelope_scale": 0,
+          "puff_start_radius_scale": 0.3,
+          "puff_end_radius_scale": 1.65,
+          "puff_size_scale": 0.75,
+          "puff_opacity": 0.39,
+          "puff_lift_m": 0.48,
+          "puff_grow": 1.4,
+          "puff_initial_scale": 0.28,
+          "puff_reveal_power": 0.18,
+          "visual_anchor": "contact_surface",
+          "puff_ground_clearance_scale": 0.79,
+          "puff_backscatter": 1.0,
+          "mote_backscatter": 1.5,
+          "mote_tumble_radians": 8.0,
+          "stone_colour": "#95836d",
+          "mineral_colour": "#bca67d",
+          "authored_surface": true,
+          "surface_scale": 1.35,
+          "texture_blend": 0.52,
+          "surface_roughness": 0.88,
+          "accent_count": 7,
+          "accent_width_scale": 0.1
+        },
+        "sound": {
+          "launch": "vfx_stone_throw_launch",
+          "travel": "vfx_stone_throw_travel",
+          "launch_travel": "vfx_stone_throw_launch_travel",
+          "impact": "vfx_stone_throw_impact",
+          "launch_mastery": "vfx_stone_throw_launch_mastery",
+          "launch_travel_mastery": "vfx_stone_throw_launch_travel_mastery",
+          "impact_mastery": "vfx_stone_throw_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "first_body",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 3,
+          "size": 0.2,
+          "colour": "#d9b26a",
+          "arc": 0.7,
+          "speed": 24.0,
+          "spread": 0.36,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 7
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 1,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 9
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 2,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 11
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 3,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 13
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 4,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true,
+            "accent_count": 15
+          }
+        ],
+        "sound_variants": {
+          "boulder": {
+            "launch": "vfx_stone_boulder_launch",
+            "travel": "vfx_stone_boulder_travel",
+            "launch_travel": "vfx_stone_boulder_launch_travel",
+            "impact": "vfx_stone_boulder_impact",
+            "launch_mastery": "vfx_stone_boulder_launch_mastery",
+            "launch_travel_mastery": "vfx_stone_boulder_launch_travel_mastery",
+            "impact_mastery": "vfx_stone_boulder_impact_mastery",
+            "gain_db": -7.0,
+            "travel_min_seconds": 0.18
+          }
+        },
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "first_body",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "fireball": {
+        "light": {
+          "enabled": true,
+          "colour": "#ffb357",
+          "body_range_m": 2.8,
+          "body_energy": 1.1,
+          "impact_range_m": 4.0,
+          "impact_energy": 2.1,
+          "flicker": 0.12
+        },
+        "body": {
+          "shape": "burning_core",
+          "motion": "projectile",
+          "lit": false,
+          "opacity": 0.86,
+          "segments": 32,
+          "rings": 16,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "flame_tongue",
+              "size_scale": 0.9,
+              "card_extent_scale": 2.5,
+              "curve_depth_scale": 0.18,
+              "colour": "#fff4d9",
+              "opacity": 0.91,
+              "flow_speed": 3.8,
+              "emission_strength": 0.5,
+              "yaw_offset_deg": 0,
+              "breakup_strength": 0.45,
+              "spin_rate": 0.8,
+              "offset": [
+                0,
+                0.24,
+                0
+              ]
+            },
+            {
+              "shape": "flame_tongue",
+              "size_scale": 0.9550000000000001,
+              "card_extent_scale": 2.5,
+              "curve_depth_scale": 0.18,
+              "colour": "#fff4d9",
+              "opacity": 0.91,
+              "flow_speed": 3.8,
+              "emission_strength": 0.5,
+              "yaw_offset_deg": 72,
+              "breakup_strength": 0.45,
+              "spin_rate": 0.8,
+              "offset": [
+                0,
+                0.265,
+                0
+              ]
+            },
+            {
+              "shape": "flame_tongue",
+              "size_scale": 1.01,
+              "card_extent_scale": 2.5,
+              "curve_depth_scale": 0.18,
+              "colour": "#fff4d9",
+              "opacity": 0.91,
+              "flow_speed": 3.8,
+              "emission_strength": 0.5,
+              "yaw_offset_deg": 144,
+              "breakup_strength": 0.45,
+              "spin_rate": 0.8,
+              "offset": [
+                0,
+                0.29,
+                0
+              ]
+            },
+            {
+              "shape": "flame_tongue",
+              "size_scale": 1.065,
+              "card_extent_scale": 2.5,
+              "curve_depth_scale": 0.18,
+              "colour": "#fff4d9",
+              "opacity": 0.91,
+              "flow_speed": 3.8,
+              "emission_strength": 0.5,
+              "yaw_offset_deg": 216,
+              "breakup_strength": 0.45,
+              "spin_rate": 0.8,
+              "offset": [
+                0,
+                0.315,
+                0
+              ]
+            },
+            {
+              "shape": "flame_tongue",
+              "size_scale": 1.12,
+              "card_extent_scale": 2.5,
+              "curve_depth_scale": 0.18,
+              "colour": "#fff4d9",
+              "opacity": 0.91,
+              "flow_speed": 3.8,
+              "emission_strength": 0.5,
+              "yaw_offset_deg": 288,
+              "breakup_strength": 0.45,
+              "spin_rate": 0.8,
+              "offset": [
+                0,
+                0.33999999999999997,
+                0
+              ]
+            }
+          ],
+          "hot_colour": "#fff1a2",
+          "ember_colour": "#b35a07",
+          "card_extent_scale": 3.5,
+          "flow_speed": 3.8,
+          "surface_scale": 4.8,
+          "deformation": 0.22,
+          "edge_softness": 0.42,
+          "emission_strength": 0.9
+        },
+        "trail": {
+          "style": "painted_flame",
+          "width": 0.64,
+          "opacity": 0.88,
+          "wave_amplitude": 0.08,
+          "wave_frequency": 1.5,
+          "wave_speed": 6.0,
+          "sample_spacing_m": 0.12,
+          "max_length_m": 2.3,
+          "flow_speed": 4.0,
+          "emission_strength": 0.75,
+          "breakup_strength": 0.72,
+          "hot_colour": "#fff0a8"
+        },
+        "impact": {
+          "shape": "fire_explosion",
+          "thermal_aftermath": true,
+          "afterburn_strength": 1.0,
+          "afterburn_start": 0.04,
+          "afterburn_end": 0.32,
+          "afterburn_colour": "#574c40",
+          "emission_fade_power": 2.2,
+          "afterburn_porosity": 0.55,
+          "duration": 0.72,
+          "grow": 1.18,
+          "heat": 0.9,
+          "opacity": 0.72,
+          "mote_shape": "soft_ember",
+          "mote_size": 0.07,
+          "speed": 5.4,
+          "gravity": 3.6,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 24,
+          "rings": 12,
+          "hot_colour": "#fff0a8",
+          "ember_colour": "#85250a",
+          "mote_colour": "#ffd176",
+          "layers": [
+            {
+              "shape": "fire_explosion",
+              "thermal_aftermath": true,
+              "afterburn_strength": 1.0,
+              "afterburn_start": 0.04,
+              "afterburn_end": 0.32,
+              "afterburn_colour": "#574c40",
+              "emission_fade_power": 2.2,
+              "afterburn_porosity": 0.55,
+              "size_scale": 0.55,
+              "card_extent_scale": 2.6,
+              "colour": "#ff681d",
+              "hot_colour": "#ffe39a",
+              "ember_colour": "#922409",
+              "opacity": 0.5,
+              "emission_strength": 0.42,
+              "edge_breakup": 0.29,
+              "porosity": 0.7,
+              "curl_scale": 6.4,
+              "heat_warp": 0.24,
+              "flow_speed": 4.1,
+              "offset": [
+                -0.48,
+                0.36,
+                0.18
+              ]
+            },
+            {
+              "shape": "fire_explosion",
+              "thermal_aftermath": true,
+              "afterburn_strength": 1.0,
+              "afterburn_start": 0.04,
+              "afterburn_end": 0.32,
+              "afterburn_colour": "#574c40",
+              "emission_fade_power": 2.2,
+              "afterburn_porosity": 0.55,
+              "size_scale": 0.63,
+              "card_extent_scale": 2.6,
+              "colour": "#ff932c",
+              "hot_colour": "#fff0b8",
+              "ember_colour": "#9c2708",
+              "opacity": 0.54,
+              "emission_strength": 0.48,
+              "edge_breakup": 0.24,
+              "porosity": 0.66,
+              "curl_scale": 5.8,
+              "heat_warp": 0.2,
+              "flow_speed": 3.7,
+              "offset": [
+                0.38,
+                0.55,
+                -0.12
+              ]
+            },
+            {
+              "shape": "soft_dust",
+              "size_scale": 0.4,
+              "card_extent_scale": 2.6,
+              "colour": "#635f59",
+              "opacity": 0.16,
+              "flow_speed": 1.7,
+              "offset": [
+                -0.12,
+                0.88,
+                0.08
+              ]
+            }
+          ],
+          "initial_grow": 0.26,
+          "growth_power": 0.42,
+          "secondary_shape": "fire_explosion",
+          "secondary_rotation_x": 0.0,
+          "mote_end_scale": 0.15,
+          "card_extent_scale": 2.6,
+          "puff_count": 6,
+          "puff_shape": "fire_explosion",
+          "puff_radius_scale": 0.55,
+          "target_envelope_scale": 0,
+          "puff_start_radius_scale": 0.15,
+          "puff_end_radius_scale": 0.85,
+          "puff_size_scale": 0.48,
+          "puff_opacity": 0.42,
+          "puff_lift_m": 0.35,
+          "puff_grow": 1.05,
+          "puff_initial_scale": 0.42,
+          "puff_reveal_power": 0.28,
+          "visual_anchor": "contact_surface",
+          "puff_backscatter": 0.7,
+          "mote_backscatter": 1.2,
+          "accent_count": 7,
+          "accent_width_scale": 0.1,
+          "flow_speed": 3.6,
+          "emission_strength": 0.5,
+          "edge_breakup": 0.26,
+          "porosity": 0.62,
+          "curl_scale": 6.0,
+          "heat_warp": 0.22
+        },
+        "sound": {
+          "launch": "vfx_fireball_launch",
+          "travel": "vfx_fireball_travel",
+          "launch_travel": "vfx_fireball_launch_travel",
+          "impact": "vfx_fireball_impact",
+          "launch_mastery": "vfx_fireball_launch_mastery",
+          "launch_travel_mastery": "vfx_fireball_launch_travel_mastery",
+          "impact_mastery": "vfx_fireball_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "body_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.45,
+          "colour": "#f6a132",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "body_layer_count": 1,
+            "accent_count": 7
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "body_layer_count": 2,
+            "accent_count": 9
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "body_layer_count": 3,
+            "accent_count": 11
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "body_layer_count": 4,
+            "accent_count": 13
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true,
+            "body_layer_count": 5,
+            "accent_count": 15
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "body_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "flame_cone": {
+        "body": {
+          "shape": "flame_volume",
+          "motion": "cone",
+          "lit": false,
+          "opacity": 0.88,
+          "segments": 18,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "widen": true,
+          "flow_speed": 4.2,
+          "flow_segments": 14,
+          "hot_colour": "#fff0b5",
+          "ember_colour": "#a85e05"
+        },
+        "trail": {
+          "style": "ember",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "fire_bloom",
+          "duration": 0.72,
+          "grow": 3.4,
+          "heat": 0.0,
+          "opacity": 0.93,
+          "mote_shape": "soft_ember",
+          "mote_size": 0.075,
+          "speed": 5.2,
+          "gravity": 3.6,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 24,
+          "rings": 12,
+          "hot_colour": "#fff0a0",
+          "ember_colour": "#a85e05",
+          "mote_colour": "#ffd176",
+          "layers": [],
+          "initial_grow": 1.0,
+          "secondary_shape": "fire_bloom",
+          "secondary_rotation_x": 0.0,
+          "mote_end_scale": 0.15,
+          "card_extent_scale": 3.6,
+          "puff_count": 6,
+          "puff_shape": "fire_bloom",
+          "puff_radius_scale": 1.3,
+          "target_envelope_scale": 0.6,
+          "puff_start_radius_scale": 0.85,
+          "puff_end_radius_scale": 1.55,
+          "puff_size_scale": 1.5,
+          "puff_opacity": 0.8,
+          "puff_lift_m": 0.85,
+          "puff_grow": 1.7
+        },
+        "sound": {
+          "launch": "vfx_flame_cone_launch",
+          "travel": "vfx_flame_cone_travel",
+          "launch_travel": "vfx_flame_cone_launch_travel",
+          "impact": "vfx_flame_cone_impact",
+          "launch_mastery": "vfx_flame_cone_launch_mastery",
+          "launch_travel_mastery": "vfx_flame_cone_launch_travel_mastery",
+          "impact_mastery": "vfx_flame_cone_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "front_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.65,
+          "colour": "#f6a132",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "front_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "ember_burst": {
+        "body": {
+          "shape": "burning_core",
+          "hot_colour": "#ffeabd",
+          "flow_speed": 4.2,
+          "surface_scale": 3.2,
+          "deformation": 0.18,
+          "edge_softness": 0.45,
+          "emission_strength": 0.45,
+          "motion": "radial",
+          "lit": false,
+          "opacity": 0.82,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38
+        },
+        "trail": {
+          "style": "ember",
+          "width": 0.095,
+          "opacity": 0.45,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "fire_explosion",
+          "hot_colour": "#ffeabd",
+          "ember_colour": "#8d3d14",
+          "thermal_aftermath": true,
+          "afterburn_strength": 0.75,
+          "afterburn_start": 0.02,
+          "afterburn_end": 0.28,
+          "afterburn_colour": "#605344",
+          "emission_fade_power": 2.0,
+          "afterburn_porosity": 0.55,
+          "card_extent_scale": 2.2,
+          "flow_speed": 3.3,
+          "emission_strength": 0.28,
+          "porosity": 0.7,
+          "initial_grow": 0.22,
+          "growth_power": 0.5,
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.62,
+          "mote_shape": "soft_ember",
+          "mote_colour": "#ffc97a",
+          "mote_end_scale": 0.12,
+          "secondary_shape": "fire_explosion",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_ember_burst_launch",
+          "travel": "vfx_ember_burst_travel",
+          "launch_travel": "vfx_ember_burst_launch_travel",
+          "impact": "vfx_ember_burst_impact",
+          "launch_mastery": "vfx_ember_burst_launch_mastery",
+          "launch_travel_mastery": "vfx_ember_burst_launch_travel_mastery",
+          "impact_mastery": "vfx_ember_burst_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "burst_front",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 8,
+          "size": 0.09,
+          "colour": "#f6a132",
+          "arc": 0.25,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 1,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 2,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 3,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 4,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "burst_front",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "sky_lightning": {
+        "light": {
+          "enabled": true,
+          "colour": "#fff0bd",
+          "body_range_m": 2.4,
+          "body_energy": 0.45,
+          "impact_range_m": 3.8,
+          "impact_energy": 2.4,
+          "flicker": 0.04
+        },
+        "body": {
+          "shape": "beam",
+          "motion": "sky",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "glyph_sides": 6,
+          "contact_anchor": "target_ground",
+          "contact_hold_seconds": 0.22,
+          "contact_fade_power": 2.4,
+          "stroke_width_scale": 2.0,
+          "branch_length_m": 0.9,
+          "branch_count": 2,
+          "branch_add_per_rank": 2,
+          "branch_down_ratio": 0.5,
+          "pulse_strength": 0.04,
+          "core_width": 0.28,
+          "corona_width": 0.74,
+          "corona_opacity": 0.28,
+          "filament_sway": 0.015,
+          "corona_sway": 0.025,
+          "corona_power": 1.8,
+          "vein_strength": 0.18,
+          "emission_floor": 0.15,
+          "emission_strength": 1.25
+        },
+        "trail": {
+          "style": "ion",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.3,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0,
+          "sample_spacing_m": 0.14,
+          "max_length_m": 1.2
+        },
+        "impact": {
+          "shape": "electrical_splash",
+          "duration": 0.48,
+          "grow": 1.8,
+          "heat": 0.6,
+          "opacity": 1.0,
+          "mote_shape": "soft_ember",
+          "mote_size": 0.06,
+          "speed": 7.0,
+          "gravity": 7.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "rays": 10,
+          "ray_width_ratio": 0.055,
+          "mote_colour": "#fff7c1",
+          "initial_grow": 0.2,
+          "growth_power": 0.5,
+          "secondary_shape": "electrical_splash",
+          "secondary_rotation_x": 0.0,
+          "layers": [],
+          "contact_anchor": "target",
+          "puff_count": 0,
+          "puff_shape": "soft_ember",
+          "puff_colour": "#fff0b1",
+          "puff_radius_scale": 0.8,
+          "target_envelope_scale": 0,
+          "puff_start_radius_scale": 0.4,
+          "puff_end_radius_scale": 1.3,
+          "puff_size_scale": 0.95,
+          "puff_opacity": 0.58,
+          "puff_lift_m": 0.6,
+          "puff_grow": 1.3,
+          "card_extent_scale": 3.4,
+          "visual_anchor": "sky_surface",
+          "visual_surface_lift_m": 0.03,
+          "accent_count": 6,
+          "accent_width_scale": 0.34,
+          "core_width": 0.28,
+          "corona_width": 0.74,
+          "corona_opacity": 0.28,
+          "filament_sway": 0.015,
+          "corona_sway": 0.025,
+          "corona_power": 1.8,
+          "vein_strength": 0.18,
+          "emission_floor": 0.15,
+          "emission_strength": 1.25
+        },
+        "sound": {
+          "launch": "vfx_sky_lightning_launch",
+          "travel": "vfx_sky_lightning_travel",
+          "launch_travel": "vfx_sky_lightning_launch_travel",
+          "impact": "vfx_sky_lightning_impact",
+          "launch_mastery": "vfx_sky_lightning_launch_mastery",
+          "launch_travel_mastery": "vfx_sky_lightning_launch_travel_mastery",
+          "impact_mastery": "vfx_sky_lightning_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "bolt_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.24,
+          "colour": "#f5d24a",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 6
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 8
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 10
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false,
+            "accent_count": 12
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true,
+            "accent_count": 14
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "bolt_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "chain_lightning": {
+        "body": {
+          "shape": "beam",
+          "motion": "chain",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38
+        },
+        "trail": {
+          "style": "ion",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.3,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "orb",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "orb",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_chain_lightning_launch",
+          "travel": "vfx_chain_lightning_travel",
+          "launch_travel": "vfx_chain_lightning_launch_travel",
+          "impact": "vfx_chain_lightning_impact",
+          "launch_mastery": "vfx_chain_lightning_launch_mastery",
+          "launch_travel_mastery": "vfx_chain_lightning_launch_travel_mastery",
+          "impact_mastery": "vfx_chain_lightning_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "arc_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.2,
+          "colour": "#f5d24a",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "arc_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "water_jet": {
+        "body": {
+          "shape": "water_stream",
+          "motion": "stream",
+          "lit": false,
+          "opacity": 0.8,
+          "segments": 18,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.7,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "stream",
+              "size_scale": 0.48,
+              "colour": "#edfaff",
+              "opacity": 0.72
+            }
+          ],
+          "flow_speed": 4.0,
+          "flow_segments": 14,
+          "foam_colour": "#d4edf2"
+        },
+        "trail": {
+          "style": "spray",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "soft_foam",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "bubble",
+          "mote_size": 0.055,
+          "speed": 4.5,
+          "gravity": 10.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "secondary_shape": "soft_foam",
+          "puff_count": 8,
+          "puff_shape": "soft_foam",
+          "puff_colour": "#d1e8ee",
+          "puff_opacity": 0.55,
+          "puff_at_ground": false,
+          "puff_radius_scale": 1.5,
+          "target_envelope_scale": 0.5,
+          "puff_size_scale": 1.6,
+          "puff_grow": 1.5,
+          "puff_lift_m": 0.15
+        },
+        "sound": {
+          "launch": "vfx_water_jet_launch",
+          "travel": "vfx_water_jet_travel",
+          "launch_travel": "vfx_water_jet_launch_travel",
+          "impact": "vfx_water_jet_impact",
+          "launch_mastery": "vfx_water_jet_launch_mastery",
+          "launch_travel_mastery": "vfx_water_jet_launch_travel_mastery",
+          "impact_mastery": "vfx_water_jet_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "stream_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.18,
+          "colour": "#57b6e8",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "stream_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "bubble_volley": {
+        "body": {
+          "shape": "bubble",
+          "motion": "projectile",
+          "lit": true,
+          "opacity": 0.68,
+          "rim_colour": "#dcfaff",
+          "rim_power": 2.6,
+          "film_strength": 0.1,
+          "flow_speed": 0.7,
+          "center_opacity": 0.045,
+          "surface_roughness": 0.14,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": []
+        },
+        "trail": {
+          "style": "bubble",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "ring",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "bubble",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.07,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "initial_grow": 0.2,
+          "growth_power": 0.45,
+          "puff_count": 4,
+          "puff_shape": "soft_foam",
+          "puff_colour": "#ddf7ff",
+          "puff_radius_scale": 0.55,
+          "target_envelope_scale": 0,
+          "puff_start_radius_scale": 0.1,
+          "puff_end_radius_scale": 0.8,
+          "puff_size_scale": 0.3,
+          "puff_opacity": 0.32,
+          "puff_initial_scale": 0.28,
+          "puff_reveal_power": 0.2,
+          "puff_grow": 1.2,
+          "puff_lift_m": 0.2,
+          "visual_anchor": "contact_surface"
+        },
+        "sound": {
+          "launch": "vfx_bubble_volley_launch",
+          "travel": "vfx_bubble_volley_travel",
+          "launch_travel": "vfx_bubble_volley_launch_travel",
+          "impact": "vfx_bubble_volley_impact",
+          "launch_mastery": "vfx_bubble_volley_launch_mastery",
+          "launch_travel_mastery": "vfx_bubble_volley_launch_travel_mastery",
+          "impact_mastery": "vfx_bubble_volley_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "first_body",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 4,
+          "size": 0.3,
+          "colour": "#57b6e8",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.36,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 1,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 2,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 3,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 4,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "first_body",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "tidal_wave": {
+        "body": {
+          "shape": "rolling_wave",
+          "motion": "projectile",
+          "lit": false,
+          "opacity": 0.82,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "curl_segments": 12,
+          "flow_speed": 3.0,
+          "foam_colour": "#def0ed"
+        },
+        "trail": {
+          "style": "foam",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "soft_foam",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "bubble",
+          "mote_size": 0.055,
+          "speed": 4.5,
+          "gravity": 10.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "secondary_shape": "soft_foam",
+          "puff_count": 8,
+          "puff_shape": "soft_foam",
+          "puff_colour": "#d1e8ee",
+          "puff_opacity": 0.55,
+          "puff_at_ground": true,
+          "puff_radius_scale": 1.5,
+          "target_envelope_scale": 0.5,
+          "puff_size_scale": 1.6,
+          "puff_grow": 1.5,
+          "puff_lift_m": 0.15
+        },
+        "sound": {
+          "launch": "vfx_tidal_wave_launch",
+          "travel": "vfx_tidal_wave_travel",
+          "launch_travel": "vfx_tidal_wave_launch_travel",
+          "impact": "vfx_tidal_wave_impact",
+          "launch_mastery": "vfx_tidal_wave_launch_mastery",
+          "launch_travel_mastery": "vfx_tidal_wave_launch_travel_mastery",
+          "impact_mastery": "vfx_tidal_wave_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "front_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.9,
+          "colour": "#57b6e8",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "front_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "wind_blade": {
+        "body": {
+          "shape": "crescent",
+          "air_surface": true,
+          "crest_colour": "#f2fff9",
+          "flow_speed": 3.1,
+          "strand_frequency": 5.0,
+          "breakup": 0.38,
+          "emission_strength": 0.04,
+          "motion": "projectile",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "crescent",
+              "air_surface": true,
+              "crest_colour": "#f2fff9",
+              "flow_speed": 3.1,
+              "strand_frequency": 5.0,
+              "breakup": 0.38,
+              "emission_strength": 0.04,
+              "size_scale": 0.48,
+              "colour": "#edfaff",
+              "opacity": 0.72
+            }
+          ],
+          "authored_slash": true,
+          "slash_width_scale": 0.25
+        },
+        "trail": {
+          "style": "air",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "crescent",
+          "air_surface": true,
+          "crest_colour": "#f2fff9",
+          "flow_speed": 3.1,
+          "strand_frequency": 5.0,
+          "breakup": 0.38,
+          "emission_strength": 0.04,
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "soft_ember",
+          "hot_colour": "#f2fff9",
+          "ember_colour": "#aacfc8",
+          "initial_grow": 0.25,
+          "growth_power": 0.55,
+          "visual_anchor": "contact_surface",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_wind_blade_launch",
+          "travel": "vfx_wind_blade_travel",
+          "launch_travel": "vfx_wind_blade_launch_travel",
+          "impact": "vfx_wind_blade_impact",
+          "launch_mastery": "vfx_wind_blade_launch_mastery",
+          "launch_travel_mastery": "vfx_wind_blade_launch_travel_mastery",
+          "impact_mastery": "vfx_wind_blade_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "body_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.7,
+          "colour": "#dbeaf7",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "body_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "tornado": {
+        "body": {
+          "shape": "vortex",
+          "motion": "projectile",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "vortex",
+              "size_scale": 0.7,
+              "colour": "#dbeaf7",
+              "opacity": 0.4,
+              "spin_rate": -3.0
+            }
+          ]
+        },
+        "trail": {
+          "style": "air",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "vortex",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "orb",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_tornado_launch",
+          "travel": "vfx_tornado_travel",
+          "launch_travel": "vfx_tornado_launch_travel",
+          "impact": "vfx_tornado_impact",
+          "launch_mastery": "vfx_tornado_launch_mastery",
+          "launch_travel_mastery": "vfx_tornado_launch_travel_mastery",
+          "impact_mastery": "vfx_tornado_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "funnel_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.7,
+          "colour": "#dbeaf7",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "funnel_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "ice_shard_volley": {
+        "body": {
+          "shape": "ice_crystal",
+          "frost_colour": "#d6f0f5",
+          "edge_width": 0.055,
+          "frost_strength": 0.36,
+          "facet_variation": 0.16,
+          "surface_roughness": 0.22,
+          "specular_strength": 0.55,
+          "emission_strength": 0.015,
+          "motion": "projectile",
+          "lit": true,
+          "opacity": 1.0,
+          "segments": 6,
+          "rings": 8,
+          "height_ratio": 3.8,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "shard",
+              "size_scale": 0.48,
+              "colour": "#edfaff",
+              "opacity": 0.72
+            }
+          ],
+          "volley_separation_scale": 3.0,
+          "volley_stagger_m": 0.25
+        },
+        "trail": {
+          "style": "frost",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "soft_foam",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "ice_crystal",
+          "frost_colour": "#d6f0f5",
+          "edge_width": 0.055,
+          "frost_strength": 0.36,
+          "facet_variation": 0.16,
+          "surface_roughness": 0.22,
+          "specular_strength": 0.55,
+          "emission_strength": 0.015,
+          "mote_size": 0.08,
+          "speed": 4.5,
+          "gravity": 12.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "secondary_shape": "soft_foam",
+          "puff_count": 6,
+          "puff_shape": "soft_foam",
+          "puff_colour": "#d5eaee",
+          "puff_opacity": 0.35,
+          "puff_size_scale": 1.1,
+          "settle_on_ground": true,
+          "mote_end_scale": 0.65
+        },
+        "sound": {
+          "launch": "vfx_ice_shard_volley_launch",
+          "travel": "vfx_ice_shard_volley_travel",
+          "launch_travel": "vfx_ice_shard_volley_launch_travel",
+          "impact": "vfx_ice_shard_volley_impact",
+          "launch_mastery": "vfx_ice_shard_volley_launch_mastery",
+          "launch_travel_mastery": "vfx_ice_shard_volley_launch_travel_mastery",
+          "impact_mastery": "vfx_ice_shard_volley_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "first_body",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 4,
+          "size": 0.2,
+          "colour": "#a8dcf0",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.36,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 1,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 2,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 3,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 4,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "first_body",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "frost_breath": {
+        "body": {
+          "shape": "mist_cone",
+          "motion": "cone",
+          "lit": false,
+          "opacity": 0.43,
+          "segments": 18,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "widen": true,
+          "flow_speed": 2.6,
+          "flow_segments": 14,
+          "dust": true
+        },
+        "trail": {
+          "style": "frost",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "soft_foam",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "ice_crystal",
+          "frost_colour": "#d6f0f5",
+          "edge_width": 0.055,
+          "frost_strength": 0.36,
+          "facet_variation": 0.16,
+          "surface_roughness": 0.22,
+          "specular_strength": 0.55,
+          "emission_strength": 0.015,
+          "mote_size": 0.08,
+          "speed": 4.5,
+          "gravity": 12.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "secondary_shape": "soft_foam",
+          "puff_count": 6,
+          "puff_shape": "soft_foam",
+          "puff_colour": "#d5eaee",
+          "puff_opacity": 0.35,
+          "puff_size_scale": 1.1,
+          "settle_on_ground": true,
+          "mote_end_scale": 0.65
+        },
+        "sound": {
+          "launch": "vfx_frost_breath_launch",
+          "travel": "vfx_frost_breath_travel",
+          "launch_travel": "vfx_frost_breath_launch_travel",
+          "impact": "vfx_frost_breath_impact",
+          "launch_mastery": "vfx_frost_breath_launch_mastery",
+          "launch_travel_mastery": "vfx_frost_breath_launch_travel_mastery",
+          "impact_mastery": "vfx_frost_breath_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "front_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.65,
+          "colour": "#a8dcf0",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "front_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "shadow_bolt": {
+        "body": {
+          "shape": "orb",
+          "shadow_surface": true,
+          "shadow_colour": "#261f3b",
+          "wisp_colour": "#927ab8",
+          "flow_speed": 1.6,
+          "surface_scale": 3.4,
+          "porosity": 0.35,
+          "emission_strength": 0.07,
+          "motion": "projectile",
+          "lit": true,
+          "opacity": 0.82,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "vortex",
+              "size_scale": 0.7,
+              "colour": "#785da0",
+              "opacity": 0.4,
+              "spin_rate": -3.0
+            }
+          ]
+        },
+        "trail": {
+          "style": "wisp",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.3,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "orb",
+          "shadow_surface": true,
+          "shadow_colour": "#261f3b",
+          "wisp_colour": "#927ab8",
+          "flow_speed": 1.6,
+          "surface_scale": 3.4,
+          "porosity": 0.35,
+          "emission_strength": 0.07,
+          "duration": 0.42,
+          "initial_grow": 0.22,
+          "growth_power": 0.48,
+          "visual_anchor": "contact_surface",
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "orb",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_shadow_bolt_launch",
+          "travel": "vfx_shadow_bolt_travel",
+          "launch_travel": "vfx_shadow_bolt_launch_travel",
+          "impact": "vfx_shadow_bolt_impact",
+          "launch_mastery": "vfx_shadow_bolt_launch_mastery",
+          "launch_travel_mastery": "vfx_shadow_bolt_launch_travel_mastery",
+          "impact_mastery": "vfx_shadow_bolt_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "body_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.42,
+          "colour": "#785da0",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "body_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "psychic_pulse": {
+        "body": {
+          "shape": "ring",
+          "motion": "pulse",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "rib_style": "psychic",
+          "rib_lobes": 6
+        },
+        "trail": {
+          "style": "ripple",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "ring",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "orb",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_psychic_pulse_launch",
+          "travel": "vfx_psychic_pulse_travel",
+          "launch_travel": "vfx_psychic_pulse_launch_travel",
+          "impact": "vfx_psychic_pulse_impact",
+          "launch_mastery": "vfx_psychic_pulse_launch_mastery",
+          "launch_travel_mastery": "vfx_psychic_pulse_launch_travel_mastery",
+          "impact_mastery": "vfx_psychic_pulse_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "ring_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.5,
+          "colour": "#a6b4ed",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "ring_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "root_stone_spikes": {
+        "body": {
+          "shape": "spike",
+          "root_stone_surface": true,
+          "stone_colour": "#706451",
+          "mineral_colour": "#b3a68a",
+          "surface_scale": 1.2,
+          "texture_blend": 0.42,
+          "surface_roughness": 0.9,
+          "motion": "target",
+          "lit": true,
+          "opacity": 1.0,
+          "segments": 5,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "glyph_sides": 6,
+          "authored_root": true
+        },
+        "trail": {
+          "style": "dust",
+          "width": 0.1,
+          "opacity": 0.42,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "spike",
+          "root_stone_surface": true,
+          "stone_colour": "#706451",
+          "mineral_colour": "#b3a68a",
+          "surface_scale": 1.2,
+          "texture_blend": 0.42,
+          "surface_roughness": 0.9,
+          "duration": 0.42,
+          "initial_grow": 0.2,
+          "growth_power": 0.5,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "stone",
+          "mote_colour": "#a59679",
+          "mote_tumble_radians": 2.0,
+          "settle_on_ground": true,
+          "mote_end_scale": 0.32,
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_root_stone_spikes_launch",
+          "travel": "vfx_root_stone_spikes_travel",
+          "launch_travel": "vfx_root_stone_spikes_launch_travel",
+          "impact": "vfx_root_stone_spikes_impact",
+          "launch_mastery": "vfx_root_stone_spikes_launch_mastery",
+          "launch_travel_mastery": "vfx_root_stone_spikes_launch_travel_mastery",
+          "impact_mastery": "vfx_root_stone_spikes_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "eruption",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 4,
+          "size": 0.36,
+          "colour": "#b4a66a",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.36,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 1,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 2,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 3,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 4,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "eruption",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "quake_ring": {
+        "body": {
+          "shape": "ring",
+          "motion": "pulse",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "rib_style": "quake",
+          "rib_lobes": 9
+        },
+        "trail": {
+          "style": "dust",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "stone",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "stone",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_quake_ring_launch",
+          "travel": "vfx_quake_ring_travel",
+          "launch_travel": "vfx_quake_ring_launch_travel",
+          "impact": "vfx_quake_ring_impact",
+          "launch_mastery": "vfx_quake_ring_launch_mastery",
+          "launch_travel_mastery": "vfx_quake_ring_launch_travel_mastery",
+          "impact_mastery": "vfx_quake_ring_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "ring_contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.6,
+          "colour": "#d9b26a",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "ring_contact",
+          "exception": "No exception; all authored volley endpoints coincide at the accepted arrival.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "slash_trail": {
+        "body": {
+          "shape": "crescent",
+          "motion": "target",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "authored_slash": true,
+          "slash_width_scale": 0.25
+        },
+        "trail": {
+          "style": "slash",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "crescent",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "orb",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_slash_trail_launch",
+          "travel": "vfx_slash_trail_travel",
+          "launch_travel": "vfx_slash_trail_launch_travel",
+          "impact": "vfx_slash_trail_impact",
+          "launch_mastery": "vfx_slash_trail_launch_mastery",
+          "launch_travel_mastery": "vfx_slash_trail_launch_travel_mastery",
+          "impact_mastery": "vfx_slash_trail_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 2,
+          "size": 0.65,
+          "colour": "#e5dab5",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.36,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 1,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 2,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 3,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 4,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "contact",
+          "exception": "Melee contact has no separate flight; commit after constructing visible contact.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "charge_dash": {
+        "body": {
+          "shape": "stream",
+          "motion": "projectile",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.7,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38
+        },
+        "trail": {
+          "style": "dash",
+          "width": 0.14,
+          "opacity": 0.78,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "crescent",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.82,
+          "mote_shape": "orb",
+          "mote_size": 0.065,
+          "speed": 4.5,
+          "gravity": 5.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_charge_dash_launch",
+          "travel": "vfx_charge_dash_travel",
+          "launch_travel": "vfx_charge_dash_launch_travel",
+          "impact": "vfx_charge_dash_impact",
+          "launch_mastery": "vfx_charge_dash_launch_mastery",
+          "launch_travel_mastery": "vfx_charge_dash_launch_travel_mastery",
+          "impact_mastery": "vfx_charge_dash_impact_mastery",
+          "gain_db": -7.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 24,
+          "trail": 18
+        },
+        "arrival": "contact",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.23,
+          "colour": "#e5dab5",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "contact",
+          "exception": "Melee contact has no separate flight; commit after constructing visible contact.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "heal_pulse": {
+        "body": {
+          "shape": "ring",
+          "motion": "self",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "rib_style": "heal",
+          "rib_lobes": 7
+        },
+        "trail": {
+          "style": "mote",
+          "width": 0.1,
+          "opacity": 0.58,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "ring",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.58,
+          "mote_shape": "orb",
+          "mote_size": 0.045,
+          "speed": 2.2,
+          "gravity": 1.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_heal_pulse_launch",
+          "travel": "vfx_heal_pulse_travel",
+          "launch_travel": "vfx_heal_pulse_launch_travel",
+          "impact": "vfx_heal_pulse_impact",
+          "launch_mastery": "vfx_heal_pulse_launch_mastery",
+          "launch_travel_mastery": "vfx_heal_pulse_launch_travel_mastery",
+          "impact_mastery": "vfx_heal_pulse_impact_mastery",
+          "gain_db": -16.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 12,
+          "trail": 10
+        },
+        "arrival": "no_damage",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.7,
+          "colour": "#98e1b8",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "no_damage",
+          "exception": "No HP damage; canonical utility/capture/guard authority commits its own effect.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "buff_aura": {
+        "body": {
+          "shape": "vortex",
+          "motion": "self",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "layers": [
+            {
+              "shape": "vortex",
+              "size_scale": 0.7,
+              "colour": "#ebdca0",
+              "opacity": 0.4,
+              "spin_rate": -3.0
+            }
+          ]
+        },
+        "trail": {
+          "style": "mote",
+          "width": 0.1,
+          "opacity": 0.58,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "vortex",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.58,
+          "mote_shape": "orb",
+          "mote_size": 0.045,
+          "speed": 2.2,
+          "gravity": 1.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_buff_aura_launch",
+          "travel": "vfx_buff_aura_travel",
+          "launch_travel": "vfx_buff_aura_launch_travel",
+          "impact": "vfx_buff_aura_impact",
+          "launch_mastery": "vfx_buff_aura_launch_mastery",
+          "launch_travel_mastery": "vfx_buff_aura_launch_travel_mastery",
+          "impact_mastery": "vfx_buff_aura_impact_mastery",
+          "gain_db": -16.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 12,
+          "trail": 10
+        },
+        "arrival": "no_damage",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.65,
+          "colour": "#ebdca0",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "no_damage",
+          "exception": "No HP damage; canonical utility/capture/guard authority commits its own effect.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "debuff_hex": {
+        "body": {
+          "shape": "sigil",
+          "motion": "target",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.06,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "glyph_sides": 6
+        },
+        "trail": {
+          "style": "wisp",
+          "width": 0.1,
+          "opacity": 0.58,
+          "wave_amplitude": 0.3,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "sigil",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.58,
+          "mote_shape": "orb",
+          "mote_size": 0.045,
+          "speed": 2.2,
+          "gravity": 1.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "glyph_sides": 6,
+          "secondary_shape": "sigil"
+        },
+        "sound": {
+          "launch": "vfx_debuff_hex_launch",
+          "travel": "vfx_debuff_hex_travel",
+          "launch_travel": "vfx_debuff_hex_launch_travel",
+          "impact": "vfx_debuff_hex_impact",
+          "launch_mastery": "vfx_debuff_hex_launch_mastery",
+          "launch_travel_mastery": "vfx_debuff_hex_launch_travel_mastery",
+          "impact_mastery": "vfx_debuff_hex_impact_mastery",
+          "gain_db": -16.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 12,
+          "trail": 10
+        },
+        "arrival": "no_damage",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.6,
+          "colour": "#b5afd5",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "no_damage",
+          "exception": "No HP damage; canonical utility/capture/guard authority commits its own effect.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "guard_flash": {
+        "body": {
+          "shape": "glint",
+          "motion": "self",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38,
+          "ray_width_ratio": 0.12
+        },
+        "trail": {
+          "style": "mote",
+          "width": 0.1,
+          "opacity": 0.58,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "glint",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.58,
+          "mote_shape": "orb",
+          "mote_size": 0.045,
+          "speed": 2.2,
+          "gravity": 1.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16,
+          "secondary_shape": "glint",
+          "ray_width_ratio": 0.12
+        },
+        "sound": {
+          "launch": "vfx_guard_flash_launch",
+          "travel": "vfx_guard_flash_travel",
+          "launch_travel": "vfx_guard_flash_launch_travel",
+          "impact": "vfx_guard_flash_impact",
+          "launch_mastery": "vfx_guard_flash_launch_mastery",
+          "launch_travel_mastery": "vfx_guard_flash_launch_travel_mastery",
+          "impact_mastery": "vfx_guard_flash_impact_mastery",
+          "gain_db": -16.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 12,
+          "trail": 10
+        },
+        "arrival": "no_damage",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.45,
+          "colour": "#fff4d8",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "no_damage",
+          "exception": "No HP damage; canonical utility/capture/guard authority commits its own effect.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      },
+      "catch_tether_beam": {
+        "body": {
+          "shape": "beam",
+          "motion": "beam",
+          "lit": false,
+          "opacity": 1.0,
+          "segments": 24,
+          "rings": 8,
+          "height_ratio": 3.0,
+          "sky_height": 6.0,
+          "tip_ratio": 0.0,
+          "width": 0.1,
+          "turns": 3.0,
+          "ribbon_ratio": 0.13,
+          "marker_fraction": 0.65,
+          "marker_scale": 2.0,
+          "marker_opacity": 0.38
+        },
+        "trail": {
+          "style": "tether",
+          "width": 0.1,
+          "opacity": 0.58,
+          "wave_amplitude": 0.12,
+          "wave_frequency": 4.0,
+          "wave_speed": 6.0
+        },
+        "impact": {
+          "shape": "ring",
+          "duration": 0.42,
+          "grow": 1.8,
+          "heat": 0.35,
+          "opacity": 0.58,
+          "mote_shape": "orb",
+          "mote_size": 0.045,
+          "speed": 2.2,
+          "gravity": 1.0,
+          "width": 0.12,
+          "height_ratio": 2.3,
+          "segments": 16
+        },
+        "sound": {
+          "launch": "vfx_catch_tether_beam_launch",
+          "travel": "vfx_catch_tether_beam_travel",
+          "launch_travel": "vfx_catch_tether_beam_launch_travel",
+          "impact": "vfx_catch_tether_beam_impact",
+          "launch_mastery": "vfx_catch_tether_beam_launch_mastery",
+          "launch_travel_mastery": "vfx_catch_tether_beam_launch_travel_mastery",
+          "impact_mastery": "vfx_catch_tether_beam_impact_mastery",
+          "gain_db": -16.0,
+          "travel_min_seconds": 0.18
+        },
+        "budget": {
+          "impact": 12,
+          "trail": 10
+        },
+        "arrival": "no_damage",
+        "collision": "host-strike geometry; visual-only; no travelling hitbox",
+        "compatibility": "real mesh body/trail/impact; no GPU-only or screen distortion dependency",
+        "parameters": {
+          "count": 1,
+          "size": 0.16,
+          "colour": "#f4c574",
+          "arc": 0.0,
+          "speed": 24.0,
+          "spread": 0.0,
+          "trail": 1.0,
+          "impact_scale": 1.0
+        },
+        "mastery": [
+          {
+            "size_scale": 1.0,
+            "count_add": 0,
+            "trail_scale": 1.0,
+            "impact_scale": 1.0,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.12,
+            "count_add": 0,
+            "trail_scale": 1.2,
+            "impact_scale": 1.08,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.28,
+            "count_add": 0,
+            "trail_scale": 1.45,
+            "impact_scale": 1.19,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.48,
+            "count_add": 0,
+            "trail_scale": 1.75,
+            "impact_scale": 1.33,
+            "secondary_trail": false,
+            "impact_layer": false
+          },
+          {
+            "size_scale": 1.72,
+            "count_add": 0,
+            "trail_scale": 2.1,
+            "impact_scale": 1.5,
+            "secondary_trail": true,
+            "impact_layer": true
+          }
+        ],
+        "body_variants": {
+          "orb_throw": {
+            "shape": "orb",
+            "motion": "projectile",
+            "lit": false,
+            "opacity": 1.0,
+            "segments": 16,
+            "rings": 8,
+            "layers": [
+              {
+                "shape": "ring",
+                "size_scale": 1.1,
+                "colour": "#fff0c7",
+                "opacity": 0.85
+              }
+            ]
+          }
+        },
+        "damage_timing": {
+          "owner": "same accepted host action; rendering cannot commit HP",
+          "arrival": "no_damage",
+          "exception": "No HP damage; canonical utility/capture/guard authority commits its own effect.",
+          "timeout": "Host cancels stale/refused/expired action; no timeout damage fallback.",
+          "number_order": "Construct contact mesh before host result/HUD number; peers reconcile contact before presenting accepted impact."
+        }
+      }
+    }
   }
 }

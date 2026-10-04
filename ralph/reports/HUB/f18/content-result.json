@@ -1,0 +1,12 @@
+{
+  "check": "F18 authored content integrity",
+  "result": "PASS",
+  "counts": {
+    "meadows": 5,
+    "tidewake": 5,
+    "cloudreach": 4,
+    "stormwood": 5
+  },
+  "total": 19,
+  "limitations": "No engine, runtime item protection, save, co-op, ordinary input or visual proof."
+}

@@ -1,0 +1,21 @@
+{
+  "reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "native_run_head": "752f6d87dc7d3a7216da74b96b5356db49701d02",
+  "verdict": "PASS WITHIN ORIGINAL FOUNDATION STORAGE SCOPE",
+  "independent_bounded_checks": 93,
+  "receipt_sha256": "9fb4c2ccc3c24aab8a6e106e33fa9c1d8c0a2e6ef8cc122f1bddd83458c6c91b",
+  "exit": 0,
+  "elapsed_seconds": 246.235,
+  "source_closure_before_after_equal": 3250,
+  "critical_sources_pinned": 16,
+  "strict_log_census": "Four logs match receipt byte/SHA pins; no native/script/resource/leak errors",
+  "native_peer_receipts": "Both exited, no unexpected exit, distinct native homes",
+  "durable_and_log_evidence": "Five host/seven guest carrier records and actual durable character/world files prove full pre/post roundtrip and named-ID rejoin equality, legal hardy+calm, exact12keys and2or3 fixture mastery receipts",
+  "negative_authority": "Guest-local bounty999 does not change host live/disk; wipe clears guest state before title rejoin restores host-world and personal state",
+  "remaining_engine_handles": false,
+  "limits": [
+    "Synthetic storage/direct title callback and ENet only; not earned progression, fullF16/invitation joining/device proof.",
+    "Native exit/logs/source bindings do not grant main/MET/criterion credit; required final-head CI and original Warden strict reload remain pending.",
+    "Independent reviewer performed no engine or file writes."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "enabled": false,
+  "revision": "f40-sanctuary-and-route-masses-r1",
+  "_disposition": "Unjudged F40 candidate. Enable only after independent matched High/Medium full-bar PASS. Previous skyline/crown FAILs remain evidence; towers and occupied terrace remain off. Local presentation only, no save or gameplay flag.",
+  "visual": {
+    "skyline_profile": {"enabled": true},
+    "settlement": {"occupied_terrace": {"enabled": false}}
+  },
+  "look": {
+    "route_verges": {
+      "station_spacing_m": 36.0,
+      "max_stations_per_route": 24,
+      "middle_ground": {
+        "enabled": true,
+        "station_every": 2,
+        "offset_m": 12.0,
+        "along_offset_m": 7.0,
+        "stone_scale": [3.4, 5.6],
+        "bush_scale": [1.8, 2.7],
+        "stone_embed_m": 0.6,
+        "maximum_support_delta_m": 1.4,
+        "support_radius_m": 3.0
+      }
+    }
+  },
+  "aviary": {
+    "crown_arcade": {
+      "enabled": true,
+      "bay_count": 20,
+      "radial_inset_m": 0.7,
+      "base_offset_m": 0.2,
+      "width_m": 8.15,
+      "post_width_m": 0.8,
+      "depth_m": 1.3,
+      "clear_height_m": 4.4,
+      "lantern_every": 4,
+      "lantern_height_m": 1.1,
+      "lantern_energy": 1.5,
+      "lantern_range_m": 10.0
+    },
+    "towers": {"enabled": false},
+    "sanctuary": {
+      "enabled": true,
+      "entry_light_height_m": 5.8,
+      "entry_lantern_height_m": 1.1,
+      "entry_lantern_outset_m": 0.7,
+      "entry_light_radius_m": 18.0,
+      "entry_light_energy": 2.0,
+      "entry_light_colour": "#ffc18b",
+      "plant_radius_m": 21.5,
+      "plant_height_m": 2.4,
+      "plant_angles_deg": [48, 132, 228, 312],
+      "planter_width_m": 3.6,
+      "planter_height_m": 0.65,
+      "clerestory_light_height_m": 10.5,
+      "clerestory_light_range_m": 22.0,
+      "clerestory_light_energy": 1.4
+    }
+  },
+  "capture": {
+    "seed": 2042,
+    "fight_fixture_level": 44,
+    "times": ["dawn", "day", "golden", "night"],
+    "weather": ["clear", "rain"],
+    "views": ["approach", "gameplay", "reverse", "detail"],
+    "approach_offset_m": 12.0,
+    "detail_offset_m": 3.0,
+    "weather_settle_frames": 24,
+    "minimum_frames": 200
+  }
+}

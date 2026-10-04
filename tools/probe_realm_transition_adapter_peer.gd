@@ -7,6 +7,7 @@ const SCOPE := preload("res://scripts/net/realm_replication_scope.gd")
 const TRAINERS := preload("res://scripts/net/trainer_spawn.gd")
 const SOURCE := "meadows"
 const TARGET := "water"
+const PASSIVE_PREPARATION := preload("res://scripts/net/owner_passive_preparation.gd")
 
 class CancellationCoordinator extends "res://scripts/net/realm_transition.gd":
 	var injected := false
@@ -30,6 +31,17 @@ class World extends Node:
 		return true
 
 class ShellSeam extends Node:
+	var hub: Node
+	# Expose only this fixture's actual mounted worlds to the production
+	# settlement scan. There is no fabricated director or saved outcome.
+	func hosted_realms() -> Array[String]:
+		var result: Array[String] = []
+		if not is_instance_valid(hub): return result
+		for realm: String in hub.worlds:
+			if is_instance_valid(hub.worlds[realm]): result.append(realm)
+		return result
+	func shell(realm: String) -> Node:
+		return hub.worlds.get(realm) if is_instance_valid(hub) else null
 	func reconcile() -> void:
 		pass
 	func release_all() -> void:
@@ -92,6 +104,8 @@ var policy_seen_before_snapshot := false
 var latejoin_reported := false
 var pending_origin := ""
 var departed_motion_before := 0.0
+var _fixture_permission_ready: bool = false
+var _fixture_original: Dictionary = {}
 ## Shutdown order (see `_ordered_shutdown`): clients report done, the host
 ## closes last.
 var _clients_done: Dictionary = {}
@@ -120,6 +134,7 @@ func _ready() -> void:
 	(session.get("_realms") as Node).set_process(false)
 	var shell_seam := ShellSeam.new()
 	shell_seam.name = "FixtureShellSeam"
+	shell_seam.hub = self
 	session.add_child(shell_seam)
 	session.set("_realms", shell_seam)
 	session.set("_mode", "host" if role == "host" else "client")
@@ -405,6 +420,9 @@ func received_scene_reply(realm: String) -> void:
 	request_answered = true
 
 func _travel() -> void:
+	# With F18's portal runtime off, a raw crossing is the shipping path and
+	# there is no portal permit to prove; the transport proof below still runs.
+	if session.call("portal_runtime_ready") == true and not await _transport_permission(): return
 	if cancellation_mode:
 		await _cancel_travel()
 		return
@@ -432,6 +450,113 @@ func _travel() -> void:
 		await get_tree().process_frame
 	_check(_body_count(TARGET) == 2, "real target trainer and creature admitted")
 	_arrived.rpc_id(1)
+
+## These tiny worlds prove transport, not earned portal gameplay. First keep
+## the shipping raw-call refusal, then supply a disclosed host-only policy
+## context/unlock fixture. No destination or coordinates are accepted by RPC.
+func _transport_permission() -> bool:
+	var before: Dictionary = {}
+	for scope: Node in transition.get("scopes"):
+		if str(scope.get("realm")) == SOURCE: before[scope.get_instance_id()] = int(scope.call("received_count"))
+	var body_count: int = _body_count(SOURCE)
+	var raw: bool = await transition.call("begin_client", SOURCE, TARGET)
+	var local: Dictionary = transition.get("_local")
+	if not _check(not raw and local.get("phase") == "cancelled" \
+		and local.get("error") == "Use the Crossing Hall portals.", "raw crossing retains readable portal-only refusal"): return false
+	var retained: bool = _body_count(SOURCE) == body_count and not local.has("token") \
+		and (transition.get("transactions") as Dictionary).is_empty() and not worlds.has(TARGET)
+	for scope: Node in transition.get("scopes"):
+		if str(scope.get("realm")) == SOURCE:
+			retained = retained and before.get(scope.get_instance_id(), -1) == int(scope.call("received_count"))
+	if not _check(retained, "raw refusal grants no receiver token and drains no actual source inventory"): return false
+	transition.call("clear_local")
+	if not _check((transition.get("_local") as Dictionary).is_empty(), "production clear_local retires only the raw refusal"): return false
+	_fixture_permission_request.rpc_id(1)
+	while not _fixture_permission_ready and not stopping: await get_tree().process_frame
+	return _check(_fixture_permission_ready, "host consumed fixed transport-fixture permit before real begin")
+
+@rpc("any_peer", "call_remote", "reliable", 0)
+func _fixture_permission_request() -> void:
+	var peer: int = multiplayer.get_remote_sender_id()
+	if role != "host" or peer != int(ids.get("departing", -1)) or not _fixture_original.is_empty(): return
+	var game: Node = get_node("/root/Game")
+	var arrival: Node = session.get_node_or_null(^"FoundationComposition/PortalArrival")
+	var world: RefCounted = game.get("world")
+	var character: String = str(session.call("_authority_character", peer))
+	var epoch: String = str(session.call("_altar_current_epoch"))
+	var body: Node3D = _body(SOURCE, peer)
+	if not _check(arrival != null and world != null and body != null and session.call("portal_runtime_ready") == true \
+		and session.call("realm_of", peer) == SOURCE and character == str(peer) and not epoch.is_empty(),
+		"transport fixture binds actual registered mover, host epoch and shipping consumer"): return
+	if world.get("reward_delivery_namespace") == "": world.set("reward_delivery_namespace", Crypto.new().generate_random_bytes(16).hex_encode())
+	var world_namespace: String = str(world.get("reward_delivery_namespace"))
+	var envelope: Dictionary = {"request_id": epoch + ":adapter-transport", "session_epoch": epoch,
+		"character_id": character, "world_instance_id": world_namespace, "payload": {"kind": "portal_enter", "arch_id": "tidewake"}}
+	var context: Dictionary = {"world_instance_id": world_namespace, "character_id": character, "peer_id": peer,
+		"realm": SOURCE, "position": body.global_position, "damage_revision": 0,
+		"combat": false, "dialogue": false, "cutscene": false, "swimming": false, "flying": false, "downed": false,
+		"arch_positions": {"tidewake": body.global_position}, "character_unlocks": [], "world_unlocks": ["tidewake"],
+		"last_waystones": {}, "waystones_activated": {}}
+	var policy: RefCounted = session.get("_portal_policy")
+	policy.call("bind_world", world_namespace)
+	var result: Dictionary = policy.call("evaluate", envelope.payload, context,
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json")),
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json")), Time.get_ticks_msec())
+	if not _check(result.get("ok") == true and session.call("_portal_envelope_valid", peer, envelope) == true,
+		"real PortalPolicy evaluates fixed disclosed Tidewake fixture with unchanged envelope validation"): return
+	var id: String = str(result.prepared.travel_permit)
+	var permit: Dictionary = policy.call("consume_permit", id, peer, character, world_namespace, SOURCE)
+	if not _check(permit.get("realm") == TARGET and permit.get("origin_realm") == SOURCE \
+		and (policy.call("consume_permit", id, peer, character, world_namespace, SOURCE) as Dictionary).is_empty(),
+		"real PortalPolicy consumes canonical fixture crossing exactly once"): return
+	var remote: Dictionary = arrival.get("_remote")
+	if remote.has(peer): _fail("transport fixture cannot replace another retained arrival"); return
+	_fixture_original = {"session": weakref(session), "world": weakref(world),
+		"envelope": envelope, "permit": permit, "owner_saved": false,
+		"arrival": weakref(arrival), "arrival_processing": arrival.is_processing()}
+	# This probe supplies only a departure predicate after the origin save.
+	# Its partial fixture cannot drive the separate full arrival-save producer.
+	# Keep the actual authorization methods/coordinator alive, then restore
+	# the producer only after retiring this exact injected fixture.
+	arrival.set_process(false)
+	if not _check(not arrival.is_processing(), "transport-only predicate fixture isolates the full arrival-save producer"): return
+	remote[peer] = _fixture_original
+	if not _check(arrival.call("transition_authorized", peer, TARGET) == false,
+		"consumed transport fixture alone cannot replace the prepared origin save"): return
+	var passive: RefCounted = session.call("_owner_passive_service")
+	var streams: Dictionary = passive.get("hosts")
+	var original_stream: Dictionary = streams.get(character, {})
+	if not _check(original_stream.get("checkpoint", {}).is_empty(), "transport checkpoint fixture cannot replace a retained passive source"): return
+	# This component probe starts after the origin BOOL grant. These are only
+	# the exact fields read by the shipping departure predicate, not a fake
+	# preparation packet or evidence of a disk write/earned portal arrival.
+	var checkpoint: Dictionary = {"source_kind": "portal_arrival",
+		"request": PASSIVE_PREPARATION.portal_request(envelope, permit), "travel_ready": true}
+	_fixture_original["passive"] = weakref(passive)
+	_fixture_original["passive_character"] = character
+	_fixture_original["passive_stream_was_present"] = streams.has(character)
+	_fixture_original["passive_checkpoint"] = checkpoint
+	_fixture_original["passive_checkpoint_was_present"] = original_stream.has("checkpoint")
+	_fixture_original["passive_original_checkpoint"] = original_stream.get("checkpoint")
+	var fixture_stream: Dictionary = original_stream.duplicate(true)
+	fixture_stream["checkpoint"] = checkpoint
+	streams[character] = fixture_stream
+	var request: Dictionary = checkpoint.request
+	var stale: Dictionary = request.duplicate(true)
+	stale.session_epoch = epoch + ":prior-generation"
+	checkpoint.request = stale
+	if not _check(arrival.call("transition_authorized", peer, TARGET) == false,
+		"a stale prepared generation cannot authorize the original consumed permit"): return
+	checkpoint.request = request
+	if not _check(arrival.call("transition_authorized", peer, TARGET) == true \
+		and arrival.call("transition_authorized", peer, "cloudreach") == false \
+		and arrival.call("transition_authorized", 1, TARGET) == false,
+		"unchanged production consumer permits only retained mover and canonical target"): return
+	_fixture_permission_installed.rpc_id(peer)
+
+@rpc("authority", "call_remote", "reliable", 0)
+func _fixture_permission_installed() -> void:
+	if role == "departing": _fixture_permission_ready = true
 
 func _cancel_travel() -> void:
 	var game := get_node("/root/Game")
@@ -512,6 +637,21 @@ func _arrived() -> void:
 	if multiplayer.get_remote_sender_id() != int(ids.departing):
 		_fail("arrival identity")
 		return
+	# Portal permits exist only while F18's portal runtime is on; with it off
+	# the crossing above was the raw shipping path and there is none to retire.
+	if session.call("portal_runtime_ready") == true:
+		var arrival: Node = session.get_node_or_null(^"FoundationComposition/PortalArrival")
+		var remote: Dictionary = arrival.get("_remote") if arrival != null else {}
+		var peer: int = multiplayer.get_remote_sender_id()
+		if not _check(not _fixture_original.is_empty() and is_same(remote.get(peer), _fixture_original) \
+			and _fixture_original.session.get_ref() == session and _fixture_original.world.get_ref() == get_node("/root/Game").get("world"),
+			"actual arrived milestone retires only the exact original transport-fixture permission"): return
+		var passive: RefCounted = _fixture_original.passive.get_ref()
+		var character: String = str(_fixture_original.passive_character)
+		var streams: Dictionary = passive.get("hosts") if passive != null else {}
+		if not _check(passive != null and is_same(streams.get(character, {}).get("checkpoint"), _fixture_original.passive_checkpoint),
+			"actual arrival retires only the exact disclosed component checkpoint"): return
+		if not _check(_retire_transport_fixture(), "transport fixture cleanup restores the original arrival producer processing"): return
 	if latejoin_mode:
 		_check(not (transition.get("origins") as RefCounted).get("rows").is_empty(), "completed departure retains live origin policy")
 		departed_motion_before = _body(TARGET, int(ids.departing)).position.x
@@ -573,6 +713,9 @@ func _finish_local() -> void:
 	if observation_only and not failed:
 		print("ADAPTER OBSERVATION reached normal completion; no acceptance credit")
 		return
+	if not _retire_transport_fixture():
+		failed = true
+		print("ADAPTER FAIL %s transport fixture source changed before shutdown cleanup" % role)
 	stopping = true
 	set_physics_process(false)
 	transition.set_process(false)
@@ -628,6 +771,38 @@ func _finish_local() -> void:
 		owned_peer.close()
 	session.set("_peer", null)
 	get_tree().quit(1 if failed else 0)
+
+func _retire_transport_fixture() -> bool:
+	if _fixture_original.is_empty(): return true
+	var original: Dictionary = _fixture_original
+	var arrival: Node = original.arrival.get_ref()
+	var passive: RefCounted = original.get("passive").get_ref() if original.get("passive") is WeakRef else null
+	var owned := true
+	if original.has("passive") and passive == null: owned = false
+	if passive != null:
+		var streams: Dictionary = passive.get("hosts")
+		var character: String = str(original.passive_character)
+		var stream: Dictionary = streams.get(character, {})
+		if not is_same(stream.get("checkpoint"), original.passive_checkpoint):
+			owned = false
+		else:
+			if original.passive_checkpoint_was_present: stream["checkpoint"] = original.passive_original_checkpoint
+			else: stream.erase("checkpoint")
+			if not original.passive_stream_was_present and stream.is_empty(): streams.erase(character)
+	if is_instance_valid(arrival):
+		var remote: Dictionary = arrival.get("_remote")
+		var peer: int = int(original.permit.peer_id)
+		if is_same(remote.get(peer), original): remote.erase(peer)
+		else: owned = false
+		arrival.set_process(original.arrival_processing)
+		owned = owned and arrival.is_processing() == original.arrival_processing
+	else:
+		owned = false
+	_fixture_original = {}
+	return owned
+
+func _exit_tree() -> void:
+	_retire_transport_fixture()
 
 func _ordered_shutdown() -> void:
 	var transport := multiplayer.multiplayer_peer

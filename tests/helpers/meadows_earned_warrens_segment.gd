@@ -30,7 +30,16 @@ class QuarryInput extends "res://tests/helpers/gate_a_material_route.gd":
 	# cannot reach. Seed 15 (run 36268640030) failed the whole route because
 	# its first point, behind a choppable tree 1 m from the rootstone, timed
 	# out through the segment's fatal `_walk`. A player tries another side.
-	func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
+	func _walk_to(target: Vector3, close_enough: float, budget: int, headings: Array[Vector3] = []) -> bool:
+		# Keep the parent's guided legs when a gather target needs them; each
+		# leg still uses this segment's fight-aware, best-effort walk.
+		var started := Engine.get_physics_frames()
+		for heading: Vector3 in headings:
+			var remaining := budget - (Engine.get_physics_frames() - started)
+			if remaining <= 0 or not await walk.call(heading, 2.5, remaining, true):
+				return false
+		budget -= Engine.get_physics_frames() - started
+		if budget <= 0: return false
 		return await walk.call(target, close_enough, budget, true)
 
 

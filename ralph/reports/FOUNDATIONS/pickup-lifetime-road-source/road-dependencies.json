@@ -1,0 +1,74 @@
+{
+  "integration": "12a2ede365be2bf0a65b30c9bfb5ab1221b3d670",
+  "pinned_main": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "last_manifest_commit": "0503f986b658e9efcab7ffda3175e17b3f8baf14",
+  "manifest_fingerprint": 601121851,
+  "source_fingerprint_integration": 2236840266,
+  "source_fingerprint_main": 2236840266,
+  "source_fingerprint_last_manifest_commit": 601121851,
+  "hash_implementation": "Godot String hash DJB2, 32-bit wrap, UTF-32 character values; source CRLF normalized to LF by the actual baker",
+  "dependencies": [
+    {
+      "path": "data/config/terrain_stormwood.json",
+      "integration_blob": "a660ac3a8c30e9af62f66c53aba3357910414899",
+      "integration_sha256": "2b56527ce1ab72053cbfe3a0377f34f7e9f44d69294c7eff96e52cee4b88635a",
+      "canonical_hash_current": 1602270296,
+      "manifest_hash": 1602270296,
+      "equals_pinned_main": true,
+      "equals_last_manifest_commit": true,
+      "current_worktree_equals_pinned_integration_canonical_text": true
+    },
+    {
+      "path": "data/config/stormwood_world.json",
+      "integration_blob": "43d3d4bcc25263037a8e2636e9a05893164ea4c0",
+      "integration_sha256": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+      "canonical_hash_current": 2386913423,
+      "manifest_hash": 2386913423,
+      "equals_pinned_main": true,
+      "equals_last_manifest_commit": true,
+      "current_worktree_equals_pinned_integration_canonical_text": true
+    },
+    {
+      "path": "scripts/world/build_stormwood_terrain.gd",
+      "integration_blob": "8c3c95e1552d6400eae743d42ca46390fabfc2ba",
+      "integration_sha256": "5a9b5c38b451e1ce34a84f81f8695844940d6703a6e2900f8024cdd6f1dd6a98",
+      "canonical_hash_current": 5696053664,
+      "manifest_hash": 5696053664,
+      "equals_pinned_main": true,
+      "equals_last_manifest_commit": true,
+      "current_worktree_equals_pinned_integration_canonical_text": true
+    },
+    {
+      "path": "scripts/world/stormwood_heightfield.gd",
+      "integration_blob": "d8cce1c21af610e8455fa6d0f7956ae80e24b6eb",
+      "integration_sha256": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+      "canonical_hash_current": 2242839411,
+      "manifest_hash": 2242839411,
+      "equals_pinned_main": true,
+      "equals_last_manifest_commit": true,
+      "current_worktree_equals_pinned_integration_canonical_text": true
+    },
+    {
+      "path": "data/config/stormwood_road_surface.json",
+      "integration_blob": "ba61756764eca448dec868b9f88da5457aa8b789",
+      "integration_sha256": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+      "canonical_hash_current": 1270024112,
+      "manifest_hash": 1270024112,
+      "equals_pinned_main": true,
+      "equals_last_manifest_commit": true,
+      "current_worktree_equals_pinned_integration_canonical_text": true
+    },
+    {
+      "path": "data/config/terrain_playground.json",
+      "integration_blob": "fb2804d8f388c59a746e84bd534465d6b02745e8",
+      "integration_sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+      "canonical_hash_current": 2494404415,
+      "manifest_hash": 1840363664,
+      "equals_pinned_main": true,
+      "equals_last_manifest_commit": false,
+      "current_worktree_equals_pinned_integration_canonical_text": true
+    }
+  ],
+  "engine_jobs_run": false,
+  "manifest_or_region_writes": false
+}

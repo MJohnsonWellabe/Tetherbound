@@ -1,0 +1,75 @@
+{
+  "raw_sha256": "d404187309d039b9ec2054b20ff57a69dc91a9ed5e4bca57bf5076f5b3568618",
+  "observed_errors": 22,
+  "groups": [
+    {
+      "message": "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+      "test": "test_missing_defaults_or_schema_refuses_with_structured_failure",
+      "line": 21,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign missing_contract defaults are missing or malformed",
+      "test": "test_missing_defaults_or_schema_refuses_with_structured_failure",
+      "line": 21,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+      "test": "test_missing_defaults_or_schema_refuses_with_structured_failure",
+      "line": 22,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign data refused: $: duplicate array member",
+      "test": "test_missing_unknown_and_duplicate_ids_fail_in_every_table",
+      "line": 49,
+      "count": 13
+    },
+    {
+      "message": "ERROR: Redesign data refused: $[0]: identity must match exactly one authored contract",
+      "test": "test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "line": 83,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign data refused: $[1]: identity must match exactly one authored contract",
+      "test": "test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "line": 83,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign data refused: $[2]: identity must match exactly one authored contract",
+      "test": "test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "line": 83,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign data refused: $[3]: identity must match exactly one authored contract",
+      "test": "test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "line": 83,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign data refused: $[4]: identity must match exactly one authored contract",
+      "test": "test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "line": 83,
+      "count": 1
+    },
+    {
+      "message": "ERROR: Redesign data refused: $[5]: identity must match exactly one authored contract",
+      "test": "test_station_attachment_slot_contract_refuses_wrong_slots_through_loader",
+      "line": 83,
+      "count": 1
+    }
+  ],
+  "wrapper_rejection_preserved": true,
+  "interpretation": "F29 independent182-check diagnostic interpretation PASS: all22 errors individually bind to three unchanged deliberate negative test methods and exact emitters/backtraces/counts. All57 selected case names occur exactly once with actual ok verdict; nativeexit0/57tests611assertions0failed. Strict raw-error wrapper rejection remains1; raw log is not clean. No unclassified ERROR/SCRIPT/warning/crash/leak/cleanup diagnostic. No runtime/test/CI/error-filter modification or gameplay acceptance.",
+  "independent_review": {
+    "reviewer": "Existing F29 conversation01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "checks": 182,
+    "result": "PASS for diagnostic interpretation only",
+    "source_head": "f6aeb5c37cec5b0b8ef379a3bd6eb183d55c914d",
+    "raw_result_sha256": "467c74e0074f585f771091e9c801eb45bb895591fabca56e1e50ee075b727230"
+  }
+}

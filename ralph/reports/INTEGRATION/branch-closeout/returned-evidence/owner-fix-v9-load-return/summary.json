@@ -1,0 +1,117 @@
+{
+  "head": "791d17cef42e8d94b2b736cf49ea3de75cb6e0fc",
+  "exit": 1,
+  "elapsed_seconds": 224.89100000006147,
+  "source_unchanged": true,
+  "engine_handles_after": 0,
+  "actual_failure": [
+    "#3 peer 0 load_save (DISCLOSED saved-input setup; original guest character only, no borrowed world) -> FAIL -- no verdict"
+  ],
+  "command_timeout_observation": {
+    "action": "load_save",
+    "coordinator_deadline_ms": 198101.666666667,
+    "coordinator_observed_ms": 198140,
+    "heartbeat": {
+      "context": "world",
+      "frame": 89.0,
+      "physics_frame": 68.0,
+      "pos": [
+        -16.0,
+        3.10991096496582,
+        14.0
+      ],
+      "session_peers": [],
+      "state_hash": 2567151825.0,
+      "t": 185.202,
+      "type": "heartbeat"
+    },
+    "heartbeat_known": true,
+    "heartbeat_receive_age_ms": 2739.0,
+    "heartbeat_receive_time_known": true,
+    "heartbeat_received_ms": 195401.0,
+    "id": "s4",
+    "phase": "timeout_before_finish"
+  },
+  "acceptance_credit": false,
+  "scope": "Original478 fullproducer stopped at initialhostload_save before Altar; freshheartbeat present. Owner/epoch repairs not reached. No complete bundle or criteria credit.",
+  "files": [
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-owner-fix-wrapper-791d17cef42e\\receipt.json",
+      "retained": "000-receipt.json.gz",
+      "bytes": 762786,
+      "sha256": "ce569092e70fc22e53fd013bd804d5398cabac7eba3befbc15695a9ceb9f36b3"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-owner-fix-wrapper-791d17cef42e\\wrapper.log",
+      "retained": "001-wrapper.log.gz",
+      "bytes": 158,
+      "sha256": "3426e795b19ce562fb23eff76156c66c25b90468ddbcbbe0aab778ce7c6f487b"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\invocation.json",
+      "retained": "002-invocation.json.gz",
+      "bytes": 1732,
+      "sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\coordinator.log",
+      "retained": "003-coordinator.log.gz",
+      "bytes": 2520,
+      "sha256": "7a2296cf92bdd4f7a52942d711afab36a5c8ad4dd587fd19af3f9bace20270d8"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\NET_RUN.json",
+      "retained": "004-NET_RUN.json.gz",
+      "bytes": 3227,
+      "sha256": "f8b1c5ecb0c8f3f8fc367b92106f85af4a200f18c946a0783ab1d7967f6fc1cd"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\peer-0.log",
+      "retained": "005-peer-0.log.gz",
+      "bytes": 10149,
+      "sha256": "7dfbba71ebcc929bb91e841687d4beb5f2ca29e2c0ac3f1026797f71e9b6255f"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\peer-1.log",
+      "retained": "006-peer-1.log.gz",
+      "bytes": 420,
+      "sha256": "bf617f85fd0dfb579c42a5ad1124ca16157159fe968786ed3ac3a1a8348902e9"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+      "retained": "007-character.json.gz",
+      "bytes": 2779501,
+      "sha256": "186c04274b0651cc4e2a2e08467547fe809dd432408eea59024d0c50e013d35b"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\slot_0.json",
+      "retained": "008-slot_0.json.gz",
+      "bytes": 4197486,
+      "sha256": "5a477f619804f6747e637f62de8e98ee93532d9b6027f58551c0565d0f730ff2"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
+      "retained": "009-world.json.gz",
+      "bytes": 26477,
+      "sha256": "176fa5f4bf06dcdc3ad70d7a736d06bb046e8061b31a594eae689f1b1addddb1"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\characters\\character-2940c5f87b7ae20c0155101d456255f5\\character.json",
+      "retained": "010-character.json.gz",
+      "bytes": 2773430,
+      "sha256": "445bdd7adde663e1b864e10e25b91c9605e3fb53ffdf49177241a79465c6da3a"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\slot_0.json",
+      "retained": "011-slot_0.json.gz",
+      "bytes": 4172165,
+      "sha256": "59e7fa551f3c2bff0b53a91d67258d33752763bd97ddd2e7b5fa8063d18dfa06"
+    },
+    {
+      "original_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-owner-fix-v9\\net-run\\home-1\\Godot\\app_userdata\\Tetherbound\\saves\\redesign-v28\\worlds\\slot-0\\world.json",
+      "retained": "012-world.json.gz",
+      "bytes": 742,
+      "sha256": "aa6478ce61feb0f557262754e39462349ae02ed67a1776f53b78e8c6f21c271c"
+    }
+  ]
+}

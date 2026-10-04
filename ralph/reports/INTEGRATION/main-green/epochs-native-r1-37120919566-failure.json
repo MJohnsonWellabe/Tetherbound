@@ -1,0 +1,70 @@
+{
+  "verdict": "FAIL",
+  "run_id": 37120919566,
+  "artifact_id": 11272969047,
+  "checkout_ref": "56b76d8fb9d7a8d11857fb9642407cd4eca8f6fd",
+  "archive_sha256": "99a59802faab00882a7f3c8f62177b359dc65d7aa4003c7fb27a8a37f9307046",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "epochs-native-r1-37120919566-0-MANIFEST.txt.gz",
+      "sha256": "4ce24db95cff7269af137ad340a6c1c95bd544796e07be0035ed6408e0344164",
+      "errors": []
+    },
+    "run.log": {
+      "retained_file": "epochs-native-r1-37120919566-1-run.log.gz",
+      "sha256": "cc9762c73ecfd0a47463ff80e38ee90e1eb4a7792bce39a8498d7576abc00ccb",
+      "errors": [
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\"."
+      ]
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "epochs-native-r1-37120919566-2-boot_log.txt.gz",
+      "sha256": "a36e51b2e8c00acad5da2910d85b787463cbdb9878ab3ce05f69f5006205834a",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "epochs-native-r1-37120919566-3-godot.log.gz",
+      "sha256": "35ec9e6c02bd4eeb8160f127d9d7d0c6c694ba57d909ffa9afece209064661ba",
+      "errors": [
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\".",
+        "SCRIPT ERROR: Trying to assign an array of type \"Array\" to a variable of type \"Array[Node]\"."
+      ]
+    },
+    "user/godot/app_userdata/Tetherbound/passive-native-_native_case_backpack_target_guard_precedes_any_care_or_item_write.log": {
+      "retained_file": "epochs-native-r1-37120919566-4-passive-native-_native_case_backpack_target_guard_precedes_any_care_or_item_write.log.gz",
+      "sha256": "7fd576cb85d8443573566cbdb77d739681107354ba77800b9e018f19b447c5c7",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/passive-native-_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care.log": {
+      "retained_file": "epochs-native-r1-37120919566-5-passive-native-_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care.log.gz",
+      "sha256": "2ac3f8edbc27a8505eef455c4f05e895162203484ecbeb00a0418901f487c93b",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/passive-native-_native_case_game_records_exact_ticks_discoveries_and_replays_live_record.log": {
+      "retained_file": "epochs-native-r1-37120919566-6-passive-native-_native_case_game_records_exact_ticks_discoveries_and_replays_live_record.log.gz",
+      "sha256": "66772b99e17a0f4334bbefb3df4e63b29d6302aa3f097e68fbcd029903b49f94",
+      "errors": []
+    },
+    "user/godot/app_userdata/Tetherbound/passive-native-_native_case_game_same_stream_fence_reset_replays_exactly.log": {
+      "retained_file": "epochs-native-r1-37120919566-7-passive-native-_native_case_game_same_stream_fence_reset_replays_exactly.log.gz",
+      "sha256": "c1dc17564e8927421d2e01095a876a5bdb967377610c56f53ac4b1b6619ef782",
+      "errors": []
+    }
+  },
+  "boundary": "72 tests/1893 assertions/1 failed. Nine SCRIPT ERROR occurrences in original run log: detached EpochSession conditional array returned untyped Array to actual ACK Array[Node] local. Correct fixture returns explicit Array[Node]; production and assertions unchanged. Other 71 selected tests pass; rerun recovery required."
+}

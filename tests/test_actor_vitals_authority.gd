@@ -38,12 +38,19 @@ class OwnerWriter:
 		writes += 1
 		return not refuse
 
+## Detached component fixture exercises the original unowned typed delivery.
+## It has no ordinary encounter or passive stream to record/authorize.
+class LegacyOwnerSession:
+	extends "res://scripts/net/session.gd"
+	func _owner_passive_actor_vitals_record(_row: Dictionary, _saved: bool) -> bool:
+		return true
+
 class OwnerGame:
 	extends Node
 	var local: RefCounted
 	var world: RefCounted
 	var save_system: RefCounted
-	var session: Node = preload("res://scripts/net/session.gd").new()
+	var session: Node = LegacyOwnerSession.new()
 	func is_host() -> bool:
 		return true
 	func _notification(what: int) -> void:

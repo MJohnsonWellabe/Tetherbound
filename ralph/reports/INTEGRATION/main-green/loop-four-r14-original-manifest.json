@@ -1,0 +1,53 @@
+{
+  "loop-craft-panel-r13": {
+    "archive_sha256": "db3fd26c579e67833a07c9e3b47835d31500c1a937c012a591fe2aa08287c512",
+    "selected_originals": [
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_button-2576-331573765.json"
+    ],
+    "peers": {
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log": {
+        "errors": 0,
+        "first_original_context": []
+      },
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log": {
+        "errors": 0,
+        "first_original_context": []
+      }
+    }
+  },
+  "four-combat-defer-r10": {
+    "archive_sha256": "12bd66f1826735f2a46853fbfc40eeb7952a5f9374bcea6f1ef6adb55fa35715",
+    "selected_originals": [
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-observations/f48_assert-2409-1765095808.json"
+    ],
+    "peers": {
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-0.log": {
+        "errors": 43,
+        "first_original_context": [
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "   at: call (modules/gdscript/gdscript_lambda_callable.cpp:110)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _draw (res://scripts/ui/dialogue_panel.gd:327)",
+          "       [1] _process (res://scripts/ui/dialogue_panel.gd:287)",
+          "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead.",
+          "   at: call (modules/gdscript/gdscript_lambda_callable.cpp:110)",
+          "   GDScript backtrace (most recent call first):",
+          "       [0] _draw (res://scripts/ui/dialogue_panel.gd:327)",
+          "       [1] _process (res://scripts/ui/dialogue_panel.gd:287)"
+        ]
+      },
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-1.log": {
+        "errors": 0,
+        "first_original_context": []
+      },
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-2.log": {
+        "errors": 0,
+        "first_original_context": []
+      },
+      "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-3.log": {
+        "errors": 0,
+        "first_original_context": []
+      }
+    }
+  }
+}

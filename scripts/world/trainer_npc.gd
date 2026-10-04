@@ -185,6 +185,9 @@ func _spawn(spec: Dictionary, positions: Dictionary = {}, facings: Dictionary = 
 	var npc: Node3D = NPC.new()
 	npc.name = display_name
 	npc.set_meta("trainer_id", id)
+	npc.set_meta("foundation_trainer_spec", spec.duplicate(true))
+	# foundation_rematches.gd TRAINER_SPEC_GROUP: found by group, not a realm walk.
+	npc.add_to_group(&"foundation_trainer_specs")
 	add_child(npc)
 	if not bool(npc.call("setup_from_config", model_config(spec), _player)):
 		push_error("trainer '%s' has no model; nothing will stand there" % id)
@@ -775,8 +778,20 @@ static func creature_for(entry: Dictionary) -> RefCounted:
 		var charged := str((moves as Dictionary).get("charged", ""))
 		if quick != "":
 			creature.move_quick = quick
+			if not creature.known_moves.has(quick):
+				creature.known_moves.append(quick)
 		if charged != "":
 			creature.move_charged = charged
+			if not creature.known_moves.has(charged):
+				creature.known_moves.append(charged)
+		# Authored equipment is also knowledge on this NPC instance. The owned
+		# card codec otherwise refuses the slot and a guest spawns a new UID
+		# instead of mirroring the host's actual trainer creature.
+		# F44 supplies these on its combat-only copy. Ordinary authored trainer
+		# entries retain their current defaults and pattern behavior.
+		for slot: String in ["utility", "ultimate"]:
+			if not str(moves.get(slot, "")).is_empty():
+				creature.set("move_" + slot, str(moves[slot]))
 	# G-2: the entry's optional per-creature behaviour override, read beside
 	# `moves` because it is the same kind of thing -- this individual fights
 	# differently, and nothing about the species changes.

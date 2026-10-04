@@ -21,6 +21,11 @@ uniform float depth_pull_max_m = 30.0;
 uniform float detail_fade_start_m = 500.0;
 uniform float detail_fade_end_m = 1600.0;
 uniform float night_lift = 0.06;
+uniform bool visual_far_core_enabled = false;
+uniform float visual_far_core_floor = 0.64;
+uniform float visual_far_edge_floor = 0.82;
+uniform float visual_far_start_m = 850.0;
+uniform float visual_far_end_m = 2100.0;
 // Own fog (copied from the live WorldEnvironment by water_veilfall_silhouette.gd):
 // the same colour at a reduced amount so the white water survives 4 km of haze.
 uniform vec3 fog_colour = vec3(0.38, 0.50, 0.60); // linear; set from the environment
@@ -80,6 +85,17 @@ void fragment() {
 	// The column's outline wanders down its length instead of a ruled edge.
 	float wander = 0.55 + 0.45 * noise(vec2(UV.x > 0.5 ? 3.0 : 7.0, UV.y / 22.0 - TIME * 0.08));
 	float edge = 1.0 - smoothstep(wander - edge_feather, wander, across);
+	if (visual_far_core_enabled) {
+		float far_mix = smoothstep(visual_far_start_m,
+			max(visual_far_end_m, visual_far_start_m + 1.0), v_distance);
+		// Reduce distant horizontal gaps without turning the waterfall into a
+		// full-width painted stripe. The near strands, lip and plunge fade survive.
+		float continuous_core = 1.0 - smoothstep(0.25, 0.78, across);
+		ragged = mix(ragged, max(ragged, continuous_core * visual_far_core_floor), far_mix);
+		float steady_edge = 1.0 - smoothstep(visual_far_edge_floor - edge_feather,
+			visual_far_edge_floor, across);
+		edge = mix(edge, max(edge, steady_edge), far_mix);
+	}
 	float lip = smoothstep(0.0, 10.0, UV.y);
 	// Fade into the plunge mist instead of exposing the last triangle row.
 	float foot = smoothstep(0.0, max(foot_feather_m, 0.001), UV2.y);

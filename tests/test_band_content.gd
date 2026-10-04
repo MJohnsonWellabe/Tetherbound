@@ -64,6 +64,11 @@ extends "res://tests/test_case.gd"
 ##     different seeds, so a swap moves both clusters and rerolls every creature
 ##     in them.
 
+## F17/RD-29 mirror catch-up: farmhouse-yard translation (+24,+30) is
+## already authored in the live band. The full entry/order/value comparison
+## stays strict, including every unchanged field and historical global.
+## F19/RD-10 mirror catch-up: only team level numbers mirror the materialized
+## redesign_level_curve.json overlays; every other fixture field stays intact.
 const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
 
 const BASELINE_DIR := "res://tests/fixtures/band_split_baseline"

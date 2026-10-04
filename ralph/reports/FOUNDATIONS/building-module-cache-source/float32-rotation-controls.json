@@ -1,0 +1,256 @@
+{
+  "status": "SOURCE_MATH_ONLY_PASS",
+  "tolerance_radians": 0.0001,
+  "arithmetic": "float32 operands, products, sums, normalization and vector length; double atan2 on float32 inputs",
+  "scope": "quaternion distance controls, not Godot basis extraction or native test execution",
+  "controls": [
+    {
+      "case": "yaw +1PI +0.00000",
+      "robust_radians": 0.0,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw +1PI -0.00005",
+      "robust_radians": 5.006790160086896e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw +1PI +0.00005",
+      "robust_radians": 4.9829483021916105e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw +1PI -0.00020",
+      "robust_radians": 0.00020003318719921234,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw +1PI +0.00020",
+      "robust_radians": 0.0001997947686224929,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw +1PI -0.00030",
+      "robust_radians": 0.0003001689888350628,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw +1PI +0.00030",
+      "robust_radians": 0.00029993057026132743,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI +0.00000",
+      "robust_radians": 1.7484555314695127e-07,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI -0.00005",
+      "robust_radians": 5.000433155923363e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI +0.00005",
+      "robust_radians": 4.989305306355171e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI -0.00020",
+      "robust_radians": 0.00019996962443413047,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI +0.00020",
+      "robust_radians": 0.0001998583313875759,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI -0.00030",
+      "robust_radians": 0.00030010542607077675,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "yaw -1PI +0.00030",
+      "robust_radians": 0.00029999413302561514,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "identity",
+      "robust_radians": 3.1415925661670165,
+      "acos_dot_radians": 3.1415927410125732,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": false
+    },
+    {
+      "case": "quarter turn",
+      "robust_radians": 1.5707964953822793,
+      "acos_dot_radians": 1.5707963705062866,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": false
+    },
+    {
+      "case": "wrong axis X",
+      "robust_radians": 3.1415926535897896,
+      "acos_dot_radians": 3.1415927410125732,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": false
+    },
+    {
+      "case": "wrong axis Z",
+      "robust_radians": 3.1415926535897896,
+      "acos_dot_radians": 3.1415927410125732,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": false
+    },
+    {
+      "case": "opposite quaternion sign",
+      "robust_radians": 0.0,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative X tilt -0.00005",
+      "robust_radians": 4.999999872647709e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative X tilt +0.00005",
+      "robust_radians": 4.999999872647709e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative X tilt -0.00020",
+      "robust_radians": 0.00019999999428090841,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative X tilt +0.00020",
+      "robust_radians": 0.00019999999428090841,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative X tilt -0.00030",
+      "robust_radians": 0.0003000000119992351,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative X tilt +0.00030",
+      "robust_radians": 0.0003000000119992351,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative Z tilt -0.00005",
+      "robust_radians": 4.999999872647709e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative Z tilt +0.00005",
+      "robust_radians": 4.999999872647709e-05,
+      "acos_dot_radians": 0.0,
+      "expected_pass": true,
+      "robust_pass": true,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative Z tilt -0.00020",
+      "robust_radians": 0.00019999999428090841,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative Z tilt +0.00020",
+      "robust_radians": 0.00019999999428090841,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative Z tilt -0.00030",
+      "robust_radians": 0.0003000000119992351,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    },
+    {
+      "case": "relative Z tilt +0.00030",
+      "robust_radians": 0.0003000000119992351,
+      "acos_dot_radians": 0.0,
+      "expected_pass": false,
+      "robust_pass": false,
+      "acos_dot_pass": true
+    }
+  ]
+}

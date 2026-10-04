@@ -1,0 +1,94 @@
+{
+  "verdict": "FAIL",
+  "checkout_ref": "387fd9276fbce06c0acd047c197d8556a303e102",
+  "run_id": 37117576397,
+  "artifact_id": 11271783822,
+  "failures": [
+    "#65 peer 0 f48_button (craft_0: ordinary input) -> FAIL -- Actual Forge button activation count=0"
+  ],
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator-home/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": []
+  },
+  "original_archive_sha256": "8fcabdafb0cd4f85d95e68cde823ac6b68ee1ca79cfbc1f40dc3f57a86d941c8",
+  "retained": {
+    "run.log": {
+      "retained_file": "loop-r17-37117576397-original.log.gz",
+      "sha256": "9c26752cc9b1f5de08898d5253d0b11df71bdbe4e034c5a2198380bd0a740044"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/NET_RUN.json": {
+      "retained_file": "loop-r17-37117576397-NET_RUN.json.gz",
+      "sha256": "a1705aa1629de9708d810974a2e25792836fa75fe5684c0753043c14b2e1f8a7"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log": {
+      "retained_file": "loop-r17-37117576397-peer-0.log.gz",
+      "sha256": "f67e1ab8576360227e663df9240b836e61028e272b9fd3bc9fe7d916e65652ab"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log": {
+      "retained_file": "loop-r17-37117576397-peer-1.log.gz",
+      "sha256": "4cd98a7e02ac8bfe2802ac238ab17bcb8bea1f369ef192ee07658f46f4b93016"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_button_activation-2484-366620531.json": {
+      "retained_file": "loop-r17-37117576397-activation.json.gz",
+      "sha256": "1f51de334a58b522ba86027d20f9d9540cd5ae28828bf7c9ca422a4be694c519"
+    }
+  },
+  "activation": {
+    "action": "f48_button",
+    "args": {
+      "text": "Refine Rootiron Ingot"
+    },
+    "result": {
+      "data": {
+        "actual_pressed_count": 0,
+        "focused_actual_target_before_down": true,
+        "input_result": {
+          "detail": "pressed 'ui_accept' x1",
+          "verdict": "PASS"
+        },
+        "panel_press": {
+          "action": "ui_accept",
+          "after": {
+            "focus_path": "",
+            "owner_path": "",
+            "owner_script": "",
+            "tree_paused": false
+          },
+          "before": {
+            "craft": {
+              "groom_waiting_release": false,
+              "open": true,
+              "pending_intent": false,
+              "station_operation": "",
+              "status": ""
+            },
+            "focus_path": "/root/@CanvasLayer@70100/@Control@71175/@CenterContainer@71177/@PanelContainer@71178/@VBoxContainer@71179/@ScrollContainer@71234/@VBoxContainer@71235/@Button@71239",
+            "owner_path": "/root/@CanvasLayer@70100",
+            "owner_script": "res://scripts/ui/craft_panel.gd",
+            "tree_paused": false
+          },
+          "binding_button": 0,
+          "binding_class": "InputEventJoypadButton",
+          "binding_menu_cancel": false,
+          "sampled_ms": 359214
+        },
+        "requested_text": "Refine Rootiron Ingot",
+        "target_instance_id": 65403242140060,
+        "target_path": "/root/@CanvasLayer@70100/@Control@71175/@CenterContainer@71177/@PanelContainer@71178/@VBoxContainer@71179/@ScrollContainer@71234/@VBoxContainer@71235/@Button@71239"
+      },
+      "detail": "Actual Forge button activation count=0",
+      "verdict": "FAIL"
+    }
+  },
+  "boundary": "Focused real target before queued physical confirmation emitted no observed pressed signal. Panel owner/focus disappears during same input; callback on a replacement target is a hypothesis pending exact native reproduction. No paid refining or loop acceptance."
+}

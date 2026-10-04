@@ -289,9 +289,12 @@ const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 const WATER_RECIPE_MIGRATION := preload("res://scripts/save/water_recipe_migration.gd")
 const FALLBACK_WORKER := preload("res://scripts/save/fallback_save_worker.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 
 signal fallback_completed(success: bool)
+signal fallback_submitted(job_id: String, request: Dictionary)
+signal fallback_request_completed(job_id: String, request: Dictionary, success: bool, receipt: Dictionary)
 
 var _dir: String
 var _legacy_dir: String = ""
@@ -299,6 +302,8 @@ var _worlds: RefCounted = null
 var _characters: RefCounted = null
 var _fallback: RefCounted = null
 var _fallback_writer: RefCounted = null
+var _fallback_write_receipt: Dictionary = {}
+var _last_refusal := ""
 ## Typed outcome for UI and tools; refused loads never apply live state.
 var last_load_result: Dictionary = {}
 
@@ -418,17 +423,57 @@ func save(game: Object, slot: int, write_split: bool = true) -> bool:
 func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		character_only: String = "") -> Dictionary:
 	var portal_owner: Variant = game.get("local")
-	var portal_character := str(portal_owner.get("character_id")) if portal_owner is Object else ""
+	var owner_identity: Variant = portal_owner.get("character_id") if portal_owner is Object else null
+	var portal_character: String = owner_identity if owner_identity is String else ""
+	if not character_only.is_empty() and character_only != portal_character:
+		return {} # A personal writer cannot borrow a different character's path.
 	var initial_data := snapshot(game)
+	# The merged slot codec deliberately leaves identity in the split envelope.
+	# Its owner guards require the actual local identity, so project that field
+	# only into this detached guard input, never from the caller's requested ID.
+	var owner_guard_data := initial_data.duplicate()
+	owner_guard_data["character_id"] = portal_character
 	var session: Variant = game.get("session")
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_vitals_snapshot_allowed") \
-			and not bool(session.call("_owner_vitals_snapshot_allowed", portal_owner, initial_data)):
+			and not bool(session.call("_owner_vitals_snapshot_allowed", portal_owner, owner_guard_data)):
+		_note_refusal("owner vitals retry does not match the live party")
 		return {} # Refuse before identity generation or any live/disk mutation.
-	if not _redesign_errors(initial_data, portal_character).is_empty():
+	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
+			and session.call("_owner_training_snapshot_allowed", portal_owner, owner_guard_data) != true:
+		_note_refusal("owner training state is mid-transaction (%s)" % str(session.call("_owner_snapshot_block_reason", portal_owner)) \
+			if session.has_method("_owner_snapshot_block_reason") else "owner training state is mid-transaction")
+		return {}
+	# The merged slot payload keeps file identity in its split locator. Typed
+	# journals still require the actual live world during pre-identity checks;
+	# supply it only to this detached validation input, never to a receipt.
+	var validation_data := initial_data.duplicate()
+	var validation_world: Variant = game.get("world")
+	validation_data["world_id"] = str(validation_world.get("world_id")) if validation_world is Object else ""
+	var redesign_errors := _redesign_errors(validation_data, portal_character)
+	if not redesign_errors.is_empty():
 		push_error("Save refused: invalid redesign state")
+		# Preserve the rejected pre-identity candidate in the existing log only.
+		# A serialized string and its hash survive disposal of scratch saves.
+		var snapshot_json := JSON.stringify(initial_data)
+		print("SAVE_SNAPSHOT_REFUSAL " + JSON.stringify({"schema_version": 1,
+			"stage": "redesign_pre_identity", "errors": redesign_errors,
+			"slot": slot, "write_split": write_split, "character_only": character_only,
+			"character_id": portal_character, "snapshot_sha256": snapshot_json.sha256_text(),
+			"snapshot_json": snapshot_json}))
 		return {}
 	var world_id := ""
 	var character_id := character_only
+	if write_split and character_only.is_empty() and _owns_world(game):
+		var target_world := _target_world_id(game, slot)
+		var live_world: Variant = game.get("world")
+		if live_world != null and str(live_world.get("world_id")) != target_world:
+			# A manual slot cannot rebind immutable journal ownership. Refuse
+			# before minting/changing any live identity or touching any file.
+			var targeted := initial_data.duplicate()
+			targeted["world_id"] = target_world
+			if not _redesign_errors(targeted, portal_character).is_empty():
+				push_warning("save: target slot conflicts with retained world transactions")
+				return {}
 	if write_split:
 		character_id = _character_id_for(game, slot)
 		# Validate portable identity before `_world_id_for` stamps the live world.
@@ -474,6 +519,15 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 	return _immutable_copy(request)
 
 
+## A refused snapshot is otherwise silent: every caller sees only `false`.
+## Logged once per distinct reason so a heartbeat probe cannot flood the log.
+func _note_refusal(reason: String) -> void:
+	if reason == _last_refusal:
+		return
+	_last_refusal = reason
+	push_warning("save refused: " + reason)
+
+
 static func _snapshot_values_only(value: Variant) -> bool:
 	if value is Object or value is Callable or value is Signal:
 		return false
@@ -511,11 +565,21 @@ func request_fallback(game: Object, slot: int, character_only: String = "") -> b
 		_fallback = FALLBACK_WORKER.new()
 		_fallback.completed.connect(_on_fallback_completed)
 		_fallback_writer = get_script().new(_dir)
+	if not _fallback.submitted.is_connected(_on_fallback_submitted):
+		_fallback.submitted.connect(_on_fallback_submitted)
+	if not _fallback.completed_request.is_connected(_on_fallback_request_completed):
+		_fallback.completed_request.connect(_on_fallback_request_completed)
 	var request := _prepare_snapshot(game, slot, character_only.is_empty(), character_only)
 	if request.is_empty():
 		_on_fallback_completed(false)
 		return false
-	return _fallback.submit(request, _fallback_writer.write_snapshot)
+	var observed_writer := Callable()
+	var receipt_reader := Callable()
+	if (not fallback_submitted.get_connections().is_empty() or not fallback_request_completed.get_connections().is_empty()) \
+		and _fallback_writer.has_method("write_snapshot_observed") and _fallback_writer.has_method("fallback_write_receipt"):
+		observed_writer=Callable(_fallback_writer,"write_snapshot_observed")
+		receipt_reader=Callable(_fallback_writer,"fallback_write_receipt")
+	return _fallback.submit(request, _fallback_writer.write_snapshot, observed_writer, receipt_reader)
 
 
 func poll_fallback() -> void:
@@ -536,17 +600,63 @@ func _on_fallback_completed(success: bool) -> void:
 		push_warning("fallback autosave: could not commit save")
 	fallback_completed.emit(success)
 
+func _on_fallback_submitted(job_id: String, request: Dictionary) -> void:
+	fallback_submitted.emit(job_id,request)
+
+func _on_fallback_request_completed(job_id: String, request: Dictionary, success: bool, receipt: Dictionary) -> void:
+	fallback_request_completed.emit(job_id,request,success,receipt)
+
 
 ## The existing slot/world/character transaction, now independent of Game.
 ## A process-wide recursive IO mutex also serializes saves from other saver
 ## instances and protects AtomicSaveFile's shared validity cache.
 func write_snapshot(request: Dictionary) -> bool:
+	return _write_snapshot_transaction(request,false)
+
+## Opt-in companion proof only. The original write and BOOL are unchanged.
+func write_snapshot_observed(request: Dictionary) -> bool:
+	return _write_snapshot_transaction(request,true)
+
+func fallback_write_receipt() -> Dictionary:
+	return _fallback_write_receipt
+
+func _write_snapshot_transaction(request: Dictionary, observe: bool) -> bool:
+	if observe: _fallback_write_receipt={}
 	if request.is_empty():
 		return false
 	ATOMIC_SAVE_FILE.begin_transaction()
 	var success := _write_snapshot_locked(request)
+	if observe and success: _fallback_write_receipt=_snapshot_receipt_locked(request)
 	ATOMIC_SAVE_FILE.end_transaction()
 	return success
+
+## Still inside the existing writer mutex, before a pending successor can
+## overwrite these primaries. Raw reads do not join, repair or use store caches.
+func _snapshot_receipt_locked(request: Dictionary) -> Dictionary:
+	var paths: Dictionary = {}
+	if request.character_only:
+		paths.character=_characters.call("path_for",str(request.character_id))
+	else:
+		paths.slot=slot_path(int(request.slot))
+		if request.write_split:
+			if request.host: paths.world=_worlds.call("path_for",str(request.world_id))
+			paths.character=_characters.call("path_for",str(request.character_id))
+	var files: Dictionary = {}
+	for kind: String in paths:
+		var file: FileAccess = FileAccess.open(str(paths[kind]),FileAccess.READ)
+		if file == null: return {} # A BOOL alone cannot invent missing file proof.
+		var bytes: PackedByteArray = file.get_buffer(file.get_length())
+		file.close()
+		var payload: Variant = SAVE_DOCUMENT.parse(bytes.get_string_from_utf8())
+		if not payload is Dictionary: return {}
+		var hasher: HashingContext = HashingContext.new()
+		hasher.start(HashingContext.HASH_SHA256)
+		hasher.update(bytes)
+		files[kind]={"path":str(paths[kind]),"bytes_base64":Marshalls.raw_to_base64(bytes),
+			"sha256":hasher.finish().hex_encode(),"payload":payload}
+	return _immutable_copy({"version":1,"source":"SaveGame_locked_fallback_write_TRUE_BOOL",
+		"writer_instance_id":get_instance_id(),"writer_script":get_script().resource_path,
+		"request_sha256":SAVE_DOCUMENT.stringify(request).sha256_text(),"files":files})
 
 
 func _write_snapshot_locked(request: Dictionary) -> bool:
@@ -571,7 +681,9 @@ func _write_snapshot_locked(request: Dictionary) -> bool:
 	if write_split and bool(request["host"]):
 		slot_data = data.duplicate(true)
 		slot_data[SPLIT_LOCATOR_KEY] = {"world_id": world_id, "character_id": character_id}
-	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), JSON.stringify(slot_data, "\t"), write_split):
+	var encoded := preload("res://scripts/save/save_document.gd").stringify(slot_data)
+	if encoded.is_empty(): return false
+	if not ATOMIC_SAVE_FILE.new().write(slot_path(slot), encoded, write_split):
 		return false
 	if not write_split:
 		return true
@@ -653,12 +765,17 @@ static func _redesign_payload(owner: Variant, scope: String) -> Dictionary:
 
 
 static func _redesign_errors(data: Dictionary, character_id: String = "") -> Array[String]:
-	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")))
+	var errors := REDESIGN_STATE.validate("world", data.get("redesign_world", REDESIGN_STATE.defaults("world")), [], str(data.get("reward_delivery_namespace", "")))
+	errors.append_array(preload("res://scripts/build/forward_camp_rules.gd").saved_errors(data.get("placed_buildings", [])))
 	errors.append_array(REDESIGN_STATE.validate("character", data.get("redesign_character", REDESIGN_STATE.defaults("character")), REDESIGN_STATE.uids(data.get("party", []))))
 	errors.append_array(preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true))
+	errors.append_array(trait_party_errors(data.get("party", []), data.get("redesign_character", {})))
 	errors.append_array(preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(data.get("satchel_escrow", {}), character_id))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
+	errors.append_array(preload("res://autoload/world_state.gd").portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
+	errors.append_array(preload("res://autoload/world_state.gd").training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", "")), data.get("placed_buildings", [])))
+	errors.append_array(preload("res://scripts/net/foundation_event.gd").errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), str(data.get("world_id", ""))))
 	return errors
 
 
@@ -692,7 +809,13 @@ func load_slot(game: Object, slot: int) -> bool:
 	last_load_result = version_result(data.get("version", null))
 	if not bool(last_load_result.ok):
 		return false
-	var redesign_errors := _redesign_errors(data, slot_locator_character(slot))
+	# Validate journal ownership against the selected on-disk locator, rather
+	# than the world currently in memory or an absent flat-payload field.
+	var validation_data := data.duplicate()
+	var validation_locator: Variant = data.get(SPLIT_LOCATOR_KEY)
+	if validation_locator is Dictionary:
+		validation_data["world_id"] = str(validation_locator.get("world_id", ""))
+	var redesign_errors := _redesign_errors(validation_data, slot_locator_character(slot))
 	if not redesign_errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That save contains invalid data.", "errors": redesign_errors}
 		return false
@@ -1112,13 +1235,20 @@ func _split_legacy_slot(game: Object, slot: int, data: Dictionary) -> Dictionary
 ## migrated it to -- so New Game, then Save to slot 2, writes slot 2's world
 ## rather than overwriting the world that was loaded from slot 1 before it.
 func _world_id_for(game: Object, slot: int) -> String:
+	var id := _target_world_id(game, slot)
+	var world: Variant = game.get("world") if game != null else null
+	if world != null: (world as RefCounted).set("world_id", id)
+	return id
+
+
+## Read-only target selection, also used before any save identity mutation.
+func _target_world_id(game: Object, slot: int) -> String:
 	var id := "slot-%d" % slot
 	var world: Variant = game.get("world") if game != null else null
 	if world != null:
 		var live := str((world as RefCounted).get("world_id"))
 		if live == id or live == "legacy-slot-%d" % slot:
 			return live
-		(world as RefCounted).set("world_id", id)
 	return id
 
 
@@ -1158,7 +1288,7 @@ func _character_id_for(game: Object, slot: int = -1) -> String:
 func slot_locator_character(slot: int) -> String:
 	if slot < 0 or slot >= SLOT_COUNT:
 		return ""
-	var flat := _read_json_file(slot_path(slot))
+	var flat := _read(slot)
 	var locator: Variant = flat.get(SPLIT_LOCATOR_KEY)
 	if not locator is Dictionary:
 		return ""
@@ -1823,7 +1953,7 @@ func _read(slot: int) -> Dictionary:
 	var file := FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
 
 
@@ -1966,6 +2096,7 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 	var teaching := preload("res://scripts/creatures/teaching.gd")
 	if not teaching.party_loadout_errors(entries,character,true).is_empty():
 		return
+	if not trait_party_errors(entries, character).is_empty(): return
 	var party_ref := party as RefCounted
 	party_ref.call("clear")
 	# Read ONCE, outside the loop, for the baseline repair below. Read through
@@ -2062,6 +2193,12 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 		creature.iv_defence = float(d.get("iv_defence", 0.5))
 		creature.trait_primary = str(d.get("trait_primary", ""))
 		creature.trait_secondary = str(d.get("trait_secondary", ""))
+		var trait_record: Variant = character.get("creatures", {}).get(creature.uid)
+		if trait_record is Dictionary:
+			var normalized := preload("res://scripts/creatures/traits.gd").initialize_legacy_record(d, trait_record)
+			# Whole-party detached preflight already validated these exact fields.
+			preload("res://scripts/creatures/traits.gd").project_instance(creature, normalized)
+			creature.traits_initialized = trait_record.get("traits_initialized", false)
 		creature.shiny = bool(d.get("shiny", false))
 		# RG19-spec/D68. Absent on any save older than VERSION 13; the
 		# defaults are creature_condition.json's own starting values, which is
@@ -2082,6 +2219,11 @@ func _array_to_party(entries: Variant, party: Variant, character: Dictionary = {
 		creature.base_attack = float(d.get("base_attack", definition.get("base_attack", 20.0)))
 		creature.base_defence = float(d.get("base_defence", definition.get("base_defence", 20.0)))
 		creature.call("recompute_stats_from_base", progression_cfg)
+		if trait_record is Dictionary:
+			# The modern canonical card already contains intrinsic stat math.
+			# Restore it exactly instead of repricing V1 or applying Hardy twice.
+			for field: String in ["max_hp", "hp", "attack", "defence", "fainted"]:
+				creature.set(field, d[field])
 		party_ref.call("add", creature)
 
 
@@ -2174,3 +2316,30 @@ func _stack_from_json(stack: Variant) -> Variant:
 		# upgrade ever happened.
 		fixed["durability_bonus"] = int(dict.get("durability_bonus"))
 	return fixed
+
+
+## Validate every canonical mirror before any loader clears or mutates state.
+## Legacy codec callers without UID mirrors retain their existing repair path.
+static func trait_party_errors(entries: Variant, character: Variant) -> Array[String]:
+	var errors: Array[String] = []
+	if not entries is Array or not character is Dictionary: return ["invalid trait party"]
+	if not character.has("creatures"): return errors
+	if not character.creatures is Dictionary: return ["invalid trait mirrors"]
+	var traits := preload("res://scripts/creatures/traits.gd")
+	for card: Variant in entries:
+		if not card is Dictionary: return ["invalid trait card"]
+		var uid := str(card.get("uid", ""))
+		# Absence remains the existing legacy codec path. A present malformed
+		# mirror still refuses before any personal or party mutation.
+		if not character.creatures.has(uid): continue
+		var record: Variant = character.creatures[uid]
+		if not record is Dictionary: return ["invalid trait mirror"]
+		errors.append_array(traits.trait_state_errors(traits.initialize_legacy_record(card, record)))
+		for field: String in ["max_hp", "hp", "attack", "defence"]:
+			var value: Variant = card.get(field)
+			if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0:
+				errors.append("invalid saved trait stat " + field)
+		if not card.get("fainted") is bool: errors.append("invalid saved fainted")
+		if errors.is_empty() and (float(card.max_hp) <= 0.0 or float(card.hp) > float(card.max_hp)):
+			errors.append("invalid saved trait HP")
+	return errors

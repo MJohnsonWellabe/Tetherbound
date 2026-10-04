@@ -1,0 +1,293 @@
+{
+  "run_id": 37122872058,
+  "artifact_id": 11273992793,
+  "checkout_ref": "31d07d769afba5b387cc1a44f8ff978f2a26b351",
+  "result": "FAIL step25: canonical catch accepted/source exists but actual Session owner mutation fence still closed; no close input sent",
+  "archive_sha256": "a86a4264521f008aabe02cd1f7f8f86df391ee3517c5af0f26ec97fab2b0af67",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "loop-r19-37122872058-0-MANIFEST.txt.gz",
+      "sha256": "c7ff6ca6f0bb62aede1b5c5eb1882b9b7295308b6b82e92016443ad48abd0401"
+    },
+    "run.log": {
+      "retained_file": "loop-r19-37122872058-1-run.log.gz",
+      "sha256": "8306e7ad196560b1b622b2ba860c5f4fdcd6b33a6059bb5551975d0b5a79143a"
+    },
+    "tree/data/config/alpha_respawns.json": {
+      "retained_file": "loop-r19-37122872058-2-alpha_respawns.json.gz",
+      "sha256": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851"
+    },
+    "tree/data/config/essence.json": {
+      "retained_file": "loop-r19-37122872058-3-essence.json.gz",
+      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+    },
+    "tree/data/config/hud.json": {
+      "retained_file": "loop-r19-37122872058-4-hud.json.gz",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+    },
+    "tree/data/config/multiplayer.json": {
+      "retained_file": "loop-r19-37122872058-5-multiplayer.json.gz",
+      "sha256": "f8b37f2736c75f20889649f8467caec67c4a09bf7dbefd04c2553d55bd3dd699"
+    },
+    "tree/data/config/stations.json": {
+      "retained_file": "loop-r19-37122872058-6-stations.json.gz",
+      "sha256": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9"
+    },
+    "tree/data/config/traits.json": {
+      "retained_file": "loop-r19-37122872058-7-traits.json.gz",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator-home/godot/app_userdata/Tetherbound/f48-prepare_inputs-scenario.json": {
+      "retained_file": "loop-r19-37122872058-8-f48-prepare_inputs-scenario.json.gz",
+      "sha256": "4cdacef91df21b5123d4bfa4b28f8f0476f2b87a89139953569e52d131f4d798"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator-home/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "loop-r19-37122872058-9-godot.log.gz",
+      "sha256": "ad67f0a59401684ccb5604c8e607beb6f79ddbf843a470ddd05c0e864000801a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/coordinator.log": {
+      "retained_file": "loop-r19-37122872058-10-coordinator.log.gz",
+      "sha256": "ad67f0a59401684ccb5604c8e607beb6f79ddbf843a470ddd05c0e864000801a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/invocation.json": {
+      "retained_file": "loop-r19-37122872058-11-invocation.json.gz",
+      "sha256": "f9f5ebe3e00b643040c48ae73ad884e110a7ee83bec5dc2019a754346bdeb088"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/fixture-manifest.json": {
+      "retained_file": "loop-r19-37122872058-12-fixture-manifest.json.gz",
+      "sha256": "b7da1567f8938b0884b0fc15575217295d0b27f19228ca04c5faf2b918b03801"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "loop-r19-37122872058-13-character.json.gz",
+      "sha256": "48289d457580a72f0a791d4d2e8c4451f4e19d9b3a42c935dc661a01c15b36e5"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/peer-0/saves/redesign-v28/slot_0.json": {
+      "retained_file": "loop-r19-37122872058-14-slot_0.json.gz",
+      "sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/peer-0/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "loop-r19-37122872058-15-world.json.gz",
+      "sha256": "71b59819d2a8bcae12d555d05d819ea0755e49909138e7447e7574f1a6c95324"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "loop-r19-37122872058-16-character.json.gz",
+      "sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/profile.json": {
+      "retained_file": "loop-r19-37122872058-17-profile.json.gz",
+      "sha256": "082f1855d812e1a648ed80e6a66bc2e056957cbfe0578316035df7609f969570"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/test-configuration/data/config/alpha_respawns.json": {
+      "retained_file": "loop-r19-37122872058-18-alpha_respawns.json.gz",
+      "sha256": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/test-configuration/data/config/essence.json": {
+      "retained_file": "loop-r19-37122872058-19-essence.json.gz",
+      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/test-configuration/data/config/hud.json": {
+      "retained_file": "loop-r19-37122872058-20-hud.json.gz",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/test-configuration/data/config/stations.json": {
+      "retained_file": "loop-r19-37122872058-21-stations.json.gz",
+      "sha256": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/test-configuration/data/config/multiplayer.json": {
+      "retained_file": "loop-r19-37122872058-22-multiplayer.json.gz",
+      "sha256": "ca39e27adee3d8b18cd3c19c4a6fd045b66ee0f92b1892467f70a0c9013acf79"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/mechanics-start/test-configuration/data/config/traits.json": {
+      "retained_file": "loop-r19-37122872058-23-traits.json.gz",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/NET_RUN.json": {
+      "retained_file": "loop-r19-37122872058-24-NET_RUN.json.gz",
+      "sha256": "9cc2c3d3235c740d901f74b72da705e7d60db7308840fcfd7244637d7a4df207"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/SUMMARY.md": {
+      "retained_file": "loop-r19-37122872058-25-SUMMARY.md.gz",
+      "sha256": "4a79ba74ccdfc63c6142dc270d2d1a8ccbebe18a31da1412c01382b33f872d0b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "loop-r19-37122872058-26-boot_log.txt.gz",
+      "sha256": "ad83bb66ea75d8410bedd7746fac226cf19103d7e816e55267a89ff9da32ad51"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "loop-r19-37122872058-29-character.json.gz",
+      "sha256": "b2ec60240d0d5757f427ec43dc1254f79d51c1836265e3edb5f73c5eaa1dc1ec"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "loop-r19-37122872058-30-godot.log.gz",
+      "sha256": "38cfccb0d77050f723cc152df03f553304c60b6903b3d3889ce266b3b7e74205"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json": {
+      "retained_file": "loop-r19-37122872058-31-slot_0.json.gz",
+      "sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "loop-r19-37122872058-32-world.json.gz",
+      "sha256": "1c889b9d7023ca6b41d66fcca083ec53a8986c101cb5b3fdaefb4933a8b31df4"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "loop-r19-37122872058-33-boot_log.txt.gz",
+      "sha256": "26a88b21c6293e1294b87d8da943edfee26fcfaa4fd825067f0e760f13072f6c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "loop-r19-37122872058-36-character.json.gz",
+      "sha256": "79f1c87398e8b800ad35ea7c795882e5cf057eb73fd00568450e6787989c93c8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "loop-r19-37122872058-37-godot.log.gz",
+      "sha256": "bae6663f029a8f4ae910414e68fd4cd9448cbf7f9c9c8d736e144a0b2de3927f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log": {
+      "retained_file": "loop-r19-37122872058-38-peer-0.log.gz",
+      "sha256": "4e900c7b949be54205de90871602b13d0a425d7427673abc0ade4dc7b8d9ba39"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log": {
+      "retained_file": "loop-r19-37122872058-39-peer-1.log.gz",
+      "sha256": "99aa49a1549c40120184f20492c4aae1aa70f7767d67167a12c41543064e60eb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/originals/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "loop-r19-37122872058-40-character.json.gz",
+      "sha256": "06fea685d133a680a4d7dcc887fbd6179b7675f36b2c87a54753c7b7c81d2063"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/originals/peer-0/saves/redesign-v28/slot_0.json": {
+      "retained_file": "loop-r19-37122872058-41-slot_0.json.gz",
+      "sha256": "b187d4f8abeffd9bbe6e6d4daedf28a472368ce1d849bf0f69d27d2f9562fe2b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/originals/peer-0/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "loop-r19-37122872058-42-world.json.gz",
+      "sha256": "4e5b04e982f85a10d38c07865306bb0f1e13fa08b0e1624e501873c3ac2f35bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/originals/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "loop-r19-37122872058-43-character.json.gz",
+      "sha256": "8d2deab960882f4f25172de6147a965fe3fb2b9366ebea9b40402a55e4b37172"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/originals/peer-2/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "loop-r19-37122872058-44-character.json.gz",
+      "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/originals/peer-3/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "loop-r19-37122872058-45-character.json.gz",
+      "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/producer-profile/profile.json": {
+      "retained_file": "loop-r19-37122872058-46-profile.json.gz",
+      "sha256": "9903320c9387a92c8cdbe140653da0e2bcacb78e1fc1b564c472b0a344eff02c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/producer-profile/source.json": {
+      "retained_file": "loop-r19-37122872058-47-source.json.gz",
+      "sha256": "4204982a8bdfac495a110e076670baa41d7ca769e252835c95149e5dd7f505a6"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/PROOF.md": {
+      "retained_file": "loop-r19-37122872058-48-PROOF.md.gz",
+      "sha256": "8afb6a92eecf7505b76505327da019faeae308667c4e8791332e7b4c0836717c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-altar-save-edges/character-626300bee616b52bfa1d40ab32fb776a/after_host_write_before_delivery.json": {
+      "retained_file": "loop-r19-37122872058-49-after_host_write_before_delivery.json.gz",
+      "sha256": "7f07df4a320fe7e60b2cc38b05eabae4670fa3495e654e96a1ed1090c4e9badf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-altar-save-edges/character-626300bee616b52bfa1d40ab32fb776a/after_owner_write_before_ack.json": {
+      "retained_file": "loop-r19-37122872058-50-after_owner_write_before_ack.json.gz",
+      "sha256": "8cae33c7cbcc346afec0a30e47be9a92c124c7540f6c208b0eb52ab8869d0508"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48-capture-host-diagnostic-25-277403608.json": {
+      "retained_file": "loop-r19-37122872058-51-f48-capture-host-diagnostic-25-277403608.json.gz",
+      "sha256": "a05f79d2c587da9a07745bd3c961fe6ff9eea88ff6f06735901410e74fcfb9dc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_assert-2495-241008330.json": {
+      "retained_file": "loop-r19-37122872058-52-f48_assert-2495-241008330.json.gz",
+      "sha256": "ae2c1b152d2f2df97c8ba0bf88f6291c02966b8fc65b6c943fb4848fbda8df1c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_assert_altar_build-2494-240297216.json": {
+      "retained_file": "loop-r19-37122872058-53-f48_assert_altar_build-2494-240297216.json.gz",
+      "sha256": "50a8fcf9514d0f899900b6eb92a4cb0607ddfb491c59fde5909b9eb7b471c0e2"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_assert_snapshot-2494-241632933.json": {
+      "retained_file": "loop-r19-37122872058-54-f48_assert_snapshot-2494-241632933.json.gz",
+      "sha256": "aec39b24b37e15df0a095b014e14ab3e7fb58e9331d228b360f01d76fa1f4678"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_assert_snapshot-2495-242124375.json": {
+      "retained_file": "loop-r19-37122872058-55-f48_assert_snapshot-2495-242124375.json.gz",
+      "sha256": "e1dbe6e6836e7115052e037fd93bec35e1805c3c89196fc5c9f17d48a7974062"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_fixture_capture-2494-247891058.json": {
+      "retained_file": "loop-r19-37122872058-56-f48_fixture_capture-2494-247891058.json.gz",
+      "sha256": "e62b2b55407cb2f0a6f288cbcabebb8688fca95d88a8c26eab9ad5973c63519b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-observations/f48_fixture_capture-2495-270666017.json": {
+      "retained_file": "loop-r19-37122872058-57-f48_fixture_capture-2495-270666017.json.gz",
+      "sha256": "67bd8e32da4f925e83cfc5f4eb5092deb1dabc59c656310e07f44a969da61800"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-owner-saves/character-626300bee616b52bfa1d40ab32fb776a/owner-290096b14bd9bfcdce25009841a0127a316b6c4d35fd53176e9bbb25415700fa-2.json": {
+      "retained_file": "loop-r19-37122872058-58-owner-290096b14bd9bfcdce25009841a0127a316b6c4d35fd53176e9bbb25415700fa-2.json.gz",
+      "sha256": "a9cc5d0ae683bb1a5142093ff56f79604e05d398048600e72170942e71654aec"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-owner-saves/character-626300bee616b52bfa1d40ab32fb776a/owner-a9331e47c60a6101995d95f13b0681d8a5025ff52e1bec4f498ff5e17d42baa2-1.json": {
+      "retained_file": "loop-r19-37122872058-59-owner-a9331e47c60a6101995d95f13b0681d8a5025ff52e1bec4f498ff5e17d42baa2-1.json.gz",
+      "sha256": "6d4c9bfb131babae7893ff59493312f789e163b69f8677c5629165c0a1952f8b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-owner-saves/character-a79c7bee9128c2ef03d266ce0352c666/owner-676fa1538bd0646f7c36b315e96bea956bca75a3f7ca84a3f460fc88e849cfa7-2.json": {
+      "retained_file": "loop-r19-37122872058-60-owner-676fa1538bd0646f7c36b315e96bea956bca75a3f7ca84a3f460fc88e849cfa7-2.json.gz",
+      "sha256": "3ab43318b9c642d22f0f83649ad2dd491cfb634f18abc618fefc1210f494a888"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-owner-saves/character-a79c7bee9128c2ef03d266ce0352c666/owner-958776c1799ce920dc0feef06b90de716cf1a94160a25114d96da2d2ffa8ba96-3.json": {
+      "retained_file": "loop-r19-37122872058-61-owner-958776c1799ce920dc0feef06b90de716cf1a94160a25114d96da2d2ffa8ba96-3.json.gz",
+      "sha256": "fb7ad7d561ece370a5e6374502bd807bed56529aadc3fe5f467d92120e7665e1"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-owner-saves/character-a79c7bee9128c2ef03d266ce0352c666/owner-f5ef0874cf17c830cad21f829539f6c5b9fef48bcb6d7fdd7c88fe388efcc7e1-1.json": {
+      "retained_file": "loop-r19-37122872058-62-owner-f5ef0874cf17c830cad21f829539f6c5b9fef48bcb6d7fdd7c88fe388efcc7e1-1.json.gz",
+      "sha256": "58fdaa40b509b549fc244bbcb8a7a3fe2180a9026a8b9a303853f171689b74ca"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-passive/actual-2494.jsonl": {
+      "retained_file": "loop-r19-37122872058-63-actual-2494.jsonl.gz",
+      "sha256": "ca57f64f7265b5aab225f81d03daa8a774574abe5ca5a6a22dd0deacd5bd19d1"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-passive/actual-2495.jsonl": {
+      "retained_file": "loop-r19-37122872058-64-actual-2495.jsonl.gz",
+      "sha256": "96448baa6785ad606a7ad7e2fd47720f670822c22384a99954bc09a55c976f9b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-witnesses/character-626300bee616b52bfa1d40ab32fb776a/admitted.json": {
+      "retained_file": "loop-r19-37122872058-65-admitted.json.gz",
+      "sha256": "90028b89a01736f859b9dc10e4f775455d6236db67a94969757b1f0f51c6d2e2"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-witnesses/character-626300bee616b52bfa1d40ab32fb776a/initial-bootstrap.json": {
+      "retained_file": "loop-r19-37122872058-66-initial-bootstrap.json.gz",
+      "sha256": "83acb4b34e789a98b311214f1dcc894d4d22a533b1a6c238f3c3b82d2cca6d69"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-witnesses/character-a79c7bee9128c2ef03d266ce0352c666/admitted.json": {
+      "retained_file": "loop-r19-37122872058-67-admitted.json.gz",
+      "sha256": "068c394093d27ed31541ee9b7be3e7beae52ef85e96d6be0edbae18fc299b966"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/f48-witnesses/character-a79c7bee9128c2ef03d266ce0352c666/initial-bootstrap.json": {
+      "retained_file": "loop-r19-37122872058-68-initial-bootstrap.json.gz",
+      "sha256": "d53dbe8acb88df8bac001983714c0c0a9c248f92ffcfe3f764b4afd28da826ef"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/peer-0/actual-paid-altar/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "loop-r19-37122872058-69-character.json.gz",
+      "sha256": "fc540df3995009bcda64f5e0e05bf660f5d4f38aa62115b1dd8d8b414d4bc005"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/peer-0/actual-paid-altar/saves/redesign-v28/slot_0.json": {
+      "retained_file": "loop-r19-37122872058-70-slot_0.json.gz",
+      "sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/peer-0/actual-paid-altar/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "loop-r19-37122872058-71-world.json.gz",
+      "sha256": "c1b86d9f443a51e45816a1318b1c9b3272c93d12d89f971ffa13cedb3780f92e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-loop/proof/peer-1/actual-paid-altar/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "loop-r19-37122872058-72-character.json.gz",
+      "sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "loop-r19-37122872058-80-boot_log.txt.gz",
+      "sha256": "9aaab9b048eacbf433e154c765836a72d559a1df15a407eb540f39a6aaa4dcf6"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "loop-r19-37122872058-81-godot.log.gz",
+      "sha256": "8306e7ad196560b1b622b2ba860c5f4fdcd6b33a6059bb5551975d0b5a79143a"
+    }
+  }
+}

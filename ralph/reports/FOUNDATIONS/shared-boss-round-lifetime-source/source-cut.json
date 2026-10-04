@@ -1,0 +1,66 @@
+{
+  "preimage": "63429ee77e31341ed82b106ce5489b6479916e3f",
+  "root_review_pin": "601a66fc9fddbd0c009d74596b993c59999f1c5c",
+  "ci_merge": "c6d0670585d2776e4931126f00dedca9d8a2d048",
+  "candidate_sources": [
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "preimage_blob": "842333b69a967f0935c1cdf257bb8c0762712f81",
+      "preimage_sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a",
+      "candidate_raw_sha256": "ae77665e7bcac2b8d632e99da4b522e3e281c39cf68d0d2e5e0e21532c94fb17",
+      "candidate_normalized_sha256": "ae77665e7bcac2b8d632e99da4b522e3e281c39cf68d0d2e5e0e21532c94fb17",
+      "candidate_blob": "4d87a7e573026bd68ab930c2fe4f1c18534ebe89"
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "preimage_blob": "0667d9a7b973835312f624de1f7adc6dbf2a84a8",
+      "preimage_sha256": "6fcd285e34bb0571596b903093b1836f3fd3362a94b2d2705b585a0310f4ba8e",
+      "candidate_raw_sha256": "d290b65c5b6983567a04a13742d9741967d39658b87cfe06002eac00adf13fab",
+      "candidate_normalized_sha256": "d290b65c5b6983567a04a13742d9741967d39658b87cfe06002eac00adf13fab",
+      "candidate_blob": "a041a58851d54d956f32934c3daea285e87495ab"
+    },
+    {
+      "path": "scripts/net/encounter_host.gd",
+      "preimage_blob": "8e93a2ba23d4fe25293a45f8c6edfeac1361383b",
+      "preimage_sha256": "e4ce9eb2868014d507bdbddceb4c8a55068287593d2f8eab6e0053486126445a",
+      "candidate_raw_sha256": "242f44b910c7cecfd239b3459c478f05604736220cb6f9111593d2061c69812e",
+      "candidate_normalized_sha256": "242f44b910c7cecfd239b3459c478f05604736220cb6f9111593d2061c69812e",
+      "candidate_blob": "f428fbd696dca6ca7f2424f9a97c98b56ba75f4a"
+    },
+    {
+      "path": "tests/test_stormwood_hosted_combat.gd",
+      "preimage_blob": "6c75ad7591660797fdccdb59061afabe8220e184",
+      "preimage_sha256": "83dd5b7721ebfea52ba7ca9d24ece03ef4ed25f54a053956a899435a04050c49",
+      "candidate_raw_sha256": "a85bda6173b147133f3507cd98dac93306b959b52ff8921691f43428fa2424e1",
+      "candidate_normalized_sha256": "a85bda6173b147133f3507cd98dac93306b959b52ff8921691f43428fa2424e1",
+      "candidate_blob": "fae51433fc8b4b388dca74d81018051aae9ca53a"
+    }
+  ],
+  "unchanged": [
+    {
+      "path": "tests/smoke_net_shared_boss.gd",
+      "sha256": "6f698cd41cea3532e8997586d8a1d94fce95bcc77098b2a70ffd66362ce31ab5"
+    },
+    {
+      "path": "tests/helpers/net_harness.gd",
+      "sha256": "1aeee3fd2cd092e0d23519b248d60afa8405ed482f9ef392888db6a74d5692e0"
+    },
+    {
+      "path": "tools/net/peer_runner.gd",
+      "sha256": "4c82987b31462ac92a8affd437d3f1cf4fe4b4aabc56e1fb7d20ba1969bd5b05"
+    },
+    {
+      "path": "scripts/creatures/shared_opponent_proxy.gd",
+      "sha256": "0ef6ee308756f3a2a2484b4a4ff3f7bc8ba107954fcfaf712d58dfe6141a1847"
+    },
+    {
+      "path": "scripts/combat/combat_math.gd",
+      "sha256": "6ef0ae1327004861fcb6f478be1b3b63ee8ab13b50c64d5a5617e6e8b2093ca9"
+    }
+  ],
+  "runtime_and_test_patch": {
+    "path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-ci6173\\shared-boss-lifetime.patch",
+    "sha256": "fb834056a1a55673aaa4a1b59dd0724b61db0017506c58b2217083325695ba7b"
+  },
+  "validation": "Source/byte and independent Python scheduling controls only; no Godot invoked."
+}

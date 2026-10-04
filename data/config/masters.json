@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "initial_cap": 10,
+  "ceiling": 60,
+  "reserved_caps": [
+    70,
+    80,
+    90,
+    100
+  ],
+  "duel_policy": "sequential_one_challenger",
+  "masters": [
+    {
+      "id": "master_t1",
+      "tier": 1,
+      "cap_level": 10,
+      "next_cap": 20,
+      "feast_id": "feast_t1",
+      "participants": 1,
+      "candy": 2,
+      "name": "Orin Stonewake",
+      "humanoid_key": "villager_quarryman",
+      "species_id": "burrowback",
+      "profile": "WALL",
+      "biome": "meadows",
+      "position": [
+        440,
+        0,
+        1780
+      ],
+      "sign_position": [
+        404,
+        0,
+        1745
+      ],
+      "author_reference": "old_quarry",
+      "access": "ground",
+      "arena_radius_m": 18,
+      "prompt_radius_m": 3.8,
+      "chest_offset": [
+        -4,
+        0.2,
+        3
+      ],
+      "npc_offset": [
+        4,
+        0.2,
+        3
+      ],
+      "sign_text": "Orin Stonewake — Lv 10 Master. Wait for the opening.",
+      "combat": {
+        "pattern_id": "two_jabs_slam",
+        "question": "Wait for the opening.",
+        "quick_tell_s": 0.9,
+        "heavy_tell_s": 1.1,
+        "heavy_recovery_s": 1.2,
+        "followup_delay_s": 0.8,
+        "volley_interval_s": 1.2,
+        "ultimate_hp_fraction": 0,
+        "ultimate_tell_s": 1.5,
+        "safe_pocket_radius_m": 5,
+        "perch_return_s": 3,
+        "no_switch": true,
+        "no_flee": true,
+        "trainer_damage": false,
+        "catchable": false
+      },
+      "scene": "res://scenes/masters/master_t1.tscn",
+      "creature_types": [
+        "ground"
+      ],
+      "lead_name": "Neri",
+      "lead_cast": "field_researcher",
+      "lead_text": "Orin Stonewake teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Wait for the opening."
+    },
+    {
+      "id": "master_t2",
+      "tier": 2,
+      "cap_level": 20,
+      "next_cap": 30,
+      "feast_id": "feast_t2",
+      "participants": 1,
+      "candy": 2,
+      "name": "Mira Emberlane",
+      "humanoid_key": "wandering_trainer",
+      "species_id": "ashtusk",
+      "profile": "CHARGER",
+      "biome": "meadows",
+      "position": [
+        -405,
+        0,
+        5050
+      ],
+      "sign_position": [
+        -321,
+        0,
+        5025
+      ],
+      "author_reference": "ironwood_ridge",
+      "access": "ground",
+      "arena_radius_m": 18,
+      "prompt_radius_m": 3.8,
+      "chest_offset": [
+        -4,
+        0.2,
+        3
+      ],
+      "npc_offset": [
+        4,
+        0.2,
+        3
+      ],
+      "sign_text": "Mira Emberlane — Lv 20 Master. Own the lane.",
+      "combat": {
+        "pattern_id": "paired_charge",
+        "question": "Own the lane.",
+        "quick_tell_s": 0.9,
+        "heavy_tell_s": 1.1,
+        "heavy_recovery_s": 1.2,
+        "followup_delay_s": 0.4,
+        "volley_interval_s": 1.2,
+        "ultimate_hp_fraction": 0,
+        "ultimate_tell_s": 1.5,
+        "safe_pocket_radius_m": 5,
+        "perch_return_s": 3,
+        "no_switch": true,
+        "no_flee": true,
+        "trainer_damage": false,
+        "catchable": false
+      },
+      "scene": "res://scenes/masters/master_t2.tscn",
+      "creature_types": [
+        "ground",
+        "fire"
+      ],
+      "lead_name": "Toma",
+      "lead_cast": "field_researcher",
+      "lead_text": "Mira Emberlane teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Own the lane."
+    },
+    {
+      "id": "master_t3",
+      "tier": 3,
+      "cap_level": 30,
+      "next_cap": 40,
+      "feast_id": "feast_t3",
+      "participants": 1,
+      "candy": 2,
+      "name": "Ione Tideglass",
+      "humanoid_key": "field_researcher",
+      "species_id": "cannonback",
+      "profile": "CURRENT",
+      "biome": "tidewake",
+      "position": [
+        -105,
+        0,
+        895
+      ],
+      "sign_position": [
+        -72,
+        0,
+        882
+      ],
+      "author_reference": "gull_rest",
+      "access": "human_swim",
+      "arena_radius_m": 18,
+      "prompt_radius_m": 3.8,
+      "chest_offset": [
+        -4,
+        0.2,
+        3
+      ],
+      "npc_offset": [
+        4,
+        0.2,
+        3
+      ],
+      "sign_text": "Ione Tideglass — Lv 30 Master. Close the distance.",
+      "combat": {
+        "pattern_id": "volley_cover",
+        "question": "Close the distance.",
+        "quick_tell_s": 0.8,
+        "heavy_tell_s": 1.1,
+        "heavy_recovery_s": 1.2,
+        "followup_delay_s": 0.8,
+        "volley_interval_s": 1.2,
+        "ultimate_hp_fraction": 0,
+        "ultimate_tell_s": 1.5,
+        "safe_pocket_radius_m": 5,
+        "perch_return_s": 3,
+        "no_switch": true,
+        "no_flee": true,
+        "trainer_damage": false,
+        "catchable": false
+      },
+      "scene": "res://scenes/masters/master_t3.tscn",
+      "creature_types": [
+        "water"
+      ],
+      "lead_name": "Elin",
+      "lead_cast": "field_researcher",
+      "lead_text": "Ione Tideglass teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Close the distance."
+    },
+    {
+      "id": "master_t4",
+      "tier": 4,
+      "cap_level": 40,
+      "next_cap": 50,
+      "feast_id": "feast_t4",
+      "participants": 1,
+      "candy": 2,
+      "name": "Aster Windward",
+      "humanoid_key": "alpha_tracker",
+      "species_id": "stormcapra",
+      "profile": "CHARGER",
+      "biome": "cloudreach",
+      "position": [
+        950,
+        1020,
+        2700
+      ],
+      "sign_position": [
+        900,
+        1020,
+        2700
+      ],
+      "author_reference": "high_roost_perches",
+      "access": "fly_only",
+      "arena_radius_m": 18,
+      "prompt_radius_m": 3.8,
+      "chest_offset": [
+        -4,
+        0.2,
+        3
+      ],
+      "npc_offset": [
+        4,
+        0.2,
+        3
+      ],
+      "sign_text": "Aster Windward — Lv 40 Master. Hold your footing.",
+      "combat": {
+        "pattern_id": "edge_charge",
+        "question": "Hold your footing.",
+        "quick_tell_s": 0.8,
+        "heavy_tell_s": 1.1,
+        "heavy_recovery_s": 1.2,
+        "followup_delay_s": 0.8,
+        "volley_interval_s": 1.2,
+        "ultimate_hp_fraction": 0,
+        "ultimate_tell_s": 1.5,
+        "safe_pocket_radius_m": 5,
+        "perch_return_s": 3,
+        "no_switch": true,
+        "no_flee": true,
+        "trainer_damage": false,
+        "catchable": false
+      },
+      "scene": "res://scenes/masters/master_t4.tscn",
+      "support_offsets": [
+        [
+          -10,
+          -10
+        ],
+        [
+          -10,
+          10
+        ],
+        [
+          10,
+          -10
+        ],
+        [
+          10,
+          10
+        ]
+      ],
+      "support_radius_m": 2,
+      "support_depth_m": 1020,
+      "creature_types": [
+        "air"
+      ],
+      "lead_name": "Sable",
+      "lead_cast": "field_researcher",
+      "lead_text": "Aster Windward teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Hold your footing."
+    },
+    {
+      "id": "master_t5",
+      "tier": 5,
+      "cap_level": 50,
+      "next_cap": 60,
+      "feast_id": "feast_t5",
+      "participants": 1,
+      "candy": 2,
+      "name": "Rowan Stormwise",
+      "humanoid_key": "former_tether_member",
+      "species_id": "voltarach",
+      "profile": "ACE",
+      "biome": "stormwood",
+      "position": [
+        -1110,
+        86,
+        3000
+      ],
+      "sign_position": [
+        -1080,
+        86,
+        2980
+      ],
+      "author_reference": "capacitor_grove",
+      "access": "ground",
+      "arena_radius_m": 18,
+      "prompt_radius_m": 3.8,
+      "chest_offset": [
+        -4,
+        0.2,
+        3
+      ],
+      "npc_offset": [
+        4,
+        0.2,
+        3
+      ],
+      "sign_text": "Rowan Stormwise — Lv 50 Master. Read the mix-up and punish recovery.",
+      "combat": {
+        "pattern_id": "heavy_dodge_followup",
+        "question": "Read the mix-up and punish recovery.",
+        "quick_tell_s": 0.8,
+        "heavy_tell_s": 1.1,
+        "heavy_recovery_s": 2,
+        "followup_delay_s": 0.8,
+        "volley_interval_s": 1.2,
+        "ultimate_hp_fraction": 0.5,
+        "ultimate_tell_s": 1.5,
+        "safe_pocket_radius_m": 5,
+        "perch_return_s": 3,
+        "no_switch": true,
+        "no_flee": true,
+        "trainer_damage": false,
+        "catchable": false
+      },
+      "scene": "res://scenes/masters/master_t5.tscn",
+      "weather_safe": true,
+      "creature_types": [
+        "electric"
+      ],
+      "lead_name": "Bryn",
+      "lead_cast": "field_researcher",
+      "lead_text": "Rowan Stormwise teaches at the side arena. Win your own one-creature duel, open the recipe chest, then cook a matching feast at home. Read the mix-up and punish recovery.",
+      "ready_species_id": "stormursa",
+      "species_gate": "storm_bear_ready"
+    }
+  ]
+}

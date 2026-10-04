@@ -1,0 +1,441 @@
+
+# F22/F23 ignored owner proposal. SAME _strike_authority; no RPC or writer.
+# Director authenticates owning Session/admitted row/body before these calls.
+const ACTION_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
+const ACTION_MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const ACTION_COMMANDS := preload("res://scripts/combat/tether_commands.gd")
+const ACTION_WIND_FIELDS := ["wind", "wind_max", "wind_regen_per_second", "wind_updated_ms", "wind_last_action", "wind_ready_at_ms"]
+
+
+func _move_actions_enabled() -> bool:
+	return MATH.config().get("move_loadout_runtime_enabled") == true \
+		and MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
+
+
+## Deep original values are private and read-only; caller receives duplicates.
+static func _freeze_action_value(value: Variant) -> Variant:
+	if value is Dictionary:
+		var out: Dictionary = value.duplicate(true)
+		for key: Variant in out: out[key] = _freeze_action_value(out[key])
+		out.make_read_only()
+		return out
+	if value is Array:
+		var out: Array = value.duplicate(true)
+		for index: int in out.size(): out[index] = _freeze_action_value(out[index])
+		out.make_read_only()
+		return out
+	return value
+
+
+func _save_move_actor_wind(participant: Dictionary) -> void:
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(str(participant.get("actor_bound_uid", "")), {})
+	if actor.is_empty(): return
+	for key: String in ACTION_WIND_FIELDS:
+		if participant.has(key): actor[key] = participant[key]
+
+
+func _move_actor_rebind(id: String, peer: int, old_uid: String, old_generation: int) -> void:
+	var participant := _actor_participant(id, peer)
+	var actor: Dictionary = participant.actor_vitals[str(participant.actor_bound_uid)]
+	if old_uid == str(participant.actor_bound_uid) and old_generation == int(actor.body_generation): return
+	cancel_move_actions_for_peer(id, peer, "actor_rebound")
+	# Existing participant Wind is merely the active actor projection. It cannot
+	# transfer spent Wind, energy, ultimate or cooldown to another owned UID.
+	for key: String in ACTION_WIND_FIELDS:
+		participant.erase(key)
+		if actor.has(key): participant[key] = actor[key]
+	var state := _move_action_state(id, peer)
+	state.erase("deadline_ms")
+	state.erase("cooldown_ms")
+
+
+func _move_action_actor(id: String, peer: int, now_ms: int) -> Dictionary:
+	var participant := _actor_participant(id, peer)
+	var uid := str(participant.get("actor_bound_uid", ""))
+	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(uid, {})
+	var character := str(participant.get("character_id", ""))
+	if uid.is_empty() or uid != str(participant.get("creature_uid", "")) or actor.is_empty() \
+		or not actor_encounter_is_current(id, peer, character) or bool(actor.get("fainted", true)) \
+		or float(actor.get("hp", 0.0)) <= 0.0: return {}
+	var out := actor.duplicate(true)
+	# An exact prior vitals ACK may advance only settlement bookkeeping while
+	# a new outcome is pending. It must not invalidate the economic/body CAS.
+	out.erase("settled_revision")
+	out.merge({"encounter_id": id, "character_id": character, "creature_uid": uid,
+		"generation": int(actor.body_generation), "ultimate_meter": actor.get("ultimate_meter", 0.0),
+		"energy": actor.get("energy", 0.0)}, true)
+	var release := int(actor.get("move_release_at_ms", 0))
+	var ready := int(actor.get("move_ready_at_ms", 0))
+	out["state"] = "windup" if now_ms < release else "recovery" if now_ms < ready else "idle"
+	if now_ms < int(actor.get("burst_ready_at_ms", 0)): out["state"] = "burst"
+	return out
+
+
+func _move_action_state(id: String, peer: int) -> Dictionary:
+	var by_peer := _strike_state_for(id)
+	if not by_peer.has(peer): by_peer[peer] = {}
+	var state: Dictionary = by_peer[peer]
+	if not state.has("accepted_actions"): state["accepted_actions"] = {}
+	return state
+
+
+func _move_action_token(id: String, peer: int, actor: Dictionary) -> String:
+	var state := _move_action_state(id, peer)
+	var next := maxi(int(state.get("next_action", 0)), int(state.get("last_action", 0))) + 1
+	return (_vitals_namespace + "|" + id + "|" + str(actor.character_id) + "|" +
+		str(actor.creature_uid) + "|" + str(actor.generation) + "|" + str(next)).sha256_text()
+
+
+## Host-issued one-use start token prevents a delayed duplicate start from
+## becoming a fresh attack after cooldown. Consumer echoes it; no client power,
+## position, HP, rank, meter, action identity or actor generation is accepted.
+func local_move_action_view(id: String, peer: int, owned: Dictionary, now_ms: int) -> Dictionary:
+	if not _move_actions_enabled() or now_ms < 0: return {}
+	var actor := _move_action_actor(id, peer, now_ms)
+	if actor.is_empty() or owned.get("uid") != actor.creature_uid: return {}
+	var ready: Array[String] = []
+	if _actor_moves == null: _actor_moves = ACTOR_MOVE_DB.new()
+	var deadlines: Dictionary = actor.get("move_deadlines", {})
+	var cfg := MATH.config()
+	if actor.state == "idle" and not move_action_publication_pending(id) \
+		and now_ms >= int(_move_action_state(id, peer).get("deadline_ms", 0)):
+		for slot: String in ["quick", "charged", "utility", "ultimate"]:
+			var move_id := str(owned.get("move_" + slot, ""))
+			if not (owned.get("known_moves", []) as Array).has(move_id) \
+				or not _actor_moves.call("has", move_id) or _actor_moves.call("slot", move_id) != slot \
+				or now_ms < int(deadlines.get(slot, 0)): continue
+			if slot == "charged" and float(actor.energy) < float(cfg.get("energy", {}).get("charged_cost", 100.0)): continue
+			if slot == "ultimate" and float(actor.ultimate_meter) != float(cfg.get("ultimate", {}).get("max", 100.0)): continue
+			ready.append(slot)
+	return {"creature_uid": actor.creature_uid, "body_generation": actor.generation,
+		"ready_slots": ready, "ultimate_meter": actor.ultimate_meter, "energy": actor.energy,
+		"start_token": _move_action_token(id, peer, actor)}
+
+
+## Retains the first frozen candidate in SAME authority before returning it.
+## Resources change only in commit_move_action_start. Retries never mint a
+## new mastery event identity, reroll, or freeze at a different mastery rank.
+func stage_move_action_start(intent: Dictionary, peer: int, host: Dictionary) -> Dictionary:
+	if not _move_actions_enabled(): return {"ok": false, "code": "disabled"}
+	if move_action_publication_pending(str(intent.get("encounter_id", ""))): return {"ok": false, "code": "pending_action"}
+	for key: String in ["encounter_id", "creature_uid", "slot", "move_id", "start_token"]:
+		if not intent.get(key) is String or str(intent[key]).is_empty(): return {"ok": false, "code": "malformed"}
+	if typeof(host.get("now_ms")) != TYPE_INT or int(host.now_ms) < 0 or not host.get("owned_row") is Dictionary \
+		or not host.get("wind_profile") is Dictionary or not host.get("completed_tiers") is Array \
+		or not UTILITY_EFFECTS._number(host.get("attack"), 1.0, INF) \
+		or not UTILITY_EFFECTS._number(host.get("move_delivery_seconds"), 0.0, 10.0):
+		return {"ok": false, "code": "actual_admission_required"}
+	var id := str(intent.encounter_id)
+	var actor := _move_action_actor(id, peer, int(host.now_ms))
+	if actor.is_empty() or host.get("character_id") != actor.character_id \
+		or host.owned_row.get("uid") != actor.creature_uid or intent.creature_uid != actor.creature_uid \
+		or host.get("source_body_instance_id") != actor.get("body_instance_id"):
+		return {"ok": false, "code": "stale_actor"}
+	var state := _move_action_state(id, peer)
+	var actions: Dictionary = state.accepted_actions
+	for original: Dictionary in actions.values():
+		if original.get("request_token") == intent.start_token:
+			if original.get("intent") != intent: return {"ok": false, "code": "replayed_request"}
+			return original.start_bundle.duplicate(true)
+	var cfg := MATH.config()
+	var limit := int(cfg.get("utility_limits", {}).get("receipt_limit_per_encounter", 0))
+	if limit < 1 or limit > 65536 or actions.size() >= limit: return {"ok": false, "code": "receipt_budget"}
+	var view := local_move_action_view(id, peer, host.owned_row, int(host.now_ms))
+	if intent.start_token != view.get("start_token") \
+		or not (view.get("ready_slots", []) as Array).has(intent.slot) \
+		or host.owned_row.get("move_" + str(intent.slot)) != intent.move_id:
+		return {"ok": false, "code": "not_ready_or_stale_token"}
+	var action := maxi(maxi(int(state.get("next_action", 0)), int(state.get("last_action", 0))),
+		int((_actor_participant(id, peer) as Dictionary).get("wind_last_action", 0))) + 1
+	if action > 2147483647: return {"ok": false, "code": "action_budget"}
+	var binding := {"encounter_id": id, "character_id": actor.character_id,
+		"creature_uid": actor.creature_uid, "generation": actor.generation, "action": action}
+	var frozen := ACTION_MASTERY.freeze_action(ACTION_MASTERY.owned_record(host.owned_row),
+		str(intent.slot), binding, host.completed_tiers, _actor_moves)
+	if frozen.get("ok") != true: return frozen
+	var profile: Dictionary = MATH.with_player_pace(frozen.move, "player_" + str(intent.slot))
+	profile["travel_seconds"] = float(host.move_delivery_seconds)
+	profile = ACTION_MANAGER.floor_reach_for_bodies(profile, float(host.get("source_radius", 0.0)),
+		float(host.get("target_radius", 0.0)), float(host.get("reach_floor", 0.0)))
+	var cost := float(profile.get("wind_cost", cfg.get("wind", {}).get(str(intent.slot) + "_cost", 0.0)))
+	var trial = get_script().new(_host_peer_id)
+	trial.encounters[id] = (encounters[id] as Dictionary).duplicate(true)
+	trial._strike_authority[id] = (_strike_authority[id] as Dictionary).duplicate(true)
+	trial._vitals_namespace = _vitals_namespace
+	var wind := trial.preview_wind(id, peer, host.wind_profile, cost, int(host.now_ms))
+	profile = ACTION_MANAGER.with_wind_exhaustion(profile, bool(wind.get("wind_exhausted", false)))
+	var next_actor := actor.duplicate(true)
+	if intent.slot == "charged": next_actor.energy = float(actor.energy) - float(cfg.get("energy", {}).get("charged_cost", 100.0))
+	if intent.slot == "ultimate":
+		var spent := ACTION_MASTERY.stage_ultimate_spend(next_actor, profile, cfg.get("ultimate", {}))
+		if spent.get("ok") != true: return spent
+		next_actor = spent.actor
+	var release := int(host.now_ms) + ceili(float(profile.get("windup", 0.0)) * 1000.0)
+	var ready := release + ceili(float(profile.get("recovery", 0.0)) * 1000.0)
+	var deadlines: Dictionary = next_actor.get("move_deadlines", {}).duplicate(true)
+	deadlines[str(intent.slot)] = int(host.now_ms) + ceili(maxf(float(profile.get("cooldown", 0.0)),
+		float(profile.get("windup", 0.0)) + float(profile.get("recovery", 0.0))) * 1000.0)
+	next_actor.merge({"move_deadlines": deadlines, "move_release_at_ms": release,
+		"move_ready_at_ms": ready}, true)
+	trial.commit_wind(id, peer, action, host.wind_profile, cost, int(host.now_ms),
+		float(profile.get("windup", 0.0)) + float(profile.get("recovery", 0.0)),
+		float(cfg.get("wind", {}).get("regen_delay", 0.6)))
+	var wind_fields := {}
+	for key: String in ACTION_WIND_FIELDS:
+		wind_fields[key] = trial.encounters[id].participants[peer].get(key)
+	var receipt := {"action_id": profile.action_id, "attacker_uid": actor.creature_uid,
+		"generation": actor.generation, "action": action, "landed": false,
+		"meter_credited": false, "command_meter_credited": false}
+	var bundle := {"ok": true, "encounter_id": id, "peer_id": peer,
+		"character_id": actor.character_id, "creature_uid": actor.creature_uid,
+		"action_id": profile.action_id, "expected_seq": int(encounters[id].seq),
+		"actor_before": actor, "actor_after": next_actor, "wind_after": wind_fields,
+		"profile": profile.duplicate(true), "receipt": receipt.duplicate(true),
+		"intent": intent.duplicate(true), "host": host.duplicate(true), "release_at_ms": release,
+		"started_delta": {"phase": "started", "encounter_id": id, "creature_uid": actor.creature_uid,
+			"body_generation": actor.generation, "action_id": profile.action_id,
+			"accepted_action": action, "frozen_move": profile.duplicate(true),
+			"ultimate_meter": next_actor.ultimate_meter, "energy": next_actor.energy,
+			"release_at_ms": release, "ready_at_ms": ready}}
+	state["next_action"] = action
+	actions[str(profile.action_id)] = {"phase": "staged_start", "request_token": intent.start_token,
+		"intent": _freeze_action_value(intent), "start_bundle": _freeze_action_value(bundle),
+		"profile": _freeze_action_value(profile), "receipt": receipt.duplicate(true)}
+	return bundle
+
+
+func commit_move_action_start(bundle: Dictionary) -> Dictionary:
+	var id := str(bundle.get("encounter_id", ""))
+	if move_action_publication_pending(id): return {"ok": false, "code": "pending_action"}
+	var peer := int(bundle.get("peer_id", 0))
+	var action_id := str(bundle.get("action_id", ""))
+	var entry: Dictionary = _move_action_state(id, peer).accepted_actions.get(action_id, {})
+	if entry.is_empty() or entry.get("start_bundle") != bundle: return {"ok": false, "code": "invalid_original"}
+	if entry.phase != "staged_start":
+		return {"ok": entry.phase != "cancelled", "duplicate": true, "delta": bundle.started_delta.duplicate(true)}
+	var actor := _move_action_actor(id, peer, int(bundle.host.now_ms))
+	if actor != bundle.actor_before or int(encounters[id].seq) != int(bundle.expected_seq):
+		entry["visual_cancel_pending"] = entry.has("release")
+		entry["phase"] = "cancelled"
+		return {"ok": false, "code": "stale_start"}
+	var participant := _actor_participant(id, peer)
+	var live: Dictionary = participant.actor_vitals[str(bundle.creature_uid)]
+	for key: String in ["energy", "ultimate_meter", "last_ultimate_action", "move_deadlines", "move_release_at_ms", "move_ready_at_ms"]:
+		if bundle.actor_after.has(key): live[key] = bundle.actor_after[key].duplicate(true) if bundle.actor_after[key] is Dictionary else bundle.actor_after[key]
+	for key: String in bundle.wind_after: participant[key] = bundle.wind_after[key]
+	_save_move_actor_wind(participant)
+	entry["phase"] = "windup"
+	entry["release_at_ms"] = bundle.release_at_ms
+	entry["receipt"]["accepted"] = true
+	_move_action_state(id, peer)["last_action"] = int(bundle.receipt.action)
+	_move_action_state(id, peer)["deadline_ms"] = int(bundle.actor_after.move_ready_at_ms)
+	seq += 1
+	encounters[id]["seq"] = seq
+	return {"ok": true, "delta": bundle.started_delta.duplicate(true)}
+
+
+## First actual host release owns original launch geometry/arrival time.
+## A later accepted action does not invalidate an earlier projectile from
+## the SAME alive UID/generation. Switch, faint, phase change do invalidate it.
+func release_move_action(id: String, peer: int, action_id: String, host: Dictionary) -> Dictionary:
+	var entry: Dictionary = _move_action_state(id, peer).accepted_actions.get(action_id, {})
+	if entry.is_empty() or entry.get("phase") != "windup": return {"ok": false, "code": "not_releasable"}
+	var actor := _move_action_actor(id, peer, int(host.get("now_ms", -1)))
+	var binding: Dictionary = entry.profile.actor_binding
+	if actor.is_empty() or actor.creature_uid != binding.creature_uid or actor.generation != binding.generation \
+		or host.get("source_body_instance_id") != actor.get("body_instance_id"):
+		entry["visual_cancel_pending"] = entry.has("release")
+		entry["phase"] = "cancelled"
+		return {"ok": false, "code": "stale_actor"}
+	if int(host.get("now_ms", -1)) < int(entry.release_at_ms) \
+		or typeof(host.get("resolve_at_ms")) != TYPE_INT or int(host.resolve_at_ms) < int(host.now_ms):
+		return {"ok": false, "code": "early_release"}
+	for key: String in ["source_position", "target_position", "facing"]:
+		if not UTILITY_EFFECTS._point(host.get(key)): return {"ok": false, "code": "invalid_release_geometry"}
+	entry["release"] = _freeze_action_value(host)
+	entry["phase"] = "inflight"
+	return {"ok": true, "profile": entry.profile.duplicate(true), "receipt": entry.receipt.duplicate(true)}
+
+
+## Freezes the first arrival decision once, before the Session publisher.
+## All retries hand back this original plan; no reroll or current-HP rebuild.
+## The publication fence holds all encounter HP/status/phase changes until
+## SAME journal durability plus runtime publication is acknowledged.
+func stage_move_action_outcome(id: String, peer: int, action_id: String, host: Dictionary) -> Dictionary:
+	var entry: Dictionary = _move_action_state(id, peer).accepted_actions.get(action_id, {})
+	if entry.get("phase") in ["staged_outcome", "published"]: return entry.outcome_bundle.duplicate(true)
+	if entry.get("phase") != "inflight" or move_action_publication_pending(id): return {"ok": false, "code": "not_arrivable"}
+	var actor := _move_action_actor(id, peer, int(host.get("now_ms", -1)))
+	var binding: Dictionary = entry.profile.actor_binding
+	if actor.is_empty() or actor.creature_uid != binding.creature_uid or actor.generation != binding.generation \
+		or host.get("source_body_instance_id") != actor.get("body_instance_id") \
+		or not host.get("owned_row") is Dictionary or host.owned_row.get("uid") != actor.creature_uid:
+		entry["visual_cancel_pending"] = entry.has("release")
+		entry["phase"] = "cancelled"
+		return {"ok": false, "code": "stale_actor"}
+	if int(host.get("now_ms", -1)) < int(entry.release.resolve_at_ms): return {"ok": false, "code": "early_arrival"}
+	var rec: Dictionary = encounters[id]
+	if host.get("target_uid") != rec.opponent.get("card", {}).get("uid") \
+		or host.get("target_generation") != rec.opponent.get("body_generation") \
+		or host.get("target_hp") != rec.opponent.get("hp") \
+		or host.get("target_max_hp") != rec.opponent.get("hp_max"):
+		return {"ok": false, "code": "stale_target"}
+	var frozen: Dictionary = entry.profile.duplicate(true)
+	frozen["accepted_receipt"] = entry.receipt.duplicate(true)
+	var frame := host.duplicate(true)
+	frame["actor"] = actor
+	frame["utility_state"] = (rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0)) as Dictionary).duplicate(true)
+	# Stable encounter utility lifetime is independent of the caster body's
+	# generation, which remains strictly checked against the frozen binding.
+	frame["utility_generation"] = 0
+	frame["attack"] = entry.start_bundle.host.attack
+	# Source is the actual retained launch point/facing, target is host contact
+	# position. An actor walking after release cannot extend a projectile's reach.
+	frame["source_position"] = entry.release.source_position
+	frame["facing"] = entry.release.facing
+	var plan := ACTION_MASTERY.stage_action_outcome(ACTION_MASTERY.owned_record(host.owned_row), frozen, frame, MATH.config())
+	if plan.get("ok") != true: return plan
+	# F24 consumes the SAME F23 receipt inside this exact hostile HP plan.
+	# No callback/observer, watermark, or second action registry grants credit.
+	var command := {}
+	plan.accepted_receipt["landed"] = float(plan.damage) > 0.0
+	plan.accepted_receipt["actual_hp_debit"] = float(plan.damage)
+	if ACTION_COMMANDS.enabled() and float(plan.damage) > 0.0:
+		command = ACTION_COMMANDS.stage_landed((_actor_participant(id, peer) as Dictionary).get("tether_commands", {}),
+			actor, frozen, plan.accepted_receipt, float(plan.damage), str(host.target_uid),
+			int(host.target_generation), int(host.now_ms))
+		if command.get("ok") != true: return command
+		plan["accepted_receipt"] = command.receipt.duplicate(true)
+	if float(plan.damage) > 0.0 and str(plan.slot) == "quick":
+		plan.actor["energy"] = MATH.energy_after_quick(float(actor.energy), float(entry.start_bundle.host.get("quick_energy_multiplier", 1.0)))
+	var source_vitals := {}
+	if float(plan.actor.hp) > float(actor.hp):
+		source_vitals = stage_actor_vitals(id, peer, str(actor.creature_uid), int(actor.generation),
+			int(actor.revision), action_id, "heal", float(plan.actor.hp) - float(actor.hp),
+			int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0)))
+		if source_vitals.get("ok") != true: return source_vitals
+	var bundle := {"ok": true, "encounter_id": id, "peer_id": peer, "action_id": action_id,
+		"character_id": actor.character_id, "creature_uid": actor.creature_uid,
+		"generation": actor.generation, "expected_seq": int(rec.seq), "actor_before": actor,
+		"host": frame, "frozen": frozen, "plan": plan, "source_vitals": source_vitals,
+		"command": command}
+	entry["outcome_bundle"] = _freeze_action_value(bundle)
+	entry["phase"] = "staged_outcome"
+	return bundle
+
+
+## Called ONLY by actual Session same-journal publisher, after its real bool
+## writers and owner ACK. A dictionary authenticates no caller. Session must
+## validate actual Director, admission, original bundle and its pending row.
+func publish_move_action_outcome(bundle: Dictionary, durable: Dictionary) -> Dictionary:
+	var id := str(bundle.get("encounter_id", ""))
+	var peer := int(bundle.get("peer_id", 0))
+	var action_id := str(bundle.get("action_id", ""))
+	var entry: Dictionary = _move_action_state(id, peer).accepted_actions.get(action_id, {})
+	if entry.get("outcome_bundle") != bundle: return {"ok": false, "code": "invalid_original"}
+	if entry.get("phase") == "published": return entry.result.duplicate(true)
+	if entry.get("phase") != "staged_outcome" or durable.get("durable") != true \
+		or durable.get("saved") != true or durable.get("acknowledged") != true \
+		or durable.get("action_id") != action_id or durable.get("character_id") != bundle.character_id \
+		or durable.get("creature_uid") != bundle.creature_uid: return {"ok": false, "code": "publication_unready"}
+	var actor := _move_action_actor(id, peer, int(bundle.host.now_ms))
+	if actor != bundle.actor_before or int(encounters[id].seq) != int(bundle.expected_seq): return {"ok": false, "code": "stale_publication"}
+	var rec: Dictionary = encounters[id]
+	var participant: Dictionary = rec.participants[peer]
+	var live: Dictionary = participant.actor_vitals[str(bundle.creature_uid)]
+	if not bundle.source_vitals.is_empty():
+		var hp := _commit_actor_vitals_unfenced(bundle.source_vitals)
+		if hp.get("ok") != true: return hp
+	# No callbacks or fallible publication between these ephemeral fields.
+	live["ultimate_meter"] = bundle.plan.actor.ultimate_meter
+	live["energy"] = bundle.plan.actor.energy
+	if not bundle.command.is_empty(): participant["tether_commands"] = bundle.command.state.duplicate(true)
+	rec["utility_state"] = bundle.plan.utility_state.duplicate(true)
+	rec.opponent["hp"] = float(bundle.plan.target_hp_after)
+	entry["receipt"] = bundle.plan.accepted_receipt.duplicate(true)
+	entry.receipt["landed"] = float(bundle.plan.damage) > 0.0
+	entry.receipt["actual_hp_debit"] = float(bundle.plan.damage)
+	entry["phase"] = "published"
+	entry["delivery_pending"] = true
+	seq += 1
+	rec["seq"] = seq
+	var delta := {"phase": "resolved", "encounter_id": id, "creature_uid": bundle.creature_uid,
+		"body_generation": bundle.generation, "action_id": action_id, "accepted_action": entry.receipt.action,
+		"hit": entry.receipt.landed, "damage": bundle.plan.damage, "hp": bundle.plan.target_hp_after,
+		"hp_max": bundle.host.target_max_hp, "killed": bundle.plan.killed,
+		"move_id": bundle.plan.move_id, "slot": bundle.plan.slot, "utility": bundle.plan.utility,
+		"mastery": bundle.plan.mastery, "ultimate_meter": live.ultimate_meter,
+		"command_meter": float(participant.get("tether_commands", {}).get("meter", 0.0)),
+		"accepted_receipt": entry.receipt.duplicate(true)}
+	entry["result"] = _freeze_action_value({"ok": true, "kind": "strike_intent", "peer": peer, "pending": false, "delta": delta})
+	return entry.result.duplicate(true)
+
+
+func move_action_publication_pending(id: String) -> bool:
+	for state: Dictionary in (_strike_authority.get(id, {}) as Dictionary).values():
+		for entry: Dictionary in (state.get("accepted_actions", {}) as Dictionary).values():
+			if entry.get("phase") == "staged_outcome" or entry.get("delivery_pending") == true: return true
+	return false
+
+
+## Read-only scheduler projection. Includes original pending decisions; never
+## debug latest-strike snapshots. Rejoin moves SAME state under stable owner.
+func pending_move_actions(id: String) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for key: Variant in (_strike_authority.get(id, {}) as Dictionary):
+		var state: Dictionary = _strike_authority[id][key]
+		for entry: Dictionary in (state.get("accepted_actions", {}) as Dictionary).values():
+			if entry.get("phase") not in ["windup", "inflight", "staged_outcome"] \
+				and entry.get("delivery_pending") != true and entry.get("visual_cancel_pending") != true: continue
+			var row := entry.duplicate(true)
+			row["peer_id"] = key if key is int else 0
+			out.append(row)
+	return out
+
+
+func cancel_move_actions(id: String, reason: String) -> void:
+	for state: Dictionary in (_strike_authority.get(id, {}) as Dictionary).values():
+		for entry: Dictionary in (state.get("accepted_actions", {}) as Dictionary).values():
+			if entry.get("phase") in ["staged_start", "windup", "inflight"]:
+				entry["visual_cancel_pending"] = entry.has("release")
+				entry["phase"] = "cancelled"
+				entry["cancel_reason"] = reason
+	# Staged outcomes already own an original decision; teardown must reconcile
+	# SAME pending journal. It cannot discard or rebuild that decision.
+
+
+func cancel_move_actions_for_peer(id: String, peer: int, reason: String) -> void:
+	var state: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	for entry: Dictionary in (state.get("accepted_actions", {}) as Dictionary).values():
+		if entry.get("phase") in ["staged_start", "windup", "inflight"]:
+			entry["visual_cancel_pending"] = entry.has("release")
+			entry["phase"] = "cancelled"
+			entry["cancel_reason"] = reason
+
+
+## Canonical original receipt lookup, for authority reconciliation only.
+## Snapshot replay has no call to stage_outcome and grants no fresh credit.
+func move_action_original(id: String, peer: int, action_id: String) -> Dictionary:
+	var state: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	var entry: Dictionary = (state.get("accepted_actions", {}) as Dictionary).get(action_id, {})
+	if entry.is_empty(): return {}
+	return {"phase": entry.phase, "start": entry.start_bundle.duplicate(true),
+		"release": (entry.get("release", {}) as Dictionary).duplicate(true),
+		"outcome": (entry.get("outcome_bundle", {}) as Dictionary).duplicate(true),
+		"receipt": entry.receipt.duplicate(true), "result": (entry.get("result", {}) as Dictionary).duplicate(true)}
+
+
+## Actual Director clears this only after exact body projection + frozen F27
+## capture. Failure holds original delivery and the current pending fence.
+func acknowledge_move_action_delivery(id: String, peer: int, action_id: String, original_result: Dictionary) -> bool:
+	var state: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	var entry: Dictionary = (state.get("accepted_actions", {}) as Dictionary).get(action_id, {})
+	if entry.get("phase") != "published" or entry.get("result") != original_result: return false
+	entry["delivery_pending"] = false
+	return true
+
+
+func acknowledge_move_action_cancel(id: String, peer: int, action_id: String) -> void:
+	var state: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	var entry: Dictionary = (state.get("accepted_actions", {}) as Dictionary).get(action_id, {})
+	if entry.get("phase") == "cancelled": entry["visual_cancel_pending"] = false

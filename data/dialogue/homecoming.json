@@ -1,40 +1,108 @@
 {
-  "_comment": "Grandpa's regional Water homecoming. The selected row matches the live party count; each creature name has its own short line so a five-creature party remains readable.",
+  "_comment": "Stormwood homecoming. Live party names and canonical personal choices only; no stored roster or invented bond memory.",
   "conversations": {
     "regional_homecoming_0": {
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
       "lines": [
-        "You're home. Word reached us that the Tidewake crossings are free again.",
-        "The road from these fields to the outer islands belongs to its people again.",
-        "Some companions walk beside us for a season. What they gave us still matters.",
+        "You're home. The Long Storm has quieted, and word reached us from the roads you reopened.",
+        "From these fields to the islands, the cliffs and the forest, people can find one another again.",
+        "$starter_status",
+        "$bond_memory",
+        "$chapter_choices",
         "Come sit a minute. I'm glad you're here."
       ]
     },
     "regional_homecoming_1": {
-      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You're home. The Long Storm has quieted, and word reached us from the roads you reopened.",
+        "From these fields to the islands, the cliffs and the forest, people can find one another again.",
+        "$party_1 came home with you.",
+        "$starter_status",
+        "$bond_memory",
+        "$chapter_choices",
+        "Come sit a minute. I'm glad you're here."
+      ]
     },
     "regional_homecoming_2": {
-      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You're home. The Long Storm has quieted, and word reached us from the roads you reopened.",
+        "From these fields to the islands, the cliffs and the forest, people can find one another again.",
+        "$party_1 came home with you.",
+        "$party_2 came home with you.",
+        "$starter_status",
+        "$bond_memory",
+        "$chapter_choices",
+        "Come sit a minute. I'm glad you're here."
+      ]
     },
     "regional_homecoming_3": {
-      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "$party_3 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You're home. The Long Storm has quieted, and word reached us from the roads you reopened.",
+        "From these fields to the islands, the cliffs and the forest, people can find one another again.",
+        "$party_1 came home with you.",
+        "$party_2 came home with you.",
+        "$party_3 came home with you.",
+        "$starter_status",
+        "$bond_memory",
+        "$chapter_choices",
+        "Come sit a minute. I'm glad you're here."
+      ]
     },
     "regional_homecoming_4": {
-      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "$party_3 came home with you.", "$party_4 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You're home. The Long Storm has quieted, and word reached us from the roads you reopened.",
+        "From these fields to the islands, the cliffs and the forest, people can find one another again.",
+        "$party_1 came home with you.",
+        "$party_2 came home with you.",
+        "$party_3 came home with you.",
+        "$party_4 came home with you.",
+        "$starter_status",
+        "$bond_memory",
+        "$chapter_choices",
+        "Come sit a minute. I'm glad you're here."
+      ]
     },
     "regional_homecoming_5": {
-      "speaker": "Grandpa Elias", "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": ["You're home. Word reached us that the Tidewake crossings are free again.", "The road from these fields to the outer islands belongs to its people again.", "$party_1 came home with you.", "$party_2 came home with you.", "$party_3 came home with you.", "$party_4 came home with you.", "$party_5 came home with you.", "Some companions walk beside us for a season. What they gave us still matters.", "Come sit a minute. I'm glad you're here."]
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "You're home. The Long Storm has quieted, and word reached us from the roads you reopened.",
+        "From these fields to the islands, the cliffs and the forest, people can find one another again.",
+        "$party_1 came home with you.",
+        "$party_2 came home with you.",
+        "$party_3 came home with you.",
+        "$party_4 came home with you.",
+        "$party_5 came home with you.",
+        "$starter_status",
+        "$bond_memory",
+        "$chapter_choices",
+        "Come sit a minute. I'm glad you're here."
+      ]
     },
     "regional_homecoming_repeat": {
       "speaker": "Grandpa Elias",
       "portrait": "res://assets/ui/portraits/grandpa.png",
-      "lines": ["Good to see you home again.", "The road is open. You and your companions are welcome here."]
+      "lines": [
+        "Good to see you home again.",
+        "The roads are open. You and your companions are welcome here."
+      ]
+    },
+    "stormwood_homecoming_aftermath": {
+      "speaker": "Captain Marrow",
+      "portrait": "res://assets/ui/portraits/captain_b.png",
+      "lines": [
+        "The Long Storm has quieted. People can use the roads without our permission.",
+        "Use your Home Key. Take your companions home to Grandpa."
+      ]
     }
   }
 }

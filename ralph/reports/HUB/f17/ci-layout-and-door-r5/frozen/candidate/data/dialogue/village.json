@@ -1,0 +1,457 @@
+{
+  "_comment": "Village banter (R7.2), merged onto data/dialogue/opening.json's table by dialogue_runner.gd. Same shape, same no-branching rule (see opening.json's own `_comment_shape`): a line or two per villager. `portrait` reuses trainer.png, the only generic human portrait art the project has; a bespoke portrait per villager is not part of this pass.",
+  "_comment_np3": "NP3 (spec sec35) gave Mira, Oskar and Tam their named roles -- Meadow Keeper, Bridgehand, Field Scout -- as an opening identity line each, and added the Quarry Foreman and the Rescued Ranger as two new reused-rig villagers. None of the five offer a real fight: R8.1 (trainer combat) doesn't exist yet, so this is identity and foreshadowing only.",
+  "_comment_of30_effects": "OF30 retires this file's original 'no `give:` or `beat:` effects -- these people have nothing to hand over' rule. Tam has something to hand over now. The effects work with no new plumbing on the panel side: `scripts/story/sequence_director.gd::_drain_effects()` drains the SHARED dialogue panel every frame and does not care which conversation is in it, and `scripts/world/village_npcs.gd` opens village lines on that very panel (through the `dialogue_panel` group). `beat:` is still forbidden here -- beats belong to the opening -- but `give:` and OF30's new `flag:` are not.",
+  "_comment_of30_tam": "OF30 (owner: \"Make one of the villagers a blacksmith who will give you a torch, an axe for trees and a pickaxe for stones. Then he'll give you the recipe for basic orbs.\"). `village_tam` stays exactly as NP3 wrote it and is still what Tam says on an ordinary greeting; the one-time handover is an ADDED branch, chosen by flag in data/config/village_npcs.json's `greeting_when`, not a replacement. Tam keeps the Field Scout identity: he is a smith who scouts, and the tools conversation opens by saying so. FIRST-HOUR-FUN moves the opening axe, pick and Basic Orb pattern to Mira's required first visit, leaving Tam's useful knife-and-torch follow-up intact. SC12 later adds his battle offer as a second entry in the same list. The torch line used to be narrative only -- OF24's carried torch was an always-on kit fixture, not an item, so there was nothing for a `give:` to name. OW12 changed that; see `_comment_ow12_torch_give` below.",
+  "_comment_ow12_torch_give": "OW12 (2026-08-16) made the torch a real satchel item (items.json's `torch`, `kind: \"tool\"`) and retired the always-on kit fixture and the free-standing buildable both. That decision's own record, `docs/decisions/D53`, left the torch line here as words with no `give:` -- deliberately flagged as real, non-silent follow-up work, because nothing else in the game handed a `torch` out and the item would otherwise be permanently unreachable (`playground_hud.gd::_arm_torch_placement` refuses to equip one that is not in the satchel, and no other conversation offers one). That gap is closed here, in the same shipping pass: the 'take the spare torch off the wall' line now carries `give:torch:1`, on the same line as the words that already promised it, the same 'gift and flag/give together' shape the tool handover just above it already uses.",
+  "_comment_of30_knife": "The owner named two tools (\"an axe for trees and a pickaxe for stones\") and the early route also needs a knife. item_db.harvest_yield()'s rule since R2.1 is right-tool = full, NO tool = half, WRONG tool = nothing, and `fiber` is gated on `knife` (items.json's `gathered_with`). A player carrying only Mira's axe and pick therefore owns 'some tool, just not that one' at every grass patch and gathers ZERO fiber. Tam's knife follow-up keeps the Basic Orb recipe's two-fiber cost achievable without changing that harvesting rule.",
+  "_comment_of30_flags": "`flag:<id>` sets an autoload/progression_state.gd flag, the same store the road gate and the TM pickups already write to. `tam_tools_given` is what stops Tam's knife-and-torch handover repeating; `recipe_orb_basic` is what unlocks the Orb recipe in data/recipes/recipes.json (its `unlocked_by`). Both are set on the SAME line as the thing they record, so a conversation that is somehow cut short cannot bank the gift without the flag or the flag without the gift. FIRST-HOUR-FUN places the Orb lesson in Mira's required first visit instead of relying on a later optional greeting.",
+  "_comment_of31_trade": "D39 (OF31, owner: \"Make the villagers so I can trade with them. Creatures and materials... Make one of the villagers the merchant. He has a store in his house. He'll buy and sell goods from you. Make the third whatever makes sense.\"). Mira is the merchant and Oskar the creature trader; Tam stays the smith OF30 made him. Same additive shape as Tam's: `village_mira` and `village_oskar` are untouched and are still what each of them says on an ordinary greeting -- the trading lines are ADDED branches in data/config/village_npcs.json's `greeting_when`. The `shop:` effect is new (scripts/story/sequence_director.gd::_queue_shop) and reads `shop:<goods|creatures>:<vendor_id>`, where the vendor id is a key in data/config/trade.json. It opens the screen once the dialogue box has CLOSED, the same wait the starter picker already needed.",
+  "_comment_of31_coins": "D39 chose the friendlier of the two starts the brief offered: Mira's first conversation hands over a float so the first visit to the shop can buy something, rather than a zero-start that has to be bootstrapped by selling. The count here and `starting_coins` in data/config/trade.json are checked against each other by tests/test_trade.gd -- a line that says thirty while the config says ten is a lie the player can count.",
+  "_comment_ow9_foreman": "OW9 (owner: \"Someone at the beginning needs to tell you to go gather materials to build things like orbs. Someone else will need to tell you to get wood and build a base camp. They should probably give you a hammer and recipe.\"). Mira's required first visit provides the gathering/Orb lesson; this is the build half, spoken by the Quarry Foreman -- the one villager with a trade that touches building and nothing yet to hand over. Second use of OF30's route exactly: one `give:`+`flag:` line, gated in data/config/village_npcs.json's `greeting_when` so it can never repeat. `hammer` is not a new item -- R2.1 shipped it as a real tool with nothing that gave it out yet (its own `_comment_tools`); this is that gift. There is no separate 'recipe' flag or item: `camp` (data/items/buildables.json) has never been locked behind an unlock flag the way `orb_basic` is -- GAME_DESIGN.md 20's mandatory tutorial shelter is meant reachable from minute one -- so gating the BUILDABLE would be inventing a system the design does not call for. The 'recipe' the owner asked for is spoken, the same way OF30 handed the torch over in words with no torch item: the Foreman names the materials a camp actually costs on the same line he hands over the hammer.",
+  "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam each gain a `_challenge` and a `_beaten` conversation, chosen by data/config/village_npcs.json's `greeting_when` once their vendor/gift branch is spent (spec sec3 Band 1, D39's dual-role rule). Every challenge's LAST line carries `battle:<trainer_id>` -- scripts/story/sequence_director.gd's fourth dialogue effect, read the moment the dialogue box closes, the same deferred-start contract scripts/world/trainer_npc.gd already uses for a standalone trainer. Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their standing vendor branch always has, so the store/swap stay reachable forever once they are beaten (D39's rule made real); Tam's is flavour only -- he has no vendor effect left to carry.",
+  "_comment_r7_9": "R7.9, owner-requested: an inn where the villagers can stay. Bram is its innkeeper, a THIRD vendor branch in the same additive shape OF31 gave Mira -- `village_bram_shop_intro` opens the store (`shop:goods:bram`, data/config/trade.json's own `bram` vendor: berries plus the three tonic/brew items, Mira's own prices) and `village_bram_shop` is the standing branch, chosen the same way in data/config/village_npcs.json's `greeting_when`. No starting-coin gift on his intro line -- Mira's `village_mira_shop_intro` already bootstraps the player's first purchase and a second float would be an unexplained windfall, not a kindness. D39's dual-role pattern also names a later trainer branch; this ships only the vendor half (see village_npcs.json's own `_why_vendor` on Bram's entry for the scope call and why).",
+  "_comment_op0905_18": "OP-0905-18 (docs/owner/OWNER_PLAYTEST_2026-09-05.md): 'When and how does the pig evolve?' -- the owner reached the midgame with a Mudsnout and never learned the rule existed. Nothing in the world ever said so out loud; the requirement only ever surfaced in the Team tab's own fine print and evolution.gd's refusal string (see burrow_warrens.json's own `_comment_prize_lead` for that same finding at the Heartstone pickup). Mira is the Meadow Keeper -- 'I look after what grows out there' is already her opening line -- so a fourth line naming what ELSE grows out there, close by a Mudsnout owner on any ordinary greeting, closes the gap without a cutscene or a new system: no rule changes, evolution.mudsnout in progression.json is still the one source of the actual gate.",
+  "_comment_hall_approach": "SF34. The Meadows Hall approach gate (scripts/world/playground_world.gd::_build_sigil_gate). Nobody stands at this gate, so the words are a Team Tether notice bolted to the leaf — the same trick road_gate_locked plays with Grandpa's voice, but diegetic here rather than remote narration. The PORTRAIT IS A STAND-IN: the project has exactly two portraits on disk (grandpa, trainer) and neither is a faction notice; tests/test_dialogue_runner.gd requires a real one, so this uses the trainer plate under CLAUDE.md's Prototyping rule and should be replaced when the faction has art of its own. The sealed line never names how many Sigils are missing — the objective tracker counts (data/progression/objectives.json), and saying it twice in two voices is how a count drifts.",
+  "conversations": {
+    "village_mira": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/mira.png",
+      "lines": [
+        "Meadow Keeper's what they call me. I look after what grows out there — the meadow has opinions about strangers.",
+        "That workshop's mended every tool this village ever broke.",
+        "Ground's wrong past the south crossing. Same seed, same season — comes up grey and thin now. I've stopped trying.",
+        "That mudsnout of yours isn't finished growing, not by a long way. Strong enough, close enough to you, and a heartstone held against it — it becomes something else entirely."
+      ]
+    },
+    "village_mira_shop_intro": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/mira.png",
+      "lines": [
+        "Grandpa said you would come through. Take these before you head out: an axe for wood and a pick for stone.",
+        {
+          "text": "Bind three wood with two fiber for a Basic Orb. Pattern's yours now — make more whenever you need them.",
+          "effects": [
+            "give:axe:1",
+            "give:pickaxe:1",
+            "flag:recipe_orb_basic",
+            "give:coin:140",
+            "give:fiber:25",
+            "flag:mira_shop_open",
+            "flag:opening:mira_visited"
+          ]
+        },
+        {
+          "text": "Now then. I sell, and I buy — haul it here first.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_mira_shop": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/mira.png",
+      "lines": [
+        {
+          "text": "Back again. Shelves are where you left them, and my prices haven't improved.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_mira_challenge": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/mira.png",
+      "lines": [
+        "You've been kind to the meadow. So here's something it taught me: it pushes back.",
+        {
+          "text": "A keeper learns to stand her ground. Want to learn it with me? Nothing held back.",
+          "effect": "battle:trainer_mira"
+        }
+      ]
+    },
+    "village_mira_beaten": {
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/mira.png",
+      "lines": [
+        {
+          "text": "That was honest fighting. Stall's open whenever you need it.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_bram": {
+      "speaker": "Bram",
+      "portrait": "res://assets/ui/portraits/bram.png",
+      "lines": [
+        "Innkeeper's the whole of it. Bed, board and a fire that stays lit.",
+        "Half the square eats here on a cold night. The other half just likes complaining about my stew."
+      ]
+    },
+    "village_bram_shop_intro": {
+      "speaker": "Bram",
+      "portrait": "res://assets/ui/portraits/bram.png",
+      "lines": [
+        "First one through the door gets the tour. Bar's here, beds are through the back, and I keep stock too.",
+        {
+          "text": "Berries, tonics, brews. Have a look.",
+          "effect": "shop:goods:bram"
+        }
+      ]
+    },
+    "village_bram_shop": {
+      "speaker": "Bram",
+      "portrait": "res://assets/ui/portraits/bram.png",
+      "lines": [
+        {
+          "text": "Back again. Shelf's the same as you left it.",
+          "effect": "shop:goods:bram"
+        }
+      ]
+    },
+    "village_oskar": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/oskar.png",
+      "lines": [
+        "Bridgehand's my trade — I keep the old crossing south of here. Team Tether's been sniffing round it lately.",
+        "Well rope's been fraying since spring. Nobody's got round to it.",
+        "You're staying with old Elias, aren't you? Whole square knows.",
+        "They pay on time and I don't ask what the masts are for. But the verge by the south road used to be waist high. You've seen it."
+      ]
+    },
+    "village_oskar_trade_intro": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/oskar.png",
+      "lines": [
+        "Bridgehand's my trade, but I keep pens behind the cottage too — creatures that came off the crossing road with nobody beside them.",
+        {
+          "text": "I don't sell them and I won't buy yours. Straight swap: one of mine for one of yours, and we shake on it.",
+          "effect": "flag:oskar_trade_open"
+        },
+        {
+          "text": "One rule — I'll not take your last. Nobody walks back out to that meadow alone. Come see who's up.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_oskar_trade": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/oskar.png",
+      "lines": [
+        {
+          "text": "Same terms as ever. Have a look at who's in the pen — they change about, so it's worth the walk.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_oskar_challenge": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/oskar.png",
+      "lines": [
+        "That bridge south of here was mine to keep shut. Was. Tether took the key off my belt in the spring.",
+        {
+          "text": "So I've nothing to hand you but a fight. Come on then.",
+          "effect": "battle:trainer_oskar"
+        }
+      ]
+    },
+    "village_oskar_beaten": {
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/oskar.png",
+      "lines": [
+        {
+          "text": "Square's square. Wish I still had that key — the lad in the grey coat has it, down at the crossing. Mind the far bank either way.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_tam": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
+      "lines": [
+        "Field Scout, that's me — I track what's out there before it tracks you. Watch temper as much as size.",
+        "Careful on the yard fence, the end post's looser than it looks.",
+        "Good road out to the meadow. Watch for the bramblebun, it startles easy.",
+        "Grass by Tether's roadworks is dead flat, and nothing dens within a hundred paces of those masts. I'd trust the creatures over a surveyor."
+      ]
+    },
+    "village_tam_tools": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
+      "lines": [
+        "Field Scout when I'm out past the fence. Smith when I'm in. Same pair of hands either way.",
+        "You've been at the oaks and outcrops with nothing but your hands. It shows.",
+        {
+          "text": "Mira set you up for gathering. This knife and torch are for the long work, and this camp hammer turns what you gather into a place to rest.",
+          "effects": ["give:knife:1", "give:torch:1", "give:hammer:1", "flag:camp_hammer_given", "flag:tam_tools_given"]
+        },
+        "Take the path toward Practice Meadow. There's deadwood off the path and long grass along the clearing. The knife will give you clean binding fiber.",
+        "Pick up what you've cut before you move on. Leave the road clear, and come back when those tools are blunt."
+      ]
+    },
+    "village_tam_challenge": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
+      "lines": [
+        "Scouting teaches you one thing fast: no single creature answers every question.",
+        {
+          "text": "Bring your whole belt, not your favourite.",
+          "effect": "battle:trainer_tam"
+        }
+      ]
+    },
+    "village_tam_beaten": {
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
+      "lines": [
+        "See? Right creature, right moment. Same craft as smithing."
+      ]
+    },
+    "village_quarry_foreman": {
+      "speaker": "Quarry Foreman",
+      "portrait": "res://assets/ui/portraits/quarry_foreman.png",
+      "lines": [
+        "Foreman by trade, though there's no quarry to run yet — Team Tether's been working the old rootstone seams longer than anyone local has.",
+        "Give it time. Stone doesn't go anywhere. Neither do I.",
+        "Honest version? Every seam they've run a line off goes bad above ground within a month. Grass first, then scrub, then bare. They tell me that's the weather."
+      ]
+    },
+    "village_quarry_foreman_hammer": {
+      "speaker": "Quarry Foreman",
+      "portrait": "res://assets/ui/portraits/quarry_foreman.png",
+      "lines": [
+        "No quarry to run leaves a foreman with time on his hands — enough to watch you cross this square with an armful of deadwood and nowhere to put it down.",
+        "Wood left in a heap too long rots. A trainer left out in the open does worse.",
+        {
+          "text": "Take this — my old hammer, no use to me without stone. Wood, stone, fiber for the binding, and you've a fire and a roof both.",
+          "effects": [
+            "give:hammer:1",
+            "flag:camp_hammer_given"
+          ]
+        },
+        "Practice Meadow has room off the path. Pitch a tent, set your fire outside, and put your bedroll under the canvas.",
+        "One Creature Bed beside it gives a tired partner somewhere to recover. More beds can wait until you need them.",
+        "Leave a partner in its bed before you turn in. Then bring your rested team to Halda at the practice ring. And keep the road clear. Learned that the hard way."
+      ]
+    },
+    "village_rescued_ranger": {
+      "speaker": "Rescued Ranger",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
+      "lines": [
+        "Ranger, before Team Tether had other plans for me. Took some doing to get clear of them — I'm still finding my feet.",
+        "Whatever you're chasing out there, watch the Tether patrols. They don't take kindly to company."
+      ]
+    },
+    "village_rescued_ranger_home": {
+      "_comment": "OWNER-0912 / C3 V-7. Sela recovers at the Pond ranger station rather than adding a sixth person to the opening street. Her post-rescue repeat is two short lines: the actionable crossing reminder and an invitation to report back. It does not replay the relay testimony or name knowledge she does not have.",
+      "speaker": "Sela",
+      "portrait": "res://assets/ui/portraits/villager_ranger.png",
+      "lines": [
+        "The mill crossing will hold once that gear's back in it. Go and see for yourself.",
+        "I'm writing the survey up here. When you get further up that line than I did, come tell me what you found."
+      ]
+    },
+    "road_gate_locked": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "That gate's locked — has been for a while. The key won't be far from it, if you look."
+      ]
+    },
+    "road_gate_unlocked": {
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "There you go. The old key still turns."
+      ]
+    },
+    "hall_approach_sealed": {
+      "speaker": "Team Tether Notice",
+      "portrait": "res://assets/ui/portraits/grunt.png",
+      "lines": [
+        "APPROACH SEALED BY ORDER OF THE WARDEN. Three regional Sigils are required at this gate and no fewer.",
+        "The lock reads all three or it reads none. Two of the discs sit dead in your hand."
+      ]
+    },
+    "hall_approach_opened": {
+      "speaker": "Team Tether Notice",
+      "portrait": "res://assets/ui/portraits/grunt.png",
+      "lines": [
+        "Field. Ridge. Riverwatch. Three discs go into the plate and stay there.",
+        "The leaf swings back off the road. Meadows Hall is up the rise, and nothing is between you and it now."
+      ]
+    },
+    "village_innkeeper": {
+      "speaker": "Wilhelm",
+      "portrait": "res://assets/ui/portraits/wilhelm.png",
+      "lines": [
+        "Bram runs the counter, I run everything Bram doesn't have time for. Rooms, rumours, the ledger nobody wants to keep.",
+        "Ask me what's been said around the fire lately and I'll tell you straight. Ask me to remember who said it and you'll be waiting."
+      ]
+    },
+    "village_inn_helper": {
+      "speaker": "Nessa",
+      "portrait": "res://assets/ui/portraits/nessa.png",
+      "lines": [
+        "Kitchen's mine most mornings. Wilhelm handles the front, I handle whatever's on fire.",
+        "Come back hungry. I mean that as an instruction, not a greeting."
+      ]
+    },
+    "village_trader": {
+      "speaker": "Corin",
+      "portrait": "res://assets/ui/portraits/corin.png",
+      "lines": [
+        "Supplies, potions, the odd thing worth more than it looks. The wagon's my whole shopfront and I like it that way.",
+        "Nothing fancy today, just the usual honest stock. Ask me again after I've made a run east."
+      ]
+    },
+    "village_craftsperson": {
+      "speaker": "Ada",
+      "portrait": "res://assets/ui/portraits/ada.png",
+      "lines": [
+        "Anything with a hinge, a handle or a hole in it, bring it here first. Half of what people call broken just needs someone patient.",
+        "The workshop's not mine, but the mess in it mostly is."
+      ]
+    },
+    "village_creature_caretaker": {
+      "speaker": "Fenn",
+      "portrait": "res://assets/ui/portraits/fenn.png",
+      "lines": [
+        "Oskar swaps them, I look after them in between. Bonding's not a trick, it's just paying attention long enough that they notice.",
+        "A creature that trusts you fights different. Slower to panic, quicker to listen. Worth the time it takes."
+      ]
+    },
+    "village_farmer": {
+      "speaker": "Garrick",
+      "portrait": "res://assets/ui/portraits/garrick.png",
+      "lines": [
+        "Berries mostly, whatever else the ground allows. Half the square eats off this fence line one way or another.",
+        "Good year so far. Ask me again after the first real frost."
+      ]
+    },
+    "village_local_historian": {
+      "speaker": "Old Perrin",
+      "portrait": "res://assets/ui/portraits/old_perrin.png",
+      "lines": [
+        "I've walked every road out of this square that still counts as a road, and a few that stopped being one.",
+        "Ask an old man about the old paths and you'll get more answer than you wanted. Ask me about the new ones and I've nothing -- Team Tether laid those, not the meadows."
+      ]
+    },
+    "village_lost_traveler": {
+      "speaker": "Tobin",
+      "portrait": "res://assets/ui/portraits/tobin.png",
+      "lines": [
+        "This used to go somewhere. I remember it going somewhere.",
+        "The Rifts took the road out from under half the county and nobody's fixed the maps to match. I'll find my way eventually. Or I won't, and I'll just live out here now."
+      ]
+    },
+    "village_field_researcher": {
+      "speaker": "Maren",
+      "portrait": "res://assets/ui/portraits/maren.png",
+      "lines": [
+        "Field notes, mostly. Which creatures den where, what the water route actually looks like once you're standing in it rather than reading about it.",
+        "The station was empty a long while before I took it. Good desk. Better view."
+      ]
+    },
+    "village_alpha_tracker": {
+      "speaker": "Sorrel",
+      "portrait": "res://assets/ui/portraits/sorrel.png",
+      "lines": [
+        "I track the ones that lead, not the ones that follow. An alpha moves different -- slower, surer, like it knows the herd's watching.",
+        "The mill crossing's a good place to wait. Water brings everything past eventually."
+      ]
+    },
+    "village_courier": {
+      "speaker": "Lark",
+      "portrait": "res://assets/ui/portraits/lark.png",
+      "lines": [
+        "Letters, mostly. A parcel now and then, if it's small enough to run.",
+        "South road's clear today. Can't promise that for tomorrow -- Team Tether's checkpoint moves less than it used to, which I don't love."
+      ]
+    },
+    "village_former_tether_member": {
+      "speaker": "Ren",
+      "portrait": "res://assets/ui/portraits/ren.png",
+      "lines": [
+        "I wore the purple once. Don't ask me to explain that here, not where anyone walking past can hear it.",
+        "I'll say this much: whatever they told you they're doing out there, it isn't the whole of it. I knew more than they'd have liked, and I left before that became a problem."
+      ]
+    },
+    "village_mira_road": {
+      "_comment": "T5-STORY-2. Mira's MID-CHAPTER branch, and the first line anyone at home says about the war between the tournament and the Warden. Measured gap: tools/_probe_story_drive.gd walked the chapter's flags against a live village and every NPC said the identical thing at every rung from the tournament to the ending -- `village_mira_shop_intro`, `village_oskar_trade_intro`, `village_bram_shop_intro`, `tournament_halda_champion`, unchanged for the whole back half. MEADOWS_EXIT_CRITERION F3 is 'home stays relevant ... returning is worth it', and returning was worth exactly one repeated sentence.\n\nGated on `captive_rescued` because that is the beat that physically sends someone home: Sela's own last line in data/dialogue/relay.json is 'I'll walk to your village', and `village_rescued_ranger` is already placed there by it. Mira is the one who would notice a stranger arrive. Carries the same `shop:goods:mira` effect every other Mira branch carries -- D39's rule, a vendor branch is never lost, only ever carried forward -- so this replaces her repeat-visit line for that window without costing the stall.\n\nSays nothing the player has not already been told to their face: Sela says the seams are cut, in those words, in the conversation that sets this flag. Spec sec32's ladder is not moved and the legendary is not named.",
+      "speaker": "Mira",
+      "portrait": "res://assets/ui/portraits/mira.png",
+      "lines": [
+        "Your surveyor walked in off the south road. Thin as a rake, asking for paper before she'd sit down.",
+        "She says the seams were cut. On purpose. I've lived under them my whole life and nobody's ever said that out loud in this square.",
+        {
+          "text": "So take what you need and don't count it too carefully.",
+          "effect": "shop:goods:mira"
+        }
+      ]
+    },
+    "village_oskar_bridge": {
+      "_comment": "T5-STORY-2, and the same measured gap `village_mira_road` documents. Gated on `south_bridge_open` because the key that opens it was HIS -- his own `village_oskar_challenge` line already says so ('Tether took the key off my belt in the spring and put one of their own on the near landing'), and until now the game never let him find out it had come back. That is F3's 'returning is worth it' in one branch.\n\nCarries `shop:creatures:oskar`, per D39, so the pen stays reachable. Placed above his `defeated_oskar` branch and below his `legendary_freed` one, so his challenge (which sits higher and is `unless defeated_oskar`) is untouched and the ending still wins.",
+      "speaker": "Oskar",
+      "portrait": "res://assets/ui/portraits/oskar.png",
+      "lines": [
+        "The near landing's clear. Tam's boy ran the whole way back to tell me and he hasn't run anywhere since he was nine.",
+        "That was my key on that man's belt. I let them take it, and I've been quietly ashamed of it since.",
+        {
+          "text": "Pen's open. Take a proper look this time — whatever's up that road is not a grunt on a bridge.",
+          "effect": "shop:creatures:oskar"
+        }
+      ]
+    },
+    "village_tam_hall": {
+      "_comment": "T5-STORY-2, the third of the mid-chapter branches and deliberately the last one before the Hall. Gated on `hall_approach_open`, which `playground_world.gd` sets when all three captain sigils are in hand -- so this fires at the exact moment the player is equipped to walk at the stronghold and is the chapter's last chance for home to say goodbye. A smith is the one villager who would know a sigil on sight.\n\nNo effect: Tam has no vendor branch to carry (his own `_beaten` entry's `_why` says so -- both his gifts are one-time and long spent by here), so this is flavour, like that one. Nothing here names what is under the Hall; spec sec32's ladder holds.",
+      "speaker": "Tam",
+      "portrait": "res://assets/ui/portraits/tam.png",
+      "lines": [
+        "Three sigils. I've held one of those once — a man came through buying nails and wouldn't say what for.",
+        "Nobody carries three for any other reason. You're going to the Hall.",
+        "Go the way you'd finish a weld. Rested, all at once. Not in pieces."
+      ]
+    },
+    "grandpa_tournament_won": {
+      "_comment": "F3. Grandpa's own mid-chapter ladder (data/config/opening.json's `grandpa_conversations_when`, read the same way village_npcs.json's `greeting_when` is), and the earliest of its five milestones. Halda tells the square before he even hears it from the player -- tournament.gd sets `tournament_won` the moment her ladder is beaten, same flag `village.json`'s own `tournament_halda_champion` reacts to. No effect: he has nothing to hand over here, this is the first time since the briefing he has had anything to say at all, and that gap closing is the whole point of the branch.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Halda sent word before you'd got your boots off. News travels faster than you do these days.",
+        "Won it fair, she says. I always knew you would.",
+        "Don't let it go to your head. Team Tether doesn't care what ribbon you're wearing."
+      ]
+    },
+    "grandpa_south_bridge": {
+      "_comment": "F3, second of the five. Gated on `south_bridge_open`, the same beat Oskar's `village_oskar_bridge` fires on -- deliberately not repeating Oskar's own key-and-belt story (that is his to tell), just an old man hearing that a road near his house opened back up.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Heard about the South Bridge before I'd finished my tea. That road's been half theirs since spring, and now it isn't.",
+        "I walked it a thousand times as a lad and never thought twice about it. You don't know what you have till somebody dares you to cross it.",
+        "One road back. Plenty more shut. But I'll take a start."
+      ]
+    },
+    "grandpa_relay_rescue": {
+      "_comment": "F3, third of the five. Gated on `captive_rescued`, the same beat Mira's `village_mira_road` fires on. Deliberately does not repeat what Sela already told the player and Mira directly (the seams, cut on purpose) -- this is Grandpa reacting to the PERSON coming home, not relitigating the reveal, and keeps spec sec32's ladder exactly where it was.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "That surveyor you pulled out of the relay stopped at the house before she'd even found the square. Wanted to see who'd raised somebody reckless enough to walk in after her.",
+        "I liked her. Didn't waste a word.",
+        "You brought somebody home who didn't think they'd get there. Hold onto how that feels."
+      ]
+    },
+    "grandpa_hall_approach": {
+      "_comment": "F3, fourth of the five and deliberately the last thing he says before the Warden -- `legendary_freed` outranks it in the ladder, so this is superseded the moment the fight is won. Gated on `hall_approach_open`, the same beat Tam's `village_tam_hall` fires on. Echoes his own first line ('you won't do it alone') on purpose, closing the loop it opened; nothing here names what is under the Hall, so spec sec32's reveal ladder holds.",
+      "speaker": "Grandpa Elias",
+      "portrait": "res://assets/ui/portraits/grandpa.png",
+      "lines": [
+        "Tam wouldn't stop talking about it at the well. Three sigils, in one satchel, all at once.",
+        "That's the door, isn't it. Everything since spring has led up to it.",
+        "I told you when this started you wouldn't do it alone. I meant it, even if my own gate's as far as I can walk now. Go on. Come back and tell me about it."
+      ]
+    }
+  },
+  "_comment_se30": "SE30 (spec Sec32's reveal ladder, plus D41's own new rung). The ladder is: villagers know travel and trade are controlled AND that the ground near Team Tether's works is dying, without knowing why; the quarry shows conduits; the relay shows energy routed and an investigator held; the rescued captive knows the separation is MADE and that power runs toward the stronghold, and no further; the Upper Meadows shows the scale of it; and the stronghold, and nowhere before it, names the legendary as the source. The drain lines added to Mira/Tam/Oskar/the foreman are the rung D41 created and nobody had spoken: the world had 2737 painted pixels of dying ground and not one line of dialogue admitting it. Each speaker reports what their own trade would notice -- rows that won't take, creatures that won't den, seams that go bad, a verge that used to be waist high -- and none of them offers a cause. tests/test_dialogue_runner.gd::test_no_dialogue_before_the_stronghold_names_the_legendary enforces the top of the ladder across every dialogue file, not just the captive's.",
+  "_comment_tournament_1": "TOURNAMENT-1. Oskar's challenge and beaten lines no longer promise the South Bridge Key: the 2026-08-22 owner directive moved the gatekeeper role to a Team Tether grunt so Oskar could be the tournament's final round. His words now point at the person who actually holds it, which is also how the player learns there is somebody standing at the crossing. His `shop:creatures:oskar` effect is untouched (D39: a vendor branch is never lost), and `tests/test_dialogue_runner.gd::test_both_of_oskars_branches_open_the_swap` still passes on it."
+}

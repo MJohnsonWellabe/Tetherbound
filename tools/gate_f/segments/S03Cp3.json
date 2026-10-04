@@ -69,7 +69,7 @@
         "kind": "load",
         "template_step": "S03-02",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -85,7 +85,7 @@
         "kind": "load",
         "template_step": "S03-03",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -101,7 +101,7 @@
         "kind": "load",
         "template_step": "S03-04",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -116,7 +116,7 @@
         "kind": "load",
         "template_step": "S03-05",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -132,7 +132,7 @@
         "kind": "load",
         "template_step": "S03-06",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -148,7 +148,7 @@
         "kind": "load",
         "template_step": "S03-07",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -164,7 +164,7 @@
         "kind": "load",
         "template_step": "S03-08",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -183,7 +183,7 @@
         "kind": "load",
         "template_step": "S03-09",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -199,7 +199,7 @@
         "kind": "load",
         "template_step": "S03-09a",
         "template_source_path": "res://tools/gate_f/segments/S03.json",
-        "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef"
+        "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d"
       }
     },
     {
@@ -2484,7 +2484,7 @@
       "S03Cp3"
     ],
     "source_path": "res://tools/gate_f/segments/S03C.json",
-    "source_sha256": "dd8abc56fae9db172e63bea5bb3c8b328d39cc9b80da569aece8ca7ff0336628",
+    "source_sha256": "c08065ae4678bbef59bb984cd804f2134ae617868d1859ea8fc66496f2aa54a6",
     "manifest_path": "res://tools/gate_f/phase_plans/S03C.manifest.json",
     "previous_segment": "S03Cp2",
     "input_save": "S03Cp2-exit.json",
@@ -2692,7 +2692,7 @@
       "GF-14-COMBAT-13a"
     ],
     "template_source_path": "res://tools/gate_f/segments/S03.json",
-    "template_source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+    "template_source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d",
     "terminal_capture": true
   }
 }

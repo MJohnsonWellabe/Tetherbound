@@ -1,0 +1,23 @@
+PASS (SOURCEPASS ONLY) - independent successor-ceiling-cb2c check
+
+Exact HEAD: cb2c67531f447c6ba3545dc8d0acb080cb9e4b83
+Reviewed predecessor: 8316c68826c95d7d3249088954294babdb504864
+Successor helper SHA256: 0805365e35c0b5bbbeff026a923608b9bbcfd3769fb6e05e893cca0fe7f49ae8
+Gather unchanged: 8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8
+Team unchanged: 981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1
+
+Binary source equivalence: PASS. Git blobs were captured through binary stdout, read twice, compared against the retained predecessor snapshots, and matched to repeated actual checkout reads. Reversing the single exact line-308 declaration change reproduces the predecessor helper SHA256 d472c80d61e6acba253f9ed7c4e1ceaf9d9f6a46266b561b6f51748c7d1072c3. Both callers are byte-identical. No other executable change exists between these commits. Merge fc885bbe55392cc915093bb078019863ac18686a has exact parents 8316... and main 252b973d3516cf99d10309cadfdd88d92c8d6126; its only differences from 8316 are docs/STATE.md and the dashboard status.json / tetherbound_dashboard.html. cb2c has that merge as its sole parent.
+
+Minimal correction: var ceiling := ... became var ceiling: float = ... . The complete initializer is byte-identical: _foot(pose) + _cap.shape.radius * (1.0 - cos(_body.floor_max_angle)) + _body.safe_margin. Explicit float removes the request to infer a static type from dynamically accessed radius. The existing registered-body contract requires CapsuleShape3D, whose radius supplies a numeric value. No floor cone, foot band, skin/depth bound, starting-overlap refusal, native body/shape identity, safe landing, collision mask/owner transform, bounded work, callback order, door/departure route, input/progression assertion or original 1800/3600 budget changed. The predecessor's source findings and conservative false-refusal/runtime caveats carry forward. No further source correction is justified by this narrow check.
+
+Actual prior parser result remains FAIL. D:/tetherbound/m1-shape-r1/parser.txt contains 5 SCRIPT ERROR lines and 1 ERROR: the ceiling inference error at helper:308 followed by dependent compilation/load failures. Native exit 0 is misleading and supplies no parser pass. receipt.json records only this parser attempt, against 8316, with no gameplay launch. Original and archived exact bytes are preserved:
+ parser SHA256 ef1e2a8ef8fce5d984362a052c5b88991118f2409858f4689768aca38cf35131
+ receipt SHA256 b45b7884a6eca5ce0f481fa96cd9022ebe187306c3d5c57a34817490f5c8dbc7
+ prior strict-review.txt SHA256 1c3eefef257a8212e07cdc82a5014073d71a8e38f9a17dd79f669d3253c21cc0
+The prior SOURCEPASS remains its historical source-only verdict; it does not override the actual parser failure.
+
+Disposition: permit one corrected whole-M1 script parser check by the owner in the proper serialized queue, then one real M1 only if that parser is clean. Clean requires no SCRIPT ERROR/ERROR or failed dependency/load output, not merely exit 0. This review ran no engine, parser, test, import, GPU, render or export; it claims neither corrected parser success nor gameplay success. F17#4 remains OPEN, zero acceptance credit, until the full uninterrupted real player chain passes.
+
+Effective approval_policy never / sandbox_mode danger-full-access retained. AGENTS and relevant CODEX run rules read with explicit UTF8. Only ignored successor evidence was written; no Git or tracked mutation, broad rereview, or outgoing message. Final HEAD, source hashes, prior report and original parser evidence remain unchanged. capture.json and prior/successor binary snapshots provide the narrow evidence.
+
+Primary type contract checked: https://docs.godotengine.org/en/4.7/tutorials/scripting/gdscript/gdscript_basics.html#variables (explicit variable typing and inference requiring a defined type). This supports the source correction, not a claim that the corrected whole script has passed the parser.

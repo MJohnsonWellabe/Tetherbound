@@ -144,6 +144,137 @@ func test_the_aftermath_beats_happen_inside_the_victory_lines() -> void:
 	assert_eq(npc.count("await _until_the_last_victory_line(lines)"), 2, "both stand-down paths wait for the last line")
 	assert_true(npc.find("var lines := _watch_victory_lines()") < npc.find("await get_tree().create_timer(hold)"), "the last line is listened for from the defeat, not after the slump")
 	var director := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
-	assert_true(director.contains("TRAINER_AFTERMATH.hand_over(shown, player)"), "the director hands the tokens over on the last line")
+	# Lifetime-safe callbacks preserve the dialogue beat through bound methods.
+	# The initialized lifetime case separately proves actual early/last signals.
+	var presentation: String = director.get_slice("func _present_trainer_victory(", 1).get_slice("\nfunc ", 0)
+	var binding: String = director.get_slice("func _bind_victory_aftermath(", 1).get_slice("\nfunc ", 0)
+	var last_line: String = director.get_slice("func _on_victory_aftermath_line(", 1).get_slice("\nfunc ", 0)
+	assert_true(presentation.contains("_bind_victory_aftermath(panel, shown, _player, delay)"), "victory presentation installs the handover listener")
+	assert_true(binding.contains("_on_victory_aftermath_line.bind(") and binding.contains('panel.connect("line_presented", on_line)'), "actual dialogue lines reach the bound handover callback")
+	assert_true(last_line.contains("if is_last and is_instance_valid(shown) and shown.is_inside_tree():"), "earlier lines and expired tokens cannot start handover")
+	assert_true(last_line.contains("create_timer(delay).timeout.connect(") and last_line.contains("TRAINER_AFTERMATH.hand_over.bind(shown, player_ref.get_ref()"), "the last line schedules the production handover with its configured delay")
 	for id: String in ["captain_riverwatch", "captain_field", "captain_ridge"]:
 		assert_true(float(AFTERMATH.for_trainer(id)["victory_show"]["side_m"]) >= 1.0, "%s's Sigil clears the hip" % id)
+
+
+var _native_lifecycle_completed := false
+var _native_lifecycle_observation: Dictionary = {}
+
+## SceneTree timers consume frame delta, including the current frame's delta
+## when armed from a deferred callback. Observe that clock, not wall time.
+class NativeAftermathClock extends Node:
+	var elapsed_s := 0.0
+	func _process(delta: float) -> void:
+		elapsed_s += delta
+
+func _aftermath_until(condition: Callable, allowance_ms: int) -> bool:
+	var deadline := Time.get_ticks_msec() + allowance_ms
+	while not bool(condition.call()) and Time.get_ticks_msec() < deadline:
+		await (Engine.get_main_loop() as SceneTree).process_frame
+	return bool(condition.call())
+
+## Actual show_victory arms each unchanged 14-second fallback. Four local
+## presentation lifetimes overlap so this costs one fallback interval; there
+## is no battle, reward, progression or network-authority setup in this scene.
+func _case_native_victory_fallback_after_handover_or_scene_teardown() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var world := Node3D.new()
+	world.name = "AftermathLifecycleRegression"
+	tree.root.add_child(world)
+	var speaker := Node3D.new()
+	world.add_child(speaker)
+	var seconds := float(AFTERMATH.for_trainer("warden_aldis")["victory_show"].get("seconds", 14.0))
+	assert_almost_eq(seconds, 14.0, 0.001, "exercise the original Warden fallback, without shortening its timer")
+	var players: Array[Node3D] = []
+	var tokens: Array[Node3D] = []
+	var refs: Array[WeakRef] = []
+	var clock := NativeAftermathClock.new()
+	world.add_child(clock)
+	# Godot 4.7 emits process_frame before Node processing, then subtracts the
+	# same frame delta from SceneTree timers. Arm here so the observer sees every
+	# delta the real fallback consumes, including its first one.
+	await tree.process_frame
+	clock.elapsed_s = 0.0
+	var started_ms := Time.get_ticks_msec()
+	for index in 4:
+		var player := Node3D.new()
+		world.add_child(player)
+		player.position = Vector3(4.0 + index, 0.0, 0.0)
+		players.append(player)
+		var token := AFTERMATH.show_victory(world, speaker, player, "warden_aldis")
+		assert_true(token != null, "production show_victory builds the actual tokens and fallback")
+		if token == null:
+			world.free()
+			return
+		tokens.append(token)
+		refs.append(weakref(token))
+	# The Director's normal early handover frees its token after the 1.2s tween.
+	AFTERMATH.hand_over(tokens[0], players[0])
+	assert_true(tokens[0].has_meta(&"handed"))
+	var tween_count := tree.get_processed_tweens().size()
+	AFTERMATH.hand_over(tokens[0], players[0])
+	assert_eq(tree.get_processed_tweens().size(), tween_count, "duplicate handover cannot create a second animation")
+	# Scene/player teardown can also precede the independent fallback.
+	players[1].free()
+	tokens[3].free()
+	players[3].free()
+	var early_ref: WeakRef = refs[0]
+	assert_true(await _aftermath_until(func() -> bool: return early_ref.get_ref() == null, 4000),
+		"the real first handover tween freed its token before the fallback")
+	assert_true(Time.get_ticks_msec() - started_ms < int(seconds * 1000.0))
+	assert_false(is_instance_valid(players[1]), "the missing-player fallback cannot capture a live player")
+	assert_false(is_instance_valid(tokens[3]), "the torn-down token is already freed")
+	# These are the production method's untyped invalid/once guards, not a
+	# reconstructed timer or lambda. The original fallback still fires later.
+	AFTERMATH.hand_over(tokens[0], players[0])
+	AFTERMATH.hand_over(tokens[3], players[3])
+	var live_ref: WeakRef = refs[2]
+	assert_true(await _aftermath_until(func() -> bool:
+		var live: Node = live_ref.get_ref() as Node
+		return live != null and live.has_meta(&"handed"), int((seconds + 3.0) * 1000.0)),
+		"the actual original fallback starts a handover for a still-live token and player")
+	var fallback_ms := Time.get_ticks_msec() - started_ms
+	var fallback_scene_seconds := clock.elapsed_s
+	assert_true(fallback_scene_seconds >= seconds - 0.001,
+		"the original fallback consumes its full duration on the SceneTree clock")
+	var without_player: Node = refs[1].get_ref() as Node
+	assert_true(without_player != null and without_player.has_meta(&"handed"),
+		"the same fallback hands over a surviving token safely after its player was freed")
+	tween_count = tree.get_processed_tweens().size()
+	AFTERMATH.hand_over(tokens[2], players[2])
+	assert_eq(tree.get_processed_tweens().size(), tween_count, "the valid fallback remains once-only")
+	assert_true(await _aftermath_until(func() -> bool:
+		for ref: WeakRef in refs:
+			if ref.get_ref() != null: return false
+		return true, 4000), "both fallback handover tweens free their actual tokens")
+	_native_lifecycle_observation = {"original_fallback_seconds": seconds,
+		"fallback_scene_seconds": fallback_scene_seconds, "fallback_observed_ms": fallback_ms,
+		"elapsed_ms": Time.get_ticks_msec() - started_ms,
+		"early_handover_freed_before_fallback": early_ref.get_ref() == null,
+		"all_four_tokens_freed": true, "scope": "local presentation lifecycle only"}
+	world.free()
+	_native_lifecycle_completed = true
+
+func test_native_victory_fallback_after_handover_or_scene_teardown() -> void:
+	var runner_path := "user://trainer_aftermath_lifecycle_runner.gd"
+	var runner := FileAccess.open(runner_path, FileAccess.WRITE)
+	assert_true(runner != null)
+	if runner == null: return
+	runner.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_trainer_aftermath.gd").new()\n\tawait test._case_native_victory_fallback_after_handover_or_scene_teardown()\n\tprint("TRAINER_AFTERMATH_LIFECYCLE_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures,"completed":test._native_lifecycle_completed,"observation":test._native_lifecycle_observation}))\n\tquit(0 if test.failures.is_empty() and test._native_lifecycle_completed else 1)\n')
+	runner.close()
+	var output: Array = []
+	var absolute := ProjectSettings.globalize_path(runner_path)
+	var log_path := ProjectSettings.globalize_path("user://trainer-aftermath-lifecycle-child.log")
+	var code := OS.execute(OS.get_executable_path(), ["--headless", "--path", ProjectSettings.globalize_path("res://"), "--script", absolute, "--log-file", log_path], output, true)
+	DirAccess.remove_absolute(absolute)
+	var combined := "\n".join(output)
+	var result: Dictionary = {}
+	for line: String in combined.split("\n"):
+		if line.begins_with("TRAINER_AFTERMATH_LIFECYCLE_RESULT="):
+			result = JSON.parse_string(line.trim_prefix("TRAINER_AFTERMATH_LIFECYCLE_RESULT="))
+	assert_true(bool(result.get("completed", false)), combined)
+	assert_eq(result.get("failures", ["missing result"]), [], combined)
+	assert_true(int(result.get("assertions", 0)) >= 15, "all real timer/lifetime paths must finish")
+	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
+	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
+	assert_eq(code, 0, combined)

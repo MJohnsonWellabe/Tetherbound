@@ -1,0 +1,33 @@
+{
+  "proposal_base": "784b5cee71a4ba42b7fd6b5b3b39bea76b67910e",
+  "applied_parent": "3983beaffb7f8c091bdeafb2f3ba26d4ef15b7ed",
+  "main_basis": "5c2c964ebaa8e25f933355324725be324218bc44",
+  "source_gate": "SOURCE PASS: exact two-path deliberately announced guest goodbye only",
+  "files": [
+    {
+      "path": "scripts/net/session.gd",
+      "before_sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+      "after_sha256": "412df1418d3fe00d9a78d129cd98395bb06dfd3a81ba0dc23b0d91bff63a37ef",
+      "ownership": "Foundation exclusive ignored proposal only"
+    },
+    {
+      "path": "scripts/net/realm_transition.gd",
+      "before_sha256": "56eeeae34bde60450a35500386760d5214d3f830025f3661b6f76def11d17265",
+      "after_sha256": "b9852aca0df3ce34400aec1384d29c7b5c383710eba2e00b1cdadf5f8cb0c2b5",
+      "ownership": "Foundation exclusive ignored proposal only"
+    }
+  ],
+  "lossless_artifacts_sha256": {
+    "original-r4-host.log": "4bff891adf1e8dd0fb05bbba1da26045faad181fea587f9c392b4eb07665c83d",
+    "original-r4-native.txt": "8aaf117cfc1c0290028a57cf87493d23b968a61143005664f1b2ea0ad7748558",
+    "original-r4-receipt.json": "c05067dbf8a4439fd899981dc2e77642e0f0c7fd2af45ab3fa2c4cbc56b676b1",
+    "approved-source-cut.patch.json": "e41046cc386e76f1916f51e3dca19072c2ae715eef3b55e65133213ffa4b4fe1",
+    "cause-and-scope.md": "f8c7b27cba3c629b85a3f1acb0918c8a809901e15e716ad438e79a27c08afb71",
+    "independent-source-review.txt": "4c150b34630bdf8dc8d99fe13b6d623f9591f35476a50568edb94af6811ef0b3",
+    "independent-source-audit.json": "1ccfc99245c476e9a01b1c7f054b6916e3e8f679d4921869085bf29ee8edfc1f",
+    "independent-checker-correction.txt": "1f947b6884c5e28508ff7983334f8c702efc4976f02673f54444b87c851818fb"
+  },
+  "native_runs_on_corrected_source": 0,
+  "acceptance_credit": false,
+  "remaining_gate": "ROOT parser plus one production completed-world registered-sync guest leave/saved rejoin; inspect both ERROR and SCRIPT ERROR; no general transport claim."
+}

@@ -81,7 +81,7 @@
         {"if_flag": "cloudreach_winds_restored", "conversation": "cloudreach_maela_after_restoration"},
         {"if_flag": "fly_traversal_unlocked", "conversation": "cloudreach_maela_fly_unlocked"},
         {"if_flag": "cloudreach_act_i_complete", "conversation": "cloudreach_maela_trial_reminder"},
-        {"if_flag": ["realm_key_cloudreach", "windscar_aerie_prepared"], "conversation": "cloudreach_maela_flight_trial"}
+        {"if_flag": ["windscar_aerie_prepared"], "conversation": "cloudreach_maela_flight_trial"}
       ]
     },
     {

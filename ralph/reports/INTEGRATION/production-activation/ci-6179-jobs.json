@@ -1,0 +1,492 @@
+{
+  "recorded_utc": "2026-10-02T10:39:19.570586+00:00",
+  "run": {
+    "id": 36991183828,
+    "run_number": 6179,
+    "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+    "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-10-02T09:40:59Z",
+    "updated_at": "2026-10-02T10:30:44Z"
+  },
+  "jobs": [
+    {
+      "id": 110787523795,
+      "name": "changes",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787523795",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:01Z",
+      "completed_at": "2026-10-02T09:41:14Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787594705,
+      "name": "verify-harvest",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787594705",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:48:04Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787594755,
+      "name": "verify-veg-corridor",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787594755",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:56:30Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787594955,
+      "name": "verify-catching",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787594955",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T09:54:20Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787594970,
+      "name": "verify-core-verb-shard",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787594970",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T10:09:42Z",
+      "failed_steps": [
+        "Verify traversal"
+      ]
+    },
+    {
+      "id": 110787594974,
+      "name": "verify-unit-tests (2)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787594974",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:49:40Z",
+      "failed_steps": [
+        "Run tests"
+      ]
+    },
+    {
+      "id": 110787594981,
+      "name": "verify-bake-freshness",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787594981",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:44:24Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595031,
+      "name": "verify-gate-b-full-known-red",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595031",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:51:09Z",
+      "failed_steps": [
+        "Verify gate_b_continuous (FULL CHAIN \u2014 gather route and tail, KNOWN RED)"
+      ]
+    },
+    {
+      "id": 110787595050,
+      "name": "verify-gate-a-ui-build-shard",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595050",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T10:11:30Z",
+      "failed_steps": [
+        "Verify free_build",
+        "Verify opening",
+        "Verify settings"
+      ]
+    },
+    {
+      "id": 110787595088,
+      "name": "verify-gate-evidence-shard",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595088",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T10:02:07Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595108,
+      "name": "export",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595108",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T09:47:08Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595113,
+      "name": "verify-unit-tests (1)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595113",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:48:18Z",
+      "failed_steps": [
+        "Run tests"
+      ]
+    },
+    {
+      "id": 110787595136,
+      "name": "verify-gate-evidence-finale",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595136",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T10:22:08Z",
+      "failed_steps": [
+        "Verify gate_e_finale"
+      ]
+    },
+    {
+      "id": 110787595143,
+      "name": "verify-scatter-rules",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595143",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:44:26Z",
+      "completed_at": "2026-10-02T10:00:31Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595166,
+      "name": "verify-regions-relay (meadows)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595166",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:18Z",
+      "completed_at": "2026-10-02T09:53:38Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595197,
+      "name": "verify-regions-shard (stormwood)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595197",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T09:55:46Z",
+      "failed_steps": [
+        "Verify Stormwood Surge audio observer",
+        "Verify Stormwood Nysa press"
+      ]
+    },
+    {
+      "id": 110787595218,
+      "name": "verify-owner-regressions-shard (controls)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595218",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:16Z",
+      "completed_at": "2026-10-02T10:08:42Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595240,
+      "name": "verify-owner-regressions-shard (catching)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595240",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T10:14:17Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595262,
+      "name": "verify-cloudreach-persistence",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595262",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T09:43:38Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595277,
+      "name": "verify-regions-relay (tidewake)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595277",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T10:00:42Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595300,
+      "name": "verify-continuous-core-known-red",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595300",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T09:50:37Z",
+      "failed_steps": [
+        "Verify the village, material and paid-build continuation (KNOWN RED)"
+      ]
+    },
+    {
+      "id": 110787595326,
+      "name": "verify-regions-shard (tidewake)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595326",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:48:22Z",
+      "completed_at": "2026-10-02T10:00:43Z",
+      "failed_steps": [
+        "Verify Tidewake chain side_water_cradle_care"
+      ]
+    },
+    {
+      "id": 110787595330,
+      "name": "verify-veridian-offer (capacity)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595330",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:41:17Z",
+      "completed_at": "2026-10-02T09:57:58Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595377,
+      "name": "verify-cloudreach-midride-rejoin",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595377",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:48:26Z",
+      "completed_at": "2026-10-02T10:12:46Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595386,
+      "name": "verify-combat-shard",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595386",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:43:40Z",
+      "completed_at": "2026-10-02T10:11:11Z",
+      "failed_steps": [
+        "Verify boss",
+        "Verify encounter_scaling"
+      ]
+    },
+    {
+      "id": 110787595401,
+      "name": "verify-veridian-offer (recovery)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595401",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:51:11Z",
+      "completed_at": "2026-10-02T10:08:41Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595409,
+      "name": "verify-regions-shard (world)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595409",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:48:06Z",
+      "completed_at": "2026-10-02T09:59:50Z",
+      "failed_steps": [
+        "Verify earned aim cancellation and native entry guard",
+        "Verify earned material prompt approach"
+      ]
+    },
+    {
+      "id": 110787595420,
+      "name": "verify-gate-b-core",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595420",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T09:49:41Z",
+      "completed_at": "2026-10-02T10:00:50Z",
+      "failed_steps": [
+        "Verify gate_b_continuous (CORE \u2014 opening through tournament readiness)"
+      ]
+    },
+    {
+      "id": 110787595426,
+      "name": "verify-veridian-offer (space)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595426",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:50:39Z",
+      "completed_at": "2026-10-02T10:10:28Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110787595486,
+      "name": "discover-net-smokes",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110787595486",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-02T09:47:10Z",
+      "completed_at": "2026-10-02T09:48:24Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110789777292,
+      "name": "verify-multiplayer-shard (6)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777292",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:53:39Z",
+      "completed_at": "2026-10-02T10:23:44Z",
+      "failed_steps": [
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110789777301,
+      "name": "verify-multiplayer-shard (4)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777301",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:54:21Z",
+      "completed_at": "2026-10-02T10:24:27Z",
+      "failed_steps": [
+        "Provision immutable actual F48 inputs",
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110789777335,
+      "name": "verify-multiplayer-shard (2)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777335",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:55:49Z",
+      "completed_at": "2026-10-02T10:25:53Z",
+      "failed_steps": [
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110789777344,
+      "name": "verify-multiplayer-shard (3)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777344",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:59:51Z",
+      "completed_at": "2026-10-02T10:29:57Z",
+      "failed_steps": [
+        "Provision immutable actual F48 inputs",
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110789777389,
+      "name": "verify-multiplayer-shard (1)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777389",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T09:56:33Z",
+      "completed_at": "2026-10-02T10:26:39Z",
+      "failed_steps": [
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110789777401,
+      "name": "verify-multiplayer-shard (5)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777401",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-02T10:00:33Z",
+      "completed_at": "2026-10-02T10:30:38Z",
+      "failed_steps": [
+        "Provision immutable actual F48 inputs",
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110789777504,
+      "name": "verify-multiplayer-shard (7)",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110789777504",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T10:00:43Z",
+      "completed_at": "2026-10-02T10:06:01Z",
+      "failed_steps": [
+        "Run net smokes"
+      ]
+    },
+    {
+      "id": 110797532739,
+      "name": "verify-solo-regression",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110797532739",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-02T10:14:17Z",
+      "completed_at": "2026-10-02T10:14:17Z",
+      "failed_steps": []
+    },
+    {
+      "id": 110802296736,
+      "name": "ci-gate",
+      "head_sha": "1cda44389ecfa79dd1f05d779387a6881e7ac71d",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36991183828/job/110802296736",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-02T10:30:41Z",
+      "completed_at": "2026-10-02T10:30:44Z",
+      "failed_steps": [
+        "Confirm active verification and export"
+      ]
+    }
+  ]
+}

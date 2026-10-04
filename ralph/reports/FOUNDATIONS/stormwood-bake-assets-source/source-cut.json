@@ -1,0 +1,34 @@
+{
+  "integration_source": "862385aa92f4b198cc5ccf22448d66f8acfb6e28",
+  "source_path": "scripts/world/build_stormwood_terrain.gd",
+  "prior_fingerprint": 3437044630,
+  "proposed_fingerprint": 2337163527,
+  "proposed_source_sha256_lf": "9f39610af3c8fec789938d3303fae6f5d9f8b507f3ccbc0f82892298db08e164",
+  "integration_patch_sha256": "1e221267cbc4023300afede26870ea735b41c4ed3563011320d224633a8d0e84",
+  "only_change_is_offline_assets_configuration": true,
+  "water_reference_matching_configuration": true,
+  "local_plugin_declared_version": "1.0.2",
+  "upstream_reference_tag": "v1.0.2-stable",
+  "upstream_reference_commit": "0077405b52e353c5e5dc3a094e7ede49833ba6fe",
+  "native_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/TokisanGames/Terrain3D/0077405b52e353c5e5dc3a094e7ede49833ba6fe/src/terrain_3d.cpp",
+      "sha256": "9967667c52ac9e928871212644a7491f3697f0f8d86d34d6b633960a22d9ffdd"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/TokisanGames/Terrain3D/0077405b52e353c5e5dc3a094e7ede49833ba6fe/src/terrain_3d.h",
+      "sha256": "171d4160f4b903457bcbb8bd709506654a266bca535ebb8b487d1c856c361faf"
+    }
+  ],
+  "api_documentation": "https://terrain3d.readthedocs.io/en/stable/api/class_terrain3d.html#class-terrain3d-property-free-editor-textures",
+  "preserved_dependency_sources": {
+    "data/config/terrain_stormwood.json": "2b56527ce1ab72053cbfe3a0377f34f7e9f44d69294c7eff96e52cee4b88635a",
+    "data/config/stormwood_world.json": "018de59fd7fafc00fa33b3fcf2f4838cee4a4b055f6e0b0716f633104f3a1651",
+    "scripts/world/stormwood_heightfield.gd": "f86449d8b25da7fe983bdbe5345c7bbdc2daa7b247ca211bbfb1b8543c41ddd0",
+    "data/config/stormwood_road_surface.json": "d16b3ee1f851c94d816363bae321d460bea827cc0b4d430a190413c488957019",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+  },
+  "engine_jobs_run_here": false,
+  "terrain_or_manifest_writes": false,
+  "runtime_verdict": "Pending coordinator real full bake and native channel comparison"
+}

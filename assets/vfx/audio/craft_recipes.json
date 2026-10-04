@@ -1,0 +1,58 @@
+{
+  "scope": "Original inactive sound candidates; no mapped cue replacement or final mix approval",
+  "sample_rate": 48000,
+  "sample_width_bytes": 3,
+  "peak_ceiling_dbfs": -4.0,
+  "roles": {
+    "launch": {"seconds": 0.16, "rms": 0.08},
+    "travel": {"seconds": 0.56, "rms": 0.065},
+    "launch_travel": {"seconds": 0.56, "rms": 0.075},
+    "impact": {"seconds": 0.38, "rms": 0.10},
+    "launch_mastery": {"seconds": 0.16, "rms": 0.08},
+    "launch_travel_mastery": {"seconds": 0.56, "rms": 0.075},
+    "impact_mastery": {"seconds": 0.38, "rms": 0.10}
+  },
+  "families": {
+    "stone_throw": {
+      "kind": "gravel",
+      "onsets_seconds": [0.0, 0.037, 0.078],
+      "modes_hz": [190.0, 317.0, 521.0],
+      "body_decay_seconds": 0.028,
+      "grit_low_hz": 600.0,
+      "grit_high_hz": 5200.0,
+      "travel_high_hz": 2200.0,
+      "mastery_mode_hz": 840.0
+    },
+    "stone_boulder": {
+      "kind": "boulder",
+      "onsets_seconds": [0.0],
+      "modes_hz": [62.0, 127.0, 243.0],
+      "body_decay_seconds": 0.115,
+      "grit_low_hz": 280.0,
+      "grit_high_hz": 3400.0,
+      "travel_high_hz": 1100.0,
+      "mastery_mode_hz": 510.0
+    },
+    "fireball": {
+      "kind": "combustion",
+      "onsets_seconds": [0.0],
+      "modes_hz": [58.0, 113.0, 227.0],
+      "body_decay_seconds": 0.14,
+      "grit_low_hz": 150.0,
+      "grit_high_hz": 2700.0,
+      "travel_high_hz": 3300.0,
+      "mastery_mode_hz": 630.0,
+      "crackle_count": 11
+    },
+    "sky_lightning": {
+      "kind": "electrical",
+      "onsets_seconds": [0.0, 0.011, 0.027, 0.064],
+      "modes_hz": [91.0, 269.0, 807.0],
+      "body_decay_seconds": 0.075,
+      "grit_low_hz": 900.0,
+      "grit_high_hz": 7600.0,
+      "travel_high_hz": 5700.0,
+      "mastery_mode_hz": 1490.0
+    }
+  }
+}

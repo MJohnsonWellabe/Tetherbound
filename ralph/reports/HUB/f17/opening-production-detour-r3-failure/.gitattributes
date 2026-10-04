@@ -1,0 +1,2 @@
+# Frozen evidence retains its raw bytes on every checkout platform.
+** -text -diff

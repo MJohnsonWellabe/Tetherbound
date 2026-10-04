@@ -1,5 +1,7 @@
 extends Node
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+## Session finds production managers by group instead of walking the realm.
+const FOUNDATION_GROUP := &"foundation_combat_managers"
 
 ## Combat Mode: a STATE, not a scene.
 ##
@@ -21,6 +23,7 @@ const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
 ## is here (`_active_index` into `_party`) so M4 adds members rather than
 ## restructuring this file.
 
+const FIGHT_CAMERA := preload("res://scripts/combat/fight_camera.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CONTACT_SPACING := preload("res://scripts/combat/contact_spacing.gd")
@@ -53,11 +56,19 @@ const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TYPE_CHART := preload("res://scripts/combat/type_chart.gd")
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const ENEMY_PATTERNS := preload("res://scripts/combat/combat_ai.gd")
+const ENEMY_PATTERN_CAST := preload("res://scripts/combat/enemy_pattern_cast.gd")
+const MOVE_MASTERY := preload("res://scripts/creatures/move_mastery.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+var _enemy_strike_connected := false
 
 signal entered()
 signal exited(outcome: String)
 signal state_changed()
 signal hit_landed(on_enemy: bool, amount: float)
+signal attack_launched(on_enemy: bool, launch: Dictionary, presentation: Node3D)
+signal impact_confirmed(on_enemy: bool, receipt: Dictionary, world_position: Vector3)
+signal host_snapshot_hp_applied(action_id: String, before: float, after: float)
 signal staggered(on_enemy: bool)
 ## T3-TYPECHART. The type verdict for the hit `hit_landed` is about to report:
 ## 1 advantaged, -1 disadvantaged, 0 neutral. Emitted IMMEDIATELY BEFORE
@@ -165,6 +176,8 @@ var _arena: Node3D = null
 ## has something to ease FROM; reset to 0.0 whenever the camera is fully
 ## released so a later fight does not inherit a wide frame from this one's end.
 var _camera_framing_extra: float = 0.0
+## Requested geometry and actual-frame diagnostics; not an acceptance verdict.
+var _fight_camera_solution: Dictionary = {}
 ## F04#7: the eased pivot height (`camera.framing.height_follow`) and the eased
 ## clear-orbit swing (`camera.framing.clear_orbit`). 0 means "not yet started";
 ## both reset with `_camera_framing_extra` when the camera is released.
@@ -223,10 +236,20 @@ var _stagger_glows: Dictionary = {}
 ## This closes the attack/burst ordering window without adding prediction that
 ## the host could later have to rewind through collision.
 var _burst_awaiting_host := false
+var _move_awaiting_host := false
+var _party_ultimate: Dictionary = {}
+var _party_utility_cooldown: Dictionary = {}
+var _ultimate_waiting_release := false
+var _ultimate_armed_left := 0.0
+var _ultimate_face_release := false
+var _move_refusal_until_ms := 0
 ## Scoped to this manager's current encounter. Transport action ids may restart
 ## for a new hosted trainer round while the physical body is reused, so replay
 ## memory belongs here/EncounterHost rather than on CreatureBody.
 var _last_burst_action := 0
+var _impact_serial := 0
+var _seen_impact_actions: Dictionary = {}
+var _seen_launch_actions: Dictionary = {}
 
 ## An attack press made during wind-up, recovery or cooldown, kept alive for
 ## `flow.input_buffer` seconds and fired the moment the creature is ready. Without
@@ -307,6 +330,7 @@ var _rng := RandomNumberGenerator.new()
 ## because a bar that un-drops is worse than a bar that lags.
 var _encounter_link: Node = null
 var _encounter_id: String = ""
+var _ordinary_reward_owned_id: String = ""
 var _realm_owned_opponent := false
 
 ## The record's `kind` ("wild" | "trainer" | "boss"). Held only so this file can
@@ -329,6 +353,12 @@ var _catch_presentation_last_ms := 0
 ## twice cannot walk the health bar backwards.
 var _encounter_seq: int = 0
 
+## A mirrored trainer/boss round can end before the host sends its next member.
+## Keep the admitted fight bound through that gap, without simulating the foe.
+var _shared_trainer_round := 0
+var _shared_trainer_round_continues := false
+var _waiting_shared_trainer_round := false
+
 ## The last refusal this process was given: `{"kind", "code", "reason"}`. Read
 ## by the HUD and by `tools/net/peer_runner.gd`'s probe -- the net smoke asserts
 ## the `friendly_target` refusal WAS issued, not merely that no damage landed.
@@ -338,6 +368,10 @@ var last_encounter_refusal: Dictionary = {}
 ## instance shared for the life of the manager is fine — the same choice
 ## `_rng` above already makes.
 var _moves: RefCounted = null
+
+
+func _enter_tree() -> void:
+	add_to_group(FOUNDATION_GROUP)
 
 
 func _ready() -> void:
@@ -376,22 +410,36 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 	# a new opponent and must be eligible for its one victory award.
 	if _encounter_id != encounter_id:
 		_victory_awarded = false
+		_ordinary_reward_owned_id = ""
 	_encounter_link = link
 	_encounter_id = encounter_id
 	_encounter_kind = kind
+	if kind in ["trainer", "boss"] and not encounter_id.is_empty() \
+		and is_instance_valid(link) and link.has_method("uses_durable_trainer_rewards"):
+		var owner: Variant = link.call("uses_durable_trainer_rewards", encounter_id)
+		if owner is bool and owner: _ordinary_reward_owned_id = encounter_id
 	_catch_claim_id = ""
 	_catch_finish_requires_host = false
 	_catch_presentation_last_ms = 0
 	_last_burst_action = 0
+	_seen_impact_actions.clear()
+	_seen_launch_actions.clear()
 
 
 func unbind_encounter() -> void:
+	_move_awaiting_host = false
 	_encounter_link = null
 	_encounter_id = ""
+	_ordinary_reward_owned_id = ""
 	_encounter_kind = ""
+	_shared_trainer_round = 0
+	_shared_trainer_round_continues = false
+	_waiting_shared_trainer_round = false
 	_catch_awaiting_host = false
 	_burst_awaiting_host = false
 	_last_burst_action = 0
+	_seen_impact_actions.clear()
+	_seen_launch_actions.clear()
 
 
 ## The record this fight is rendering, or "" solo. Read by the director and by
@@ -576,14 +624,23 @@ func begin(
 	_quick_cooldown = 0.0
 	_charged_cooldown = 0.0
 	_initialize_wind()
+	_move_awaiting_host = false
+	_party_ultimate.clear()
+	_party_utility_cooldown.clear()
+	_clear_move_input()
 	_reset_player_poise()
 	_hitstop_left = 0.0
 	_burst_awaiting_host = false
 	_last_burst_action = 0
+	_seen_impact_actions.clear()
+	_seen_launch_actions.clear()
 	_buffered_attack = ""
 	_buffer_left = 0.0
 	_resolve_timer = 0.0
 	_outcome = ""
+	_shared_trainer_round = 0
+	_shared_trainer_round_continues = false
+	_waiting_shared_trainer_round = false
 	_input_guard = float(MATH.config().get("flow", {}).get("input_guard", 0.25))
 	_flee_buffer_left = 0.0
 
@@ -654,6 +711,8 @@ func _release_contact_spacing() -> void:
 func end_shared_opponent_presentation(body: Node3D) -> bool:
 	if not _realm_owned_opponent or body == null or body != _wild:
 		return false
+	_shared_trainer_round_continues = false
+	_waiting_shared_trainer_round = false
 	if state == State.ACTIVE:
 		_begin_resolve("fled")
 		return true
@@ -913,8 +972,9 @@ func _place_fighters() -> void:
 	# side with room, the same treatment `_place_realm_owned_ally` gives realm
 	# fights (F14#0 C3). 0 keeps the in-line formation.
 	var lateral := float(cfg.get("trainer_ally_lateral_m", 0.0))
+	var trainer_rank: Variant = _wild.get_meta(&"trainer_rank") if _wild.has_meta(&"trainer_rank") else null
 	if _enemy_owned and lateral > 0.0 \
-			and trainer_seats_aside(cfg, _wild.get_meta(&"trainer_rank", null)):
+			and trainer_seats_aside(cfg, trainer_rank):
 		var side := Vector3(-forward.z, 0.0, forward.x).normalized()
 		var right := _staging_reach(ally_spot, side, lateral)
 		var left := _staging_reach(ally_spot, -side, lateral)
@@ -1146,6 +1206,7 @@ func _ground_height(x: float, z: float) -> float:
 ## height. A second camera would be a second thing to keep in sync, and the rig
 ## already eases onto a new target for free.
 func _take_camera() -> void:
+	_fight_camera_solution = {}
 	if _camera_rig == null or not _camera_rig.has_method("set_target"):
 		return
 	# `set_target()` below resets the rig's height and clear-orbit swing to the
@@ -1155,6 +1216,8 @@ func _take_camera() -> void:
 	_camera_clear_orbit_target = 0.0
 	_camera_clear_orbit_wait = 0.0
 	_camera_rig.call("set_target", _ally_body, _combat_camera_profile())
+	if bool(FIGHT_CAMERA.config().get("enabled", false)) and _camera_rig.has_method("set_fight_frame_composer"):
+		_camera_rig.call("set_fight_frame_composer", _draw_fight_camera)
 	# The camera still orbits the player's creature. A separate, soft opponent
 	# tracker only corrects a neutral camera after manual-look grace, so the
 	# player keeps full right-stick/mouse ownership instead of entering lock-on.
@@ -1162,6 +1225,10 @@ func _take_camera() -> void:
 		var tracking: Dictionary = ((MATH.config().get("camera", {}) as Dictionary) \
 			.get("tracking", {}) as Dictionary).duplicate()
 		tracking.merge(_opponent_camera("tracking"), true)
+		if bool(FIGHT_CAMERA.config().get("enabled", false)):
+			tracking["dead_zone_deg"] = float(FIGHT_CAMERA.config().get("tracking_dead_zone_deg", 1.0))
+			tracking["strength"] = float(FIGHT_CAMERA.config().get("tracking_strength", 4.0))
+			tracking["max_speed_deg"] = float(FIGHT_CAMERA.config().get("orbit_speed_deg_s", 90.0))
 		# F14#0 C3: an opponent's own `camera_composition_yaw_deg` (a trainer
 		# team member's combat override) wins over both blocks above.
 		var authored_yaw := opponent_composition_yaw_deg(_wild)
@@ -1210,6 +1277,12 @@ func _combat_camera_profile() -> Dictionary:
 	var distance := float(profile.get("distance", 6.0))
 	profile["shoulder_offset"] = _combat_shoulder_offset(
 		distance, float(profile.get("pitch_start_deg", -25.0)))
+	var fight := FIGHT_CAMERA.config()
+	if bool(fight.get("enabled", false)) and is_instance_valid(_ally_body) and is_instance_valid(_wild):
+		var pair := FIGHT_CAMERA.pair_profile(_body_world_bounds(_ally_body), _body_world_bounds(_wild), fight)
+		# Applied once on takeover, never accumulated each frame or over manual pitch.
+		profile["pitch_start_deg"] = float(profile.get("pitch_start_deg", -25.0)) + float(pair.get("pitch_offset_deg", 0.0))
+		profile["shoulder_offset"] = 0.0
 	return profile
 
 
@@ -1380,6 +1453,8 @@ func _update_combat_camera_framing(delta: float) -> void:
 	# must not fight either of them for `_distance`.
 	if _camera_rig.get("_target") != _ally_body:
 		return
+	if _update_fight_camera_matrix(delta):
+		return
 	var cfg: Dictionary = MATH.config().get("camera", {}) as Dictionary
 	var base_distance := float(cfg.get("distance", 6.0))
 	var framing: Dictionary = cfg.get("framing", {}) as Dictionary
@@ -1414,6 +1489,104 @@ func _update_combat_camera_framing(delta: float) -> void:
 		_camera_rig.set("_shoulder", lerpf(float(_camera_rig.get("_shoulder")), shoulder, weight))
 	_update_combat_top_band(cfg.get("hud_safe", {}) as Dictionary, weight)
 	_update_combat_body_clear(cfg.get("body_clear", {}) as Dictionary)
+
+
+## Same-frame presentation after actual actor physics/follow/impact roll.
+## Ordinary aim/exit changes the target and clears this callback at the rig.
+func _draw_fight_camera(delta: float) -> void:
+	if state == State.ACTIVE and is_instance_valid(_ally_body):
+		_update_fight_camera_matrix(delta, true)
+
+## The solver scores constrained lens transforms, not requested camera arms.
+## Physics merely reserves this mode; the rig's final idle tick owns composition.
+func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> bool:
+	var fight := FIGHT_CAMERA.config()
+	if not bool(fight.get("enabled", false)) or not is_instance_valid(_wild) \
+			or not _camera_rig.has_method("probe_fight_camera_pose"):
+		_fight_camera_solution = {}
+		if _camera_rig.has_method("set_framing_pivot_offset"):
+			_camera_rig.call("set_framing_pivot_offset", Vector3.ZERO)
+		if _camera_rig.has_method("set_fight_yaw_target"):
+			_camera_rig.call("set_fight_yaw_target", null)
+		return false
+	if not render_tick: return true
+	var ally := _body_world_bounds(_ally_body)
+	var foe := _body_world_bounds(_wild)
+	var ally_points := _body_world_corners(_ally_body)
+	var foe_points := _body_world_corners(_wild)
+	if ally.size.is_zero_approx() or foe.size.is_zero_approx() \
+		or ally_points.size()!=8 or foe_points.size()!=8: return false
+	var camera := _camera_rig.get_node_or_null(^"Camera3D") as Camera3D
+	var model := _wild.call("model_pivot") as Node3D
+	if camera == null or not is_instance_valid(model) or not model.is_inside_tree(): return false
+	var viewport := camera.get_viewport().get_visible_rect().size
+	var aspect := viewport.x / maxf(viewport.y,1.0)
+	var cfg: Dictionary = MATH.config().get("camera", {})
+	var manual := float(_camera_rig.get("_tracking_manual_left")) > 0.0
+	var yaw := float(_camera_rig.get("yaw"))
+	var local := fight.duplicate()
+	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
+	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
+	local["roll_radians"] = (_camera_rig as Node3D).rotation.z
+	if manual:
+		local["orbit_candidates_deg"] = [0.0]
+		local["allow_pair_side_views"] = false
+		local["orbit_refinement_step_deg"] = 0.0
+	var weight := 1.0-exp(-maxf(float(fight.get("lag",4.0)),0.01)*delta)
+	_update_combat_top_band(cfg.get("hud_safe",{}) as Dictionary,weight)
+	var clear: Dictionary = cfg.get("body_clear",{})
+	var ignore_lunge := bool(clear.get("ignore_lunging_foe",false)) \
+		or (_wild.has_method("camera_ignores_lunge") and bool(_wild.call("camera_ignores_lunge")))
+	var use_body_guard := bool(clear.get("enabled",false)) \
+		and not (ignore_lunge and _wild.has_method("is_lunging") and bool(_wild.call("is_lunging")))
+	var box := _body_render_bounds(_wild) if use_body_guard else AABB()
+	var pose := model.global_transform
+	var probe := func(point: Vector3, basis: Basis, distance: float) -> Dictionary:
+		return _camera_rig.call("probe_fight_camera_pose",point,basis,distance,box,pose,
+			float(clear.get("margin_m",0.35)),float(clear.get("min_length_m",2.0)))
+	var visibility_context := _fight_visibility_context(camera, fight.get("readability",{}) as Dictionary)
+	var visibility_score := func(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2) -> Dictionary:
+		return _fight_visibility_score(transform,ally_rect,foe_rect,visibility_context)
+	var solution := FIGHT_CAMERA.solve(ally,foe,yaw,float(_camera_rig.get("pitch")),camera.fov,
+		aspect,float(cfg.get("distance",6.0)),local,false,ally_points,foe_points,probe,visibility_score)
+	if solution.is_empty(): return false
+	_fight_camera_solution = solution
+	# Retain smooth follow/current yaw whenever its freshly queried constrained
+	# lens is already framed and clear. A bad view is corrected to the nearest
+	# scored safe candidate; invalid interpolation is never drawn as a success.
+	var selected: Dictionary = solution
+	var selected_yaw := yaw + deg_to_rad(float(solution.yaw_offset_deg))
+	var current := probe.call((_camera_rig as Node3D).global_position,
+		(_camera_rig as Node3D).global_basis,minf(float(_camera_rig.get("_distance")),float(local.max_distance_m))) as Dictionary
+	if not current.is_empty():
+		var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
+		var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
+		if bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false)) \
+			and FIGHT_CAMERA.overlap_ratio(current_a.rect,current_b.rect)<=float(local.max_actor_overlap) \
+			and bool((_fight_visibility_score(current.transform,current_a.rect,current_b.rect,visibility_context)).get("pass",false)) \
+			and (manual or not bool(solution.get("pass",false)) or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75))):
+			selected = current
+			selected_yaw = yaw
+	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
+	_camera_rig.call("set_framing_pivot_offset",offset)
+	_camera_rig.set("_distance",float(solution.get("requested_distance",solution.distance)))
+	_camera_rig.set("_shoulder",0.0)
+	_camera_rig.call("apply_fight_camera_pose",selected,selected_yaw)
+	_fight_camera_solution["selected_pivot"] = selected.pivot
+	_fight_camera_solution["selected_distance"] = selected.distance
+	_fight_camera_solution["selected_transform"] = selected.transform
+	_fight_camera_solution["selected_world_room"] = selected.get("world_room",null)
+	var model_room := float(selected.get("model_room",INF))
+	_fight_camera_solution["selected_model_room"] = model_room if is_finite(model_room) else null
+	var actual_a := FIGHT_CAMERA.project_points(ally_points,camera.get_camera_transform(),camera.fov,aspect,camera.near)
+	var actual_b := FIGHT_CAMERA.project_points(foe_points,camera.get_camera_transform(),camera.fov,aspect,camera.near)
+	_fight_camera_solution["actual_framed"] = bool(actual_a.get("in_frame",false)) and bool(actual_b.get("in_frame",false))
+	_fight_camera_solution["actual_overlap"] = FIGHT_CAMERA.overlap_ratio(actual_a.rect,actual_b.rect) \
+		if bool(actual_a.get("valid",false)) and bool(actual_b.get("valid",false)) else 1.0
+	_fight_camera_solution["actual_visibility"] = _fight_visibility_score(camera.get_camera_transform(),
+		actual_a.get("rect",Rect2()),actual_b.get("rect",Rect2()),visibility_context)
+	_fight_camera_solution["clock"] = "final_idle_after_physics_follow_and_roll"
+	return true
 
 
 ## F14#0 C3 (Aquaryn): a tall opponent standing uphill of the ally rode up
@@ -1604,6 +1777,13 @@ func _update_combat_body_clear(clear: Dictionary) -> void:
 		return
 	var pivot: Vector3 = (_camera_rig as Node3D).global_position
 	var arm := (_camera_rig as Node3D).global_basis.z * float(_camera_rig.get("_distance"))
+	if bool(FIGHT_CAMERA.config().get("enabled", false)):
+		var model := _wild.call("model_pivot") as Node3D if _wild.has_method("model_pivot") else null
+		if model != null and model.is_inside_tree():
+			_camera_rig.call("set_body_limit", FIGHT_CAMERA.oriented_body_limit(pivot, pivot + arm,
+				_body_render_bounds(_wild), model.global_transform, float(clear.get("margin_m", 0.35)),
+				float(clear.get("min_length_m", 2.0))))
+			return
 	_camera_rig.call("set_body_limit", body_limit_along_arm(pivot, pivot + arm,
 		_body_world_bounds(_wild), float(clear.get("margin_m", 0.35)),
 		float(clear.get("min_length_m", 2.0))))
@@ -1634,6 +1814,12 @@ func _body_world_bounds(body: Node3D) -> AABB:
 		return AABB()
 	var model := body.call("model_pivot") as Node3D
 	return model.global_transform * local if model != null and model.is_inside_tree() else AABB()
+
+func _body_world_corners(body: Node3D) -> PackedVector3Array:
+	var local := _body_render_bounds(body)
+	if local.size.is_zero_approx() or not body.is_inside_tree(): return PackedVector3Array()
+	var model := body.call("model_pivot") as Node3D
+	return FIGHT_CAMERA.box_points(local, model.global_transform) if model != null and model.is_inside_tree() else PackedVector3Array()
 
 
 ## MEADOWS-VISUAL-PASS: while the piloted ally hides the foe from the live
@@ -2048,6 +2234,7 @@ func _size_framing_extra(body: Node3D, framing: Dictionary) -> float:
 
 
 func _release_camera(fought_at: Variant = null) -> void:
+	_fight_camera_solution = {}
 	_camera_framing_extra = 0.0
 	_camera_framing_height = 0.0
 	_camera_clear_orbit_deg = 0.0
@@ -2109,7 +2296,7 @@ func _physics_process(delta: float) -> void:
 			_tick_active(delta)
 		State.RESOLVING:
 			_resolve_timer -= delta
-			if _resolve_timer <= 0.0:
+			if _resolve_timer <= 0.0 and not _waiting_shared_trainer_round:
 				_finish()
 		_:
 			_refuse_combat_input()
@@ -2132,6 +2319,9 @@ func _physics_process(delta: float) -> void:
 ## the outcome banner is up and the player is watching a fight end, which is not
 ## the "is this button broken?" moment this exists for.
 func _refuse_combat_input() -> void:
+	# X/Y have world meanings. Their combat aliases must stay silent here.
+	if Input.is_action_just_pressed("interact") or Input.is_action_just_pressed("inventory") \
+		or not combat_input_available(): return
 	# Nothing pressed is the case on very nearly every frame, so it is answered
 	# before any node lookup.
 	var attacking := Input.is_action_just_pressed("combat_quick") \
@@ -2139,16 +2329,8 @@ func _refuse_combat_input() -> void:
 	if not attacking:
 		return
 
-	# Two of these buttons are shared with build mode (project.godot):
-	#
-	#   LMB / RMB  -> build_place / build_cancel
-	#   LT / RT    -> build_rotate_left / build_rotate_right
-	#
-	# All four only mean anything with a placement armed, so one check covers
-	# them, and a refusal that fires on top of the other thing is worse than
-	# silence. `torch_place` used to need its own line here because it shared RT
-	# with `combat_quick`; CONTROLLER-MAP took its pad binding away entirely, so
-	# there is no longer a torch press to stand aside for.
+	# LMB/RMB also place/cancel while building. Let the actual build mode own
+	# those clicks; X/Y's exploration aliases have already returned above.
 	var game := get_node_or_null(^"/root/Game")
 	if game == null:
 		return
@@ -2168,6 +2350,10 @@ func _refuse_combat_input() -> void:
 
 
 func _tick_active(delta: float) -> void:
+	if not combat_input_available(): _clear_move_input()
+	_ultimate_armed_left = maxf(0.0, _ultimate_armed_left - delta)
+	for uid: String in _party_utility_cooldown:
+		_party_utility_cooldown[uid] = maxf(0.0, float(_party_utility_cooldown[uid]) - delta)
 	_buffer_flee_while_input_unread(delta)
 	if _hitstop_left > 0.0:
 		_buffer_attack_while_hitstopped()
@@ -2431,6 +2617,7 @@ func wind_exhausted() -> bool:
 ## empties. This is the anti-mash rule: an attack committed into a visible tell
 ## is lost instead of resolving through the incoming blow.
 func _take_player_poise_damage(amount: float) -> bool:
+	_clear_move_input()
 	var interrupted := _action == Action.WINDUP
 	if interrupted:
 		_pending_move = {}
@@ -2460,6 +2647,7 @@ func _consume_player_stagger_critical() -> bool:
 
 
 func _play_combat_flinch(body: Node3D, away: Vector3) -> void:
+	if body.has_method("protected_heavy_committed") and body.call("protected_heavy_committed") == true: return
 	if body.has_method("play_combat_flinch"):
 		body.call("play_combat_flinch", away)
 	else:
@@ -2548,17 +2736,19 @@ func _submit_strike_intent() -> void:
 	var facing: Vector3 = _ally_body.call("facing")
 	var creature := active_creature()
 	var is_quick: bool = bool(_pending_move.get("is_quick", false))
-	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+	var intent := {
 		"kind": "strike_intent",
 		"encounter_id": _encounter_id,
 		# The move is named, not described. The host rebuilds the profile from
 		# its OWN `combat.json` and its own two body radii
 		# (`host_move_profile()`), so a peer cannot post itself a longer reach.
-		"slot": "quick" if is_quick else "charged",
-		"move_id": str(creature.move_quick if is_quick else creature.move_charged),
+		"slot": str(_pending_move.get("slot", "quick" if is_quick else "charged")),
+		"move_id": str(_pending_move.get("move_id", creature.move_quick if is_quick else creature.move_charged)),
 		"origin": [origin.x, origin.y, origin.z],
 		"facing": [facing.x, facing.y, facing.z],
-	})
+	}
+	if _pending_move.has("accepted_action"): intent["action"] = int(_pending_move.accepted_action)
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", intent)
 	# `pending` is the ordinary answer on a CLIENT: the host has not spoken yet,
 	# nothing is drawn and nothing is decremented until it does (§3), and the
 	# answer arrives later through `apply_host_strike_verdict()`.
@@ -2584,9 +2774,19 @@ func _submit_strike_intent() -> void:
 ## A refusal never arrives here -- it goes to `_note_encounter_refusal()` -- so
 ## this function is only ever the performance of a decision already made.
 func apply_host_strike_verdict(payload: Dictionary) -> void:
+	if bool(payload.get("scheduled", false)):
+		if state == State.ACTIVE:
+			_sync_authoritative_wind(payload)
+			present_host_attack_launch(payload.get("launch", {}) as Dictionary)
+		return
+	var impact: Dictionary = payload.get("impact", {})
+	if not impact.is_empty():
+		if _enemy == null or str(impact.get("target_uid", "")) != str(_enemy.get("uid")): return
+		if not _admit_host_feedback(_seen_impact_actions, impact, false): return
 	if state != State.ACTIVE:
 		return
 	_sync_authoritative_wind(payload)
+	_confirm_host_contact(str(impact.get("action_id", "")))
 	if payload.has("hp") and _enemy != null:
 		# §3: WRITTEN, not decremented. `take_damage()` here would apply the
 		# host's blow on top of whatever the record broadcast already set, and
@@ -2598,7 +2798,18 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 			float(payload.get("stagger_left", -1.0)))
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
-		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)))
+		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)), impact)
+	_apply_move_resources(payload)
+
+
+func _apply_move_resources(payload: Dictionary) -> void:
+	var uid := str(payload.get("creature_uid", ""))
+	if uid.is_empty(): return
+	for creature: RefCounted in _party:
+		if creature == null or str(creature.get("uid")) != uid: continue
+		if payload.has("energy"): creature.set("energy", clampf(float(payload.energy), 0.0, float(MATH.config().get("energy", {}).get("max", 100.0))))
+		if payload.has("ultimate_meter"): _party_ultimate[uid] = clampf(float(payload.ultimate_meter), 0.0, float(MATH.config().get("ultimate", {}).get("maximum", 100.0)))
+		if payload.has("utility_cooldown_s"): _party_utility_cooldown[uid] = maxf(0.0, float(payload.utility_cooldown_s))
 
 
 ## The performance of a strike, and -- solo -- the decision too.
@@ -2610,7 +2821,7 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 ## the projectile, the energy gain and the two signals.
 func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		killed_override: bool = false, crit_override: bool = false,
-		stagger_triggered_override: bool = false) -> void:
+		stagger_triggered_override: bool = false, impact: Dictionary = {}) -> void:
 	var creature := active_creature()
 	if creature == null or _enemy == null or _ally_body == null or _wild == null:
 		return
@@ -2623,11 +2834,12 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		state_changed.emit()
 		return
 
-	var is_quick: bool = bool(_pending_move.get("is_quick", false))
+	var is_quick: bool = str(impact.get("slot", "")) == "quick" if impact.has("slot") else bool(_pending_move.get("is_quick", false))
 	var stagger_crit := crit_override
 	if damage_override < 0.0 and _wild.has_method("consume_stagger_critical"):
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
-	var move_id: String = creature.move_quick if is_quick else creature.move_charged
+	var move_id: String = str(impact.get("move_id", creature.move_quick if is_quick else creature.move_charged))
+	if not impact.is_empty() and not _admit_host_feedback(_seen_impact_actions, impact): return
 	var cfg: Dictionary = PROGRESSION.config()
 	var is_best := _is_best(creature)
 	var ability: Dictionary = SPECIES.best_creature_ability(creature.species_id) if is_best else {}
@@ -2661,7 +2873,8 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	# W09-VFX: damage over the bar, so the spark can be sized to the blow.
 	var hit_fraction: float = damage / maxf(1.0, float(_enemy.max_hp))
-	_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
+	if impact.is_empty():
+		_wild.call("add_impulse", facing, float(_pending_move.get("lunge", 3.6)) * 0.4)
 	if killed:
 		_wild.call("play_faint")
 	else:
@@ -2669,7 +2882,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	# Ranged moves draw their travel, and the impact waits for it to land. A
 	# melee move has no travel to draw, so `launch` hands back null and the
 	# burst goes off here exactly as it always did.
-	var vfx: Dictionary = _pending_move.get("vfx", {}) as Dictionary
+	var vfx: Dictionary = _moves.move(move_id).get("vfx", {}) if not impact.is_empty() else _pending_move.get("vfx", {}) as Dictionary
 	var tint: Variant = Color(str(vfx["colour"])) if vfx.has("colour") else null
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	# The bolt LEAVES the creature rather than starting inside it.
@@ -2687,12 +2900,19 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	var muzzle := origin
 	if _ally_body.has_method("body_radius"):
 		muzzle = origin + facing * float(_ally_body.call("body_radius"))
-	var shot := PROJECTILE.launch(host, muzzle, target, vfx)
+	var shot: Node3D = null
+	if impact.is_empty():
+		shot = PROJECTILE.launch(host, muzzle, target, vfx)
+	elif not bool(impact.get("presentation_launched", false)):
+		shot = PROJECTILE.launch(host, muzzle, target, vfx, impact)
 	if shot != null:
 		var landing: Vector3 = target
-		shot.connect("arrived", func() -> void: _flash_at(landing, not is_quick, tint, _wild, hit_fraction))
+		shot.connect("arrived", func() -> void:
+			if impact.is_empty(): _flash_at(landing, not is_quick, tint, _wild, hit_fraction)
+			else: _flash_host_impact(landing, not is_quick, tint, _wild, hit_fraction, impact))
 	else:
-		_flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction)
+		if impact.is_empty(): _flash_at(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction)
+		else: _flash_host_impact(_wild.call("centre"), not is_quick, tint, _wild, hit_fraction, impact)
 
 	# Energy is earned by CONNECTING, not by pressing. That is what makes
 	# positioning matter to the charged attack rather than only to survival.
@@ -2703,7 +2923,13 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	if stagger_triggered:
 		_announce_stagger(true)
 	hit_landed.emit(true, damage)
-	_begin_hitstop(_hitstop_seconds(is_quick, stagger_crit))
+	if impact.is_empty():
+		_begin_hitstop(_hitstop_seconds(is_quick, stagger_crit))
+	else:
+		_begin_hitstop(float(impact.get("hitstop_seconds", 0.0)))
+		if str(impact.get("weight", "light")) in ["heavy", "ultimate"]:
+			_nudge_camera_on_landing(true)
+		_emit_host_impact(true, impact, _wild)
 	state_changed.emit()
 	if killed:
 		_award_victory()
@@ -2720,6 +2946,8 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 ## targeting bug, and a player who cannot tell "I swung at my friend" from "the
 ## game dropped my input" will conclude the second.
 func note_encounter_refusal(verdict: Dictionary) -> void:
+	if str(verdict.get("kind", "")) == "move_start":
+		_move_awaiting_host = false
 	if str(verdict.get("kind", "")) == "burst_intent":
 		_burst_awaiting_host = false
 	_sync_authoritative_wind(verdict.get("delta", {}) as Dictionary)
@@ -2766,15 +2994,33 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		var peer_id := int(_encounter_link.call(local_peer_method))
 		var participants: Dictionary = rec.get("participants", {}) as Dictionary
 		if participants.has(peer_id):
-			_sync_authoritative_wind(participants[peer_id] as Dictionary)
+			var participant: Dictionary = participants[peer_id]
+			var creature := active_creature()
+			var uid := str(creature.get("uid")) if creature != null else ""
+			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})
+			_sync_authoritative_wind(participant if resource.is_empty() else resource)
+			for resource_uid: String in participant.get("move_resources", {}):
+				var value: Dictionary = participant.move_resources[resource_uid].duplicate(true)
+				value["creature_uid"] = resource_uid
+				_apply_move_resources(value)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
+	_apply_shared_trainer_round(opponent)
+	var snapshot_impact: Dictionary = rec.get("resolved_impact", {})
+	if state == State.ACTIVE and _enemy != null and not snapshot_impact.is_empty() \
+		and str(snapshot_impact.get("target_uid", "")) == str(_enemy.get("uid")):
+		_confirm_host_contact(str(snapshot_impact.get("action_id", "")))
+	else:
+		snapshot_impact = {}
 	var was_staggered := enemy_is_staggered()
 	if _enemy != null and opponent.has("hp"):
 		var hp_max := maxf(1.0, float(opponent.get("hp_max", _enemy.max_hp)))
 		var hp := clampf(float(opponent["hp"]), 0.0, hp_max)
-		var dropped: bool = hp < float(_enemy.hp) - 0.001
+		var hp_before := float(_enemy.hp)
+		var dropped: bool = hp < hp_before - 0.001
 		_enemy.max_hp = hp_max
 		_enemy.hp = hp
+		if dropped and not snapshot_impact.is_empty():
+			host_snapshot_hp_applied.emit(str(snapshot_impact.get("action_id", "")), hp_before, hp)
 		if dropped and not quiet and _wild != null and hp > 0.0:
 			# Somebody else's blow. The body reacts so a teammate's hits are
 			# visible rather than the bar moving on its own.
@@ -2798,6 +3044,30 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		_begin_resolve("won" if won else "lost")
 
 
+func _apply_shared_trainer_round(opponent: Dictionary) -> void:
+	if not _realm_owned_opponent or _encounter_kind not in ["trainer", "boss"] or _enemy == null:
+		return
+	var round_number := int(opponent.get("round", 0))
+	var card: Variant = opponent.get("card", {})
+	# The director must have installed this exact host card on the mirror first.
+	if round_number < 1 or not card is Dictionary or card.get("uid") != _enemy.get("uid"):
+		return
+	if round_number > _shared_trainer_round:
+		_shared_trainer_round = round_number
+		_victory_awarded = false
+		if _waiting_shared_trainer_round and state == State.RESOLVING and _outcome == "won":
+			_waiting_shared_trainer_round = false
+			_resolve_timer = 0.0
+			_outcome = ""
+			state = State.ACTIVE
+			_bind_contact_spacing(true)
+	if round_number == _shared_trainer_round:
+		var continues: Variant = opponent.get("round_continues", false)
+		_shared_trainer_round_continues = continues is bool and continues == true
+		if not _shared_trainer_round_continues:
+			_waiting_shared_trainer_round = false
+
+
 func _sync_authoritative_wind(payload: Dictionary) -> void:
 	if not payload.has("wind"):
 		return
@@ -2818,6 +3088,108 @@ func note_caught_by(peer_id: int, species: String) -> void:
 		_begin_resolve("fled")
 
 
+
+## The consolidated VFX lane supplies this script and the five-argument
+## projectile wrapper. Older lane checkouts retain their four-argument path.
+## The host damage decision never depends on an effect node or its signals.
+func _shared_hit_feedback() -> Script:
+	const FEEDBACK_PATH := "res://scripts/combat/hit_feedback.gd"
+	return load(FEEDBACK_PATH) as Script if ResourceLoader.exists(FEEDBACK_PATH) else null
+
+
+func _confirm_host_contact(action_id: String) -> void:
+	if not action_id.is_empty() and _shared_hit_feedback() != null:
+		PROJECTILE.confirm_impact(get_tree(), action_id)
+
+
+func _admit_host_feedback(history: Dictionary, value: Dictionary, commit: bool = true) -> bool:
+	var feedback := _shared_hit_feedback()
+	return feedback != null and bool(feedback.call("admit", history, value, commit))
+
+
+func _new_impact(move_id: String, slot: String, damage: float, type_mult: float,
+		critical: bool, direction: Vector3, target_body: Node3D, action_id: String = "") -> Dictionary:
+	var feedback := _shared_hit_feedback()
+	if feedback == null: return {}
+	if action_id.is_empty():
+		_impact_serial += 1
+		action_id = "%s:impact:%d" % [_encounter_id, _impact_serial]
+	var height := float(target_body.call("body_height")) if is_instance_valid(target_body) and target_body.has_method("body_height") else 0.0
+	var profile: Dictionary = target_body.call("combat_config") if is_instance_valid(target_body) and target_body.has_method("combat_config") else {}
+	var target_instance := _enemy if target_body == _wild else active_creature()
+	var target_uid := str(target_instance.get("uid")) if target_instance != null else ""
+	var move: Dictionary = _moves.move(move_id)
+	var contact := Vector3.INF
+	if is_instance_valid(target_body):
+		contact = target_body.global_position if str(move.get("vfx", {}).get("archetype", "")) == "root_stone_spikes" else target_body.call("centre")
+	var cfg: Dictionary = feedback.call("config")
+	return feedback.call("receipt", action_id, move_id, move, slot, damage, type_mult,
+		critical, direction, height, float(profile.get("knockback_scale",
+		cfg.get("default_profile_knockback_scale", 1.0))), target_uid, contact)
+
+
+func _host_body_hitstop(body: Node3D, impact: Dictionary) -> void:
+	if is_instance_valid(body) and body.has_method("begin_combat_impact_hitstop"):
+		body.call("begin_combat_impact_hitstop", float(impact.get("hitstop_seconds", 0.0)))
+
+
+## Admission and damage belong to Director's host timer; this only draws launch.
+func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_enemy: bool = true) -> void:
+	var target_body := _wild if on_enemy else _ally_body
+	var target_instance := _enemy if on_enemy else active_creature()
+	if state != State.ACTIVE or not is_instance_valid(target_body) or target_instance == null: return
+	if str(launch.get("encounter_id", "")) != _encounter_id \
+		or str(launch.get("target_uid", "")) != str(target_instance.get("uid")): return
+	if striker == null: striker = _ally_body if on_enemy else _wild
+	if not is_instance_valid(striker): return
+	if not _admit_host_feedback(_seen_launch_actions, launch): return
+	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
+	var move: Dictionary = launch.get("move", _moves.move(str(launch.get("move_id", "")))).duplicate(true)
+	var context := launch.duplicate(true)
+	if move.has("actor_binding"):
+		# Match the existing presentation/impact key. Mastery keeps its accepted
+		# original in EncounterHost; this render copy never credits anything.
+		move["action_id"] = str(launch.action_id)
+		if _encounter_link == null or not _encounter_link.has_method("presentation_move_actor"): return
+		context["current_actor"] = _encounter_link.call("presentation_move_actor", launch, striker)
+		if move.get("slot") == "ultimate":
+			var session := get_node_or_null(^"/root/Session")
+			context["recipient_character_id"] = str(session.call("_local_character_id")) if session != null and session.has_method("_local_character_id") else str(move.get("actor_binding", {}).get("character_id", ""))
+	var presentation: Node3D = PROJECTILE.launch(parent,
+		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
+		move, context)
+	attack_launched.emit(on_enemy, launch, presentation)
+
+
+func _emit_host_impact(on_enemy: bool, impact: Dictionary, target_body: Node3D, own_hit: bool = true) -> void:
+	var bounds := _body_world_bounds(target_body)
+	var feedback := _shared_hit_feedback()
+	var cfg: Dictionary = feedback.call("config") if feedback != null else {}
+	var where := bounds.position + Vector3(bounds.size.x * 0.5,
+		bounds.size.y + float(cfg.get("numbers", {}).get("target_offset_m", 0.0)), bounds.size.z * 0.5)
+	var frozen := impact.duplicate()
+	if not own_hit: frozen["own_hit"] = false
+	frozen.make_read_only()
+	impact_confirmed.emit(on_enemy, frozen, where)
+
+
+## Observed peer contact does not write HP, grant energy, or pause local clocks.
+func present_host_peer_impact(impact: Dictionary) -> void:
+	if state != State.ACTIVE or not is_instance_valid(_wild) or _enemy == null: return
+	if str(impact.get("target_uid", "")) != str(_enemy.get("uid")): return
+	if not _admit_host_feedback(_seen_impact_actions, impact): return
+	_confirm_host_contact(str(impact.get("action_id", "")))
+	_host_body_hitstop(_wild, impact)
+	_flash_host_impact(_wild.call("centre"), str(impact.get("weight", "light")) in ["heavy", "ultimate"],
+		VFX.tint_for_type(_moves.type_of(str(impact.get("move_id", "")))), _wild,
+		float(impact.get("damage", 0.0)) / maxf(1.0, float(_enemy.max_hp)), impact, false)
+	if bool(impact.get("killed", false)):
+		_wild.call("play_faint")
+	elif float(_enemy.hp) > 0.0:
+		_play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO))
+	_emit_host_impact(true, impact, _wild, false)
+
+
 # --- what the HOST asks of this manager ------------------------------------------
 
 ## §5 steps 4-5, run on the host for ANY participant's strike -- its own
@@ -2829,9 +3201,11 @@ func note_caught_by(peer_id: int, species: String) -> void:
 ## `_enemy`, the host's own live instance, so `take_damage()` here IS the record
 ## and there is no second copy of the number to keep in step.
 func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
-		charged: bool = false) -> Dictionary:
+		charged: bool = false, impact_context: Dictionary = {}) -> Dictionary:
 	if _enemy == null:
 		return {}
+	# A delayed shared strike requires the consolidated receipt dependency.
+	if not impact_context.is_empty() and _shared_hit_feedback() == null: return {}
 	var cfg: Dictionary = PROGRESSION.config()
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
@@ -2849,13 +3223,43 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 		if stagger_crit:
 			damage *= _poise_crit_scale()
+	var frozen: Dictionary = impact_context.get("move", {})
+	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
+	var named := is_instance_valid(_wild) and _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
+	if slot == "ultimate" and named:
+		damage = minf(damage, float(_enemy.max_hp) * float(MATH.config().get("ultimate", {}).get("max_fraction_of_named_hp", 0.2)))
+	var hp_before := float(_enemy.hp)
+	_confirm_host_contact(str(impact_context.get("action_id", "")))
 	var killed: bool = _enemy.take_damage(damage)
 	var stagger_triggered := false
-	if not killed and _wild != null and _wild.has_method("apply_poise_damage"):
+	var protected := is_instance_valid(_wild) and _wild.has_method("protected_heavy_committed") and bool(_wild.call("protected_heavy_committed"))
+	if not killed and _wild != null and _wild.has_method("apply_poise_damage") and not protected:
 		var force_interrupt := charged and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true))
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
-	return {"damage": damage, "killed": killed, "hp": _enemy.hp,
+	if hp_before > float(_enemy.hp) and not killed and is_instance_valid(_wild):
+		if slot == "utility" and _wild.has_method("apply_landed_utility"):
+			var source := impact_context.get("striker_body") as Node3D
+			var actor: Dictionary = frozen.get("actor_binding", {})
+			if is_instance_valid(source):
+				_wild.call("apply_landed_utility", frozen, {"action_id": str(frozen.get("action_id", "")),
+					"encounter_id": str(actor.get("encounter_id", "")), "generation": int(impact_context.get("body_generation", 0)),
+					"source_uid": str(card.get("creature_uid", "")), "target_uid": str(_enemy.get("uid")),
+					"source_position": source.global_position, "target_position": _wild.global_position,
+					"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
+					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named})
+		elif slot == "ultimate" and _wild.has_method("hold_ultimate_reaction"):
+			_wild.call("hold_ultimate_reaction", maxf(0.0, float(frozen.get("ultimate", {}).get("presentation_seconds", 2.4)) - float(impact_context.get("travel_seconds", 0.0))))
+	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
+	var impact: Dictionary = {} if impact_context.is_empty() else _new_impact(move_id, slot, damage, type_mult,
+		stagger_crit, direction, _wild, str(impact_context.get("action_id", "")))
+	if not impact.is_empty():
+		var feedback := _shared_hit_feedback()
+		if is_instance_valid(_wild):
+			_wild.call("add_impulse", impact.direction, float(feedback.call("impulse_for", impact)))
+			_host_body_hitstop(_wild, impact)
+		_host_body_hitstop(impact_context.get("striker_body") as Node3D, impact)
+	return {"damage": damage, "killed": killed, "hp": _enemy.hp, "impact": impact,
 		"hp_max": _enemy.max_hp, "type_mult": type_mult,
 		"poise": float(_wild.call("poise_fraction")) * _enemy_poise_max() if _wild != null and _wild.has_method("poise_fraction") else _enemy_poise_max(),
 		"poise_max": _enemy_poise_max(),
@@ -2873,18 +3277,38 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 ## longer reach by describing its own move in the intent -- it names the move,
 ## and this decides what the move is.
 static func host_move_profile(moves: RefCounted, block: String, move_id: String,
-		mine: float, theirs: float, cooldown_multiplier: float = 1.0, reach_floor: float = 0.0) -> Dictionary:
+		mine: float, theirs: float, cooldown_multiplier: float = 1.0, reach_floor: float = 0.0,
+		frozen: Dictionary = {}) -> Dictionary:
 	var profile: Dictionary = MATH.config().get(block, {}).duplicate()
 	if not move_id.is_empty() and moves != null:
-		var move: Dictionary = moves.call("move", move_id)
+		var move: Dictionary = frozen if not frozen.is_empty() else moves.call("move", move_id)
 		for key in ["range", "cone_degrees", "windup", "recovery", "cooldown", "lunge"]:
 			if move.has(key):
 				profile[key] = float(move[key])
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+		profile["slot"] = str(move.get("slot", block.trim_prefix("player_")))
+		profile["is_quick"] = profile.slot == "quick"
+		profile["wind_cost"] = float(move.get("wind_cost", MATH.config().get("wind", {}).get(str(profile.slot) + "_cost", 0.0)))
+		profile["energy_cost"] = float(move.get("energy_cost", 0.0))
+		profile["energy_gain"] = float(move.get("energy_gain", 0.0))
+		profile["power"] = float(move.get("base_power", profile.get("power", 9.0))) * float(move.get("power_multiplier", 1.0))
+		for key: String in ["base_power", "utility", "ultimate", "actor_binding", "action_id", "mastery_rank", "breakthrough_count", "power_multiplier"]:
+			if move.has(key): profile[key] = move[key]
 	profile = MATH.with_player_pace(profile, block)
+	if profile.get("slot") == "ultimate":
+		# The visible sequence begins when the committed windup launches it.
+		profile["recovery"] = maxf(float(profile.get("recovery", 0.0)), float(profile.get("ultimate", {}).get("presentation_seconds", 2.4)))
 	profile = with_cooldown_multiplier(profile, cooldown_multiplier)
 	return floor_reach_for_bodies(profile, mine, theirs, reach_floor)
+
+
+## These authored families have a live host effect consumer. Others refuse
+## before authorization, spending, or presentation until their own path exists.
+static func live_move_supported(slot: String, move_id: String) -> bool:
+	if slot in ["quick", "charged"]: return true
+	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id): return false
+	return (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)
 
 
 ## Realm powers may shorten a move's cooldown, but never lengthen it and never
@@ -2913,6 +3337,7 @@ static func with_cooldown_multiplier(profile: Dictionary, multiplier: float) -> 
 ## report of anything.
 func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vector3,
 		facing: Vector3) -> bool:
+	_enemy_strike_connected = false
 	var pick: Dictionary = _encounter_link.call("host_pick_struck_participant",
 		_encounter_id, cfg, origin, facing)
 	if pick.is_empty():
@@ -2921,8 +3346,12 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		attack_missed.emit(false)
 		state_changed.emit()
 		return true
-	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")):
+	var durable_owner: Variant = _encounter_link.call("uses_durable_trainer_rewards", _encounter_id) \
+		if _encounter_link.has_method("uses_durable_trainer_rewards") else false
+	if int(pick.get("peer_id", 0)) == int(_encounter_link.call("local_encounter_peer_id")) \
+		and not (durable_owner is bool and durable_owner):
 		return false
+	_enemy_strike_connected = true
 
 	var card: Dictionary = pick.get("card", {}) as Dictionary
 	var prog_cfg: Dictionary = PROGRESSION.config()
@@ -2966,14 +3395,17 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var creature := active_creature()
 	if creature == null:
 		return
+	var canonical: bool = _durable_trainer_reward_owned()
+	if canonical and not _saved_actor_vitals_matches(creature, payload): return
+	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
 	# Host rolls the base strike; this character's one active relic applies
 	# once at the owning health mutation, also for a host on another island.
-	var damage := _incoming_owned_damage(float(payload.get("damage", 0.0)))
+	var damage: float = float(payload.get("damage", 0.0)) if canonical else _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
-	var stagger_crit := _consume_player_stagger_critical()
-	if stagger_crit:
+	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical else _consume_player_stagger_critical()
+	if stagger_crit and not canonical:
 		damage *= _poise_crit_scale()
-	var killed: bool = creature.take_damage(damage)
+	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage)
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
 	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
@@ -2990,8 +3422,60 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
-		CONDITION.note_faint(creature, CONDITION.config())
+		if not canonical: CONDITION.note_faint(creature, CONDITION.config())
 		_handle_active_faint()
+
+
+func _durable_trainer_reward_owned() -> bool:
+	if not _ordinary_reward_owned_id.is_empty() and _ordinary_reward_owned_id == _encounter_id: return true
+	if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("uses_durable_trainer_rewards"): return false
+	var owned: Variant = _encounter_link.call("uses_durable_trainer_rewards", _encounter_id)
+	return owned is bool and owned
+
+
+func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> bool:
+	if not is_inside_tree() or payload.get("creature_uid") != creature.get("uid") \
+		or not payload.get("actor_vitals_receipt") is Dictionary \
+		or creature.get("hp") != payload.get("actor_vitals_hp") \
+		or creature.get("fainted") != payload.get("actor_vitals_fainted"): return false
+	var game: Node = get_node_or_null(^"/root/Game")
+	var player: RefCounted = game.get("local") if game != null else null
+	var world: RefCounted = game.get("world") if game != null else null
+	if player == null or world == null: return false
+	var session: Node = game.get("session") as Node
+	if not is_instance_valid(session) or not session.has_method("_altar_current_epoch"): return false
+	var character: String = str(player.get("character_id"))
+	var namespace_id: String = str(world.get("reward_delivery_namespace"))
+	var actor_delivery: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
+	var marker: Variant = player.get("satchel_escrow").get(actor_delivery.delivery_id(namespace_id, character, str(payload.creature_uid)))
+	return actor_delivery.valid(marker, character, namespace_id) and marker.get("status") == "settled" \
+		and marker.get("world_id") == world.get("world_id") \
+		and marker.get("session_id") == session.call("_altar_current_epoch") \
+		and marker.get("receipt", {}).get("encounter_id") == _encounter_id \
+		and marker.get("receipt") == payload.actor_vitals_receipt and marker.get("creature_uid") == payload.creature_uid \
+		and marker.get("hp") == payload.actor_vitals_hp and marker.get("fainted") == payload.actor_vitals_fainted
+
+
+func apply_host_actor_heal(payload: Dictionary) -> void:
+	var creature: RefCounted = active_creature()
+	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
+		or not _durable_trainer_reward_owned() or payload.get("canonical_self_heal") != true \
+		or not _saved_actor_vitals_matches(creature, payload) or not payload.get("move") is Dictionary: return
+	var action_id: String = str(payload.actor_vitals_receipt.get("receipt_id", ""))
+	if action_id.is_empty() or _seen_impact_actions.has(action_id): return
+	_seen_impact_actions[action_id] = true
+	_move_awaiting_host = false
+	var delta: Dictionary = payload.get("heal_verdict", {}).get("delta", {})
+	_sync_authoritative_wind(delta)
+	var move: Dictionary = payload.move
+	_party_utility_cooldown[str(creature.get("uid"))] = maxf(0.0, float(move.get("cooldown", 0.0)))
+	_clear_move_input()
+	_pending_move = {}
+	_action = Action.RECOVERY
+	_action_timer = maxf(0.0, float(move.get("windup", 0.0)) + float(move.get("recovery", 0.0)))
+	_ally_body.call("play_attack")
+	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(str(move.get("move_id", "")))), _ally_body, 0.0)
+	state_changed.emit()
 
 
 ## The opponent's body and instance, for the host to read its own truth off.
@@ -3011,6 +3495,11 @@ func opponent_hp_pair() -> Array:
 ## the rest of the party having been "in the fight" without taking the risk.
 ## A fainted party member gets nothing — it did not fight.
 func _award_victory() -> void:
+	if _encounter_link != null and _encounter_link.has_method("uses_durable_rematch_rewards") \
+		and _encounter_link.call("uses_durable_rematch_rewards", _encounter_id) == true:
+		return # The host's retained rematch award owns this portable mutation.
+	if _encounter_kind in ["trainer", "boss"] and not _encounter_id.is_empty() and _durable_trainer_reward_owned():
+		return # This exact host-owned round supplies the journaled party award.
 	if _enemy == null:
 		return
 	if _victory_awarded:
@@ -3054,9 +3543,9 @@ func _award_victory() -> void:
 ## Movement is the dodge. The creature is driven straight from the stick, in camera
 ## space, exactly like the trainer — and is rooted while attacking.
 func _drive_player_creature() -> void:
-	if _ally_body == null:
+	if _ally_body == null or not combat_input_available():
 		return
-	if _action != Action.READY or _burst_awaiting_host:
+	if _action != Action.READY or _burst_awaiting_host or _move_awaiting_host:
 		return
 	# Aiming abandons your creature. It stops taking stick input while you line up the
 	# throw and the opponent does not stop attacking it — that is the entire cost
@@ -3085,24 +3574,21 @@ func _drive_player_creature() -> void:
 
 
 func _read_player_input() -> void:
+	if _move_awaiting_host or not combat_input_available(): return
 	var creature := active_creature()
 	if creature == null:
 		return
 
-	# While aiming, throw_aim.gd owns the input: Run cancels the aim rather than
-	# ending the fight, and the attack buttons release the orb. Reading them here
-	# too would make one press do two things.
+	# While aiming, ThrowAim owns X/F release and B/Escape cancel. The combat
+	# polls stay silent until it hands input back.
 	if bool(_throw.call("is_busy")):
 		return
 	if _burst_awaiting_host:
 		return
 
-	# CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS disengaging."
-	# `combat_run` keeps its keyboard Escape and lost its pad button, so the pad
-	# reaches this through `creature_recall` -- the same button that calls the
-	# creature out and puts it away outside a fight.
 	if _flee_pressed() or _flee_buffer_left > 0.0:
 		_flee_buffer_left = 0.0
+		_clear_move_input()
 		try_flee()
 		return
 
@@ -3110,8 +3596,11 @@ func _read_player_input() -> void:
 	# deliberately unbuffered: a press during attack/recovery/stagger cannot
 	# cancel that action or turn into surprising movement later.
 	if Input.is_action_just_pressed("jump"):
+		_clear_move_input()
 		request_burst(_combat_input_direction())
 		return
+	if _read_ultimate_taps(): return
+	if _pending_move.get("slot") == "ultimate" and _action != Action.READY: return
 
 	# Attack presses are RECORDED whatever state the creature is in, and fired by
 	# `_consume_buffered_attack()` the moment it is ready. Throws stay
@@ -3123,13 +3612,107 @@ func _read_player_input() -> void:
 		return
 
 	if _throw_pressed():
+		_clear_move_input()
 		_try_throw()
+
+
+func combat_input_available() -> bool:
+	return not is_inside_tree() or INPUT_OWNER.current(get_tree()) == null
+
+
+func _clear_move_input() -> void:
+	_buffered_attack = ""
+	_buffer_left = 0.0
+	_ultimate_waiting_release = false
+	_ultimate_armed_left = 0.0
+	_ultimate_face_release = false
+
+
+func ultimate_fraction() -> float:
+	var creature := active_creature()
+	if creature == null: return 0.0
+	return clampf(float(_party_ultimate.get(str(creature.get("uid")), 0.0)) / maxf(1.0, float(MATH.config().get("ultimate", {}).get("maximum", 100.0))), 0.0, 1.0)
+
+
+func ultimate_armed() -> bool:
+	return _ultimate_armed_left > 0.0
+
+
+func utility_cooldown() -> float:
+	var creature := active_creature()
+	return float(_party_utility_cooldown.get(str(creature.get("uid")), 0.0)) if creature != null else 0.0
+
+
+func utility_ready() -> bool:
+	var creature := active_creature()
+	if creature == null or not _uses_host_move_start(): return false
+	var move_id := str(creature.get("move_utility"))
+	return live_move_supported("utility", move_id) and _action == Action.READY and utility_cooldown() <= 0.0 \
+		and wind_value() >= float(_moves.move(move_id).get("wind_cost", 24.0))
+
+
+func _move_refusal(reason: String) -> void:
+	if Time.get_ticks_msec() < _move_refusal_until_ms: return
+	_move_refusal_until_ms = Time.get_ticks_msec() + 700
+	encounter_refused.emit("move_unavailable", reason)
+	if is_inside_tree():
+		var game := get_node_or_null(^"/root/Game")
+		if game != null: game.call("push_world_message", reason)
+
+
+## RB release starts the window. A face held as part of a chord must be
+## released before a new face edge can spend a meter; nothing repeats on hold.
+func _read_ultimate_taps() -> bool:
+	var face_held := _ultimate_face_held()
+	if _ultimate_arm_pressed():
+		_clear_move_input()
+		if _action != Action.READY: return true
+		if ultimate_fraction() < 1.0:
+			_move_refusal("Ultimate not ready")
+			return true
+		_ultimate_waiting_release = true
+		return true
+	if _ultimate_waiting_release:
+		if not _ultimate_arm_held():
+			_ultimate_waiting_release = false
+			_ultimate_armed_left = float(MATH.config().get("ultimate", {}).get("arm_window_s", 1.5))
+			_ultimate_face_release = face_held
+		return true
+	if not ultimate_armed(): return false
+	if _ultimate_face_release:
+		_ultimate_face_release = face_held
+		return true
+	if not _attack_pressed().is_empty():
+		_clear_move_input()
+		if _action == Action.READY:
+			_buffered_attack = "ultimate"
+			_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
+		return true
+	return false
+
+
+func _ultimate_arm_pressed() -> bool:
+	return Input.is_action_just_pressed("combat_ultimate_arm")
+
+
+func _ultimate_arm_held() -> bool:
+	return Input.is_action_pressed("combat_ultimate_arm")
+
+
+func _ultimate_face_held() -> bool:
+	return Input.is_action_pressed("combat_quick") or Input.is_action_pressed("combat_charged") or Input.is_action_pressed("combat_utility")
 
 
 ## Record a quick/charged press into the attack buffer for
 ## `_consume_buffered_attack()` to fire when the creature is ready.
 func _record_attack_press() -> void:
 	var pressed := _attack_pressed()
+	if pressed == "utility":
+		var creature := active_creature()
+		if creature != null and wind_value() + 0.001 < float(_moves.move(str(creature.get("move_utility"))).get("wind_cost", 24.0)):
+			_buffered_attack = ""
+			_move_refusal("Your creature needs more Wind.")
+			return
 	if pressed != "":
 		_buffered_attack = pressed
 		_buffer_left = float(MATH.config().get("flow", {}).get("input_buffer", 0.3))
@@ -3138,6 +3721,8 @@ func _record_attack_press() -> void:
 ## This tick's attack EDGE: "charged", "quick" or "". Split out, like
 ## `_flee_pressed()`, so a test can inject the edge.
 func _attack_pressed() -> String:
+	if Input.is_action_just_pressed("combat_utility"):
+		return "utility"
 	if Input.is_action_just_pressed("combat_charged"):
 		return "charged"
 	if Input.is_action_just_pressed("combat_quick"):
@@ -3155,7 +3740,8 @@ func _attack_pressed() -> String:
 ## guard, a pending burst, an open throw/aim and a catch in progress all own
 ## the attack buttons instead.
 func _buffer_attack_while_hitstopped() -> void:
-	if _input_guard > 0.0 or _burst_awaiting_host or _catch_phase != CatchPhase.NONE:
+	if not combat_input_available() or ultimate_armed() or _ultimate_waiting_release \
+		or _pending_move.get("slot") == "ultimate" or _input_guard > 0.0 or _burst_awaiting_host or _catch_phase != CatchPhase.NONE:
 		return
 	if active_creature() == null or bool(_throw.call("is_busy")):
 		return
@@ -3177,11 +3763,13 @@ func _combat_input_direction() -> Vector3:
 ## immediately. A hosted fight submits only direction; the host owns approval,
 ## the Wind spend, and the absolute value returned in the verdict and record.
 func request_burst(direction: Vector3) -> bool:
-	if state != State.ACTIVE or _action != Action.READY or _burst_awaiting_host:
+	if state != State.ACTIVE or _action != Action.READY or _burst_awaiting_host or _move_awaiting_host:
 		return false
 	if _throw == null or bool(_throw.call("is_busy")):
 		return false
 	var flat := Vector3(direction.x, 0.0, direction.z)
+	if flat.length_squared() <= 0.000001 and _ally_body != null:
+		flat = _ally_body.call("facing")
 	if flat.length_squared() <= 0.000001:
 		return false
 	if wind_value() + 0.001 < wind_cost("burst"):
@@ -3250,22 +3838,16 @@ func apply_host_burst_verdict(payload: Dictionary) -> void:
 	_begin_burst(direction, payload, int(payload.get("accepted_action", 0)))
 
 
-## The throw button, on both devices.
-##
-## CONTROLLER-MAP put the orb on the hotbar and throws it with interact, so
-## `combat_throw` no longer has a pad binding of its own; X reaches this
-## through `interact`. Keyboard F still works, and is what the on-screen
-## `throw` glyph names for a desktop player.
+## LT / F opens aim. Its X / F release is a separate aim-only action.
 func _throw_pressed() -> bool:
-	return Input.is_action_just_pressed("combat_throw") \
-			or Input.is_action_just_pressed("interact")
+	return Input.is_action_just_pressed("combat_throw")
 
 
 ## Keep a disengage press made on a tick whose input `_read_player_input()`
-## will not read. Aiming is left alone: there Run cancels the aim
-## (`throw_aim.gd` owns it), and buffering it too would make one press do two
-## things. A catch in progress is left alone too; the orb decides that fight.
+## will not read. Aim owns X release and B cancel; RT never buffers a flee
+## underneath it. A catch in progress is left alone too; the orb decides it.
 func _buffer_flee_while_input_unread(delta: float) -> void:
+	if not combat_input_available(): return
 	# Hitstop also freezes `_input_guard`, so the buffer holds too: a guard plus
 	# a hit or two landing in it could otherwise outlast `flow.flee_buffer`.
 	if _hitstop_left <= 0.0:
@@ -3279,8 +3861,7 @@ func _buffer_flee_while_input_unread(delta: float) -> void:
 
 ## The disengage button, on both devices. See `_read_player_input`.
 func _flee_pressed() -> bool:
-	return Input.is_action_just_pressed("combat_run") \
-			or Input.is_action_just_pressed("creature_recall")
+	return Input.is_action_just_pressed("combat_run")
 
 
 ## CL-W5(b), owner directive 2026-09-04-B amendment A-1: "you shouldn't be able
@@ -3346,24 +3927,35 @@ func _refuse_flee() -> void:
 ## branch consumes the buffer even when energy is short — a refused press
 ## should stay refused, not retry itself every frame until it surprises you.
 func _consume_buffered_attack() -> void:
-	if _action != Action.READY or _buffered_attack == "" or _input_guard > 0.0 \
-			or _burst_awaiting_host:
+	if not combat_input_available() or _action != Action.READY or _buffered_attack == "" or _input_guard > 0.0 \
+			or _burst_awaiting_host or _move_awaiting_host:
 		return
 	if bool(_throw.call("is_busy")):
 		return
 	var creature := active_creature()
 	if creature == null:
 		return
+	if _buffered_attack in ["utility", "ultimate"]:
+		var slot := _buffered_attack
+		_buffered_attack = ""
+		var move_id := str(creature.get("move_" + slot))
+		if not _uses_host_move_start() or not live_move_supported(slot, move_id):
+			_move_refusal("That move is not available in this build yet.")
+			return
+		if slot == "utility" and wind_value() + 0.001 < float(_moves.move(move_id).get("wind_cost", 24.0)):
+			_move_refusal("Your creature needs more Wind.")
+			return
+		_start_action({}, slot)
+		return
 
 	if _buffered_attack == "charged":
 		if _charged_cooldown > 0.0:
 			return
 		_buffered_attack = ""
-		if creature.spend_charged():
+		if _uses_host_move_start() or creature.spend_charged():
 			var charged := _move_profile("player_charged", str(creature.move_charged))
 			charged["is_quick"] = false
 			_start_action(charged, "charged")
-			_charged_cooldown = float(charged.get("cooldown", 1.2))
 		return
 
 	if _quick_cooldown > 0.0:
@@ -3372,7 +3964,6 @@ func _consume_buffered_attack() -> void:
 	var quick := _move_profile("player_quick", str(creature.move_quick))
 	quick["is_quick"] = true
 	_start_action(quick, "quick")
-	_quick_cooldown = float(quick.get("cooldown", 0.45))
 
 
 ## The config block for a slot, with the named move's own numbers laid over it.
@@ -3400,6 +3991,7 @@ func _move_profile(block: String, move_id: String) -> Dictionary:
 		# look without going back to the database for it.
 		profile["vfx"] = move.get("vfx", {})
 		profile["move_id"] = move_id
+		profile["slot"] = str(move.get("slot", block.trim_prefix("player_")))
 	profile = MATH.with_player_pace(profile, block)
 	return with_cooldown_multiplier(profile, active_move_cooldown_multiplier())
 
@@ -3418,12 +4010,48 @@ func active_move_cooldown_multiplier() -> float:
 	return clampf(float(power.get("cooldown_multiplier", 1.0)), 0.1, 1.0)
 
 
+func _uses_host_move_start() -> bool:
+	return _encounter_link != null and _encounter_link.has_method("supports_host_move_start") \
+		and _encounter_link.call("supports_host_move_start") == true \
+		and MATH.config().get("move_commit", {}).get("runtime_enabled") == true
+
+
 func _start_action(move: Dictionary, wind_slot: String = "") -> void:
+	if _uses_host_move_start():
+		if _move_awaiting_host: return
+		_move_awaiting_host = true
+		var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {
+			"kind": "move_start", "encounter_id": _encounter_id, "slot": wind_slot})
+		if verdict.get("pending") == true: return
+		if verdict.get("ok") == true: apply_host_move_start(verdict.get("delta", {}))
+		else: note_encounter_refusal(verdict)
+		return
 	var resolved := move.duplicate(true)
 	var exhausted := not wind_slot.is_empty() and not consume_wind(wind_slot)
 	resolved = with_wind_exhaustion(resolved, exhausted)
 	resolved["wind_exhausted"] = exhausted
-	_pending_move = _with_reach_for_the_bodies(resolved)
+	_begin_move_presentation(_with_reach_for_the_bodies(resolved))
+
+
+func apply_host_move_start(payload: Dictionary) -> void:
+	var awaiting := _move_awaiting_host
+	_move_awaiting_host = false
+	var creature := active_creature()
+	if not awaiting or _action != Action.READY or state != State.ACTIVE or creature == null or payload.get("creature_uid") != str(creature.get("uid")) \
+		or payload.get("encounter_id") != _encounter_id or not payload.get("move") is Dictionary: return
+	_sync_authoritative_wind(payload)
+	_apply_move_resources(payload)
+	var move: Dictionary = payload.move.duplicate(true)
+	move["accepted_action"] = int(payload.get("accepted_action", 0))
+	_begin_move_presentation(move)
+
+
+func _begin_move_presentation(move: Dictionary) -> void:
+	_clear_move_input()
+	_pending_move = move.duplicate(true)
+	var slot := str(move.get("slot", "quick" if move.get("is_quick") == true else "charged"))
+	if slot == "quick": _quick_cooldown = float(move.get("cooldown", 0.45))
+	elif slot == "charged": _charged_cooldown = float(move.get("cooldown", 1.2))
 	_action = Action.WINDUP
 	_action_timer = float(_pending_move.get("windup", 0.18))
 	# Face and lunge at the START of the wind-up, not at the strike. The lunge
@@ -3436,7 +4064,7 @@ func _start_action(move: Dictionary, wind_slot: String = "") -> void:
 	# animation starts here too, so the body moves when the motion does.
 	if _ally_body != null and _wild != null:
 		_ally_body.call("face_towards", _wild.call("centre"))
-		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 3.6)))
+		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 0.0)))
 		_ally_body.call("play_attack")
 	state_changed.emit()
 
@@ -3545,7 +4173,6 @@ func _on_enemy_strike() -> void:
 		else MATH.config().get("enemy", {})
 	var origin: Vector3 = _wild.call("centre")
 	var facing: Vector3 = _wild.call("facing")
-	var target: Vector3 = _ally_body.call("centre")
 
 	# F04: a named CHARGER's lunge has already travelled by the time it strikes
 	# (`wild_creature.gd`, combat.json `charger_lunge`), and it reports whether
@@ -3556,9 +4183,40 @@ func _on_enemy_strike() -> void:
 	var lunge: Dictionary = _wild.call("take_lunge_outcome") \
 		if _wild.has_method("take_lunge_outcome") else {}
 	var travelled := not lunge.is_empty()
-	if not travelled:
+	if not travelled and str(cfg.get("telegraph_shape", "")) != "marker":
 		_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
 		_wild.call("play_attack")
+	if _begin_enemy_pattern_cast(cfg): return
+	_resolve_enemy_strike(cfg, origin, facing, lunge)
+
+
+## Fan arrivals and persistent fields retain the original geometry. They use
+## the same host/local damage path as ordinary strikes, once per actual hit.
+func _begin_enemy_pattern_cast(cfg: Dictionary) -> bool:
+	if not cfg.has("pattern_attack_id") or str(cfg.get("telegraph_shape", "")) not in ["fan", "field"]:
+		return false
+	if _encounter_link != null and _encounter_link.has_method("is_encounter_host") \
+		and not bool(_encounter_link.call("is_encounter_host")): return true
+	var geometry: Dictionary = _wild.call("pattern_geometry")
+	if geometry.is_empty(): return true
+	var move: Dictionary = _moves.move(str(cfg.get("move_id", "")))
+	ENEMY_PATTERN_CAST.begin(_wild, cfg, geometry, move,
+		_resolve_enemy_pattern_contact.bind(weakref(_wild)), MATH.config().get("patterns", {}))
+	return true
+
+
+func _resolve_enemy_pattern_contact(profile: Dictionary, geometry: Dictionary, original: WeakRef) -> bool:
+	if state != State.ACTIVE or not is_instance_valid(_wild) or original.get_ref() != _wild \
+		or _wild.get("engaged") != true: return false
+	profile["_pattern_geometry"] = geometry
+	return _resolve_enemy_strike(profile, geometry.origin, geometry.heading, {})
+
+
+func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lunge: Dictionary) -> bool:
+	if state != State.ACTIVE or not is_instance_valid(_wild) or _enemy == null: return false
+	# A host-only simulation has no local party; its link routes all targets.
+	var creature := active_creature()
+	var travelled := not lunge.is_empty()
 
 	# Stage B lane 4.C, protocol §2 and §5, and 4.B's handover H1.
 	#
@@ -3571,24 +4229,30 @@ func _on_enemy_strike() -> void:
 	# The host swings for everybody; the answer arrives at
 	# `apply_host_enemy_hit()`.
 	if _encounter_link != null:
-		if not bool(_encounter_link.call("is_encounter_host")):
-			return
+		if _encounter_link.has_method("is_encounter_host") and not bool(_encounter_link.call("is_encounter_host")):
+			return false
 		if travelled and not bool(lunge.get("contact", false)):
 			# The charge reached nobody: a miss for everybody, decided here.
 			attack_missed.emit(false)
 			state_changed.emit()
-			return
+			return false
 		# On contact the host still picks who was struck, from where the
 		# charging body actually stopped.
 		if _host_resolve_enemy_strike_for_a_participant(cfg, origin, facing):
-			return
+			return _enemy_strike_connected
+	if creature == null or not is_instance_valid(_ally_body): return false
+	var target: Vector3 = _ally_body.call("centre")
 
 	var connects: bool = bool(lunge.get("contact", false)) if travelled \
 		else MATH.move_connects(cfg, origin, facing, target)
+	if not travelled and cfg.has("pattern_attack_id"):
+		var geometry: Dictionary = cfg.get("_pattern_geometry", _wild.call("pattern_geometry"))
+		connects = not geometry.is_empty() and geometry.get("blocked") != true and ENEMY_PATTERNS.pattern_contains(cfg,
+			geometry.origin, geometry.heading, geometry.marker, target, float(_ally_body.call("body_radius")))
 	if not connects:
 		attack_missed.emit(false)
 		state_changed.emit()
-		return
+		return false
 
 	# Ordinary wilds retain their quick-move fallback.  An opt-in named attack
 	# freezes its move id in the body's combat profile at telegraph start, and
@@ -3638,6 +4302,7 @@ func _on_enemy_strike() -> void:
 		# the second half.
 		CONDITION.note_faint(creature, CONDITION.config())
 		_handle_active_faint()
+	return true
 
 
 ## The active creature was just reduced to 0 HP. GATE-F-LEG-S04 (owner
@@ -3687,6 +4352,10 @@ func _handle_active_faint() -> void:
 ## emptied the bar -- the KO puff are fired from; `combat_vfx.gd` reads the
 ## struck instance's `fainted` flag here rather than needing a hook of its own.
 func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0) -> void:
+	_flash_host_impact(where, charged, tint, struck, damage_fraction)
+
+
+func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, struck: Node3D = null, damage_fraction: float = 0.0, impact: Dictionary = {}, shake_camera: bool = true) -> void:
 	# Parented into the WORLD, not to this manager. CombatManager is a plain
 	# Node, and a Node3D hung under one is outside the 3D transform chain: the
 	# burst was created correctly twelve times in a row and rendered none of
@@ -3694,7 +4363,7 @@ func _flash_at(where: Vector3, charged: bool, tint: Variant = null, struck: Node
 	# the fight, so it also cleans these up on its way out.
 	var host: Node = _arena if _arena != null else _player.get_parent()
 	VFX.hit(host, where, tint, charged, struck, damage_fraction)
-	_nudge_camera_on_landing(charged)
+	if shake_camera and impact.is_empty(): _nudge_camera_on_landing(charged)
 	var cfg: Dictionary = MATH.config().get("impact", {})
 	if not bool(cfg.get("enabled", true)):
 		return
@@ -3736,6 +4405,7 @@ func _nudge_camera_on_landing(charged: bool) -> void:
 ## adds the second refusal — somebody else's creature — on the same terms and
 ## through the same door, so no route into a throw can miss either.
 func _try_throw() -> void:
+	_clear_move_input()
 	if _enemy == null:
 		return
 	var allowed: bool = CATCH.can_be_caught(_enemy.fainted, _enemy_owned)
@@ -4083,7 +4753,7 @@ func _finish_catch() -> void:
 		_catch_succeeded = bool(confirmation.get("ok", false)) \
 			and bool(confirmation.get("caught", false))
 		if _catch_succeeded:
-			var canonical := CAPTURE_CODEC.decode(confirmation.get("creature", {}))
+			var canonical := CAPTURE_CODEC.decode(confirmation.get("creature", {}), confirmation.get("capture_traits", {}))
 			if canonical == null:
 				_catch_succeeded = false
 				note_encounter_refusal({"kind": "catch_finished", "code": "invalid_capture",
@@ -4203,6 +4873,8 @@ func _begin_resolve(outcome: String) -> void:
 	if state == State.RESOLVING:
 		return
 	_outcome = outcome
+	_waiting_shared_trainer_round = outcome == "won" and _realm_owned_opponent \
+		and _encounter_kind in ["trainer", "boss"] and _shared_trainer_round_continues
 	state = State.RESOLVING
 	_end_hitstop()
 	# W12-COMPANION-0904. The result beat: the fight is decided and nothing is
@@ -4223,6 +4895,11 @@ func _begin_resolve(outcome: String) -> void:
 
 
 func _finish() -> void:
+	if _outcome == "won" and _durable_trainer_reward_owned():
+		if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("ordinary_combat_round_release_ready") \
+			or _encounter_link.call("ordinary_combat_round_release_ready", _encounter_id) != true: return
+	_clear_move_input()
+	if is_inside_tree(): PROJECTILE.cancel_encounter(get_tree(), _encounter_id)
 	_end_hitstop()
 	state = State.INACTIVE
 	_disconnect_opponent_callbacks(_wild)
@@ -4357,6 +5034,8 @@ func _next_switchable_index(direction: int) -> int:
 ## being spammed into a stutter of creatures.
 func can_switch() -> bool:
 	return is_fighting() \
+		and combat_input_available() \
+		and not _move_awaiting_host \
 		and not is_aiming() \
 		and not is_resolving_catch() \
 		and not player_is_committed() \
@@ -4379,6 +5058,11 @@ func cycle_active(direction: int) -> bool:
 ## clamped: an illegal request is refused outright (returns false), never
 ## partially applied.
 func request_switch(index: int) -> bool:
+	if _durable_trainer_reward_owned():
+		if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("ordinary_actor_vitals_pending") \
+			or _encounter_link.call("ordinary_actor_vitals_pending", _encounter_id) == true:
+			_move_refusal("The original health change is still being saved.")
+			return false
 	if not can_switch():
 		return false
 	if index < 0 or index >= _party.size() or index == _active_index:
@@ -4387,6 +5071,7 @@ func request_switch(index: int) -> bool:
 	if member == null or not _can_take_the_field(member):
 		return false
 
+	_clear_move_input()
 	_activate_party_member(index)
 	_switch_lockout = float(MATH.config().get("switch", {}).get("lockout_seconds", 1.5))
 	creature_switched.emit(index)
@@ -4410,6 +5095,7 @@ func request_switch(index: int) -> bool:
 ## it is safe to zero here: `can_switch()`'s `player_is_committed()` guard
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
+	_move_awaiting_host = false
 	var incoming: RefCounted = _party[index]
 	_active_index = index
 
@@ -4700,3 +5386,139 @@ func arena_focus() -> Vector3:
 	if _player != null:
 		return _player.global_position
 	return Vector3.ZERO
+
+
+## Read actual occupied HUD geometry; no panel fade, layout or visibility is
+## changed by the camera. The Canvas transform keeps the rectangles correct
+## for the current viewport rather than assuming the scene's original offsets.
+func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
+	var extent := camera.get_viewport().get_visible_rect().size
+	var rectangles: Array[Rect2] = []
+	var hud_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
+	var invalid_hud: Array[String] = []
+	var hud := (_camera_rig as Node).get_parent().get_node_or_null(^"CombatHUD")
+	var controls: Array[Control] = []
+	if hud != null:
+		for path: String in cfg.get("hud_paths", []):
+			var control := hud.get_node_or_null(NodePath(path)) as Control
+			if control != null:
+				controls.append(control)
+			else:
+				hud_valid = false
+				invalid_hud.append(path)
+		for property: String in cfg.get("hud_dynamic_controls", []):
+			var value: Variant = hud.get(property)
+			if value is Control: controls.append(value)
+	var margin := clampf(float(cfg.get("hud_margin_px", 12.0)), 0.0, 64.0)
+	if not is_finite(margin): hud_valid = false
+	for control: Control in controls:
+		if not control.is_visible_in_tree(): continue
+		if not control.size.is_finite():
+			hud_valid = false
+			continue
+		if control.size.x<=0.0 or control.size.y<=0.0: continue
+		var transform := control.get_global_transform_with_canvas()
+		if not transform.x.is_finite() or not transform.y.is_finite() or not transform.origin.is_finite():
+			hud_valid = false
+			continue
+		if not extent.is_finite() or extent.x<=0.0 or extent.y<=0.0: continue
+		var lo := Vector2(INF, INF)
+		var hi := Vector2(-INF, -INF)
+		var finite_corners: bool = true
+		for corner: Vector2 in [Vector2.ZERO, Vector2(control.size.x,0.0), control.size, Vector2(0.0,control.size.y)]:
+			var point := transform * corner
+			if not point.is_finite():
+				finite_corners = false
+				break
+			lo = lo.min(point)
+			hi = hi.max(point)
+		if not finite_corners:
+			hud_valid = false
+			continue
+		var rect := Rect2((lo-Vector2.ONE*margin)/extent, (hi-lo+Vector2.ONE*margin*2.0)/extent)
+		if rect.has_area(): rectangles.append(rect)
+	var occluders: Array = []
+	var overflow: bool = false
+	var geometry_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
+	var centre: Vector3 = (_ally_body.global_position+_wild.global_position)*0.5
+	var radius: float = clampf(float(cfg.get("occluder_radius_m",80.0)),1.0,200.0)
+	var cap: int = clampi(int(cfg.get("occluder_limit",32)),1,64)
+	var candidates: Array[Node] = get_tree().get_nodes_in_group(&"creature_voice")
+	# The trainer is a real foreground body too. Never hide/move it to obtain
+	# a clear frame, and never substitute a capsule for its authored Model.
+	if is_instance_valid(_player) and not candidates.has(_player): candidates.append(_player)
+	for candidate: Node in candidates:
+		if not candidate is Node3D or candidate==_ally_body or candidate==_wild \
+			or not candidate.is_inside_tree() or candidate.is_queued_for_deletion() \
+			or not (candidate as Node3D).is_visible_in_tree() \
+			or (candidate as Node3D).global_position.distance_squared_to(centre)>radius*radius: continue
+		var model: Node3D = candidate.call("model_pivot") as Node3D if candidate.has_method("model_pivot") \
+			else candidate.get_node_or_null(^"Model") as Node3D
+		if not is_instance_valid(model) or not model.is_visible_in_tree(): continue
+		var bounds: AABB = RENDER_BOUNDS.measure(model)
+		if not bounds.position.is_finite() or not bounds.size.is_finite() \
+			or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0:
+			geometry_valid = false
+			continue
+		if occluders.size()==cap:
+			overflow = true
+			break
+		var pose: Transform3D = model.global_transform
+		if not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or absf(pose.basis.determinant())<=0.000001:
+			geometry_valid = false
+			continue
+		occluders.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":candidate.get_instance_id()})
+	# Conservative whole model envelopes replace the inscribed ellipsoid and
+	# sparse head/torso rays that missed feet. These bounds are not a claim of
+	# exact skinned pixels: blind review still owns whole-silhouette quality.
+	var subjects: Array = []
+	for body: Node3D in [_ally_body,_wild]:
+		var model: Node3D = body.call("model_pivot") as Node3D
+		var bounds: AABB = RENDER_BOUNDS.measure(model)
+		var pose: Transform3D = model.global_transform
+		if not bounds.position.is_finite() or not bounds.size.is_finite() \
+			or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0 \
+			or not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or absf(pose.basis.determinant())<=0.000001:
+			geometry_valid = false
+			continue
+		subjects.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
+			"points":FIGHT_CAMERA.box_points(bounds,pose)})
+	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
+		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
+		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
+
+
+## Whole oriented render envelopes are conservative sight constraints, not
+## exact mesh silhouettes. Human and creature foreground bodies participate;
+## fresh independent pixels still decide whether the actual view is readable.
+func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
+		context: Dictionary) -> Dictionary:
+	var hud_overlap := 0.0
+	for occupied: Rect2 in context.hud_rects:
+		for subject: Rect2 in [ally_rect,foe_rect]:
+			hud_overlap += subject.intersection(occupied).get_area()
+	var hidden: int = 0
+	if not bool(context.overflow) and bool(context.geometry_valid):
+		for subject: Dictionary in context.subjects:
+			for occluder: Dictionary in context.occluders:
+				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
+					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
+					hidden += 1
+					break
+	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
+	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
+	var occupied_records: Array = []
+	for rect: Rect2 in context.hud_rects:
+		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
+	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
+		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
+		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
+		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
+		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
+		"occluder_count":context.occluders.size(),"geometry_valid":bool(context.geometry_valid),
+		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}

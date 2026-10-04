@@ -17,6 +17,17 @@ const BUILD_MATERIAL_FINISH := preload("res://scripts/build/build_material_finis
 
 var _model: Node3D = null
 
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE:
+		return
+	# BuildMaterialFinish's private surface overrides can be hidden beneath
+	# the shared ghost tint. Detach them while the mesh instances are still
+	# alive, before their last Material refs die ahead of the renderer's
+	# instance cleanup. Tree exit alone may be a reparent, so keep its finish.
+	for mesh_instance in mesh_instances():
+		for surface in mesh_instance.get_surface_override_material_count():
+			mesh_instance.set_surface_override_material(surface, null)
+
 ## OF24: a data-driven point light for any buildable that wants one -- see
 ## `_build_light()`. Only the torch uses this today, but nothing here is
 ## torch-specific: a second lit buildable is a `light` block in

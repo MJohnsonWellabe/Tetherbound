@@ -1,0 +1,17 @@
+{
+  "base": "e0e23696551b5571d61492cbe919a7e77ca80d17",
+  "source_sha256": {
+    "tests/helpers/f48_net_proof.gd": "7a7d1d7546fde708a5f32af2d5686336fb98e138cc50b31bbc28a06b03562438",
+    "tools/net/proof_steps.gd": "d932f5020f923a9fe2fffbd34301b2a6284ed7007e13fc1824ee625d4dfc1655"
+  },
+  "portable_guest_input": "Explicit portable_only opt-in copies authentic characters subtree byte-for-byte (or existinggzip decoding), requires exactlyone actual character, uses production CharacterSave.apply outside a session; no world/locator grant or save rewrite",
+  "original_identity": "Pin actual production load_save returned character_id before firstadmission; production_join supplies this identity; fresh guest selects its original saved character with existing real title picker; all later registry checks stay pinned",
+  "legacy": "Existing load_save behavior unchanged without explicit portable_only opt-in",
+  "checks": {
+    "standalone_gdtoolkit_grammar": "PASS for both changed GDScript files",
+    "git_diff_check": "PASS"
+  },
+  "native_runtime": "UNRUN: ROOT serializes engine",
+  "profiles": "Actual retained2 v28 starter/boss characters now structurally compatible; real route profiles and 4-peer starts still OPEN",
+  "acceptance": "OPEN"
+}

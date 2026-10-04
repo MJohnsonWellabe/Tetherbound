@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "status": "SOURCE_ONLY_RUNTIME_PENDING",
+  "foundation_parent": "13edb2afac29928690ec7e7edb52590414883767",
+  "observed_smoke_head": "2fb3a0f2423ab25a78d3ec04a54395b856de0726",
+  "integration_head_at_static_check": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+  "files_changed": [
+    "scripts/world/building_prefabs.gd",
+    "tests/test_wall_foliage_normals.gd"
+  ],
+  "patch_sha256": "47540015e42629e0f81950e001f8f3e276b00846dfcc3473f504249cf598b5fc",
+  "read_only_integration_apply_check": 0,
+  "exact_runtime_source_minus_cache_equals_original": true,
+  "existing_test_bytes_unchanged": true,
+  "sources": [
+    {
+      "path": "scripts/world/building_prefabs.gd",
+      "smoke_source_sha256": "c810de6ea61ea843847e0e4d83ae27de96dff43375b97c41ab71749e7697a9f5",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true,
+      "changed_lf_sha256": "a851bb5a526b4665b93318bbdd0c355a405081531365d0b6d956f3d2a252cbc0"
+    },
+    {
+      "path": "tests/test_wall_foliage_normals.gd",
+      "smoke_source_sha256": "bdeebc6819798ffd6d7b4096d9d582fd880dce9b2a0237524ef41c50d399c09c",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true,
+      "changed_lf_sha256": "3b1c8352147acf5265bccf919542659832ef1346bf614e21f02047f9351e470f"
+    },
+    {
+      "path": "scripts/world/village.gd",
+      "smoke_source_sha256": "7c7732796e25f3982c1cf0b93b46894c78c733145c8737361539c48827deed0b",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    },
+    {
+      "path": "scripts/world/grandpa_house.gd",
+      "smoke_source_sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    },
+    {
+      "path": "scripts/world/props.gd",
+      "smoke_source_sha256": "c43de6e8ca58fb539982f99e4154ee1d4880aa9c8704b7b3817045adcc2fff80",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    },
+    {
+      "path": "scripts/world/playground_world.gd",
+      "smoke_source_sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    },
+    {
+      "path": "data/config/building_prefabs.json",
+      "smoke_source_sha256": "5e60ebd341184fe5946f115f6c9494c5d0163df08e69c5e0ae33d662f114c3b3",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    },
+    {
+      "path": "data/config/village.json",
+      "smoke_source_sha256": "24688edacadb6f368e4c62fed73bc923c3da98949fb841b67b15f7ea2f7aee9b",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    },
+    {
+      "path": "tests/smoke_gate_a_rest_torch.gd",
+      "smoke_source_sha256": "213817ebc106c69bcdb1f4e843745f4ea7de03212f4da3b93c471e0a7bac7dea",
+      "foundation_base_matches_smoke": true,
+      "integration_working_copy_matches_smoke": true
+    }
+  ],
+  "logs": [
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-2fb3a0f2423a-smoke_gate_a_rest_torch\\smoke.log",
+      "raw_sha256": "e5f0b08225171c8fb9b0e1ffd391e247ecc612796a79a042b8a93d5f350c9da2",
+      "spawn_line": 4178,
+      "post_spawn_gltf_loader_entries": 670,
+      "unique_gltf_paths": 33,
+      "completed": 669,
+      "per_path_counts": {
+        "res://assets/buildings/quaternius_medieval/Corner_ExteriorWide_Wood.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Corner_Exterior_Brick.gltf": 36,
+        "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf": 36,
+        "res://assets/buildings/quaternius_medieval/DoorFrame_Flat_WoodDark.gltf": 10,
+        "res://assets/buildings/quaternius_medieval/Door_1_Flat.gltf": 8,
+        "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf": 28,
+        "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf": 9,
+        "res://assets/buildings/quaternius_medieval/Overhang_Roof_Plaster.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Prop_Chimney.gltf": 3,
+        "res://assets/buildings/quaternius_medieval/Prop_Chimney2.gltf": 5,
+        "res://assets/buildings/quaternius_medieval/Prop_Crate.gltf": 1,
+        "res://assets/buildings/quaternius_medieval/Prop_ExteriorBorder_Straight1.gltf": 70,
+        "res://assets/buildings/quaternius_medieval/Prop_ExteriorBorder_Straight2.gltf": 68,
+        "res://assets/buildings/quaternius_medieval/Prop_Vine1.gltf": 7,
+        "res://assets/buildings/quaternius_medieval/Prop_Vine2.gltf": 5,
+        "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf": 33,
+        "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Roof_Front_Brick4.gltf": 8,
+        "res://assets/buildings/quaternius_medieval/Roof_Front_Brick6.gltf": 14,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_4x6.gltf": 4,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_6x10.gltf": 3,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_6x6.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_6x8.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_Door_Flat.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_Straight.gltf": 43,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_Window_Wide_Flat.gltf": 25,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_WoodGrid.gltf": 52,
+        "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Door_Flat.gltf": 8,
+        "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf": 92,
+        "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Window_Wide_Flat.gltf": 25,
+        "res://assets/buildings/quaternius_medieval/WindowShutters_Wide_Flat_Open.gltf": 13,
+        "res://assets/buildings/quaternius_medieval/Window_Wide_Flat1.gltf": 50
+      },
+      "last_load": {
+        "line": 6508,
+        "path": "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf"
+      }
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\bed-diagnostic-3e7bc7cfe0f2\\native.log",
+      "raw_sha256": "07a956b20951385fa73dd5fa984853aa43ad8340340cba356c348900535f5fa0",
+      "spawn_line": 4184,
+      "post_spawn_gltf_loader_entries": 908,
+      "unique_gltf_paths": 34,
+      "completed": 907,
+      "per_path_counts": {
+        "res://assets/buildings/quaternius_medieval/Corner_ExteriorWide_Wood.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Corner_Exterior_Brick.gltf": 56,
+        "res://assets/buildings/quaternius_medieval/Corner_Exterior_Wood.gltf": 48,
+        "res://assets/buildings/quaternius_medieval/DoorFrame_Flat_WoodDark.gltf": 16,
+        "res://assets/buildings/quaternius_medieval/Door_1_Flat.gltf": 14,
+        "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf": 28,
+        "res://assets/buildings/quaternius_medieval/Floor_WoodDark.gltf": 9,
+        "res://assets/buildings/quaternius_medieval/Overhang_Roof_Plaster.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Prop_Chimney.gltf": 8,
+        "res://assets/buildings/quaternius_medieval/Prop_Chimney2.gltf": 8,
+        "res://assets/buildings/quaternius_medieval/Prop_Crate.gltf": 1,
+        "res://assets/buildings/quaternius_medieval/Prop_ExteriorBorder_Straight1.gltf": 104,
+        "res://assets/buildings/quaternius_medieval/Prop_ExteriorBorder_Straight2.gltf": 102,
+        "res://assets/buildings/quaternius_medieval/Prop_Vine1.gltf": 8,
+        "res://assets/buildings/quaternius_medieval/Prop_Vine2.gltf": 7,
+        "res://assets/buildings/quaternius_medieval/Prop_WoodenFence_Single.gltf": 33,
+        "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Roof_Front_Brick4.gltf": 20,
+        "res://assets/buildings/quaternius_medieval/Roof_Front_Brick6.gltf": 16,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_4x4.gltf": 4,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_4x6.gltf": 6,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_6x10.gltf": 4,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_6x6.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Roof_RoundTiles_6x8.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf": 2,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_Door_Flat.gltf": 4,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_Straight.gltf": 54,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_Window_Wide_Flat.gltf": 32,
+        "res://assets/buildings/quaternius_medieval/Wall_Plaster_WoodGrid.gltf": 62,
+        "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Door_Flat.gltf": 12,
+        "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Straight.gltf": 118,
+        "res://assets/buildings/quaternius_medieval/Wall_UnevenBrick_Window_Wide_Flat.gltf": 36,
+        "res://assets/buildings/quaternius_medieval/WindowShutters_Wide_Flat_Open.gltf": 18,
+        "res://assets/buildings/quaternius_medieval/Window_Wide_Flat1.gltf": 68
+      },
+      "last_load": {
+        "line": 7231,
+        "path": "res://assets/buildings/quaternius_medieval/Prop_ExteriorBorder_Straight2.gltf"
+      }
+    }
+  ],
+  "recipe_module_counts": {
+    "crossing_hall_shell": 303,
+    "river_bank_perch": 8,
+    "workshop": 47,
+    "cottage_a": 33,
+    "cottage_b": 29,
+    "well": 20,
+    "fence_run": 3,
+    "doorstep": 2,
+    "wagon": 1,
+    "cart_repair_patch": 2,
+    "cart_repair_chocks": 2,
+    "square_oak_a": 1,
+    "square_oak_b": 1,
+    "farmhouse_shell": 74,
+    "inn": 80,
+    "castle": 132,
+    "road_gate_leaf": 4,
+    "mill": 78,
+    "footbridge": 16,
+    "ranger_station": 34,
+    "south_bridge": 11,
+    "quarry_foundation": 18,
+    "south_bridge_gate": 2,
+    "meadows_hall": 18
+  },
+  "native_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/main/node.cpp",
+      "lines": [
+        2612,
+        2621
+      ],
+      "claim": "default instantiation flag reloads and instantiates imported children"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/io/resource_loader.cpp",
+      "lines": [
+        255,
+        268,
+        738,
+        747
+      ],
+      "claim": "cache reuse returns before verbose format-load path"
+    },
+    {
+      "url": "https://docs.godotengine.org/en/stable/classes/class_resource.html",
+      "claim": "global cache removes resource after all references are released"
+    }
+  ],
+  "regression_selector": "tests/test_wall_foliage_normals.gd::test_repeated_prefab_placements_retain_modules_until_composer_release",
+  "runtime_execution": "NONE; coordinator owns parser/native/Godot/smoke/CI validation",
+  "performance_attribution": "Repeated actual load work is observed. Full240s cause, speedup, smoke success and criterion completion are unproved.",
+  "autosave_status": "No new rejected snapshot; cause remains unproved.",
+  "patch_reproduction": "git diff FOUNDATION_PARENT RETURNED_HEAD -- scripts/world/building_prefabs.gd tests/test_wall_foliage_normals.gd"
+}

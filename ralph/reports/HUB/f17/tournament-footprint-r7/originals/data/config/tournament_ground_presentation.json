@@ -1,0 +1,99 @@
+{
+  "_comment": "PRACTICE-MEADOW-HIERARCHY-0911. The Meadows home relic circle intentionally puts four large crescent shrines beside the tournament ground. From the production village walk-up, two of those identical stone silhouettes read first and made the bracket field look like a duplicated shrine display. This layer does not move or disguise the owner-requested circle. It gives the already-authored tournament its own vocabulary: one continuous ochre lists ring, one singular timber marshal canopy, and an asymmetric training-equipment group. Every piece is presentation-only; paths, interactions, encounter centres, arena bounds and every existing collider remain owned by their original systems.",
+  "arena": {
+    "centre": [
+      78,
+      44
+    ],
+    "radius_x_m": 6.65,
+    "radius_z_m": 5.75,
+    "segments": 72,
+    "ribbon_width_m": 0.54,
+    "lift_m": 0.035,
+    "colour": "#d2ad72",
+    "_why_colour": "X04 RED-AUDIT: #9b602d multiplied into dirt_path_Color rendered about (48,16,0), a maroon the Meadows blind judge read as red beside the home circle. Red/oxblood is reserved for Team Tether. This lighter straw multiplier keeps the same texture and ribbon and lands on ochre packed earth.",
+    "albedo_texture": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+    "_why": "The existing tournament fight centre recorded by the Band 1 prop contract. One continuous, terrain-sampled packed-earth ribbon makes a smooth event-scale ellipse. It has no raised slab mass and places no solid object on the combat floor."
+  },
+  "marshal_canopy": {
+    "at": [
+      85.2,
+      51.1
+    ],
+    "yaw_deg": 205.0,
+    "model": "Stall_Empty",
+    "dir": "res://assets/props/quaternius_fantasy",
+    "fit_height_m": 4.65,
+    "width_scale": 1.58,
+    "accent_models": [
+      "Banner_1_Cloth",
+      "Banner_2_Cloth"
+    ],
+    "light_colour": "#ffd19a",
+    "light_energy": 2.25,
+    "light_range_m": 4.8,
+    "light_below_roof_m": 0.62,
+    "lantern_emission_energy": 0.55,
+    "lantern_below_roof_m": 1.24,
+    "lantern_visible_side_offset_m": 0.62,
+    "lantern_hanger_length_m": 0.28,
+    "cloth_emission_floor": 0.07,
+    "cloth_backlight_colour": "#503829",
+    "cloth_tint": "#d8b66a",
+    "_why_cloth_tint": "X04 RED-AUDIT: the installed stall and Banner_*_Cloth MI_Banner surfaces carry oxblood COLOR_0 vertex colour. The canopy cloth ignores that tint and multiplies this Meadows straw ochre over the kit cloth texture instead. Material and colour only; no geometry.",
+    "_why_night_cloth": "MEADOWS-BANNER-TREATMENT-0912 / R7. The bounded 4.8m lantern pool remains close to the eaves. Round 05 proved that its light reached the lower swag but the roof's outward face still collapsed to black, while the white source clipped. The visible bulb emission stays at the accepted 0.55 and only this canopy's imported MI_Banner surfaces keep the accepted low 0.07 texture-preserving exposure floor plus warm thin-cloth backlight. Round 06 retained one geometric defect: the globe appeared as a white half-disc sliced flush by the lower valance. The globe now hangs 1.24m below the roof and 0.62m toward the visible interior side, with a short dark hanger, while the invisible practical light remains at its accepted roof-modelling position. This keeps the roof's atlas variation and sag judgeable at night without flattening daylight or touching the accepted road, Relay, and Hall materials.",
+    "_why": "One installed, production-authored market stall sits directly behind the bracket as a marshal's judging canopy. The board faces 205 degrees and the canopy shares that yaw; its centre is 1.12m behind the board, beyond the stall's measured half-depth at this fit, so the painted face stays unobstructed. This position retains 2.31m to the village boundary and 5.54m centre clearance from the nearest shrine. R3 scales the same single installed silhouette only across its frontage: about 5.1m wide and 4.65m tall, broad enough to outrank one 4.8m shrine without making a second stall clone or deepening its footprint toward the board/fence. Two installed cloth-only banner pieces hang beneath its outer eaves as canopy trim, not the freestanding flags the owner rejected around this ring. It is deliberately singular, timber and roofed rather than arched, so the training ground has a primary event read that cannot be mistaken for another cloned relic shrine."
+  },
+  "equipment": [
+    {
+      "name": "PracticeDummy",
+      "model": "Dummy",
+      "dir": "res://assets/props/quaternius_fantasy",
+      "at": [
+        98.0,
+        28.0
+      ],
+      "yaw_deg": -32.0,
+      "fit_height_m": 2.25
+    },
+    {
+      "name": "PracticeWeaponStand",
+      "model": "WeaponStand",
+      "dir": "res://assets/props/quaternius_fantasy",
+      "at": [
+        99.6,
+        29.1
+      ],
+      "yaw_deg": -62.0,
+      "fit_height_m": 2.0
+    },
+    {
+      "name": "PracticeShield",
+      "model": "Shield_Wooden",
+      "dir": "res://assets/props/quaternius_fantasy",
+      "at": [
+        98.4,
+        30.2
+      ],
+      "yaw_deg": -18.0,
+      "fit_height_m": 1.35
+    }
+  ],
+  "equipment_light": {
+    "at": [
+      100.0,
+      26.5
+    ],
+    "yaw_deg": 18.0,
+    "dir": "res://assets/props/quaternius_fantasy",
+    "stand_model": "CandleStick_Stand",
+    "head_model": "Torch_Metal",
+    "stand_height_m": 1.45,
+    "head_height_m": 0.62,
+    "light_colour": "#f0a057",
+    "light_energy": 1.35,
+    "light_range_m": 6.5,
+    "_why": "A single installed standing-light pair anchors the equipment verge after dark. The CandleStick_Stand is the visible base and Torch_Metal is the visible source; a small emissive flame sits inside that source, so the bounded OmniLight never floats unexplained. All pieces remain presentation-only."
+  },
+  "collision_enabled": false
+}

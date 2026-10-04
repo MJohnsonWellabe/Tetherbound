@@ -1,0 +1,32 @@
+{
+  "tested_head": "b672a1ed8c522f6ae23b4b4a4b1df173d611fe7d",
+  "recorded_utc": "2026-10-01T22:27:22.904282+00:00",
+  "initial_feature_sessions": "All five R3 initial feature sources consolidated and archived; shared production composition remains unfinished.",
+  "local_result": "FAIL: authoritative second import retains 16 CI-regex errors plus three ordinary ERRORs despite native exit zero.",
+  "compile_roots": [
+    {
+      "path": "autoload/world_state.gd",
+      "line": 283,
+      "error": "Expected parameter name",
+      "binding": "namespace"
+    },
+    {
+      "path": "scripts/data/redesign_state.gd",
+      "line": 47,
+      "error": "Expected loop variable name after for",
+      "binding": "trait"
+    },
+    {
+      "path": "scripts/ui/altar_service.gd",
+      "line": 100,
+      "error": "Expected variable name after var",
+      "binding": "trait"
+    }
+  ],
+  "unit_shards": "BLOCKED_BY_IMPORT; no native test failures claimed because unit suite has not run.",
+  "dedicated_heavy_jobs": "test_veg_corridor.gd, test_scatter_rules.gd, test_harvest.gd remain required separate CI coverage.",
+  "preflight": "Release tag Node 7/7 PASS; actionlint PASS. Node original observed stdout retained as summary only; no invented raw log hash.",
+  "repair_return": "Exact original import and direct parser diagnostics returned to existing R3 Foundation owner. No regex weakening or criterion credit.",
+  "limits": "Windows engine commands mirror setup and planned unit commands; Linux POSIX cleanup/export, service/hardware and acceptance proof are not covered.",
+  "main_status": "Separately verified main remains 30fcc38fc591d5df3a7cfb122b9da58445467021; scheduled CI6174 failed; R1 not landed."
+}

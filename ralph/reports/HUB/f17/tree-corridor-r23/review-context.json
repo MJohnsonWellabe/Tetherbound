@@ -1,0 +1,21 @@
+{
+  "request": "ROOT R23: implement a concrete full-capsule-width adjacent-facet approach on the actual frozen R22 mesh, inside the unchanged original 180 frames.",
+  "root_native_source_head": "f1929de4f869682f741b1ab34df66ab214a2f43d",
+  "root_native_source_directory": "D:/tetherbound/foundations-batch-check/.tmp/closeout/returned-smoke-f1929de4f869-_probe_scatter_tree_prompt_height",
+  "prior_authoritative_native_result": "R22 original 180-frame approach FAIL: no trunk contact; final prompt distance3.549401; unsticks0. Preserved raw log and full geometry bytes.",
+  "actual_backend": "GodotPhysicsDirectSpaceState3D",
+  "implementation": "Before the original walk, validate all 392 original grid triangles and consistent shared vertex heights. Use the exact settled player and registered .4m radius with original skin/angle. Sweep radius+skin+.22m against every steep triangle and boundary along six geometry-derived east legs and the final radial trunk approach; refuse absent clearance. Issue only ordinary left-stick headings at the original cadence, advance within .20m of each waypoint, and after the final waypoint aim at the same tree center. Original contact loop and success conjunction remain byte-identical.",
+  "geometry_reasoning": "The direct chord intersects steep terrain. Every reduced east leg clears steep facets by at least .699996948m; final ray by .632455532m, above .621000006m swept radius. Exact mesh-edge splitting gives12.045870868m piecewise ground route including contact ray. Shared edges are part of the walkable union; a .4m disc cannot fit an isolated unit right triangle. Upright full-capsule support envelope over all triangle faces is continuous on the cleared height graph; goal virtual footY5.806535981m, conservative prompt distance within .22m tracking tube2.088116475m < unchanged2.6m radius. Source virtual poses do not write the body.",
+  "route_selection": "One route derived from frozen native mesh geometry with eroded walkable union and continuous segment simplification. No native heading search, native pass ranking, placement selection, terrain flattening, or easier tree substitution.",
+  "meaningful_checks": {
+    "author_source_checks": 75,
+    "new_gd_cases": 3,
+    "original_gd_cases_preserved": 5,
+    "cases": "full capsule union vs direct blocked chord; missing/duplicated/nonfinite/discontinuous/new-steep/boundary fixtures; original radius/skin/angle/tree/spawn refusals",
+    "ideal_models": "SOURCE only, original5m/s and42m/s^2 at60Hz: flat137frames/.072237m tracking; terrain-constant-speed148frames/.046730m tracking. Neither is native movement, floor, collision or activation proof."
+  },
+  "production_change": "NONE: actual fixture geometry contains a full-width corridor. No indispensable production placement defect demonstrated.",
+  "unchanged": "same kept trees#886 CommonTree_2 scale1.6529272198677063; original fixed +Z4 spawn, 14x14 unit mesh/392triangles; registered full capsule/trunk and skin/slope/masks/exclusions;30settle/180walk/8neutral/3press/5release; actual Player/arbiter/prompt; grounded+actual trunk contact+activation+winning provider+unsticks0 conjunction; original fresh-opening caps and gates; R20-R22 seals.",
+  "native_execution": "UNRUN locally. No engine/parser/import/render/unit/CI/push/ROOT writes/new agent/new chat. ROOT owns F29 review and any native lane.",
+  "acceptance": "F17#4 OPEN; source/synthetic diagnostic only; original fresh opening and CI still required; R9 general recovery/query replacement HOLD."
+}

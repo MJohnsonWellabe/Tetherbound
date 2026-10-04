@@ -163,6 +163,11 @@ func _tick_waiting() -> void:
 	# that screen.
 	if tree.current_scene.is_in_group(&"title_screen"):
 		return
+	# Yielded startup may expose the scene before terrain and authored floors
+	# finish. Keep the full existing settle interval after real readiness.
+	if tree.current_scene.has_method("shell_build_complete") \
+			and not bool(tree.current_scene.call("shell_build_complete")):
+		return
 	_settle -= 1
 	if _settle > 0:
 		return

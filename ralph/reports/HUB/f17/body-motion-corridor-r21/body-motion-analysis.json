@@ -1,0 +1,23 @@
+{
+  "scope": "exact source conclusions plus explicitly simplified one-plane rational model; NO native run",
+  "effective_min_margin_m": 0.0001,
+  "recovery_pair_cap": 32,
+  "max_recovery_attempts": 4,
+  "raw_candidate_cap_before_filters": 2048,
+  "external_contact_cap": 8,
+  "filters": "other.layer & body.mask; reciprocal RID exceptions; exclude self/areas/soft bodies and original motion exclusions",
+  "first_initial_aabb_contained_in_original": true,
+  "second_contained_if_each_translation_axis_at_most": 0.0009000000474974513,
+  "whole_world_completeness_proven": false,
+  "initial_depth_inferred_from_travel": false,
+  "native_clearance_certified": false,
+  "admission": false,
+  "simplified_one_plane_model": {
+    "input_geometric_pair_depth_m": 0.0002714879810810089,
+    "first_virtual_travel_m": 0.00031899113873291017,
+    "second_virtual_travel_m": 4.134125157978516e-05,
+    "combined_virtual_travel_m": 0.0003603323903126953,
+    "remaining_MARGIN_contact_depth_m": 1.1155590768313598e-05,
+    "actual_native_result": "UNRUN; not substituted for original raw result"
+  }
+}

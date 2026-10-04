@@ -120,7 +120,7 @@ func is_unlocked(game: Node) -> bool:
 ## intentionally retained: it is the player's record of completing the prior
 ## realm, not a consumable tooth snapped off in this one lock.
 func try_unlock(game: Node) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	if is_unlocked(game):
 		return true
@@ -148,7 +148,7 @@ func try_unlock(game: Node) -> bool:
 ## Returning true means the request was issued; the asynchronous transition is
 ## still Game's responsibility.
 func try_enter(game: Node) -> bool:
-	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
 		return false
 	if game == null or not is_unlocked(game) or destination_realm == "":
 		return false
@@ -183,6 +183,14 @@ func _on_activated() -> void:
 
 func _refresh(game: Node) -> void:
 	if not _built or _prompt == null:
+		return
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings(game):
+		var portals: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
+		var reason := str(portals.get("retired_crossing_reason", "Use the Crossing Hall portals.")) if portals is Dictionary else "Use the Crossing Hall portals."
+		_prompt.call("configure", reason, interaction_radius, true)
+		_prompt.set("actionable", false)
+		_set_open_visual(false, false)
+		set_process(false)
 		return
 	_observed_progression = _progression(game)
 	_progression_revision = int(_observed_progression.get("revision")) if _observed_progression != null else -1

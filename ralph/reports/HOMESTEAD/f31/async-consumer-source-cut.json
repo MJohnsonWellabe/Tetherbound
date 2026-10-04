@@ -1,0 +1,40 @@
+{
+  "kind": "bounded_owned_async_consumer_successor",
+  "source_commit": "efb9a77b25accd63ae1c664945499a7f891c666a",
+  "predecessor_package": "09aa5402db311de1a533e6dc0b5e17a7f383d7f5",
+  "branch": "tb/f31",
+  "files": [
+    {
+      "path": "scripts/ui/craft_panel.gd",
+      "before_git_sha256": "dd7a0ebc859a4bc4003513bef833049c01cac40d18c7f5491ff7ec73b762320e",
+      "after_git_sha256": "6c9b49eaf258f4bc1ed0cbd6f6e0c3227d28696e716cc5524c0438b080009b69",
+      "working_sha256": "a9f0518996a85ade1a1363ba28254adf100961d96c767c0a41fe3813ef063bed",
+      "after_git_blob_oid": "2623488e2ea44ac9410ae30129c139b6a9821d06"
+    },
+    {
+      "path": "scripts/build/build_placer.gd",
+      "before_git_sha256": "686bc450ba97a5e074e6c103a4da6a7b089fe41d356af5ade7c09db3a88553ee",
+      "after_git_sha256": "d8ee94aa2d3a112b648d9dbeb572a984b65cfed77d688d41811a958ff36998fe",
+      "working_sha256": "95469e7a5fcf54ed1f9923446f8a39b34367b217d73af45255c7bb59f2a32607",
+      "after_git_blob_oid": "afa16c7dc848c6db2b52ea592595ec06a63f9fd4"
+    }
+  ],
+  "engine_or_tests_run": false,
+  "runtime_acceptance": "OPEN",
+  "flags": "unchanged OFF; data files unchanged",
+  "shared_writes": false,
+  "signal_contract": "homestead_personal_view_completed() no args; cache notification only",
+  "view_keys": [
+    "character_id",
+    "registry_revision",
+    "inventory",
+    "party",
+    "equipment",
+    "redesign_character",
+    "farm_stock_revisions"
+  ],
+  "refresh": "deferred/coalesced; re-read authenticated current producer cache; retain original operation/intent/source/revision; preserve UI status/controller focus",
+  "removed_source_retry": "WeakRef may resolve null; original journal reconciliation comes before fresh source validation; null may never start a new mutation",
+  "independent_delta_review": "PASS_FOR_FLAG_OFF_ASYNC_CONSUMER_DELTA on efb9a77b25accd63ae1c664945499a7f891c666a; existing reviewer reused; zero acceptance credit",
+  "review_evidence": "async-consumer-review/verdict.json"
+}

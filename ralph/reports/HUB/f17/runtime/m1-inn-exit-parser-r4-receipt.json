@@ -1,0 +1,16 @@
+{
+  "source": "9510eaa477aef013109d6c591b06f06d3e753784",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--check-only",
+    "--script",
+    "res://tests/helpers/meadows_earned_team_segment.gd"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\village-m1-profile-r4",
+  "native_exit": 0,
+  "elapsed_seconds": 1.3290000000270084,
+  "scope": "Existing genuine fresh prefix only: title through tournament. New actual resident door threshold/front/field route within original budget; no later biome proof."
+}

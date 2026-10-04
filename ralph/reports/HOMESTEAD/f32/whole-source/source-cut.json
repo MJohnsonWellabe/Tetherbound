@@ -1,0 +1,164 @@
+{
+  "status": "frozen_owned_source_not_accepted",
+  "baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+  "branch": "tb/f32",
+  "source_paths": [
+    {
+      "path": "data/config/cloudreach_resources.json",
+      "git_blob": "fa1bc2eb6a4f02aa43732f5ca1ee2f76b3a6a1ba",
+      "git_content_sha256": "1456f99da14b69e39aa9f8a109f518b8fd8adcb3c653f7959570dda575372dd3",
+      "working_content_sha256": "53dc2e5d549c2d3aa86b7538aaa76faa3789872984b3f0dcda34edb66aaa4fe5"
+    },
+    {
+      "path": "data/config/essence_nodes.json",
+      "git_blob": "e62919876d824ab84151a8654ae9c194af2ffdd6",
+      "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+      "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+    },
+    {
+      "path": "data/config/f32_runtime.json",
+      "git_blob": "72d61de8941f70370dd82225598b1b8fcee06e8e",
+      "git_content_sha256": "222b02ad2e169888b10a93763106e077aff7fab2ad46ea0061ad102e458da36d",
+      "working_content_sha256": "988ee7bb134fd97cb9666115c2420e9468d50d785f5e81f1345e797a7467a1e9"
+    },
+    {
+      "path": "data/config/farm.json",
+      "git_blob": "0231d2443c83f1ba431d84569fec97e53607faa2",
+      "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+      "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+    },
+    {
+      "path": "data/config/harvest.json",
+      "git_blob": "b7d571a472bc9a014bd061e47668fa9899d9fcfa",
+      "git_content_sha256": "0f5a05d9f1d78b5a6e42f03bac32898e8e86935ffa70255d663daa52c0d2346e",
+      "working_content_sha256": "63ecd5af0af14922f5d7957d54b1636b41937306cc326ec1e424d6b8a0979114"
+    },
+    {
+      "path": "data/config/shed_drops.json",
+      "git_blob": "7267a6a8349d03d90c712badf0d688db16bd88c2",
+      "git_content_sha256": "9edfffc7c1bc4e5c4153d0d4c5075bd3d3d33e63fdad4bee7b2231eca9ce0a78",
+      "working_content_sha256": "08acf0d7724eb6b0c8427bbfae451ebf9fbffa098aca84b22efe2a505026a48d"
+    },
+    {
+      "path": "data/config/stormwood_harvests.json",
+      "git_blob": "f5d667ee64745dbb0fabeb4108cf06f01f87e689",
+      "git_content_sha256": "8a1743628b93fbca011ea6959c0b396c9194b709fe483be77944d16ebcd8d3d2",
+      "working_content_sha256": "3274b95ce552d7ef2e60fcaf1ddaf411ecdb40004d884b4d28e9d53915329627"
+    },
+    {
+      "path": "data/config/water_crafting.json",
+      "git_blob": "db78a1ccac32044992ffeb210a445e7c92baecfb",
+      "git_content_sha256": "d121bb95f2739e00538d7268a1c5313d6467d2e825ce3c78bfb02542128c923e",
+      "working_content_sha256": "9800b4f7e78cd0c631e035e19ce59b886141fc0a6bb7d0d6438369573478a6df"
+    },
+    {
+      "path": "data/config/water_pickups.json",
+      "git_blob": "6e6c37e20f0f6730414e94a64bc98f7aa68c04da",
+      "git_content_sha256": "7a7b5d2df12681996c558912ed24c92664854b90a80b50edb80f26d70e8d0459",
+      "working_content_sha256": "75611547281ec26ce083130c916047a9452df60a2ac4ce7d20cbc4272b1a6aac"
+    },
+    {
+      "path": "data/config/water_resource_models.json",
+      "git_blob": "ab848bfb1a3d7206d9b08e013f2f2d3466f8fa15",
+      "git_content_sha256": "f662dd8a72bd54da83d83a1c23a7c32d1f351b3e7ee27c1f4eb5d594266e7c1c",
+      "working_content_sha256": "6d1c2df76e9dfd6fa4304e26526c26b68e01668123e5a4780509479ef1202cbf"
+    },
+    {
+      "path": "data/items/f32_materials.json",
+      "git_blob": "8ce778afc9bcdf09d8a86feb60a2d8e6ee652baf",
+      "git_content_sha256": "4b7f4e2fe705632495f69eb1f8ac5545547e947ecb1418a4aeee8897345d20ff",
+      "working_content_sha256": "a70942c0a7e3edcf4042c1a302109c150ec20fe2087dfa0c912c2eef6e1e0a6b"
+    },
+    {
+      "path": "data/recipes/recipes_forge.json",
+      "git_blob": "5428fd3e275eef28d22c074a38d21c761b300451",
+      "git_content_sha256": "31b004ed464502b56a9d1788b78b5d9882e245da62617f91f8f65fc4e0c2e378",
+      "working_content_sha256": "98ce40540e2776a733750f74bc63fb5e60740870b94d96fc739a5d0431c8c7fb"
+    },
+    {
+      "path": "scripts/world/essence_node_catalog.gd",
+      "git_blob": "aa6d85287132dafec9ee58c21ca5bd23f7ca154c",
+      "git_content_sha256": "57abe67e92cf0c5e06f8b510f22049a7cdca1e676b6d994feab68ea389ac0521",
+      "working_content_sha256": "57abe67e92cf0c5e06f8b510f22049a7cdca1e676b6d994feab68ea389ac0521"
+    },
+    {
+      "path": "scripts/world/essence_node_mount.gd",
+      "git_blob": "78f862d41feaedcffe6ce74ccf8589b7a7f56c5e",
+      "git_content_sha256": "db9f3f0ab7e9b9b2c049d75c8d96887ab7360c8108bf521902344ffd87a8159c",
+      "working_content_sha256": "db9f3f0ab7e9b9b2c049d75c8d96887ab7360c8108bf521902344ffd87a8159c"
+    },
+    {
+      "path": "scripts/world/f32_catalogue_registration.gd",
+      "git_blob": "98fcf1c0df84efe73bac9fe689b2ccfc030a6188",
+      "git_content_sha256": "1f5b973502f5ee23a110e827bd27010ad2e708e5685ef148134efdba80587fd0",
+      "working_content_sha256": "1f5b973502f5ee23a110e827bd27010ad2e708e5685ef148134efdba80587fd0"
+    },
+    {
+      "path": "scripts/world/f32_source_actions.gd",
+      "git_blob": "54a9c9ad72353cd4ecd1f5f8704d8797f230237c",
+      "git_content_sha256": "6e7052528353bf228831681228c8cddbf4892766f6348ace4097d3cfb96e10d6",
+      "working_content_sha256": "6e7052528353bf228831681228c8cddbf4892766f6348ace4097d3cfb96e10d6"
+    },
+    {
+      "path": "scripts/world/f32_source_service.gd",
+      "git_blob": "de1c97880febb36fe470b225dba379d5425b56ad",
+      "git_content_sha256": "7bbde420f88cb84dd60611c6b69e60378f3e34e3f56c9d13c22d8760c2cd846c",
+      "working_content_sha256": "7bbde420f88cb84dd60611c6b69e60378f3e34e3f56c9d13c22d8760c2cd846c"
+    },
+    {
+      "path": "scripts/world/f32_world_mount.gd",
+      "git_blob": "4a87a0975d640a5e4f8676918042092df3157248",
+      "git_content_sha256": "67947436f637f54839660d3d25226116d1724fcb3ab84e1b0be5161aea7d07b1",
+      "working_content_sha256": "67947436f637f54839660d3d25226116d1724fcb3ab84e1b0be5161aea7d07b1"
+    },
+    {
+      "path": "scripts/world/farm_logic.gd",
+      "git_blob": "b3b7816740872036d7de208ef01f6d1c3a731f35",
+      "git_content_sha256": "1d1236a142245d993f872b432fdafa7c81da6a0808d5106b401253253dd8733c",
+      "working_content_sha256": "1d1236a142245d993f872b432fdafa7c81da6a0808d5106b401253253dd8733c"
+    },
+    {
+      "path": "scripts/world/harvest_node.gd",
+      "git_blob": "2987b3921219112bf3938ff8477bfdc3faa9cd3f",
+      "git_content_sha256": "b142b3d252a34fd2a02609526929e3c72a80cae8fabe4e2b7b842078f227d8b8",
+      "working_content_sha256": "b142b3d252a34fd2a02609526929e3c72a80cae8fabe4e2b7b842078f227d8b8"
+    },
+    {
+      "path": "scripts/world/homestead_refining.gd",
+      "git_blob": "1c9481a971f4b150dfa4f1ff32adb00d66be4ff1",
+      "git_content_sha256": "af5eb48c682631ad6bf13ca4c780f7eae99fbf4e4cc907558b630656b94a04c7",
+      "working_content_sha256": "af5eb48c682631ad6bf13ca4c780f7eae99fbf4e4cc907558b630656b94a04c7"
+    },
+    {
+      "path": "scripts/world/renewable_site_catalog.gd",
+      "git_blob": "5758824bbd48ef464c93df36909e128dab3153d4",
+      "git_content_sha256": "ba9dd3e919cc5934a05b297625f37acd9c8641c139a1134f74a226b41f5fec65",
+      "working_content_sha256": "ba9dd3e919cc5934a05b297625f37acd9c8641c139a1134f74a226b41f5fec65"
+    },
+    {
+      "path": "scripts/world/shed_drop_rules.gd",
+      "git_blob": "b1d5c81ca5b79c9d6b5df452aaa4d0f58eb7154c",
+      "git_content_sha256": "e82a138ce6b43abeae97592df30e33966264db95654a8dfa39109bdd98a26c95",
+      "working_content_sha256": "e82a138ce6b43abeae97592df30e33966264db95654a8dfa39109bdd98a26c95"
+    },
+    {
+      "path": "scripts/world/type_crop_plot.gd",
+      "git_blob": "fe92c133961815f8b50ec38eeb8e1a68129a5b6c",
+      "git_content_sha256": "b4560dc6262db6fbc5a11b8dd9f6c132b6d2110ef9b6e998c547d4063313146b",
+      "working_content_sha256": "b4560dc6262db6fbc5a11b8dd9f6c132b6d2110ef9b6e998c547d4063313146b"
+    }
+  ],
+  "canonical_working_set_sha256": "ce3ee8a1e460a4d4a19805ac19051a95ae49552b4a3581d83442560d9d0f7899",
+  "runtime_flags": "OFF",
+  "engine_executed": false,
+  "shared_patch": {
+    "path": "autoload/item_db.gd",
+    "before_sha256": "a18d85e2aceca5243d94bebd057b8661cf01a5e194437a23f6ce16589d7d84f1",
+    "after_sha256": "fece530d82f68d35b908488c9b991a66c034f417218c3bde6ac02a24358481f6",
+    "patch_sha256": "f90f0d6a26198941fce0d5e8c851b25f0e8e952aa72611be96a5fe7088f5cd99",
+    "applied": false,
+    "owner": "Foundation",
+    "note": "Overlay only. No generic Forge recipes; exact baseline must be composed after Foundation F27/F28 loaders."
+  }
+}

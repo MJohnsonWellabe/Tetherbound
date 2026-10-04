@@ -1,0 +1,339 @@
+{
+  "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+  "branch": "tb/r3-f48",
+  "permissions": {
+    "approval_policy": "never",
+    "sandbox_mode": "danger-full-access"
+  },
+  "changed_source": [
+    {
+      "path": "tests/helpers/f48_net_proof.gd",
+      "sha256": "9f5dbcb2e1efe9bb3f3995bf67c0a582eeb5f34213d2400b2751b12414aa33b1"
+    },
+    {
+      "path": "tests/smoke_net_f48_loop.gd",
+      "sha256": "d98d3a858ae34f8ff77c63c3cfd04d406b5e7ffb9ddf7ab9c2e6fc2cb985c596"
+    },
+    {
+      "path": "tests/smoke_net_f48_transactions.gd",
+      "sha256": "efffeacbef7ecaa81f9a514a2b7a6cb0208fcacf2467e1dccfb227adb22c64ad"
+    },
+    {
+      "path": "tests/smoke_net_f48_boss_four.gd",
+      "sha256": "37bb76f124635300c07f10525b31d4099af67a3292fb146cd6c17cd121fdd23b"
+    },
+    {
+      "path": "tests/smoke_net_f48_behind.gd",
+      "sha256": "c880e5f578b10f0801cf273c7bebdec387018ba0c6889fe6f7ca47e3224c212a"
+    },
+    {
+      "path": "tools/net/proof_steps_f48.gd",
+      "sha256": "cb734631fc9438cd23c00fedba03eeca65506616eeae2a19adcfcd9b5f955350"
+    },
+    {
+      "path": "tools/net/proof_peer_runner.gd",
+      "sha256": "b6ca3f63c54a0dc21141744b135f230acd29c49b8fb9993ae41a795cacabc40b"
+    }
+  ],
+  "overlap": [
+    "tools/net/proof_peer_runner.gd"
+  ],
+  "dependency_contract_digests": [
+    {
+      "path": "autoload/game_state.gd",
+      "sha256": "acdfc09400384745bf17666a14651ad08be38fd301af33bba1df053a461f4bc4"
+    },
+    {
+      "path": "autoload/player_state.gd",
+      "sha256": "8d0d35e9b8444bea54483bb2e78b574f37934485292f1aed5519c167f782d849"
+    },
+    {
+      "path": "autoload/world_state.gd",
+      "sha256": "670d9f6fbe7c1130f5a79fe6ec689bdabb371adae99abc6d18c53a07ffdc14ab"
+    },
+    {
+      "path": "scripts/net/session.gd",
+      "sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa"
+    },
+    {
+      "path": "scripts/net/peer_registry.gd",
+      "sha256": "6c7016958f667579e90058ea49fb0e978caf4ebf75325c3962cfe9a38227fc10"
+    },
+    {
+      "path": "scripts/net/reward_delivery.gd",
+      "sha256": "329018e95dc60a6e259f4b18b4a676dc2aedb02f8e156f0b678716285b5e4b6d"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "sha256": "f39ce5849116c0aee9474f7dd53f4052ff88642d72c52204c44a0883320af1d4"
+    },
+    {
+      "path": "scripts/net/ledger_rpc.gd",
+      "sha256": "9faa126ace30cfbec097a9d6973f791cfd9c98b0f1cf55d1f1d1de6c5db65053"
+    },
+    {
+      "path": "scripts/net/encounter_rewards.gd",
+      "sha256": "586b95dd241bc5431a3ae1bdbcdad3cba304874446f6d077e5ef05e83d024839"
+    },
+    {
+      "path": "scripts/save/character_save.gd",
+      "sha256": "cf8361f7b93a34915cc3c55f80eb081f4843e63be19e703ce73e384709f1e425"
+    },
+    {
+      "path": "scripts/save/world_save.gd",
+      "sha256": "7f07290ce6d0045b0187768bf042fd3e73b216898d07f3b001f3171484df4b9a"
+    },
+    {
+      "path": "scripts/save/atomic_save_file.gd",
+      "sha256": "26fb9f78ec5ea6c913b72b72f6544da78083db7bcb66f6005b5dc8158de7570d"
+    },
+    {
+      "path": "scripts/masters/breakthrough_service.gd",
+      "sha256": "6e08236b29b73f9dd5a950815371e57f25a4f7d244deac86e30f09c9b49926d6"
+    },
+    {
+      "path": "scripts/world/realm_heart_shrine.gd",
+      "sha256": "7dd6b3a569fbe9f1a6334be0c6806c1c3204a64b0dfb29458445fa0394927007"
+    },
+    {
+      "path": "data/config/stations.json",
+      "sha256": "25cd64cb9fa22416aa2ef13bacabb5a22bc2bb983923308b73e6f9a1d7db8c11"
+    },
+    {
+      "path": "data/schema/character_state.schema.json",
+      "sha256": "3dbd212199b5041bd38440b1a3f262598879b4768c8cd1663f8e319b9b3947d8"
+    }
+  ],
+  "source_check": "Standalone gdtoolkit grammar and referenced-path/JSON validation only; no engine",
+  "acceptance": "F48#0-F48#3 OPEN",
+  "queued_suites": [
+    "res://tests/smoke_net_f48_loop.gd",
+    "res://tests/smoke_net_f48_boss_four.gd",
+    "res://tests/smoke_net_f48_behind.gd"
+  ],
+  "queued_transaction_matrix": [
+    {
+      "name": "f48/craft/before_input",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=craft",
+        "--cut=before_input"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/craft/after_settlement",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=craft",
+        "--cut=after_settlement"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/craft/after_host_write_before_delivery",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=craft",
+        "--cut=after_host_write_before_delivery"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/craft/after_owner_write_before_ack",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=craft",
+        "--cut=after_owner_write_before_ack"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/release/before_input",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=release",
+        "--cut=before_input"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/release/after_settlement",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=release",
+        "--cut=after_settlement"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/release/after_host_write_before_delivery",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=release",
+        "--cut=after_host_write_before_delivery"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/release/after_owner_write_before_ack",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=release",
+        "--cut=after_owner_write_before_ack"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/feast/before_input",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=feast",
+        "--cut=before_input"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/feast/after_settlement",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=feast",
+        "--cut=after_settlement"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/feast/after_host_write_before_delivery",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=feast",
+        "--cut=after_host_write_before_delivery"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/feast/after_owner_write_before_ack",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=feast",
+        "--cut=after_owner_write_before_ack"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/key/before_input",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=key",
+        "--cut=before_input"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/key/after_settlement",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=key",
+        "--cut=after_settlement"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/key/after_host_write_before_delivery",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=key",
+        "--cut=after_host_write_before_delivery"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/key/after_owner_write_before_ack",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=key",
+        "--cut=after_owner_write_before_ack"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/relic/before_input",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=relic",
+        "--cut=before_input"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/relic/after_settlement",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=relic",
+        "--cut=after_settlement"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/relic/after_host_write_before_delivery",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=relic",
+        "--cut=after_host_write_before_delivery"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/relic/after_owner_write_before_ack",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=relic",
+        "--cut=after_owner_write_before_ack"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/essence_spend/before_input",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=essence_spend",
+        "--cut=before_input"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/essence_spend/after_settlement",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=essence_spend",
+        "--cut=after_settlement"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/essence_spend/after_host_write_before_delivery",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=essence_spend",
+        "--cut=after_host_write_before_delivery"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    },
+    {
+      "name": "f48/essence_spend/after_owner_write_before_ack",
+      "script": "res://tests/smoke_net_f48_transactions.gd",
+      "arguments": [
+        "--transaction=essence_spend",
+        "--cut=after_owner_write_before_ack"
+      ],
+      "state": "QUEUED_NOT_RUN"
+    }
+  ],
+  "missing": [
+    "Shared actual station/Master/Kitchen composition",
+    "Protected personal relic delivery/hang",
+    "Reviewed actual-input route profiles and independently captured v28 save inputs",
+    "Exact-identity save-before-delivery and save-before-ACK observations",
+    "ROOT native runtime/latency/loss/CI proof"
+  ]
+}

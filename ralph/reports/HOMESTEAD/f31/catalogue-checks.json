@@ -1,0 +1,210 @@
+[
+  {
+    "check": "forge eight slots and four live",
+    "pass": true
+  },
+  {
+    "check": "forge_meadows canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_meadows buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "forge_tidewake canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_tidewake buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "forge_cloudreach canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_cloudreach buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "forge_stormwood canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_stormwood buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "forge_biome5 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_biome6 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_biome7 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "forge_biome8 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen eight slots and four live",
+    "pass": true
+  },
+  {
+    "check": "kitchen_meadows canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_meadows buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "kitchen_tidewake canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_tidewake buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "kitchen_cloudreach canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_cloudreach buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "kitchen_stormwood canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_stormwood buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "kitchen_biome5 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_biome6 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_biome7 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "kitchen_biome8 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar eight slots and four live",
+    "pass": true
+  },
+  {
+    "check": "altar_meadows canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_meadows buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "altar_tidewake canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_tidewake buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "altar_cloudreach canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_cloudreach buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "altar_stormwood canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_stormwood buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "altar_biome5 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_biome6 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_biome7 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "altar_biome8 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den eight slots and four live",
+    "pass": true
+  },
+  {
+    "check": "den_meadows canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_meadows buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "den_tidewake canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_tidewake buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "den_cloudreach canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_cloudreach buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "den_stormwood canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_stormwood buildable exact cost",
+    "pass": true
+  },
+  {
+    "check": "den_biome5 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_biome6 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_biome7 canonical identity",
+    "pass": true
+  },
+  {
+    "check": "den_biome8 canonical identity",
+    "pass": true
+  }
+]

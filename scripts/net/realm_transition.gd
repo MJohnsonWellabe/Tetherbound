@@ -313,6 +313,11 @@ func _request(request: int, to: String) -> void:
 	if peer <= 1 or not _peers().has(peer):
 		return
 	var from := str(session().call("realm_of", peer))
+	if session().has_method("portal_runtime_ready") and session().call("portal_runtime_ready") == true:
+		var arrival := session().get_node_or_null(^"FoundationComposition/PortalArrival")
+		if arrival == null or arrival.call("transition_authorized", peer, to) != true:
+			_refused.rpc_id(peer, request, "Use the Crossing Hall portals.")
+			return
 	var game := get_node_or_null("/root/Game")
 	var hearts: Variant = game.get("realm_hearts") if game != null else null
 	if from.is_empty() or from == to or hearts == null or str(hearts.call("scene_for_realm", to)).is_empty():
@@ -568,6 +573,7 @@ func _prepare_retarget(token: String, realm: String) -> bool:
 	return true
 
 func outgoing_allowed(owner: int, realm: String, observer: int, origin: String = "") -> bool:
+	if _observer_departing(observer): return false
 	if not origins.allowed(origin, observer):
 		return false
 	# The listen server temporarily has no receiver at the source world's
@@ -585,6 +591,7 @@ func outgoing_allowed(owner: int, realm: String, observer: int, origin: String =
 	return true
 
 func admission_allowed(realm: String, observer: int, owner: int = 0, origin: String = "") -> bool:
+	if _observer_departing(observer): return false
 	if not origins.allowed(origin, observer):
 		return false
 	if (retired_receivers.get(observer, {}) as Dictionary).has(realm):
@@ -598,6 +605,7 @@ func admission_allowed(realm: String, observer: int, owner: int = 0, origin: Str
 	return true
 
 func scene_rpc_allowed(realm: String, observer: int, completing: bool = false) -> bool:
+	if _observer_departing(observer): return false
 	if (retired_receivers.get(observer, {}) as Dictionary).has(realm):
 		return false
 	for tx: Dictionary in transactions.values():
@@ -982,3 +990,12 @@ func peer_disconnected(peer: int) -> void:
 	for scope: Node in scopes:
 		if is_instance_valid(scope):
 			scope.call("refresh_visibility")
+
+
+## Consume Session's one goodbye flag, not another peer/readiness registry.
+## Observer zero is expanded by the existing replication-scope recipient
+## predicate; every concrete outgoing/admission observer is checked here.
+func _observer_departing(observer: int) -> bool:
+	var session := get_parent()
+	return session != null and session.has_method("peer_is_departing") \
+		and session.call("peer_is_departing", observer) == true

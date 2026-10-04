@@ -1,0 +1,21 @@
+F25 R18 bubble body/contact content; library remains OFF and all F25 rows OPEN.
+Base source 33fea6237a14d0a5daf0d2866b1323a49e82d58c; no engine/GPU/test/CI run.
+
+The existing bubble sphere now has a lit thin-film surface: clear center,
+subtle cool interference, brighter rim and actual sun/ambient response. Its
+vertices, tessellation, scale, motion, envelope and mastery are unchanged.
+Remove the old opaque crescent highlight so actual lighting supplies the highlight.
+Bubble-volley impact uses the existing thin ring plus four small foam puffs and
+bubble beads; four puffs spend four of the existing impact slots, never extra
+particles. Existing water-jet bubble motes also admit the same physical surface.
+Contact/burst uses R17's staged-growth code without any new clocks or authority.
+
+Surface/pop tunables are in ONLY bubble_volley's body and impact profiles.
+Other profiles, move parameters/mappings, mastery, budgets, sounds, pool, particle
+caps, lights, frozen contexts and arrival/host/damage remain unchanged. Bubble pop
+uses the existing measured contact-surface presentation anchor; frozen flight and
+host endpoints remain unchanged. One new original shader source, no raster change
+or import pass. No screenshot or previously failed verdict is replaced.
+This is source content, not native syntax, visual/full-craft or real-player proof.
+R17's pending four-family batch will validate parser/lifetime and its own phase
+changes only; bubble native/craft and actual-path proof remain separately OPEN.

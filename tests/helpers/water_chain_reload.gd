@@ -10,7 +10,7 @@ extends RefCounted
 ## The caller re-fetches every scene node from the returned world.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
-const SLOT := 1
+const SLOT := SAVE.AUTOSAVE_SLOT
 
 ## Point Game at an isolated production SaveGame directory (same class and
 ## format as the shipped one), so a run never touches another run's slots.
@@ -28,6 +28,15 @@ static func save_and_reload(tree: SceneTree, game: Node, world: Node3D,
 	var saved := bool(game.save_game(SLOT))
 	out.append([saved, "Completed chain saved through production Game.save_game(%d)" % SLOT])
 	if not saved:
+		var snapshot: Dictionary = game.save_system.snapshot(game)
+		snapshot["character_id"] = character_id
+		print("WATER_CHAIN_SAVE_REFUSAL " + JSON.stringify({
+			"world_owned": game.world_save_owned(),
+			"vitals_allowed": game.session._owner_vitals_snapshot_allowed(game.local, snapshot),
+			"training_allowed": game.session._owner_training_snapshot_allowed(game.local, snapshot),
+			"redesign_errors": SAVE._redesign_errors(snapshot, character_id),
+			"codec_supported": not preload("res://scripts/save/save_document.gd").stringify(snapshot).is_empty(),
+			"snapshot": snapshot}))
 		return {"world": null, "checks": out}
 	var old: WeakRef = weakref(world)
 	tree.current_scene = null

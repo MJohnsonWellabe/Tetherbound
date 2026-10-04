@@ -30,6 +30,7 @@ const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const DIALOGUE_RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const RIFT_CROSSING := preload("res://scripts/world/rift_crossing.gd")
+const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 const WARDEN_ID := "warden_aldis"
 const FREED_FLAG := "legendary_freed"
@@ -691,9 +692,16 @@ func _the_rift_collapses_and_the_barrier_holds() -> void:
 		var deck := crossing.find_child("CrossingDeckBody", true, false)
 		if deck == null or not deck is StaticBody3D:
 			_fail("the rift crossing has no CrossingDeckBody; the span never appeared after the collapse")
+		# RD-17 (owner, 2026-09-29; WORLD §2.2): physical crossings are retired
+		# once the portal runtime is live. The rebuilt span stays as walkable
+		# regional scenery, but no shipping boundary area may request a later
+		# realm; only the legacy fixture opt-in builds the far-rim trigger.
 		var trigger := crossing.find_child("RiftCrossingTrigger", true, false)
-		if trigger == null or not trigger is Area3D:
-			_fail("the rift crossing has no RiftCrossingTrigger past the far rim")
+		if BIOME_ORDER.legacy_physical_crossings():
+			if trigger == null or not trigger is Area3D:
+				_fail("the rift crossing has no RiftCrossingTrigger past the far rim")
+		elif trigger != null:
+			_fail("RD-17: the rift crossing built a RiftCrossingTrigger although physical crossings are retired")
 		if not bool(crossing.call("span_ready")):
 			_fail("the rift crossing reports its own span is not ready yet")
 

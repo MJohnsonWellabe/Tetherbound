@@ -1,0 +1,87 @@
+{
+  "verdict": "FAIL",
+  "checkout_ref": "387fd9276fbce06c0acd047c197d8556a303e102",
+  "run_id": 37117577760,
+  "artifact_id": 11273195579,
+  "failures": [
+    "#36 peer 0 f48_fixture_trainer_fight (boss_fight: disclosed mechanics fixture) -> FAIL -- the battle never resolved in 8760 frames (0 swings, 0 of their creatures met, 4 still queued); enemy=burrowback hp=242.000/242.000 quick_ready=true fighting=true active_hp=177.600 fainted=false refusal={  } bound=1:1"
+  ],
+  "fixture_fight": {
+    "acceptance_credit": false,
+    "actions": [],
+    "driver_budget_frames": 9000,
+    "final_manager": {
+      "outcome": "",
+      "resolve_timer": 0.0,
+      "state": 1,
+      "waiting_shared_trainer_round": false
+    },
+    "fixture_disclosure": {
+      "ally_placement": true,
+      "earned_campaign_credit": false,
+      "enemy_hp_ceiling": 0,
+      "scope": "named_mechanics_only",
+      "self_hp_topups": true
+    },
+    "killing_verdict": {},
+    "result": {
+      "detail": "the battle never resolved in 8760 frames (0 swings, 0 of their creatures met, 4 still queued); enemy=burrowback hp=242.000/242.000 quick_ready=true fighting=true active_hp=177.600 fainted=false refusal={  } bound=1:1",
+      "verdict": "FAIL"
+    },
+    "trainer_id": "warden_aldis",
+    "trainer_send_delay": 0.0,
+    "typed_self_topups": []
+  },
+  "retained": {
+    "run.log": {
+      "retained_file": "four-r12-37117577760-original.log.gz",
+      "sha256": "646bb1d2f16a64c30aa6e6180f1d701d01dad17069ee7fa7d101dd2144a3a703"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/NET_RUN.json": {
+      "retained_file": "four-r12-37117577760-NET_RUN.json.gz",
+      "sha256": "b4dcba43bbcbcd42d951ced48530ae09381a0ea5f699dcff02472165f8af947a"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-0.log": {
+      "retained_file": "four-r12-37117577760-peer-0.log.gz",
+      "sha256": "23852e81b82a1c504b5fe399e98f63cf81158875fa25d6b58808112fef2e57ae"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-1.log": {
+      "retained_file": "four-r12-37117577760-peer-1.log.gz",
+      "sha256": "973ec0a3ee4eeba1facd3a713523fc01caf34c678f5308f5f25cd3e4777d9a17"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-2.log": {
+      "retained_file": "four-r12-37117577760-peer-2.log.gz",
+      "sha256": "bc371aac0b1a30a3b1d7ee47e161d994ffc6a450752f0e6398ea5b3e4af2d8fd"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-3.log": {
+      "retained_file": "four-r12-37117577760-peer-3.log.gz",
+      "sha256": "b46c3aa024606cff183dadbab34adc3494a10f762786f4271e7e5c297494212c"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/f48-fixture-fights/2513-warden_aldis-1717975922.json": {
+      "retained_file": "four-r12-37117577760-fixture-fight.json.gz",
+      "sha256": "07a24c910344fd5e0f340a92a653c2c6678d9063841e673f13f9d0c5a71447cf"
+    }
+  },
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator-home/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-0.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-1.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-2.log": [],
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-3.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": []
+  },
+  "original_archive_sha256": "856d75d2225f03026f386efdadc62adf83daf0472aa1e0a25b691ad9f0dcb251",
+  "boundary": "Actual provider admission passed; fight0 swings/0topups, no accepted Warden outcome. Source driver remains fenced while original ordinary health is pending; exact durability blockage under investigation. Original save/ACK fences remain required."
+}

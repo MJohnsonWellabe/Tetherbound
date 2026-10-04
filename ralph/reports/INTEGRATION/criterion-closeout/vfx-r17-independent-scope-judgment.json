@@ -1,0 +1,263 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:43:23.427742+00:00",
+  "platform": {
+    "engine": {
+      "build": "official",
+      "hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+      "hex": 263936,
+      "major": 4,
+      "minor": 7,
+      "patch": 0,
+      "status": "stable",
+      "string": "4.7-stable (official)",
+      "timestamp": 0
+    },
+    "renderer": "gl_compatibility",
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "resolution": [
+      1920,
+      1080
+    ]
+  },
+  "input": "synthetic production effect nodes; posed production Mudsnout body; fixed30fps movie with0.7s travel",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "actual_executed_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+  "actual_package_hash": null,
+  "checks": {
+    "13_original_member_hashes_and_lengths": true,
+    "single_selected_case_only": true,
+    "native_exit0_without_watchdog_or_declared_errors": true,
+    "actual_lease_zero_before_cleanup": true,
+    "same_clock_original_allowance": true,
+    "18_actual_node_preflights": true,
+    "source_unchanged_and_zero_processes_reported": true
+  },
+  "members": [
+    {
+      "file": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "actual_git_blob_sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "before-native-source-hashes.json",
+      "bytes": 49109,
+      "sha256": "0b5f3d487f07c040a1010957cb09ffa3482c28cc03b58f7b0de4cc10ac891444",
+      "actual_git_blob_sha256": "0b5f3d487f07c040a1010957cb09ffa3482c28cc03b58f7b0de4cc10ac891444",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "identities-motion.avi",
+      "bytes": 4835074,
+      "sha256": "d6e917bc0512ce30b723bf2ba1531757a4ff500fb384f2c203ae681a57c66f22",
+      "actual_git_blob_sha256": "d6e917bc0512ce30b723bf2ba1531757a4ff500fb384f2c203ae681a57c66f22",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "native-receipt.json",
+      "bytes": 1288,
+      "sha256": "6716fbef79217070862cc874029da352237eb13011722962ac47b5492d6a29cd",
+      "actual_git_blob_sha256": "6716fbef79217070862cc874029da352237eb13011722962ac47b5492d6a29cd",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "native.txt",
+      "bytes": 907,
+      "sha256": "6f2dd0ee15ffc4b0dd473cc64933d4f01c22060cde3be406ef035c08a15e9a15",
+      "actual_git_blob_sha256": "6f2dd0ee15ffc4b0dd473cc64933d4f01c22060cde3be406ef035c08a15e9a15",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "r17-source-gate.txt",
+      "bytes": 9565,
+      "sha256": "ad2833a16dbce8830b537912aa023324df3ca847c213f5cfb8a29ad72c32bc33",
+      "actual_git_blob_sha256": "ad2833a16dbce8830b537912aa023324df3ca847c213f5cfb8a29ad72c32bc33",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "r17-source-hashpins.json",
+      "bytes": 17712,
+      "sha256": "4b87112e8095f475b80e0e1face13ede92cc31361b956fbb590b1e4314f056a9",
+      "actual_git_blob_sha256": "4b87112e8095f475b80e0e1face13ede92cc31361b956fbb590b1e4314f056a9",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "results.json",
+      "bytes": 3730,
+      "sha256": "d7a70392e6f6a5e9be48da3fdabfa6375017ef9119c685e32ef84b205168b3a3",
+      "actual_git_blob_sha256": "d7a70392e6f6a5e9be48da3fdabfa6375017ef9119c685e32ef84b205168b3a3",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "run_selected.py",
+      "bytes": 5546,
+      "sha256": "99b390ef006ff670a82e40f435351f58088ac59fa6672982533343ffb7461fae",
+      "actual_git_blob_sha256": "99b390ef006ff670a82e40f435351f58088ac59fa6672982533343ffb7461fae",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "sequence-00-contact.png",
+      "bytes": 76514,
+      "sha256": "27d4ef700169e3d6807ebd5de2581eaa108f724e551aac7089d3c1328f9f2c93",
+      "actual_git_blob_sha256": "27d4ef700169e3d6807ebd5de2581eaa108f724e551aac7089d3c1328f9f2c93",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "sequence-00-flight.png",
+      "bytes": 82271,
+      "sha256": "d5bf2e001fefb7d5d36ec2ddabd2ed502012aed0ddbcd8f39388c673804a2dc4",
+      "actual_git_blob_sha256": "d5bf2e001fefb7d5d36ec2ddabd2ed502012aed0ddbcd8f39388c673804a2dc4",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "sequence-00-impact.png",
+      "bytes": 77871,
+      "sha256": "c2db28d3a24ffad2a32372379d2adf400d357b850a5d6de3d347b4e460ede086",
+      "actual_git_blob_sha256": "c2db28d3a24ffad2a32372379d2adf400d357b850a5d6de3d347b4e460ede086",
+      "sha256_matches": true,
+      "length_matches": true
+    },
+    {
+      "file": "verdict.txt",
+      "bytes": 1330,
+      "sha256": "5096b2fd8843aae6dcdc2099d54c6e108fb98f1d60e98938ac5b801053a9339a",
+      "actual_git_blob_sha256": "5096b2fd8843aae6dcdc2099d54c6e108fb98f1d60e98938ac5b801053a9339a",
+      "sha256_matches": true,
+      "length_matches": true
+    }
+  ],
+  "native": {
+    "source_commit": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+    "command": [
+      "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+      "--path",
+      "D:\\tetherbound\\redesign-vfx",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--write-movie",
+      "D:\\tetherbound\\vfx-r17-selected-runtime\\identities-motion.avi",
+      "--fixed-fps",
+      "30",
+      "--script",
+      "res://tests/smoke_move_effects_library.gd",
+      "--",
+      "--batch=identities",
+      "--identity=small-stones:r1",
+      "--out=D:/tetherbound/vfx-small-stones-selected-r17"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "elapsed_seconds": 16.39,
+    "tracked_process_ids": [
+      5772,
+      19348
+    ],
+    "owned_orphan_cleanup": [],
+    "godot_processes_remaining": [],
+    "errors": [],
+    "source_unchanged": true,
+    "selected_identity": "small-stones:r1",
+    "native_preflight_checks": 18,
+    "unit_reused": "R14 light lease, 27 assertions PASS; unchanged budget/test source, no full suite",
+    "scope": "Synthetic production-node lifetime and visual candidate, not HP/player/combat/Medium/device/final craft acceptance",
+    "movie_limit": "Fixed30fps synthetic0.7s travel; not real-time/performance proof"
+  },
+  "selected_case": {
+    "arrival_process_frames": [
+      78
+    ],
+    "arrival_wall_seconds": [
+      0.888892
+    ],
+    "arrivals": 1,
+    "captures_at_wall_seconds": {
+      "contact": {
+        "arrivals": 1,
+        "nominal_travel_fraction": 1.0,
+        "wall_seconds": 1.014422
+      },
+      "flight": {
+        "actual_body_positions": [
+          "(-1.086635, 1.698155, 0.781934)",
+          "(-0.714286, 2.37533, -0.390967)",
+          "(-0.341936, 1.020981, -0.390967)"
+        ],
+        "arrivals": 0,
+        "clear_of_expanded_target_bounds": true,
+        "nominal_travel_fraction": 0.34866828918457,
+        "wall_seconds": 0.432308
+      },
+      "impact": {
+        "arrivals": 1,
+        "nominal_travel_fraction": 1.14,
+        "wall_seconds": 1.201478
+      }
+    },
+    "cpu_process_ms": [],
+    "end_process_frame": 101,
+    "end_slots": 0,
+    "end_wall_seconds": 1.855418,
+    "id": "small-stones",
+    "independent_schedule_process_frame": 78,
+    "lifetime_allowance_seconds": 2.42,
+    "lifetime_deadline_clock": "idle_simulation",
+    "move_id": "pebble_toss",
+    "p95_ms": 0.0,
+    "p99_ms": 0.0,
+    "particle_budget": {
+      "impact": 24.0,
+      "trail": 18.0
+    },
+    "peak_slots": 42,
+    "rank": 1,
+    "resolved_count": 3,
+    "resolved_size": 0.2,
+    "simultaneous": 1,
+    "target_visual_bounds": {
+      "position": "(1.315012, 0.0, -0.827969)",
+      "size": "(3.369976, 2.0, 1.655939)"
+    },
+    "transit_shutter": {
+      "body_envelope_radius_m": 0.46,
+      "clear_transit_required": true,
+      "entry_fraction": 0.435835361480713,
+      "envelope_radius_m": 1.7,
+      "fraction": 0.34866828918457,
+      "method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+      "revision": "r6-separate-body-and-group-envelopes"
+    },
+    "travel_seconds": 0.7,
+    "wall_frame_ms": [],
+    "wall_watchdog_expired": false
+  },
+  "independent_verdict": "ONE_SELECTED_NATIVE_LIFETIME_CASE_PASS",
+  "scope": "Original r14 RED preserved; selected r17 ends its lease within original allowance. This is not a code-blind art judgment or a proof of historical failure cause.",
+  "honest_gap": "Other identity cases/full craft, real player/contact→HP/audio, active production library, mastery matrix, four-creature Medium timing, peers and Ally remain open. Empty cpu_process_ms/wall_frame_ms arrays are not performance samples;p95/p99 zero does not prove frame time.",
+  "criterion_verdicts": {
+    "F25#0": "OPEN",
+    "F25#2": "OPEN",
+    "F25#3": "OPEN",
+    "F25#4": "OPEN",
+    "F25#5": "OPEN"
+  },
+  "prior_failure_artifact": "ralph/reports/VFX/f25/native-identities-r14",
+  "visual_verdict_issued": false
+}

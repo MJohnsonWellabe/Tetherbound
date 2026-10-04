@@ -3,13 +3,15 @@ extends SceneTree
 ## Host-authority fixture for the per-participant Stormheart offer. The real
 ## `stormwood_ending.gd` runs against the offline host Session with two extra
 ## registered characters; a hub stub records what each peer is sent, a chapter
-## stub commits the two chapter events it would dispatch, and a Dynamo stub
+## adapter reads the real authored table, and a Dynamo stub
 ## supplies the fight's participant peers. It also covers the host refusing
 ## from its own answer receipt against a client's flag, the portable
 ## acceptance hint (an acceptance elsewhere withholds, a refusal does not), and
 ## a legacy save freed before participants were recorded: the Dynamo's own
 ## record, else only the host, never whoever claims first. It does not play the
-## fight, the dialogue or the five-slot ceremony UI.
+## fight, the dialogue or the five-slot ceremony UI. The final-act entry is
+## seeded explicitly. An in-memory bool writer records the prepared world;
+## this fixture does not prove an earned chapter or a physical disk save.
 const ENDING := preload("res://scripts/world/stormwood_ending.gd")
 
 var failures: Array[String] = []
@@ -47,14 +49,20 @@ class HubStub extends Node:
 
 class ChapterStub extends Node:
 	var game: Node
+	var chapter: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_chapter.json"))
 
 	func emit_event(event: String) -> Dictionary:
-		var flag: String = {"dynamo:release": "stormwood:legendary_freed",
-			"legendary:offer_shown": "stormwood:legendary_offer_made"}.get(event, "")
-		if flag == "" or game.progression.has(flag):
-			return {"accepted": false}
-		game.progression.set_flag(flag)
-		return {"accepted": true}
+		return preload("res://scripts/world/realm_chapter_progression.gd").dispatch(game.progression, chapter, event)
+
+
+class PreparedWorldWriter extends RefCounted:
+	var writes: Array[Dictionary] = []
+	func finish_fallback() -> bool: return true
+	func fallback_busy() -> bool: return false
+	func save_world_prepared(game: Object, world_id: String) -> bool:
+		if world_id != "stormheart-participants-fixture" or game.world.world_id != world_id: return false
+		writes.append(game.world.save_data().duplicate(true))
+		return true
 
 
 class DynamoStub extends Node:
@@ -75,6 +83,11 @@ func _run() -> void:
 		return
 	game.reset_for_new_game()
 	game.current_realm = "stormwood"
+	var original_saver: RefCounted = game.save_system
+	var prepared_writer := PreparedWorldWriter.new()
+	game.save_system = prepared_writer
+	game.world.world_id = "stormheart-participants-fixture"
+	game.progression.set_flag("stormwood:act_ii_complete")
 	var session: Node = game.get_node("Session")
 	var local_peer := int(session.local_peer_id())
 	# A headless new game has no stable character id yet; give the host one.
@@ -172,6 +185,14 @@ func _run() -> void:
 		and game.progression.has(ENDING.resolution_flag(false, "character-fought-b"))
 		and not game.progression.has(ENDING.resolution_flag(true, "character-fought-b")),
 		"each answer leaves its own world receipt: accepted for the host, refused for B")
+	_check(not prepared_writer.writes.is_empty(), "the actual settlement used the prepared bool world writer")
+	if not prepared_writer.writes.is_empty():
+		var written := preload("res://autoload/world_state.gd").new()
+		written.load_data(prepared_writer.writes.back())
+		_check(written.flags.has(ENDING.resolution_flag(true, host_character))
+			and written.flags.has(ENDING.resolution_flag(false, "character-fought-b"))
+			and written.realm_environment.stormwood.ending.claims["character-fought-b"].settled == true,
+			"the bool writer observed the original per-character receipts and settled claim together")
 
 	var saved: Dictionary = game.world.save_data()
 	var environment: Dictionary = game.realm_environment.duplicate(true)
@@ -251,6 +272,7 @@ func _run() -> void:
 	_check(state.get("participants", []) == ["character-fought-b"]
 		and (state.claims as Dictionary).keys() == ["character-fought-b"],
 		"the legacy save records only the Dynamo's fighter characters as participants")
+	game.save_system = original_saver
 	world.queue_free()
 	await process_frame
 	_finish()

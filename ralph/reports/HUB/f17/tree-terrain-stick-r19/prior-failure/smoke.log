@@ -1,0 +1,131 @@
+WorkerThreadPool: 6 threads, 1 max low-priority.
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+TextServer: Added interface "Dummy"
+TextServer: Added interface "ICU / HarfBuzz / Graphite (Built-in)"
+Using "default" pen tablet driver...
+
+TextServer: Primary interface set to: "ICU / HarfBuzz / Graphite (Built-in)".
+Loading resource: res://default_bus_layout.tres remapped: res://default_bus_layout.tres
+Completed load for: 'res://default_bus_layout.tres' remapped 'res://default_bus_layout.tres' at thread -1
+CORE API HASH: 3472268009
+EDITOR API HASH: 2212757246
+Loading resource: res://tools/_probe_scatter_tree_prompt_height.gd remapped: res://tools/_probe_scatter_tree_prompt_height.gd
+Loading resource: res://scenes/player/player.tscn remapped: res://scenes/player/player.tscn
+Loading resource: res://scripts/player/player_controller.gd remapped: res://scripts/player/player_controller.gd
+Completed load for: 'res://scripts/player/player_controller.gd' remapped 'res://scripts/player/player_controller.gd' at thread -1
+Loading resource: res://scripts/player/camera_rig.gd remapped: res://scripts/player/camera_rig.gd
+Completed load for: 'res://scripts/player/camera_rig.gd' remapped 'res://scripts/player/camera_rig.gd' at thread -1
+Loading resource: res://scripts/player/trainer_model.gd remapped: res://scripts/player/trainer_model.gd
+Loading resource: res://shaders/human_water_contact.gdshader remapped: res://shaders/human_water_contact.gdshader
+Completed load for: 'res://shaders/human_water_contact.gdshader' remapped 'res://shaders/human_water_contact.gdshader' at thread -1
+Completed load for: 'res://scripts/player/trainer_model.gd' remapped 'res://scripts/player/trainer_model.gd' at thread -1
+Completed load for: 'res://scenes/player/player.tscn' remapped 'res://scenes/player/player.tscn' at thread -1
+Loading resource: res://scripts/world/foliage_camera_visibility.gdshader remapped: res://scripts/world/foliage_camera_visibility.gdshader
+Completed load for: 'res://scripts/world/foliage_camera_visibility.gdshader' remapped 'res://scripts/world/foliage_camera_visibility.gdshader' at thread -1
+Completed load for: 'res://tools/_probe_scatter_tree_prompt_height.gd' remapped 'res://tools/_probe_scatter_tree_prompt_height.gd' at thread -1
+SceneTreeFTI: traversal method DEFAULT
+Loading resource: res://autoload/game_state.gd remapped: res://autoload/game_state.gd
+Loading resource: res://assets/environment/terrain/stylised/dirt_path_Color.png remapped: res://assets/environment/terrain/stylised/dirt_path_Color.png
+Loading resource: res://.godot/imported/dirt_path_Color.png-8e0029f28da2975003bf952b0ed18a51.s3tc.ctex remapped: res://.godot/imported/dirt_path_Color.png-8e0029f28da2975003bf952b0ed18a51.s3tc.ctex
+Completed load for: 'res://assets/environment/terrain/stylised/dirt_path_Color.png' remapped 'res://assets/environment/terrain/stylised/dirt_path_Color.png' at thread -1
+Loading resource: res://assets/environment/terrain/stylised/dirt_path_NormalGL.png remapped: res://assets/environment/terrain/stylised/dirt_path_NormalGL.png
+Loading resource: res://.godot/imported/dirt_path_NormalGL.png-1b1ce23d902d10aecbc2bc51708379e0.s3tc.ctex remapped: res://.godot/imported/dirt_path_NormalGL.png-1b1ce23d902d10aecbc2bc51708379e0.s3tc.ctex
+Completed load for: 'res://assets/environment/terrain/stylised/dirt_path_NormalGL.png' remapped 'res://assets/environment/terrain/stylised/dirt_path_NormalGL.png' at thread -1
+Loading resource: res://assets/props/quaternius_fantasy/banner_dimensional_cloth.gdshader remapped: res://assets/props/quaternius_fantasy/banner_dimensional_cloth.gdshader
+Completed load for: 'res://assets/props/quaternius_fantasy/banner_dimensional_cloth.gdshader' remapped 'res://assets/props/quaternius_fantasy/banner_dimensional_cloth.gdshader' at thread -1
+Loading resource: res://scenes/creatures/creature.tscn remapped: res://scenes/creatures/creature.tscn
+Completed load for: 'res://scenes/creatures/creature.tscn' remapped 'res://scenes/creatures/creature.tscn' at thread -1
+Loading resource: res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png remapped: res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png
+Loading resource: res://.godot/imported/T_WoodTrim_BaseColor.png-eab8e844acd722a4e55316d9b1c1ee7f.s3tc.ctex remapped: res://.godot/imported/T_WoodTrim_BaseColor.png-eab8e844acd722a4e55316d9b1c1ee7f.s3tc.ctex
+Completed load for: 'res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png' remapped 'res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png' at thread -1
+Loading resource: res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png remapped: res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png
+Loading resource: res://.godot/imported/T_WoodTrim_Normal.png-3dda6b8402a2235ce4bd6caf43026edf.s3tc.ctex remapped: res://.godot/imported/T_WoodTrim_Normal.png-3dda6b8402a2235ce4bd6caf43026edf.s3tc.ctex
+Completed load for: 'res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png' remapped 'res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png' at thread -1
+Loading resource: res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png remapped: res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png
+Loading resource: res://.godot/imported/T_WoodTrim_Roughness.png-345a5c8dca1bff00317d793ccfbfd9c6.s3tc.ctex remapped: res://.godot/imported/T_WoodTrim_Roughness.png-345a5c8dca1bff00317d793ccfbfd9c6.s3tc.ctex
+Completed load for: 'res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png' remapped 'res://assets/buildings/quaternius_medieval/T_WoodTrim_Roughness.png' at thread -1
+Loading resource: res://assets/props/quaternius_fantasy/Lantern_Wall.gltf remapped: res://assets/props/quaternius_fantasy/Lantern_Wall.gltf
+Loading resource: res://.godot/imported/Lantern_Wall.gltf-a8db3bb761aab70950717d0a626b0a36.scn remapped: res://.godot/imported/Lantern_Wall.gltf-a8db3bb761aab70950717d0a626b0a36.scn
+Loading resource: res://assets/props/quaternius_fantasy/T_Trim_Metal_BaseColor.png remapped: res://assets/props/quaternius_fantasy/T_Trim_Metal_BaseColor.png
+Loading resource: res://.godot/imported/T_Trim_Metal_BaseColor.png-4bc5643970476ccfa50d45aece588664.s3tc.ctex remapped: res://.godot/imported/T_Trim_Metal_BaseColor.png-4bc5643970476ccfa50d45aece588664.s3tc.ctex
+Completed load for: 'res://assets/props/quaternius_fantasy/T_Trim_Metal_BaseColor.png' remapped 'res://assets/props/quaternius_fantasy/T_Trim_Metal_BaseColor.png' at thread -1
+Loading resource: res://assets/props/quaternius_fantasy/T_Trim_Metal_ORM.png remapped: res://assets/props/quaternius_fantasy/T_Trim_Metal_ORM.png
+Loading resource: res://.godot/imported/T_Trim_Metal_ORM.png-58ac4c3ad409bb59b77206dec8f775fe.s3tc.ctex remapped: res://.godot/imported/T_Trim_Metal_ORM.png-58ac4c3ad409bb59b77206dec8f775fe.s3tc.ctex
+Completed load for: 'res://assets/props/quaternius_fantasy/T_Trim_Metal_ORM.png' remapped 'res://assets/props/quaternius_fantasy/T_Trim_Metal_ORM.png' at thread -1
+Loading resource: res://assets/props/quaternius_fantasy/T_Trim_Metal_Normal.png remapped: res://assets/props/quaternius_fantasy/T_Trim_Metal_Normal.png
+Loading resource: res://.godot/imported/T_Trim_Metal_Normal.png-83a0ab42e82a739517bc322eaeef1d1d.s3tc.ctex remapped: res://.godot/imported/T_Trim_Metal_Normal.png-83a0ab42e82a739517bc322eaeef1d1d.s3tc.ctex
+Completed load for: 'res://assets/props/quaternius_fantasy/T_Trim_Metal_Normal.png' remapped 'res://assets/props/quaternius_fantasy/T_Trim_Metal_Normal.png' at thread -1
+Completed load for: 'res://assets/props/quaternius_fantasy/Lantern_Wall.gltf' remapped 'res://assets/props/quaternius_fantasy/Lantern_Wall.gltf' at thread -1
+Completed load for: 'res://autoload/game_state.gd' remapped 'res://autoload/game_state.gd' at thread -1
+Loaded system CA certificates
+Loading resource: res://scenes/ui/game_menu.tscn remapped: res://scenes/ui/game_menu.tscn
+Loading resource: res://scripts/ui/game_menu.gd remapped: res://scripts/ui/game_menu.gd
+Completed load for: 'res://scripts/ui/game_menu.gd' remapped 'res://scripts/ui/game_menu.gd' at thread -1
+Completed load for: 'res://scenes/ui/game_menu.tscn' remapped 'res://scenes/ui/game_menu.tscn' at thread -1
+Loading resource: res://assets/ui/theme/tetherbound_theme.tres remapped: res://assets/ui/theme/tetherbound_theme.tres
+Completed load for: 'res://assets/ui/theme/tetherbound_theme.tres' remapped 'res://assets/ui/theme/tetherbound_theme.tres' at thread -1
+Loading resource: res://scripts/ui/tab_backpack.gd remapped: res://scripts/ui/tab_backpack.gd
+Completed load for: 'res://scripts/ui/tab_backpack.gd' remapped 'res://scripts/ui/tab_backpack.gd' at thread -1
+Loading resource: res://scripts/ui/tab_creatures.gd remapped: res://scripts/ui/tab_creatures.gd
+Loading resource: res://scenes/ui/name_prompt.tscn remapped: res://scenes/ui/name_prompt.tscn
+Loading resource: res://scripts/ui/name_prompt.gd remapped: res://scripts/ui/name_prompt.gd
+Completed load for: 'res://scripts/ui/name_prompt.gd' remapped 'res://scripts/ui/name_prompt.gd' at thread -1
+Completed load for: 'res://scenes/ui/name_prompt.tscn' remapped 'res://scenes/ui/name_prompt.tscn' at thread -1
+Loading resource: res://assets/ui/icons/ui/type_ground.png remapped: res://assets/ui/icons/ui/type_ground.png
+Loading resource: res://.godot/imported/type_ground.png-4fb5d29c3719c1f8745cb5e0200e1ebc.ctex remapped: res://.godot/imported/type_ground.png-4fb5d29c3719c1f8745cb5e0200e1ebc.ctex
+Completed load for: 'res://assets/ui/icons/ui/type_ground.png' remapped 'res://assets/ui/icons/ui/type_ground.png' at thread -1
+Loading resource: res://assets/ui/icons/ui/type_water.png remapped: res://assets/ui/icons/ui/type_water.png
+Loading resource: res://.godot/imported/type_water.png-30bbef72a4f91ef680d85310dc17cfb1.ctex remapped: res://.godot/imported/type_water.png-30bbef72a4f91ef680d85310dc17cfb1.ctex
+Completed load for: 'res://assets/ui/icons/ui/type_water.png' remapped 'res://assets/ui/icons/ui/type_water.png' at thread -1
+Loading resource: res://assets/ui/icons/ui/type_air.png remapped: res://assets/ui/icons/ui/type_air.png
+Loading resource: res://.godot/imported/type_air.png-414ef69829ffc7671fc906ddb04fea42.ctex remapped: res://.godot/imported/type_air.png-414ef69829ffc7671fc906ddb04fea42.ctex
+Completed load for: 'res://assets/ui/icons/ui/type_air.png' remapped 'res://assets/ui/icons/ui/type_air.png' at thread -1
+Loading resource: res://assets/ui/icons/ui/bond.png remapped: res://assets/ui/icons/ui/bond.png
+Loading resource: res://.godot/imported/bond.png-e9695d8408b08700b200b28f3550379c.ctex remapped: res://.godot/imported/bond.png-e9695d8408b08700b200b28f3550379c.ctex
+Completed load for: 'res://assets/ui/icons/ui/bond.png' remapped 'res://assets/ui/icons/ui/bond.png' at thread -1
+Completed load for: 'res://scripts/ui/tab_creatures.gd' remapped 'res://scripts/ui/tab_creatures.gd' at thread -1
+Loading resource: res://scripts/ui/tab_map.gd remapped: res://scripts/ui/tab_map.gd
+Completed load for: 'res://scripts/ui/tab_map.gd' remapped 'res://scripts/ui/tab_map.gd' at thread -1
+Loading resource: res://scripts/ui/tab_skills.gd remapped: res://scripts/ui/tab_skills.gd
+Completed load for: 'res://scripts/ui/tab_skills.gd' remapped 'res://scripts/ui/tab_skills.gd' at thread -1
+Loading resource: res://scripts/ui/tab_quest_log.gd remapped: res://scripts/ui/tab_quest_log.gd
+Completed load for: 'res://scripts/ui/tab_quest_log.gd' remapped 'res://scripts/ui/tab_quest_log.gd' at thread -1
+Loading resource: res://scripts/ui/tab_build.gd remapped: res://scripts/ui/tab_build.gd
+Loading resource: res://assets/ui/theme/build_theme.tres remapped: res://assets/ui/theme/build_theme.tres
+Completed load for: 'res://assets/ui/theme/build_theme.tres' remapped 'res://assets/ui/theme/build_theme.tres' at thread -1
+Completed load for: 'res://scripts/ui/tab_build.gd' remapped 'res://scripts/ui/tab_build.gd' at thread -1
+Loading resource: res://scripts/ui/tab_players.gd remapped: res://scripts/ui/tab_players.gd
+Completed load for: 'res://scripts/ui/tab_players.gd' remapped 'res://scripts/ui/tab_players.gd' at thread -1
+Loading resource: res://scripts/ui/tab_save.gd remapped: res://scripts/ui/tab_save.gd
+Completed load for: 'res://scripts/ui/tab_save.gd' remapped 'res://scripts/ui/tab_save.gd' at thread -1
+Loading resource: res://scripts/ui/tab_settings.gd remapped: res://scripts/ui/tab_settings.gd
+Completed load for: 'res://scripts/ui/tab_settings.gd' remapped 'res://scripts/ui/tab_settings.gd' at thread -1
+EXACT BAKED placement={ "model": "res://assets/environment/stylized_nature/CommonTree_2.gltf", "position": (98.15209, 5.791119, -35.9321), "yaw": 1.87158632278442, "scale": 1.65292721986771 } layer=trees order=886 layer_collision=0.435 collides=true canonical_ground=5.7911189218932 old_prompt_height=2.65292721986771
+GROUND sample z_offset=-4.0 y=8.11704684142941
+GROUND sample z_offset=-1.0 y=5.88274193994427
+GROUND sample z_offset=0.0 y=5.7911189218932
+GROUND sample z_offset=1.0 y=5.41352876902847
+GROUND sample z_offset=4.0 y=3.03754690590502
+Loading resource: res://assets/characters/trainer/trainer_lod0.glb remapped: res://assets/characters/trainer/trainer_lod0.glb
+Loading resource: res://.godot/imported/trainer_lod0.glb-6aa56a8f87a7ca0782b27bc25a6f0629.scn remapped: res://.godot/imported/trainer_lod0.glb-6aa56a8f87a7ca0782b27bc25a6f0629.scn
+Loading resource: res://assets/characters/trainer/trainer_lod0_texture_0.png remapped: res://assets/characters/trainer/trainer_lod0_texture_0.png
+Loading resource: res://.godot/imported/trainer_lod0_texture_0.png-2de5ef9b9c3ff5257631648d73df5537.s3tc.ctex remapped: res://.godot/imported/trainer_lod0_texture_0.png-2de5ef9b9c3ff5257631648d73df5537.s3tc.ctex
+Completed load for: 'res://assets/characters/trainer/trainer_lod0_texture_0.png' remapped 'res://assets/characters/trainer/trainer_lod0_texture_0.png' at thread -1
+Completed load for: 'res://assets/characters/trainer/trainer_lod0.glb' remapped 'res://assets/characters/trainer/trainer_lod0.glb' at thread -1
+Loading resource: res://assets/characters/trainer/trainer_teal_accent.png remapped: res://assets/characters/trainer/trainer_teal_accent.png
+Loading resource: res://.godot/imported/trainer_teal_accent.png-30c50fe67aeea14f8b195183d108c14e.s3tc.ctex remapped: res://.godot/imported/trainer_teal_accent.png-30c50fe67aeea14f8b195183d108c14e.s3tc.ctex
+Completed load for: 'res://assets/characters/trainer/trainer_teal_accent.png' remapped 'res://assets/characters/trainer/trainer_teal_accent.png' at thread -1
+PHYSICAL tree-contact player=(96.97294, 3.525657, -33.71149) grounded=true touched_actual_trunk=false prompt=(98.15209, 7.191119, -35.9321) distance=4.44489526748657 radius=2.6 own_offer={  } winner={  } contacts=[{ "body": "CanonicalLocalTerrain", "normal": (-0.273454, 0.88466, 0.377622) }] unsticks=0
+APPROACH cached sample={ "stage": "settled", "approach_frame": 0, "physics_frame": 31, "position": (98.15209, 3.143477, -31.9321), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.0, 0.0, 0.0), "resolved_stick": (0.0, 0.0), "last_controller_wanted": (0.0, 0.0, 0.0), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": false, "floor_stop_on_slope": true, "floor_constant_speed": false, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (98.32475, 3.22643, -32.10476), "normal": (-0.432645, 0.790967, 0.432655), "depth": 0.00117015698925 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 1, "physics_frame": 32, "position": (98.15209, 3.143477, -31.9321), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.0, 0.0, -1.0), "resolved_stick": (0.0, -1.0), "last_controller_wanted": (0.0, 0.0, 0.0), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": false, "floor_stop_on_slope": true, "floor_constant_speed": false, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (98.32475, 3.22643, -32.10476), "normal": (-0.432645, 0.790967, 0.432655), "depth": 0.00117015698925 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 15, "physics_frame": 46, "position": (98.14581, 3.436437, -32.7491), "velocity": (-2.406538, 0.0, -1.835639), "requested_stick": (0.001564, 0.0, -0.999999), "resolved_stick": (0.001564, -0.999999), "last_controller_wanted": (0.001428, 0.0, -0.999999), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (98.37769, 3.507984, -32.80259), "normal": (-0.576714, 0.77185, 0.267673), "depth": 0.00095329183387 }, { "body": "CanonicalLocalTerrain", "position": (98.335, 3.584366, -32.99678), "normal": (-0.470884, 0.630212, 0.617333), "depth": 0.00103770149872 }, { "body": "CanonicalLocalTerrain", "position": (98.33456, 3.583823, -32.99656), "normal": (-0.470884, 0.630212, 0.617333), "depth": 0.00016086311371 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 30, "physics_frame": 61, "position": (97.89647, 3.965995, -33.48514), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.103611, 0.0, -0.994618), "resolved_stick": (0.103611, -0.994618), "last_controller_wanted": (0.10333, 0.0, -0.994647), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (97.99955, 4.083942, -33.74961), "normal": (-0.255662, 0.710435, 0.655682), "depth": 0.00093675917014 }, { "body": "CanonicalLocalTerrain", "position": (97.99952, 4.08368, -33.74933), "normal": (-0.255662, 0.710435, 0.655682), "depth": 0.00093052728334 }, { "body": "CanonicalLocalTerrain", "position": (97.99933, 4.083181, -33.74886), "normal": (-0.255662, 0.710435, 0.655682), "depth": 0.00091976585099 }, { "body": "CanonicalLocalTerrain", "position": (97.99914, 4.082685, -33.7484), "normal": (-0.255662, 0.710435, 0.655682), "depth": 0.00091523525771 }, { "body": "CanonicalLocalTerrain", "position": (97.99895, 4.08219, -33.74794), "normal": (-0.255662, 0.710435, 0.655682), "depth": 0.00091523525771 }, { "body": "CanonicalLocalTerrain", "position": (97.99876, 4.081692, -33.74747), "normal": (-0.255662, 0.710435, 0.655682), "depth": 0.00091523525771 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 60, "physics_frame": 91, "position": (97.21909, 3.692321, -33.72015), "velocity": (-1.300259, 0.0, -0.803911), "requested_stick": (0.378003, 0.0, -0.925804), "resolved_stick": (0.378003, -0.925804), "last_controller_wanted": (0.369699, 0.0, -0.929152), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (97.4093, 3.848067, -33.97625), "normal": (-0.416896, 0.609527, 0.674295), "depth": 0.00104143773206 }, { "body": "CanonicalLocalTerrain", "position": (97.38621, 3.847986, -33.99045), "normal": (-0.416896, 0.609527, 0.674295), "depth": 0.00014222563186 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 90, "physics_frame": 121, "position": (96.97285, 3.528205, -33.71206), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.46911, 0.0, -0.88314), "resolved_stick": (0.46911, -0.88314), "last_controller_wanted": (0.469115, 0.0, -0.883137), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (97.08276, 3.572274, -33.86276), "normal": (-0.274637, 0.884765, 0.376517), "depth": 0.00092191260774 }, { "body": "CanonicalLocalTerrain", "position": (97.06887, 3.660532, -33.99557), "normal": (-0.237581, 0.669214, 0.704066), "depth": 0.00092255562777 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 120, "physics_frame": 151, "position": (96.97282, 3.528246, -33.71194), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.469095, 0.0, -0.883148), "resolved_stick": (0.469095, -0.883148), "last_controller_wanted": (0.469095, 0.0, -0.883148), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (97.08264, 3.572189, -33.86264), "normal": (-0.274489, 0.884752, 0.376656), "depth": 0.00103760743514 }, { "body": "CanonicalLocalTerrain", "position": (97.06892, 3.660587, -33.9956), "normal": (-0.237581, 0.669214, 0.704066), "depth": 0.00094620068558 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 150, "physics_frame": 181, "position": (96.97316, 3.526817, -33.7121), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.469018, 0.0, -0.883188), "resolved_stick": (0.469018, -0.883188), "last_controller_wanted": (0.469021, 0.0, -0.883187), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (97.06846, 3.659003, -33.99426), "normal": (-0.237581, 0.669214, 0.704066), "depth": 0.00095420418074 }], "unsticks": 0 }
+APPROACH cached sample={ "stage": "approach", "approach_frame": 180, "physics_frame": 211, "position": (96.97319, 3.526704, -33.71196), "velocity": (0.0, 0.0, 0.0), "requested_stick": (0.468985, 0.0, -0.883206), "resolved_stick": (0.468985, -0.883206), "last_controller_wanted": (0.468984, 0.0, -0.883207), "deflect_left": 0.0, "deflect": (0.0, 0.0, 0.0), "locomotion_enabled": true, "carried": false, "input_owner": "", "grounded": true, "wall": true, "floor_stop_on_slope": false, "floor_constant_speed": true, "contacts": [{ "body": "CanonicalLocalTerrain", "position": (97.0685, 3.658895, -33.99414), "normal": (-0.237581, 0.669214, 0.704066), "depth": 0.00096023885999 }], "unsticks": 0 }
+RESULT exact physical prompt activated=false success=false mode=current production no campaign receipt claimed
+XR: Clearing primary interface
+XR: Removed interface "Native mobile"
+XR: Removed interface "OpenXR"

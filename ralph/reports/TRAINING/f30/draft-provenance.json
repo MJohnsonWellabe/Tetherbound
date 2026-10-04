@@ -1,0 +1,308 @@
+{
+  "feature": "F30",
+  "status": "disabled_source_only_draft_no_acceptance_credit",
+  "captured_at_utc": "2026-09-30T16:04:26.2812497Z",
+  "source_worktree": "D:/tetherbound/redesign-training",
+  "base_kind": "retained_read_only_worktree_file_snapshots_with_current_source_presence_and_hashes_not_a_Git_revision_or_clean_tree_claim",
+  "packaging_note": "Source files can change or disappear under the sole project writer. Packaging reuses retained work/base copies and reports current source presence/hash separately. A preceding refresh stopped at missing data/config/essence.json after copying earlier inputs; previous receipt hashes are recorded to expose any snapshot drift.",
+  "target_paths_absent_at_packaging": {
+    "data/config/traits.json": true,
+    "scripts/creatures/traits.gd": true
+  },
+  "change_scope": [
+    "data/config/traits.json",
+    "scripts/creatures/traits.gd"
+  ],
+  "trait_count": 30,
+  "rarity_counts": {
+    "common": 12,
+    "rare": 10,
+    "epic": 8
+  },
+  "performed": [
+    "Read-only source inspection",
+    "Authored two NEW files only in own outputs",
+    "JSON readback with PowerShell ConvertFrom-Json",
+    "Manual source review of input/config refusal paths",
+    "Packaged new-file unified diff and SHA256 source/output receipts"
+  ],
+  "not_performed": [
+    "D: project writes",
+    "Git operations",
+    "Godot parsing/import/engine/GPU",
+    "Unit or distribution tests",
+    "CI",
+    "Live hooks",
+    "Acceptance scoring",
+    "ItemDB/bond/CreatureInstance/Session/shared-source edits"
+  ],
+  "canonical_schema_boundary": [
+    "Current F16 data/schema/traits.json and traits.schema.json admit only hardy/max_hp_scale.",
+    "canonical_catalog preserves that exact row; candidate_catalog uses the same literal four-field row shape and labels all 29 other identities as proposals.",
+    "Do not pass the full config envelope to RedesignData.load_catalog: F16 expects an array. The helper validates only source canonical_catalog through F16 and validates disabled proposals separately.",
+    "The new config envelope is a draft extension, not an already registered F16 schema. Do not call the full candidate pool canonical until the authorized writer extends traits manifest/schema and character trait enums coherently."
+  ],
+  "host_boundary": [
+    "preview_roll requires seven HOST-sampled [0,1) draws and host-owned alpha/night/weather spawn facts; the module creates no RNG and admits no network request.",
+    "Both typed result containers and every typed effect proposal carry admissible=false; code=draft_only indicates content preview, never gameplay authorization.",
+    "preview_effects emits one scalar target with an eligibility gate per distinct id; all inputs and output proposals are detached, with no stat application.",
+    "No grant of swim/fly/climb permission, no trainer damage, no held gameplay input, no producer/automation behavior and no ownership-cap change.",
+    "Future Session must recompute from its admitted canonical record, sample RNG only on the host and stage its existing personalized character ledger before same-record CAS.",
+    "Release must atomically combine existing release:<uid> receipts, chosen seed, essence, inventory capacity and owned uid removal; no second roster/receipt store.",
+    "Teach must require completed breakthrough, slot, canonical seed payload and species-derived essence; overwrite destroys the old taught trait, with duplicate checks across all admitted visible traits."
+  ],
+  "unresolved_proposals": [
+    "Existing TRAINING section 12 item 4: personality mapping remains OFF; existing primary/hidden secondary identity and current bond threshold are preserved. No capacity/duplicate resolution is silently chosen.",
+    "Dual-type teaching debit has no explicit settled rule; primary-type debit is labeled a disabled proposal pending training-owner review.",
+    "Strongest eligible magnitude per scalar target/event replaces the earlier multiplicative stacking proposal. It remains disabled pending COMBAT formula order/caps/network review; no new hard rule has been adopted.",
+    "Rare traversal/projectile/stagger consumers need real-path review; content does not prove those hooks exist.",
+    "Trait Seed item identity/payload/stacking must be registered by ItemDB owner. No made-up generic seed item id is treated as usable inventory."
+  ],
+  "content_refinements": [
+    "Canonical hardy/common/max_hp_scale/0.05 appears unchanged in both canonical_catalog and candidate_catalog.",
+    "The eight existing Common personality effects keep the exact CREATURES section 3.1 scalar targets and 5% magnitudes; mapping remains disabled.",
+    "All 30 candidate ids and effect ids are distinct; counts remain Common12/Rare10/Epic8 and every magnitude respects its 5/8/12% cap.",
+    "The eight Epic type-power rows share a scalar family but have distinct mutually exclusive host move-type gates; no generic Epic power row is added.",
+    "Typed effects expose scalar_target_group and the pending strongest-eligible proposal so a future consumer cannot mistake distinct ids for permission to multiply overlapping power effects.",
+    "Keen Aim preserves projectile range, Far Reach preserves projectile speed, Watchful preserves Burst distance/timing/vulnerability and Surefoot explicitly applies outside combat.",
+    "The earlier multiplicative proposal could produce a 17.6% charged-fire bonus from Bold5% and Flameheart12%; the disabled strongest-eligible proposal would leave that target at12%."
+  ],
+  "integration_next": [
+    "Re-read and compare source hashes before adopting; another lane can change the base while this helper stays read-only.",
+    "Adopt only the two proposed NEW paths after reviewing the exact patch. Do not replace existing data/traits/traits.json or trait_db.gd.",
+    "Complete canonical registry additions and settle identity mapping separately; remove draft-only restrictions only in a reviewed operational implementation.",
+    "Keep all F30 criteria OPEN until named per-trait effects, roll distribution, persistence, UI and host transaction proofs are produced by the owning lane."
+  ],
+  "source_snapshots": [
+    {
+      "project_path": "AGENTS.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\AGENTS.md",
+      "snapshot_relative_to_task": "work/base/AGENTS.md",
+      "sha256": "0e3f2b1a387ffe7ab4666c3b6ac6f0aa086af92ad6bc2b64509ea57931051035",
+      "previous_receipt_sha256": "0e3f2b1a387ffe7ab4666c3b6ac6f0aa086af92ad6bc2b64509ea57931051035",
+      "current_source_present": true,
+      "current_source_sha256": "0e3f2b1a387ffe7ab4666c3b6ac6f0aa086af92ad6bc2b64509ea57931051035"
+    },
+    {
+      "project_path": "CODEX_START_HERE.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\CODEX_START_HERE.md",
+      "snapshot_relative_to_task": "work/base/CODEX_START_HERE.md",
+      "sha256": "8d34735f754bab4f3f5bf900d9f107157045af9f047180ecc6a384af9a22539d",
+      "previous_receipt_sha256": "8d34735f754bab4f3f5bf900d9f107157045af9f047180ecc6a384af9a22539d",
+      "current_source_present": true,
+      "current_source_sha256": "8d34735f754bab4f3f5bf900d9f107157045af9f047180ecc6a384af9a22539d"
+    },
+    {
+      "project_path": "docs/STATE.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\STATE.md",
+      "snapshot_relative_to_task": "work/base/docs/STATE.md",
+      "sha256": "4f94278444dbf9936edfb93079f52ac6557586071e36b5f88f1e763090435d91",
+      "previous_receipt_sha256": "eb257ce9717eba66f4934822714edfba09079b6c972af5bf39a2b3705a3f3ca5",
+      "current_source_present": true,
+      "current_source_sha256": "4f94278444dbf9936edfb93079f52ac6557586071e36b5f88f1e763090435d91"
+    },
+    {
+      "project_path": "docs/GAME_BIBLE.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\GAME_BIBLE.md",
+      "snapshot_relative_to_task": "work/base/docs/GAME_BIBLE.md",
+      "sha256": "571dbba02b0f95314e00d05e54974a7bdec6a4943c0335e3a7513a5ccf4259b4",
+      "previous_receipt_sha256": "571dbba02b0f95314e00d05e54974a7bdec6a4943c0335e3a7513a5ccf4259b4",
+      "current_source_present": true,
+      "current_source_sha256": "571dbba02b0f95314e00d05e54974a7bdec6a4943c0335e3a7513a5ccf4259b4"
+    },
+    {
+      "project_path": "docs/ACCEPTANCE.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\ACCEPTANCE.md",
+      "snapshot_relative_to_task": "work/base/docs/ACCEPTANCE.md",
+      "sha256": "5c79e3420c5e2f509bab9c86cfe7d6f2676c16a666ba422712e3636b52bf7e58",
+      "previous_receipt_sha256": "5c79e3420c5e2f509bab9c86cfe7d6f2676c16a666ba422712e3636b52bf7e58",
+      "current_source_present": true,
+      "current_source_sha256": "5c79e3420c5e2f509bab9c86cfe7d6f2676c16a666ba422712e3636b52bf7e58"
+    },
+    {
+      "project_path": "docs/WORKFLOW.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\WORKFLOW.md",
+      "snapshot_relative_to_task": "work/base/docs/WORKFLOW.md",
+      "sha256": "fe28641b20aa473d6513239b2c768ad2a82271f50f384013ad06ffbbed98daef",
+      "previous_receipt_sha256": "fe28641b20aa473d6513239b2c768ad2a82271f50f384013ad06ffbbed98daef",
+      "current_source_present": true,
+      "current_source_sha256": "fe28641b20aa473d6513239b2c768ad2a82271f50f384013ad06ffbbed98daef"
+    },
+    {
+      "project_path": "docs/TECHNICAL.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\TECHNICAL.md",
+      "snapshot_relative_to_task": "work/base/docs/TECHNICAL.md",
+      "sha256": "96862f794660b92d42f2651fb0f50bc1862c7d152426abb1ceefba1e10e22797",
+      "previous_receipt_sha256": "96862f794660b92d42f2651fb0f50bc1862c7d152426abb1ceefba1e10e22797",
+      "current_source_present": true,
+      "current_source_sha256": "96862f794660b92d42f2651fb0f50bc1862c7d152426abb1ceefba1e10e22797"
+    },
+    {
+      "project_path": "docs/design/TRAINING.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\design\\TRAINING.md",
+      "snapshot_relative_to_task": "work/base/docs/design/TRAINING.md",
+      "sha256": "572579e15440ceb89e964f0a7dd063e04bdde360aa3e412905dd7d41a29d97e6",
+      "previous_receipt_sha256": "572579e15440ceb89e964f0a7dd063e04bdde360aa3e412905dd7d41a29d97e6",
+      "current_source_present": true,
+      "current_source_sha256": "572579e15440ceb89e964f0a7dd063e04bdde360aa3e412905dd7d41a29d97e6"
+    },
+    {
+      "project_path": "docs/design/CREATURES.md",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\docs\\design\\CREATURES.md",
+      "snapshot_relative_to_task": "work/base/docs/design/CREATURES.md",
+      "sha256": "9a6c671e7096189951530cdd4949cfeef36d893ca1f1211c574c35a48776254c",
+      "previous_receipt_sha256": "9a6c671e7096189951530cdd4949cfeef36d893ca1f1211c574c35a48776254c",
+      "current_source_present": true,
+      "current_source_sha256": "9a6c671e7096189951530cdd4949cfeef36d893ca1f1211c574c35a48776254c"
+    },
+    {
+      "project_path": "data/traits/traits.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\traits\\traits.json",
+      "snapshot_relative_to_task": "work/base/data/traits/traits.json",
+      "sha256": "984ad812c97c8fa16cc573b94b63f4767b224f3f3f6fa97e86294774b2a5ba9a",
+      "previous_receipt_sha256": "984ad812c97c8fa16cc573b94b63f4767b224f3f3f6fa97e86294774b2a5ba9a",
+      "current_source_present": true,
+      "current_source_sha256": "984ad812c97c8fa16cc573b94b63f4767b224f3f3f6fa97e86294774b2a5ba9a"
+    },
+    {
+      "project_path": "scripts/creatures/trait_db.gd",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\scripts\\creatures\\trait_db.gd",
+      "snapshot_relative_to_task": "work/base/scripts/creatures/trait_db.gd",
+      "sha256": "16c49ddb38bff242fe653c7f5514ab844b7c93ed196fb9801243623ff36a6b55",
+      "previous_receipt_sha256": "16c49ddb38bff242fe653c7f5514ab844b7c93ed196fb9801243623ff36a6b55",
+      "current_source_present": true,
+      "current_source_sha256": "16c49ddb38bff242fe653c7f5514ab844b7c93ed196fb9801243623ff36a6b55"
+    },
+    {
+      "project_path": "data/schema/traits.schema.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\schema\\traits.schema.json",
+      "snapshot_relative_to_task": "work/base/data/schema/traits.schema.json",
+      "sha256": "75be535a8a97a98d4b46502e29087cd7e74c3b4f3fd19060ed03066c79233ed1",
+      "previous_receipt_sha256": "75be535a8a97a98d4b46502e29087cd7e74c3b4f3fd19060ed03066c79233ed1",
+      "current_source_present": true,
+      "current_source_sha256": "75be535a8a97a98d4b46502e29087cd7e74c3b4f3fd19060ed03066c79233ed1"
+    },
+    {
+      "project_path": "data/schema/traits.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\schema\\traits.json",
+      "snapshot_relative_to_task": "work/base/data/schema/traits.json",
+      "sha256": "cbf31b2f23e300df1664ee24116585bc97ada33d391ccb97bec2866aa05cca97",
+      "previous_receipt_sha256": "cbf31b2f23e300df1664ee24116585bc97ada33d391ccb97bec2866aa05cca97",
+      "current_source_present": true,
+      "current_source_sha256": "cbf31b2f23e300df1664ee24116585bc97ada33d391ccb97bec2866aa05cca97"
+    },
+    {
+      "project_path": "data/schema/character_state.schema.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\schema\\character_state.schema.json",
+      "snapshot_relative_to_task": "work/base/data/schema/character_state.schema.json",
+      "sha256": "2adaa65032ccf5c3f36cbc1100d960de26e0538043c3ac8dd45ca6ee22821c7c",
+      "previous_receipt_sha256": "2adaa65032ccf5c3f36cbc1100d960de26e0538043c3ac8dd45ca6ee22821c7c",
+      "current_source_present": true,
+      "current_source_sha256": "2adaa65032ccf5c3f36cbc1100d960de26e0538043c3ac8dd45ca6ee22821c7c"
+    },
+    {
+      "project_path": "data/schema/character_state.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\schema\\character_state.json",
+      "snapshot_relative_to_task": "work/base/data/schema/character_state.json",
+      "sha256": "8e56ff733cfc50196cf58215d78fb2eaefd88cf51c1ecc2eac440eed4eab5210",
+      "previous_receipt_sha256": "8e56ff733cfc50196cf58215d78fb2eaefd88cf51c1ecc2eac440eed4eab5210",
+      "current_source_present": true,
+      "current_source_sha256": "8e56ff733cfc50196cf58215d78fb2eaefd88cf51c1ecc2eac440eed4eab5210"
+    },
+    {
+      "project_path": "data/schema/essences.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\schema\\essences.json",
+      "snapshot_relative_to_task": "work/base/data/schema/essences.json",
+      "sha256": "ebcda15375132ac735175547f35ad0ec143abb1e85637887d2e597255e8c70c8",
+      "previous_receipt_sha256": "ebcda15375132ac735175547f35ad0ec143abb1e85637887d2e597255e8c70c8",
+      "current_source_present": true,
+      "current_source_sha256": "ebcda15375132ac735175547f35ad0ec143abb1e85637887d2e597255e8c70c8"
+    },
+    {
+      "project_path": "data/progression/flag_scopes.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\progression\\flag_scopes.json",
+      "snapshot_relative_to_task": "work/base/data/progression/flag_scopes.json",
+      "sha256": "d834ac1237d6dce48d53d1afd93aa1412e7fc77479817816bb2c56916396c87b",
+      "previous_receipt_sha256": "d834ac1237d6dce48d53d1afd93aa1412e7fc77479817816bb2c56916396c87b",
+      "current_source_present": true,
+      "current_source_sha256": "d834ac1237d6dce48d53d1afd93aa1412e7fc77479817816bb2c56916396c87b"
+    },
+    {
+      "project_path": "data/config/progression.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\config\\progression.json",
+      "snapshot_relative_to_task": "work/base/data/config/progression.json",
+      "sha256": "ee83ea8a3c65012d57133e1803abab87647452d5c7963552bdf8b175e96b6246",
+      "previous_receipt_sha256": "ee83ea8a3c65012d57133e1803abab87647452d5c7963552bdf8b175e96b6246",
+      "current_source_present": true,
+      "current_source_sha256": "ee83ea8a3c65012d57133e1803abab87647452d5c7963552bdf8b175e96b6246"
+    },
+    {
+      "project_path": "data/config/essence.json",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\data\\config\\essence.json",
+      "snapshot_relative_to_task": "work/base/data/config/essence.json",
+      "sha256": "cb43d621a8b93634b357e8f435ed976d15d2be73d812644f0a4b28586cd907a1",
+      "previous_receipt_sha256": "cb43d621a8b93634b357e8f435ed976d15d2be73d812644f0a4b28586cd907a1",
+      "current_source_present": false,
+      "current_source_sha256": null
+    },
+    {
+      "project_path": "scripts/data/redesign_data.gd",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\scripts\\data\\redesign_data.gd",
+      "snapshot_relative_to_task": "work/base/scripts/data/redesign_data.gd",
+      "sha256": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99",
+      "previous_receipt_sha256": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99",
+      "current_source_present": true,
+      "current_source_sha256": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99"
+    },
+    {
+      "project_path": "scripts/data/redesign_state.gd",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\scripts\\data\\redesign_state.gd",
+      "snapshot_relative_to_task": "work/base/scripts/data/redesign_state.gd",
+      "sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+      "previous_receipt_sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+      "current_source_present": true,
+      "current_source_sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed"
+    },
+    {
+      "project_path": "scripts/creatures/creature_instance.gd",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\scripts\\creatures\\creature_instance.gd",
+      "snapshot_relative_to_task": "work/base/scripts/creatures/creature_instance.gd",
+      "sha256": "202ee40889cd872d5ec3cbe3d59ad3df619bed9a2e3b65656970b74084dbca49",
+      "previous_receipt_sha256": "202ee40889cd872d5ec3cbe3d59ad3df619bed9a2e3b65656970b74084dbca49",
+      "current_source_present": true,
+      "current_source_sha256": "202ee40889cd872d5ec3cbe3d59ad3df619bed9a2e3b65656970b74084dbca49"
+    },
+    {
+      "project_path": "scripts/creatures/essence.gd",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\scripts\\creatures\\essence.gd",
+      "snapshot_relative_to_task": "work/base/scripts/creatures/essence.gd",
+      "sha256": "5e26e94744a1315322f4b5e0f7ecf166da7f83e9a3369afefb04fb536e9d95b9",
+      "previous_receipt_sha256": "5e26e94744a1315322f4b5e0f7ecf166da7f83e9a3369afefb04fb536e9d95b9",
+      "current_source_present": false,
+      "current_source_sha256": null
+    },
+    {
+      "project_path": "scripts/net/session.gd",
+      "absolute_source": "D:\\tetherbound\\redesign-training\\scripts\\net\\session.gd",
+      "snapshot_relative_to_task": "work/base/scripts/net/session.gd",
+      "sha256": "a981315eb7c635895c1ca2445be9d474049bf02bd0f645ea306ce511d2ca69c0",
+      "previous_receipt_sha256": "a981315eb7c635895c1ca2445be9d474049bf02bd0f645ea306ce511d2ca69c0",
+      "current_source_present": true,
+      "current_source_sha256": "a981315eb7c635895c1ca2445be9d474049bf02bd0f645ea306ce511d2ca69c0"
+    }
+  ],
+  "deliverables": [
+    {
+      "path": "outputs/data/config/traits.json",
+      "sha256": "77324d3d6a5a0c26ddb675c0a2e0fad97fd30ac7f3b990e3f56e4455415cc239"
+    },
+    {
+      "path": "outputs/scripts/creatures/traits.gd",
+      "sha256": "9bf83f2c5cbe6193af96d5baa18b8851f5aff4ed74b5189674fb3ad5a49dbe26"
+    },
+    {
+      "path": "outputs/f30-source-only.patch",
+      "sha256": "3a03077d8cba400a8e5feac17503ed4dfe65810e8a9751cbca260f03b93c760b"
+    }
+  ]
+}

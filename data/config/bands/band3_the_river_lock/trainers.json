@@ -22,11 +22,11 @@
       "team": [
         {
           "species": "bramblebun",
-          "level": 8
+          "level": 12
         },
         {
           "species": "mudsnout",
-          "level": 8
+          "level": 12
         }
       ],
       "reward": {
@@ -64,11 +64,11 @@
         {
           "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
           "species": "burrowback",
-          "level": 9
+          "level": 13
         },
         {
           "species": "pipwing",
-          "level": 9
+          "level": 13
         }
       ],
       "reward": {
@@ -107,7 +107,7 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 10,
+          "level": 14,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. BOSSES §2.1 step 2 maps this species by its CREATURES role (mosshell \"endurance anchor\", burrowback \"front-line wall\", CREATURES.md:123/127) to WALL, so step 3 clamps WALL .85/1.1 up to .9 s tell / 1.1 s recovery. Timing only: WALL power/chase/reposition are not applied here. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -116,7 +116,7 @@
         },
         {
           "species": "burrowback",
-          "level": 10,
+          "level": 14,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. BOSSES §2.1 step 2 maps this species by its CREATURES role (mosshell \"endurance anchor\", burrowback \"front-line wall\", CREATURES.md:123/127) to WALL, so step 3 clamps WALL .85/1.1 up to .9 s tell / 1.1 s recovery. Timing only: WALL power/chase/reposition are not applied here. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -126,7 +126,7 @@
         {
           "_why_d72": "D72 (owner playtest 2026-09-03, finding 10): the two starters belong to the opening choice alone, so no other trainer in the chapter may field one. This slot held a starter and now holds the nearest non-starter of the same type already used in this band file, at the same authored level -- index, id, level and reward are untouched. Mirrored in tests/fixtures/band_split_baseline/trainers.json in the same change, per that fixture's TRACKED MIRROR policy.",
           "species": "galecrest",
-          "level": 10,
+          "level": 14,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9
@@ -169,7 +169,7 @@
       "team": [
         {
           "species": "galecrest",
-          "level": 12,
+          "level": 15,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -180,7 +180,7 @@
         },
         {
           "species": "duskhush",
-          "level": 12,
+          "level": 15,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,
@@ -191,7 +191,7 @@
         },
         {
           "species": "burrowback",
-          "level": 12,
+          "level": 15,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -202,7 +202,7 @@
         },
         {
           "species": "mosshell",
-          "level": 12,
+          "level": 16,
           "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
           "combat": {
             "telegraph": 0.9,
@@ -213,7 +213,7 @@
         },
         {
           "species": "tuskroot",
-          "level": 12,
+          "level": 16,
           "combat": {
             "_comment": "GATE3_ENCOUNTER_CONTRACTS.md G-3/V-2 CHARGER profile, relative to combat.json's `enemy` defaults (power 8, telegraph 0.55, recovery 0.75, attack_cooldown 1.1, preferred_range 2.1, lunge 3.4). Read by scripts/creatures/wild_creature.gd's per-body `combat` override (G-2, landing separately from the G3-ENCOUNTERS lane) -- absent or unread, this body fights exactly as before. Closes from range in one lunge; the tell is the distance it keeps, not the wind-up time, which is what makes it read as different from Dell's or a picket's creatures rather than the same fight at a higher number.",
             "preferred_range": 4.5,
@@ -279,7 +279,7 @@
       "team": [
         {
           "species": "mosshell",
-          "level": 16,
+          "level": 15,
           "combat": {
             "telegraph": 0.85,
             "recovery": 1.1,
@@ -293,7 +293,7 @@
         },
         {
           "species": "trailpup",
-          "level": 16,
+          "level": 15,
           "combat": {
             "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
             "telegraph": 0.9,

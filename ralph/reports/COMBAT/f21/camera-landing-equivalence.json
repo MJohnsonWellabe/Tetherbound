@@ -1,0 +1,540 @@
+{
+  "criterion": "F21#4",
+  "integration_base": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "preserved_full_lane": "0fde99d8013690931d715d126df65137c83ee103",
+  "observed_source": "8cff5ee2821941c68b43657ba4f9e96cbc83d8e6",
+  "status": "F21#4 numeric runtime PASS at8cff includes measured occupied HUD exclusion and approximate foreground sight; independent strict and fresh blind verdict/main landing pending. bf9 numericPASS/blindFAIL retained.",
+  "scope": "Only camera production/config and exact camera tests/capture; no feedback/audio/VFX/loadout/utility/net authority prototypes.",
+  "proof_reuse": "Original static r2 and failed live r1 are retained without alteration. Current solver, manager, rig and tuning differ, so no static image/composition verdict is transferred to the fix. Original assertions remain; no whole-suite rerun or full-art claim.",
+  "missing": [
+    "independent strict source/runtime and fresh code-blind dynamic verdict",
+    "reviewed camera slice landing on main"
+  ],
+  "not_claimed": [
+    "F21#5",
+    "full visual craft bar",
+    "Medium FPS",
+    "Ally device",
+    "earned creature/campaign acquisition"
+  ],
+  "camera_cut_before_capture": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
+  "live_runtime": {
+    "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+    "native_exit": 1,
+    "result": "failed/incomplete",
+    "proof": "camera-live-r1/source-proof.json",
+    "diagnosis": "Strict projected overlap failed in 54 of 119 scored small/small observations despite both actors framed and simulation live. Encounter left ACTIVE at observation 239 before quick input. The render-observation schedule advanced 1,150 actual physics frames, so the nominal tick duration was inaccurate; case elapsed 27.062s is below the 30s wall budget.",
+    "same_source_before_after": true,
+    "all_owned_godot_processes_exited": true
+  },
+  "historical_cut_equivalence": {
+    "camera_cut": "ecd45e2b1e9e6c3b7bf7190f5e24a1910c2e6181",
+    "observed_source": "367e3b1b167156f88b3726f5112a016298cd1e27",
+    "scope": "Historical static cut only. The current production orbit/bounds/guard fix differs; its original native/blind verdict is not transferred.",
+    "functions": {
+      "_take_camera": {
+        "observed_sha256": "e90458e41e3b813f5873f2de8958eee046f3396749794c7fef8cbc8ef6c46cba",
+        "cut_sha256": "e90458e41e3b813f5873f2de8958eee046f3396749794c7fef8cbc8ef6c46cba",
+        "equal": true
+      },
+      "_combat_camera_profile": {
+        "observed_sha256": "fbeff085029d30c5cb2400fa72d1be1176a1ba37643b3b74ebd08aa3cea6afe1",
+        "cut_sha256": "fbeff085029d30c5cb2400fa72d1be1176a1ba37643b3b74ebd08aa3cea6afe1",
+        "equal": true
+      },
+      "_update_combat_camera_framing": {
+        "observed_sha256": "3f1cb511646c576cf9ef875ad7c7bc429161623b693ae3222f71c97075773eb3",
+        "cut_sha256": "3f1cb511646c576cf9ef875ad7c7bc429161623b693ae3222f71c97075773eb3",
+        "equal": true
+      },
+      "_release_camera": {
+        "observed_sha256": "1896d932c6314b6ac740e0a046b36ca710cdbfea0a1710e17a01bbbd08d9830e",
+        "cut_sha256": "1896d932c6314b6ac740e0a046b36ca710cdbfea0a1710e17a01bbbd08d9830e",
+        "equal": true
+      },
+      "_update_fight_camera_matrix": {
+        "observed_sha256": "680466fcbfc6ace61742cbe201eea5380215046f19e95a461cf321497f9eb708",
+        "cut_sha256": "680466fcbfc6ace61742cbe201eea5380215046f19e95a461cf321497f9eb708",
+        "equal": true
+      },
+      "_body_world_bounds": {
+        "observed_sha256": "e03609c01e56a2caa757faa4758454520d3afa7b7d7eed79abb5b13a12132598",
+        "cut_sha256": "e03609c01e56a2caa757faa4758454520d3afa7b7d7eed79abb5b13a12132598",
+        "equal": true
+      },
+      "_combat_shoulder_offset": {
+        "observed_sha256": "bfb584c3dfb1baf3d35ddcd8214d8f5804014edf4d73e340d97e5c1edab095ef",
+        "cut_sha256": "bfb584c3dfb1baf3d35ddcd8214d8f5804014edf4d73e340d97e5c1edab095ef",
+        "equal": true
+      },
+      "_update_combat_top_band": {
+        "observed_sha256": "c82770116599b5d9f55302dbfd741688410ecf86ff943ebee1408a9f4304f6c6",
+        "cut_sha256": "c82770116599b5d9f55302dbfd741688410ecf86ff943ebee1408a9f4304f6c6",
+        "equal": true
+      },
+      "_update_combat_body_clear": {
+        "observed_sha256": "3589419ed6718cbe908b80e1f84ec7693ff4d1dae0892ed90d7e37fe0316ad42",
+        "cut_sha256": "3589419ed6718cbe908b80e1f84ec7693ff4d1dae0892ed90d7e37fe0316ad42",
+        "equal": true
+      },
+      "_physics_process": {
+        "observed_sha256": "b2aa852b83f2501e57b690d484dce5e42c0f073199f61b903103b5509aeca112",
+        "cut_sha256": "b2aa852b83f2501e57b690d484dce5e42c0f073199f61b903103b5509aeca112",
+        "equal": true
+      }
+    },
+    "whole_files": {
+      "scripts/player/camera_rig.gd": {
+        "observed_sha256": "b7bd778a5ce87566a23d35994aa3e3159991841a84cc2851637e4e74da58a7b8",
+        "cut_sha256": "b7bd778a5ce87566a23d35994aa3e3159991841a84cc2851637e4e74da58a7b8",
+        "equal": true
+      },
+      "scripts/combat/fight_camera.gd": {
+        "observed_sha256": "258ae8dd48ce614bd51f3a053d2308f0c0e2698bc073e5d4b369ef0cee7c5d39",
+        "cut_sha256": "258ae8dd48ce614bd51f3a053d2308f0c0e2698bc073e5d4b369ef0cee7c5d39",
+        "equal": true
+      },
+      "data/config/camera.json": {
+        "observed_sha256": "57e32fdbde4f78debd29ca7cc5987d4fb816e09f0358c791daa505884f1b897d",
+        "cut_sha256": "57e32fdbde4f78debd29ca7cc5987d4fb816e09f0358c791daa505884f1b897d",
+        "equal": true
+      },
+      "tests/test_fight_camera.gd": {
+        "observed_sha256": "6a46c002ddc675310a1993959adc85eb912a7c44999d297f3d085d1a5f5d36fe",
+        "cut_sha256": "6a46c002ddc675310a1993959adc85eb912a7c44999d297f3d085d1a5f5d36fe",
+        "equal": true
+      },
+      "tests/smoke_combat_camera.gd": {
+        "observed_sha256": "5c98d9255dce5ab8d75742e96876e07219dbc8c551fb56ba0c2f752702c9340d",
+        "cut_sha256": "be8f79f1249d994803c956298b3c7a52a8cf06e0b26a03f91bfb66b09d52015c",
+        "equal": false,
+        "scope": "Capture-only successor adds opt-in --matrix-live; original static matrix and retained original controls remain. No original native proof is transferred to the unexecuted live mode."
+      }
+    },
+    "dependencies": {
+      "data/config/combat.json": {
+        "observed_sha256": "0f0c0628db779e6a0926379eb32f4cd0be40140aebfdc7585ec14ec275fb9d56",
+        "cut_sha256": "0f0c0628db779e6a0926379eb32f4cd0be40140aebfdc7585ec14ec275fb9d56",
+        "equal": true,
+        "scope": "camera block only"
+      },
+      "data/config/art.json": {
+        "observed_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+        "cut_sha256": "fb26ab9943076293eb2163446c4a294805f6045fe60e6b5671f84496d6411bac",
+        "equal": true,
+        "scope": "whole file normalized Git LF"
+      },
+      "data/creatures/species.json": {
+        "observed_sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+        "cut_sha256": "0c6d102591e383dfe71e876c8467231863ed5a8e570a87beb91453be33717d9f",
+        "equal": true,
+        "scope": "whole file normalized Git LF"
+      },
+      "scripts/creatures/follower_creature.gd": {
+        "observed_sha256": "5dbed5313df65e44dda68ab324d4f64daed6efebb048751cd22f8c64b646ae83",
+        "cut_sha256": "5dbed5313df65e44dda68ab324d4f64daed6efebb048751cd22f8c64b646ae83",
+        "equal": true,
+        "scope": "whole file normalized Git LF"
+      },
+      "scripts/creatures/creature_body.gd": {
+        "observed_sha256": "892614be410c551121df3c36421978e2bf9b6a0ab9f9f92fdd0fc03c62999cfe",
+        "cut_sha256": "7096f76c289c61570abafea82c44c7b3782f78fde8d9bd77d8ed59637de7ca3d",
+        "equal": false,
+        "scope": "whole file normalized Git LF"
+      },
+      "scripts/ui/graphics_prefs.gd": {
+        "observed_sha256": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7",
+        "cut_sha256": "b27a7030a8c4a55ea8a01c07c5f6e3e1e92c5bb2e617ba488dc947f12117ddb7",
+        "equal": true,
+        "scope": "whole file normalized Git LF"
+      },
+      "scenes/world/meadows_playground.tscn": {
+        "observed_sha256": "c79cda6e773f1a8c75ea69fc954991d3712c97bdbbfc5ae6af95701c0143a812",
+        "cut_sha256": "c79cda6e773f1a8c75ea69fc954991d3712c97bdbbfc5ae6af95701c0143a812",
+        "equal": true,
+        "scope": "whole file normalized Git LF"
+      }
+    },
+    "dependency_difference": "CreatureBody differs by the excluded impact-feedback/movement lease prototype. The held matrix disabled body physics; exact render-bounds callers, art/catalog/model inputs and rig/solver/config are retained. This difference is not used to transfer a moving nine-pair result.",
+    "existing_moving_input_evidence": "Observed native-fullscreen.txt includes retained physical-input encounter/orbit/manual grace, varying separation, creature switch, aim/cancel and exit assertions after the held matrix was restored. It does not cover movement of every staged nine-pair body combination."
+  },
+  "current_fix": {
+    "source": "8cff5ee2821941c68b43657ba4f9e96cbc83d8e6",
+    "files": {
+      "scripts/combat/combat_manager.gd": {
+        "executed_source_sha256": "b41440e4dce55a540b92baefd21c9c1df52c3f326001889abc7c3eb50f0c4812",
+        "current_git_blob_sha256": "b41440e4dce55a540b92baefd21c9c1df52c3f326001889abc7c3eb50f0c4812",
+        "equal": true
+      },
+      "scripts/combat/fight_camera.gd": {
+        "executed_source_sha256": "e03e402a0a94760fb025a8a091daaa0ef265a9aa4d29caeeb6a92806f786755f",
+        "current_git_blob_sha256": "e03e402a0a94760fb025a8a091daaa0ef265a9aa4d29caeeb6a92806f786755f",
+        "equal": true
+      },
+      "scripts/player/camera_rig.gd": {
+        "executed_source_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "current_git_blob_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "equal": true
+      },
+      "data/config/camera.json": {
+        "executed_source_sha256": "7c5bb9b173306c5d060e5dccb47c54ae9ce893ec5d4e1fa759e7ce934d138c4e",
+        "current_git_blob_sha256": "7c5bb9b173306c5d060e5dccb47c54ae9ce893ec5d4e1fa759e7ce934d138c4e",
+        "equal": true
+      },
+      "data/config/combat.json": {
+        "executed_source_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "current_git_blob_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "equal": true
+      },
+      "tests/smoke_combat_camera.gd": {
+        "executed_source_sha256": "fef4c7fddcca47d6d03d315ee17b8c6aa38bbbfad95e8647128e6aaf8b12527a",
+        "current_git_blob_sha256": "fef4c7fddcca47d6d03d315ee17b8c6aa38bbbfad95e8647128e6aaf8b12527a",
+        "equal": true
+      },
+      "tests/test_fight_camera.gd": {
+        "executed_source_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "current_git_blob_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "equal": true
+      }
+    },
+    "source_gate": "camera-readability-r2-source/independent-root-review.json.raw",
+    "scope": "Exactly four reviewed production/config/smoke visibility changes, other executed dependencies unchanged; no HUD C2/C4 or incoming prototypes applied. All actual original inputs/physics/body/collision/AI/manual camera checks preserved."
+  },
+  "live_runtime_r2": {
+    "source": "984ee07808aac06ca0883c18c8ba2ebfa08382ae",
+    "native_exit": 1,
+    "elapsed_seconds": 283.4220000000205,
+    "proof": "camera-live-r2/source-proof.json",
+    "complete_cases": 9,
+    "physics_samples_per_case": [
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300,
+      300
+    ],
+    "original_png_count": 54,
+    "passed_pairs": [
+      "normal/small",
+      "giant/small"
+    ],
+    "failed_pairs": [
+      "small/small",
+      "small/normal",
+      "small/giant",
+      "normal/normal",
+      "normal/giant",
+      "giant/normal",
+      "giant/giant"
+    ],
+    "same_source_before_after": true,
+    "processes_exited": "ROOT wrapper terminal confirms native ended; engine queue now belongs ROOT/M1."
+  },
+  "next_approach": "Refine only a failed coarse constrained orbit around its measured best angle, preserving same pitch/world/model guard/cap; distinguish bounded canonical contact hitstop from inactive simulation using recorded live state.",
+  "historical_fix_r2": {
+    "source_identity": "The commit containing this manifest freezes the listed byte hashes; the external runner pins actual git HEAD and tracked cleanliness before and after execution.",
+    "files": {
+      "data/config/camera.json": {
+        "raw_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
+        "git_lf_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3"
+      },
+      "scripts/combat/combat_manager.gd": {
+        "raw_sha256": "56388e088557c81a8243450baca93ec5c6bed7fa7cd0b01331904bb89163167a",
+        "git_lf_sha256": "56388e088557c81a8243450baca93ec5c6bed7fa7cd0b01331904bb89163167a"
+      },
+      "scripts/combat/fight_camera.gd": {
+        "raw_sha256": "8f122481725c95dba8ad1c3d9415dd8aca4abe20c6f0c60f53a22789443341cc",
+        "git_lf_sha256": "8f122481725c95dba8ad1c3d9415dd8aca4abe20c6f0c60f53a22789443341cc"
+      },
+      "scripts/player/camera_rig.gd": {
+        "raw_sha256": "5a4fa8bc56fe1a492385f1460a266ecb89617ed5060fc23217572dedf6157cfb",
+        "git_lf_sha256": "5a4fa8bc56fe1a492385f1460a266ecb89617ed5060fc23217572dedf6157cfb"
+      },
+      "tests/smoke_combat_camera.gd": {
+        "raw_sha256": "25e6fade847a2d395d6a429e3b6dec1c6f8ec377a7eb196bc048b16f8994e2a0",
+        "git_lf_sha256": "25e6fade847a2d395d6a429e3b6dec1c6f8ec377a7eb196bc048b16f8994e2a0"
+      },
+      "tests/test_fight_camera.gd": {
+        "raw_sha256": "7300242a951ed3318f49f2a71fb80fd83a5d6058750bcb06ffe794584fc19803",
+        "git_lf_sha256": "7300242a951ed3318f49f2a71fb80fd83a5d6058750bcb06ffe794584fc19803"
+      }
+    },
+    "diagnosis": "First scored r1 failure155 had disjoint world boxes but lagged orbital correction; frame160 had a2m lens arm despite disjoint boxes. Later inflated world AABBs overlapped for rotating long models. Old draw-driven input advanced1150 physics ticks across239 observations and ended before quick.",
+    "production_changes": [
+      "Measure exact8 corners of the same local model render box after actual model transform; retain inflated world-AABB diagnostics. No body/collision/model transform edits.",
+      "Choose nearest clear CURRENT rig yaw and supply one absolute solved yaw to the existing manual-grace-aware tracker; tuned strength18/speed180/deadzone0. Existing pivot/distance smoothing/world sweeps remain.",
+      "Use the same model-transformed box for foe lens guard instead of empty enclosing world corners. Legacy non-matrix guard remains. Strict projected model-rectangle overlap stays0."
+    ],
+    "regression": "One added pure rotated-long-model regression: intersecting inflated world AABBs, actually separate transformed model boxes, strict0/framing/no size change; empty-corner vs actual lens intersections. Existing5 methods and assertions retained.",
+    "source_limitations": [
+      "Unexecuted source; cannot establish that real moving meshes never intersect or tracker lag never overlaps.",
+      "Changed production framing requires fresh native/pixel gates; literal zero overlap has not been relaxed.",
+      "No shared CreatureBody/collision/AI/scale or authority changes; staged roster/start positions are not earned campaign evidence."
+    ]
+  },
+  "live_runtime_r3": {
+    "source": "9507b405b75a3e4be3f84780853dfa40b7aba889",
+    "proof": "camera-live-r3/source-proof.json",
+    "native_exit": 1,
+    "elapsed_seconds": 302.5779999999795,
+    "complete_cases": 9,
+    "original_png_count": 54,
+    "passed_pairs": [
+      "small/small",
+      "small/normal",
+      "small/giant",
+      "normal/normal",
+      "giant/small"
+    ],
+    "failed_pairs": [
+      "normal/small",
+      "normal/giant",
+      "giant/normal",
+      "giant/giant"
+    ]
+  },
+  "historical_fix_r3": {
+    "source_identity": "The containing commit freezes these bytes. External launch must verify actual clean HEAD and before/after hashes; no source claim derives from a script argument alone.",
+    "files": {
+      "data/config/camera.json": {
+        "raw_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3",
+        "git_lf_sha256": "49e3b6a30dcf0f0694ffc73c0b7e4a532d90d8bfbc8478aee7e9a286e689bde3"
+      },
+      "scripts/combat/combat_manager.gd": {
+        "raw_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5",
+        "git_lf_sha256": "a70b4488b6eafc2246e8f85e4db446fea0683dda7b27de4c47b5026e21fe85e5"
+      },
+      "scripts/combat/fight_camera.gd": {
+        "raw_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897",
+        "git_lf_sha256": "67686433a4ebeb3c6c17502feb37de54431543f8d7b226569e581bdce37d7897"
+      },
+      "scripts/player/camera_rig.gd": {
+        "raw_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "git_lf_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398"
+      },
+      "tests/smoke_combat_camera.gd": {
+        "raw_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588",
+        "git_lf_sha256": "e611457fbb19f14ead212f5644bd037b40289123f6fa0f64d6643a1b85560588"
+      },
+      "tests/test_fight_camera.gd": {
+        "raw_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a",
+        "git_lf_sha256": "703b5b95b10210de36e55672a0707fc02e6473b71d868c8e611372f880805d6a"
+      }
+    },
+    "diagnosis": "Source984ee actual complete nine-pair run failed7 cases.314 scored draws/149bad; read-only15-axis SAT on actual eight model-transformed corners found0 OBB intersections. Small/small observed48 requested9.5m clear but actual lens2m; observed51 spring3.6855m with cached hit2.9035m matching preceding spring. Giant-foe lenses similarly collapsed2..2.48m. This does not justify changing bodies/collision/scale.",
+    "production_changes": [
+      "Rig calls its scoped fight composer after actor physics, ordinary look/tracking/follow and impact roll, before the current draw. Target changes clear this callback for aim/exit/conversation.",
+      "Read-only pose probes reuse existing spherical casts, world mask/exclusions/margin, vertical/lateral/pivot sweeps and oriented actual foe guard. Pure solver projects the returned constrained lens transform, including live roll and Camera3D offsets.",
+      "Keep a newly probed current-yaw/follow view when it is framed and clear; otherwise select nearest scored constrained safe orbit. Manual grace restricts candidates to current yaw. Existing distance cap and literal zero-overlap equation remain.",
+      "Apply only the scored rig/Camera3D presentation pose for this draw, replacing the stale SpringArm physics child placement. Subsequent SpringArm physics continues normally. No actor movement, collision/size changes, AI pause, HP/cost/authority or input-map edits."
+    ],
+    "capture_delta": "Existing live driver and all strict assertions retained. Flush only its two scheduled physical trigger edges before manager physics; raw r2 small/small was READY with action strength0 through120..122. Godot4.7 parse_input_event buffers by default, so slow draws can defer both edges. Actual next run must still observe a real quick action. Requested/selected transforms and constraint lengths now serialized numerically, not Variant strings.",
+    "primary_source_checks": {
+      "input_buffer_and_flush": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/input/input.cpp#L1410-L1468",
+      "camera_adjusted_transform_offsets": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/3d/camera_3d.cpp#L247-L259"
+    },
+    "regression": "Same existing rotated-long-model regression now also refuses a requested clear fit when a read-only constraint probe returns a0.2m lens. No method/assertion removed; one added assertion, total expected19 in this sole selected method. No broad suite needed for this source change.",
+    "source_limitations": [
+      "Unparsed/unexecuted adaptive source. Exact native actual camera/world sweep/hitstop and fresh dynamic blind judgment remain required; F21#4 NOT MET.",
+      "Safety correction can change camera pose promptly when smooth follow is invalid; dynamic pixel readability and correction quality need fresh independent blind judgment.",
+      "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
+      "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
+    ]
+  },
+  "parser_failure_r4": {
+    "source": "2df26db877348f5d999dddcb160fd0f9ad4889f5",
+    "proof": "camera-live-r4-parser-fail/source-proof.json",
+    "native_exit": 1,
+    "elapsed_seconds": 1.453,
+    "regression_executed": false,
+    "gameplay_executed": false,
+    "correction": "Only explicit bool declarations across eight new/derived capture predicates. Production/config/meaningful assertions unchanged."
+  },
+  "live_runtime_r4_types_r2": {
+    "source": "bf9df4536c4290516570072502b958883531d423",
+    "proof": "camera-live-r4-types-r2/source-proof.json",
+    "native_exit": 0,
+    "elapsed_seconds": 293.8280000000959,
+    "complete_cases": 9,
+    "original_png_count": 54,
+    "scored_render_count": 299,
+    "scope": "Physical movement and Quick input with actual authored bodies/enemy AI/rig/collision live, staged pair roster/start/action baselines; measured canonical bounded hitstop remains live presentation.",
+    "independent_review": "pending"
+  },
+  "historical_capture_plan": {
+    "mode": "--matrix-live",
+    "source_status": "Containing commit freezes successor after actual9507 failure; no engine launch or acceptance implied.",
+    "physics_boundaries_per_pair": 300,
+    "settling_physics_boundaries": 120,
+    "observed_physics_boundaries": 180,
+    "duration": "300 physics boundaries at actual Engine.physics_ticks_per_second (5 seconds at60Hz), independent of draw/PNG latency; actual draw count and timing are recorded. 30-second per-case wall limit;900-second whole-script cap.",
+    "physical_input": "Pre-physics left Y -0.85 at observed30 torelease90; physical quick trigger120 torelease122, flush buffered events at both trigger edges; right stick neutral. No direct action injection. Every actual post-draw view after settling scored, terminal/aborted renders retained.",
+    "images_per_pair": 6,
+    "ordered_png_milestones": [
+      0,
+      30,
+      60,
+      90,
+      120,
+      179
+    ],
+    "invariants": "Complete pass requires all9 cases,300 physics samples/case,6 nonblank1920x1080 PNG/case on distinct draws with requested+actual tick metadata, >=6 scored render records/case, strict0 overlap/in-frame/live simulation on EVERY scored render, physical movement and actual quick action. If skipped milestones cannot all be captured within interval, fail; no held-lifecycle escape.",
+    "output_plan": "If ROOT grants: fresh combat-camera-live-r4/frames and combat-camera-live-r4-user isolated APPDATA/LOCALAPPDATA, same single smoke parser/sole regression/one LowCompatibility1920x1080 full live9matrix.",
+    "asset_import_status": "No new assets. Existing cache ran984ee Low native successfully to a truthful7-caseFAIL. No import requested unless actual parser requires a missing/invalid necessary cache, coordinated with ROOT.",
+    "scope": "Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise BEFORE each pair only. No rescale, freeze, invulnerability, mid-interval HP/resource grants or earned acquisition claim.",
+    "status": "Historical pre-run plan only; superseded by live_runtime_r4_types_r2 complete native0 receipt."
+  },
+  "current_live_source_equivalence": {
+    "executed_source": "8cff5ee2821941c68b43657ba4f9e96cbc83d8e6",
+    "archive_commit": "72418c529b7509ec427fadfec9d8b70579c2dfd0",
+    "method": "Every raw Git blob SHA256 equals actual clean external native before/after receipt, all seven exact",
+    "files": {
+      "scripts/combat/combat_manager.gd": {
+        "executed_source_sha256": "b41440e4dce55a540b92baefd21c9c1df52c3f326001889abc7c3eb50f0c4812",
+        "current_git_blob_sha256": "b41440e4dce55a540b92baefd21c9c1df52c3f326001889abc7c3eb50f0c4812",
+        "equal": true
+      },
+      "scripts/combat/fight_camera.gd": {
+        "executed_source_sha256": "e03e402a0a94760fb025a8a091daaa0ef265a9aa4d29caeeb6a92806f786755f",
+        "current_git_blob_sha256": "e03e402a0a94760fb025a8a091daaa0ef265a9aa4d29caeeb6a92806f786755f",
+        "equal": true
+      },
+      "scripts/player/camera_rig.gd": {
+        "executed_source_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "current_git_blob_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "equal": true
+      },
+      "data/config/camera.json": {
+        "executed_source_sha256": "7c5bb9b173306c5d060e5dccb47c54ae9ce893ec5d4e1fa759e7ce934d138c4e",
+        "current_git_blob_sha256": "7c5bb9b173306c5d060e5dccb47c54ae9ce893ec5d4e1fa759e7ce934d138c4e",
+        "equal": true
+      },
+      "data/config/combat.json": {
+        "executed_source_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "current_git_blob_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "equal": true
+      },
+      "tests/smoke_combat_camera.gd": {
+        "executed_source_sha256": "fef4c7fddcca47d6d03d315ee17b8c6aa38bbbfad95e8647128e6aaf8b12527a",
+        "current_git_blob_sha256": "fef4c7fddcca47d6d03d315ee17b8c6aa38bbbfad95e8647128e6aaf8b12527a",
+        "equal": true
+      },
+      "tests/test_fight_camera.gd": {
+        "executed_source_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "current_git_blob_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "equal": true
+      }
+    },
+    "scope": "Current production source has the new occupied-HUD/approximate-foreground camera constraints. bf9 blindFAIL is retained; no old visual verdict transferred and fresh blind review pending."
+  },
+  "camera_readability_r2": {
+    "source": "8cff5ee2821941c68b43657ba4f9e96cbc83d8e6",
+    "proof": "camera-live-r4-types-r2/source-proof.json",
+    "native_exit": 0,
+    "elapsed_seconds": 326.0,
+    "complete_cases": 9,
+    "original_png_count": 54,
+    "scored_render_count": 277,
+    "scope": "Physical movement and Quick input with actual authored bodies/enemy AI/rig/collision live, staged pair roster/start/action baselines; measured canonical bounded hitstop remains live presentation.",
+    "independent_review": "pending; numeric success alone is not acceptance",
+    "visibility_scope": "Measured real HUD exclusion and approximate foreground creature ellipsoid head/torso rays; not a whole mesh silhouette proof",
+    "performance": "Not measured; raw draw counts alone do not establish FPS"
+  },
+  "historical_live_source_equivalence_bf9": {
+    "executed_source": "bf9df4536c4290516570072502b958883531d423",
+    "archive_commit": "7ef57d5f4c",
+    "method": "SHA256 raw git show bytes compared to frozen native receipt before/after hashes, all seven exact",
+    "files": {
+      "scripts/combat/combat_manager.gd": {
+        "executed_source_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+        "current_git_blob_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+        "equal": true
+      },
+      "scripts/combat/fight_camera.gd": {
+        "executed_source_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+        "current_git_blob_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+        "equal": true
+      },
+      "scripts/player/camera_rig.gd": {
+        "executed_source_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "current_git_blob_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "equal": true
+      },
+      "data/config/camera.json": {
+        "executed_source_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+        "current_git_blob_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+        "equal": true
+      },
+      "data/config/combat.json": {
+        "executed_source_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "current_git_blob_sha256": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+        "equal": true
+      },
+      "tests/smoke_combat_camera.gd": {
+        "executed_source_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+        "current_git_blob_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+        "equal": true
+      },
+      "tests/test_fight_camera.gd": {
+        "executed_source_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "current_git_blob_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "equal": true
+      }
+    },
+    "scope": "Actual moving-camera proof belongs to these bytes. Historical static blind verdict is not transferred; fresh dynamic judge remains pending."
+  },
+  "historical_fix_bf9": {
+    "source_identity": "The containing commit freezes these bytes. External launch must verify actual clean HEAD and before/after hashes; no source claim derives from a script argument alone.",
+    "files": {
+      "data/config/camera.json": {
+        "raw_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9",
+        "git_lf_sha256": "84a37ea275cbc9f333310eb0a33185f4a5b81de830ec0e0b0bcca581f6342ac9"
+      },
+      "scripts/combat/combat_manager.gd": {
+        "raw_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a",
+        "git_lf_sha256": "bee884a22b1f676b92ee2fe2037c080de4f51fcbb20151942b23387b3bbb176a"
+      },
+      "scripts/combat/fight_camera.gd": {
+        "raw_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306",
+        "git_lf_sha256": "c11179caa71bb17fb0040ba500a9a0ec7331c14534c9da579eb950203caf9306"
+      },
+      "scripts/player/camera_rig.gd": {
+        "raw_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398",
+        "git_lf_sha256": "2a23d5bba682453f173a4b17d9fa67d36df1ae68241ae553089f055b7f466398"
+      },
+      "tests/smoke_combat_camera.gd": {
+        "raw_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d",
+        "git_lf_sha256": "4a42c9173045fc69c24a2cf7f1d483b1f3a49de561285289cc45b7593173e23d"
+      },
+      "tests/test_fight_camera.gd": {
+        "raw_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+        "git_lf_sha256": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d"
+      }
+    },
+    "diagnosis": "9507 r3 completed nine300tick/54PNG cases, native1/fourFAIL. Giant/giant55 SAT is disjoint (.61996/.68332m gaps); coarse yaw grid skips a model-unblocked/zero-overlap interval. Same-pitch/model-constrained offline pose yaw-9.0023deg/distance14.738m is feasible in pure geometry; world sweep native proof remains required. Four live=false rows occur at accepted contact; production hitstop disables body physics. Original receipt lacks individual flags and remains FAIL.",
+    "production_changes": [
+      "Rig calls its scoped fight composer after actor physics, ordinary look/tracking/follow and impact roll, before the current draw. Target changes clear this callback for aim/exit/conversation.",
+      "Read-only pose probes reuse existing spherical casts, world mask/exclusions/margin, vertical/lateral/pivot sweeps and oriented actual foe guard. Pure solver projects the returned constrained lens transform, including live roll and Camera3D offsets.",
+      "Keep a newly probed current-yaw/follow view when it is framed and clear; otherwise select nearest scored constrained safe orbit. Manual grace restricts candidates to current yaw. Existing distance cap and literal zero-overlap equation remain.",
+      "Apply only the scored rig/Camera3D presentation pose for this draw, replacing the stale SpringArm physics child placement. Subsequent SpringArm physics continues normally. No actor movement, collision/size changes, AI pause, HP/cost/authority or input-map edits.",
+      "After all coarse candidates fail, refine within configured15deg of the best coarse angle in2.5deg steps; at most12 extra candidates, same pitch, same constraints/zero-overlap/cap. Manual grace explicitly disables refinement. No new body/AI/HP/input behavior."
+    ],
+    "capture_delta": "Keep all original per-view framing/zero-overlap/input/lifecycle assertions. Explicitly record individual simulation/hitstop fields. A body may qualify only through current same-manager same-body bounded canonical hitstop with positive HP and prior physics enabled; held/fainted/ended/stale bodies or stopped manager still fail. Original r3 FAIL unchanged, no retroactive reclassification.",
+    "primary_source_checks": {
+      "input_buffer_and_flush": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/input/input.cpp#L1410-L1468",
+      "camera_adjusted_transform_offsets": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/scene/3d/camera_3d.cpp#L247-L259"
+    },
+    "regression": "Same sole existing rotated-model method retains19 assertions and adds5 exact native giant/giant55 body-constrained coarse-fail/refined-pass/zero-overlap/cap+budget/unchanged-pitch assertions; expected24. Input fixture is all16 original measured model corners, exact46deg lens and39.5m cap; actual world sweep remains native-only.",
+    "source_limitations": [
+      "Unparsed/unexecuted adaptive source. Exact native actual camera/world sweep/hitstop and fresh dynamic blind judgment remain required; F21#4 NOT MET.",
+      "Safety correction can change camera pose promptly when smooth follow is invalid; dynamic pixel readability and correction quality need fresh independent blind judgment.",
+      "Scene query work is bounded by existing angular/distance search but FPS/Medium/Ally/F21#5 remain unproved.",
+      "Staged actual roster/start poses and setup baselines are disclosed; no earned campaign/acquisition or full-craft claim."
+    ],
+    "dependency_delta": "Merged landed7dcd actor lifetime/Heal prerequisite. All six listed camera hashes unchanged by merge; actor_vitals.runtime_enabled remains false, so no new actor/Heal gameplay activation. Fresh camera native successor still required, old9507 is not transferred as PASS."
+  }
+}

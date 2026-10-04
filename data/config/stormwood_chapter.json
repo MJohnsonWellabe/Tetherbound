@@ -95,9 +95,7 @@
       "id": "act_i",
       "order": 1,
       "title": "Under the Storm",
-      "entry_flags": [
-        "realm_key_stormwood"
-      ],
+      "entry_flags": ["realm_key_stormwood"],
       "completion_flag": "stormwood:act_i_complete",
       "objectives": [
         {
@@ -107,9 +105,7 @@
           "label": "Find Ashfoot Waycamp.",
           "how": "Follow the Struck Sentinel north under the canopy.",
           "region_id": "cinder_verge",
-          "requires_flags": [
-            "realm_key_stormwood"
-          ],
+          "requires_flags": ["realm_key_stormwood"],
           "completion_event": "arrival:ashfoot"
         },
         {
@@ -467,14 +463,8 @@
             "stormwood:legendary_offer_made"
           ],
           "completion_event": "aftermath:waterward_view",
-          "grants_flags": [
-            "realm_key_water",
-            "waterward_route_revealed",
-            "stormwood:chapter_complete"
-          ],
-          "consumed_grants": {
-            "realm_key_water": "realm_gate_water_unlocked"
-          }
+          "grants_flags": ["realm_key_water", "waterward_route_revealed", "stormwood:chapter_complete"],
+          "consumed_grants": {"realm_key_water": "realm_gate_water_unlocked"}
         }
       ]
     }
@@ -782,7 +772,7 @@
     "safe_rod_plates": 3,
     "phases": 3,
     "captive_chamber": "crown",
-    "legendary_level": 44,
+    "legendary_level": 55,
     "party_limit": 5,
     "declining_legendary_blocks_ending": false
   },
@@ -791,7 +781,7 @@
     "relic_display_name": "Spark of the Stormwood",
     "power": "Livewire",
     "cooldown_multiplier": 0.75,
-    "next_realm_key": "realm_key_water",
+    "next_realm_key": "portal_key_biome5",
     "next_realm_enterable": false
   }
 }

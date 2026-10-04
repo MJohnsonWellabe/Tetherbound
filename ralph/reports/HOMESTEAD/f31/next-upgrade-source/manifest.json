@@ -1,0 +1,25 @@
+{
+  "parent": "080cda4fd0f4c405f014fd09804009ff51674ce4",
+  "owned_source_normalized_lf_sha256": {
+    "scripts/build/station_next_upgrade.gd": "23f7662d59cb9eebff658a56c7a1467958161a2f13bded4176b879a1d199d334"
+  },
+  "status": "Uncalled F31#3 presentation projection source, independent review pending",
+  "runtime_callers_or_registrations_added": false,
+  "source_implementation": [
+    "Existing strict F16 stations/attachments catalog reader, unique host tier+1 target, exactly one target, reserved future slots never shown as satisfied",
+    "Host WorldState redesign_world.station_tiers and current PlayerState redesign_character.attachment_recipes; Meadows open from start, later own blueprint recipe required; no guest grants",
+    "One missing prerequisite or material from canonical authored cost order, actual saved inventory stack counts including normal null slots, invalid shapes/duplicate costs/overflow refuse readiness",
+    "Optional canonical blueprint catalog adapter must supply exact attachment/station/tier, literal registered bool, unlock phrase and id/n/name/source_hint cost rows; absent/unregistered rows cannot display satisfied requirements",
+    "No body authentication, placement authorization, stock/payment/craft/progression/receipt mutation, station UI/shared writes or unlock service"
+  ],
+  "trusted_presentation_signature": "describe(station_id,host_world:WorldState.save_data projection,host_character:PlayerState.save_data projection,blueprint:trusted canonical catalog presentation row={})->detached view",
+  "shortcuts_and_pending_proof": [
+    "No caller: actual station panel and canonical blueprint presentation adapter remain unwired; registered marker describes owning catalog input, not a new durable unlock flag",
+    "Workbench/Farm nonattachment next kit/Greenhouse projection remains in their separate work orders; helper returns no attachment track",
+    "No source costs/tunables or relic identifiers invented; actual owned blueprint data must supply player wording and configured costs",
+    "This source does not prove visible controller UI, clarity/judge, guest transaction rules or physical attachment installation",
+    "No parser/engine/tests/CI/GPU/import/render/export; integration proofs require ROOT allocation"
+  ],
+  "acceptance_met": [],
+  "F31_status": "OPEN"
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "fb875006f915e5c4c9728886478773ef4dfbc15c",
+  "status": "Frozen inactive Den manual grooming actor source for independent strict review",
+  "owned_source_normalized_lf_sha256": {
+    "scripts/build/station_den.gd": "047583b9ea656307d2fe508a4cea99e34f2533c0b91c578b06a175a562330dce"
+  },
+  "runtime_enabled": false,
+  "activation_config": {
+    "path": ".tmp/f31-den-config-draft/stations.json",
+    "sha256": "ab1e7d2847f865daa58bc60f7e53d57eac8758d285a9a79b3dc4b3ca8c6a7604",
+    "applied": false,
+    "scope": "Append den block with actual bool OFF and starting radius 3m; no frozen Forge source/config changed"
+  },
+  "existing_helper": "scripts/world/shed_drop_rules.gd",
+  "source_implementation": [
+    "One manual tap resolves an actual host CharacterBody3D and matching unique placed Den UID/position in live Meadows ancestry and same World3D",
+    "Current authenticated per-character modal/combat/plot eligibility and actual 3D radius; strict positive finite host-world day/identities and actual owned roster no larger than five",
+    "Existing den_groom_candidate produces detached shed proposal, including no-shed species; no local material/care/cap grant",
+    "One stable groom ticket per world instance/character/UID/day; latched before canonical commit; repeat taps blocked while unresolved",
+    "Matched actual-bool pending/ok/durable canonical verdict only; durable success emits after transient state cleared, submission serial guards synchronous returned ACK reentry"
+  ],
+  "canonical_adapter_exists_or_wired_here": false,
+  "new_transport_kind_or_inventory_service_or_durable_bag": false,
+  "trusted_internal_adapters": [
+    "reader(actor,station_uid)->{world:WorldState.save_data projection,character:PlayerState.save_data projection,modal_open:bool for unrelated modal,in_combat:bool,plot_allowed:bool,received_shed_receipts:Dictionary read-only canonical projection}",
+    "commit(plan,ticket,actor)->{txn_id,world_id,character_id,creature_uid,ok:bool,pending:bool,durable:bool}; authoritative service must revalidate sender/actual station/body/policy/day/roster, compose Training care and shed in one existing durable receipt/CAS",
+    "resolve_pending_groom(verdict); trusted canonical callback, no RPC/client completion claims"
+  ],
+  "shortcuts_and_pending_proof": [
+    "Actor not registered or called; den activation config absent in tracked stations.json and draft remains strict OFF",
+    "Read projection mapping from canonical receipt to shed helper internal shed:groom identity is not implemented here; do not serialize that helper namespace or add new receipt storage",
+    "Training care composition/cap, actual inventory capacity/CAS and durable result are canonical service integration requirements, not proven adapters",
+    "No rest/happiness/gear equip/display implementation, Den geometry, modal/controller UI or visual judgment in this bounded checkpoint",
+    "No parser/engine/unit/CI/import/render/export/GPU invocation; actual tap/duplicate/dayroll/inventoryfull/savefail/pending/rejoin/co-op proofs require batched integration allocation"
+  ],
+  "acceptance_met": [],
+  "F31_F32_status": "OPEN"
+}

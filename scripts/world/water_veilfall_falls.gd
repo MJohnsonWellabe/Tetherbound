@@ -9,6 +9,9 @@ extends Node3D
 ## the whole pass costs two draw calls. Tunables: water_veilfall.json::falls.
 const FALL_SHADER := preload("res://shaders/water_veilfall_fall.gdshader")
 const SPRAY_SHADER := preload("res://shaders/water_veilfall_spray.gdshader")
+const VISUAL_CONFIG := "res://data/config/water_veilfall_falls_visual.json"
+const VISUAL_UNIFORMS := ["visual_far_core_floor", "visual_far_edge_floor",
+	"visual_far_start_m", "visual_far_end_m"]
 
 var column_receipt: Array[Dictionary] = []
 var materials: Array[ShaderMaterial] = []
@@ -49,6 +52,9 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 	ribbon_mesh.mesh = ribbons.commit()
 	ribbon_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	ribbon_mesh.material_override = _material(FALL_SHADER, config.get("column_shader", {}))
+	var candidate: Variant = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_CONFIG))
+	if candidate is Dictionary:
+		apply_visual_settings(ribbon_mesh.material_override as ShaderMaterial, candidate)
 	materials.append(ribbon_mesh.material_override)
 	# The depth pull and minimum width move vertices outside the authored
 	# bounds; a generous AABB margin keeps frustum culling from popping it.
@@ -63,6 +69,20 @@ func build(world: Node3D, config: Dictionary, centre_xz: Vector2) -> void:
 		materials.append(puffs.material_override)
 		puffs.extra_cull_margin = 400.0
 		add_child(puffs)
+
+
+## Allowlisted local uniforms only. Reapplying false restores the original
+## fragment path; shared mesh, fog registration and physical samples stay intact.
+static func apply_visual_settings(material: ShaderMaterial, settings: Dictionary) -> void:
+	if material == null:
+		return
+	var enabled := bool(settings.get("enabled", false))
+	material.set_shader_parameter("visual_far_core_enabled", enabled)
+	if enabled:
+		var values: Dictionary = settings.get("shader", {})
+		for key: String in VISUAL_UNIFORMS:
+			if values.has(key):
+				material.set_shader_parameter(key, float(values[key]))
 
 
 ## Walks outward from the island centre along the column's bearing and keeps

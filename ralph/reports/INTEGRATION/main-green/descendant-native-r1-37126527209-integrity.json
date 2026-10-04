@@ -1,0 +1,29 @@
+{
+  "run_id": 37126527209,
+  "artifact_id": 11275602528,
+  "checkout_ref": "7361726e1bf1706aa00c8f26de1d18b6ab5ac02e",
+  "result": "STRICT FAIL original2engineerrors on malformedbase64negative; 22tests135assertions0failed/exit0/9s. All updated PeerRunner/proof dependencies compile; no waived error guard.",
+  "archive_sha256": "921302fe91935dc0d13efef4b7ef25c1ea5e1ed27497f20dcaf568ba4dcdd316",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "descendant-native-r1-37126527209-0-MANIFEST.txt.gz",
+      "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+    },
+    "exit_code": {
+      "retained_file": "descendant-native-r1-37126527209-1-exit_code.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "run.log": {
+      "retained_file": "descendant-native-r1-37126527209-2-run.log.gz",
+      "sha256": "677e10eb95130c1a43c6fcfa3b644c80a53a1498af83e7dc7f2d5dc3903c87fb"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "descendant-native-r1-37126527209-3-boot_log.txt.gz",
+      "sha256": "3e32a4731500eb66b06d16d70778b25cf976d36bbc197f4a438db784ce4adba6"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "descendant-native-r1-37126527209-4-godot.log.gz",
+      "sha256": "44687ae3e5dd38edd459e32ec5e3237ea51ef7d72b9fa2bc28703be61399a489"
+    }
+  }
+}

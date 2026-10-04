@@ -1,0 +1,704 @@
+{
+  "scope": "Source/data audit only. Detached candidate assertions grant zero runtime, route, solvency, earning, transaction, readiness, save, visual or activation credit.",
+  "parent_sha": "6617bb05c73e6963d8697cda88ac1e50fbe2a48e",
+  "baseline_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "candidate_source_sha": "e86c6a9fed5e22ef830fc6f4ec0e83a82600809f",
+  "candidate_shipping_runtime_enabled": false,
+  "production_mounts": [],
+  "allocated_paths": [
+    {
+      "path": "data/config/chapter_curve.json",
+      "overlay_records": 31,
+      "owned_live_blob": "a63d4e6e578ca7d5bac10580638be3495f09f5d1",
+      "baseline_blob": "353b63df307157693adadc813c41799af35b7e09",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band3_the_river_lock/trainers.json",
+      "overlay_records": 17,
+      "owned_live_blob": "7f915ddf4a08d74d71e741098ca5ec75dab02bee",
+      "baseline_blob": "7f915ddf4a08d74d71e741098ca5ec75dab02bee",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "overlay_records": 16,
+      "owned_live_blob": "b552497446ed74975cb9e6fee57478cd2f849b47",
+      "baseline_blob": "b552497446ed74975cb9e6fee57478cd2f849b47",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band5_stronghold_approach/trainers.json",
+      "overlay_records": 20,
+      "owned_live_blob": "f9f6f6a7a5d1a5bf5e23f7a75b7d51e5bc6e9b7e",
+      "baseline_blob": "f9f6f6a7a5d1a5bf5e23f7a75b7d51e5bc6e9b7e",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "overlay_records": 4,
+      "owned_live_blob": "f483430a75f9f718be8b9040ca0d35fdded9745e",
+      "baseline_blob": "f483430a75f9f718be8b9040ca0d35fdded9745e",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+      "overlay_records": 2,
+      "owned_live_blob": "00168a0a16981082b2790af0608eb33745861114",
+      "baseline_blob": "00168a0a16981082b2790af0608eb33745861114",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/cloudreach_chapter.json",
+      "overlay_records": 50,
+      "owned_live_blob": "004723f9e599ac685e401d10980592ac219b5dfc",
+      "baseline_blob": "c29ac2aeb7d6d7240fd888e640f9f054cc169de4",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/cloudreach_solmane_climax.json",
+      "overlay_records": 1,
+      "owned_live_blob": "7044e1b312c80894dadc53fdbebc2a9910925ea2",
+      "baseline_blob": "7044e1b312c80894dadc53fdbebc2a9910925ea2",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/stormwood_encounters.json",
+      "overlay_records": 31,
+      "owned_live_blob": "a66ee9be061f07689905e8105962b3864b3186a5",
+      "baseline_blob": "c8f90739256e0017c6135b1abf8315888d5c1639",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/stormwood_trainers.json",
+      "overlay_records": 88,
+      "owned_live_blob": "fa341f67de8118d8711cd3c225dd6abd97b138a7",
+      "baseline_blob": "fa341f67de8118d8711cd3c225dd6abd97b138a7",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/stormwood_dynamo.json",
+      "overlay_records": 1,
+      "owned_live_blob": "616f7fb8b9d69b1909c4c1632c4f4ff7d34e955d",
+      "baseline_blob": "616f7fb8b9d69b1909c4c1632c4f4ff7d34e955d",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    },
+    {
+      "path": "data/config/water_characters.json",
+      "overlay_records": 80,
+      "owned_live_blob": "7be542e56315981e466c8bef57e7b33cfd9e093c",
+      "baseline_blob": "7be542e56315981e466c8bef57e7b33cfd9e093c",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/water_encounters.json",
+      "overlay_records": 39,
+      "owned_live_blob": "8b60e035ff9745f3bea0ee7bcec0a215c781301e",
+      "baseline_blob": "b6df882313d667cc852095b8d684820f06c75bb3",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": false
+    },
+    {
+      "path": "data/config/water_alpha.json",
+      "overlay_records": 1,
+      "owned_live_blob": "a6fcd9a990c08579ab04a4f3b0104b4dce3f874f",
+      "baseline_blob": "a6fcd9a990c08579ab04a4f3b0104b4dce3f874f",
+      "nonlevel_bytes_unchanged": true,
+      "all_live_level_leaves_match_baseline": true,
+      "all_candidate_level_leaves_match_source": true,
+      "root_must_restore_numeric_leaves_even_if_owned_branch_has_no_diff": true
+    }
+  ],
+  "overlay_records": 381,
+  "restoration": {
+    "baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+    "source": "e86c6a9fed5e22ef830fc6f4ec0e83a82600809f",
+    "restored": [
+      {
+        "path": "data/config/chapter_curve.json",
+        "numeric_edits": 16
+      },
+      {
+        "path": "data/config/bands/band3_the_river_lock/trainers.json",
+        "numeric_edits": 14
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+        "numeric_edits": 10
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/trainers.json",
+        "numeric_edits": 20
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/cloudreach_chapter.json",
+        "numeric_edits": 50
+      },
+      {
+        "path": "data/config/cloudreach_solmane_climax.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/stormwood_encounters.json",
+        "numeric_edits": 31
+      },
+      {
+        "path": "data/config/stormwood_trainers.json",
+        "numeric_edits": 88
+      },
+      {
+        "path": "data/config/stormwood_dynamo.json",
+        "numeric_edits": 0
+      },
+      {
+        "path": "data/config/water_characters.json",
+        "numeric_edits": 80
+      },
+      {
+        "path": "data/config/water_encounters.json",
+        "numeric_edits": 37
+      },
+      {
+        "path": "data/config/water_alpha.json",
+        "numeric_edits": 0
+      }
+    ],
+    "fixture_numeric_edits": 33,
+    "new_numeric_fields": [
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          8,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              8,
+              "order"
+            ],
+            "value": 4007
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          78,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              78,
+              "order"
+            ],
+            "value": 4075
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          79,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              79,
+              "order"
+            ],
+            "value": 4100
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+        "at": [
+          "spawns",
+          80,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              80,
+              "order"
+            ],
+            "value": 4101
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+        "at": [
+          "spawns",
+          1,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              1,
+              "order"
+            ],
+            "value": 5001
+          }
+        ]
+      },
+      {
+        "path": "data/config/bands/band5_stronghold_approach/spawns.json",
+        "at": [
+          "spawns",
+          15,
+          "alpha",
+          "level_ceiling"
+        ],
+        "candidate": 20,
+        "identities": [
+          {
+            "at": [
+              "spawns",
+              15,
+              "order"
+            ],
+            "value": 5015
+          }
+        ]
+      }
+    ],
+    "missing_identities": []
+  },
+  "fixture_nonlevel_bytes_unchanged": true,
+  "route_and_solvency_checks": [
+    {
+      "path": "tests/test_cloudreach_route_ledger.gd",
+      "owned_live_blob": "c93a3fc459687b12f4742aaec19740c111a1e57f",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    },
+    {
+      "path": "tests/test_meadows_economy_solvency.gd",
+      "owned_live_blob": "d31d5ecd06217f1e7eb66b3b799754df8e0fd920",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    },
+    {
+      "path": "tests/test_meadows_earned_route_ledger_segment.gd",
+      "owned_live_blob": "739f58f43329962e654a60d329db78a85051ac29",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    },
+    {
+      "path": "tests/helpers/meadows_earned_route_ledger_segment.gd",
+      "owned_live_blob": "bc9afc611a415094138f23ef7c379cc66a4e2f2f",
+      "unchanged_from_owned_parent": true,
+      "equals_pinned_main": true
+    }
+  ],
+  "warrens": {
+    "path": "data/config/burrow_warrens.json",
+    "restore_blob": "3b0a3025884a05b46df64cf0b1cbfae951179ec5",
+    "owned_geometry_identity_rewards_equal_pinned_main": true,
+    "integration_geometry_identity_rewards_equal_owned": true,
+    "owned_levels": [
+      {
+        "at": [
+          "spawns",
+          0,
+          "level"
+        ],
+        "value": 9
+      },
+      {
+        "at": [
+          "spawns",
+          1,
+          "level"
+        ],
+        "value": 10
+      },
+      {
+        "at": [
+          "spawns",
+          2,
+          "level"
+        ],
+        "value": 10
+      },
+      {
+        "at": [
+          "spawns",
+          3,
+          "level"
+        ],
+        "value": 13
+      },
+      {
+        "at": [
+          "guardian",
+          "level"
+        ],
+        "value": 14
+      }
+    ],
+    "integration_levels_read_only": [
+      {
+        "at": [
+          "spawns",
+          0,
+          "level"
+        ],
+        "value": 11
+      },
+      {
+        "at": [
+          "spawns",
+          1,
+          "level"
+        ],
+        "value": 12
+      },
+      {
+        "at": [
+          "spawns",
+          2,
+          "level"
+        ],
+        "value": 12
+      },
+      {
+        "at": [
+          "spawns",
+          3,
+          "level"
+        ],
+        "value": 15
+      },
+      {
+        "at": [
+          "guardian",
+          "level"
+        ],
+        "value": 16
+      }
+    ]
+  },
+  "retained_live_metadata": "chapter_curve.biomes is preexisting unmounted authoring metadata, retained byte-for-byte outside this numeric-only allocation. Candidate owns the exact new metadata copy.",
+  "foundation_test_patch": "test-input-reconciliation.patch; ROOT applies to existing test_redesign_chapter_curve.gd after structural composition.",
+  "checks": {
+    "exact_candidate_and_legacy_numbers": "PASS",
+    "numeric_only_live_and_fixture_edits": "PASS",
+    "no_missing_legacy_identities": "PASS",
+    "warrens_nonlevel_comparison": "PASS",
+    "unchanged_actual_route_and_solvency_checks": "PASS",
+    "test_f19_curve_mjs": "PASS: 88 named teams / 36 regional wild tables; detached authoring only",
+    "godot_parser_and_tests": "NOT RUN: ROOT owns serialized engine/import/CI"
+  },
+  "integration_instructions": [
+    "Apply baseline levels for ALL 14 paths from overlay legacy values, preserving other owners nonlevel changes; legacy:null means delete the new leaf, never invent a legacy value.",
+    "Cherry-pick alone cannot restore integration-only edits in the five allocated paths whose owned numeric edit count is zero.",
+    "Restore the exact owned Warrens blob after geometry/identity comparison, per ROOT allocation.",
+    "Keep candidate false and policy unmounted. No provider hooks or shared gameplay source belongs to this cut.",
+    "Compose the existing Foundation test patch with F20 chapter admission/ending ownership; actual route inputs, engagement, margins and negative controls stay unchanged."
+  ],
+  "restored_token_totals": {
+    "live": 346,
+    "fixture": 33,
+    "total": 379
+  },
+  "foundation_test_patch_successor": {
+    "data_cut_sha": "077929e9b9673b0f8559490de1df023250c09255",
+    "patch_sha256": "7f99d34cdf78d8d0fe04ed82c7f69d9a41de5479186d3b72ebdf36ce6236cce3",
+    "candidate_captive_level_expected": 55,
+    "live_captive_and_actual_ending_getter_level_expected": 44,
+    "actual_live_dialogue_guard_arrays": {
+      "cloudreach_aila_arrival": [
+        "realm_key_cloudreach",
+        "cloudreach_chapter_started"
+      ],
+      "cloudreach_maela_flight_trial": [
+        "realm_key_cloudreach",
+        "windscar_aerie_prepared"
+      ]
+    },
+    "maela_greeting_prerequisite_unchanged": [
+      "windscar_aerie_prepared"
+    ],
+    "ending_handoff_and_negative_controls_unchanged": true,
+    "source_checks": "PASS: source/expected input reconciliation only; no engine execution",
+    "readonly_apply_check": "PASS --whitespace=error-all against current integration",
+    "godot_parser_and_execution": "NOT RUN: ROOT owns serialized engine/import/CI; runtime evidence remains open"
+  },
+  "legacy_off_test_followup": {
+    "root_combined_source_sha": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+    "baseline_sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+    "returned_root_engine_batch": {
+      "tests": 130,
+      "assertions": 9089,
+      "failed": 2,
+      "raw_log_path": ".tmp/closeout/returned-unit-06cb7c3f8252-4fb3e513/tests.log",
+      "raw_log_sha256": "c5492689ad3622be64792c1286b1713d93505987b5f38b2c5f3d25ef3cc0fd58",
+      "status": "FAIL; prior batch is not acceptance",
+      "reported_engine_errors_or_leaks": false
+    },
+    "diagnosis": [
+      {
+        "realm": "cloudreach",
+        "current_first_entry": [
+          "realm_key_cloudreach"
+        ],
+        "pinned_and_corrected_first_entry": [
+          "realm_key_cloudreach"
+        ],
+        "pinned_and_corrected_guarded_arrivals": [
+          {
+            "id": "cloudreach_arrive",
+            "requires_flags": [
+              "realm_key_cloudreach"
+            ]
+          }
+        ]
+      },
+      {
+        "realm": "stormwood",
+        "current_first_entry": [],
+        "pinned_and_corrected_first_entry": [
+          "realm_key_stormwood"
+        ],
+        "pinned_and_corrected_guarded_arrivals": [
+          {
+            "id": "stormwood_chapter_started",
+            "requires_flags": [
+              "realm_key_stormwood"
+            ]
+          }
+        ]
+      }
+    ],
+    "actual_off_aftermath_equals_entire_pinned_main_objective": true,
+    "expected_off_aftermath": {
+      "id": "stormwood_waterward_revealed",
+      "flag_id": "stormwood:waterward_revealed",
+      "scope": "world",
+      "label": "Look beyond the broken storm.",
+      "how": "Return to the high platform for the newly clear view of water.",
+      "region_id": "dynamo",
+      "requires_flags": [
+        "stormwood:legendary_offer_made"
+      ],
+      "completion_event": "aftermath:waterward_view",
+      "grants_flags": [
+        "realm_key_water",
+        "waterward_route_revealed",
+        "stormwood:chapter_complete"
+      ],
+      "consumed_grants": {
+        "realm_key_water": "realm_gate_water_unlocked"
+      }
+    },
+    "changed_methods": [
+      "test_inactive_curve_retains_legacy_chapter_arrival_prerequisites",
+      "test_inactive_stormwood_aftermath_retains_legacy_view_and_consumed_key_contract"
+    ],
+    "incremental_patch": {
+      "path": "ralph/reports/F19-CI-REPAIR/test-legacy-off-followup.patch",
+      "sha256": "c1156545bb96887bb23185cc678f0bfb3b538c5b112899d1ff8514794696fd23",
+      "base_source_sha": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+      "readonly_apply_check": "PASS --whitespace=error-all"
+    },
+    "source_guard_patch": {
+      "path": "ralph/reports/F19-CI-REPAIR/stormwood-legacy-arrival-guards.patch",
+      "sha256": "14a8c5df310ea84bb5882abd4289924cafb191c21fdf79baea27a60be10af9de",
+      "base_source_sha": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+      "exact_leaf_paths": [
+        [
+          "acts",
+          0,
+          "entry_flags"
+        ],
+        [
+          "acts",
+          0,
+          "objectives",
+          0,
+          "requires_flags"
+        ]
+      ],
+      "legacy_value": [
+        "realm_key_stormwood"
+      ],
+      "all_other_current_json_fields_preserved": true,
+      "entire_resulting_guard_matrix_equals_main": true,
+      "readonly_apply_check": "PASS --whitespace=error-all"
+    },
+    "full_replacement_patch_sha256": "0c45d203070a85cb1ec17659a09a5b3e3dac0dcdcdb9ff49bf49b74aa2188372",
+    "unchanged_scope": "Every other live data leaf/runtime flag, F20 Aila/Maela guards, candidate targets/strict-number/legendary55+OFF44 assertions and typed handoff negative controls unchanged.",
+    "source_checks": "PASS: exact pinned-main input comparisons and detached two-leaf guard restoration; no assertions dropped or tests skipped",
+    "engine_after_correction": "NOT RUN here; ROOT owns named affected engine checks and runtime route/acceptance gates remain open"
+  },
+  "progression_xp_compatibility_followup": {
+    "root_source_sha": "12a2ede365be2bf0a65b30c9bfb5ab1221b3d670",
+    "target": "tests/test_progression.gd",
+    "patch": "ralph/reports/F19-CI-REPAIR/test-progression-xp-compatibility.patch",
+    "patch_sha256": "2d964692a1eb6648801997c6df89a66e4d8d772a6b43615570aaf168ca7eaa49",
+    "existing_root_api_source_sha256": "72b6604008370ee0d8b77d898b7e7f36a199b7fc4baf63dd7ed7b14bfffdea68",
+    "existing_root_essence_source_sha256": "b9ba8eb22f1803d6205b565e16d8fce3a64f20bce3d61302f1542a647121d1a2",
+    "diagnosis": "F27 test invoked nonexistent combat_xp_config, passed a third argument to two-argument live xp_award_for, asserted detached reduction on ordinary live XP, and replaced legacy party floor with detached positive floor.",
+    "replacement_methods": [
+      "test_automatic_combat_xp_preserves_ordinary_awards_and_legacy_party_floor",
+      "test_explicit_staged_combat_xp_uses_one_positive_configured_reduction"
+    ],
+    "ordinary_contract": "Exact ordinary base/per-level formula for levels1..100; separately tuned fractional formula fixtures and legacy zero-floor tiny party share.",
+    "detached_contract": "Existing scaled_combat_xp/scaled_party_combat_xp APIs only, explicit supplied essence inputs, exact configured/0.5 single reduction and positive staging floor, retained invalid false/true/0/negative/1/INF/NAN refusals, unchanged subsequent live awards and config snapshots.",
+    "shipping_wild_victory_runtime_enabled": false,
+    "other_test_methods_unchanged": true,
+    "tests_before": 50,
+    "tests_after": 51,
+    "authored_numeric_range_checks": 100,
+    "readonly_apply_check": "PASS --whitespace=error-all against ROOT12a2",
+    "production_source_data_or_flags_mutated": false,
+    "scope": "Patch target is integration: F27 detached APIs/essence input are absent from the older owned branch. No production API introduced; no runtime activation, route, earning, transaction, or save credit.",
+    "godot_parser_and_execution": "NOT RUN; ROOT owns the affected progression and combat progression engine checks"
+  },
+  "ci6165_bounded_followup": {
+    "runtime_sha": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+    "root_coordination_sha": "41f03d7f4f7b2cf7687fab4ddbe418a8245196b9",
+    "returned_ci": {
+      "job": "110344653258",
+      "tests": 2728,
+      "assertions": 297840,
+      "failed": 6,
+      "raw_log_path": ".tmp/closeout/ci6165-110344653258.log",
+      "raw_log_sha256": "6aa22f8f9759f4fdfce3fdb1fce372037582ca809f71d5f08304c8ff76b7b3ce",
+      "status": "FAIL: six cases and12 leaked objects; this receipt is not acceptance"
+    },
+    "owned_cases": [
+      "test_cloudreach_no_legendary_offer.gd::test_no_line_in_scripts_ties_cloudreach_to_a_legendary",
+      "test_stormwood_encounters_data.gd::test_tables_are_replaceable_and_obey_role_and_crown_limits"
+    ],
+    "source_files": [
+      {
+        "path": "tests/test_cloudreach_no_legendary_offer.gd",
+        "before_blob": "cf6a1ffd0ffcbd4e2971ca54b8115cf7507d910a",
+        "after_blob": "657149bf1de5b67e0f3086e53108319ab6141b62"
+      },
+      {
+        "path": "tests/test_stormwood_encounters_data.gd",
+        "before_blob": "eba76fed7dc42e4bfc65d319c4aff0a0b5c7a80d",
+        "after_blob": "6224dc32ddc9b4cbc92a6b875b4927f67939bdd7"
+      }
+    ],
+    "exact_source_packet_sha256": "762fd71fb42eeaa80b10979bcaddc34cb8a75514761b4881117589487c109f33",
+    "cloudreach_scope": {
+      "allowance": "Exact pair of policy source path and one full stripped numeric inventory literal; no helper/file/prefix exemption.",
+      "numeric_target": [
+        "legendary",
+        "level"
+      ],
+      "shipping_candidate_flag": false,
+      "old_scanner_and_all_existing_test_methods_unchanged": true,
+      "new_negative_controls": [
+        "same policy appended offer call",
+        "same policy look-alike config literal",
+        "identical approved literal in a different script"
+      ]
+    },
+    "stormwood_scope": {
+      "legacy_off_crown": [
+        38,
+        40
+      ],
+      "detached_on_crown": [
+        48,
+        50
+      ],
+      "both_views_retain": "12 tables, one Crown Surge, replaceability, role minimum, no night clock, valid nonstarter species, explicit replacements",
+      "strict_literal_boolean_activation_controls": [
+        false,
+        1,
+        "true"
+      ],
+      "numeric_endpoints": "finite integral exact comparisons; no int truncation",
+      "base_and_nonlevel_tables_unchanged": true
+    },
+    "checks": "PASS source/data and read-only apply check only; no Godot/import/native/CI execution here",
+    "independent_review": {
+      "reviewer": "existing /root/f19_strict_review agent reused at explicit ROOT request",
+      "verdict": "PASS: no actionable source findings",
+      "reviewed_sha256": {
+        "tests/test_cloudreach_no_legendary_offer.gd": "5712159bb4627a85b1c426951311da4c6baee41205cb39aa50a6fbb72a6181c1",
+        "tests/test_stormwood_encounters_data.gd": "fd1aa8ed10c3cca04da9f34c0b41086d231c9b88704dd8fa09318711be96fa80"
+      },
+      "scope": "Two-file bounded diff only; original blobs match a795 runtime. No edits, new agents/sessions, engine/import/native/CI or ROOT writes.",
+      "findings": "One exact file+line inventory allowance with unchanged scanner and added offer/look-alike/cross-file negative controls. Exact finite integral OFF38–40 / detachedON48–50 with all prior role/species/starter/night/replacement checks applied to both views. No skipped/weakened tests; GDScript typing/context appears consistent.",
+      "limitations": "Independent source/data review only; execution proof and runtime activation/acceptance remain open."
+    },
+    "engine_after_fix": "NOT RUN: ROOT batches returned fixes after independent review. Runtime activation/actual earning/route/solvency acceptance stays open."
+  }
+}

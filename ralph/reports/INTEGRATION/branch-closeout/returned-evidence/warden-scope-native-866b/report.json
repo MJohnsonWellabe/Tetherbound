@@ -1,0 +1,59 @@
+{
+  "classification": "ACTUAL EXACT WARDEN SCOPE REGISTRY CHECK PASS / WHOLE WARDEN RELOAD PENDING",
+  "head": "866baecb3082c21a708e73ce89370d9fcf578687",
+  "source_candidate": "473b3c117ba7479c85c4a96da086587b92de5e70",
+  "source_review": {
+    "reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "independent_binding_scope_checks": 83,
+    "cut_sha256": "319da7a765412370982f2624792df0e52df37f9eb1f4bbd6de329c7fb336c99d"
+  },
+  "native_exit": 0,
+  "tests": 12,
+  "assertions": 330,
+  "failed": 0,
+  "strict_native_errors_or_leaks": 0,
+  "selection": "test_flag_scopes.gd",
+  "invocation_error_preserved": {
+    "head": "866baecb3082c21a708e73ce89370d9fcf578687",
+    "exit": 2,
+    "timed_out": false,
+    "selection": "tests/test_flag_scopes.gd",
+    "summary": [
+      "ERROR: --only=tests/test_flag_scopes.gd matched no test files"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-866baecb3082-43530ac1\\tests.log",
+    "raw_log_sha256": "d202ba9aa1629a9d03960a71a7e8e7c6158a61a710c647231da51a0006c47584"
+  },
+  "original_actual_ci_ids": [
+    "reward:trainer:warden_aldis:xp:1",
+    "reward:trainer:warden_aldis:xp:1790841056"
+  ],
+  "proof": "Native existing generators/resolver/host-only guard and actual merged world/player reload stores; both original IDs persist in world, guest cannot forge them, unrelated trainer prefix stays unknown.",
+  "limits": [
+    "Initial path selector matched no tests and exit2 is an invocation error, not production failure. Correct basename selector then ran all12 existing registry tests, including actual new case.",
+    "This unit proof does not retire the three-error original Warden raw log or prove whole Warden/final payout/rejoin. The separate callback and HP fixture candidates require actual native checks.",
+    "No broad reward scope, production journal/save/migration/quarantine/host guard change; only one exact existing Warden XP world prefix. No criterion/main credit."
+  ],
+  "sealed_files": [
+    {
+      "file": "tests.log.gz",
+      "raw_bytes": 12525,
+      "raw_sha256": "ddb52bfaaca3700656418dbec2c23cf3ed0993b4d02ec9d6369382c68265cfad"
+    },
+    {
+      "file": "result.json.gz",
+      "raw_bytes": 405,
+      "raw_sha256": "3e6ddf02e68866944a3e9b342923b5567e6d7de67cbf28b7c0966d3bb106803f"
+    },
+    {
+      "file": "incorrect-selector-tests.log.gz",
+      "raw_bytes": 11528,
+      "raw_sha256": "d202ba9aa1629a9d03960a71a7e8e7c6158a61a710c647231da51a0006c47584"
+    },
+    {
+      "file": "incorrect-selector-result.json.gz",
+      "raw_bytes": 438,
+      "raw_sha256": "e4097d8659ff33a4362edd793288b11d85e1e8165629a7709187a0c405c166a3"
+    }
+  ]
+}

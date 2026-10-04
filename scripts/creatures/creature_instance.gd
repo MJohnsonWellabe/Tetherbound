@@ -17,6 +17,7 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
+const TRAITS := preload("res://scripts/creatures/traits.gd")
 ## RG19-spec/D68. Condition (rested/fed/happy) arithmetic. Preloadable from
 ## here without a cycle: creature_condition.gd knows nothing about this class,
 ## it only reads and writes fields on whatever RefCounted it is handed.
@@ -240,6 +241,10 @@ var boost_defence: int = 0
 ## `_apply_level_stats` already uses for stat growth.
 var trait_primary: String = ""
 var trait_secondary: String = ""
+## Runtime projections of the one canonical redesign_character UID row.
+var traits_initialized := false
+var rolled_traits: Array = []
+var taught_traits: Dictionary = {}
 
 ## OF27: "make a version that is a 'shiny' like Pokemon go. Rare and nothing
 ## different than just the colors" (owner report). Purely cosmetic — nothing
@@ -418,7 +423,9 @@ func heal(amount: float) -> float:
 	if fainted:
 		return 0.0
 	var before := hp
-	hp = clampf(hp + maxf(0.0, amount), 0.0, max_hp)
+	var healing := maxf(0.0, amount)
+	if _traits_runtime_active(): healing = TRAITS.apply_value(self, "healing", healing)
+	hp = clampf(hp + healing, 0.0, max_hp)
 	return hp - before
 
 
@@ -471,6 +478,8 @@ func _apply_level_stats(cfg: Dictionary) -> void:
 		* PROGRESSION.individuality_multiplier(iv_hp, cfg) + float(boost_hp)
 	attack = PROGRESSION.stat_at_level(base_attack, level, float(growth.get("attack", 0.0))) \
 		* PROGRESSION.individuality_multiplier(iv_attack, cfg) + float(boost_attack)
+	if _traits_runtime_active():
+		max_hp = TRAITS.apply_value(self,"max_hp",max_hp)
 	defence = PROGRESSION.stat_at_level(base_defence, level, float(growth.get("defence", 0.0))) \
 		* PROGRESSION.individuality_multiplier(iv_defence, cfg) + float(boost_defence)
 	hp = max_hp * fraction
@@ -578,11 +587,51 @@ func set_level(new_level: int, cfg: Dictionary) -> void:
 	hp = max_hp
 	# This API is the existing pre-fight spawn/story jump. Caught above an
 	# unlock arrives knowing it; picking its initial utility is not a field edit.
+	# A jump DOWN (a pinned practice/fixed-level spawn overriding its rolled
+	# level) must also forget learnset moves gated above the new level: kept,
+	# the creature is a level-2 Bramblebun knowing its level-5 Snare, and the
+	# save boundary refuses the whole party as an invalid mastery document.
+	_forget_unlocks_above_level()
 	TEACHING.refresh_known_moves(self)
 	if move_utility.is_empty():
 		var row: Dictionary = TEACHING.learnsets().get(species_id,{})
 		var first := str(row.get("first_utility",""))
 		if known_moves.has(first): move_utility = first
+
+
+## Spawn/story jump only (`set_level`). Drops a known move whose ONLY source in
+## the species learnset is a level unlock above `level`, unless it has mastery
+## history; taught/TM/default moves are untouched. An equipped slot left naming
+## a dropped move is cleared so the initial-utility pick below can refill it.
+func _forget_unlocks_above_level() -> void:
+	var row: Dictionary = TEACHING.learnsets().get(species_id, {})
+	var gated_above: Array[String] = []
+	for raw: Variant in row.get("unlocks", []):
+		if raw is Dictionary and (raw as Dictionary).has("level") \
+				and int(raw.level) > level and not gated_above.has(str(raw.get("move_id", ""))):
+			gated_above.append(str(raw.get("move_id", "")))
+	if gated_above.is_empty():
+		return
+	var still := TEACHING.available_moves(species_id, level, [])
+	# Loaded lazily: creature_species.gd preloads this script.
+	var species_db: GDScript = load("res://scripts/creatures/creature_species.gd")
+	var definition: Variant = species_db.call("definition", species_id)
+	var defaults: Dictionary = (definition as Dictionary).get("moves", {}) if definition is Dictionary else {}
+	var kept: Array[String] = []
+	var dropped: Array[String] = []
+	for id: String in known_moves:
+		if gated_above.has(id) and not still.has(id) and not defaults.values().has(id) \
+				and not move_mastery_uses.has(id) and not move_mastery_receipts.has(id):
+			dropped.append(id)
+		else:
+			kept.append(id)
+	if dropped.is_empty():
+		return
+	known_moves = kept
+	if dropped.has(move_quick): move_quick = ""
+	if dropped.has(move_charged): move_charged = ""
+	if dropped.has(move_utility): move_utility = ""
+	if dropped.has(move_ultimate): move_ultimate = ""
 
 
 ## PROGRESSION-VISIBLE (prompt 73, D76): this is the single place XP arrives
@@ -754,7 +803,7 @@ func effective_defence(cfg: Dictionary, is_best: bool = false, ability: Dictiona
 		* buff_scale("defence")
 	if is_best and str(ability.get("kind", "")) == "survivability":
 		scaled *= 1.0 + float(ability.get("value", 0.0))
-	return scaled
+	return TRAITS.apply_value(self, "defence", scaled) if _traits_runtime_active() else scaled
 
 
 ## --- tonics: timed buffs (the potions board's temporary half) --------------
@@ -861,3 +910,12 @@ func revealed_trait_secondary(cfg: Dictionary) -> String:
 	if trait_secondary == "":
 		return ""
 	return trait_secondary if PROGRESSION.trait_unlocked(bond_nodes(cfg), cfg) else ""
+
+
+## Durable initialization describes the projection format, not activation.
+## Only the actual authored runtime gate can enable passive numeric effects.
+## Missing/malformed activation retains the exact legacy arithmetic.
+func _traits_runtime_active() -> bool:
+	if not traits_initialized or not TRAITS.runtime_enabled(): return false
+	return TRAITS.trait_state_errors({"traits_initialized": traits_initialized,
+		"rolled_traits": rolled_traits, "taught_traits": taught_traits}).is_empty()

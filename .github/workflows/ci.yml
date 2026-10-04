@@ -194,9 +194,19 @@ jobs:
           # still the right call for CI cost, but it multiplies exactly this,
           # so the filter is what keeps it affordable.
           filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/
+            /tests/test_release_latest_tag.mjs
+            /tools/release_latest_tag.mjs
+            /tests/test_ci_smoke_runner.py
+            /tools/ci/run_godot_smoke.py
 
       - name: Verify rolling release reference helper
         run: node --test tests/test_release_latest_tag.mjs
+
+      - name: Verify aborted script process cleanup
+        run: python3 tests/test_ci_smoke_runner.py
 
       - name: Decide whether anything but documentation changed
         id: filter
@@ -428,7 +438,10 @@ jobs:
         # Two shards (2026-09-25): four measured 3m02-4m29 each including ~2m
         # setup; two keep ~5m of tests per shard under the 12-minute ceiling
         # and free two runner slots for the split verify jobs.
-        shard: [1, 2]
+        # Three (2026-10-04): shard 2 of two had grown to 10-12 min against
+        # the 12-minute ceiling and was cancelled by it twice (CI 37183813895,
+        # 37187293215) with every test passing; shard 1 took ~6 min.
+        shard: [1, 2, 3]
     timeout-minutes: 12
     needs: changes
     if: needs.changes.outputs.code == 'true'
@@ -561,7 +574,7 @@ jobs:
         # cheap".
         run: |
           godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/2 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
+            -- --shard=${{ matrix.shard }}/3 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
 
   # test_veg_corridor.gd, alone, in its own job with its own ceiling.
   #
@@ -1013,6 +1026,23 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Verify f31_station_paid_path
+        if: ${{ !cancelled() }}
+        env: { SMOKE: f31_station_paid_path, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
       - name: Verify opening
         if: ${{ !cancelled() }}
         env: { SMOKE: opening, RETRIES: 2 }
@@ -1364,6 +1394,11 @@ jobs:
 
   verify-regions-shard:
     runs-on: ubuntu-latest
+    # Independent original checks; the matrix retains an exact one-time cover.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [world, stormwood, tidewake]
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
@@ -1392,26 +1427,26 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify earned aim cancellation and native entry guard
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         timeout-minutes: 3
         run: bash tools/ci/verify-earned-aim.sh
       - name: Verify character texture binding and material cache isolation
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         timeout-minutes: 2
         run: bash tools/ci/verify-character-texture.sh
       - name: Verify actual Game crossing and native scoped receiver lifecycle
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         timeout-minutes: 6
         run: python3 tools/ci/verify-realm-transition.py
       - name: Retain realm lifecycle first-attempt receipts
-        if: ${{ always() && env.REALM_TRANSITION_RECEIPTS != '' }}
+        if: ${{ matrix.group == 'world' && (always() && env.REALM_TRANSITION_RECEIPTS != '') }}
         uses: actions/upload-artifact@v4
         with:
           name: realm-transition-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ env.REALM_TRANSITION_RECEIPTS }}
           if-no-files-found: error
       - name: Verify warrens
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: warrens, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1428,7 +1463,7 @@ jobs:
           done
           exit 1
       - name: Verify relay_station
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: relay_station, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1445,7 +1480,7 @@ jobs:
           done
           exit 1
       - name: Verify continuous Relay ramp and deck walk
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           godot --headless --path . --log-file /tmp/relay-deck-walk.log --script tests/smoke_relay_deck_walk.gd
@@ -1454,7 +1489,7 @@ jobs:
             exit 1
           fi
       - name: Verify Stormheart approach and open ramp entrance
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$(mktemp -d)"
@@ -1463,7 +1498,7 @@ jobs:
             exit 1
           fi
       - name: Verify earned material prompt approach
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$(mktemp -d)"
@@ -1472,7 +1507,7 @@ jobs:
             exit 1
           fi
       - name: Verify exact baked tree prompt at trunk contact
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           run_dir="$(mktemp -d)"
@@ -1484,7 +1519,7 @@ jobs:
             exit 1
           fi
       - name: Verify live road coverage observation
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           run_dir="$(mktemp -d)"
@@ -1496,7 +1531,7 @@ jobs:
             exit 1
           fi
       - name: Verify felled resource destruction
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           export XDG_DATA_HOME="$(mktemp -d)"
@@ -1505,7 +1540,7 @@ jobs:
             exit 1
           fi
       - name: Verify earned material source selection
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: |
           set -euo pipefail
           godot --headless --path . --log-file /tmp/earned-material-selection.log --script tests/smoke_earned_material_selection.gd
@@ -1514,7 +1549,7 @@ jobs:
             exit 1
           fi
       - name: Verify earned Stormwood input clocks
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           godot --headless --path . --log-file /tmp/stormwood-engage-clock.log --script tools/probe_stormwood_alpha_admission.gd
@@ -1528,7 +1563,7 @@ jobs:
       # art.json comment key; ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/). This
       # walks the real arrival route on the production scene, ~8 min.
       - name: Verify cloudreach_arrival_walk
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: cloudreach_arrival_walk, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1547,20 +1582,20 @@ jobs:
       # F08: Cloudreach's completed tail (wind roads, Wings/shrine, Stormwood
       # key) is written once and survives a disk reload with nothing re-granted.
       - name: Verify Cloudreach persistence tail
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         run: timeout 180s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
       - name: Verify Stormwood constructed arch journey
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
       - name: Verify solo Stormwood hosted rewards
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
           test -s /tmp/stormwood-hosted-rewards.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
       - name: Verify Stormwood Deepwood Circuit wiring
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         env: { SMOKE: stormwood_deepwood_circuit_wiring, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1577,14 +1612,14 @@ jobs:
           done
           exit 1
       - name: Verify Stormwood finalized death lifecycle
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-finalized-death.log --script tests/smoke_stormwood_finalized_death.gd
           test -s /tmp/stormwood-finalized-death.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-finalized-death.log; then exit 1; fi
       - name: Verify Stormwood combat telemetry
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         env:
           TETHERBOUND_TELEMETRY_OUTPUT: /tmp/stormwood-combat-telemetry.json
         run: |
@@ -1593,7 +1628,7 @@ jobs:
           test -s /tmp/stormwood-combat-telemetry.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-combat-telemetry.log; then exit 1; fi
       - name: Verify Relay cable socket supports
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         timeout-minutes: 1
         run: |
           set -euo pipefail
@@ -1601,7 +1636,7 @@ jobs:
           test -s /tmp/relay-cable-sockets.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/relay-cable-sockets.log; then exit 1; fi
       - name: Verify Stormwood equipped lightning protection
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         timeout-minutes: 1
         run: |
           set -euo pipefail
@@ -1609,7 +1644,7 @@ jobs:
           test -s /tmp/stormwood-lightning-equipment.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-equipment.log; then exit 1; fi
       - name: Verify controller equipment and disk save
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         timeout-minutes: 1
         run: |
           set -euo pipefail
@@ -1617,77 +1652,78 @@ jobs:
           test -s /tmp/backpack-equipment.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/backpack-equipment.log; then exit 1; fi
       - name: Verify Stormwood lightning warning cleanup
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-cleanup.log --script tests/smoke_stormwood_lightning_cleanup.gd
           test -s /tmp/stormwood-lightning-cleanup.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-cleanup.log; then exit 1; fi
       - name: Verify Stormwood authoritative opponent teardown
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
           set -euo pipefail
           timeout 30s godot --headless --path . --log-file /tmp/stormwood-authoritative-teardown.log --script tests/smoke_stormwood_authoritative_teardown.gd
           test -s /tmp/stormwood-authoritative-teardown.log
           if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-authoritative-teardown.log; then exit 1; fi
       - name: Verify Stormwood heartstone interaction
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
       - name: Verify Stormwood Crown records side chain
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_records.gd
       - name: Verify Stormwood per-participant Stormheart offers
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_participants.gd
       - name: Verify Stormwood Stormheart accept/refuse choice
-        if: ${{ !cancelled() }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        run: timeout 120s python3 tools/ci/run_godot_smoke.py godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
       - name: Verify Stormwood Dynamo Break faint recovery
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_dynamo_break_faint.gd
       - name: Verify Stormwood ordinary and electric TM pickups
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
       - name: Verify ordinary Stormwood to Water gate path
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
       - name: Verify Stormwood Surge audio observer
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
       - name: Verify Stormwood hosted encounter admission
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
       - name: Verify Stormwood Nysa press
-        if: ${{ !cancelled() }}
-        # 420 s, not 240: the walk to Nysa's stance can legitimately draw a wild
-        # route encounter first (~55 s), which the segment resolves before the
-        # ~160 s trainer fight. Two main-based runs hit 240 s on that path.
-        run: timeout 420s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        # Let the smoke's existing 900 s watchdog judge its unchanged route.
+        # CI37070627396 won two intervening wild fights (138 + 122 s), then
+        # hit the former 420 s outer cap during the trainer challenge. The
+        # separate diagnostic passed; 60 s also covers startup/exit overhead.
+        run: timeout 960s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
       - name: Verify Tidewake closed-gate tide-race seal
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
       - name: Verify Tidewake dismount leaves no mounted state
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
       # F12 (ACCEPTANCE 6.1): drowning and the safe shore, the fully drowned
       # recovery, and a disk reload mid-water (human and mounted) agree.
       - name: Verify Tidewake drowning and safe shore
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_swimming.gd
       - name: Verify Tidewake drowned recovery
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_player_death.gd
       - name: Verify Tidewake reload mid-water
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_reconnect_save.gd
       - name: Verify Tidewake mounted reload mid-water
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
       - name: Verify Tidewake combat pause while swimming
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
       - name: Verify Tidewake Guardian offer keeps controller focus across a drop
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_water_guardian_drop_refocus.gd
       # F13 (ACCEPTANCE 6.1): the six selected Tidewake local chains, one per
       # island group, each show lure/action/payoff/acknowledgement in the
@@ -1696,28 +1732,38 @@ jobs:
       # completion, ACCEPTANCE 5). Each measured ~50-55s locally, three in
       # parallel (2026-09-26); 120s leaves headroom for slower CI runners.
       - name: Verify Tidewake chain side_water_lantern_return
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_lantern_return.gd
       - name: Verify Tidewake chain side_water_gull_research
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_gull_research.gd
       - name: Verify Tidewake chain side_water_cradle_care
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_cradle_care.gd
       - name: Verify Tidewake chain side_water_garden_records
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_garden_records.gd
       - name: Verify Tidewake chain side_water_deep_watch_chart
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_deep_watch_chart.gd
       - name: Verify Tidewake chain side_water_lastlight_shelter
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
       - name: Verify regional credits survive a disk reload
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
+      - name: Verify pending regional ending receipts and reconnect rejection
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
+        run: |
+          set -euo pipefail
+          pending_log="$RUNNER_TEMP/regional-homecoming-pending.log"
+          timeout 120s godot --headless --path . --script tests/smoke_regional_homecoming_pending.gd 2>&1 | tee "$pending_log"
+          if grep -Eq 'SCRIPT ERROR:|^ERROR:|instances were leaked|resources still in use' "$pending_log"; then
+            echo "Regional pending acknowledgement emitted engine or cleanup errors."
+            exit 1
+          fi
       - name: Verify wild_streaming
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: wild_streaming, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1736,7 +1782,7 @@ jobs:
       # GATE-D. smoke_art.gd was in NO ci job at all; docs/WORKFLOW.md §5
       # requires it and nothing ran it. Kept here, now as its own leg.
       - name: Verify bramblebun_colourway_binding
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'world' && (!cancelled()) }}
         env: { SMOKE: bramblebun_colourway_binding, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1756,6 +1802,11 @@ jobs:
   verify-regions-relay:
     # Split from verify-regions-shard (CI wall-clock): identical steps, own runner.
     runs-on: ubuntu-latest
+    # Independent original checks; the matrix retains an exact one-time cover.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [meadows, tidewake]
     # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
     # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
     # total, so the worst case is ~32 min plus runner variance; 45 min keeps
@@ -1786,7 +1837,7 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify relay
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
         env: { SMOKE: relay, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1803,7 +1854,7 @@ jobs:
           done
           exit 1
       - name: Verify stronghold
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
         env: { SMOKE: stronghold, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1820,7 +1871,7 @@ jobs:
           done
           exit 1
       - name: Verify art
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
         env: { SMOKE: art, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1847,17 +1898,22 @@ jobs:
       # so its timeout is 430 s).
       # Each timeout is 1.5x its group's measured wall.
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 460s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reed_root_circuit,brine_terrace_circuit
       - name: Verify Tidewake land loops walked (salt shrine, sluice patrol)
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 540s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=salt_shrine_circuit,sluice_patrol_circuit
       - name: Verify Tidewake return shortcuts closed then open and shorter
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 430s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut
 
   verify-owner-regressions-shard:
     runs-on: ubuntu-latest
+    # Independent original checks; the matrix retains an exact one-time cover.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [catching, controls]
     # Sum of these seven tests' own run time measured 2026-09-01: 1,272s
     # (21.2 min). 28 min covers checkout/setup with margin. title_new_game
     # (AUDIT-K §K2a) folded back in as an eighth sequential step; its own
@@ -1888,7 +1944,7 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify title_load_game
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: title_load_game, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1907,7 +1963,7 @@ jobs:
       # AUDIT-K §K2a. The New Game front door had no CI coverage at all --
       # only title_load_game was wired here.
       - name: Verify title_new_game
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: title_new_game, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1928,7 +1984,7 @@ jobs:
       # reason stick_navigator is withheld from it. One leg of its own means
       # its flake no longer takes the other six regressions down with it.
       - name: Verify party_count_after_catches
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'catching' && (!cancelled()) }}
         env: { SMOKE: party_count_after_catches, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1936,7 +1992,7 @@ jobs:
           until [ "$n" -ge "$RETRIES" ]; do
             n=$((n + 1))
             echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+            if python3 tools/ci/run_godot_smoke.py godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
               echo "::endgroup::"
               exit 0
             fi
@@ -1945,7 +2001,7 @@ jobs:
           done
           exit 1
       - name: Verify satchel_owns_hotbar
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: satchel_owns_hotbar, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1962,7 +2018,7 @@ jobs:
           done
           exit 1
       - name: Verify build_owns_creature_cycle
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: build_owns_creature_cycle, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1979,7 +2035,7 @@ jobs:
           done
           exit 1
       - name: Verify trainer_battle_camera
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: trainer_battle_camera, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1996,7 +2052,7 @@ jobs:
           done
           exit 1
       - name: Verify arena_contain
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: arena_contain, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2013,7 +2069,7 @@ jobs:
           done
           exit 1
       - name: Verify menu_open_does_not_offer_to_drop
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
         env: { SMOKE: menu_open_does_not_offer_to_drop, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2685,18 +2741,16 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # 7-way measured-cost matrix. Run 34158919494 is the last complete green
-    # seven-shard run before the four-biome merge; its artifact timestamps are
-    # the costs used below. Longest-processing-time-first assignment replaces
-    # the alphabetical index split that stacked `split_realms` behind three
-    # other smokes in run 34163799085 and let that regression consume shard 5's
-    # 30-minute job ceiling. `split_realms` owns shard 7 alone: its successful
-    # measurement is kept in the table, while isolation ensures a future realm
-    # build stall cannot discard otherwise-green smoke results.
+    # Nine-way scheduling: eight ordinary LPT bins, then split_realms alone.
+    # Completed case timestamps from run 37120921415 replace stale weights;
+    # failed elapsed times are only scheduling lower bounds, never successful
+    # runtime measurements. The original 1200-second smoke budget and
+    # 30-minute job limit remain. The F48 co-op suites (owner, 2026-10-03)
+    # live on `tb/coop` until F48 itself is built; they return with it.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     timeout-minutes: 30
     needs:
       - changes
@@ -2720,7 +2774,7 @@ jobs:
         env:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 7
+          SHARD_COUNT: 9
           # Smoke wall time only. This leaves ten minutes of the unchanged
           # 30-minute job for checkout, Godot setup, upload and runner drift.
           MEASURED_SHARD_BUDGET_SECONDS: 1200
@@ -2730,95 +2784,135 @@ jobs:
           import os
           import sys
 
-          # Seconds measured from completed run 34158919494's artifact start
-          # names and NET_RUN.json completion timestamps. The one smoke merged
-          # after that run has its completed local harness measurement.
-          costs = {
-              "tests/smoke_net_behind_character_joins_ahead_world.gd": 92,
+          # Ceil seconds from original wrapper group start through return in
+          # run 37120921415. Nine cases lacking a new successful completion keep
+          # their earlier successful 34158919494/local measurement. Raw timing
+          # provenance is retained in the existing main-green PROOF directory.
+          successful_costs = {
+              "tests/smoke_net_behind_character_joins_ahead_world.gd": 110,
               "tests/smoke_net_boss_rewards_each_participant.gd": 110,
               "tests/smoke_net_catch_race.gd": 118,
-              "tests/smoke_net_deploy_two_creatures.gd": 72,
-              "tests/smoke_net_farm_race.gd": 89,
-              "tests/smoke_net_fly.gd": 117,
-              "tests/smoke_net_fog_is_personal.gd": 96,
-              "tests/smoke_net_gate_opens_for_both.gd": 88,
-              "tests/smoke_net_hearts.gd": 92,
-              "tests/smoke_net_host_exit_saves.gd": 88,
-              "tests/smoke_net_host_join_leave.gd": 67,
-              "tests/smoke_net_join_by_address.gd": 80,
-              "tests/smoke_net_late_join_modified_world.gd": 81,
-              "tests/smoke_net_menu_does_not_freeze_peer.gd": 146,
-              "tests/smoke_net_movement_two_peers.gd": 97,
-              "tests/smoke_net_peer_death.gd": 81,
-              "tests/smoke_net_pickup_race.gd": 89,
-              "tests/smoke_net_realm_owner_disconnect_mid_fight.gd": 117,
-              "tests/smoke_net_reconnect_keeps_character.gd": 83,
-              "tests/smoke_net_revive.gd": 92,
-              "tests/smoke_net_riding.gd": 168,
+              "tests/smoke_net_client_trainer_rewards.gd": 225,
+              "tests/smoke_net_deploy_two_creatures.gd": 111,
+              "tests/smoke_net_farm_race.gd": 96,
+              "tests/smoke_net_fly.gd": 109,
+              "tests/smoke_net_fog_is_personal.gd": 100,
+              "tests/smoke_net_gate_opens_for_both.gd": 130,
+              "tests/smoke_net_hearts.gd": 112,
+              "tests/smoke_net_host_exit_saves.gd": 137,
+              "tests/smoke_net_host_join_leave.gd": 102,
+              "tests/smoke_net_identity_admission.gd": 128,
+              "tests/smoke_net_join_by_address.gd": 127,
+              "tests/smoke_net_join_version_mismatch.gd": 123,
+              "tests/smoke_net_late_join_modified_world.gd": 124,
+              "tests/smoke_net_meadows_identity_fresh_join.gd": 169,
+              "tests/smoke_net_menu_does_not_freeze_peer.gd": 160,
+              "tests/smoke_net_movement_two_peers.gd": 136,
+              "tests/smoke_net_peer_death.gd": 99,
+              "tests/smoke_net_pickup_race.gd": 115,
+              "tests/smoke_net_realm_owner_disconnect_mid_fight.gd": 306,
+              "tests/smoke_net_reconnect_keeps_character.gd": 171,
+              "tests/smoke_net_revive.gd": 164,
+              "tests/smoke_net_riding.gd": 153,
               "tests/smoke_net_shared_boss.gd": 117,
-              "tests/smoke_net_shared_building.gd": 87,
+              "tests/smoke_net_shared_building.gd": 129,
               "tests/smoke_net_shared_wild_fight.gd": 89,
-              "tests/smoke_net_sleep_vote.gd": 75,
-              "tests/smoke_net_split_realms.gd": 116,
-              "tests/smoke_net_storage_concurrency.gd": 91,
+              "tests/smoke_net_sleep_vote.gd": 94,
+              "tests/smoke_net_split_realms.gd": 409,
+              "tests/smoke_net_storage_concurrency.gd": 135,
               "tests/smoke_net_stormwood_hosted_trainers.gd": 122,
               "tests/smoke_net_stormwood_realms.gd": 116,
-              "tests/smoke_net_trade.gd": 92,
+              "tests/smoke_net_trade.gd": 140,
               "tests/smoke_net_two_peers_boot.gd": 83,
+              "tests/smoke_net_veridian_full_refusal.gd": 132,
+              "tests/smoke_net_veridian_mixed.gd": 100,
               "tests/smoke_net_water_alpha.gd": 86,
-              "tests/smoke_net_water_mounted_swimming.gd": 58,
+              "tests/smoke_net_water_local_chains.gd": 74,
+              "tests/smoke_net_water_mounted_swimming.gd": 85,
               "tests/smoke_net_water_swim_stone_late_join.gd": 63,
-              "tests/smoke_net_water_swimming.gd": 69,
+              "tests/smoke_net_water_swimming.gd": 95,
           }
+          # Completed FAILED attempts from 37120921415: lower bounds only.
+          failed_elapsed_lower_bounds = {
+              "tests/smoke_net_boss_rewards_each_participant.gd": 108,
+              "tests/smoke_net_catch_race.gd": 202,
+              "tests/smoke_net_cloudreach_riding.gd": 127,
+              "tests/smoke_net_foundations.gd": 234,
+              "tests/smoke_net_session_host_first_realm.gd": 133,
+              "tests/smoke_net_shared_boss.gd": 153,
+              "tests/smoke_net_shared_wild_fight.gd": 159,
+              "tests/smoke_net_stormwood_finalized_death.gd": 122,
+              "tests/smoke_net_stormwood_glass_for_bryn.gd": 128,
+              "tests/smoke_net_stormwood_hosted_trainers.gd": 123,
+              "tests/smoke_net_stormwood_livewire.gd": 123,
+              "tests/smoke_net_stormwood_realms.gd": 99,
+              "tests/smoke_net_veridian_choices.gd": 110,
+              "tests/smoke_net_veridian_relic_key.gd": 137,
+              "tests/smoke_net_veridian_same_five.gd": 473,
+              "tests/smoke_net_water_alpha.gd": 86,
+              "tests/smoke_net_water_deep_watch_chart.gd": 104,
+              "tests/smoke_net_water_return.gd": 228,
+          }
+          # Slowest successful ordinary smoke, excluding isolated split_realms.
+          # An unknown discovery gets this explicit reservation until measured.
+          ordinary_fallback = 306
+          isolated = [
+              "tests/smoke_net_split_realms.gd",
+          ]
           files = os.environ["ALL_FILES"].split()
           shard = int(os.environ["SHARD"])
           shard_count = int(os.environ["SHARD_COUNT"])
           budget = int(os.environ["MEASURED_SHARD_BUDGET_SECONDS"])
-          reserved = "tests/smoke_net_split_realms.gd"
-          if shard_count < 2 or not 1 <= shard <= shard_count:
+          ordinary_count = shard_count - len(isolated)
+          if ordinary_count < 1 or not 1 <= shard <= shard_count:
               sys.exit("invalid shard configuration")
-          if reserved not in files:
-              sys.exit(f"{reserved} was not discovered")
+          missing = sorted(set(isolated) - set(files))
+          if missing:
+              sys.exit(f"required isolated net smokes were not discovered: {missing}")
 
-          # A new smoke gets the slowest measured cost until its first green
-          # artifact replaces that conservative value. Existing smokes must
-          # never silently disappear from the plan.
-          fallback = max(costs.values())
-          unknown = sorted(set(files) - costs.keys())
+          unknown = sorted(set(files) - successful_costs.keys() - set(isolated))
           for path in unknown:
-              print(f"::warning::{path} has no completed measurement; reserving {fallback}s")
+              print(f"::warning::{path} has no successful measurement; reserving at least {ordinary_fallback}s")
+          weights = {
+              path: max(successful_costs.get(path, ordinary_fallback),
+                        failed_elapsed_lower_bounds.get(path, 0))
+              for path in files
+          }
+          for path in isolated[1:]:
+              weights[path] = budget  # Capacity reservation, NOT measured wall time.
 
           bins = [[] for _ in range(shard_count)]
           loads = [0 for _ in range(shard_count)]
-          bins[-1].append(reserved)
-          loads[-1] = costs[reserved]
+          for offset, path in enumerate(isolated, start=ordinary_count):
+              bins[offset].append(path)
+              loads[offset] = weights[path]
           weighted = sorted(
-              (path for path in files if path != reserved),
-              key=lambda path: (-costs.get(path, fallback), path),
+              (path for path in files if path not in isolated),
+              key=lambda path: (-weights[path], path),
           )
           for path in weighted:
-              target = min(range(shard_count - 1), key=lambda i: (loads[i], i))
+              target = min(range(ordinary_count), key=lambda i: (loads[i], i))
               bins[target].append(path)
-              loads[target] += costs.get(path, fallback)
+              loads[target] += weights[path]
 
-          # Deterministic assignment/budget contract: complete cover, no
-          # duplicates, split_realms isolated, and every measured load leaves
-          # the job-level setup/teardown reserve intact.
+          # Deterministic complete one-time cover, unchanged setup/teardown
+          # reserve, and no other case sharing an isolated suite's bin.
           assigned = [path for group in bins for path in group]
           if sorted(assigned) != sorted(files) or len(assigned) != len(set(assigned)):
               sys.exit("net-shard plan is not an exact one-time cover")
-          if bins[-1] != [reserved]:
-              sys.exit("split_realms must be the only smoke on its shard")
+          for offset, path in enumerate(isolated, start=ordinary_count):
+              if bins[offset] != [path]:
+                  sys.exit(f"{path} must be the only smoke on its shard")
           overloaded = [i + 1 for i, load in enumerate(loads) if load > budget]
           if overloaded:
-              sys.exit(f"measured net-shard budget exceeded by shard(s) {overloaded}: {loads}")
+              sys.exit(f"net-shard scheduling budget exceeded by shard(s) {overloaded}: {loads}")
 
           for index, (group, load) in enumerate(zip(bins, loads), start=1):
-              print(f"plan shard {index}/{shard_count}: measured={load}s files={' '.join(group)}")
+              print(f"plan shard {index}/{shard_count}: scheduling_weight={load}s files={' '.join(group)}")
           mine = " ".join(bins[shard - 1])
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
               output.write(f"files={mine}\n")
-              output.write(f"measured_seconds={loads[shard - 1]}\n")
+              output.write(f"scheduling_weight_seconds={loads[shard - 1]}\n")
           PY
       - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
@@ -2923,6 +3017,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # CI6172 spent 612 seconds fetching/materialising the full tree.
+          # Use the verification jobs' runtime tree so the package witness
+          # has its original time budget available. Both exports still run.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
 
       - name: Cache Godot editor and export templates
         id: cache-godot
@@ -3005,6 +3112,11 @@ jobs:
     # gate-opens-once smoke (~4 min), on their own runner so the long smoke
     # runs in parallel with the other jobs instead of lengthening one of them.
     runs-on: ubuntu-latest
+    # Six original offer scenarios, two per isolated process; no path omitted.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [space, capacity, recovery]
     timeout-minutes: 50
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -3037,15 +3149,17 @@ jobs:
       # display. Six world boots, measured 31 min locally (headless).
       - name: Verify veridian_offer_choice
         if: ${{ !cancelled() }}
-        timeout-minutes: 45
-        env: { SMOKE: veridian_offer_choice, RETRIES: 1 }
+        # Native retains its original45min deadline; this outer minute permits
+        # process cleanup and an artifact instead of runner cancellation.
+        timeout-minutes: 46
+        env: { SMOKE: veridian_offer_choice, RETRIES: 1, TB_VERIDIAN_CASE_GROUP: "${{ matrix.group }}" }
         run: |
           set -uo pipefail
           n=0
           until [ "$n" -ge "$RETRIES" ]; do
             n=$((n + 1))
             echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+            if python3 tools/ci/run_godot_smoke.py --native-timeout-seconds=2700 --native-log="/tmp/veridian-offer/${{ matrix.group }}.log.gz" godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
               echo "::endgroup::"
               exit 0
             fi
@@ -3053,8 +3167,15 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      - name: Retain original Veridian native diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: veridian-offer-${{ matrix.group }}-native
+          path: /tmp/veridian-offer/*.log.gz
+          if-no-files-found: warn
       - name: Verify rift gate opens once
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.group == 'space' }}
         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
   verify-cloudreach-persistence:

@@ -1,0 +1,11 @@
+{
+  "owner": "Training/Foundation through ROOT",
+  "path": "data/config/progression.json",
+  "baseline": "b7cb96de89",
+  "field_delta": {"field":"evolution_mode","old_present":false,"new":"breakthrough"},
+  "activation_gate": "Apply atomically with current host-authoritative F28 consumer, actual cook/feed UI and canonical transaction source, after required source gate; not alone on old build",
+  "effect": "All legacy evolution.gd requirements/check/evolve callers using canonical Progression.config refuse standalone held-stone evolution. Only prepare_feast_choice called inside F28 single feast remains allowed. Legacy pure fixture configuration without this production activation marker retains its original API behavior; no existing test skipped or weakened.",
+  "ui_contract": "F28 cook quote names immutable catalyst SKU and one-time cooking debit; feed quote calls feast_offer on host admitted card+mirror, presents evolve/stay and permanent-stay text via existing input_owner. Client sends choice plus canonical feast SKU and owned UID only; host re-derives catalyst. No separate evolution-confirm save or inventory mutation.",
+  "canonical_contract": "Receipt/recovery binds exact stable character, owned UID, original revision/world/request ID/SKU/choice. All same-request duplicate/conflict/reconnect decisions go through existing Foundation typed creature_training flow. Do not replace the five-creature Party.",
+  "source_mutated_here": false
+}

@@ -1,0 +1,99 @@
+{
+  "name": "F28/F29 one combined ROOT proof",
+  "status": "NOT RUN; all six F28 criteria remain OPEN",
+  "source_readiness": "Owned arithmetic/data/scenes/UI and typed detached producers authored; shared consumers still require owner integration",
+  "prerequisites": [
+    "F16 current shared producer/replay/save/ACK wiring",
+    "F27 source cap/XP/spend activation + typed catch initialization",
+    "F31 actual Kitchen/attachment/source integration",
+    "F29 evolved source + legacy evolution activation gate",
+    "F22 real master encounter/profile integration",
+    "F32 reviewed source 6c063a2c8c104619730759b27e0332ae8e23a583; actual renewable node/crop stock and ordinary early supply"
+  ],
+  "execution_owner": "ROOT only; no lane Godot/import/check-only/gameplay/render/export/GPU execution",
+  "minimum_batch": [
+    {
+      "witness": "Caps and composed feast component",
+      "covers": [
+        "F28#0",
+        "F28#3",
+        "F29#0",
+        "F29#1",
+        "F29#2"
+      ],
+      "assertions": [
+        "Caps10/20/30/40/50; ceiling60/reserved100",
+        "Actual native XP, all candy, paid Altar stop at typed cap and bank no excess XP",
+        "Actual caughtL31 initializes tiers1/2/3 without retroactive evolution",
+        "Homestead Kitchen cooks typed matching feast at host tier; camp/unknownrecipe/shortinputs/fullbag refuse atomically",
+        "BaseT2 stay and catalystT2 evolve consume exactly cooked SKU; no stone second debit; no freeXP/level",
+        "Same UID, nickname, IVs, bond, rolled/taught traits, mastery and equipped slots preserved; new learnsets added only",
+        "One feast lifts exactly one creature cap; stale/wrongtype/foreignUID/wrongtier/conflictingchoice replay refuse"
+      ],
+      "component_script": "res://ralph/reports/TRAINING/f28/component_proof.gd"
+    },
+    {
+      "witness": "Ordinary-input Master discovery and home loop",
+      "covers": [
+        "F28#1",
+        "F28#2",
+        "F28#3",
+        "F28#5"
+      ],
+      "assertions": [
+        "All five site routes/signposts/named leads/reveal boards work with appropriate chapter access; Tidewake human swim and Cloudreach Fly",
+        "Arena18m footprint clear/support collision/landing and safe-pocket/edge recovery/rod cover verified on real sampler",
+        "Choose any conscious creature from own five; human never deals damage; spectator cannot hit/join/reward; switching/flee/tag combo disabled",
+        "Loss faints chosen creature only; retry atonce with any conscious companion",
+        "Win then manually open chest teaches own tierrecipe+2candy; fullbag preserves pending chest; repeatclaim paysnothing",
+        "Actual gather sources from ingredient-ledger exist in/before each biome; T2 uses Meadows berries+ironwood, no Sunleaf",
+        "Home Key\u2192actual Kitchen\u2192cook\u2192feed\u2192capUI\u2192portal retains earned route; no direct setup grants undisclosed",
+        "F32 canonical eight Meadows node types are earned before L10; no master_garden pool. Prove actual stock generations, co-op contention, repeat feast supply, real seed rolls and native/paid-Greenhouse manual crops without undisclosed grants; 1 attuned/3hostdays and25%seed do not prove solvency."
+      ]
+    },
+    {
+      "witness": "Two-peer stable-character/save/ACK/rejoin batch",
+      "covers": [
+        "F28#2",
+        "F28#3",
+        "F28#4"
+      ],
+      "assertions": [
+        "Two stable characters win sequential own1v1s; each gets exactly ownrecipe once; spectators getnothing",
+        "At win/chest/cook/feed inject real bool world-save false, owner-save false, lostACK/disconnect/rejoin, worldswap and peerID reuse",
+        "Neither halfdebit nor doublegrant; same immutable original row is recovered; no client supplied outcomes/caps/rewards/ACKbool",
+        "Recipe portable across hosts; acceptedhistory cannot overwrite newer creature/inventory",
+        "F29 explicit stay/evolve result persists within same feed row; same tier with different choice/SKU refuses"
+      ]
+    }
+  ],
+  "separate_verdicts_required": [
+    "F28#0",
+    "F28#1",
+    "F28#2",
+    "F28#3",
+    "F28#4",
+    "F28#5"
+  ],
+  "source_checks_only": {
+    "name": "source_risk_check.cjs",
+    "checks": 728,
+    "result": "PASS",
+    "engine_proof": false
+  },
+  "never": [
+    "default unit suite",
+    "full CI by lane",
+    "Godot worker",
+    "asset expansion",
+    ".godot copy",
+    "test disable/skip/quarantine"
+  ],
+  "attuned_source_dependency": {
+    "contract": "attuned-source-contract.json",
+    "f32_source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+    "f32_ticket": "ralph/reports/HOMESTEAD/f32/whole-source/proof-ticket.json",
+    "runtime_accepted_stock": null
+  },
+  "source_commit": "0724c8d5d0965bd6ac90dfe7a9d20287c8f16811"
+}

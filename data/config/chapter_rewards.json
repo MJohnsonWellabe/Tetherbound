@@ -1,6 +1,36 @@
 {
   "_comment": "REWARD-ECONOMY (prompt 58). The chapter's reward audit, as data. One row per activity that pays something, in route order, recording what it gives, what that lets the player DO next, and whether the player can be expected to understand that use at the moment they receive it -- which is prompt 58's actual test ('a reward is good when the player can connect it to something they want to do next'), not whether a prize exists. Rewards themselves live where they always have: trainer payouts in the band trainer files, shop stock in trade.json, recipes in data/recipes/, world pickups in playground_world.gd. Nothing here is a second economy; this is the map of the one that ships, and tests/test_chapter_rewards.gd checks the map against it.",
   "_comment_no_new_systems": "Prompt 58 opens by forbidding a second inventory, currency, recipe or loot system, so this file deliberately holds no numbers the game reads. It is an audit and a set of invariants. The one CHANGE the audit produced was a placement, not a system: three apex TMs (tm_earthshatter/tm_leviathan_surge/tm_heavenfall) existed as items with full move data and no acquisition path anywhere in the game -- see playground_world.gd's TM_AT.",
+  "boss_hand_offs": {
+    "warden_aldis": {
+      "runtime_realm": "meadows",
+      "relic_biome": "meadows",
+      "portal_key_item": "tidewake_portal_key",
+      "portal_key_id": "portal_key_tidewake",
+      "next_biome": "tidewake"
+    },
+    "water_trainer_nerissa": {
+      "runtime_realm": "water",
+      "relic_biome": "tidewake",
+      "portal_key_item": "cloudreach_portal_key",
+      "portal_key_id": "portal_key_cloudreach",
+      "next_biome": "cloudreach"
+    },
+    "captain_veyra_storm_anchor": {
+      "runtime_realm": "cloudreach",
+      "relic_biome": "cloudreach",
+      "portal_key_item": "stormwood_portal_key",
+      "portal_key_id": "portal_key_stormwood",
+      "next_biome": "stormwood"
+    },
+    "captain_marrow_dynamo_core": {
+      "runtime_realm": "stormwood",
+      "relic_biome": "stormwood",
+      "portal_key_item": "fifth_portal_key",
+      "portal_key_id": "portal_key_biome5",
+      "next_biome": "biome5"
+    }
+  },
   "materials": {
     "_comment": "Prompt 58's resource tiers, with the use that makes each one worth picking up. Audited 2026-08-22: every material the world can yield is a recipe input, a build cost or shop stock -- there are no orphan collectibles in the Meadows.",
     "baseline": [
@@ -383,5 +413,56 @@
     "_comment_local_requests": "Every row in objectives.json's `local` array must appear here with a matching `objective_id`. An optional activity the reward map cannot see is exactly how the six went unaudited."
   },
   "_comment_audit_gap_closed": "The four rows above were missing when the 2026-08-22 Gate C audit read this file against prompt 58, which names 'Tournament: coins/reward/status that makes victory feel meaningful and transitions the chapter' and 'ordinary wild fights' as required sections of the reward map. The REWARDS existed -- data/config/bands/band1_lower_meadows/trainers.json has paid all three tournament rounds since TOURNAMENT-1 -- but an audit table that omits the chapter's transition prize cannot answer the question it exists to answer. Read off the shipping data, not invented: coins 20/25/40, potions 2/-/3, orbs -/3/-, and recipe_saddle on the final's own reward.flags.",
-  "_comment_local_requests_0922": "ROADMAP item 6 counts six optional Meadows activities, and every one of them was missing from this map until now -- the same shape of gap `_comment_audit_gap_closed` records for the tournament, found again by reading objectives.json's `local` array against this file. All seven rows are read off shipping data (band trainers.json rewards, meadowhart_herd_visit.gd, river_nest_clear.gd, cart_repair.gd), not invented, and `objective_id` matches the row id in data/progression/objectives.json so tests/test_chapter_rewards.gd can hold the two together instead of a human re-noticing. One row records a GAP rather than a reward: Coll's cart spends three materials and pays none back. That is stated, not filled in with a number nobody authorised."
+  "_comment_local_requests_0922": "ROADMAP item 6 counts six optional Meadows activities, and every one of them was missing from this map until now -- the same shape of gap `_comment_audit_gap_closed` records for the tournament, found again by reading objectives.json's `local` array against this file. All seven rows are read off shipping data (band trainers.json rewards, meadowhart_herd_visit.gd, river_nest_clear.gd, cart_repair.gd), not invented, and `objective_id` matches the row id in data/progression/objectives.json so tests/test_chapter_rewards.gd can hold the two together instead of a human re-noticing. One row records a GAP rather than a reward: Coll's cart spends three materials and pays none back. That is stated, not filled in with a number nobody authorised.",
+  "boss_handoffs": {
+    "warden_aldis": {
+      "biome": "meadows",
+      "key_item": "tidewake_portal_key",
+      "next_biome": "tidewake",
+      "relic_biome": "meadows",
+      "delivery_phase": "accepted_boss_victory",
+      "delivery_requires_world_flags": []
+    },
+    "water_trainer_nerissa": {
+      "biome": "tidewake",
+      "key_item": "cloudreach_portal_key",
+      "next_biome": "cloudreach",
+      "relic_biome": "water",
+      "delivery_phase": "accepted_legendary_settlement",
+      "delivery_requires_world_flags": ["water_guardian_settled"]
+    },
+    "captain_veyra_storm_anchor": {
+      "biome": "cloudreach",
+      "key_item": "stormwood_portal_key",
+      "next_biome": "stormwood",
+      "relic_biome": "cloudreach",
+      "delivery_phase": "accepted_boss_victory",
+      "delivery_requires_world_flags": []
+    },
+    "captain_marrow_dynamo_core": {
+      "biome": "stormwood",
+      "key_item": "fifth_portal_key",
+      "next_biome": "biome5",
+      "relic_biome": "stormwood",
+      "delivery_phase": "accepted_legendary_settlement",
+      "delivery_requires_world_flags": ["stormwood:legendary_offer_made"],
+      "delivery_requires_any_resolution_prefix": ["stormwood:legendary_resolution:accepted:", "stormwood:legendary_resolution:refused:"]
+    }
+  },
+  "boss_handoff_contract": {
+    "authority": "host_accepted_boss_transaction",
+    "participant_capture": "journal_admitted_stable_character_ids_before_boss_defeat_publish",
+    "release_rule": "boss_victory_captures_eligibility_delivery_phase_controls_release",
+    "ceremony_rule": "first_validated_accept_or_refuse_releases_all_captured_participants_without_waiting_for_absent_players",
+    "settlement_validation": "host_controller_accepted_settlement_not_client_flag_or_offer_shown_message",
+    "source_template": "boss_drop:<biome>:<character_id>",
+    "eligibility": "stable_character_ids_recorded_as_fight_participants",
+    "scope": "portable_character",
+    "key_count": 1,
+    "relic_count": 1,
+    "receipt_scope": "world_instance_namespace_source_character_id",
+    "save_behavior": "journal_before_publish_character_save_before_ack_retry_same_delivery",
+    "capacity_behavior": "preserve_pending_until_full_grant_fits",
+    "nonparticipant_behavior": "no_grant"
+  }
 }

@@ -1,0 +1,60 @@
+{
+  "verdict": "PASS",
+  "checkout_ref": "4b7815de64066b9629f86d7ea627295f3ea867c0",
+  "run_id": 37119316183,
+  "artifact_id": 11272258644,
+  "tests": 1,
+  "assertions": 13,
+  "failed": 0,
+  "exit_code": 0,
+  "duration_seconds": 8,
+  "child_results": {
+    "CRAFT_CONFIRM_RESULT": {
+      "assertions": 34,
+      "completed": true,
+      "failures": []
+    },
+    "CRAFT_QUEUED_CONFIRM_RESULT": {
+      "assertions": 42,
+      "completed": true,
+      "failures": [],
+      "negative": {
+        "original": {
+          "down": 0,
+          "pressed": 0,
+          "up": 0
+        },
+        "replacement": {
+          "down": 1,
+          "pressed": 1,
+          "up": 1
+        },
+        "submissions": 1
+      },
+      "positive": {
+        "down": 1,
+        "pressed": 1,
+        "up": 1
+      }
+    }
+  },
+  "retained": {
+    "run.log": {
+      "retained_file": "forge-queued-native-r2-37119316183-original.log.gz",
+      "sha256": "8da567d3a68d4763470f1e8b3bf3e5ed80b1add2954c5b061fb99f415f42aed7"
+    },
+    "user/godot/app_userdata/Tetherbound/craft-confirm-2248-2247430.log": {
+      "retained_file": "forge-queued-native-r2-37119316183-child.log.gz",
+      "sha256": "5e7e14ce8cf35166987a0d9421997d4bee1966fa9906e35f785afc409e4ca0bd"
+    }
+  },
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": [],
+    "user/godot/app_userdata/Tetherbound/craft-confirm-2248-2247430.log": []
+  },
+  "original_archive_sha256": "a238fc1471e97d660984f8b333c0f0713c17efc32d253209ac81ad6d51bea012",
+  "boundary": "Exact previous native-only guard reproduced queued replacement activation; fixed original real native down/up/pressed once. Session submission/read boundaries are disclosed doubles, no earned refining/save credit."
+}

@@ -1,8 +1,182 @@
 [
   {
+    "id": "bold",
+    "rarity": "common",
+    "effect": "charged_power",
+    "magnitude": 0.05
+  },
+  {
+    "id": "calm",
+    "rarity": "common",
+    "effect": "wind_regen",
+    "magnitude": 0.05
+  },
+  {
+    "id": "sturdy",
+    "rarity": "common",
+    "effect": "defence",
+    "magnitude": 0.05
+  },
+  {
+    "id": "swift",
+    "rarity": "common",
+    "effect": "combat_speed",
+    "magnitude": 0.05
+  },
+  {
+    "id": "gentle",
+    "rarity": "common",
+    "effect": "healing",
+    "magnitude": 0.05
+  },
+  {
+    "id": "stubborn",
+    "rarity": "common",
+    "effect": "poise",
+    "magnitude": 0.05
+  },
+  {
+    "id": "curious",
+    "rarity": "common",
+    "effect": "cooldown",
+    "magnitude": 0.05
+  },
+  {
+    "id": "watchful",
+    "rarity": "common",
+    "effect": "burst_cost",
+    "magnitude": 0.05
+  },
+  {
     "id": "hardy",
     "rarity": "common",
-    "effect": "max_hp_scale",
+    "effect": "max_hp",
     "magnitude": 0.05
+  },
+  {
+    "id": "keen",
+    "rarity": "common",
+    "effect": "quick_power",
+    "magnitude": 0.05
+  },
+  {
+    "id": "surefoot",
+    "rarity": "common",
+    "effect": "ride_speed",
+    "magnitude": 0.05
+  },
+  {
+    "id": "paddler",
+    "rarity": "common",
+    "effect": "swim_speed",
+    "magnitude": 0.05
+  },
+  {
+    "id": "fierce",
+    "rarity": "rare",
+    "effect": "charged_power",
+    "magnitude": 0.08
+  },
+  {
+    "id": "composed",
+    "rarity": "rare",
+    "effect": "wind_regen",
+    "magnitude": 0.08
+  },
+  {
+    "id": "resolute",
+    "rarity": "rare",
+    "effect": "defence",
+    "magnitude": 0.08
+  },
+  {
+    "id": "nimble",
+    "rarity": "rare",
+    "effect": "combat_speed",
+    "magnitude": 0.08
+  },
+  {
+    "id": "renewing",
+    "rarity": "rare",
+    "effect": "healing",
+    "magnitude": 0.08
+  },
+  {
+    "id": "unshaken",
+    "rarity": "rare",
+    "effect": "poise",
+    "magnitude": 0.08
+  },
+  {
+    "id": "inventive",
+    "rarity": "rare",
+    "effect": "cooldown",
+    "magnitude": 0.08
+  },
+  {
+    "id": "vigilant",
+    "rarity": "rare",
+    "effect": "burst_cost",
+    "magnitude": 0.08
+  },
+  {
+    "id": "current_rider",
+    "rarity": "rare",
+    "effect": "swim_speed",
+    "magnitude": 0.08
+  },
+  {
+    "id": "soaring",
+    "rarity": "rare",
+    "effect": "fly_speed",
+    "magnitude": 0.08
+  },
+  {
+    "id": "precise",
+    "rarity": "epic",
+    "effect": "quick_power",
+    "magnitude": 0.12
+  },
+  {
+    "id": "ferocious",
+    "rarity": "epic",
+    "effect": "charged_power",
+    "magnitude": 0.12
+  },
+  {
+    "id": "radiant",
+    "rarity": "epic",
+    "effect": "ultimate_power",
+    "magnitude": 0.12
+  },
+  {
+    "id": "unyielding",
+    "rarity": "epic",
+    "effect": "defence",
+    "magnitude": 0.12
+  },
+  {
+    "id": "tireless",
+    "rarity": "epic",
+    "effect": "wind_regen",
+    "magnitude": 0.12
+  },
+  {
+    "id": "fleet",
+    "rarity": "epic",
+    "effect": "combat_speed",
+    "magnitude": 0.12
+  },
+  {
+    "id": "tide_dancer",
+    "rarity": "epic",
+    "effect": "swim_speed",
+    "magnitude": 0.12
+  },
+  {
+    "id": "sky_dancer",
+    "rarity": "epic",
+    "effect": "fly_speed",
+    "magnitude": 0.12
   }
 ]

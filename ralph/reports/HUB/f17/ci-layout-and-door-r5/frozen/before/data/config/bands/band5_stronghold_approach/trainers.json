@@ -1,0 +1,454 @@
+{
+  "_comment": "BAND-SPLIT. Band-local trainers for band5_stronghold_approach. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order trainers are placed. A new entry in this band takes an unused order in this band's reserved range 5000-5999, which no other band can collide with; do not renumber an existing one.",
+  "trainers": [
+    {
+      "order": 8,
+      "id": "stronghold_patrol",
+      "name": "Patrolman Verrick",
+      "_comment": "SG38, spec Sec8 'Outer Works: patrol trainer'. The first Team Tether body the player meets inside the stronghold's own works, and the lowest rank on Sec36's ladder -- a grunt on a walk, not a gatekeeper. Two creatures, both a little above the captains' band: this fight's job is to tell an under-levelled party to turn around while turning around is still cheap.",
+      "_comment_ow5d": "OW5D relocation, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: same (-141.8,+7775.4) offset as stronghold.json's `site.at` (141.8,-215.4)->(0,7560), since this fallback mirrors the room's own (translation-only) position.",
+      "rank": "grunt",
+      "placed_by": "stronghold",
+      "position": [
+        6.0,
+        7560.0
+      ],
+      "_position_note": "FALLBACK ONLY. scripts/world/stronghold.gd places this row from data/config/stronghold.json's `gauntlet` block, because the coordinates of a spot inside a room belong to the room. This is the same point, written out so the row still stands somewhere sane if the building ever fails to build.",
+      "facing_deg": 90.0,
+      "challenge": "stronghold_patrol_challenge",
+      "defeated": "stronghold_patrol_defeated",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 15
+        },
+        {
+          "species": "burrowback",
+          "level": 16
+        }
+      ],
+      "reward": {
+        "coins": 60,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_patrol",
+      "rechallenge": false,
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
+    },
+    {
+      "order": 9,
+      "id": "stronghold_courtyard",
+      "name": "Warder Solene",
+      "_comment": "SG38, spec Sec8 'Courtyard / Hall Approach: trainer fight'. An officer on Sec36's ladder, and the first three-creature team in the building -- the step up from the patrol is a whole extra creature, not just levels, because that is what actually punishes a party of two.",
+      "_comment_ow5d": "OW5D relocation, same offset as stronghold_patrol above.",
+      "rank": "officer",
+      "placed_by": "stronghold",
+      "position": [
+        36.0,
+        7564.0
+      ],
+      "_position_note": "FALLBACK ONLY -- see stronghold_patrol above.",
+      "facing_deg": 90.0,
+      "challenge": "stronghold_courtyard_challenge",
+      "defeated": "stronghold_courtyard_defeated",
+      "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). No W- id assigns this row a profile, and none is added: left fully at DEFAULT, deliberately, on all three. §5.1's own escalation ladder already has Ness fielding CURRENT on all three of hers at the Sigil gate, one room before this one (this file's other rows) -- giving Solene a profile too would spend the 'first behavioural surprise inside the Hall' beat twice in three fights and blunt it when Hald actually needs it (his own `_why_combat` above says the same thing from his side of the ladder). Solene's own escalation lever is what her `_comment` above already claims: 'the step up from the patrol is a whole extra creature, not just levels' -- a numeric escalation, not a behavioural one, and DEFAULT is the correct way to author that honestly rather than inventing a one-off. Corr and Verrick hold the same DEFAULT floor earlier in the band for the identical reason (their own rows, other file). Should a later pass want the courtyard to carry its own texture, the mudsnout (the escaped special encounter's own kin, per this row's `_comment`) is the one member with a story reason to differ from its two neighbours.",
+      "team": [
+        {
+          "species": "mosshell",
+          "level": 16
+        },
+        {
+          "species": "reedwing",
+          "level": 17
+        },
+        {
+          "species": "mudsnout",
+          "level": 17
+        }
+      ],
+      "reward": {
+        "coins": 90,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          },
+          {
+            "id": "orb_basic",
+            "count": 3
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_courtyard",
+      "rechallenge": false,
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
+    },
+    {
+      "order": 10,
+      "id": "stronghold_elite",
+      "_why_mirrored_g3_land_0904": "G3-LAND-0904 mirror. G3-FINALE changed this row's identity in the live config (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md, the W- contracts) and did not mirror it, so tests/test_band_content.gd went red at integration. The rule this satisfies is the fixture's own: a deliberate identity move is made TWICE, live config and mirror, in the same commit. Mirrored here by the coordinator at integration rather than reverted, because the change is the point -- the Warden opened at level 16 against an elite fielding 18/19/19, so the chapter's last fight was softer at the front than the one gate the player cannot walk around.",
+      "name": "Keeper Hald",
+      "_comment": "SG38, spec Sec8 'Tether Chamber Approach: elite trainer'. Captain rank, three creatures of three different types, and the hardest fight before the Warden. His defeat flag is also the ONE door in the complex: data/config/stronghold.json's tether_approach->warden_arena passage is `gated_by_flag: defeated_stronghold_elite`, so he is not a fight the player can walk around. The recovery point sits behind him, which is the order Sec8 asks for -- elite, then rest, then the Warden.",
+      "_comment_ow5d": "OW5D relocation, same offset as stronghold_patrol above.",
+      "rank": "captain",
+      "placed_by": "stronghold",
+      "position": [
+        69.0,
+        7557.0
+      ],
+      "_position_note": "FALLBACK ONLY -- see stronghold_patrol above.",
+      "facing_deg": 90.0,
+      "challenge": "stronghold_elite_challenge",
+      "defeated": "stronghold_elite_defeated",
+      "_comment_w7": "GATE3_ENCOUNTER_CONTRACTS.md W-7. Shipped duskhush -> mosshell: his own `_comment` above claims 'three creatures of three different types' and the data did not deliver it (Air/Ground/Air). Now Air/Ground/Water, which is what the comment always said. No TM-tier quick here (W-3): Hald fights with species moves, same as the courtyard, so the step up into TM quicks lands only in the Warden's own arena.",
+      "team": [
+        {
+          "species": "galecrest",
+          "level": 18,
+          "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-7. DIVER -- hit-and-run, short tell, comes again from a new side. Hald is 'the last check of the kit, not the HP' (W-8): a diver that keeps repositioning is what makes a player burn a potion mid-fight rather than just outlasting one long trade. Inert until G-2's `wild_creature.gd` merge lands.",
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "lunge_travels": true,
+            "_why_lunge_travels_diver_f04": "F04 (owner yes, #356 5859072534): BOSSES gives the DIVER a .4 s tell only with a long positional cue. Its 5.5 m dive now really travels, drawing the same ground lane and arrow as the CHARGER while it winds up, and lands only if the body reaches its target (combat.json charger_lunge; wild_creature.gd). Before this the dive was an in-place strike and the code-blind judge saw no direction. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2,
+            "poise_max": 28.0
+          }
+        },
+        {
+          "species": "burrowback",
+          "level": 19,
+          "_why_combat": "G-2/G-3, W-7. Left at DEFAULT deliberately, the same floor-role Corr and Verrick hold earlier in the band (see their own `_why_combat` in this file's other rows) -- Hald's team is meant to read as DIVER and WALL either side of one ordinary fighter, not three novelties at once. `stronghold_courtyard`'s own team stays fully DEFAULT for the same reason: the first behavioural surprise inside the Hall is reserved for Hald, right before the Warden fields five, so it lands as a real step rather than diluting across every fight in the building.",
+          "combat": {
+            "_why_telegraph_f04": "F04, BOSSES §2.1 step 3: an ordinary (baseline) trainer creature from South Bridge onward is clamped up to .9 s tell / .75 s recovery (PROGRESSION: every Meadows named fight is after South Bridge). The 0.8 s enemy default was under that; recovery inherits the 0.75 s default. Timing only -- no profile, still a baseline slot. Pinned by tests/test_named_fight_tell_timing.gd; mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 0.9,
+            "power": 23.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "trailpup",
+          "level": 19,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 21.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "duskhush",
+          "level": 19,
+          "_why_member_f04_7": "F04#7 (owner 2026-09-28, option c): added so the captain fields five, the same count as the Warden and the player. A baseline body from this band's own pool, clamped to the post-South-Bridge .9 s tell (BOSSES 2.1 step 3); no new profile or tell.",
+          "combat": {
+            "telegraph": 0.9,
+            "power": 32.0,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "mosshell",
+          "level": 19,
+          "_why_combat": "G-2/G-3, W-7. WALL -- slow, heavy, stands its ground, the punish window is long. Mosshell is the type answer this row exists to add (Water, per W-7's own point); giving it the profile that rewards a patient, well-spaced fight matches a shelled creature's own read and pairs with the DIVER above it to bracket the ordinary burrowback in the middle. Inert until G-2 lands.",
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "power": 23.0,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5,
+            "poise_max": 60.0,
+            "stagger_seconds": 0.85,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        }
+      ],
+      "reward": {
+        "coins": 150,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 3
+          },
+          {
+            "id": "revive",
+            "count": 1
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_elite",
+      "rechallenge": false,
+      "_comment_base_t1_hall_3": "T1-HALL-3, 2026-08-30. REVERTED to the rank's shared oxblood grunt silhouette. JUDGE-5 (D2, ranked 2nd of 16) read the officer_b body in H-07-courtyard blind and called it \"from a different game\": cel-shaded anime, flat blown-out white face, painted eye and mouth, hair as a solid magenta mass, in a world of painted stylised realism -- and said the swap away from hall0830's oxblood grunt \"cost style cohesion and cost the Team Tether colour identity\". That is a property of the generated atlas, not of the override mechanism: the three Meshy cast bodies used inside the Hall (grunt_c/officer_b/captain_a) all carry the same anime idiom and a purple-magenta palette with no oxblood in it (measured: mean lit RGB (76,57,60) for officer_b against the grunt rig's (73,52,52) maroon). The rank system's own default base IS `grunt` for all three ranks, so deleting the override restores the body the judge preferred with no other change; rank stays legible through the badge/palette layer exactly as before. T3-INSTALL's per-individual identity goal is sound and is not reopened for NPCs outside the Hall -- this reverts only the three bodies standing in the frames JUDGE-5 condemned."
+    },
+    {
+      "order": 14,
+      "id": "warden_aldis",
+      "_why_mirrored_g3_land_0904": "G3-LAND-0904 mirror. G3-FINALE changed this row's identity in the live config (docs/specs/GATE3_ENCOUNTER_CONTRACTS.md, the W- contracts) and did not mirror it, so tests/test_band_content.gd went red at integration. The rule this satisfies is the fixture's own: a deliberate identity move is made TWICE, live config and mirror, in the same commit. Mirrored here by the coordinator at integration rather than reverted, because the change is the point -- the Warden opened at level 16 against an elite fielding 18/19/19, so the chapter's last fight was softer at the front than the one gate the player cannot walk around.",
+      "name": "Warden Aldis",
+      "_comment": "R8.3, spec Act VI step 35 and M14 -- the chapter's last fight. THERE IS NO BOSS MODE AND NO BOSS SCRIPT. He is an ordinary row of this same table: the same team schema, the same reward schema, the same defeat flag, the same encounter_director.begin_trainer_battle(), the same sequential send-out, and catching refused exactly as it is refused for every other trainer in the game (a trainer's creatures are theirs -- CLAUDE.md's hard rule). What makes him the boss is the ONLY thing spec sec12 says makes a boss: a full team of five and the highest levels in the chapter.",
+      "_comment_character": "Spec sec33 gives him a worldview rather than a motive, and the lines are in data/dialogue/stronghold.json. He is not a moustache-twirler: he believes separation prevents chaos and that ordinary people do not understand the risks, he confirms the readout rather than denying it, and he does not recant when he loses. His face is still PAINTED rather than modelled (HANDOFF sec6) -- flagged, not faked. Sec20 covers creatures, so a Warden face sheet is legal under sec22's budget, but it is owner-gated art and no generation was spent here.",
+      "rank": "warden",
+      "_comment_rank": "data/config/npc_ranks.json's top tier -- the crimson badge at its largest, on the Warden's own rig. He is the rig every other Team Tether rank in the chapter has been a variant of, met last and unmodified.",
+      "_comment_ow5d": "OW5D relocation, same (-141.8,+7775.4) offset as stronghold.json's `site.at`, since this fallback mirrors the room's own (translation-only) position.",
+      "placed_by": "stronghold_climax",
+      "position": [
+        90.2,
+        7569.4
+      ],
+      "_position_note": "FALLBACK ONLY, and it mirrors the Warden Arena's own centre-ish point. scripts/world/stronghold_climax.gd places him from the `warden_stand` mark that R8.2's data/config/stronghold.json registers, because a room's coordinates belong to the room. Written out so the row still stands somewhere sane if the building ever fails to build.",
+      "facing_deg": 180.0,
+      "challenge": "stronghold_warden_challenge",
+      "defeated": "stronghold_warden_defeated",
+      "victory_conversation": "stronghold_warden_realm_reward",
+      "_comment_team": "A FULL team of five -- the only trainer in the chapter who fields one, and the first time the player's own five-creature limit is met by an equal. Three types across the five so no single answer sweeps it: two Ground, one Water, one Air, and a Ground ace. ALL TUNABLE.",
+      "_comment_w1_w2_w3": "GATE3_ENCOUNTER_CONTRACTS.md W-1/W-2/W-3, G3-ENCOUNTERS-0903 (Fable). W-1: shipped 16/17/17/18/20 opened two levels SOFTER than Hald's own weakest (18) -- a player who just beat 18/19/19, rested, and opened the chapter's climax against a 16 and two 17s. Raised to 18/18/19/19/20 (sum 94, +38 over Hald's 56): no member below the elite's floor, the ace still the chapter's highest, still inside band5's [15,20] window (data/config/chapter_curve.json, owned by G3-ECONOMY -- not edited here). W-2: send-out order is now the doctrine, not an accident of authoring order -- the first four are the four behaviour profiles the region's captains/elite already taught the player, one each, so a prepared player recognises each as it comes out; the fifth is the one telegraph in the chapter worth reading, Earth Fist's own cone from the Warrens guardian (G-9), on the ace. W-3: TM-tier quicks on this team only (rock_throw/aqua_shot/wind_blade, each 15-20% harder than the species move and on-type) -- G-4's *fails if* is that nothing below the Warden carries one, so the step into this arena is felt in the first exchange, not before it. `combat` blocks are G-3's five reusable profiles (WALL/DIVER/CURRENT/CHARGER/ACE per the region's own captains), computed off combat.json's `enemy` defaults; they are inert until G-2's `set_engaged()` merge ships on the encounter lane's own branch (G-2's own contract: absent behaviour is unchanged, and an override only ever reaches the body that authored it), so authoring them here ahead of that merge is safe.",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 18,
+          "moves": {
+            "quick": "rock_throw"
+          },
+          "_why_combat": "G-2/G-3, GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903), W-2. WALL, sent first -- the drilled line that does not move, telegraph long enough to punish, on-type rock_throw (W-3). A player's first read of the Warden's doctrine is 'this one holds ground', the plainest of the five profiles and the correct one to open on. Inert until G-2's `wild_creature.gd` merge lands.",
+          "combat": {
+            "telegraph": 0.85,
+            "recovery": 1.1,
+            "power": 22.0,
+            "chase_speed": 3.4,
+            "reposition_distance": 2.5,
+            "poise_max": 60.0,
+            "stagger_seconds": 0.85,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "galecrest",
+          "level": 18,
+          "moves": {
+            "quick": "wind_blade"
+          },
+          "_why_combat": "G-2/G-3, W-2. DIVER, sent second -- hit-and-run, short tell, comes again from a new side. Ness fielded this same profile on all three of her creatures at the Sigil gate (this file's other rows); meeting it again here, on one creature this time, is the doctrine repeating at the top of the ladder rather than a one-off. Inert until G-2 lands.",
+          "combat": {
+            "telegraph": 0.4,
+            "lunge": 5.5,
+            "lunge_travels": true,
+            "_why_lunge_travels_diver_f04": "F04 (owner yes, #356 5859072534): BOSSES gives the DIVER a .4 s tell only with a long positional cue. Its 5.5 m dive now really travels, drawing the same ground lane and arrow as the CHARGER while it winds up, and lands only if the body reaches its target (combat.json charger_lunge; wild_creature.gd). Before this the dive was an in-place strike and the code-blind judge saw no direction. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "reposition_distance": 7.0,
+            "reposition_time": 1.6,
+            "attack_cooldown": 0.9,
+            "power": 7.2,
+            "poise_max": 28.0
+          }
+        },
+        {
+          "species": "brooktail",
+          "level": 19,
+          "moves": {
+            "quick": "aqua_shot"
+          },
+          "_why_combat": "G-2/G-3, W-2. CURRENT, sent third -- relentless pressure, short cooldown, never backs off far. The Water answer in the five, and the profile that turns 'brief lull between send-outs' into 'no lull at all' for one round, so the fight's middle does not sag between the WALL/DIVER opener and the CHARGER/ACE close. Inert until G-2 lands.",
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 24.5,
+            "poise_max": 60.0,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        },
+        {
+          "species": "meadowhart",
+          "level": 19,
+          "moves": {
+            "quick": "rock_throw"
+          },
+          "_why_combat": "G-2/G-3, W-2. CHARGER, sent fourth -- the stag that closes the distance in one lunge, tell is distance not time. The second-to-last send-out is where the contract asks for the fight's own tension to visibly rise before the ace; a long-range closer that punishes standing still is the shape of that rise. Inert until G-2 lands.",
+          "combat": {
+            "preferred_range": 4.5,
+            "_why_telegraph_f04": "F04: BOSSES writes a .8 s minimum CHARGER charge cue (Vance, the Warden) and COMBAT a .80 s baseline tell floor; 0.6 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "lunge": 7.0,
+            "_why_lunge_travels_f04": "F04: this CHARGER's lunge really travels. At the end of its tell the body runs `lunge` metres down the heading it locked at mid-tell, shown on the ground as a lane of exactly that length while it winds up, and the blow lands only if the body reaches its target on the way (combat.json `charger_lunge`; scripts/creatures/wild_creature.gd). Before this the 7.0 was an impulse that moved the body under a metre and hit or missed by a cone test at range, so the distance BOSSES makes the cue was never seen. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "open_separation": 8.5,
+            "_why_open_separation_f04": "F04#2: CHARGER opens outside its own 7 m reach; see captain_field's note (combat_manager.gd::_open_separation). Staging only. Mirrored in tests/fixtures/band_split_baseline/trainers.json where the trainer is in the baseline.",
+            "lunge_travels": true,
+            "telegraph": 0.8,
+            "recovery": 0.9,
+            "attack_cooldown": 1.6,
+            "power": 10.4
+          }
+        },
+        {
+          "species": "tuskroot",
+          "level": 20,
+          "moves": {
+            "quick": "rock_throw"
+          },
+          "_why_combat": "G-2/G-3, W-2. ACE, sent last -- the one telegraph in the chapter worth reading. `lunge`/`cone_degrees` widened past the base ACE profile to Earth Fist's own shape (G-9, the Warrens guardian's signature move at level 14): the chapter's first telegraph-worth-respecting and its last are the same shape, on the same move family, eighteen levels and every fight in this file apart. A player who learned to step out of Earth Fist in the first hour gets to feel that lesson pay off in the last one. Inert until G-2 lands.",
+          "combat": {
+            "_why_telegraph_f04": "F04: BOSSES writes the Warden ace a 1.1 s signature tell and COMBAT a 1.10 s heavy floor; 1.0 predated that settled spec. Mirrored in tests/fixtures/band_split_baseline/trainers.json.",
+            "telegraph": 1.1,
+            "recovery": 1.2,
+            "power": 18.0,
+            "lunge": 6.5,
+            "cone_degrees": 72,
+            "attack_cooldown": 1.8,
+            "first_attack_delay": 2.5,
+            "poise_max": 70.0,
+            "stagger_seconds": 1.2,
+            "_why_power_f04_7": "F04#7 (owner 2026-09-28, option c): harder Meadows named fights with no tell change. power is set from this body's measured worst single hit so the C3 0.5 ceiling holds; poise_max 60 stops a masher stagger-locking it. Evidence ralph/reports/BALANCE/f04_7/."
+          }
+        }
+      ],
+      "reward": {
+        "coins": 150,
+        "items": [
+          {
+            "id": "revive",
+            "count": 2
+          },
+          {
+            "id": "potion_small",
+            "count": 4
+          }
+        ],
+        "flags": [
+          "realm_key_cloudreach",
+          "realm_heart_meadows_earned"
+        ],
+        "xp_bonus": 400
+      },
+      "_comment_defeat_flag": "R8.4 waits on exactly this id: data/config/stronghold_climax.json gates the tether machine shut until it is set, so a player who sprints past him cannot reach the Legendary Chamber's lever with the boss still standing. Spec sec28's order is not optional and this flag is where that is enforced. SG44's world event reads `legendary_freed`, not this.",
+      "defeat_flag": "defeated_warden",
+      "rechallenge": false
+    },
+    {
+      "order": 5005,
+      "id": "stronghold_outer_watch",
+      "name": "Watchman Corr",
+      "_comment": "BAND5-CONTENT. Prompt 66: 'ordinary faction patrols/checkpoints to build pressure before the interior... do not consume every major combat beat before the stronghold.' Every named Team Tether fight in this band used to stand in the same 12m span at the Hall's own doorstep (z 7557-7569) -- four fights stacked at the door and 560m of open, unoccupied ground in front of them. This is the FIRST body the player meets after the three-Sigil approach opens: a lone grunt on a walk, floor-of-band level, at the mouth of the region rather than its threshold. His job is the same one `quarry_picket_dorn` had at the start of Band 2 -- tell an unready party this ground is not free, cheaply, before the real cost arrives.",
+      "rank": "grunt",
+      "position": [
+        -68.0,
+        7140.0
+      ],
+      "facing_deg": 160.0,
+      "_why_here": "12m off the spine's own first band-5 waypoint (-80,7120), on the meadow side of the mouth burrowback cluster (order 5000, centre (-85,7125) r18) rather than inside it -- close enough that the two reinforce the same read (drained ground, something dug in, something posted) without a wild aggro chase landing on top of a challenge prompt. Facing back down the road toward where the player enters the band, by eye, the same way `south_bridge_grunt`/`quarry_picket_dorn`'s own facing values are tuned rather than computed.",
+      "challenge": "stronghold_outer_watch_challenge",
+      "defeated": "stronghold_outer_watch_defeated",
+      "team": [
+        {
+          "species": "burrowback",
+          "level": 15
+        },
+        {
+          "species": "duskhush",
+          "level": 15
+        }
+      ],
+      "_why_team": "The same two species this exact stretch of ground already fields wild (spawns.json orders 5000/5002) -- his own creatures came off this land, not out of a barracks. Floor of the band's [15,20] trainer range: this fight is a doorbell, not an obstacle.",
+      "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). Left at DEFAULT deliberately -- Corr is the first fight in the band and the floor the rest of the approach's escalation (Ness's CURRENT below, and whatever profile the Hall cast's own lane gives Solene/Hald) reads against. `stronghold_patrol` (Verrick, order 8) shares this same grunt-tier default at the other end of the approach and carries no matching comment: that row is a pre-split-protected entry (`test_band_content.gd`'s baseline mirror), and 'no combat block' needs no rationale recorded on the row that has one.",
+      "reward": {
+        "coins": 45,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_outer_watch",
+      "rechallenge": false,
+      "base": "grunt_a",
+      "_comment_base_0830": "T3-INSTALL, 2026-08-30. Assigns this individual a distinct generated body (docs/specs/ASSET_LEDGER.md's T1-NPC-CAST entries) instead of the rank's shared 'grunt' silhouette -- see npc_ranks.gd::config_for()'s base_override. The rank badge/palette still applies on top, so rank stays legible at a glance and identity now differs too."
+    },
+    {
+      "order": 5006,
+      "id": "stronghold_checkpoint",
+      "name": "Warder Ness",
+      "_comment": "BAND5-CONTENT. The escalation step between `stronghold_outer_watch` and the doorstep gauntlet: an OFFICER (npc_ranks.json's ladder, one rung above grunt, the same rank `stronghold_courtyard`'s Warder Solene holds) standing just past the three-Sigil gate (`playground_world.gd`'s SIGIL_GATE_AT, (0,7400)) rather than before it. The gate itself already tells the player this ground is sealed to the unprepared; this fight tells them what is on the other side of that seal -- occupied, ranked, and getting worse. Three creatures against the outer watch's two, levels a step above his, still inside the band's [15,20] table and still below the courtyard's own 16-17.",
+      "rank": "officer",
+      "base": "officer_b",
+      "_comment_base_t1_cast": "T1-CAST, 2026-08-30, owner directive: use the bodies that were generated. `officer_b` is the body JUDGE-5 (D2) condemned in the Warden's courtyard, and T1-HALL-3 answered that correctly for THAT frame -- the chapter's climax room is the last place to run an unresolved art-style risk -- but the answer left the asset standing nowhere, and the game's only two officer fights (Dell here in band 3, Ness here) were both wearing officer_a. This lane fixed the defect where it lived instead: `tools/regrade_tether_textures.py` measured the purple/magenta share of each generated Tether atlas against the hand-built rigs (production rigs 0.0-0.1%, generated cast 19.6-34.8%, officer_b worst at 34.8%) and rotated that band onto the hue the shipped `grunt` rig already sits at, bringing all seven to 0.0-0.4%. With the body in the faction's own colour, it can carry an officer fight. Placed at the Sigil-gate checkpoint rather than back in the courtyard: the courtyard keeps the shared oxblood grunt silhouette JUDGE-5 preferred, this spends the body one room earlier, and the two officers stop being the same person twice.",
+      "position": [
+        45.0,
+        7440.0
+      ],
+      "facing_deg": 165.0,
+      "_why_here": "Between spine waypoints (80,7370) and (20,7480), 44.1m past the three-Sigil gate along the player's own line of travel -- the first thing they see once the gate opens is this fight, not open meadow. BAND5-CONTENT correction: this read '25m past the Sigil gate on the bearing the gate's own leaf turns to face', which described a gate the road did not actually pass. This lane's driven run measured the gate at (0,7400) sitting 55.9m off the spine (and 60.2m from Ness), and moved it onto the road at (63.6,7400); the 44.1m above is measured from that site by `tools/_probe_band5_sigil_gate.gd`. His 4.0m prompt and the gate's 4.2m are nowhere near contesting. 55m clear of the duskhush cluster at the gate (order 5002, centre (85,7375) r18) and well outside the trailpup cluster ahead (order 5003, centre (20,7485) r16), so neither wild aggro nor either cluster's own radius contests his 4.0m challenge prompt.",
+      "challenge": "stronghold_checkpoint_challenge",
+      "defeated": "stronghold_checkpoint_defeated",
+      "team": [
+        {
+          "species": "trailpup",
+          "level": 16,
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4,
+            "poise_max": 28.0
+          }
+        },
+        {
+          "species": "galecrest",
+          "level": 16,
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4,
+            "poise_max": 28.0
+          }
+        },
+        {
+          "species": "mosshell",
+          "level": 16,
+          "combat": {
+            "attack_cooldown": 0.7,
+            "recovery": 0.55,
+            "reposition_time": 0.5,
+            "reposition_distance": 2.0,
+            "power": 6.4,
+            "poise_max": 28.0
+          }
+        }
+      ],
+      "_why_team": "Trailpup and galecrest are this band's own wild roster (spawns.json orders 5003/5001); mosshell is `stronghold_courtyard`'s own species, met here a room early and wilder for it, the same continuity the mudsnout special encounter (spawns.json order 5004) uses. Three creatures, one level above the outer watch, and the escalation reads: the further in, the more the checkpoint fields.",
+      "_why_combat": "G-2/G-3, docs/specs/GATE3_ENCOUNTER_CONTRACTS.md (G3-ENCOUNTERS-0903). Ness is the one officer-rank fight this lane owns (Solene/Hald/the Warden are the Hall cast, G3-FINALE's per this lane's own file-ownership split) and gets the CURRENT profile -- relentless pressure, short cooldown, never backs off far -- so 'past the gate, rank means something' (her own challenge line) is a felt difference, not just a third creature and a level. Both grunt fights this lane owns (Corr, Verrick) stay at DEFAULT so Ness reads as a real step up rather than one fight among three that all play the same. Inert until G-2's `wild_creature.gd` merge lands; absent that code every number here is unused.",
+      "reward": {
+        "coins": 65,
+        "items": [
+          {
+            "id": "potion_small",
+            "count": 2
+          },
+          {
+            "id": "orb_basic",
+            "count": 2
+          }
+        ],
+        "flags": []
+      },
+      "defeat_flag": "defeated_stronghold_checkpoint",
+      "rechallenge": false,
+      "_comment_base_superseded": "T1-CAST, 2026-08-30. T3-INSTALL's `base: officer_a` was here, DUPLICATING the `base` key this entry now carries near the top -- a JSON object with the same key twice keeps the last one, so the override up there was silently dead until this was removed. Removed rather than moved: the reasoning it carried (give an individual a distinct generated body instead of the rank's shared silhouette, rank stays legible through the badge/palette layer) is unchanged and now lives on the surviving `base` key, which names `officer_b` so that the game's only two officer fights stop being the same body twice."
+    }
+  ]
+}

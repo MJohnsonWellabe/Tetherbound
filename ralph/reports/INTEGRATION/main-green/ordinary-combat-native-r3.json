@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS",
+  "checkout_ref": "8b853e50181bdb607f36ef11a3e6103bf48d6bcf",
+  "run_id": 37113136071,
+  "artifact_id": 11270956166,
+  "tests": 28,
+  "assertions": 708,
+  "failed": 0,
+  "exit_code": 0,
+  "duration_seconds": 8,
+  "selectors": [
+    "combat_round_reward",
+    "ordinary_actor_vitals_recovery",
+    "actor_vitals_authority",
+    "net_boss_snapshot"
+  ],
+  "original_log_sha256": "b54f38b36c418c0dd1094e12e1df0a44a5d8ed9eadb880c41d9b3eb890bd0670",
+  "original_archive_sha256": "324ea42aa9a2b4cf30cc7b5bafdf3252483cdecbefbea74177a5b706ecb1b051",
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": []
+  },
+  "boundary": "Focused initialized tests only; no actual multiplayer/F48 acceptance. R2 unchanged passing checks reused."
+}

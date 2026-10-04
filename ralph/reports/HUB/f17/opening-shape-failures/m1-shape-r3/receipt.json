@@ -1,0 +1,75 @@
+{
+  "source": "dff2f6c7a4111cb26d36ae22c0428b97180799fb",
+  "source_before": {
+    "tests/helpers/opening_geometry_navigator.gd": "5b781f8401018c9030058874692c1f3c7bd6ebf427dbec741f61c81f1d201fc0",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+    "tests/helpers/meadows_earned_team_segment.gd": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+    "tests/smoke_four_biome_continuous.gd": "8fee7fab8693af0963b133d83e929da893a0b2cc378af3034fc2c1c582eea207",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/grandpa_house.gd": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947"
+  },
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "independent_source_gate": "PASS dff2f6c7a4 .tmp/independent-opening-review/shape-correction-root-r1/successor-local-step-dff/strict-review.txt; only provisional local step choice changed; all native safety checks and original budgets unchanged",
+  "runs": [
+    {
+      "label": "parser",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-hub",
+        "--check-only",
+        "--script",
+        "res://tests/smoke_four_biome_continuous.gd"
+      ],
+      "timeout_s": 90,
+      "pid": 16868,
+      "native_exit": 0,
+      "elapsed_seconds": 11.077999999979511,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "errors": []
+    },
+    {
+      "label": "native",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-hub",
+        "--script",
+        "res://tests/smoke_four_biome_continuous.gd",
+        "--",
+        "--through-tournament",
+        "--world-seed=4",
+        "--no-checkpoints"
+      ],
+      "timeout_s": 5400,
+      "pid": 19196,
+      "native_exit": 1,
+      "elapsed_seconds": 227.28099999995902,
+      "raw_sha256": "020ad89b9bbe9efbdb19e544b03de94938a4d7f171a3c7f8b4468b55b663bfef",
+      "errors": [
+        "ERROR: Native opening refused: native local floor/clearance incomplete; no blind fallback\r",
+        "ERROR: could not reach actual door standoff: player=(22.74388, 0.90083, -5.677587) target=(27.0, 0.85, 5.0) distance=11.49 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Terrain\"]\r",
+        "ERROR: could not naturally enter Mira's building\r"
+      ]
+    }
+  ],
+  "scope": "One original-budget genuine fresh title\u2192starter\u2192catch\u2192village/gather\u2192camp\u2192three-bed readiness\u2192three tournament rounds; no checkpoints/grants; F17#4 stays OPEN unless entire prefix passes.",
+  "source_after": {
+    "tests/helpers/opening_geometry_navigator.gd": "5b781f8401018c9030058874692c1f3c7bd6ebf427dbec741f61c81f1d201fc0",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+    "tests/helpers/meadows_earned_team_segment.gd": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+    "tests/smoke_four_biome_continuous.gd": "8fee7fab8693af0963b133d83e929da893a0b2cc378af3034fc2c1c582eea207",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/grandpa_house.gd": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947"
+  },
+  "same_source": true,
+  "head_after": "dff2f6c7a4111cb26d36ae22c0428b97180799fb"
+}

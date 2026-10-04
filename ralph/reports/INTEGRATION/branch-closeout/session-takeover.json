@@ -1,0 +1,126 @@
+{
+  "owner_instruction": "Archive other sessions; ROOT and local subagents handle everything until all on main. Consolidate all coded work into one branch.",
+  "integration_before_takeover": "09b836562f8b10cf69b15dce165de567fbd1ea73",
+  "preserved_unverified_author_wip": "cd291c9326e52b441b70f9dc62fc9b3a59fb0e34",
+  "archived_final_sessions": [
+    "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+    "01a0f51f-eae6-7400-8a76-16b642c262ad",
+    "01a0f8ec-f553-77d1-8975-10f7fe056137",
+    "01a0f512-b160-7053-8f6a-e84f072c2d94"
+  ],
+  "verification": "Fresh app list reports only ROOT as an unarchived thread in project581a2e2d-0e34-411f-900c-29649b733b9c; archived R3 section item keys remain in listing. TenR2 and fiveR3 initial author sessions already archived; all fiveR3 archive settings reaffirmed. Unrelated projects/chats untouched.",
+  "preservation": "No worktrees or source deleted; foundation tracked clean with local WIP commit, untracked reports/.deps retained. F29 made no source writes. All final active external writers confirmed idle before archival.",
+  "acceptance": "OPEN: main/CI/criteria unchanged by archival. Local subagents run in ROOT conversation; no new app sessions.",
+  "owner_authorized_astra_execution": {
+    "ownerInstruction": "Use Astra sessions now to finish integration; after green main assess every criterion, then close criteria with three Astra lanes at a time.",
+    "planCommit": "791d17cef4",
+    "planPath": "docs/STATE.md",
+    "threads": [
+      {
+        "title": "Astra CI failure repairs",
+        "path": "D:/tetherbound/r3-f45",
+        "branch": "tb/astra-ci-closeout",
+        "threadId": "01a0fb3e-a520-7bc3-92d0-e7c7ee2c3c5c",
+        "hostId": "local",
+        "model": "gpt-6-astra",
+        "thinking": "high"
+      },
+      {
+        "title": "Astra authentic CI input completion",
+        "path": "D:/tetherbound/r3-f46",
+        "branch": "tb/astra-input-closeout",
+        "threadId": "01a0fb3e-ab34-76a0-b051-0cdf8be09aeb",
+        "hostId": "local",
+        "model": "gpt-6-astra",
+        "thinking": "high"
+      },
+      {
+        "title": "Astra real player criterion proof",
+        "path": "D:/tetherbound/r3-f47",
+        "branch": "tb/astra-player-closeout",
+        "threadId": "01a0fb3e-b50a-7de2-a4e5-ed2f4a77dd1b",
+        "hostId": "local",
+        "model": "gpt-6-astra",
+        "thinking": "high"
+      }
+    ],
+    "evidenceThreadId": "01a0fa54-ebb4-71d0-bb05-7be8fb895c6d",
+    "automationId": "tetherbound-astra-delivery-and-criterion-closeouts",
+    "automationVerifiedActive": true,
+    "followupMinutes": 10,
+    "followupRuns": 48,
+    "producerSessionId": 23036,
+    "producerOutput": ".tmp/closeout/f48-complete-input-producer-owner-fix-v9",
+    "durableTrackingAction": "Recorded here after native V9 terminal source-exact return; prior archival history preserved.",
+    "acceptance": "main and new criteria remain OPEN until actual required proof; no newMET from plan/session creation."
+  },
+  "owner_stop_and_astra_takeover": {
+    "instruction": "Wrap up and archive ROOT and all started lanes without losing work; owner will start an Astra lane to activate features, code missing behavior and produce actual criterion evidence while continually validating main.",
+    "goal_status": "paused",
+    "automation_status": "PAUSED",
+    "automation_id": "tetherbound-astra-delivery-and-criterion-closeouts",
+    "preserved": {
+      "integration": {
+        "directory": "D:\\tetherbound\\foundations-batch-check",
+        "branch": "tb/integration",
+        "head": "d74d88fef5f3955d2d4d6ee9f3e6cb1059723ab5",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "foundation": {
+        "directory": "D:\\tetherbound\\r3-foundation-wiring",
+        "branch": "tb/r3-foundation-wiring",
+        "head": "93afca390aa4e0430de84c35e34857bf2dfb9550",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "proof": {
+        "directory": "D:\\tetherbound\\r3-f48",
+        "branch": "tb/r3-f48",
+        "head": "1e696c7db194637e1a78c642e7b74cd8233354b3",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "ci": {
+        "directory": "D:\\tetherbound\\r3-f45",
+        "branch": "tb/astra-ci-closeout",
+        "head": "420eabf9e0254db0dcde7cab97d7fabdde609938",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "inputs": {
+        "directory": "D:\\tetherbound\\r3-f46",
+        "branch": "tb/astra-input-closeout",
+        "head": "bed1b235fc0452cef12ba9b19c4abf9b6e461608",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "player": {
+        "directory": "D:\\tetherbound\\r3-f47",
+        "branch": "tb/astra-player-closeout",
+        "head": "33fedcee4d40162fda7275326b7fcdf7915a93b2",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      },
+      "evidence": {
+        "directory": "D:\\tetherbound\\criterion-evidence-closeout",
+        "branch": "tb/criterion-evidence-closeout",
+        "head": "5a83a6b8aea31b4d60d5d30bbe7375c6c1689c8c",
+        "tracked_clean": true,
+        "untracked_ignored_files": "Retained in original checkout; no worktree or files deleted."
+      }
+    },
+    "archived_app_threads": [
+      "01a0fb3e-a520-7bc3-92d0-e7c7ee2c3c5c",
+      "01a0fb3e-ab34-76a0-b051-0cdf8be09aeb",
+      "01a0fb3e-b50a-7de2-a4e5-ed2f4a77dd1b",
+      "01a0fa54-ebb4-71d0-bb05-7be8fb895c6d"
+    ],
+    "root_archive_after_preservation": "01a0f573-f081-7673-8b74-fd466ebdff9e",
+    "collaboration_agents": "foundation_completion/proof_completion/source_review interrupted; no new work assigned",
+    "new_MET": 0,
+    "worktrees_deleted": false,
+    "remote_pushes_during_stop": false,
+    "native_interruption": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\owner-stop-native-interruption"
+  }
+}

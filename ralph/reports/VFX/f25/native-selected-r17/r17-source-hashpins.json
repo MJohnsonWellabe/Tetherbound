@@ -1,0 +1,458 @@
+{
+  "scope": "Independent read-only pinned source comparison. No engine/test/native/visual acceptance claim. SHA256 computed on exact git show stdout bytes.",
+  "client_date": "2026-09-30",
+  "baseline": "89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e",
+  "candidate": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+  "pins": [
+    {
+      "path": "scripts/vfx/move_effect.gd",
+      "candidate_git_blob_oid": "21e422d9dc5b7e42d7160327a25bb5052d46cb24",
+      "candidate_sha256": "b9c1caf26054ae96f7526f2ad96c8dbebfbe574e8c3244e267de542cd4cbaa31",
+      "candidate_bytes": 34792,
+      "base_git_blob_oid": "0334a157fe4c17927aeba3605c2da76adb15b522",
+      "base_sha256": "816ac904797bcc98a7e2118b9e2e66a7a8a853a102761932678e72609471a7b5",
+      "base_bytes": 33723,
+      "byte_unchanged": false
+    },
+    {
+      "path": "data/config/vfx.json",
+      "candidate_git_blob_oid": "9740437b51be17dd01fc2c501a0ca095414d5f10",
+      "candidate_sha256": "5649a18b151344da1f6ee0adabbebf84119e95e91fb357bc9025275c864586fd",
+      "candidate_bytes": 102971,
+      "base_git_blob_oid": "b43d16e0cd087b20e4036da858b05517935fc595",
+      "base_sha256": "fd3934d61b8c61f96e268eea08c9404247c23fe22bb56aa9e04764787f428b67",
+      "base_bytes": 102688,
+      "byte_unchanged": false
+    },
+    {
+      "path": "tests/smoke_move_effects_library.gd",
+      "candidate_git_blob_oid": "449899837449018234eaadb4824dfce910d5eb8a",
+      "candidate_sha256": "7df4fc6948ad1e68b9aef338a83de01edd0fe6df160613a71fb80fe7c1753c61",
+      "candidate_bytes": 24085,
+      "base_git_blob_oid": "5b928737619920e92fd9e3c9bed3b9d1a639a81f",
+      "base_sha256": "b5e42606b22ed115a1a9eb9af49c2579917d24b890ebcf9de1d00b59893b9ef9",
+      "base_bytes": 22402,
+      "byte_unchanged": false
+    },
+    {
+      "path": "scripts/vfx/move_effect_library.gd",
+      "candidate_git_blob_oid": "d0d8a2c991b19342476b8dac463833f7e02fb859",
+      "candidate_sha256": "9fca716969bf873068ca016fc90f6ca63ba2aac622b731f9070f54562c2c642e",
+      "candidate_bytes": 5481,
+      "base_git_blob_oid": "d0d8a2c991b19342476b8dac463833f7e02fb859",
+      "base_sha256": "9fca716969bf873068ca016fc90f6ca63ba2aac622b731f9070f54562c2c642e",
+      "base_bytes": 5481,
+      "byte_unchanged": true
+    },
+    {
+      "path": "scripts/vfx/move_effect_budget.gd",
+      "candidate_git_blob_oid": "63e231e5f26ce291a116bb989d1f9a205b0294d5",
+      "candidate_sha256": "16aa35f1194f0c0747a57408fb39d9002f449bb05de7ae86840c017e3eefe07c",
+      "candidate_bytes": 2120,
+      "base_git_blob_oid": "63e231e5f26ce291a116bb989d1f9a205b0294d5",
+      "base_sha256": "16aa35f1194f0c0747a57408fb39d9002f449bb05de7ae86840c017e3eefe07c",
+      "base_bytes": 2120,
+      "byte_unchanged": true
+    },
+    {
+      "path": "scripts/vfx/move_effect_geometry.gd",
+      "candidate_git_blob_oid": "2982eeaf75a20ef4a255562cb3d6f2e067034ebc",
+      "candidate_sha256": "5545388d626439c4502f7b1a731f464ff73e7ad8e507e62723f1b3e021af9ef7",
+      "candidate_bytes": 22217,
+      "base_git_blob_oid": "2982eeaf75a20ef4a255562cb3d6f2e067034ebc",
+      "base_sha256": "5545388d626439c4502f7b1a731f464ff73e7ad8e507e62723f1b3e021af9ef7",
+      "base_bytes": 22217,
+      "byte_unchanged": true
+    },
+    {
+      "path": "scripts/vfx/legacy_move_travel.gd",
+      "candidate_git_blob_oid": "663aca2574bab1be0952f73bfbc68fff8d276966",
+      "candidate_sha256": "b53ea13b8ceed83eff78fae8e3e00eb90fe4a59b9486b3f1f44395a2d4edb2cf",
+      "candidate_bytes": 11864,
+      "base_git_blob_oid": "663aca2574bab1be0952f73bfbc68fff8d276966",
+      "base_sha256": "b53ea13b8ceed83eff78fae8e3e00eb90fe4a59b9486b3f1f44395a2d4edb2cf",
+      "base_bytes": 11864,
+      "byte_unchanged": true
+    },
+    {
+      "path": "scripts/combat/move_projectile.gd",
+      "candidate_git_blob_oid": "f489dc08f3bd1b99280aa13d3ef4a0aa07b7be3f",
+      "candidate_sha256": "e103fce23bb599c470348f1c3cb1b2ab909a49a5eddb0805ee2de8c622435d41",
+      "candidate_bytes": 1729,
+      "base_git_blob_oid": "f489dc08f3bd1b99280aa13d3ef4a0aa07b7be3f",
+      "base_sha256": "e103fce23bb599c470348f1c3cb1b2ab909a49a5eddb0805ee2de8c622435d41",
+      "base_bytes": 1729,
+      "byte_unchanged": true
+    },
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "candidate_git_blob_oid": "0956fd15d82f111e3c0adee58165271cce5e51ee",
+      "candidate_sha256": "814bf3aeb39074f7c76e19c909f6b1bd779a301b1ab4ec2629064b37521f4d2f",
+      "candidate_bytes": 241124,
+      "base_git_blob_oid": "0956fd15d82f111e3c0adee58165271cce5e51ee",
+      "base_sha256": "814bf3aeb39074f7c76e19c909f6b1bd779a301b1ab4ec2629064b37521f4d2f",
+      "base_bytes": 241124,
+      "byte_unchanged": true
+    },
+    {
+      "path": "scripts/combat/encounter_director.gd",
+      "candidate_git_blob_oid": "d509175227d294f75a9f0a8565f4b0a64173ed1e",
+      "candidate_sha256": "cd4cfe3aff30d7b387d711921c48e7433ce7814b571810aeef853833fba0ece1",
+      "candidate_bytes": 329762,
+      "base_git_blob_oid": "d509175227d294f75a9f0a8565f4b0a64173ed1e",
+      "base_sha256": "cd4cfe3aff30d7b387d711921c48e7433ce7814b571810aeef853833fba0ece1",
+      "base_bytes": 329762,
+      "byte_unchanged": true
+    },
+    {
+      "path": "assets/vfx/proof_scenarios.json",
+      "candidate_git_blob_oid": "14de6bec9e35f59bc420f5285166e952d0e6faad",
+      "candidate_sha256": "0f0a1bd86de69d42f15c65e86a6f0d0cab7e62f0f3b95094634876cadc66d83e",
+      "candidate_bytes": 2709,
+      "base_git_blob_oid": "14de6bec9e35f59bc420f5285166e952d0e6faad",
+      "base_sha256": "0f0a1bd86de69d42f15c65e86a6f0d0cab7e62f0f3b95094634876cadc66d83e",
+      "base_bytes": 2709,
+      "byte_unchanged": true
+    },
+    {
+      "path": "data/config/audio.json",
+      "candidate_git_blob_oid": "230c6b5ab38f7229dbe402ae0cdb79a20a8d0512",
+      "candidate_sha256": "32888366e81156b3ab5985dd880c6a7c3071dfa689168b5b93b9e30c8918a49a",
+      "candidate_bytes": 30977,
+      "base_git_blob_oid": "230c6b5ab38f7229dbe402ae0cdb79a20a8d0512",
+      "base_sha256": "32888366e81156b3ab5985dd880c6a7c3071dfa689168b5b93b9e30c8918a49a",
+      "base_bytes": 30977,
+      "byte_unchanged": true
+    },
+    {
+      "path": "data/moves/moves.json",
+      "candidate_git_blob_oid": "b3b91352b1bb8a63e5ee5ecb5d80f3d3f11db840",
+      "candidate_sha256": "c03cf243a193418a57fd4d0a1d438ace62c66bc1d35662e0fef2ff0836efe356",
+      "candidate_bytes": 32978,
+      "base_git_blob_oid": "b3b91352b1bb8a63e5ee5ecb5d80f3d3f11db840",
+      "base_sha256": "c03cf243a193418a57fd4d0a1d438ace62c66bc1d35662e0fef2ff0836efe356",
+      "base_bytes": 32978,
+      "byte_unchanged": true
+    },
+    {
+      "path": "tests/test_move_effects.gd",
+      "candidate_git_blob_oid": "f266702276aefa7112f21b6faf7ffb542a631a3d",
+      "candidate_sha256": "7f1e89664968d058ac72a90712137b1aff7d12d7fd9c4b220674e4b63e8f0a23",
+      "candidate_bytes": 5113,
+      "base_git_blob_oid": "f266702276aefa7112f21b6faf7ffb542a631a3d",
+      "base_sha256": "7f1e89664968d058ac72a90712137b1aff7d12d7fd9c4b220674e4b63e8f0a23",
+      "base_bytes": 5113,
+      "byte_unchanged": true
+    },
+    {
+      "path": "AGENTS.md",
+      "candidate_git_blob_oid": "21bebf24a2a743be29a9f3a1b570dae5480fa003",
+      "candidate_sha256": "5adc1e81ebd2e32609226d9b2bfb0915b10b9eee15a036b1b6f9da5654f3cb1b",
+      "candidate_bytes": 17690
+    },
+    {
+      "path": "CODEX_START_HERE.md",
+      "candidate_git_blob_oid": "eb85eff16dffb4d74f418d58bfced4af46424757",
+      "candidate_sha256": "c83e6f169fd491fafcdb9961e7306123e59ba33f5183d26f5bc034371298cb1a",
+      "candidate_bytes": 90789
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "candidate_git_blob_oid": "8f66556389edb06dbfed00b765f815bf5f26e459",
+      "candidate_sha256": "fe68fffa864e78d05fc546a18833638161056a42493918db7df6f9b4a98515e3",
+      "candidate_bytes": 62617
+    },
+    {
+      "path": "docs/WORKFLOW.md",
+      "candidate_git_blob_oid": "f76775c0771a7f2ed350ced87d673e8744c57d5b",
+      "candidate_sha256": "c1ffea7311d8b662ca500b0db7c3e2b16b7c379db6cd70c1704d23a09f7dcdbf",
+      "candidate_bytes": 41971
+    },
+    {
+      "path": "ralph/reports/VFX/f25/native-identities-r14/native.txt",
+      "candidate_git_blob_oid": "37fb143cebed4e01819a25e861da6127703bd4e9",
+      "candidate_sha256": "798ac11ca578584c35bf5d3397b6f0bc1b384fe46447da925b2954d62dd3f2cf",
+      "candidate_bytes": 884
+    },
+    {
+      "path": "ralph/reports/VFX/f25/native-identities-r14/results.json",
+      "candidate_git_blob_oid": "75bbff944dec599f04b48d956c7be5af16fafb39",
+      "candidate_sha256": "94ed05fd18599cd3ce48bf3a5ee3b1f6cf1c296fa1234442d08ac4f49a63bb52",
+      "candidate_bytes": 20253
+    },
+    {
+      "path": "ralph/reports/VFX/f25/native-identities-r14/batch-receipt.json",
+      "candidate_git_blob_oid": "442037b944a42963d022be48b9189a9169cd9c99",
+      "candidate_sha256": "264229d917ef00e24471907382ee1e86b3d25311b106d0179072ee01ad12ef40",
+      "candidate_bytes": 2115
+    },
+    {
+      "path": "ralph/reports/VFX/f25/independent-r14/review.txt",
+      "candidate_git_blob_oid": "82daa34d98e7a9905202d883625b6973f6845d91",
+      "candidate_sha256": "6aa5ab9508ed2a123d8b2fadc54db56cc6dd3782337d05eb9157470031cd3f4f",
+      "candidate_bytes": 4950
+    },
+    {
+      "path": "ralph/reports/VFX/f25/authored-r16/capture-clock-repair.txt",
+      "candidate_git_blob_oid": "45fa66dbdd955c9e729cdf2e1c8488bfaf510332",
+      "candidate_sha256": "26bdc101c40e2336594cc23d5b1ba6206b581c12e44bb760cadc633b3bbb2b08",
+      "candidate_bytes": 1961
+    },
+    {
+      "path": "ralph/reports/VFX/f25/authored-r17/craft-source.txt",
+      "candidate_git_blob_oid": "8f9b8ce2d53bbcf7f19a3e44f873af901dbe0cf9",
+      "candidate_sha256": "6fff8893f55a40bc6d0ab7d31fe18388a996ef3437a86919b78d3448733b1e01",
+      "candidate_bytes": 2665
+    },
+    {
+      "path": "ralph/reports/VFX/f25/authored-r17/source-preservation.json",
+      "candidate_git_blob_oid": "b9da4a929ea2895d0fd7cfd7fbcb4f8dd5f0e151",
+      "candidate_sha256": "5d0a4977b24b11596246c991c9d403a4142dad0039f8e4832a4d311ff2ce7bea",
+      "candidate_bytes": 2969
+    }
+  ],
+  "comparison": {
+    "baseline": "89a075c6d7cdc98fcbc6c4a0809e7ff80cd5c25e",
+    "candidate": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+    "observed_head_during_review": "33fea6237a14d0a5daf0d2866b1323a49e82d58c",
+    "scoped_runtime_changed": [
+      "data/config/vfx.json",
+      "scripts/vfx/move_effect.gd",
+      "tests/smoke_move_effects_library.gd"
+    ],
+    "modified_production_methods": [
+      "_process",
+      "_build_impact",
+      "_update_puffs",
+      "_update_impact"
+    ],
+    "unchanged_production_methods": [
+      "configure",
+      "_ready",
+      "_mesh_node",
+      "_build_light",
+      "_finish_presentation",
+      "_update_bodies",
+      "_projectile_position",
+      "_append_trail_point",
+      "_update_trail",
+      "_impact_visual_origin",
+      "_build_puffs",
+      "_set_opacity",
+      "_cue",
+      "_contact_position",
+      "_play_launch",
+      "_play_impact",
+      "_exit_tree",
+      "action_id",
+      "encounter_id",
+      "confirm_presentation_impact",
+      "cancel_presentation"
+    ],
+    "method_names_unchanged": true,
+    "config_changes": [
+      {
+        "path": "/move_library/archetypes/fireball/impact/growth_power",
+        "before": null,
+        "after": 0.42
+      },
+      {
+        "path": "/move_library/archetypes/fireball/impact/initial_grow",
+        "before": 0.7,
+        "after": 0.26
+      },
+      {
+        "path": "/move_library/archetypes/fireball/impact/puff_initial_scale",
+        "before": null,
+        "after": 0.42
+      },
+      {
+        "path": "/move_library/archetypes/fireball/impact/puff_reveal_power",
+        "before": null,
+        "after": 0.28
+      },
+      {
+        "path": "/move_library/archetypes/sky_lightning/body/contact_fade_power",
+        "before": null,
+        "after": 2.4
+      },
+      {
+        "path": "/move_library/archetypes/sky_lightning/impact/growth_power",
+        "before": null,
+        "after": 0.5
+      },
+      {
+        "path": "/move_library/archetypes/sky_lightning/impact/initial_grow",
+        "before": 0.6,
+        "after": 0.2
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/body/mineral_colour",
+        "before": "#b9aa8b",
+        "after": "#d1c1a2"
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/body/stone_colour",
+        "before": "#8b8071",
+        "after": "#aa9981"
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/body/texture_blend",
+        "before": 0.52,
+        "after": 0.38
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/impact/growth_power",
+        "before": null,
+        "after": 0.45
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/impact/initial_grow",
+        "before": 0.55,
+        "after": 0.18
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/impact/puff_initial_scale",
+        "before": null,
+        "after": 0.28
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/impact/puff_reveal_power",
+        "before": null,
+        "after": 0.18
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/trail/opacity",
+        "before": 0.68,
+        "after": 0.48
+      },
+      {
+        "path": "/move_library/archetypes/stone_throw/trail/width",
+        "before": 0.24,
+        "after": 0.15
+      }
+    ],
+    "library_enabled_base": false,
+    "library_enabled_candidate": false,
+    "old_failure_append_line_count": 18,
+    "removed_or_modified_failure_append_lines": [],
+    "added_failure_append_lines": [
+      "if watchdog_expired: _failures.append(\"Capture wall watchdog expired \" + encounter)"
+    ],
+    "light_lifecycle_method_unchanged": true,
+    "default_identity_keys": [
+      "small-stones:r1",
+      "small-stones:r3",
+      "small-stones:r5",
+      "large-stone:r1",
+      "large-stone:r3",
+      "large-stone:r5",
+      "burning-orb:r1",
+      "burning-orb:r3",
+      "burning-orb:r5",
+      "descending-bolt:r1",
+      "descending-bolt:r3",
+      "descending-bolt:r5"
+    ],
+    "r14_failures": [
+      "Lease remains small-stones:r1"
+    ],
+    "r14_first_case": {
+      "arrival_process_frames": [
+        78
+      ],
+      "arrival_wall_seconds": [
+        1.792404
+      ],
+      "arrivals": 1,
+      "captures_at_wall_seconds": {
+        "contact": {
+          "arrivals": 1,
+          "nominal_travel_fraction": 1.0,
+          "wall_seconds": 2.072042
+        },
+        "flight": {
+          "actual_body_positions": [
+            "(-1.086635, 1.698155, 0.781934)",
+            "(-0.714286, 2.37533, -0.390967)",
+            "(-0.341936, 1.020981, -0.390967)"
+          ],
+          "arrivals": 0,
+          "clear_of_expanded_target_bounds": true,
+          "nominal_travel_fraction": 0.34866828918457,
+          "wall_seconds": 1.336379
+        },
+        "impact": {
+          "arrivals": 1,
+          "nominal_travel_fraction": 1.14,
+          "wall_seconds": 2.253433
+        }
+      },
+      "cpu_process_ms": [],
+      "end_slots": 42,
+      "id": "small-stones",
+      "independent_schedule_process_frame": 78,
+      "move_id": "pebble_toss",
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "particle_budget": {
+        "impact": 24.0,
+        "trail": 18.0
+      },
+      "peak_slots": 42,
+      "rank": 1,
+      "resolved_count": 3,
+      "resolved_size": 0.2,
+      "simultaneous": 1,
+      "target_visual_bounds": {
+        "position": "(1.315012, 0.0, -0.827969)",
+        "size": "(3.369976, 2.0, 1.655939)"
+      },
+      "transit_shutter": {
+        "body_envelope_radius_m": 0.46,
+        "clear_transit_required": true,
+        "entry_fraction": 0.435835361480713,
+        "envelope_radius_m": 1.7,
+        "fraction": 0.34866828918457,
+        "method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+        "revision": "r6-separate-body-and-group-envelopes"
+      },
+      "travel_seconds": 0.7,
+      "wall_frame_ms": []
+    },
+    "r14_light_checks": {
+      "cancel_arrivals": 0,
+      "check_count": 18,
+      "checks": {
+        "authored_scene_cap_four": true,
+        "cancel_actual_light_nodes": true,
+        "cancel_five_actual_nodes": true,
+        "cancel_frees_actual_nodes": true,
+        "cancel_global_cap": true,
+        "cancel_hides_lights_immediately": true,
+        "cancel_never_emits_arrival": true,
+        "cancel_reclaims_lights": true,
+        "cancel_reclaims_particles": true,
+        "initial_lights_empty": true,
+        "natural_arrives_once_per_node": true,
+        "natural_five_actual_nodes": true,
+        "natural_frees_actual_nodes": true,
+        "natural_only_contact_cues": true,
+        "natural_peak_bounded": true,
+        "natural_reclaims_lights": true,
+        "natural_reclaims_particles": true,
+        "one_launch_voice_per_node": true
+      },
+      "impact_cues": 5,
+      "launch_cues": 10,
+      "natural_arrivals": 5,
+      "peak_lights": 4,
+      "scope": "production_nodes_synthetic_lifetime_only"
+    },
+    "source_clock_allowances": {
+      "stone_throw": 2.42,
+      "fireball": 2.42,
+      "sky_lightning": 2.1799999999999997
+    }
+  }
+}

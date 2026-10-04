@@ -1,0 +1,81 @@
+{
+  "classification": "ACTUAL ORIGINAL-BUDGET EARNED PREFIX FAIL; F17#4 OPEN; ZERO MET CREDIT",
+  "head": "90d88dc6b24f9a5e0e705465ac62ba5429a068cf",
+  "source_closure_count": 2180,
+  "before_after_source_closure_sha256": "6899faf09a5125dcdc142fb6120da035e49f8b575f3972fca1b0e6b3bb61e5d7",
+  "parser_exit": 0,
+  "parser_elapsed_seconds": 12.625,
+  "native_exit": 1,
+  "native_elapsed_seconds": 278.23400000005495,
+  "campaign_result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": true,
+    "cumulative_elapsed_seconds": 262.874,
+    "dry_run": false,
+    "elapsed_seconds": 262.874,
+    "failures": [
+      "The selected wild needs a physical village crossing but no current open gate route is available"
+    ],
+    "local_chains": [],
+    "reached": "village",
+    "requested_prefix_passed": false,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://four_biome_fresh_16148_13220"
+  },
+  "milestones": [
+    "GATE A OPENING +0.14s — title interactive",
+    "GATE A OPENING +0.29s — answered the character-choice step",
+    "GATE A OPENING +3.46s — confirmed the configured trainer-name prefill",
+    "GATE A OPENING +3.51s — new game world entered",
+    "GATE A OPENING +133.21s — wake/Get Up complete",
+    "GATE A OPENING +137.56s — Grandpa briefing and pack complete",
+    "GATE A OPENING +137.59s — starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+    "GATE A OPENING +141.60s — starter selected and named (terrapup, uid creature-e7f95e61fa67c294c04a41940c49b3af)",
+    "GATE A OPENING +143.20s — Grandpa's first-catch supplies received (50 Basic Orbs)",
+    "GATE A OPENING +144.85s — usable house/front doorway exited",
+    "GATE A OPENING +163.40s — engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+    "GATE A OPENING +163.43s — tutorial Bramblebun combat entered",
+    "GATE A OPENING +173.29s — Bramblebun naturally weakened to 28/106 HP",
+    "GATE A OPENING +173.33s — live catch begins with 50 earned orbs; no HP or inventory fixture",
+    "GATE A OPENING +182.47s — catch complete; exploration resumed with two-creature party",
+    "GATE A OPENING +192.27s — village key earned and consumed by the real gate",
+    "GATE A NPC/GATHER +8.92s — Mira cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +10.39s — Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue",
+    "GATE A NPC/GATHER +13.46s — Tam cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +13.48s — Tam handed over knife, torch and build hammer through dialogue",
+    "GATE A NPC/GATHER +17.01s — Satchel assigned four tools by focused controller input",
+    "GATE A NPC/GATHER +34.75s — axe equipped, swung, gathered +4 Wood",
+    "GATE A NPC/GATHER +37.07s — pickaxe equipped, swung, gathered +4 Stone",
+    "GATE A NPC/GATHER +42.19s — knife equipped, swung, gathered +4 Fiber",
+    "GATE A NPC/GATHER +59.03s — Oskar cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +65.95s — Bram cycle 1 exited and movement resumed",
+    "GATE A NPC/GATHER +67.38s — Bram cycle 2 exited and movement resumed",
+    "GATE A NPC/GATHER +68.73s — Bram cycle 3 exited and movement resumed",
+    "GATE A NPC/GATHER +70.35s — five NPC/modal exits and three equipped-tool gathers returned world control",
+    "[meadows_earned_team] {\"beat\":\"world_seed\",\"world_seed\":4}",
+    "[meadows_earned_team] FAIL: The selected wild needs a physical village crossing but no current open gate route is available",
+    "FRESH CAMPAIGN RESULT {\"campaign_complete\":false,\"checkpoints\":[],\"counts_as_proof\":true,\"cumulative_elapsed_seconds\":262.874,\"dry_run\":false,\"elapsed_seconds\":262.874,\"failures\":[\"The selected wild needs a physical village crossing but no current open gate route is available\"],\"local_chains\":[],\"reached\":\"village\",\"requested_prefix_passed\":false,\"resume\":{},\"resumed_from\":\"\",\"scratch\":\"user://four_biome_fresh_16148_13220\"}"
+  ],
+  "error_emissions": [],
+  "failure_return": "Returned to the same existing F17 conversation 01a0f519-0f68-7f12-b4a0-f3c4051860c0; exact cause/route state not yet established.",
+  "limits": "Original 90/5400 second commands/budgets, no checkpoints/resume/grants, same actual source during run. No unchanged retry. Bram exit completed this time; earlier raw-recovery failures remain retained and unresolved. R15 first-failed-PRE diagnostic was not exercised, so no native capsule/penetration certificate follows.",
+  "files": [
+    {
+      "name": "receipt.json.gz",
+      "raw_bytes": 498899,
+      "raw_sha256": "8f78bd3700db33de436f960e376053431a9a5c7e1e92b99aac80c709c579bd5a"
+    },
+    {
+      "name": "parser.log.gz",
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "name": "native.log.gz",
+      "raw_bytes": 148680,
+      "raw_sha256": "e1d040ee06ac0181bf68b716cf529ad75b1ab83c08bead519dff6ad0d152a130"
+    }
+  ]
+}

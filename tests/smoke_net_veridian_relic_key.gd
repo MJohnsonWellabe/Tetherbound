@@ -26,8 +26,9 @@ extends "res://tests/helpers/net_harness.gd"
 ##
 ## Disclosed staging: parties are granted with `party_grant`, both peers are
 ## placed at the Warden arena with `explore_at`, and the win is driven by
-## `win_trainer_battle` (smoke_net_shared_boss.gd's path). The shrine is a real
-## `realm_heart_shrine.gd` stood in each process by `heart_bind`, the way the
+## `win_trainer_battle` without self-HP top-ups (smoke_net_shared_boss.gd's path).
+## The shrine is a real `realm_heart_shrine.gd` stood in each process by
+## `heart_bind`, the way the
 ## world stands the authored one.
 
 const PARTY := ["terrapup", "bramblebun", "trailpup", "mudsnout"]
@@ -118,7 +119,8 @@ func _run() -> void:
 	var guest_in: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	check(str(guest_in.get("verdict", "")) == "PASS", "guest joined the Warden's own fight")
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING,
+		 "self_hp_topups": false}, BATTLE_FRAMES + 900)
 	check(str(won.get("verdict", "")) == "PASS", "both peers felled the Warden (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())

@@ -1,0 +1,86 @@
+{
+  "source": "f65692df960435918da196301aebac72ac827cfc",
+  "source_before": {
+    "tests/helpers/opening_geometry_navigator.gd": "2bfdb54c0760fba575252be182cfbf08c6f87875a8e1212a44b2ed88adfe606d",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "58adf57b1276b2f7b6ea20b243fb4d3a069fb4fdf9640a550be611a330c8cc8b",
+    "tests/helpers/meadows_earned_team_segment.gd": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+    "tests/smoke_four_biome_continuous.gd": "8fee7fab8693af0963b133d83e929da893a0b2cc378af3034fc2c1c582eea207",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/grandpa_house.gd": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+    "tests/helpers/fresh_opening_segment.gd": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a",
+    "autoload/game_state.gd": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b"
+  },
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "independent_source_gate": "Independent74checks SOURCEPASS614597/db20 ordinary production stick steering with pre/post physical observation; originalR5FAIL preserved; predictive APIs untouched, original earned assertions and1800/3600 budgets unchanged",
+  "runs": [
+    {
+      "label": "parser",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-hub",
+        "--check-only",
+        "--script",
+        "res://tests/smoke_four_biome_continuous.gd"
+      ],
+      "timeout_s": 90,
+      "pid": 9780,
+      "native_exit": 0,
+      "elapsed_seconds": 19.594000000040978,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "errors": []
+    },
+    {
+      "label": "native",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-hub",
+        "--script",
+        "res://tests/smoke_four_biome_continuous.gd",
+        "--",
+        "--through-tournament",
+        "--world-seed=4",
+        "--no-checkpoints",
+        "--opening-contact-diagnostics"
+      ],
+      "timeout_s": 5400,
+      "pid": 17780,
+      "native_exit": 1,
+      "elapsed_seconds": 253.17199999990407,
+      "raw_sha256": "660644db98b6f062a05d37d8608a2141b02b8411a80260652845ea8a422fa30b",
+      "errors": [
+        "ERROR: Native opening refused: production observation cooperative callback deadline\r",
+        "ERROR: could not reach actual door standoff: player=(37.33337, -2.011569, -19.43266) target=(27.0, 0.85, 5.0) distance=26.53 colliders=[\"/root/MeadowsPlayground/Terrain\"]\r",
+        "ERROR: could not naturally enter Mira's building\r"
+      ]
+    }
+  ],
+  "scope": "One source-corrected original-budget genuine fresh title\u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122starter\u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122catch\u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122village/gather\u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122camp\u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122three-bed readiness\u00c3\u00a2\u00e2\u20ac\u00a0\u00e2\u20ac\u2122three tournament rounds; no checkpoints/grants; F17#4 stays OPEN unless entire prefix passes.",
+  "source_after": {
+    "tests/helpers/opening_geometry_navigator.gd": "2bfdb54c0760fba575252be182cfbf08c6f87875a8e1212a44b2ed88adfe606d",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "58adf57b1276b2f7b6ea20b243fb4d3a069fb4fdf9640a550be611a330c8cc8b",
+    "tests/helpers/meadows_earned_team_segment.gd": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a",
+    "tests/helpers/stick_navigator.gd": "e8ae08d855be2de9b020db611ddc0c419f86edb555beb5eca1cec18f50ef9345",
+    "tests/smoke_four_biome_continuous.gd": "8fee7fab8693af0963b133d83e929da893a0b2cc378af3034fc2c1c582eea207",
+    "data/config/village.json": "7133e909b11d6573aa3893686f11dd3deb65814be4efae60226df5e01da8e946",
+    "data/config/terrain_playground.json": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2",
+    "scripts/player/player_controller.gd": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+    "scripts/world/grandpa_house.gd": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947",
+    "tests/helpers/fresh_opening_segment.gd": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a",
+    "autoload/game_state.gd": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5",
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/utility_effects.gd": "4084905257f0d05442c7333fd4425594cce3c6c151ab79b8a81903f256ab57ba",
+    "data/config/combat.json": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b"
+  },
+  "same_source": true,
+  "head_after": "f65692df960435918da196301aebac72ac827cfc"
+}

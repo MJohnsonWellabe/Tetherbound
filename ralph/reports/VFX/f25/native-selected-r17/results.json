@@ -1,0 +1,135 @@
+{
+	"adapter": "NVIDIA GeForce GTX 1060 3GB",
+	"batch": "identities",
+	"cases": [
+		{
+			"arrival_process_frames": [
+				78
+			],
+			"arrival_wall_seconds": [
+				0.888892
+			],
+			"arrivals": 1,
+			"captures_at_wall_seconds": {
+				"contact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.0,
+					"wall_seconds": 1.014422
+				},
+				"flight": {
+					"actual_body_positions": [
+						"(-1.086635, 1.698155, 0.781934)",
+						"(-0.714286, 2.37533, -0.390967)",
+						"(-0.341936, 1.020981, -0.390967)"
+					],
+					"arrivals": 0,
+					"clear_of_expanded_target_bounds": true,
+					"nominal_travel_fraction": 0.34866828918457,
+					"wall_seconds": 0.432308
+				},
+				"impact": {
+					"arrivals": 1,
+					"nominal_travel_fraction": 1.14,
+					"wall_seconds": 1.201478
+				}
+			},
+			"cpu_process_ms": [],
+			"end_process_frame": 101,
+			"end_slots": 0,
+			"end_wall_seconds": 1.855418,
+			"id": "small-stones",
+			"independent_schedule_process_frame": 78,
+			"lifetime_allowance_seconds": 2.42,
+			"lifetime_deadline_clock": "idle_simulation",
+			"move_id": "pebble_toss",
+			"p95_ms": 0.0,
+			"p99_ms": 0.0,
+			"particle_budget": {
+				"impact": 24.0,
+				"trail": 18.0
+			},
+			"peak_slots": 42,
+			"rank": 1,
+			"resolved_count": 3,
+			"resolved_size": 0.2,
+			"simultaneous": 1,
+			"target_visual_bounds": {
+				"position": "(1.315012, 0.0, -0.827969)",
+				"size": "(3.369976, 2.0, 1.655939)"
+			},
+			"transit_shutter": {
+				"body_envelope_radius_m": 0.46,
+				"clear_transit_required": true,
+				"entry_fraction": 0.435835361480713,
+				"envelope_radius_m": 1.7,
+				"fraction": 0.34866828918457,
+				"method": "Measured production-model world AABB expanded by resolved projectile envelope; earlier actual presentation timer fraction before intersection. Pose, model scale and camera unchanged.",
+				"revision": "r6-separate-body-and-group-envelopes"
+			},
+			"travel_seconds": 0.7,
+			"wall_frame_ms": [],
+			"wall_watchdog_expired": false
+		}
+	],
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+		"hex": 263936,
+		"major": 4,
+		"minor": 7,
+		"patch": 0,
+		"status": "stable",
+		"string": "4.7-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"light_lifecycle": {
+		"cancel_arrivals": 0,
+		"check_count": 18,
+		"checks": {
+			"authored_scene_cap_four": true,
+			"cancel_actual_light_nodes": true,
+			"cancel_five_actual_nodes": true,
+			"cancel_frees_actual_nodes": true,
+			"cancel_global_cap": true,
+			"cancel_hides_lights_immediately": true,
+			"cancel_never_emits_arrival": true,
+			"cancel_reclaims_lights": true,
+			"cancel_reclaims_particles": true,
+			"initial_lights_empty": true,
+			"natural_arrives_once_per_node": true,
+			"natural_five_actual_nodes": true,
+			"natural_frees_actual_nodes": true,
+			"natural_only_contact_cues": true,
+			"natural_peak_bounded": true,
+			"natural_reclaims_lights": true,
+			"natural_reclaims_particles": true,
+			"one_launch_voice_per_node": true
+		},
+		"impact_cues": 5,
+		"launch_cues": 10,
+		"natural_arrivals": 5,
+		"peak_lights": 4,
+		"scope": "production_nodes_synthetic_lifetime_only"
+	},
+	"limits": [
+		"No combat/damage authority exercised",
+		"Wall-frame intervals include CPU/GPU/present/OS scheduling",
+		"No Ally or four-creature-fight acceptance claim",
+		"Identity duration slowed for readable frames; host timing requires separate player witness"
+	],
+	"medium_features": false,
+	"renderer": "gl_compatibility",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scope": "production_effect_nodes_synthetic_arena",
+	"selected_identity": "small-stones:r1",
+	"target": {
+		"production_model": true,
+		"scope": "posed production body; no encounter or HP authority",
+		"species": "mudsnout"
+	}
+}

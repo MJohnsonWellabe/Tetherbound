@@ -1,0 +1,135 @@
+--- a/tools/_probe_scatter_tree_prompt_height.gd
++++ b/tools/_probe_scatter_tree_prompt_height.gd
+@@ -12,6 +12,8 @@
+ # bf0f38b203 removed trees#320. Pin kept trees#886, the closest non-smaller
+ # CommonTree_2 in this region by scale (1.598110499382019 -> 1.6529272198677063).
+ const TARGET := Vector3(98.15209197998047, 5.79111909866333, -35.932098388671875)
++const BANK_TURN_FRAMES := 26
++const MAX_BANK_TURNS := 3
+ var _player: CharacterBody3D
+ var _arbiter: Node
+ var _prompt: Node3D
+@@ -95,16 +97,32 @@
+ 	# At most nine cached observations; no additional physics query or frame.
+ 	var approach_trace := [_approach_sample("settled", 0, Vector3.ZERO)]
+ 	var saw_wall := false
++	var terrain := world.get_node("CanonicalLocalTerrain") as StaticBody3D
++	var bank_left := 0
++	var bank_direction := Vector3.ZERO
++	var bank_turns: Array[Dictionary] = []
+ 	var touched := false
+ 	for frame in 180:
+ 		var offset := TARGET - _player.global_position
+ 		offset.y = 0
+ 		offset = offset.normalized()
+-		_axis(JOY_AXIS_LEFT_X, offset.x)
+-		_axis(JOY_AXIS_LEFT_Y, offset.z)
++		var steering := offset
++		if bank_left == 0 and bank_turns.size() < MAX_BANK_TURNS:
++			var normal := _terrain_bank_normal(offset, terrain)
++			var tangent := bank_tangent(offset, normal, bank_direction)
++			if tangent != Vector3.ZERO:
++				bank_direction = tangent
++				bank_left = BANK_TURN_FRAMES
++				bank_turns.append({"approach_frame": frame + 1, "player": _player.global_position,
++					"cached_normal": normal, "requested_tangent": tangent})
++		if bank_left > 0:
++			steering = bank_direction
++			bank_left -= 1
++		_axis(JOY_AXIS_LEFT_X, steering.x)
++		_axis(JOY_AXIS_LEFT_Y, steering.z)
+ 		await physics_frame
+ 		if frame == 0 or (frame + 1) % 30 == 0 or (_player.is_on_wall() and not saw_wall):
+-			approach_trace.append(_approach_sample("approach", frame + 1, offset))
++			approach_trace.append(_approach_sample("approach", frame + 1, steering))
+ 			saw_wall = saw_wall or _player.is_on_wall()
+ 		for index in _player.get_slide_collision_count():
+ 			if _player.get_slide_collision(index).get_collider() == trunk:
+@@ -123,6 +141,7 @@
+ 	# Flush outside the moving sample; these observations cannot admit success.
+ 	for sample: Dictionary in approach_trace:
+ 		print("APPROACH cached sample=", sample)
++	print("TERRAIN stick turns=", bank_turns, " within_original_180_frames=true")
+ 	await process_frame
+ 	var press := InputEventAction.new()
+ 	press.action = "interact"
+@@ -141,6 +160,38 @@
+ 	world.queue_free()
+ 	await process_frame
+ 	quit(0 if success else 1)
++
++func _terrain_bank_normal(wanted: Vector3, terrain: StaticBody3D) -> Vector3:
++	if not _player.is_on_floor() or not _player.is_on_wall():
++		return Vector3.ZERO
++	for index in _player.get_slide_collision_count():
++		var hit := _player.get_slide_collision(index)
++		if hit.get_collider() != terrain:
++			continue
++		var normal := hit.get_normal()
++		if normal.y > 0.0 and normal.y < cos(_player.floor_max_angle) \
++				and Vector3(normal.x, 0.0, normal.z).dot(wanted) < -0.0001:
++			return normal
++	return Vector3.ZERO
++
++
++## A provisional horizontal stick request along an observed wall. Collision,
++## actual trunk contact and the unchanged success conjunction remain decisive.
++static func bank_tangent(wanted: Vector3, normal: Vector3, previous: Vector3 = Vector3.ZERO) -> Vector3:
++	for value: float in [wanted.x, wanted.y, wanted.z, normal.x, normal.y, normal.z,
++			previous.x, previous.y, previous.z]:
++		if not is_finite(value):
++			return Vector3.ZERO
++	var tangent := Vector3(-normal.z, 0.0, normal.x)
++	if tangent.length_squared() < 0.0001 or Vector2(wanted.x, wanted.z).length_squared() < 0.0001:
++		return Vector3.ZERO
++	tangent = tangent.normalized()
++	# Keep the first side through bounded turns; do not oscillate as the bank
++	# normal changes. The first turn retains the most requested target heading.
++	var reference := previous if previous.length_squared() >= 0.0001 else wanted
++	if tangent.dot(reference) < 0.0:
++		tangent = -tangent
++	return tangent
+ 
+ func _approach_sample(stage: String, frame: int, requested_stick: Vector3) -> Dictionary:
+ 	# physics_frame resumes before the next player step; contact/wanted fields
+--- a/tests/test_vegetation_human_prompt_height.gd
++++ b/tests/test_vegetation_human_prompt_height.gd
+@@ -1,6 +1,7 @@
+ extends "res://tests/test_case.gd"
+ 
+ const VEG := preload("res://scripts/world/vegetation.gd")
++const TREE_PROBE := preload("res://tools/_probe_scatter_tree_prompt_height.gd")
+ const TARGET := Vector3(45.44734573364258, -0.18858742713928223, -62.50096893310547)
+ 
+ func _exact_placement() -> Dictionary:
+@@ -32,6 +33,30 @@
+ 	assert_true(contact.distance_to(old) > float(prompt.radius))
+ 	assert_true(contact.distance_to(current) < float(prompt.radius))
+ 	vegetation.free()
++
++
++func test_recorded_terrain_wall_requests_horizontal_tangent_and_keeps_first_side() -> void:
++	var first_normal := Vector3(-0.470884, 0.630212, 0.617333)
++	var first := TREE_PROBE.bank_tangent(Vector3(0, 0, -1), first_normal)
++	assert_almost_eq(first.length(), 1.0, 0.0001)
++	assert_almost_eq(first.y, 0.0, 0.0001)
++	assert_almost_eq(first.dot(first_normal), 0.0, 0.0001)
++	assert_true(first.x < 0.0 and first.z < 0.0)
++	var later_normal := Vector3(-0.237581, 0.669214, 0.704066)
++	var later_wanted := Vector3(0.46911, 0, -0.88314)
++	var later := TREE_PROBE.bank_tangent(later_wanted, later_normal, first)
++	assert_almost_eq(later.dot(later_normal), 0.0, 0.0001)
++	assert_true(later.dot(first) > 0.0, "the observed changing bank cannot flip the committed side")
++	assert_true(later.x < 0.0 and later.z < 0.0)
++	assert_eq(TREE_PROBE.BANK_TURN_FRAMES, 26)
++	assert_eq(TREE_PROBE.MAX_BANK_TURNS, 3)
++
++
++func test_terrain_tangent_refuses_no_heading_no_horizontal_normal_or_nonfinite_input() -> void:
++	assert_eq(TREE_PROBE.bank_tangent(Vector3.ZERO, Vector3.LEFT), Vector3.ZERO)
++	assert_eq(TREE_PROBE.bank_tangent(Vector3.FORWARD, Vector3.UP), Vector3.ZERO)
++	assert_eq(TREE_PROBE.bank_tangent(Vector3(INF, 0, -1), Vector3.LEFT), Vector3.ZERO)
++	assert_eq(TREE_PROBE.bank_tangent(Vector3.FORWARD, Vector3(INF, 0, 1)), Vector3.ZERO)
+ 
+ func test_measured_large_stone_spawns_a_reachable_human_height_prompt() -> void:
+ 	var vegetation := VEG.new()

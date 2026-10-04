@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "scope": "disclosed foundations storage fixture only",
+  "parent": "6af251fe8720e859a503830d1a41217c0804fb41",
+  "root_read_pin": "85ba143150d08d1e30efe7fc55c7671c2fc02b73",
+  "ci_merge_head": "8d3bf7eaadde51ebb18c363aeb47c3233309972c",
+  "artifact_id": 11174329186,
+  "artifact_zip_sha256": "915c3fa3d04eb97aa9aebea92d52bb2f6dcc4eec01a0bb10c3a8d98ef86da135",
+  "selected_files": [
+    {
+      "path": "tools/net/peer_runner.gd",
+      "parent_blob": "f699c6f51ed24a86e8fe45709db909ca0dde3c6d",
+      "root_blob": "f699c6f51ed24a86e8fe45709db909ca0dde3c6d",
+      "preimage_sha256": "d2c2b417217f7f0104026f91f9a63ea533d64e723f07e06f3785eb2bc50cf691",
+      "candidate_sha256": "2965ebac92059e39f7a4e53f96d96b7e395ba4cfe6df4d27bd5ad1d52a45007c",
+      "candidate_blob": "ddf69e80ed81151001b82e907190328d64fc7914"
+    },
+    {
+      "path": "tests/smoke_net_foundations.gd",
+      "parent_blob": "1750d40324ee1e2cb421e3a3596ca555d88e01ef",
+      "root_blob": "1750d40324ee1e2cb421e3a3596ca555d88e01ef",
+      "preimage_sha256": "adabfc7d6b9f7381a67be26433bd14061955440b6d0ef65c018319b74b07111b",
+      "candidate_sha256": "898f0c38344cf4fad145d6c38e2bebbd392abca2b957084a9623fef6aef4848a",
+      "candidate_blob": "784bb264c02c4cf03f5af3981c3793250d732c25"
+    }
+  ],
+  "root_read_dependencies": [
+    {
+      "path": "scripts/save/save_game.gd",
+      "blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+      "ci_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+      "sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8"
+    },
+    {
+      "path": "autoload/game_state.gd",
+      "blob": "ae8c5948f6670b646c05e7e4564bf2f270c4723a",
+      "ci_blob": "ae8c5948f6670b646c05e7e4564bf2f270c4723a",
+      "sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156"
+    },
+    {
+      "path": "scripts/creatures/teaching.gd",
+      "blob": "80727c7e018af35fe30b5004b5e6bc1152d6063b",
+      "ci_blob": "80727c7e018af35fe30b5004b5e6bc1152d6063b",
+      "sha256": "4128cf4a87384270412150ecb3bf24afdb497c049c2298ad89d7db57f77faac4"
+    },
+    {
+      "path": "scripts/creatures/traits.gd",
+      "blob": "c1f977042b1e77adfa129b48f8f083a84b976031",
+      "ci_blob": "c1f977042b1e77adfa129b48f8f083a84b976031",
+      "sha256": "70074025deee55868a238c51b5b81d5b925955b76e9c3e86e785f158bc869dc8"
+    },
+    {
+      "path": "scripts/creatures/move_mastery.gd",
+      "blob": "dfac9eec6f91d18639fdd1d4a815cbf905262c94",
+      "ci_blob": "dfac9eec6f91d18639fdd1d4a815cbf905262c94",
+      "sha256": "cf1c3797df7e2cd6042b208d463efd6b4d6d7e3c38aa49cab7cd89e1bd7c93bd"
+    },
+    {
+      "path": "scripts/net/character_record_rules.gd",
+      "blob": "c2fa453b153e030c68c318991cb82d3968acb131",
+      "ci_blob": "c2fa453b153e030c68c318991cb82d3968acb131",
+      "sha256": "9c05aaacda9f1818a7349c3620dfc3d9aeac7eec712d7226d6e3c7ab1baf9282"
+    },
+    {
+      "path": "data/config/traits.json",
+      "blob": "b9a9d4f2ce86193edefb824a50812d4a35e4448b",
+      "ci_blob": "b9a9d4f2ce86193edefb824a50812d4a35e4448b",
+      "sha256": "e8c1a8c991dba8a3a7301c30ac51728db64452b3f7c93ee1dd89770c9f54192b"
+    },
+    {
+      "path": "data/config/move_mastery.json",
+      "blob": "616f750cae81be437d8a35b7a41de3743db7fcac",
+      "ci_blob": "616f750cae81be437d8a35b7a41de3743db7fcac",
+      "sha256": "b80f37c11385f217cbab302b52802092a36655fa25b20ec3e7aafdf948865e06"
+    },
+    {
+      "path": "data/schema/character_state.schema.json",
+      "blob": "b8956cb9fba30714fe85863677c8545323588fe5",
+      "ci_blob": "b8956cb9fba30714fe85863677c8545323588fe5",
+      "sha256": "ba8cf4398329a34df452a958c9ce6f515e486d1c38f12af47a0666bc69b589d9"
+    },
+    {
+      "path": "data/moves/moves.json",
+      "blob": "7b66fdcc0401d04104465aef0c6947627099f019",
+      "ci_blob": "7b66fdcc0401d04104465aef0c6947627099f019",
+      "sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
+    },
+    {
+      "path": "data/moves/learnsets.json",
+      "blob": "8fa23c678c10116738786730e3765842cdc572c7",
+      "ci_blob": "8fa23c678c10116738786730e3765842cdc572c7",
+      "sha256": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5"
+    },
+    {
+      "path": "data/creatures/species.json",
+      "blob": "78a8adcd78b2826b5e7963141343d4e9965caf33",
+      "ci_blob": "78a8adcd78b2826b5e7963141343d4e9965caf33",
+      "sha256": "e8b8bf8ab07818952a2261d552540a94a14549e7661a27d8a86f182eb0caa968"
+    }
+  ],
+  "verification": {
+    "source_checks_passed": 77,
+    "native": "not run; ROOT-owned",
+    "criteria": "no MET claim"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "classification": "AUTHOR SOURCE CANDIDATE ONLY; F17#4 OPEN",
+  "base_commit": "92272ee7c5740968ac61a3999b67ea007f7573ce",
+  "changed_path": "tests/test_tournament_network_selection.gd",
+  "root_snapshot_head": "41f03d7f4f7b2cf7687fab4ddbe418a8245196b9",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "originals/tests/test_tournament_network_selection.gd": {
+      "bytes": 8216,
+      "sha256": "a0fb3353619b0cc1ad1690ab61545433133440bf72749e13256e9afaed8b97a2"
+    },
+    "prior-failure/ci6165-110344653258.log": {
+      "bytes": 902452,
+      "sha256": "6aa22f8f9759f4fdfce3fdb1fce372037582ca809f71d5f08304c8ff76b7b3ce"
+    },
+    "proposal/tests/test_tournament_network_selection.gd": {
+      "bytes": 8534,
+      "sha256": "ea954887511edb996537b073a66d20aae95dca23689bda94c2ce5f7a18a18845"
+    },
+    "repair.patch": {
+      "bytes": 2066,
+      "sha256": "1d94fd735f51b6e7cdc0b30b78417638a2a4c87b3acb4e9e3bf2889218c32742"
+    },
+    "review-context.txt": {
+      "bytes": 2186,
+      "sha256": "85b02f903e8f4414316f5eb58a32da1bd0da29deb45d6298517b41fa4acb41f6"
+    },
+    "root-actual/scripts/combat/encounter_director.gd": {
+      "bytes": 355711,
+      "sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162"
+    },
+    "root-actual/scripts/net/session.gd": {
+      "bytes": 158617,
+      "sha256": "02fb845febabe456887c0170aa2b933704c80ec6a21a3870328317ea76d7e7fa"
+    },
+    "root-actual/tests/test_director_projectile_deployment_binding.gd": {
+      "bytes": 7915,
+      "sha256": "e6a2b2e3e6a0b8e01882a062c7768e01651ac7f203d15ef995bb186ab2c42d4b"
+    },
+    "source-check.py": {
+      "bytes": 3801,
+      "sha256": "893d57eb0428311c1d9cd609f228c86c3f6dd869fcb7f4f49a041dd765f26445"
+    }
+  },
+  "protected_hub_sha256": {
+    "scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "tests/helpers/gate_a_opening_drive.gd": "b95d7865129722abb4b010a379a2473cd3d0457d14f202acc5e11233a79689d3",
+    "tests/helpers/fresh_opening_segment.gd": "5bd2ea999b87d1071bc23ad1786be39c4e23f0f08d00bd34682cdcfeedd791fb",
+    "tests/test_fresh_opening_target.gd": "5e64bf948d1f8ccdc8bf4e9d68f98d3d01e374e607190e347c9a738d3ad63902"
+  }
+}

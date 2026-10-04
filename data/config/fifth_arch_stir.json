@@ -1,0 +1,39 @@
+{
+  "_comment": "F20 presentation only. Foundation's Hall owner may consume this after the typed, durable host biome5 stir commit. Snapshot/rejoin restores the existing stirred material without replaying this one-shot. The arch remains sealed and untravelable; no quest, marker or sequel state is authored here.",
+  "_comment_readiness": "Source prototype. Consumer, real key use, audible mix, visual quality and measured performance remain unproved.",
+  "arch_id": "biome5",
+  "line": "Not ready yet.",
+  "glow": {
+    "material_family": "PortalSurface",
+    "palette_path": "res://data/config/crossing_hall.json",
+    "palette_state": "stirred",
+    "prefab_family": "crossing_hall_shell",
+    "prefab_path": "res://data/config/building_prefabs.json",
+    "rise_s": 0.18,
+    "hold_s": 0.28,
+    "fall_s": 0.74,
+    "baseline_emission_energy": 0.1,
+    "peak_emission_energy": 0.22,
+    "max_active_pulses_per_arch": 1,
+    "new_meshes": 0,
+    "new_particles": 0,
+    "new_dynamic_lights": 0
+  },
+  "hum": {
+    "asset_path": "res://assets/audio/ambience/tether_drone.wav",
+    "source_git_blob": "6ae3c096d0421848077ce51f7fc9632e9340e3c5",
+    "source_format": "PCM WAV, mono, 22050 Hz, 16 bit, 18 seconds",
+    "bus": "SFX",
+    "volume_db": -24.0,
+    "pitch_scale": 1.0,
+    "source_start_s": 0.0,
+    "fade_in_s": 0.12,
+    "hold_s": 0.5,
+    "fade_out_s": 0.58,
+    "hard_stop_s": 1.2,
+    "loop": false,
+    "max_audible_distance_m": 9.0,
+    "max_active_sources_per_arch": 1,
+    "caption": "[low arch hum]"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "baseline": "8189ef734addce12d446c6c9a0f9d4016a0d657d",
+  "scope": "Read-only analysis; no tracked change, native run, or admission decision",
+  "evidence": {
+    "exact_cached_total": 12,
+    "manifold_counts": [2, 2, 2, 2, 2, 2],
+    "logged_point_prefix": 8,
+    "floor": "RID67778878898179 shape33 normalUP, y0.9",
+    "second_collider": "RID5448982058764229 shape0; near-horizontal normal[.930705,0,.365770], point[12.601347,1.52,14.580248]; runtime name not logged",
+    "live_query": "Two contacts, shallow depths .0001874566/.0000582679; recovery travel .0009233356 within .00101000005 allowance; grounded and on_wall; recoveries0",
+    "desired_heading": "[-.952226,0,-.305393] projects about -.998 onto the second contact normal: almost directly into the wall",
+    "diagnostic_defect": "gate_a_npc_gather_segment.gd:753 uses get_collider() without an index, reporting only index0 for each manifold. Six Terrain names hide the second collider.",
+    "uncertainty": "Four omitted cached point records are not reconstructable. No pre-motion contact snapshot retained separately. Exact second collider type/name and safe physical alternatives are unproved. Different selected wood node cannot be attributed to this stone-only change from these receipts."
+  },
+  "literal_constraints": [
+    "AGENTS.md:61: Preserve required save, authority/transaction, real-path and visual proofs, CI, and the prohibition on skipping, disabling or quarantining tests.",
+    "AGENTS.md:67: New pillar/hard-rule decisions, purchases and a commercial platform launch are separate owner decisions.",
+    "CODEX_START_HERE.md:912-914: Independent strict re-check: a read-only sub-agent scores the evidence against the criterion wording. It closes only on MET. Disclose shortcuts (fixture starts, teleports, harness input) in the evidence text.",
+    "docs/WORKFLOW.md:315-316: If a test is red because the implementation is wrong, fix the implementation. Never skip, disable or quarantine a test to get green.",
+    "Current helper source:1282-1284 sums every collision.get_collision_count() and refuses cumulative contacts>CONTACTS; CONTACTS is8. This is an implementation bound also explicitly preserved by ROOT's task mandate and prior strict source gates."
+  ],
+  "bounded_options": [
+    {
+      "option": "Use already gathered current live wall contact for provisional ordinary-input deflection before driving into it",
+      "assessment": "A possible steering change, not an admission exception. Scan at most the existing unsaturated eight native contact results, derive a horizontal heading with outward/tangent component only, feed the real stick seam, preserve mandatory departure, same frame/stall/retry/choice budgets, aggregate contact refusal and all pre/post checks. No added query/shape/pose/velocity/controller/grant change. It could address both physical head-on wall cases instead of target-specific road retries. Runtime pre-motion wall availability and arrival remain unproved. ROOT must choose scope and strict-review an exact source proposal before any engine attempt."
+    },
+    {
+      "option": "Authored geometry route for selected wood target",
+      "assessment": "Can preserve guards but remains target-specific. Metadata includes The Pond path via[20,14],[20,-12],[-8,-12],[-12.5,6.5]; current selected target[-8,8]. Do not authorize or implement a new route merely from metadata. Roads are not collision certificates, and a first or final connector could still hit the unidentified collider."
+    },
+    {
+      "option": "Stronger validation admitting all twelve while retaining aggregate eight",
+      "assessment": "Impossible under the literal cumulative policy. Per-manifold bounds, pooling across frames, grouping byRID, exact or approximate point dedup, or treating cached repeats as one could admit more than eight raw contacts and therefore alter the policy. Stronger normal/depth/shape validation could be additional checks, but cannot turn this twelve-contact frame into a pass while retaining the existing guard. No such source change is authorized here."
+    }
+  ],
+  "status": "F17#4 OPEN; R3 failed before stone; tracked source and HEAD held"
+}

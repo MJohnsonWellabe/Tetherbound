@@ -1,0 +1,17 @@
+{
+  "source_commit": "d2ca82a501ef753090438c4d6cc0208ff9532a51",
+  "baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "predecessor": "f37e2e1bc5533849466370ca0227f9a11ab48cc2",
+  "data_and_source_comparisons": {
+    "legacy_12_exact_baseline": true,
+    "typed_23_exact_prior": true,
+    "typed_unique": true,
+    "reserved_absent": true,
+    "legacy_costs_resolve": true,
+    "old_catalogue_assertions_exact": true,
+    "preview_runtime_assertions_exact": true,
+    "flags_unchanged": true,
+    "obtainability_assertions_unchanged": true
+  },
+  "engine_or_test_execution": false
+}

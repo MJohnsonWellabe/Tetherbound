@@ -218,7 +218,7 @@ func test_a_newer_than_this_build_world_file_refuses() -> void:
 	var game := FIXTURE.populated_game(db)
 	assert_true(saver.save(game, 1))
 	var path := str(worlds.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = WORLD_SAVE.VERSION + 1
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
@@ -231,7 +231,7 @@ func test_version_one_world_refuses_without_changing_reward_journal() -> void:
 	var game := FIXTURE.populated_game(db)
 	assert_true(saver.save(game, 1))
 	var path := str(worlds.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 1
 	data.erase("reward_deliveries")
 	data.erase("reward_delivery_namespace")

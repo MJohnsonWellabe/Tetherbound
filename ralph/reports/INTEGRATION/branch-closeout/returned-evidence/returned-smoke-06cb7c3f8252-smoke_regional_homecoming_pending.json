@@ -1,0 +1,12 @@
+{
+  "head": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+  "script": "tests/smoke_regional_homecoming_pending.gd",
+  "exit": 0,
+  "errors": [],
+  "summary": [
+    "regional pending acknowledgement: 2 cases, 9 assertions, 0 failed"
+  ],
+  "raw_log_sha256": "0035a514260af53f85d22b6067bcac9c52606b5d618669f2d470eaef237c778c",
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-06cb7c3f8252-smoke_regional_homecoming_pending\\smoke.log",
+  "scope": "Exact tested source only; no criterion closure, main landing or archive inferred."
+}

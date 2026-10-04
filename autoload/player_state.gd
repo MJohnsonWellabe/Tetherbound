@@ -310,6 +310,7 @@ func hotbar_can_hold(item_id: String) -> bool:
 	var definition := items.call("definition", item_id) as Dictionary
 	if definition.is_empty():
 		return false
+	if item_id == "home_key": return true
 	return HOTBAR_KINDS_ALLOWED.has(str(items.call("kind", item_id)))
 
 
@@ -423,6 +424,9 @@ func load_data(data: Dictionary) -> void:
 		return
 	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(data.get("party",[]),data.get("redesign_character",{}),true).is_empty():
 		push_error("Character move loadout refused before applying personal state.")
+		return
+	if not SAVE_GAME.trait_party_errors(data.get("party", []), data.get("redesign_character", {})).is_empty():
+		push_error("Character traits refused before applying personal state.")
 		return
 	var redesign: Variant = data.get("redesign_character", REDESIGN_STATE.defaults("character"))
 	var redesign_errors := REDESIGN_STATE.validate("character", redesign, REDESIGN_STATE.uids(data.get("party", [])))

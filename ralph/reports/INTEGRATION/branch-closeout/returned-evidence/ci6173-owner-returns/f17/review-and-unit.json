@@ -1,0 +1,21 @@
+{
+  "source_candidate": "1c7e04b350dd2a559f71492655bd31ae8bc5287f",
+  "root_merge": "dfba0f60ea515a694a531112eedd4247bb89e6bb",
+  "independent_reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "source_verdict": "PASS849 independent source checks; original navigator/guards/caps and old test bodies preserved. Official pinned Godot recovery mechanism checked; actual first idle cause remains an inference.",
+  "native_unit": {
+    "head": "dfba0f60ea515a694a531112eedd4247bb89e6bb",
+    "exit": 0,
+    "timed_out": false,
+    "selection": "test_player_runaway_velocity_guard.gd,test_gate_a_npc_gather_segment_contract.gd,test_opening_beats.gd",
+    "summary": [
+      "40 tests, 305 assertions, 0 failed"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-dfba0f60ea51-fc83410d\\tests.log",
+    "raw_log_sha256": "efbbcfcc4546d159bff85bb2deca69c95569d226e6b7bb7f65776cc7358e5b1c"
+  },
+  "raw_log_bytes": 25774,
+  "lossless_log": "tests.log.gz",
+  "dependency_preservation": "camera_rig.gd and player_vitals.gd Git blobs equal first parent before/after merge",
+  "limits": "Affected units pass; whole original opening remains unverified. Original CI6173 failures retained; F17#4OPEN/R9HOLD and no criterion credit."
+}

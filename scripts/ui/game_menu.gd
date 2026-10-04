@@ -32,8 +32,6 @@ const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const GRAPHICS_OVERLAY := preload("res://scripts/ui/graphics_overlay.gd")
-const GRAPHICS_RESTART := preload("res://scripts/ui/graphics_restart.gd")
-const STEAM_LOBBY := preload("res://scripts/net/steam_lobby.gd")
 var _graphics_restarting := false
 ## D102: pausing the tree is a solo-only act. See local_pause.gd.
 const LOCAL_PAUSE := preload("res://scripts/ui/local_pause.gd")
@@ -175,25 +173,9 @@ func restart_for_graphics() -> String:
 	if Engine.is_embedded_in_editor() or OS.get_cmdline_args().has("--editor-pid"):
 		return "Stop and run the game again to apply the renderer change."
 	_graphics_restarting = true
-	if not GRAPHICS_RESTART.save_progress(game):
-		_graphics_restarting = false
-		return "Could not save progress. The game will stay open; try again or choose Later."
-	# Preserve session's reliable goodbye flush and peer authority. Its own
-	# bounded close window settles before process exit; the menu keeps input.
-	var session: Node = game.get("session")
-	if session != null and bool(session.call("is_active")):
-		session.call("leave", "graphics_restart")
-		while is_instance_valid(session) and bool(session.call("is_active")):
-			await get_tree().process_frame
-	STEAM_LOBBY.leave_for_quit(game)
-	# Exported builds need no launch flags; development launches need their
-	# project path. Do not replay test scripts or multiplayer auto-join flags.
-	var arguments := PackedStringArray()
-	if not OS.has_feature("standalone"):
-		arguments.append_array(["--path", ProjectSettings.globalize_path("res://")])
-	OS.set_restart_on_exit(true, arguments)
-	get_tree().quit()
-	return ""
+	var reason: String = await game.call("request_process_exit", true, true)
+	if not reason.is_empty(): _graphics_restarting = false
+	return reason
 
 
 ## A sibling of `_root`, not a child of it, so it can be shown while the menu
@@ -492,6 +474,14 @@ func current_tab_id() -> String:
 		return ""
 	return str((_tabs[_index] as Dictionary).get("id", ""))
 
+## F42/F45 integration seam; the shell keeps ownership of tab discovery.
+func configure_research_view(reader: Callable) -> bool:
+	if not reader.is_valid(): return false
+	for body: Node in _bodies:
+		if body.has_method("configure_research_view"):
+			return body.call("configure_research_view", reader) == true
+	return false
+
 
 func select(index: int) -> void:
 	if _tabs.is_empty():
@@ -789,6 +779,15 @@ func _read_actions() -> void:
 				_explain_refusal()
 			return
 		for action in _shortcuts().keys():
+			# X/Y belong to the piloted creature in combat and the Dynamo.
+			if _fight_in_progress(): return
+			if INPUT_OWNER.current(get_tree()) != null:
+				# A story panel (picker, conversation, naming) reads neither
+				# shortcut, so the press is a menu request it refuses: say why,
+				# or the button just looks broken. Other owners keep the press.
+				if _story_modal_open() and Input.is_action_just_pressed(str(action)):
+					_explain_refusal()
+				return
 			if Input.is_action_just_pressed(str(action)):
 				if not open(str(_shortcuts()[action])):
 					_explain_refusal()

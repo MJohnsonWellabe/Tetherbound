@@ -1,0 +1,441 @@
+{
+  "classification": "CI6170 LIVE; UNIT SHARDS GREEN; EARNED CORE AND TREE STILL FAIL; NO CRITERION CREDIT",
+  "head": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+  "run_id": 36882902951,
+  "first_page_jobs_only": true,
+  "unit2": {
+    "job": 110442934417,
+    "job_conclusion": "success",
+    "tests": 2740,
+    "assertions": 482445,
+    "failed": 0,
+    "raw_log_clean": false,
+    "limitations": "Job succeeds but raw DummyRenderer allocator/RID/resource errors and105 ObjectDB leaks remain. Preserve full decoded log; do not equate CI success with zero native errors or acceptance."
+  },
+  "earned_core": {
+    "job": 110442934661,
+    "job_conclusion": "failure",
+    "original_workflow_attempts": "2/2; no extra local rerun",
+    "failed_production_observations": [
+      {
+        "acceptance": false,
+        "actual_delta": [],
+        "authored_road_hint": "",
+        "ceiling_frames": 0,
+        "controller_observation_available": false,
+        "controller_wanted_dir": [],
+        "delivered_input": [
+          0.0,
+          0.0
+        ],
+        "diagnostic_output_outside_physics_cap": true,
+        "failed_original_pre_sample": {
+          "acceptance": false,
+          "backend_identity_proven": false,
+          "body_pose": {
+            "basis_x": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "basis_y": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "basis_z": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "origin": [
+              26.4839038848877,
+              0.949628829956055,
+              7.29789638519287
+            ]
+          },
+          "capsule": {
+            "height": 1.79999995231628,
+            "radius": 0.400000005960464,
+            "rid": "RID(9908489551872)"
+          },
+          "collide_shape_points": [
+            [
+              26.4839038848877,
+              0.949628829956055,
+              7.29789638519287
+            ],
+            [
+              26.4839038848877,
+              0.949999988079071,
+              7.29789638519287
+            ]
+          ],
+          "complete": true,
+          "configured_backend": "DEFAULT",
+          "elapsed_us": 80,
+          "excluded_self_only": "RID(10651518894080)",
+          "original_motion_contact_geometry": [
+            {
+              "body_pose": {
+                "basis_x": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "basis_y": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "basis_z": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "origin": [
+                  27.0,
+                  0.849999964237213,
+                  7.90000009536743
+                ]
+              },
+              "index": 0,
+              "path": "/root/MeadowsPlayground/Village/doorstep_21/Collision",
+              "rid": "RID(369732259677631)",
+              "shape_data": [
+                2.0,
+                0.0500000007450581,
+                1.0
+              ],
+              "shape_index": 0,
+              "shape_local_pose": {
+                "basis_x": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "basis_y": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "basis_z": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "origin": [
+                  0.0,
+                  0.0500000007450581,
+                  0.0
+                ]
+              },
+              "shape_rid": "RID(369736554644922)",
+              "shape_type": 3,
+              "shape_world_pose": {
+                "basis_x": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "basis_y": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "basis_z": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "origin": [
+                  27.0,
+                  0.899999976158142,
+                  7.90000009536743
+                ]
+              }
+            }
+          ],
+          "pair_limit": 8,
+          "pair_limit_reached": false,
+          "phase": "original_pre",
+          "queries_after": 3,
+          "queries_before": 1,
+          "query_margin": 0.0,
+          "query_mask": 1,
+          "query_motion": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "query_pose": {
+            "basis_x": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "basis_y": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "basis_z": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "origin": [
+              26.4839038848877,
+              1.8496288061142,
+              7.29789638519287
+            ]
+          },
+          "raw_pairs_are_not_a_penetration_certificate": true,
+          "rest_info": {
+            "collider_id": 4530100190486,
+            "normal": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "point": [
+              26.4839038848877,
+              0.949999988079071,
+              7.29789638519287
+            ],
+            "rid": "RID(369732259677631)",
+            "shape": 0
+          },
+          "server_class": "PhysicsServer3D",
+          "trigger": "zero-motion recovery exceeds unchanged skin"
+        },
+        "floor_angle": 0.785399973392487,
+        "frame": 635,
+        "live_contacts": [
+          {
+            "collider_path": "/root/MeadowsPlayground/Village/doorstep_21/Collision",
+            "collider_rid": "RID(369732259677631)",
+            "collider_shape": 0,
+            "depth": 0.000221133232116699,
+            "local_shape": 0,
+            "normal": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "point": [
+              26.4839038848877,
+              0.949999988079071,
+              7.29789638519287
+            ]
+          }
+        ],
+        "live_recovery_travel": [
+          0.0,
+          0.00114995241165161,
+          0.0
+        ],
+        "live_state_phase": "pre",
+        "mask": 1,
+        "on_ceiling": false,
+        "on_floor": true,
+        "on_wall": false,
+        "physics_frame": 4052,
+        "plans": 1,
+        "player": [
+          26.4839038848877,
+          0.949628829956055,
+          7.29789638519287
+        ],
+        "progress_m": 50.5959916198626,
+        "provisional_choice": 0,
+        "provisional_steering": {
+          "acceptance": false,
+          "heading": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "prediction_motion": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "retry_choice": 0,
+          "source": "none",
+          "wall_normal": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "queries": 3,
+        "recoveries": 0,
+        "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+        "request": [
+          27.0,
+          0.849999964237213,
+          2.79999995231628
+        ],
+        "requests": 636,
+        "safe_margin": 0.00100000004749745,
+        "slide_contacts": [],
+        "slide_contacts_are_capped_prefix": true,
+        "slide_count": -1,
+        "slide_motion": [],
+        "slide_point_counts": [],
+        "snap": 0.400000005960464,
+        "stall_frames": 0,
+        "swept_depth": -1.0,
+        "timing": {
+          "callback_cap_us": 10000,
+          "input_flush_us": 0,
+          "live_pre_us": 173,
+          "pre_us": 217,
+          "stage": "pre_refused"
+        },
+        "total_queries": 1906,
+        "wall_frames": 5
+      },
+      {
+        "acceptance": false,
+        "actual_delta": [
+          0.00774383544921875,
+          -0.0396581888198853,
+          -0.082371711730957
+        ],
+        "authored_road_hint": "",
+        "callback_own_us": 488,
+        "ceiling_frames": 0,
+        "checked_start": false,
+        "controller_observation_available": true,
+        "controller_wanted_dir": [
+          0.0935916975140572,
+          0.0,
+          -0.99561071395874
+        ],
+        "delivered_input": [
+          -0.579561352729797,
+          -0.814928591251373
+        ],
+        "diagnostic_output_outside_physics_cap": true,
+        "floor_angle": 0.785399973392487,
+        "frame": 784,
+        "live_contacts": [
+          {
+            "collider_path": "/root/MeadowsPlayground/Terrain",
+            "collider_rid": "RID(67559835566083)",
+            "collider_shape": 33,
+            "depth": 0.000244557857513428,
+            "local_shape": 0,
+            "normal": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "point": [
+              26.6337032318115,
+              0.899999976158142,
+              6.69660234451294
+            ]
+          }
+        ],
+        "live_recovery_travel": [
+          0.0,
+          0.00130641460418701,
+          0.0
+        ],
+        "live_state_phase": "post",
+        "mask": 1,
+        "on_ceiling": false,
+        "on_floor": true,
+        "on_wall": false,
+        "physics_frame": 4506,
+        "plans": 2,
+        "player": [
+          26.6337032318115,
+          0.899448990821838,
+          6.69660234451294
+        ],
+        "progress_m": 62.8154590139166,
+        "provisional_choice": 0,
+        "provisional_steering": {
+          "acceptance": false,
+          "heading": [
+            0.0935916602611542,
+            0.0,
+            -0.995610654354095
+          ],
+          "prediction_motion": [
+            0.187183320522308,
+            0.0,
+            -1.99122130870819
+          ],
+          "retry_choice": 0,
+          "source": "prospective_step",
+          "wall_normal": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "queries": 3,
+        "recoveries": 0,
+        "refusal": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+        "request": [
+          27.0,
+          0.849999964237213,
+          2.79999995231628
+        ],
+        "requests": 785,
+        "safe_margin": 0.00100000004749745,
+        "slide_contacts": [],
+        "slide_contacts_are_capped_prefix": true,
+        "slide_count": 0,
+        "slide_motion": [
+          0.00774383544921875,
+          -0.039658185094595,
+          -0.082371711730957
+        ],
+        "slide_point_counts": [],
+        "snap": 0.400000005960464,
+        "stall_frames": 0,
+        "swept_depth": 0.00110056751873344,
+        "timing": {
+          "between_callbacks": "controller and other nodes; excluded; not controller-only",
+          "between_callbacks_us": 3549,
+          "callback_cap_us": 10000,
+          "input_flush_us": 42,
+          "live_post_us": 100,
+          "live_pre_us": 68,
+          "movement_progress_us": 0,
+          "post_contract_us": 21,
+          "post_us": 167,
+          "pre_us": 252,
+          "provisional_steering_us": 59,
+          "serialization_and_print": "deferred; excluded; snapshot included",
+          "slide_validation_us": 6,
+          "snapshot_us": 38,
+          "stage": "post"
+        },
+        "total_queries": 2351,
+        "wall_frames": 5
+      }
+    ],
+    "limits": "Current CI failure is at Mira, including original POST recovery guard on Terrain heightfield. It is distinct from stored7e487 failed PRE Box sample. No initial whole-world penetration/clearance certificate is inferred from contact points or recovery travel."
+  },
+  "files": [
+    {
+      "job": 110442934417,
+      "decoded_utf8_bytes": 839579,
+      "decoded_utf8_sha256": "81f7a912df8d8b808778f27b27bd2f2a22d736fbc9d611dcb64140d02e33da77",
+      "file": "job-110442934417-decoded.log.gz"
+    },
+    {
+      "job": 110442934661,
+      "decoded_utf8_bytes": 573338,
+      "decoded_utf8_sha256": "406a1c30795b2ae31a764edea4d857757883868afcbf81cc18907d986f06f1cd",
+      "file": "job-110442934661-decoded.log.gz"
+    }
+  ]
+}

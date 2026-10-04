@@ -1,0 +1,94 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:08:32.728811+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "criterion": "F37#3",
+  "method": "all authorized live contracts plus actual data/scripts/autoload source scan and Ripplet definition inspection",
+  "live_documents_scanned": [
+    "AGENTS.md",
+    "CLAUDE.md",
+    "CODEX_START_HERE.md",
+    "CLAUDE_START_HERE.md",
+    "docs/ACCEPTANCE.md",
+    "docs/GAME_BIBLE.md",
+    "docs/PRODUCT.md",
+    "docs/ROADMAP.md",
+    "docs/STATE.md",
+    "docs/TECHNICAL.md",
+    "docs/WORKFLOW.md",
+    "docs/design/ART_DIRECTION.md",
+    "docs/design/AUDIO.md",
+    "docs/design/BOSSES.md",
+    "docs/design/COMBAT.md",
+    "docs/design/CREATURES.md",
+    "docs/design/HOMESTEAD.md",
+    "docs/design/MULTIPLAYER.md",
+    "docs/design/PROGRESSION.md",
+    "docs/design/SYSTEMS.md",
+    "docs/design/TRAINING.md",
+    "docs/design/UX.md",
+    "docs/design/WORLD.md"
+  ],
+  "game_files_scanned": 910,
+  "ui_dialogue_files_scanned": 82,
+  "mentions": [
+    {
+      "path": "CODEX_START_HERE.md",
+      "line": 84,
+      "text": "| RD-32 | **Starter traversal:** Terrapup rides (Meadows). **Ripplet swims (surface mount in Tidewake) and Dives at its L30 breakthrough.** Galewisp flies (Cloudreach). Ripplet's old Teleport promise is dropped; the Home Key does fast travel. Required water routes stay human-swimmable. |",
+      "retirement_statement": true
+    },
+    {
+      "path": "CODEX_START_HERE.md",
+      "line": 710,
+      "text": "  - `#3` The old Ripplet Teleport promise is removed from docs and UI.",
+      "retirement_statement": true
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "line": 33,
+      "text": "**Superseded in part (owner, 2026-09-29, RD-11..RD-13, RD-03):** the redesign adds three move slots plus an ultimate, learnsets and mastery, Tether Commands (no human damage), impact feedback, enemy patterns, and chosen leveling with breakthroughs. Their proof is ACCEPTANCE §6.2 (F21–F24, F27–F30). The C/S/U/M gates below still apply to the new systems. C1's 'quick, charged, burst and switch' reads as 'quick, charged, utility, ultimate, dodge/burst, switch and Tether Commands', with the same no-hold, no-shield and no-human-attack rules. S4's Ripplet Teleport promise is replaced by Ripplet swim/dive (RD-32). The previous scope decision follows for history: **Mechanics scope decision for the four-chapter completion pass:** ship and tune the current quick/charged/burst/switch combat, current poise, current unordered bond and current food/bed recovery. Do not add the universal L4/Y skill, normalized poise rewrite, revised bond ledger or Strain. Their detailed sections remain archived candidate designs, not acceptance requirements or blockers for Meadows or later chapters. If an earned witness fails C2, C3, A4 or A8, first repair its actual cause using the existing rules and retest the same segment; a new system requires an explicit spec amendment grounded in that failed witness. Final tuning matrices run at the affected integrated milestone, not after every small edit.",
+      "retirement_statement": true
+    },
+    {
+      "path": "docs/ACCEPTANCE.md",
+      "line": 176,
+      "text": "| F37 Ripplet swim and dive | (0) An owned Ripplet can be ridden as a surface swimmer from Tidewake's opening, faster than human swimming and able to cross currents. (1) At the L30 breakthrough Ripplet gains Dive, reaching sunken caches, nodes and hidden optional routes. (2) Every required water route stays human-swimmable without Ripplet. (3) The old Ripplet Teleport promise is removed from docs and UI. (4) Riding and diving survive save/reload and two-peer rejoin. |",
+      "retirement_statement": true
+    },
+    {
+      "path": "docs/TECHNICAL.md",
+      "line": 35,
+      "text": "| Traversal | `scripts/world/riding_controller.gd`, Fly and Water controllers/configs, `stormwood_arches.json` | Galewisp Fly; planned Ripplet surface swim and L30 Dive (RD-32, F37; Ripplet Teleport dropped); Home Key, portals and waystones (§11.1); no-hold climb; safe mounting/landing/gates. |",
+      "retirement_statement": true
+    },
+    {
+      "path": "docs/TECHNICAL.md",
+      "line": 95,
+      "text": "**Planned schema work, not implemented in this PR:** injury fraction and recovery state; per-creature landmark credit and migrated bond completion; L4 skill/equipped skill and relevant cooldown state; earned-rest/vendor receipt; no-loss sixth-hotbar-binding migration; Ripplet attuned anchor/cooldown; remaining Tidewake regional-ending state. Durable three-member tournament selection with ownership validation is implemented in merged27/character6. Three-bed preparation reuses existing player-scoped bed milestones and their shared camp grants; no new flag/schema is added. `home.required_pieces` retains its one-bed meaning; `home.preparation_creature_beds` expands only the recipe-derived gathering target. The journal retires this extra preparation after `tournament_entered`; earned placement/care and shared-player acceptance remain open. Homecoming/credits use player-scoped `homecoming_seen` and `regional_credits_seen` in the existing flag dictionary. Decide each future version increment at implementation based on then-current schema. **Redesign note (RD-35):** v28 is a fresh schema, so items above that were planned as migrations (injury, skill/cooldown, hotbar binding) become new-game fields in v28 if their feature still exists. Ripplet's attuned anchor/cooldown is dropped with Teleport (RD-32).",
+      "retirement_statement": true
+    },
+    {
+      "path": "docs/design/SYSTEMS.md",
+      "line": 183,
+      "text": "Out of scope: boats, underwater combat or catching, diving by any creature other than Ripplet, free-flight combat, world-map teleport-anywhere, mount breeding, gate bypass via a loaned creature.",
+      "retirement_statement": true
+    },
+    {
+      "path": "data/config/combat.json",
+      "line": 68,
+      "text": "    \"_why\": \"COMBAT §5 contact spacing (scripts/combat/contact_spacing.gd, applied in creature_body.gd::_hold_contact_spacing). Tidewake F14#0/#1 (Tess judge B 84%, Nerissa 83%), Meadows F04#2/#7 and Stormwood F10#2 failed C3 on one defect: after a strike the capsules touch but the RENDERED bodies overlap at 4.7-6.6 m, the ally stands in front of the opponent's head, and no camera can separate them. At contact range the pair now keeps the two directional rendered half-extents plus a visible clearance apart, floored at the colliders' sum. The opponent's preferred_range floors at that same separation (wild_creature.spaced_config_for), so it walks to where the bodies clear; every reach (the player's floor_reach_for_bodies / host_move_profile and the opponent's spaced range) floors at the pair's LONGEST possible separation (each body's longest half-extent) plus 0.5 m, so no hold-apart and no turn can carry a target out of a strike that would have reached it. A first cut capped the separation at (r_a + r_b) x enemy.body_clearance instead; judge B still saw Mirejaw (5.5 m half-length) and Ripplet touching at that cap, so the cap was replaced by these floors. The ally yields at once; the host-authoritative opponent holds and yields only a deficit older than foe_yield_after_s (the ally is pinned). Bodies in a combat burst or travelling lunge are exempt until it ends. Swept with move_and_collide, never a teleport; the arena hold runs after it. Same numbers solo, host and guest.\",",
+      "retirement_statement": true
+    }
+  ],
+  "suspects": [],
+  "ui_ripplet_teleport_promises": [],
+  "ripplet_active_teleport_fields": [],
+  "verdict": "SUFFICIENT_STATIC_PASS",
+  "scope": "Text/promise removal only. Retired history and generic debug relocation terms do not promise Ripplet teleport. No traversal/play/device/co-op credit."
+}

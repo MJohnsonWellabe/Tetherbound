@@ -1,0 +1,1017 @@
+{
+  "schema_version": 1,
+  "runtime_enabled": true,
+  "day_seconds": 600,
+  "repeat_days": 2,
+  "unique_candy": 1,
+  "repeat_essence_per_type": 12,
+  "maximum_transaction_receipts": 4096,
+  "credits_flag": "regional_credits_seen",
+  "endgame_levels": {
+    "trainer": 55,
+    "leader": 58,
+    "master": 58,
+    "boss": 60
+  },
+  "biomes": {
+    "meadows": {
+      "climax_flag": "defeated_warden",
+      "r1_levels": {
+        "trainer": 32,
+        "leader": 33,
+        "master": 33
+      },
+      "unique_materials": {
+        "rootiron_ingot": 2
+      },
+      "repeat_materials": {
+        "wood": 3
+      }
+    },
+    "tidewake": {
+      "climax_flag": "water_captain_nerissa_defeated",
+      "r1_levels": {
+        "trainer": 43,
+        "leader": 44,
+        "master": 44
+      },
+      "unique_materials": {
+        "tidesteel_ingot": 2
+      },
+      "repeat_materials": {
+        "driftwood": 3
+      }
+    },
+    "cloudreach": {
+      "climax_flag": "captain_veyra_defeated",
+      "r1_levels": {
+        "trainer": 54,
+        "leader": 55,
+        "master": 55
+      },
+      "unique_materials": {
+        "skyglass_ingot": 2
+      },
+      "repeat_materials": {
+        "windworn_heartwood": 3
+      }
+    },
+    "stormwood": {
+      "climax_flag": "stormwood:marrow_defeated",
+      "r1_levels": {
+        "trainer": 55,
+        "leader": 58,
+        "master": 58
+      },
+      "unique_materials": {
+        "stormglass_plate": 2
+      },
+      "repeat_materials": {
+        "thunderwood": 3
+      }
+    }
+  },
+  "profiles": {
+    "practice_trainer": {
+      "id": "practice_trainer",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "trainer_defeated_practice",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "trainer_mira": {
+      "id": "trainer_mira",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_mira",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "trainer_oskar": {
+      "id": "trainer_oskar",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_oskar",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "trainer_tam": {
+      "id": "trainer_tam",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_tam",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "south_bridge_grunt": {
+      "id": "south_bridge_grunt",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_south_bridge_grunt",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "tournament_quarter_mira": {
+      "id": "tournament_quarter_mira",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "tournament_quarter_won",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "tournament_semi_tam": {
+      "id": "tournament_semi_tam",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "tournament_semi_won",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "tournament_final_oskar": {
+      "id": "tournament_final_oskar",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "tournament_won",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "shepherd_the_rise": {
+      "id": "shepherd_the_rise",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_shepherd_the_rise",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "wanderer_trail_camp": {
+      "id": "wanderer_trail_camp",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_wanderer_trail_camp",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "old_champion_bram": {
+      "id": "old_champion_bram",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band1_lower_meadows/trainers.json",
+      "defeat_flag": "defeated_old_bram",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "quarry_picket_dorn": {
+      "id": "quarry_picket_dorn",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band2_stone_and_root/trainers.json",
+      "defeat_flag": "defeated_quarry_dorn",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "warrens_watch_pell": {
+      "id": "warrens_watch_pell",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band2_stone_and_root/trainers.json",
+      "defeat_flag": "defeated_warrens_pell",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "band2_outrider_kest": {
+      "id": "band2_outrider_kest",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band2_stone_and_root/trainers.json",
+      "defeat_flag": "defeated_band2_outrider_kest",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "night_watch_farro": {
+      "id": "night_watch_farro",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band2_stone_and_root/trainers.json",
+      "defeat_flag": "defeated_night_watch_farro",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "relay_picket_hess": {
+      "id": "relay_picket_hess",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
+      "defeat_flag": "defeated_relay_hess",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "relay_picket_orrin": {
+      "id": "relay_picket_orrin",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
+      "defeat_flag": "defeated_relay_orrin",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "relay_officer_dell": {
+      "id": "relay_officer_dell",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
+      "defeat_flag": "defeated_relay_dell",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "relay_captain": {
+      "id": "relay_captain",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
+      "defeat_flag": "relay_captain_defeated",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "captain_riverwatch": {
+      "id": "captain_riverwatch",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band3_the_river_lock/trainers.json",
+      "defeat_flag": "defeated_captain_riverwatch",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "captain_field": {
+      "id": "captain_field",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "defeat_flag": "defeated_captain_field",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "captain_ridge": {
+      "id": "captain_ridge",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "defeat_flag": "defeated_captain_ridge",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "patrol_ridgeline": {
+      "id": "patrol_ridgeline",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "defeat_flag": "defeated_patrol_ridgeline",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "pasture_drover_juno": {
+      "id": "pasture_drover_juno",
+      "biome": "meadows",
+      "kind": "trainer",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "defeat_flag": "defeated_pasture_drover_juno",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "lost_creature_rue": {
+      "id": "lost_creature_rue",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "defeat_flag": "defeated_lost_creature_rue",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "stronghold_patrol": {
+      "id": "stronghold_patrol",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
+      "defeat_flag": "defeated_stronghold_patrol",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "stronghold_courtyard": {
+      "id": "stronghold_courtyard",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
+      "defeat_flag": "defeated_stronghold_courtyard",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "stronghold_elite": {
+      "id": "stronghold_elite",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
+      "defeat_flag": "defeated_stronghold_elite",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "warden_aldis": {
+      "id": "warden_aldis",
+      "biome": "meadows",
+      "kind": "boss",
+      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
+      "defeat_flag": "defeated_warden",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "stronghold_outer_watch": {
+      "id": "stronghold_outer_watch",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
+      "defeat_flag": "defeated_stronghold_outer_watch",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "stronghold_checkpoint": {
+      "id": "stronghold_checkpoint",
+      "biome": "meadows",
+      "kind": "leader",
+      "source": "res://data/config/bands/band5_stronghold_approach/trainers.json",
+      "defeat_flag": "defeated_stronghold_checkpoint",
+      "essence_types": [
+        "ground"
+      ]
+    },
+    "water_trainer_pell_trial": {
+      "id": "water_trainer_pell_trial",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_pell_trial",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_fen": {
+      "id": "water_trainer_fen",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_fen",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_lysa": {
+      "id": "water_trainer_lysa",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_lysa",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_daro": {
+      "id": "water_trainer_daro",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_daro",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_tovin": {
+      "id": "water_trainer_tovin",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_tovin",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_keir": {
+      "id": "water_trainer_keir",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_keir",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_rune": {
+      "id": "water_trainer_rune",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_rune",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_solm": {
+      "id": "water_trainer_solm",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_solm",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_irva": {
+      "id": "water_trainer_irva",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_irva",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_nel": {
+      "id": "water_trainer_nel",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_nel",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_oswin": {
+      "id": "water_trainer_oswin",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_oswin",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_tal": {
+      "id": "water_trainer_tal",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_tal",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_sera": {
+      "id": "water_trainer_sera",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_sera",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_odan": {
+      "id": "water_trainer_odan",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_odan",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_yara": {
+      "id": "water_trainer_yara",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_yara",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_bex": {
+      "id": "water_trainer_bex",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_bex",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_calder": {
+      "id": "water_trainer_calder",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_calder",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_vera": {
+      "id": "water_trainer_vera",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_vera",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_tess": {
+      "id": "water_trainer_tess",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_tess",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_fennel": {
+      "id": "water_trainer_fennel",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_fennel",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_venn": {
+      "id": "water_trainer_venn",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_venn",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_morra": {
+      "id": "water_trainer_morra",
+      "biome": "tidewake",
+      "kind": "leader",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_morra",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_evi": {
+      "id": "water_trainer_evi",
+      "biome": "tidewake",
+      "kind": "trainer",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_evi",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "water_trainer_nerissa": {
+      "id": "water_trainer_nerissa",
+      "biome": "tidewake",
+      "kind": "boss",
+      "source": "res://data/config/water_characters.json",
+      "defeat_flag": "defeated_water_trainer_nerissa",
+      "essence_types": [
+        "water"
+      ]
+    },
+    "trainer_ila_lower_ring": {
+      "id": "trainer_ila_lower_ring",
+      "biome": "cloudreach",
+      "kind": "trainer",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "defeated_cloudreach_ila",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "trainer_orrin_bridge_watch": {
+      "id": "trainer_orrin_bridge_watch",
+      "biome": "cloudreach",
+      "kind": "trainer",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "defeated_cloudreach_orrin",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "tether_lieutenant_senn": {
+      "id": "tether_lieutenant_senn",
+      "biome": "cloudreach",
+      "kind": "leader",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "defeated_cloudreach_senn",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "keeper_maela_trial": {
+      "id": "keeper_maela_trial",
+      "biome": "cloudreach",
+      "kind": "leader",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "completed_cloudreach_maela_trial_battle",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "young_trainer_tavi_upper_ring": {
+      "id": "young_trainer_tavi_upper_ring",
+      "biome": "cloudreach",
+      "kind": "leader",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "defeated_cloudreach_tavi",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "officer_voss_summit_approach": {
+      "id": "officer_voss_summit_approach",
+      "biome": "cloudreach",
+      "kind": "leader",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "defeated_cloudreach_voss",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "captain_veyra_storm_anchor": {
+      "id": "captain_veyra_storm_anchor",
+      "biome": "cloudreach",
+      "kind": "boss",
+      "source": "res://data/config/cloudreach_chapter.json",
+      "defeat_flag": "captain_veyra_defeated",
+      "essence_types": [
+        "air"
+      ]
+    },
+    "tamsin_surge_lesson": {
+      "id": "tamsin_surge_lesson",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:tamsin_surge_lesson:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "rodfolk_pathfinder_elin": {
+      "id": "rodfolk_pathfinder_elin",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:rodfolk_pathfinder_elin:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "lieutenant_dace_hollows_rod": {
+      "id": "lieutenant_dace_hollows_rod",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:lieutenant_dace_hollows_rod:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "traveller_ivo_lantern_pools": {
+      "id": "traveller_ivo_lantern_pools",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:traveller_ivo_lantern_pools:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "lieutenant_varga_rodline_bridge": {
+      "id": "lieutenant_varga_rodline_bridge",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:lieutenant_varga_rodline_bridge:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "officer_maren_verge_rod": {
+      "id": "officer_maren_verge_rod",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:officer_maren_verge_rod:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "archwright_senn_crown_footing": {
+      "id": "archwright_senn_crown_footing",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:archwright_senn_crown_footing:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "archivist_wen_crown_trial": {
+      "id": "archivist_wen_crown_trial",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:archivist_wen_crown_trial:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "crown_wayfarer_nell": {
+      "id": "crown_wayfarer_nell",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:crown_wayfarer_nell:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "officer_nysa_deepwood_rod": {
+      "id": "officer_nysa_deepwood_rod",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:officer_nysa_deepwood_rod:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "rodfolk_guard_bram": {
+      "id": "rodfolk_guard_bram",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:rodfolk_guard_bram:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "outerworks_lieutenant_sera": {
+      "id": "outerworks_lieutenant_sera",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:outerworks_lieutenant_sera:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "officer_kestrel_outer_works": {
+      "id": "officer_kestrel_outer_works",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:officer_kestrel_outer_works:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "captain_marrow_dynamo_core": {
+      "id": "captain_marrow_dynamo_core",
+      "biome": "stormwood",
+      "kind": "boss",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:captain_marrow_dynamo_core:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "tamsin_ash_ring": {
+      "id": "tamsin_ash_ring",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:tamsin_ash_ring:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "ranger_pax_sentinel": {
+      "id": "ranger_pax_sentinel",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:ranger_pax_sentinel:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "courier_pim_pool_loop": {
+      "id": "courier_pim_pool_loop",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:courier_pim_pool_loop:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "traveller_ivo_moss_detour": {
+      "id": "traveller_ivo_moss_detour",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:traveller_ivo_moss_detour:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "rodline_scout_kael": {
+      "id": "rodline_scout_kael",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:rodline_scout_kael:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "rodline_keeper_fenn": {
+      "id": "rodline_keeper_fenn",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:rodline_keeper_fenn:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "rodline_duelist_ren": {
+      "id": "rodline_duelist_ren",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:rodline_duelist_ren:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "rook_circuit_lantern": {
+      "id": "rook_circuit_lantern",
+      "biome": "stormwood",
+      "kind": "leader",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:rook_circuit_lantern:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "circuit_lena_giant": {
+      "id": "circuit_lena_giant",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:circuit_lena_giant:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "circuit_orin_blackwater": {
+      "id": "circuit_orin_blackwater",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:circuit_orin_blackwater:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "circuit_mira_lantern": {
+      "id": "circuit_mira_lantern",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:circuit_mira_lantern:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "circuit_tavi_rodline": {
+      "id": "circuit_tavi_rodline",
+      "biome": "stormwood",
+      "kind": "trainer",
+      "source": "res://data/config/stormwood_trainers.json",
+      "defeat_flag": "stormwood:trainer:circuit_tavi_rodline:defeated",
+      "essence_types": [
+        "electric"
+      ]
+    },
+    "master_t1": {
+      "id": "master_t1",
+      "biome": "meadows",
+      "kind": "master",
+      "source": "res://data/config/masters.json",
+      "defeat_flag": "",
+      "essence_types": [
+        "ground"
+      ],
+      "original_win_field": "master_wins"
+    },
+    "master_t2": {
+      "id": "master_t2",
+      "biome": "meadows",
+      "kind": "master",
+      "source": "res://data/config/masters.json",
+      "defeat_flag": "",
+      "essence_types": [
+        "ground"
+      ],
+      "original_win_field": "master_wins"
+    },
+    "master_t3": {
+      "id": "master_t3",
+      "biome": "tidewake",
+      "kind": "master",
+      "source": "res://data/config/masters.json",
+      "defeat_flag": "",
+      "essence_types": [
+        "water"
+      ],
+      "original_win_field": "master_wins"
+    },
+    "master_t4": {
+      "id": "master_t4",
+      "biome": "cloudreach",
+      "kind": "master",
+      "source": "res://data/config/masters.json",
+      "defeat_flag": "",
+      "essence_types": [
+        "air"
+      ],
+      "original_win_field": "master_wins"
+    },
+    "master_t5": {
+      "id": "master_t5",
+      "biome": "stormwood",
+      "kind": "master",
+      "source": "res://data/config/masters.json",
+      "defeat_flag": "",
+      "essence_types": [
+        "electric"
+      ],
+      "original_win_field": "master_wins"
+    }
+  },
+  "witnesses": {
+    "meadows": "relay_captain",
+    "tidewake": "water_trainer_yara",
+    "cloudreach": "officer_voss_summit_approach",
+    "stormwood": "officer_maren_verge_rod"
+  }
+}

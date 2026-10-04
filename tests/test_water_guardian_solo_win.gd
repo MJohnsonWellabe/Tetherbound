@@ -43,6 +43,11 @@ class Saver extends RefCounted:
 ## `active` false models no session at all (pure solo); true with one row is a
 ## one-peer hosted session. Multi-peer once a second row is admitted.
 class SessionStub extends Node:
+	var personal_mirror := preload("res://tests/fixtures/foundation_flag_mirror.gd").new()
+	func foundation_record_personal_flags(delta: Dictionary) -> void:
+		personal_mirror.record(delta, rows)
+	func _owner_training_mutation_blocked(player: RefCounted) -> bool:
+		return get_parent() == null or get_parent().get("local") != player
 	var active := false
 	var rows: RefCounted = PEER_REGISTRY.new()
 	func is_active() -> bool: return active

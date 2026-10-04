@@ -25,6 +25,10 @@ const EXPECTED_WATER_SWIMMERS: Array[String] = [
 	"water_aquaryn", "water_mosshell", "water_sirenseal", "water_riverdrake", "water_cannonback",
 ]
 
+## Owner redesign RD-32 / F37 adds the starter's Tidewake surface mount;
+## it does not expand the five original water_* mounts or the Meadows roster.
+const EXPECTED_STARTER_SWIMMERS: Array[String] = ["ripplet"]
+
 func test_water_swimmers_require_swim_saddle_and_other_water_species_cannot_carry() -> void:
 	for id: String in _all_species_ids():
 		if not id.begins_with("water_"):
@@ -56,7 +60,7 @@ func _all_species_ids() -> Array[String]:
 	return found
 
 
-func test_exactly_five_meadows_and_five_owner_water_species_are_rideable() -> void:
+func test_exact_owner_meadows_water_and_redesign_starter_roster_are_rideable() -> void:
 	var found: Array[String] = []
 	for id in _all_species_ids():
 		if SPECIES.is_rideable(id):
@@ -64,9 +68,18 @@ func test_exactly_five_meadows_and_five_owner_water_species_are_rideable() -> vo
 	found.sort()
 	var expected := EXPECTED_RIDEABLE.duplicate()
 	expected.append_array(EXPECTED_WATER_SWIMMERS)
+	expected.append_array(EXPECTED_STARTER_SWIMMERS)
 	expected.sort()
 	assert_eq(found, expected,
 		"the rideable roster is %s, expected exactly %s" % [found, expected])
+
+func test_authorized_starter_swimmer_stays_in_tidewake() -> void:
+	var block := SPECIES.rideable("ripplet")
+	assert_false(block.is_empty(), "RD-32 requires Ripplet's surface swimming")
+	# The production riding controller reads this gate from the canonical
+	# definition; rideable() normalizes seat/saddle fields only.
+	assert_eq(str(SPECIES.definition("ripplet").get("rideable", {}).get("required_realm", "")), "water")
+	assert_true(SPECIES.definition("ripplet").get("swim_mount", {}).get("compatible") == true)
 
 
 func test_mudsnout_and_ashtusk_carry_no_rideable_block_at_all() -> void:

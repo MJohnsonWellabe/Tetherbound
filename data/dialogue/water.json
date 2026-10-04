@@ -16,9 +16,9 @@
       "lines": [
         "The first civilian supplies reached Shellwatch this morning. I finally took the barricade chalk off my dock board.",
         "Reedhaven's crews, Shellwatch's families and Salt Crown's traders can share the docks again.",
-        "Rodfolk and Cloudreach couriers are carrying medicine and blankets without a Tether permit.",
+        "You helped the island crews reclaim their crossings. They can choose their landings without a Tether permit.",
         "The sea still has currents. Rest and choose your landing even when nobody is using the water against you.",
-        "Your road home starts at the First Shore passage to Stormwood. The return gates lead through Cloudreach to the Meadows."
+        "Use your Home Key to return to the Crossing Hall. Its Cloudreach arch leads to the cliffs once you unlock it."
       ]
     },
     "water_pell_pre": {
@@ -204,7 +204,7 @@
       "speaker": "Shrinekeeper Edda",
       "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
       "lines": [
-        "The Compass marks a realm that can breathe again. Carry it home and place it at its stone in the Meadows shrine circle when you are ready.",
+        "The Compass marks a realm that can breathe again. Bring your relic to the Hall Shrine in Crossing Hall when you are ready.",
         "Only one relic power can be active. Choosing Tidal Guard is a choice about preparation, not a second power hidden underneath the first."
       ]
     },
@@ -1068,7 +1068,7 @@
       "speaker": "Shrinekeeper Edda",
       "portrait": "res://assets/ui/portraits/cloudreach_aila_clean.png",
       "lines": [
-        "The Compass marks a realm that can breathe again. Carry it home and place it at its stone in the Meadows shrine circle when you are ready.",
+        "The Compass marks a realm that can breathe again. Bring your relic to the Hall Shrine in Crossing Hall when you are ready.",
         "The docks are shared landings again, as the vault account says they always were."
       ]
     },

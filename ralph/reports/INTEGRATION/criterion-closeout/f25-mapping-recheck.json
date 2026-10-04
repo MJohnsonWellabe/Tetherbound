@@ -1,0 +1,20 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:47:15.249858+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "criterion": "F25#1",
+  "method": "exact pinned JSON mapping + detached unknown-archetype negative case",
+  "move_count": 94,
+  "archetype_count": 24,
+  "negative_detected": [
+    "pebble_toss"
+  ],
+  "failures": [],
+  "data_contract_pass": true,
+  "limitation": "Does not prove effect activation, native lookup, animation, arrival timing, performance or visual bar."
+}

@@ -770,15 +770,8 @@ func _fail_join(message: String, leave: bool) -> void:
 	_set_error(message)
 
 
-## Closing the window must not leave this account sitting in a Steam lobby:
-## friends would keep seeing a joinable host that no longer exists until
-## Steam times the member out.
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		leave_lobbies_for_quit()
-
-
-## For `get_tree().quit()` call sites, which never send WM_CLOSE_REQUEST.
+## Session guards both window close and explicit process exit before this
+## cleanup. A refused save must keep the current lobby and host alive.
 ## A no-op when this game has no SteamLobby (stock build, solo, ENet).
 static func leave_for_quit(game: Node) -> void:
 	var lobby := game.get_node_or_null(^"SteamLobby") if game != null else null

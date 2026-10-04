@@ -42,12 +42,9 @@ const NAME_ENTRY := preload("res://scripts/ui/name_entry.gd")
 const NPC_GATHER_SEGMENT := preload("res://tests/helpers/gate_a_npc_gather_segment.gd")
 const MATERIAL_ROUTE := preload("res://tests/helpers/gate_a_material_route.gd")
 const BUILD_SEGMENT := preload("res://tests/helpers/gate_a_build_segment.gd")
-## CONTROLLER-MAP (archive/owner/OWNER_DIRECTIVES_2026-08-22.md section 1) took the pad
-## binding off `combat_throw`: the orb is a hotbar item now and X throws it, so
-## `interact` IS the pad's throw button. combat_manager.gd::_throw_pressed and
-## throw_aim.gd both read it beside `combat_throw`'s surviving keyboard F. This
-## harness may only press what a pad can press, so it presses that.
-const THROW_ACTION := &"interact"
+## F23 separates physical LT aim from the physical X release inside aim.
+const AIM_ACTION := &"combat_throw"
+const THROW_ACTION := &"combat_orb_release"
 ## What `combat_manager.gd` records for a fight that ended in a capture
 ## (`OUTCOME_CAUGHT`). Named here because the catch loop has to tell that apart
 ## from a fight your own creature simply won.
@@ -310,6 +307,8 @@ func run(tree: SceneTree) -> Dictionary:
 		_fail("Grandpa's first-catch conversation left %d Basic Orbs; expected 45–50" % opening_orbs)
 		return _result()
 	_checkpoint("Grandpa's first-catch supplies received (%d Basic Orbs)" % opening_orbs)
+	if not await _complete_home_key_lesson():
+		return _result()
 	if _failures.is_empty() and not await _walk_toward(house.call("marker", "door"), 700):
 		_fail("could not leave the now-unlocked front doorway")
 	if not _failures.is_empty():
@@ -318,7 +317,7 @@ func run(tree: SceneTree) -> Dictionary:
 	if stop_after_doorway:
 		return _result()
 
-	_wild = _encounter.call("wild_creature") as Node3D
+	_wild = _tutorial_wild_at_road_end()
 	if _wild == null:
 		_fail("opening has no naturally spawned tutorial Bramblebun")
 		return _result()
@@ -811,7 +810,7 @@ func _open_throw_aim() -> bool:
 				if not _target_is_out_cold() or not bool(_combat.call("is_fighting")):
 					break
 			continue
-		await _tap_action(THROW_ACTION)
+		await _tap_action(AIM_ACTION)
 		for _i in 6:
 			if bool(_combat.call("is_aiming")):
 				return true
@@ -868,6 +867,8 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		if to.length() < 0.01:
 			if await _released_aim_is_ready():
 				return true
+			if _aim_readiness_requires_movement():
+				return false
 			continue
 		var forward := -camera.global_transform.basis.z
 		var wanted := to.normalized()
@@ -888,6 +889,8 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 			# steering inside this same deadline.
 			if await _released_aim_is_ready():
 				return true
+			if _aim_readiness_requires_movement():
+				return false
 			_aim_has_history = false
 			continue
 		# One deflection, split across the two axes by the direction of the
@@ -900,6 +903,7 @@ func _aim_camera_at(target: Node3D, seconds: float = AIM_CONVERGE_SECONDS) -> bo
 		var direction := Vector2(yaw_error, pitch_error).normalized()
 		_send_axis(JOY_AXIS_RIGHT_X, direction.x * deflection)
 		_send_axis(JOY_AXIS_RIGHT_Y, -direction.y * deflection)
+		Input.flush_buffered_events()
 		# The camera turns in `_process`, so that is the frame this samples on.
 		# Sampling on `physics_frame` meant every process frame in between
 		# applied the same stale stick, and the loop only ever saw the sum.
@@ -931,6 +935,12 @@ func _released_aim_is_ready() -> bool:
 
 func _aim_readiness_ready() -> bool:
 	return _shot_is_eligible()
+
+
+## A settled physical obstruction can yield to the existing bounded movement
+## recovery. It remains a failed aim; ordinary callers keep their timer behavior.
+func _aim_readiness_requires_movement() -> bool:
+	return false
 
 
 ## How far to push the stick this sample, measured rather than assumed.
@@ -1147,11 +1157,131 @@ var _stall_frames := 0
 var _stall_side := 1.0
 
 
+## Metadata hints only; the legacy drive still earns its own travel and catch.
+## Near the front doorway, clear its axis before taking the authored field road.
+static func wild_approach_road(from: Vector3, house: Vector3, door: Vector3, routes: Variant) -> Dictionary:
+	var points: Array[Vector3] = []
+	if not from.is_finite() or not house.is_finite() or not door.is_finite():
+		return {"valid": false, "points": points}
+	var offset := from - door
+	offset.y = 0.0
+	if offset.length() >= 4.0:
+		return {"valid": true, "points": points}
+	var front := door - house
+	front.y = 0.0
+	if front.length_squared() < 0.01 or not routes is Array or routes.size() > 32:
+		return {"valid": false, "points": points}
+	front = front.normalized()
+	if offset.dot(front) < 1.0:
+		points.append(door + front * 1.8)
+	var matches := 0
+	for route: Variant in routes:
+		if not route is Dictionary or route.get("label") != "Practice Meadow":
+			continue
+		matches += 1
+		var raw: Variant = route.get("points")
+		if not raw is Array or raw.is_empty() or raw.size() > 64:
+			return {"valid": false, "points": []}
+		for point: Variant in raw:
+			if not point is Array or point.size() != 2 \
+					or not (point[0] is int or point[0] is float) \
+					or not (point[1] is int or point[1] is float) \
+					or not is_finite(float(point[0])) or not is_finite(float(point[1])) \
+					or absf(float(point[0])) > 180.0 or absf(float(point[1])) > 180.0:
+				return {"valid": false, "points": []}
+			points.append(Vector3(float(point[0]), from.y, float(point[1])))
+	return {"valid": matches == 1, "points": points}
+
+
+## Select for the destination we actually walk to. wild_creature() answers
+## nearest to the farmhouse, where an ambient herd can be closer than the
+## authored Practice Meadow. Selection earns no travel or engagement.
+func _tutorial_wild_at_road_end() -> Node3D:
+	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D
+	if house == null:
+		return null
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	if not raw is Dictionary or not raw.get("paths") is Dictionary:
+		return null
+	var plan := wild_approach_road(_player.global_position, house.global_position,
+		house.call("marker", "door"), raw.paths.get("routes"))
+	if not bool(plan.valid) or plan.points.is_empty():
+		return null
+	var anchor: Vector3 = plan.points[-1]
+	var opening: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/opening.json"))
+	if not opening is Dictionary or not opening.get("encounter") is Dictionary:
+		return null
+	var species := str(opening.encounter.get("species", ""))
+	var bodies: Array[Node3D] = []
+	var candidates: Array = []
+	for body: Node3D in _encounter.call("wild_creatures"):
+		if not is_instance_valid(body) or not body.has_method("is_alive"):
+			continue
+		bodies.append(body)
+		candidates.append({"species": str(body.get("species_id")),
+			"position": body.global_position, "visible": body.visible,
+			"alive": bool(body.call("is_alive"))})
+	var selected := practice_wild_index(candidates, species, anchor)
+	if selected < 0:
+		return null
+	var target := bodies[selected]
+	print("WILD_APPROACH_SELECTION ", JSON.stringify({"acceptance": false,
+		"name": str(target.name), "species": species,
+		"anchor": [anchor.x, anchor.y, anchor.z],
+		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
+		"target": [target.global_position.x, target.global_position.y, target.global_position.z]}))
+	return target
+
+
+static func practice_wild_index(candidates: Array, species: String, anchor: Vector3) -> int:
+	if species.is_empty() or not anchor.is_finite():
+		return -1
+	var best := -1
+	var distance := INF
+	for i in candidates.size():
+		var candidate: Variant = candidates[i]
+		if not candidate is Dictionary or candidate.get("species") != species \
+				or not bool(candidate.get("visible", false)) or not bool(candidate.get("alive", false)):
+			continue
+		var position: Variant = candidate.get("position")
+		if not position is Vector3 or not position.is_finite():
+			continue
+		var next_distance: float = anchor.distance_squared_to(position)
+		if next_distance < distance:
+			best = i
+			distance = next_distance
+	return best
+
+
 func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
+	var started_frame := Engine.get_physics_frames()
+	var road: Array[Vector3] = []
+	var road_index := 0
+	var house := _world.get_node_or_null(^"GrandpaHouse") as Node3D if _world != null else null
+	if house != null:
+		var door: Vector3 = house.call("marker", "door")
+		var offset := _player.global_position - door
+		offset.y = 0.0
+		var routes: Variant = null
+		if offset.length() < 4.0:
+			var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+			if raw is Dictionary and raw.get("paths") is Dictionary:
+				routes = raw.paths.get("routes")
+		var plan := wild_approach_road(_player.global_position, house.global_position, door, routes)
+		if not bool(plan.valid):
+			_stop_left_stick()
+			print("wild approach: invalid farmhouse/Practice Meadow route metadata")
+			return false
+		road.assign(plan.points)
+		if not road.is_empty():
+			print("wild approach: legacy controller uses farmhouse/Practice Meadow road ", road)
 	var closest := INF
 	_stall_best = INF
 	_stall_frames = 0
 	for _i in budget:
+		# Road, pursuit and sidesteps consume this one original travel budget.
+		if int(Engine.get_physics_frames() - started_frame) >= budget:
+			break
 		if not is_instance_valid(target):
 			print("wild approach: target despawned")
 			_stop_left_stick()
@@ -1171,26 +1301,45 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 				])
 				await _tap_action("interact")
 				return true
+		if int(Engine.get_physics_frames() - started_frame) >= budget:
+			break
+		var goal := target.global_position
+		if road_index < road.size():
+			var offset := road[road_index] - _player.global_position
+			offset.y = 0.0
+			if offset.length() <= 0.8 and _player.is_on_floor():
+				road_index += 1
+				_stall_best = INF
+				_stall_frames = 0
+			if road_index < road.size():
+				goal = road[road_index]
+		var progress := _player.global_position.distance_to(goal)
 		# A player who walks into a fence post or a tree between them and the
 		# creature steps around it; the straight drive would press into it for
 		# the rest of the budget (CI: stalled 9 m short behind the F01 village
 		# props while the wanderer stood on their far side). No progress for
 		# STALL_FRAMES -> side-step perpendicular, alternating sides.
-		if distance < _stall_best - 0.3:
-			_stall_best = distance
+		if progress < _stall_best - 0.3:
+			_stall_best = progress
 			_stall_frames = 0
 		else:
 			_stall_frames += 1
 		if _stall_frames >= STALL_FRAMES:
-			var to_target := target.global_position - _player.global_position
+			var to_target := goal - _player.global_position
 			var side := Vector3(-to_target.z, 0.0, to_target.x).normalized() * (4.0 * _stall_side)
 			_stall_side = -_stall_side
 			_stall_frames = 0
 			_stall_best = INF
-			await _drive_body_toward(_player, _player.global_position + side, SIDESTEP_FRAMES)
+			var remaining := maxi(0, budget - int(Engine.get_physics_frames() - started_frame))
+			await _drive_body_toward(_player, _player.global_position + side, mini(SIDESTEP_FRAMES, remaining))
 			continue
-		await _drive_body_toward(_player, target.global_position, 1)
+		await _drive_body_toward(_player, goal, 1)
 	_stop_left_stick()
+	print("WILD_APPROACH_FINAL ", JSON.stringify({"acceptance": false,
+		"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
+		"target": [target.global_position.x, target.global_position.y, target.global_position.z],
+		"road_index": road_index, "road_size": road.size(), "on_floor": _player.is_on_floor(),
+		"physics_frames": int(Engine.get_physics_frames() - started_frame), "budget": budget}))
 	print("wild approach: exhausted after closest %.2fm; final %.2fm; visible=%s alive=%s prompt='%s' winner=%s" % [
 		closest,
 		_player.global_position.distance_to(target.global_position),
@@ -1200,6 +1349,45 @@ func _walk_to_and_engage_wild(target: Node3D, budget: int) -> bool:
 		str(_arbiter.call("winning_provider")),
 	])
 	return false
+
+
+## The first Home Key grant now opens its authored lesson beside Grandpa.
+## Read every line through its actual controller binding before walking; the
+## input owner correctly prevents locomotion while that card is on screen.
+func _complete_home_key_lesson() -> bool:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if rules.config().get("enabled") != true: return true
+	# Grandpa hands the Home Key over only while F18's portal runtime is on
+	# (sequence_director `finite_gift_enabled`); with it off there is no key
+	# and so no lesson to read.
+	var session: Node = _game.get("session")
+	if session == null or session.call("portal_runtime_ready") != true: return true
+	var local: RefCounted = _game.get("local")
+	var flag := rules.PREFIX + "home_key"
+	if local.get("flags").call("has", flag): return true
+	var panel: CanvasLayer = null
+	for frame: int in 180:
+		var lessons := _game.get_node_or_null(^"OnboardingLessons")
+		if lessons != null:
+			panel = lessons.get("_panel") as CanvasLayer
+			if panel != null and panel.call("is_open"): break
+		await _tree.physics_frame
+	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
+		_fail("Home Key grant did not present its authored controller lesson")
+		return false
+	var observed: Array[String] = []
+	for line: int in 20:
+		if not panel.call("is_open"): break
+		observed.append(str(panel.get("_text").get("text")))
+		await _tap_action(&"menu_confirm")
+	for frame: int in 300:
+		if local.get("flags").call("has", flag) and not panel.call("owns_input"): break
+		await _tree.physics_frame
+	if panel.call("owns_input") or not local.get("flags").call("has", flag):
+		_fail("Home Key lesson did not acknowledge and release controller input")
+		return false
+	_checkpoint("Home Key lesson read through physical confirm (%d lines), personal acknowledgement applied" % observed.size())
+	return true
 
 
 func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
@@ -1217,17 +1405,33 @@ func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> boo
 
 
 func _drive_body_toward(body: Node3D, point: Vector3, frames: int) -> void:
-	var direction := point - body.global_position
+	for _i in frames:
+		# Re-aim against the actual body and current camera on every requested
+		# tick. A zero heading must still yield: otherwise a close airborne
+		# waypoint can exhaust the loop without letting gravity settle it.
+		var direction := point - body.global_position
+		var basis: Basis = _rig.call("planar_basis")
+		var axis := drive_axis(direction, basis)
+		if not axis.is_finite():
+			_stop_left_stick()
+			_fail("nonfinite legacy ordinary stick heading")
+			return
+		_send_axis(JOY_AXIS_LEFT_X, axis.x)
+		_send_axis(JOY_AXIS_LEFT_Y, axis.y)
+		# Parsed axes otherwise wait for a process-frame flush. Several physics
+		# ticks can then use an older camera-relative heading before delivery.
+		Input.flush_buffered_events()
+		await _tree.physics_frame
+
+
+static func drive_axis(direction: Vector3, basis: Basis) -> Vector2:
+	if not direction.is_finite() or not basis.is_finite() or absf(basis.determinant()) < 0.00001:
+		return Vector2.INF
 	direction.y = 0.0
 	if direction.length_squared() < 0.01:
-		_stop_left_stick()
-		return
-	var basis: Basis = _rig.call("planar_basis")
+		return Vector2.ZERO
 	var local := basis.inverse() * direction.normalized()
-	_send_axis(JOY_AXIS_LEFT_X, local.x)
-	_send_axis(JOY_AXIS_LEFT_Y, local.z)
-	for _i in frames:
-		await _tree.physics_frame
+	return Vector2(local.x, local.z)
 
 
 func _close_dialogue(max_presses: int) -> bool:
@@ -1287,9 +1491,8 @@ func _event_for(action: StringName, pressed: bool) -> InputEvent:
 
 
 func _required_pad_actions_exist() -> bool:
-	# `combat_throw` is deliberately absent: CONTROLLER-MAP left it keyboard-only
-	# and requiring a pad binding for it failed this whole run at boot.
-	for action in [&"ui_accept", &"ui_right", &"ui_down", &"menu_confirm", &"interact", &"combat_quick"]:
+	# Both aim and release must have their actual physical controller events.
+	for action in [&"ui_accept", &"ui_right", &"ui_down", &"menu_confirm", &"interact", &"combat_quick", AIM_ACTION, THROW_ACTION]:
 		if _event_for(action, true) == null:
 			_fail("required action '%s' has no physical joypad binding" % action)
 	return _failures.is_empty()
@@ -1310,6 +1513,10 @@ func _stop_left_stick() -> void:
 func _stop_right_stick() -> void:
 	_send_axis(JOY_AXIS_RIGHT_X, 0.0)
 	_send_axis(JOY_AXIS_RIGHT_Y, 0.0)
+	# parse_input_event queues accumulated pad motion. A process-phase aim
+	# candidate must release the actual axes before the camera's next callback,
+	# otherwise its old full deflection rotates past the target during settling.
+	Input.flush_buffered_events()
 
 
 func _find_interactable(words: Array[String]) -> Node3D:

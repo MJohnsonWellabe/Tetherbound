@@ -1,0 +1,35 @@
+{
+  "application_parent": "510273afd622a8eb02861c39c16e5f83d42b43ac",
+  "patch_sha256": "8659aed3abe3dfd0e3c2f72176b151a4e2dc27ec9e3ddf04dff6b30caac0827b",
+  "applied_expected_after_normalized_lf_sha256": {
+    "data/config/harvest.json": "2c55815cf0ca8fb705c36d4745bbe8e042d16cf6034ff98efeb67c0d64363c38",
+    "data/config/water_pickups.json": "644ed24641f584202f28ded3966ca3af908c446bdc5e6f665f29bf2c81f04854",
+    "scripts/world/renewable_site_catalog.gd": "a10bbc09a62b215ea16c35db5ddbea803efc4e6f21f03011f2d4248617a491b0",
+    "scripts/world/essence_node_mount.gd": "c8a016eec1656b24ffab1f74fdb2b903476eac672309d1e68728444778f0a2d0"
+  },
+  "application": "Approved exact source-only default-OFF material admission/mount path; no runtime flag/proof marker flip or world-owner caller activation.",
+  "reviewer_raw_archived_byte_faithfully": true,
+  "raw_git_eol_normalization_possible": true,
+  "unchanged_existing_config_after_removing_two_off_fields": true,
+  "known_site_source_count_preserved": 549,
+  "additional_sites_still_unknown": 6,
+  "original_essence_residency_followup_f10_applied": false,
+  "refining_helper_runtime_activated": false,
+  "godot_parser_engine_tests_gpu_import_render_export_ci_run": false,
+  "acceptance_met": [],
+  "F32_open": [
+    "F32#0",
+    "F32#1",
+    "F32#2",
+    "F32#3",
+    "F32#4",
+    "F32#5"
+  ],
+  "raw_changed_hunk_artifact": {
+    "path": "v1-to-v2.diff.base64",
+    "encoding": "base64",
+    "decoded_sha256": "2117bf9a1f6392a09106dfcb55e76b5b1a07aecd2cd4393b2f7a7f18ddaad614",
+    "decoded_matches_reviewer_raw_diff_exactly": true,
+    "reason": "A plain unified diff contains required context-space then tab; archiving as base64 preserves exact bytes without repository whitespace warnings."
+  }
+}

@@ -8,6 +8,7 @@ extends Node3D
 ## with the creature encounter pass.
 
 const HARVEST := preload("res://scripts/world/harvest_node.gd")
+const RENEWABLE_SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const PRESENTATION_PATH := "res://data/config/cloudreach_resources.json"
 
@@ -51,6 +52,26 @@ static func harvest_spec(spec: Dictionary, world_day: int) -> Dictionary:
 static func depletion_flag(spec: Dictionary, world_day: int) -> String:
 	var crop_spec := harvest_spec(spec, world_day)
 	return HARVEST.flag_id("order:" + str(crop_spec.get("order", ""))) if not crop_spec.is_empty() else ""
+
+
+## F32 detached host registration payload. Existing placement IDs and legacy
+## day flags are retained; the renewable stock identity is the stable id.
+## No encounter-cycle shed item is converted into a gatherable node here.
+static func renewable_site(spec: Dictionary) -> Dictionary:
+	return RENEWABLE_SITES.by_id("cloudreach", str(spec.get("id", "")))
+
+
+## Called only after the world owner registers the typed host claim and
+## supplies stock from the authoritative snapshot. Unknown stock stays hidden.
+static func renewable_harvest_spec(spec: Dictionary, world_day: int, stock: Dictionary) -> Dictionary:
+	var site := renewable_site(spec)
+	if site.is_empty():
+		return {}
+	var result := harvest_spec(spec, world_day)
+	result["realm"] = "cloudreach"
+	result["renewable_site_id"] = str(site["id"])
+	result["renewable_stock"] = stock.duplicate(true)
+	return result
 
 
 func setup(spec: Dictionary) -> void:

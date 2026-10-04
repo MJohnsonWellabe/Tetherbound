@@ -1,0 +1,81 @@
+{
+  "classification": "AUTHOR SOURCE CANDIDATE ONLY; F17#4 OPEN",
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "manifest.json": {
+      "bytes": 3952,
+      "sha256": "66e3d7d4d858bb86b1d29f56657afa9b1fcb025a26b2b82dbf41e38bfd23b4fc"
+    },
+    "originals/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 72895,
+      "sha256": "b95d7865129722abb4b010a379a2473cd3d0457d14f202acc5e11233a79689d3"
+    },
+    "originals/tests/test_opening_beats.gd": {
+      "bytes": 12701,
+      "sha256": "854377ba771abf6d62e48dda8e61d737c83d862098a53c5a5518602bcd74c395"
+    },
+    "prior-failure/ci6165-110344653602.log": {
+      "bytes": 463218,
+      "sha256": "28925e3ceddf7e35354dc5171aa5b4f34e0c723f9a0c75e6c77556f344324663"
+    },
+    "prior-failure/ci6165-110344653729.log": {
+      "bytes": 549217,
+      "sha256": "419d679227f27e0cd7ea048714c13d671c8033621f82b3cf111ee966790c9d55"
+    },
+    "proposal/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 76123,
+      "sha256": "f23eeb19bdebeeb97839d8bd85cdc217fc4c551f896babaa0eb944e15ace0e5f"
+    },
+    "proposal/tests/test_opening_beats.gd": {
+      "bytes": 14928,
+      "sha256": "dc1c5fdbdfdb8f6dd11c6936293aca42ef58e41de92c4a1fad26e16393e9514b"
+    },
+    "repair.patch": {
+      "bytes": 8454,
+      "sha256": "b7c11950b2c9700e3758bd4cd53e6d108713c138ac1aee2ba387bfde137ac48f"
+    },
+    "review-context.txt": {
+      "bytes": 3579,
+      "sha256": "93250cdf0590e9cda52a03f6ee45286575186c06b0d179348ef566540bf423c8"
+    },
+    "root-actual/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "root-actual/scripts/combat/encounter_director.gd": {
+      "bytes": 355711,
+      "sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162"
+    },
+    "root-actual/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "root-actual/scripts/world/grandpa_house.gd": {
+      "bytes": 43387,
+      "sha256": "54774a23f7dcedab5ef1b272c89dcf517113e01e0244371330eefebd71dfa947"
+    },
+    "root-actual/scripts/world/playground_world.gd": {
+      "bytes": 122478,
+      "sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241"
+    },
+    "root-actual/tests/helpers/fresh_opening_segment.gd": {
+      "bytes": 19706,
+      "sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+    },
+    "root-actual/tests/helpers/gate_a_opening_drive.gd": {
+      "bytes": 72553,
+      "sha256": "36681ba1e791f90842195ceff73cabb5b3109cf74e865e4ea4846140816f7370"
+    },
+    "source-check.py": {
+      "bytes": 6115,
+      "sha256": "64d360014a048b7ee22a6b8ea20c7a80ccb7f1c557acf1ad4db220af3aa1aaca"
+    },
+    "source-results.json": {
+      "bytes": 12382,
+      "sha256": "a0cba416e11d38a6a3f9feb3f024c9ab249ed729f8705f6e4d0676a3447869e2"
+    }
+  }
+}

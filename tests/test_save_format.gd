@@ -194,7 +194,7 @@ func test_malformed_player_pose_falls_back_as_one_unit() -> void:
 	assert_true(saver.save(written, 1))
 	var path: String = saver.slot_path(1)
 	var file := FileAccess.open(path, FileAccess.READ)
-	var data: Dictionary = JSON.parse_string(file.get_as_text())
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	file.close()
 	# A position that would float-convert to the origin was the dangerous case:
 	# the rest of an otherwise valid save must load, but no partial pose applies.
@@ -222,7 +222,7 @@ func test_version_11_save_loads_without_inventing_a_player_pose_refused_by_redes
 	assert_true(saver.save(written, 1))
 	var path: String = saver.slot_path(1)
 	var file := FileAccess.open(path, FileAccess.READ)
-	var data: Dictionary = JSON.parse_string(file.get_as_text())
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	file.close()
 	data["version"] = 11
 	data.erase("player_pose")
@@ -413,7 +413,7 @@ func test_a_save_with_no_base_stats_reconstructs_them_from_species() -> void:
 
 	var path := TEST_DIR.path_join("slot_1.json")
 	var file := FileAccess.open(path, FileAccess.READ)
-	var data: Dictionary = JSON.parse_string(file.get_as_text())
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	file.close()
 	var party: Array = data["party"]
 	(party[0] as Dictionary).erase("base_hp")
@@ -638,7 +638,7 @@ func test_every_readable_save_version_actually_loads() -> void:
 		# version number alone is enough to prove the DISPATCH reaches them.
 		var path: String = saver.slot_path(2)
 		var file := FileAccess.open(path, FileAccess.READ)
-		var data: Dictionary = JSON.parse_string(file.get_as_text())
+		var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 		file.close()
 		data["version"] = version
 		_write_legacy_slot_json(2, data)
@@ -1206,7 +1206,7 @@ func test_a_pre_condition_save_loads_at_the_configured_start_refused_by_redesign
 	# rewrite below opened nothing and the test aborted there.
 	var path: String = saver.slot_path(0)
 	var file := FileAccess.open(path, FileAccess.READ)
-	var data: Dictionary = JSON.parse_string(file.get_as_text()) as Dictionary
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(file.get_as_text()) as Dictionary
 	file.close()
 	data["version"] = 12
 	for raw: Variant in (data.get("party", []) as Array):
@@ -1362,7 +1362,7 @@ func _read_slot_json(slot: int) -> Dictionary:
 	assert_true(file != null, "slot %d was never written" % slot)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(file.get_as_text())
 	return parsed as Dictionary if typeof(parsed) == TYPE_DICTIONARY else {}
 
 

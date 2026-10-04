@@ -1,0 +1,17 @@
+Inactive ice-crystal material draft, based on source at 9a6dbc823c.
+Material direction: physically lit pale blue triangular facets, milky frost at
+the authored prism edges, low emission, cool nature/fantasy palette. Existing
+mesh tips/rings/normal winding and scale are unchanged. No asset service used.
+
+Current material has diagonal periodic sine stripes unrelated to its triangular
+mesh edges. This draft uses the exact existing per-face UV layout (.5,1/.5,0
+tips and y=.3 widest ring) and local flat normals for stable facet variation.
+Profile fields must provide frost colour, edge width, frost strength, facet
+variation, roughness/specular and emission. Keep all existing move parameters,
+mastery, timing, mapped consumers, particle/light/voice caps and leases unchanged.
+
+Existing ice_crystal consumers: ice_shard_volley body and its impact motes;
+frost_breath impact motes. Neither has an ordinary mapped move today. Do not
+invent or remap a move to claim an earned player path. F25 rows stay OPEN.
+Native syntax, motion, cold/warm visual craft, scene readability/performance
+and full comparison bar remain UNPROVED. No engine/GPU token is held.

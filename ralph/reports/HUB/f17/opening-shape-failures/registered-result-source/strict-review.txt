@@ -1,0 +1,44 @@
+PASS (SOURCEPASS ONLY) - independent strict read-only shape-correction-root-r1
+
+Frozen actual tb/hub commit: 8316c68826c95d7d3249088954294babdb504864
+Parent: 39ad0773577c54a798322ea5d0ef3aef8255a2da
+Exactly three changed paths against that parent:
+ tests/helpers/opening_geometry_navigator.gd
+ SHA256 d472c80d61e6acba253f9ed7c4e1ceaf9d9f6a46266b561b6f51748c7d1072c3
+ tests/helpers/gate_a_npc_gather_segment.gd
+ SHA256 8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8
+ tests/helpers/meadows_earned_team_segment.gd
+ SHA256 981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1
+
+Gate decision: no substantive source blocker found in this frozen applied correction. This permits exactly one real M1 in the proper serialized queue. M1 remains OPEN until the owner executes it; F17#4 remains OPEN with zero acceptance credit until the full uninterrupted player chain passes. No runtime, parse, import, test, GPU, render or export was performed.
+
+Freeze and scope
+AGENTS.md and relevant CODEX ownership/run rules were read. Effective permissions remained approval_policy never / sandbox_mode danger-full-access. No Git mutation, tracked write, outgoing message or visual assessment was performed. Source reads used binary Git blobs or explicit UTF8. The three reviewed paths match both pinned Git blobs and supplied exact hashes, with repeated live reads and final HEAD/source checks unchanged. Supporting files whose checkout differed only by CRLF/LF have both raw byte forms and separate hashes; no textual difference was accepted. capture.json records the bounded supporting sources and binary copies. The unfinished external packet is API/provenance evidence, not an independently sealed production packet or asserted PASS. opening-shape-recovery.json is archived. Prior routing-v3 UNSEALED artifacts and routing-v3-sealed FAIL were not overwritten or promoted; the latter's SHA256 remains cbf7fd68f927c38b85ca7a516ac480550e9d418238543a6fa784370c93eb51d1.
+
+Registered body / API correction
+helper:222-297 uses PhysicsServer3D.body_test_motion with the actual trainer RID and PhysicsTestMotionResult3D. get_collision_local_shape(index) is the native integer shape index, without the missing KinematicCollision3D owner_id lookup that blocked sealed v3. The sole native index 0 is checked against shape_owner_get_shape_index and shape_find_owner. Before and after queries the code verifies the body instance, space, collision mask, shape RID, shape count and transform against the live CharacterBody3D and CollisionShape3D owner. Scene and owner disabled states are checked. The actual trainer is the upright radius 0.4 / height 1.8 capsule at local (0,0.9,0), with live safe_margin, floor_max_angle, snap and up_direction; production step constants remain 0.35 / 0.25. No cloned/shrunken body or shape substitutes its physics.
+
+Starting overlap / support / ordinary floor
+helper:323-395 explicitly queries the full actual owner shape and transform with zero query margin, live body mask, and only self RID excluded. Any exact intersection refuses, including mixed floor/wall contacts in one concave shape. Zero-motion native recovery additionally must have shallow travel and all reported contacts must satisfy native local-shape identity, finite normal/point/depth, the actual floor cone and capsule foot contact band. Downward support uses native SAFE travel for the landing pose; moving-contact depth is not compared to a skin bound because contacts are gathered at UNSAFE advance in the official Godot backend. That same safe pose then receives a separate exact overlap and shallow zero-motion recovery check. The skin bound was not increased.
+An ordinary flat floor separated from the unshrunk capsule by collision skin can satisfy these checks: no exact overlap, native floor contact with local index 0, allowable normal and foot band. The old missing-owner universal refusal is gone. This is a source-consistent admission case, not proof of the mounted backend's contact values. Contact saturation, missing support, deep/side/elevated or ambiguous recovery remain refusals.
+
+Actual callbacks / bounded work
+NativeTick runs under the mounted world with physics priority one lower than the trainer. The frozen trainer inherits that world's group and no separate thread/priority override was found in the scoped production sources. SceneTree.physics_frame is emitted before node physics callbacks; request submission at that seam is followed by the native callback before the player's movement callback. The native callback refuses a changed non-main thread and queries before emitting inherited camera-relative stick input. Team's unawaited step submits its request before its subsequent physics_frame wait; completion/refusal can be observed on the next loop. This does not grant runtime scheduling or engine-load proof.
+Work is route local: <=64 authored road inputs, <=8 road choices, <=16 grouped houses plus Grandpa, <=256 plans, <=96 geometry queries per frame, <=250000 lifetime, <=24000 requests, <=180m motions and <=8 contacts (saturation refuses), with 1MiB configuration reads and a cooperative 10000us check. Registration checks are constant trainer-only work. Native broadphase/narrowphase can inspect remote concave, raw and dynamic physics according to the engine; they are not globally rejected or replaced with a terrain grid envelope. The cooperative deadline cannot interrupt an individual native call and is not a performance theorem. Existing performance/progression assertions were not weakened.
+
+Mandatory physical route / retained player chain
+helper:513-630 retains actual mounted doorway identity, owner/resource/transform/disabled verification and requires threshold then outside point before completing departure; reset preserves pending departure. The gather caller requires its original door standoff, actual activation and open door before axial entry; exit, activation witness, movement-resumed checks and real stick source remain unchanged. Team retains actual house departure, village/field boundary gates and prohibits provider/combat success before required departure completes. Full parent diff was examined; eight critical unchanged functions were additionally text-hashed in preserved-blocks.json. Ordinary inventory/tool acquisition, equip/input/activation, authored gather, earned team and engagement assertions remain present. Gather's 1800 and team's 3600 budgets remain exact; the guessed extra gather go-around is removed. No skip, teleport, grant, obstacle whitelist, body shrinking or assertion relaxation is introduced.
+
+Limits and next action
+Exact floor touches reported as overlap, skin/foot-band ambiguity, saturation, slopes, constant-height long sweeps, limited road bends and legitimate dynamic or stream transitions can conservatively refuse. Queries are a snapshot and do not prove future moving geometry or full-route terrain support. Active engine/backend version, registration visibility, Terrain3D collision availability and raw/dynamic contacts, mounted callback timing, eventual path existence, real input consumption and frame/performance outcomes remain unproved. A PASS here permits the one serialized real M1 only; it supplies no F17#4 credit. No source correction is justified by this review. If M1 refuses, the smallest correction must address the specific recorded native contact/route cause while retaining capsule, overlap, floor, budget and player-chain guards; do not relax metrics or weaken tests.
+
+Primary API evidence
+https://docs.godotengine.org/en/4.7/classes/class_physicstestmotionresult3d.html
+https://docs.godotengine.org/en/4.7/classes/class_physicstestmotionparameters3d.html
+https://docs.godotengine.org/en/4.7/classes/class_physicsserver3d.html
+https://docs.godotengine.org/en/4.7/classes/class_node.html
+https://docs.godotengine.org/en/4.7/classes/class_scenetree.html
+https://raw.githubusercontent.com/godotengine/godot/4.7/servers/physics_3d/physics_server_3d.cpp
+https://raw.githubusercontent.com/godotengine/godot/4.7/scene/3d/physics/collision_object_3d.cpp
+https://raw.githubusercontent.com/godotengine/godot/4.7/modules/godot_physics_3d/godot_space_3d.cpp
+Raw API bytes/hashes are under primary-api/, primary-api-hashes.json and official-api-verification.json. The first two current official raw downloads exactly matched the external API bytes; previously independently verified backend bytes are retained. Native backend reasoning is identified above and does not assert the mounted runtime backend was executed.

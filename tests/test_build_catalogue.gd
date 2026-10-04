@@ -10,6 +10,7 @@ extends "res://tests/test_case.gd"
 
 const BUILDABLES_PATH := "res://data/items/buildables.json"
 const ITEMS_PATH := "res://data/items/items.json"
+const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 
 
 func _buildables_config() -> Dictionary:
@@ -33,6 +34,53 @@ func _item_ids() -> Array[String]:
 		out.append(id)
 	return out
 
+## F31 activates the canonical overlay. Explicit disabled/malformed fixtures
+## still preserve every legacy cost/mesh/obtainability assertion below.
+func test_homestead_catalogue_requires_exact_boolean_runtime_enable() -> void:
+	var catalogue := _buildables_config()
+	var legacy: Array = catalogue.get("buildables",[])
+	assert_eq(legacy.size(),12)
+	var disabled_cfg := STATION_RULES.config().duplicate(true)
+	disabled_cfg.runtime_enabled = false
+	assert_eq(STATION_RULES.active_catalogue(catalogue,disabled_cfg),legacy,
+		"explicitly disabled homestead must retain the legacy catalogue")
+	for disabled: Variant in [false,0,1,1.0,"true",null,{},[]]:
+		assert_eq(STATION_RULES.active_catalogue(catalogue,{"runtime_enabled":disabled}),legacy,
+			"only an exact bool true can expose typed homestead entries")
+	assert_eq(STATION_RULES.active_catalogue(catalogue,{}),legacy)
+
+func test_enabled_homestead_overlay_replaces_workbench_without_mutating_input() -> void:
+	var catalogue := _buildables_config()
+	var before := catalogue.duplicate(true)
+	var cfg := STATION_RULES.config()
+	assert_true(cfg.get("runtime_enabled") is bool and cfg.runtime_enabled,
+		"F31 enables the canonical homestead catalogue")
+	var active := STATION_RULES.active_catalogue(catalogue,cfg)
+	assert_eq(active.size(),34)
+	var ids: Array[String] = []
+	for row: Dictionary in active:
+		assert_false(ids.has(str(row.id)),"overlay must replace its Workbench, never duplicate it")
+		ids.append(str(row.id))
+		if row.id == "workbench": assert_true(row.get("home_only") == true)
+		if row.id in ["forge","kitchen","altar","den","farm","greenhouse"]: assert_true(row.get("home_only") == true)
+	for attached: Dictionary in cfg.attachments:
+		if attached.status == "reserved": assert_false(ids.has(str(attached.id)))
+	assert_eq(catalogue,before)
+	active[0].cost[0].n=999
+	assert_eq(catalogue,before,"returned projections must not share nested costs with source data")
+
+func test_malformed_typed_overlay_falls_back_atomically_to_legacy() -> void:
+	var catalogue := _buildables_config()
+	var cfg := STATION_RULES.config()
+	cfg.runtime_enabled=true
+	var legacy: Array = catalogue.buildables.duplicate(true)
+	catalogue.homestead_buildables.append(catalogue.homestead_buildables[0].duplicate(true))
+	assert_eq(STATION_RULES.active_catalogue(catalogue,cfg),legacy,
+		"duplicate typed identities must not publish a partial overlay")
+	catalogue=_buildables_config()
+	catalogue.homestead_buildables[0].cost=[]
+	assert_eq(STATION_RULES.active_catalogue(catalogue,cfg),legacy,
+		"malformed typed costs must not publish a partial overlay")
 
 # --- the table is well-formed ------------------------------------------------
 

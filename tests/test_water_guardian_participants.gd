@@ -19,9 +19,12 @@ const FLAGS := preload("res://autoload/progression_state.gd")
 
 class Saver extends RefCounted:
 	var fail_write := false
+	var fail_character := false
 	var writes := 0
 	var character_writes := 0
 	var store: RefCounted = SAVE.new("user://guardian_participants_%d/" % Time.get_ticks_usec())
+	func finish_fallback() -> bool: return true
+	func fallback_busy() -> bool: return false
 	func save_world(game: Object, id: String) -> bool:
 		writes += 1
 		var snapshot: Dictionary = game.world.save_data()
@@ -29,7 +32,9 @@ class Saver extends RefCounted:
 		return false if fail_write else store.write(id, SAVE.partition(snapshot))
 	func save_character(_game: Object, _id: String) -> bool:
 		character_writes += 1
-		return true
+		return not fail_character
+	func save_character_prepared(game: Object, id: String) -> bool:
+		return save_character(game, id)
 
 class LocalFixture extends RefCounted:
 	var character_id := "host-char"
@@ -543,6 +548,9 @@ class FakeGame extends Node:
 
 class FakeSession extends RefCounted:
 	func local_peer_id() -> int: return 1
+	# Stable session lifetime for the retained decline envelope. The fixture
+	# does not claim an actual network handshake or persisted owner ACK.
+	func _altar_current_epoch() -> String: return "guardian-fixture-epoch"
 
 ## The host bridge (ledger_rpc in production): resolves a peer to its actor.
 class FakeBridge extends Node:
@@ -799,10 +807,55 @@ func test_held_claim_decline_is_confirmed_only_after_the_host_journals_it() -> v
 	# The joiner side records the host's confirmation.
 	var joiner := claims_fixture(game)
 	joiner.fake_game.host = false
+	# A's endpoint owns A, not the host's PlayerState. Retain the exact decline
+	# lifetime before accepting the production confirmation envelope.
+	var a_local := LocalFixture.new()
+	a_local.character_id = "A"
+	joiner.fake_game.local = a_local
+	joiner.hold_for_decline(str(a.id))
+	var envelope := {"claim_id": str(a.id), "character_id": "A",
+		"world_namespace": game.world.reward_delivery_namespace,
+		"session_epoch": joiner.fake_game.session.call("_altar_current_epoch")}
 	assert_false(joiner.decline_settled(str(a.id)))
 	joiner._decline_done(str(a.id))
+	assert_false(joiner.decline_settled(str(a.id)), "a naked legacy packet cannot confirm an unbound owner answer")
+	var foreign := envelope.duplicate()
+	foreign.character_id = "B"
+	joiner._decline_done(str(a.id), foreign)
+	assert_false(joiner.decline_settled(str(a.id)), "another character's confirmation cannot settle A's answer")
+	foreign = envelope.duplicate()
+	foreign.session_epoch = "another-session"
+	joiner._decline_done(str(a.id), foreign)
+	assert_false(joiner.decline_settled(str(a.id)), "a previous session's confirmation cannot settle the retained answer")
+	joiner._decline_done(str(a.id), envelope)
 	assert_true(joiner.decline_settled(str(a.id)))
 	free_claims(joiner)
+	free_claims(claims)
+
+func test_confirmed_decline_retries_original_personal_answer_after_owner_bool_failure() -> void:
+	var game := fixture(["host-char"])
+	var claims := claims_fixture(game)
+	claims.fake_game.host = false
+	var ledger: RefCounted = claims.fake_bridge.ledger
+	var offer: Dictionary = REWARD.begin(game, ledger, "host-char", guardian())
+	assert_true(offer.ok)
+	claims.hold_for_decline(offer.id)
+	assert_true(REWARD.refuse(game, ledger, "host-char").ok, "the host's original world refusal is journaled first")
+	var world_before: Dictionary = game.world.save_data()
+	game.save_system.fail_character = true
+	claims.confirm_declined(offer.id)
+	assert_false(game.local.flags.has("water:legendary_refused"), "failed owner bool save restores the original flags")
+	assert_eq(claims.get("_answer_save_pending").get("claim_id"), offer.id, "the exact answer remains retryable")
+	assert_eq(game.save_system.character_writes, 1)
+	assert_eq(game.world.save_data(), world_before, "owner failure does not mint another world refusal or claim")
+	game.save_system.fail_character = false
+	claims._retry_declined_answer()
+	assert_true(game.local.flags.has("water:legendary_refused"))
+	assert_eq(claims.get("_answer_save_pending"), {})
+	assert_eq(game.save_system.character_writes, 2)
+	claims._retry_declined_answer()
+	assert_eq(game.save_system.character_writes, 2, "settled original answer never writes or grants twice")
+	assert_eq(game.local.party.size(), 0, "a declined creature is never added during owner retry")
 	free_claims(claims)
 
 func legacy_world_fixture(legacy_recipient: String) -> RefCounted:

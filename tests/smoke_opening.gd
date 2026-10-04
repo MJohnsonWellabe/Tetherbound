@@ -67,6 +67,7 @@ const STARTER_PICKER_SCRIPT := "res://scripts/ui/starter_picker.gd"
 const SEAM := preload("res://scripts/story/party_seam.gd")
 const ENTRY := preload("res://scripts/ui/name_entry.gd")
 const PARTY := preload("res://autoload/party.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
 
 ## Long enough for the terrain to build and the player to land on it. Matches
 ## smoke_catching, which boots the same scene.
@@ -96,7 +97,7 @@ var _starter_picker: CanvasLayer = null
 
 
 func _init() -> void:
-	_run()
+	_run.call_deferred()
 
 
 func _run() -> void:
@@ -104,8 +105,19 @@ func _run() -> void:
 		_report()
 		return
 
+	_game = root.get_node_or_null(^"Game")
+	if _game == null:
+		_fail("the Game autoload is not in the tree before the opening boots")
+		_report()
+		return
+	# The real starter grant now saves its owner before returning control.
+	# Keep those writes out of a player's slots when this smoke runs locally.
+	_game.set("save_system", SAVE.new("user://smoke_opening_%d_%d/" % [OS.get_process_id(), Time.get_ticks_usec()]))
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	# Production scene entry sets this automatically. The durable adoption
+	# authenticates its director against current_scene, including in a smoke.
+	current_scene = _world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -121,11 +133,14 @@ func _run() -> void:
 	await _grandpa_says_his_piece()
 	await _a_starter_can_be_chosen()
 	await _the_creature_is_named_on_the_grid()
-	_the_named_creature_is_in_the_real_party()
+	await _the_named_creature_is_in_the_real_party()
 	_the_party_still_holds_at_most_five()
 	await _the_player_is_told_how_to_get_out_of_the_house()
 	await _grandpa_hands_over_the_first_catch_orbs()
 	_grandpa_handed_over_the_orbs()
+	if not await _the_home_key_lesson_returns_control():
+		_report()
+		return
 	await _the_road_gate_stops_until_the_key_is_found()
 	_report()
 
@@ -473,6 +488,84 @@ func _grandpa_handed_over_the_orbs() -> void:
 		print("the opening catch supply: %d Basic Orbs" % orbs)
 
 
+## The Home Key handover opens its authored lesson beside Grandpa. It owns
+## input until the player reads it; action-state polling cannot reach _input.
+func _the_home_key_lesson_returns_control() -> bool:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	if rules.config().get("enabled") != true:
+		return true
+	# No Home Key handover (and so no lesson) while F18's portal runtime is off.
+	var session: Node = _game.get("session")
+	if session == null or session.call("portal_runtime_ready") != true:
+		return true
+	var local: RefCounted = _game.get("local")
+	var flag := rules.PREFIX + "home_key"
+	var lesson: Dictionary = {}
+	for row: Dictionary in rules.config().get("lessons", []):
+		if row.get("id") == "home_key":
+			lesson = row
+			break
+	var teacher := _world.find_child(str(lesson.get("teacher_node", "")), true, false) as Node3D
+	if teacher == null:
+		_fail("the Home Key lesson has no mounted teacher")
+		return false
+	var forward: InputEventJoypadMotion = null
+	for binding: InputEvent in InputMap.action_get_events("move_forward"):
+		if binding is InputEventJoypadMotion:
+			forward = InputEventJoypadMotion.new()
+			forward.axis = (binding as InputEventJoypadMotion).axis
+			forward.axis_value = (binding as InputEventJoypadMotion).axis_value
+			break
+	if forward == null:
+		_fail("move_forward has no physical stick binding for the walk back to Grandpa")
+		return false
+	var stop := forward.duplicate() as InputEventJoypadMotion
+	stop.axis_value = 0.0
+	# The door-callout assertion left us outside the teacher's lesson radius.
+	# Return with the real stick, stopping as soon as the lesson owns input.
+	var walking := false
+	var panel: CanvasLayer = null
+	for frame: int in 300:
+		var lessons := _game.get_node_or_null(^"OnboardingLessons")
+		if lessons != null:
+			panel = lessons.get("_panel") as CanvasLayer
+			if panel != null and panel.call("is_open"):
+				break
+		var to := teacher.global_position - _player.global_position
+		to.y = 0.0
+		if to.length() > 0.8:
+			_rig.set("yaw", atan2(-to.x, -to.z))
+			if not walking:
+				Input.parse_input_event(forward)
+				walking = true
+		elif walking:
+			Input.parse_input_event(stop)
+			walking = false
+		await physics_frame
+	Input.parse_input_event(stop)
+	await process_frame
+	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
+		_fail("Grandpa's Home Key handover did not present its authored controller lesson (teacher %.1fm away; key %d; given %s; acknowledged %s)" % [
+			_player.global_position.distance_to(teacher.global_position), int(local.get("inventory").call("count", "home_key")),
+			str(local.get("flags").call("has", "home_key_given")), str(local.get("flags").call("has", flag))])
+		return false
+	var lines := 0
+	for line: int in 20:
+		if not panel.call("is_open"):
+			break
+		await _press_pad("menu_confirm")
+		lines += 1
+	for frame: int in 300:
+		if local.get("flags").call("has", flag) and not panel.call("owns_input"):
+			break
+		await physics_frame
+	if panel.call("owns_input") or not local.get("flags").call("has", flag):
+		_fail("Home Key lesson did not acknowledge and release controller input after %d presses" % lines)
+		return false
+	print("Home Key: read %d lesson lines with the pad and returned to exploration" % lines)
+	return true
+
+
 ## SA2 (spec sec1D): "the player cannot leave Grandpa's house until the
 ## required Grandpa opening interaction is complete." Walks the player
 ## straight at the exterior doorway, skipping Grandpa entirely — proving the
@@ -742,12 +835,17 @@ func _the_named_creature_is_in_the_real_party() -> void:
 		_fail("the Game autoload has no party")
 		return
 
+	# Naming closes before the follower has grounded and its original-choice
+	# receipt has saved. Observe completion without granting or advancing it.
+	for frame: int in 600:
+		if int(party.call("size")) > 0:
+			break
+		await physics_frame
 	var members: Array = party.members()
 	if members.is_empty():
 		_fail(
-			"the chosen creature never reached Game.party. If scripts/story/party_seam.gd reports a creature "
-			+ "while this is empty, the seam is on its fallback list again — check the node name "
-			+ "(`Game`) and the calls (`add`/`members`/`is_full`)."
+			"the chosen creature never reached Game.party after 600 frames (beat '%s', starter save pending: %s)"
+			% [str(_director.call("beat")), str(not (_director.get("_pending_starter_adoption") as Dictionary).is_empty())]
 		)
 		return
 	if members.size() != 1:
@@ -908,7 +1006,10 @@ func _the_road_gate_stops_until_the_key_is_found() -> void:
 		_fail("the gate reports open before the player ever held the key")
 		return
 
-	var key := _find_interactable_matching(["key"])
+	# The gate's own key ("Take the old key", playground_world.gd), not the
+	# first label containing "key": live portal arches now read "... · Needs
+	# the Tidewake Portal Key" and win a bare "key" match on tree order.
+	var key := _find_interactable_matching(["old key"])
 	if key == null:
 		_fail("no key offered anywhere; the gate is locked with no way through")
 		return
@@ -996,14 +1097,20 @@ func _press_pad(action: String) -> void:
 	var down := InputEventJoypadButton.new()
 	down.button_index = button_index
 	down.pressed = true
+	var edge_start := Engine.get_physics_frames()
 	Input.parse_input_event(down)
-	for i in 3:
+	# Match the physical opening driver: each edge must span a process frame,
+	# even when several physics ticks run before parsed events are flushed.
+	await process_frame
+	while Engine.get_physics_frames() - edge_start < 3:
 		await physics_frame
 	var up := InputEventJoypadButton.new()
 	up.button_index = button_index
 	up.pressed = false
+	edge_start = Engine.get_physics_frames()
 	Input.parse_input_event(up)
-	for i in 4:
+	await process_frame
+	while Engine.get_physics_frames() - edge_start < 4:
 		await physics_frame
 
 

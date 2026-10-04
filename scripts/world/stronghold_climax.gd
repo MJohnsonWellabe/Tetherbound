@@ -951,6 +951,12 @@ func _free_the_legendary() -> void:
 	if not _chamber_told:
 		_chamber_told = true
 	_start(str(machine.get("free_conversation", "")))
+	# The world fact goes to the host now, not only when the conversation's
+	# own flag line plays: a guest still settling its fight rewards can sit
+	# on that line long after the lever, and every other participant's offer
+	# waits on this flag. Written before the local mirror, which would make
+	# _write_world_flag see it as already held.
+	_write_world_flag(_flag("legendary_freed"))
 	_set_flag(_flag("legendary_freed"))
 	_release_visual()
 

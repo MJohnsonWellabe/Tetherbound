@@ -1,0 +1,19 @@
+{
+  "source": "a6fbdb5bac7d3af93a59e45c246399943b9ee813",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "res://tests/smoke_four_biome_continuous.gd",
+    "--",
+    "--through-tournament",
+    "--world-seed=4",
+    "--no-checkpoints"
+  ],
+  "profile": "D:\\tetherbound\\redesign-hub\\.tmp\\village-m1-profile",
+  "native_exit": 1,
+  "elapsed_seconds": 212.125,
+  "scope": "Existing genuine fresh-save prefix only: title through tournament; no later biome claim."
+}

@@ -1,0 +1,288 @@
+diff --git a/scripts/ui/motion_prefs.gd b/scripts/ui/motion_prefs.gd
+--- a/scripts/ui/motion_prefs.gd
++++ b/scripts/ui/motion_prefs.gd
+@@ -18,6 +18,7 @@
+ ## setting: 100% plays the camera impulses exactly as combat.json tunes them
+ ## (the charged-hit roll is 0.65°). Reduced motion overrides it to nothing.
+ static var _shake_percent := 100
++static var _rumble_percent := 100
+ 
+ 
+ static func reduced_motion() -> bool:
+@@ -49,6 +50,18 @@
+ 	return 0.0 if _reduced else float(_shake_percent) / 100.0
+ 
+ 
++static func rumble_percent() -> int:
++	return _rumble_percent
++
++static func set_rumble_percent(value: int) -> void:
++	_rumble_percent = clampi(value, 0, 100)
++	if _rumble_percent == 0:
++		for device: int in Input.get_connected_joypads(): Input.stop_joy_vibration(device)
++
++static func rumble_scale() -> float:
++	return float(_rumble_percent) / 100.0
++
++
+ ## Read from the settings object's `accessibility` section. A missing or
+ ## malformed section leaves the default (off).
+ static func load_from(prefs: RefCounted) -> void:
+@@ -59,6 +72,7 @@
+ 		return
+ 	_reduced = bool((stored as Dictionary).get("reduced_motion", false))
+ 	set_camera_shake_percent(int((stored as Dictionary).get("camera_shake_percent", 100)))
++	set_rumble_percent(int((stored as Dictionary).get("rumble_percent", 100)))
+ 
+ 
+ ## Write back into `prefs.accessibility`. The caller saves.
+@@ -69,4 +83,5 @@
+ 	var out: Dictionary = (table as Dictionary).duplicate() if typeof(table) == TYPE_DICTIONARY else {}
+ 	out["reduced_motion"] = _reduced
+ 	out["camera_shake_percent"] = _shake_percent
++	out["rumble_percent"] = _rumble_percent
+ 	prefs.set("accessibility", out)
+diff --git a/data/config/audio.json b/data/config/audio.json
+--- a/data/config/audio.json
++++ b/data/config/audio.json
+@@ -204,5 +204,182 @@
+     "exploration_off_seconds": [70.0, 130.0],
+     "_comment_village_radius": "Metres from the village centre at which the village cue takes over. The village is the chapter's rest beat and it should be audible as one before it is visible as one.",
+     "village_radius_metres": 55.0
++  },
++  "move_effect_cues": {
++    "vfx_stone_throw_launch": "res://assets/vfx/audio/stone_throw_launch.wav",
++    "vfx_stone_throw_travel": "res://assets/vfx/audio/stone_throw_travel.wav",
++    "vfx_stone_throw_launch_travel": "res://assets/vfx/audio/stone_throw_launch_travel.wav",
++    "vfx_stone_throw_impact": "res://assets/vfx/audio/stone_throw_impact.wav",
++    "vfx_stone_throw_launch_mastery": "res://assets/vfx/audio/stone_throw_launch_mastery.wav",
++    "vfx_stone_throw_launch_travel_mastery": "res://assets/vfx/audio/stone_throw_launch_travel_mastery.wav",
++    "vfx_stone_throw_impact_mastery": "res://assets/vfx/audio/stone_throw_impact_mastery.wav",
++    "vfx_fireball_launch": "res://assets/vfx/audio/fireball_launch.wav",
++    "vfx_fireball_travel": "res://assets/vfx/audio/fireball_travel.wav",
++    "vfx_fireball_launch_travel": "res://assets/vfx/audio/fireball_launch_travel.wav",
++    "vfx_fireball_impact": "res://assets/vfx/audio/fireball_impact.wav",
++    "vfx_fireball_launch_mastery": "res://assets/vfx/audio/fireball_launch_mastery.wav",
++    "vfx_fireball_launch_travel_mastery": "res://assets/vfx/audio/fireball_launch_travel_mastery.wav",
++    "vfx_fireball_impact_mastery": "res://assets/vfx/audio/fireball_impact_mastery.wav",
++    "vfx_flame_cone_launch": "res://assets/vfx/audio/flame_cone_launch.wav",
++    "vfx_flame_cone_travel": "res://assets/vfx/audio/flame_cone_travel.wav",
++    "vfx_flame_cone_launch_travel": "res://assets/vfx/audio/flame_cone_launch_travel.wav",
++    "vfx_flame_cone_impact": "res://assets/vfx/audio/flame_cone_impact.wav",
++    "vfx_flame_cone_launch_mastery": "res://assets/vfx/audio/flame_cone_launch_mastery.wav",
++    "vfx_flame_cone_launch_travel_mastery": "res://assets/vfx/audio/flame_cone_launch_travel_mastery.wav",
++    "vfx_flame_cone_impact_mastery": "res://assets/vfx/audio/flame_cone_impact_mastery.wav",
++    "vfx_ember_burst_launch": "res://assets/vfx/audio/ember_burst_launch.wav",
++    "vfx_ember_burst_travel": "res://assets/vfx/audio/ember_burst_travel.wav",
++    "vfx_ember_burst_launch_travel": "res://assets/vfx/audio/ember_burst_launch_travel.wav",
++    "vfx_ember_burst_impact": "res://assets/vfx/audio/ember_burst_impact.wav",
++    "vfx_ember_burst_launch_mastery": "res://assets/vfx/audio/ember_burst_launch_mastery.wav",
++    "vfx_ember_burst_launch_travel_mastery": "res://assets/vfx/audio/ember_burst_launch_travel_mastery.wav",
++    "vfx_ember_burst_impact_mastery": "res://assets/vfx/audio/ember_burst_impact_mastery.wav",
++    "vfx_sky_lightning_launch": "res://assets/vfx/audio/sky_lightning_launch.wav",
++    "vfx_sky_lightning_travel": "res://assets/vfx/audio/sky_lightning_travel.wav",
++    "vfx_sky_lightning_launch_travel": "res://assets/vfx/audio/sky_lightning_launch_travel.wav",
++    "vfx_sky_lightning_impact": "res://assets/vfx/audio/sky_lightning_impact.wav",
++    "vfx_sky_lightning_launch_mastery": "res://assets/vfx/audio/sky_lightning_launch_mastery.wav",
++    "vfx_sky_lightning_launch_travel_mastery": "res://assets/vfx/audio/sky_lightning_launch_travel_mastery.wav",
++    "vfx_sky_lightning_impact_mastery": "res://assets/vfx/audio/sky_lightning_impact_mastery.wav",
++    "vfx_chain_lightning_launch": "res://assets/vfx/audio/chain_lightning_launch.wav",
++    "vfx_chain_lightning_travel": "res://assets/vfx/audio/chain_lightning_travel.wav",
++    "vfx_chain_lightning_launch_travel": "res://assets/vfx/audio/chain_lightning_launch_travel.wav",
++    "vfx_chain_lightning_impact": "res://assets/vfx/audio/chain_lightning_impact.wav",
++    "vfx_chain_lightning_launch_mastery": "res://assets/vfx/audio/chain_lightning_launch_mastery.wav",
++    "vfx_chain_lightning_launch_travel_mastery": "res://assets/vfx/audio/chain_lightning_launch_travel_mastery.wav",
++    "vfx_chain_lightning_impact_mastery": "res://assets/vfx/audio/chain_lightning_impact_mastery.wav",
++    "vfx_water_jet_launch": "res://assets/vfx/audio/water_jet_launch.wav",
++    "vfx_water_jet_travel": "res://assets/vfx/audio/water_jet_travel.wav",
++    "vfx_water_jet_launch_travel": "res://assets/vfx/audio/water_jet_launch_travel.wav",
++    "vfx_water_jet_impact": "res://assets/vfx/audio/water_jet_impact.wav",
++    "vfx_water_jet_launch_mastery": "res://assets/vfx/audio/water_jet_launch_mastery.wav",
++    "vfx_water_jet_launch_travel_mastery": "res://assets/vfx/audio/water_jet_launch_travel_mastery.wav",
++    "vfx_water_jet_impact_mastery": "res://assets/vfx/audio/water_jet_impact_mastery.wav",
++    "vfx_bubble_volley_launch": "res://assets/vfx/audio/bubble_volley_launch.wav",
++    "vfx_bubble_volley_travel": "res://assets/vfx/audio/bubble_volley_travel.wav",
++    "vfx_bubble_volley_launch_travel": "res://assets/vfx/audio/bubble_volley_launch_travel.wav",
++    "vfx_bubble_volley_impact": "res://assets/vfx/audio/bubble_volley_impact.wav",
++    "vfx_bubble_volley_launch_mastery": "res://assets/vfx/audio/bubble_volley_launch_mastery.wav",
++    "vfx_bubble_volley_launch_travel_mastery": "res://assets/vfx/audio/bubble_volley_launch_travel_mastery.wav",
++    "vfx_bubble_volley_impact_mastery": "res://assets/vfx/audio/bubble_volley_impact_mastery.wav",
++    "vfx_tidal_wave_launch": "res://assets/vfx/audio/tidal_wave_launch.wav",
++    "vfx_tidal_wave_travel": "res://assets/vfx/audio/tidal_wave_travel.wav",
++    "vfx_tidal_wave_launch_travel": "res://assets/vfx/audio/tidal_wave_launch_travel.wav",
++    "vfx_tidal_wave_impact": "res://assets/vfx/audio/tidal_wave_impact.wav",
++    "vfx_tidal_wave_launch_mastery": "res://assets/vfx/audio/tidal_wave_launch_mastery.wav",
++    "vfx_tidal_wave_launch_travel_mastery": "res://assets/vfx/audio/tidal_wave_launch_travel_mastery.wav",
++    "vfx_tidal_wave_impact_mastery": "res://assets/vfx/audio/tidal_wave_impact_mastery.wav",
++    "vfx_wind_blade_launch": "res://assets/vfx/audio/wind_blade_launch.wav",
++    "vfx_wind_blade_travel": "res://assets/vfx/audio/wind_blade_travel.wav",
++    "vfx_wind_blade_launch_travel": "res://assets/vfx/audio/wind_blade_launch_travel.wav",
++    "vfx_wind_blade_impact": "res://assets/vfx/audio/wind_blade_impact.wav",
++    "vfx_wind_blade_launch_mastery": "res://assets/vfx/audio/wind_blade_launch_mastery.wav",
++    "vfx_wind_blade_launch_travel_mastery": "res://assets/vfx/audio/wind_blade_launch_travel_mastery.wav",
++    "vfx_wind_blade_impact_mastery": "res://assets/vfx/audio/wind_blade_impact_mastery.wav",
++    "vfx_tornado_launch": "res://assets/vfx/audio/tornado_launch.wav",
++    "vfx_tornado_travel": "res://assets/vfx/audio/tornado_travel.wav",
++    "vfx_tornado_launch_travel": "res://assets/vfx/audio/tornado_launch_travel.wav",
++    "vfx_tornado_impact": "res://assets/vfx/audio/tornado_impact.wav",
++    "vfx_tornado_launch_mastery": "res://assets/vfx/audio/tornado_launch_mastery.wav",
++    "vfx_tornado_launch_travel_mastery": "res://assets/vfx/audio/tornado_launch_travel_mastery.wav",
++    "vfx_tornado_impact_mastery": "res://assets/vfx/audio/tornado_impact_mastery.wav",
++    "vfx_ice_shard_volley_launch": "res://assets/vfx/audio/ice_shard_volley_launch.wav",
++    "vfx_ice_shard_volley_travel": "res://assets/vfx/audio/ice_shard_volley_travel.wav",
++    "vfx_ice_shard_volley_launch_travel": "res://assets/vfx/audio/ice_shard_volley_launch_travel.wav",
++    "vfx_ice_shard_volley_impact": "res://assets/vfx/audio/ice_shard_volley_impact.wav",
++    "vfx_ice_shard_volley_launch_mastery": "res://assets/vfx/audio/ice_shard_volley_launch_mastery.wav",
++    "vfx_ice_shard_volley_launch_travel_mastery": "res://assets/vfx/audio/ice_shard_volley_launch_travel_mastery.wav",
++    "vfx_ice_shard_volley_impact_mastery": "res://assets/vfx/audio/ice_shard_volley_impact_mastery.wav",
++    "vfx_frost_breath_launch": "res://assets/vfx/audio/frost_breath_launch.wav",
++    "vfx_frost_breath_travel": "res://assets/vfx/audio/frost_breath_travel.wav",
++    "vfx_frost_breath_launch_travel": "res://assets/vfx/audio/frost_breath_launch_travel.wav",
++    "vfx_frost_breath_impact": "res://assets/vfx/audio/frost_breath_impact.wav",
++    "vfx_frost_breath_launch_mastery": "res://assets/vfx/audio/frost_breath_launch_mastery.wav",
++    "vfx_frost_breath_launch_travel_mastery": "res://assets/vfx/audio/frost_breath_launch_travel_mastery.wav",
++    "vfx_frost_breath_impact_mastery": "res://assets/vfx/audio/frost_breath_impact_mastery.wav",
++    "vfx_shadow_bolt_launch": "res://assets/vfx/audio/shadow_bolt_launch.wav",
++    "vfx_shadow_bolt_travel": "res://assets/vfx/audio/shadow_bolt_travel.wav",
++    "vfx_shadow_bolt_launch_travel": "res://assets/vfx/audio/shadow_bolt_launch_travel.wav",
++    "vfx_shadow_bolt_impact": "res://assets/vfx/audio/shadow_bolt_impact.wav",
++    "vfx_shadow_bolt_launch_mastery": "res://assets/vfx/audio/shadow_bolt_launch_mastery.wav",
++    "vfx_shadow_bolt_launch_travel_mastery": "res://assets/vfx/audio/shadow_bolt_launch_travel_mastery.wav",
++    "vfx_shadow_bolt_impact_mastery": "res://assets/vfx/audio/shadow_bolt_impact_mastery.wav",
++    "vfx_psychic_pulse_launch": "res://assets/vfx/audio/psychic_pulse_launch.wav",
++    "vfx_psychic_pulse_travel": "res://assets/vfx/audio/psychic_pulse_travel.wav",
++    "vfx_psychic_pulse_launch_travel": "res://assets/vfx/audio/psychic_pulse_launch_travel.wav",
++    "vfx_psychic_pulse_impact": "res://assets/vfx/audio/psychic_pulse_impact.wav",
++    "vfx_psychic_pulse_launch_mastery": "res://assets/vfx/audio/psychic_pulse_launch_mastery.wav",
++    "vfx_psychic_pulse_launch_travel_mastery": "res://assets/vfx/audio/psychic_pulse_launch_travel_mastery.wav",
++    "vfx_psychic_pulse_impact_mastery": "res://assets/vfx/audio/psychic_pulse_impact_mastery.wav",
++    "vfx_root_stone_spikes_launch": "res://assets/vfx/audio/root_stone_spikes_launch.wav",
++    "vfx_root_stone_spikes_travel": "res://assets/vfx/audio/root_stone_spikes_travel.wav",
++    "vfx_root_stone_spikes_launch_travel": "res://assets/vfx/audio/root_stone_spikes_launch_travel.wav",
++    "vfx_root_stone_spikes_impact": "res://assets/vfx/audio/root_stone_spikes_impact.wav",
++    "vfx_root_stone_spikes_launch_mastery": "res://assets/vfx/audio/root_stone_spikes_launch_mastery.wav",
++    "vfx_root_stone_spikes_launch_travel_mastery": "res://assets/vfx/audio/root_stone_spikes_launch_travel_mastery.wav",
++    "vfx_root_stone_spikes_impact_mastery": "res://assets/vfx/audio/root_stone_spikes_impact_mastery.wav",
++    "vfx_quake_ring_launch": "res://assets/vfx/audio/quake_ring_launch.wav",
++    "vfx_quake_ring_travel": "res://assets/vfx/audio/quake_ring_travel.wav",
++    "vfx_quake_ring_launch_travel": "res://assets/vfx/audio/quake_ring_launch_travel.wav",
++    "vfx_quake_ring_impact": "res://assets/vfx/audio/quake_ring_impact.wav",
++    "vfx_quake_ring_launch_mastery": "res://assets/vfx/audio/quake_ring_launch_mastery.wav",
++    "vfx_quake_ring_launch_travel_mastery": "res://assets/vfx/audio/quake_ring_launch_travel_mastery.wav",
++    "vfx_quake_ring_impact_mastery": "res://assets/vfx/audio/quake_ring_impact_mastery.wav",
++    "vfx_slash_trail_launch": "res://assets/vfx/audio/slash_trail_launch.wav",
++    "vfx_slash_trail_travel": "res://assets/vfx/audio/slash_trail_travel.wav",
++    "vfx_slash_trail_launch_travel": "res://assets/vfx/audio/slash_trail_launch_travel.wav",
++    "vfx_slash_trail_impact": "res://assets/vfx/audio/slash_trail_impact.wav",
++    "vfx_slash_trail_launch_mastery": "res://assets/vfx/audio/slash_trail_launch_mastery.wav",
++    "vfx_slash_trail_launch_travel_mastery": "res://assets/vfx/audio/slash_trail_launch_travel_mastery.wav",
++    "vfx_slash_trail_impact_mastery": "res://assets/vfx/audio/slash_trail_impact_mastery.wav",
++    "vfx_charge_dash_launch": "res://assets/vfx/audio/charge_dash_launch.wav",
++    "vfx_charge_dash_travel": "res://assets/vfx/audio/charge_dash_travel.wav",
++    "vfx_charge_dash_launch_travel": "res://assets/vfx/audio/charge_dash_launch_travel.wav",
++    "vfx_charge_dash_impact": "res://assets/vfx/audio/charge_dash_impact.wav",
++    "vfx_charge_dash_launch_mastery": "res://assets/vfx/audio/charge_dash_launch_mastery.wav",
++    "vfx_charge_dash_launch_travel_mastery": "res://assets/vfx/audio/charge_dash_launch_travel_mastery.wav",
++    "vfx_charge_dash_impact_mastery": "res://assets/vfx/audio/charge_dash_impact_mastery.wav",
++    "vfx_heal_pulse_launch": "res://assets/vfx/audio/heal_pulse_launch.wav",
++    "vfx_heal_pulse_travel": "res://assets/vfx/audio/heal_pulse_travel.wav",
++    "vfx_heal_pulse_launch_travel": "res://assets/vfx/audio/heal_pulse_launch_travel.wav",
++    "vfx_heal_pulse_impact": "res://assets/vfx/audio/heal_pulse_impact.wav",
++    "vfx_heal_pulse_launch_mastery": "res://assets/vfx/audio/heal_pulse_launch_mastery.wav",
++    "vfx_heal_pulse_launch_travel_mastery": "res://assets/vfx/audio/heal_pulse_launch_travel_mastery.wav",
++    "vfx_heal_pulse_impact_mastery": "res://assets/vfx/audio/heal_pulse_impact_mastery.wav",
++    "vfx_buff_aura_launch": "res://assets/vfx/audio/buff_aura_launch.wav",
++    "vfx_buff_aura_travel": "res://assets/vfx/audio/buff_aura_travel.wav",
++    "vfx_buff_aura_launch_travel": "res://assets/vfx/audio/buff_aura_launch_travel.wav",
++    "vfx_buff_aura_impact": "res://assets/vfx/audio/buff_aura_impact.wav",
++    "vfx_buff_aura_launch_mastery": "res://assets/vfx/audio/buff_aura_launch_mastery.wav",
++    "vfx_buff_aura_launch_travel_mastery": "res://assets/vfx/audio/buff_aura_launch_travel_mastery.wav",
++    "vfx_buff_aura_impact_mastery": "res://assets/vfx/audio/buff_aura_impact_mastery.wav",
++    "vfx_debuff_hex_launch": "res://assets/vfx/audio/debuff_hex_launch.wav",
++    "vfx_debuff_hex_travel": "res://assets/vfx/audio/debuff_hex_travel.wav",
++    "vfx_debuff_hex_launch_travel": "res://assets/vfx/audio/debuff_hex_launch_travel.wav",
++    "vfx_debuff_hex_impact": "res://assets/vfx/audio/debuff_hex_impact.wav",
++    "vfx_debuff_hex_launch_mastery": "res://assets/vfx/audio/debuff_hex_launch_mastery.wav",
++    "vfx_debuff_hex_launch_travel_mastery": "res://assets/vfx/audio/debuff_hex_launch_travel_mastery.wav",
++    "vfx_debuff_hex_impact_mastery": "res://assets/vfx/audio/debuff_hex_impact_mastery.wav",
++    "vfx_guard_flash_launch": "res://assets/vfx/audio/guard_flash_launch.wav",
++    "vfx_guard_flash_travel": "res://assets/vfx/audio/guard_flash_travel.wav",
++    "vfx_guard_flash_launch_travel": "res://assets/vfx/audio/guard_flash_launch_travel.wav",
++    "vfx_guard_flash_impact": "res://assets/vfx/audio/guard_flash_impact.wav",
++    "vfx_guard_flash_launch_mastery": "res://assets/vfx/audio/guard_flash_launch_mastery.wav",
++    "vfx_guard_flash_launch_travel_mastery": "res://assets/vfx/audio/guard_flash_launch_travel_mastery.wav",
++    "vfx_guard_flash_impact_mastery": "res://assets/vfx/audio/guard_flash_impact_mastery.wav",
++    "vfx_catch_tether_beam_launch": "res://assets/vfx/audio/catch_tether_beam_launch.wav",
++    "vfx_catch_tether_beam_travel": "res://assets/vfx/audio/catch_tether_beam_travel.wav",
++    "vfx_catch_tether_beam_launch_travel": "res://assets/vfx/audio/catch_tether_beam_launch_travel.wav",
++    "vfx_catch_tether_beam_impact": "res://assets/vfx/audio/catch_tether_beam_impact.wav",
++    "vfx_catch_tether_beam_launch_mastery": "res://assets/vfx/audio/catch_tether_beam_launch_mastery.wav",
++    "vfx_catch_tether_beam_launch_travel_mastery": "res://assets/vfx/audio/catch_tether_beam_launch_travel_mastery.wav",
++    "vfx_catch_tether_beam_impact_mastery": "res://assets/vfx/audio/catch_tether_beam_impact_mastery.wav",
++    "vfx_stone_boulder_launch": "res://assets/vfx/audio/stone_boulder_launch.wav",
++    "vfx_stone_boulder_travel": "res://assets/vfx/audio/stone_boulder_travel.wav",
++    "vfx_stone_boulder_launch_travel": "res://assets/vfx/audio/stone_boulder_launch_travel.wav",
++    "vfx_stone_boulder_impact": "res://assets/vfx/audio/stone_boulder_impact.wav",
++    "vfx_stone_boulder_launch_mastery": "res://assets/vfx/audio/stone_boulder_launch_mastery.wav",
++    "vfx_stone_boulder_launch_travel_mastery": "res://assets/vfx/audio/stone_boulder_launch_travel_mastery.wav",
++    "vfx_stone_boulder_impact_mastery": "res://assets/vfx/audio/stone_boulder_impact_mastery.wav"
+   }
+ }
+diff --git a/data/config/combat.json b/data/config/combat.json
+--- a/data/config/combat.json
++++ b/data/config/combat.json
+@@ -330,16 +330,14 @@
+       "colour": "#ffe19a",
+       "radius": 0.9,
+       "duration": 0.3,
+-      "strength": 1.3,
+-      "spike_softness": 0.7
++      "strength": 1.3
+     },
+     "_comment_charged": "Bigger and warmer than a quick hit. If the expensive move looks like the free one, building energy was never worth doing.",
+     "charged": {
+       "colour": "#ffc063",
+       "radius": 1.2,
+       "duration": 0.4,
+-      "strength": 1.5,
+-      "spike_softness": 0.8
++      "strength": 1.5
+     },
+     "_comment_size": "Small and brief. The first attempt used 1.35/1.9 metre radii that expanded to nearly two and a half times that, and from the combat camera's downward angle the camera-facing ring lay across the ground like a decal five metres wide \u2014 it read as a texture bug rather than as a blow landing. An impact is a point event; if it is big enough to notice on a still it is far too big in motion."
+   },
+diff --git a/assets/props/stat_draughts/bottle_base_Image_0.jpg.import b/assets/props/stat_draughts/bottle_base_Image_0.jpg.import
+--- a/assets/props/stat_draughts/bottle_base_Image_0.jpg.import
++++ b/assets/props/stat_draughts/bottle_base_Image_0.jpg.import
+@@ -18,7 +18,7 @@
+ 
+ [params]
+ 
+-compress/mode=0
++compress/mode=2
+ compress/high_quality=false
+ compress/lossy_quality=0.7
+ compress/uastc_level=0
+@@ -40,4 +40,4 @@
+ process/hdr_as_srgb=false
+ process/hdr_clamp_exposure=false
+ process/size_limit=0
+-detect_3d/compress_to=1
++detect_3d/compress_to=0
+diff --git a/assets/vfx/textures/flame_tongue_v2.png.import b/assets/vfx/textures/flame_tongue_v2.png.import
+--- a/assets/vfx/textures/flame_tongue_v2.png.import
++++ b/assets/vfx/textures/flame_tongue_v2.png.import
+@@ -15,7 +15,7 @@
+ 
+ [params]
+ 
+-compress/mode=0
++compress/mode=2
+ compress/high_quality=false
+ compress/lossy_quality=0.7
+ compress/uastc_level=0
+@@ -37,4 +37,4 @@
+ process/hdr_as_srgb=false
+ process/hdr_clamp_exposure=false
+ process/size_limit=0
+-detect_3d/compress_to=1
++detect_3d/compress_to=0

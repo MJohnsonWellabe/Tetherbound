@@ -1,0 +1,14 @@
+{
+  "checks": 38,
+  "result": "SOURCE_RELATION_PASS",
+  "hashes": {
+    "scripts/creatures/evolution.gd": "55c8f5d4b52d760dea7dfde51d7696deffab82686ed0308de0a0e335adf12dd0",
+    "data/config/evolution_lines.json": "a69be75eac331632f12ea9c17c8f271e32e17ad10c353936b984e5ef9b1cedae",
+    "assets/creatures/tetherbound/stormursa/source/provenance.json": "a8955bd8687f54a0b51bf0bf12920dae3437cc81f3b48c1c086fcbade0097fee",
+    "assets/creatures/tetherbound/stormursa/source/reference_brief.json": "fc26cb8b0a3f744883a02af63c51e4e25f5beea9bffe86e53bf4f3db587963fc",
+    "ralph/reports/TRAINING/f29/species-delta.json": "2a4eb26dfa223a0613409ae19b78d75d05f22376a4ca12f39e2911769871d832",
+    "ralph/reports/TRAINING/f29/feast_choice_proof.gd": "b923365df61cc839fc12321ca1cff01a83397faf5d2678b88fc5b7a76d4ba145"
+  },
+  "engine_runs": 0,
+  "acceptance_credit": 0
+}

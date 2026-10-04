@@ -71,8 +71,8 @@ func _run() -> void:
 			authored = spec
 	var team: Array = TRAINERS.team_of(authored)
 	var enemy: RefCounted = TRAINERS.creature_for(team[2])
-	_check(str(enemy.species_id) == "stormraven" and int(enemy.level) == 39,
-		"opponent uses authored Varga third member, Stormraven level 39")
+	_check(str(enemy.species_id) == "stormraven" and int(enemy.level) == 49,
+		"opponent uses the F19 Varga third member, Stormraven level 49")
 	var creature: RefCounted = SPECIES.spawn("terrapup")
 	creature.set_level(44, PROGRESSION.config())
 	var ally := _body(creature, Vector3.ZERO)
@@ -143,7 +143,7 @@ func _run() -> void:
 	_check(telemetry.impacts.size() == 2 and int(terminal.input_counts.controller_presses) == 0
 		and int(terminal.input_counts.direct_fixture_intents) == 2,
 		"terminal sample does not duplicate impact or mislabel intents as controller presses")
-	_check(int(terminal.record.opponent.level) == 39, "authority record retains authored level metadata")
+	_check(int(terminal.record.opponent.level) == 49, "authority record retains authored level metadata")
 	ally.instance = null
 	var without_body_instance := telemetry.capture("body_without_instance", fight, engine, ally, replica)
 	_check(str(without_body_instance.manager.active_creature.species_id) == "terrapup"

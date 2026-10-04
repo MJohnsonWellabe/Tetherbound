@@ -1,0 +1,71 @@
+{
+  "run": 36904561755,
+  "head": "9efce7ef28e8eb20d513c484e29d2b3aee7f8c6a",
+  "status": "PARTIAL; jobs still live, full CI already contradicted by failures",
+  "measured_initial_job": {
+    "old_seconds": 542,
+    "new_seconds": 22,
+    "old_checkout_seconds": 535,
+    "new_checkout_seconds": 7,
+    "eight_POSIX_process_cases": "PASS in 3.386s on real Linux"
+  },
+  "failed_jobs": {
+    "110511919635": "Full opening continuation: actual overlap skin + Bram cycle3 refusal; returned F17",
+    "110511919652": "Mira exit: actual production contact observation cap; returned F17",
+    "110511919754": "Mira approach: grounding and unchanged skin refusal; returned F17",
+    "110511919968": "Credits smoke parser: removed HOME_RETURN_PREFIX and missing await; reopened original F20"
+  },
+  "branch_audit": "All original committed local/remote heads contained in624b integration history; authorized R2 next-batch excluded; dirty owner work and criteria still require checks",
+  "full_speed_gain": "Unmeasured; do not infer complete run time from initial job",
+  "files": [
+    {
+      "source": "ci6172-changes.log",
+      "sealed": "ci6172-changes.log.gz",
+      "sha256": "4cbe60b1b64092d87cc7d7c3456bde7f73f3d40474a2f206eee4ff63657b55f7",
+      "bytes": 322941
+    },
+    {
+      "source": "ci6172-timings.json",
+      "sealed": "ci6172-timings.json.gz",
+      "sha256": "1cc5e8219a4d172a6f795a44c3398a1e1a1da036fc814b5b588b86dd4ae1596b",
+      "bytes": 70533
+    },
+    {
+      "source": "current-branch-reachability.json",
+      "sealed": "current-branch-reachability.json.gz",
+      "sha256": "659d3d96ad1dfa1a2c8b19e69c18954696db2ab262c282ef33388f4e397b1ddf",
+      "bytes": 29856
+    },
+    {
+      "source": "current-remote-reachability.json",
+      "sealed": "current-remote-reachability.json.gz",
+      "sha256": "d930f5f1cb7e1c2a57ebeda852d40d2a040d1a9e84e035884fb7eb15c2ed3db9",
+      "bytes": 5946
+    },
+    {
+      "source": "ci6172-job-110511919635.log",
+      "sealed": "ci6172-job-110511919635.log.gz",
+      "sha256": "58ca2f7a0bf4d65da639ab0d265117170754fdb8c908fb50a87b8197fe694789",
+      "bytes": 589541
+    },
+    {
+      "source": "ci6172-job-110511919652.log",
+      "sealed": "ci6172-job-110511919652.log.gz",
+      "sha256": "87906d8d2a44d1f4c52216590536268add3f928c167cd591e5459bfb92eaae8a",
+      "bytes": 495704
+    },
+    {
+      "source": "ci6172-job-110511919754.log",
+      "sealed": "ci6172-job-110511919754.log.gz",
+      "sha256": "3ccb89de6088c560476bba004c1a19b43241486da1b8e4dd60f4497bc64a271f",
+      "bytes": 540209
+    },
+    {
+      "source": "ci6172-job-110511919968.log",
+      "sealed": "ci6172-job-110511919968.log.gz",
+      "sha256": "0bde4f36383bd4a2bcdcd234ced38d48d228ce55ababc42208e0f813f5bc6b66",
+      "bytes": 487605
+    }
+  ],
+  "no_criterion_credit": true
+}

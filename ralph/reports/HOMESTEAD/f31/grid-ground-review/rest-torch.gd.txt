@@ -1,0 +1,26 @@
+extends "res://tests/smoke_gate_a_rest_torch.gd"
+
+const BED_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+
+func _tap(action: String) -> void:
+	if action == "build_place": _bed_probe("before")
+	await super._tap(action)
+	if action == "build_place": _bed_probe("after")
+
+func _bed_probe(phase: String) -> void:
+	var placer := get_first_node_in_group("build_placer")
+	var owner := BED_INPUT_OWNER.current(self)
+	var ghost: Node3D = placer.get("_ghost") if placer != null else null
+	print("F31_BED_DIAG ", {
+		"phase": phase, "physics_frame": Engine.get_physics_frames(),
+		"armed": _game.get("pending_build"), "paused": paused,
+		"player": _player.global_position,
+		"input_owner": str(owner.get_path()) if owner != null else "",
+		"can_afford": _game.call("can_afford", "creature_bed"),
+		"ghost": ghost.global_position if ghost != null else Vector3.INF,
+		"ghost_ok": placer.get("_ghost_ok") if placer != null else null,
+		"ghost_reason": placer.get("_ghost_reason") if placer != null else null,
+		"place_blocked": placer.get("_place_blocked") if placer != null else null,
+		"pending": placer.get("_pending_placements") if placer != null else null,
+		"records": _game.get("placed_buildings"),
+	})

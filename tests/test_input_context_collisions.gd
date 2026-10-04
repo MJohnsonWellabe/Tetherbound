@@ -40,7 +40,7 @@ func test_the_declaration_and_the_input_map_both_parse() -> void:
 	var bindings := _pad_bindings()
 	assert_true(bindings.size() >= 30, "expected project.godot's [input] section to yield 30+ actions, got %d -- the parser or the file format changed" % bindings.size())
 	assert_eq(str(bindings.get("hotbar_2", "")), "pad:13", "hotbar_2 should parse as d-pad left")
-	assert_eq(str(bindings.get("combat_quick", "")), "axis:5:+", "combat_quick should parse as RT")
+	assert_eq(str(bindings.get("combat_quick", "")), "pad:2", "combat_quick should parse as X")
 
 	var declared := _contexts()
 	assert_true(declared.size() >= 5, "expected several declared contexts, got %d" % declared.size())

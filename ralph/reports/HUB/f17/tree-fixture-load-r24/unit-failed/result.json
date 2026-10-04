@@ -1,0 +1,17 @@
+{
+  "head": "8783105f7c17d0a84523348aa897b4f1faaff1b1",
+  "exit": 1,
+  "timed_out": false,
+  "selection": "test_vegetation_human_prompt_height.gd",
+  "summary": [
+    "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+    "  FAIL  test_vegetation_human_prompt_height.gd :: test_corridor_preserves_original_radius_margin_angle_and_fixed_spawn",
+    "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+    "  FAIL  test_vegetation_human_prompt_height.gd :: test_corridor_refuses_incomplete_discontinuous_or_obstructed_mesh",
+    "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+    "  FAIL  test_vegetation_human_prompt_height.gd :: test_full_capsule_corridor_uses_adjacent_original_facets_and_refuses_direct_bank",
+    "8 tests, 40 assertions, 3 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-8783105f7c17-8250ff4c\\tests.log",
+  "raw_log_sha256": "a23f60c833a370a36ae290a1ab086ce9ae4670af7c82e408e2b774ad281429e1"
+}

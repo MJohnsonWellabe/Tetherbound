@@ -1,0 +1,649 @@
+extends Node3D
+
+## Authored prop clusters, placed from data/config/props.json.
+##
+## Same shape as village.gd's structures: data describes, code places, and
+## nothing is saved into a scene. Unlike the farm buildings (raw .obj meshes),
+## the Fantasy Props MegaKit imports as glTF scenes, so each entry is
+## instantiated as a scene rather than loaded as a bare Mesh -- this also
+## means a multi-part model keeps its parts, instead of vegetation.gd's
+## flatten-to-first-mesh shortcut (fine for scattered grass, wrong for an
+## authored prop someone is meant to look at). A collider is still built from
+## the combined mesh AABB, the same reasoning village.gd gives: a crate you
+## can walk through is a hologram.
+
+const PROPS_DIR := "res://assets/props/quaternius_fantasy"
+const CONFIG_PATH := "res://data/config/props.json"
+
+## BAND-SPLIT. The `clusters` array is cut per corridor band under
+## `data/config/bands/<band>/props.json` and merged back here.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const CAMPFIRE_GLOW := preload("res://scripts/world/campfire_glow.gd")
+## SITE-DRESSING: `apply_retint` is a general-purpose material-name ->
+## colour recolour, already shipped for village.gd's building prefabs
+## (`retint` in village.json — see building_prefabs.gd's own header). It
+## needs no recipe/template state, only its own `_tinted` cache, so one
+## shared instance here gives props.json entries the same lever for the one
+## case a loose prop needs it: an oxblood Team Tether banner at an occupied
+## site, without sourcing or generating a second banner mesh.
+const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
+## T5-CADENCE. A cluster MAY carry a `rest` block, which turns an authored camp
+## from a mesh arrangement into a place the player can actually sleep and
+## craft. See `rest_point.gd`'s own header for what that offers and for the
+## audit finding it closes; this file's only job is to notice the key.
+const REST_POINT := preload("res://scripts/world/rest_point.gd")
+const TRAIL_CAMP_ROADSIDE_THRESHOLD := preload("res://scripts/world/trail_camp_roadside_threshold.gd")
+const TERRACE_ALBEDO := preload("res://assets/environment/terrain/stylised/dirt_path_Color.png")
+const TERRACE_NORMAL := preload("res://assets/environment/terrain/stylised/dirt_path_NormalGL.png")
+
+var _placed := 0
+var _walkable_joint_heights: Dictionary = {}
+var _rest_points := 0
+var _prefabs: RefCounted = null
+
+
+func build() -> void:
+	var parsed: Dictionary = BAND_CONTENT.load_config(CONFIG_PATH, "clusters")
+	if parsed.is_empty():
+		push_error("props.json missing; the settlement has no prop clusters")
+		return
+
+	for cluster: Variant in parsed.get("clusters", []):
+		if not cluster is Dictionary:
+			continue
+		var cluster_name := str((cluster as Dictionary).get("name", "cluster"))
+		var group := Node3D.new()
+		group.name = cluster_name
+		add_child(group)
+		var cluster_props: Array = (cluster as Dictionary).get("props", [])
+		if cluster_name == "the_rise_cairn_trail":
+			_walkable_joint_heights.clear()
+		for entry: Variant in cluster_props:
+			if entry is Dictionary:
+				place(group, entry as Dictionary)
+		# The individual terrace boxes remain the proven collision substrate, but
+		# their visible end faces read as overlapping blockout slabs in production.
+		# The Rise gets one continuous, softly feathered tread over those colliders.
+		if cluster_name == "the_rise_cairn_trail":
+			_build_walkable_ribbon(group, cluster_props)
+		# After the props, not before: the rest point samples ground the same
+		# way they do, and building it last keeps the camp's own meshes ahead
+		# of it in the tree so a probe or a remote tree reads the site in the
+		# order it was authored.
+		var rest: Variant = (cluster as Dictionary).get("rest", {})
+		if rest is Dictionary and not (rest as Dictionary).is_empty():
+			var point: Node3D = REST_POINT.new()
+			point.name = "%s_Rest" % cluster_name
+			group.add_child(point)
+			point.call("build", rest as Dictionary)
+			_rest_points += 1
+		# A named camp may opt into one visual-only roadside threshold. Its
+		# position remains authored beside the cluster data; this dispatcher only
+		# gives it the same live-ground sample every prop above receives.
+		var threshold: Variant = (cluster as Dictionary).get("roadside_threshold", {})
+		if threshold is Dictionary and not (threshold as Dictionary).is_empty():
+			var threshold_cfg := threshold as Dictionary
+			var raw_at: Array = threshold_cfg.get("at", [])
+			if raw_at.size() >= 2:
+				var x := float(raw_at[0])
+				var z := float(raw_at[1])
+				var ground := _ground_height(x, z)
+				if not is_nan(ground):
+					var gateway := TRAIL_CAMP_ROADSIDE_THRESHOLD.new()
+					gateway.name = "TrailCampRoadsideThreshold"
+					group.add_child(gateway)
+					gateway.call("build", Vector3(x, ground, z),
+						float(threshold_cfg.get("yaw_deg", 0.0)))
+	print("[props] placed %d props in %d clusters (%d usable rest points)"
+		% [_placed, parsed.get("clusters", []).size(), _rest_points])
+
+
+## How many authored camps stood up a working rest offer this run. Read by
+## `tests/smoke_authored_camps.gd`, which is the difference between "the data
+## says these camps are rest points" and "the world built them".
+func rest_points() -> int:
+	return _rest_points
+
+
+func placed() -> int:
+	return _placed
+
+
+## One prop from one spec: `model`, `at` (WORLD metres [x, z]), and the
+## optional `yaw_deg`/`pitch_deg`/`roll_deg`/`scale`/`sink_m` documented
+## inline below.
+##
+## Public, and called from outside this file by exactly one other place:
+## `burrow_warrens.gd::_build_dressing()`, which stands its own instance of
+## this script up as a `top_level` child of the cave so that `_ground_height()`
+## below walks up into the WARRENS' `ground_height_at()` -- the cave floor --
+## instead of the hillside now several metres overhead. Reused rather than
+## re-implemented because the collider-from-combined-AABB and the `sink_m`
+## reasoning below are the two things a second copy would get subtly wrong,
+## and a crate you can walk through is a hologram underground too.
+func place(into: Node3D, spec: Dictionary) -> void:
+	if spec.has("walkable_segment"):
+		_place_walkable_segment(into, spec)
+		return
+	var model := str(spec.get("model", ""))
+	# `dir` (optional, default PROPS_DIR): BAND1-D1. Every prop cluster before
+	# this pass only ever named a bare quaternius_fantasy filename, so that
+	# stays the default and every existing entry is untouched. A cluster that
+	# needs an asset from a different installed pack (quaternius_survival's
+	# Bonfire, quaternius_furniture's Stool, stylized_nature's RockPath/scatter
+	# props, quaternius_castle's Banner) names its own `dir` instead of forcing
+	# every band onto one folder or duplicating assets into quaternius_fantasy.
+	# This is CLAUDE.md's "one prop family" read as one INSTALLED prop family
+	# (nothing new is generated or sourced), not one folder.
+	var dir := str(spec.get("dir", PROPS_DIR))
+	var gltf_path := "%s/%s.gltf" % [dir, model]
+	var glb_path := "%s/%s.glb" % [dir, model]
+	var obj_path := "%s/%s.obj" % [dir, model]
+
+	var root: Node3D = null
+	if ResourceLoader.exists(gltf_path):
+		var packed: PackedScene = load(gltf_path) as PackedScene
+		if packed == null:
+			push_error("prop failed to load as a scene: %s" % gltf_path)
+			return
+		root = packed.instantiate()
+	elif ResourceLoader.exists(glb_path):
+		# .glb is the same glTF format as .gltf, just binary -- the corridor's
+		# own environment/nature kit (log.glb, grass_*.glb) ships this way.
+		var packed: PackedScene = load(glb_path) as PackedScene
+		if packed == null:
+			push_error("prop failed to load as a scene: %s" % glb_path)
+			return
+		root = packed.instantiate()
+	elif ResourceLoader.exists(obj_path):
+		# OBJ ships as a bare Mesh, not a scene -- the same fallback
+		# building_prefabs.gd::_build_template already uses for the castle
+		# kit (its own comment: "the castle kit ships OBJ+MTL, not glTF").
+		# Wrapped in a MeshInstance3D so the rest of this function (the
+		# combined-AABB collider build below) sees the same node shape a
+		# glTF scene's root would give it.
+		var mesh: Mesh = load(obj_path) as Mesh
+		if mesh == null:
+			push_error("prop failed to load as a mesh: %s" % obj_path)
+			return
+		var mi := MeshInstance3D.new()
+		mi.name = model
+		mi.mesh = mesh
+		root = mi
+	else:
+		push_error("prop missing: %s (looked for .gltf/.glb/.obj under %s)" % [model, dir])
+		return
+
+	# GF-B-010's rule, applied to props: a surface that imports as metal with
+	# no metallic texture to modulate it is a glTF export omission, and renders
+	# as a black silhouette in daylight. See `imported_materials.gd`'s header --
+	# it is also, on the evidence, why `ralph/BLOCKED.md` records the
+	# `environment/nature` pack as not rendering correctly through this
+	# function. A no-op for every pack that ships an ORM map, which is most of
+	# them.
+	IMPORTED_MATERIALS.make_dielectric(root)
+
+	var at: Array = spec.get("at", [0.0, 0.0])
+	var x := float(at[0])
+	var z := float(at[1])
+	var ground := _ground_height(x, z)
+	if is_nan(ground):
+		push_error("no ground under prop '%s' at %.0f, %.0f" % [model, x, z])
+		return
+
+	var scale_factor := float(spec.get("scale", 1.0))
+	# `scale_xyz` (optional, [sx, sy, sz]): a non-uniform override for
+	# `scale`. Round 4's firewood pile needed to go "half as tall, twice as
+	# wide" against its own generated proportions -- a shape correction no
+	# single uniform number can express -- and every other placement math
+	# below (collider box, sink) already worked in a full Vector3, so this
+	# is the one line that needed to stop assuming uniform scale rather than
+	# a new mechanism.
+	var scale_xyz_raw: Variant = spec.get("scale_xyz", null)
+	var scale_vec: Vector3 = (Vector3(float(scale_xyz_raw[0]), float(scale_xyz_raw[1]), float(scale_xyz_raw[2]))
+		if scale_xyz_raw is Array and (scale_xyz_raw as Array).size() == 3
+		else Vector3.ONE * scale_factor)
+	# `name` (optional, default the model name): Godot silently auto-renames
+	# same-named siblings to `@Node3D@25876`-style ids, which is invisible in
+	# the world and useless in a probe or a remote tree the moment one cluster
+	# uses the same model twice. A caller that places several of one model in
+	# one parent -- burrow_warrens.gd's cave dressing does -- passes its own.
+	#
+	# GATE-D: both halves of this block landed in different lanes (D1's
+	# scale_xyz, D2's name) and neither replaces the other.
+	root.name = str(spec.get("name", model))
+	# `sink_m` (optional, default 0): extra downward offset below the sampled
+	# ground height. Most of the pack's models embed only a few centimetres at
+	# their own authored origin (EV7-clusters-fix probe:
+	# tools/_probe_ev7fix.gd -- Crate_Wooden embeds just 0.052m), which is
+	# shallower than this meadow's grass card height, so a shallow-buried
+	# crate reads as floating with grass lit up under its own skirt rather
+	# than resting on the ground. Sinking it a little further (like
+	# village.gd's own -0.05 "never hovers on a residual slope" sink for
+	# buildings) buries that gap without touching grass density itself.
+	var sink := float(spec.get("sink_m", 0.0))
+	root.position = Vector3(x, ground - sink, z)
+	# `pitch_deg`/`roll_deg` (optional, default 0): most props in this pack
+	# are authored to stand or lie flat on their own, so yaw-only placement
+	# has been enough -- but a couple (Axe_Bronze) are authored vertical with
+	# no way to rest them at an angle using yaw alone. Full Euler rotation
+	# (Godot's default order) lets one lean against another prop instead of
+	# always standing bolt upright.
+	root.rotation = Vector3(
+		deg_to_rad(float(spec.get("pitch_deg", 0.0))),
+		deg_to_rad(float(spec.get("yaw_deg", 0.0))),
+		deg_to_rad(float(spec.get("roll_deg", 0.0))))
+	root.scale = scale_vec
+	into.add_child(root)
+
+	# `retint` (optional): a material-name -> colour map, applied the same
+	# way village.gd's own building prefabs use it (building_prefabs.gd::
+	# apply_retint). Every prop here shares one prop family (D24); this is
+	# for the rare site that needs one PIECE of that shared family to read
+	# as a different faction's without sourcing or generating a second mesh
+	# -- SITE-DRESSING's oxblood Team Tether banner at the picket-hess
+	# checkpoint is the first user. Values are colour strings ("#7a2430")
+	# keyed by the mesh's own material resource_name, exactly like
+	# village.json's `retint` blocks.
+	var retint: Variant = spec.get("retint", {})
+	if retint is Dictionary and not (retint as Dictionary).is_empty():
+		if _prefabs == null:
+			_prefabs = PREFABS.new()
+		_prefabs.call("apply_retint", root, retint)
+
+	# `glow` (optional): BAND1-D1. A log mesh with no emissive material
+	# (assets/props/quaternius_survival/Bonfire*.mtl carries Ke 0 0 0 on every
+	# surface) reads as unlit cargo, not a fire, and is invisible as a landmark
+	# from any distance. `"campfire"` is the only value read today: it lights
+	# the mesh's own `Fire` surface if it has one, and attaches the light,
+	# ember and smoke overlay `campfire_glow.gd` owns.
+	#
+	# The overlay is counter-scaled out of `root`'s own scale on purpose.
+	# BAND1-D1 round 2 shipped the opposite rule ("entries using this should
+	# keep scale_factor at 1.0") and it was wrong twice over: the Bonfire is
+	# authored at 2.2m across, so a believable campfire MUST be scaled down,
+	# and shrinking a 4.6m smoke column by the same factor is exactly what
+	# made the camp unfindable from the trail. The glow's sizes are absolute
+	# metres; the prop's scale is the prop's business.
+	# `"flame_mesh"` (round 5 follow-up): the prop IS a whole generated flame
+	# sculpt (camp_flame.glb), not a log pile with one small Fire surface --
+	# `ignite_mesh` lights every surface from its own baked texture instead
+	# of one named one, and the light/embers/smoke overlay is built without
+	# its billboard halo, since a real flame mesh under it made the halo
+	# redundant rather than additive (see campfire_glow.gd's own comment on
+	# `include_halo`).
+	var glow := str(spec.get("glow", ""))
+	var signal_overlay: Node3D = null
+	if glow == "campfire":
+		var lit := CAMPFIRE_GLOW.ignite(root)
+		if lit == 0:
+			push_warning("prop '%s' has glow:\"campfire\" but no `Fire` surface to light" % model)
+		CAMPFIRE_GLOW.texture_logs(root)
+		# `glow_scale` (optional, default 1.0): E4-CAMP-CLUSTERING. Grows the
+		# light range/energy and the ember particles without touching the log
+		# mesh's own `scale` -- see campfire_glow.gd's own `_glow_scale` note.
+		# 1.0 keeps every existing campfire in the chapter pixel-identical;
+		# `ridge_patrol_camp` is the one site that passes anything else.
+		var glow_scale := float(spec.get("glow_scale", 1.0))
+		var overlay: Node3D = CAMPFIRE_GLOW.new(true, 1.0, glow_scale)
+		# `smoke_top_m` / `smoke_alpha` / `smoke_top_size_m` / `smoke_colour` /
+		# `smoke_fade` / `smoke_base_size_m` (optional): a signal fire meant to be
+		# found from a road (F03 lure cue). Absent, the column is unchanged.
+		if spec.has("smoke_top_m"):
+			overlay.call("configure_smoke", float(spec.get("smoke_top_m")),
+				float(spec.get("smoke_alpha", CAMPFIRE_GLOW.SMOKE_COLOUR.a)),
+				float(spec.get("smoke_top_size_m", -1.0)),
+				Color(str(spec.get("smoke_colour", "#00000000"))),
+				float(spec.get("smoke_fade", 0.85)),
+				float(spec.get("smoke_base_size_m", -1.0)))
+			signal_overlay = overlay
+		if not is_zero_approx(scale_factor):
+			overlay.scale = Vector3.ONE / scale_factor
+		root.add_child(overlay)
+	elif glow == "flame_mesh":
+		CAMPFIRE_GLOW.ignite_mesh(root, 0.5, true)
+		var overlay: Node3D = CAMPFIRE_GLOW.new(false)
+		if not is_zero_approx(scale_factor):
+			overlay.scale = Vector3.ONE / scale_factor
+		root.add_child(overlay)
+
+	var meshes: Array[MeshInstance3D] = []
+	_collect(root, meshes)
+	# A signal fire's tall smoke is not solid: left in, its quads would make
+	# the collider a ~27 m invisible pillar. (Ordinary campfires keep their
+	# existing collider exactly.)
+	if signal_overlay != null:
+		meshes = meshes.filter(func(m: MeshInstance3D) -> bool: return not signal_overlay.is_ancestor_of(m))
+	if meshes.is_empty():
+		push_warning("prop '%s' has no mesh; placed with no collider" % model)
+		_placed += 1
+		return
+
+	# Meshes may sit under intermediate transform nodes the glTF importer adds,
+	# so this reads each one's GLOBAL transform (valid immediately -- `root`
+	# is already parented into the tree above) and un-does root's own
+	# transform, leaving the combined bounds in root's local, unscaled,
+	# unrotated space -- the same space village.gd's OBJ meshes get for free.
+	var to_root_local: Transform3D = root.global_transform.affine_inverse()
+	var aabb: AABB = to_root_local * (meshes[0].global_transform * meshes[0].get_aabb())
+	for i in range(1, meshes.size()):
+		aabb = aabb.merge(to_root_local * (meshes[i].global_transform * meshes[i].get_aabb()))
+
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % root.name
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	# Broad-canopied authored trees need trunk collision, not a solid box around
+	# every leaf card. This optional local multiplier narrows only collision;
+	# visible scale and the default collider for every ordinary prop are intact.
+	var collision_scale_raw: Variant = spec.get("collision_scale_xyz", null)
+	var collision_scale := (Vector3(float(collision_scale_raw[0]),
+		float(collision_scale_raw[1]), float(collision_scale_raw[2]))
+		if collision_scale_raw is Array and (collision_scale_raw as Array).size() == 3
+		else Vector3.ONE)
+	box.size = aabb.size * scale_vec * collision_scale
+	shape.shape = box
+	body.add_child(shape)
+	body.position = root.global_transform * (aabb.position + aabb.size * 0.5)
+	body.rotation = root.rotation
+	into.add_child(body)
+	_placed += 1
+
+
+## A grounded authored terrace segment. Unlike a scaled imported RockPath AABB,
+## this is one visible surface and one exactly matching thin box collider. The
+## two top endpoints are sampled from production ground, so neighbouring
+## segments meet without an invisible step even on a steep, irregular bank.
+## This is intentionally data-driven and currently used only by The Rise.
+func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
+	var segment := spec.get("walkable_segment", {}) as Dictionary
+	var from_raw := segment.get("from", []) as Array
+	var to_raw := segment.get("to", []) as Array
+	if from_raw.size() != 2 or to_raw.size() != 2:
+		push_error("walkable segment '%s' requires two XZ endpoints" % str(spec.get("name", "unnamed")))
+		return
+	var from_xz := Vector2(float(from_raw[0]), float(from_raw[1]))
+	var to_xz := Vector2(float(to_raw[0]), float(to_raw[1]))
+	var horizontal := to_xz - from_xz
+	var length := horizontal.length()
+	if length < 0.25:
+		push_error("walkable segment '%s' is too short" % str(spec.get("name", "unnamed")))
+		return
+	var from_ground := _ground_height(from_xz.x, from_xz.y)
+	var to_ground := _ground_height(to_xz.x, to_xz.y)
+	if is_nan(from_ground) or is_nan(to_ground):
+		push_error("no ground under walkable segment '%s'" % str(spec.get("name", "unnamed")))
+		return
+	# Keep the authored tread clearly above Terrain3D's collision skin. At 0.10m
+	# both surfaces claimed the Player capsule at a seam and exhausted all slide
+	# iterations; 0.28m remains below the production 0.35m step allowance.
+	var lift := maxf(float(segment.get("surface_lift_m", 0.28)), 0.28)
+	var width := maxf(float(segment.get("width_m", 5.4)), 2.0)
+	var thickness := clampf(float(segment.get("thickness_m", 0.14)), 0.12, 0.22)
+	var overlap := clampf(float(segment.get("overlap_m", 0.45)), 0.0, 1.0)
+	# R9 corrects R8 sampling every segment independently. At the lower Rise fork one terrain
+	# interval dropped steeply enough that the matching BoxShape became a wall to
+	# the real CharacterBody, even though the XZ endpoints touched. Carry the
+	# previous installed surface height into the next segment, then limit the
+	# actual 3D grade. Descending cliff intervals remain raised terraces rather
+	# than non-floor ramps; later legs settle back toward terrain at the same bound.
+	var from_key := _walkable_joint_key(from_xz)
+	var to_key := _walkable_joint_key(to_xz)
+	var has_incoming_segment := _walkable_joint_heights.has(from_key)
+	var from_y := float(_walkable_joint_heights.get(from_key, from_ground + lift))
+	var desired_to_y := to_ground + lift
+	var max_slope_deg := clampf(float(segment.get("max_slope_deg", 20.0)), 5.0, 20.0)
+	var max_vertical_delta := horizontal.length() * tan(deg_to_rad(max_slope_deg))
+	var to_y := clampf(desired_to_y, from_y - max_vertical_delta,
+		from_y + max_vertical_delta)
+	_walkable_joint_heights[from_key] = from_y
+	_walkable_joint_heights[to_key] = to_y
+	var from_top := Vector3(from_xz.x, from_y, from_xz.y)
+	var to_top := Vector3(to_xz.x, to_y, to_xz.y)
+	var forward := (to_top - from_top).normalized()
+	var right := Vector3.UP.cross(forward).normalized()
+	if right.length_squared() < 0.5:
+		push_error("walkable segment '%s' has invalid orientation" % str(spec.get("name", "unnamed")))
+		return
+	var up := forward.cross(right).normalized()
+	var basis := Basis(right, up, forward)
+	# R9's centred overlap extended half of the next segment backward across the
+	# incoming tread. Its vertical start face met the player 0.82m before the
+	# authored C-D joint: exactly half the 1m overlap plus capsule clearance.
+	# Give each installed segment an exit-only overlap. A positive optional entry
+	# clearance moves its leading face beyond a joint supported by the prior
+	# segment; zero keeps that face on the carried shared top edge, which is needed
+	# where an uphill grade change would otherwise expose the face to the player.
+	# The visible box and collider remain identical in either case.
+	var requested_entry_clearance := float(segment.get("entry_clearance_m",
+		minf(overlap * 0.45, 0.42)))
+	var entry_clearance := clampf(requested_entry_clearance, 0.0, overlap * 0.90) \
+		if has_incoming_segment else 0.0
+	# Even a top-only concave surface has a perimeter edge. At a rising turn that
+	# edge can report an averaged wall normal before the capsule reaches the new
+	# floor. Zero-clearance joints are continuous by contract, so bury the next
+	# surface's perimeter inside the incoming surface. Positive-clearance joints
+	# retain their authored handoff.
+	var backward_overlap := minf(overlap * 0.80, 0.80) \
+		if has_incoming_segment and requested_entry_clearance <= 0.001 else 0.0
+	var physical_from := from_top + forward * entry_clearance - forward * backward_overlap
+	var physical_to := to_top + forward * overlap
+	var centre := (physical_from + physical_to) * 0.5 - up * thickness * 0.5
+	var box_size := Vector3(width, thickness, physical_from.distance_to(physical_to))
+
+	var mesh_instance := MeshInstance3D.new()
+	mesh_instance.name = str(spec.get("name", "WalkableSegment"))
+	var mesh := BoxMesh.new()
+	mesh.size = box_size
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color.from_string(str(segment.get("colour", "#786a4f")), Color(0.47, 0.42, 0.31))
+	material.albedo_texture = TERRACE_ALBEDO
+	material.normal_enabled = true
+	material.normal_texture = TERRACE_NORMAL
+	material.normal_scale = 0.65
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3.ONE * 0.34
+	material.roughness = 0.96
+	mesh.material = material
+	mesh_instance.mesh = mesh
+	mesh_instance.transform = Transform3D(basis, centre)
+	into.add_child(mesh_instance)
+
+	var body := StaticBody3D.new()
+	body.name = "%s_Collision" % mesh_instance.name
+	var shape := CollisionShape3D.new()
+	# R16: a chain of closed BoxShapes has a vertical leading face at every
+	# internal joint. The Player capsule's lower hemisphere catches those faces
+	# even when the adjacent top planes overlap perfectly, turning a continuous
+	# visible ramp into stairs with invisible risers. These terraces are embedded
+	# in Terrain3D and are walked only from above, so collide with the exact top
+	# rectangle that the visible box presents and omit the unreachable underside
+	# and artificial internal walls.
+	var half_width := box_size.x * 0.5
+	var half_height := box_size.y * 0.5
+	var half_length := box_size.z * 0.5
+	var surface := ConcavePolygonShape3D.new()
+	surface.set_faces(PackedVector3Array([
+		Vector3(-half_width, half_height, -half_length),
+		Vector3(half_width, half_height, -half_length),
+		Vector3(half_width, half_height, half_length),
+		Vector3(-half_width, half_height, -half_length),
+		Vector3(half_width, half_height, half_length),
+		Vector3(-half_width, half_height, half_length),
+	]))
+	shape.shape = surface
+	body.add_child(shape)
+	body.transform = mesh_instance.transform
+	into.add_child(body)
+	_placed += 1
+
+
+func _walkable_joint_key(point: Vector2) -> String:
+	return "%.3f,%.3f" % [point.x, point.y]
+
+
+## Replaces the Rise's per-segment box visuals with a single continuous trail.
+## Collision deliberately stays on the broad, independently proven top planes;
+## this ribbon is narrower, curved through the authored centreline, and fades at
+## its verges so the route reads as worn earth rather than construction panels.
+func _build_walkable_ribbon(into: Node3D, entries: Array) -> void:
+	var segments: Array[Dictionary] = []
+	var segment_names: Dictionary = {}
+	for entry_variant: Variant in entries:
+		if not entry_variant is Dictionary:
+			continue
+		var entry := entry_variant as Dictionary
+		if not entry.has("walkable_segment"):
+			continue
+		segments.append(entry.get("walkable_segment", {}) as Dictionary)
+		segment_names[str(entry.get("name", "WalkableSegment"))] = true
+	if segments.is_empty():
+		return
+
+	for child: Node in into.get_children():
+		if child is MeshInstance3D and segment_names.has(child.name):
+			(child as MeshInstance3D).visible = false
+
+	var control_xz: Array[Vector2] = []
+	var control_y: Array[float] = []
+	var control_width: Array[float] = []
+	for index in segments.size():
+		var segment := segments[index]
+		var from_raw := segment.get("from", []) as Array
+		var to_raw := segment.get("to", []) as Array
+		if from_raw.size() != 2 or to_raw.size() != 2:
+			return
+		var from_xz := Vector2(float(from_raw[0]), float(from_raw[1]))
+		var to_xz := Vector2(float(to_raw[0]), float(to_raw[1]))
+		var segment_width := maxf(float(segment.get("width_m", 5.4)) * 0.66, 3.35)
+		if index == 0:
+			control_xz.append(from_xz)
+			control_y.append(float(_walkable_joint_heights.get(
+				_walkable_joint_key(from_xz), _ground_height(from_xz.x, from_xz.y) + 0.29)))
+			control_width.append(segment_width)
+		else:
+			control_width[index] = (control_width[index] + segment_width) * 0.5
+		control_xz.append(to_xz)
+		control_y.append(float(_walkable_joint_heights.get(
+			_walkable_joint_key(to_xz), _ground_height(to_xz.x, to_xz.y) + 0.29)))
+		control_width.append(segment_width)
+
+	var centres: Array[Vector3] = []
+	var widths: Array[float] = []
+	const SUBDIVISIONS := 5
+	for segment_index in segments.size():
+		var p0: Vector2 = control_xz[maxi(segment_index - 1, 0)]
+		var p1: Vector2 = control_xz[segment_index]
+		var p2: Vector2 = control_xz[segment_index + 1]
+		var p3: Vector2 = control_xz[mini(segment_index + 2, control_xz.size() - 1)]
+		for step in SUBDIVISIONS:
+			var t := float(step) / float(SUBDIVISIONS)
+			var xz := _catmull_rom_xz(p0, p1, p2, p3, t)
+			var y := lerpf(control_y[segment_index], control_y[segment_index + 1], t) + 0.018
+			centres.append(Vector3(xz.x, y, xz.y))
+			widths.append(lerpf(control_width[segment_index], control_width[segment_index + 1], t))
+	var final_xz: Vector2 = control_xz[-1]
+	centres.append(Vector3(final_xz.x, control_y[-1] + 0.018, final_xz.y))
+	widths.append(control_width[-1])
+
+	var surface := SurfaceTool.new()
+	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var distance_along := 0.0
+	var lane_fractions := PackedFloat32Array([-0.50, -0.28, 0.28, 0.50])
+	var lane_alphas := PackedFloat32Array([0.0, 1.0, 1.0, 0.0])
+	for point_index in centres.size() - 1:
+		var a: Vector3 = centres[point_index]
+		var b: Vector3 = centres[point_index + 1]
+		var fade_a := minf(1.0, minf(float(point_index) / 3.0,
+			float(centres.size() - 1 - point_index) / 3.0))
+		var fade_b := minf(1.0, minf(float(point_index + 1) / 3.0,
+			float(centres.size() - 2 - point_index) / 3.0))
+		var tangent_a := (centres[mini(point_index + 1, centres.size() - 1)]
+			- centres[maxi(point_index - 1, 0)]).normalized()
+		var tangent_b := (centres[mini(point_index + 2, centres.size() - 1)]
+			- centres[point_index]).normalized()
+		var right_a := Vector3(tangent_a.z, 0.0, -tangent_a.x).normalized()
+		var right_b := Vector3(tangent_b.z, 0.0, -tangent_b.x).normalized()
+		var normal_a := tangent_a.cross(right_a).normalized()
+		var normal_b := tangent_b.cross(right_b).normalized()
+		var next_distance := distance_along + a.distance_to(b)
+		for lane in lane_fractions.size() - 1:
+			var a0 := a + right_a * widths[point_index] * lane_fractions[lane] \
+				* _trail_verge_variation(point_index, lane_fractions[lane])
+			var a1 := a + right_a * widths[point_index] * lane_fractions[lane + 1] \
+				* _trail_verge_variation(point_index, lane_fractions[lane + 1])
+			var b0 := b + right_b * widths[point_index + 1] * lane_fractions[lane] \
+				* _trail_verge_variation(point_index + 1, lane_fractions[lane])
+			var b1 := b + right_b * widths[point_index + 1] * lane_fractions[lane + 1] \
+				* _trail_verge_variation(point_index + 1, lane_fractions[lane + 1])
+			_add_ribbon_vertex(surface, a0, normal_a,
+				Vector2(distance_along * 0.32, float(lane) / 3.0), lane_alphas[lane] * fade_a)
+			_add_ribbon_vertex(surface, b0, normal_b,
+				Vector2(next_distance * 0.32, float(lane) / 3.0), lane_alphas[lane] * fade_b)
+			_add_ribbon_vertex(surface, b1, normal_b,
+				Vector2(next_distance * 0.32, float(lane + 1) / 3.0), lane_alphas[lane + 1] * fade_b)
+			_add_ribbon_vertex(surface, a0, normal_a,
+				Vector2(distance_along * 0.32, float(lane) / 3.0), lane_alphas[lane] * fade_a)
+			_add_ribbon_vertex(surface, b1, normal_b,
+				Vector2(next_distance * 0.32, float(lane + 1) / 3.0), lane_alphas[lane + 1] * fade_b)
+			_add_ribbon_vertex(surface, a1, normal_a,
+				Vector2(distance_along * 0.32, float(lane + 1) / 3.0), lane_alphas[lane + 1] * fade_a)
+		distance_along = next_distance
+
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color.WHITE
+	material.albedo_texture = TERRACE_ALBEDO
+	material.normal_enabled = true
+	material.normal_texture = TERRACE_NORMAL
+	material.normal_scale = 0.58
+	material.vertex_color_use_as_albedo = true
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.cull_mode = BaseMaterial3D.CULL_DISABLED
+	material.roughness = 0.97
+	surface.set_material(material)
+	var ribbon := MeshInstance3D.new()
+	ribbon.name = "RiseContinuousTrailRibbon"
+	ribbon.mesh = surface.commit()
+	ribbon.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	into.add_child(ribbon)
+
+
+func _catmull_rom_xz(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> Vector2:
+	var t2 := t * t
+	var t3 := t2 * t
+	return 0.5 * (2.0 * p1 + (-p0 + p2) * t
+		+ (2.0 * p0 - 5.0 * p1 + 4.0 * p2 - p3) * t2
+		+ (-p0 + 3.0 * p1 - 3.0 * p2 + p3) * t3)
+
+
+func _trail_verge_variation(point_index: int, lane_fraction: float) -> float:
+	var side_phase := 1.71 if lane_fraction < 0.0 else 4.83
+	return 1.0 + sin(float(point_index) * 1.37 + side_phase) * 0.075
+
+
+func _add_ribbon_vertex(surface: SurfaceTool, point: Vector3, normal: Vector3,
+		uv: Vector2, alpha: float) -> void:
+	surface.set_normal(normal)
+	surface.set_uv(uv)
+	# The texture is already warm earth; a near-white modulation preserves that
+	# mid-value read in both day and moonlight instead of multiplying it to black.
+	surface.set_color(Color(0.74, 0.64, 0.49, alpha))
+	surface.add_vertex(point)
+
+
+func _collect(node: Node, into: Array[MeshInstance3D]) -> void:
+	if node is MeshInstance3D and (node as MeshInstance3D).mesh != null:
+		into.append(node as MeshInstance3D)
+	for child in node.get_children():
+		_collect(child, into)
+
+
+func _ground_height(x: float, z: float) -> float:
+	var node: Node = get_parent()
+	while node != null:
+		if node.has_method("ground_height_at"):
+			return float(node.call("ground_height_at", x, z))
+		node = node.get_parent()
+	return NAN

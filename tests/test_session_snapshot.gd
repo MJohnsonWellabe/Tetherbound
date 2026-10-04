@@ -25,7 +25,7 @@ class GameStub extends Node:
 		events.append("snapshot")
 
 
-class LedgerRpcStub extends Node:
+class LegacyLedgerRpcStub extends Node:
 	var events: Array
 	var applied: Array[Dictionary] = []
 
@@ -36,6 +36,14 @@ class LedgerRpcStub extends Node:
 	func apply_remote_delta(delta: Dictionary) -> void:
 		applied.append(delta.duplicate(true))
 		events.append("delta")
+
+
+class LedgerRpcStub extends LegacyLedgerRpcStub:
+	var training_ready: Variant = true
+	func _init(shared_events: Array) -> void:
+		super(shared_events)
+	func reconcile_creature_training_before_ready() -> Variant:
+		return training_ready
 
 
 class ClientSessionStub extends Node:
@@ -98,10 +106,11 @@ func test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta() -> v
 	game.free()
 
 
-func _redesign_bootstrap(carrier: Variant) -> Dictionary:
+func _redesign_bootstrap(carrier: Variant, training_ready: Variant = true, expose_guard: bool = true) -> Dictionary:
 	var game := GameStub.new()
 	var session := AckSession.new()
-	var ledger := LedgerRpcStub.new(game.events)
+	var ledger: Node = LedgerRpcStub.new(game.events) if expose_guard else LegacyLedgerRpcStub.new(game.events)
+	if expose_guard: ledger.set("training_ready", training_ready)
 	game.add_child(session)
 	session.add_child(ledger)
 	session.set("_mode", "client")
@@ -150,6 +159,25 @@ func test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ac
 	assert_true(session.handshake_snapshot_applied())
 	assert_eq(session.acknowledgement_calls, 1)
 	game.free()
+
+func test_training_transport_must_explicitly_confirm_readiness_before_ack() -> void:
+	for readiness: Variant in [false, null, 0, 1, "true"]:
+		var fixture := _redesign_bootstrap(REDESIGN_STATE.defaults("world"), readiness)
+		var session: AckSession = fixture.session
+		assert_true(fixture.applied, "the immutable world boundary may apply while owner settlement waits")
+		assert_true(session.get("_training_bootstrap_waiting"))
+		assert_false(session.snapshot_ready())
+		assert_false(session.handshake_snapshot_applied())
+		assert_eq(session.acknowledgement_calls, 0)
+		fixture.game.free()
+	var legacy := _redesign_bootstrap(REDESIGN_STATE.defaults("world"), true, false)
+	var legacy_session: AckSession = legacy.session
+	assert_true(legacy.applied)
+	assert_true(legacy_session.get("_training_bootstrap_waiting"))
+	assert_false(legacy_session.snapshot_ready())
+	assert_false(legacy_session.handshake_snapshot_applied())
+	assert_eq(legacy_session.acknowledgement_calls, 0, "missing typed transport must not acknowledge readiness")
+	legacy.game.free()
 
 func test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one() -> void:
 	var host := GAME_STATE.new()

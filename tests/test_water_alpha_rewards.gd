@@ -43,7 +43,7 @@ func test_result_and_stable_entitlements_round_trip_real_world_file() -> void:
 	var restored := WORLD.new()
 	restored.load_data(game.save_system.store.read(game.world.world_id))
 	assert_true(restored.flags.has(REWARD.RESOLVED))
-	assert_eq(restored.water_capture_claims.get(capture.id), JSON.parse_string(JSON.stringify(capture)), "Capture and entitlement survive the same actual world file")
+	assert_eq(restored.water_capture_claims.get(capture.id), capture, "Exact capture and entitlement survive the same actual world file")
 	assert_true(restored.flags.has(REWARD.outcome_flag("caught")))
 	assert_true(REWARD.entitled(restored, "character-A"))
 	assert_true(REWARD.entitled(restored, "character-B"))

@@ -261,7 +261,7 @@ func throw_launch_used_assist(throw: Node) -> bool:
 ## file failed on `main` from the merge onward. No CI shard runs it.
 func _open_aim() -> bool:
 	for _attempt in 18:
-		await _tap_button(JOY_BUTTON_X)
+		await _tap_action("combat_throw")
 		for _i in 6:
 			if bool(_manager.call("is_aiming")):
 				return true

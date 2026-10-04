@@ -231,13 +231,38 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var from := str(args.get("from", ""))
 	if from.is_empty():
 		return {"verdict": "ERROR", "detail": "load_save needs args.from (a captured save directory or a slot json)"}
-	if not from.begins_with("res://") and not from.begins_with("/"):
+	if not from.begins_with("res://") and not from.is_absolute_path():
 		from = ProjectSettings.globalize_path("res://").path_join(from)
 	from = ProjectSettings.globalize_path(from)
 	var game := tree.root.get_node_or_null(^"Game")
 	var saver: Variant = game.get("save_system") if game != null else null
 	if saver == null:
 		return {"verdict": "ERROR", "detail": "no Game.save_system"}
+	if args.get("portable_only") == true:
+		# An admitted guest may have only its authentic portable character.
+		# Restore through the production CharacterSave owner; do not fabricate
+		# a slot/world locator, alter fields or manufacture a host-owned world.
+		var source_characters := from.path_join("characters")
+		var schema_root := source_characters.path_join("redesign-v28")
+		var source_root := schema_root if DirAccess.dir_exists_absolute(schema_root) else source_characters
+		var directory := DirAccess.open(source_root)
+		if directory == null: return {"verdict": "FAIL", "detail": "No actual portable characters under " + from}
+		var candidates: Array[String] = []
+		for id: String in directory.get_directories():
+			if FileAccess.file_exists(source_root.path_join(id).path_join("character.json")) \
+				or FileAccess.file_exists(source_root.path_join(id).path_join("character.json.gz")): candidates.append(id)
+		if candidates.size() != 1:
+			return {"verdict": "FAIL", "detail": "Portable input must contain exactly one original character"}
+		var session: Node = game.get("session")
+		if session == null or session.call("is_active"):
+			return {"verdict": "FAIL", "detail": "Portable captured input loads only outside an active session"}
+		if _copy_tree(source_characters, OS.get_user_data_dir().path_join("characters"), true) == 0:
+			return {"verdict": "FAIL", "detail": "Could not copy actual portable character carrier"}
+		var characters: RefCounted = saver.call("characters")
+		if characters == null or characters.call("apply", game, candidates[0]) != true:
+			return {"verdict": "FAIL", "detail": "Production CharacterSave refused captured portable input"}
+		return {"verdict": "PASS", "detail": "Restored only authentic portable character through production owner; no world or locator copied",
+			"data": {"character_id": candidates[0], "portable_only": true, "world_copied": false}}
 	var slot := int(args.get("slot", 0))
 	var form := ""
 	if DirAccess.dir_exists_absolute(from) and args.has("slot") \
@@ -260,7 +285,13 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 	elif DirAccess.dir_exists_absolute(from):
 		form = "captured directory (split path)"
 		var found := -1
-		var saves := DirAccess.open(from.path_join("saves"))
+		# Redesign-v28 uses the same split carriers beneath their schema root.
+		# Preserve the original captured layout byte-for-byte; never flatten,
+		# reinterpret a locator, invent a guest world or migrate an old save.
+		var saves_path := from.path_join("saves")
+		if DirAccess.dir_exists_absolute(saves_path.path_join("redesign-v28")):
+			saves_path = saves_path.path_join("redesign-v28")
+		var saves := DirAccess.open(saves_path)
 		if saves != null:
 			for entry: String in saves.get_files():
 				var m := RegEx.create_from_string("^slot_(\\d+)\\.json(\\.gz)?$").search(entry)
@@ -279,14 +310,16 @@ static func _load_save(tree: SceneTree, args: Dictionary) -> Dictionary:
 		form = "single slot json (legacy-migration path)"
 		var dst := str((saver as RefCounted).call("slot_path", slot))
 		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dst.get_base_dir()))
-		var named: Variant = JSON.parse_string(_read_text(from))
+		var named: Variant = preload("res://scripts/save/save_document.gd").parse(_read_text(from))
 		if not (named is Dictionary):
 			return {"verdict": "FAIL", "detail": "named save %s is not a JSON object" % from}
 		(named as Dictionary).erase("split_locator")
+		var encoded := preload("res://scripts/save/save_document.gd").stringify(named)
+		if encoded.is_empty(): return {"verdict": "FAIL", "detail": "named save cannot be encoded losslessly"}
 		var out := FileAccess.open(dst, FileAccess.WRITE)
 		if out == null:
 			return {"verdict": "ERROR", "detail": "could not write %s" % dst}
-		out.store_string(JSON.stringify(named))
+		out.store_string(encoded)
 		out.close()
 	else:
 		return {"verdict": "FAIL", "detail": "named save %s does not exist" % from}

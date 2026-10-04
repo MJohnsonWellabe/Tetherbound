@@ -1,0 +1,133 @@
+{
+  "classification": "AUTHOR SOURCE DIAGNOSTIC CANDIDATE ONLY; R16 NATIVE FAIL; R17 PARSER/NATIVE UNRUN; F17#4 OPEN",
+  "base_commit": "4cddc9161dc9bedc6c43d06c203eea219a9bbfd3",
+  "root_failed_commit": "ca855bad9a1d9545f457c7592e8912d33ae2c29b",
+  "changed_paths": [
+    "tools/_probe_scatter_tree_prompt_height.gd"
+  ],
+  "prior_seal_sha256": "1766254bd41cf28496ff4ea5a496dfbb9c9b717eeaed5cfd5ded3da7ac2f5c8e",
+  "unchanged_production": {
+    "scripts/world/scatter_bake.gd": {
+      "bytes": 34161,
+      "sha256": "ab3c64339ef63b20d301f9b0c17d53b91a001360d9fee441ebb65cbae269eb6e"
+    },
+    "scripts/world/vegetation.gd": {
+      "bytes": 142445,
+      "sha256": "8f92c7405a16c41e8dfed2bda1694668d0858934646dc017d2c74ae835098d5a"
+    },
+    "scripts/world/playground_heightfield.gd": {
+      "bytes": 95972,
+      "sha256": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf"
+    },
+    "scripts/world/vegetation_harvest_point.gd": {
+      "bytes": 12750,
+      "sha256": "0b4fbc85deeb63e9b1132e1401acfd36fb5ea5eea52aa48486b793df81c0dd87"
+    },
+    "scripts/world/interaction_arbiter.gd": {
+      "bytes": 19816,
+      "sha256": "e602c42c44734a2f65d499e059d1f7310939fe42a054938f573a4c9892ad5206"
+    },
+    "scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "scenes/player/player.tscn": {
+      "bytes": 1478,
+      "sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7"
+    },
+    "data/config/vegetation.json": {
+      "bytes": 240087,
+      "sha256": "4e3331edea4ceb764bf57bb422dc7db676a3e0acad412dd23d42939cd55593df"
+    },
+    "data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "data/scatter/playground/region_0_-1.bin": {
+      "bytes": 434805,
+      "sha256": "25cd556cdd008fa464bde19ba8828f86fb21c16056fc5a6c1a296b33c02b595c"
+    },
+    "scripts/ui/input_owner.gd": {
+      "bytes": 7864,
+      "sha256": "5ad5c03411661834f31fab8b835865432867e0b04ba65d780adc00a9727979cf"
+    },
+    "data/config/movement.json": {
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    "autoload/game_state.gd": {
+      "bytes": 135845,
+      "sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5"
+    },
+    "project.godot": {
+      "bytes": 21697,
+      "sha256": "87b876e47fc4604e622e9d99f08493b0ab9fdd1aaa8e7ca01ca894bc4c880d7a"
+    }
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 15,
+      "sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c"
+    },
+    "originals/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 6593,
+      "sha256": "8c3e3f87385748cc1ad808fed87416327e3ab8fba4ef358083eed9df70ad4d33"
+    },
+    "prior-failure/smoke.log": {
+      "bytes": 15243,
+      "sha256": "3a52d544b8ad1a74b193480ffb5f4a3cdb288652f1aedf5087c36eda947bc1bb"
+    },
+    "proposal/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 8585,
+      "sha256": "956c40b2a0d1ac55ce49e1313577e24579238bdd0ec1e51fbe716785b891cb50"
+    },
+    "repair.patch": {
+      "bytes": 3678,
+      "sha256": "8326c661a342da72d2dd08298a94480986757ea408415b5aa0a905dc1a9ac16c"
+    },
+    "review-context.txt": {
+      "bytes": 4407,
+      "sha256": "065433d8729b39501ac4ea6130f24e6b0e6278352639c18c7b6ecdcf495b17ef"
+    },
+    "root-failed/autoload/game_state.gd": {
+      "bytes": 143645,
+      "sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156"
+    },
+    "root-failed/data/config/movement.json": {
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    "root-failed/data/config/terrain_playground.json": {
+      "bytes": 258199,
+      "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+    },
+    "root-failed/project.godot": {
+      "bytes": 21681,
+      "sha256": "05b3fa1ddc651ef460ef0b28a632a0120ba26fddd8120af4f76c6fc3ced29307"
+    },
+    "root-failed/scenes/player/player.tscn": {
+      "bytes": 1439,
+      "sha256": "0581055e91554a259f5d2059bb216bd27404a96418be7d8168e27b6edb5507de"
+    },
+    "root-failed/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "root-failed/scripts/ui/input_owner.gd": {
+      "bytes": 7864,
+      "sha256": "5ad5c03411661834f31fab8b835865432867e0b04ba65d780adc00a9727979cf"
+    },
+    "root-failed/scripts/world/playground_heightfield.gd": {
+      "bytes": 95972,
+      "sha256": "8af7bfb87247b9f23e54224c2bc18872d43023059fc748c9956d0c4ed5fcd1bf"
+    },
+    "root-failed/tools/_probe_scatter_tree_prompt_height.gd": {
+      "bytes": 6593,
+      "sha256": "8c3e3f87385748cc1ad808fed87416327e3ab8fba4ef358083eed9df70ad4d33"
+    },
+    "source-check.py": {
+      "bytes": 6710,
+      "sha256": "9c2924bf5795e1f4a950dc555d4d68cf10b9c2702f03b08d336238ce3f1a5bf4"
+    }
+  }
+}

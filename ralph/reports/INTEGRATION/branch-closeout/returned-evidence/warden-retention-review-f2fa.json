@@ -1,0 +1,15 @@
+{
+  "classification": "SOURCE REVISION REQUIRED; PRESERVATION CHECKS PASS; NO NATIVE OR CRITERION CREDIT",
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "head": "f2fa698cb01b35e9f30ca6dab6a16437fc607b87",
+  "parent": "31e28029bcfd9c4bd14150e70986db176a038fe2",
+  "tree": "2a239a7eada389e7a38716d36aad00845c1f5997",
+  "independent_checks": 394,
+  "cut_sha256": "5f0525105eb8fb1fa0988bbe0581fe4484aab644816ad84cec2ef1461cd69852",
+  "blocking_finding": "Timeout heartbeat_received_ms and heartbeat_receive_age_ms read last_heartbeat_t. That existing watchdog grace clock also advances after a successful world-build completion without an actual heartbeat; old or absent packets can therefore be assigned a false receive time.",
+  "correction_returned_to": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+  "required_correction": "Dedicated observation stamp assigned only on actual existing heartbeat receive, with missing packet/stamp null/unknown. Preserve original watchdog grace, timeout, pumping and cleanup.",
+  "preservation": "Whole peer/harness source inverses recover exact parents;177 other peer functions and35 other harness functions, constants/awaits/hash/send/60-physics cadence/cleanup unchanged. Original83d failure/raw copies unchanged.",
+  "scope_limits": "Normal trainer roster reuses the same encounter ID. Fixed starting binding does not inherently miss later normal roster kills; fallback/new IDs are ignored. Captured row is the last observed kill within the bound battle, not proof of the current opponent's kill. Use explicit target/action/timestamp. Peer95s freeze remains nominal, not actual coordinator clock.",
+  "native_executed": false
+}

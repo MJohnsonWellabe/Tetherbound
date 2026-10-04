@@ -1,0 +1,174 @@
+{
+  "source_head": "f6aeb5c37cec5b0b8ef379a3bd6eb183d55c914d",
+  "main_head": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "remote_candidate": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+  "pr": 519,
+  "pr_draft": true,
+  "ci_run": 36854264014,
+  "ci_status": "completed/failure",
+  "named_assertions": {
+    "tests": 132,
+    "assertions": 3354,
+    "failed": 0,
+    "first_batch_fully_clean": true,
+    "remaining_strict_wrapper_rejected_intentional_negative_errors": true
+  },
+  "criteria": "110/280 MET unchanged; all existing feature acceptance still requires its named evidence and main landing. Green CI does not close gameplay, visual, device, save or co-op criteria automatically.",
+  "repairs": [
+    {
+      "owner": "F17",
+      "head": "92272ee7c5740968ac61a3999b67ea007f7573ce",
+      "scope": "settled blocked aim yields false to existing recovery",
+      "independent": "F29 SOURCE PASS147checks"
+    },
+    {
+      "owner": "F17",
+      "head": "3e0f329dbf387ac4b4a49bf2fb3920274625f2ed",
+      "scope": "canonical guest authority tournament fixture",
+      "independent": "F29 SOURCE PASS76checks"
+    },
+    {
+      "owner": "F17",
+      "head": "9e16e1d9da07a8193820f9bbe5c7c00b6c980461",
+      "scope": "legacy authored field road shares unchanged travel frames",
+      "independent": "F29 SOURCE PASS202checks+21metadata"
+    },
+    {
+      "owner": "Foundation",
+      "head": "13edb2afac29928690ec7e7edb52590414883767",
+      "scope": "authored schema retirement flag assertion",
+      "independent": "F29 SOURCE PASS"
+    },
+    {
+      "owner": "F18",
+      "head": "f69d5a6ce26cc8f7a5e6f1c753113544108a12e8",
+      "scope": "isolated ON refusal and OFF legacy fixtures; optional explicit Game binding",
+      "independent": "F29 SOURCE PASS; integration changed only three repair paths, existing dependency content unchanged"
+    },
+    {
+      "owner": "F19",
+      "head": "15ce6ff7ac8bb7852564bf9eb4ba23a292797cee",
+      "scope": "exact numeric inventory boundary plus meaningful OFF/ON encounter projection",
+      "independent": "existing f19_strict_review SOURCE PASS"
+    },
+    {
+      "owner": "F31",
+      "head": "ee097eeffab09ce4b9d120e164412f1f5416a13c",
+      "scope": "resolved grid centre ground and slope",
+      "independent": "existing f31_source_review SOURCE PASS; ae65 evidence included"
+    },
+    {
+      "owner": "ROOT",
+      "head": "f6aeb5c37cec5b0b8ef379a3bd6eb183d55c914d",
+      "scope": "unchanged generator refreshes eight stale phase definitions",
+      "independent": "F291933-check structural SOURCE PASS; exact patch62c00ca4989e33727b663c0465f5dba87187d08061cc9ba210f2c9684f396c2a"
+    }
+  ],
+  "remaining": [
+    "Actual fresh earned opening proof on reviewed new source unrun at this seal.",
+    "Original controller smokes remain unproved; two loading timeouts/no verdict retained and returned to Foundation.",
+    "CI6165 regions tree-contact step failed; cancelled regions/owner/Veridian jobs not passing. Their decoded logs unavailable (BlobNotFound), cause unproven.",
+    "Autosave refusal cause still unproven; no new rejected payload.",
+    "All existing feature acceptance and activation obligations remain; no MET awarded."
+  ],
+  "proofs": [
+    {
+      "label": "first-unit",
+      "result": {
+        "head": "f496d7bc756938b883ee2867eda61036efeac942",
+        "exit": 0,
+        "timed_out": false,
+        "selection": "test_cloudreach_no_legendary_offer.gd,test_stormwood_encounters_data.gd,test_build_placer_preview.gd,test_fresh_opening_target.gd,test_tournament_network_selection.gd",
+        "summary": [
+          "75 tests, 2743 assertions, 0 failed"
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-f496d7bc7569-be070ae2\\tests.log",
+        "raw_log_sha256": "6626482cde763a44c2c2e8c8a51a394c328ce82f68ba6b69a27e9ae5446d0c4c",
+        "raw_log_gzip": "first-unit.log.gz"
+      }
+    },
+    {
+      "label": "remaining-unit",
+      "result": {
+        "head": "f6aeb5c37cec5b0b8ef379a3bd6eb183d55c914d",
+        "exit": 0,
+        "timed_out": false,
+        "selection": "test_schema_redesign.gd,test_stormwood_water_gate.gd,test_water_return_connection.gd,test_portal_admission_mode.gd,test_gate_f_phase_evidence.gd,test_opening_beats.gd",
+        "summary": [
+          "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+          "ERROR: Redesign missing_contract defaults are missing or malformed",
+          "ERROR: Parse JSON failed. Error at line 0: Unknown error getting token",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $: duplicate array member",
+          "ERROR: Redesign data refused: $[0]: identity must match exactly one authored contract",
+          "ERROR: Redesign data refused: $[1]: identity must match exactly one authored contract",
+          "ERROR: Redesign data refused: $[2]: identity must match exactly one authored contract",
+          "ERROR: Redesign data refused: $[3]: identity must match exactly one authored contract",
+          "ERROR: Redesign data refused: $[4]: identity must match exactly one authored contract",
+          "ERROR: Redesign data refused: $[5]: identity must match exactly one authored contract",
+          "57 tests, 611 assertions, 0 failed"
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-f6aeb5c37cec-82ae6860\\tests.log",
+        "raw_log_sha256": "d404187309d039b9ec2054b20ff57a69dc91a9ed5e4bca57bf5076f5b3568618",
+        "strict_wrapper_exit": 1,
+        "interpretation": "Native exit0, all57cases/611assertions pass, zero SCRIPT/cleanup/leak errors. Strict generic raw-error wrapper rejects original deliberate malformed-schema error emissions; exact per-case interpretation retained separately, without changing tests, runner, runtime or CI guards.",
+        "raw_log_gzip": "remaining-unit.log.gz"
+      }
+    },
+    {
+      "label": "rest-controller",
+      "result": {
+        "head": "2fb3a0f2423ab25a78d3ec04a54395b856de0726",
+        "script": "tests/smoke_gate_a_rest_torch.gd",
+        "exit": 1,
+        "errors": [],
+        "summary": [],
+        "raw_log_sha256": "e5f0b08225171c8fb9b0e1ffd391e247ecc612796a79a042b8a93d5f350c9da2",
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-2fb3a0f2423a-smoke_gate_a_rest_torch\\smoke.log",
+        "interpretation": "No controller verdict or fixture assertion reached before the existing wrapper 240s limit; tail still loads house resources. Native exit1 retained; no placement PASS or exact loader blame.",
+        "raw_log_gzip": "rest-controller.log.gz"
+      }
+    },
+    {
+      "label": "bed-diagnostic",
+      "result": {
+        "head": "3e7bc7cfe0f2dbac967383382074bf61a7225c58",
+        "script": "res://.tmp/f31-bed-diagnostic/rest-torch.gd",
+        "wrapper_sha256": "c4529b001973180f01969b3ddef65aef26ef394dc812856af9a43327d42f06dc",
+        "budget_seconds": 240,
+        "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+        "counts_as_acceptance": false,
+        "pid": 16428,
+        "command": [
+          "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--verbose",
+          "--path",
+          "D:\\tetherbound\\foundations-batch-check",
+          "--script",
+          "res://.tmp/f31-bed-diagnostic/rest-torch.gd"
+        ],
+        "timed_out": true,
+        "exit": 1,
+        "elapsed_seconds": 240.125,
+        "raw_log_sha256": "07a956b20951385fa73dd5fa984853aa43ad8340340cba356c348900535f5fa0",
+        "observations": [],
+        "errors": [],
+        "frozen_source_count": 2180,
+        "source_closure_sha256": "02dfb62f2d7cb334294ce0c326c507ee90340761f52440c045c6e820c7bb8f91",
+        "raw_log_gzip": "bed-diagnostic.log.gz"
+      }
+    }
+  ]
+}

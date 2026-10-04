@@ -7,7 +7,7 @@
     "S03p3"
   ],
   "source_path": "res://tools/gate_f/segments/S03.json",
-  "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+  "source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d",
   "hash_algorithm": "sha256 of UTF-8 source text with CRLF normalized to LF",
   "capture_lane": "S03C",
   "capture_ids": [
@@ -651,7 +651,7 @@
         "S03p3"
       ],
       "source_path": "res://tools/gate_f/segments/S03.json",
-      "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+      "source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d",
       "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
       "previous_segment": "",
       "input_save": "S02-exit.json",
@@ -892,7 +892,7 @@
         "S03p3"
       ],
       "source_path": "res://tools/gate_f/segments/S03.json",
-      "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+      "source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d",
       "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
       "previous_segment": "S03p1",
       "input_save": "S03p1-exit.json",
@@ -1109,7 +1109,7 @@
         "S03p3"
       ],
       "source_path": "res://tools/gate_f/segments/S03.json",
-      "source_sha256": "dece556f3a9330f946042aacd1b977c0f1aab5fe82bf0d2788c81230bf277bef",
+      "source_sha256": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d",
       "manifest_path": "res://tools/gate_f/phase_plans/S03.manifest.json",
       "previous_segment": "S03p2",
       "input_save": "S03p2-exit.json",

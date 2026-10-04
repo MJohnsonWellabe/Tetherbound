@@ -1,0 +1,26 @@
+{
+  "source_commit": "47e5d01d049089b3ab14b7cef04a4153586887ac",
+  "started_utc": "2026-09-30T10:02:49.384354+00:00",
+  "scope": "One necessary new-PNG import, then original 12 identity cases/36 native PNGs. No full suite/CI/earned gameplay/visual bar credit.",
+  "steps": [
+    {
+      "name": "import",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--rendering-method",
+        "gl_compatibility",
+        "--path",
+        "D:\\tetherbound\\redesign-vfx",
+        "--editor",
+        "--import",
+        "--quit"
+      ],
+      "native_exit": 4294967295,
+      "timeout": false,
+      "elapsed_seconds": 492.734,
+      "errors": [],
+      "log": "D:\\tetherbound\\vfx-identities-native-r7-import.log"
+    }
+  ]
+}

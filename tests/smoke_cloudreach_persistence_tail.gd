@@ -127,7 +127,7 @@ func _f08_disk_flag_counts(paths: Array) -> Dictionary:
 	var counts := {}
 	for path: String in paths:
 		_require(FileAccess.file_exists(path), "The production save wrote %s" % path)
-		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+		var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 		_require(parsed is Dictionary, "%s parses as a JSON object" % path)
 		_f08_count_flags(parsed, counts)
 	_log("persistence_f08_disk", {"files": paths})
@@ -153,12 +153,12 @@ func _f08_append_flag_to_character_half(flag: String) -> void:
 	var local_character: RefCounted = game.get("local")
 	var path := "user://cloudreach_persistence_tail_regression/characters/%s/character.json" % str(
 		local_character.get("character_id"))
-	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Variant = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	var holder: Dictionary = _f08_first_flags_holder(data)
 	_require(not holder.is_empty(), "Negative control found a flags array in %s" % path)
 	(holder["flags"] as Array).append(flag)
 	var file := FileAccess.open(path, FileAccess.WRITE)
-	file.store_string(JSON.stringify(data))
+	file.store_string(preload("res://scripts/save/save_document.gd").stringify(data))
 	file.close()
 
 

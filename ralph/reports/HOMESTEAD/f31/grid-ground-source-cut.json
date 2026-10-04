@@ -1,0 +1,117 @@
+{
+  "kind": "bounded_returned_ci_legacy_grid_ground_repair",
+  "source_commit": "ee097eeffab09ce4b9d120e164412f1f5416a13c",
+  "predecessor_package": "517d5ff18fbe28d8a71d29fac3d6d4b4f87db2e3",
+  "branch": "tb/f31",
+  "pr": 516,
+  "files": [
+    {
+      "path": "scripts/build/build_placer.gd",
+      "before_git_sha256": "d8ee94aa2d3a112b648d9dbeb572a984b65cfed77d688d41811a958ff36998fe",
+      "after_git_sha256": "fc7e0d4efc96979989564235b1eaa811e9a0e158d9305cd2edc1f9b8acb47774",
+      "working_sha256": "59423f87164e024347b9b283cee74a7b40df97ce80befdc95105e820d4a17db8",
+      "after_git_blob_oid": "e993c32699c95d1dd44b8aa1c2be711fbb7b6be5"
+    },
+    {
+      "path": "tests/test_build_placer_preview.gd",
+      "before_git_sha256": "6a1d708bd34495d4660c470f22a615c8d3a339dfc655edb2cf2ed56c3bc4023f",
+      "after_git_sha256": "8529321648c4dc074508688b7b756f3cbde6666554a5eca5826841c9a82e58cc",
+      "working_sha256": "1933f0c3e6e5ccdb4fc9bf296dbf22818726666568e10f0e1c1f7031f9bace6d",
+      "after_git_blob_oid": "033e243780ba6a86dfebff11265d6de3fca28ad7"
+    }
+  ],
+  "source_patch_sha256": "f96f0c736c2045138d2099ee3cdae116c6454026e6e119f1d28d756d2ad2fd72",
+  "cheap_static_source_checks": {
+    "source_delta_exact_two_paths": true,
+    "production_delta_only_non_neighbour_centre_sampling": true,
+    "old_twelve_assertion_case_bodies_preserved": true,
+    "four_meaningful_regression_cases_added": true,
+    "fixture_lifetime_cleanup_unchanged": true,
+    "threshold_and_corner_radius_unchanged": true,
+    "same_cell_gentle_plane_old_refuses_new_accepts": true,
+    "true_steep_plane_still_refuses": true,
+    "ground_sampling_before_corner_loop": true
+  },
+  "returned_ci": {
+    "candidate": "a795",
+    "job": "110344653729",
+    "log_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\ci6165-110344653729.log",
+    "raw_log_sha256": "419d679227f27e0cd7ea048714c13d671c8033621f82b3cf111ee966790c9d55",
+    "failures": [
+      "smoke_gate_a_rest_torch.gd controller bed fixture",
+      "smoke_post_modal_control.gd controller bed fixture"
+    ],
+    "same_run_control": "smoke_build_two_creature_beds actual controller placements passed"
+  },
+  "static_committed_terrain_analysis": {
+    "terrain_working_sha256": "cf49af09dd99063f095005957800b8abea3261e51d2a06b535c4cf4f4bb94aa2",
+    "height_map": "first 256x256 RFloat embedded image",
+    "vertex_spacing_m": 2,
+    "basis": "file-only compressed resource decode and standard bilinear interpolation; no Godot/runtime executed",
+    "raw_aim": [
+      70,
+      67
+    ],
+    "snapped_centre": [
+      70,
+      68
+    ],
+    "raw_height": -4.486988425254822,
+    "centre_height": -5.1270365715026855,
+    "corners": [
+      -4.95122127532959,
+      -5.264126491546632,
+      -5.543745136260988,
+      -4.358978796005248
+    ],
+    "old_rise": 1.056756711006166,
+    "centre_rise": 0.7680577754974376,
+    "aligned_passing_aim": [
+      70,
+      70
+    ],
+    "aligned_rise": 0.4167085647583022,
+    "live_refusal_confirmation": "OPEN; ROOT unchanged-runtime wrapper timed out during loading before any samples",
+    "actual_ROOT_diagnostic": {
+      "head": "3e7bc7cfe0f2dbac967383382074bf61a7225c58",
+      "script": "res://.tmp/f31-bed-diagnostic/rest-torch.gd",
+      "wrapper_sha256": "c4529b001973180f01969b3ddef65aef26ef394dc812856af9a43327d42f06dc",
+      "budget_seconds": 240,
+      "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+      "counts_as_acceptance": false,
+      "pid": 16428,
+      "timed_out": true,
+      "exit": 1,
+      "elapsed_seconds": 240.125,
+      "raw_log_sha256": "07a956b20951385fa73dd5fa984853aa43ad8340340cba356c348900535f5fa0",
+      "observations": [],
+      "errors": [],
+      "source_closure_equal": true,
+      "runtime_input_count": 2180,
+      "result_json_sha256": "f745982360df56c861d1983b60c5aad5b48df34c0e6c01e247e2c5f3bacaea9e",
+      "result_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\bed-diagnostic-3e7bc7cfe0f2\\result.json"
+    }
+  },
+  "preserved": [
+    "all original controller smoke fixtures, actions, and assertions",
+    "legacy creature_bed recipe and cost",
+    "0.8m slope limit",
+    "neighbour inherited height and slope exemption",
+    "all default OFF station flags",
+    "shared Session/Game/ItemDB source"
+  ],
+  "runtime_followup": {
+    "owner": "ROOT only",
+    "selectors": [
+      "tests/test_build_placer_preview.gd",
+      "tests/smoke_gate_a_rest_torch.gd",
+      "tests/smoke_post_modal_control.gd"
+    ],
+    "status": "OPEN; no engine/import/native/runtime/tests executed in F31"
+  },
+  "independent_review": "PASS_FOR_BOUNDED_GRID_GROUND_SOURCE_FIX",
+  "independent_review_sha256": "dc401ff07b883ac3c1e293754a4d6b782d1936adcb58662536c91440e3a224a4",
+  "acceptance_credit": 0,
+  "runtime_visual_save_coop_criteria": "OPEN",
+  "shared_writes": false
+}

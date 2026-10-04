@@ -1,0 +1,22 @@
+R4 verdict: F25#2 FAIL. Sampled mastery scaling PASS with limits. Whole F25#5 FAIL for acceptance.
+
+Independent reviewer: /root/visual_judge_r3. Fresh inspection of all 36 original r4 images at full size after restoring and viewing the reference boards. Neutral observations preceded the mapping reveal. No source, results, reports or private execution receipts informed this judgment.
+
+00/01/02 — Pebble Toss, ranks 1/3/5: Multiple convincing small stones are visible in flight. The creature’s head obscures some stones, preventing reliable total counts. More clearly separated stones at rank 3; larger stones at rank 5.
+03/04/05 — Rock Throw, ranks 1/3/5: One convincing rough boulder is identifiable. Boulder size increases; rank 5 adds substantially more visible dust.
+06/07/08 — Fireball, ranks 1/3/5: Fails the required burning-orb/trail/explosion read. The visible shape resembles a tapered fire plume at the snout. A distinct orb and explosion are obscured or unreadable. Trail width/extent and body glow change visibly. Rank 5 is broader/brighter, although its trail is shorter.
+09/10/11 — Thunder Break, ranks 1/3/5: A branched bolt descends from above and intersects the visible creature’s back. Target-strike identity passes in these stills. Bolt thickness and impact sparks increase modestly; the distinction is subtle.
+
+F25#2 specifically requires “fireball a burning orb with a trail and explosion.” The fireball frames do not provide that identification. Recognizable stones, boulder and downward lightning cannot compensate for the missing fireball read.
+
+The sampled rank 1/3/5 comparisons show upgrades through size, count or trail, satisfying that narrower observation. They do not demonstrate ranks 2/4 or mastery presentation across the wider library. Whole F25#5 also remains below the mandated visual finish.
+
+Actionable pixel findings:
+- Capture flight before the projectile overlaps the target. Fireball needs a separately readable burning orb followed by its trail.
+- Make the explosion visible around the contact point. Current lower-rank fire impacts largely disappear behind the creature; orange glow alone does not read as an explosion.
+- Give stone impacts readable dust/debris beyond the face silhouette. Most contact/impact frames have too little visible change to communicate weight.
+- Strengthen lightning’s impact and rank separation. Its rigid golden branching remains schematic, with sparse sparks mostly visible beneath the body.
+
+The synthetic flat plane and blank background cannot establish Palworld/Animo world appeal or Valheim atmosphere. Visible VFX finish also falls below the combat references. This does not establish defects in unseen production environments.
+
+No before/after improvement claim is made. These stills certify neither motion, audio, damage timing, ordinary gameplay, renderer coverage nor performance.

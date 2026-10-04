@@ -1,0 +1,279 @@
+{
+  "source_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+  "run_id": 36861410922,
+  "run_status": "in_progress",
+  "first_page_only": true,
+  "jobs": [
+    {
+      "id": 110366262008,
+      "name": "changes",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008237,
+      "name": "verify-gate-a-ui-build-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008291,
+      "name": "verify-harvest",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008305,
+      "name": "verify-regions-relay",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368008351,
+      "name": "verify-unit-tests (2)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008352,
+      "name": "verify-catching",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008361,
+      "name": "verify-scatter-rules",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008373,
+      "name": "verify-unit-tests (1)",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008381,
+      "name": "verify-owner-regressions-shard",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368008405,
+      "name": "verify-core-verb-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008432,
+      "name": "verify-veg-corridor",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008434,
+      "name": "verify-combat-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008443,
+      "name": "verify-bake-freshness",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008538,
+      "name": "verify-regions-shard",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": [
+        "Verify exact baked tree prompt at trunk contact"
+      ]
+    },
+    {
+      "id": 110368008550,
+      "name": "verify-continuous-core-known-red",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Verify the village, material and paid-build continuation (KNOWN RED)"
+      ]
+    },
+    {
+      "id": 110368008575,
+      "name": "verify-gate-evidence-finale",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008607,
+      "name": "verify-cloudreach-persistence",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008617,
+      "name": "discover-net-smokes",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008632,
+      "name": "export",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008651,
+      "name": "verify-cloudreach-midride-rejoin",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008856,
+      "name": "verify-gate-b-core",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Verify gate_b_continuous (CORE \u2014 opening through tournament readiness)"
+      ]
+    },
+    {
+      "id": 110368008873,
+      "name": "verify-gate-evidence-shard",
+      "status": "completed",
+      "conclusion": "success",
+      "failed_steps": []
+    },
+    {
+      "id": 110368008959,
+      "name": "verify-veridian-offer",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368008973,
+      "name": "verify-gate-b-full-known-red",
+      "status": "completed",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Verify gate_b_continuous (FULL CHAIN \u2014 gather route and tail, KNOWN RED)"
+      ]
+    },
+    {
+      "id": 110368540279,
+      "name": "verify-multiplayer-shard (3)",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368540313,
+      "name": "verify-multiplayer-shard (6)",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368540354,
+      "name": "verify-multiplayer-shard (4)",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368540375,
+      "name": "verify-multiplayer-shard (5)",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368540433,
+      "name": "verify-multiplayer-shard (2)",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    },
+    {
+      "id": 110368540480,
+      "name": "verify-multiplayer-shard (1)",
+      "status": "in_progress",
+      "conclusion": null,
+      "failed_steps": []
+    }
+  ],
+  "observed_passes": [
+    "gate_a_opening_segment",
+    "gate_a_build_house",
+    "build_two_creature_beds",
+    "gate_a_rest_torch",
+    "authored_camps",
+    "post_modal_control",
+    "combat",
+    "Windows export"
+  ],
+  "limits": "Scoped CI successes do not replace earned full title-to-tournament, visual or criterion acceptance. Known-red failures retained, unit shard2 cancelled without final verdict, required tree-contact step failed; shared run still active.",
+  "logs": [
+    {
+      "id": 110368008856,
+      "characters": 542738,
+      "ended_newline": true,
+      "label": "Decoded GitHub job log, preserved as UTF-8; original transport ZIP bytes unavailable",
+      "utf8_bytes": 542862,
+      "sha256": "c6e7c3945b35ed0d64bbb5492498c2d0507ce4c424fe83878aed7b379ea10559"
+    },
+    {
+      "id": 110368008351,
+      "characters": 769868,
+      "ended_newline": true,
+      "label": "Decoded GitHub job log, preserved as UTF-8; original transport ZIP bytes unavailable",
+      "utf8_bytes": 769872,
+      "sha256": "caa59ff195f182dc8c5c43b2f1a2e8259bababeba87c7cd14034b0e1ab489dee"
+    },
+    {
+      "id": 110368008873,
+      "characters": 551532,
+      "ended_newline": true,
+      "label": "Decoded GitHub job log, preserved as UTF-8; original transport ZIP bytes unavailable",
+      "utf8_bytes": 551602,
+      "sha256": "3518be2b903775184544187d6d7e3dcd7743d570b179d0e508ffeebbe1d76c38"
+    }
+  ],
+  "cache_check": {
+    "head": "c2371fcd24a0cde93d8bf00834032a540edf402f",
+    "exit": 1,
+    "timed_out": false,
+    "selection": "test_wall_foliage_normals.gd",
+    "summary": [
+      "SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)",
+      "ERROR: Failed to load script \"res://tests/test_wall_foliage_normals.gd\" with error \"Parse error\".",
+      "  FAIL  test_wall_foliage_normals.gd :: could not be parsed or instantiated",
+      "1 tests, 0 assertions, 1 failed",
+      "  res://tests/test_wall_foliage_normals.gd: parse error, see SCRIPT ERROR above"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-c2371fcd24a0-aae7e721\\tests.log",
+    "raw_log_sha256": "bd8147f4d26d2db39b32a4f014dc6d72ce62309be106b0c1b30066df226ede78",
+    "verdict": "FAIL parsing new cache test line37; zero assertions executed; returned to existing Foundation owner. Local c237 not pushed."
+  }
+}

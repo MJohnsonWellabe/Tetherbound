@@ -16,6 +16,7 @@ extends RefCounted
 ## has in hand. Passing it in keeps both cases the same function call.
 
 const CONFIG_PATH := "res://data/config/progression.json"
+const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 
 static var _config: Dictionary = {}
 
@@ -56,6 +57,213 @@ static func xp_award_for(enemy_level: int, cfg: Dictionary) -> int:
 	var base := float(award_cfg.get("base", 18.0))
 	var per_level := float(award_cfg.get("per_enemy_level", 6.0))
 	return int(base + per_level * float(enemy_level))
+
+
+## Validated unreduced formula for detached typed defeat staging. Existing
+## live xp_award_for stays unchanged until the actual earned-route gate passes.
+static func raw_xp_award_for(enemy_level: int, cfg: Dictionary) -> int:
+	var award_cfg: Dictionary = cfg.get("xp_award", {})
+	var base: Variant = award_cfg.get("base", 18.0)
+	var per_level: Variant = award_cfg.get("per_enemy_level", 6.0)
+	if enemy_level < 1 or enemy_level > 100: return 0
+	for value: Variant in [base, per_level]:
+		if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0: return 0
+	var amount := float(base) + float(per_level) * float(enemy_level)
+	return int(floorf(amount)) if is_finite(amount) and amount <= 2147483647.0 else 0
+
+
+## A positive eligible combat award cannot floor to zero. Invalid authoring
+## refuses the amount explicitly, rather than silently falling back to full XP.
+static func scaled_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dictionary) -> int:
+	var raw: Variant = essence_cfg.get("auto_xp_scale")
+	if not (raw is int or raw is float) or not is_finite(float(raw)) \
+			or float(raw) <= 0.0 or float(raw) >= 1.0:
+		return 0
+	var amount := raw_xp_award_for(enemy_level, cfg)
+	return maxi(1, int(floor(float(amount) * float(raw)))) if amount > 0 else 0
+
+
+## Detached host transaction split only. Legacy party_share remains unchanged.
+static func scaled_party_combat_xp(enemy_level: int, cfg: Dictionary, essence_cfg: Dictionary) -> int:
+	var award := scaled_combat_xp(enemy_level, cfg, essence_cfg)
+	if award <= 0: return 0
+	var share: Variant = cfg.get("xp_award", {}).get("party_share", 0.35)
+	if not (share is int or share is float) or not is_finite(float(share)) \
+			or float(share) <= 0.0 or float(share) > 1.0: return 0
+	return maxi(1, int(floorf(float(award) * float(share))))
+
+
+## Detached snapshot math uses the same canonical stat functions as
+## CreatureInstance._apply_level_stats. Live HP, XP, UI events and saves are
+## untouched here. The host commits this with the resource debit or neither.
+static func staged_next_level(row: Dictionary, cap: int, cfg: Dictionary, maximum_modifier: Callable = Callable()) -> Dictionary:
+	var level_raw: Variant = row.get("level")
+	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
+			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) < 1 or int(level_raw) >= cap:
+		return {}
+	if not _staged_row_valid(row, cfg): return {}
+	var next := row.duplicate(true)
+	var fraction := float(row.hp) / float(row.max_hp)
+	next.level = int(row.level) + 1
+	next.xp = 0 if int(next.level) == cap else int(row.xp)
+	next.levels_gained_with_you = int(row.levels_gained_with_you) + 1
+	var growth: Dictionary = cfg.get("level", {}).get("growth_per_level", {})
+	for stat: String in ["hp", "attack", "defence"]:
+		var value := stat_at_level(float(row["base_" + stat]), int(next.level), float(growth.get(stat, 0.0))) \
+			* individuality_multiplier(float(row["iv_" + stat]), cfg) + float(row.get("boost_" + stat, 0))
+		if stat == "hp" and maximum_modifier.is_valid():
+			value = float(maximum_modifier.call(next, value))
+		if not is_finite(value) or value <= 0.0:
+			return {}
+		next["max_hp" if stat == "hp" else stat] = value
+	next.hp = float(next.max_hp) * fraction
+	return next
+
+
+static func _staged_row_valid(row: Dictionary, cfg: Dictionary) -> bool:
+	var level_raw: Variant = row.get("level")
+	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
+			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) < 1 or int(level_raw) > 100:
+		return false
+	for field: String in ["hp", "max_hp", "base_hp", "base_attack", "base_defence", "iv_hp", "iv_attack", "iv_defence", "xp", "levels_gained_with_you"]:
+		var raw: Variant = row.get(field)
+		if not (raw is int or raw is float) or not is_finite(float(raw)) or float(raw) < 0.0:
+			return false
+	for stat: String in ["hp", "attack", "defence"]:
+		var boost: Variant = row.get("boost_" + stat, 0)
+		if not (boost is int or boost is float) or not is_finite(float(boost)) \
+				or float(boost) < 0.0 or float(boost) != floorf(float(boost)) \
+				or float(row["iv_" + stat]) > 1.0 or float(row["base_" + stat]) <= 0.0:
+			return false
+	if float(row.max_hp) <= 0.0 or float(row.hp) > float(row.max_hp) \
+			or float(row.xp) != floorf(float(row.xp)) or int(row.xp) >= xp_to_next(int(row.level), cfg) \
+			or float(row.levels_gained_with_you) != floorf(float(row.levels_gained_with_you)):
+		return false
+	return true
+
+
+## Detached participant XP for the host defeat/rest transaction. Caller owns
+## eligibility, positive award math and the creature's admitted typed cap.
+## At the cap XP becomes zero; it cannot bank for a later breakthrough.
+static func staged_xp(row: Dictionary, cap: int, amount: int, cfg: Dictionary, maximum_modifier: Callable = Callable()) -> Dictionary:
+	if cap < 1 or cap > 100 or amount <= 0 or amount > 2147483647: return {}
+	var current := row.duplicate(true)
+	var level_raw: Variant = current.get("level")
+	var banked: Variant = current.get("xp")
+	if not (level_raw is int or level_raw is float) or not is_finite(float(level_raw)) \
+			or float(level_raw) != floorf(float(level_raw)) or int(level_raw) > cap: return {}
+	if not (banked is int or banked is float) or not is_finite(float(banked)) \
+			or float(banked) < 0.0 or float(banked) != floorf(float(banked)) \
+			or float(banked) > 2147483647: return {}
+	if int(level_raw) == cap: current.xp = 0
+	if not _staged_row_valid(current, cfg): return {}
+	if int(current.level) == cap: return current
+	var remaining := int(current.xp) + amount
+	current.xp = 0
+	while int(current.level) < cap:
+		var needed := xp_to_next(int(current.level), cfg)
+		if needed <= 0: return {}
+		if remaining < needed: break
+		remaining -= needed
+		current = staged_next_level(current, cap, cfg, maximum_modifier)
+		if current.is_empty(): return {}
+	current.xp = 0 if int(current.level) == cap else remaining
+	return current
+
+
+## Detached property adapter calls the EXISTING condition arithmetic without
+## a live CreatureInstance, feed event, scene mutation or copied mood formula.
+class TrainingConditionSnapshot extends RefCounted:
+	var values: Dictionary = {}
+	func _get(property: StringName) -> Variant:
+		return values.get(str(property))
+	func _set(property: StringName, value: Variant) -> bool:
+		if not values.has(str(property)): return false
+		values[str(property)] = value
+		return true
+
+
+static func staged_training_condition(row: Dictionary, levels_gained: int,
+		victory: bool, condition_cfg: Dictionary = {}) -> Dictionary:
+	if levels_gained < 0 or levels_gained > 59 or not row.get("fainted") is bool: return {}
+	var mood: Variant = row.get("happiness")
+	if not (mood is int or mood is float) or not is_finite(float(mood)) or float(mood) < 0.0: return {}
+	var cfg := CONDITION.config() if condition_cfg.is_empty() else condition_cfg
+	var happiness: Variant = cfg.get("happiness")
+	if not happiness is Dictionary: return {}
+	for field: String in ["max", "on_victory", "on_level_up"]:
+		var value: Variant = happiness.get(field)
+		if not (value is int or value is float) or not is_finite(float(value)): return {}
+	if float(happiness.max) < 0.0 or float(mood) > float(happiness.max): return {}
+	var snapshot := TrainingConditionSnapshot.new()
+	snapshot.values = row.duplicate(true)
+	if victory:
+		var fought: Variant = row.get("battles_fought")
+		if row.fainted or not (fought is int or fought is float) or not is_finite(float(fought)) \
+				or float(fought) != floorf(float(fought)) or float(fought) < 0.0 or float(fought) >= 2147483647.0:
+			return {}
+		snapshot.values.battles_fought = int(fought) + 1
+		CONDITION.note_victory(snapshot, cfg)
+	for _level: int in levels_gained:
+		CONDITION.note_level_up(snapshot, cfg)
+	return snapshot.values
+
+
+## Pure full-party XP proposal for an actual host defeat. The combat owner
+## derives active UID, eligible UIDs and caps from its admitted/frozen records;
+## none is accepted from a client packet. This provides no journal/CAS/ACK.
+## Compose this with type essence, existing victory/bond/condition effects and
+## the host defeat receipt before promotion. No legacy award caller is changed.
+static func staged_combat_party_xp(party_rows: Array, host_active_uid: String,
+		host_eligible_uids: Array, host_caps: Dictionary, host_enemy_level: int,
+		cfg: Dictionary, essence_cfg: Dictionary, xp_mode: String = "hybrid", maximum_modifier: Callable = Callable()) -> Dictionary:
+	if not xp_mode in ["ordinary", "hybrid"]: return {}
+	if party_rows.is_empty() or party_rows.size() > 5 or host_active_uid.is_empty() \
+			or host_enemy_level < 1 or host_enemy_level > 100 or host_eligible_uids.is_empty(): return {}
+	var by_uid: Dictionary = {}
+	for raw: Variant in party_rows:
+		if not raw is Dictionary or not raw.get("uid") is String or str(raw.uid).is_empty() \
+				or by_uid.has(raw.uid) or not raw.get("fainted") is bool: return {}
+		by_uid[raw.uid] = raw
+	if not by_uid.has(host_active_uid): return {}
+	var eligible: Dictionary = {}
+	for uid: Variant in host_eligible_uids:
+		if not uid is String or not by_uid.has(uid) or eligible.has(uid): return {}
+		var raw: Dictionary = by_uid[uid]
+		var hp: Variant = raw.get("hp")
+		var cap: Variant = host_caps.get(uid)
+		if raw.fainted or not (hp is int or hp is float) or not is_finite(float(hp)) or float(hp) <= 0.0 \
+				or not (cap is int or cap is float) or not is_finite(float(cap)) \
+				or float(cap) != floorf(float(cap)) or not int(cap) in [10, 20, 30, 40, 50, 60]: return {}
+		eligible[uid] = int(cap)
+	# A fainted active member gets nothing; living bench members retain their
+	# existing share. Do not invent a new active creature to grant the full award.
+	# The first actual earned-essence mount preserves today's ordinary XP.
+	# Hybrid is activated only after the real earned/spend/ordinary-route gate.
+	# Mode is frozen in the host intent/receipt; replay never reprices it.
+	var full := raw_xp_award_for(host_enemy_level, cfg) if xp_mode == "ordinary" else scaled_combat_xp(host_enemy_level, cfg, essence_cfg)
+	var share := party_share(full, cfg) if xp_mode == "ordinary" else scaled_party_combat_xp(host_enemy_level, cfg, essence_cfg)
+	if full <= 0 or share <= 0: return {}
+	var next := party_rows.duplicate(true)
+	var awards: Dictionary = {}
+	for index: int in next.size():
+		var uid: String = next[index].uid
+		if not eligible.has(uid): continue
+		var amount := full if uid == host_active_uid else share
+		var changed := staged_xp(next[index], int(eligible[uid]), amount, cfg, maximum_modifier)
+		if changed.is_empty(): return {}
+		var gained := int(changed.level) - int(next[index].level)
+		changed = staged_training_condition(changed, gained, true)
+		if changed.is_empty(): return {}
+		awards[uid] = {"authored_award": amount, "levels": gained, "battle_credit": 1,
+			"happiness_before": next[index].happiness, "happiness_after": changed.happiness,
+			"old_level": int(next[index].level), "level": int(changed.level), "xp": int(changed.xp),
+			"cap": int(eligible[uid]), "at_cap": int(changed.level) == int(eligible[uid])}
+		next[index] = changed
+	return {"party": next, "before_party": party_rows.duplicate(true), "awards": awards,
+		"ready_to_commit": false, "requires": ["actual_host_wild_defeat_and_participants",
+			"canonical_admitted_per_uid_caps", "same_record_XP_essence_victory_and_defeat_receipt_CAS",
+			"canonical_learnset_refresh", "owner_save_ACK"]}
 
 
 ## What one party member's share of `amount` xp is, floored so a three-way

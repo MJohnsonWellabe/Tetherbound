@@ -31,6 +31,9 @@ const BUILD_GRID := preload("res://scripts/build/build_grid.gd")
 const BUILD_SNAP := preload("res://scripts/build/build_snap_contract.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const SETTLE_FRAMES := 240
+## Open, flat homestead yard west of the berry beds. Facing the world's
+## default -Z, the placer's ghost lands on the (-6, 20) grid cell.
+const WORKBENCH_STANCE := Vector3(-6.0, 1.4, 22.0)
 
 ## How far up from where the settings screen starts the toggle may be. Three
 ## controls' worth of slack; more than that and it is buried.
@@ -50,6 +53,10 @@ func _init() -> void:
 func _run() -> void:
 	var world: Node = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(world)
+	# The title enters this world with change_scene_to_file, so in the game it
+	# IS the current scene. Host authority (combat fences, the unique placer)
+	# resolves the active world from it and fails closed without one.
+	current_scene = world
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -240,6 +247,15 @@ func _check_the_first_day_arc(world: Node) -> void:
 	inventory.call("add", "wood", 12)
 	inventory.call("add", "stone", 8)
 	inventory.call("add", "fiber", 6)
+	# F31#0: the Workbench is a homestead station now, built only on Grandpa's
+	# plot (data/config/stations.json `homestead_plot`) clear of the farmhouse,
+	# road and berry beds -- which is exactly where the camp above stands. Walk
+	# to the open west yard so the ghost two metres ahead is a legal station
+	# spot, then plant it through the same press and the real paid path.
+	player.global_position = WORKBENCH_STANCE
+	player.velocity = Vector3.ZERO
+	for i in 10:
+		await physics_frame
 	_game.set("pending_build", "workbench")
 	for i in 30:
 		await physics_frame

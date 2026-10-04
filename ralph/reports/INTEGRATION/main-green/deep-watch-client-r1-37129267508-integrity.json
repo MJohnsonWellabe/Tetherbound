@@ -1,0 +1,9 @@
+{
+  "run_id": 37129267508,
+  "artifact_id": 11276600695,
+  "checkout_ref": "96ca088431a9c0aba6c8a6a0dd0b20d02489ad16",
+  "result": "PREEXECUTIONFAIL sameVariantline167; noenginegameplayclaim.",
+  "archive": "deep-watch-client-r1-37129267508-original-artifact.zip",
+  "archive_sha256": "3c288bde400305dd1e3d9593d5bc935625e7c3219091493bebe97304e1d16982",
+  "retention": "Complete original archive, no filtering, no error waivers."
+}

@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_move_effects.gd::test_light_cap_is_global_idempotent_and_reclaims_existing_lease: 1 of 673 test files
+  ok    test_move_effects.gd :: test_light_cap_is_global_idempotent_and_reclaims_existing_lease
+
+1 tests, 27 assertions, 0 failed

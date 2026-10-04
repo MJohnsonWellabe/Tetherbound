@@ -1,0 +1,86 @@
+{
+  "run": {
+    "id": 36915534683,
+    "name": "CI",
+    "run_number": 6173,
+    "event": "pull_request",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-10-01T19:36:32Z",
+    "run_started_at": "2026-10-01T19:36:32Z",
+    "updated_at": "2026-10-01T20:33:24Z",
+    "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36915534683"
+  },
+  "duration_seconds": 3412,
+  "success_jobs": 27,
+  "required_validation_failures": [
+    "verify-gate-b-core",
+    "verify-gate-evidence-shard",
+    "verify-regions-shard (stormwood)",
+    "verify-multiplayer-shard (5)"
+  ],
+  "optional_failed_probe": "verify-gate-b-full-known-red",
+  "aggregate_failure": "ci-gate",
+  "cancelled_jobs": [
+    {
+      "id": 110548567376,
+      "name": "verify-continuous-core-known-red",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T20:06:50Z"
+    },
+    {
+      "id": 110548567424,
+      "name": "verify-veridian-offer (space)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T20:31:51Z"
+    },
+    {
+      "id": 110548567547,
+      "name": "verify-owner-regressions-shard (catching)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:50Z",
+      "completed_at": "2026-10-01T20:09:50Z"
+    },
+    {
+      "id": 110548567598,
+      "name": "verify-veridian-offer (recovery)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:38:16Z",
+      "completed_at": "2026-10-01T20:33:17Z"
+    },
+    {
+      "id": 110548567733,
+      "name": "verify-veridian-offer (capacity)",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-01T19:36:51Z",
+      "completed_at": "2026-10-01T20:31:51Z"
+    }
+  ],
+  "skipped_jobs": [
+    {
+      "id": 110561891399,
+      "name": "verify-solo-regression",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-01T20:09:51Z",
+      "completed_at": "2026-10-01T20:09:51Z"
+    }
+  ],
+  "downloaded_run_archive": {
+    "bytes": 4195571,
+    "sha256": "4a46ac83b3a81138768158ed328459f213a018be51b0f846038b39a60705ef4b",
+    "entries": 424,
+    "missing_cancelled_jobs": "All five cancelled jobs absent from run archive; individual cancelled log requests return unsigned storage404. No raw cause assigned."
+  },
+  "validated_speed": "ExportPASS426s; fullrun56m52 versus prior6172 57m06 (14s shorter, essentially unchanged). FullCI remains failed; three timed-out Veridian groups remain a bottleneck.",
+  "source_repairs": "Reviewed F20 legacy text66d902 merged23f48; original240s localworldloadtimeout inconclusive. Reviewed F17R261c7e mergeddfba; affected40/305 strictnativePASS. Sharedboss guest next-round repair in originalFoundation session pending review. No unchanged CI rerun.",
+  "next_batch": "All15 R2/R3 authors sourcecontained+archived on pushed8f30dc; R3Foundation source checkpoints still underreview/code, no NEXTengine/CI.",
+  "acceptance": "Mainunchanged30fcc38f;110/280 MET unchanged; no newcriteria credit."
+}

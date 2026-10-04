@@ -55,11 +55,14 @@ func _on_enemy_strike() -> void:
 	# No second impulse, and a charge that reached nobody misses everybody.
 	var lunge: Dictionary = _wild.call("take_lunge_outcome") \
 		if _wild.has_method("take_lunge_outcome") else {}
-	if lunge.is_empty():
+	if lunge.is_empty() and str(cfg.get("telegraph_shape", "")) != "marker":
 		_wild.call("add_impulse", facing, float(cfg.get("lunge", 3.4)))
-	elif not bool(lunge.get("contact", false)):
+	elif not lunge.is_empty() and not bool(lunge.get("contact", false)):
 		attack_missed.emit(false)
 		state_changed.emit()
+		swung.emit()
+		return
+	if _begin_enemy_pattern_cast(cfg):
 		swung.emit()
 		return
 	# The link reports local peer zero: every actual participant, including the

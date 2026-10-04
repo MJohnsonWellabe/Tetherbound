@@ -363,7 +363,7 @@ func test_the_save_file_carries_the_pinned_set_at_its_top_level() -> void:
 	_pin_within(written.map, written.progression, Vector2(-180.0, 2250.0))
 	assert_true(saver.call("save", written, 1))
 	var raw := FileAccess.get_file_as_string(saver.call("slot_path", 1))
-	var parsed: Variant = JSON.parse_string(raw)
+	var parsed: Variant = preload("res://scripts/save/save_document.gd").parse(raw)
 	assert_true(parsed is Dictionary, "the save slot is not readable JSON")
 	var data: Dictionary = parsed
 	assert_eq(int(data.get("version", 0)), SAVE_GAME.VERSION)
@@ -386,7 +386,7 @@ func test_a_pre_seventeen_save_is_refused_without_changing_live_pins() -> void:
 	var written: RefCounted = _game()
 	assert_true(saver.call("save", written, 1))
 	var path: String = saver.call("slot_path", 1)
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	# Replace the ordinary split save with an intentionally flat legacy file;
 	# remove its associated split halves so load_slot cannot select stale
 	# authority from the preceding write.
@@ -518,6 +518,37 @@ func test_the_hall_alpha_row_is_dressed_as_the_named_pack_leader() -> void:
 
 class _FakeInstance extends RefCounted:
 	var nickname := ""
+
+
+class DressingDirector extends Node:
+	var _wild_creatures: Array = []
+	var _once_only: Dictionary = {}
+
+
+class DressingBody extends Node3D:
+	var display_name := ""
+	var instance := _FakeInstance.new()
+
+
+func test_dressing_skips_a_freed_body_and_still_updates_the_live_alpha() -> void:
+	var world := Node.new()
+	var director := DressingDirector.new()
+	director.name = "EncounterDirector"
+	world.add_child(director)
+	var pins := ALPHA_PINS.new()
+	world.add_child(pins)
+	var departed := Node3D.new()
+	var live := DressingBody.new()
+	director._wild_creatures = [departed, live]
+	director._once_only[live] = "alpha-fixture"
+	pins._clusters = [{"once_id": "alpha-fixture", "nickname": "Retained Alpha", "aura_light": {}, "nameplate": {}}]
+	departed.free()
+	pins._dress_live_alphas()
+	assert_eq(live.display_name, "Retained Alpha")
+	assert_eq(live.instance.nickname, "Retained Alpha")
+	assert_true(live.get_meta("alpha_dressed", false))
+	live.free()
+	world.free()
 
 
 func test_dress_alpha_body_sets_names_and_one_light() -> void:

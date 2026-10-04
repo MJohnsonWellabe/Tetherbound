@@ -1,0 +1,30 @@
+{
+  "parent": "c9d1ea2e58d1903bf03327e959ef48f981aed981",
+  "corrects": "Original Den carrier source FAIL: _owned_roster expected species but canonical PlayerState.save_data party rows contain species_id; raw canonical rows could not supply the shed helper species profile.",
+  "original_preserved_evidence": "ralph/reports/HOMESTEAD/f32/den-groom-source/manifest.json",
+  "owned_source_normalized_lf_sha256": {
+    "scripts/build/station_den.gd": "2e5e0260a61f33d8aa0724d79e1f8d11140cc416cf47e19d7550c0f2de3ca73b"
+  },
+  "narrow_change": "Validate canonical row species_id; construct fresh detached helper rows {uid,species:species_id}; pass only that validated projection to SHED.den_groom_candidate. Do not mutate the canonical array, add/save an alias or accept client roster data.",
+  "canonical_carriers_read": [
+    "autoload/player_state.gd: save_data party = saver._party_to_array(party)",
+    "scripts/save/save_game.gd: _party_to_array emits uid and species_id"
+  ],
+  "preserved": [
+    "Exact unique owned UID membership; full roster 1 through 5, refusal on malformed row/missing identity/duplicate UID",
+    "Actual host Den/body residency, radius and per-character modal/combat/homestead policy",
+    "Existing helper output rules and empty-output candidate for non-shed species; canonical service still must atomically compose care cap/stamp + shed/miss receipt + inventory CAS",
+    "Existing transaction identity and strict pending/durable callback semantics; no client source, transport or durable bag"
+  ],
+  "runtime_enabled": false,
+  "configuration_changes": false,
+  "canonical_adapter_exists_or_wired_here": false,
+  "engine_parser_tests_gpu_ci_run": false,
+  "checks": [
+    "Source carrier read and narrow diff inspection",
+    "git diff --check"
+  ],
+  "independent_recheck": "Requested from ROOT on separate successor pin; verdict pending",
+  "acceptance_met": [],
+  "F31_F32_status": "OPEN"
+}

@@ -1,4 +1,5 @@
 extends Node
+var _closing_cancel := false
 
 ## Aiming and throwing an orb.
 ##
@@ -195,7 +196,7 @@ func is_aiming() -> bool:
 
 
 func is_busy() -> bool:
-	return state != State.IDLE
+	return state != State.IDLE or (_closing_cancel and Input.is_action_pressed("menu_cancel"))
 
 
 ## Orbs live in the satchel, not here.
@@ -306,8 +307,7 @@ func _tick_aiming(delta: float) -> void:
 	# wind-up — the orb is only spent in _release() itself. The cancel used to
 	# be unreachable once the wind-up started (the early return sat above it),
 	# which turned a mis-press into a guaranteed spent orb 0.18s later.
-	if _guard <= 0.0 and (Input.is_action_just_pressed("combat_run")
-			or Input.is_action_just_pressed("menu_cancel")):
+	if _guard <= 0.0 and Input.is_action_just_pressed("menu_cancel"):
 		_leave_aim()
 		return
 
@@ -319,13 +319,9 @@ func _tick_aiming(delta: float) -> void:
 	if _guard > 0.0:
 		return
 
-	# CONTROLLER-MAP: interact (X) is the pad's throw button now -- `combat_throw`
-	# kept its keyboard F and lost its pad binding when the orb became a hotbar
-	# item. `combat_quick` stays because the aim opens on the same press that
-	# releases it and a player already holding the attack trigger expects that.
-	if Input.is_action_just_pressed("combat_throw") \
-			or Input.is_action_just_pressed("interact") \
-			or Input.is_action_just_pressed("combat_quick"):
+	# Aim alone reads X / F release. LT opens this mode and never releases an
+	# orb; world interaction and ordinary combat attack polls are silent here.
+	if Input.is_action_just_pressed("combat_orb_release"):
 		_commit_launch_assist()
 		_windup = _release_windup
 
@@ -333,6 +329,7 @@ func _tick_aiming(delta: float) -> void:
 ## Try to enter aim mode. Returns false with a reason on the signal when the
 ## throw cannot happen, so the refusal is always explained.
 func try_begin_aim(target_can_be_caught: bool, refusal: String) -> bool:
+	_closing_cancel = false
 	if state != State.IDLE or _cooldown > 0.0:
 		return false
 	if stock() <= 0:
@@ -343,9 +340,8 @@ func try_begin_aim(target_can_be_caught: bool, refusal: String) -> bool:
 		return false
 
 	state = State.AIMING
-	# The button that opens the aim is also the button that releases it, and
-	# `is_action_just_pressed` stays true for the whole frame. Same guard as the
-	# one that stops engaging a fight from being read as the first attack of it.
+	# Keyboard F opens and releases aim; its edge lasts the whole frame. Keep
+	# the short handoff guard even though the pad separates LT aim from X release.
 	_guard = 0.15
 	_windup = 0.0
 	_apply_aim_camera()
@@ -430,6 +426,7 @@ func _set_trainer_movable(movable: bool) -> void:
 
 
 func _leave_aim() -> void:
+	_closing_cancel = Input.is_action_pressed("menu_cancel")
 	_aim_report = {}
 	state = State.IDLE
 	_windup = 0.0

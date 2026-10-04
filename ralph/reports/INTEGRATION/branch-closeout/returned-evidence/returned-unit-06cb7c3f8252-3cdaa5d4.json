@@ -1,0 +1,32 @@
+{
+  "head": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+  "exit": 1,
+  "selection": "test_motion_prefs.gd,test_hit_feedback.gd,test_move_effects.gd,test_combat_vfx.gd,test_texture_import_policy.gd,test_audio_cues.gd,test_impact_audio.gd,test_audio.gd",
+  "summary": [
+    "SCRIPT ERROR: Parse Error: Cannot call non-static function \"call()\" on the class \"res://scripts/combat/move_projectile.gd\" directly. Make an instance instead.",
+    "SCRIPT ERROR: Parse Error: Cannot call non-static function \"call()\" on the class \"res://scripts/combat/move_projectile.gd\" directly. Make an instance instead.",
+    "SCRIPT ERROR: Parse Error: Cannot call non-static function \"call()\" on the class \"res://scripts/combat/move_projectile.gd\" directly. Make an instance instead.",
+    "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+    "ERROR: Failed to load script \"res://tests/test_combat_vfx.gd\" with error \"Compilation failed\".",
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.",
+    "SCRIPT ERROR: Cannot call method 'connect' on a null value.",
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.",
+    "SCRIPT ERROR: Cannot call method 'call' on a null value.",
+    "SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.",
+    "SCRIPT ERROR: Cannot call method 'call' on a null value.",
+    "SCRIPT ERROR: Parse Error: Could not resolve class \"res://scripts/combat/stormwood_authoritative_fight.gd\".",
+    "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+    "SCRIPT ERROR: Compile Error: Failed to compile depended scripts.",
+    "ERROR: Failed to load script \"res://tests/test_hit_feedback.gd\" with error \"Compilation failed\".",
+    "SCRIPT ERROR: Invalid access to property or key 'colour' on a base object of type 'Dictionary'.",
+    "  FAIL  test_hit_feedback.gd :: test_critical_effective_resisted_and_ordinary_numbers_differ",
+    "SCRIPT ERROR: Invalid access to property or key 'strength_scale' on a base object of type 'Dictionary'.",
+    "SCRIPT ERROR: Invalid access to property or key 'giant_height_m' on a base object of type 'Dictionary'.",
+    "SCRIPT ERROR: Invalid access to property or key 'strong' on a base object of type 'Dictionary'.",
+    "  FAIL  test_hit_feedback.gd :: test_weighted_feedback_is_immutable_and_preserves_host_damage",
+    "76 tests, 1856 assertions, 2 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-3cdaa5d4\\tests.log",
+  "raw_log_sha256": "703af3de4e9ef1e80e517364c150e4cd95276bf5cf2a9b5932e7b441049650ce",
+  "scope": "Exact tested source only; no criterion closure, main landing or archive inferred."
+}

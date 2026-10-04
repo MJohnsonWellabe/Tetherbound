@@ -1,0 +1,60 @@
+F17 remaining visibility/gather contract repair: source proposal only
+F17#4 remains OPEN. No engine, parser, import, CI, new session or agent.
+
+The two owned changes are test metadata/boundaries. No runtime helper,
+visibility model, terrain, creature population, calibration, frame/query
+budget, controller flow or earned assertion changes.
+
+ROOT's expanded named batch on 12a2ede365be2bf0a65b30c9bfb5ab1221b3d670
+reported 131 tests, 9079 assertions, one failure: historical road expected251,
+got250 for band1_lower_meadows. The raw log is retained byte-exact, SHA256
+e501bc5c006a7b61a82ecb8e0d6eeecb78455d1f48c11a6d1430e35bf725286f.
+Its all-critical-route two-forward-visible-creature test passed. This is
+existing ROOT evidence, not an engine run for this candidate.
+
+Visibility cause
+
+Historical baseline source a6ae37c1ef4190d3bca0b57423c627bf25d5a039 has
+27 band1 points, starting at (11.5,2). Accepted F17/RD-29 moves only that
+first point to (13.79,14), the road/TrailGate approach. All26 later points
+are identical. The first-leg relocation shortens the complete route from
+2493.984390926m to2481.815282956m, a12.169107970m reduction. The unchanged
+10m sampler plus final endpoint changes251 to250 points. Update only this
+sample-count pin and its rationale. Ceilings124 failing samples/130m run,
+all other historic pins, and the strict independent zero-failure/two-visible
+assertions stay unchanged. No road point is added to manufacture251 samples.
+
+Gather contract cause
+
+The unchanged gather helper has _one_approach followed by the real
+_press_and_observe_activation function. Its former Travel-one-leg comment
+does not exist there; using that prose as a substring delimiter causes an
+isolation failure before the activation checks can inspect the function.
+The test now finds the next top-level func declaration and preserves the
+original bounds assertion. A failed-bounds guard returns after that failure
+instead of evaluating an invalid substring. Every original assertion remains
+exact, including rejection of snapshot-as-success, bounded no-activation
+retry, immediate competing-provider failure and fatal outer retry handling.
+No helper change is authorized or made.
+
+Frozen unchanged gather SHA256:
+414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d
+Unchanged production navigator SHA256:
+6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55
+Source manifest SHA256:
+83e6303beb964ddc57aaf7491c16357c8ddf41bb102b2cccf99c137b79bc3304
+
+Validation
+
+source-check.py passes53/53 static checks from frozen bytes. It mirrors the
+existing sampler on old/current paths; compares every failure ceiling and
+all road-test functions; restores the contract exactly after removing only
+the delimiter/guard change; preserves all controller assertions; verifies
+helper hashes and the retained raw failure. Negative controls keep the old
+251 pin failing on the accepted route and reject stale winner-as-success,
+deleted no-activation retry, and competing activation entering retry.
+
+This is author source readiness, not a new independent or engine verdict.
+ROOT owns the named engine checks and fresh original-budget no-checkpoint
+earned opening, independent criterion review and main landing. Original
+native failure remains retained in R5; F17#4 remains OPEN.

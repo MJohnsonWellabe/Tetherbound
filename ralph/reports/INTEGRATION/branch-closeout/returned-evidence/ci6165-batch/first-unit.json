@@ -1,0 +1,12 @@
+{
+  "head": "f496d7bc756938b883ee2867eda61036efeac942",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_cloudreach_no_legendary_offer.gd,test_stormwood_encounters_data.gd,test_build_placer_preview.gd,test_fresh_opening_target.gd,test_tournament_network_selection.gd",
+  "summary": [
+    "75 tests, 2743 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-f496d7bc7569-be070ae2\\tests.log",
+  "raw_log_sha256": "6626482cde763a44c2c2e8c8a51a394c328ce82f68ba6b69a27e9ae5446d0c4c",
+  "raw_log_gzip": "first-unit.log.gz"
+}

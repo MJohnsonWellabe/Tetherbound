@@ -1,0 +1,18 @@
+Later ember-burst data source candidate, not folded into the frozen R24 capture.
+Eight radial plain balls currently use generic materials. Keep the existing
+radial movement/count/mastery and exact sphere vertices, but opt into the
+existing burning_core material: small warm ragged objects with pale hot cores,
+inward-only contraction, less trail competition and lower bounded emission.
+Use the existing explosion/soft-ember materials for compact cooling contact
+and fragments, through the already implemented thermal age/data controls.
+
+No new shader, texture, image/model generation, renderer hook, light, emitter,
+node/mesh-instance, particle slot, voice or timing is introduced. The existing
+SphereMesh body is unchanged; contact/debris mesh resources switch to already
+installed cards (vertex topology differs). All sound IDs, motion, mechanical
+parameters, mastery tables, lifetimes and leases remain unchanged. Keep OFF.
+
+No independent full-bar or new-family identity evidence exists yet; this is
+an authored source candidate, not proof of an earned player path or final craft.
+Full Palworld/Animo/Valheim judgment, actual input/HP authority, multiplayer,
+real Medium/Compatibility performance and device proofs remain separate.

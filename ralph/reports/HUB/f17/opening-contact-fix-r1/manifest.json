@@ -1,0 +1,78 @@
+{
+  "parent_helper_sha256": "bb45c5d0737c4a861a75d7cdf8f1a856e2e1492997bb6f154ef4d1f84809b67a",
+  "after_helper_sha256": "b05d1655021d2b796c4803e6f4d844c918a9ef0915f27d1e553ca5f09b674953",
+  "independent_review_sha256": "0cb96b744446ccc53da958f8be34c41ba4ddfd1645ca7f8be0396691154ec283",
+  "verdict": "BOUNDED INDEPENDENT SOURCEPASS; actual parser/player proof required; no MET",
+  "artifacts": [
+    {
+      "original": "freeze.json",
+      "gzip": "freeze.json.gz",
+      "original_sha256": "9913d747490479dd9c1809f2f02380e682312771f0e53581e8ab807e94460926",
+      "gzip_sha256": "1c80c7be7cac1a556e6775b378ccaecc4b6832ca7f80e1a8ef8be43941970b94",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "cause-and-constraints.json",
+      "gzip": "cause-and-constraints.json.gz",
+      "original_sha256": "63b670b03ac3af2af7360b9dd98fb5fcc543d03511d53eaa8ebd79b6918c2b74",
+      "gzip_sha256": "54fb9005925ae24d3caecf2751882aae2eb3054ddda9c2a05bd4f570580f7614",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "opening-contact-fix.patch",
+      "gzip": "opening-contact-fix.patch.gz",
+      "original_sha256": "02e34b9415cfc705358101975488312a0ca5ae485c8f6a236c0d8346310161ec",
+      "gzip_sha256": "a9a5b8df2010a23dd981de2092e6c92780ef6c98b04b4064cbba323bb4cebfa5",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "evidence/actual-contact-record.txt",
+      "gzip": "evidence/actual-contact-record.txt.gz",
+      "original_sha256": "6359866220f4da3350d53f97967ce5ee53c9f5a54870f938ff192e1565f17f7e",
+      "gzip_sha256": "34fd2adddb7aec539de80b78ffe28b20bf69a3b870e1436feb985989cdde411c",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "evidence/actual-r3-native.txt",
+      "gzip": "evidence/actual-r3-native.txt.gz",
+      "original_sha256": "020ad89b9bbe9efbdb19e544b03de94938a4d7f171a3c7f8b4468b55b663bfef",
+      "gzip_sha256": "63c24844e9fd830a3620057ea6c5f837c7d256c5eb968f3a34e5d6cdce3c27ea",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "evidence/actual-r3-receipt.json",
+      "gzip": "evidence/actual-r3-receipt.json.gz",
+      "original_sha256": "21096b037a5e182199f257a5acfc87f2d715716cbaf6951153ff2456bbef5c24",
+      "gzip_sha256": "0a287afacc9872bd3b7affb9936ce179ca5e3b63dfdaa281df31afedf6c9d65d",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "evidence/actual-r4-native.txt",
+      "gzip": "evidence/actual-r4-native.txt.gz",
+      "original_sha256": "0a87b014e5f3312cc3e776764c03c72999aa5ed8dd724922630665bea334fa7b",
+      "gzip_sha256": "a7e949262eb3ab090defa0da3cdac0e0928330a9583e54e25e0c538064f76c49",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "evidence/actual-r4-receipt.json",
+      "gzip": "evidence/actual-r4-receipt.json.gz",
+      "original_sha256": "28b804c9095fdc0a634f5f9eb0e9c2460019336d2de1aac78a577c539ce118fb",
+      "gzip_sha256": "45de3a8332a5bb6d523d0ebfa4828627aec8920eefb436ee916b73e4e4db6175",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "independent/strict-review.txt",
+      "gzip": "independent/strict-review.txt.gz",
+      "original_sha256": "642517cb52d1db239af5ec11f459494334feee6569009b98480a406d95a0b888",
+      "gzip_sha256": "8c50b50f43b8c680ed1478b289775ea95c01b9623d1427c68bcec9e7516206f9",
+      "lossless_roundtrip": true
+    },
+    {
+      "original": "independent/review.json",
+      "gzip": "independent/review.json.gz",
+      "original_sha256": "0cb96b744446ccc53da958f8be34c41ba4ddfd1645ca7f8be0396691154ec283",
+      "gzip_sha256": "96b8426c7a84bef70efeec3c5ba85fbfaed1564e2b5a11a35e3c1e441c31275c",
+      "lossless_roundtrip": true
+    }
+  ]
+}

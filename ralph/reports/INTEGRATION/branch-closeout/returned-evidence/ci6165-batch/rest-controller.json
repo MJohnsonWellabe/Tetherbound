@@ -1,0 +1,11 @@
+{
+  "head": "2fb3a0f2423ab25a78d3ec04a54395b856de0726",
+  "script": "tests/smoke_gate_a_rest_torch.gd",
+  "exit": 1,
+  "errors": [],
+  "summary": [],
+  "raw_log_sha256": "e5f0b08225171c8fb9b0e1ffd391e247ecc612796a79a042b8a93d5f350c9da2",
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-2fb3a0f2423a-smoke_gate_a_rest_torch\\smoke.log",
+  "interpretation": "No controller verdict or fixture assertion reached before the existing wrapper 240s limit; tail still loads house resources. Native exit1 retained; no placement PASS or exact loader blame.",
+  "raw_log_gzip": "rest-controller.log.gz"
+}

@@ -1,0 +1,4 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+F25 batch=identities cases=12 failures=0 renderer=gl_compatibility out=D:/tetherbound/vfx-identities-native-r2 scope=synthetic_no_combat

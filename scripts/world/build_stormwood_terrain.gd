@@ -292,9 +292,17 @@ func _run() -> void:
 	if not DirAccess.dir_exists_absolute(output_absolute):
 		DirAccess.make_dir_recursive_absolute(output_absolute)
 	var terrain: Node = ClassDB.instantiate("Terrain3D")
+	# Dynamically built assets have no path for Terrain3D to reload on entry.
+	terrain.set("free_editor_textures", false)
 	terrain.set("region_size", 256)
 	terrain.set("vertex_spacing", 2.0)
 	terrain.set("data_directory", data_dir)
+	# Offline bakes have no gameplay camera. Supply a mounted camera before
+	# Terrain3D enters the tree and attempts to acquire it during physics.
+	var bake_camera := Camera3D.new()
+	root.add_child(bake_camera)
+	bake_camera.current = true
+	terrain.call("set_camera", bake_camera)
 	root.add_child(terrain)
 	await process_frame
 	var data: Object = terrain.get("data")

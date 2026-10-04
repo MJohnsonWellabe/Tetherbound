@@ -113,7 +113,7 @@
   "captain_defeat_flag": "water_captain_nerissa_defeated",
   "captain_requires": ["water_veilfall_return_opened"],
   "guardian_species_id": "water_abyssal_guardian",
-  "guardian_level": 55,
+  "guardian_level": 33,
   "relic_landmark_id": "salt_crown_shrine",
   "guardian_position": [0.0, 0.0, 108.0],
   "guardian_freed_position": [-10.0, 0.0, 108.0],

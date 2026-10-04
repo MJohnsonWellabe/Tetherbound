@@ -13,8 +13,8 @@
   "legendary": {
     "species": "solmane",
     "display_name": "Solmane",
-    "level": 34,
-    "_comment_level": "Above Captain Veyra's own team (L30-33 summit band), as Veridian is above the Warden's. TUNABLE.",
+    "level": 44,
+    "_comment_level": "F19: Cloudreach exit L44; volunteer offer, never a wild capture.",
     "fallback": [
       101.5,
       5476.0

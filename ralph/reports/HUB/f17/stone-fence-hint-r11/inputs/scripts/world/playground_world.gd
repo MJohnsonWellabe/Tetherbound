@@ -1,0 +1,2375 @@
+extends Node3D
+
+## Builds the M1 playground at runtime from baked Terrain3D data.
+##
+## The Terrain3D node is created in code rather than saved into the scene. A
+## GDExtension node stored in a .tscn breaks the whole scene if the extension is
+## missing or its version moves, and it turns "did you install the addon?" into
+## a corrupt-scene error instead of a clear message. Creating it here means the
+## failure is one readable push_error and the rest of the playground still runs.
+##
+## The terrain itself is authored data, baked once by
+## scripts/world/build_playground_terrain.gd. Nothing generates terrain at run
+## time and nothing should: per the owner's direction the terrain is authored
+## macro geography, not a procedural seed.
+
+## D97 / lane 6.A: the realm this world IS. Named rather than repeated as a
+## literal because from Wave 6 it is an authority answer -- the per-realm
+## spawners and synchronizer visibility filters key on it.
+const REALM_ID := "meadows"
+const DATA_DIR := "res://data/terrain/playground"
+const TERRAIN_CONFIG := "res://data/config/terrain_playground.json"
+const LONG_WATER_VISUAL_CONFIG := "res://data/config/long_water_visual.json"
+## MEADOWS-VISUAL-PASS round 5: runtime terrain shader values that are
+## presentation only, kept out of terrain_playground.json for the same reason
+## the Long Water bank treatment is -- that file fingerprints both bakes.
+const GROUND_PRESENTATION_CONFIG := "res://data/config/terrain_presentation.json"
+const VEGETATION := preload("res://scripts/world/vegetation.gd")
+const DROPPED_ITEM_SPAWNER := preload("res://scripts/world/dropped_item_spawner.gd")
+const TRADE_OFFER := preload("res://scripts/ui/trade_offer.gd")
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
+const SHELL_BUILD := preload("res://scripts/world/shell_build_budget.gd")
+const STRUCTURE_VISIBILITY_RANGE := preload("res://scripts/world/structure_visibility_range.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const TERRAIN_HEIGHT := preload("res://scripts/world/terrain_height.gd")
+const WATER := preload("res://scripts/world/water.gd")
+const VILLAGE := preload("res://scripts/world/village.gd")
+const PROPS := preload("res://scripts/world/props.gd")
+const VILLAGE_NPCS := preload("res://scripts/world/village_npcs.gd")
+const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+const LOST_COMPANION_REUNION := preload("res://scripts/world/lost_companion_reunion.gd")
+## TOURNAMENT-1: the village tournament's bracket board. The fights themselves
+## are ordinary trainer entries and the marshal is an ordinary villager, so this
+## is the only node the tournament adds to the world.
+const TOURNAMENT := preload("res://scripts/world/tournament.gd")
+const GRANDPA_HOUSE := preload("res://scripts/world/grandpa_house.gd")
+const HARVEST_NODE := preload("res://scripts/world/harvest_node.gd")
+## BAND-SPLIT. `harvest.json`'s `nodes` array is cut per corridor band under
+## `data/config/bands/<band>/harvest.json` and merged back at load.
+const BAND_CONTENT := preload("res://scripts/data/band_content.gd")
+const FARM_PLOT := preload("res://scripts/world/farm_plot.gd")
+const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
+const BUILD_PLACER := preload("res://scripts/build/build_placer.gd")
+const SIGNPOST := preload("res://scripts/world/signpost.gd")
+const LANDMARK := preload("res://scripts/world/landmark.gd")
+const WATCHTOWER_LANDMARK := preload("res://scripts/world/watchtower_landmark.gd")
+const RIDGELINE_WATCH := preload("res://scripts/world/ridgeline_watch.gd")
+const STONEWATER_REACH := preload("res://scripts/world/stonewater_reach.gd")
+const HIGHFIELD_PASTURE_IDENTITY := preload("res://scripts/world/highfield_pasture_identity.gd")
+const IRONWOOD_GROVE_PRESENTATION := preload("res://scripts/world/ironwood_grove_presentation.gd")
+const ROAD_GATE := preload("res://scripts/world/road_gate.gd")
+## OP-0830-1: the village's own fence line, and the gates in it.
+const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
+const KEY_PICKUP := preload("res://scripts/world/key_pickup.gd")
+const TM_PICKUP := preload("res://scripts/world/tm_pickup.gd")
+const ITEM_CACHE_PICKUP := preload("res://scripts/world/item_cache_pickup.gd")
+const BAND_PICKUPS := preload("res://scripts/world/band_pickups.gd")
+const CART_REPAIR := preload("res://scripts/world/cart_repair.gd")
+const RIVER_NEST_CLEAR := preload("res://scripts/world/river_nest_clear.gd")
+const MEADOWHART_HERD_VISIT := preload("res://scripts/world/meadowhart_herd_visit.gd")
+const WORLD_PERIMETER := preload("res://scripts/world/world_perimeter.gd")
+const SOUTH_BRIDGE := preload("res://scripts/world/south_bridge.gd")
+const OLD_QUARRY := preload("res://scripts/world/old_quarry.gd")
+const TETHER_RELAY := preload("res://scripts/world/tether_relay.gd")
+const ALPHA_PINS := preload("res://scripts/world/alpha_pins.gd")
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
+const MILL_CROSSING := preload("res://scripts/world/mill_crossing.gd")
+const RIVER := preload("res://scripts/world/river.gd")
+const SEVERED_SPOKES := preload("res://scripts/world/severed_spokes.gd")
+const RIFT_COLLAPSE := preload("res://scripts/world/rift_collapse.gd")
+const RIFT_CROSSING := preload("res://scripts/world/rift_crossing.gd")
+const MEADOW_HEALING := preload("res://scripts/world/meadow_healing.gd")
+const REALM_HEART_SHRINE := preload("res://scripts/world/realm_heart_shrine.gd")
+const REALM_CRESCENT_SHRINE := preload("res://assets/props/tideglass_shrine/tideglass_shrine.glb")
+const STRONGHOLD := preload("res://scripts/world/stronghold.gd")
+const STRONGHOLD_CLIMAX := preload("res://scripts/world/stronghold_climax.gd")
+const PLAYER_DEATH := preload("res://scripts/world/player_death.gd")
+const BOOT_LOG := preload("res://scripts/boot/boot_log.gd")
+const REALM_TRANSITIONS_CONFIG := "res://data/config/realm_transitions.json"
+
+## SA7: on `paths.routes`' "toward the rocky rise" leg (`[10,-10] -> [45,-22]`,
+## the same road `landmark.gd`'s stronghold silhouette sits beyond), a stone's
+## throw past the square so the player meets it early. `GATE_YAW_DEG` is not
+## derived from the route's heading — the one existing "along the path" fence
+## yaw in `village.json` was tuned by eye against a render, not computed, so
+## this was too; verified square across the road via `tools/survey.gd`.
+## `harvest.json` places a berries node at `[20,-16]`, 2.8m from the first
+## candidate point on this leg — well inside both interactables' radii, so
+## the arbiter kept offering "Pick berries" instead of the gate. Moved
+## further out along the same leg for clearance rather than moving the
+## harvest node, which R2.1's tutorial route already depends on.
+##
+## OP-0830-1, 2026-08-30. BOTH VALUES ARE NOW READ FROM
+## `data/config/village_boundary.json`, not from here, and the two below are
+## kept only as the pre-boundary record of where this gate stood and why. The
+## owner's report is that the gate "doesn't keep you in"; it did not, because it
+## stood in open meadow with a 24m seal and the settlement was open on every
+## other bearing (see `village_boundary.gd`'s header for the measurements). A
+## gate is now a hole in the village's own fence line, so its position is the
+## point where that line crosses this road — (38.7, -19.9) — and its yaw is the
+## line's own direction there.
+##
+## The yaw is worth its own line. The comment above says this one was "tuned by
+## eye against a render, not computed", and the eye got the SIGN: 71.0 puts the
+## leaf's own local +X on (0.33, -0.95), which is 38 degrees off square to a road
+## running (0.95, -0.32). The perpendicular is -71.6. The gate the owner walked
+## past was standing at an angle to the road it was supposed to bar.
+const GATE_AT := Vector2(27.5, -16.0)
+const GATE_YAW_DEG := 71.0
+
+## A short detour off the road toward the square — "easy," per SA7's own
+## done-when, not a real obstacle. Far enough from `GATE_AT` that the two
+## interactables' radii (4.0m gate, 2.4m key) do not overlap; the first
+## placement (3.6m away) put both prompts in contest right where a player
+## would naturally stand to try the gate, and the closer one always won.
+##
+## SIGIL-SEAL fallout, 2026-08-25: the old (24,-10) sat only 6.8m along the
+## gate's own fence line -- inside `_build_wings()`'s `seal_half_width` 12.0m
+## reach on that side, ~2m from the wing panel it now builds there. The wing
+## is solid, so it ate the approach: nothing got the player inside the key's
+## 2.4m prompt radius and `smoke_opening` failed with "the arbiter picked
+## something else" (it hadn't; there was nothing to pick).
+##
+## Moved off the fence line entirely rather than shortened along it -- a
+## shorter seal on this one side is a gap in an otherwise-physical barrier,
+## exactly the hole SIGIL-SEAL was written to close. Computed, not eyeballed,
+## by `tools/_probe_key_site.gd` (kept for the next time a gate or a fence
+## near here moves): a grid search over ground-valid points requiring real
+## clearance from every neighbour that matters -- the seal wings themselves
+## (>6.0m to the nearest wing centre), the gate's own prompt (>6.4m, same
+## non-overlap rule this comment already used), the berries harvest node and
+## both village.json `fence_run`s (>4.8m / >4.0m), cottage_b's walls (>3.0m)
+## and the square oak (>2.5m) -- then, among every point that cleared all of
+## those, the one closest to the gate, so the detour stays "short." Verified
+## clear at every margin; see the probe's own output for the full table.
+##
+## OP-0830-1, 2026-08-30. Re-sited to (30.7, -15.9) by the same probe, rewritten
+## for the world that exists now: `tools/_probe_key_site.gd` searches for a point
+## INSIDE the village boundary (`village_boundary.gd::contains`), on real ground,
+## at least 5m from every live prompt in the world and 3m from every fence panel,
+## and closest to the gate among all of those. It reads its neighbours off the
+## built scene rather than from a transcribed list, which is what the old version
+## did and why it went stale.
+##
+## Inside is the part that matters and the part that is new. The owner's ask is
+## that the gate "keep you in until you find the key" — a key on the far side of
+## the wall is a key the confined player cannot reach, and the old (31.2,-8.4)
+## fell outside the new line. Measured result: 8.94m from the gate, 5.26m to the
+## nearest other prompt, 9.20m to the nearest fence panel, ground 0.48.
+const GATE_KEY_AT := Vector2(30.7, -15.9)
+
+## SF34: the Meadows Hall approach, the chapter's last gate (spec §3 Band 4).
+## Three Sigils, one lock — sealed at two of three, open at three. The body is
+## `road_gate.gd` configured, not a second gate script; see that file's own
+## note on why.
+##
+## ORIGINAL siting record (pre-OW5D; see that note below for what actually
+## drives `SIGIL_GATE_AT` today). Sited where the walkable upper Meadows
+## ENDED on the stronghold's bearing at the time: `map_landmarks.json` put
+## Meadows Hall at [229.8,-144.4], which was 271m out and therefore beyond
+## `world_perimeter.gd`'s 235m ring — it was a silhouette, drawn to be seen
+## and not reached, and the approach to it was the last ground the player
+## could stand on facing it. GATE-E2 (2026-08-23, "move the castle to the
+## end") later moved BOTH the castle (`landmark.gd`'s `SITE`, now (150,7595))
+## and this landmark's map pin (`map_landmarks.json`'s `stronghold` entry,
+## now also (150,7595)) again, decoupled from this gate's own siting below —
+## see `landmark.gd`'s own header for that move's reasoning. [130,-176] was
+## 219m out, measured by
+## `tools/_probe_upper_meadows.gd` at 1.19m of height spread and a worst local
+## slope of 9.8 degrees over a 5m pad, with the Riverwatch Captain 18m back
+## down the draw — close enough that the sealed gate is visible over his
+## shoulder while you fight him, far enough that their two prompts (4.0m and
+## 4.2m) never contest. `SIGIL_GATE_YAW_DEG` puts the leaf across the bearing
+## to the Hall (72.4 degrees from here) and is TUNABLE by eye, exactly like
+## `GATE_YAW_DEG` above and for the same reason.
+## OW5D relocation, docs/specs/MEADOWS_MACRO_LAYOUT.md section 10.2: moved from
+## (130,-176) to the table's explicit new coordinate (0,7400), alongside
+## stronghold.json's `site.at` moving to (0,7560). `SIGIL_GATE_YAW_DEG` is
+## left UNCHANGED below and is almost certainly wrong for the new site: the
+## old -17.6 deg was tuned so the gate leaf sits across the OLD bearing to
+## the Hall (72.4 deg from the old gate position, per the comment above,
+## which itself is now stale prose describing geometry that no longer
+## exists). The new corridor's Stronghold-approach spine runs roughly
+## north-south, a completely different bearing, so this yaw needs fresh
+## tuning against the real approach once it is built -- flagged rather than
+## guessed at. Ground truth at (0,7400) was NOT re-probed by this pass.
+## BAND5-CONTENT. The OW5D note above deferred both of these to "fresh tuning
+## against the real approach ONCE IT IS BUILT" and recorded that "ground truth
+## at (0,7400) was NOT re-probed by this pass." The approach is built, and this
+## lane's driven run (`tools/_probe_band5_approach.gd`) measured what the note
+## could not have known: (0,7400) is **55.9m from the nearest point of the
+## authored Band 5 spine**. The spine swings east to (80,7370) before turning
+## back to the works, so a player walking the road never came within 55m of the
+## chapter's own final gate. The single physical progression checkpoint of the
+## region stood in open meadow beside the route, and the objective that
+## completes on `hall_approach_open` waited on a thing the road did not pass.
+##
+## Both constants are now measured, by `tools/_probe_band5_sigil_gate.gd`:
+##   * (63.6, 7400) is where the spine ACTUALLY crosses z=7400 -- the same
+##     latitude the table gave, moved onto the road instead of beside it.
+##     Ground there carries 2.25m of relief over a 16m pad, against 2.08m at
+##     the old point: the same quality of ground, so nothing is traded for it.
+##     Clearances: 44.1m to Warder Ness's checkpoint (whose own 4.0m prompt and
+##     this gate's 4.2m therefore still never contest), 32.9m to the duskhush
+##     cluster, 95m+ to everything else authored.
+##   * -28.6 deg is `atan2(bearing.x, bearing.z)` of the road's own heading
+##     there, (-0.479, 0.878). That is the yaw that puts the leaf ACROSS the
+##     road, and the axis was MEASURED rather than assumed
+##     (`tools/_probe_gate_leaf_axis.gd`): `road_gate_leaf`'s local AABB is
+##     4.07 x 1.46 x 0.12, so the panel spans local X, and `rotation.y = θ`
+##     carries local +X onto (cos θ, -sin θ) -- perpendicular to the bearing
+##     exactly when θ = atan2(dx, dz). `GATE_YAW_DEG` above is NOT a
+##     counter-example: its own comment records that it was tuned by eye
+##     against a render rather than computed.
+##
+## WHAT THIS DOES NOT FIX, said out loud. The leaf is 4.07m wide and stands on
+## open ground with no gorge, wall or ravine flanking it, so it is a key-use
+## point and a piece of staging -- it is not a barrier, and a player who wants
+## to walk around it can. Prompt 66 asks that "a physical gorge/barrier must
+## actually constrain travel", and satisfying that needs flanking terrain from
+## `terrain_playground.json`'s `crossings`/`spokes` carves, which is a file no
+## Gate D lane may edit (GATE_D_LANE_CONTRACT §5). It is requested, with
+## measurements, in this lane's report.
+const SIGIL_GATE_AT := Vector2(63.6, 7400.0)
+const SIGIL_GATE_YAW_DEG := -28.6
+const SIGIL_ITEM_IDS := ["field_sigil", "ridge_sigil", "river_sigil"]
+const SIGIL_GATE_FLAG := "hall_approach_open"
+
+## D71/T3-SUNSTONE: the Sunstone, the second Mudsnout evolution catalyst
+## (species.json's `mudsnout.evolves_into_variants`). Sited a few metres off
+## the centre of the wild Ashtusk cluster T3-CREATURES placed and this lane
+## removed ((118,0,7340), band5_stronghold_approach/spawns.json's
+## `_comment_ashtusk_removed`) -- the same scorched Team Tether industrial
+## ground by the Sigil gate, already proven walkable by the creature that used
+## to stand there. A `key_pickup.gd` one-time physical pickup, the same class
+## `castle_gate_key` below already uses, because the brief restricts this
+## family of item to open-world geography ("scorched terrain, warm stone,
+## burned clearings, Team Tether industrial sites"), not a dungeon `prize`
+## block -- there is no dungeon here to hang that mechanism on.
+const SUNSTONE_AT := Vector2(121.0, 7336.0)
+
+## T3-BAND4: the ruined watchtower at the Band4->Band5 seam (see
+## watchtower_landmark.gd's own header). Sited at the flattest of six
+## candidates measured with tools/_probe_t3band4_sites.gd along the
+## corridor's own worst authored-content gap after Captain Vess
+## (h=2.16m, 1.67m spread, worst slope 10.6 degrees over a 7m pad).
+## `facing_deg` is the yaw looking back down the road toward the captains,
+## the same atan2(dx,dz) convention `trainers.json`'s own siting notes use,
+## derived from the spine's own travel direction at this point.
+const WATCHTOWER_AT := Vector2(40.0, 6800.0)
+const WATCHTOWER_FACING_DEG := -123.7
+
+## A few metres off the well (village.json stands it at the green's centre,
+## [10.5,-6], on the main street axis) so the signpost has its own footing
+## instead of sharing the well's, and clear of the Green Walk to the stone
+## cottage (OPTION-B, owner 2026-09-29).
+const SIGNPOST_AT := Vector2(13.5, -3.5)
+
+## R4.4: two TMs standing in the open field, well clear of every other
+## interactable's radius (checked against GATE_AT/GATE_KEY_AT and every
+## data/config/harvest.json node — nearest is >7m). Both `ground`-compatible,
+## the Meadows' dominant type (GAME_DESIGN.md 8), same as every wild species
+## placed here so far.
+## REWARD-ECONOMY added the other three. `data/items/items.json` has carried
+## fourteen TMs since R4.4; nine are stocked at Mira's, these two stand in the
+## opening field, and `tm_earthshatter`, `tm_leviathan_surge` and
+## `tm_heavenfall` — one apex TM per type, each of whose own blurb says "Very
+## rare" — could not be obtained anywhere in the game. Not a balance problem: a
+## shipped item with no acquisition path at all, the same written-but-inert
+## shape as the relay console's `requires_flag` seam recorded in BACKLOG.md.
+##
+## Sited by prompt 58's rule ("where discovery and difficulty justify their
+## value") rather than by convenience: one per type, each off the spine in the
+## late region that owns that type, each a real detour a player chooses to make.
+## They are one-time pickups on exactly the mechanism the first two use — the
+## `tm:<id>` flag below already makes a reload unable to mint a second copy —
+## so nothing new is introduced to carry them.
+const TM_AT := {
+	"tm_stone_rush": Vector2(34.0, -20.0),
+	"tm_burrow_strike": Vector2(6.0, -30.0),
+	# Water, beside the river gorge ~350m downstream of the Old Mill Crossing.
+	# 45m off the course centreline at x=500, where terrain_playground.json's
+	# `river` measures half_width 12 and rim 6 — an 18m carve edge, so ~27m of
+	# clearance. Beside the gorge, not in it, and reached by walking the river
+	# instead of crossing it.
+	"tm_leviathan_surge": Vector2(500.0, 4240.0),
+	# Ground, on Band 4's western high stone, ~110m off the spine's own far
+	# point (-420, 5140). The upper country's rock, past the old-growth.
+	"tm_earthshatter": Vector2(-520.0, 5180.0),
+	# Air, off the Meadows Hall approach road in Band 5 — the latest and hardest
+	# of the three to reach, in the region whose wild band is the chapter's
+	# strongest.
+	"tm_heavenfall": Vector2(140.0, 7300.0),
+	# T3-BRIDGE. Band 1 had zero TM pickups over its whole 2,384m span — every
+	# other early-chapter checklist item (wilds, trainers, resources, a rest
+	# camp, an off-route detour) had landed by BAND1-D1/PW2, but "a TM pickup
+	# or discovery" (owner-direction §5) had not. tm_wind_blade was already an
+	# item (data/items/items.json) and already purchasable at Mira's —
+	# REWARD-ECONOMY stocked it there — this adds a second, free acquisition
+	# path rather than replacing that one, the same "any one of the three
+	# makes it obtainable" shape tests/test_chapter_rewards.gd already checks.
+	# Air-compatible, planted 8.5m off the pipwing grove pocket
+	# (data/config/bands/band1_lower_meadows/spawns.json order 1046, itself
+	# already off-spine by ~110m at the oak grove's far side) rather than on
+	# the road: owner-direction §13's own example is "a Pipwing nest ... with
+	# a TM sphere", and finding one requires the same curiosity-driven detour
+	# into the grove interior that order 1046's own comment already banked on.
+	"tm_wind_blade": Vector2(336.0, 786.0),
+	# NOTE (LAND-0829A): T3-BAND4 also placed tm_wind_blade at
+	# Vector2(70.0, 6245.0), 768m before Captain Vess, to close the
+	# interior band-4 gap with an Air move before an Air captain. That
+	# collided with T3-BRIDGE's band-1 placement above -- this dict is
+	# keyed by TM id, so one TM can sit in exactly one place. Band 1's
+	# placement wins because band 1 had ZERO TM pickups over its whole
+	# 2,384m span, which is the more severe gap. Band 4's Air
+	# preparation beat before Captain Vess is therefore STILL UNMET and
+	# wants a different Air TM -- see ralph/reports/
+	# finding-post-tournament-cadence-2026-08-29.md.
+	# T3-BAND4: Water, at the base of the ruined watchtower (WATCHTOWER_AT),
+	# the landmark reward the cadence finding's band4->band5 seam asks for.
+	# Water rather than another Air/Ground disc — band 4 otherwise preps
+	# every type but the one Captain Riverwatch (band 3) already tested, and
+	# a cache a Team Tether patrol never got to ship out is the honest
+	# in-fiction reason an upper-ridge ruin holds a river-region TM.
+	"tm_riptide_lance": Vector2(33.0, 6795.0),
+	# T3-PICKUPS. The 768m gap this dict's own note above (tm_wind_blade)
+	# names as "STILL UNMET" -- band 4's Air-prep beat before Captain Vess
+	# (captain_ridge), immediately before him at chapter distance ~10,119.
+	# tm_wind_blade is taken (Band 1), so this is the "different Air TM" the
+	# note asks for. tm_aerial_flash rather than tm_cyclone: both are
+	# unplaced in the world (both shop-only at Mira's, data/config/trade.json
+	# -- verified before writing this, `test_every_tm_in_the_game_can_actually_be_obtained`
+	# already passed for both), and this adds a second, free acquisition
+	# path, the same "any one of the three makes it obtainable" shape
+	# tm_wind_blade's own Band-1 placement already establishes. Sited near
+	# the wild cluster at (60,6230) — T3-BAND4's own note calls this "the
+	# ordinary herd" the special encounter 84m south stands apart from —
+	# rather than on the spine itself, 39m off that cluster's centre and
+	# clear of it and of every other node measured with
+	# tools/_probe_pickups_sites.gd (worst slope 4.5 degrees over a 2m pad).
+	"tm_aerial_flash": Vector2(85.0, 6260.0),
+	# T3-DENSITY, Gap B. Of the chapter's 14 TMs, 8 were already placed in the
+	# world before this pass -- but region-by-region, every one of them sat in
+	# Band 1 (3), Band 3 (1, the apex leviathan_surge detour) or Band 4 (3);
+	# Band 2 (Stone & Root -- the Old Quarry, the Burrow Warrens, the region
+	# spec section 6 names as the roster-improvement test) had NONE, on-route
+	# or off. tm_stone_spike was one of five TMs sitting shop-only at Mira's
+	# with no world alternative at all (data/config/trade.json; verified
+	# unplaced in this dict and in every band's trainers.json before writing
+	# this); this adds a second, free acquisition path, the same shape every
+	# other TM_AT entry already establishes and
+	# test_every_tm_in_the_game_can_actually_be_obtained already covers. A
+	# Ground TM, matching the quarry's own working stone (GAME_DESIGN.md 8's
+	# Ground-dominant Meadows) and a real ladder step above the two starting
+	# TMs (stone_rush 1.0/burrow_strike 1.1 power, data/moves/moves.json) below
+	# earth_fist (1.4, Captain Field's trainer reward) and earthshatter (2.0,
+	# apex). Sited on the quarry_rim_overlook loop (docs/specs/MEADOWS_MACRO_LAYOUT.md
+	# row 2: departs (310,1660), rejoins (330,1950)), further into the loop
+	# than the rejoin's own potion_large (harvest.json order 2013) so the two
+	# don't crowd one spot -- MEASURED, tools/_probe_density_sites.gd: worst
+	# slope 3.8 degrees over a 2m pad, the flattest of four candidates walked
+	# across the loop, clear of quarry_station/Dorn/the rejoin cluster by
+	# 100m+.
+	"tm_stone_spike": Vector2(230.0, 1870.0),
+}
+
+## T3-PICKUPS. One-time world finds for items with no renewable/rare tension
+## reason to be a harvest node (`item_cache_pickup.gd`; see its own header for
+## why this exists beside key_pickup.gd/tm_pickup.gd rather than reusing
+## either). Keyed by item id, same one-item-one-place contract TM_AT already
+## uses.
+##
+## `elixir_might` is the only entry: D47's own comment in items.json says
+## permanent stat boosters are deliberately kept OUT of Mira's stock so they
+## "stay rare", and a 60s-respawn harvest node (this file's other new
+## pickups all use one) would let a player farm past
+## data/config/progression.json's `elixirs.cap_per_stat` (24, i.e. 4 copies)
+## in under 20 minutes standing still -- the opposite of what D47 asked for.
+## A one-time find is the honest reading of "belongs in the world -- a
+## dungeon, a captain, a stronghold" (items.json's own `_comment_elixirs`).
+##
+## Sited in the Band 5 off-spine warren pocket (spawns.json order 5016,
+## centre (-145,7085), "leaving the road here is rewarded, not just
+## scenery") pushed a further 22m into the pocket -- owner-direction
+## section 15's "final tempting roster opportunity" region, and exactly the
+## "genuinely off-path, worth the detour" placement the brief asked for a
+## permanent elixir to get. MEASURED, tools/_probe_pickups_sites.gd: worst
+## slope 7.3 degrees over a 2m pad, clear of every other authored node.
+## WORLD-CONTENT, docs/specs/BAND1_ROUTE_CONTRACT.md place 2 (the Rise): "a
+## cache 40-60m off the crest marked by a lone dead tree, holding either a TM
+## the band's species can learn or the Ironwood-tier recipe -- check
+## data/moves/tms.json and data/recipes/ and pick the one a level-5 to
+## level-8 team actually benefits from".
+##
+## tm_rock_throw, not an Ironwood recipe. `data/recipes/recipes_ironwood.json`
+## needs `ironwood`/`rootstone` in every entry (its own header: "NOTHING THE
+## STRONGHOLD NEEDS MAY REQUIRE A THIRD NEW MATERIAL" -- baseline, Rootstone,
+## Ironwood only), and neither material exists anywhere near Band 1: rootstone
+## is Band 2's Old Quarry, ironwood is Band 4's upper Meadows. A level-5 to
+## level-8 team standing on the Rise cannot spend an Ironwood recipe on the
+## day they find it -- it would sit unusable in the recipe book for two whole
+## bands. tm_rock_throw is Ground-type (`data/moves/moves.json`), which most
+## of Band 1's roster already is (bramblebun/terrapup/mudsnout/meadowhart/
+## burrowback/trailpup all resolve to `type: "ground"` in species.json), and
+## it is the one Ground TM in the game with NO free world pickup anywhere
+## (`tm_stone_rush`/`tm_burrow_strike` are the opening-field TMs at TM_AT
+## above; `tm_stone_spike` is the Old Quarry's; `tm_earth_fist` is Captain
+## Field's Band 4 trainer reward, data/config/bands/band4_upper_meadows_ironwood/trainers.json)
+## -- Mira sells it for 120 coins (data/config/trade.json), well past what a
+## team this early has banked. A free copy on a curiosity-rewarded detour is a
+## real Band 1 upgrade the day it is found, not a recipe waiting for a
+## material two regions away.
+## 2026-09-04. A first representative placement of the new pickup art
+## (docs/specs/ASSET_LEDGER.md, "Meadows pickup props") through this exact
+## existing mechanism, per the addendum's own art-source order: reuse
+## infrastructure, one new mesh per family, tint/scale for tiers rather than
+## a pickup per tier. **Not the full regional-density pass** —
+## docs/FINISH_THE_MEADOWS_ADDENDUM_2026-09-04.md sections B/C ask for ~100
+## candy and ~100-150 findables total, authored per band in regional
+## batches; this is one of each family, in Band 1, to prove the seam works
+## end to end. The remaining bands and the rest of the count are the next
+## regional batch, not attempted here.
+##
+## UNVERIFIED GROUND: placed 2-3m from the two already-proven-valid points
+## above rather than at a freshly probed site — this session had no running
+## Godot instance to confirm ground height at a new coordinate.
+## `ground_height_at()` refuses gracefully (push_error, no spawn, no crash)
+## if any of these land off-terrain, so the failure mode is silent rather
+## than broken, but treat these four as needing a real probe
+## (`tools/_probe_activities_sites.gd`'s pattern) before trusting them as
+## final band-1 placements.
+const CACHE_AT := {
+	"elixir_might": Vector2(-165.0, 7065.0),
+	"tm_rock_throw": Vector2(-382.8, 355.5),
+	"good_candy": Vector2(-167.5, 7062.5),
+	"potion_small": Vector2(-380.3, 358.0),
+	"revive": Vector2(-384.5, 353.0),
+	"stamina_mushroom": Vector2(-163.0, 7067.5),
+}
+const CACHE_LABEL := {
+	"elixir_might": "Take the elixir",
+	"tm_rock_throw": "Take the TM",
+	"good_candy": "Take the candy",
+	"potion_small": "Take the potion",
+	"revive": "Take the revive",
+	"stamina_mushroom": "Take the mushroom",
+}
+const CACHE_MODEL := "res://assets/props/quaternius_fantasy/Barrel.gltf"
+const CACHE_MODEL_SCALE := 0.9
+
+## T3-ACTIVITIES. Band 1's "Broken Cart" Local Request (spec sec6). Off the
+## South Bridge approach, on the village side -- ground-checked flat with
+## tools/_probe_activities_sites.gd (worst local slope 10.5 degrees over a 3m
+## pad); no authored content within 20m.
+const BROKEN_CART_AT := Vector2(80.0, 1240.0)
+const BROKEN_CART_YAW_DEG := 40.0
+
+## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request.
+## Near-bank perch beside the actual river course.
+##
+## _why (F03 lure legibility): WORLD sec11 says "Doss's blocked bank is visible
+## from the river loop", but the first site (72,4187.4) stood 152m from the
+## nearest road and no road sample within 120m had a clear line to him
+## (tests/probe_lure_road_visibility.gd: 4 clear samples, nearest 153.6m).
+## Moved 91m west along the SAME north bank (water edge ~21m away, as before
+## ~17m) to the flattest scatter-free spot that the river loop
+## (near_bank_river_walk) sees: 62.8m off the loop, 16 clear road samples,
+## nearest at (-80,4165) 62.8m, 3.7-degree worst slope over a 5m pad, no solid
+## or soft scatter within 6m, no authored Meadows content within 45m. Closer to
+## the loop the bank is steeper than 5 degrees. `world_ledger.gd::DOSS_AT` is
+## the authority's copy and must move with it (tests/test_world_ledger_races.gd).
+##
+## F03#0 (lure judge D, 2026-09-27): at (-19,4180) the camp sat on the ridge
+## plateau just past its west crest, so from the loop the crest hid Doss, the
+## fire and the perch until the prompt; only the smoke column showed. Moved
+## 15 m south-west to the crest's road-facing edge on the same ridge above the
+## river: 56 m off the loop, and `probe_lure_road_visibility.gd
+## --camp-grid=doss:-32,4174,14,2 --camp-margin=0.25` finds loop samples at
+## 51-58 m that see both the ground (+0.3 m) and body height here, where the
+## old site had none inside 70 m. 4.0-degree worst slope over a 5 m pad.
+## Facing -74 puts him toward the loop and the perch (offset -4,0,3) on the
+## visible crest edge at (-26,4163).
+const RIVER_NEST_AT := Vector2(-22.0, 4166.0)
+const RIVER_NEST_FACING_DEG := -74.0
+
+## Where Grandpa's house stands: the west building pad in
+## data/config/terrain_playground.json's `flats`. One source of truth would be
+## nicer, but the flat is a terrain concept and the house is a building; they
+## meet at this number and the bake test asserts the pad is genuinely flat.
+const HOUSE_AT := Vector2(2.0, 14.0)
+
+## Terrain3D.CollisionMode. 1 is DYNAMIC_GAME: real collision shapes rebuilt
+## incrementally around the camera, out to `COLLISION_RADIUS_REQUESTED`.
+##
+## §8.2: FULL_GAME (3) was the fix for a lifecycle bug (see the `_ready()`
+## comment below), not a statement that dynamic collision is wrong. At 4
+## regions FULL_GAME is cheap; at the 64 regions the corridor bakes, it is
+## real shapes across the entire loaded world built at load, all at once, on
+## the load screen. Dynamic collision with a radius the player cannot
+## outrun is the streaming answer -- see `_apply_dynamic_collision()`.
+const COLLISION_DYNAMIC_GAME := 1
+
+## What `_apply_dynamic_collision()` asks Terrain3D for. Verified against the
+## vendored addon (`tools/_probe_terrain_collision.gd`, run 2026-08-16) that
+## `collision_radius` is SILENTLY CLAMPED to the nearest legal value in
+## [16, 256] step 16 -- asking for 512, the number §8.2 reasoned from (based
+## on `sprint_speed` alone, before this was checked against the addon), gets
+## you 256 back, not 512. `_ready()` reads back what was actually granted and
+## uses THAT for the "can the player outrun it" reasoning, not this constant.
+const COLLISION_RADIUS_REQUESTED := 512
+## `collision_shape_size` clamps to [8, 64] step 8 on the same build. 64 is
+## already inside that range, so this one is not a request in the same
+## aspirational sense as the radius above -- it is expected to be granted
+## exactly, and `_ready()` still reads it back rather than assuming so.
+const COLLISION_SHAPE_SIZE := 64
+
+## Metres above the sampled ground to drop the player from, so a small mismatch
+## between the collision bake and the heightfield does not spawn them inside it.
+const SPAWN_CLEARANCE := 2.0
+
+## D101. `$Player` is an instance of `scenes/player/local_rig.tscn` — THIS
+## process's one local rig, in the `local_player` group. `$CameraRig` is that
+## rig's camera: it is authored as a root-level sibling only because
+## `camera_rig.gd::_ready()` sets `top_level = true` and follows the player by
+## code, so the two are one rig however the tree is drawn. Other peers'
+## trainers live under `Spawned/Trainers` and are never reachable from either
+## of these paths, so every subsystem below that keys on the camera or the
+## player — the terrain, the grass field, scatter streaming, weather, the HUD,
+## the encounter director, riding — stays a per-process singleton keyed on the
+## local rig, which is the simplification D101 buys. `local_rig()` and
+## `local_camera_rig()` below are the public door onto them.
+## D97 / Wave 6 lane 6.A. SIMULATION-ONLY MODE -- this world as a headless
+## realm shell on the host, standing so the host stays authoritative over a
+## realm nobody in this process can see.
+##
+## Set by `realm_shells.gd::_stand_up()` on the instance BEFORE `add_child()`,
+## because `add_child()` is what runs `_ready()` and `_ready()` is what reads
+## it. Set afterwards it would build the whole visual meadow first and then
+## apologise -- which is exactly the post-hoc free spike S2 measured and D97
+## was amended to reject: freeing after `_ready()` recovered 30 % of frame
+## time but only 1.2 % of memory, because the 385,333-prop scatter and
+## Terrain3D's resident data were already built.
+##
+## What a shell keeps: the heightfield and its collision, the encounter
+## director and combat manager, world records, pickups, gates and NPC
+## triggers, the authored `Spawned` containers and their spawners, and -- per
+## D97's amendment -- `DialoguePanel`, `NamePrompt` and `StarterPicker`, which
+## `sequence_director.gd` calls every frame and which produced 13,000+
+## "previously freed instance" errors when S2 freed them.
+##
+## What it drops: grass, water, weather, audio, the HUDs, the sun, the
+## environment and the visual half of the vegetation scatter. See
+## `_shell_strip()`.
+@export var simulation_only: bool = false
+## The realm this shell stands for, stamped by `realm_shells.gd`. Empty in an
+## ordinary world -- which reads its realm from `REALM_ID` like everything
+## else -- and only ever used for logging here.
+@export var shell_realm: String = ""
+
+@onready var _player: CharacterBody3D = $Player
+@onready var _camera_rig: Node3D = $CameraRig
+@onready var _camera: Camera3D = $CameraRig/Camera3D
+
+var _terrain: Node3D = null
+var _vegetation: Node3D = null
+
+## D97 / lane MP-REALM-REOPEN. The time slice this world builds in when it is
+## a headless realm shell on somebody else's host. Inert -- every `await` on
+## it resumes in the same frame -- when `simulation_only` is false, which is
+## every case a player is actually standing here. See
+## `scripts/world/shell_build_budget.gd`.
+var _shell_build: RefCounted = null
+var _shell_ready := false
+var _spawn_position: Vector3 = Vector3.ZERO
+
+## WORLD-ART aerial-fade pass, 2026-09-02. The terrain material this world
+## built, kept so a later time-of-day change can push a new distance-fade
+## colour at it -- `_apply_ground_shader` below used to read
+## `terrain_playground.json`'s `aerial_fade_colour` exactly ONCE, at scene
+## setup, and nothing ever touched it again, while the sky's own fog/horizon
+## colours already vary continuously with `world_look.gd`'s clock. Static,
+## and mirrors `character_model.gd`'s `_emission_floor_scale` static-setter
+## pattern for the identical reason given there: a value read only at build
+## time is frozen at whatever hour the world happened to boot at.
+static var _aerial_material: Object = null
+
+
+## Called by `world_look.gd::_apply_environment` (so both `apply_time()` and
+## the driven clock's `_apply_blended()` reach this the same way, since both
+## funnel through that one function) whenever `art.json`'s merged environment
+## config carries an `aerial_fade_colour` for the current moment. A no-op if
+## this world has not built a terrain material yet, or if this Terrain3D
+## build's shader has no such uniform installed -- `_apply_ground_shader`'s
+## own shader-override install already warns by name if that ever happens,
+## so this stays silent rather than doubling that warning on every clock tick.
+static func set_aerial_fade_colour(colour: Color) -> void:
+	if _aerial_material == null or not is_instance_valid(_aerial_material):
+		return
+	if not _aerial_material.has_method("set_shader_param"):
+		return
+	_aerial_material.call("set_shader_param", "aerial_fade_colour", colour)
+
+
+## WORLD-ART aerial-fade pass, VP3 fix (2026-09-02). `WorldLook` is a sibling
+## child of this same scene root, so Godot readies it (and its `_ready()`'s
+## `apply_time(DEFAULT_TIME)`, which calls `_apply_environment` ->
+## `set_aerial_fade_colour` above) BEFORE this node's own `_ready()` runs --
+## children are readied bottom-up, and WorldLook has no `await` of its own to
+## delay it, while this function's caller does. That first push therefore
+## always lands while `_aerial_material` is still null and is silently
+## dropped by that setter's own no-op guard: on every fresh boot the terrain
+## started life on `terrain_playground.json`'s baked-in constant, not on the
+## current time-of-day's `aerial_fade_colour`, until the passive clock's next
+## `_apply_blended()` tick happened to retry -- which a frozen capture clock
+## (`world_look.gd::set_clock_frozen`, used by every survey/capture tool) never
+## does, so a pinned capture frame could carry the wrong aerial fade with
+## nothing in the capture path ever re-driving it.
+##
+## Called right after `_apply_ground_materials()` installs the real material
+## (the earliest point `_aerial_material` can be valid), this re-asks WorldLook
+## to apply whatever time of day it already resolved to -- a plain re-push of
+## the SAME preset, not a new one -- so the one-frame ordering race can no
+## longer matter: whichever of the two `_ready()`s happens to run first, the
+## terrain ends this function with the correct preset's fade colour on it.
+## N14: through `reapply_current_look()`, not `apply_time()`. The paragraph
+## above already describes the intent as "a plain re-push of the SAME preset,
+## not a new one" -- but `apply_time()` also PINS the clock to that preset's
+## authored hour (its own R5.1 comment), which was invisible while every world
+## opened at 08:00 and became a real defect the moment a world could open at a
+## saved evening: this re-push snapped 19:40 back to `golden`'s 18:00 on every
+## boot. `reapply_current_look()` pushes the same look off the live clock
+## instead of writing to it.
+## D101 deliverable 5 — the one door onto this process's local rig and its
+## camera. `scripts/net/trainer_spawn.gd` asks for it when it needs a spawn
+## anchor, and anything else that needs "the player" in a world that may also
+## hold remote trainer bodies should ask here (or `Game.local_player()`)
+## rather than by node name.
+func local_rig() -> CharacterBody3D:
+	return _player
+
+
+func local_camera_rig() -> Node3D:
+	return _camera_rig
+
+
+## The realm this world stands for, shell or not. `trainer_spawn.gd` asks so
+## it can spawn only the peers who are actually standing here, and so the
+## bodies it spawns are only replicated to the peers who can see them.
+func world_realm() -> String:
+	return shell_realm if not shell_realm.is_empty() else REALM_ID
+
+
+## D97's "no grass, water rendering, VFX, HUD or audio", applied to the nodes
+## this scene AUTHORS rather than builds. Runs at the very top of `_ready()`,
+## before any of them has had a `_ready()` of its own.
+##
+## Every one of these is a correctness problem in a shell, not only a cost:
+## the scene is a sibling of the host's own world under the SAME tree root
+## (see `realm_shells.gd`'s header for why it has to be), so a second
+## `WorldEnvironment` fights the host's, a second `DirectionalLight3D` adds
+## its light to the host's meadow, a second `current` `Camera3D` takes the
+## viewport, and both HUD `CanvasLayer`s draw straight over the host's screen.
+##
+## `WorldLook` goes too, and that one is worth naming: it is in the
+## `day_cycle` group, and `game_state.gd::_sync_clock_state()` takes the FIRST
+## member it finds. A shell that kept its own clock could hand the host's save
+## the shell's hour.
+##
+## `DialoguePanel`, `NamePrompt` and `StarterPicker` deliberately STAY (D97,
+## amended after spike S2): `sequence_director.gd` calls them every frame and
+## freeing them produced 13,000+ "previously freed instance" errors.
+##
+## `SequenceDirector` itself goes, and that is a small deviation from D97
+## worth stating. D97 keeps the three panels BECAUSE the director calls them;
+## freeing the director instead satisfies the same constraint from the other
+## end -- nothing calls a freed panel, because nothing calls them at all --
+## and it closes a hole the panels-only rule leaves open: a `DialoguePanel` is
+## a `CanvasLayer`, and a shell that ran a story beat would draw a dialogue
+## box over the screen of a player standing in a realm the beat is not
+## happening in.
+##
+## Nothing is lost by it. Story beats are per-player and the peer actually
+## standing in this realm runs its own `SequenceDirector` in its own scene;
+## the shell exists to be authoritative about the world, not to narrate to
+## nobody. Nothing in either world scene looks the director up -- it points at
+## other nodes and nothing points at it (grepped, not assumed) -- so its
+## absence is inert. `scripts/story/sequence_director.gd` belongs to lane 5.A
+## and is not touched.
+func _shell_strip() -> void:
+	for path: String in [
+		"WorldEnvironment", "Sun", "WorldLook", "WorldWeather", "WorldAudio",
+		"PlaygroundHUD", "CombatHUD", "SequenceDirector",
+	]:
+		var node := get_node_or_null(NodePath(path))
+		if node != null:
+			node.get_parent().remove_child(node)
+			node.queue_free()
+
+	# The camera STAYS. Terrain3D decides which regions keep resident
+	# collision from the camera it was handed (spike S2 item 5 confirmed a
+	# distant second camera builds collision where it points), and a shell
+	# with no camera is a shell whose simulated bodies fall through the world.
+	# It simply must not be the one the viewport draws from.
+	var cam := get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if cam != null:
+		cam.current = false
+
+	# The local rig has no player behind it here. Left in the tree because
+	# half this scene addresses it by `NodePath("../Player")` from the editor
+	# (`EncounterDirector`, `WorldWeather`, `RidingController`,
+	# `SequenceDirector`), and a null there is a crash rather than a saving --
+	# but stopped, hidden, and taken off every collision layer, so it neither
+	# reads the host's input nor shoves the remote bodies standing around it.
+	var rig := get_node_or_null(^"Player") as CharacterBody3D
+	if rig != null:
+		rig.process_mode = Node.PROCESS_MODE_DISABLED
+		rig.visible = false
+		rig.collision_layer = 0
+		rig.collision_mask = 0
+	print("[playground] simulation-only shell for realm '%s': no grass, water, weather, audio, HUD, sun or environment"
+		% (shell_realm if not shell_realm.is_empty() else "meadows"))
+
+
+## Where this shell should keep its resident terrain collision. Called by
+## `realm_shells.gd` with the average position of the peers actually standing
+## in it -- a shell has no player of its own to follow, and Terrain3D's
+## dynamic collision follows the camera.
+##
+## Also re-centres the scatter's collision streaming bubble, which is what
+## `_process()` does for the player in an ordinary world.
+func track_simulation_focus(at: Vector3) -> void:
+	if not simulation_only:
+		return
+	if _camera_rig != null and is_instance_valid(_camera_rig):
+		_camera_rig.global_position = at
+	if _vegetation != null and is_instance_valid(_vegetation) \
+			and _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", at)
+
+
+func _reapply_look_after_ground_materials() -> void:
+	var look := get_node_or_null(^"WorldLook")
+	if look == null:
+		return
+	if look.has_method("reapply_current_look"):
+		look.call("reapply_current_look")
+		return
+	if look.has_method("apply_time") and look.has_method("time_of_day"):
+		look.call("apply_time", look.call("time_of_day"))
+
+
+func _ready() -> void:
+	# FIRST, before any build work and before the DROPPED_ITEM_SPAWNER /
+	# TRADE_OFFER attach below: `_shell_strip()` frees the nodes whose
+	# `_ready()` would otherwise draw a second HUD over the host's screen,
+	# install a second WorldEnvironment, or add a second directional light to
+	# the world the host is actually looking at.
+	if simulation_only:
+		_shell_strip()
+	var perf_cfg := PERF_CONFIG.config()
+	# D107, lane 3.E. The two nodes item trading needs standing in every
+	# process before anybody presses anything: the spawner that draws a
+	# committed `item_dropped` op as a stack on the ground, and the offer
+	# transport, whose node path has to be identical on both peers or its RPCs
+	# do not resolve at all. Both are idempotent.
+	DROPPED_ITEM_SPAWNER.attach(self, REALM_ID)
+	TRADE_OFFER.attach(get_node_or_null(^"/root/Game"))
+
+	if perf_cfg.has("collision_stream_interval_s"):
+		COLLISION_STREAM_INTERVAL = maxf(0.05, float(perf_cfg["collision_stream_interval_s"]))
+
+	# RG7. Mid-session Load restores persistent flags into an already-built
+	# Meadows scene; this world owns reconciling its authored one-shot props.
+	add_to_group("progression_restore")
+	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
+	# in a live session uses the coarser crossing slice so its connection keeps
+	# pumping. Solo still resumes every `await` below in the same frame.
+	_shell_build = SHELL_BUILD.new()
+	_shell_build.call("begin", self, simulation_only)
+	# The build yields while Terrain3D is coming online even in unsliced solo.
+	# A physics-active body resting on a collider that construction then moves
+	# inherits that collider's apparent platform velocity; T5-CARE measured a
+	# seven-digit launch, and AGGRESSION-STAGING-0908 reproduced the same guard
+	# warning on a same-process second Meadows boot. Hold every REAL local player
+	# before the first yield, not only a sliced multiplayer arrival. Simulation
+	# shells have already disabled/stripped their local rig and stay untouched.
+	var held_player_mode := hold_player_for_real_build(_player, simulation_only)
+	BOOT_LOG.phase("playground: _ready start, building Terrain3D node")
+	_terrain = _build_terrain()
+	if _terrain == null:
+		BOOT_LOG.line("playground: terrain build FAILED (see push_error above); world will not stand up")
+		if held_player_mode >= 0:
+			restore_player_after_real_build(_player, held_player_mode)
+		return
+	BOOT_LOG.phase("playground: terrain node created, waiting for Terrain3DData")
+	# D97 / lane MP-REALM-REOPEN. Split from the data-directory assignment
+	# below on purpose: in a shell that assignment is a single indivisible
+	# ~7.5 s engine call, and it must not have to share a heartbeat window
+	# with the node build that precedes it.
+	await _shell_build.call("step", "terrain_node")
+
+	# data_directory MUST be set after the node is in the tree and a frame has
+	# passed. Terrain3D builds its Terrain3DData on first frame, and assigning
+	# the directory before that silently leaves `data` null with nothing but a
+	# "Resource file not found: res://" in the log. The terrain then renders
+	# nothing, has no collision, and the player stands on empty space at the
+	# origin — which looks enough like working that it is worth this comment.
+	await get_tree().process_frame
+	_terrain.set("data_directory", DATA_DIR)
+	await get_tree().process_frame
+	BOOT_LOG.phase("playground: terrain data_directory assigned")
+	await _shell_build.call("step", "terrain_data")
+
+	_apply_dynamic_collision()
+	await _shell_build.call("step", "terrain_collision")
+
+	_apply_ground_materials()
+	BOOT_LOG.phase("playground: ground materials/shader applied")
+	await _shell_build.call("step", "ground_materials")
+	_reapply_look_after_ground_materials()
+
+	# Terrain3D needs a camera to decide which regions to keep resident. Without
+	# it the extension logs an error every physics frame and stops processing.
+	if _terrain.has_method("set_camera"):
+		_terrain.call("set_camera", _camera)
+	_place_player()
+	# A title-screen load happens before this world exists. Player._ready's
+	# deferred attempt can run before Terrain3D finishes and `_place_player()`
+	# then overwrites it, so the world retries only after its authored spawn has
+	# been established. A fresh game simply has no saved pose and is unchanged.
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("apply_loaded_player_pose"):
+		game.call("apply_loaded_player_pose")
+	BOOT_LOG.phase("playground: player placed on terrain")
+	await _shell_build.call("step", "player_placed")
+	await _dress_the_meadow()
+	BOOT_LOG.phase("playground: vegetation scatter built (instance/batch count above)")
+	await _shell_build.call("step", "vegetation")
+	# D97: no water RENDERING in a shell. The heightfield's water_level and
+	# stream_factor are read straight off the terrain by everything that cares
+	# (`playground_heightfield.gd`), so a shell without a Water node still
+	# knows where the pond is; it simply does not draw it.
+	if not simulation_only:
+		_build_water()
+		BOOT_LOG.phase("playground: water built (pond, stream, reeds — counts above)")
+	await _build_settlement()
+	BOOT_LOG.phase("playground: settlement (house, village, signpost, landmark, perimeter, harvest nodes) built")
+	await _shell_build.call("step", "settlement")
+	# CL-W1. The whole hook: `alpha_pins.gd` self-ticks and shares no state with
+	# anything here — see its own header for why it is not part of the encounter
+	# director. Added after the player is placed so its `../Player` lookup finds
+	# a body already standing on the terrain.
+	add_child(ALPHA_PINS.new())
+	# OWNER-0912-WAYFINDING. One production objective source, now visible in
+	# the world as well as on MapState. Simulation shells must not present or
+	# mutate the local trainer's personal objective marker.
+	if not simulation_only:
+		var objective_beacon := OBJECTIVE_BEACON.new()
+		objective_beacon.name = "ObjectiveBeacon"
+		add_child(objective_beacon)
+	# A shell must never touch the mouse: `get_window()` is the REAL window
+	# even for a world that is not the current scene, so an unguarded capture
+	# here takes the pointer away from the player standing in the host's own
+	# realm.
+	if not simulation_only:
+		_capture_mouse_if_free()
+		get_window().focus_entered.connect(_capture_mouse_if_free)
+	if OS.get_cmdline_args().has("--verify-export"):
+		# Verify a running, fully built world rather than quitting inside its
+		# final construction turn, before deferred disposal can finish.
+		await get_tree().physics_frame
+		await get_tree().process_frame
+		_report_for_export_check()
+		return
+	BOOT_LOG.phase("playground: _ready complete, waiting for first frame")
+	var profile := str(_shell_build.call("summary"))
+	if not profile.is_empty():
+		print("[playground] shell build %s" % profile)
+	if held_player_mode >= 0:
+		# `_place_player()` separately calls set_physics_process(false) for a
+		# pending remote arrival. Restoring process_mode here does not turn that
+		# flag back on; `_settle_meadows_realm_arrival()` remains its sole release.
+		# Keep the broader hold through one COMPLETE physics tick after the last
+		# build mutation. `physics_frame` is emitted before node physics callbacks,
+		# so the following process boundary is the first safe time to restore.
+		# Otherwise the first resumed `move_and_slide()` can still read the
+		# one-frame apparent velocity of collision moved during construction.
+		await get_tree().physics_frame
+		await get_tree().process_frame
+		restore_player_after_real_build(_player, held_player_mode)
+	# Readiness follows release. Realm entry must not dismiss its overlay while
+	# a real Player is still under the construction hold.
+	_shell_ready = true
+	await get_tree().process_frame
+	BOOT_LOG.phase("playground: first frame presented")
+
+
+## Keep a real local player inert while procedural construction moves collision
+## underneath it. Public/static only so the focused unit guard can prove the
+## mode/velocity contract without booting Terrain3D.
+static func hold_player_for_real_build(player: CharacterBody3D, simulation_only_build: bool) -> int:
+	if simulation_only_build or player == null or not is_instance_valid(player):
+		return -1
+	var prior_mode := int(player.process_mode)
+	player.process_mode = Node.PROCESS_MODE_DISABLED
+	player.velocity = Vector3.ZERO
+	return prior_mode
+
+
+## Restore only what the build hold owns. In particular, do not call
+## `set_physics_process(true)`: a pending realm arrival owns that narrower hold
+## until collision has streamed at its authored destination.
+static func restore_player_after_real_build(player: CharacterBody3D, prior_mode: int) -> void:
+	if player == null or not is_instance_valid(player) or prior_mode < 0:
+		return
+	player.velocity = Vector3.ZERO
+	player.process_mode = prior_mode as Node.ProcessMode
+	if player.is_inside_tree():
+		player.reset_physics_interpolation()
+
+
+## D97 / lane MP-REALM-REOPEN. False while a SHELL is still building itself
+## across frames, true the moment its `_ready()` finishes. Always true for a
+## world a player is actually standing in. `realm_shells.gd::report()` carries
+## it and realm entry wait on it. See `cloudreach_world.gd` for the full note;
+## the contract is identical for shells and sliced live-session crossings.
+func shell_build_complete() -> bool:
+	return _shell_ready
+
+
+## Sets dynamic collision (mode, radius, shape size) and reads every value
+## back rather than trusting what was set — §8.2's two verified traps:
+##
+## 1. Terrain3D setters are no-ops while the node is out of the tree (this is
+##    what silently reverted `collision_mode` to Dynamic/Game before the fix
+##    that gave this function its home in `_ready()`, after `data_directory`
+##    is assigned and the node has been in the tree for a frame).
+## 2. `collision_radius` and `collision_shape_size` are silently CLAMPED to
+##    ranges this build's addon does not document anywhere reachable from
+##    script -- confirmed empirically (`tools/_probe_terrain_collision.gd`):
+##    radius to [16, 256] step 16, shape size to [8, 64] step 8. Asking for
+##    `COLLISION_RADIUS_REQUESTED` (512) silently gets 256, not 512.
+##
+## So every value used below the `set()` calls is the READBACK, never the
+## requested constant -- the whole point of this function is to not repeat
+## the mistake `collision_mode` already made once.
+func _apply_dynamic_collision() -> void:
+	_terrain.set("collision_mode", COLLISION_DYNAMIC_GAME)
+	_terrain.set("collision_radius", COLLISION_RADIUS_REQUESTED)
+	_terrain.set("collision_shape_size", COLLISION_SHAPE_SIZE)
+
+	var mode: int = int(_terrain.get("collision_mode"))
+	var radius: int = int(_terrain.get("collision_radius"))
+	var shape_size: int = int(_terrain.get("collision_shape_size"))
+	BOOT_LOG.line("playground: dynamic collision mode=%d radius=%d (requested %d) shape_size=%d (requested %d)" % [
+		mode, radius, COLLISION_RADIUS_REQUESTED, shape_size, COLLISION_SHAPE_SIZE])
+
+	if mode != COLLISION_DYNAMIC_GAME:
+		push_error("terrain collision_mode is %d, expected %d (Dynamic/Game). " % [mode, COLLISION_DYNAMIC_GAME] +
+			"The player will fall through the world outside the dynamic collision radius.")
+	if radius <= 0:
+		push_error("terrain collision_radius read back as %d; Terrain3D exposed no usable dynamic collision" % radius)
+	if shape_size <= 0:
+		push_error("terrain collision_shape_size read back as %d; Terrain3D exposed no usable collision shapes" % shape_size)
+
+## COLL1 / §8.3: re-centres the scatter's collision streaming bubble on the
+## player, throttled rather than every physics tick -- see
+## `COLLISION_STREAM_INTERVAL`'s own comment for why a periodic sweep is
+## enough. `_place_player()`/`_dress_the_meadow()` cover frame one; this
+## covers every frame after the player actually moves.
+##
+## T3-INSTALL, P1: `performance.json`'s `collision_stream_interval_s` had no
+## reader. Read once in `_ready()` (below `COLLISION_STREAM_INTERVAL`'s own
+## fallback default), same pattern as `vegetation.gd`'s two sibling levers.
+var COLLISION_STREAM_INTERVAL := 0.5
+## Playtest (2026-09-29): the mouse stopped turning the camera after the build menu and
+## after trading with Oskar. See `_reclaim_mouse_if_released`.
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const MOUSE_GUARD_INTERVAL := 0.25
+var _mouse_guard_elapsed := 0.0
+var _collision_stream_elapsed: float = 0.0
+
+
+func _process(delta: float) -> void:
+	# A shell's streaming bubble follows the peers standing in it, not the
+	# disabled local rig parked on the authored spawn -- `realm_shells.gd`
+	# drives that through `track_simulation_focus()`. Left to run here, this
+	# would drag the bubble back to the spawn twice a second.
+	if simulation_only:
+		return
+	_mouse_guard_elapsed += delta
+	if _mouse_guard_elapsed >= MOUSE_GUARD_INTERVAL:
+		_mouse_guard_elapsed = 0.0
+		_reclaim_mouse_if_released()
+	if _vegetation == null or _player == null:
+		return
+	_collision_stream_elapsed += delta
+	if _collision_stream_elapsed < COLLISION_STREAM_INTERVAL:
+		return
+	_collision_stream_elapsed = 0.0
+	if _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", _player.global_position)
+
+
+## Safety net for the camera's mouse. Every panel puts the mouse back when it closes,
+## but only if nothing else still owns input at that instant (the dialogue panel keeps
+## owning input until its closing press is released, so a shop that closes inside that
+## window skips the restore), and once skipped nothing ever came back: the camera stayed
+## dead until the player happened to alt-tab. Whenever no panel owns input and nothing
+## wants the cursor, the camera gets the mouse back. A no-op on the headless display
+## server, which cannot report the real mode.
+func _reclaim_mouse_if_released() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		return
+	if INPUT_OWNER.current(get_tree()) != null or _mouse_wanted_elsewhere():
+		return
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+## Capture the mouse for camera look — unless a menu, dialogue box or the
+## naming panel currently owns it, which would trap an unclickable cursor
+## under whichever of those is open.
+##
+## Called once at boot and again on every window focus_entered. The single
+## boot-time call is what shipped before, and on Windows it can silently
+## no-op: Godot's MOUSE_MODE_CAPTURED request made before the native window
+## has actually received OS input focus is recorded (Input.mouse_mode reads
+## back CAPTURED) but never confines the cursor, so camera_rig.gd's
+## `_unhandled_input` — which only turns mouse motion into look at all when
+## `Input.mouse_mode == MOUSE_MODE_CAPTURED` — sees a mode that claims to be
+## right while no real capture ever happened. That matches the owner's report
+## exactly: everything else worked, mouse look did not, from the first frame.
+## Headless CI cannot reproduce or verify this (smoke_menu.gd's own note): the
+## dummy DisplayServer reports `Input.mouse_mode` back as VISIBLE no matter
+## what is requested, so a boot on CI cannot even prove the boot-time call
+## above landed, let alone that a later focus_entered re-assertion did. This
+## needs a real exported Windows run to confirm — recorded plainly in
+## DONE.md, not claimed as tested coverage that does not exist.
+func _capture_mouse_if_free() -> void:
+	if _mouse_wanted_elsewhere():
+		return
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+## Whether a menu, dialogue box or the naming panel currently wants the mouse
+## visible. Each of those saves the mouse mode on open and restores it on
+## close; re-capturing over one of them on a focus regain would fight that
+## and trap the cursor under a panel the player is trying to read or click.
+##
+## Reached through `/root/Game` rather than the bare `Game` autoload name —
+## see `scripts/story/party_seam.gd`'s header on why: the unit suite runs
+## under `--script`, which starts no autoloads at all, and referencing the
+## bare singleton name from a script that can load in that context is exactly
+## the mistake already paid for once on this project.
+func _mouse_wanted_elsewhere() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and game.has_method("menu"):
+		var menu: Object = game.call("menu")
+		if menu != null and bool(menu.call("is_open")):
+			return true
+	var dialogue := get_node_or_null(^"DialoguePanel")
+	if dialogue != null and dialogue.has_method("is_open") and bool(dialogue.call("is_open")):
+		return true
+	var naming := get_node_or_null(^"NamePrompt")
+	if naming != null and naming.has_method("is_open") and bool(naming.call("is_open")):
+		return true
+	var starter := get_node_or_null(^"StarterPicker")
+	if starter != null and starter.has_method("is_open") and bool(starter.call("is_open")):
+		return true
+	# D34's build menu (`scripts/ui/build_menu.gd`) and R2.4/R2.7's craft and
+	# storage panels (`craft_panel.gd`/`storage_panel.gd`) are none of them
+	# fixed children of this scene the way `DialoguePanel`/`NamePrompt`/
+	# `StarterPicker` above are — each is lazily instantiated (by
+	# `tab_build.gd`, `camp.gd`, `storage_container.gd` respectively) and
+	# added straight under the scene tree's own root, so there is no fixed
+	# NodePath to look one up by. Ducktyped instead: anything sitting under
+	# root with an `is_open()` that says yes wants the mouse, whichever of
+	# the three (or a future fourth) it turns out to be. This was the
+	# documented gap this task asked to close — see `_mouse_wanted_elsewhere`'s
+	# header on why the fixed-path checks above existed but these did not.
+	for node: Node in get_tree().root.get_children():
+		if node.has_method("is_open") and bool(node.call("is_open")):
+			return true
+	return false
+
+
+## A liveness report an EXPORTED build can actually be tested against.
+##
+## Run with `--verify-export`, the world says whether it stood itself up and
+## then quits. Nothing else in the game reads this flag.
+##
+## It exists because a shipped build fell through the world forever and there
+## was no way to find out from outside. Three separate mechanisms defeated the
+## obvious approaches: a release export strips `print()`, so the spawn line the
+## world already logged never reached stdout; `--quit-after` is an editor flag
+## and is ignored by an export, so the process had to be killed, which flushed
+## nothing; and `--quit` exits before the terrain has finished loading, which is
+## the exact thing being checked.
+##
+## `push_warning` survives all three — it goes through the error macros, which
+## release builds keep, and it is written immediately rather than buffered.
+func _report_for_export_check() -> void:
+	if not OS.get_cmdline_args().has("--verify-export"):
+		return
+	var solid := _terrain != null and _terrain.get("data") != null
+	var height: float = ground_height_at(_player.global_position.x, _player.global_position.z)
+	push_warning("EXPORT-CHECK terrain=%s ground_at_spawn=%s player_y=%.2f props=%d" % [
+		"yes" if solid else "NO",
+		"NaN" if is_nan(height) else "%.2f" % height,
+		_player.global_position.y,
+		int((_vegetation.call("stats") as Dictionary).get("instances", 0)) if _vegetation != null else 0
+	])
+	var tree := get_tree()
+	var verdict := 0 if solid and not is_nan(height) else 1
+	# Retire the scene while the engine is still running, so its physics bodies
+	# and render resources leave the tree before the native server shuts down.
+	# SceneTree owns both deferred calls: this world is freed by the first one.
+	tree.process_frame.connect(tree.quit.bind(verdict), CONNECT_DEFERRED | CONNECT_ONE_SHOT)
+	tree.call_deferred("unload_current_scene")
+
+
+func _build_terrain() -> Node3D:
+	if not ClassDB.class_exists("Terrain3D"):
+		push_error("Terrain3D addon is not installed or failed to load. " +
+			"Check addons/terrain_3d/ and that the extension matches this Godot build.")
+		return null
+	# Checked through res://, NOT through the OS filesystem.
+	#
+	# This was `DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(...))`,
+	# and it shipped a build that fell through the world forever.
+	#
+	# In the editor, `res://` IS a real directory, so globalizing it gives a path
+	# that exists and the check passes. In an EXPORTED build the terrain lives
+	# inside the .pck and there is no such directory on disk, so the check failed
+	# every time, `_build_terrain()` returned null, and the player spawned in
+	# mid-air over an empty world. The data was in the pack the whole time; the
+	# guard against it being missing was the only thing missing it.
+	#
+	# The general form, for the third time in this project: a check that uses a
+	# different mechanism from the thing it checks is testing the mechanism.
+	# `move_and_slide` uses shape casts while the probe used rays (D09); the
+	# smoke tests run from source while players run an export; and here the
+	# guard read the OS filesystem while the game reads a resource pack.
+	if not DirAccess.dir_exists_absolute(DATA_DIR):
+		push_error("No baked terrain at %s. Run: godot --headless --path . " % DATA_DIR +
+			"--script scripts/world/build_playground_terrain.gd")
+		return null
+
+	var config := _load_terrain_config()
+	var terrain: Node3D = ClassDB.instantiate("Terrain3D")
+	terrain.name = "Terrain"
+	terrain.set("region_size", int(config.get("region_size", 256)))
+	terrain.set("vertex_spacing", float(config.get("vertex_spacing", 1.0)))
+	# collision_mode/collision_radius/collision_shape_size are deliberately
+	# NOT set here: confirmed against this build (`tools/_probe_terrain_
+	# collision.gd`) that Terrain3D's collision setters are no-ops while the
+	# node is out of the tree, silently keeping their defaults instead of
+	# raising an error. `_apply_dynamic_collision()` sets and reads all three
+	# back in `_ready()`, once the node has actually been in the tree for a
+	# frame.
+	add_child(terrain)
+	return terrain
+
+
+## Give the ground real PBR materials.
+##
+## Until now this switched on `show_colormap`, a Terrain3D DEBUG VIEW, and used
+## it as the ground treatment. It was flagged as a placeholder when it went in
+## and it survived three milestones. The blind critic measured what it cost:
+## 78–91% of the lower half of every exploration frame was featureless flat
+## fill, against 3–13% for the references — because a vertex colour map has no
+## albedo detail at any distance.
+##
+## Terrain3D's auto shader picks between the textures by slope, so the same
+## grass/soil/rock intent the bake already encodes is expressed with real
+## materials instead of flat colour.
+func _apply_ground_materials() -> void:
+	if _terrain == null:
+		return
+	var material: Object = _terrain.get("material")
+	if material == null:
+		push_warning("terrain has no material; ground will render as the default checker")
+		return
+
+	var textures := _build_texture_list()
+	if textures == null:
+		# The colour map is still better than a grey checkerboard, so a missing
+		# texture is a downgrade rather than a broken world.
+		push_warning("no terrain textures; falling back to the flat colour map")
+		material.set("show_checkered", false)
+		material.set("show_colormap", true)
+		return
+
+	_terrain.set("assets", textures)
+	material.set("show_checkered", false)
+	material.set("show_colormap", false)
+	# The auto shader blends the second texture onto slopes, which is what makes
+	# the rocky rises read as stone rather than as grass at an angle.
+	material.set("auto_shader", true)
+	_apply_ground_shader(material)
+
+
+## Push data/config/terrain_playground.json's `shader` block at the material.
+##
+## Split from the texture list because these are two different kinds of thing:
+## which textures exist is a content question, and how they are drawn is a
+## presentation one. The distinction matters because the presentation half is
+## what answers two of the blind critic's measured complaints — the world edge
+## and the tiling — and both were invisible from the config until now.
+##
+## Named properties go through `set`; everything else is a shader uniform. The
+## split is by name because Terrain3D exposes some of the shader's uniforms as
+## real properties and leaves the rest reachable only through
+## `set_shader_param`, and setting one the wrong way fails silently.
+func _apply_ground_shader(material: Object) -> void:
+	# WORLD-ART aerial-fade pass. Kept BEFORE any early return below so
+	# world_look.gd's static setter can always reach this world's terrain
+	# material once it exists, even on a boot path where `shader` config is
+	# missing and the rest of this function returns early.
+	_aerial_material = material
+
+	# Terrain3DMaterial exposes exactly TWO of these as real properties. The rest
+	# — blend_sharpness, dual_scale_*, mipmap_bias and the macro variation
+	# colours — are shader uniforms, reachable only through set_shader_param.
+	#
+	# This list was longer, and `material.set()` on a name that is not a property
+	# returns quietly having done nothing. So five settings were written to the
+	# config, read back from the config, and never reached the shader: two
+	# consecutive surveys came back byte-identical after retuning dual scaling,
+	# which is the only reason it was noticed at all. If a value here appears to
+	# do nothing, check which side of this line it is on before tuning it further.
+	const PROPERTIES := ["world_background", "texture_filtering"]
+	const COLOURS := [
+		"macro_variation1", "macro_variation2", "aerial_fade_colour",
+		"long_water_bank_earth_tint", "long_water_bank_moss_tint",
+		"long_water_bank_silt_tint",
+	]
+	const VECTOR2S := ["long_water_bank_center", "long_water_bank_half_extent"]
+
+	# T1-GROUND-2, Job 2: aerial perspective. shaders/terrain_ground.gdshader
+	# is Terrain3D's own auto-generated shader (see its own header for how it
+	# was captured) plus a distance desaturate/haze block Terrain3D's stock
+	# auto-shader has no equivalent for. Installed BEFORE the config loop
+	# below so the aerial_fade_* uniforms it declares are already part of
+	# the shader's known-uniform list by the time that loop's
+	# `_get_shader_parameters()` check runs — installing after would land
+	# every aerial_fade_* config key in `ignored`. Confirmed (throwaway
+	# probe, not committed) that `set_shader_override()` survives a later
+	# `enable_shader_override(true)` call rather than being clobbered by it.
+	var override_shader := load("res://shaders/terrain_ground.gdshader") as Shader
+	if override_shader != null and material.has_method("set_shader_override") and material.has_method("enable_shader_override"):
+		material.call("set_shader_override", override_shader)
+		material.call("enable_shader_override", true)
+	else:
+		push_warning("terrain aerial-perspective shader could not be installed; ground falls back to Terrain3D's stock auto-shader with no distance haze")
+
+	var cfg: Dictionary = (_load_terrain_config().get("shader", {}) as Dictionary).duplicate()
+	# Long Water's bank treatment is presentation-only and intentionally lives
+	# outside terrain_playground.json. That file fingerprints the terrain and
+	# vegetation bakes even when only a runtime shader value changes; separating
+	# this local treatment keeps a colour correction from pretending it needs a
+	# world rebuild.
+	var long_water_cfg := _load_long_water_visual_config()
+	for key: String in long_water_cfg.keys():
+		cfg[key] = long_water_cfg[key]
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string(GROUND_PRESENTATION_CONFIG))
+	if presentation is Dictionary:
+		var overrides: Dictionary = (presentation as Dictionary).get("shader", {})
+		for key: String in overrides.keys():
+			cfg[key] = overrides[key]
+	if cfg.is_empty():
+		# FLAT rather than NOISE, matching the shader's own default, so a missing
+		# config is the old look rather than an unlit void.
+		material.set("world_background", 1)
+		return
+
+	# get_shader_param()'s OWN readback is not trustworthy on this Terrain3D
+	# build — R7.1 found it returns null after a successful set for every
+	# genuinely valid uniform name, not just for dead ones (proved by forcing
+	# extreme values and watching the render actually change while the readback
+	# stayed null throughout). _get_shader_parameters() is the real source of
+	# truth: it enumerates the shader's actual uniform names directly, so a key
+	# missing from it is a genuinely wrong name rather than an unreadable right
+	# one.
+	var known: Dictionary = {}
+	if material.has_method("_get_shader_parameters"):
+		known = material.call("_get_shader_parameters")
+
+	var ignored: Array[String] = []
+	for key: String in cfg.keys():
+		if key.begins_with("_"):
+			continue
+		var value: Variant = cfg[key]
+		if COLOURS.has(key):
+			value = Color(str(value))
+		elif VECTOR2S.has(key):
+			var pair: Array = value as Array
+			if pair.size() != 2:
+				ignored.append(key)
+				continue
+			value = Vector2(float(pair[0]), float(pair[1]))
+		if PROPERTIES.has(key):
+			material.set(key, value)
+			continue
+		if not material.has_method("set_shader_param"):
+			ignored.append(key)
+			continue
+		if not known.is_empty() and not known.has(key):
+			ignored.append(key)
+			continue
+		material.call("set_shader_param", key, value)
+	if not ignored.is_empty():
+		push_warning("terrain shader config names %d setting(s) this build's shader does not have, which will look exactly like tuning them did nothing: %s" % [
+			ignored.size(), ", ".join(ignored)
+		])
+
+	var background: int = int(material.get("world_background"))
+	if background != int(cfg.get("world_background", 1)):
+		push_warning("terrain world_background is %d, not the %d the config asked for; " % [
+			background, int(cfg.get("world_background", 1))
+		] + "the world will have a visible edge at the end of the baked regions.")
+
+
+func _load_long_water_visual_config() -> Dictionary:
+	var file := FileAccess.open(LONG_WATER_VISUAL_CONFIG, FileAccess.READ)
+	if file == null:
+		push_warning("Long Water bank presentation config is missing; using the shader's neutral defaults")
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_warning("Long Water bank presentation config is invalid; using the shader's neutral defaults")
+		return {}
+	return parsed as Dictionary
+
+
+## Build a Terrain3DAssets from data/config/terrain_playground.json.
+##
+## Returns null rather than half a texture list, so the caller can fall back
+## cleanly instead of rendering one texture and a checkerboard.
+func _build_texture_list() -> Object:
+	if not ClassDB.class_exists("Terrain3DAssets") or not ClassDB.class_exists("Terrain3DTextureAsset"):
+		return null
+	var entries: Array = _load_terrain_config().get("textures", [])
+	if entries.is_empty():
+		return null
+
+	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
+	var index := 0
+	# Every texture in the array must be the same size. Terrain3D builds one
+	# Texture2DArray, and a single odd resolution makes the whole array fail —
+	# silently, leaving a terrain drawn from the colour map alone.
+	#
+	# That cost two rounds. A 2K grass dropped into a set of 1K textures turned
+	# the ground into a flat pale field with no albedo at all, and because it
+	# still LOOKED like ground, the next hour went into tuning sun energy and
+	# ambient against a surface that had no texture on it to tune.
+	var uniform_size := Vector2i.ZERO
+	for entry: Variant in entries:
+		var path: String = str((entry as Dictionary).get("albedo", ""))
+		if not ResourceLoader.exists(path):
+			continue
+		var size: Vector2i = (load(path) as Texture2D).get_size()
+		if uniform_size == Vector2i.ZERO:
+			uniform_size = size
+		elif size != uniform_size:
+			push_error("terrain texture %s is %dx%d but the set is %dx%d. " % [
+				path.get_file(), size.x, size.y, uniform_size.x, uniform_size.y
+			] + "Terrain3D needs one size for the whole array; the ground will draw " +
+				"from the colour map with no albedo detail at all.")
+			return null
+
+	for entry: Variant in entries:
+		var spec: Dictionary = entry
+		var albedo: String = str(spec.get("albedo", ""))
+		if not ResourceLoader.exists(albedo):
+			push_error("terrain texture missing: %s" % albedo)
+			return null
+		var texture: Object = ClassDB.instantiate("Terrain3DTextureAsset")
+		texture.set("name", str(spec.get("name", "texture%d" % index)))
+		texture.set("id", index)
+		texture.set("albedo_texture", load(albedo))
+		var normal: String = str(spec.get("normal", ""))
+		if ResourceLoader.exists(normal):
+			texture.set("normal_texture", load(normal))
+		# Normal depth well under 1.0, and this is the single most consequential
+		# number in the file.
+		#
+		# At full strength a photographic grass normal map turns most of its
+		# texels away from a 52-degree sun, and the ground within about thirty
+		# metres of the camera goes black — measured luminance 0.071 against
+		# 0.27-0.60 across the references, with the mottled high-contrast fizz the
+		# critic called "high-frequency mottled noise, not grass". It flattens
+		# with distance because the mip average cancels the perturbation, which is
+		# why the far hills looked fine and the foreground did not, and why three
+		# confident explanations for it were all wrong.
+		texture.set("normal_depth", float(spec.get("normal_depth", 0.35)))
+		texture.set("ao_strength", float(spec.get("ao_strength", 0.3)))
+		texture.set("roughness_mod", float(spec.get("roughness_mod", 0.0)))
+		# Detiling rotates and shifts the tile per region so a 2K texture stops
+		# announcing its own repeat period.
+		texture.set("detiling_rotation", float(spec.get("detiling_rotation", 0.25)))
+		texture.set("detiling_shift", float(spec.get("detiling_shift", 0.3)))
+		texture.set("uv_scale", float(spec.get("uv_scale", 0.1)))
+		texture.set("albedo_color", Color(str(spec.get("tint", "#ffffff"))))
+		assets.call("set_texture", index, texture)
+		index += 1
+	return assets
+
+
+## Scatter grass, bushes, trees and rocks across the playground.
+##
+## Built at runtime from a seeded rule rather than saved into the scene, for the
+## same reason the terrain is: a scene full of ten thousand placed nodes is
+## unreadable, unmergeable, and impossible to retune. The seed makes it
+## identical every run, so a survey frame taken today is comparable with one
+## taken after a change.
+## GRASS-FIELD. The camera-relative ground cover, if `data/config/
+## grass_field.json` says it is on. Built AFTER the scatter, because
+## `vegetation.gd::build()` is what drops the layers this replaces and the log
+## line it prints should come first, in the order a reader would want them.
+##
+## Off by default and absent when off -- `grass_field.gd::_ready` builds
+## nothing and processes nothing unless enabled -- so this costs a node and a
+## config read on a boot that is not using it.
+func _stand_up_the_grass_field() -> void:
+	# D97: no grass in a shell, and skipped at BUILD time rather than freed
+	# after -- see `simulation_only`'s own comment for what S2 measured about
+	# the difference.
+	if simulation_only:
+		return
+	if not GRASS_FIELD.is_enabled():
+		return
+	if _terrain == null:
+		push_warning("[playground] grass field is on but there is no terrain to sample")
+		return
+	var field := MultiMeshInstance3D.new()
+	field.set_script(GRASS_FIELD)
+	field.name = "GrassField"
+	add_child(field)
+	# The field follows a CAMERA, and it has to be the one actually rendering:
+	# handed the wrong one it centres its ring somewhere the player is not and
+	# the ground goes bare exactly where they are standing.
+	field.call("bind", _terrain, _camera)
+
+
+func _dress_the_meadow() -> void:
+	var config := _load_terrain_config()
+	_vegetation = VEGETATION.new()
+	_vegetation.name = "Vegetation"
+	# D97's amendment names "the visual half of vegetation" as part of the
+	# skip-build flag. Set BEFORE `add_child`/`build`, for the same reason
+	# this world's own flag is set before `add_child`.
+	_vegetation.set("simulation_only", simulation_only)
+	add_child(_vegetation)
+	await _vegetation.call("build", float(config.get("world_size", 512)), _terrain, _shell_build)
+	await _shell_build.call("breathe")
+	# COLL1 / §8.3: build() only streamed collision in around the world
+	# ORIGIN (see vegetation.gd::_add_collision), so any prop near the actual
+	# spawn point that is not also near (0,0,0) would otherwise be a hologram
+	# for one frame. _place_player() already ran, so the real spawn is known.
+	if _player != null and _vegetation.has_method("update_collision_streaming"):
+		_vegetation.call("update_collision_streaming", _player.global_position)
+	# HARVEST-ALL: build() always draws the fresh, nothing-chopped scatter --
+	# this reconciles it against whatever `Game.harvested_vegetation` already
+	# remembers (a "Continue" boot that resumed a save before this scene
+	# even existed), the same "build fresh, then restore on top" pattern
+	# `build_placer.gd`'s own `_ready()` uses for placed buildings.
+	# `GameState.load_game`'s own group loop covers the mid-session "Load"
+	# case separately.
+	var game := get_node_or_null(^"/root/Game")
+	if game != null and _vegetation.has_method("restore_from_game"):
+		_vegetation.call("restore_from_game", game)
+	await _shell_build.call("breathe")
+	_stand_up_the_grass_field()
+	var stats: Dictionary = _vegetation.call("stats")
+	print("[playground] scattered %d props in %d batches (%d harvestable, %d already chopped, %d/%d collision resident)" % [
+		stats["instances"], stats["batches"], stats.get("harvest_points", 0),
+		stats.get("harvested_permanently", 0), stats.get("solid_resident", 0), stats.get("solid", 0)
+	])
+
+
+## EV5: the pond at the valley floor, its inflow stream, and the reeds at
+## their banks. After the vegetation so a water regression cannot take the
+## whole meadow's dressing down with it; the two systems only meet through
+## the heightfield's water_level/stream_factor, which both read.
+func _build_water() -> void:
+	var water: Node3D = WATER.new()
+	water.name = "Water"
+	add_child(water)
+	water.call("build")
+
+
+## Grandpa's house and the village, stood on the building pads the terrain
+## bake flattened for them. After _dress_the_meadow so a scatter regression
+## cannot leave the opening without its house.
+func _build_settlement() -> void:
+	var ground := ground_height_at(HOUSE_AT.x, HOUSE_AT.y)
+	if is_nan(ground):
+		push_error("no ground under the house pad; the opening has nowhere to wake up")
+	else:
+		var house: Node3D = GRANDPA_HOUSE.new()
+		house.name = "GrandpaHouse"
+		house.position = Vector3(HOUSE_AT.x, ground, HOUSE_AT.y)
+		# Door on the east wall faces the village square.
+		add_child(house)
+		house.call("build", _camera_rig, _player)
+		await _shell_build.call("breathe")
+		STRUCTURE_VISIBILITY_RANGE.apply(house, "grandpa_house")
+		BOOT_LOG.phase("settlement: grandpa house")
+
+	var village: Node3D = VILLAGE.new()
+	village.name = "Village"
+	add_child(village)
+	await village.call("build", _shell_build)
+	await _shell_build.call("breathe")
+	STRUCTURE_VISIBILITY_RANGE.apply(village, "village")
+	BOOT_LOG.phase("settlement: village")
+
+	var props: Node3D = PROPS.new()
+	props.name = "Props"
+	add_child(props)
+	props.call("build")
+	await _shell_build.call("breathe")
+	STRUCTURE_VISIBILITY_RANGE.apply(props, "props")
+	BOOT_LOG.phase("settlement: props")
+
+	# The broad Stonewater region keeps its authored wreck/overlook/springhead
+	# props above; this layer supplies their shared large-scale water identity.
+	var stonewater: Node3D = STONEWATER_REACH.new()
+	stonewater.name = "StonewaterReach"
+	add_child(stonewater)
+	if not bool(stonewater.call("build", self)):
+		push_error("Stonewater Reach failed to build")
+	await _shell_build.call("breathe")
+
+	# The Highfield's existing herd, open drove gate and visual stock camp need
+	# one shared vertical silhouette to read together from their ordinary south
+	# approach. This installed-family pasture tree leaves all encounters and
+	# functional props in place and uses a trunk-only collision shape.
+	var highfield_identity: Node3D = HIGHFIELD_PASTURE_IDENTITY.new()
+	highfield_identity.name = "HighfieldPastureIdentity"
+	add_child(highfield_identity)
+	if not bool(highfield_identity.call("build", self)):
+		push_error("Highfield pasture identity failed to build")
+	await _shell_build.call("breathe")
+
+	var village_npcs: Node3D = VILLAGE_NPCS.new()
+	village_npcs.name = "VillageNPCs"
+	add_child(village_npcs)
+	village_npcs.call("build", _player)
+	await _shell_build.call("breathe")
+	BOOT_LOG.phase("settlement: village NPCs")
+
+	# R8.1: the people who challenge you. After the villagers, so a trainer
+	# standing too close to one is visible in the same pass rather than a
+	# frame later, and named separately because SC12 moves three of these
+	# roles onto villagers who are already placed above.
+	# SE27: the relay station's captive, placed by the same script from a
+	# second list (data/config/relay_site.json). Not a new placer — the only
+	# thing she needs that a villager does not is a `place_when` gate, and
+	# village_npcs.gd grew one for the pair of them.
+	var relay_npcs: Node3D = VILLAGE_NPCS.new()
+	relay_npcs.name = "RelayNPCs"
+	add_child(relay_npcs)
+	relay_npcs.call("build", _player, VILLAGE_NPCS.RELAY_CONFIG_PATH)
+	await _shell_build.call("breathe")
+
+	# WORLD-CONTENT: the Pond fisher (docs/specs/BAND1_ROUTE_CONTRACT.md place
+	# 3), a third list for the same placer -- see PondNPCs config's own header
+	# for why this reuses village_npcs.gd rather than a new mechanism.
+	var pond_npcs: Node3D = VILLAGE_NPCS.new()
+	pond_npcs.name = "PondNPCs"
+	add_child(pond_npcs)
+	pond_npcs.call("build", _player, VILLAGE_NPCS.POND_CONFIG_PATH)
+	await _shell_build.call("breathe")
+
+	var trainers: Node3D = TRAINER_NPCS.new()
+	trainers.name = "Trainers"
+	add_child(trainers)
+	trainers.call("build", _player)
+	await _shell_build.call("breathe")
+
+	var lost_companion_reunion: Node3D = LOST_COMPANION_REUNION.new()
+	lost_companion_reunion.name = "LostCompanionReunion"
+	add_child(lost_companion_reunion)
+	lost_companion_reunion.call("build", self, trainers)
+	await _shell_build.call("breathe")
+
+	# TOURNAMENT-1: the bracket board, in the north field behind the square.
+	# After the trainers so it stands in a settlement that is already built --
+	# it reads ground height the same way they do and nothing about it depends
+	# on them, but the tournament ground is Bryn's practice field and building
+	# the two in the order the player meets them keeps the log readable.
+	var tournament: Node3D = TOURNAMENT.new()
+	tournament.name = "Tournament"
+	add_child(tournament)
+	tournament.call("build", self)
+	await _shell_build.call("breathe")
+
+	var signpost: Node3D = SIGNPOST.new()
+	signpost.name = "Signpost"
+	add_child(signpost)
+	signpost.call("build", self, SIGNPOST_AT)
+	await _shell_build.call("breathe")
+
+	# Cloudreach Phase 1: the reusable Heart socket in the village and the
+	# permanent keyed realm arch at Storm Road. Both read/write central durable
+	# state; rebuilding this scene cannot duplicate either reward.
+	_build_realm_handoff()
+	await _shell_build.call("breathe")
+
+	_build_trailhead_signposts()
+	await _shell_build.call("breathe")
+
+	# T1-HALL (2026-08-30): the detached castle silhouette this call built at
+	# `landmark.gd`'s own `SITE` (150,7595) retired. The owner's directive is
+	# that the castle IS the Meadows Hall IS the stronghold -- one location,
+	# not two buildings 154m apart sharing a vista. `scripts/world/stronghold.gd`
+	# now builds the whole merged complex's massing itself
+	# (`_build_hall_massing()`), on the works' own re-sited footprint. Nothing
+	# stands at (150,7595) any more. `landmark.gd` stays in the tree as
+	# history per repo convention (see its own header); it is simply never
+	# instantiated from here again.
+
+	_build_road_gate()
+	await _shell_build.call("breathe")
+	_build_sigil_gate()
+	await _shell_build.call("breathe")
+	_build_broken_cart()
+	await _shell_build.call("breathe")
+	_build_meadowhart_herd_visit()
+	await _shell_build.call("breathe")
+	_build_river_nest_clear()
+	await _shell_build.call("breathe")
+
+	var watchtower: Node3D = WATCHTOWER_LANDMARK.new()
+	watchtower.name = "RuinedWatchtower"
+	add_child(watchtower)
+	watchtower.call("build", self, WATCHTOWER_AT, WATCHTOWER_FACING_DEG)
+	await _shell_build.call("breathe")
+
+	# The map's Ridgeline Watch is the patrol posting around (-250,6490), not
+	# the Broken Tower ruin above. Give that named place its own elevated read.
+	var ridgeline_watch: Node3D = RIDGELINE_WATCH.new()
+	ridgeline_watch.name = "RidgelineWatch"
+	add_child(ridgeline_watch)
+	if not bool(ridgeline_watch.call("build", self)):
+		push_error("Ridgeline Watch failed to build")
+	await _shell_build.call("breathe")
+
+	# SC14: the South Bridge over the south gully, and the leaf across it.
+	# After the road gate so the two gates build in the order the player meets
+	# them, and before the spokes for no reason but readability — neither
+	# touches the other.
+	var south_bridge: Node3D = SOUTH_BRIDGE.new()
+	south_bridge.name = "SouthBridge"
+	add_child(south_bridge)
+	south_bridge.call("build", self)
+	await _shell_build.call("breathe")
+
+	# SD16: the Old Quarry past it — foundations and the Tether conduit run.
+	# Its Rootstone deposits are ordinary `harvest.json` nodes and stand up in
+	# `_place_harvest_nodes()` below with every other gathering spot; its
+	# abandoned gear is a `props.json` cluster and is already standing.
+	var quarry: Node3D = OLD_QUARRY.new()
+	quarry.name = "OldQuarry"
+	add_child(quarry)
+	quarry.call("build", self)
+	await _shell_build.call("breathe")
+
+	# SE23: the Tether Relay Station further along the same bearing the
+	# quarry's conduit run leaves on. After the quarry because that is the
+	# order §32's reveal ladder puts them in and the order the player meets
+	# them; neither touches the other. The people on it are SE25/SE27's
+	# (data/config/relay_site.json), placed by the ordinary NPC/trainer
+	# placers, not by this.
+	var relay: Node3D = TETHER_RELAY.new()
+	relay.name = "TetherRelay"
+	add_child(relay)
+	relay.call("build", self)
+	await _shell_build.call("breathe")
+	# SE21: the river that divides the deeper Meadows. Only its recovery
+	# volumes are built here -- the channel is terrain (the bake cut it) and
+	# the water is the water layer's.
+	var river: Node3D = RIVER.new()
+	river.name = "River"
+	add_child(river)
+	river.call("build", self)
+	await _shell_build.call("breathe")
+
+	# SE22: the Old Mill Crossing, the one authored way over that river.
+	var mill_crossing: Node3D = MILL_CROSSING.new()
+	mill_crossing.name = "MillCrossing"
+	add_child(mill_crossing)
+	mill_crossing.call("build", self)
+	await _shell_build.call("breathe")
+	STRUCTURE_VISIBILITY_RANGE.apply(mill_crossing, "mill_crossing")
+
+	# SA4: the severed outward roads. Before the boundary ring because they
+	# stand INSIDE it (~160-200m out) and are the thing the player is meant to
+	# read at those bearings; the ring is the ordinary field edge behind them.
+	var spokes: Node3D = SEVERED_SPOKES.new()
+	spokes.name = "SeveredSpokes"
+	add_child(spokes)
+	spokes.call("build", self)
+	await _shell_build.call("breathe")
+	STRUCTURE_VISIBILITY_RANGE.apply(spokes, "severed_spokes")
+	print("[playground] severed spokes standing: %s" % ", ".join(spokes.call("built")))
+
+	var perimeter: Node3D = WORLD_PERIMETER.new()
+	perimeter.name = "WorldPerimeter"
+	add_child(perimeter)
+	perimeter.call("build", self, _player, _spawn_position)
+	await _shell_build.call("breathe")
+
+	_place_harvest_nodes()
+	# The harvest nodes remain the grove's functional trees. This collisionless
+	# layer reads their exact seats and makes the old-growth/crafting story
+	# visible without owning a second prompt, resource, or route obstacle. A
+	# simulation shell has no rendering consumer and keeps the layer unloaded.
+	if not simulation_only:
+		var ironwood_grove: Node3D = IRONWOOD_GROVE_PRESENTATION.new()
+		ironwood_grove.name = "IronwoodGrovePresentation"
+		add_child(ironwood_grove)
+		if not bool(ironwood_grove.call("build", self)):
+			push_error("Ironwood Grove presentation failed to build")
+		await _shell_build.call("breathe")
+	_place_farm_plots()
+	_place_tms()
+	_place_item_caches()
+	_place_band_pickups()
+	_place_sunstone()
+	await _build_burrow_warrens()
+	await _shell_build.call("breathe")
+	await _build_stronghold()
+	await _shell_build.call("breathe")
+	_build_stronghold_climax()
+	await _shell_build.call("breathe")
+
+	# SG44: the first Tether Rift collapses. Sky only -- a distant,
+	# non-enterable view past the storm road's seam, built last because it
+	# depends on nothing and nothing depends on it. See the file's header for
+	# the carve-out it is written around.
+	var rift: Node3D = RIFT_COLLAPSE.new()
+	rift.name = "RiftCollapse"
+	add_child(rift)
+	rift.call("build", self)
+	await _shell_build.call("breathe")
+
+	# OP-0905-15/D110: the ground half of the same seam. No arch, no key
+	# prompt -- once the flag above lands, this rebuilds the storm road's own
+	# collapsed bridge and opens the one Area3D that is the actual realm
+	# boundary into Cloudreach. Reads `RiftCollapse`'s own config file for its
+	# timings; does not touch or depend on the node itself.
+	var crossing: Node3D = RIFT_CROSSING.new()
+	crossing.name = "RiftCrossing"
+	add_child(crossing)
+	crossing.call("build", self)
+
+	# SG46 / D41: and the local half of the same event -- the meadow itself is
+	# freed. After everything it heals (the vegetation, the relay, the pylon
+	# lines, the gates, the trainers), because it walks the world it is given.
+	var healing: Node3D = MEADOW_HEALING.new()
+	healing.name = "MeadowHealing"
+	add_child(healing)
+	healing.call("build", self)
+	await _shell_build.call("breathe")
+
+	var placer := BUILD_PLACER.new()
+	placer.name = "BuildPlacer"
+	placer.player_path = NodePath("../Player")
+	placer.camera_rig_path = NodePath("../CameraRig")
+	add_child(placer)
+
+	# §22: on player death, drop a satchel and respawn at home.
+	var death: Node3D = PLAYER_DEATH.new()
+	death.name = "PlayerDeath"
+	add_child(death)
+	death.call("build", self, _player, _spawn_position)
+	await _shell_build.call("breathe")
+
+
+## OF10-remainder: one small fingerpost per entry in `paths.trailheads`,
+## reusing signpost.gd's `routes_override` so each is a single arm continuing
+## its own route's label and bearing rather than the full junction sign.
+## Data-driven (like `paths.routes` itself) because a second trailhead is a
+## config entry, not a new script.
+func _build_trailhead_signposts() -> void:
+	var cfg: Dictionary = _load_terrain_config().get("paths", {})
+	var trailheads: Array = cfg.get("trailheads", [])
+	var i := 0
+	for entry: Variant in trailheads:
+		var trailhead: Dictionary = entry as Dictionary
+		var at: Array = trailhead.get("at", [])
+		var label := str(trailhead.get("label", ""))
+		var points: Array = trailhead.get("points", [])
+		if at.size() < 2 or label.is_empty() or points.size() < 2:
+			push_warning("skipped a malformed paths.trailheads entry")
+			continue
+		var post: Node3D = SIGNPOST.new()
+		post.name = "TrailheadSignpost_%d" % i
+		add_child(post)
+		post.call("build", self, Vector2(float(at[0]), float(at[1])), [{"label": label, "points": points}])
+		i += 1
+
+
+## SA7, rewritten by OP-0830-1: the settlement has an edge, and the gates are
+## the holes in it. The key still sits a few metres off the road, inside.
+##
+## The old shape of this function -- one leaf in open grass, with
+## `seal_half_width` wings guessing how far a sliding player would go -- is what
+## the 2026-08-30 owner playtest reports as pointless, and the guess had already
+## been raised 12.0 -> 20.0 once and still lost. `village_boundary.gd` owns the
+## line and both leaves now; this only stands it up and drops the key.
+func _build_road_gate() -> void:
+	var boundary: Node3D = VILLAGE_BOUNDARY.new()
+	boundary.name = "VillageBoundary"
+	add_child(boundary)
+	boundary.call("build", self)
+	STRUCTURE_VISIBILITY_RANGE.apply(boundary, "village_boundary")
+
+	_build_gate_key_post()
+	var game := get_node_or_null(^"/root/Game")
+	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
+		return
+	_spawn_gate_key()
+
+
+## T3-ACTIVITIES. Band 1's "Broken Cart" Local Request -- see cart_repair.gd's
+## own header for why it reuses item_gate.gd/building_prefabs.gd rather than a
+## new mechanism.
+func _build_broken_cart() -> void:
+	var cart: Node3D = CART_REPAIR.new()
+	cart.name = "BrokenCart"
+	add_child(cart)
+	cart.call("build", self, BROKEN_CART_AT, BROKEN_CART_YAW_DEG)
+
+
+func _build_meadowhart_herd_visit() -> void:
+	var visit: Node3D = MEADOWHART_HERD_VISIT.new()
+	visit.name = "MeadowhartHerdVisit"
+	add_child(visit)
+	if not bool(visit.call("build", self, _player, get_node_or_null(^"EncounterDirector"))):
+		push_error("Meadowhart herd visit failed to build")
+
+
+## T3-ACTIVITIES / CI-TRAINER-CENSUS. Band 3's "River Nest" Local Request --
+## see river_nest_clear.gd's own header for why this is a gather-and-give
+## NPC rather than a trainers.json row.
+func _build_river_nest_clear() -> void:
+	var doss: Node3D = RIVER_NEST_CLEAR.new()
+	doss.name = "RiverNestClear"
+	add_child(doss)
+	doss.call("build", self, _player, RIVER_NEST_AT, RIVER_NEST_FACING_DEG)
+
+
+## F01#2/#3. The post stands whether or not the key is still on it: a loaded
+## save that already took the key shows the empty peg.
+func _build_gate_key_post() -> void:
+	if get_node_or_null(^"GateKeyPost") != null \
+			or not bool(KEY_PICKUP.post_config().get("enabled", false)):
+		return
+	var ground := ground_height_at(GATE_KEY_AT.x, GATE_KEY_AT.y)
+	if is_nan(ground):
+		return
+	KEY_PICKUP.build_post(self, Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y))
+
+
+func _spawn_gate_key() -> void:
+	if get_node_or_null(^"GateKey") != null:
+		return
+	var ground := ground_height_at(GATE_KEY_AT.x, GATE_KEY_AT.y)
+	if is_nan(ground):
+		push_error("no ground under the gate key at %.0f, %.0f" % [GATE_KEY_AT.x, GATE_KEY_AT.y])
+		return
+	var key: Node3D = KEY_PICKUP.new()
+	key.name = "GateKey"
+	key.position = Vector3(GATE_KEY_AT.x, ground, GATE_KEY_AT.y)
+	add_child(key)
+	# F01#2/#3: the key hangs on a post by the road (data/config/key_post.json).
+	var mount := "post" if bool(KEY_PICKUP.post_config().get("enabled", false)) else "ground"
+	key.call("setup", "castle_gate_key", "Take the old key", "key", "meadows", mount)
+
+
+## SF34: the Hall approach. Same body as the road gate, three Sigils instead
+## of one key — and no key lying nearby, because the keys are three captains
+## (`data/config/trainers.json`). Nothing here checks a level or a flag the
+## player cannot see in their own satchel.
+func _build_sigil_gate() -> void:
+	var gate: Node3D = ROAD_GATE.new()
+	gate.name = "SigilGate"
+	gate.set("key_item_ids", SIGIL_ITEM_IDS)
+	gate.set("flag_id", SIGIL_GATE_FLAG)
+	gate.set("locked_conversation", "hall_approach_sealed")
+	gate.set("unlocked_conversation", "hall_approach_opened")
+	gate.set("prompt_text", "Try the Hall gate")
+	# SIGIL-SEAL. The leaf alone is 4.06m against a 14.1m causeway, so a locked
+	# gate could be walked round at +/-3m off centre -- `smoke_traversal.gd`
+	# walks exactly that. 8.5m is the causeway's own measured half-width (7.04m)
+	# plus enough to bury the wing ends in the gorge rims instead of stopping
+	# flush with walkable ground.
+	# Raised 8.5 -> 16.0 under the 2026-08-25 owner ruling. 8.5 covered the
+	# causeway's own 7.04m half-width and was sized for a player who walks
+	# STRAIGHT at a gate. Once the body slides (OF15), it runs along the wings
+	# and round their ends: smoke_traversal walked a locked gate at -6.0m off
+	# centre and got 15m past. The wings now reach out to where the gorge itself
+	# stops the player -- the same run records a fall-and-respawn at +/-18m -- so
+	# the barrier ends where the ground does rather than in open grass. Wings
+	# skip any offset with no ground under it, so this cannot hang panels over
+	# the carve.
+	gate.set("seal_half_width", 16.0)
+	# T1-HALL-3 / JUDGE-5 D4: piers, a lintel and two sigil banners, so this
+	# reads as Team Tether's checkpoint rather than as "a three-rail farm fence
+	# with a small yellow padlock". Opt-in on this gate only -- the village road
+	# gate keeps the plain leaf it is supposed to have. See `road_gate.gd`'s
+	# `faction_dressing`.
+	gate.set("faction_dressing", true)
+	# GATE-F-LEG-S10CDE. The four flanking `sigil_gate_gorge_*` carves are
+	# 11m-deep, ~72-degree-walled trenches with no rescue of their own --
+	# reproduced twice (S10c and S10d both permanently pinned inside
+	# `sigil_gate_gorge_west_wing`, burning their whole walk budget). See
+	# `road_gate.gd`'s own `gorge_carve_ids` comment for the full account.
+	gate.set("gorge_carve_ids", [
+		"sigil_gate_gorge_west", "sigil_gate_gorge_east",
+		"sigil_gate_gorge_west_wing", "sigil_gate_gorge_east_wing",
+	])
+	add_child(gate)
+	gate.call("build", self, SIGIL_GATE_AT, SIGIL_GATE_YAW_DEG)
+
+
+## R4.4: TMs found in the world (GAME_DESIGN.md 13). Each is a one-time
+## physical prop, and OF29 makes what it grants a real satchel item -- so
+## "one-time" now has to be enforced here. A TM whose `tm:<id>` flag is
+## already set was taken in an earlier session and is simply not placed; a
+## reload cannot mint a second copy of a consumable disc.
+##
+## Migration: a save written BEFORE OF29 carries that same flag from the old
+## flag-only pickup, and gets exactly this treatment -- prop gone, no free
+## item. That is the honest reading. The flag was only ever a key to
+## `tab_creatures.gd::_teach_next()`'s auto-teach, which OF29 retires; a
+## player who took a TM under the old rules already had every teach that
+## screen would give them, and handing them a fresh disc now would be
+## inventing a reward the old design never promised.
+func _place_tms() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	for tm_id: String in TM_AT:
+		if TM_PICKUP.was_taken(game, tm_id):
+			continue
+		_spawn_tm(tm_id)
+
+
+func _spawn_tm(tm_id: String) -> void:
+	if get_node_or_null(NodePath("TM_%s" % tm_id)) != null:
+		return
+	var at: Vector2 = TM_AT[tm_id]
+	var ground := ground_height_at(at.x, at.y)
+	if is_nan(ground):
+		push_error("no ground under TM '%s' at %.0f, %.0f" % [tm_id, at.x, at.y])
+		return
+	var pickup: Node3D = TM_PICKUP.new()
+	pickup.name = "TM_%s" % tm_id
+	pickup.position = Vector3(at.x, ground, at.y)
+	add_child(pickup)
+	pickup.call("setup", tm_id)
+
+
+## T3-PICKUPS. One-time item finds (CACHE_AT/item_cache_pickup.gd), the same
+## one-time-prop shape `_place_tms()` above already establishes: a
+## `cache:<id>` flag means "taken", and a reload cannot mint a second copy.
+func _place_item_caches() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	for item_id: String in CACHE_AT:
+		if ITEM_CACHE_PICKUP.was_taken(game, item_id):
+			continue
+		_spawn_item_cache(item_id)
+
+
+## 2026-09-04. `world_model`/`world_model_scale` on the item's own
+## `data/items/items.json` definition take priority over the shared
+## `CACHE_MODEL` barrel — every pickup this session generated real art for
+## (candy, potion, revive, mushroom) carries these keys; an item with
+## neither (the elixir, the TM disc) still gets the barrel exactly as
+## before. One lookup, additive, nothing about the existing two caches
+## changes.
+func _item_cache_model(item_id: String) -> Array:
+	var game := get_node_or_null(^"/root/Game")
+	var db: RefCounted = game.get("items") as RefCounted if game != null else null
+	if db == null:
+		return [CACHE_MODEL, CACHE_MODEL_SCALE]
+	var definition: Dictionary = db.call("definition", item_id) as Dictionary
+	var model := str(definition.get("world_model", ""))
+	if model.is_empty():
+		return [CACHE_MODEL, CACHE_MODEL_SCALE]
+	return [model, float(definition.get("world_model_scale", 1.0))]
+
+
+func _spawn_item_cache(item_id: String) -> void:
+	if get_node_or_null(NodePath("Cache_%s" % item_id)) != null:
+		return
+	var at: Vector2 = CACHE_AT[item_id]
+	var ground := ground_height_at(at.x, at.y)
+	if is_nan(ground):
+		push_error("no ground under item cache '%s' at %.0f, %.0f" % [item_id, at.x, at.y])
+		return
+	var pickup: Node3D = ITEM_CACHE_PICKUP.new()
+	pickup.name = "Cache_%s" % item_id
+	pickup.position = Vector3(at.x, ground, at.y)
+	add_child(pickup)
+	var model_and_scale := _item_cache_model(item_id)
+	pickup.call("setup", item_id, CACHE_LABEL.get(item_id, "Take it"),
+		model_and_scale[0], model_and_scale[1])
+
+
+## W17-DENSITY-B2-B3. The authored per-band findables (candy, revives,
+## potions, mushrooms) from `data/config/bands/<band>/pickups.json`, stood up
+## through the same `item_cache_pickup.gd` seam `_place_item_caches()` uses,
+## keyed on their own authored id. `band_pickups.gd` owns the reading, the
+## ground/scatter siting and the tier look; this is the one hook.
+func _place_band_pickups() -> void:
+	var stats: Dictionary = BAND_PICKUPS.place_all(self, _vegetation)
+	print("[playground] placed %d band pickups (%d already taken, %d nudged off scatter, %d unclear, %d without ground)" % [
+		int(stats["placed"]), int(stats["taken"]), int(stats["nudged"]), int(stats["unclear"]), int(stats["no_ground"])])
+
+
+## D71/T3-SUNSTONE: the Sunstone, a one-time physical pickup exactly like
+## `castle_gate_key` above (`KEY_PICKUP`, not a bespoke class) -- see
+## `SUNSTONE_AT`'s own comment for why this item is a ground pickup rather
+## than a dungeon `prize` block or a `harvest.json` node.
+func _place_sunstone() -> void:
+	var game := get_node_or_null(^"/root/Game")
+	if KEY_PICKUP.was_taken(game, "sunstone"):
+		return
+	_spawn_sunstone()
+
+
+func _spawn_sunstone() -> void:
+	if get_node_or_null(^"Sunstone") != null:
+		return
+	var ground := ground_height_at(SUNSTONE_AT.x, SUNSTONE_AT.y)
+	if is_nan(ground):
+		push_error("no ground under the sunstone at %.0f, %.0f" % [SUNSTONE_AT.x, SUNSTONE_AT.y])
+		return
+	var pickup: Node3D = KEY_PICKUP.new()
+	pickup.name = "Sunstone"
+	pickup.position = Vector3(SUNSTONE_AT.x, ground, SUNSTONE_AT.y)
+	add_child(pickup)
+	pickup.call("setup", "sunstone", "Take the sunstone", "stone")
+
+
+## RG7. Loading through the in-world Save tab does not rebuild the scene. Make
+## authored one-shot props match the newly loaded flags in both directions:
+## consumed props disappear immediately, and an earlier save can restore a prop
+## that was picked up after that save was written.
+func restore_progression_from_game(game: Node) -> void:
+	var key := get_node_or_null(^"GateKey") as Node3D
+	if KEY_PICKUP.was_taken(game, "castle_gate_key"):
+		if key != null and key.has_method("restore_progression_from_game"):
+			key.call("restore_progression_from_game", game)
+	elif key == null:
+		_spawn_gate_key()
+	var sunstone := get_node_or_null(^"Sunstone") as Node3D
+	if KEY_PICKUP.was_taken(game, "sunstone"):
+		if sunstone != null and sunstone.has_method("restore_progression_from_game"):
+			sunstone.call("restore_progression_from_game", game)
+	elif sunstone == null:
+		_spawn_sunstone()
+	for tm_id: String in TM_AT:
+		var pickup := get_node_or_null(NodePath("TM_%s" % tm_id)) as Node3D
+		if TM_PICKUP.was_taken(game, tm_id):
+			if pickup != null and pickup.has_method("restore_progression_from_game"):
+				pickup.call("restore_progression_from_game", game)
+		elif pickup == null:
+			_spawn_tm(tm_id)
+	for item_id: String in CACHE_AT:
+		var cache := get_node_or_null(NodePath("Cache_%s" % item_id)) as Node3D
+		if ITEM_CACHE_PICKUP.was_taken(game, item_id):
+			if cache != null and cache.has_method("restore_progression_from_game"):
+				cache.call("restore_progression_from_game", game)
+		elif cache == null:
+			_spawn_item_cache(item_id)
+
+
+## SD17: the Burrow Warrens, dug into the flank of the rocky rise out in the
+## deeper Meadows. Its position, layout, population and contents all live in
+## data/config/burrow_warrens.json; the world only hands it the three things
+## it cannot find on its own — the ground query, the camera rig it swaps
+## profiles on, and the encounter director that owns every wild body.
+##
+## Placed after the harvest nodes and TMs for the ordinary reason everything
+## in this function is ordered: a regression in the dungeon must not be able
+## to take the field's own contents down with it.
+func _build_burrow_warrens() -> void:
+	var warrens: Node3D = BURROW_WARRENS.new()
+	warrens.name = "BurrowWarrens"
+	add_child(warrens)
+	var director := get_node_or_null(^"EncounterDirector")
+	var built: Variant = await warrens.call("build", self, _camera_rig, _player, director, _shell_build)
+	if not bool(built):
+		push_warning("the Burrow Warrens did not build; the required dungeon is missing")
+	else:
+		STRUCTURE_VISIBILITY_RANGE.apply(warrens, "burrow_warrens")
+
+
+## R8.2/SG38: the authored stronghold route behind `landmark.gd`'s castle, and
+## the three-fight gauntlet standing in it. Its layout, contents and trainers
+## live in data/config/stronghold.json; like the warrens, the world only hands
+## it the ground query, the camera rig and the player. Placed after the warrens
+## so a regression in either dungeon cannot take the other down with it, and
+## after the trainers pass above on purpose -- the stronghold's own people carry
+## `placed_by: "stronghold"`, so that pass has already skipped them and this one
+## stands them on the stronghold's floor rather than on the meadow under it.
+func _build_stronghold() -> void:
+	var stronghold: Node3D = STRONGHOLD.new()
+	stronghold.name = "Stronghold"
+	add_child(stronghold)
+	var built: Variant = await stronghold.call("build", self, _camera_rig, _player, _shell_build)
+	if not bool(built):
+		push_warning("the stronghold route did not build; spec §8's five spaces are missing")
+## R8.3/SG40/R8.4: the Warden, the reveal and the freeing of the legendary.
+##
+## Built LAST of the authored content, and after `_build_stronghold()` when
+## R8.2's route is present, because the climax asks that building for its
+## named marks (`warden_stand`, `machine_foot`, `legendary_stand`) rather than
+## hard-coding a metre inside somebody else's rooms. Where the route is not in
+## the tree yet the climax falls back to its own world coordinates in
+## data/config/stronghold_climax.json and still runs end to end — the merge is
+## then only a matter of the markers starting to answer.
+func _build_stronghold_climax() -> void:
+	var climax: Node3D = STRONGHOLD_CLIMAX.new()
+	climax.name = "StrongholdClimax"
+	add_child(climax)
+	if not bool(climax.call("build", self, _player)):
+		push_warning("the stronghold climax did not build; the chapter has no ending")
+
+
+## The first day's gathering spots, from data/config/harvest.json.
+func _place_harvest_nodes() -> void:
+	var parsed: Dictionary = BAND_CONTENT.load_config("res://data/config/harvest.json", "nodes")
+	if parsed.is_empty():
+		push_warning("harvest.json missing; the first day has nothing to gather")
+		return
+	var placed := 0
+	for entry: Variant in parsed.get("nodes", []):
+		if not entry is Dictionary:
+			continue
+		var spec: Dictionary = entry
+		var at: Array = spec.get("at", [0.0, 0.0])
+		var ground := ground_height_at(float(at[0]), float(at[1]))
+		if is_nan(ground):
+			continue
+		var node: Node3D = HARVEST_NODE.new()
+		node.position = Vector3(float(at[0]), ground, float(at[1]))
+		add_child(node)
+		node.call("setup", spec)
+		placed += 1
+	print("[playground] placed %d harvest nodes" % placed)
+
+
+## R7.6. The berry farm's beds, from data/config/farm.json.
+##
+## Its own placer rather than a row in harvest.json: a farm bed is not a
+## harvest node. It carries saved state, it has four appearances instead of
+## two, and it answers to the hoe — none of which `harvest_node.gd::setup()`
+## has a field for. What the two DO share is `harvest_logic.gd`, and they
+## share it through the code (`farm_plot.gd::_harvest`), not through the data.
+##
+## The index passed to each plot is its position in the file, which is the key
+## its saved state is stored under (`game_state.gd::farm_plots`).
+func _place_farm_plots() -> void:
+	var file := FileAccess.open("res://data/config/farm.json", FileAccess.READ)
+	if file == null:
+		push_warning("farm.json missing; the farmhouse has no farm")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		push_error("farm.json is not valid JSON; the farmhouse has no farm")
+		return
+	var config := parsed as Dictionary
+
+	var root := Node3D.new()
+	root.name = "BerryFarm"
+	add_child(root)
+
+	var placed := 0
+	for entry: Variant in config.get("plots", []):
+		if not entry is Dictionary:
+			continue
+		var at: Array = (entry as Dictionary).get("at", [0.0, 0.0])
+		var x := float(at[0])
+		var z := float(at[1])
+		# D09: ask the world, never a raycast.
+		var ground := ground_height_at(x, z)
+		if is_nan(ground):
+			push_warning("no ground under farm plot %d at %.0f, %.0f" % [placed, x, z])
+			continue
+		var plot: Node3D = FARM_PLOT.new()
+		plot.name = "Plot%d" % placed
+		plot.position = Vector3(x, ground, z)
+		root.add_child(plot)
+		# D97, lane 6.E: the bed's realm comes from the WORLD that placed it, so
+		# the claim it raises when it is picked is filed against this world and
+		# not against whichever realm the local player happens to be standing in.
+		plot.call("setup", placed, config, world_realm())
+		placed += 1
+	print("[playground] placed %d farm plots" % placed)
+
+
+## Ground height at a world x/z, or NAN where there is no terrain.
+##
+## Anything that needs to stand something on the ground should ask this rather
+## than casting a ray downwards.
+##
+## Raycasts against Terrain3D's heightmap collision are unreliable: measured
+## across the playground, roughly a quarter of downward rays return no hit at
+## points where the ground is unquestionably present — a sphere query at the
+## same spot collides, the character walks over it without falling, and
+## `data.get_height` returns a sane value. `move_and_slide` uses shape casts, so
+## the world has always been solid to walk on; only rays lie about it.
+##
+## That cost an entire creature. The M3 wild creature was placed by raycast, the ray
+## silently missed, and the creature was never spawned at all — no error, no
+## body, just an encounter that could not happen.
+func ground_height_at(x: float, z: float) -> float:
+	return TERRAIN_HEIGHT.height_at(_terrain, x, z)
+
+
+func _load_terrain_config() -> Dictionary:
+	var file := FileAccess.open(TERRAIN_CONFIG, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
+## Drop the player onto the baked ground rather than trusting a hand-placed Y in
+## the scene, which silently rots every time the terrain is re-baked.
+func _place_player() -> void:
+	if _player == null or _terrain == null:
+		return
+	var data: Object = _terrain.get("data")
+	if data == null:
+		push_warning("terrain data not ready; leaving the player at its scene position")
+		return
+
+	var spawn := Vector3(_player.global_position.x, 0.0, _player.global_position.z)
+	var ground: float = TERRAIN_HEIGHT.height_from(data, float(_terrain.get("vertex_spacing")), spawn.x, spawn.z)
+	if is_nan(ground):
+		push_warning("no terrain height at spawn; leaving the player where it is")
+		return
+
+	_player.global_position = Vector3(spawn.x, ground + SPAWN_CLEARANCE, spawn.z)
+	_spawn_position = _player.global_position
+
+	# A realm return has its own authored arrival on the accessible side of the
+	# Storm Road arch. Keep `_spawn_position` at home so an ordinary later death
+	# still returns to Grandpa's house rather than turning a transition into a
+	# new permanent death checkpoint.
+	var game := get_node_or_null(^"/root/Game")
+	var pending := str(game.call("pending_entry_for", "meadows")) if game != null and game.has_method("pending_entry_for") else ""
+	if pending != "":
+		var transition_cfg := _load_realm_transition_config()
+		var entries: Dictionary = transition_cfg.get("meadows_entries", {})
+		var entry: Variant = entries.get(pending, {})
+		if entry is Dictionary:
+			var raw: Variant = (entry as Dictionary).get("position", [])
+			if raw is Array and (raw as Array).size() >= 2:
+				var x := float(raw[0])
+				var z := float(raw[1])
+				var arrival_ground := ground_height_at(x, z)
+				if not is_nan(arrival_ground):
+					# Terrain3D streams its Dynamic/Game collision around the render
+					# camera. A cross-realm arrival can be kilometres from the scene
+					# default, so hold gravity until the snapped camera has driven a
+					# few physics updates at the destination.
+					_player.set_physics_process(false)
+					_player.global_position = Vector3(x, arrival_ground + SPAWN_CLEARANCE, z)
+					_player.velocity = Vector3.ZERO
+					var yaw := deg_to_rad(float((entry as Dictionary).get("facing_yaw_deg", 180.0)))
+					var model := _player.get_node_or_null(^"Model") as Node3D
+					if model != null:
+						model.rotation.y = yaw
+					_camera_rig.set("yaw", yaw)
+					_settle_meadows_realm_arrival.call_deferred(game, _player, x, z)
+	if _camera_rig != null and _camera_rig.has_method("set_target"):
+		_camera_rig.call("set_target", _player)
+	print("[playground] spawned at %.1f, %.1f, %.1f" % [
+		_player.global_position.x, _player.global_position.y, _player.global_position.z
+	])
+
+
+func _settle_meadows_realm_arrival(game: Node, player: CharacterBody3D, x: float, z: float) -> void:
+	# The world build following `_place_player()` is synchronous, so these are
+	# the first real collision-streaming beats at the remote arrival site.
+	for _frame in 4:
+		await get_tree().physics_frame
+	if is_instance_valid(player):
+		var arrival_ground := ground_height_at(x, z)
+		if not is_nan(arrival_ground):
+			player.global_position = Vector3(x, arrival_ground + SPAWN_CLEARANCE, z)
+		player.velocity = Vector3.ZERO
+		player.set_physics_process(true)
+		player.reset_physics_interpolation()
+	if is_instance_valid(game):
+		game.call("complete_realm_entry", "meadows")
+
+
+## OP-0905-15/D110: the keyed realm arch this used to also build at
+## `meadows_cloudreach_gate` (`realm_transitions.json`) is gone. The Storm
+## Road's own rebuilt span (`rift_crossing.gd`, built alongside `RiftCollapse`
+## below) is the crossing now; `meadows_cloudreach_gate` stays authored in
+## that config only so `meadows_entries.meadows_cloudreach_gate_return` next
+## to it keeps naming the Meadows-side arrival point for the return trip.
+func _build_realm_handoff() -> void:
+	var config := _load_realm_transition_config()
+	var shrine_spec: Dictionary = config.get("meadows_heart_shrine", {})
+	var shrine_at: Variant = shrine_spec.get("position", [])
+	if shrine_at is Array and (shrine_at as Array).size() >= 2:
+		var shrine_ground := ground_height_at(float(shrine_at[0]), float(shrine_at[1]))
+		if not is_nan(shrine_ground):
+			var shrine: Node3D = REALM_HEART_SHRINE.new()
+			shrine.name = "MeadowsRealmHeartShrine"
+			# The configured point is the circle centre. The Meadows shrine is
+			# the north stone; rotate its offset with the whole ritual ring so
+			# the authored point remains the true centre at every configured yaw.
+			var circle_yaw := deg_to_rad(float(shrine_spec.get("yaw_deg", 0.0)))
+			var north_offset := Basis(Vector3.UP, circle_yaw) * Vector3(0.0, 0.0, -6.2)
+			shrine.position = Vector3(float(shrine_at[0]) + north_offset.x, shrine_ground,
+				float(shrine_at[1]) + north_offset.z)
+			shrine.rotation.y = circle_yaw
+			shrine.set("presentation_model", REALM_CRESCENT_SHRINE)
+			# OWNER-0912 village acceptance. The former 4.8 x 4.0 m relics
+			# were house-scale and one stood directly beside Mira's threshold,
+			# visually pinching off the new south street. Keep the complete
+			# four-realm circle and all interactions, but use the shrine body's
+			# authored human-scale presentation so the street remains primary.
+			shrine.set("presentation_footprint_m", 3.0)
+			shrine.set("presentation_height_m", 2.4)
+			shrine.set("home_circle_enabled", true)
+			shrine.call("setup", "meadows", "Heart of Meadows")
+			add_child(shrine)
+			# The village lawn falls gently across the 12.4 m ring. Anchor every
+			# plinth to the terrain under itself instead of copying the north
+			# stone's elevation to all four members.
+			var circle_members: Array[Node3D] = [shrine]
+			for id: String in ["cloudreach", "stormwood", "water"]:
+				var member := shrine.get_node_or_null("RelicSlot_%s" % id) as Node3D
+				if member != null:
+					circle_members.append(member)
+			for member: Node3D in circle_members:
+				var member_ground := ground_height_at(member.global_position.x,
+					member.global_position.z)
+				if not is_nan(member_ground):
+					var grounded := member.global_position
+					grounded.y = member_ground
+					member.global_position = grounded
+
+
+func _load_realm_transition_config() -> Dictionary:
+	var file := FileAccess.open(REALM_TRANSITIONS_CONFIG, FileAccess.READ)
+	if file == null:
+		push_error("realm transition config missing: %s" % REALM_TRANSITIONS_CONFIG)
+		return {}
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	return parsed as Dictionary if parsed is Dictionary else {}

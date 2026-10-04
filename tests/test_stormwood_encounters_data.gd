@@ -6,6 +6,7 @@ extends "res://tests/test_case.gd"
 const PATH := "res://data/config/stormwood_encounters.json"
 const WORLD_PATH := "res://data/config/stormwood_world.json"
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const POLICY := preload("res://scripts/creatures/level_curve_policy.gd")
 const STARTERS := ["terrapup", "ripplet", "galewisp"]
 
 
@@ -27,8 +28,42 @@ func test_catalogue_census_meets_the_stormwood_minimums() -> void:
 
 
 func test_tables_are_replaceable_and_obey_role_and_crown_limits() -> void:
-	var tables: Array = _read(PATH).get("tables", [])
+	var live := _read(PATH)
+	var candidate := POLICY.config()
+	assert_true(candidate.get("runtime_enabled") is bool)
+	assert_eq(candidate.get("runtime_enabled"), true)
+	assert_eq(POLICY.apply(PATH, live), live)
+	assert_eq(POLICY.apply(PATH, live, true, candidate), live, "the shipped table already carries RD-10")
+	_assert_tables(live, [48, 50], "live RD-10")
+
+
+func test_repeated_manifest_preserves_roles_and_pins_crown_surge_at_50() -> void:
+	var live := _read(PATH)
+	var before := live.duplicate(true)
+	var candidate := POLICY.config()
+	assert_eq(candidate.get("runtime_enabled"), true)
+	for activation: Variant in [false, 1, "true"]:
+		assert_eq(POLICY.apply(PATH, live, activation, candidate), before, "activation must be a literal true boolean")
+	var next := POLICY.apply(PATH, live, true, candidate)
+	assert_false(next.is_empty(), "the manifest validates its exact live inputs")
+	_assert_tables(next, [48, 50], "repeat RD-10 application")
+	assert_eq(live, before, "a candidate projection cannot relevel the production dictionary")
+	var live_tables: Array = live.get("tables", [])
+	var next_tables: Array = next.get("tables", [])
+	assert_eq(next_tables.size(), live_tables.size())
+	for index in mini(live_tables.size(), next_tables.size()):
+		var actual: Dictionary = next_tables[index].duplicate(true)
+		var expected: Dictionary = live_tables[index].duplicate(true)
+		actual.erase("level_range")
+		expected.erase("level_range")
+		assert_eq(actual, expected, "table identities, roles, clocks and replacement data survive projection")
+	assert_eq(POLICY.config().get("runtime_enabled"), true, "shipping data remains active")
+
+
+func _assert_tables(data: Dictionary, crown_band: Array, context: String) -> void:
+	var tables: Array = data.get("tables", [])
 	assert_eq(tables.size(), 12)
+	var crown_count := 0
 	for table: Dictionary in tables:
 		assert_true(bool(table.get("replaceable", false)))
 		assert_true((table.get("roles", []) as Array).size() >= 3)
@@ -39,12 +74,18 @@ func test_tables_are_replaceable_and_obey_role_and_crown_limits() -> void:
 		var levels: Array = table.get("level_range", [])
 		assert_eq(levels.size(), 2)
 		if str(table.get("id", "")) == "crown_surge":
-			assert_true(int(levels[1]) <= 40, "ordinary Crown Surge field stays at the exit-level cap")
+			crown_count += 1
+			for index in mini(levels.size(), crown_band.size()):
+				assert_true(levels[index] is int or levels[index] is float)
+				if levels[index] is int or levels[index] is float:
+					assert_true(is_finite(float(levels[index])) and float(levels[index]) == floorf(float(levels[index])))
+					assert_eq(float(levels[index]), float(crown_band[index]), context + " pins the exact Crown Surge envelope")
 		for role: Dictionary in table.get("roles", []):
 			var species := str(role.get("placeholder_species", ""))
 			assert_true(SPECIES.has(species), "missing placeholder species " + species)
 			assert_false(STARTERS.has(species), "starter may not be a Stormwood wild placeholder")
 			assert_false(str(role.get("replacement_point", "")).is_empty())
+	assert_eq(crown_count, 1, "both views retain exactly one Crown Surge table")
 
 
 func test_positions_and_named_ranks_are_explicit_and_valid() -> void:

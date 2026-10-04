@@ -333,6 +333,124 @@ func _harvest_authored_stop(stop: Dictionary) -> bool:
 ## `smoke_gate_b_continuous.gd::_walk_back_to_the_square` uses coming home).
 const VILLAGE_BOUNDARY_PATH := "res://data/config/village_boundary.json"
 const GATE_CROSSING_STANDOFF_M := 5.0
+const MATERIAL_TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const MATERIAL_ROAD_GATE_PATH := "res://scripts/world/road_gate.gd"
+
+
+## Scatter can lie just across a concave closed edge. Endpoint membership
+## alone cannot establish a clear bearing. Read the actual bounded perimeter
+## and The Rise, including its outside endpoint, before asking the same stick
+## walk to follow optional headings. This is geometry, not a movement proof.
+static func scatter_perimeter_plan(here: Vector2, there: Vector2, boundary: Variant, terrain: Variant) -> Dictionary:
+	if not here.is_finite() or not there.is_finite() or not boundary is Dictionary or not terrain is Dictionary:
+		return {"ok": false}
+	var outline_data: Variant = boundary.get("outline")
+	var paths_data: Variant = terrain.get("paths")
+	var gates_data: Variant = boundary.get("gates")
+	if not outline_data is Dictionary or not paths_data is Dictionary or not gates_data is Dictionary:
+		return {"ok": false}
+	var outline := _bounded_points(outline_data.get("points"), 3, 128)
+	var routes: Variant = paths_data.get("routes")
+	var entries: Variant = gates_data.get("entries")
+	if outline.is_empty() or not routes is Array or routes.size() > 32 or not entries is Array or entries.size() > 16:
+		return {"ok": false}
+	var road := PackedVector2Array()
+	var gate := Vector2.INF
+	var road_count := 0
+	var gate_count := 0
+	for row: Variant in routes:
+		if row is Dictionary and row.get("label") == "The Rise":
+			road_count += 1
+			road = _bounded_points(row.get("points"), 3, 16)
+	for row: Variant in entries:
+		if row is Dictionary and row.get("id") == "RoadGate":
+			gate_count += 1
+			var at := _bounded_points([row.get("at")], 1, 1)
+			if not at.is_empty() and row.get("route") == "The Rise":
+				gate = at[0]
+	if road_count != 1 or gate_count != 1 or road.is_empty() or not gate.is_finite():
+		return {"ok": false}
+	if not Geometry2D.is_point_in_polygon(road[0], outline) or Geometry2D.is_point_in_polygon(road[-1], outline):
+		return {"ok": false}
+	# No-op requires a genuinely clear segment, including same-side endpoints.
+	if _perimeter_hits(here, there, outline).is_empty():
+		return {"ok": true, "headings": [], "crosses_gate": false, "gate": gate}
+	var inside := Geometry2D.is_point_in_polygon(here, outline)
+	var ends_inside := Geometry2D.is_point_in_polygon(there, outline)
+	var headings: Array[Vector2] = []
+	if inside != ends_inside:
+		for p: Vector2 in road:
+			headings.append(p)
+		if not inside:
+			headings.reverse()
+	else:
+		# A concave outline can cut a chord twice. Only an authored road
+		# endpoint with both remaining chords clear can provide a detour.
+		headings.append(road[0] if inside else road[-1])
+	var previous := here
+	var crosses_gate := false
+	var legs := headings.duplicate()
+	legs.append(there)
+	for p: Vector2 in legs:
+		for hit: Vector2 in _perimeter_hits(previous, p, outline):
+			if hit.distance_to(gate) > 0.15:
+				return {"ok": false}
+			crosses_gate = true
+		previous = p
+	if inside != ends_inside and not crosses_gate:
+		return {"ok": false}
+	return {"ok": true, "headings": headings, "crosses_gate": crosses_gate, "gate": gate}
+
+
+static func _bounded_points(raw: Variant, minimum: int, maximum: int) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	if not raw is Array or raw.size() < minimum or raw.size() > maximum:
+		return out
+	for pair: Variant in raw:
+		if not pair is Array or pair.size() != 2:
+			return PackedVector2Array()
+		for coordinate: Variant in pair:
+			if not (coordinate is int or coordinate is float) or not is_finite(float(coordinate)) or absf(float(coordinate)) > 4096.0:
+				return PackedVector2Array()
+		out.append(Vector2(float(pair[0]), float(pair[1])))
+	return out
+
+
+static func _perimeter_hits(a: Vector2, b: Vector2, outline: PackedVector2Array) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	for i: int in outline.size():
+		var hit: Variant = Geometry2D.segment_intersects_segment(a, b, outline[i], outline[(i + 1) % outline.size()])
+		if hit is Vector2:
+			out.append(hit)
+	return out
+
+
+func _scatter_headings(target: Vector3) -> Dictionary:
+	var boundary: Variant = JSON.parse_string(FileAccess.get_file_as_string(VILLAGE_BOUNDARY_PATH))
+	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string(MATERIAL_TERRAIN_PATH))
+	var here := Vector2(_player.global_position.x, _player.global_position.z)
+	var plan := scatter_perimeter_plan(here, Vector2(target.x, target.z), boundary, terrain)
+	if not bool(plan.get("ok", false)):
+		return plan
+	if bool(plan.crosses_gate):
+		var gate: Node3D = _world.find_child("RoadGate", true, false) as Node3D
+		if not _open_material_gate(_world, gate, plan.gate):
+			return {"ok": false}
+	var headings: Array[Vector3] = []
+	for at: Vector2 in plan.headings:
+		headings.append(Vector3(at.x, _player.global_position.y, at.y))
+	return {"ok": true, "headings": headings}
+
+
+static func _open_material_gate(world: Node3D, gate: Node3D, authored_at: Vector2) -> bool:
+	if not is_instance_valid(world) or not is_instance_valid(gate) or not world.is_ancestor_of(gate) or not gate.is_inside_tree():
+		return false
+	var script: Script = gate.get_script() as Script
+	if script == null or script.resource_path != MATERIAL_ROAD_GATE_PATH or not bool(gate.call("is_open")):
+		return false
+	var shape: Variant = gate.get("_shape")
+	return shape is CollisionShape3D and is_instance_valid(shape) and gate.is_ancestor_of(shape) \
+		and shape.disabled and Vector2(gate.global_position.x, gate.global_position.z).distance_to(authored_at) <= 0.05
 
 
 func cross_village_fence_toward(target: Vector3) -> bool:
@@ -462,7 +580,12 @@ func _fill_with_live_scatter(item_id: String) -> bool:
 		# establishes that and says so when it cannot. So a short walk goes on
 		# to try the harvest, and only a walk that ended a long way off is
 		# called a travel failure.
-		var reached: bool = await _walk_to(at, 1.65, _travel_budget(at))
+		var plan := _scatter_headings(at)
+		var reached := false
+		if bool(plan.get("ok", false)):
+			reached = await _walk_to(at, 1.65, _travel_budget(at), plan.headings)
+		else:
+			_fail("no verified open-road bearing to live natural %s at %s" % [item_id, at])
 		var short_by := _player.global_position.distance_to(at)
 		if not reached and short_by > WITHIN_REACH:
 			_fail("controller could not reach live natural %s at %s (stopped %.1fm short)" % [
@@ -1139,13 +1262,17 @@ func _travel_budget(target: Vector3) -> int:
 	return 240 + int(_player.global_position.distance_to(target) * 60.0)
 
 
-func _walk_to(target: Vector3, close_enough: float, budget: int) -> bool:
+func _walk_to(target: Vector3, close_enough: float, budget: int, headings: Array[Vector3] = []) -> bool:
 	var started := Engine.get_physics_frames()
 	var start_pose := _player.global_position
 	var purpose := _active_walk_purpose
 	print("EARNED WALK START phase=materials purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
-	var arrived: bool = await _nav.walk_to(target, budget, close_enough)
+	var arrived := false
+	if headings.is_empty():
+		arrived = await _nav.walk_to(target, budget, close_enough)
+	else:
+		arrived = await _nav.walk_to_guided(target, budget, close_enough, headings)
 	_release_move()
 	print("EARNED WALK END phase=materials purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " start_frame=", started,

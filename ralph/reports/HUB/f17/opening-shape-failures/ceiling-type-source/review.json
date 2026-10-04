@@ -1,0 +1,71 @@
+{
+  "verdict": "PASS",
+  "gate": "SOURCEPASS only",
+  "commit": "cb2c67531f447c6ba3545dc8d0acb080cb9e4b83",
+  "predecessor": "8316c68826c95d7d3249088954294babdb504864",
+  "helper_sha256": "0805365e35c0b5bbbeff026a923608b9bbcfd3769fb6e05e893cca0fe7f49ae8",
+  "sources": [
+    {
+      "live_equals_git": true,
+      "successor_bytes": 27001,
+      "prior_sha256": "d472c80d61e6acba253f9ed7c4e1ceaf9d9f6a46266b561b6f51748c7d1072c3",
+      "successor_sha256": "0805365e35c0b5bbbeff026a923608b9bbcfd3769fb6e05e893cca0fe7f49ae8",
+      "second_binary_reads_equal": true,
+      "prior_bytes": 26995,
+      "path": "tests/helpers/opening_geometry_navigator.gd"
+    },
+    {
+      "live_equals_git": true,
+      "successor_bytes": 42423,
+      "prior_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "successor_sha256": "8447b332545a433835da06362841e02b3f23094702d201a85d78988df03b7df8",
+      "second_binary_reads_equal": true,
+      "prior_bytes": 42423,
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd"
+    },
+    {
+      "live_equals_git": true,
+      "successor_bytes": 50000,
+      "prior_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "successor_sha256": "981fe38324bf5056c4099c41260ebc49b51be202eb67f1f5c5a53a97b75081a1",
+      "second_binary_reads_equal": true,
+      "prior_bytes": 50000,
+      "path": "tests/helpers/meadows_earned_team_segment.gd"
+    }
+  ],
+  "binary_equivalence_except_single_declaration": true,
+  "merge_docs_status_only": true,
+  "declaration_change": {
+    "after": "var ceiling: float = ...",
+    "before": "var ceiling := ...",
+    "initializer_unchanged": true,
+    "line": 308
+  },
+  "source_frozen": true,
+  "prior_sourcepass_preserved": true,
+  "prior_actual_parser_verdict": "FAIL",
+  "prior_parser_evidence": {
+    "receipt_sha256": "b45b7884a6eca5ce0f481fa96cd9022ebe187306c3d5c57a34817490f5c8dbc7",
+    "errors": 1,
+    "gameplay_launched": false,
+    "native_exit": 0,
+    "script_errors": 5,
+    "parser_sha256": "ef1e2a8ef8fce5d984362a052c5b88991118f2409858f4689768aca38cf35131"
+  },
+  "effective_permissions": {
+    "sandbox_mode": "danger-full-access",
+    "approval_policy": "never"
+  },
+  "reviewer_engine_parser_test_run": false,
+  "acceptance_credit": false,
+  "F17_4": "OPEN",
+  "permitted_next": "One corrected whole-M1 parser check in the serialized queue; if clean, one real M1",
+  "clean_parser_requires": "No SCRIPT ERROR/ERROR or failed compilation/load output, regardless of native exit",
+  "smallest_correction": "Already applied explicit float declaration; no additional source edit justified",
+  "caveats": "Predecessor conservative refusals and runtime/terrain assumptions retained; corrected parser and gameplay unproved",
+  "raw_report": "D:\\tetherbound\\redesign-hub\\.tmp\\independent-opening-review\\shape-correction-root-r1\\successor-ceiling-cb2c\\strict-review.txt",
+  "raw_report_sha256": "90f3d7be1768abb77f0dc7ccad103c754411ebccf74cb95622b9eace1835fd39",
+  "prior_raw_report_sha256": "1c3eefef257a8212e07cdc82a5014073d71a8e38f9a17dd79f669d3253c21cc0",
+  "primary_type_contract": "https://docs.godotengine.org/en/4.7/tutorials/scripting/gdscript/gdscript_basics.html#variables",
+  "utc": "2026-09-30T21:44:03.1630633Z"
+}

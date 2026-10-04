@@ -1,0 +1,84 @@
+{
+  "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+  "tracked_clean_before": true,
+  "source_raw_hashes_before": {
+    "scripts/combat/combat_manager.gd": "2da1dcc1735e74792701702227fc031b0907946dbd4f34e8de3059be59099c30",
+    "scripts/combat/fight_camera.gd": "258ae8dd48ce614bd51f3a053d2308f0c0e2698bc073e5d4b369ef0cee7c5d39",
+    "scripts/player/camera_rig.gd": "b7bd778a5ce87566a23d35994aa3e3159991841a84cc2851637e4e74da58a7b8",
+    "data/config/camera.json": "57e32fdbde4f78debd29ca7cc5987d4fb816e09f0358c791daa505884f1b897d",
+    "data/config/combat.json": "a87d1be087861c1e5b5a7e135c194203bbe90ec0b4fe07aed6f584ade626dbfd",
+    "tests/smoke_combat_camera.gd": "be8f79f1249d994803c956298b3c7a52a8cf06e0b26a03f91bfb66b09d52015c",
+    "tests/test_fight_camera.gd": "6a46c002ddc675310a1993959adc85eb912a7c44999d297f3d085d1a5f5d36fe"
+  },
+  "engine_path": "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "environment": {
+    "APPDATA": "D:\\tetherbound\\combat-camera-live-r1-user\\APPDATA",
+    "LOCALAPPDATA": "D:\\tetherbound\\combat-camera-live-r1-user\\LOCALAPPDATA"
+  },
+  "runs": [
+    {
+      "label": "parser",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--headless",
+        "--check-only",
+        "--script",
+        "tests/smoke_combat_camera.gd"
+      ],
+      "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+      "timeout_s": 60,
+      "pid": 19568,
+      "native_exit": 0,
+      "elapsed_seconds": 0.9679999999934807,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "errors": []
+    },
+    {
+      "label": "native",
+      "command": [
+        "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-combat",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen",
+        "--script",
+        "tests/smoke_combat_camera.gd",
+        "--",
+        "--matrix-live",
+        "--matrix-preset=Low",
+        "--matrix-dir=D:\\tetherbound\\combat-camera-live-r1\\frames",
+        "--source-commit=6155e48ca9045b0e09d9e6de53e8d0816dcaafbb"
+      ],
+      "source": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+      "timeout_s": 930,
+      "pid": 15636,
+      "native_exit": 1,
+      "elapsed_seconds": 229.28200000000652,
+      "raw_sha256": "4292b30d3d86d95c498f91d9ed07c6e97d01690e6b33a30e600724e477d4dde6",
+      "errors": [
+        "FAIL: live matrix small/small ended or exceeded its 30s case budget at 239\r",
+        "FAIL: live matrix small/small failed framing/simulation/motion/quick evidence; input travel=4.71408414840698\r",
+        "FAIL: matrix encounter ended before the retained ordinary control checks\r"
+      ]
+    }
+  ],
+  "scope": "One parser then one graphical Low/Compatibility1920x1080 live nine-pair capture; staged roster/poses and setup baselines; native result is not independent blind acceptance.",
+  "source_raw_hashes_after": {
+    "scripts/combat/combat_manager.gd": "2da1dcc1735e74792701702227fc031b0907946dbd4f34e8de3059be59099c30",
+    "scripts/combat/fight_camera.gd": "258ae8dd48ce614bd51f3a053d2308f0c0e2698bc073e5d4b369ef0cee7c5d39",
+    "scripts/player/camera_rig.gd": "b7bd778a5ce87566a23d35994aa3e3159991841a84cc2851637e4e74da58a7b8",
+    "data/config/camera.json": "57e32fdbde4f78debd29ca7cc5987d4fb816e09f0358c791daa505884f1b897d",
+    "data/config/combat.json": "a87d1be087861c1e5b5a7e135c194203bbe90ec0b4fe07aed6f584ade626dbfd",
+    "tests/smoke_combat_camera.gd": "be8f79f1249d994803c956298b3c7a52a8cf06e0b26a03f91bfb66b09d52015c",
+    "tests/test_fight_camera.gd": "6a46c002ddc675310a1993959adc85eb912a7c44999d297f3d085d1a5f5d36fe"
+  },
+  "same_source_before_after": true,
+  "head_after": "6155e48ca9045b0e09d9e6de53e8d0816dcaafbb",
+  "tracked_clean_after": true
+}

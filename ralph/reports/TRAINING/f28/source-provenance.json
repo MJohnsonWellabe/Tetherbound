@@ -1,0 +1,23 @@
+{
+  "status": "ignored_unparsed_source_draft_no_acceptance_credit",
+  "base_tag": "tb-training-wip-before-f27-items-cut-20260930",
+  "base_commit": "657092e5e58e3afa9df8f412b76f9e7cd3c82c52",
+  "paths": [
+    {
+      "path": "scripts/creatures/breakthrough.gd",
+      "base_sha256_lf": "d7ff3c036e18ad5dea9ad1b39da69727fc94822e514ec11ca49003a055cb9251",
+      "draft_sha256_lf": "c380c96ebc1209f0f3d0611181ef910106357b925741ea7d704155cfc5c4eda6"
+    },
+    {
+      "path": "data/config/masters.json",
+      "base_sha256_lf": "23ae89324f778ef5650bc635973e9b5bbbe9021ca16d5037314cbaab296f091f",
+      "draft_sha256_lf": "1f1f4c5a4adb02e9867f44e4efabb626dfaa71e03d71805cf2f249b85dc666d3"
+    },
+    {
+      "path": "data/recipes/feasts.json",
+      "base_sha256_lf": "093112bab71d69c2a6b81c287fe7c684ea916a6d8ca58495f5e65be73c56637b",
+      "draft_sha256_lf": "c13525a8c28dbb1690f84bfc8cdcad48bc4db182f0189815a10515efaa8430ed"
+    }
+  ],
+  "additional_unallocated_items": "data/items/feast-item-proposals.json;42 SKUs excluded from patch"
+}

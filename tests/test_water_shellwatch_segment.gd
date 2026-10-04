@@ -65,15 +65,15 @@ func test_live_trainer_contract_uses_production_namespaced_species() -> void:
 		func(_x: float, _z: float) -> float: return 0.0)
 	assert_true(translated.ok)
 	var trainers: Dictionary = translated.trainer_specs
-	assert_false(SEGMENT.trainer_contract(trainers[SEGMENT.SOLM_ID], SEGMENT.SOLM_ID, 47,
+	assert_false(SEGMENT.trainer_contract(trainers[SEGMENT.SOLM_ID], SEGMENT.SOLM_ID, [24, 25],
 		["mirejaw", "mangrove_monitor"]), "negative control reproduces old raw-ID comparison against live specs")
-	assert_true(SEGMENT.trainer_contract(trainers[SEGMENT.SOLM_ID], SEGMENT.SOLM_ID, 47,
+	assert_true(SEGMENT.trainer_contract(trainers[SEGMENT.SOLM_ID], SEGMENT.SOLM_ID, [24, 25],
 		["water_mirejaw", "water_mangrove_monitor"]))
-	assert_true(SEGMENT.trainer_contract(trainers[SEGMENT.IRVA_ID], SEGMENT.IRVA_ID, 48,
+	assert_true(SEGMENT.trainer_contract(trainers[SEGMENT.IRVA_ID], SEGMENT.IRVA_ID, [25, 26],
 		["water_riptusk", "water_cannonback"]))
 	var changed: Dictionary = trainers[SEGMENT.IRVA_ID].duplicate(true)
-	changed.team[0].level = 47
-	assert_false(SEGMENT.trainer_contract(changed, SEGMENT.IRVA_ID, 48,
+	changed.team[0].level = 24
+	assert_false(SEGMENT.trainer_contract(changed, SEGMENT.IRVA_ID, [25, 26],
 		["water_riptusk", "water_cannonback"]), "runtime contract still requires exact authored levels")
 
 
@@ -101,9 +101,9 @@ func test_authored_route_trainers_and_actions_match_segment() -> void:
 		trainers[str(candidate.id)] = candidate
 	assert_true(SEGMENT.route_contract(route))
 	assert_true(SEGMENT.trainer_contract(trainers.get(SEGMENT.SOLM_ID, {}),
-		SEGMENT.SOLM_ID, 47, ["mirejaw", "mangrove_monitor"]))
+		SEGMENT.SOLM_ID, [24, 25], ["mirejaw", "mangrove_monitor"]))
 	assert_true(SEGMENT.trainer_contract(trainers.get(SEGMENT.IRVA_ID, {}),
-		SEGMENT.IRVA_ID, 48, ["riptusk", "cannonback"]))
+		SEGMENT.IRVA_ID, [25, 26], ["riptusk", "cannonback"]))
 	assert_true(SEGMENT.dock_contract(docks))
 	assert_true(SEGMENT.world_dock_contract(world))
 	assert_eq(SEGMENT.DEPARTURE_BARRIER, "shellwatch_to_tidal_cradle_dockBarrier")

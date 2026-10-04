@@ -29,6 +29,10 @@ const GROUP := "camera_rig"
 
 var yaw: float = 0.0
 var pitch: float = 0.0
+## Presentation-only offset relative to target + profile height; reset on every takeover.
+var _framing_pivot_offset := Vector3.ZERO
+var _fight_yaw_target: Variant = null
+var _fight_frame_composer: Callable = Callable()
 
 var _distance: float = 5.2
 var _height: float = 1.75
@@ -39,6 +43,11 @@ var _mouse_sensitivity: float = 0.16
 var _deadzone: float = 0.18
 var _invert_y: bool = false
 var _follow_lag: float = 14.0
+## A target this far from the rig was teleported (fast travel, respawn, a
+## recovery), not walked: snap instead of gliding. Terrain3D builds collision
+## around this camera, so a rig left lagging kilometres behind leaves the
+## player standing on ground with no collision yet.
+var _teleport_snap_m: float = 50.0
 var _recover_speed: float = 4.0
 ## Exploration's `collision_recover_speed`, restored by an empty profile.
 var _base_recover_speed: float = 4.0
@@ -239,6 +248,7 @@ func _load_config() -> void:
 	_deadzone = float(cfg.get("stick_deadzone", _deadzone))
 	_invert_y = bool(cfg.get("invert_y", false))
 	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
+	_teleport_snap_m = float(cfg.get("teleport_snap_m", _teleport_snap_m))
 	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
 	_base_recover_speed = _recover_speed
 	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
@@ -256,6 +266,9 @@ func _load_config() -> void:
 ## ease, because a fight opening with a hard cut loses the connection between
 ## "the animal I walked up to" and "the animal I am fighting".
 func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	_fight_yaw_target = null
+	_fight_frame_composer = Callable()
+	_framing_pivot_offset = Vector3.ZERO
 	_impact_nudge_left = 0.0
 	rotation.z = 0.0
 	set_lens_lift(0.0)
@@ -480,6 +493,9 @@ func _process(delta: float) -> void:
 	_apply_tracking(delta)
 	_follow(delta)
 	_tick_impact_nudge(delta)
+	# Actors completed their physics steps before this idle tick. Compose the
+	# final constrained view after follow/impact roll, before this frame draws.
+	if _fight_frame_composer.is_valid(): _fight_frame_composer.call(delta)
 
 
 ## The conversation push-in, and only the push-in.
@@ -505,11 +521,23 @@ func _process(delta: float) -> void:
 ## same clock as the box it exists for.
 func _physics_process(delta: float) -> void:
 	if not (_talk_active or _talk_leaving):
+		# The follow runs on the idle tick, which can lag several physics
+		# ticks under load; catch a teleport on the first physics tick so the
+		# collision Terrain3D centres on this camera arrives with the player.
+		_snap_if_teleported()
 		return
 	if _target == null or not is_instance_valid(_target):
 		_target = null
 		return
 	_conversation_follow(delta)
+
+
+func _snap_if_teleported() -> void:
+	if _target == null or not is_instance_valid(_target) or _teleport_snap_m <= 0.0:
+		return
+	var anchor := _pivot_anchor()
+	if global_position.distance_to(anchor) > _teleport_snap_m:
+		global_position = anchor
 
 
 ## CONTROLLER-MAP: R3 (or Home) swings the camera back behind whatever it is
@@ -580,10 +608,10 @@ func _apply_tracking(delta: float) -> void:
 		return
 	if not bool(_tracking_config.get("enabled", true)) or _tracking_manual_left > 0.0:
 		return
-	var neutral: Variant = _tracking_neutral_yaw()
+	var neutral: Variant = _tracking_neutral_yaw() if _fight_yaw_target == null else _fight_yaw_target
 	if neutral == null:
 		return
-	var wanted := float(neutral) + deg_to_rad(_clearance_extra_deg)
+	var wanted := float(neutral) + (deg_to_rad(_clearance_extra_deg) if _fight_yaw_target == null else 0.0)
 	var difference := angle_difference(yaw, wanted)
 	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
 	if absf(difference) <= dead_zone:
@@ -653,11 +681,73 @@ static func _world_point(node: Node3D) -> Vector3:
 ## The leg above VERTICAL_SWEEP_FROM_M is swept like the shoulder leg below.
 const VERTICAL_SWEEP_FROM_M := 1.0
 
+## Combat midpoint composition only; no target, input, aim or scale mutation.
+func set_framing_pivot_offset(offset: Vector3) -> void:
+	_framing_pivot_offset = offset if offset.is_finite() else Vector3.ZERO
+
+## One solved absolute orbit, rather than two independently lagged neutral and
+## clearance angles. Manual look/grace still owns _apply_tracking above.
+func set_fight_yaw_target(radians: Variant) -> void:
+	_fight_yaw_target = radians if (radians is float or radians is int) and is_finite(float(radians)) else null
+
+func set_fight_frame_composer(composer: Callable) -> void:
+	_fight_frame_composer = composer
+
+## Read-only same-frame lens query. Uses the same world mask, swept ball,
+## exclusions and margin as the existing rig, plus the actual rotated foe box.
+## Nothing here moves the actors, camera, rig or spring arm.
+func probe_fight_camera_pose(pivot: Vector3, camera_basis: Basis, distance: float,
+		foe_box: AABB, foe_pose: Transform3D, body_margin: float, body_minimum: float) -> Dictionary:
+	if _target == null or not is_instance_valid(_target) or not pivot.is_finite() \
+		or not is_finite(distance) or distance <= 0.0: return {}
+	var offset := pivot - (_world_point(_target) + Vector3.UP * _height)
+	var anchor := _pivot_anchor_for_offset(offset)
+	var safe := _world_point(_target) + Vector3.UP * minf(maxf(0.0,_height+offset.y),VERTICAL_SWEEP_FROM_M)
+	var leg := anchor-safe
+	if leg.length()>0.001: anchor = safe+leg.normalized()*_free_distance_behind(safe,leg.normalized(),leg.length())
+	var basis := camera_basis.orthonormalized()
+	var room := _free_distance_behind(anchor,basis.z,distance)
+	var body_room := preload("res://scripts/combat/fight_camera.gd").oriented_body_limit(anchor,
+		anchor+basis.z*distance,foe_box,foe_pose,body_margin,body_minimum)
+	var length := minf(distance,minf(room,body_room))
+	if not is_finite(length) or length<=0.0: return {}
+	var view_origin := anchor+basis.z*length
+	if _camera != null: view_origin += basis.x*_camera.h_offset+basis.y*_camera.v_offset
+	return {"pivot":anchor,"distance":length,"transform":Transform3D(basis,view_origin),
+		"world_room":room,"model_room":body_room}
+
+## Only an already scored constrained presentation pose reaches this door.
+## SpringArm's cached physics child placement is replaced for this draw; its
+## next physics update remains intact. World collision is queried above.
+func apply_fight_camera_pose(pose: Dictionary, requested_yaw: float) -> void:
+	if _camera == null or not pose.get("transform") is Transform3D \
+		or not pose.get("pivot") is Vector3 or not pose.get("distance") is float: return
+	var shot: Transform3D = pose.transform
+	if not shot.origin.is_finite() or not (pose.pivot as Vector3).is_finite() \
+		or not is_finite(float(pose.distance)) or float(pose.distance)<=0.0 or not is_finite(requested_yaw): return
+	yaw = wrapf(requested_yaw,-PI,PI)
+	_fight_yaw_target = yaw
+	global_transform = Transform3D(shot.basis,pose.pivot)
+	spring_length = float(pose.distance)
+	set_body_limit(float(pose.get("model_room",INF)))
+	_camera.position = Vector3(0.0,0.0,float(pose.distance))
+
+func framing_pivot_offset() -> Vector3:
+	return _framing_pivot_offset
+
 func _pivot_anchor() -> Vector3:
-	var base_up := minf(_height, VERTICAL_SWEEP_FROM_M)
+	return _pivot_anchor_for_offset(_framing_pivot_offset)
+
+func _pivot_anchor_for_offset(offset: Vector3) -> Vector3:
+	var height := maxf(0.0, _height + offset.y)
+	var base_up := minf(height, VERTICAL_SWEEP_FROM_M)
 	var anchor := _world_point(_target) + Vector3.UP * base_up
-	if _height > base_up:
-		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, _height - base_up)
+	if height > base_up:
+		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, height - base_up)
+	var lateral := Vector3(offset.x, 0.0, offset.z)
+	var length := lateral.length()
+	if length > 0.001:
+		anchor += lateral / length * _free_distance_behind(anchor, lateral / length, length)
 	return anchor
 
 
@@ -681,16 +771,19 @@ func _follow(delta: float) -> void:
 	# swap between trainer and creature is a glide rather than a snap.
 	var lag := _retarget_lag if _retarget_lag > 0.0 else _follow_lag
 	var weight := 1.0 - exp(-lag * delta)
+	if _teleport_snap_m > 0.0 and global_position.distance_to(desired) > _teleport_snap_m:
+		weight = 1.0
 	var candidate := global_position.lerp(desired, weight)
 	# The lagged point can approach from a different side than today's desired
 	# shoulder. Sweep that complete anchor-to-candidate leg too, so smoothing
 	# cannot tunnel the pivot through a corner the lateral cast avoided.
-	if not is_zero_approx(_shoulder):
-		var candidate_leg := candidate - anchor
+	if not is_zero_approx(_shoulder) or not _framing_pivot_offset.is_zero_approx():
+		var safe_anchor := _world_point(_target) + Vector3.UP * minf(maxf(0.0, _height + _framing_pivot_offset.y), VERTICAL_SWEEP_FROM_M)
+		var candidate_leg := candidate - safe_anchor
 		var candidate_length := candidate_leg.length()
 		if candidate_length > 0.001:
-			candidate = anchor + candidate_leg / candidate_length * _free_distance_behind(
-				anchor, candidate_leg / candidate_length, candidate_length)
+			candidate = safe_anchor + candidate_leg / candidate_length * _free_distance_behind(
+				safe_anchor, candidate_leg / candidate_length, candidate_length)
 	global_position = candidate
 
 	# Once the rig has arrived, hand pacing back to the normal follow lag —

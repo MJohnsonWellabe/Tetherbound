@@ -1,0 +1,492 @@
+{
+  "method": "READONLY installed glTF JSON/accessor/provenance inspection, not model/engine/render/visual/path proof.",
+  "whole_candidate_enabled": false,
+  "reference_inspected": "docs/reference/owner-board-2026-08-15-creature-colors.png",
+  "source_state": "Applied as flag-OFF source candidate at a247a5be9748e76c4a103a68020956fb52073894. No Godot/import/render/player-path/shape-recognition/full-bar proof or runtime activation.",
+  "modules": {
+    "res://assets/environment/stylized_nature/Flower_3_Group.gltf": {
+      "sha256": "1dc92301637cf9c9456236324356ad3b85f6e0ba5e1f8a8b5b577549ab3c9c5c",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_3_Group"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.568230926990509,
+            -0.03458359092473984,
+            -0.5427353382110596
+          ],
+          "max": [
+            0.7883017063140869,
+            1.7742599248886108,
+            0.7045559287071228
+          ]
+        },
+        {
+          "min": [
+            -0.6136013269424438,
+            1.4516462087631226,
+            -0.8017617464065552
+          ],
+          "max": [
+            0.8748752474784851,
+            2.020251512527466,
+            0.789365291595459
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Leaves",
+          "alphaMode": "MASK"
+        },
+        {
+          "name": "Flowers",
+          "alphaMode": "MASK"
+        }
+      ],
+      "source_triangle_count": 755,
+      "normalized_lf_sha256": "4df1612371982c543f930d6b213967372e0d459622d7eff7fc2ed1ddbfaa3b6c"
+    },
+    "res://assets/environment/stylized_nature/Flower_3_Single.gltf": {
+      "sha256": "f2d58e09f0b5568f35064dc465c82b17383e8eeb0e3aeb62b2e62c662a56f8e6",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_3_Single"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.48073863983154297,
+            -0.018326954916119576,
+            -0.520720362663269
+          ],
+          "max": [
+            0.42587125301361084,
+            1.7716585397720337,
+            0.35561174154281616
+          ]
+        },
+        {
+          "min": [
+            -0.27247604727745056,
+            1.755362868309021,
+            -0.3710358142852783
+          ],
+          "max": [
+            0.42078328132629395,
+            2.0498666763305664,
+            0.3568156957626343
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Leaves",
+          "alphaMode": "MASK"
+        },
+        {
+          "name": "Flowers",
+          "alphaMode": "MASK"
+        }
+      ],
+      "source_triangle_count": 285,
+      "normalized_lf_sha256": "26c33edf26f0913947977109fefa2367095a854541a731dfecfd64263b7db2bc"
+    },
+    "res://assets/environment/stylized_nature/Flower_4_Group.gltf": {
+      "sha256": "626e920e94761132aa01c091e6637023fc71a65909c600054a9aefcd0584ee47",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_4_Group"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.7901612520217896,
+            -0.05699761211872101,
+            -0.6181322932243347
+          ],
+          "max": [
+            0.6255365610122681,
+            2.2943496704101562,
+            0.5279141068458557
+          ]
+        },
+        {
+          "min": [
+            -0.9313857555389404,
+            1.122023582458496,
+            -0.6361504197120667
+          ],
+          "max": [
+            0.8491399884223938,
+            2.4297707080841064,
+            0.7313783168792725
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Leaves",
+          "alphaMode": "MASK"
+        },
+        {
+          "name": "Flowers",
+          "alphaMode": "MASK"
+        }
+      ],
+      "source_triangle_count": 1690,
+      "normalized_lf_sha256": "69ead56b36b50f06a0cf18380797fce7434302e9b2da7bf68a85014b993c6134"
+    },
+    "res://assets/environment/stylized_nature/Flower_4_Single.gltf": {
+      "sha256": "163d88a449eddadd9d9143b80a63977a931cb41db2e5aa630bba70c86c9a47dc",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Flower_4_Single"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.5050064325332642,
+            -0.03043048270046711,
+            -0.3631875216960907
+          ],
+          "max": [
+            0.56728196144104,
+            2.2943310737609863,
+            0.21159152686595917
+          ]
+        },
+        {
+          "min": [
+            -0.39627349376678467,
+            1.1264549493789673,
+            -0.40180256962776184
+          ],
+          "max": [
+            0.3805691599845886,
+            2.388728618621826,
+            0.37106218934059143
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Leaves",
+          "alphaMode": "MASK"
+        },
+        {
+          "name": "Flowers",
+          "alphaMode": "MASK"
+        }
+      ],
+      "source_triangle_count": 642,
+      "normalized_lf_sha256": "271189ec424eea2821d758c5c605d9e7737c259d64f4eec4555de7cd9de5a517"
+    },
+    "res://assets/environment/stylized_nature/Mushroom_Common.gltf": {
+      "sha256": "59f6b49ba2dc57e61a1f0643f2d66d6cb5a1200ea9c1ee9c728e13f3bd5fb0a0",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Mushroom_Common"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -0.33337587118148804,
+            -0.017470968887209892,
+            -0.44521069526672363
+          ],
+          "max": [
+            0.23032501339912415,
+            0.4460097551345825,
+            0.3339020013809204
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Mushrooms",
+          "alphaMode": "OPAQUE"
+        }
+      ],
+      "source_triangle_count": 880,
+      "normalized_lf_sha256": "2088b39d92f2f6331f45e59a048d02814dcd8b22767b024f4d220143bc8339f4"
+    },
+    "res://assets/environment/stylized_nature/Mushroom_Oyster.gltf": {
+      "sha256": "2d3b29daf3238c306e1864377510336b9cedaaf759087e55e79366b0053f4992",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Mushroom_Oyster"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -1.0733827352523804,
+            -0.17178910970687866,
+            -0.15129603445529938
+          ],
+          "max": [
+            1.3203638792037964,
+            1.607744812965393,
+            1.2459725141525269
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Mushrooms",
+          "alphaMode": "OPAQUE"
+        }
+      ],
+      "source_triangle_count": 1640,
+      "normalized_lf_sha256": "98a9420e24bb2146d8802af39b56ecfdc2962b86963f60dfec2b0f5cf751b445"
+    },
+    "res://assets/environment/stylized_nature/Plant_1_Big.gltf": {
+      "sha256": "1091ddd87cfb8304b295c4483777c7b5231fa86439c967872525affcc0e93128",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Plant_1_Big"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -1.394121527671814,
+            -0.05603840574622154,
+            -1.6583820581436157
+          ],
+          "max": [
+            1.4963372945785522,
+            3.7003872394561768,
+            1.4680646657943726
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Leaves",
+          "alphaMode": "MASK"
+        }
+      ],
+      "source_triangle_count": 360,
+      "normalized_lf_sha256": "8c22e28d1ad79f3967c0022265b1d09319a3d82cbf14238de0cc77b5fe7e370a"
+    },
+    "res://assets/environment/stylized_nature/Rock_Medium_2.gltf": {
+      "sha256": "d692cd6352ac5b1606968ba98e2794ce1c639e17af43dc6119d0d512313d6d51",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Rock_Medium_2"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -1.713641881942749,
+            -0.05084158852696419,
+            -1.1591253280639648
+          ],
+          "max": [
+            1.3351185321807861,
+            1.8481333255767822,
+            1.3199462890625
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Rocks",
+          "alphaMode": "OPAQUE"
+        }
+      ],
+      "source_triangle_count": 244,
+      "normalized_lf_sha256": "fac2d05a05f2d0d2098de59c09b58f42cc875c9caca4fd4c4bd57f3d36e7b12e"
+    },
+    "res://assets/environment/stylized_nature/Rock_Medium_3.gltf": {
+      "sha256": "8fee9a6fdc2f997a3018d995a298d05610a3443c3fd2773a488f6bbb35ac88cf",
+      "nodes": [
+        {
+          "mesh": 0,
+          "name": "Rock_Medium_3"
+        }
+      ],
+      "accessor_bounds": [
+        {
+          "min": [
+            -1.8242793083190918,
+            -0.31564441323280334,
+            -0.8904620409011841
+          ],
+          "max": [
+            1.5958054065704346,
+            2.000638246536255,
+            2.5856480598449707
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "name": "Rocks",
+          "alphaMode": "OPAQUE"
+        }
+      ],
+      "source_triangle_count": 522,
+      "normalized_lf_sha256": "9a575b911372cf91693aa3a56aea8137ec2251c2b99fb34a31272ee64503047f"
+    }
+  },
+  "profiles": {
+    "ground": {
+      "part_count": 2,
+      "authored_scales": [
+        0.4,
+        0.2
+      ],
+      "scaled_y_ranges": [
+        [
+          0.0007422347068786472,
+          0.927255298614502
+        ],
+        [
+          0.0008316822946071618,
+          0.3806266651153565
+        ]
+      ]
+    },
+    "water": {
+      "part_count": 1,
+      "authored_scales": [
+        0.38
+      ],
+      "scaled_y_ranges": [
+        [
+          0.000705405816435814,
+          1.4281471509933472
+        ]
+      ]
+    },
+    "air": {
+      "part_count": 1,
+      "authored_scales": [
+        0.66
+      ],
+      "scaled_y_ranges": [
+        [
+          0.00017482998967170704,
+          1.3563659982681273
+        ]
+      ]
+    },
+    "electric": {
+      "part_count": 1,
+      "authored_scales": [
+        0.6
+      ],
+      "scaled_y_ranges": [
+        [
+          0.0008014327287673984,
+          1.4928624248504638
+        ]
+      ]
+    },
+    "fire": {
+      "part_count": 3,
+      "authored_scales": [
+        0.45,
+        0.55,
+        0.35
+      ],
+      "scaled_y_ranges": [
+        [
+          0.0163062827847898,
+          1.1049278783798218
+        ],
+        [
+          0.013263234514743087,
+          1.3438007402420045
+        ],
+        [
+          0.01934933105483651,
+          0.8660550165176392
+        ]
+      ]
+    },
+    "dark": {
+      "part_count": 2,
+      "authored_scales": [
+        0.6,
+        1.2
+      ],
+      "scaled_y_ranges": [
+        [
+          0.0009265341758727952,
+          1.0686468877792359
+        ],
+        [
+          0.001034837335348128,
+          0.5572117061614991
+        ]
+      ]
+    },
+    "ice": {
+      "part_count": 3,
+      "authored_scales": [
+        0.3,
+        0.52,
+        0.32
+      ],
+      "scaled_y_ranges": [
+        [
+          0.000747523441910744,
+          0.5704399976730347
+        ],
+        [
+          0.0005623739659786214,
+          0.9880293292999268
+        ],
+        [
+          0.0007306916713714605,
+          0.6084026641845703
+        ]
+      ]
+    },
+    "psychic": {
+      "part_count": 3,
+      "authored_scales": [
+        0.42,
+        0.64,
+        0.42
+      ],
+      "scaled_y_ranges": [
+        [
+          0.01730267893522978,
+          0.8859440040588379
+        ],
+        [
+          0.023270748853683475,
+          1.3469146728515624
+        ],
+        [
+          0.01730267893522978,
+          0.8859440040588379
+        ]
+      ]
+    }
+  },
+  "inspection_recorded_before_source_application": true,
+  "applied_source_commit": "a247a5be9748e76c4a103a68020956fb52073894",
+  "hash_basis": "Each existing sha256 is the exact Windows filesystem byte hash observed during original read-only inspection. Preserve those bytes/hashes, including CRLF; they are not canonical Git-LF blob hash claims. normalized_lf_sha256 below removes CRLF from the same unchanged observed JSON bytes for comparison; it is not an import or model validation."
+}

@@ -198,7 +198,9 @@ func _measure_chase_distance(aim_active: bool) -> float:
 		previous = current
 
 	if aim_active:
-		await _press("combat_run")
+		# The combat_aim context backs out with menu_cancel (pad B); RT/combat_run
+		# is not read while aiming since the physical X/Y/B/A combat map.
+		await _press("menu_cancel")
 		if bool(_manager.call("is_aiming")):
 			_fail("could not cancel the aim after the measurement window")
 

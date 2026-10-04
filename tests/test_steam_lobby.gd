@@ -531,26 +531,33 @@ func test_the_players_tab_disables_invite_at_four_of_four() -> void:
 	(h.steam as Node).free()
 
 
-func test_closing_the_window_leaves_the_hosted_lobby() -> void:
+func test_window_close_keeps_hosted_lobby_until_guarded_exit_accepts() -> void:
 	var h := _ready_host()
 	var steam: MockSteam = h.steam
 	var lobby: Node = h.lobby
 	lobby.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
-	assert_eq(steam.left, [777], "WM_CLOSE_REQUEST leaves the Steam lobby")
+	assert_eq(steam.left, [], "raw window close cannot leave before Session saves")
+	STEAM_LOBBY.leave_for_quit(h.game)
+	assert_eq(steam.left, [777], "accepted process exit leaves the Steam lobby")
 	lobby.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	STEAM_LOBBY.leave_for_quit(h.game)
 	assert_eq(steam.left, [777], "and leaves it only once")
 	h.game.free()
 	steam.free()
 
 
-func test_closing_the_window_mid_join_leaves_the_joining_lobby() -> void:
+func test_window_close_keeps_joining_lobby_until_guarded_exit_accepts() -> void:
 	var steam := MockSteam.new()
 	var lobby := STEAM_LOBBY.new()
 	lobby._inject_native_for_test(steam)
 	assert_true(lobby.initialize())
 	assert_true(lobby.request_join(4242))
 	lobby.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	assert_eq(steam.left, [], "a rejected exit must preserve an in-flight join")
+	lobby.leave_lobbies_for_quit()
 	assert_eq(steam.left, [4242])
+	lobby.leave_lobbies_for_quit()
+	assert_eq(steam.left, [4242], "accepted join cleanup leaves only once")
 	lobby.free()
 	steam.free()
 

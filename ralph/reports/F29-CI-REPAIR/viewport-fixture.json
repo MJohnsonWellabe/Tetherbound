@@ -1,0 +1,29 @@
+{
+  "classification": "SOURCE ONLY; required ROOT runtime isolation and regression rerun pending",
+  "integration_source": "862385aa92f4b198cc5ccf22448d66f8acfb6e28",
+  "patch_target": "tests/test_creature_viewport_framing.gd",
+  "patch_sha256": "b8d6631fc3b855811980006bb839724181bd248c75579bdad1b5a3d422e65886",
+  "before_sha256_lf": "f33404d6d4c5d3c4fc3a2224a95e621d96c3107d82c9b1fd5ff8abe9b66c6ab5",
+  "after_sha256_lf": "029d603af073c6fc98be222d1c31d5d8975be3bdfc3428634a38d69d49e6a076",
+  "changed_method": "test_showcase_is_warm_never_red_and_switches_off",
+  "only_change": "Add widget.free() after the final rim-colour assertion; all assertions and all other source remain exact.",
+  "insertion_after_original_line": 432,
+  "original_assertion_call_sites": 34,
+  "proposed_assertion_call_sites": 34,
+  "diagnosis": "Detached VIEWPORT.new()/_build_world() fixture exits without freeing its widget; every other VIEWPORT.new() fixture has cleanup. The leaked unframed world, environment, two lights, camera, cylinder ground, torus halo and shared resources match this sole missing teardown.",
+  "ownership": "Production tab_creatures.build parents the CreatureViewport to its row; preview-owned children recursively belong to the widget. No production ownership change is proposed.",
+  "other_fixtures": "HUD portrait test frees its menu/hud without building a CreatureViewport. Band pickup fixtures do not allocate CreatureViewport and retain their cleanup.",
+  "prior_failed_batch": {
+    "path": ".tmp/closeout/returned-unit-862385aa92f4-b3c7e854/tests.log",
+    "sha256": "938709b278a36edc9bec63803f0048b5dee90b1aeb149c3bd510156403ae826d",
+    "tests": 162,
+    "assertions": 95648,
+    "failed": 1,
+    "objectdb_instances": 22,
+    "status": "FAIL retained; tournament assertion and teardown leaks remain unresolved by source-only proposal"
+  },
+  "runtime": "NOT RUN. ROOT owns engine, bake, imports and CI. Require affected framing/HUD isolation with unchanged assertions and clean native/resource/RID teardown, then the required regression batch.",
+  "root_source_or_metadata_writes": false,
+  "production_or_render_changes": false,
+  "new_agents_or_sessions": false
+}

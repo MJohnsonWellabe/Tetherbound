@@ -1,0 +1,100 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T03:00:55.726287+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "artifact_kind": "criterion closure forecast with bounded independent verdicts",
+  "quality_recheck": "PASS",
+  "latest_reviewed_native_source": "e2cc4192367979e44d003038ea915971ac9d8c5b",
+  "board_historical": {
+    "accepted": 110,
+    "total": 280,
+    "original": "95/101",
+    "redesign": "15/179",
+    "fresh_rechecks_of_prior110": 0
+  },
+  "independently_sufficient_new_rows_pending_green_main": [
+    {
+      "id": "F23#2",
+      "verdict": "SUFFICIENT_NATIVE_POLICY_PASS_PENDING_GREEN_MAIN_LANDING",
+      "proofs": [
+        "f23-f35-catalogue-recheck.json",
+        "data-native-e2cc-independent-judgment.json"
+      ],
+      "honest_gap": "None for this bounded catalogue/equip-policy criterion; fixtures are detached L15 and a synthetic host station context. It does not establish F23#0 active controller combat or F23#3 actual station/save/rejoin. Green main landing/counting remains; no MET credit added by this lane."
+    },
+    {
+      "id": "F25#1",
+      "verdict": "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING",
+      "proofs": [
+        "f25-mapping-recheck.json",
+        "data-native-e2cc-independent-judgment.json"
+      ],
+      "honest_gap": "None for mapping; active effect rendering, visual bar, real contact/HP, mastery appearance and Medium performance remain separate criteria. Green main landing/counting remains; no MET credit added by this lane."
+    },
+    {
+      "id": "F35#0",
+      "verdict": "SUFFICIENT_NATIVE_MAPPING_PASS_PENDING_GREEN_MAIN_LANDING",
+      "proofs": [
+        "f23-f35-catalogue-recheck.json",
+        "data-native-e2cc-independent-judgment.json"
+      ],
+      "honest_gap": "None for the explicitly named mapping test; presentation/runtime enablement, unique performances, growth, duration and code-blind judgment belong to F35#1..#4. Green main landing/counting remains; no MET credit added by this lane."
+    },
+    {
+      "id": "F37#3",
+      "verdict": "SUFFICIENT_STATIC_PASS_PENDING_GREEN_MAIN_LANDING",
+      "proofs": [
+        "f37-teleport-removal-recheck.json"
+      ],
+      "honest_gap": "Exact static requirement independently passes at pinned source; green main landing/counting remains. No other row/engine/visual/co-op inference."
+    }
+  ],
+  "sufficient_new_row_count": 4,
+  "added_MET_now": 0,
+  "current_confirmed_main_landing": "No green main build/landing returned to this lane.",
+  "conditional_count_arithmetic": {
+    "if_existing110_remain_relevant_and_all4_independent_rows_land_green": "114/280 (95/101 original;19/179 redesign)",
+    "limit": "Arithmetic only; neither existing110 relevance nor main green is newly certified by this evidence lane."
+  },
+  "partial_rows": [
+    {
+      "id": "F23#1",
+      "passed": "All69 learnsets, L5/L15, all5 native+unmodified JSON prefix/carrier cases and primary compatibility.",
+      "remaining": "New knowledge-only TM consumer binding and successful owned teaching/debit/use. Existing test_moves exercises retired Teaching.teach auto-equip and cannot substitute. No new planner microtest alone establishes actual paid use."
+    },
+    {
+      "id": "F29#4",
+      "passed": "No forbidden572 wild references; six positive-weight Cannonback Water-alias pools and three Stormcapra pools bound to live provider source; prior-main weights/unlocks/site IDs retained.",
+      "remaining": "Live provider/unlock/physical site resolution not exercised. Namespace is water_cannonback in Water; base evolution Cannonback is distinct and not silently merged."
+    },
+    {
+      "id": "F17#4",
+      "passed": "Actual Mira cycle1 and all three equipped Wood/Stone/Fiber gathers at582b.",
+      "remaining": "Whole CORE failed at Oskar; reviewed route repair still needs original actual rerun. M1 additionally needs full camp/three-bed/three played tournament rounds and all three starter witnesses."
+    }
+  ],
+  "larger_remaining_gates": [
+    "F48 authentic saved inputs, paid Forge/Altar/feed, guest Master and actual host/owner write/ACK/disconnect/restart boundaries are still open; first paid Altar return failed.",
+    "F49 has no passing continuous four-biome save-to-credits witness. Source helpers and inactive flags cannot replace it.",
+    "Current combat bands/named fights require new timing distributions and C2/C3 proof; pre448/450 results are stale.",
+    "Full High/Medium BarsA/B biome, creature, VFX, ultimate and UI pixel/motion judgments remain open. Selected VFX r17 lifetime PASS leaves original r14 RED and all omitted scopes retained.",
+    "Owner human play, owner ROG Ally/renderer authorization and a current passing published download remain distinct unclaimed gates."
+  ],
+  "forecast": "Four additional rows have reviewable sufficient evidence. This is not a forecast that all170 historical open criteria can close in this batch.",
+  "integrity_counts": {
+    "historical_native_inventory": 95,
+    "paired_declared_raw_hashes_matched": 79,
+    "unpaired_not_called_hash_verified": 16,
+    "prior_sealed_gzips_CRC_valid": 296,
+    "prior_sealed_gzips_matching_raw_manifest": 75,
+    "new_lossless_return_copies_hash_verified": 9,
+    "VFXr17_original_members_hash_verified": 13,
+    "latest_native_source_entries_bound": 3365
+  },
+  "execution_limit": "No engine/import/GPU/network/test execution launched by this lane; ROOT owns serialized execution under RENDER_LOCK. No production/board/STATE/workflow modifications or main push."
+}

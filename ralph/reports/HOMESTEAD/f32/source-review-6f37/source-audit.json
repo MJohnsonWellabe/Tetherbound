@@ -1,0 +1,88 @@
+{
+  "candidate": "6f37f5e6950760242a863efa8e585b66a6999607",
+  "comparison_main": "686040ea3884d0c6f3e2d44f397f179a17458ab0",
+  "kind": "source JSON inspection only; no Godot or gameplay execution",
+  "legacy": {
+    "data/config/farm.json": {
+      "plots": true,
+      "grow_days": true,
+      "yield": true,
+      "seed_item": true,
+      "crop_item": true
+    },
+    "data/config/water_pickups.json": {
+      "pickups": true,
+      "harvest": true
+    },
+    "data/config/stormwood_harvests.json": {
+      "sites": true
+    },
+    "data/config/cloudreach_resources.json": {
+      "resources": true
+    }
+  },
+  "catalogue": {
+    "node_count": 32,
+    "ids_unique": true,
+    "orders_unique": true,
+    "census": {
+      "meadows:ground": 1,
+      "meadows:water": 1,
+      "meadows:air": 1,
+      "meadows:electric": 1,
+      "meadows:fire": 1,
+      "meadows:dark": 1,
+      "meadows:ice": 1,
+      "meadows:psychic": 1,
+      "water:ground": 1,
+      "water:water": 1,
+      "water:air": 1,
+      "water:electric": 1,
+      "water:fire": 1,
+      "water:dark": 1,
+      "water:ice": 1,
+      "water:psychic": 1,
+      "cloudreach:ground": 1,
+      "cloudreach:water": 1,
+      "cloudreach:air": 1,
+      "cloudreach:electric": 1,
+      "cloudreach:fire": 1,
+      "cloudreach:dark": 1,
+      "cloudreach:ice": 1,
+      "cloudreach:psychic": 1,
+      "stormwood:ground": 1,
+      "stormwood:water": 1,
+      "stormwood:air": 1,
+      "stormwood:electric": 1,
+      "stormwood:fire": 1,
+      "stormwood:dark": 1,
+      "stormwood:ice": 1,
+      "stormwood:psychic": 1
+    },
+    "declared_min_route_distance": 26.426,
+    "all_placement_claims_unproved": true,
+    "all_outputs_match_type": true,
+    "all_seed_ids_match_type": true
+  },
+  "water_existing_registration": {
+    "proposal_items": 9,
+    "recipes": 10
+  },
+  "forge_proposals": [
+    "rootiron_ingot",
+    "tidesteel_ingot",
+    "skyglass_ingot",
+    "stormglass_plate"
+  ],
+  "all_type_crops": [
+    "berries",
+    "ground",
+    "water",
+    "air",
+    "electric",
+    "fire",
+    "dark",
+    "ice",
+    "psychic"
+  ]
+}

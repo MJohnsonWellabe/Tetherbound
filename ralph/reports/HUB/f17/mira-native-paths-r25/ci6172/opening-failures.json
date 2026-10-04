@@ -1,0 +1,51 @@
+[
+  {
+    "job": 110511919635,
+    "bytes": 589541,
+    "sha256": "58ca2f7a0bf4d65da639ab0d265117170754fdb8c908fb50a87b8197fe694789",
+    "errors": [
+      "2026-10-01T18:14:53.6328656Z ERROR: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "2026-10-01T18:14:53.6337417Z ERROR: natural controller travel could not activate Bram cycle 3 (4.3m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Bram means something nearer took the interact line.",
+      "2026-10-01T18:14:53.6343911Z ERROR: village tools: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "2026-10-01T18:14:53.6349825Z ERROR: village tools: natural controller travel could not activate Bram cycle 3 (4.3m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Bram means something nearer took the interact line.",
+      "2026-10-01T18:14:53.6355617Z gate B continuous FAIL: village tools: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "2026-10-01T18:14:53.6356882Z gate B continuous FAIL: village tools: natural controller travel could not activate Bram cycle 3 (4.3m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Bram means something nearer took the interact line."
+    ]
+  },
+  {
+    "job": 110511919652,
+    "bytes": 495704,
+    "sha256": "87906d8d2a44d1f4c52216590536268add3f928c167cd591e5459bfb92eaae8a",
+    "errors": [
+      "2026-10-01T18:13:23.6362090Z ERROR: Native opening refused: actual production contact observation cap",
+      "2026-10-01T18:13:23.6366067Z ERROR: could not naturally leave Mira's building (player 3.3m from door at (27.0, 1.0, 2.0))",
+      "2026-10-01T18:13:23.6370834Z gate A opening segment FAIL: NPC/gather continuation: Native opening refused: actual production contact observation cap",
+      "2026-10-01T18:13:23.6371803Z gate A opening segment FAIL: NPC/gather continuation: could not naturally leave Mira's building (player 3.3m from door at (27.0, 1.0, 2.0))"
+    ]
+  },
+  {
+    "job": 110511919754,
+    "bytes": 540209,
+    "sha256": "3ccb89de6088c560476bba004c1a19b43241486da1b8e4dd60f4497bc64a271f",
+    "errors": [
+      "2026-10-01T18:13:24.3187764Z ERROR: Native opening refused: actual production walk lost grounded floor",
+      "2026-10-01T18:13:24.3194765Z ERROR: could not reach actual door standoff: player=(29.55687, 0.170185, -25.07781) target=(27.0, 0.85, 5.0) distance=30.19 colliders=[]",
+      "2026-10-01T18:13:24.3199715Z ERROR: could not naturally enter Mira's building",
+      "2026-10-01T18:13:24.3205020Z ERROR: village tools: Native opening refused: actual production walk lost grounded floor",
+      "2026-10-01T18:13:24.3211649Z ERROR: village tools: could not reach actual door standoff: player=(29.55687, 0.170185, -25.07781) target=(27.0, 0.85, 5.0) distance=30.19 colliders=[]",
+      "2026-10-01T18:13:24.3216979Z ERROR: village tools: could not naturally enter Mira's building",
+      "2026-10-01T18:13:24.3221894Z gate B continuous FAIL: village tools: Native opening refused: actual production walk lost grounded floor",
+      "2026-10-01T18:13:24.3222886Z gate B continuous FAIL: village tools: could not reach actual door standoff: player=(29.55687, 0.170185, -25.07781) target=(27.0, 0.85, 5.0) distance=30.19 colliders=[]",
+      "2026-10-01T18:13:24.3223688Z gate B continuous FAIL: village tools: could not naturally enter Mira's building",
+      "2026-10-01T18:15:21.9144076Z ERROR: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "2026-10-01T18:15:21.9150836Z ERROR: could not reach actual door standoff: player=(25.21919, 0.580089, -26.78232) target=(27.0, 0.85, 5.0) distance=31.83 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision\"]",
+      "2026-10-01T18:15:21.9157848Z ERROR: could not naturally enter Mira's building",
+      "2026-10-01T18:15:21.9162349Z ERROR: village tools: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "2026-10-01T18:15:21.9168252Z ERROR: village tools: could not reach actual door standoff: player=(25.21919, 0.580089, -26.78232) target=(27.0, 0.85, 5.0) distance=31.83 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision\"]",
+      "2026-10-01T18:15:21.9173821Z ERROR: village tools: could not naturally enter Mira's building",
+      "2026-10-01T18:15:21.9179143Z gate B continuous FAIL: village tools: Native opening refused: deep actual overlap: zero-motion recovery exceeds unchanged skin",
+      "2026-10-01T18:15:21.9180417Z gate B continuous FAIL: village tools: could not reach actual door standoff: player=(25.21919, 0.580089, -26.78232) target=(27.0, 0.85, 5.0) distance=31.83 colliders=[\"/root/MeadowsPlayground/Terrain\", \"/root/MeadowsPlayground/Props/trainer_camp/camp_bed_Collision\"]",
+      "2026-10-01T18:15:21.9181516Z gate B continuous FAIL: village tools: could not naturally enter Mira's building"
+    ]
+  }
+]

@@ -1,0 +1,539 @@
+{
+  "integration_head": "61b9a82b1454741d777219153a6b2d3867d28ae2",
+  "main": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "pushed_candidate": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+  "ref_count": 131,
+  "not_ancestor_local": [
+    "tb/f22",
+    "tb/foundations",
+    "tb/hub"
+  ],
+  "not_ancestor_remote": [],
+  "refs": [
+    {
+      "name": "codex/all-branches-integration-0913",
+      "head": "44f578d2a193f090088a8e8f8a110df3bf0b15a9"
+    },
+    {
+      "name": "codex/meadows-campaign-0916",
+      "head": "3692fd618367e5c5c336fa80452f31c54d491f81"
+    },
+    {
+      "name": "codex/pre-full-game-integration-0913",
+      "head": "5eb911f38ad1ef3a5df75d19b22081f2aecd21cb"
+    },
+    {
+      "name": "main",
+      "head": "9cf6bde7d92796dda25dbeb4f25e5857adb0df6c"
+    },
+    {
+      "name": "owner-run/20260915T193953Z",
+      "head": "844e1ef7553e7f065bd469c123f4e4108ff5b9e8"
+    },
+    {
+      "name": "owner-run/20260915T222920Z",
+      "head": "6688933c3313415f2b0cfff51f4f9d6721490454"
+    },
+    {
+      "name": "ralph/cloudreach-visual-production-0919",
+      "head": "e9260ddda47169262f9235155352dd340faa47c3"
+    },
+    {
+      "name": "ralph/combat-camera-follow-check",
+      "head": "4d486823b9ddff950b45f58929dc48038faee6ff"
+    },
+    {
+      "name": "ralph/combat-depth-0919",
+      "head": "868f312d35423a5481c8424dec5c29a42b4c36d7"
+    },
+    {
+      "name": "ralph/compact-team-rewards",
+      "head": "e7a9efb29b0a3d5fbe4ed8f4a431a87aeaac8066"
+    },
+    {
+      "name": "ralph/concurrent-feature-lanes",
+      "head": "e346703154676e19553d90ab8c4ac55811184603"
+    },
+    {
+      "name": "ralph/coop-ci-boundaries",
+      "head": "fb0b7f304a87ab4fd45d33b6e4512405a6d573cc"
+    },
+    {
+      "name": "ralph/dock-save-boundary",
+      "head": "f112e7c8579630e67a174df925bd37fa364eda12"
+    },
+    {
+      "name": "ralph/expedition-priority",
+      "head": "cf63886257910d0bc412fe058652d822ef299d8a"
+    },
+    {
+      "name": "ralph/export-scene-retirement",
+      "head": "a7c0471e5cf369d27523d236b868746eb71d6fb2"
+    },
+    {
+      "name": "ralph/feature-register",
+      "head": "3688a3c976ca76e09b69618fbbd283ef78cfff09"
+    },
+    {
+      "name": "ralph/first-expedition",
+      "head": "865025cfd301fc702b65db51c18bc855c40438bd"
+    },
+    {
+      "name": "ralph/guest-wild-authority",
+      "head": "43d727ffa80afe379d4748cbc833c12fb84daa09"
+    },
+    {
+      "name": "ralph/handoff-main-receipt",
+      "head": "768b0a195c223c8f8594467dd13f4861ac658da0"
+    },
+    {
+      "name": "ralph/herd-landmark-payoff",
+      "head": "0e1c4c5c5e1ba42ab175a1c30f38811099993ccf"
+    },
+    {
+      "name": "ralph/invite-coop",
+      "head": "812a84d50892f8fc75165efa1be6725621ad0aa6"
+    },
+    {
+      "name": "ralph/lost-companion-reunion",
+      "head": "e8bd5fb42eaea7810199112662de25b224421a16"
+    },
+    {
+      "name": "ralph/meadows-biome-specs",
+      "head": "e20434ce07a6c7380a83460778462153b5d68920"
+    },
+    {
+      "name": "ralph/meadows-coop-crossings-proof",
+      "head": "c75ca265e636fabe747c7c7c5cbd3a0a7cad1724"
+    },
+    {
+      "name": "ralph/meadows-coop-guardian-payoff",
+      "head": "f34d478fbae3586032dad8f3c074ec615526629e"
+    },
+    {
+      "name": "ralph/meadows-coop-opening",
+      "head": "8ba39b4daa92b2c03422d59863d412bc369bafd7"
+    },
+    {
+      "name": "ralph/meadows-coop-opening-proof",
+      "head": "e239b1322320924858fde2d725b606e2f03afac3"
+    },
+    {
+      "name": "ralph/meadows-coop-path",
+      "head": "b4f763562ca295f75e711f947dbd16cbc1834a42"
+    },
+    {
+      "name": "ralph/meadows-coop-path-witness",
+      "head": "a674b559d6a95f00588d608a1f55c25d63725d6f"
+    },
+    {
+      "name": "ralph/meadows-coop-trainer-exit",
+      "head": "0365f1fc2d11affaddd9528a89216ca35a9d6daf"
+    },
+    {
+      "name": "ralph/meadows-coop-warrens",
+      "head": "877d38d100a3d8ac4b3c3d90561ea388adc562bb"
+    },
+    {
+      "name": "ralph/meadows-integration-status",
+      "head": "817e66172715fdc2b2857c850b19ca23a0665530"
+    },
+    {
+      "name": "ralph/meadows-payoffs",
+      "head": "906b48bcfb743c8eb6ddf9eaed82b71c470c03bc"
+    },
+    {
+      "name": "ralph/meadows-six-activities",
+      "head": "d31d1e83aee0c12c17974016a0ae49db6171718a"
+    },
+    {
+      "name": "ralph/plan-rewrite",
+      "head": "7aaa14cb43a1abb946836cf253021f9376c936ae"
+    },
+    {
+      "name": "ralph/portable-character-identity",
+      "head": "7f302f44ffd5e387de73c8a4a5fbb4111a775d87"
+    },
+    {
+      "name": "ralph/regional-credits",
+      "head": "21a0642588f44573c3dbbf6e572ad0833c8c5e47"
+    },
+    {
+      "name": "ralph/regional-homecoming",
+      "head": "63914dafd5f186d218f9a7919e416b014ef893d5"
+    },
+    {
+      "name": "ralph/regional-return-guidance",
+      "head": "43d727ffa80afe379d4748cbc833c12fb84daa09"
+    },
+    {
+      "name": "ralph/relay-gear-handoff",
+      "head": "7c580b641d69053474c9bab244ff4d72a59d749a"
+    },
+    {
+      "name": "ralph/remote-creature-replacement",
+      "head": "a1c90f434e81f0634ca4e5a4c714ab8e99b3643a"
+    },
+    {
+      "name": "ralph/revive-first-tap",
+      "head": "1c818ee9a7cb15a3a991ef07a91ac8bee510b233"
+    },
+    {
+      "name": "ralph/reward-delivery",
+      "head": "8bf86f3c30205433dcb0c2f1b3158b412e0b6334"
+    },
+    {
+      "name": "ralph/satchel-world-scope",
+      "head": "3ab6108a17625d16eaeaa8a7f6b153d034fa0956"
+    },
+    {
+      "name": "ralph/session-sequence",
+      "head": "48c134c5d1439a7fd395627e2d0956255cc916aa"
+    },
+    {
+      "name": "ralph/shared-catch-confirmation",
+      "head": "50d0f8cc911d604b572fde2c14aed35a27a8c725"
+    },
+    {
+      "name": "ralph/shared-opponent-presentation",
+      "head": "0d7a1da3c0b66a3e05e8c7cb74b9f6e735b72a02"
+    },
+    {
+      "name": "ralph/shared-wild-authority-fixture",
+      "head": "91b66ac77b4f1ba755bd2ed5772b14f20af1e6e1"
+    },
+    {
+      "name": "ralph/shared-wild-lifetime",
+      "head": "24f68769f11e9a8f72a79037e7a1cacb7738d3f2"
+    },
+    {
+      "name": "ralph/spec-driven-delivery",
+      "head": "5eb8146c161944859883fd9d44644bc384caeee9"
+    },
+    {
+      "name": "ralph/stormwood-water-survey-0919",
+      "head": "4bd015805d8315f48013fa6e9cc49b2fa7f1b060"
+    },
+    {
+      "name": "ralph/three-bed-preparation",
+      "head": "9722282ba077f2b8314ebd0c9932d6921744b518"
+    },
+    {
+      "name": "ralph/tournament-three-entrants",
+      "head": "4b17d7e2a050bae0bc07b7260ca635b99c48bfe3"
+    },
+    {
+      "name": "ralph/visual-acceptance",
+      "head": "8cca525d66aef55b2c20429c508356924cc79656"
+    },
+    {
+      "name": "ralph/warrens-camera-diagnosis",
+      "head": "d1a79eb198a845094291a5534b599985d2a55939"
+    },
+    {
+      "name": "ralph/warrens-camera-expedition",
+      "head": "0021ae3b667b4c1bfd99e8e5283629dbff9fccb7"
+    },
+    {
+      "name": "ralph/warrens-camera-readability",
+      "head": "32212400518cb5c6f0a7a4d6c2b68d9c5917b519"
+    },
+    {
+      "name": "ralph/warrens-egress",
+      "head": "3748edd1affc9c6092a37a56dbf8687ba88fbf84"
+    },
+    {
+      "name": "ralph/warrens-guardian-signature",
+      "head": "6cf8f8510074e31d710b41928f350e5449102ff6"
+    },
+    {
+      "name": "ralph/water-crossing-gates",
+      "head": "d313c9817c6d073ac17bb3bb6e02ef93aaf7e801"
+    },
+    {
+      "name": "ralph/water-human-route",
+      "head": "58f3aaaec7f8a196753e479716dd720814d72577"
+    },
+    {
+      "name": "ralph/world-return-provenance",
+      "head": "d4ecc0ca74670daacbe6b88a01cfe1a8b8bc40cb"
+    },
+    {
+      "name": "tb/combat",
+      "head": "bc07a6c6df6b05befc66963ba6b7b3833f8aee0b"
+    },
+    {
+      "name": "tb/f18",
+      "head": "f69d5a6ce26cc8f7a5e6f1c753113544108a12e8"
+    },
+    {
+      "name": "tb/f19",
+      "head": "15ce6ff7ac8bb7852564bf9eb4ba23a292797cee"
+    },
+    {
+      "name": "tb/f20",
+      "head": "e7829fba3ceec4d31a1bcb45b2e1f4d53a0b94ff"
+    },
+    {
+      "name": "tb/f22",
+      "head": "50e25a24b460d9afd1311400b5b5bc9f880f353f"
+    },
+    {
+      "name": "tb/f23",
+      "head": "1e24ef9f5037fbd5f8b00cfb5d37dc32f169b943"
+    },
+    {
+      "name": "tb/f24",
+      "head": "5e0481bb5ac80b17906e7b2756251766d6678c0b"
+    },
+    {
+      "name": "tb/f25",
+      "head": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7"
+    },
+    {
+      "name": "tb/f28",
+      "head": "a07c26cc5866d4845f8dd7c76e4807e452535173"
+    },
+    {
+      "name": "tb/f29",
+      "head": "6f8ee829c5bd670b411b66a676e3b3d57484733b"
+    },
+    {
+      "name": "tb/f30",
+      "head": "26b0a1a0e008fe65c0f20fc4ad9c10ee3e4e9227"
+    },
+    {
+      "name": "tb/f31",
+      "head": "ae65eb81949f7f72deaf4c5a58c532790a2f7978"
+    },
+    {
+      "name": "tb/f32",
+      "head": "810881e7a8ff4056eeafd5fbbf30994825fd06fd"
+    },
+    {
+      "name": "tb/f33",
+      "head": "ac662d34b5962a758eea8048b2af9ea1d9f93303"
+    },
+    {
+      "name": "tb/f35",
+      "head": "532f2842615256a844a5672a124b4ae08fe86699"
+    },
+    {
+      "name": "tb/foundations",
+      "head": "843196939e2adbebfda6ff7908cd898f30e71d3c"
+    },
+    {
+      "name": "tb/gpu-runs",
+      "head": "66365151b2e99a856f44577f92d14f11481a0ced"
+    },
+    {
+      "name": "tb/homestead",
+      "head": "499e8e38e6b4e6d9be37dcdabe01c447693e1276"
+    },
+    {
+      "name": "tb/hub",
+      "head": "9a90f8536785509648862231bd3f0ee100860744"
+    },
+    {
+      "name": "tb/integration",
+      "head": "61b9a82b1454741d777219153a6b2d3867d28ae2"
+    },
+    {
+      "name": "tb/lookdev",
+      "head": "ade7b9258dc0e9d5642fc4e45a1c28574255f169"
+    },
+    {
+      "name": "tb/redesign-board",
+      "head": "5ff1f37a17f7db1ec61a49a8f8d9cf38dcd7400b"
+    },
+    {
+      "name": "tb/reorder",
+      "head": "567798bce2e6eeedefbbb0e46d7bdfed9149572b"
+    },
+    {
+      "name": "tb/training",
+      "head": "94612ec95c91aba7d64d7424359970f21a4844f2"
+    },
+    {
+      "name": "tb/vfx",
+      "head": "a9ef7a0328190ec11838aa8ef38663812455d38d"
+    },
+    {
+      "name": "tb/x04-capture",
+      "head": "abc93f316740d791a3a3122b126f1398596d449b"
+    },
+    {
+      "name": "tb/x04-capture-compact",
+      "head": "1bccb1aee3091dd0b7f62784fa74d785605ac7d6"
+    },
+    {
+      "name": "tb/x04-cloudreach",
+      "head": "1306ce7f9c6261656f331e652fc1ff52adf8b611"
+    },
+    {
+      "name": "tb/x04-cloudreach-aviary",
+      "head": "6e6cdd213e4fadd75a8b3094b46fec6961b09248"
+    },
+    {
+      "name": "tb/x04-creature-attack-contact",
+      "head": "c1a4980d4d2c094524e40bf1dba31ad07f282902"
+    },
+    {
+      "name": "tb/x04-cross-game-visual-sweep",
+      "head": "389e1160ab1c4c1538f086ec995a1cf95b94d8a4"
+    },
+    {
+      "name": "tb/x04-draught-world-models",
+      "head": "9d4261e64aa9fe3b17cbe96f492cecac2099329c"
+    },
+    {
+      "name": "tb/x04-first-shore-current-gate",
+      "head": "1068acd8e5884ddf65fee698b78527c1a02b6885"
+    },
+    {
+      "name": "tb/x04-first-shore-portals",
+      "head": "d3b8fc758a7f8f879029e110326a6ede6eb63f48"
+    },
+    {
+      "name": "tb/x04-meadowhart-anatomy",
+      "head": "0025acafebb104f438c59f781bc14735811a3cac"
+    },
+    {
+      "name": "tb/x04-meadows",
+      "head": "d1ca575208e39961dbc7ba806c42ba30710b40f0"
+    },
+    {
+      "name": "tb/x04-meadows-landing",
+      "head": "3a89e610ecabb54f17ec242e95ff9e954823a0b7"
+    },
+    {
+      "name": "tb/x04-phase2d",
+      "head": "8cbfb07a1fe6752789178156401a580e787d6361"
+    },
+    {
+      "name": "tb/x04-phase2d-status",
+      "head": "1d69f6453b07c7075de09236c5be9cb5ce12b266"
+    },
+    {
+      "name": "tb/x04-stormwood",
+      "head": "1ea1efc119b3be2f81cd4911fd9c9e02a2903ac2"
+    },
+    {
+      "name": "tb/x04-terrain-material",
+      "head": "d7eb3db411e9b81cafa6737edf68b6afb83bd975"
+    },
+    {
+      "name": "tb/x04-tidewake",
+      "head": "7497f32931b2ba5cab3c8a808ab37ba2c3319418"
+    },
+    {
+      "name": "tb/x04-veilfall-waterfalls",
+      "head": "4b06a01c3b732b62b9a43a46497ed528017cf693"
+    },
+    {
+      "name": "origin",
+      "head": "30fcc38fc591d5df3a7cfb122b9da58445467021"
+    },
+    {
+      "name": "origin/main",
+      "head": "30fcc38fc591d5df3a7cfb122b9da58445467021"
+    },
+    {
+      "name": "origin/tb/combat",
+      "head": "bc07a6c6df6b05befc66963ba6b7b3833f8aee0b"
+    },
+    {
+      "name": "origin/tb/f18",
+      "head": "f69d5a6ce26cc8f7a5e6f1c753113544108a12e8"
+    },
+    {
+      "name": "origin/tb/f19",
+      "head": "f09e16cdb33d6da8ba564a9e964ff6eb6d4aa5f9"
+    },
+    {
+      "name": "origin/tb/f20",
+      "head": "e7829fba3ceec4d31a1bcb45b2e1f4d53a0b94ff"
+    },
+    {
+      "name": "origin/tb/f22",
+      "head": "f7c775464db47bfdfd46fbf58c09c6266839dd6a"
+    },
+    {
+      "name": "origin/tb/f23",
+      "head": "1e24ef9f5037fbd5f8b00cfb5d37dc32f169b943"
+    },
+    {
+      "name": "origin/tb/f24",
+      "head": "5e0481bb5ac80b17906e7b2756251766d6678c0b"
+    },
+    {
+      "name": "origin/tb/f25",
+      "head": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7"
+    },
+    {
+      "name": "origin/tb/f28",
+      "head": "a07c26cc5866d4845f8dd7c76e4807e452535173"
+    },
+    {
+      "name": "origin/tb/f29",
+      "head": "0c1b7151f1772ede073e9e21604be2a785550c3b"
+    },
+    {
+      "name": "origin/tb/f30",
+      "head": "26b0a1a0e008fe65c0f20fc4ad9c10ee3e4e9227"
+    },
+    {
+      "name": "origin/tb/f31",
+      "head": "ae65eb81949f7f72deaf4c5a58c532790a2f7978"
+    },
+    {
+      "name": "origin/tb/f32",
+      "head": "810881e7a8ff4056eeafd5fbbf30994825fd06fd"
+    },
+    {
+      "name": "origin/tb/f33",
+      "head": "ac662d34b5962a758eea8048b2af9ea1d9f93303"
+    },
+    {
+      "name": "origin/tb/f35",
+      "head": "532f2842615256a844a5672a124b4ae08fe86699"
+    },
+    {
+      "name": "origin/tb/foundations",
+      "head": "13edb2afac29928690ec7e7edb52590414883767"
+    },
+    {
+      "name": "origin/tb/homestead",
+      "head": "499e8e38e6b4e6d9be37dcdabe01c447693e1276"
+    },
+    {
+      "name": "origin/tb/hub",
+      "head": "c21be258900a2de22ac4eef61cf71f9b55c6e426"
+    },
+    {
+      "name": "origin/tb/integration",
+      "head": "aba5268a53de6724ad5ec5097c063dc0363bcc09"
+    },
+    {
+      "name": "origin/tb/lookdev",
+      "head": "ade7b9258dc0e9d5642fc4e45a1c28574255f169"
+    },
+    {
+      "name": "origin/tb/redesign-board",
+      "head": "5ff1f37a17f7db1ec61a49a8f8d9cf38dcd7400b"
+    },
+    {
+      "name": "origin/tb/reorder",
+      "head": "567798bce2e6eeedefbbb0e46d7bdfed9149572b"
+    },
+    {
+      "name": "origin/tb/training",
+      "head": "94612ec95c91aba7d64d7424359970f21a4844f2"
+    },
+    {
+      "name": "origin/tb/vfx",
+      "head": "a9ef7a0328190ec11838aa8ef38663812455d38d"
+    }
+  ],
+  "classification": "All freshly fetched remote refs and all other local branch heads are ancestors of integration. Only existing F17/Foundation/F22 repair heads remain outside integration; uncommitted owner work is not asserted included. Main/criteria still OPEN."
+}

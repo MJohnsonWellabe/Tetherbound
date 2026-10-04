@@ -1,0 +1,17 @@
+{
+  "kind": "Original procedural CPU mesh source, no acquired bitmap or model",
+  "source": [
+    "res://scripts/vfx/ultimates/ultimate_geometry.gd",
+    "res://scripts/vfx/ultimates/ultimate_choreography.gd"
+  ],
+  "craft": "Curved swept solids, stratified toothed jaws, breaching wave/leviathan, feather vanes, branching antlers/roots, nautilus ribs/tendrils, solar rays, coiled serpent hood/fangs, hollow furnace vents and shell barrels, split horns and paw pads.",
+  "reference_contracts": [
+    "docs/design/ART_DIRECTION.md VFX full bar",
+    "docs/design/COMBAT.md8.4,13",
+    "F29 owned Stormursa reference_brief.json source0c1b7151f1"
+  ],
+  "external_generation": "No ImageGen/Meshy used; no generation credits consumed",
+  "reuse": "Installed F25 geometry shape delegation rock/water/ice/wind, shared particle pool and existing audio cue IDs; new archetype producer owns revised APIs.",
+  "renderer": "Mesh/CPU transforms and StandardMaterial3D on Compatibility and Forward+; no GPU particles, screen distortion or scene queries",
+  "disposition": "SOURCE_ONLY_OFF; actual High/Medium/Low motion, independent code-blind12way distinction and fourplayer performance remain UNRUN; no visualPASS claimed"
+}

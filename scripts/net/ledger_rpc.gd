@@ -1,4 +1,26 @@
 extends Node
+const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
+const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
+signal transaction_boundary(observation: Dictionary)
+
+## Exact identity at the real writer edge, for ROOT's deterministic loss
+## witnesses. This is observation only; it cannot ACK, save or grant anything.
+func _observe_training_boundary(row: Dictionary, phase: String) -> void:
+	transaction_boundary.emit({"phase": phase, "kind": row.kind, "action": row.action,
+		"character_id": row.character_id, "world_namespace": row.world_namespace,
+		"session_id": row.session_id, "delivery_id": row.delivery_id, "receipt": row.receipt,
+		"journal_revision": row.journal_revision, "character_revision": row.character_revision})
+
+func _observe_portal_boundary(row: Dictionary, phase: String, epoch: String) -> void:
+	transaction_boundary.emit({"phase": phase, "kind": row.kind, "action": "portal_key",
+		"character_id": row.character_id, "world_namespace": row.world_instance_id,
+		"session_id": epoch, "delivery_id": row.receipt, "receipt": row.receipt,
+		"biome": row.biome, "key_slot": row.key_slot})
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const WORLD_STATE := preload("res://autoload/world_state.gd")
+const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 
 ## Stage B Wave 3 lane 3.A. THE LEDGER TRANSPORT: intents up, deltas down.
@@ -71,6 +93,7 @@ signal delta_applied(delta: Dictionary)
 signal intent_refused(kind: String, code: String, reason: String, detail: Dictionary)
 
 var ledger: RefCounted = null
+var _training_publications: Dictionary = {}
 var _actor_vitals_publications: Dictionary = {}
 var _actor_vitals_session_id := Crypto.new().generate_random_bytes(16).hex_encode()
 const SATCHEL_ESCROW := preload("res://scripts/net/satchel_escrow.gd")
@@ -80,13 +103,93 @@ var _satchel_retry_at: Dictionary = {}
 var _satchel_poll := 0.0
 var _reward_retry_at: Dictionary = {}
 
+## Internal alpha service uses the existing host-world CAS and BOOL writer.
+## No body is published by this method, and no portable reward is granted.
+func commit_alpha_plan(plan: Dictionary, capture_offer: Dictionary = {}) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null or ledger.world != game.world: return {"ok": false, "durable": false}
+	var world: RefCounted = game.world
+	var saver: RefCounted = game.save_system
+	var session: Node = game.session
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var world_id := str(world.world_id)
+	var namespace_id := str(world.reward_delivery_namespace)
+	var epoch := str(session.call("_altar_current_epoch"))
+	if not capture_offer.is_empty():
+		if not preload("res://scripts/repeatables/alpha_respawns.gd").valid_plan(plan, world.redesign_world, namespace_id): return {"ok": false, "durable": false}
+		if plan.get("operation") != "alpha_resolve" or not preload("res://scripts/net/foundation_event.gd").valid(capture_offer, namespace_id, world_id) \
+			or capture_offer.session_id != epoch or capture_offer.duties.size() != 1 or capture_offer.duties[0].action != "capture_offer" \
+			or capture_offer.duties[0].context.capture_traits.captured_from.spawn_id != plan.site_id \
+			or capture_offer.duties[0].context.capture_traits.captured_from.spawn_generation != plan.source.generation \
+			or not plan.source.region_characters.has(capture_offer.duties[0].character_id): return {"ok": false, "durable": false, "code": "alpha_capture_binding_changed"}
+	game.call("_sync_clock_state")
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_alpha_plan", plan)
+	if result.get("ok") != true: return {"ok": false, "durable": false, "code": "alpha_stale_plan"}
+	var offer_result: Dictionary = {}
+	if not capture_offer.is_empty():
+		offer_result = ledger.call("commit_foundation_event", capture_offer)
+		if offer_result.get("ok") != true:
+			world.call("load_data", before)
+			world.revision = revision
+			ledger.seq = sequence
+			return {"ok": false, "durable": false, "code": "alpha_capture_offer_refused"}
+	if saver.call("save_world_prepared", game, world_id) != true:
+		world.call("load_data", before)
+		world.revision = revision
+		ledger.seq = sequence
+		return {"ok": false, "durable": false, "code": "alpha_world_save_failed"}
+	if game.world != world or game.save_system != saver or game.session != session \
+		or str(world.world_id) != world_id or str(world.reward_delivery_namespace) != namespace_id \
+		or str(session.call("_altar_current_epoch")) != epoch: return {"ok": false, "durable": false, "code": "alpha_owner_changed"}
+	publish_journaled_delta(result.delta)
+	if not offer_result.is_empty() and offer_result.get("duplicate") != true: publish_journaled_delta(offer_result.delta)
+	return {"ok": true, "durable": true}
+
+## Host-internal append, before personal actions/terminal source cleanup.
+## A failed atomic world write restores the same ledger state and sequence.
+func journal_foundation_event(source: String, duties: Array) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or game.call("is_host") != true or ledger == null: return {"ok": false, "durable": false}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return {"ok": false, "durable": false}
+	var row := preload("res://scripts/net/foundation_event.gd").make(world, game.get("session").call("_altar_current_epoch"), source, duties)
+	if row.is_empty(): return {"ok": false, "durable": false}
+	var before: Dictionary = world.call("save_data")
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var result: Dictionary = ledger.call("commit_foundation_event", row)
+	if result.get("ok") != true: return {"ok": false, "durable": false}
+	if result.get("duplicate") != true:
+		if saver.call("save_world_prepared", game, world.world_id) != true:
+			world.call("load_data", before)
+			world.revision = revision
+			ledger.seq = sequence
+			return {"ok": false, "durable": false}
+		publish_journaled_delta(result.delta)
+	return {"ok": true, "durable": true, "delivery_id": row.delivery_id}
+
 func _process(delta: float) -> void:
 	_satchel_poll -= delta
 	if _satchel_poll > 0.0:
 		return
 	_satchel_poll = 0.5
+	var trace := BACKGROUND_TRACE.begin("ledger.poll")
+	var satchel_trace := BACKGROUND_TRACE.begin("ledger.reconcile_satchel")
 	reconcile_satchel_escrow()
+	BACKGROUND_TRACE.end("ledger.reconcile_satchel", satchel_trace)
+	var rewards_trace := BACKGROUND_TRACE.begin("ledger.reconcile_rewards")
 	reconcile_reward_deliveries()
+	BACKGROUND_TRACE.end("ledger.reconcile_rewards", rewards_trace)
+	var portals_trace := BACKGROUND_TRACE.begin("ledger.reconcile_portals")
+	reconcile_portal_deliveries()
+	BACKGROUND_TRACE.end("ledger.reconcile_portals", portals_trace)
+	BACKGROUND_TRACE.end("ledger.poll", trace)
 
 func drop_satchel(at: Vector3, realm: String) -> Dictionary:
 	var game := _game()
@@ -285,8 +388,17 @@ func submit(intent: Dictionary) -> Dictionary:
 ## local player and a remote one are arbitrated by literally the same lines.
 func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
+	var altar: Dictionary = _altar_building_request(intent, peer_id)
+	if altar.get("intercept") == true:
+		var session: Node = _game().get("session")
+		if altar.get("homestead") == true:
+			if session == null or not session.has_method("host_homestead_building"):
+				return _pending(intent, false, "Homestead building is not ready yet.")
+			return session.call("host_homestead_building", peer_id, altar.request)
+		if session == null: return _pending(intent, false, "Altar building is not ready yet.")
+		return session.call("host_altar_building", peer_id, altar.request)
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
-	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear"]
+	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -312,6 +424,16 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	if kind == "river_nest_clear":
 		intent = intent.duplicate(true)
 		intent["_doss_actor"] = _water_actor_context(peer_id, intent)
+	if kind == "ripplet_sunken_claim":
+		intent = intent.duplicate(true)
+		intent["_ripplet_actor"] = {}
+		var root := get_tree().current_scene
+		var service := root.get_node_or_null("RippletWaterService") if root != null else null
+		if service == null:
+			for node: Node in get_tree().get_nodes_in_group("ripplet_water_service"):
+				service = node
+				break
+		if service != null: intent["_ripplet_actor"] = service.actor_context(peer_id, str(intent.get("creature_uid", "")))
 	# Every kind can write world flags, so every intent carries the admitted
 	# identity; a claimed `_actor_character_id` is always overwritten.
 	intent = with_host_actor(intent, _registered_character(peer_id))
@@ -336,7 +458,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if kind in ["reward_grant", "water_dock_action", "river_nest_clear"] or not world_id.is_empty():
+		if kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
@@ -353,6 +475,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 						if kind == "water_dock_action" else (
 							"The world could not save Doss's repair. Your items remain safe." \
 							if kind == "river_nest_clear" else "The world could not save this satchel move. Your items remain safe."))
+				if kind == "ripplet_sunken_claim": failure_reason = "The sunken find could not save. Nothing was claimed."
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
 					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),
@@ -360,7 +483,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	# A host recipient can durably ACK while its player op is applied. Publish
 	# the pending journal first so its later acceptance delta cannot overtake it
 	# on the same reliable ledger channel.
-	if kind in ["reward_grant", "river_nest_clear"]:
+	if kind in ["reward_grant", "river_nest_clear", "ripplet_sunken_claim"]:
 		delta_applied.emit(delta)
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
@@ -607,7 +730,12 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 			or not ACTOR_VITALS.equivalent(row.receipt, receipt):
 		return false
 	if row.status == "accepted":
-		return true # Existing accepted world write is the durable duplicate proof.
+		# The second world write can succeed before local actor ACK repair.
+		# Reuse that exact durable decision; never rewrite or reapply owner HP.
+		var accepted_session: Node = game.get("session") as Node
+		return row.world_id == str(world.get("world_id")) and accepted_session != null \
+			and accepted_session.call("host_ack_creature_vitals", peer_id,
+				str(row.creature_uid), int(row.character_revision), receipt) == true
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or not saver.has_method("save_world_prepared") or bool(saver.call("fallback_busy")):
 		return false
@@ -633,10 +761,12 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 func publish_journaled_delta(delta: Dictionary) -> void:
 	if not bool(_game().call("is_host")) or delta.get("ops", []).is_empty():
 		return
-	_apply_player_ops(delta)
-	delta_applied.emit(delta)
+	# Send first: applying the host's own player ops can synchronously publish
+	# a follow-up delta (its own vitals ACK), which peers must receive after.
 	if _can_rpc() and _is_multi_peer():
 		rpc("_rpc_delta", delta)
+	_apply_player_ops(delta)
+	delta_applied.emit(delta)
 
 
 # --- rpc ------------------------------------------------------------------------
@@ -745,6 +875,8 @@ func _rpc_reward_delivery_ack(delivery_id: String) -> void:
 ## same question of the same code rather than re-deriving "did both peers get
 ## it" in the test file.
 func _apply_player_ops(delta: Dictionary) -> void:
+	var flag_game := _game()
+	if flag_game != null and flag_game.get("session") != null: flag_game.get("session").call("foundation_record_personal_flags", delta)
 	var game := _game()
 	if game == null:
 		return
@@ -754,6 +886,9 @@ func _apply_player_ops(delta: Dictionary) -> void:
 	for raw: Variant in WORLD_LEDGER.player_ops_for(delta, _local_peer_id()):
 		var op := raw as Dictionary
 		match str(op.get("op", "")):
+			"creature_training_settle":
+				if op.get("delivery") is Dictionary:
+					call_deferred("_process_creature_training", op.delivery.duplicate(true))
 			"actor_vitals_settle":
 				if op.get("delivery") is Dictionary:
 					_process_actor_vitals(op.delivery)
@@ -802,10 +937,12 @@ func reconcile_reward_deliveries() -> void:
 		return
 	# A reconnect learns pending host receipts from the admitted world snapshot.
 	for raw: Variant in game.get("world").reward_deliveries.values():
+		if raw is Dictionary and raw.get("kind") in ["creature_training", "altar_building"] and raw.get("character_id") == character_id:
+			_process_creature_training(raw)
 		if raw is Dictionary and raw.get("kind") == "actor_vitals" and raw.get("status") == "pending":
 			_process_actor_vitals(raw)
 	for delivery: Dictionary in REWARD_DELIVERY.pending_for_character(game.get("world"), character_id):
-		if delivery.get("kind") != "actor_vitals":
+		if not delivery.get("kind") in ["actor_vitals", "creature_training", "altar_building", "portal_unlock"]:
 			_process_reward_delivery(delivery)
 	# Once accepted, the portable character escrow remains the source of truth
 	# until a full bag has room, including while visiting another world.
@@ -815,7 +952,18 @@ func reconcile_reward_deliveries() -> void:
 			_process_reward_delivery(raw as Dictionary)
 
 
+func _owner_training_blocks_character_write(game: Node) -> bool:
+	if game == null or not game.get("local") is RefCounted: return true
+	var session: Variant = game.get("session")
+	if not session is Node or not session.has_method("_owner_training_mutation_blocked"): return true
+	var blocked: Variant = session.call("_owner_training_mutation_blocked", game.get("local"))
+	return not blocked is bool or blocked
+
+
 func _process_reward_delivery(delivery: Dictionary) -> void:
+	if _owner_training_blocks_character_write(_game()): return # Existing durable reward row retries after settlement.
+	if delivery.get("kind") == "creature_training" or str(delivery.get("delivery_id", "")).begins_with("creature_training:"):
+		return # Typed revision/receipt ACK only, never ordinary reward escrow.
 	var game := _game()
 	if game == null or not _character_writes_ready():
 		return
@@ -827,6 +975,10 @@ func _process_reward_delivery(delivery: Dictionary) -> void:
 	var flags: RefCounted = player.get("flags")
 	var before_flags: Dictionary = flags.call("save_data") if flags != null else {}
 	var before_escrow: Dictionary = player.get("satchel_escrow").duplicate(true)
+	var session: Variant = game.get("session")
+	if session is Node and session.has_method("_owner_passive_delivery_ready") \
+		and session.call("_owner_passive_delivery_ready") != true:
+		return # Retries once the owner-passive stream can carry this payout.
 	var outcome: Dictionary = REWARD_DELIVERY.apply(player, delivery)
 	if not bool(outcome.get("ok", false)):
 		return
@@ -842,6 +994,9 @@ func _process_reward_delivery(delivery: Dictionary) -> void:
 			flags.call("load_data", before_flags)
 		player.set("satchel_escrow", before_escrow)
 		return
+	if SATCHEL_RULES.slots(player.get("inventory")) != before_slots and session is Node \
+		and session.has_method("_owner_passive_delivery_record"):
+		session.call("_owner_passive_delivery_record", delivery)
 	if show_room_message:
 		game.call("push_world_message", "Your earned reward is safe. Make room in your satchel to receive it.")
 	if bool(outcome.get("settled", false)) and bool(outcome.get("changed", false)):
@@ -980,3 +1135,576 @@ func _local_peer_id() -> int:
 
 func _game() -> Node:
 	return get_node_or_null(^"/root/Game")
+
+
+## Internal prepared transaction. No owner save, delta signal or RPC during
+## the hidden registry stage. Same WorldLedger and atomic WorldSave as vitals.
+func journal_creature_training_prepared(peer: int, character: String, accepted: Dictionary) -> Dictionary:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or ledger == null \
+			or ledger.get("world") != game.get("world") or character.is_empty() \
+			or character != _registered_character(peer) or accepted.get("character_id") != character:
+		return {"ok": false, "durable": false, "code": "not_admitted"}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or not saver.has_method("save_world_prepared") or saver.call("fallback_busy") == true:
+		return {"ok": false, "durable": false, "code": "world_not_prepared"}
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var row: Dictionary
+	if accepted.get("action") in preload("res://scripts/net/character_action_rules.gd").ACTIONS or accepted.get("action") in preload("res://scripts/net/foundation_actions.gd").ACTIONS:
+		# No candidate from an intent/RPC can enter this arm. The same hidden
+		# registry's private token must still bind its exact accepted stage.
+		var owner_session: Node = game.get("session")
+		if owner_session == null or owner_session.call("character_action_stage_matches", peer, accepted) != true:
+			return {"ok": false, "durable": false, "code": "action_stage_changed"}
+		var codec: Script = preload("res://scripts/net/foundation_delivery.gd") if accepted.get("action") in preload("res://scripts/net/foundation_actions.gd").ACTIONS else preload("res://scripts/net/character_action_delivery.gd")
+		row = codec.make_record(
+			world.world_id, world.reward_delivery_namespace, str(owner_session.call("foundation_event_stage_epoch", accepted)),
+			accepted, world.reward_deliveries.get(id), preload("res://scripts/net/character_record_rules.gd").errors)
+	else:
+		row = ESSENCE.next_training_delivery(world.world_id, world.reward_delivery_namespace,
+			_actor_vitals_session_id, accepted, world.reward_deliveries.get(id), ESSENCE.config(),
+			PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	if row.is_empty() or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id):
+		return {"ok": false, "durable": false, "code": "invalid_training_journal"}
+	var session: Node=game.get("session")
+	if session==null or session.call("training_actor_baseline_ready",peer,row)!=true: return {"ok":false,"code":"training_actor_baseline_not_ready"}
+	var before: Dictionary = world.call("save_data")
+	var before_revision := int(world.get("revision"))
+	var before_seq := int(ledger.get("seq"))
+	var verdict: Dictionary = ledger.call("commit_creature_training_delivery", row, peer)
+	if verdict.get("ok") != true: return verdict
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.call("load_data", before)
+		world.set("revision", before_revision)
+		ledger.set("seq", before_seq)
+		return {"ok": false, "durable": false, "code": "training_journal_failed"}
+	_training_publications[id] = {"peer": peer, "row": row.duplicate(true), "delta": verdict.delta.duplicate(true)}
+	return {"ok": true, "durable": true, "delivery_id": id, "journal_revision": row.journal_revision}
+
+
+func publish_creature_training(peer: int, character: String, receipt: String) -> bool:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or character.is_empty() \
+			or character != _registered_character(peer): return false
+	var world: RefCounted = game.get("world")
+	var id := ESSENCE.training_delivery_id(world.reward_delivery_namespace, character)
+	var pending: Dictionary = _training_publications.get(id, {})
+	var latest: Variant = world.reward_deliveries.get(id)
+	if pending.is_empty() or pending.peer != peer or not WORLD_STATE.training_row_valid(latest,
+		world.reward_delivery_namespace, world.world_id) or latest.receipt != receipt \
+		or not ESSENCE._equivalent(latest, pending.row): return false
+	_observe_training_boundary(latest, "after_host_write_before_delivery")
+	# Observers may interrupt a process; never publish a replaced decision.
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), latest): return false
+	_training_publications.erase(id)
+	publish_journaled_delta(pending.delta)
+	return true
+
+
+var _training_stall := ""
+
+
+## Diagnostic only: where two portable records part, a few levels deep.
+static func _differing_paths(left: Variant, right: Variant, at: String) -> Array:
+	if ESSENCE._equivalent(left, right): return []
+	if left is Dictionary and right is Dictionary and at.count("/") < 4:
+		var out: Array = []
+		var keys: Array = left.keys()
+		for key: Variant in right.keys():
+			if not left.has(key): keys.append(key)
+		for key: Variant in keys:
+			out.append_array(_differing_paths(left.get(key), right.get(key), "%s/%s" % [at, str(key)]))
+		return out
+	if left is Array and right is Array and left.size() == right.size() and at.count("/") < 4:
+		var out: Array = []
+		for index: int in left.size():
+			out.append_array(_differing_paths(left[index], right[index], "%s/%d" % [at, index]))
+		return out
+	return ["%s: %s != %s" % [at, str(left).left(60), str(right).left(60)]]
+
+
+## Logged once per distinct reason: a stalled owner row retries every poll.
+func _note_training_stall(reason: String) -> void:
+	if reason == _training_stall:
+		return
+	_training_stall = reason
+	push_warning("creature training stalled: " + reason)
+
+
+func _process_creature_training(row: Dictionary) -> void:
+	var game := _game()
+	if game == null or game.get("local") == null or game.get("world") == null: return
+	var session: Node = game.get("session")
+	var world: RefCounted = game.get("world")
+	var player: RefCounted = game.get("local")
+	if session == null or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+			or row.character_id != player.get("character_id") \
+			or not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
+	if row.status == "accepted":
+		if bool(game.call("is_host")):
+			if not _accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id()):
+				_note_training_stall("host accept of its own accepted row refused")
+		else:
+			session.call("_settle_owner_training_accepted", player, world, row)
+		return
+	# Bootstrap installs the real world before this arm. It intentionally does
+	# not require handshake_snapshot_applied, which waits on this owner save.
+	if session.call("_altar_current_epoch") == "":
+		_note_training_stall("no session epoch yet for the owner apply")
+		return
+	var outcome: Dictionary
+	if row.kind == "altar_building": outcome = session.call("apply_altar_building_owner", row)
+	elif preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3]: outcome = preload("res://scripts/net/character_action_owner.gd").apply_owner(game, row)
+	else: outcome = ESSENCE.apply_training_owner(game, row, TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	if outcome.get("ok") != true or outcome.get("saved") != true:
+		var stall_detail := ""
+		if outcome.get("code") == "owner_action_baseline_conflict":
+			stall_detail = " " + str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").portable_projection(
+				player.call("save_data")), row.get("before", {}), ""))
+		_note_training_stall("owner apply %s%s" % [str(outcome.get("code", outcome.get("reason", "unsaved"))), stall_detail])
+		return
+	_observe_training_boundary(row, "after_owner_write_before_ack")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
+	if bool(game.call("is_host")):
+		if not _accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id()):
+			_note_training_stall("host accept after its own owner write refused")
+	elif _can_rpc():
+		rpc_id(HOST_PEER_ID, "_rpc_creature_training_ack", str(session.call("_altar_current_epoch")),
+			row.delivery_id, int(row.journal_revision), row.receipt)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_creature_training_ack(epoch: String, id: String, revision: int, receipt: String) -> void:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")): return
+	var session: Node = game.get("session")
+	if session == null or epoch != session.call("_altar_current_epoch"): return
+	_accept_creature_training(id, revision, receipt, multiplayer.get_remote_sender_id())
+
+
+func _accept_creature_training(id: String, revision: int, receipt: String, peer: int) -> bool:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or ledger == null: return false
+	var character := _registered_character(peer)
+	var world: RefCounted = game.get("world")
+	var row: Variant = world.reward_deliveries.get(id)
+	if character.is_empty() or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+			or row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision: return false
+	var session: Node = game.get("session")
+	if row.status == "accepted":
+		if session == null or session.call("host_ack_creature_training", peer, row) != true:
+			var authority: RefCounted = session.get("_character_authority") if session != null else null
+			_note_training_stall("host ack of accepted row refused (pending matches %s; revision %s, row %s; differs %s)" % [
+				str(authority.call("creature_training_pending_matches", character, row) if authority != null else null),
+				str(authority.call("revision", character) if authority != null else null), str(row.get("character_revision")),
+				str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").training_projection(
+					authority.call("state", character), row, ESSENCE.training_projection), row.get("after", {}), "") if authority != null else [])])
+			return false
+		_publish_training_acceptance(peer, row)
+		session.call("_deliver_training_decision", peer, row)
+		return true
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return false
+	if session == null or session.call("training_actor_baseline_ready",peer,row)!=true:
+		_note_training_stall("actor baseline not ready")
+		return false
+	var before: Dictionary = world.call("save_data")
+	var before_revision := int(world.get("revision"))
+	var before_seq := int(ledger.get("seq"))
+	var verdict: Dictionary = ledger.call("accept_creature_training_delivery", id, character, revision, receipt, peer)
+	if verdict.get("ok") != true: return false
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.call("load_data", before)
+		world.set("revision", before_revision)
+		ledger.set("seq", before_seq)
+		return false
+	var accepted: Dictionary = world.reward_deliveries[id].duplicate(true)
+	# Keep publication identity in the existing transient delivery queue if
+	# actor handoff fails. The saved row remains the sole recovery truth.
+	_training_publications[id] = {"peer": peer, "row": accepted.duplicate(true), "delta": verdict.delta.duplicate(true)}
+	# Only the saved accepted row unlocks authority. A lost result is recoverable
+	# from this same row, never from a boolean the client claimed in an intent.
+	if session == null or session.call("host_ack_creature_training", peer, accepted) != true: return false
+	_publish_training_acceptance(peer, accepted)
+	session.call("_deliver_training_decision", peer, accepted)
+	return true
+
+
+func reconcile_creature_training_before_ready() -> bool:
+	var game := _game()
+	if game == null or game.get("local") == null or game.get("world") == null: return false
+	var world: RefCounted = game.get("world")
+	var character := str(game.get("local").character_id)
+	var row: Dictionary = WORLD_STATE.training_owner_row(world.reward_deliveries, world.reward_delivery_namespace, world.world_id, character)
+	if row.is_empty():
+		for raw: Variant in world.reward_deliveries.values():
+			if raw is Dictionary and raw.get("character_id") == character and raw.get("kind") in ["creature_training", "altar_building"]: return false
+		return true
+	var id: String = row.delivery_id
+	_process_creature_training(row)
+	# A pending world row keeps admission/readiness shut until both bool writes
+	# are accepted. Session resumes its existing bootstrap on accepted response.
+	row = game.get("world").reward_deliveries.get(id)
+	return row is Dictionary and row.status == "accepted" \
+		and game.get("local").redesign_character.transaction_receipts.has(row.receipt) \
+		and not _owner_training_blocks_character_write(game)
+
+
+## Only called after private actor handoff and registry ACK. A process restart
+## needs no transient delta: its validated bootstrap carries the accepted row.
+func _publish_training_acceptance(peer: int, row: Dictionary) -> void:
+	var pending: Dictionary = _training_publications.get(row.delivery_id, {})
+	if pending.is_empty(): return
+	if pending.get("peer") != peer or not ESSENCE._equivalent(pending.get("row"), row) \
+		or row.get("status") != "accepted": return
+	_training_publications.erase(row.delivery_id)
+	publish_journaled_delta(pending.delta)
+
+
+## Only the Altar subset of existing building ingress is intercepted. An
+## index or a forged paid flag cannot fall through to legacy free placement.
+func _altar_building_request(intent: Dictionary, peer: int) -> Dictionary:
+	var kind := str(intent.get("kind", ""))
+	var character := _registered_character(peer)
+	if kind == "place_building" and intent.get("id") == "altar":
+		var allowed := ["kind", "realm", "id", "position", "yaw_deg", "paid", "txn_id", "available_materials"]
+		for key: Variant in intent:
+			if not allowed.has(key): return {"intercept": true, "request": {}}
+		if intent.has("available_materials") and (not intent.available_materials is Dictionary or not intent.available_materials.is_empty()):
+			return {"intercept": true, "request": {}}
+		var request := intent.duplicate(true)
+		request.erase("available_materials")
+		return {"intercept": true, "request": request}
+	# F31: every gated homestead station/attachment uses the same paid journal
+	# with a version-2 record. A legacy free placement is never reachable.
+	if kind == "place_building" and HOMESTEAD_BUILDING.requires_journal(intent.get("id")):
+		for key: Variant in intent:
+			if not HOMESTEAD_BUILDING.PLACE_REQUEST_FIELDS.has(key) and key != "available_materials":
+				return {"intercept": true, "homestead": true, "request": {}}
+		if intent.has("available_materials") and (not intent.available_materials is Dictionary or not intent.available_materials.is_empty()):
+			return {"intercept": true, "homestead": true, "request": {}}
+		var homestead_request := intent.duplicate(true)
+		homestead_request.erase("available_materials")
+		return {"intercept": true, "homestead": true, "request": homestead_request}
+	if kind != "dismantle": return {}
+	var world: RefCounted = ledger.world
+	var uid := str(intent.get("uid", ""))
+	var index := int(world.call("building_index_of", uid)) if not uid.is_empty() else -1
+	if index < 0 and intent.get("index") is int: index = int(intent.index)
+	var target_is_altar: bool = index >= 0 and index < world.placed_buildings.size() \
+		and world.placed_buildings[index].get("id") == "altar"
+	var target_is_homestead: bool = index >= 0 and index < world.placed_buildings.size() \
+		and world.placed_buildings[index] is Dictionary \
+		and (HOMESTEAD_BUILDING.requires_journal(world.placed_buildings[index].get("id")) \
+			or HOMESTEAD_BUILDING.record_valid(world.placed_buildings[index]))
+	var id := WORLD_STATE.altar_build_id(world.reward_delivery_namespace, character, str(intent.get("txn_id", "")))
+	var frozen: Variant = world.reward_deliveries.get(id)
+	var frozen_building: bool = frozen is Dictionary and frozen.get("kind") == "altar_building"
+	if not target_is_altar and not target_is_homestead and not frozen_building: return {}
+	# A retried txn follows its frozen row's own version; otherwise the target.
+	var homestead: bool = HOMESTEAD_BUILDING.row_valid(frozen, world.reward_delivery_namespace, world.world_id) \
+		if frozen_building else target_is_homestead
+	for key: Variant in intent:
+		if not ["kind", "realm", "uid", "index", "txn_id"].has(key): return {"intercept": true, "homestead": homestead, "request": {}}
+	var request := intent.duplicate(true)
+	request.erase("index") # Never authoritative; UID is required by the typed door.
+	return {"intercept": true, "homestead": homestead, "request": request}
+
+
+func journal_altar_building_prepared(peer: int, stage: Dictionary, request: Dictionary) -> Dictionary:
+	var game := _game()
+	var session: Node = game.get("session") if game != null else null
+	var character := _registered_character(peer)
+	if game == null or not bool(game.call("is_host")) or session == null or ledger == null \
+		or ledger.world != game.get("world") or character.is_empty() or stage.get("character_id") != character:
+		return {"ok": false, "durable": false, "code": "not_admitted"}
+	var authority: RefCounted = session.get("_character_authority")
+	if authority == null or not ESSENCE._equivalent(authority.call("staged_creature_training", stage), stage):
+		return {"ok": false, "durable": false, "code": "stale_building_stage"}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true or not saver.has_method("save_world_prepared"):
+		return {"ok": false, "durable": false, "code": "world_not_prepared"}
+	var id := WORLD_STATE.altar_build_id(world.reward_delivery_namespace, character, stage.action_id)
+	var cfg := ESSENCE.config()
+	if world.reward_deliveries.has(id) or not ESSENCE._integer(cfg.get("maximum_transaction_receipts"), 1, 65536):
+		return {"ok": false, "durable": false, "code": "building_receipt_conflict"}
+	var building_rows := 0
+	for raw: Variant in world.reward_deliveries.values():
+		if raw is Dictionary and raw.get("kind") == "altar_building": building_rows += 1
+	if building_rows >= int(cfg.maximum_transaction_receipts): return {"ok": false, "durable": false, "code": "building_receipt_budget"}
+	# Version 2 only for a canonical F31 Homestead record; Altar rows stay v1.
+	var row := {"version": HOMESTEAD_BUILDING.VERSION if HOMESTEAD_BUILDING.record_valid(stage.record) else 1,
+		"kind": "altar_building", "delivery_id": id,
+		"world_id": world.world_id, "world_namespace": world.reward_delivery_namespace,
+		"session_id": _actor_vitals_session_id, "character_id": character,
+		"action": stage.action, "action_id": stage.action_id,
+		"intent": {"request": request.duplicate(true), "record": stage.record.duplicate(true), "cost": stage.cost.duplicate(true)},
+		"before": ESSENCE.training_projection(stage.before), "after": ESSENCE.training_projection(stage.state),
+		"receipt": stage.receipt, "character_revision": stage.character_revision, "journal_revision": 1, "status": "pending"}
+	if not WORLD_STATE.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id):
+		return {"ok": false, "durable": false, "code": "invalid_building_journal"}
+	var before: Dictionary = world.call("save_data")
+	var before_revision := int(world.revision)
+	var before_seq := int(ledger.seq)
+	var before_seen: Dictionary = ledger.get("_seen_txns").duplicate(true)
+	var verdict: Dictionary = ledger.call("commit_altar_building", row, peer)
+	if verdict.get("ok") != true: return verdict
+	# Applied journal and building op must BOTH match before the atomic writer.
+	var building_index := int(world.call("building_index_of", stage.record.uid))
+	var placed_ok := building_index >= 0 and ESSENCE._equivalent(world.placed_buildings[building_index], stage.record)
+	var save_trace := ALTAR_TRACE.begin("journal.prepared_world_write")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), row) \
+		or (stage.action == "place_building" and not placed_ok) \
+		or (stage.action == "dismantle" and building_index >= 0) \
+		or saver.call("save_world_prepared", game, world.world_id) != true:
+		ALTAR_TRACE.end("journal.prepared_world_write", save_trace, "guard_or_bool_refused")
+		world.call("load_data", before)
+		world.set("revision", before_revision)
+		ledger.set("seq", before_seq)
+		ledger.set("_seen_txns", before_seen)
+		return {"ok": false, "durable": false, "code": "building_journal_failed"}
+	ALTAR_TRACE.end("journal.prepared_world_write", save_trace, "saved")
+	var retain_trace := ALTAR_TRACE.begin("journal.retain_publication")
+	_training_publications[id] = {"peer": peer, "row": row.duplicate(true), "delta": verdict.delta.duplicate(true)}
+	ALTAR_TRACE.end("journal.retain_publication", retain_trace)
+	return {"ok": true, "durable": true, "delivery_id": id, "verdict": verdict}
+
+
+func publish_altar_building(peer: int, character: String, id: String, receipt: String) -> bool:
+	var identity_trace := ALTAR_TRACE.begin("publish.identity")
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or character.is_empty() \
+		or _registered_character(peer) != character:
+		ALTAR_TRACE.end("publish.identity", identity_trace, "refused")
+		return false
+	ALTAR_TRACE.end("publish.identity", identity_trace)
+	var world: RefCounted = game.get("world")
+	var row: Variant = world.reward_deliveries.get(id)
+	var saved: Dictionary = _training_publications.get(id, {})
+	var validate_trace := ALTAR_TRACE.begin("publish.canonical_row")
+	if not WORLD_STATE.altar_build_row_valid(row, world.reward_delivery_namespace, world.world_id) \
+		or row.character_id != character or row.receipt != receipt or saved.get("peer") != peer \
+		or not ESSENCE._equivalent(saved.get("row"), row):
+		ALTAR_TRACE.end("publish.canonical_row", validate_trace, "refused")
+		return false
+	ALTAR_TRACE.end("publish.canonical_row", validate_trace)
+	var boundary_trace := ALTAR_TRACE.begin("publish.host_boundary_callbacks")
+	_observe_training_boundary(row, "after_host_write_before_delivery")
+	ALTAR_TRACE.end("publish.host_boundary_callbacks", boundary_trace)
+	# Observe only the real saved boundary; never publish a changed decision.
+	var original_trace := ALTAR_TRACE.begin("publish.original_row_recheck")
+	if not ESSENCE._equivalent(world.reward_deliveries.get(id), saved.row):
+		ALTAR_TRACE.end("publish.original_row_recheck", original_trace, "refused")
+		return false
+	ALTAR_TRACE.end("publish.original_row_recheck", original_trace)
+	_training_publications.erase(id)
+	var delivery_trace := ALTAR_TRACE.begin("publish.original_delta_delivery")
+	publish_journaled_delta(saved.delta)
+	ALTAR_TRACE.end("publish.original_delta_delivery", delivery_trace)
+	return true
+
+
+const PORTAL_DELIVERY := preload("res://scripts/net/portal_delivery.gd")
+var _portal_publications: Dictionary = {}
+var _portal_retry_at: Dictionary = {}
+
+
+## Save the same host carrier BEFORE an owner sees a debit. Caller must have
+## staged the corresponding admitted registry CAS and flushed fallback first.
+func journal_portal_delivery_prepared(peer: int, character: String, biome: String, slot: int) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or character != _registered_character(peer):
+		return {"ok": false, "durable": false, "code": "not_admitted"}
+	var world: RefCounted = game.get("world")
+	var saver: RefCounted = game.get("save_system")
+	if world == null or saver == null or saver.call("fallback_busy") == true: return {"ok": false, "code": "world_not_prepared"}
+	var row := PORTAL_DELIVERY.row(world, character, biome, slot)
+	if row.is_empty(): return {"ok": false, "code": "invalid_portal_row"}
+	var prior: Variant = world.reward_deliveries.get(row.receipt)
+	if prior != null:
+		if not PORTAL_DELIVERY.valid(prior, character, world.reward_delivery_namespace): return {"ok": false, "code": "invalid_prior_portal"}
+		return {"ok": true, "durable": true, "duplicate": true, "row": prior.duplicate(true)}
+	var before: Dictionary = world.save_data()
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var verdict: Dictionary = ledger.call("commit_portal_delivery", row, peer)
+	if verdict.get("ok") != true: return verdict
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.load_data(before)
+		world.revision = revision
+		ledger.seq = sequence
+		return {"ok": false, "durable": false, "code": "portal_world_save_failed"}
+	_portal_publications[row.receipt] = {"peer": peer, "character": character, "delta": verdict.delta.duplicate(true)}
+	return {"ok": true, "durable": true, "duplicate": false, "row": row.duplicate(true)}
+
+
+func publish_portal_delivery(peer: int, character: String, receipt: String) -> bool:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or character != _registered_character(peer): return false
+	var world: RefCounted = game.get("world")
+	var row: Variant = world.reward_deliveries.get(receipt)
+	if not PORTAL_DELIVERY.valid(row, character, world.reward_delivery_namespace): return false
+	_observe_portal_boundary(row, "after_host_write_before_delivery", str(game.get("session").call("_altar_current_epoch")))
+	if not PORTAL_DELIVERY.equivalent(world.reward_deliveries.get(receipt), row): return false
+	var publication: Dictionary = _portal_publications.get(receipt, {})
+	if not publication.is_empty():
+		if publication.peer != peer or publication.character != character: return false
+		_portal_publications.erase(receipt)
+		publish_journaled_delta(publication.delta)
+	if peer == _local_peer_id():
+		_process_portal_delivery(row.duplicate(true))
+	elif _can_rpc():
+		rpc_id(peer, "_rpc_portal_delivery", str(game.get("session").call("_altar_current_epoch")), row.duplicate(true))
+	return true
+
+
+@rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_portal_delivery(generation: String, row: Dictionary) -> void:
+	var game := _game()
+	if game == null or generation.is_empty() or not _character_writes_ready(): return
+	var session: Node = game.get("session")
+	if session == null or generation != session.call("_altar_current_epoch"): return
+	# The row must already exist in the authoritative delta/snapshot. A packet
+	# cannot replace its frozen item, world, character, biome or debit slot.
+	var world: RefCounted = game.get("world")
+	var canonical: Variant = world.reward_deliveries.get(row.get("receipt"))
+	if not PORTAL_DELIVERY.equivalent(canonical, row): return
+	_process_portal_delivery(row, generation)
+
+
+func _process_portal_delivery(row: Dictionary, generation: String = "") -> void:
+	var game := _game()
+	if game == null or not _character_writes_ready(): return
+	var session: Node = game.get("session")
+	if session == null: return
+	var current_generation := str(session.call("_altar_current_epoch"))
+	if bool(game.call("is_host")) and generation.is_empty(): generation = current_generation
+	if generation.is_empty() or generation != current_generation: return
+	var world: RefCounted = game.get("world")
+	var player: RefCounted = game.get("local")
+	if world == null or player == null or not PORTAL_DELIVERY.valid(row, player.character_id, world.reward_delivery_namespace): return
+	if row.status == "accepted": return
+	var canonical: Variant = world.reward_deliveries.get(row.receipt)
+	if not PORTAL_DELIVERY.equivalent(canonical, row): return
+	var result := PORTAL_DELIVERY.settle_owner(game, row.duplicate(true))
+	if result.get("ok") != true: return
+	_observe_portal_boundary(row, "after_owner_write_before_ack", current_generation)
+	if game.get("world") != world or game.get("local") != player or session.call("_altar_current_epoch") != current_generation \
+		or not PORTAL_DELIVERY.equivalent(world.reward_deliveries.get(row.receipt), row): return
+	var now := Time.get_ticks_msec()
+	if now < int(_portal_retry_at.get(row.receipt, 0)): return
+	_portal_retry_at[row.receipt] = now + 1000
+	var echo := row.duplicate(true)
+	if bool(game.call("is_host")):
+		_accept_portal_delivery(echo, _local_peer_id(), current_generation)
+	elif _can_rpc() and not generation.is_empty():
+		rpc_id(HOST_PEER_ID, "_rpc_portal_delivery_ack", generation, echo)
+
+
+@rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
+func _rpc_portal_delivery_ack(generation: String, row: Dictionary) -> void:
+	var game := _game()
+	if game != null and bool(game.call("is_host")):
+		_accept_portal_delivery(row, multiplayer.get_remote_sender_id(), generation)
+
+
+func _accept_portal_delivery(echo: Dictionary, peer: int, generation: String) -> bool:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or game.get("session") == null or generation != game.get("session").call("_altar_current_epoch"): return false
+	var character := _registered_character(peer)
+	var world: RefCounted = game.get("world")
+	if character.is_empty() or world == null or not PORTAL_DELIVERY.valid(echo, character, world.reward_delivery_namespace): return false
+	var prior: Variant = world.reward_deliveries.get(echo.receipt)
+	if not PORTAL_DELIVERY.valid(prior, character, world.reward_delivery_namespace): return false
+	var expected: Dictionary = prior.duplicate(true)
+	expected.status = "pending"
+	if not PORTAL_DELIVERY.equivalent(echo, expected): return false
+	if prior.status == "accepted":
+		_publish_portal_acceptance(peer, prior)
+		return true
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return false
+	var before: Dictionary = world.save_data()
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var accepted: Dictionary = prior.duplicate(true)
+	accepted.status = "accepted"
+	var verdict: Dictionary = ledger.call("accept_portal_delivery", accepted, peer)
+	if verdict.get("ok") != true: return false
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.load_data(before)
+		world.revision = revision
+		ledger.seq = sequence
+		return false
+	publish_journaled_delta(verdict.delta)
+	_publish_portal_acceptance(peer, accepted)
+	return true
+
+
+func _publish_portal_acceptance(peer: int, row: Dictionary) -> void:
+	var game := _game()
+	var session: Node = game.get("session") if game != null else null
+	if session != null: session.call("_portal_delivery_accepted", peer, row.duplicate(true))
+
+
+func reconcile_portal_deliveries() -> void:
+	var game := _game()
+	if game == null or not _character_writes_ready(): return
+	var world: RefCounted = game.get("world")
+	if world == null: return
+	for row: Variant in world.reward_deliveries.values():
+		if not row is Dictionary or row.get("kind") != PORTAL_DELIVERY.KIND: continue
+		if not PORTAL_DELIVERY.valid(row, "", world.reward_delivery_namespace): continue
+		if bool(game.call("is_host")):
+			var session: Node = game.get("session")
+			if session == null: continue
+			# Offline solo has no peer registry entry. Bind the same actual local
+			# character explicitly, then handle only the remote roster below.
+			if row.character_id == game.get("local").character_id:
+				if row.status == "pending": publish_portal_delivery(_local_peer_id(), row.character_id, row.receipt)
+				elif row.status == "accepted": _publish_portal_acceptance(_local_peer_id(), row)
+			for peer: int in session.call("registry").peer_ids():
+				if peer == _local_peer_id(): continue
+				if _registered_character(peer) == row.character_id:
+					if row.status == "pending": publish_portal_delivery(peer, row.character_id, row.receipt)
+					elif row.status == "accepted": _publish_portal_acceptance(peer, row)
+		elif row.character_id == game.get("local").character_id and row.status == "pending":
+			# Host retries the bound epoch packet; a snapshot alone cannot invent
+			# a current sender-generation ACK. Owner durability may recover now.
+			_process_portal_delivery(row)
+
+
+func journal_opening_home_key_prepared(peer: int, source: Node) -> Dictionary:
+	_ensure_ledger()
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or source == null or peer != _local_peer_id(): return {"durable": false}
+	var session: Node = game.get("session")
+	var world: RefCounted = game.get("world")
+	var player: RefCounted = game.get("local")
+	var saver: RefCounted = game.get("save_system")
+	if session == null or session.call("portal_runtime_ready") != true or world == null or player == null or saver == null or saver.call("fallback_busy") == true: return {"durable": false}
+	if source.get("_f18_opening_conversation_id") != "grandpa_first_catch" or game.call("original_starter_uid") == "" or _registered_character(peer) != player.character_id: return {"durable": false}
+	var row := REWARD_DELIVERY.make_record(world.world_id, world.reward_delivery_namespace, "home_key:grant:" + player.character_id, player.character_id, "home_key", 1, "home_key_given")
+	if row.is_empty(): return {"durable": false}
+	var prior: Variant = world.reward_deliveries.get(row.delivery_id)
+	if prior is Dictionary:
+		if prior.character_id != player.character_id or prior.source != row.source or prior.get("stacks") != row.stacks: return {"durable": false}
+		_process_reward_delivery(prior.duplicate(true))
+		return {"durable": true, "duplicate": true}
+	var before: Dictionary = world.save_data()
+	var revision := int(world.revision)
+	var sequence := int(ledger.seq)
+	var verdict: Dictionary = ledger.call("_commit", [{"op": "reward_delivery_journal", "scope": "world", "realm": "meadows", "delivery_id": row.delivery_id, "delivery": row}], "opening_home_key", peer, "meadows")
+	if verdict.get("ok") != true: return {"durable": false}
+	if saver.call("save_world_prepared", game, world.world_id) != true:
+		world.load_data(before)
+		world.revision = revision
+		ledger.seq = sequence
+		return {"durable": false}
+	publish_journaled_delta(verdict.delta)
+	_process_reward_delivery(row)
+	return {"durable": true, "duplicate": false}

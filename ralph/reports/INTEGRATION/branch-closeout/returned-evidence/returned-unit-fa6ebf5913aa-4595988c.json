@@ -1,0 +1,12 @@
+{
+  "head": "fa6ebf5913aabbe1670ea53a4d76c3b8820a433c",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_tournament_ground_presentation.gd",
+  "summary": [
+    "6 tests, 148 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-fa6ebf5913aa-4595988c\\tests.log",
+  "raw_log_sha256": "5fda01acc75a65c84f36a4913147dd25971a224ab872eccb3a390aae15e0d5ad",
+  "scope": "Exact named source/selector only. Full CI/earned path/ENet acceptance still required; no main or criterion credit."
+}

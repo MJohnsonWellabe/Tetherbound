@@ -1,0 +1,35 @@
+{
+  "feature": "F41",
+  "disposition": "implemented default-off candidates; every acceptance criterion remains open",
+  "base": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "source_audit": {
+    "catalog": "D:/tetherbound/redesign-board/ralph/reports/VISUAL/phase2/catalog.csv",
+    "board": "D:/tetherbound/redesign-board/ralph/reports/COORDINATOR/dashboard/criteria.json",
+    "rows_touching_stormwood": 44,
+    "rows_over_impact_12": 43,
+    "board_criteria_not_started": 6,
+    "local_catalog_missing": true,
+    "existing_systems_reused": ["authoritative Stormwood Surge and pinned purple WorldLook", "physical Stormheart tree and installed-family ancient trunk/branching crown/canopy/built detail candidates", "road current ShaderMaterial and phase/reduced-motion resolver", "grass_field.configure_profile", "scorched Glass Field candidate and grass-clear groups"],
+    "rejected_hero_not_integrated": "assets/environment/stormwood/stormheart_hero/README.md explicitly records a rejected unwired Meshy candidate. It stays unwired. No asset generation or acquisition."
+  },
+  "implemented": [
+    {"rows": ["P2-037"], "change": "Narrow lit forked core, lower emission/local light budget, persistent cooled seam and lights out after authoritative release. Revision plus flag-object identity handles replacement/reload; repeated updates do not create nodes. Existing physical ascent/decks/rails unchanged."},
+    {"rows": ["P2-039"], "change": "Copied realm-local ground profile: damp blue-green sparse grass, patch variation, existing litter and no flower tiers. Shared grass config, installed meshes, terrain and scatter remain unchanged."},
+    {"rows": ["P2-040"], "change": "Default-off fine gold fissure profile with narrower veins, more breakup and restrained energy. Yellow direction flow, warnings, reduced motion and release semantics preserved."}
+  ],
+  "candidate_capture_reuses": ["P2-037 ancient trunk, installed leaf atlas, branching crown and built detail", "P2-043 existing scorched scars; still unjudged"],
+  "unclosed_regional_rows": ["P2-033", "P2-038", "P2-041", "P2-043", "P2-045", "P2-046", "P2-070"],
+  "other_owner_seams": {"F36": "Creature scale/poses/colourways and named character models; no edits", "F42": "UI/map/dialogue screens and HUD; no edits", "F21-F26": "Fight camera, contact, tell/hit presentation and F26 High/Medium look proof; reuse consolidated dependency after prior batch lands", "F34": "Camps; no edits", "F37": "Traversal; no edits"},
+  "overlapping_files": ["scripts/world/stormwood_world.gd (only ground-profile hookup)", "scripts/world/stormheart_tree.gd (core presentation and existing release flag observer)", "scripts/world/stormwood_road_current.gd (local candidate config resolution)", "data/config/stormheart_presentation.json", "data/config/stormwood_road_current.json"],
+  "static_checks": ["tools/check_r2_f41_source.py: 12 structural checks; not runtime proof", "git diff --check", "PowerShell AST parse of tools/run_r2_f41_captures.ps1; runner not executed"],
+  "required_pending_engine_commands": [
+    "& $GodotExe --headless --path D:/tetherbound/r2-f41 --script tests/run_tests.gd -- --only=r2_f41_core_finish,stormwood_road_current,stormwood_restored_sky,stormheart_presentation,stormheart_ancient_trunk,stormheart_branching_crown,stormheart_canopy_atlas",
+    "& D:/tetherbound/r2-f41/tools/run_r2_f41_captures.ps1 -GodotExe $GodotExe -Variant baseline -RunId r1",
+    "& D:/tetherbound/r2-f41/tools/run_r2_f41_captures.ps1 -GodotExe $GodotExe -Variant candidate -RunId r1",
+    "& $GodotExe --path D:/tetherbound/r2-f41 --rendering-method forward_plus --resolution 1920x1080 --script tools/phase2_capture_stormwood_fights.gd -- --out=D:/tetherbound/r2-f41/.tmp/stormwood-phase2/f41-fight-high --seed=2042 --party-level=42",
+    "Repeat the real production fight capture on Medium using production graphics preferences, retain fight/event receipts and copy evidence into R2-F41; disclose fixture party and outcomes. No campaign-win inference."
+  ],
+  "capture_scope": "The prepared runner stages config bytes only in this checkout and restores them in finally. Each baseline/candidate preset matrix is 320 native frames; High and Medium must match. Raised-floor interior captures supplement approaches, reverse and lateral details. Day/night pins are fixed-purple invariance controls, not a new day-night presentation. Frames/config hashes record staging. Real fight, full destination/detail inventory, ≥200-frame recapture/rescore, code-blind judgment per top20/>12 row, Low readability, owner Ally and co-op release/reconnect evidence remain pending. The shared engine queue has not been entered.",
+  "audio": "All nine configured Stormwood audio paths remain absent. Owner decision and human listen acceptance remain open; no source authorized or manufactured here.",
+  "landing": "No PR or self-landing. Reconcile the frozen source against main after prior consolidated batch is green and all ten feature owners are ready. No criteria MET claim."
+}

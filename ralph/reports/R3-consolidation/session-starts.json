@@ -1,0 +1,135 @@
+{
+  "consolidated_branch": "tb/integration-next",
+  "source_baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+  "source_only": true,
+  "ci_deferred_until_prior_batch_green_on_main": true,
+  "archive_policy": "Archive only after exact source HEAD is contained and owned uncommitted source is absent; restore for attributable CI repairs. Source inclusion is not criterion acceptance.",
+  "sessions": [
+    {
+      "thread_id": "01a0f8de-3f53-7a41-bc91-689c49cc3024",
+      "title": "R3 F45 \u00e2\u20ac\u201d Research log",
+      "feature": "F45",
+      "checkout": "D:/tetherbound/r3-f45",
+      "branch": "tb/r3-f45",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "c82a9d10d5122ff452b908b6df378606250e894f",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit",
+      "status_at_launch": {
+        "type": "active",
+        "activeFlags": []
+      }
+    },
+    {
+      "thread_id": "01a0f8df-d2a5-72b1-b5ce-9fc75530db55",
+      "title": "R3 F46 \u00e2\u20ac\u201d New-system onboarding",
+      "feature": "F46",
+      "checkout": "D:/tetherbound/r3-f46",
+      "branch": "tb/r3-f46",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "c130f340309b981eb119080548654928049cb6bd",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit",
+      "status_at_launch": {
+        "type": "active",
+        "activeFlags": []
+      }
+    },
+    {
+      "thread_id": "01a0f8e0-c591-77a2-a145-b0510dc61a1c",
+      "title": "R3 F47 \u00e2\u20ac\u201d Economy and balance",
+      "feature": "F47",
+      "checkout": "D:/tetherbound/r3-f47",
+      "branch": "tb/r3-f47",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "55f6300154b910f945f0a9d0c75cf0339798bac6",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit",
+      "status_at_launch": {
+        "type": "active",
+        "activeFlags": []
+      }
+    },
+    {
+      "thread_id": "01a0f8e1-9d29-78f2-b3be-6a513313932b",
+      "title": "R3 F48 \u00e2\u20ac\u201d Co-op across the new loop",
+      "feature": "F48",
+      "checkout": "D:/tetherbound/r3-f48",
+      "branch": "tb/r3-f48",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "1ac778d726d1f74d39ded74199ff910e1eaf1f94",
+      "source_contained_at": "635cd49cf785804c7f5c8b008796038ca19ffc5a",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; mounted producers and exact loss observations remain open; no criterion credit",
+      "status_at_launch": {
+        "type": "active",
+        "activeFlags": []
+      }
+    },
+    {
+      "thread_id": "01a0f8e2-2fb7-7ae2-9039-4abaa404eb47",
+      "title": "R3 F49 \u00e2\u20ac\u201d Integrated campaign and release\u00e2\u20ac\u00a6",
+      "feature": "F49",
+      "checkout": "D:/tetherbound/r3-f49",
+      "branch": "tb/r3-f49",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "archived": true,
+      "confirmed_archived": true,
+      "source_head": "220668bd4f8e327249f6e5e0f24b71d3cc06916b",
+      "source_contained_at": "ed6ade90fbf9c7b3ab1bcc8cd3688dedfdf94e56",
+      "tracked_clean": true,
+      "untracked_source": [],
+      "runtime_proof": "PENDING; no unconditional dock conclusion or missing arrival treated as complete",
+      "status_at_launch": {
+        "type": "active",
+        "activeFlags": []
+      }
+    },
+    {
+      "thread_id": "01a0f8ec-f553-77d1-8975-10f7fe056137",
+      "title": "R3 Foundation \u00e2\u20ac\u201d Wire the remaining production\u00e2\u20ac\u00a6",
+      "feature": "Foundation",
+      "checkout": "D:/tetherbound/r3-foundation-wiring",
+      "branch": "tb/r3-foundation-wiring",
+      "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+      "status": {
+        "type": "active",
+        "activeFlags": []
+      },
+      "archived": false,
+      "source_review": "Reviewed checkpoint source consolidated; complete R3 production composition remains unfinished.",
+      "remaining_source_work": [
+        "Authenticated guest travel and grounded split owner-save/ACK consumer",
+        "Guest Master and remaining Master/boss/alpha rematch production composition",
+        "Authenticated guest ending acknowledgements",
+        "Executable F48 ordinary-input profiles and actual write/delivery/owner-write/ACK loss boundaries"
+      ],
+      "source_review_evidence": "foundation-source-review.json",
+      "source_checkpoint_consolidated": "665c6e73229f5fcec94777ff6cc4f91c364c6bdf",
+      "source_contained_at": "26f0c017fbafd3d2c20e1b732529434ad064842b"
+    }
+  ],
+  "root_source_review": {
+    "F45": "Optional additive personal carrier; bounty/rematch staging retained; producer/durability dependencies pending",
+    "F46": "Personal scope/modal ownership/authentic arrival gate retained; F45 journal reader combined via three-way merge",
+    "F47": "ROOT overlay repair0fa57dec9a independently sourcePASS byF49 atd07ae5c396;15 focused Node checks PASS, original live levels/gates unchanged; no runtime solvency credit",
+    "F48": "Witnesses never repair/save observed state; real OS.kill guest restart; actual file/participant/namespace receipts; missing exact loss windows fail",
+    "F49": "New-order driver preserves earned helpers and immutable save copies, package evidence verifier is read-only, missing producer/ordinary dock continuation fails explicitly. Runtime/owner/hardware/publication pending",
+    "Foundation": "Reviewed checkpoint source consolidated; complete R3 production composition remains unfinished. No NEXT runtime/CI or acceptance credit."
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "reviewed_root_head": "85ba143150d08d1e30efe7fc55c7671c2fc02b73",
+  "reviewed_tree": "a9dff0cb9579f6fd351fcccc3641a98bc6bc5488",
+  "verdict": "EVIDENCE VALID WITH STATED LIMITS",
+  "artifact_source_binding_native_payload_checks": 510,
+  "compressed_artifacts_verified": 18,
+  "reused_source_reviews": {
+    "tree_r22": {
+      "checks": 299,
+      "official_file_byte_matches": 4
+    },
+    "guest_repair": {
+      "checks": 484
+    },
+    "corrected_warden_retention": {
+      "checks": 133,
+      "reused_prior_preservation": 394
+    }
+  },
+  "native_results": {
+    "tree": {
+      "head": "f1929de4f869682f741b1ab34df66ab214a2f43d",
+      "exit": 1,
+      "strict_errors_or_leaks": 0,
+      "vertices": 225,
+      "triangles": 392,
+      "mesh_faces": 1176,
+      "json_body_bytes": 23581,
+      "extracted_payload_with_CRLF_bytes": 23583,
+      "registered_metadata_complete": true,
+      "backend": "GodotPhysicsDirectSpaceState3D",
+      "original_walk_contact_activation": "FAIL"
+    },
+    "warden": {
+      "head": "49d9668f9348a802df4f9ef48ec854330586d546",
+      "exit": 1,
+      "elapsed_seconds": 257.203,
+      "strict_log_errors_or_leaks": 0,
+      "source_before_after_count": 3250,
+      "all_handles_ended_after_runner": true,
+      "NET_RUN_peer_exited_at_earlier_report": [
+        false,
+        true
+      ],
+      "heartbeat_received_ms": 251183,
+      "deadline_ms": 251932,
+      "timeout_observed_ms": 251935,
+      "heartbeat_receive_age_ms": 752,
+      "peer_sample_elapsed_ms": [
+        89016,
+        91000,
+        92424,
+        94214
+      ],
+      "sampled_state": "ACTIVE fourth Meadowhart HP6/notfainted; one queued; resolve timer0/outcomeempty; last kill historical/current kill unknown"
+    },
+    "guest": {
+      "identical_entire_test_bytes": true,
+      "before": {
+        "child_assertions": 79,
+        "child_failed": 10,
+        "outer_tests": 5,
+        "outer_assertions": 30,
+        "outer_failed_tests": 1
+      },
+      "after": {
+        "child_assertions": 79,
+        "child_failed": 0,
+        "outer_tests": 5,
+        "outer_assertions": 30,
+        "outer_failed_tests": 0
+      },
+      "original_transport_child_assertions": 32,
+      "both_transport_children_pass": true,
+      "strict_outer_and_child_errors_or_leaks": 0,
+      "proof": "ONE host won round exit and ONE award per peer/next-send-out scheduling only"
+    },
+    "ci_foundation": {
+      "run": 36882902951,
+      "job": 110443557525,
+      "head": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+      "decoded_bytes": 529911,
+      "decoded_characters": 529907,
+      "refusal_prints": 2,
+      "smoke_attempts": 1,
+      "artifact_id": 11174329186,
+      "zip_verification_scope_at_reviewed_head": false
+    }
+  },
+  "limits": [
+    "Registered complete metadata does not prove server disabled state, whole-world clearance or full-capsule corridor. Nine critical source dependencies are pinned; the generic tree runner did not collect full3250 source closure. project.godot differs from HUB only by F26 shader globals, with no physics/input/renderer delta.",
+    "Warden predeadline snapshots refute using them as a stalled faint diagnosis; they do not establish why later actions fail to reduce HP or how all time was spent. Peer/coordinator clocks are not aligned.",
+    "Guest proof uses runtime flagoff/manual presentation and manual unchanged manager resolution. No actual next-opponent spawn/full battle/final payout/tracked actor-enabled path proof.",
+    "CI artifact ZIP hash copied from upload log at85ba is not independently downloaded verification. e530 terminal ZIP proof is a later artifact and was not included in this review.",
+    "No engine/parser/source writes/push/new sessions/agents. F17#4 remains OPEN; R9 remains HOLD; no general game/criteria/MET/main credit."
+  ]
+}

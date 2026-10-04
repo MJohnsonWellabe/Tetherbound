@@ -3,10 +3,12 @@ extends RefCounted
 const SURGE := preload("res://scripts/world/stormwood_surge_rules.gd")
 const PATH := "res://data/config/stormwood_harvests.json"
 var sites: Dictionary = {}
+var region_prerequisites: Dictionary = {}
 var surge := SURGE.new()
 
 func _init() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PATH))
+	region_prerequisites = data.get("region_prerequisites", {})
 	for site: Dictionary in data.get("sites", []):
 		sites[str(site.id)] = site
 
@@ -16,7 +18,7 @@ func refusal(id: String, world: RefCounted) -> String:
 	var site: Dictionary = sites[id]
 	var region := str(site.region_id)
 	var flags: RefCounted = world.get("flags")
-	var gate := {"hollow_crown":"stormwood:crown_reached", "deepwood":"stormwood:rootgate_released", "dynamo":"stormwood:rootgate_released"}.get(region, "") as String
+	var gate := region_prerequisites.get(region, "") as String
 	if not gate.is_empty() and not flags.has(gate):
 		return "The route to that resource is still closed."
 	var environment: Dictionary = world.get("realm_environment")

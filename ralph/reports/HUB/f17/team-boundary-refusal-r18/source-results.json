@@ -1,0 +1,295 @@
+{
+  "classification": "AUTHOR REFUSAL DIAGNOSTIC SOURCE CANDIDATE ONLY; ACTUAL FRESH NATIVE FAIL; R18 PARSER/NATIVE UNRUN; F17#4 OPEN",
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "pass": true
+    },
+    {
+      "name": "frozen originals/tests/helpers/meadows_earned_team_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen prior-failure/native.log",
+      "pass": true
+    },
+    {
+      "name": "frozen prior-failure/receipt.json",
+      "pass": true
+    },
+    {
+      "name": "frozen proposal/tests/helpers/meadows_earned_team_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen repair.patch",
+      "pass": true
+    },
+    {
+      "name": "frozen review-context.txt",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/data/config/village_boundary.json",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/world/road_gate.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/scripts/world/village_boundary.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/tests/helpers/meadows_earned_team_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen root-failed/tests/test_meadows_earned_team_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "frozen source-check.py",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/village_boundary.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged scripts/world/road_gate.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/village_boundary.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged tests/test_meadows_earned_team_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged tests/helpers/opening_geometry_navigator.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged tests/helpers/fresh_opening_segment.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged ralph/reports/HUB/f17/tree-approach-trace-r17/seal.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged ralph/reports/HUB/f17/tree-probe-fixture-r16/seal.json",
+      "pass": true
+    },
+    {
+      "name": "working proposal exact",
+      "pass": true
+    },
+    {
+      "name": "actual frozen failure used original source",
+      "pass": true
+    },
+    {
+      "name": "one refusal-only receipt",
+      "pass": true
+    },
+    {
+      "name": "one observed wrapper",
+      "pass": true
+    },
+    {
+      "name": "full original recovered by reversing only diagnostic additions",
+      "pass": true
+    },
+    {
+      "name": "no extra await, input or navigator step",
+      "pass": true
+    },
+    {
+      "name": "same selection and admission call counts",
+      "pass": true
+    },
+    {
+      "name": "no snapshot admission/LOS/native query",
+      "pass": true
+    },
+    {
+      "name": "snapshot methods limited to metadata/getter/local-array reads",
+      "pass": true
+    },
+    {
+      "name": "receipt precedes original exact failure without route fallback",
+      "pass": true
+    },
+    {
+      "name": "diagnostic called only for the same required/empty plan",
+      "pass": true
+    },
+    {
+      "name": "gate authorization copies original sampled IDs",
+      "pass": true
+    },
+    {
+      "name": "helper does not call or override gate authorization",
+      "pass": true
+    },
+    {
+      "name": "exact original function _choose_wild",
+      "pass": true
+    },
+    {
+      "name": "exact original function _training_eligible",
+      "pass": true
+    },
+    {
+      "name": "exact original function _open_boundary_gate",
+      "pass": true
+    },
+    {
+      "name": "exact original function boundary_approach",
+      "pass": true
+    },
+    {
+      "name": "exact original function exterior_path",
+      "pass": true
+    },
+    {
+      "name": "exact original function exterior_edge_clear",
+      "pass": true
+    },
+    {
+      "name": "exact original function crosses_boundary",
+      "pass": true
+    },
+    {
+      "name": "exact original function _verify_engagement",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes same_side_chord_crosses_fence",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes no_authorized_live_open_leaf",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes no_valid_single_gate_path",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes invalid_outline",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes invalid_gate_clearance",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes target_name",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes target_position",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes player",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes from_xz",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes target_xz",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes from_inside",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes target_inside",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes direct_chord_crosses",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes open_ids",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes script",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes flag_id",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes logical_open",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes leaf_present",
+      "pass": true
+    },
+    {
+      "name": "refusal diagnostic includes leaf_disabled",
+      "pass": true
+    },
+    {
+      "name": "actual frozen run head",
+      "pass": true
+    },
+    {
+      "name": "actual closure unchanged",
+      "pass": true
+    },
+    {
+      "name": "actual parser pass native fail",
+      "pass": true
+    },
+    {
+      "name": "actual fresh requested prefix still failed",
+      "pass": true
+    },
+    {
+      "name": "actual fresh no checkpoints/resume",
+      "pass": true
+    },
+    {
+      "name": "original failure lacks selected/gate refusal receipt",
+      "pass": true
+    },
+    {
+      "name": "actual team failure before wild approach receipt",
+      "pass": true
+    },
+    {
+      "name": "native failure raw log matches receipt",
+      "pass": true
+    }
+  ],
+  "passed": 72
+}
+

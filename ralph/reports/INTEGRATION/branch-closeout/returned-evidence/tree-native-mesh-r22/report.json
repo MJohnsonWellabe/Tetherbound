@@ -1,0 +1,52 @@
+{
+  "classification": "ACTUAL COMPLETE REGISTERED METADATA / ORIGINAL TREE WALK FAIL / NO CRITERION CREDIT",
+  "head": "f1929de4f869682f741b1ab34df66ab214a2f43d",
+  "source_candidate": "ed33d3b375fdb4766a446e202e98cb9968f22141",
+  "source_review": {
+    "reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "independent_checks": 299,
+    "fresh_official_file_byte_matches": 4,
+    "whole_probe_inverse_to_R19": true,
+    "source_verdict": "PASS / NATIVE GEOMETRY PENDING AT REVIEW"
+  },
+  "native_exit": 1,
+  "strict_native_errors_or_leaks": 0,
+  "native_geometry_complete": true,
+  "vertices": 225,
+  "triangles": 392,
+  "geometry_payload_bytes": 23583,
+  "actual_backend": "GodotPhysicsDirectSpaceState3D",
+  "original_physical_result": [
+    "PHYSICAL tree-contact player=(96.55426, 4.26337, -34.71824) grounded=true touched_actual_trunk=false prompt=(98.15209, 7.191119, -35.9321) distance=3.54940104484558 radius=2.6 own_offer={  } winner={  } contacts=[{ \"body\": \"CanonicalLocalTerrain\", \"normal\": (-0.50868, 0.708818, 0.488694) }] unsticks=0",
+    "TERRAIN stick turns=[{ \"approach_frame\": 16, \"player\": (98.1457, 3.436354, -32.74911), \"cached_normal\": (-0.470884, 0.630212, 0.617333), \"requested_tangent\": (-0.795099, 0.0, -0.606479) }, { \"approach_frame\": 42, \"player\": (96.3298, 3.298436, -33.7093), \"cached_normal\": (-0.237581, 0.669214, 0.704066), \"requested_tangent\": (-0.947509, 0.0, -0.319728) }, { \"approach_frame\": 94, \"player\": (95.00301, 3.50638, -34.98455), \"cached_normal\": (-0.544301, 0.680147, 0.491057), \"requested_tangent\": (-0.669858, 0.0, -0.742489) }] within_original_180_frames=true",
+    "RESULT exact physical prompt activated=false success=false mode=current production no campaign receipt claimed"
+  ],
+  "limits": [
+    "Complete means bounded metadata/registration/shape-data parity; server disabled state was not observed and whole-world clearance is not proved.",
+    "Actual ordered construction/native terrain faces match; capsule/trunk dimensions and poses are registered native observations. Full-capsule adjacent-facet route is still unproved.",
+    "Original30settle/180walk/3x26 steering/input/shape/target/contact/radius/skin/floor/verdict preserved. Added bounded CPU serialization can affect elapsed scheduling, although no awaits or queries added.",
+    "The runner checks unchanged HEAD and starts with tracked clean state; no full3250file closure was collected by this generic smoke wrapper.",
+    "Original same-tree outcome is FAIL, independent of successful diagnostic metadata. No campaign admission, chapter acceptance, MET or main credit.",
+    "R21 ancestor is evidence-only. F29 verified seals and explicit nonadmission limits; no native corridor is inferred from sparse historic samples."
+  ],
+  "sealed_files": [
+    {
+      "file": "smoke.log.gz",
+      "original_bytes": 46864,
+      "original_sha256": "7d7de091fbf727de1af2fe9430f8183fe5e3b0566bfc064f98cf0366a7ba72d7",
+      "compressed_sha256": "8cfdfa5fe7372c6b1319550ce7bc6a438fcd2d18333a7a982e37a1dc271b6ccf"
+    },
+    {
+      "file": "native-result.json.gz",
+      "original_bytes": 399,
+      "original_sha256": "44dc8d9ea1c8173a88324aa110a102e59dd5f66c8f9e6c4ecc0949c6cb092b8e",
+      "compressed_sha256": "5691d448eb2fdfdf154e5521215bec8e51eb227db79bc66dff1c4c9b3c459d83"
+    },
+    {
+      "file": "tree-geometry.json.gz",
+      "original_bytes": 23583,
+      "original_sha256": "a2865c7c39c7be4d3b10d185f5ad90f1d9b81044df0ed7a1d53a8a086294073b",
+      "compressed_sha256": "a2e30885258a07a8d603f477c3daa8239efc7e50585b511f39dc0eb0fa3161d0"
+    }
+  ]
+}

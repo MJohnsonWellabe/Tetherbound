@@ -1,0 +1,142 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:31:13.442841+00:00",
+  "platform": "Windows native headless Godot returned by ROOT",
+  "input": "actual parsed InputEventJoypadButton and production controller/contact route; instrumented chain",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "actual_executed_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "native": {
+    "head": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+    "watchdog_seconds": 1200,
+    "elapsed_seconds": 486.844000000041,
+    "timed_out": false,
+    "script": "tests/smoke_gate_b_continuous.gd",
+    "exit": 1,
+    "errors": [
+      "ERROR: missing/malformed bounded authored Oskar approach",
+      "ERROR: natural controller travel could not activate Oskar cycle 1 (61.3m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Oskar means something nearer took the interact line.",
+      "ERROR: village tools: missing/malformed bounded authored Oskar approach",
+      "ERROR: village tools: natural controller travel could not activate Oskar cycle 1 (61.3m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Oskar means something nearer took the interact line."
+    ],
+    "summary": [],
+    "raw_log_sha256": "522d7072b9234c92c4bc333405eb8cc80592e3a63c792278514e194ab8d75af0",
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-582b2f13cc53-smoke_gate_b_continuous\\smoke.log"
+  },
+  "starting_save_and_shortcuts": "Fresh title/opening harness, declared team/level assistance described in smoke_gate_b_continuous.gd; CORE scope, not full chain; no earned campaign inferred.",
+  "observations": {
+    "mira_dialogue_shop_cancel_owner_and_movement_resume": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7522,
+          "text": "GATE A NPC/GATHER +15.29s — Mira cycle 1 exited and movement resumed"
+        }
+      ]
+    },
+    "mira_actual_interior_exit_gifts_validated": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7525,
+          "text": "GATE A NPC/GATHER +17.00s — Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue"
+        }
+      ]
+    },
+    "axe_equipped_and_real_wood_gather": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7644,
+          "text": "GATE A NPC/GATHER +35.67s — axe equipped, swung, gathered +4 Wood"
+        }
+      ]
+    },
+    "pickaxe_equipped_and_real_stone_gather": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7678,
+          "text": "GATE A NPC/GATHER +50.06s — pickaxe equipped, swung, gathered +4 Stone"
+        }
+      ]
+    },
+    "knife_equipped_and_real_fiber_gather": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7687,
+          "text": "GATE A NPC/GATHER +51.85s — knife equipped, swung, gathered +4 Fiber"
+        }
+      ]
+    },
+    "terminal_core_failed": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7718,
+          "text": "gate B continuous FAIL: village tools: missing/malformed bounded authored Oskar approach"
+        },
+        {
+          "line": 7719,
+          "text": "gate B continuous FAIL: village tools: natural controller travel could not activate Oskar cycle 1 (61.3m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Oskar means something nearer took the interact line."
+        }
+      ]
+    },
+    "oskar_authored_heading_blocker": {
+      "observed": true,
+      "matches": [
+        {
+          "line": 7688,
+          "text": "ERROR: missing/malformed bounded authored Oskar approach"
+        },
+        {
+          "line": 7703,
+          "text": "ERROR: village tools: missing/malformed bounded authored Oskar approach"
+        },
+        {
+          "line": 7718,
+          "text": "gate B continuous FAIL: village tools: missing/malformed bounded authored Oskar approach"
+        }
+      ]
+    }
+  },
+  "production_guard_binding": {
+    "_wait_dialogue_open(90)": true,
+    "_close_dialogue(40)": true,
+    "_wait_open_panel(expected_panel_suffix, 90)": true,
+    "_tap_action(&\"menu_cancel\")": true,
+    "_wait_world_owned(45)": true,
+    "_prove_movement_resumed(door, npc.global_position)": true,
+    "_exit_through(door, npc.global_position)": true
+  },
+  "raw_hash_matches": true,
+  "independent_verdict": "SCOPED_MIRA_AND_THREE_EQUIPPED_GATHERS_PASS_WHOLE_CORE_FAIL",
+  "scope": "Mira cycle1 dialogue→shop handoff→B cancel→world ownership→movement→actual interior exit plus actual Wood/Stone/Fiber gathers; not full16, all modal cycles or M1 chain.",
+  "criterion_verdicts": {
+    "F17#4": "OPEN",
+    "M1": "OPEN",
+    "F48": "OPEN",
+    "F49#0": "OPEN"
+  },
+  "next_needed": "ROOT's independently reviewed Oskar final duplicate waypoint repair needs the original actual CORE rerun. Full M1 additionally needs --gate-b-full-chain/starter witnesses.",
+  "prior_failure_preservation": "Earlier full19 FAIL, full16 terrain FAIL and focused23 PASS remain untouched in sealed mira-verification-16fbddde3930.",
+  "members": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-582b2f13cc53-smoke_gate_b_continuous\\result.json",
+      "copy": "returned-native\\core582b-result.json.gz",
+      "raw_bytes": 1074,
+      "raw_sha256": "aaa859ae30394828f0a52d589e9fa5588726d0efdf01288eb95e1821c7bc352a",
+      "gzip_sha256": "288de00bb0be252d04cb2904cfad16e070c256fe57523663806aaee28fe1106f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-582b2f13cc53-smoke_gate_b_continuous\\smoke.log",
+      "copy": "returned-native\\core582b-smoke.log.gz",
+      "raw_bytes": 1463937,
+      "raw_sha256": "522d7072b9234c92c4bc333405eb8cc80592e3a63c792278514e194ab8d75af0",
+      "gzip_sha256": "d6ab04fb74ce6606c87d3a4e12b44190f7aa4587fc304e9d44f88fd033b55edc"
+    }
+  ]
+}

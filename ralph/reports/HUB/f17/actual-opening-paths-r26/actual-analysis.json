@@ -1,0 +1,164 @@
+{
+  "tam": {
+    "actual_body": [
+      26.2546939849854,
+      0.899729669094086,
+      16.831148147583
+    ],
+    "native_floor_point_y": 0.899999976158142,
+    "actual_full_capsule_foot_y": 0.8997296094894399,
+    "nominal_foot_below_sample_plane_m": 0.00027036666870206005,
+    "raw_recovery_m": 0.00106215476989746,
+    "unchanged_raw_limit_m": 0.00101000004749745,
+    "live_reported_depth_m": 0.000208199024200439,
+    "actual_pre_refused_before_input": true,
+    "source_repair": "Only idle flat UP floor policy. Actual native recovery is retained by move_and_slide; no direct transforms, lift, shrink, disabled collision, fake grounding, skin/depth admission or query replacement.",
+    "inference_limit": "Nominal plane deficit is source arithmetic from one actual native sample, not all-world clearance or a complete terrain certificate. The whole CI failed; this candidate has not run."
+  },
+  "bram": {
+    "actual_post": {
+      "acceptance": false,
+      "actual_delta": [
+        -0.0584449768066406,
+        -0.0331937074661255,
+        2.62260437011719e-05
+      ],
+      "authored_road_hint": "",
+      "callback_own_us": 426,
+      "ceiling_frames": 0,
+      "checked_start": false,
+      "controller_observation_available": true,
+      "controller_wanted_dir": [
+        -1.0,
+        0.0,
+        0.0
+      ],
+      "delivered_input": [
+        0.464417785406113,
+        0.88561624288559
+      ],
+      "diagnostic_output_outside_physics_cap": true,
+      "floor_angle": 0.785399973392487,
+      "frame": 3845,
+      "live_contacts": [],
+      "live_recovery_travel": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "live_state_phase": "post",
+      "mask": 1,
+      "on_ceiling": false,
+      "on_floor": false,
+      "on_wall": false,
+      "physics_frame": 7822,
+      "plans": 17,
+      "player": [
+        45.2478523254395,
+        1.06301784515381,
+        1.83485519886017
+      ],
+      "progress_m": 312.361807616195,
+      "provisional_choice": 0,
+      "provisional_steering": {
+        "acceptance": false,
+        "heading": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "prediction_motion": [
+          -0.042340274900198,
+          0.0,
+          -0.136936992406845
+        ],
+        "retry_choice": 0,
+        "source": "prospective_step",
+        "wall_normal": [
+          0.0,
+          0.0,
+          1.0
+        ]
+      },
+      "queries": 3,
+      "recoveries": 0,
+      "refusal": "actual production walk lost grounded floor",
+      "request": [
+        44.0,
+        1.96799993515015,
+        -2.39000010490417
+      ],
+      "requests": 3846,
+      "safe_margin": 0.00100000004749745,
+      "slide_contacts": [],
+      "slide_contacts_are_capped_prefix": true,
+      "slide_count": 0,
+      "slide_motion": [
+        -0.0584449768066406,
+        -0.0331937074661255,
+        2.62260437011719e-05
+      ],
+      "slide_point_counts": [],
+      "snap": 0.400000005960464,
+      "stall_frames": 0,
+      "swept_depth": 0.0,
+      "timing": {
+        "between_callbacks": "controller and other nodes; excluded; not controller-only",
+        "between_callbacks_us": 3540,
+        "callback_cap_us": 10000,
+        "input_flush_us": 41,
+        "live_post_us": 51,
+        "live_pre_us": 86,
+        "movement_progress_us": 0,
+        "post_contract_us": 14,
+        "post_us": 100,
+        "pre_us": 277,
+        "provisional_steering_us": 84,
+        "serialization_and_print": "deferred; excluded; snapshot included",
+        "slide_validation_us": 7,
+        "snapshot_us": 27,
+        "stage": "post"
+      },
+      "total_queries": 11504,
+      "wall_frames": 16
+    },
+    "actual_pre_origin": [
+      45.30629730224614,
+      1.0962115526199354,
+      1.8348289728164688
+    ],
+    "actual_on_floor": false,
+    "original_resume_heading_record": [
+      0.88561624288559,
+      0.0,
+      0.464417785406113
+    ],
+    "same_original_door_axis_goal": [
+      44.0,
+      0.85,
+      4.8
+    ],
+    "source_repair": "The first indoor movement-resume candidate uses the original _exit_through doorway-axis point in the original22moving/4neutral frames; four-candidate loop and remaining three physical directions remain. Actual travel and both original guards decide. No extra walking leg, allowance or body write.",
+    "inference_limit": "Furniture/perch source correlation is not a full native geometry reconstruction; original failed frame has no contacts. Corrected same-cycle native path is required."
+  },
+  "tutorial": {
+    "actual_attempt1_closest_m": 49.57,
+    "actual_attempt1_final_m": 54.69,
+    "actual_attempt1_final_pose_available": false,
+    "required_gate_evidence_first_and_only_attempt": {
+      "job": "110548567294",
+      "first_failure_utc": "2026-10-01T19:42:58.6740184Z",
+      "closest_m": 37.89,
+      "final_m": 38.02,
+      "actual_final_pose_available": false,
+      "later_steps_continued": true
+    },
+    "actual_attempt2_ready_m": 2.74,
+    "original_budget_frames": 2600,
+    "source_repair": "Existing driver now recalculates actual body/current-camera axes each requested tick and flushes the same real joypad events before yielding. A neutral heading still yields the requested frame. Original road, target readiness, presses, sidestep caps and total physics budget unchanged. Terminal failure records body, target, waypoint index and spent frames without a query.",
+    "inference_limit": "No invented first-attempt body/collider. Stale queued heading or zero-heading busy loop is a source defect, not a demonstrated unique cause of this sparse failure. Next original runtime must establish outcome."
+  },
+  "status": "F17#4 OPEN; R9 general recovery/query replacement HOLD; original CI6173 failures remain authoritative; R25 unit13tests69assertions PASS is ROOT reported, not rerun here; catching/export PASS are separate and unchanged",
+  "no_native_acceptance": true,
+  "ideal_motion_models_used": false
+}

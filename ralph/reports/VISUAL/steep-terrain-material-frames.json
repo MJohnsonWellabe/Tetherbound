@@ -1,0 +1,340 @@
+{
+  "proof": "DRY RUN \u2014 does not count",
+  "baseline": "c2ef0487b",
+  "candidate": "0cee26d57",
+  "regression_code": "a0c5a8055",
+  "frames": [
+    {
+      "file": "shots/terrain-material-baseline/region/meadows/001_meadows_gully_north_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "9551f0690908aa46af622e9005f5a6c565191407bc83d65b2d9ae42bc6a8e66b"
+    },
+    {
+      "file": "shots/terrain-material-candidate/region/meadows/001_meadows_gully_north_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "107e23e871e89dfc4d4cf84989f4a7d30fbd31b39ecfbddcd84e4af476cab5ff"
+    },
+    {
+      "file": "shots/terrain-material-baseline/region/meadows/002_meadows_gully_north_dusk.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "abac24464ae4374dafbfdde7501e830e4150a719983b3737c7484e7482d72838"
+    },
+    {
+      "file": "shots/terrain-material-candidate/region/meadows/002_meadows_gully_north_dusk.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "c943c46f83aa1648bdcba113cb7cb2ae856f3ed20732dd56c1de81072041d0c9"
+    },
+    {
+      "file": "shots/terrain-material-baseline/region/meadows/003_meadows_gully_south_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "152d10b1c22e79b2be023ceecd0f9292a33a17f90f9f84938d3d79d5cf97ff1d"
+    },
+    {
+      "file": "shots/terrain-material-candidate/region/meadows/003_meadows_gully_south_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "659a19ce49baf265275090006bebd20ade44122ecdf94549c3a9ad5c04e99876"
+    },
+    {
+      "file": "shots/terrain-material-baseline/region/meadows/004_meadows_bridge_approach_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "58e3b15f9c57c33c76df0ded9c21a052f5e7cdd907bbc382412067f153d8ea8d"
+    },
+    {
+      "file": "shots/terrain-material-candidate/region/meadows/004_meadows_bridge_approach_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "839330628a7e2be083f547c11976aaa9fd27957c95e006e96e20eed933c00a23"
+    },
+    {
+      "file": "shots/terrain-material-regression/region/meadows/001_meadows_bridge_approach_off_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "5617d5eac277f981fd72da2d2e0c4a80f8a1e94d3e37fe8dabbc41088173a07d"
+    },
+    {
+      "file": "shots/terrain-material-regression/region/meadows/002_meadows_bridge_approach_on_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "9726e25bb9d8b2831170c4ac4350c15c4092000a6eda2023c401860fcefdfb7d"
+    },
+    {
+      "file": "shots/terrain-material-regression/region/meadows/003_meadows_long_water_off_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "311026f01ae46669a9f8f00f6427e993601152622884aac7a940c8bbc3911d8a"
+    },
+    {
+      "file": "shots/terrain-material-regression/region/meadows/004_meadows_long_water_on_day.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "8f3347b05b9184be7276d18c02cf90b4fdfc984db4e5e771b14682f5ecf66240"
+    },
+    {
+      "file": "shots/terrain-material-regression/region/meadows/005_meadows_long_water_off_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "f52cf5fbf7fb41467e3ee994bc13dcd4112fb568e7ac75361380d71672bb380f"
+    },
+    {
+      "file": "shots/terrain-material-regression/region/meadows/006_meadows_long_water_on_night.png",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "1a2c4e98c6568c6d9adcc49e5c904ad0e1cd5f73148faeddf401562bb5aeae38"
+    }
+  ],
+  "regression_manifest": [
+    {
+      "kind": "note",
+      "text": "meadows: 4 rows (env+places)"
+    },
+    {
+      "camera": [
+        0.0,
+        1.4,
+        1289.9
+      ],
+      "camera_arm_m": 5.20017862319946,
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        0.0,
+        -1.4,
+        1295.0
+      ],
+      "file": "001_meadows_bridge_approach_off_day.png",
+      "kind": "frame",
+      "label": "South Bridge approach and path",
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "bridge_approach_off",
+      "target": [
+        0.0,
+        -2.3,
+        1350.0
+      ],
+      "target_dist_m": 55.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        0.0,
+        1.4,
+        1289.9
+      ],
+      "camera_arm_m": 5.20005416870117,
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        0.0,
+        -1.4,
+        1295.0
+      ],
+      "file": "002_meadows_bridge_approach_on_day.png",
+      "kind": "frame",
+      "label": "South Bridge approach and path",
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "bridge_approach_on",
+      "target": [
+        0.0,
+        -2.3,
+        1350.0
+      ],
+      "target_dist_m": 55.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": -180.0
+    },
+    {
+      "camera": [
+        -275.0,
+        -2.0,
+        4173.2
+      ],
+      "camera_arm_m": 5.20003843307495,
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -280.0,
+        -4.8,
+        4174.0
+      ],
+      "file": "003_meadows_long_water_off_day.png",
+      "kind": "frame",
+      "label": "Long Water bank treatment",
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "long_water_off",
+      "target": [
+        -360.0,
+        -8.3,
+        4187.0
+      ],
+      "target_dist_m": 81.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": 99.2
+    },
+    {
+      "camera": [
+        -275.0,
+        -2.0,
+        4173.2
+      ],
+      "camera_arm_m": 5.19997358322144,
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -280.0,
+        -4.8,
+        4174.0
+      ],
+      "file": "004_meadows_long_water_on_day.png",
+      "kind": "frame",
+      "label": "Long Water bank treatment",
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "long_water_on",
+      "target": [
+        -360.0,
+        -8.3,
+        4187.0
+      ],
+      "target_dist_m": 81.0,
+      "time": "day",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": 99.2
+    },
+    {
+      "camera": [
+        -275.0,
+        -2.0,
+        4173.2
+      ],
+      "camera_arm_m": 5.19997358322144,
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -280.0,
+        -4.8,
+        4174.0
+      ],
+      "file": "005_meadows_long_water_off_night.png",
+      "kind": "frame",
+      "label": "Long Water bank treatment",
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "long_water_off",
+      "target": [
+        -360.0,
+        -8.3,
+        4187.0
+      ],
+      "target_dist_m": 81.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": 99.2
+    },
+    {
+      "camera": [
+        -275.0,
+        -2.0,
+        4173.2
+      ],
+      "camera_arm_m": 5.19997358322144,
+      "closed_dialogue": [],
+      "companion": "parked behind camera",
+      "feet": [
+        -280.0,
+        -4.8,
+        4174.0
+      ],
+      "file": "006_meadows_long_water_on_night.png",
+      "kind": "frame",
+      "label": "Long Water bank treatment",
+      "pitch_deg": -12.0,
+      "proof": "DRY RUN \u00e2\u20ac\u201d does not count",
+      "region": "meadows",
+      "subject": "long_water_on",
+      "target": [
+        -360.0,
+        -8.3,
+        4187.0
+      ],
+      "target_dist_m": 81.0,
+      "time": "night",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "why": "",
+      "yaw_deg": 99.2
+    },
+    {
+      "kind": "summary",
+      "text": "visual audit region/meadows: 6 frames, 0 skips"
+    }
+  ]
+}

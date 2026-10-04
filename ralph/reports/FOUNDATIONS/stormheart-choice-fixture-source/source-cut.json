@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "scope": "existing Stormheart choice ordinary pending-catch fixture only",
+  "parent": "473b3c117ba7479c85c4a96da086587b92de5e70",
+  "reviewed_root_pin": "71d8065ef5aea5a43191d95ee76eb9d14e7a04ba",
+  "actual_ci_merge": "705556e360f1f84a3cbdb0e0f65996814a59c967",
+  "actual_job_log_sha256": "c26d66df0faa9ab583536222240a10bdc2b876b232acf4c4358444cd060b31ed",
+  "selected_file": {
+    "path": "tests/smoke_stormwood_stormheart_choice.gd",
+    "preimage_blob": "78bb70b05fda10e785c78c3bd0c7a7461a660685",
+    "preimage_sha256": "343b863412e2a8d4ab4ef57c9463e53113dc74016966aaedbed2c473e728dc7d",
+    "candidate_blob": "d98c3aef0e22ff8c17295f5c4b9ffb291d3b6861",
+    "candidate_sha256": "4af5f9036a8fc92e189ce9a69571c196871f6429de9327a8a5008b1147a76639"
+  },
+  "dependencies": [
+    {
+      "path": "autoload/game_state.gd",
+      "reviewed_root_blob": "ae8c5948f6670b646c05e7e4564bf2f270c4723a",
+      "reviewed_root_sha256": "378d0d39e155ce8866fc97dff859f6978cdda850790dc0819e218f43e0a84156"
+    },
+    {
+      "path": "autoload/player_state.gd",
+      "reviewed_root_blob": "69bee626d3acf6c900faa68367f6ae45ed9f9aae",
+      "reviewed_root_sha256": "8d0d35e9b8444bea54483bb2e78b574f37934485292f1aed5519c167f782d849"
+    },
+    {
+      "path": "scripts/creatures/creature_instance.gd",
+      "reviewed_root_blob": "c877341ee7d1cff7e5845100866c0396ccc1bfcd",
+      "reviewed_root_sha256": "d2d5a86b9d4fcaeb1180671051b94496670c96a2ad944164bc44cc5ce7261db0"
+    },
+    {
+      "path": "scripts/save/water_capture_codec.gd",
+      "reviewed_root_blob": "87245bb2e5f8fa2873dbe5b00f5899395502f109",
+      "reviewed_root_sha256": "3007fb315d78f8dec9243cf71cca530d3cc45e0f03f5cfff5fb21825686da7e2"
+    },
+    {
+      "path": "scripts/world/stormwood_ending.gd",
+      "reviewed_root_blob": "4475ce10f71d24accc83c0781514710c203e195d",
+      "reviewed_root_sha256": "28442d5612f5b677b2f31418b27f88502dccc34950d3c8dd05c1a71e41ca21f9"
+    },
+    {
+      "path": "scripts/creatures/teaching.gd",
+      "reviewed_root_blob": "80727c7e018af35fe30b5004b5e6bc1152d6063b",
+      "reviewed_root_sha256": "4128cf4a87384270412150ecb3bf24afdb497c049c2298ad89d7db57f77faac4"
+    },
+    {
+      "path": "scripts/creatures/move_mastery.gd",
+      "reviewed_root_blob": "dfac9eec6f91d18639fdd1d4a815cbf905262c94",
+      "reviewed_root_sha256": "cf1c3797df7e2cd6042b208d463efd6b4d6d7e3c38aa49cab7cd89e1bd7c93bd"
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "reviewed_root_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+      "reviewed_root_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8"
+    },
+    {
+      "path": "data/creatures/species.json",
+      "reviewed_root_blob": "78a8adcd78b2826b5e7963141343d4e9965caf33",
+      "reviewed_root_sha256": "e8b8bf8ab07818952a2261d552540a94a14549e7661a27d8a86f182eb0caa968"
+    },
+    {
+      "path": "data/moves/learnsets.json",
+      "reviewed_root_blob": "8fa23c678c10116738786730e3765842cdc572c7",
+      "reviewed_root_sha256": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5"
+    },
+    {
+      "path": "data/moves/moves.json",
+      "reviewed_root_blob": "7b66fdcc0401d04104465aef0c6947627099f019",
+      "reviewed_root_sha256": "0aa53b2f876e93a4128efbf6f562c198036929385db58d1c500e18c49d3a0375"
+    },
+    {
+      "path": "data/config/move_mastery.json",
+      "reviewed_root_blob": "616f750cae81be437d8a35b7a41de3743db7fcac",
+      "reviewed_root_sha256": "b80f37c11385f217cbab302b52802092a36655fa25b20ec3e7aafdf948865e06"
+    }
+  ],
+  "dependency_merge": "not needed: invoked factory/codec/UID functions identical to reviewed ROOT",
+  "verification": {
+    "source_policy_checks_passed": 54,
+    "native": "not run; ROOT original120s smoke pending",
+    "criterion_credit": false
+  }
+}

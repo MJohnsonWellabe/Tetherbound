@@ -1,0 +1,32 @@
+{
+  "provenance": "Actual native read-only ground measurement on candidate32f3d3ea50, no physical placement PASS. Detached initial actor grounded surface+production SPAWN_CLEARANCE2.0; fixture station origins use actual sampled ground. Original8a untouched.",
+  "native_validated": false,
+  "native_measurement": {
+    "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-measured-layout-c41a-source\\proof\\f48-layout-measurement.json",
+    "sha256": "d1a9024599a04878b691f811913ac708cf06007258fb7454b6127612f8f10c69",
+    "scene": "MeadowsPlayground",
+    "status": "Terrain sample PASS only; original actor was belowground/not onfloor; actual physical build remains OPEN"
+  },
+  "stations": {
+    "forge": [
+      -16.0,
+      1.14382481575012,
+      10.0
+    ],
+    "kitchen": [
+      -16.0,
+      0.947120308876038,
+      25.0
+    ],
+    "altar": [
+      -10.0,
+      0.899999976158142,
+      8.0
+    ]
+  },
+  "actor_start": [
+    -16,
+    3.1099109649658203,
+    14
+  ]
+}

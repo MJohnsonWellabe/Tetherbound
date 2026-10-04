@@ -1,0 +1,1271 @@
+{
+  "classification": "SOURCEPASS",
+  "acceptance": "F17#4 OPEN; immutable original actual floor failure; no engine/independent acceptance credit",
+  "passed": 205,
+  "total": 205,
+  "manifest_sha256": "6fafecb678ecee01f40221233d77c96a1c8fddc758b25c42e0647ffd83c18ffe",
+  "geometry": {
+    "GrandpaHarvestTable": {
+      "corners": [
+        [
+          4.961560518741607,
+          8.635061373114585
+        ],
+        [
+          7.238439481258392,
+          8.635061373114585
+        ],
+        [
+          7.238439481258392,
+          9.073160368800163
+        ],
+        [
+          4.961560518741607,
+          9.073160368800163
+        ]
+      ],
+      "path_distance_m": 12.761560518741607
+    },
+    "GrandpaFreshHarvest": {
+      "corners": [
+        [
+          4.419193808820323,
+          9.378941267595932
+        ],
+        [
+          4.9758605555551,
+          9.19806927734391
+        ],
+        [
+          5.080806191179677,
+          9.521058732404066
+        ],
+        [
+          4.5241394444449,
+          9.701930722656089
+        ]
+      ],
+      "path_distance_m": 12.495513350019683
+    },
+    "GrandpaWashBucket": {
+      "corners": [
+        [
+          7.442042529114796,
+          9.221394389135684
+        ],
+        [
+          7.78804815679873,
+          9.361189737006548
+        ],
+        [
+          7.664513919668293,
+          9.666947703274904
+        ],
+        [
+          7.318508291984359,
+          9.52715235540404
+        ]
+      ],
+      "path_distance_m": 12.21195184320127
+    },
+    "terminal_bucket_box_distance_m": 0.4503687909033243,
+    "GrandpaYardStool": {
+      "corners": [
+        [
+          5.768907446151595,
+          7.599926720195156
+        ],
+        [
+          6.1495815719634415,
+          7.519011936895848
+        ],
+        [
+          6.230496360343675,
+          7.899686086611572
+        ],
+        [
+          5.849822234531829,
+          7.98060086991088
+        ]
+      ],
+      "path_distance_m": 13.769503639656325
+    },
+    "authored_prefix": [
+      [
+        20,
+        14
+      ],
+      [
+        20,
+        -12
+      ],
+      [
+        -8,
+        -12
+      ],
+      [
+        -12.5,
+        6.5
+      ]
+    ],
+    "actual_wood_goal": [
+      -8.0,
+      8.0
+    ],
+    "nominal_from_Tam_length_m": 86.2681306291509,
+    "nominal_constant5mps_60fps_frames": 1035.2175675498108,
+    "house_envelope_clearance_m": 5.556977595779922,
+    "fence_centreline_clearance_m": 9.484118303775,
+    "scope": "Static authored centreline and named yard OBBs only; not native ground, steering envelope, rendered, timing or earned proof."
+  },
+  "terminal_actual_observation": {
+    "acceptance": false,
+    "actual_delta": [
+      0.00785112380981445,
+      -0.0329525470733643,
+      -0.0467100143432617
+    ],
+    "authored_road_hint": "",
+    "callback_own_us": 588,
+    "ceiling_frames": 0,
+    "checked_start": false,
+    "controller_observation_available": true,
+    "controller_wanted_dir": [
+      -0.998145341873169,
+      0.0,
+      -0.0608760416507721
+    ],
+    "delivered_input": [
+      -0.613625943660736,
+      -0.789596855640411
+    ],
+    "diagnostic_output_outside_physics_cap": true,
+    "floor_angle": 0.785399973392487,
+    "frame": 808,
+    "live_contacts": [],
+    "live_recovery_travel": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "live_state_phase": "post",
+    "mask": 1,
+    "on_ceiling": false,
+    "on_floor": false,
+    "on_wall": false,
+    "physics_frame": 5174,
+    "plans": 8,
+    "player": [
+      7.9054102897644,
+      1.01087713241577,
+      8.9228687286377
+    ],
+    "progress_m": 65.6083555975929,
+    "provisional_choice": 0,
+    "provisional_steering": {
+      "acceptance": false,
+      "heading": [
+        -0.998145341873169,
+        0.0,
+        -0.0608760453760624
+      ],
+      "prediction_motion": [
+        -1.99629068374634,
+        0.0,
+        -0.121752090752125
+      ],
+      "retry_choice": 0,
+      "source": "prospective_step",
+      "wall_normal": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "queries": 3,
+    "recoveries": 0,
+    "refusal": "actual production walk lost grounded floor",
+    "request": [
+      -8.0,
+      0.899999976158142,
+      8.0
+    ],
+    "requests": 809,
+    "safe_margin": 0.00100000004749745,
+    "slide_contacts": [],
+    "slide_contacts_are_capped_prefix": true,
+    "slide_count": 0,
+    "slide_motion": [
+      0.00785112380981445,
+      -0.0329525470733643,
+      -0.0467100143432617
+    ],
+    "slide_point_counts": [],
+    "snap": 0.400000005960464,
+    "stall_frames": 1,
+    "swept_depth": 0.0,
+    "timing": {
+      "between_callbacks": "controller and other nodes; excluded; not controller-only",
+      "between_callbacks_us": 3705,
+      "callback_cap_us": 10000,
+      "input_flush_us": 57,
+      "live_post_us": 65,
+      "live_pre_us": 100,
+      "movement_progress_us": 1,
+      "post_contract_us": 23,
+      "post_us": 131,
+      "pre_us": 375,
+      "provisional_steering_us": 99,
+      "serialization_and_print": "deferred; excluded; snapshot included",
+      "slide_validation_us": 11,
+      "snapshot_us": 29,
+      "stage": "post"
+    },
+    "total_queries": 2425,
+    "wall_frames": 1
+  },
+  "checks": [
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/Bench.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/Bench.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/Bucket_Wooden_1.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/Bucket_Wooden_1.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/FarmCrate_Apple.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/FarmCrate_Apple.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/Stool.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_fantasy/Stool.gltf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_survival/Bonfire_Fire.mtl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/assets/props/quaternius_survival/Bonfire_Fire.obj",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/scripts/world/props.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes inputs/tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes originals/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes originals/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes originals/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes prior-failure/native.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes prior-failure/parser.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes prior-failure/receipt.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes proposal/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes proposal/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes proposal/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes root-actual/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes root-actual/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen bytes root-actual/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live scripts/world/grandpa_house.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live scripts/world/props.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "protected live tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposal equals live tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT executed original tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposal equals live tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT executed original tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "proposal equals live tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT executed original tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only walk_to changed in existing navigator functions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only bounded prefix function added",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _init",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _config",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _append_road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function refused",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function refusal_reason",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _stop_geometry",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function reset",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function set_approach_radius",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function step",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function push_once",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _spend",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _motion",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _trainer_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _registered_body_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _foot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _paired_floor_skin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _floor_contacts",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _start_clear_impl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _supported_step_from",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _choose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _native_tick_impl",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function departure_pending",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _leaf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _open_leaf",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _prepare_departure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _xz",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_init",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_mark",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_stage_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_capture",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_vector",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_pose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _contact_dump",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _native_tick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _supported_step",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _supported_step_at",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _start_clear",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function diagnose_supported_pose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_contract",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _observed_live_clear",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_live_check",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_stop_input",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_wall_normals",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_heading",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _choose_route",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_observe",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_record",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged navigator function _production_collider_path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only gather heading and forwarding change",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function run",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _progression_has",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _visit_villager",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _assign_tools_in_satchel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _focus_satchel_slot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_for_tool_idle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _nearest_authored_node",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _enter_through",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _exit_through",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _door_outward",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _nearest_door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _npc_prompt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _walk_to_and_activate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _one_approach",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _press_and_observe_activation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _on_arbiter_activated",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function activation_verdict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _walk_diagnosis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _prove_movement_resumed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_dialogue_open",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _close_dialogue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_open_panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_world_owned",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _tap_action",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _event_for",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _required_pad_actions_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _send_axis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _send_stick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _stop_left_stick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _script_path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _descendants",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _checkpoint",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _fail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged original contract test_controller_activation_is_confirmed_by_the_live_arbiter_signal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged original contract test_activation_verdict_distinguishes_target_competitor_and_nothing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged original contract test_pre_press_winner_snapshot_is_not_returned_as_success",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged original contract test_fatal_approach_failure_stops_at_the_outer_retry_boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "default whole walk exactly original",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all remaining navigator code/caps/callbacks exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "complete original gather actions and assertions exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "complete original walk forwarding and refusal exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one entire approach budget counter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one reset before approach only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "gather single original1800/1.55 request",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "stone full original road preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prefix forwarded without resets or second walk",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prefix supplies authored points only",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prefix validation precedes exit selection",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "final exit keeps original edge scope",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prefix contains no engine/input/native/pose seam",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "absent road still sticky refusal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "malformed prefix is sticky refusal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "default predictive API exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual authored prefix exactly pinned",
+      "passed": true,
+      "detail": [
+        [
+          20,
+          14
+        ],
+        [
+          20,
+          -12
+        ],
+        [
+          -8,
+          -12
+        ],
+        [
+          -12.5,
+          6.5
+        ]
+      ]
+    },
+    {
+      "name": "original road untouched and prefix contiguous",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "resource target outside road is not inserted into prefix",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "distant pond omitted",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses missing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses malformed-pair",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses nonfinite-road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses nonfinite-goal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses oversize-road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses distant-edge",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative model refuses out-of-scope-exit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative outsideroute injected coordinate fails exact provenance",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "negative former full-road detour differs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "new engine unit tests cover absent/malformed/scope inputs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "asset root untransformed Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bench",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire wood path clears yard OBB GrandpaHarvestTable",
+      "passed": true,
+      "detail": 12.761560518741607
+    },
+    {
+      "name": "asset root untransformed FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds FarmCrate_Apple",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire wood path clears yard OBB GrandpaFreshHarvest",
+      "passed": true,
+      "detail": 12.495513350019683
+    },
+    {
+      "name": "asset root untransformed Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Bucket_Wooden_1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire wood path clears yard OBB GrandpaWashBucket",
+      "passed": true,
+      "detail": 12.21195184320127
+    },
+    {
+      "name": "asset root untransformed Stool",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real float32 positions Stool",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "real vertices match declared bounds Stool",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire wood path clears yard OBB GrandpaYardStool",
+      "passed": true,
+      "detail": 13.769503639656325
+    },
+    {
+      "name": "source house dimensions/pose pinned",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire proposed centreline clears full house envelope",
+      "passed": true,
+      "detail": 5.556977595779922
+    },
+    {
+      "name": "direct Tam-to-wood crosses house negative control",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "all selected authored nodes and final goal remain inside fence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire path avoids closed fence geometry",
+      "passed": true,
+      "detail": 9.484118303775
+    },
+    {
+      "name": "nominal path fits original1800frames at5m/s60fps",
+      "passed": true,
+      "detail": 86.2681306291509
+    },
+    {
+      "name": "exact floor loss original preserved",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact desired/prospective zero-wall state",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT exact frozen source after run",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "prior fail not earned credit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "successful tool gifts retained in original trace",
+      "passed": true,
+      "detail": null
+    }
+  ]
+}

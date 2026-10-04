@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "scope": "exact existing Warden host XP receipt declaration plus existing registry test",
+  "parent": "c54be71c979fc58013e8fc99dff1fba40ddac067",
+  "root_read_pin": "85ba143150d08d1e30efe7fc55c7671c2fc02b73",
+  "ci_merge_head": "8d3bf7eaadde51ebb18c363aeb47c3233309972c",
+  "selected_files": [
+    {
+      "path": "data/progression/flag_scopes.json",
+      "preimage_blob": "338a5646856febe6b68e67091ee419221a7b1be8",
+      "preimage_sha256": "eabd77c05bc852307bffbe3ec71ff7e81fee46dec3112110e681cad6cbe9d6a8",
+      "candidate_sha256": "12baf6349ef2c49f451ac4d62656fa31486bd5dde6b411f37a3e387ddb87ed6e",
+      "candidate_blob": "f3d5378dbaef6c2573fc7c63e63538d306703a88"
+    },
+    {
+      "path": "tests/test_flag_scopes.gd",
+      "preimage_blob": "fe84238be5980885189271ee2ee78144f1974a28",
+      "preimage_sha256": "9a357e9cd98c876d1579dc7289a2d0079ee589ecd0d2f70b256c3fbbe49a6678",
+      "candidate_sha256": "d8a6e9d5f47258bbe24a84cd7e0648ef04ce27df3c36b11f1ef9143727c33a2b",
+      "candidate_blob": "8a0acc5bef26323a6387ef9561e84f8752c5b476"
+    }
+  ],
+  "read_dependencies": [
+    {
+      "path": "scripts/net/world_ledger.gd",
+      "root_blob": "39ec01c4331fbe97d8d79c505c9387641c527bde",
+      "ci_blob": "39ec01c4331fbe97d8d79c505c9387641c527bde",
+      "root_sha256": "7c1cd4fab959a392df7bb299084ba18f14b9968547c42c96995b2dbfc6a471a3"
+    },
+    {
+      "path": "scripts/net/encounter_rewards.gd",
+      "root_blob": "e933676fdc9977c7ac846891bf62f8edc750d755",
+      "ci_blob": "e933676fdc9977c7ac846891bf62f8edc750d755",
+      "root_sha256": "586b95dd241bc5431a3ae1bdbcdad3cba304874446f6d077e5ef05e83d024839"
+    },
+    {
+      "path": "autoload/progression_state.gd",
+      "root_blob": "7dccb0e4ce92d8061a80bd01eeaae582f8b6f3f5",
+      "ci_blob": "7dccb0e4ce92d8061a80bd01eeaae582f8b6f3f5",
+      "root_sha256": "74649504e655e3f3301ddc7ccca3042d0f4f7e0ed98e77f5c533fb0cce73632f"
+    },
+    {
+      "path": "autoload/merged_progression.gd",
+      "root_blob": "1efc1dbb6c4b42f17d90d323a2e3b79cdafb5528",
+      "ci_blob": "1efc1dbb6c4b42f17d90d323a2e3b79cdafb5528",
+      "root_sha256": "5e1b54652167890cf1ab2e126a009c10493f6e1c00d71a4db625d00b381b06cd"
+    },
+    {
+      "path": "scripts/save/realm_reward_migration.gd",
+      "root_blob": "3ab5622075a5e92ddfd8865f80df6a07b0e30213",
+      "ci_blob": "3ab5622075a5e92ddfd8865f80df6a07b0e30213",
+      "root_sha256": "a3965ae404bb905efbb6e7dded226c1c1008a03d7c6ced5845068e157c065c2a"
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "root_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+      "ci_blob": "0fc57615ea133c73030db6bb2a3f6b0802fed121",
+      "root_sha256": "7428dda7fa54ea68883dd191f66b6bd8516bb21319d09acf26928ebdf0d855e8"
+    }
+  ],
+  "verification": {
+    "source_policy_checks_passed": 42,
+    "native": "not run; ROOT-owned",
+    "criteria": "no MET or strict-error-clean claim"
+  }
+}

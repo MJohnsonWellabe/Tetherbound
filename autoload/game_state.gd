@@ -1,5 +1,16 @@
 extends Node
 
+## Read-only proof observation around the actual clocks and discovery credits.
+## condition_tick_applied distinguishes host-owned care from a local tick.
+## No listener means no additional card serialization or observer snapshots.
+signal party_passive_tick(observation: Dictionary)
+var _passive_observation_sequence: int = 0
+
+class PassiveCardSnapshot extends RefCounted:
+	var instance: RefCounted
+	func members() -> Array:
+		return [instance]
+
 const WORLD_IDENTITY := preload("res://scripts/save/world_identity.gd")
 const STEAM_LOBBY := preload("res://scripts/net/steam_lobby.gd")
 
@@ -833,6 +844,14 @@ func _mount_session() -> void:
 	session = SESSION.new()
 	session.name = "Session"
 	add_child(session)
+	var loadout_service: Node = preload("res://scripts/ui/foundation_loadout_service.gd").new()
+	loadout_service.name = "FoundationLoadoutService"
+	add_child(loadout_service)
+	loadout_service.call("configure", session)
+	preload("res://scripts/ui/altar_service.gd").attach(self).call("configure_loadout_ui", loadout_service)
+	var composition: Node = preload("res://scripts/net/foundation_composition.gd").new()
+	composition.name = "FoundationComposition"
+	session.add_child(composition)
 	# D103/lane 3.A. The ledger transport is mounted here, with the session,
 	# rather than by whichever consumer happens to submit the first intent.
 	# Its RPCs only resolve because every process holds it at the identical
@@ -980,7 +999,10 @@ func _input(event: InputEvent) -> void:
 func advance_day() -> int:
 	if not is_host():
 		return day
-	return int(world.call("advance_day"))
+	var advanced := int(world.call("advance_day"))
+	# The real host morning/rest lifecycle alone advances the saved board clock.
+	world.redesign_world.bounty_day = int(world.redesign_world.bounty_day) + 1
+	return advanced
 
 
 ## R7.6. The state of farm bed `index`, or a fresh fallow one.
@@ -1053,6 +1075,13 @@ func _exit_tree() -> void:
 ## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
+	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
+		_travel_pos_valid = false # No delayed travel/bond grant on resume.
+		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
+	var canonical_passive := _canonical_guest_passive()
+	var record_passive: bool = session != null and session.has_method("owner_passive_recording_active") \
+		and session.call("owner_passive_recording_active") == true
+	if canonical_passive: _travel_pos_valid = false
 	_tick_autosave(delta)
 	_tick_creature_bed_recovery(delta)
 	_watch_pending_catch()
@@ -1063,13 +1092,36 @@ func _process(delta: float) -> void:
 	# tonic time.
 	if party != null:
 		var condition_cfg: Dictionary = CREATURE_CONDITION.config()
+		var passive_uids: Array[String] = []
 		for member: Variant in (party.call("members") as Array):
+			if record_passive: passive_uids.append(str(member.get("uid")))
+			var watched: bool = not get_signal_connection_list("party_passive_tick").is_empty()
+			var source: PassiveCardSnapshot
+			var before: Dictionary = {}
+			var buffs_before: Array = []
+			if watched:
+				source = PassiveCardSnapshot.new()
+				source.instance = member as RefCounted
+				before = SAVE_GAME.new().call("_party_to_array", source)[0]
+				buffs_before = (member.get("active_buffs") as Array).duplicate(true)
 			(member as RefCounted).call("tick_buffs", delta)
 			# RG19-spec/D68. Every party member, not just the one out in
 			# front: a five that only the active companion feeds is a five in
 			# name only. Paused menus pause the tree and this with it, so
 			# reading the backpack costs no nourishment.
-			CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
+			if not canonical_passive:
+				CREATURE_CONDITION.tick(member as RefCounted, condition_cfg, delta)
+			if watched:
+				_passive_observation_sequence += 1
+				party_passive_tick.emit({"sequence": _passive_observation_sequence, "delta": delta,
+					"character_id": str(local.character_id), "world_namespace": str(world.reward_delivery_namespace),
+					"session_epoch": str(session.call("_altar_current_epoch")) if session != null else "",
+					"uid": str(member.get("uid")), "before": before,
+					"after": SAVE_GAME.new().call("_party_to_array", source)[0],
+					"buffs_before": buffs_before, "buffs_after": (member.get("active_buffs") as Array).duplicate(true),
+					"condition_config": condition_cfg.duplicate(true), "condition_tick_applied": not canonical_passive})
+		if record_passive and not canonical_passive:
+			session.call("record_owner_passive_input", {"op": "condition", "delta": delta, "uids": passive_uids})
 	var progression_revision: int = int(progression.get("revision"))
 	var realm_changed: bool = bool(quest_log.call("set_realm", current_realm))
 	var rung_moved := progression_revision != _last_progression_revision or realm_changed
@@ -1089,6 +1141,7 @@ func _process(delta: float) -> void:
 	_discovery_elapsed += delta
 	if _discovery_elapsed < _DISCOVERY_INTERVAL_S:
 		return
+	var discovery_elapsed := _discovery_elapsed
 	_discovery_elapsed = 0.0
 	var player := _find_player()
 	if player == null:
@@ -1099,21 +1152,61 @@ func _process(delta: float) -> void:
 	# used) — measured here rather than in player_controller.gd so the
 	# player's own delicate movement/collision code stays untouched.
 	var landmarks_before := int(map.discovered_landmark_count())
+	var watch_discovery := not canonical_passive and party != null \
+		and not get_signal_connection_list("party_passive_tick").is_empty()
+	var discovered_before: Dictionary = (map.get("_discovered") as Dictionary).duplicate() if record_passive or watch_discovery else {}
+	var discovery_cards: Array[Dictionary] = []
+	if watch_discovery:
+		for member: Variant in (party.call("members") as Array):
+			var source := PassiveCardSnapshot.new()
+			source.instance = member as RefCounted
+			discovery_cards.append({"source": source, "before": SAVE_GAME.new().call("_party_to_array", source)[0],
+				"buffs_before": (member.get("active_buffs") as Array).duplicate(true)})
 	var here := player.global_position
-	if _travel_pos_valid:
+	var travel_from := _travel_pos
+	var travel_was_valid := _travel_pos_valid
+	if not canonical_passive and _travel_pos_valid:
 		var stepped := here.distance_to(_travel_pos)
 		if stepped > 0.0 and stepped <= _TRAVEL_TELEPORT_GUARD_M and party != null:
 			for member: Variant in (party.call("members") as Array):
 				BOND_MILESTONES.credit_distance(member as RefCounted, stepped)
 	_travel_pos = here
-	_travel_pos_valid = true
+	_travel_pos_valid = not canonical_passive
 
 	map.mark_visited(here)
 	map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
-	if landmarks_gained > 0 and party != null:
+	if not canonical_passive and landmarks_gained > 0 and party != null:
 		for member: Variant in (party.call("members") as Array):
 			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)
+	if watch_discovery:
+		for observed: Dictionary in discovery_cards:
+			var member: RefCounted = observed.source.instance
+			_passive_observation_sequence += 1
+			party_passive_tick.emit({"operation": "discovery", "sequence": _passive_observation_sequence, "delta": 0.0,
+				"character_id": str(local.character_id), "world_namespace": str(world.reward_delivery_namespace),
+				"session_epoch": str(session.call("_altar_current_epoch")) if session != null else "",
+				"uid": str(member.get("uid")), "before": observed.before,
+				"after": SAVE_GAME.new().call("_party_to_array", observed.source)[0],
+				"buffs_before": observed.buffs_before, "buffs_after": (member.get("active_buffs") as Array).duplicate(true),
+				"condition_config": CREATURE_CONDITION.config().duplicate(true),
+				"realm": current_realm, "from": [travel_from.x, travel_from.y, travel_from.z],
+				"to": [here.x, here.y, here.z], "travel_valid": travel_was_valid, "discovery_elapsed": discovery_elapsed,
+				"landmarks_before": discovered_before.duplicate(), "landmarks_after": (map.get("_discovered") as Dictionary).duplicate()})
+	if record_passive and not canonical_passive:
+		var new_landmarks: Array[String] = []
+		for id: String in (map.get("_discovered") as Dictionary):
+			if not discovered_before.has(id): new_landmarks.append(id)
+		session.call("record_owner_passive_input", {"op": "discovery", "realm": current_realm,
+			"from": [travel_from.x, travel_from.y, travel_from.z], "to": [here.x, here.y, here.z],
+			"travel_valid": travel_was_valid, "new_landmarks": new_landmarks})
+
+
+## Session supplies the authenticated ownership decision. Until that capability
+## exists, solo/host/legacy callers keep their existing local passive writers.
+func _canonical_guest_passive() -> bool:
+	return session != null and session.has_method("canonical_guest_passive") \
+		and session.call("canonical_guest_passive") == true
 
 
 ## R4.10. While a catch is waiting on the release ceremony, the Team screen is
@@ -1248,6 +1341,24 @@ func push_world_message(text: String) -> void:
 	_pending_world_message = text
 
 
+func show_process_exit_refusal(message: String) -> void:
+	push_world_message(message)
+	if is_instance_valid(_menu) and _menu.is_node_ready(): _menu.call("_flash_refusal", message)
+
+
+func process_exit_preserves_autosave() -> bool:
+	return not _realm_transition_recovery.is_empty()
+
+
+func request_process_exit(restart_graphics: bool = false, save_progress: bool = false) -> String:
+	if session != null:
+		return await session.call("request_process_exit", restart_graphics, save_progress)
+	# Empty boot/title without a Session has no combat authority to lose.
+	STEAM_LOBBY.leave_for_quit(self)
+	get_tree().quit()
+	return ""
+
+
 ## Read-and-clear: "" if nothing is waiting (the common case, polled every
 ## frame by `playground_hud.gd`), the queued line exactly once otherwise.
 func take_pending_world_message() -> String:
@@ -1288,6 +1399,7 @@ func take_progression_events() -> Array:
 # --- creature-bed recovery (Gate A) -----------------------------------------
 
 func _tick_creature_bed_recovery(delta: float) -> void:
+	if session != null and session.has_method("_owner_training_mutation_blocked") and session.call("_owner_training_mutation_blocked", local) == true: return
 	if party == null or delta <= 0.0:
 		return
 	var cfg := CREATURE_PROGRESSION.config()
@@ -1312,6 +1424,7 @@ func _tick_creature_bed_recovery(delta: float) -> void:
 ## creature bed receive the full overnight recovery/rest reward; otherwise the
 ## bed would be optional decoration because ordinary sleep healed everyone.
 func complete_creature_bed_rests() -> int:
+	if session != null and session.has_method("_owner_training_mutation_blocked") and session.call("_owner_training_mutation_blocked", local) == true: return 0
 	if party == null:
 		return 0
 	var cfg := CREATURE_PROGRESSION.config()
@@ -1488,8 +1601,9 @@ func can_enter_realm(realm_id: String) -> bool:
 	if scene == "":
 		return false
 	var order := preload("res://scripts/data/biome_order.gd")
-	if not order.legacy_physical_crossings():
+	if not order.legacy_physical_crossings(self):
 		var biome := order.canonical_id(realm_id)
+		if not order.ids(false).has(biome) or world == null or local == null: return false
 		return biome == order.ids(false)[0] or world.redesign_world.portal_unlocks.has(biome) \
 			or local.redesign_character.portal_unlocks.has(biome)
 	var key_flag := str(realm_hearts.call("entry_key_for_realm", realm_id))
@@ -1597,6 +1711,12 @@ func _realm_crossing_valid(context: Dictionary) -> bool:
 	return true
 
 
+func _realm_destination_results_settled(realm_id: String) -> bool:
+	if session == null or not session.has_method("realms") or session.call("is_host") != true: return true
+	var hosted: Node = session.call("realms")
+	return hosted == null or hosted.call("destination_results_settled", realm_id) == true
+
+
 func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 		context: Dictionary) -> bool:
 	var profile_load := OS.get_cmdline_user_args().has("--profile-realm-load")
@@ -1626,6 +1746,7 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 	var tree := get_tree()
 	if tree == null:
 		return false
+	if not _realm_destination_results_settled(realm_id): return false
 	var source_scene := tree.current_scene
 	var coordinator: Variant = context.get("coordinator")
 	if bool(context.client):
@@ -1644,6 +1765,10 @@ func _enter_realm_owned(realm_id: String, entry_id: String, bypass_gate: bool,
 		context["host_permit"] = true
 	if current_realm != leaving or tree.current_scene != source_scene:
 		return false
+	# Host admission can await peer fences while an accepted hit resolves.
+	# Recheck before announcing/mutating the realm: a retained destination shell
+	# must keep its authored root path until its original outcome is durable.
+	if not _realm_destination_results_settled(realm_id): return false
 	var transition_snapshot := _realm_transition_snapshot(leaving)
 	_sync_placed_building_state()
 	_sync_death_satchel_state()
@@ -1870,6 +1995,10 @@ static func _rollback_overlay_may_dismiss(compensating_save_ok: bool,
 
 
 func _show_realm_recovery(overlay: CanvasLayer, message: String) -> void:
+	# Every recovery prompt preserves the last autosave, including begin/rollback
+	# admission failures that have not installed a detailed recovery snapshot.
+	if _realm_transition_recovery.is_empty():
+		_realm_transition_recovery = {"reason": "recovery_overlay"}
 	LOADING_OVERLAY.set_message(overlay, message + " Exit and restart to recover the last autosave.")
 	if not is_instance_valid(overlay) or overlay.has_node("RecoveryExit"):
 		return
@@ -1883,9 +2012,8 @@ func _show_realm_recovery(overlay: CanvasLayer, message: String) -> void:
 	button.offset_bottom = 118
 	button.focus_mode = Control.FOCUS_ALL
 	button.pressed.connect(func():
-		# get_tree().quit() sends no WM_CLOSE_REQUEST; leave the Steam lobby here.
-		STEAM_LOBBY.leave_for_quit(self)
-		get_tree().quit())
+		var reason: String = await request_process_exit()
+		if not reason.is_empty(): LOADING_OVERLAY.set_message(overlay, reason))
 	overlay.add_child(button)
 	button.grab_focus()
 
@@ -2503,6 +2631,10 @@ func can_craft(id: String) -> bool:
 ## `inventory.remove` is itself all-or-nothing per ingredient -- see its own
 ## comment on why a craft must never eat half its cost and then fail.
 func craft(id: String) -> bool:
+	# F34 must never fall through the retired local craft debit. The actual
+	# Workbench producer uses the admitted character journal and stage_craft.
+	if id == "forward_camp_kit": return false
+	if session != null and session.has_method("_owner_training_mutation_blocked") and session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not can_craft(id):
 		return false
 	for requirement in recipe_cost_for(id):
@@ -2941,3 +3073,229 @@ func _seed_demo() -> void:
 	var second: RefCounted = party.at(1)
 	if second != null:
 		second.take_damage(second.max_hp * 0.6)
+
+
+## The owning live BuildPlacer supplies the canonical current-node/UID/plot
+## reader. This composition never mints, charges or publishes a placement;
+## the missing durable paid placement transaction still blocks activation.
+func altar_placement_is_authorized(record: Dictionary, building: Node3D) -> bool:
+	if not is_instance_valid(building) or not building.is_inside_tree() \
+		or building.is_queued_for_deletion() or not is_inside_tree(): return false
+	var uid: Variant = record.get("uid")
+	if not uid is String or uid.is_empty() or record.get("id") != "altar" \
+		or record.get("realm", "meadows") != "meadows" or record.get("removed", false) != false: return false
+	var scene := get_tree().current_scene
+	if scene == null or not scene.is_ancestor_of(building): return false
+	var key: String = "altar:meadows:" + uid
+	var matched := false
+	for placer: Node in get_tree().get_nodes_in_group("build_placer"):
+		if not is_instance_valid(placer) or not placer.is_inside_tree() \
+			or not scene.is_ancestor_of(placer): continue
+		var script: Script = placer.get_script()
+		if script == null or script.resource_path != "res://scripts/build/build_placer.gd": continue
+		if not placer.has_method("resolve_altar_station"): return false
+		var resolved: Variant = placer.call("resolve_altar_station", self, key, building)
+		if not resolved is Dictionary or resolved.get("ok") != true: continue
+		if matched or resolved.get("key") != key or resolved.get("building") != building \
+			or resolved.get("record") != record: return false
+		matched = true
+	return matched
+
+
+signal portal_action_result(result: Dictionary)
+
+func request_portal_action(payload: Dictionary) -> Dictionary:
+	return session.call("request_portal_action", payload) if session != null else {"ok": false, "reason": "Travel is not ready yet."}
+
+func portal_view(arch_id: String) -> Dictionary:
+	return session.call("portal_view", arch_id) if session != null else {"ready": false}
+
+func portal_character_state() -> Dictionary:
+	return session.call("portal_character_state") if session != null else {}
+
+func home_key_refusal() -> String:
+	return str(session.call("home_key_refusal")) if session != null else "The Home Key is not ready yet."
+
+func use_home_key() -> bool:
+	if local == null or local.inventory.count("home_key") != 1 or session == null: return false
+	var key := get_node_or_null(^"HomeKey")
+	if key == null:
+		key = preload("res://scripts/world/home_key.gd").new()
+		key.name = "HomeKey"
+		add_child(key)
+	return key.call("use") == true
+
+## Appended to Game. Only the mounted opening director may call these local
+## producer doors. They are not RPCs and do not accept an imported roster.
+func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
+	if session == null or not is_host() or save_system == null or source == null or instance == null: return false
+	if not bool(session.call("portal_runtime_ready")) and session.call("config").get("redesign_ending_runtime_enabled", false) != true: return false
+	var scene := get_tree().current_scene
+	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
+	var director: Node = source.get("_encounter")
+	if director == null or director.call("ally_instance") != instance or current_realm != "meadows": return false
+	var uid: Variant = instance.get("uid")
+	if not uid is String or uid.is_empty() or local.character_id.is_empty() or local.character_id.contains(":") or uid.contains(":"): return false
+	var prefix := "starter_choice:%s:" % local.character_id
+	var receipt: String = prefix + uid
+	for prior: String in local.redesign_character.transaction_receipts:
+		if prior.begins_with(prefix): return prior == receipt and local.flags.call("has", "opening:starter_granted") == true
+	if party.size() != 0 or session.call("_owner_training_mutation_blocked", local) == true: return false
+	if not bool(save_system.call("finish_fallback")) or save_system.call("fallback_busy") == true: return false
+	# Flush callbacks cannot turn this into another character's adoption.
+	if director.call("ally_instance") != instance or party.size() != 0 or local.character_id != prefix.trim_prefix("starter_choice:").trim_suffix(":"): return false
+	var before_personal: Dictionary = local.redesign_character.duplicate(true)
+	var before_flags: Dictionary = local.flags.call("save_data")
+	var before_revision := int(party.revision)
+	var before_nickname: String = str(instance.get("nickname"))
+	instance.set("nickname", nickname)
+	if not party.add(instance):
+		instance.set("nickname", before_nickname)
+		return false
+	local.redesign_character.transaction_receipts.append(receipt)
+	local.flags.call("set_flag", "opening:starter_granted", true)
+	if not bool(save_system.call("save_character_prepared", self, local.character_id)):
+		party.remove_at(0)
+		party.revision = before_revision
+		instance.set("nickname", before_nickname)
+		local.redesign_character = before_personal
+		local.flags.call("load_data", before_flags)
+		return false
+	return true
+
+
+func original_starter_uid() -> String:
+	var prefix := "starter_choice:%s:" % local.character_id
+	var found := ""
+	for receipt: String in local.redesign_character.transaction_receipts:
+		if receipt.begins_with(prefix):
+			var uid := receipt.trim_prefix(prefix)
+			if uid.is_empty() or uid.contains(":") or (not found.is_empty() and found != uid): return ""
+			found = uid
+	return found
+
+
+var _regional_ack_intents: Dictionary = {}
+
+## Read the owner's saved decisions; a shared finale flag alone grants nothing.
+func regional_ending_context() -> Dictionary:
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	if session == null or local == null or world == null or party == null \
+		or not ending.valid_party(party) or original_starter_uid().is_empty(): return {}
+	var flags: Dictionary = local.flags.call("save_data")
+	var outcome := ""
+	var storm_answer := ""
+	var originals: Array[String] = []
+	var answers: Array[String] = []
+	for flag: String in flags.get("flags", []):
+		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
+		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	if originals.size() > 1: return {}
+	# Legacy data has no original marker. Only a single actual saved answer is
+	# unambiguous; a roster or arbitrary ordering cannot select an old outcome.
+	if originals.is_empty() and answers.size() != 1: return {}
+	var selected := answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	if not answers.has(selected): return {}
+	for flag: String in [selected]:
+		if not flag.begins_with("stormwood:legendary_answer:"): continue
+		var answer := flag.get_slice(":", flag.get_slice_count(":") - 1)
+		if answer not in ["accepted", "refused"]: return {}
+		outcome = flag
+		storm_answer = answer
+	if outcome.is_empty() or not local.flags.call("has", "stormwood:legendary_ceremony_settled") \
+		or not world.flags.call("has", ending.WORLD_FLAG): return {}
+	var choices: Array[String] = []
+	for biome: String in ["meadows", "water", "cloudreach"]:
+		var prefix := "" if biome == "meadows" else biome + ":"
+		var joined: bool = local.flags.call("has", prefix + "legendary_joined")
+		var refused: bool = local.flags.call("has", prefix + "legendary_refused")
+		if joined or refused: choices.append(biome + (":accepted" if joined else ":refused"))
+	choices.append("stormwood:" + storm_answer)
+	var home := ""
+	var home_seen := false
+	var credits_seen := false
+	for receipt: String in local.redesign_character.transaction_receipts:
+		if receipt.begins_with("craft:home_return_" + world.reward_delivery_namespace + "_") and receipt.ends_with(":" + local.character_id): home = receipt
+		if receipt == "craft:regional_ending_homecoming_seen:" + local.character_id: home_seen = true
+		if receipt == "craft:regional_ending_regional_credits_seen:" + local.character_id: credits_seen = true
+	var player := find_player() as CharacterBody3D
+	var at_farm := false
+	var farm_source: Node = null
+	var scene := get_tree().current_scene
+	if player != null and current_realm == "meadows" and scene != null:
+		for source: Node in scene.find_children("*", "Node", true, false):
+			if source.get_script() == null or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": continue
+			var prompt: Node3D = source.get("_grandpa_prompt")
+			if is_instance_valid(prompt) and player.global_position.distance_to(prompt.global_position) <= float(prompt.get("radius")):
+				at_farm = true
+				farm_source = source
+	var safety: Dictionary = session.call("_host_portal_context", session.call("local_peer_id"))
+	if not is_host():
+		var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		if lifecycle != null:
+			safety = lifecycle.call("local_sample")
+			safety.combat = session.call("_altar_peer_in_combat", session.call("local_peer_id"))
+	var safe := not safety.is_empty()
+	for hazard: String in ["combat", "swimming", "flying", "downed"]:
+		if safety.get(hazard) != false: safe = false
+	var owner := preload("res://scripts/ui/input_owner.gd").current(get_tree())
+	var ending_owner := false
+	if farm_source != null and owner != null:
+		var panel: Node = farm_source.get("_dialogue")
+		var credits: Node = farm_source.get("_regional_credits")
+		ending_owner = (owner == panel or owner == farm_source) \
+			and str(farm_source.get("_f18_opening_conversation_id")).begins_with("regional_homecoming_")
+		if owner == credits and credits != null:
+			ending_owner = credits.get("_expected_character_id") == local.character_id and credits.get("_expected_world") == world
+	if safety.get("cutscene") == true and not ending_owner: safe = false
+	if safety.get("dialogue") == true and not ending_owner: safe = false
+	return {"version": 1, "world_instance_id": world.reward_delivery_namespace,
+		"session_epoch": session.call("_altar_current_epoch"), "character_id": local.character_id,
+		"outcome_id": outcome, "accepted_outcome": true, "home_return_receipt": home,
+		"party_revision": party.get("revision"), "party_signature": ending.party_signature(party),
+		"starter_uid": original_starter_uid(), "chapter_choices": choices,
+		"homecoming_seen": home_seen, "regional_credits_seen": credits_seen,
+		"realm": current_realm, "at_farm": at_farm, "safe": safe, "durable_home_return": not home.is_empty()}
+
+
+func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	if session == null or ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) != intent: return {"status": "refused"}
+	var view: Dictionary = session.call("homestead_personal_view")
+	if view.is_empty(): return {"status": "refused"}
+	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
+	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	return regional_ending_ack_result(intent.transaction_id)
+
+
+func regional_ending_ack_result(transaction_id: String) -> Dictionary:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() or session == null: return {"status": "refused"}
+	var row: Dictionary = session.call("_owner_training_row")
+	var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)
+	if row.get("action") != "regional_ack" or row.get("intent") != intent \
+		or decision.get("ok") != true or decision.get("saved") != true: return {"status": "pending"}
+	var result := intent.duplicate(true)
+	result.merge({"status": "committed", "durable": true}, true)
+	return result
+
+
+func grant_home_key_from_opening(source: Node) -> bool:
+	if session == null or not is_host() or not bool(session.call("portal_runtime_ready")) or source == null: return false
+	var scene := get_tree().current_scene
+	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
+	if source.get("_f18_opening_conversation_id") != "grandpa_first_catch" or current_realm != "meadows": return false
+	var panel: Node = source.get("_dialogue")
+	var spoken: Variant = source.get("_f18_pending_home_key")
+	var retained: Variant = spoken is Dictionary and spoken.size() == 3 and spoken.get("character_id") == local.character_id and spoken.get("world_instance_id") == world.reward_delivery_namespace and spoken.get("session_epoch") == session.call("_altar_current_epoch")
+	if spoken is Dictionary and not spoken.is_empty() and not retained: return false
+	if panel == null or (panel.call("is_open") != true and not retained) or original_starter_uid().is_empty(): return false
+	if local.flags.call("has", "home_key_given") == true: return true
+	# A finite gift already owed by a former world follows its character even
+	# with a full bag; another Grandpa interaction cannot produce another key.
+	for row: Variant in local.satchel_escrow.values():
+		if row is Dictionary and row.get("kind") == "reward_delivery" and row.get("source") == "home_key:grant:" + local.character_id:
+			return row.get("status") in ["grant_due", "settled"]
+	var ledger := session.get_node_or_null("LedgerRpc")
+	if ledger == null or save_system == null or not bool(save_system.call("finish_fallback")): return false
+	return bool(ledger.call("journal_opening_home_key_prepared", session.call("local_peer_id"), source).get("durable", false))

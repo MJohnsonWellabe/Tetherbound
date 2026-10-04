@@ -1,0 +1,22 @@
+Root/stone eruption source candidate, extending f978de2419; library OFF.
+Use installed unchanged assets/environment/terrain/stylised/rock_scree_Color.png
+on physically lit warm mineral faces. No asset acquisition, pixel generation,
+new source texture, import execution, light, particle slot or voice is introduced.
+The existing cone bodies/core and their emergence marker/timing stay intact.
+Existing debris slots use the local authored stone mesh rather than round orbs;
+they tumble and settle through existing presentation fields. Vertex topology
+differs, but actual MultiMesh instance/particle count and lease remain unchanged.
+The trail is narrower/quieter and the contact core starts compact before growing
+to the same maximum over the same existing impact lifetime.
+
+An opt-in root-only shader reuses the installed triplanar stone material math,
+honoring opacity so core/chips follow the existing fade. It does not change the
+earlier stone shader or frozen R17 evidence/candidate. No vertex displacement,
+screen/depth sampling, emission or gameplay geometry/query is added.
+All color/texture blend/roughness/scale and stage/tumble/settle values are data.
+
+No native/parser, new-family motion, final craft, audience, real combat/player,
+four-creature Medium/Compatibility performance or device PASS is claimed.
+The existing cone silhouette remains a possible full-bar failure; installed
+texture and a repaired single defect cannot satisfy the full craft acceptance.
+All F25 rows remain OPEN pending independent code-blind actual-path evidence.

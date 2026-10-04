@@ -97,7 +97,8 @@ func test_eight_slots_have_exactly_four_live_and_four_sealed() -> void:
 		assert_false(DATA._relations(domain, value).is_empty())
 	for id: String in BIOMES.ids().slice(4): assert_eq(BIOMES.display_name(id), "Sealed")
 	assert_eq(BIOMES.runtime_ids(), ["meadows", "water", "cloudreach", "stormwood"])
-	assert_false(BIOMES.legacy_physical_crossings())
+	var legacy_flag: Variant = DATA.json(BIOMES.PATH).get("legacy_physical_crossings")
+	assert_true(legacy_flag is bool and legacy_flag == false, "authored portal contract disables legacy physical crossings")
 
 func test_durable_schema_rejects_unknown_fields_ids_and_unowned_uid() -> void:
 	var state := STATE.defaults("character")

@@ -17,6 +17,12 @@ void fragment() {
 	// appear flat. Material coverage follows the actual triangle slope.
 	vec3 face = normalize(cross(dFdx(world_at), dFdy(world_at)));
 	float up = abs(face.y);
+	// Compute derivatives before the per-fragment turf/rock branch. A quad
+	// crossing that boundary must still have a defined stone pixel footprint.
+	float rock_footprint = 0.0;
+	if (cloudreach_rock_courses.x > 0.0) {
+		rock_footprint = max(length(dFdx(world_at)), length(dFdy(world_at)));
+	}
 	if (up >= grass_slope_cos + edge_breakup) {
 		// Most of the realm is gentle turf: avoid six unused rock samples.
 		ALBEDO = cloudreach_turf(world_at);
@@ -26,7 +32,7 @@ void fragment() {
 		float turf = smoothstep(rock_slope_cos, grass_slope_cos, up + breakup);
 		vec3 rock_albedo;
 		vec3 rock_normal_world;
-		cloudreach_rock(world_at, n, rock_albedo, rock_normal_world);
+		cloudreach_rock(world_at, n, rock_footprint, rock_albedo, rock_normal_world);
 		ALBEDO = mix(rock_albedo, cloudreach_turf(world_at), turf);
 		NORMAL = normalize((VIEW_MATRIX * vec4(normalize(mix(rock_normal_world, n, turf)), 0.0)).xyz);
 		ROUGHNESS = mix(0.96, 0.98, turf);

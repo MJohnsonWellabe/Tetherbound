@@ -1,0 +1,53 @@
+{
+  "head": "b672a1ed8c522f6ae23b4b4a4b1df173d611fe7d",
+  "members": {
+    "preflight.json.gz": {
+      "original_path": "preflight.json",
+      "raw_bytes": 1352,
+      "raw_sha256": "490d7fd2d65446e9e60c275b7ac3a7e52af2f19798b315fe5c32065e830314ef",
+      "compressed_sha256": "5682d7c9a035c35fe5772b0adc4abb119098b9d026108656d742060419bac18b"
+    },
+    "import-receipt.json.gz": {
+      "original_path": "import/receipt.json",
+      "raw_bytes": 2427214,
+      "raw_sha256": "1c0f3e898ee955c471107477035a2e97827785f1317e0775ae34d7d2724ba89e",
+      "compressed_sha256": "7cb9c75fb6108494df62b01442ced06cc860dc1daaf8aa97b40499b5864145bf"
+    },
+    "import-warm-import.log.gz": {
+      "original_path": "import/warm-import.log",
+      "raw_bytes": 730179,
+      "raw_sha256": "31ddaa36d424eaadc51c0ef55974ddee487b008d3247aa4028df7afeb17d505c",
+      "compressed_sha256": "c785c88dc8995ab1423c618eb693565cc18a542b62c79638262b56365e01fbf7"
+    },
+    "import-verify-import.log.gz": {
+      "original_path": "import/verify-import.log",
+      "raw_bytes": 4922,
+      "raw_sha256": "3bee0912a2c5cd1becc58d49aae0991510b1a68f6e443854bff9cb0a5d455fca",
+      "compressed_sha256": "b4662ebfbff66a4a0673a44d2679f92d8243ec91f1de7c53d82bcf33b811b715"
+    },
+    "import-diagnosis-receipt.json.gz": {
+      "original_path": "import-diagnosis/receipt.json",
+      "raw_bytes": 2490,
+      "raw_sha256": "394bbe6ae184ef9fd92fc2c2b875439c11484117cf1d6031d4bc44c2b8dd0e2f",
+      "compressed_sha256": "96d85ed51d462bc9cbf2f5031208afa219da53b510576d0746f33f9dae7b6ef8"
+    },
+    "import-diagnosis-world_state.log.gz": {
+      "original_path": "import-diagnosis/world_state.log",
+      "raw_bytes": 339,
+      "raw_sha256": "0f1881d59f0c01a710fe3c452b5b19eb3a11e3892151fece11f181e155224e35",
+      "compressed_sha256": "c7d7184616b518f4d3779b24704af89c93d2d5e23a0a820c8b44875ff7d70daa"
+    },
+    "import-diagnosis-redesign_state.log.gz": {
+      "original_path": "import-diagnosis/redesign_state.log",
+      "raw_bytes": 368,
+      "raw_sha256": "da9c0731ce0ce133ca02140d213f1e06c8c40ccde899472ce712704eaf9d62a7",
+      "compressed_sha256": "b47b5115d8272beaae8a698b329ad85593b1c0bec28f45ab143e70a45df83ff0"
+    },
+    "import-diagnosis-altar_service.log.gz": {
+      "original_path": "import-diagnosis/altar_service.log",
+      "raw_bytes": 358,
+      "raw_sha256": "c47e8c91b9d5c980d0032e44b37dd6e2b3c363b0f7bb0e7490448b36b9819e1c",
+      "compressed_sha256": "d9faa7d877ca0b8924817e800507d0e2e79dda9945f6f35e84b2a2f3d2a72395"
+    }
+  }
+}

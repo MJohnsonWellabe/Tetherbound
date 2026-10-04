@@ -1,0 +1,74 @@
+{
+  "source_commit": "8da29a0bfc30cc0afd6bf60f250c308afc4dbf62",
+  "runtime_source_files": {
+    "scripts/combat/combat_manager.gd": {
+      "before": "b41440e4dce55a540b92baefd21c9c1df52c3f326001889abc7c3eb50f0c4812",
+      "after": "aebc9180c141f4fd7a01be664fbbf5a2a7b5e305dc748ed50a62dc2cc695b7f2"
+    },
+    "scripts/combat/fight_camera.gd": {
+      "before": "e03e402a0a94760fb025a8a091daaa0ef265a9aa4d29caeeb6a92806f786755f",
+      "after": "b46b93b349f9df6a900ce347375fd643baaf576ca435e7b0940dbe69a53702ea"
+    },
+    "data/config/camera.json": {
+      "before": "7c5bb9b173306c5d060e5dccb47c54ae9ce893ec5d4e1fa759e7ce934d138c4e",
+      "after": "843dd9a8da389dcbdf81e31682cd8686ca7e7b00dacedc459e49e297aaacf27b"
+    },
+    "tests/test_fight_camera.gd": {
+      "before": "f797f9ec19aa98600d646b5b66076da9d23c2d007e1b187ebb0e1d336e62839d",
+      "after": "4de1c1ca56efdbc6d45329821c5dc010a6d45e4159984680675fd1001212852a"
+    },
+    "scripts/ui/combat_hud.gd": {
+      "before": "0674f1d6e0fb5dd7300f4a8290839a607d87d231f6a3d1b5d5745b0f40ab7af4",
+      "after": "c43f4ca780b17818c9d2f1c8f2da9c17d4f54f414739bae25bf68e94cf757ede"
+    },
+    "scripts/combat/impact_flash.gd": {
+      "before": "a37e11fb7cf6211bc25f9f29a819a7c97f115e8ba6da768c89a669fd02148a8a",
+      "after": "4d1c3558ca9940b1e15e9f33689b7609364775b7d60f656046fe22cff1edd401"
+    },
+    "data/config/combat.json": {
+      "before": "7cc7cc12f25ec73f584c48144d16f4c8644bc4efd8a25607b64655f00810a97b",
+      "after": "eb308771d96f62fea40dd62780998596490fc1c46bc0d0fc9bf031fae49fb00e"
+    }
+  },
+  "records": {
+    "camera-bindings.json": {
+      "raw_sha256": "64546155340f75c8b41efb84aecc3a952a984059453ab7c6f5fab12e92d5b717",
+      "gzip_sha256": "8d7341ca1ed2cd4ebfc62887b882b48d2c13fd4ab3fb05f8f99060f1ea6ff612",
+      "raw_bytes": 4547,
+      "gzip_bytes": 2216
+    },
+    "camera.patch": {
+      "raw_sha256": "5c26a24f2836d3e95f22d226cb10e5ebe7454ca46f46a80713340d2a0e2e6a4e",
+      "gzip_sha256": "7cc8de81546f97b04c8d62585f046d482ae66a098607c2fece9949e6d8409c55",
+      "raw_bytes": 16507,
+      "gzip_bytes": 5412
+    },
+    "craft.patch": {
+      "raw_sha256": "dde55bdbf3397d84b3982bc19229cf7f9165dd6574c474625a0986e3dc14a3da",
+      "gzip_sha256": "f419396245af12a0425dab7cdec02d933c9c368c63d4be937d8354a502ab17b2",
+      "raw_bytes": 6686,
+      "gzip_bytes": 3022
+    },
+    "candidate.zip": {
+      "raw_sha256": "56bd84b7c9e8e0eeb70035dfb03c42dc62e2164a30b8f1d8f9f8e24db010d476",
+      "gzip_sha256": "acaa3db80fb4683d8125d7128874a0915cc19531277e8255e928e3a62f506321",
+      "raw_bytes": 160891,
+      "gzip_bytes": 160168
+    },
+    "independent-source-review.json": {
+      "raw_sha256": "f30fb72c63ee3ebe55a47dd02b0ab72f60fc16363c8ec1995d7fff81c176d46c",
+      "gzip_sha256": "8160cc6c8d7835fead86c5de7caf45d112b477666f57c09483129c669a802b14",
+      "raw_bytes": 11248,
+      "gzip_bytes": 3330
+    }
+  },
+  "verdict": "Independent SOURCEPASS only; actual new parser/native/visual proof unrun. F21 criteria remain OPEN.",
+  "scope": "Existing F21 pilot/camera source branch; this checkpoint adds whole model envelopes/current clear-view retention plus C2 portrait/foreground and C4 positive-softness.",
+  "limitations": [
+    "Whole current rest Mesh AABBs and finite depth samples are proxies, not exact animated visible pixels.",
+    "Prior numeric9-pair PASS is bound to8cff source and cannot certify this R5 cut.",
+    "Prior blind6/9 readability FAIL and all9 full-craft FAIL remain unchanged.",
+    "Catch positive-softness collateral needs actual pixels.",
+    "No actor/utility/loadout activation or acceptance credit."
+  ]
+}

@@ -1,0 +1,145 @@
+diff --git a/tools/_probe_scatter_tree_prompt_height.gd b/tools/_probe_scatter_tree_prompt_height.gd
+index 803e942df9..ddb71c030f 100644
+--- a/tools/_probe_scatter_tree_prompt_height.gd
++++ b/tools/_probe_scatter_tree_prompt_height.gd
+@@ -18,6 +18,7 @@ var _player: CharacterBody3D
+ var _arbiter: Node
+ var _prompt: Node3D
+ var _activated := false
++var _geometry_faces := PackedVector3Array()
+ 
+ class CameraBasis extends Node3D:
+ 	func planar_basis() -> Basis: return Basis.IDENTITY
+@@ -96,6 +97,8 @@ func _run() -> void:
+ 	for frame in 30: await physics_frame
+ 	# At most nine cached observations; no additional physics query or frame.
+ 	var approach_trace := [_approach_sample("settled", 0, Vector3.ZERO)]
++	# One full-precision geometry witness before the unchanged original walk.
++	print("TREE_GEOMETRY ", JSON.stringify(_fixture_geometry(world, trunk, placement, layer, order), "", true, true))
+ 	var saw_wall := false
+ 	var terrain := world.get_node("CanonicalLocalTerrain") as StaticBody3D
+ 	var bank_left := 0
+@@ -233,6 +236,123 @@ func _build_floor(world: Node3D, field: RefCounted) -> void:
+ 	collision.shape = shape
+ 	body.add_child(collision)
+ 	world.add_child(body)
++	_geometry_faces = faces.duplicate() # Freeze the actual construction array; never resample.
++
++
++## Metadata only. Incomplete capture cannot change movement or native success.
++func _fixture_geometry(world: Node3D, trunk: StaticBody3D, placement: Dictionary, layer: String, order: int) -> Dictionary:
++	var record := {"acceptance": false, "complete": false, "mesh_frozen_at": "fixture_construction",
++		"registered_state_at": "settled_before_original_walk", "native_queries_added": 0,
++		"expected_vertices": 225, "expected_triangles": 392, "target": _geometry_vector(TARGET),
++		"kept_record": {"layer": layer, "order": order, "model": str(placement.model),
++			"position": _geometry_vector(placement.position), "yaw": float(placement.yaw), "scale": float(placement.scale),
++			"normal": _geometry_vector(placement.normal) if placement.has("normal") else null},
++		"physics_frame": Engine.get_physics_frames(),
++		"direct_space_state_class": world.get_world_3d().direct_space_state.get_class()}
++	if _geometry_faces.size() != 1176:
++		record["incomplete"] = "unexpected construction face count"
++		return record
++	var ids := {}
++	var vertices: Array = []
++	var indices: Array = []
++	for vertex: Vector3 in _geometry_faces:
++		if not vertex.is_finite():
++			record["incomplete"] = "nonfinite construction vertex"
++			return record
++		if not ids.has(vertex):
++			if vertices.size() == 225:
++				record["incomplete"] = "construction vertex bound exceeded"
++				return record
++			ids[vertex] = vertices.size()
++			vertices.append(_geometry_vector(vertex))
++		indices.append(int(ids[vertex]))
++	if vertices.size() != 225:
++		record["incomplete"] = "unexpected distinct construction vertex count"
++		return record
++	var triangles: Array = []
++	for index in 392:
++		triangles.append([indices[index * 3], indices[index * 3 + 1], indices[index * 3 + 2]])
++	var terrain := world.get_node("CanonicalLocalTerrain") as StaticBody3D
++	var terrain_geometry := _registered_geometry(terrain, terrain.get_child(0) as CollisionShape3D, PhysicsServer3D.SHAPE_CONCAVE_POLYGON)
++	var trunk_geometry := _registered_geometry(trunk, trunk.get_child(0) as CollisionShape3D, PhysicsServer3D.SHAPE_CYLINDER)
++	var player_geometry := _registered_geometry(_player, _player.get_node("Collision") as CollisionShape3D, PhysicsServer3D.SHAPE_CAPSULE)
++	record["mesh"] = {"vertices": vertices, "triangle_indices": triangles, "terrain": terrain_geometry,
++		"global_transform": terrain_geometry.get("shape_world_pose", {})}
++	record["trunk"] = trunk_geometry
++	record["settled_start"] = {"player": player_geometry, "position": _geometry_vector(_player.global_position),
++		"velocity": _geometry_vector(_player.velocity), "grounded": _player.is_on_floor(), "wall": _player.is_on_wall(),
++		"floor_max_angle": _player.floor_max_angle, "safe_margin": _player.safe_margin,
++		"floor_snap_length": _player.floor_snap_length, "unsticks": int(_player.get("_unstick_count"))}
++	record["prompt"] = {"path": str(_prompt.get_path()), "global_transform": _geometry_transform(_prompt.global_transform),
++		"radius": _prompt.radius} # Read height/radius only; no new offer or LOS query.
++	record["complete"] = terrain_geometry.get("complete", false) and trunk_geometry.get("complete", false) \
++		and player_geometry.get("complete", false) and record.prompt.global_transform.finite \
++		and _player.global_position.is_finite() and _player.velocity.is_finite()
++	return record
++
++
++func _registered_geometry(body: PhysicsBody3D, collision: CollisionShape3D, expected_type: int) -> Dictionary:
++	var record := {"complete": false, "server_disabled_state_observed": false,
++		"disabled_state_source": "CollisionShape3D.disabled; no public server getter"}
++	if body == null or collision == null or collision.shape == null:
++		return record
++	var rid := body.get_rid()
++	if not rid.is_valid() or PhysicsServer3D.body_get_shape_count(rid) != 1:
++		return record
++	var shape := PhysicsServer3D.body_get_shape(rid, 0)
++	if shape != collision.shape.get_rid() or PhysicsServer3D.shape_get_type(shape) != expected_type:
++		return record
++	var raw: Variant = PhysicsServer3D.shape_get_data(shape)
++	if not raw is Dictionary:
++		return record
++	var data: Dictionary = raw
++	if expected_type == PhysicsServer3D.SHAPE_CONCAVE_POLYGON:
++		if not data.get("faces") is PackedVector3Array or data.faces.size() != 1176:
++			return record
++		record["shape_data"] = {"face_vertices": 1176, "backface_collision": data.get("backface_collision"),
++			"faces_match_construction": data.faces == _geometry_faces}
++		if data.faces != _geometry_faces:
++			return record
++	else:
++		if not data.has("height") or not data.has("radius"):
++			return record
++		var height := float(data.height)
++		var radius := float(data.radius)
++		if not is_finite(height) or not is_finite(radius) or height <= 0.0 or radius <= 0.0:
++			return record
++		if expected_type == PhysicsServer3D.SHAPE_CAPSULE and height < 2.0 * radius:
++			return record
++		record["shape_data"] = {"height": height, "radius": radius,
++			"resource_height": float(collision.shape.get("height")), "resource_radius": float(collision.shape.get("radius"))}
++		if height != record.shape_data.resource_height or radius != record.shape_data.resource_radius:
++			return record
++	var body_pose: Transform3D = PhysicsServer3D.body_get_state(rid, PhysicsServer3D.BODY_STATE_TRANSFORM)
++	var local_pose := PhysicsServer3D.body_get_shape_transform(rid, 0)
++	record.merge({"path": str(body.get_path()), "body_rid": str(rid), "shape_rid": str(shape), "shape_index": 0,
++		"shape_type": expected_type, "shape_node_disabled": collision.disabled,
++		"body_pose": _geometry_transform(body_pose), "shape_local_pose": _geometry_transform(local_pose),
++		"shape_world_pose": _geometry_transform(body_pose * local_pose), "shape_node_world_pose": _geometry_transform(collision.global_transform),
++		"collision_layer": PhysicsServer3D.body_get_collision_layer(rid), "collision_mask": PhysicsServer3D.body_get_collision_mask(rid),
++		"space_rid": str(PhysicsServer3D.body_get_space(rid))})
++	record["complete"] = record.body_pose.finite and record.shape_local_pose.finite and record.shape_world_pose.finite \
++		and body_pose == body.global_transform and local_pose == collision.transform and not collision.disabled \
++		and PhysicsServer3D.body_get_space(rid) == body.get_world_3d().space \
++		and PhysicsServer3D.body_get_shape_count(rid) == 1 and PhysicsServer3D.body_get_shape(rid, 0) == shape
++	return record
++
++
++func _geometry_vector(value: Vector3) -> Array:
++	if not value.is_finite():
++		return []
++	return [value.x, value.y, value.z]
++
++
++func _geometry_transform(value: Transform3D) -> Dictionary:
++	if not value.origin.is_finite() or not value.basis.x.is_finite() or not value.basis.y.is_finite() or not value.basis.z.is_finite():
++		return {"finite": false}
++	return {"finite": true, "origin": _geometry_vector(value.origin), "basis_x": _geometry_vector(value.basis.x),
++		"basis_y": _geometry_vector(value.basis.y), "basis_z": _geometry_vector(value.basis.z),
++		"basis_scale": [value.basis.x.length(), value.basis.y.length(), value.basis.z.length()], "basis_determinant": value.basis.determinant()}
+ 
+ func _axis(axis: int, value: float) -> void:
+ 	var event := InputEventJoypadMotion.new()

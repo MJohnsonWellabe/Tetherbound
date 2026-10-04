@@ -1,0 +1,558 @@
+{
+  "verdict": "SOURCEPASS",
+  "scope": "source readiness only; F17#4 OPEN",
+  "parent": "f65692df960435918da196301aebac72ac827cfc",
+  "source_sha256": "be502a6bb89402651965f4d7d5ab750b8de8ee7fe30934baa2959a68629fa74f",
+  "patch_sha256": "1cae91d77a4a416627b446a62d4e26d2796eab02298260a80790406d5ee690fb",
+  "freeze_sha256": "14de25be0088bd37bc964e1acb53640d7988cad2fb29baf0c17f262eb2a51b0d",
+  "review_script_sha256": "33fd02ff0ecfa047d42c2d7cc53790d091739f2c2a6d1d809782bc69bb897b10",
+  "engine_executed": false,
+  "tracked_files_written": false,
+  "checks": [
+    {
+      "check": "pinned HEAD",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned branch",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "tracked diff scope",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "no staged changes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "freeze parent and state",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact frozen manifest set and every hash",
+      "passed": true,
+      "details": {
+        "files": 27
+      }
+    },
+    {
+      "check": "exact proposal hash",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact patch hash",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "live source equals frozen proposal",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "patch independently regenerated",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin data/config/village.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence data/config/village.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source data/config/village.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin data/config/terrain_playground.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence data/config/terrain_playground.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source data/config/terrain_playground.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin scripts/player/player_controller.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence scripts/player/player_controller.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source scripts/player/player_controller.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin scripts/world/grandpa_house.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence scripts/world/grandpa_house.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source scripts/world/grandpa_house.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin autoload/game_state.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence autoload/game_state.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source autoload/game_state.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin scripts/net/encounter_host.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence scripts/net/encounter_host.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source scripts/net/encounter_host.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin scripts/combat/utility_effects.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence scripts/combat/utility_effects.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source scripts/combat/utility_effects.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin data/config/combat.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence data/config/combat.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source data/config/combat.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin data/config/building_prefabs.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence data/config/building_prefabs.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source data/config/building_prefabs.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin data/config/movement.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence data/config/movement.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source data/config/movement.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original pin scenes/player/player.tscn",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original Git equivalence scenes/player/player.tscn",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "protected live source scenes/player/player.tscn",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact protected archive path set",
+      "passed": true,
+      "details": {
+        "count": 279
+      }
+    },
+    {
+      "check": "all protected archive hashes",
+      "passed": true,
+      "details": []
+    },
+    {
+      "check": "prior failure retained",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "prior parser is parent only",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "official included Godot pin core/input/input.cpp",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "official included Godot pin main/main.cpp",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "official included Godot pin scene/main/scene_tree.cpp",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "only intended outer functions changed",
+      "passed": true,
+      "details": [
+        "_native_tick",
+        "_native_tick_impl",
+        "_production_observe",
+        "_production_record"
+      ]
+    },
+    {
+      "check": "unchanged physical/default contract _trainer_contract",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _registered_body_contract",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _motion",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _observed_live_clear",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _production_contract",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _spend",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _start_clear_impl",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _floor_contacts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _paired_floor_skin",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _supported_step_from",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _prepare_departure",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _choose_route",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract walk_to",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract step",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract push_once",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract reset",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged physical/default contract _stop_geometry",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged cap FRAME_QUERY_US",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged cap MAX_QUERIES_FRAME",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged cap MAX_QUERIES_LIFETIME",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged cap MAX_REQUESTS",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged cap MAX_PLANS",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged cap CONTACTS",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "gather/team/retry/stall allowances retained",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "real motion event seam retained",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "successful own callback accounting includes pre and snapshot",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "bounded record queue and terminal suppression",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "deferred sink has no body/native reads",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "no serialization in observed callback/snapshot",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "diagnostics explicitly no acceptance",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "causal claim distinguishes logging hypothesis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "input queues and explicit flush drains",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "official physics priority ordering",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "deferred physics tick location",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "final successful cap guard covers last measured metadata work",
+      "passed": true,
+      "details": "Normal sampled metadata now precedes final success guard; later writes occur only within refused cleanup and explicitly set checked_start=false."
+    },
+    {
+      "check": "pre callback clears live and controller availability",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "controller availability set only after refusal early return",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "terminal marks unavailable prior-controller data",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "live native result reset and independently phased",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "failed_checks": []
+}

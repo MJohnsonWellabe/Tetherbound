@@ -45,17 +45,14 @@ const NO_SINGLE_PAD_BUTTON := {
 
 
 func test_the_throw_verb_names_the_pad_button_that_actually_throws() -> void:
-	# `combat_manager.gd::_throw_pressed()` and `throw_aim.gd` both read
-	# `interact` beside `combat_throw`'s keyboard F, and
-	# `smoke_controller_catching.gd` opens the aim with a physical JOY_BUTTON_X
-	# and nothing else. X is the answer a pad player needs.
-	assert_eq(INPUT_GLYPH.pad_button_name_for_verb("combat_throw"), "X")
+	# The combat manager opens aim on LT; only aim reads the separate X release.
+	assert_eq(INPUT_GLYPH.pad_button_name_for_verb("combat_throw"), "LT")
+	assert_eq(INPUT_GLYPH.pad_button_name_for_verb("combat_orb_release"), "X")
 
 
 func test_the_flee_verb_names_the_pad_button_that_actually_flees() -> void:
-	# `combat_manager.gd::_flee_pressed()` reads `creature_recall` beside
-	# `combat_run`'s Escape. D68: "flee is `creature_recall` on RB".
-	assert_eq(INPUT_GLYPH.pad_button_name_for_verb("combat_run"), "RB")
+	# Combat owns RT flee; exploration keeps its independent RB recall.
+	assert_eq(INPUT_GLYPH.pad_button_name_for_verb("combat_run"), "RT")
 
 
 func test_the_tool_swing_verb_names_interact() -> void:
@@ -64,13 +61,13 @@ func test_the_tool_swing_verb_names_interact() -> void:
 
 
 func test_the_literal_resolver_still_reports_no_pad_binding() -> void:
-	# The Settings tab's gamepad column reads the literal answer, because that
-	# is the cell the player edits. An empty cell for `combat_throw` is correct
-	# rather than broken (`data/config/menu.json` says so in as many words), and
-	# the alias must never leak into it.
-	for id in ["combat_throw", "combat_run", "use_tool"]:
+	# Settings reads the actual binding: unbound tool aliases stay empty, and
+	# the two new trigger actions report the real trigger rather than a key.
+	for id in ["use_tool"]:
 		assert_eq(INPUT_GLYPH.pad_button_name_for_action(str(id)), "",
 			"%s should still report no joypad event of its own" % id)
+	assert_eq(INPUT_GLYPH.pad_button_name_for_action("combat_throw"), "LT")
+	assert_eq(INPUT_GLYPH.pad_button_name_for_action("combat_run"), "RT")
 
 
 func test_an_action_with_its_own_pad_button_is_never_aliased() -> void:

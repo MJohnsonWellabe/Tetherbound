@@ -42,6 +42,17 @@ const GLANCE_FONT_PX := UITokens.FONT_BUTTON
 const CATCH := preload("res://scripts/combat/catch_math.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const SYSTEM_OVERLAY := preload("res://scripts/ui/combat_system_overlay.gd")
+var _system_overlay: Control
+
+## F42 narrow producer seam. Combat authority supplies the local, acknowledged
+## view; this HUD never reads a guest's untrusted resource or move proposal.
+func configure_new_system_view(reader: Callable) -> bool:
+	if not reader.is_valid(): return false
+	if not is_instance_valid(_system_overlay):
+		_system_overlay = SYSTEM_OVERLAY.new()
+		$Root.add_child(_system_overlay)
+	return _system_overlay.call("configure", reader) == true
 ## T3-COMBAT. Only for `combat.json`'s `effect_banner` block; this file resolves
 ## no damage and reads no other part of that config.
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
@@ -141,6 +152,10 @@ var _party_strip: Control = null
 var _strip_fader: Control = null
 ## Per-panel subject-fade level, 1.0 = opaque (see `_update_subject_fade`).
 var _subject_fade := {}
+# Actual authored identity art in the current Chip footprint; no placeholder
+# creature render, scene-model scale or per-frame texture reload.
+var _ally_portrait: TextureRect = null
+var _ally_portrait_species := ""
 ## OWNER-0902-HUD-TEAM-MENU: edge-detects the fight-just-ended frame for
 ## `_show_fight(false)`'s `hide_now()` call below -- `_process()` calls
 ## `_show_fight(false)` on EVERY frame nothing is fighting, not just the one
@@ -235,6 +250,9 @@ var _effect_clock: float = 0.0
 
 @onready var _orbs_panel: PanelContainer = $Root/OrbsPanel
 @onready var _orbs: Label = $Root/OrbsPanel/OrbsLabel
+var _ultimate_readout: RichTextLabel
+var _ultimate_meter: ProgressBar
+const COMBAT_INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 @onready var _grid_panel: PanelContainer = $Root/GridPanel
 
 @onready var _cell_quick: PanelContainer = $Root/GridPanel/Grid/CellQuick
@@ -289,6 +307,18 @@ func _ready() -> void:
 	_orbs_panel.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
+	_ultimate_readout = RichTextLabel.new()
+	_ultimate_readout.bbcode_enabled = true
+	_ultimate_readout.fit_content = true
+	_ultimate_readout.scroll_active = false
+	_ultimate_readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_ultimate_readout.add_theme_font_size_override("normal_font_size", 22)
+	$Root/AllyPanel/AllyVBox.add_child(_ultimate_readout)
+	_ultimate_meter = ProgressBar.new()
+	_ultimate_meter.custom_minimum_size.y = 8.0
+	_ultimate_meter.show_percentage = false
+	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
 
 	_party_strip = PARTY_STRIP.new()
 	_party_strip.set("progression_feedback_enabled", false)
@@ -531,6 +561,7 @@ func _process(delta: float) -> void:
 		# last round left them until the next creature is out; nothing redraws.
 		return
 	if not fighting:
+		if is_instance_valid(_system_overlay): _system_overlay.hide()
 		_show_fight(false, _was_fighting)
 		_was_fighting = false
 		return
@@ -540,6 +571,11 @@ func _process(delta: float) -> void:
 	_draw_enemy()
 	_draw_ally()
 	_draw_grid()
+	if is_instance_valid(_system_overlay):
+		_system_overlay.hide()
+		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
+			_grid_panel.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()
@@ -560,6 +596,10 @@ func _update_subject_fade(delta: float) -> void:
 	var low := float(cfg.get("alpha", 0.3))
 	var rate := float(cfg.get("rate", 6.0))
 	var min_overlap := float(cfg.get("min_overlap", 0.1))
+	var raw_floor: Variant = cfg.get("foreground_alpha_floor",1.0)
+	var foreground_floor := 1.0
+	if (raw_floor is int or raw_floor is float) and is_finite(float(raw_floor)):
+		foreground_floor = clampf(float(raw_floor),0.0,1.0)
 	var subjects: Array[Rect2] = _subject_rects() if enabled else []
 	# Enemy plate and grid: their own draw code resets `modulate.a` every
 	# frame, so the fade multiplies. Ally panel, orbs plate and strip holder
@@ -580,9 +620,20 @@ func _update_subject_fade(delta: float) -> void:
 			if measured.is_visible_in_tree() else 1.0
 		var level := move_toward(float(_subject_fade.get(panel, 1.0)), want, delta * rate)
 		_subject_fade[panel] = level
-		if bool(entry[1]):
+		if panel is PanelContainer:
+			# Preserve the SAME subject backing fade (including its easing),
+			# while retaining legible labels/bars/glyphs. self_modulate affects
+			# this panel's backing only; descendants retain the foreground floor.
+			# An intentional catch-state base alpha is still multiplied normally.
+			var foreground := maxf(level,foreground_floor)
+			var base_alpha := panel.modulate.a if bool(entry[1]) else 1.0
+			panel.modulate.a = base_alpha*foreground
+			panel.self_modulate.a = level/foreground if foreground>0.0 else 0.0
+		elif bool(entry[1]):
 			panel.modulate.a *= level
 		else:
+			# PartyStrip owns its internal draw/fade lifecycle; do not invent a
+			# second row-opacity controller in this no-draw parent holder.
 			panel.modulate.a = level
 
 
@@ -662,6 +713,7 @@ func _show_fight(visible_now: bool, just_ended: bool = false) -> void:
 		for panel: Control in [_ally_panel, _orbs_panel, _strip_fader]:
 			if panel != null:
 				panel.modulate.a = 1.0
+				panel.self_modulate.a = 1.0
 		if _party_strip != null:
 			if just_ended:
 				# OWNER-0902-HUD-TEAM-MENU: `set_pinned(false)` merely starts
@@ -857,7 +909,7 @@ func _draw_ally() -> void:
 		return
 	_ally_name.text = creature.label()
 	_ally_level.text = "Lv %d" % int(creature.level)
-	_ally_chip.color = _species_colour(str(creature.species_id))
+	_draw_ally_portrait(str(creature.species_id))
 
 	var fraction: float = creature.hp_fraction()
 	_ally_health.value = fraction * 100.0
@@ -871,6 +923,13 @@ func _draw_ally() -> void:
 
 	var energy: float = creature.energy_fraction()
 	_ally_energy.value = energy * 100.0
+	var ultimate: float = float(_manager.call("ultimate_fraction"))
+	_ultimate_meter.value = ultimate * 100.0
+	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", 22, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
+	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
+	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
 	# stops meaning anything. Only the RISING edge (not-full -> full) fires it.
@@ -878,6 +937,26 @@ func _draw_ally() -> void:
 	if now_full and not _energy_was_full:
 		_pulse(_energy_pulse)
 	_energy_was_full = now_full
+
+
+## The same species resolver used by the roster supplies real identity art.
+## Missing authored texture remains an honest swatch, not another species.
+func _draw_ally_portrait(species_id: String) -> void:
+	if species_id==_ally_portrait_species: return
+	_ally_portrait_species = species_id
+	if _ally_portrait==null:
+		_ally_portrait = TextureRect.new()
+		_ally_portrait.name = "AuthoredPortrait"
+		_ally_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_ally_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_ally_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_ally_chip.add_child(_ally_portrait)
+		_ally_portrait.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var path := CREATURE_PORTRAIT.resolve(species_id)
+	var texture: Texture2D = load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path) else null
+	_ally_portrait.texture = texture
+	_ally_portrait.visible = texture!=null
+	_ally_chip.color = Color.TRANSPARENT if texture!=null else _species_colour(species_id)
 
 
 func _species_colour(species_id: String) -> Color:
@@ -895,7 +974,9 @@ func _species_colour(species_id: String) -> Color:
 ## of those are true.
 func _draw_grid() -> void:
 	var orbs: int = int(_manager.call("orbs_left"))
-	_orbs.text = "Orbs  %d" % orbs
+	_orbs.text = "%s Aim · %d orbs   %s Switch   %s Flee" % [
+		_combat_binding_text("combat_throw"), orbs,
+		_combat_binding_text("party_cycle"), _combat_binding_text("combat_run")]
 
 	var resolving: bool = bool(_manager.call("is_resolving_catch"))
 	var aiming: bool = bool(_manager.call("is_aiming"))
@@ -954,21 +1035,30 @@ func _draw_grid() -> void:
 	_draw_cells(orbs)
 
 
-func _draw_cells(orbs: int) -> void:
+func _combat_binding_text(action: String) -> String:
+	return INPUT_GLYPH.pad_button_name_for_action(action) if INPUT_GLYPH.using_gamepad() else INPUT_GLYPH.key_name_for_action(action)
+
+
+func _draw_cells(_orbs_count: int) -> void:
 	var creature: RefCounted = _manager.call("active_creature")
 	if creature == null:
 		return
 
 	var quick_ready: bool = bool(_manager.call("quick_ready"))
 	var charged_ready: bool = bool(_manager.call("charged_ready"))
-	var throw_ready: bool = orbs > 0
-	var switchable: Array = _manager.call("switchable_indices")
-	var switch_ready: bool = bool(_manager.call("can_switch")) and not switchable.is_empty()
-
 	_draw_quick_cell(creature, quick_ready)
 	_draw_charged_cell(creature, charged_ready)
-	_draw_throw_cell(orbs, throw_ready)
-	_draw_switch_cell(switch_ready)
+	var utility_id := str(creature.get("move_utility"))
+	var utility_ready: bool = bool(_manager.call("utility_ready"))
+	var utility_name := _move_name(utility_id, "No utility")
+	var cooldown: float = float(_manager.call("utility_cooldown"))
+	if cooldown > 0.0: utility_name += " %.1fs" % cooldown
+	elif not utility_id.is_empty() and not _manager.call("live_move_supported", "utility", utility_id): utility_name += " · unavailable"
+	_cell_throw_content.text = "[center]%s\n%s[/center]" % [INPUT_GLYPH.icon("combat_utility", CELL_GLYPH_PX), utility_name]
+	_cell_throw.modulate = CELL_READY if utility_ready else CELL_DIMMED
+	var burst_ready: bool = not bool(_manager.call("player_is_committed")) and float(_manager.call("wind_value")) >= float(_manager.call("wind_cost", "burst"))
+	_cell_switch_content.text = "[center]%s\nDodge[/center]" % INPUT_GLYPH.icon("jump", CELL_GLYPH_PX)
+	_cell_switch.modulate = CELL_READY if burst_ready else CELL_DIMMED
 
 
 func _move_name(move_id: String, fallback: String) -> String:
@@ -1077,7 +1167,7 @@ func _draw_orb_cluster(orbs: int) -> void:
 			icon_path = str(db.call("definition", orb_id).get("icon", ORB_ICON_PATH))
 	_orb_cluster.text = "[right][img=24x24]%s[/img]  %s  x%d\n%s %s     %s %s[/right]" % [
 		icon_path, item_name, orbs,
-		INPUT_GLYPH.icon("throw", 26, VERB_READY), "Throw",
+		INPUT_GLYPH.icon("combat_orb_release", 26, VERB_READY), "Throw",
 		INPUT_GLYPH.icon("cancel", 26, VERB_READY), "Cancel",
 	]
 
@@ -1153,7 +1243,7 @@ func _update_capture_reticle() -> void:
 ## CONTROLLER-MAP removes: LB is this verb and nothing else, and the d-pad is
 ## the hotbar and nothing else, in every context including a fight.
 func _handle_switch_input() -> void:
-	if _manager == null:
+	if _manager == null or COMBAT_INPUT_OWNER.current(get_tree()) != null:
 		return
 
 	# Aiming and a resolving catch both already own player input elsewhere in

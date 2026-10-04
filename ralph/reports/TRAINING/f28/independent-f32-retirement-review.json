@@ -1,0 +1,152 @@
+{
+  "feature": "F28",
+  "reviewer": "independent agent /root/strict_f28_source_review (different implementation author)",
+  "review_kind": "Independent read-only F32 retirement successor delta review",
+  "reviewed_head": "0724c8d5d0965bd6ac90dfe7a9d20287c8f16811",
+  "disposition": "NO_CONCRETE_OWNED_SOURCE_BLOCKER_FOUND_IN_RETIREMENT_DELTA",
+  "acceptance": "HELD; no F28 criterion is marked MET by this source review",
+  "mutations": "Only ignored .tmp/f28/independent-f32-retirement-review.json; no implementation/shared/tracked evidence changed",
+  "engine_or_tests_run": [],
+  "files": [
+    {
+      "path": "data/config/masters.json",
+      "sha256": "d93a2a2064c87f5f27066691c128e7a17a62bf212e878da385c6c7c110aafece"
+    },
+    {
+      "path": "data/recipes/feasts.json",
+      "sha256": "f5d56eca0663be480ba85df7b55401ad554ecff5228f54b179be65cd695ed1f7"
+    },
+    {
+      "path": "scenes/masters/master_t1.tscn",
+      "sha256": "221c94a8b9991db155769492b068d4ac348153fed020b8413714da2077805ae1"
+    },
+    {
+      "path": "scenes/masters/master_t2.tscn",
+      "sha256": "4ad7b9b0664eb737aa6d8a33ccda423bed7985942dc544a6e565e4829b8a1ae8"
+    },
+    {
+      "path": "scenes/masters/master_t3.tscn",
+      "sha256": "d2cfb48bc6779f238adbb1ac5fb31dee8a063f50ce86e3ecb6367936dafaa567"
+    },
+    {
+      "path": "scenes/masters/master_t4.tscn",
+      "sha256": "a97b7f0a1b23924efc91fecc6ba19a833fee942861ad8f447a359b9c93e9b88c"
+    },
+    {
+      "path": "scenes/masters/master_t5.tscn",
+      "sha256": "543be7dbf44f751205d4b2bb96bf543a0b2bc094a3d62ade45c3e129e8c9e47f"
+    },
+    {
+      "path": "scripts/creatures/breakthrough.gd",
+      "sha256": "a01540a1d0469f309fe860a1b5056c042e04c2040471ef7ac059b357520cbebb"
+    },
+    {
+      "path": "scripts/masters/attuned_herb.gd",
+      "sha256": "2f0cf342d944a23bd1d5fabe8ecb2394f94b9e50f862105875e6ddef08df6ca4"
+    },
+    {
+      "path": "scripts/masters/breakthrough_actions.gd",
+      "sha256": "7570bcb25b0ab976de3581cff33cfc0cc3996d7d0d00b8a05c8c44baf29b77ab"
+    },
+    {
+      "path": "scripts/masters/breakthrough_panel.gd",
+      "sha256": "2a3c48571caa8f19f5fb44d057003b578d71383587e0370961ef470081decbd6"
+    },
+    {
+      "path": "scripts/masters/breakthrough_service.gd",
+      "sha256": "6e08236b29b73f9dd5a950815371e57f25a4f7d244deac86e30f09c9b49926d6"
+    },
+    {
+      "path": "scripts/masters/master_duel.gd",
+      "sha256": "529206af830f49944b1d321f0b6d2324dbc89ccb1e5bf6672d6db6749e69d373"
+    },
+    {
+      "path": "scripts/masters/master_site.gd",
+      "sha256": "e1f581bb7ab34cc5dbfdabdd45b3e040e3b38b017ddf6d0906b545a461a3b926"
+    }
+  ],
+  "remaining_holds": [
+    "All inherited F28 shared integration and ROOT runtime acceptance holds",
+    "F32/Foundation actual renewable node/farm mounting and world_harvest stock carrier; currently flag-off",
+    "All eight early Meadows body paths beforeL10, terrain and off-route clearance",
+    "Actual accepted node/plot stock, generations, seeds, paid Greenhouse, co-op contention and repeated five-creature feast supply",
+    "Save/ACK/rejoin/world namespace boundaries",
+    "F28#0 through#5 remain OPEN; source arithmetic does not prove ordinary-play solvency"
+  ],
+  "limitations": [
+    "Source reasoning and file reads only; no Godot parsing/import/gameplay/render/export, unit tests or CI",
+    "Reviewed owned source does not prove prerequisite landing or final integrated player path"
+  ],
+  "predecessor_source": "1341de115f9d228d2ff2657cff5cf17cb301bd2c",
+  "dependency": {
+    "owner": "F32",
+    "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+    "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+    "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
+    "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
+    "files": {
+      "data/config/essence_nodes.json": {
+        "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+        "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+      },
+      "data/config/farm.json": {
+        "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+        "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+      }
+    },
+    "runtime_accepted_stock": null,
+    "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+    "retirement": "F28 finite master_garden nodes removed; old prepare_gather compatibility doorway always refuses. F32 node/farm staging alone owns attuned supply and renewable stock.",
+    "typed_node_intent": [
+      "site_id",
+      "expected_stock_revision",
+      "action_id"
+    ],
+    "transaction_owner": "F32 inside Foundation existing world_harvest/character journal; host resolves actual source, stock revision, host day and retained seed roll.",
+    "item_owners": "F28 attuned definitions; F27 essence; F32 seeds. Register each canonical ID once.",
+    "supply": {
+      "node_attuned_per_ready_generation": 1,
+      "node_respawn_host_days": 3,
+      "seed_chance": 0.25,
+      "crop_grow_host_days": 2,
+      "crop_attuned_output": 2,
+      "native_outdoor_types": [
+        "ground",
+        "air"
+      ],
+      "other_types_require": "actual paid world Greenhouse"
+    },
+    "unproven": [
+      "All eight Meadows body paths before L10",
+      "Off-route and terrain clearance",
+      "Actual node/plot stock and generations",
+      "Co-op contention and repeated five-creature feast supply",
+      "Actual seed availability and paid Greenhouse access",
+      "Save/ACK/rejoin and world namespace boundaries"
+    ],
+    "removed_assumption": "No longer asserts 25 attuned units per type per character; renewable source arithmetic is not ordinary-play solvency proof.",
+    "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument",
+    "checked_checkout": "D:/tetherbound/feature-f32"
+  },
+  "findings": [],
+  "observations": [
+    "Recipes, items and costs outside attuned_sources unchanged by git delta",
+    "All32 finite F28 garden nodes removed; enabled=false and nodes=[]",
+    "prepare_gather always refuses, including retained compatibility doorway; MasterSite garden loop sees no rows",
+    "F32 final essence_nodes and farm working hashes match dependency contract and source-cut",
+    "World stock supplies one attuned per generation with three-host-day respawn and25-percent seed chance",
+    "Farm ground/air native outdoor crops and two-day/two-attuned outputs match contract; other types need actual paid world Greenhouse",
+    "Ledger labels authored candidates, unproven stock/path/seed supply and no personal25-unit guarantee"
+  ],
+  "packaging_followup": {
+    "requirement": "Regenerate current14 hashes/source0724 and728 check references in manifest and combined ticket; preserve prior review as predecessor evidence",
+    "status": "Acknowledged by implementer; successor evidence freeze pending",
+    "source_blocker": false
+  },
+  "source_checker_rerun": false,
+  "recorded_source_check": {
+    "checks": 728,
+    "reviewer_ran": false,
+    "failures": []
+  }
+}

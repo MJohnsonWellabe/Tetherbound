@@ -1,0 +1,21 @@
+{
+  "source_commit": "08be1a3b26ebabf76a77057dcd18a0ea7fc6ce50",
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-vfx",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tests/smoke_move_effects_library.gd",
+    "--",
+    "--batch=identities",
+    "--out=D:/tetherbound/vfx-identities-native-r6"
+  ],
+  "isolated_home": "D:\\tetherbound\\vfx-r6-isolated-home",
+  "native_exit": 0,
+  "elapsed_seconds": 22.515999999945052,
+  "scope": "12 synthetic production-effect identity cases,36 original-resolution stills; not integrated world/earned combat/performance evidence."
+}

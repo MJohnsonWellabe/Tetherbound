@@ -1,0 +1,1177 @@
+extends SpringArm3D
+
+## Third-person orbit camera.
+##
+## A SpringArm3D so terrain intrusion is handled by the engine rather than by
+## hand-written raycasts, which is the kind of thing the previous prototype
+## reimplemented badly. The arm shortens instantly when something gets between
+## the camera and the player, and eases back out, because the reverse reads as
+## the camera lunging at your back.
+##
+## Yaw lives here rather than on the player: the player turns to face travel,
+## and the camera turns to face where the player is looking. Coupling them makes
+## the character spin when you look around while standing still.
+
+const CONFIG_PATH := "res://data/config/movement.json"
+## Visual enclosure surfaces that must stop a lens but not change traversal.
+const OCCLUSION_ONLY_LAYER := 1 << 31
+
+## The conversation push-in (D73 §6 / CL-G10). It resolves who is being talked
+## to and solves the framing; the blend, the arm and the occlusion probe stay
+## here, because they are this rig's own state.
+const CONVERSATION := preload("res://scripts/player/conversation_camera.gd")
+const LOOK_PREFS := preload("res://scripts/ui/look_prefs.gd")
+
+## `dialogue_panel.gd` and `tab_map.gd`-style callers find the rig through this
+## rather than through a NodePath, because the rig is a sibling of the world's
+## UI layers and every scene spells that path differently.
+const GROUP := "camera_rig"
+
+var yaw: float = 0.0
+var pitch: float = 0.0
+## Presentation-only offset relative to target + profile height; reset on every takeover.
+var _framing_pivot_offset := Vector3.ZERO
+var _fight_yaw_target: Variant = null
+var _fight_frame_composer: Callable = Callable()
+
+var _distance: float = 5.2
+var _height: float = 1.75
+var _pitch_min: float = -60.0
+var _pitch_max: float = 32.0
+var _gamepad_sensitivity: float = 190.0
+var _mouse_sensitivity: float = 0.16
+var _deadzone: float = 0.18
+var _invert_y: bool = false
+var _follow_lag: float = 14.0
+var _recover_speed: float = 4.0
+## Exploration's `collision_recover_speed`, restored by an empty profile.
+var _base_recover_speed: float = 4.0
+
+## How far the arm stops short of whatever it hit. SpringArm3D's own property;
+## kept here as a named default so it is data-driven like the rest of the rig
+## instead of a bare number sitting in the .tscn.
+##
+## The scene shipped this at 0.3, which is standoff-from-the-hit-surface, not
+## standoff-from-the-player. A tree trunk directly behind the player (the
+## `trees`/`grove`/`rocks` vegetation layers collide, `scripts/world/vegetation.gd`
+## `_add_collision()`, radius up to 1.1m) can leave the arm barely longer than
+## the trunk's own radius, and the render is a close-up of whatever the arm
+## stopped against filling the frame — the same failure this file's own header
+## already names happening to the combat camera against a bush, now hit by the
+## exploration camera against the denser Meadows scatter. Raising the margin
+## does not stop the collapse; it stops the collapse from reading as the
+## camera being INSIDE the obstruction.
+var _collision_margin: float = 0.6
+
+## Radius of the ball the arm sweeps along itself, in metres.
+##
+## SpringArm3D only shape-casts if it has been given a `shape`. Nothing ever
+## assigned one — not the .tscn, not this file — so the arm fell back to its
+## default single, infinitely thin raycast down the centre line, and a
+## third-person camera indoors behaved exactly the way that implies. It slipped
+## between a chair back and a table edge and then drew the camera inside them,
+## and when the one ray did hit something nearer than `margin` the arm collapsed
+## to about zero length and put the camera inside the player's head. Both were
+## reported by the same blind playtest as one symptom ("the camera collapses
+## into the character indoors"), and neither is reachable by tuning distance or
+## margin, because a ray that misses reports no hit at all.
+##
+## Small on purpose: the ball is a stand-in for the camera's near plane, not for
+## the player. Too large and the arm shortens for doorframes it would have fitted
+## through. TUNABLE.
+var _probe_radius: float = 0.25
+
+var _target: Node3D = null
+var _mouse_delta := Vector2.ZERO
+## F10#2 C3 (V-SW-7): the longest the arm may be this frame so the lens stays
+## outside a large foe's render mesh, which reaches past its collision capsule.
+## INF = no limit. Set every physics frame by `combat_manager.gd`.
+var _body_limit := INF
+
+## Combat keeps the opponent findable without replacing the player's orbit.
+## The right stick/mouse always wins immediately; after a short neutral grace,
+## the rig only corrects enough yaw to bring the tracked body back inside the
+## authored safe angle. `set_target()` clears this because throw aim and
+## conversation shots own their own composition.
+var _tracking_target: Node3D = null
+var _tracking_config: Dictionary = {}
+## MEADOWS-VISUAL-PASS round 5: extra composition the fight asks for while the
+## piloted ally hides the opponent (`combat_manager.gd::_update_ally_occlusion`).
+## Added to `composition_yaw_deg` on the same side; 0 outside that moment.
+var _composition_extra_deg := 0.0
+## F04#7: signed degrees the neutral tracker swings to find room for the arm
+## (`combat_manager.gd::_update_combat_clear_orbit`). 0 outside that moment.
+var _clearance_extra_deg := 0.0
+var _tracking_manual_left := 0.0
+
+## Defaults from movement.json, kept so a combat profile can be handed back.
+var _base_distance: float = 5.2
+var _base_height: float = 1.75
+var _base_pitch_min: float = -60.0
+var _base_pitch_max: float = 32.0
+
+## Profile-scoped look tuning. catching.json's aim profile carried
+## `sensitivity_scale: 0.55` and pitch bounds from the day it was written, and
+## nothing read them — aim mode ran at the full 190 deg/s exploration turn
+## rate, which is most of what "aiming is fiddly on the stick" was. A profile
+## may now scale sensitivity, bend the stick response (exponent > 1 gives a
+## fine-aim centre without costing full-deflection speed), and narrow pitch.
+var _sensitivity_scale: float = 1.0
+var _response_exponent: float = 1.0
+
+## An extra, per-frame scale pushed in by whoever owns the current aim (the
+## throw slows the stick further when the reticle is near the target). Reset
+## to 1.0 by every set_target.
+var _assist_scale: float = 1.0
+
+## The target assist is for the last, careful part of lining up a throw. It
+## must not reduce a fully-deflected stick: a close creature can circle the
+## trainer faster than the assisted turn rate, leaving the reticle permanently
+## behind it even though the player is holding the stick all the way over.
+## Blend the assist away across the outer part of the stick so fine aim keeps
+## its slowdown and deliberate tracking keeps the profile's full turn speed.
+const ASSIST_FULL_SPEED_START := 0.55
+const ASSIST_FULL_SPEED_END := 0.92
+
+## While a fight is running the rig follows the player's creature instead of the
+## trainer, at a shorter creature's height. Combat is piloted (D07), and a
+## piloted creature wants exactly this camera — so it is re-pointed rather than
+## replaced by a second one that would have to be kept in sync.
+var _retarget_lag: float = 0.0
+
+## The camera hanging off the end of the arm. A combat profile narrows its lens:
+## the exploration 70 is right for looking at a landscape and wrong for looking
+## at two creatures four metres away.
+@onready var _camera: Camera3D = get_node_or_null(^"Camera3D") as Camera3D
+var _base_fov: float = 70.0
+
+## Over-the-shoulder offset, in metres, applied to the ARM's pivot rather than
+## to the camera hanging off it.
+##
+## The obvious implementation — sliding the child Camera3D sideways — silently
+## does nothing. SpringArm3D rewrites its children's transforms every frame to
+## place them at the end of the arm, so the offset was wiped before it was ever
+## drawn, and combat spent a whole survey with the camera dead behind the creature
+## while the config confidently said 1.5.
+var _shoulder: float = 0.0
+
+
+## --- the conversation push-in ------------------------------------------------
+##
+## While a conversation is on screen the rig stops orbiting the player and
+## blends to a two-shot on the speaker (`conversation_camera.gd` solves it).
+## Look input is ignored for the duration: the shot is the composition, and a
+## player who nudges the stick while reading should not end up looking at a
+## hedge.
+##
+## The pose the rig had before the push-in is saved here and blended back to on
+## close, rather than recomputed — the exploration yaw is a player-authored
+## value and guessing it back is how a camera "snaps somewhere else" every time
+## you finish talking to somebody.
+var _talk_speaker: Node3D = null
+var _talk_cfg: Dictionary = {}
+var _talk_shot: Dictionary = {}
+var _talk_active: bool = false
+var _talk_leaving: bool = false
+var _talk_blend_time: float = 0.45
+## 0 is the exploration orbit, 1 is the two-shot. Moves toward whichever end the
+## current state wants, so a conversation reopened mid-exit picks up where the
+## blend had got to instead of jumping.
+var _talk_blend: float = 0.0
+var _talk_saved_yaw: float = 0.0
+var _talk_saved_pitch: float = 0.0
+var _talk_saved_distance: float = 5.2
+var _talk_saved_fov: float = 70.0
+var _talk_used_fallback: bool = false
+## Mirror of the arm's exclusion list while a conversation is up — see
+## `_exclude_conversation_bodies()`.
+var _talk_excluded: Array[RID] = []
+
+## How far the camera may stand from the framing pivot before world geometry is
+## in the way, in metres. Replaced by tests with a fixture that describes a wall
+## analytically: `tests/run_tests.gd` has no live SceneTree, so it has no physics
+## space to put a real wall in, and a fallback that only ever ran indoors in a
+## booted scene would be covered by nothing that runs on every push.
+var _occlusion_probe: Callable = Callable()
+
+
+func _ready() -> void:
+	_load_config()
+	collision_mask |= OCCLUSION_ONLY_LAYER
+	top_level = true          # the arm follows the player by code, not by parenting
+	spring_length = _distance
+	margin = _collision_margin
+	# Set here rather than in the .tscn for the same reason `margin` is: the rig
+	# is configured from movement.json in one place, and the scene carrying half
+	# the values is how `collision_margin` sat in the config being ignored.
+	if shape == null:
+		var probe := SphereShape3D.new()
+		probe.radius = _probe_radius
+		shape = probe
+	pitch = deg_to_rad(clampf(pitch, _pitch_min, _pitch_max))
+	add_to_group(GROUP)
+	# The push-in's watcher, created here rather than placed in the two scenes
+	# that carry a rig, so a rig instanced anywhere — a capture fixture, a test —
+	# has one without anybody remembering to add a node. It is a plain `Node`:
+	# SpringArm3D rewrites the transform of every Node3D child every frame to put
+	# it at the end of the arm, so a Node3D helper would be dragged around the
+	# world by the very camera it is advising.
+	if get_node_or_null(^"ConversationCamera") == null:
+		var watcher: Node = CONVERSATION.new()
+		watcher.name = "ConversationCamera"
+		add_child(watcher)
+
+
+func _load_config() -> void:
+	var file := FileAccess.open(CONFIG_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("movement.json missing; camera using built-in defaults")
+		return
+	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	if not parsed is Dictionary:
+		return
+	var cfg: Dictionary = (parsed as Dictionary).get("camera", {})
+	_distance = float(cfg.get("distance", _distance))
+	_height = float(cfg.get("height", _height))
+	_pitch_min = float(cfg.get("pitch_min_deg", _pitch_min))
+	_pitch_max = float(cfg.get("pitch_max_deg", _pitch_max))
+	_base_pitch_min = _pitch_min
+	_base_pitch_max = _pitch_max
+	pitch = float(cfg.get("pitch_start_deg", -12.0))
+	_gamepad_sensitivity = float(cfg.get("gamepad_sensitivity", _gamepad_sensitivity))
+	_mouse_sensitivity = float(cfg.get("mouse_sensitivity", _mouse_sensitivity))
+	_deadzone = float(cfg.get("stick_deadzone", _deadzone))
+	_invert_y = bool(cfg.get("invert_y", false))
+	_follow_lag = float(cfg.get("follow_lag", _follow_lag))
+	_recover_speed = float(cfg.get("collision_recover_speed", _recover_speed))
+	_base_recover_speed = _recover_speed
+	_collision_margin = float(cfg.get("collision_margin", _collision_margin))
+	_probe_radius = float(cfg.get("collision_probe_radius", _probe_radius))
+	_base_distance = _distance
+	_base_height = _height
+	if _camera != null:
+		_base_fov = _camera.fov
+
+
+## Follow a new target, optionally with an override profile.
+##
+## An empty profile restores the exploration defaults, which is how combat hands
+## the camera back. The first call has no previous target and snaps; later calls
+## ease, because a fight opening with a hard cut loses the connection between
+## "the animal I walked up to" and "the animal I am fighting".
+func set_target(target: Node3D, profile: Dictionary = {}) -> void:
+	_fight_yaw_target = null
+	_fight_frame_composer = Callable()
+	_framing_pivot_offset = Vector3.ZERO
+	_impact_nudge_left = 0.0
+	rotation.z = 0.0
+	set_lens_lift(0.0)
+	# A fight, a mount or a thrown orb taking the camera outranks a conversation
+	# push-in that is still blending: whoever calls this is about to overwrite
+	# every value the push-in is interpolating, and a half-finished blend left
+	# running on top of it drags the new shot back toward a villager's chest.
+	if _talk_active or _talk_leaving:
+		_abandon_conversation()
+	var had_target := _target != null
+	_target = target
+	_tracking_target = null
+	_tracking_config = {}
+	_composition_extra_deg = 0.0
+	_clearance_extra_deg = 0.0
+	_tracking_manual_left = 0.0
+	_body_limit = INF
+
+	_distance = float(profile.get("distance", _base_distance))
+	_height = float(profile.get("height", _base_height))
+	_retarget_lag = float(profile.get("retarget_lag", 0.0))
+	# F04#7: a profile may carry its own arm recovery speed. The combat arm
+	# wants 9.5m plus framing (13-24m measured) against exploration's 5.2m, and
+	# at exploration's 4 m/s it spent the first 2-4s of every fight short
+	# enough to put the lens inside the creatures (code-blind judge, F04).
+	_recover_speed = float(profile.get("collision_recover_speed", _base_recover_speed))
+	_shoulder = float(profile.get("shoulder_offset", 0.0))
+	_sensitivity_scale = float(profile.get("sensitivity_scale", 1.0))
+	_response_exponent = maxf(float(profile.get("response_exponent", 1.0)), 0.1)
+	_pitch_min = float(profile.get("pitch_min_deg", _base_pitch_min))
+	_pitch_max = float(profile.get("pitch_max_deg", _base_pitch_max))
+	_assist_scale = 1.0
+	if _camera != null:
+		_camera.fov = float(profile.get("fov", _base_fov))
+	if profile.has("pitch_start_deg"):
+		pitch = clampf(deg_to_rad(float(profile["pitch_start_deg"])),
+			deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
+
+	# The arm has to ignore whatever it is following.
+	#
+	# SpringArm3D excludes its own parent automatically, and this rig is
+	# `top_level` so it has no parent to exclude. Following the player's creature put
+	# the arm's origin inside that creature's capsule, the arm collided with it
+	# on the first cast and collapsed to nothing, and the whole fight was played
+	# from a camera buried in the back of your own creature.
+	clear_excluded_objects()
+	if target is CollisionObject3D:
+		add_excluded_object((target as CollisionObject3D).get_rid())
+
+	if target != null and not had_target:
+		CONVERSATION.set_world_position(
+			self, CONVERSATION.world_position(target) + Vector3.UP * _height)
+		spring_length = _distance
+
+
+## Add a soft look-at guard to the current orbit target. CombatManager calls
+## this immediately after targeting the player's active creature. It is a
+## separate operation from `set_target()` so throw/catch cameras cannot inherit
+## combat tracking accidentally.
+## Degrees the neutral combat tracker swings past its configured composition,
+## for as long as the fight asks. Manual look still wins, as for all tracking.
+func set_composition_extra(degrees: float) -> void:
+	_composition_extra_deg = maxf(0.0, degrees)
+
+
+func composition_extra() -> float:
+	return _composition_extra_deg
+
+
+func set_clearance_extra(degrees: float) -> void:
+	_clearance_extra_deg = degrees
+
+
+func clearance_extra() -> float:
+	return _clearance_extra_deg
+
+
+## F04#7: the smallest orbit swing, in signed degrees from the tracker's
+## NEUTRAL angle (`_tracking_neutral_yaw()`), whose arm has at least
+## `max(length * min_fraction, min_room)` of free travel. `min_room` is the
+## caller's floor for "the lens is still outside the ally", so a wall that
+## would collapse the arm into the ally's body never counts as clear.
+##
+## Measured from the tracker's own neutral so the answer is stable once the rig
+## has swung. While the player steers (`_tracking_manual_left`) the current
+## swing is held rather than re-solved around the player's view. Ties -- and
+## the no-clear fallback, unless another angle is `switch_margin` roomier --
+## keep the side already in use, so small movements do not flip it.
+##
+## `frame_fraction` > 0 drops every swing that would put the tracked opponent
+## outside that fraction of the lens's horizontal half-angle: a 100-degree
+## swing past a wall found room for the arm and lost the fight from the frame
+## (square 1920x1920 runner viewport, `smoke_combat_camera.gd`). A shortened
+## arm that still shows both fighters beats a clear one that shows one.
+func clear_orbit_offset_deg(length: float, samples: Array, min_fraction: float,
+		min_room: float = 0.0, switch_margin: float = 1.0, frame_fraction: float = 0.0) -> float:
+	if _target == null or not is_instance_valid(_target) or length <= 0.01:
+		return 0.0
+	if _tracking_manual_left > 0.0:
+		return _clearance_extra_deg
+	var neutral_variant: Variant = _tracking_neutral_yaw()
+	var neutral := float(neutral_variant) if neutral_variant != null \
+		else yaw - deg_to_rad(_clearance_extra_deg)
+	var needed := maxf(length * clampf(min_fraction, 0.1, 1.0), minf(min_room, length))
+	var candidates: Array[float] = [0.0]
+	var side := -1.0 if _clearance_extra_deg < 0.0 else 1.0
+	for raw: Variant in samples:
+		var magnitude := absf(float(raw))
+		candidates.append(magnitude * side)
+		candidates.append(-magnitude * side)
+	var best := 0.0
+	var best_room := -1.0
+	var current_room := -1.0
+	for offset in candidates:
+		var dir := Basis.from_euler(Vector3(pitch, neutral + deg_to_rad(offset), 0.0)).z
+		if not is_zero_approx(offset) and not _opponent_in_frame(dir, length, frame_fraction):
+			continue
+		var room := _free_distance_behind(global_position, dir, length)
+		if room >= needed:
+			return offset
+		if is_equal_approx(offset, _clearance_extra_deg):
+			current_room = room
+		if room > best_room + 0.01:
+			best_room = room
+			best = offset
+	if current_room >= 0.0 and best_room < current_room + switch_margin:
+		return _clearance_extra_deg
+	return best
+
+
+## Whether the tracked opponent stays within `fraction` of the lens's
+## horizontal half-angle with the arm along `dir` at `length`. True when there
+## is nothing to keep in frame (no tracker, no lens, `fraction` <= 0).
+func _opponent_in_frame(dir: Vector3, length: float, fraction: float) -> bool:
+	if fraction <= 0.0 or _camera == null or _tracking_target == null \
+			or not is_instance_valid(_tracking_target):
+		return true
+	var point := _world_point(_tracking_target)
+	if _tracking_target.has_method("centre") and _tracking_target.is_inside_tree():
+		point = _tracking_target.call("centre")
+	var lens := global_position + dir * length
+	var look := Vector2(-dir.x, -dir.z)
+	var to := Vector2(point.x - lens.x, point.z - lens.z)
+	if look.length_squared() < 0.0001 or to.length_squared() < 0.0001:
+		return true
+	var size := _camera.get_viewport().get_visible_rect().size if _camera.is_inside_tree() \
+		else Vector2(16.0, 9.0)
+	var aspect := size.x / maxf(size.y, 1.0)
+	var half := atan(tan(deg_to_rad(_camera.fov) * 0.5) * aspect)
+	return absf(look.angle_to(to)) <= half * clampf(fraction, 0.0, 1.0)
+
+
+func set_tracking_target(target: Node3D, config: Dictionary = {}) -> void:
+	_tracking_target = target
+	_tracking_config = config.duplicate()
+	_tracking_manual_left = 0.0
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		_mouse_delta += (event as InputEventMouseMotion).relative
+
+
+var _impact_nudge_left := 0.0
+var _impact_nudge_duration := 0.16
+var _impact_nudge_radians := 0.0
+
+
+## F14#0 C3: the fight may shift the lens up (Camera3D.v_offset, metres) so a
+## tall opponent standing uphill keeps its head out of the boss-panel band
+## (combat.json `camera.hud_safe.top_band`,
+## combat_manager.gd::_update_combat_top_band). The arm, pivot, yaw and look
+## pitch are unchanged, so it cannot push the lens into the slope below; the
+## aim reticle stays the lens's own centre. 0 outside fights.
+func set_lens_lift(metres: float) -> void:
+	if _camera != null:
+		_camera.v_offset = metres
+
+
+func lens_lift() -> float:
+	return _camera.v_offset if _camera != null else 0.0
+
+
+## Presentation roll only: preserves aim yaw/pitch and spring-arm position.
+func nudge_combat_impact(config: Dictionary = {}) -> void:
+	if not bool(config.get("enabled", true)):
+		return
+	# UX §8 reduced motion: this roll is pure camera impulse and carries no
+	# information the fight needs, so it is the first thing reduced motion
+	# removes. Presentation only -- the strike it follows is untouched.
+	# The player's camera-shake level scales it, and is zero under reduced
+	# motion (`motion_prefs.gd::camera_shake_scale()`).
+	var shake := preload("res://scripts/ui/motion_prefs.gd").camera_shake_scale()
+	if shake <= 0.0:
+		return
+	_impact_nudge_duration = maxf(0.01, float(config.get("seconds", 0.16)))
+	_impact_nudge_left = _impact_nudge_duration
+	_impact_nudge_radians = deg_to_rad(clampf(float(config.get("degrees", 0.65)), 0.0, 2.0)) * shake
+
+
+func _tick_impact_nudge(delta: float) -> void:
+	_impact_nudge_left = maxf(0.0, _impact_nudge_left - delta)
+	var phase := 1.0 - _impact_nudge_left / _impact_nudge_duration
+	rotation.z = sin(phase * PI) * (1.0 - phase) * _impact_nudge_radians
+
+
+func _process(delta: float) -> void:
+	# The freed check matters now that the rig can follow a thrown orb through
+	# the catch resolution: the orb is freed with the fight, and a rig holding
+	# the stale reference would crash on the next frame's follow.
+	if _target == null or not is_instance_valid(_target):
+		_target = null
+		return
+	if _talk_active or _talk_leaving:
+		# Look input is ignored for the duration, and the accumulated mouse
+		# motion is DROPPED rather than kept: a mouse moved across a whole
+		# conversation would otherwise be replayed as one flick the frame the
+		# box closes. The shot itself is driven on the physics tick below.
+		_mouse_delta = Vector2.ZERO
+		return
+	_apply_look(delta)
+	_apply_tracking(delta)
+	_follow(delta)
+	_tick_impact_nudge(delta)
+	# Actors completed their physics steps before this idle tick. Compose the
+	# final constrained view after follow/impact roll, before this frame draws.
+	if _fight_frame_composer.is_valid(): _fight_frame_composer.call(delta)
+
+
+## The conversation push-in, and only the push-in.
+##
+## It is driven here rather than from `_process` because THE IDLE TICK IS NOT
+## THE RIG'S TO RELY ON WHILE A DIALOGUE BOX IS UP.
+## `scripts/story/sequence_director.gd` ends its per-frame gate with
+## `_camera_rig.set_process(not panel)` — the rig has never had a suspend of its
+## own, so the director switches the whole idle tick off for the length of every
+## conversation, deliberately, to stop the stick look and the follow.
+##
+## Driving the blend from `_process` therefore advanced it for exactly one frame
+## and then froze it: measured on the real village with
+## `tools/_capture_dialogue_camera.gd --dry-run`, the rig reported
+## `in_conv yes  blend 0.056  arm 5.18  fov 69.7` at every sample from t+0 to
+## t+48 — a push-in that had engaged and then never moved. Nothing in the unit
+## suite could see it, because a detached rig stepped by hand is never suspended
+## by a director that is not there.
+##
+## The physics tick is the right home for it beyond just being the one that
+## still runs: `dialogue_panel.gd` reads its advance input on the physics tick
+## and `interaction_arbiter.gd` recomputes there, so the shot now ticks on the
+## same clock as the box it exists for.
+func _physics_process(delta: float) -> void:
+	if not (_talk_active or _talk_leaving):
+		return
+	if _target == null or not is_instance_valid(_target):
+		_target = null
+		return
+	_conversation_follow(delta)
+
+
+## CONTROLLER-MAP: R3 (or Home) swings the camera back behind whatever it is
+## following. Written as a snap rather than a glide because the verb the owner
+## authored is "recentre", and a camera that takes half a second to arrive
+## reads as drift rather than as a button doing something. Pitch is left alone:
+## the complaint a recentre answers is "I am looking at the back of my own
+## head", which is a yaw problem.
+##
+## `_target.global_basis.z` is the direction the followed body faces; the rig
+## sits BEHIND it, so the yaw that puts the camera at its back is that vector's
+## own heading. A target with no meaningful facing (a spinning creature body
+## mid-attack) still gets a defined answer, which is better than refusing.
+func _recentre_behind_target() -> void:
+	if _target == null or not is_instance_valid(_target):
+		return
+	var forward := -_target.global_transform.basis.z
+	if Vector2(forward.x, forward.z).length() < 0.001:
+		return
+	yaw = wrapf(atan2(-forward.x, -forward.z), -PI, PI)
+	rotation = Vector3(pitch, yaw, 0.0)
+
+
+func _apply_look(delta: float) -> void:
+	if Input.is_action_just_pressed(&"camera_recenter"):
+		_recentre_behind_target()
+
+	# Gamepad, in degrees per second so sensitivity is frame-rate independent.
+	var stick := Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	var mouse_was_moved := not _mouse_delta.is_zero_approx()
+	if stick.length() < _deadzone:
+		stick = Vector2.ZERO
+	elif _response_exponent != 1.0:
+		# Bend the response so small deflections move slowly and full
+		# deflection keeps its speed — a fine-aim centre for the throw camera.
+		stick = stick.normalized() * pow(stick.length(), _response_exponent)
+	var turn := _gamepad_sensitivity * _sensitivity_scale \
+		* aim_assist_scale(stick.length(), _assist_scale)
+	var yaw_change := -stick.x * turn * delta
+	var pitch_change := -stick.y * turn * delta
+
+	# Mouse, in degrees per pixel. Not scaled by delta: the motion event already
+	# describes distance moved, and multiplying it by frame time makes fast
+	# frames turn less than slow ones for the same physical movement.
+	yaw_change += -_mouse_delta.x * _mouse_sensitivity
+	pitch_change += -_mouse_delta.y * _mouse_sensitivity
+	_mouse_delta = Vector2.ZERO
+
+	# The player's sensitivity and per-axis inversion (UX §8), on top of the
+	# tuned numbers above. `_invert_y` stays the config default it always was.
+	var adjusted := LOOK_PREFS.apply(Vector2(yaw_change, pitch_change), _invert_y)
+	yaw_change = adjusted.x
+	pitch_change = adjusted.y
+
+	yaw = wrapf(yaw + deg_to_rad(yaw_change), -PI, PI)
+	pitch = clampf(pitch + deg_to_rad(pitch_change), deg_to_rad(_pitch_min), deg_to_rad(_pitch_max))
+	rotation = Vector3(pitch, yaw, 0.0)
+	if stick != Vector2.ZERO or mouse_was_moved:
+		_tracking_manual_left = maxf(_tracking_manual_left,
+			float(_tracking_config.get("manual_grace_seconds", 0.4)))
+	else:
+		_tracking_manual_left = maxf(0.0, _tracking_manual_left - delta)
+
+
+func _apply_tracking(delta: float) -> void:
+	if _tracking_target == null or not is_instance_valid(_tracking_target) \
+			or _target == null or not is_instance_valid(_target):
+		return
+	if not bool(_tracking_config.get("enabled", true)) or _tracking_manual_left > 0.0:
+		return
+	var neutral: Variant = _tracking_neutral_yaw() if _fight_yaw_target == null else _fight_yaw_target
+	if neutral == null:
+		return
+	var wanted := float(neutral) + (deg_to_rad(_clearance_extra_deg) if _fight_yaw_target == null else 0.0)
+	var difference := angle_difference(yaw, wanted)
+	var dead_zone := deg_to_rad(float(_tracking_config.get("dead_zone_deg", 10.0)))
+	if absf(difference) <= dead_zone:
+		return
+	var correction := difference - signf(difference) * dead_zone
+	var strength := maxf(0.0, float(_tracking_config.get("strength", 4.0)))
+	var max_step := deg_to_rad(maxf(0.0,
+		float(_tracking_config.get("max_speed_deg", 120.0)))) * delta
+	yaw = wrapf(yaw + clampf(correction * strength * delta, -max_step, max_step), -PI, PI)
+	rotation = Vector3(pitch, yaw, 0.0)
+
+
+## F04#7: cut straight to the tracker's neutral composition. Combat calls
+## this once when a fight opens (combat.json `tracking.snap_on_open`): the
+## exploration yaw left from walking up to a trainer ran the arm back through
+## the opponent just sent out, `body_clear` pinned the lens at its 2m floor
+## inside the player's creature, and the tracker needed ~0.75s at its 120
+## deg/s cap to swing clear (tools/f04_fight_camera_probe.gd). Returns
+## whether it moved.
+func snap_to_tracking() -> bool:
+	var neutral: Variant = _tracking_neutral_yaw()
+	if neutral == null:
+		return false
+	yaw = wrapf(float(neutral), -PI, PI)
+	rotation = Vector3(pitch, yaw, 0.0)
+	return true
+
+
+## The yaw the neutral combat tracker aims for BEFORE any clear-orbit swing,
+## or null when there is nothing to track. Shared by `_apply_tracking()` and
+## `clear_orbit_offset_deg()` so the solver measures from the real neutral,
+## not from wherever the dead zone or a lag left the rig.
+func _tracking_neutral_yaw() -> Variant:
+	if _tracking_target == null or not is_instance_valid(_tracking_target) \
+			or _target == null or not is_instance_valid(_target):
+		return null
+	var origin := _world_point(_target)
+	var point := _world_point(_tracking_target)
+	if _tracking_target.has_method("centre") and _tracking_target.is_inside_tree():
+		point = _tracking_target.call("centre")
+	var toward := point - origin
+	toward.y = 0.0
+	if toward.length_squared() < 0.01:
+		return null
+	toward = toward.normalized()
+	# Camera3D looks down the arm's local -Z; the arm itself therefore sits on
+	# +Z opposite the opponent. This is the same yaw convention used by
+	# `_recentre_behind_target()` above.
+	var wanted := atan2(-toward.x, -toward.z)
+	# An oblique combat composition keeps the opponent's stance visible beside
+	# a large piloted body. Manual orbit and its grace period still win above.
+	var composition := float(_tracking_config.get("composition_yaw_deg", 0.0))
+	return wanted + deg_to_rad(composition + signf(composition if composition != 0.0 else 1.0) * _composition_extra_deg)
+
+
+## `global_position` of a node, or its `position` when it is out of the tree
+## (a parentless node's local transform IS its world transform, and asking an
+## out-of-tree node for its global one is an engine error, not an answer).
+static func _world_point(node: Node3D) -> Vector3:
+	return node.global_position if node.is_inside_tree() else node.position
+
+
+## F04 (Keeper Hald's room): the pivot rises `_height` straight up from the
+## target, and nothing swept that leg -- a combat `height_follow` lift toward
+## 6 m under a 6.5 m ceiling put the pivot into the slab, and `cast_motion`
+## ignores overlaps it starts inside, so the lens then shot through the roof.
+## The leg above VERTICAL_SWEEP_FROM_M is swept like the shoulder leg below.
+const VERTICAL_SWEEP_FROM_M := 1.0
+
+## Combat midpoint composition only; no target, input, aim or scale mutation.
+func set_framing_pivot_offset(offset: Vector3) -> void:
+	_framing_pivot_offset = offset if offset.is_finite() else Vector3.ZERO
+
+## One solved absolute orbit, rather than two independently lagged neutral and
+## clearance angles. Manual look/grace still owns _apply_tracking above.
+func set_fight_yaw_target(radians: Variant) -> void:
+	_fight_yaw_target = radians if (radians is float or radians is int) and is_finite(float(radians)) else null
+
+func set_fight_frame_composer(composer: Callable) -> void:
+	_fight_frame_composer = composer
+
+## Read-only same-frame lens query. Uses the same world mask, swept ball,
+## exclusions and margin as the existing rig, plus the actual rotated foe box.
+## Nothing here moves the actors, camera, rig or spring arm.
+func probe_fight_camera_pose(pivot: Vector3, camera_basis: Basis, distance: float,
+		foe_box: AABB, foe_pose: Transform3D, body_margin: float, body_minimum: float) -> Dictionary:
+	if _target == null or not is_instance_valid(_target) or not pivot.is_finite() \
+		or not is_finite(distance) or distance <= 0.0: return {}
+	var offset := pivot - (_world_point(_target) + Vector3.UP * _height)
+	var anchor := _pivot_anchor_for_offset(offset)
+	var safe := _world_point(_target) + Vector3.UP * minf(maxf(0.0,_height+offset.y),VERTICAL_SWEEP_FROM_M)
+	var leg := anchor-safe
+	if leg.length()>0.001: anchor = safe+leg.normalized()*_free_distance_behind(safe,leg.normalized(),leg.length())
+	var basis := camera_basis.orthonormalized()
+	var room := _free_distance_behind(anchor,basis.z,distance)
+	var body_room := preload("res://scripts/combat/fight_camera.gd").oriented_body_limit(anchor,
+		anchor+basis.z*distance,foe_box,foe_pose,body_margin,body_minimum)
+	var length := minf(distance,minf(room,body_room))
+	if not is_finite(length) or length<=0.0: return {}
+	var view_origin := anchor+basis.z*length
+	if _camera != null: view_origin += basis.x*_camera.h_offset+basis.y*_camera.v_offset
+	return {"pivot":anchor,"distance":length,"transform":Transform3D(basis,view_origin),
+		"world_room":room,"model_room":body_room}
+
+## Only an already scored constrained presentation pose reaches this door.
+## SpringArm's cached physics child placement is replaced for this draw; its
+## next physics update remains intact. World collision is queried above.
+func apply_fight_camera_pose(pose: Dictionary, requested_yaw: float) -> void:
+	if _camera == null or not pose.get("transform") is Transform3D \
+		or not pose.get("pivot") is Vector3 or not pose.get("distance") is float: return
+	var shot: Transform3D = pose.transform
+	if not shot.origin.is_finite() or not (pose.pivot as Vector3).is_finite() \
+		or not is_finite(float(pose.distance)) or float(pose.distance)<=0.0 or not is_finite(requested_yaw): return
+	yaw = wrapf(requested_yaw,-PI,PI)
+	_fight_yaw_target = yaw
+	global_transform = Transform3D(shot.basis,pose.pivot)
+	spring_length = float(pose.distance)
+	set_body_limit(float(pose.get("model_room",INF)))
+	_camera.position = Vector3(0.0,0.0,float(pose.distance))
+
+func framing_pivot_offset() -> Vector3:
+	return _framing_pivot_offset
+
+func _pivot_anchor() -> Vector3:
+	return _pivot_anchor_for_offset(_framing_pivot_offset)
+
+func _pivot_anchor_for_offset(offset: Vector3) -> Vector3:
+	var height := maxf(0.0, _height + offset.y)
+	var base_up := minf(height, VERTICAL_SWEEP_FROM_M)
+	var anchor := _world_point(_target) + Vector3.UP * base_up
+	if height > base_up:
+		anchor += Vector3.UP * _free_distance_behind(anchor, Vector3.UP, height - base_up)
+	var lateral := Vector3(offset.x, 0.0, offset.z)
+	var length := lateral.length()
+	if length > 0.001:
+		anchor += lateral / length * _free_distance_behind(anchor, lateral / length, length)
+	return anchor
+
+
+func _follow(delta: float) -> void:
+	var anchor := _pivot_anchor()
+	var desired := anchor
+	if not is_zero_approx(_shoulder):
+		# Sideways relative to where the camera is looking, so the offset stays
+		# on the same shoulder as you turn. Sweep the pivot's own probe volume:
+		# SpringArm only protects depth behind the pivot, not this lateral leg.
+		var lateral := Basis(Vector3.UP, yaw).x * _shoulder
+		var lateral_length := lateral.length()
+		if lateral_length > 0.001:
+			desired += lateral / lateral_length * _free_distance_behind(
+				anchor, lateral / lateral_length, lateral_length)
+	# Exponential smoothing written frame-rate independently. A raw lerp by
+	# `lag * delta` changes behaviour with frame rate, which shows up as the
+	# camera feeling different on the handheld than on the desktop.
+	#
+	# `retarget_lag` slows the follow while a fight is opening or closing, so the
+	# swap between trainer and creature is a glide rather than a snap.
+	var lag := _retarget_lag if _retarget_lag > 0.0 else _follow_lag
+	var weight := 1.0 - exp(-lag * delta)
+	var candidate := global_position.lerp(desired, weight)
+	# The lagged point can approach from a different side than today's desired
+	# shoulder. Sweep that complete anchor-to-candidate leg too, so smoothing
+	# cannot tunnel the pivot through a corner the lateral cast avoided.
+	if not is_zero_approx(_shoulder) or not _framing_pivot_offset.is_zero_approx():
+		var safe_anchor := _world_point(_target) + Vector3.UP * minf(maxf(0.0, _height + _framing_pivot_offset.y), VERTICAL_SWEEP_FROM_M)
+		var candidate_leg := candidate - safe_anchor
+		var candidate_length := candidate_leg.length()
+		if candidate_length > 0.001:
+			candidate = safe_anchor + candidate_leg / candidate_length * _free_distance_behind(
+				safe_anchor, candidate_leg / candidate_length, candidate_length)
+	global_position = candidate
+
+	# Once the rig has arrived, hand pacing back to the normal follow lag —
+	# otherwise the whole fight is played through a camera that lags behind
+	# every dodge.
+	if _retarget_lag > 0.0 and global_position.distance_to(desired) < 0.3:
+		_retarget_lag = 0.0
+
+	# The spring arm collapses instantly on intrusion (SpringArm3D's own
+	# behaviour) and is eased back out here, so leaving cover is smooth.
+	spring_length = move_toward(spring_length, _distance, _recover_speed * delta)
+	# A render-mesh limit clamps at once, like the arm's own collision does.
+	spring_length = minf(spring_length, _body_limit)
+
+
+## F10#2 C3: cap the arm short of a body's render mesh (INF clears it).
+func set_body_limit(length: float) -> void:
+	_body_limit = length if is_finite(length) and length > 0.0 else INF
+
+
+func body_limit() -> float:
+	return _body_limit
+
+
+## --- the conversation push-in -----------------------------------------------
+
+## Blend to the two-shot on `speaker`. Returns false, and leaves the camera
+## exactly where it was, when there is nothing worth pushing in on.
+##
+## Called from `scripts/ui/dialogue_panel.gd` by way of
+## `conversation_camera.gd::begin()` — one call in, one call out, so there is a
+## single place that knows a conversation moves the camera at all.
+func enter_conversation(speaker: Node3D, cfg: Dictionary) -> bool:
+	if speaker == null or not is_instance_valid(speaker):
+		return false
+	if _target == null or not is_instance_valid(_target):
+		return false
+	if _talk_active:
+		return false
+
+	var anchor := CONVERSATION.speaker_anchor(speaker, cfg)
+	# A conversation opened from across a field is not the shot this is for —
+	# the road gate calls its lock message from wherever you are standing, and a
+	# 3.5m two-shot on a person 20m away frames a patch of grass between you.
+	if CONVERSATION.world_position(_target).distance_to(anchor) \
+			> float(cfg.get("max_speaker_distance", 9.0)):
+		return false
+
+	# Only save the exploration pose on a genuine entry. Re-entering while the
+	# exit blend is still running (two villagers in one press, the stronghold's
+	# back-to-back beats) must keep the ORIGINAL saved pose, or the second
+	# conversation blends back to the two-shot the first one left behind.
+	if not _talk_leaving:
+		_talk_saved_yaw = yaw
+		_talk_saved_pitch = pitch
+		_talk_saved_distance = _distance
+		_talk_saved_fov = _camera.fov if _camera != null else _base_fov
+		_talk_blend = 0.0
+
+	_talk_speaker = speaker
+	_talk_cfg = cfg
+	_talk_blend_time = maxf(float(cfg.get("blend_time", 0.45)), 0.01)
+	_talk_active = true
+	_talk_leaving = false
+	_exclude_conversation_bodies()
+	_talk_shot = _solve_conversation_shot()
+	return true
+
+
+## Blend back to the pose the rig had before the push-in. Safe when nothing
+## pushed in.
+func exit_conversation() -> void:
+	if not _talk_active:
+		return
+	_talk_active = false
+	_talk_leaving = true
+
+
+func is_in_conversation() -> bool:
+	return _talk_active
+
+
+## True when the two-shot did not fit and the closer over-shoulder was used
+## instead. Read by `tests/test_conversation_camera.gd`; nothing in the game
+## branches on it.
+func conversation_used_fallback() -> bool:
+	return _talk_used_fallback
+
+
+## How far the push-in has got: 0 is the exploration orbit, 1 is the two-shot.
+## Read by `tests/test_conversation_camera.gd` to step the blend to its end
+## rather than guessing a frame count.
+func conversation_blend() -> float:
+	return _talk_blend
+
+
+## The shot currently being blended toward, in `conversation_camera.gd::solve`'s
+## own terms. For tests and for the capture tool.
+func conversation_shot() -> Dictionary:
+	return _talk_shot.duplicate()
+
+
+## Test seam. `probe.call(pivot, dir, limit) -> float` answers "how many metres
+## of clear space are there from `pivot` along `dir`", the same question the
+## physics query below answers.
+func set_occlusion_probe_for_tests(probe: Callable) -> void:
+	_occlusion_probe = probe
+
+
+## Drop the push-in immediately, with no blend, and put back everything it
+## changed. Used when something with a better claim takes the camera.
+func _abandon_conversation() -> void:
+	_talk_active = false
+	_talk_leaving = false
+	_talk_blend = 0.0
+	_talk_speaker = null
+	_talk_shot = {}
+	_talk_used_fallback = false
+	_talk_excluded.clear()
+	yaw = _talk_saved_yaw
+	pitch = _talk_saved_pitch
+	rotation = Vector3(pitch, yaw, 0.0)
+	spring_length = _talk_saved_distance
+	if _camera != null:
+		_camera.fov = _talk_saved_fov
+
+
+## Drive the blend, in either direction. Called instead of `_apply_look` and
+## `_follow`, never alongside them.
+func _conversation_follow(delta: float) -> void:
+	if _talk_active:
+		# Re-solved every frame rather than once on open: the speaker turns to
+		# face you as you arrive (`npc_body.gd` TURN_SPEED), the player is still
+		# settling on the ground, and a shot frozen on the opening frame drifts
+		# visibly off both of them during the fade.
+		var solved := _solve_conversation_shot()
+		if not solved.is_empty():
+			_talk_shot = solved
+
+	var wanted := 1.0 if _talk_active else 0.0
+	_talk_blend = move_toward(_talk_blend, wanted, delta / _talk_blend_time)
+	var weight := smoothstep(0.0, 1.0, _talk_blend)
+
+	# The far end of the blend is the exploration orbit as it would be RIGHT
+	# NOW, not as it was when the conversation opened. The player can be shoved
+	# by a creature mid-sentence, and blending back to a stale point would walk
+	# the camera to where they used to be.
+	var explore_pivot := CONVERSATION.world_position(_target) + Vector3.UP * _height
+	var pivot: Vector3 = _talk_shot.get("pivot", explore_pivot)
+	var shot_yaw: float = float(_talk_shot.get("yaw", _talk_saved_yaw))
+	var shot_pitch: float = float(_talk_shot.get("pitch", _talk_saved_pitch))
+	var shot_distance: float = float(_talk_shot.get("distance", _talk_saved_distance))
+	var shot_fov: float = float(_talk_shot.get("fov", _talk_saved_fov))
+
+	CONVERSATION.set_world_position(self, explore_pivot.lerp(pivot, weight))
+	yaw = lerp_angle(_talk_saved_yaw, shot_yaw, weight)
+	pitch = lerpf(_talk_saved_pitch, shot_pitch, weight)
+	rotation = Vector3(pitch, yaw, 0.0)
+	spring_length = lerpf(_talk_saved_distance, shot_distance, weight)
+	if _camera != null:
+		_camera.fov = lerpf(_talk_saved_fov, shot_fov, weight)
+
+	if _talk_leaving and is_zero_approx(_talk_blend):
+		_talk_leaving = false
+		_talk_speaker = null
+		_talk_shot = {}
+		_talk_used_fallback = false
+		# Hand the arm back to `_follow`'s own recovery, and give the exclusion
+		# list back to the plain "ignore whatever I am following" rule.
+		_talk_excluded.clear()
+		clear_excluded_objects()
+		if _target is CollisionObject3D:
+			add_excluded_object((_target as CollisionObject3D).get_rid())
+
+
+## Solve the two-shot, then find out whether it fits, then take the closer
+## over-shoulder if it does not. Empty when the speaker has gone (a villager
+## removed by a progression flag mid-sentence), in which case the caller keeps
+## the last good shot rather than snapping to nothing.
+func _solve_conversation_shot() -> Dictionary:
+	if _talk_speaker == null or not is_instance_valid(_talk_speaker):
+		return {}
+	var trainer_anchor := CONVERSATION.world_position(_target) \
+		+ Vector3.UP * float(_talk_cfg.get("trainer_anchor_height", 1.45))
+	var speaker_anchor := CONVERSATION.speaker_anchor(_talk_speaker, _talk_cfg)
+	var forward := -CONVERSATION.world_basis(self).z
+
+	var shot := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, _talk_cfg)
+	var used_cfg: Dictionary = _talk_cfg
+	var used_room := INF
+	var room := _free_distance_behind(shot["pivot"], shot["dir"], float(shot["distance"]))
+	if CONVERSATION.is_blocked(shot, room, _talk_cfg):
+		# Re-solved rather than trimmed. The room is handed to the solver as a
+		# ceiling so that every guard it applies — the speaker's clearance, and
+		# above all the trainer's — is worked out against the arm the camera
+		# will REALLY have. Clamping a finished shot afterwards left the guards
+		# holding for a length that no longer existed, which is how the lens
+		# ended up inside the player's own head in Bram's inn.
+		var tighter := CONVERSATION.fallback_config(_talk_cfg)
+		# Where the room IS, not where the shot would like it to be. Standing
+		# behind the trainer is the default and the first thing tried; backed
+		# into a corner it is a wall, and insisting on it produces a lens in the
+		# back of the player's own head with the speaker hidden behind it. Each
+		# candidate swing is solved and then swept for real, nearest-first, and
+		# the first that fits its own arm wins.
+		var base_swing := float(tighter.get("shoulder_yaw_deg", 0.0))
+		var best: Dictionary = tighter
+		var best_room := -1.0
+		var found_reachable := false
+		for extra: float in CONVERSATION.swing_search(tighter):
+			var candidate := tighter.duplicate()
+			candidate["shoulder_yaw_deg"] = base_swing + extra
+			var probe := CONVERSATION.solve(
+				trainer_anchor, speaker_anchor, forward, candidate)
+			var probe_room := _free_distance_behind(
+				probe["pivot"], probe["dir"], float(probe["distance"]))
+			# A swing is only worth having if the camera could GET there from
+			# behind the player. Room measured outward from the pivot says
+			# nothing about that: the pivot already sits most of the way toward
+			# the speaker, so in Bram's inn a wide swing found clear air on the
+			# FAR side of the bar and put the lens there — nothing intersecting,
+			# and a viewpoint standing where no camera following this player
+			# could stand, with the trainer not in the picture at all. Sweeping
+			# the trainer -> camera path rules that out.
+			var reachable := _camera_is_reachable(trainer_anchor, probe)
+			var better := probe_room > best_room
+			if reachable and not found_reachable:
+				# Any reachable shot beats the best unreachable one.
+				better = true
+			elif found_reachable and not reachable:
+				better = false
+			if better:
+				best_room = probe_room
+				best = candidate
+				found_reachable = reachable
+			if reachable and probe_room >= float(probe["distance"]):
+				break
+		shot = CONVERSATION.solve(
+			trainer_anchor, speaker_anchor, forward, best, best_room)
+		shot["fallback"] = true
+		used_cfg = best
+		used_room = best_room
+	if bool(_talk_cfg.get("require_speaker_sight", false)) \
+			and not _speaker_in_sight(shot, speaker_anchor):
+		shot = _swing_for_sight(shot, used_cfg, used_room, trainer_anchor, speaker_anchor, forward)
+	_talk_used_fallback = bool(shot.get("fallback", false))
+	return shot
+
+
+## F04#6 (aftermath render af2 03e7486c): Vess's post is the start of the
+## Watchtower Spur, and the spur's signpost stood between the lens and her for
+## her whole victory speech. With `require_speaker_sight`, a shot whose line to
+## the speaker's head runs into something swings round the pivot, nearest
+## first, to the first angle the camera can reach that sees them.
+func _speaker_in_sight(shot: Dictionary, speaker_anchor: Vector3) -> bool:
+	var lens: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var to_speaker := speaker_anchor - lens
+	var reach := to_speaker.length()
+	if reach <= 0.3:
+		return true
+	# Stops short of the speaker's own anchor: their body is excluded, but a
+	# prop they lean on at arm's length is not what this is asking about.
+	var look := reach - 0.3
+	return _free_distance_behind(lens, to_speaker / reach, look, false) >= look - 0.01
+
+
+func _swing_for_sight(shot: Dictionary, cfg: Dictionary, room: float,
+		trainer_anchor: Vector3, speaker_anchor: Vector3, forward: Vector3) -> Dictionary:
+	var base_swing := float(cfg.get("shoulder_yaw_deg", 0.0))
+	for extra: float in CONVERSATION.swing_search(cfg):
+		if is_zero_approx(extra):
+			continue
+		var candidate := cfg.duplicate()
+		candidate["shoulder_yaw_deg"] = base_swing + extra
+		var probe := CONVERSATION.solve(trainer_anchor, speaker_anchor, forward, candidate, room)
+		var probe_room := _free_distance_behind(probe["pivot"], probe["dir"], float(probe["distance"]))
+		if probe_room < float(probe["distance"]) - 0.01:
+			continue
+		if _camera_is_reachable(trainer_anchor, probe) and _speaker_in_sight(probe, speaker_anchor):
+			probe["fallback"] = bool(shot.get("fallback", false))
+			return probe
+	return shot
+
+
+## Metres of clear space from `pivot` out along `dir`, capped at `limit`.
+##
+## A swept ball rather than a ray, for the reason `_probe_radius` above gives at
+## length: indoors a single hairline ray slips between a chair back and a table
+## edge and reports a room that is not there.
+func _free_distance_behind(pivot: Vector3, dir: Vector3, limit: float,
+		apply_margin: bool = true) -> float:
+	if _occlusion_probe.is_valid():
+		return float(_occlusion_probe.call(pivot, dir, limit))
+	# `get_world_3d()` does not merely answer null off the tree, it PRINTS.
+	if not is_inside_tree():
+		return limit
+	var world := get_world_3d()
+	if world == null:
+		return limit
+	var space := world.direct_space_state
+	if space == null:
+		return limit
+	var query := PhysicsShapeQueryParameters3D.new()
+	var ball := SphereShape3D.new()
+	ball.radius = _probe_radius
+	query.shape = ball
+	query.transform = Transform3D(Basis(), pivot)
+	query.motion = dir * limit
+	# The arm's own mask: what SpringArm3D itself would stop against. The query
+	# default is every layer, so a body the arm walks straight through -- the
+	# trainer standing behind their creature -- read as a wall and sent the
+	# clear-orbit solver swinging away from a perfectly open fight.
+	query.collision_mask = collision_mask
+	var excluded: Array[RID] = _talk_excluded.duplicate()
+	# The ordinary follow target surrounds `pivot`; without excluding it every
+	# shoulder sweep begins inside the creature and reports zero free distance.
+	if _target is CollisionObject3D:
+		var target_rid := (_target as CollisionObject3D).get_rid()
+		if not excluded.has(target_rid):
+			excluded.append(target_rid)
+	query.exclude = excluded
+	var travel: Array = space.cast_motion(query)
+	if travel.size() < 1:
+		return limit
+	var hit := float(travel[0]) * limit
+	if hit >= limit or not apply_margin:
+		return minf(hit, limit)
+	# The room a hit leaves is NOT where the camera goes. SpringArm3D keeps
+	# `margin` (0.6m here, and deliberately large — see `_collision_margin`)
+	# between the arm's end and whatever it hit, so an arm set to exactly this
+	# measurement is placed 0.6m shorter than that, forward of everything the
+	# framing was solved for. Reporting the usable length instead is what lets
+	# the solver's guards mean anything indoors.
+	return maxf(hit - margin, 0.0)
+
+
+## Could a camera following this player actually stand where `shot` puts it?
+##
+## Swept from the trainer's own framing anchor out to the lens, with no margin:
+## this is a line-of-travel question, not a "how much arm fits" one. Both people
+## are already excluded from the sweep, so what it finds is furniture and walls
+## — the bar Bram stands behind, the cottage wall Mira stands against.
+func _camera_is_reachable(trainer_anchor: Vector3, shot: Dictionary) -> bool:
+	var at: Vector3 = shot["pivot"] + Vector3(shot["dir"]) * float(shot["distance"])
+	var to_camera := at - trainer_anchor
+	var reach := to_camera.length()
+	if reach <= 0.01:
+		return true
+	return _free_distance_behind(trainer_anchor, to_camera / reach, reach, false) >= reach - 0.01
+
+
+## The trainer and the person they are talking to are both excluded from the
+## arm's sweep for the whole conversation.
+##
+## Both matter and for different reasons. The framing pivot sits most of the way
+## along the line to the speaker, so the TRAINER stands between that pivot and
+## the camera — an arm that collided with them would collapse onto the back of
+## their own head every single time. And the pivot can end up inside the
+## SPEAKER's capsule when the player walks right into a villager to greet them,
+## which a sweep starting in contact reports as zero room and the fallback then
+## reads as a wall.
+func _exclude_conversation_bodies() -> void:
+	# SpringArm3D exposes add/remove/clear for its exclusion list but no getter,
+	# so the same RIDs are mirrored here for the shape query below to reuse.
+	_talk_excluded.clear()
+	clear_excluded_objects()
+	if _target is CollisionObject3D:
+		_talk_excluded.append((_target as CollisionObject3D).get_rid())
+	for body: CollisionObject3D in _collision_bodies_of(_talk_speaker):
+		_talk_excluded.append(body.get_rid())
+	for rid: RID in _talk_excluded:
+		add_excluded_object(rid)
+
+
+## The colliders belonging to a body. `npc_body.gd` builds its StaticBody3D as a
+## direct child, so the node itself and one level of children is the whole
+## answer. Deliberately NOT recursive and deliberately not walking upward: a
+## villager's parent is the node holding every OTHER villager, and excluding
+## that whole level would let the camera sweep straight through the rest of the
+## square.
+static func _collision_bodies_of(node: Node) -> Array[CollisionObject3D]:
+	var found: Array[CollisionObject3D] = []
+	if node == null or not is_instance_valid(node):
+		return found
+	if node is CollisionObject3D:
+		found.append(node as CollisionObject3D)
+	for child in node.get_children():
+		if child is CollisionObject3D:
+			found.append(child as CollisionObject3D)
+	return found
+
+
+## Forward direction on the horizontal plane, for translating stick input into
+## world movement. Kept here so the controller never has to know how the camera
+## is oriented.
+func planar_basis() -> Basis:
+	return Basis(Vector3.UP, yaw)
+
+
+## Per-frame extra look scaling from whoever owns the current aim — the throw
+## slows the stick further while the reticle is near its target. Reset by
+## every set_target, so a profile change cannot inherit a stale slowdown.
+func set_look_scale(scale_value: float) -> void:
+	_assist_scale = clampf(scale_value, 0.1, 1.0)
+
+
+static func aim_assist_scale(stick_strength: float, requested_scale: float) -> float:
+	var fine_scale := clampf(requested_scale, 0.1, 1.0)
+	var full_speed_weight := smoothstep(
+		ASSIST_FULL_SPEED_START, ASSIST_FULL_SPEED_END, clampf(stick_strength, 0.0, 1.0))
+	return lerpf(fine_scale, 1.0, full_speed_weight)

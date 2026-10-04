@@ -1,0 +1,481 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:47:15.246866+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "utility_count": 10,
+  "live_species_count": 69,
+  "authored_learnset_count": 70,
+  "utilities": [
+    "bramble_trap",
+    "dash_strike",
+    "heal_pulse",
+    "hearten",
+    "quake_ring",
+    "sap",
+    "shove",
+    "slow_field",
+    "snare",
+    "veil"
+  ],
+  "role_species": {
+    "CURRENT": [
+      "abyssal_guardian",
+      "bramblebun",
+      "breezetail",
+      "frostclaw",
+      "fulgocobra",
+      "paddlenewt",
+      "pebbik",
+      "reedwing",
+      "ribbonray",
+      "riftfrill",
+      "sirenseal",
+      "stormbrush",
+      "tanglevolt",
+      "tempestwing",
+      "tidecoil",
+      "veridian",
+      "voltwig",
+      "water_abyssal_guardian",
+      "water_sirenseal",
+      "water_tidecoil"
+    ],
+    "CHARGER": [
+      "aeriex",
+      "aquaryn",
+      "brooktail",
+      "galecrest",
+      "mangrove_monitor",
+      "pipwing",
+      "ripplet",
+      "riverdrake",
+      "skyrill",
+      "sparkit",
+      "stormraven",
+      "stormtrail",
+      "torrentoad",
+      "trailpup",
+      "water_aquaryn",
+      "water_mangrove_monitor",
+      "water_riverdrake",
+      "water_torrentoad"
+    ],
+    "WALL": [
+      "ashtusk",
+      "burrowback",
+      "cannonback",
+      "cindercub",
+      "cliffspike",
+      "cragclaw",
+      "craghorn",
+      "mosshell",
+      "mudsnout",
+      "riptusk",
+      "staticub",
+      "stormcapra",
+      "terrapup",
+      "thundertunnel",
+      "tuskroot",
+      "voltarach",
+      "water_cannonback",
+      "water_cragclaw",
+      "water_mosshell",
+      "water_riptusk"
+    ],
+    "DIVER": [
+      "cloudfang",
+      "duskhush",
+      "galewisp",
+      "glimmermoth",
+      "meadowhart",
+      "mirejaw",
+      "mosshock",
+      "nightburrow",
+      "shadelet",
+      "solmane",
+      "water_mirejaw"
+    ]
+  },
+  "utility_catalogue_failures": [],
+  "shared_ultimate_count": 19,
+  "shared_ids": [
+    "ultimate_air_charger",
+    "ultimate_air_current",
+    "ultimate_air_diver",
+    "ultimate_air_wall",
+    "ultimate_dark_diver",
+    "ultimate_electric_charger",
+    "ultimate_electric_current",
+    "ultimate_electric_diver",
+    "ultimate_electric_wall",
+    "ultimate_fire_wall",
+    "ultimate_ground_charger",
+    "ultimate_ground_current",
+    "ultimate_ground_diver",
+    "ultimate_ground_wall",
+    "ultimate_ice_current",
+    "ultimate_water_charger",
+    "ultimate_water_current",
+    "ultimate_water_diver",
+    "ultimate_water_wall"
+  ],
+  "mapping": [
+    {
+      "species": "abyssal_guardian",
+      "ultimate": "ultimate_abyssal_guardian",
+      "unique": true
+    },
+    {
+      "species": "aeriex",
+      "ultimate": "ultimate_air_charger",
+      "unique": false
+    },
+    {
+      "species": "aquaryn",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "ashtusk",
+      "ultimate": "ultimate_ashtusk",
+      "unique": true
+    },
+    {
+      "species": "bramblebun",
+      "ultimate": "ultimate_ground_current",
+      "unique": false
+    },
+    {
+      "species": "breezetail",
+      "ultimate": "ultimate_air_current",
+      "unique": false
+    },
+    {
+      "species": "brooktail",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "burrowback",
+      "ultimate": "ultimate_ground_wall",
+      "unique": false
+    },
+    {
+      "species": "cannonback",
+      "ultimate": "ultimate_cannonback",
+      "unique": true
+    },
+    {
+      "species": "cindercub",
+      "ultimate": "ultimate_fire_wall",
+      "unique": false
+    },
+    {
+      "species": "cliffspike",
+      "ultimate": "ultimate_air_wall",
+      "unique": false
+    },
+    {
+      "species": "cloudfang",
+      "ultimate": "ultimate_air_diver",
+      "unique": false
+    },
+    {
+      "species": "cragclaw",
+      "ultimate": "ultimate_water_wall",
+      "unique": false
+    },
+    {
+      "species": "craghorn",
+      "ultimate": "ultimate_air_wall",
+      "unique": false
+    },
+    {
+      "species": "duskhush",
+      "ultimate": "ultimate_air_diver",
+      "unique": false
+    },
+    {
+      "species": "frostclaw",
+      "ultimate": "ultimate_ice_current",
+      "unique": false
+    },
+    {
+      "species": "fulgocobra",
+      "ultimate": "ultimate_fulgocobra",
+      "unique": true
+    },
+    {
+      "species": "galecrest",
+      "ultimate": "ultimate_air_charger",
+      "unique": false
+    },
+    {
+      "species": "galewisp",
+      "ultimate": "ultimate_galewisp",
+      "unique": true
+    },
+    {
+      "species": "glimmermoth",
+      "ultimate": "ultimate_electric_diver",
+      "unique": false
+    },
+    {
+      "species": "mangrove_monitor",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "meadowhart",
+      "ultimate": "ultimate_ground_diver",
+      "unique": false
+    },
+    {
+      "species": "mirejaw",
+      "ultimate": "ultimate_water_diver",
+      "unique": false
+    },
+    {
+      "species": "mosshell",
+      "ultimate": "ultimate_water_wall",
+      "unique": false
+    },
+    {
+      "species": "mosshock",
+      "ultimate": "ultimate_electric_diver",
+      "unique": false
+    },
+    {
+      "species": "mudsnout",
+      "ultimate": "ultimate_ground_wall",
+      "unique": false
+    },
+    {
+      "species": "nightburrow",
+      "ultimate": "ultimate_ground_diver",
+      "unique": false
+    },
+    {
+      "species": "paddlenewt",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "pebbik",
+      "ultimate": "ultimate_air_current",
+      "unique": false
+    },
+    {
+      "species": "pipwing",
+      "ultimate": "ultimate_air_charger",
+      "unique": false
+    },
+    {
+      "species": "reedwing",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "ribbonray",
+      "ultimate": "ultimate_air_current",
+      "unique": false
+    },
+    {
+      "species": "riftfrill",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "ripplet",
+      "ultimate": "ultimate_ripplet",
+      "unique": true
+    },
+    {
+      "species": "riptusk",
+      "ultimate": "ultimate_water_wall",
+      "unique": false
+    },
+    {
+      "species": "riverdrake",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "shadelet",
+      "ultimate": "ultimate_dark_diver",
+      "unique": false
+    },
+    {
+      "species": "sirenseal",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "skyrill",
+      "ultimate": "ultimate_air_charger",
+      "unique": false
+    },
+    {
+      "species": "solmane",
+      "ultimate": "ultimate_solmane",
+      "unique": true
+    },
+    {
+      "species": "sparkit",
+      "ultimate": "ultimate_electric_charger",
+      "unique": false
+    },
+    {
+      "species": "staticub",
+      "ultimate": "ultimate_electric_wall",
+      "unique": false
+    },
+    {
+      "species": "stormbrush",
+      "ultimate": "ultimate_electric_current",
+      "unique": false
+    },
+    {
+      "species": "stormcapra",
+      "ultimate": "ultimate_stormcapra",
+      "unique": true
+    },
+    {
+      "species": "stormraven",
+      "ultimate": "ultimate_electric_charger",
+      "unique": false
+    },
+    {
+      "species": "stormtrail",
+      "ultimate": "ultimate_ground_charger",
+      "unique": false
+    },
+    {
+      "species": "tanglevolt",
+      "ultimate": "ultimate_electric_current",
+      "unique": false
+    },
+    {
+      "species": "tempestwing",
+      "ultimate": "ultimate_air_current",
+      "unique": false
+    },
+    {
+      "species": "terrapup",
+      "ultimate": "ultimate_terrapup",
+      "unique": true
+    },
+    {
+      "species": "thundertunnel",
+      "ultimate": "ultimate_electric_wall",
+      "unique": false
+    },
+    {
+      "species": "tidecoil",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "torrentoad",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "trailpup",
+      "ultimate": "ultimate_ground_charger",
+      "unique": false
+    },
+    {
+      "species": "tuskroot",
+      "ultimate": "ultimate_tuskroot",
+      "unique": true
+    },
+    {
+      "species": "veridian",
+      "ultimate": "ultimate_veridian",
+      "unique": true
+    },
+    {
+      "species": "voltarach",
+      "ultimate": "ultimate_electric_wall",
+      "unique": false
+    },
+    {
+      "species": "voltwig",
+      "ultimate": "ultimate_electric_current",
+      "unique": false
+    },
+    {
+      "species": "water_abyssal_guardian",
+      "ultimate": "ultimate_abyssal_guardian",
+      "unique": true
+    },
+    {
+      "species": "water_aquaryn",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "water_cannonback",
+      "ultimate": "ultimate_cannonback",
+      "unique": true
+    },
+    {
+      "species": "water_cragclaw",
+      "ultimate": "ultimate_water_wall",
+      "unique": false
+    },
+    {
+      "species": "water_mangrove_monitor",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "water_mirejaw",
+      "ultimate": "ultimate_water_diver",
+      "unique": false
+    },
+    {
+      "species": "water_mosshell",
+      "ultimate": "ultimate_water_wall",
+      "unique": false
+    },
+    {
+      "species": "water_riptusk",
+      "ultimate": "ultimate_water_wall",
+      "unique": false
+    },
+    {
+      "species": "water_riverdrake",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    },
+    {
+      "species": "water_sirenseal",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "water_tidecoil",
+      "ultimate": "ultimate_water_current",
+      "unique": false
+    },
+    {
+      "species": "water_torrentoad",
+      "ultimate": "ultimate_water_charger",
+      "unique": false
+    }
+  ],
+  "mapping_failures": [],
+  "species_metadata_missing_ultimate": [],
+  "verdicts": {
+    "F23#2": "DATA_PASS_RUNTIME_EQUIP_OPEN",
+    "F35#0": "DATA_PASS_NATIVE_MAPPING_OPEN"
+  },
+  "honest_gap": "Every base species supplies its authored ultimate; Teaching.initialize_loadout also resolves learned signatures. Runtime feature flags are OFF. No native equip/spawn/mapping or ordinary feature activation is inferred from catalogue presence."
+}

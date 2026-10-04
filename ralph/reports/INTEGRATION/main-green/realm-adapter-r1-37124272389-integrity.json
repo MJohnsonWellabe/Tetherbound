@@ -1,0 +1,25 @@
+{
+  "run_id": 37124272389,
+  "artifact_id": 11273744143,
+  "checkout_ref": "3c27dd1eb81b0373749e3e62d0e0f1ec74a2b059",
+  "result": "FAIL original strict error guard: cancel host _portal_grant checkpoint.id missing; incomplete transport-only fixture consumed by unrelated arrival producer. Game108 and all adapter checks completed, not clean.",
+  "archive_sha256": "33ee9bd099fe78f63ee0f0c81417bf61abeea4ee7254c430154e3303afbd3f18",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "realm-adapter-r1-37124272389-0-MANIFEST.txt.gz",
+      "sha256": "8ac7eca9255a22af1be46fba56137039fce7238f77ec5de6ae11217e4b1b780c"
+    },
+    "run.log": {
+      "retained_file": "realm-adapter-r1-37124272389-1-run.log.gz",
+      "sha256": "7a59e1829127eb5bfe8a256ee9603952bd1fe9d8c38298449022bf45445521a4"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "realm-adapter-r1-37124272389-2-boot_log.txt.gz",
+      "sha256": "12e11a702a48dd3026a47c74ee15adfc520651161c414e4e037dce0842119cc5"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "realm-adapter-r1-37124272389-3-godot.log.gz",
+      "sha256": "7a59e1829127eb5bfe8a256ee9603952bd1fe9d8c38298449022bf45445521a4"
+    }
+  }
+}

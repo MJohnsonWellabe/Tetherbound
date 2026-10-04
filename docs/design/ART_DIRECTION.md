@@ -143,6 +143,17 @@ These targets define the ordinary-camera judgment for Bar A and Bar B together. 
 
 **Frame matrix and judgment.** Each biome uses the same ordinary-camera approach, forward gameplay, reverse view and near detail, plus a real fight. Meadows/Tidewake/Cloudreach add morning, noon, golden hour, night, clear and authored bad weather; Stormwood substitutes all four Surge phases and pre/post-release weather. The Hall adds farm-door approach, nave, each arch/sign and Shrine Room. Capture matched High and Medium views at 1920×1080 and Low readability controls; record preset, actual renderer, time/phase/weather, position, route revision and frame timing. A code-blind judge receives images/motion and these references without source changes or defect-only prompts. Any missing material, clipped body, floating object, unreadable route, magenta slab or placeholder silhouette blocks the full bar. F26#3/#4 remain open until those actual matrices and route measurements exist.
 
+Cloudreach stone must read as related exposed beds and weathered ledges at the
+ordinary camera, with moss following shelf orientation. Grain must retain a
+believable metre scale across cliff walls and crown banks; it must not turn the
+grey-green authored palette brown, form continuous barcode rings, shimmer at
+distance or rotate a wall's lighting normal toward the sky. The F26 cliff-course
+surface in `art.json` is a candidate, OFF in Low/Medium/High pending matched native
+review (`ralph/reports/VISUAL/lookdev/f26-cliff-courses/`). It addresses material
+coherence only; the archived Cloudreach High/Medium full-bar FAILs and F26#3 remain
+open. Terrain shape, ecology, creature appeal and atmosphere still require their
+own integrated matrix evidence.
+
 ### 4.2 Reference boards
 
 For Bar A's chapter-specific comparison, use:
@@ -169,7 +180,7 @@ Every final creature needs a readable face/eye region, ground contact, habitat s
 - **Evolution lines (RD-28, F29).** One line per biome, each taken at a breakthrough feast: Mudsnout → Tuskroot or Ashtusk (L20), Mosshell → Cannonback (L30), Craghorn → Stormcapra (L40), Staticub → the new storm bear (L50). The evolved form must read as the same individual grown up. Keep the nickname plate, keep traits and gear accents visible, and let the palette carry over. It is larger than its base form. Starters do not evolve. Superseded (RD-28): Mudsnout's former L15-plus-bond evolution.
 - **Gear accents (RD-14, F33#1).** An equipped Harness or Charm shows as a trim or glow on the body, one family per tier (Rootiron, Tidesteel, Skyglass, Stormglass). Accents stay small and must not break the silhouette, hide the face or use oxblood.
 - **Traits and alphas (RD-30, F30).** Rare traits may add a restrained visual cue that never displaces rarity, shiny or alpha presentation. Shinies remain cosmetic.
-- **Ripplet (RD-32, F37).** Surface-swim mount and dive presentation replace the dropped Teleport promise. The rider pose and the water surface stay readable while crossing currents.
+- **Ripplet (RD-32, F37).** Surface-swim mount and dive presentation carry the starter traversal promise. The rider pose and the water surface stay readable while crossing currents.
 
 General habitat separation targets **1.5:1** value or hue contrast in representative day and night samples, but identity wins over a blind universal threshold. Burrowback's grey-olive rock armour is a named exception: target about **1.30:1**, preserving its dark identity and improving rim/contact separation rather than bleaching the armour. Colour is not the only differentiator: rarity uses restrained scale, VFX, animation, habitat, behaviour and encounter staging. Shinies remain cosmetic.
 
@@ -247,7 +258,7 @@ The owner authorized a **bounded, agent-attended** Meshy batch for **about 25–
 | 11 | Cloudfang | Main path | Most frequent Cloudreach subject; Veyra team | candidate, confirm in F36 |
 | 12 | Aeriex | Main path | Frequent Cloudreach subject; Veyra lane controller | candidate, confirm in F36 |
 | 13 | Tanglevolt | Main path | Most frequent Stormwood subject; Marrow team | candidate, confirm in F36 |
-| 14 | Sparkit | Main path | Frequent Stormwood subject; Marrow team; current Stormheart placeholder body | candidate, confirm in F36 |
+| 14 | Fulgocobra | Legendary | Settled Stormwood legendary identity replaces the Sparkit captive placeholder; Sparkit remains in the all-species pose pass | source audited in R2-F36; visual confirmation pending |
 | 15 | Tuskroot | Boss ace, evolution | Warden's ace; L20 evolved form with a unique ultimate | candidate, confirm in F36 |
 | 16 | Ashtusk | Evolution | L20 alternative evolved form with a unique ultimate | candidate, confirm in F36 |
 | 17 | Cannonback | Boss team, evolution | L30 evolved form; Venn and Nerissa teams; frequent Tidewake wild | candidate, confirm in F36 |
@@ -285,8 +296,12 @@ This section is the live provenance/disposition ledger within the authorized doc
 
 | Subject | Standing disposition |
 |---|---|
+| F36 installed-rig pose candidates | Source-authored, per-instance AnimationLibrary recipes for hurt, rolled-envelope-grounded collapse, swim, fly-grip and ride across the 57 installed creature rigs; water aliases reuse their verified source identity. No mesh/texture/skin acquisition or service generation; original clips and acquisition/redistribution provenance stay intact. Rebuild: `tools/art_pipeline/author_f36_pose_profiles.py`; runtime checks exact model SHA-256 and bone names. All species remain disabled in `data/creatures/f36_pose_candidates.json`. Static census/source audit: `ralph/reports/R2-F36/`. Native posed-vertex contact, High/Medium code-blind pose matrix and actual traversal/save/rejoin proof remain pending through ROOT's queue; fitted-envelope grounding is not posed-vertex acceptance. |
+| Stormursa F36 drafted reference | Original built-in imagegen reference `assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png`, drafted from the inspected installed Staticub front reference and the existing F29 brief. Author inspection sees the established rounded ears/blue eyes/muzzle, larger adult bear mass, copper shoulder ridges and glass/lightning accents. Exact prompt, hash and limits: `source/f36-reference-provenance.json`. No Meshy task submitted, model generated, rig/scale/native judgment earned or runtime gate enabled. F29's existing candidate species and provenance gates remain unchanged. |
+| Tuskroot/Ashtusk, Riptusk, Staticub, Fulgocobra, Solmane attack derivatives | Code-authored attack-only transformations of the already installed assets, 2026-09-26. Original mesh, skin, material, reference and acquisition/redistribution provenance remain unchanged; no new external asset or generation. `tools/art_pipeline/author_attack_candidates.py` pins source SHA-256 and preserves original binary data and all other clips. Ground-contact and native playback evidence: `ralph/reports/VISUAL/CREATURE-ATTACK-CONTACT.md`; whole-creature Bars A/B remain open. |
 | Camp set | Owner selected the generated tent despite fidelity limits; fire-ring scaling and the bed passed. Preserve the accepted result unless current gameplay evidence reopens it. |
 | Pickups | Candy and potion-plant assets shipped with known defects; revive and mushroom passed. Do not infer a general pickup-generation allowance. |
+| Six stat-drink world models (Codex X04) | Owner requested one Meshy bottle with different badges. Agent-drafted reference `assets/props/stat_draughts/reference/bottle.png`, inspected before submission; Meshy task `01a0e076-a807-73f5-9c96-b1fba0d4c41e`, one textured image-backed candidate, 30 credits. One shared sea-green bottle with leather/brass/cork and six small authored badge meshes, composed as scenes under `assets/props/stat_draughts/`. Attack/armour/heart/speed marks follow existing icons. Permanent elixirs use light enamel with dark marks; temporary tonics use dark fields with ivory marks. Front/reverse faces share usable size; restrained ivory emission preserves night contrast. Guard has a solid shield, Stoneguard an outline. Source height 0.80m, ordinary world height 0.64m. Rebuild/provenance: `tools/art_pipeline/author_stat_draught_models.py`, adjacent `provenance.json`. Replaces unrelated barrel/crate/plant stand-ins for these six items. Visual evidence is scoped; whole-game acceptance remains open. |
 | South Bridge gate | Thin from inaccessible angles and explicitly accepted ship-as-is. Reachable-view failure may reopen it; an inaccessible reverse view does not. |
 | Nature Kit | Many meshes lack a usable albedo/palette atlas and render cyan/white. Only known-safe uses such as logs are production-ready until the material path is repaired. Evaluated Kenney cliffs and Poly Haven mossy rock were not shipped. |
 | Tidewake dune grass atlas | Codex-authored offline HSV remap of installed `assets/environment/stylized_nature/Grass.png` to `derived/Grass_C_dune_sage_straw.png`, reproducible with `tools/art_pipeline/derive_water_dune_grass.py` and the palette in `water_dune_cover.json`. Preserves source UV layout, neutral pixels and alpha; source licence/redistribution limits remain those recorded for the installed stylized-nature family in `archive/docs/specs-2026-09-19/ASSET_LEDGER.md`. The inspected Sleeping Bear Dunes NPS photograph supplies ecological/palette direction only; no external pixels, new model, acquisition or purchase. Local duplicated materials use the derived atlas outside Veilfall; original atlas/materials remain intact. Requires normal VRAM-compressed 3D texture import. Default-off candidate pending production visual review. |

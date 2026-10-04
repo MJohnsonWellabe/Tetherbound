@@ -1,0 +1,19 @@
+{
+  "reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "reviewed_head": "e530d72d1f5547d12080ec9cf7a4ddfba23639b0",
+  "verdict": "EVIDENCE VALID WITH LIMITS",
+  "checks": 390,
+  "exact_api_artifact_digest_checks": 2,
+  "sealed_payloads_verified": 19,
+  "report_raw_sha256": "7ec1cf673aaf548c3ed79ea9fe951bb07a5e370e54f7515e246bb31e3c772ad3",
+  "original_zip_bytes_in_memory_verified": {
+    "11174329186": "915c3fa3d04eb97aa9aebea92d52bb2f6dcc4eec01a0bb10c3a8d98ef86da135",
+    "11175522838": "b6d8b432ae830498023e363a84cb8e2aa9f7865e77169190cf4e261ab9224395"
+  },
+  "findings": [
+    "Actual terminal CI6170 failure at pushed91c3. Warden assertions passed with THREE distinct host ERROR events, mirrored in home0; not strict clean/native acceptance.",
+    "Original Foundation autosave refusal is one failed attempt. All9 net2 receipts bind original ZIP members/IDs/both exited/emptyfailures andfatal; omitted job conclusion and strict logs remain unproved.",
+    "All26 fetched remote SHAs were actual ancestors of historical85ba. origin/main30fcc is correctly pinned; local branchmain remains stale9cf6, not modified.",
+    "No engines/parser/push/files changed by reviewer. Original local49d failure/F17#4 OPEN/R9 HOLD/noMET credit retained."
+  ]
+}

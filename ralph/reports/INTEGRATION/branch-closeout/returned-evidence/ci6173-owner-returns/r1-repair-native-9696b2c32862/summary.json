@@ -1,0 +1,70 @@
+{
+  "tested_head": "9696b2c3286209b825428ec0b3d8ee548e907503",
+  "R27_source_review": "F29 PASS110 bounded checks; reviewed713bc3 mergedced318. Actual prior failure retained, no distance/frame/native guard waiver.",
+  "authored_boss_source_review": "F29 PASS168 bounded checks; reviewedc5c908 merged9696b2. Authored NPC known-move correction only, strict codec unchanged.",
+  "units": "Actual47 tests/428 parent assertions/0failed; F29 independent receiptPASS91checks. Controlled child56 assertions/no failures, exit0 evidenced by unchanged passing wrapper; no separately serialized childPID/exit record. Original70 lifecycle assertions unchanged and not newly executed by this receipt.",
+  "original_shared_boss": {
+    "result": "FAIL",
+    "exit": 1,
+    "elapsed_seconds": 273.9220000000205,
+    "timed_out": false,
+    "strict_errors": [],
+    "logs": 4,
+    "source_hashes": 3254,
+    "engine_handles_after": ""
+  },
+  "opening": "Original R27 full opening still pending, prior c791 original FAIL retained.",
+  "main": "Still30fcc; CI6174 failure; candidate has not landed. Local proof does not close acceptance criteria.",
+  "members": {
+    "unit-result.json.gz": {
+      "raw_bytes": 558,
+      "raw_sha256": "19e05935557e166d8015e0c79c788a6694edf53c91d9f9b2c20bfad414f3b519",
+      "gzip_sha256": "11821c0c03910c1b259e2fbafe9a6bd05fe5de7aa4152dd82c6db149bb6c1ac3"
+    },
+    "unit-parent.log.gz": {
+      "raw_bytes": 32213,
+      "raw_sha256": "da5b524c01371d2c68c833881974a18e48d32c59044543a21fc6b892b569708e",
+      "gzip_sha256": "4b9b0615e221dbc3db9c4331b0a84a9d5d9f8d4876dd43604fdca545c17c69b6"
+    },
+    "unit-child.log.gz": {
+      "raw_bytes": 140,
+      "raw_sha256": "be4826d631d04639b77eba601678a896ec21c3a91fa9be845ad4dc1deb0c63ba",
+      "gzip_sha256": "6327bdf80cc9c0eeb29e1eecd97e0710c7b1fb5d9a63d1cf287913ef09d02c78"
+    },
+    "net-receipt.json.gz": {
+      "raw_bytes": 738063,
+      "raw_sha256": "1731d89ac2b082c2468f46636bcb94d74f60bb0d11ac52b293baed83a2e2d4d2",
+      "gzip_sha256": "8dbdddc6bddd55d3e33aed57c315ae9afd996b7ddc44779bf058ccb6ef74ebc1"
+    },
+    "NET_RUN.json.gz": {
+      "raw_bytes": 2858,
+      "raw_sha256": "86159e1bf0f8bc104ac1faa9b718f58f573a0c2cb79ffcd4922c34c6571fb131",
+      "gzip_sha256": "fd73c8e54fb9258931641988422571d9ec8786dae025e95dd994887dd219fab7"
+    },
+    "native-0.log.gz": {
+      "raw_bytes": 18610,
+      "raw_sha256": "05ccbb5200177a60a9714f6fa635c1988892ced7bec46a4cdc5923c799f2ae4e",
+      "gzip_sha256": "c10c2b24a24ae515d3bd5c01d23bdd95a2fc22ee2a090e935e8d3d7172c7ba5b"
+    },
+    "native-1.log.gz": {
+      "raw_bytes": 18403,
+      "raw_sha256": "a796f7a15128c017f8f3d412d75be33c9f5112745d5889d780e47ab860ec629c",
+      "gzip_sha256": "0a0baefb0e7af127e736ce901ae00e403fb7a02bba0026edcca67e5da3a4f183"
+    },
+    "native-2.log.gz": {
+      "raw_bytes": 12315,
+      "raw_sha256": "6a52dd70399f877a43c9a2ac309c3a65cb9424bc0aab8013c99fb2da7771a9b9",
+      "gzip_sha256": "3c08c9e02602660f5bdacacd7dd68e24e7658870bae6602f22df721db1238f44"
+    },
+    "native-3.log.gz": {
+      "raw_bytes": 11660,
+      "raw_sha256": "81426ec1553d068655a26f6549ef7cbc765e052d1a71fcccb4e4e433c66e048e",
+      "gzip_sha256": "6d53d377f912b7f7a662424e6aab864c75a402c48a88b9bd1f13ec349e4e05e7"
+    },
+    "actual-main-status.json.gz": {
+      "raw_bytes": 5804,
+      "raw_sha256": "75a8a620f74b53da8d8bed0590b0a857db3d523397315b384b4594ba136ec13c",
+      "gzip_sha256": "6a4eaedc9cd2933bc850d648c078c90149dac7a3d4803d67bee3c8b63aa13038"
+    }
+  }
+}

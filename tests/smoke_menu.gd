@@ -186,7 +186,10 @@ func _check_refusal_shows_an_on_screen_reason(world: Node) -> void:
 		combat.set("state", 0)
 		return
 
-	await _press("inventory")
+	# The Menu button itself. Since the physical X/Y/B/A combat map, pad Y
+	# (`inventory`) is the piloted creature's Charged move mid-fight, so the
+	# shell's shortcut path stands aside silently there by design.
+	await _press("game_menu")
 
 	if bool(_menu.call("is_open")):
 		_fail("the menu opened mid-fight; `menu_cancel` would open a menu instead of fleeing")
@@ -721,9 +724,12 @@ func _check_backpack_tm_teach() -> void:
 	if student == null:
 		_fail("TM check needs slot 0 filled; the five-creature check should have done that")
 		return
-	if str(student.get("move_quick")) == "burrow_strike":
+	if (student.get("known_moves") as Array).has("burrow_strike"):
 		_fail("TM check fixture already knew burrow_strike; the check would prove nothing")
 		return
+	var original_quick := str(student.get("move_quick"))
+	var original_charged := str(student.get("move_charged"))
+	var original_uid := str(student.get("uid"))
 
 	inventory.call("add", "tm_burrow_strike", 1)
 	var slot: int = int(inventory.call("find_slot", "tm_burrow_strike"))
@@ -764,16 +770,28 @@ func _check_backpack_tm_teach() -> void:
 		return
 
 	await _press("ui_accept")
+	for frame in 120:
+		if (body.get("_tm_intent") as Dictionary).is_empty(): break
+		await process_frame
 
 	if int(body.get("_targeting")) != -1:
 		_fail("confirming a TM target did not close the picker")
-	if str(student.get("move_quick")) != "burrow_strike":
-		_fail("confirming slot 0 did not teach it the TM's move (move_quick is '%s')"
-			% str(student.get("move_quick")))
+	if not (student.get("known_moves") as Array).has("burrow_strike"):
+		_fail("confirming slot 0 did not teach the chosen UID the TM's knowledge")
+	if str(student.get("uid")) != original_uid or party.call("at", 0) != student:
+		_fail("TM teaching replaced the original chosen live UID instance")
+	if str(student.get("move_quick")) != original_quick or str(student.get("move_charged")) != original_charged:
+		_fail("Backpack TM learning equipped a move outside the Altar/camp")
+	var session: Node = _game.get("session")
+	var retained: Dictionary = session.call("retained_training_transaction", ["tm_teach"])
+	if retained.get("status") != "accepted" or retained.get("intent", {}).get("creature_uid") != original_uid \
+		or retained.get("intent", {}).get("tm_id") != "tm_burrow_strike" \
+		or not _game.get("local").redesign_character.transaction_receipts.has(retained.get("receipt", "")):
+		_fail("TM teaching did not resolve the actual saved owner/host journal for the chosen UID")
 	if int(inventory.call("count", "tm_burrow_strike")) != 0:
 		_fail("teaching did not consume the TM (OF29: one disc teaches one creature)")
 	else:
-		print("TM taught to the CHOSEN creature and the disc was consumed")
+		print("TM knowledge saved to the CHOSEN creature; one disc consumed; equipped slots unchanged")
 
 	# Second copy: slot 0 now already knows the move, so its row must grey out
 	# with the reason showing, and focus must skip past it to slot 1.

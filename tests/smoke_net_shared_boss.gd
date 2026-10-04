@@ -1,5 +1,7 @@
 extends "res://tests/helpers/net_harness.gd"
 
+const ORIGINAL_STARTER_FIXTURE := preload("res://tests/helpers/net_original_starter_fixture.gd")
+
 # peers: 2
 
 ## Stage B row 8. **§17 ITEM 8: A BOSS ENCOUNTER TOGETHER.**
@@ -80,6 +82,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## which pulls the opponent's `hp` down. It never touches `max_hp`, `attack` or
 ## `defence` -- the three this asserts on -- but reading them afterwards would
 ## invite the next reader to assume it might.
+## The fight driver supplies no self-HP top-ups in any of this smoke's modes.
 ##
 ## ### FINDING F1, CLOSED: the stat multiplier and the cooldown now reach the
 ## ### creature, and this file asserts it
@@ -173,9 +176,9 @@ const ALLOWED_SCALING_KEYS: Array[String] = ["stat_multiplier", "attack_cooldown
 ## player who misses swings again. The claim is that the peer CAN land a blow on
 ## the shared record, not that any particular swing connects.
 ##
-## A swing is only submitted once the HOST holds the creature within
-## `SWING_REACH_M` of the boss, so an attempt spent waiting for the host's view
-## to catch up is a re-place and not one of these.
+## A swing is only submitted once the HOST's actual quick profile can reach
+## the boss from the creature's centre. An attempt waiting for that host
+## geometry is a re-place and not one of these.
 const SWINGS := 14
 const PLACE_SETTLE := 20
 const STRIKE_SETTLE := 30
@@ -198,18 +201,19 @@ const APART_Z := 1.5
 ## other lever and is the named next step if this ever exhausts, but it would
 ## change what the passing runs exercised, and a cap that is never reached cannot.
 const FRIENDLY_TRIES := 12
+## How many FRIENDLY_SETTLE waits a swing's refusal may take to arrive.
+const REFUSAL_POLLS := 12
 ## A short settle for that staging, for the same reason: a long one gives each
 ## manager time to pull its creature back.
 const FRIENDLY_SETTLE := 8
-## What "within one swing" means here, used by both halves: the gate the
-## shared-damage loop waits for before it submits, and the diagnostic the
-## friendly-fire staging is reported against.
+## The unchanged conservative distance used by friendly-fire staging. The
+## boss-damage half reads the live host quick profile instead: production
+## floors reach at the rendered pair's contact spacing plus 0.5 m.
 ## `combat_manager.gd::_with_reach_for_the_bodies` floors the real quick reach at
 ## (r + r) * body_clearance 2.75 + 0.5, a little over 3 m for two ordinary bodies;
 ## 4.0 is that with room for two of unequal size. Deliberately CONSERVATIVE
-## against the boss, whose body is larger than an ordinary one: runs that landed a
-## blow from 5.2 m are on record, so a gate at 4.0 never lets through a swing that
-## could not reach.
+## for bringing the two allies together; this is not a replacement for the
+## boss's production body-scaled reach or its centre-to-centre cone predicate.
 const SWING_REACH_M := 4.0
 
 ## `smoke_boss.gd`'s allowance, by its own name and for its own stated reason.
@@ -290,6 +294,14 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# Disclosed setup: complete each standalone peer's real original choice and
+	# naming before admission. No second starter, loaner, party_grant or forged fact.
+	var starter_fixture := ORIGINAL_STARTER_FIXTURE.new()
+	var prepared: Array[Dictionary] = await starter_fixture.prepare(self)
+	if prepared.size() != 2:
+		quit(await finish())
+		return
+
 	# --- the handshake, copied verbatim from smoke_net_movement_two_peers.gd ---
 	check(_peers.size() == 2, "coordinator tracked 2 peers")
 	for i in 2:
@@ -321,6 +333,10 @@ func _run() -> void:
 		var out: Dictionary = await step(i, "deploy_creature", {})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
+
+	if not await starter_fixture.verify_after_admission(self, prepared):
+		quit(await finish())
+		return
 
 	# What the configured multiplier for two players IS, read out of the data
 	# file rather than out of the code that applies it.
@@ -405,8 +421,16 @@ func _run() -> void:
 		"peer 1 joined the boss fight already in progress (%s)" % str(joined_fight.get("detail", "")))
 
 	# --- 1. ONE record, not two fights ----------------------------------------
-	var host_live: Dictionary = await _boss(0)
-	var host_rec: Dictionary = host_live.get("record", {}) as Dictionary
+	# The guest's local join returns before its join RPC reaches the host;
+	# give the host record a bounded window to show both participants.
+	var host_live: Dictionary = {}
+	var host_rec: Dictionary = {}
+	for _poll in 30:
+		host_live = await _boss(0)
+		host_rec = host_live.get("record", {}) as Dictionary
+		if (host_rec.get("participants", []) as Array).size() == 2:
+			break
+		await step(0, "wait", {"frames": 10})
 	check((host_rec.get("participants", []) as Array).size() == 2,
 		"the host's ONE record holds 2 participants (got %d)"
 			% (host_rec.get("participants", []) as Array).size())
@@ -460,7 +484,7 @@ func _run() -> void:
 
 	# --- his second creature comes out, with two people already fighting ------
 	var first_down: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": ROUND_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING,
+		{"budget_frames": ROUND_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false,
 		 "stop_when_creatures_left": AUTHORED_TEAM_SIZE - 2}, ROUND_FRAMES)
 	check(str(first_down.get("verdict", "")) == "PASS",
 		"the two of them put his first creature down and he sent out his second (%s)"
@@ -628,23 +652,31 @@ func _run() -> void:
 				break
 			# Where the HOST holds this peer's creature, and where it holds the
 			# boss, both read as late as possible.
-			var fresh: Dictionary = (await _boss(0)).get("record", {}) as Dictionary
+			var fresh_view := await _boss(0, true)
+			var fresh: Dictionary = fresh_view.get("record", {}) as Dictionary
 			var aim := _vec(fresh.get("position", []))
 			if aim == Vector3.INF:
 				aim = boss_at
-			var really_at := await _host_view_of_creature(mover)
-			if really_at == Vector3.INF:
-				continue
-			last_gap = really_at.distance_to(aim)
-			if last_gap >= SWING_REACH_M:
-				# The host does not hold this creature beside the boss yet. Place
-				# it again rather than swinging into empty grass.
+			# Production tests horizontal centre-to-centre reach, including the
+			# rendered pair's contact floor. Feet-to-centre against a fixed 4 m
+			# gate can reject a legally spaced pair through all 28 attempts.
+			var geometry: Dictionary = {}
+			for geometry_row: Dictionary in fresh_view.get("strike_geometry", []):
+				if bool(geometry_row.get("is_local", false)) == (mover == 0) \
+						and str(geometry_row.get("encounter_id", "")) == str(fresh.get("id", "")):
+					geometry = geometry_row
+					break
+			last_gap = float(geometry.get("distance_m", INF))
+			print("[shared-boss geometry] pilot=%d %s" % [mover, JSON.stringify(geometry)])
+			if geometry.get("can_reach", false) != true:
+				# An absent body/profile or an actually out-of-range target is
+				# still a placement attempt, never an admitted hit.
 				continue
 			swings += 1
-			var toward := aim - really_at
 			var struck: Dictionary = await step(mover, "strike",
-				{"facing": [toward.x, toward.y, toward.z], "slot": "quick",
+				{"target": [aim.x, aim.y, aim.z], "slot": "quick",
 				 "settle": STRIKE_SETTLE})
+			print("[shared-boss strike] pilot=%d %s" % [mover, JSON.stringify(struck)])
 			if str(struck.get("verdict", "")) != "PASS":
 				check(false, "peer %d swung at the boss (%s)" % [mover, str(struck.get("detail", ""))])
 				break
@@ -722,7 +754,11 @@ func _run() -> void:
 		staged += 1
 		guest_at = await _host_view_of_guest_creature()
 		if guest_at == Vector3.INF:
-			break
+			# Between rounds a guest's party update can briefly put its creature
+			# away and send it out again. Wait for the host to hold it once more
+			# rather than giving up on the first read.
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE * 4})
+			continue
 		var stand := guest_at + Vector3(0.0, 0.0, APART_Z)
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
@@ -744,6 +780,8 @@ func _run() -> void:
 		victim_hp = float(pre.get("my_creature_hp", -1.0))
 		var at_teammate := host_creature_at - guest_at
 		at_teammate.y = 0.0
+		if at_teammate.length() < 0.05:
+			continue
 		friendly = await step(1, "strike",
 			{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
@@ -752,6 +790,17 @@ func _run() -> void:
 		boss_after = float((post.get("record", {}) as Dictionary).get("hp", -1.0))
 		victim_after = float(post.get("my_creature_hp", -1.0))
 		refusal = (await _boss(1)).get("refusal", {}) as Dictionary
+		# On the move-commit path the swing reaches the host as a move start,
+		# then a strike after the wind-up, and only then the refusal travels
+		# back -- longer than STRIKE_SETTLE under CI load (CI 37179276640: the
+		# guest logged friendly_target after this read had come back empty, and
+		# the next swing went stale). The HP and tally reads above stay inside
+		# the window; only the refusal's arrival is waited for.
+		for _wait in REFUSAL_POLLS:
+			if not str(refusal.get("code", "")).is_empty():
+				break
+			await step(1, "wait", {"frames": FRIENDLY_SETTLE})
+			refusal = (await _boss(1)).get("refusal", {}) as Dictionary
 		# The refusal's ARRIVAL is part of `clean`, not merely something read
 		# once the swing looked good. Without this the loop exits the moment the
 		# swing lands cleanly, and if the host's answer has not made the round
@@ -785,11 +834,16 @@ func _run() -> void:
 	check(str(friendly.get("verdict", "")) == "PASS",
 		"peer 1's swing at its teammate's creature reached the host (%s)"
 			% str(friendly.get("detail", "")))
-	# The client's own local answer is `pending`, and `pending` is the host being
-	# ASKED, not the host saying no. Asserted so nothing here can mistake the two.
+	# The client's own local answer never refuses: it is `pending` (the host
+	# being ASKED) on the legacy strike path, or the accepted local move start
+	# when F23's move commit is live (the swing then goes through the player's
+	# own input path and the host still decides). Either way no local refusal
+	# code, so nothing here can mistake the host saying no for the client.
 	var local_answer: Dictionary = (friendly.get("data", {}) as Dictionary)
-	check(bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true)),
-		"and the client's own local answer was `pending` -- the host being asked, not a refusal"
+	var asked_host := bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true))
+	var started_move := bool(local_answer.get("ok", false)) and not bool(local_answer.get("pending", false))
+	check((asked_host or started_move) and str(local_answer.get("code", "")).is_empty(),
+		"and the client's own local answer was not a refusal -- the host decides"
 		+ " (ok=%s pending=%s code='%s')" % [str(local_answer.get("ok", true)),
 			str(local_answer.get("pending", false)), str(local_answer.get("code", ""))])
 	# HALF ONE: the host said no, out loud, with §5's own code, and the sentence
@@ -817,7 +871,7 @@ func _run() -> void:
 
 	# --- and the five of them go down -----------------------------------------
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS",
 		"the two of them fought the Warden's whole team of %d down (%s)"
 			% [AUTHORED_TEAM_SIZE, str(won.get("detail", ""))])
@@ -945,7 +999,7 @@ func _run_chapter_handoff() -> void:
 	check(str(guest_joined.get("verdict", "")) == "PASS",
 		"guest joined the Warden's own fight rather than opening another")
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "both peers felled the Warden (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())
@@ -1202,7 +1256,7 @@ func _run_client_chapter_handoff() -> void:
 		quit(await finish())
 		return
 	var won: Dictionary = await step(1, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "the guest felled the Warden alone (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
 		quit(await finish())
@@ -1454,7 +1508,7 @@ func _run_hall_room(row: Dictionary, markers: Dictionary) -> bool:
 		"the guest is IN '%s' without running a trainer battle of its own" % trainer)
 
 	var won: Dictionary = await step(0, "win_trainer_battle",
-		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+		{"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS",
 		"both peers resolved '%s' (%s)" % [trainer, str(won.get("detail", ""))])
 	if str(won.get("verdict", "")) != "PASS":
@@ -1550,7 +1604,7 @@ func _run_tournament_round(round: Dictionary) -> bool:
 		var landed := await _tournament_hit(peer)
 		check(landed, "peer %d reduced '%s' shared opponent HP%s"
 			% [peer, trainer, "" if landed else " -- " + _tournament_hit_detail])
-	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING}, BATTLE_FRAMES)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"budget_frames": BATTLE_FRAMES, "enemy_hp_ceiling": ENEMY_HP_CEILING, "self_hp_topups": false}, BATTLE_FRAMES)
 	check(str(won.get("verdict", "")) == "PASS", "both peers completed '%s'" % trainer)
 	if str(won.get("verdict", "")) != "PASS":
 		return false
@@ -1749,8 +1803,11 @@ func _tournament_accepted_characters(deliveries: Dictionary, source: String) -> 
 ## This peer's view of the boss fight, from `tools/net/peer_runner.gd`'s `boss`
 ## probe: the host record, the creature actually on the field, the same team
 ## entry rebuilt UNSCALED, and the last refusal this peer was given.
-func _boss(peer: int) -> Dictionary:
-	var value = await probe(peer, "boss", {"trainer": BOSS})
+func _boss(peer: int, strike_geometry: bool = false) -> Dictionary:
+	var args := {"trainer": BOSS}
+	if strike_geometry:
+		args["strike_geometry"] = true
+	var value = await probe(peer, "boss", args)
 	return value if value is Dictionary else {}
 
 

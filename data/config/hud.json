@@ -14,5 +14,18 @@
     "action_font_size": 30,
     "pulse_speed": 4.0,
     "pulse_depth": 0.45
+  },
+  "new_system_screens": {
+    "_comment": "Production controller screens for Altar, stations, gear, research and bounties. Services own rewards and durable state; readability and device acceptance are tracked separately.",
+    "enabled": true,
+    "safe_margin": 48,
+    "row_height": 66,
+    "combat": {
+      "inset": 56,
+      "command_bottom": 500,
+      "move_width": 420,
+      "move_bottom": 380
+    },
+    "scope": "device_local_presentation"
   }
 }

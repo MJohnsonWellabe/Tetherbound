@@ -34,6 +34,8 @@ extends Node3D
 const INNER_HALF_W := 1.69
 const INNER_HALF_D := 2.69
 const WALL_H := 3.12
+const FLOOR_RISE := 0.02
+var _floor_shape: CollisionShape3D = null
 
 ## The doorway the recipe leaves open: 1.6m clear, centred on x=1 in the front
 ## (+z) wall. Nothing may be built into this lane or the shop has a door you
@@ -70,19 +72,42 @@ func build(_room: Dictionary = {}) -> void:
 	_build_crest_light()
 
 
-## A plank floor whose TOP sits level with the ground outside.
-##
-## village.gd sinks a building to `ground - 0.05`, so a slab centred at -0.10
-## with a 0.30 body puts its surface exactly on the terrain height — no step at
-## the threshold, and the villager standing inside (placed on the TERRAIN by
-## village_npcs.gd, which knows nothing about floors) has her feet on the boards
-## rather than through them.
+## A real plank floor above the terrain. Coincident support surfaces produced
+## repeated floor contacts while turning by the counter. The 2cm rise separates
+## them within the ordinary step height; NPC placement reads this actual floor.
 func _build_floor() -> void:
-	_box(
+	_floor_shape = _box(
 		Vector3(INNER_HALF_W * 2.0 + 0.6, 0.3, INNER_HALF_D * 2.0 + 0.6),
-		Vector3(0.0, -0.10, 0.0),
+		Vector3(0.0, -0.10 + FLOOR_RISE, 0.0),
 		COL_FLOOR
 	)
+
+
+## Placement support from the built enabled box, including its current yaw,
+## scale and top plane. This is no terrain/collision clearance certificate.
+func floor_top_world_at(x: float, z: float) -> float:
+	if not is_finite(x) or not is_finite(z) or not is_instance_valid(_floor_shape) \
+			or not _floor_shape.is_inside_tree() or _floor_shape.disabled \
+			or not _floor_shape.shape is BoxShape3D:
+		return NAN
+	var body := _floor_shape.get_parent() as StaticBody3D
+	if body == null or (body.collision_layer & 1) == 0:
+		return NAN
+	var pose := _floor_shape.global_transform
+	if not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or absf(pose.basis.determinant()) < 0.000001:
+		return NAN
+	var half: Vector3 = (_floor_shape.shape as BoxShape3D).size * 0.5
+	if not half.is_finite() or half.x <= 0.0 or half.y <= 0.0 or half.z <= 0.0:
+		return NAN
+	var top: Vector3 = pose * Vector3(0.0, half.y, 0.0)
+	var normal: Vector3 = (pose.basis.inverse().transposed() * Vector3.UP).normalized()
+	if normal.y <= 0.000001:
+		return NAN
+	var y := top.y - (normal.x * (x - top.x) + normal.z * (z - top.z)) / normal.y
+	var local: Vector3 = pose.affine_inverse() * Vector3(x, y, z)
+	return y if is_finite(y) and absf(local.x) <= half.x and absf(local.z) <= half.z else NAN
 
 
 ## The counter Mira stands behind. Left of the door lane, so walking in never
@@ -202,7 +227,7 @@ func _build_crest_light() -> void:
 	add_child(light)
 
 
-func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
+func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> CollisionShape3D:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
@@ -219,6 +244,8 @@ func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> void:
 		body.add_child(shape)
 		body.position = at
 		add_child(body)
+		return shape
+	return null
 
 
 func _material(colour: Color) -> StandardMaterial3D:

@@ -1,0 +1,37 @@
+{
+  "runtime_enabled": false,
+  "candidate_species": {
+    "stormursa": {
+      "display_name": "Stormursa",
+      "type": "electric",
+      "evolves_from": "staticub",
+      "evolution_authorized": true,
+      "evolution_enabled": false,
+      "evolution_trigger": "breakthrough_feast",
+      "evolution_breaks_level": 50,
+      "wild_evolution_form": false,
+      "base_hp": 150.0,
+      "base_attack": 30.0,
+      "base_defence": 24.0,
+      "catch_rate": 0.0,
+      "aggressive": false,
+      "moves": {
+        "quick": "spark_bite",
+        "charged": "arc_lash",
+        "utility": "",
+        "ultimate": "ultimate_stormursa"
+      },
+      "learnset_id": "stormursa",
+      "_comment": "RD-28 sole authorized new species. Tuning authored by F29; target art 4.10m versus current Staticub3.25m. No placeholder/model path: acquisition and visual activation OFF until reference/Meshy/rig/animation/scale/full in-engine code-blind art bar PASS. F23 supplies unique ultimate from its authored stormursa learnset.",
+      "learnset": "stormursa"
+    }
+  },
+  "source_species_overrides": {
+    "staticub": {
+      "evolves_into": "stormursa",
+      "evolution_breaks_level": 50,
+      "evolution_trigger": "breakthrough_feast",
+      "evolution_enabled": false
+    }
+  }
+}

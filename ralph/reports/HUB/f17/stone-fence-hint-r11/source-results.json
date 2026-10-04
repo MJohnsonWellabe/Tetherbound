@@ -1,0 +1,1427 @@
+{
+  "classification": "SOURCEPASS",
+  "acceptance": "F17#4 OPEN; author-only; no engine/native/independent/whole-prefix credit",
+  "passed": 184,
+  "total": 184,
+  "checks": [
+    {
+      "name": "frozen .gitattributes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/autoload/game_state.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band2_stone_and_root/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band3_the_river_lock/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/bands/band5_stronghold_approach/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/movement.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scenes/player/player.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scenes/world/meadows_playground.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/combat/encounter_director.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/combat/spawn_tables.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/data/band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/harvest_node.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/village_boundary.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/scripts/world/village_npcs.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen inputs/tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen originals/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen originals/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/earned-opening-857bc75d65e1/native.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/earned-opening-857bc75d65e1/parser.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/earned-opening-857bc75d65e1/receipt.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/earned-opening-bbe43027409c/native.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/earned-opening-bbe43027409c/parser.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-failure/earned-opening-bbe43027409c/receipt.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen prior-r10-independent-source-review.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen proposal/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen proposal/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen repair.patch",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen review-context.txt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen root-actual/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen root-actual/tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "frozen source-route-check.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/village_boundary.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/village_npcs.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/world/harvest_node.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/data/band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/combat/spawn_tables.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/combat/encounter_director.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live autoload/game_state.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scenes/world/meadows_playground.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scenes/player/player.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/movement.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band2_stone_and_root/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band3_the_river_lock/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged live data/config/bands/band5_stronghold_approach/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT executed original tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "live proposal tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ROOT executed original tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "live proposal tests/test_gate_a_npc_gather_segment_contract.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only gather function changed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one pure bounded hint added",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function run",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _progression_has",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _visit_villager",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _assign_tools_in_satchel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _focus_satchel_slot",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_for_tool_idle",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _nearest_authored_node",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _enter_through",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _exit_through",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _door_outward",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _nearest_door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _npc_prompt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _walk_to_and_activate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _one_approach",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _press_and_observe_activation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _on_arbiter_activated",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function activation_verdict",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _walk_diagnosis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _walk_toward",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _prove_movement_resumed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_dialogue_open",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _close_dialogue",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_open_panel",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _wait_world_owned",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _tap_action",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _event_for",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _required_pad_actions_exist",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _send_axis",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _send_stick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _stop_left_stick",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _script_path",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _descendants",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _checkpoint",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged earned function _fail",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "entire gathering actions/assertions exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "one original1800/1.55 walk; wood prefix exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "same actual position and selected goal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no fixed resource/gate coordinates in routing function",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only existing authored meadow road",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "bounded hint no native/input/pose work",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "malformed validation before polygon work",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "crossing and buffered parallel hints",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_controller_activation_is_confirmed_by_the_live_arbiter_signal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_activation_verdict_distinguishes_target_competitor_and_nothing",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_pre_press_winner_snapshot_is_not_returned_as_success",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_fatal_approach_failure_stops_at_the_outer_retry_boundary",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_local_wood_errand_leaves_the_actual_pond_road_before_the_distant_pond",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_road_prefix_keeps_authored_order_and_uses_the_first_nearest_exit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "existing contract unchanged test_road_prefix_refuses_malformed_and_out_of_scope_inputs",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "two geometry regression tests added",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failed exact sourceclosure earned-opening-bbe43027409c",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "same actual gate/key/sourcecount earned-opening-bbe43027409c",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "failed exact sourceclosure earned-opening-857bc75d65e1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "same actual gate/key/sourcecount earned-opening-857bc75d65e1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "two actual closures differ only R10 gather",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/world/village_boundary.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/world/playground_world.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/world/village_npcs.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/world/harvest_node.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/data/band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/combat/spawn_tables.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/combat/encounter_director.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin autoload/game_state.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scenes/world/meadows_playground.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scenes/player/player.tscn",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/movement.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/bands/band2_stone_and_root/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/bands/band3_the_river_lock/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual receipt pin data/config/bands/band5_stronghold_approach/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual target and contact refusal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "raw ten contacts unchanged refusal",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual fence seam identities",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual inside endpoints cross concave fence twice",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual terminal is outside fence",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "first crossing is at already-open actual gate",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix hint covered ([-8, 8], [-18, 6])",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix closed-fence buffered path ([-8, 8], [-18, 6])",
+      "passed": true,
+      "detail": 12.727922061357855
+    },
+    {
+      "name": "matrix original edge/budget scale ([-8, 8], [-18, 6])",
+      "passed": true,
+      "detail": 10.198039027185569
+    },
+    {
+      "name": "matrix hint covered ([-8, 8], [22, -34])",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix closed-fence buffered path ([-8, 8], [22, -34])",
+      "passed": true,
+      "detail": 18.384776310850235
+    },
+    {
+      "name": "matrix original edge/budget scale ([-8, 8], [22, -34])",
+      "passed": true,
+      "detail": 51.61395160225576
+    },
+    {
+      "name": "matrix hint covered ([-8, 8], [47, -34.5])",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix closed-fence buffered path ([-8, 8], [47, -34.5])",
+      "passed": true,
+      "detail": 3.1676796004826318
+    },
+    {
+      "name": "matrix original edge/budget scale ([-8, 8], [47, -34.5])",
+      "passed": true,
+      "detail": 69.50719387228922
+    },
+    {
+      "name": "matrix hint covered ([36, -16], [-18, 6])",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix closed-fence buffered path ([36, -16], [-18, 6])",
+      "passed": true,
+      "detail": 3.8462969204157935
+    },
+    {
+      "name": "matrix original edge/budget scale ([36, -16], [-18, 6])",
+      "passed": true,
+      "detail": 58.309518948453004
+    },
+    {
+      "name": "matrix hint covered ([36, -16], [22, -34])",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix closed-fence buffered path ([36, -16], [22, -34])",
+      "passed": true,
+      "detail": 3.8462969204157935
+    },
+    {
+      "name": "matrix original edge/budget scale ([36, -16], [22, -34])",
+      "passed": true,
+      "detail": 22.80350850198276
+    },
+    {
+      "name": "matrix hint covered ([36, -16], [47, -34.5])",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "matrix closed-fence buffered path ([36, -16], [47, -34.5])",
+      "passed": true,
+      "detail": 3.1676796004826318
+    },
+    {
+      "name": "matrix original edge/budget scale ([36, -16], [47, -34.5])",
+      "passed": true,
+      "detail": 67.81415407071205
+    },
+    {
+      "name": "actual failing selected route exact",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "ordinary merged harvest source",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "nearest live selection unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "seed override before fresh title",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "actual_terminal": {
+    "acceptance": false,
+    "actual_delta": [
+      0.0442581176757813,
+      0.00828361511230469,
+      -0.0504207611083984
+    ],
+    "authored_road_hint": "",
+    "callback_own_us": 729,
+    "ceiling_frames": 0,
+    "checked_start": false,
+    "controller_observation_available": true,
+    "controller_wanted_dir": [
+      0.031556848436594,
+      0.0,
+      -0.999502003192902
+    ],
+    "delivered_input": [
+      -0.933306634426117,
+      0.35908031463623
+    ],
+    "diagnostic_output_outside_physics_cap": true,
+    "floor_angle": 0.785399973392487,
+    "frame": 1442,
+    "live_contacts": [
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_87",
+        "collider_rid": "RID(5456751654602808)",
+        "collider_shape": 0,
+        "depth": 5.53131103515625e-05,
+        "local_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.590648651123,
+          -2.92250680923462,
+          -29.3306579589844
+        ]
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_87",
+        "collider_rid": "RID(5456751654602808)",
+        "collider_shape": 0,
+        "depth": 5.53131103515625e-05,
+        "local_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.590648651123,
+          -3.92250680923462,
+          -29.3306579589844
+        ]
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_86",
+        "collider_rid": "RID(5456717294864439)",
+        "collider_shape": 0,
+        "depth": 5.53131103515625e-05,
+        "local_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.590648651123,
+          -2.92250680923462,
+          -29.3306579589844
+        ]
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_86",
+        "collider_rid": "RID(5456717294864439)",
+        "collider_shape": 0,
+        "depth": 5.53131103515625e-05,
+        "local_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.590648651123,
+          -3.92250680923462,
+          -29.3306579589844
+        ]
+      }
+    ],
+    "live_recovery_travel": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "live_state_phase": "post",
+    "mask": 1,
+    "on_ceiling": false,
+    "on_floor": true,
+    "on_wall": true,
+    "physics_frame": 5814,
+    "plans": 8,
+    "player": [
+      46.8703880310059,
+      -4.32250690460205,
+      -29.0434226989746
+    ],
+    "progress_m": 117.684809227008,
+    "provisional_choice": 0,
+    "provisional_steering": {
+      "acceptance": false,
+      "heading": [
+        0.0315568447113037,
+        0.0,
+        -0.999501943588257
+      ],
+      "prediction_motion": [
+        0.0631136894226074,
+        0.0,
+        -1.99900388717651
+      ],
+      "retry_choice": 0,
+      "source": "prospective_step",
+      "wall_normal": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "queries": 3,
+    "recoveries": 0,
+    "refusal": "actual production contact observation cap",
+    "request": [
+      47.0,
+      -2.96763777732849,
+      -34.5
+    ],
+    "requests": 1443,
+    "safe_margin": 0.00100000004749745,
+    "slide_contacts": [
+      {
+        "collider_path": "/root/MeadowsPlayground/Terrain",
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 41,
+        "normal": [
+          0.0137282041832805,
+          0.985254764556885,
+          0.17054195702076
+        ],
+        "point": [
+          46.8215065002441,
+          -4.32554721832275,
+          -29.0624027252197
+        ],
+        "slide": 0,
+        "swept_depth": 0.000963047205004841
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_87",
+        "collider_rid": "RID(5456751654602808)",
+        "collider_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.5705947875977,
+          -2.92560195922852,
+          -29.3111267089844
+        ],
+        "slide": 1,
+        "swept_depth": 0.00130700704175979
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_87",
+        "collider_rid": "RID(5456751654602808)",
+        "collider_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.5705947875977,
+          -3.92560195922852,
+          -29.3111267089844
+        ],
+        "slide": 1,
+        "swept_depth": 0.00130700704175979
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_86",
+        "collider_rid": "RID(5456717294864439)",
+        "collider_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.5705947875977,
+          -2.92560195922852,
+          -29.311128616333
+        ],
+        "slide": 1,
+        "swept_depth": 0.00130700704175979
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_86",
+        "collider_rid": "RID(5456717294864439)",
+        "collider_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.5705947875977,
+          -3.92560195922852,
+          -29.311128616333
+        ],
+        "slide": 1,
+        "swept_depth": 0.00130700704175979
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/Terrain",
+        "collider_rid": "RID(67778878898179)",
+        "collider_shape": 41,
+        "normal": [
+          0.0137282041832805,
+          0.985254764556885,
+          0.17054195702076
+        ],
+        "point": [
+          46.8439559936523,
+          -4.32053804397583,
+          -29.093147277832
+        ],
+        "slide": 1,
+        "swept_depth": 0.00130700704175979
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_87",
+        "collider_rid": "RID(5456751654602808)",
+        "collider_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.590648651123,
+          -2.92250680923462,
+          -29.3306579589844
+        ],
+        "slide": 2,
+        "swept_depth": 5.53131103515625e-05
+      },
+      {
+        "collider_path": "/root/MeadowsPlayground/VillageBoundary/FencePanelCollision_87",
+        "collider_rid": "RID(5456751654602808)",
+        "collider_shape": 0,
+        "normal": [
+          0.697696626186371,
+          0.0,
+          0.716393351554871
+        ],
+        "point": [
+          46.590648651123,
+          -3.92250680923462,
+          -29.3306579589844
+        ],
+        "slide": 2,
+        "swept_depth": 5.53131103515625e-05
+      }
+    ],
+    "slide_contacts_are_capped_prefix": true,
+    "slide_count": 3,
+    "slide_motion": [
+      0.0442581176757813,
+      0.00828361511230469,
+      -0.0504207611083984
+    ],
+    "slide_point_counts": [
+      1,
+      5,
+      4
+    ],
+    "snap": 0.400000005960464,
+    "stall_frames": 1,
+    "swept_depth": 0.00130700704175979,
+    "timing": {
+      "between_callbacks": "controller and other nodes; excluded; not controller-only",
+      "between_callbacks_us": 5605,
+      "callback_cap_us": 10000,
+      "input_flush_us": 44,
+      "live_post_us": 76,
+      "live_pre_us": 91,
+      "movement_progress_us": 0,
+      "post_contract_us": 19,
+      "post_us": 205,
+      "pre_us": 453,
+      "provisional_steering_us": 228,
+      "serialization_and_print": "deferred; excluded; snapshot included",
+      "slide_validation_us": 13,
+      "snapshot_us": 95,
+      "stage": "post"
+    },
+    "total_queries": 4324,
+    "wall_frames": 5
+  },
+  "source_fence_crossings": [
+    {
+      "edge": 24,
+      "point": [
+        41.05740757855823,
+        -24.505640018484286
+      ]
+    },
+    {
+      "edge": 25,
+      "point": [
+        38.564769059543686,
+        -20.31347523650529
+      ]
+    }
+  ],
+  "source_route_matrix": [
+    {
+      "from_wood_metadata": [
+        -8,
+        8
+      ],
+      "selected_stone_metadata": [
+        -18,
+        6
+      ],
+      "hint": "DIRECT",
+      "source_path": [
+        [
+          -8,
+          8
+        ],
+        [
+          -18,
+          6
+        ]
+      ],
+      "fence_distance_m": 12.727922061357855,
+      "length_m": 10.198039027185569,
+      "nominal5mps60fps_frames": 122.37646832622681
+    },
+    {
+      "from_wood_metadata": [
+        -8,
+        8
+      ],
+      "selected_stone_metadata": [
+        22,
+        -34
+      ],
+      "hint": "DIRECT",
+      "source_path": [
+        [
+          -8,
+          8
+        ],
+        [
+          22,
+          -34
+        ]
+      ],
+      "fence_distance_m": 18.384776310850235,
+      "length_m": 51.61395160225576,
+      "nominal5mps60fps_frames": 619.367419227069
+    },
+    {
+      "from_wood_metadata": [
+        -8,
+        8
+      ],
+      "selected_stone_metadata": [
+        47,
+        -34.5
+      ],
+      "hint": "DIRECT",
+      "source_path": [
+        [
+          -8,
+          8
+        ],
+        [
+          47,
+          -34.5
+        ]
+      ],
+      "fence_distance_m": 3.1676796004826318,
+      "length_m": 69.50719387228922,
+      "nominal5mps60fps_frames": 834.0863264674706
+    },
+    {
+      "from_wood_metadata": [
+        36,
+        -16
+      ],
+      "selected_stone_metadata": [
+        -18,
+        6
+      ],
+      "hint": "DIRECT",
+      "source_path": [
+        [
+          36,
+          -16
+        ],
+        [
+          -18,
+          6
+        ]
+      ],
+      "fence_distance_m": 3.8462969204157935,
+      "length_m": 58.309518948453004,
+      "nominal5mps60fps_frames": 699.7142273814361
+    },
+    {
+      "from_wood_metadata": [
+        36,
+        -16
+      ],
+      "selected_stone_metadata": [
+        22,
+        -34
+      ],
+      "hint": "DIRECT",
+      "source_path": [
+        [
+          36,
+          -16
+        ],
+        [
+          22,
+          -34
+        ]
+      ],
+      "fence_distance_m": 3.8462969204157935,
+      "length_m": 22.80350850198276,
+      "nominal5mps60fps_frames": 273.6421020237931
+    },
+    {
+      "from_wood_metadata": [
+        36,
+        -16
+      ],
+      "selected_stone_metadata": [
+        47,
+        -34.5
+      ],
+      "hint": "MEADOW",
+      "source_path": [
+        [
+          36,
+          -16
+        ],
+        [
+          20,
+          -18
+        ],
+        [
+          20,
+          -26
+        ],
+        [
+          14.6,
+          -31
+        ],
+        [
+          21,
+          -37.5
+        ],
+        [
+          30,
+          -40
+        ],
+        [
+          47,
+          -34.5
+        ]
+      ],
+      "fence_distance_m": 3.1676796004826318,
+      "length_m": 67.81415407071205,
+      "nominal5mps60fps_frames": 813.7698488485446
+    }
+  ],
+  "limits": "Matrix is metadata for two observed wood and three nearby stone sites; selection remains all real available authored nodes. Exact selection-time player pose not logged. No universal reachability, physics, floor, vegetation, actual frame time or earned proof."
+}

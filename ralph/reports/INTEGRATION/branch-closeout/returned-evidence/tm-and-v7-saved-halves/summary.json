@@ -1,0 +1,121 @@
+{
+  "acceptance_credit": false,
+  "executed_head": "10608aa41a555a06446b252ed74823a684e161dd",
+  "tm_unit": {
+    "head": "10608aa41a555a06446b252ed74823a684e161dd",
+    "exit": 0,
+    "timed_out": false,
+    "selection": "test_tm_teach_transaction.gd",
+    "summary": [
+      "5 tests, 87 assertions, 0 failed"
+    ],
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-10608aa41a55-2d940bae\\tests.log",
+    "raw_log_sha256": "5b8db8bedfb5fed7bcbc65a7e707ed396f6786136b6e62225acf19b8eceee56e"
+  },
+  "menu_smoke": {
+    "head": "10608aa41a555a06446b252ed74823a684e161dd",
+    "watchdog_seconds": 240,
+    "elapsed_seconds": 241.48400000005495,
+    "timed_out": true,
+    "script": "tests/smoke_menu.gd",
+    "exit": 1,
+    "errors": [],
+    "summary": [],
+    "raw_log_sha256": "dc0272c0b257db3cfa5312b169d7e6f5d7d07afa2cb5b09c50577f9ec253850f",
+    "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-10608aa41a55-smoke_menu\\smoke.log"
+  },
+  "scope": "Real TM durable planner and owner BOOL refusal/retry controls; actual UI smoke is bounded regression evidence, never substitutes for full F23 station equip/combat hit. V7 actual pending world and unchanged original owner file retained losslessly alongside their pin report.",
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-affected-10608aa41a55-2d940bae.json",
+      "sealed": "000-combined-affected-10608aa41a55-2d940bae.json.gz",
+      "raw_bytes": 759860,
+      "raw_sha256": "0ca43ba933cbf8fbeb4f4438db1f2c08e7a255fc440e9a1f2ada40ea230b8372",
+      "gzip_sha256": "0fabc532ef97803d72a4221c2f4199e96c40b94490af60cdb7390ece71ab9ab2"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-10608aa41a55\\0.log",
+      "sealed": "001-0.log.gz",
+      "raw_bytes": 373,
+      "raw_sha256": "9af23e9db4711f7d40e216f8ad95371728514634ffddd1e0b0ec793bb79bc8e9",
+      "gzip_sha256": "ab0ce0e069dd1c88c54d5cbe4e92a9bd8c3073df4a50d1d8c037e64ef44743b3"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-10608aa41a55\\receipt.json",
+      "sealed": "002-receipt.json.gz",
+      "raw_bytes": 760856,
+      "raw_sha256": "b2312d938f72314c25300ed89914e541859450b3e5c6a16c88987d52f0f92da0",
+      "gzip_sha256": "2f0120e5ca1b3f3adb47b65e974fe05731126ba43299cb3133d0293700b825ec"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-10608aa41a55\\scripts.json",
+      "sealed": "003-scripts.json.gz",
+      "raw_bytes": 197,
+      "raw_sha256": "7a60261d2ea0e0d87fda43a613852fe1dda1e902271d50a4859e1c87d1a7585b",
+      "gzip_sha256": "0bf63d9a3ddc1bfcfde3d9ff8649f5c76fafea6de773458c00bf83569e5629a8"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-smokes-10608aa41a55-041b13de.json",
+      "sealed": "004-combined-smokes-10608aa41a55-041b13de.json.gz",
+      "raw_bytes": 760448,
+      "raw_sha256": "bc0f843b3482c5e9a8c0e0e7d520c0b44935a26577be0404a3128f70acdb720c",
+      "gzip_sha256": "ae41adc18e000b1f0a1c8c1db7b74ddd36593bdc46207c42216158270e931bd5"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\invocation.json",
+      "sealed": "005-invocation.json.gz",
+      "raw_bytes": 1732,
+      "raw_sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "gzip_sha256": "a52e68067c8dde41c0b3cb84df1bb9e4f5ed8f2a6db55ae90c891d062f740829"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+      "sealed": "006-character.json.gz",
+      "raw_bytes": 2779501,
+      "raw_sha256": "186c04274b0651cc4e2a2e08467547fe809dd432408eea59024d0c50e013d35b",
+      "gzip_sha256": "21e80242f3e09bda59595159f69689aa7ecbfc3f64b104beedf94050b4e55eaf"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
+      "sealed": "007-world.json.gz",
+      "raw_bytes": 35347,
+      "raw_sha256": "62c1b602e06d1cd4e256e1f79c73895a916894ffdad9deeee9d66ac6b948af96",
+      "gzip_sha256": "15fa499abf294d6def89bd99b5a7cae8ebc6ade921297499595c1f0dab3b0b05"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-10608aa41a55-smoke_menu\\result.json",
+      "sealed": "008-result.json.gz",
+      "raw_bytes": 445,
+      "raw_sha256": "2ea1690a823044e9dcf0c8d93850155f8a13b420bb09dbc2365d546900e1139d",
+      "gzip_sha256": "a22b6dc435ac4dd53095617f6510d8239172bc4142daa16659629d1b10459c20"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-smoke-10608aa41a55-smoke_menu\\smoke.log",
+      "sealed": "009-smoke.log.gz",
+      "raw_bytes": 974622,
+      "raw_sha256": "dc0272c0b257db3cfa5312b169d7e6f5d7d07afa2cb5b09c50577f9ec253850f",
+      "gzip_sha256": "2a43ac06e56c0fc4cd68f83d3ea1c86ec228366ae4a3f1617c67606ec9e5f778"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-10608aa41a55-2d940bae\\result.json",
+      "sealed": "010-result.json.gz",
+      "raw_bytes": 412,
+      "raw_sha256": "b0fcbaf700f2d8b77142f52fc073b2f1209ce47a310c6ed8f2cbac6f2247799c",
+      "gzip_sha256": "74b23979c31631ba3c6c165abe3c04587c520b361e3759f75bdbe039a6e792d4"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-10608aa41a55-2d940bae\\tests.log",
+      "sealed": "011-tests.log.gz",
+      "raw_bytes": 13107,
+      "raw_sha256": "5b8db8bedfb5fed7bcbc65a7e707ed396f6786136b6e62225acf19b8eceee56e",
+      "gzip_sha256": "a7939c6a74f70a33b4d67cc18f96119b7fef8cbb9c4b53c48fa04ca5fa7735cc"
+    },
+    {
+      "source": "D:\\tetherbound\\r3-f48\\ralph\\reports\\R3-F48\\native-producer-v7.json",
+      "sealed": "012-native-producer-v7.json.gz",
+      "raw_bytes": 11782,
+      "raw_sha256": "ac834888c247a0463f1dc5efef1b39c19251809ec7d29d646b93d224e2f3089b",
+      "gzip_sha256": "0809dcfe286e965bcbdc5af48021412433d1eac7b5adf7fef0e923d2926d1af8"
+    }
+  ]
+}

@@ -87,7 +87,7 @@ func test_existing_character_id_survives_saves_to_other_slots_and_reload() -> vo
 	assert_true(saver.save(game, 3), "manual save to another slot keeps that character")
 	assert_eq(str(game.local.character_id), "character-explicit-existing")
 	for slot: int in [0, 3]:
-		var flat: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(saver.slot_path(slot)))
+		var flat: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(saver.slot_path(slot)))
 		var locator := flat.get(SAVE_GAME.SPLIT_LOCATOR_KEY, {}) as Dictionary
 		assert_eq(str(locator.get("world_id", "")), "slot-%d" % slot,
 			"each manual slot still selects its own home world")
@@ -103,6 +103,46 @@ func test_existing_character_id_survives_saves_to_other_slots_and_reload() -> vo
 			"both worlds load the portable character's latest saved state")
 		assert_eq(loaded.party.size(), 1)
 
+
+func test_cross_slot_refusal_preserves_accepted_waystone_journal_and_original_save() -> void:
+	var source := preload("res://tests/test_f18_waystones.gd").new()
+	var proposal := source.ACTIONS.stage(source._current(), 0, "waystone_touch", source._intent(), source._context(), source.RECORD.errors)
+	assert_true(proposal.get("ok") == true)
+	if proposal.get("ok") != true: return
+	proposal.character_revision = 1
+	var row := source.DELIVERY.make_record("slot-0", "stone-world", "epoch", proposal, null, source.RECORD.errors)
+	assert_false(row.is_empty())
+	if row.is_empty(): return
+	row.status = "accepted"
+	var game := FIXTURE.game(db, false)
+	game.local = preload("res://autoload/player_state.gd").new()
+	game.local.configure(db)
+	game.local.character_id = "stone-owner"
+	game.local.redesign_character = proposal.state.redesign_character.duplicate(true)
+	game.party = game.local.party
+	game.inventory = game.local.inventory
+	game.world = preload("res://autoload/world_state.gd").new()
+	game.world.world_id = "slot-0"
+	game.world.reward_delivery_namespace = "stone-world"
+	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+	assert_true(saver.save(game, 0))
+	var original := FileAccess.get_file_as_bytes(saver.slot_path(0))
+	var owner_path: String = characters.path_for("stone-owner")
+	var owner_bytes := FileAccess.get_file_as_bytes(owner_path)
+	var world_path: String = saver.worlds().path_for("slot-0")
+	var world_bytes := FileAccess.get_file_as_bytes(world_path)
+	assert_false(saver.save(game, 1), "Original journal cannot move to a different world locator")
+	assert_eq(game.world.world_id, "slot-0", "Refusal must not rename the live world")
+	assert_eq(game.world.reward_delivery_namespace, "stone-world")
+	assert_eq(game.local.character_id, "stone-owner")
+	assert_eq(game.world.reward_deliveries[row.delivery_id], row)
+	assert_eq(FileAccess.get_file_as_bytes(saver.slot_path(0)), original)
+	assert_eq(FileAccess.get_file_as_bytes(owner_path), owner_bytes)
+	assert_eq(FileAccess.get_file_as_bytes(world_path), world_bytes)
+	assert_false(saver.has_slot(1))
+	assert_false(saver.worlds().has("slot-1"))
+	assert_true(saver.save(game, 0), "Original slot remains saveable after refused copy")
+	assert_eq(saver.worlds().read("slot-0").reward_deliveries[row.delivery_id], row)
 
 func test_scratch_save_does_not_mint_or_rename_live_identity() -> void:
 	var game := FIXTURE.populated_game(db)
@@ -308,6 +348,7 @@ func test_apply_refuses_a_character_that_is_not_there() -> void:
 func test_a_client_writes_its_own_character_and_only_that() -> void:
 	var game := _legacy_id_game()
 	game.host = false
+	game.local.character_id = "joiner-1"
 	game.world.reward_delivery_namespace = "friend-instance"
 	assert_true(bool(saver.call("save_character", game, "joiner-1")))
 	assert_true(bool(characters.call("has", "joiner-1")),
@@ -317,6 +358,26 @@ func test_a_client_writes_its_own_character_and_only_that() -> void:
 	var written: Dictionary = characters.call("read", "joiner-1")
 	assert_eq(str(written.get("last_world_instance_id", "")), "friend-instance",
 		"a client records the host instance received in its world snapshot")
+	assert_eq(str(written.get("character_id", "")), "joiner-1")
+	assert_false(bool(characters.call("has", "slot-1")), "the prior fixture identity is not a second character")
+
+
+func test_a_client_cannot_overwrite_another_character_file() -> void:
+	var other := _legacy_id_game()
+	other.host = false
+	other.local.character_id = "other-owner"
+	assert_true(bool(saver.call("save_character", other, "other-owner")))
+	var path := str(characters.call("path_for", "other-owner"))
+	var disk_before := FileAccess.get_file_as_bytes(path)
+	var game := _legacy_id_game()
+	game.host = false
+	game.local.character_id = "joiner-1"
+	var live_before: Dictionary = saver.snapshot(game).duplicate(true)
+	assert_false(bool(saver.call("save_character", game, "other-owner")))
+	assert_eq(FileAccess.get_file_as_bytes(path), disk_before, "a foreign owner file stays byte-identical")
+	assert_eq(saver.snapshot(game), live_before, "refusal cannot rename or mutate the local actor")
+	assert_false(bool(characters.call("has", "joiner-1")))
+	assert_true(((saver.call("worlds") as RefCounted).call("list_ids") as Array).is_empty())
 
 
 func test_rewriting_character_preserves_world_instance_envelope() -> void:
@@ -333,7 +394,7 @@ func test_rewriting_character_does_not_turn_malformed_provenance_into_identity()
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var malformed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var malformed: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	malformed["last_world_instance_id"] = 123
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(malformed))
@@ -374,7 +435,7 @@ func test_a_newer_than_this_build_character_file_refuses() -> void:
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = CHARACTER_SAVE.VERSION + 1
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	file.store_string(JSON.stringify(data))
@@ -386,7 +447,7 @@ func test_version_two_character_remains_readable_with_legacy_escrow_refused_by_r
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 2
 	# The old format already carried death-satchel escrow. Its tolerant default
 	# remains valid while v3 reserves this field for durable reward rows too.
@@ -410,7 +471,7 @@ func test_version_three_character_without_world_instance_remains_readable_refuse
 	var game := _legacy_id_game()
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 3
 	data.erase("last_world_instance_id")
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -438,7 +499,7 @@ func test_version_four_pending_escrow_without_world_instance_is_preserved_refuse
 	}}
 	assert_true(saver.save(game, 1))
 	var path := str(characters.call("path_for", "slot-1"))
-	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var data: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(path))
 	data["version"] = 4
 	data.erase("last_world_instance_id")
 	data["satchel_escrow"] = escrow

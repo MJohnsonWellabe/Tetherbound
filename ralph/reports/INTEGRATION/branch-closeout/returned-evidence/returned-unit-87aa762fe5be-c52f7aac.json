@@ -1,0 +1,11 @@
+{
+  "head": "87aa762fe5be1c4ad0565f95250bfb1809e163df",
+  "exit": 0,
+  "selection": "test_f22_action_publication.gd,test_director_projectile_deployment_binding.gd,test_encounter_host_wind_publish.gd,test_encounter_host_rejects_friendly_strike.gd,test_shared_wild_host_fight.gd,test_stormwood_hosted_combat.gd,test_hosted_combat_staging.gd,test_training_guard_lifetime.gd,test_gate_f_capture_window.gd",
+  "summary": [
+    "54 tests, 315 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-87aa762fe5be-c52f7aac\\tests.log",
+  "raw_log_sha256": "86ddbb711270593afabfe42bef340573672b7a48f4d51bb380191fd265dd82a8",
+  "scope": "Exact tested source and stated selectors only. Retained failures remain failures; no main landing or criterion credit."
+}

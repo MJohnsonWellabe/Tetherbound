@@ -27,6 +27,7 @@ const IRONWOOD_RECIPES_PATH := "res://data/recipes/recipes_ironwood.json"
 const CLOUDREACH_RECIPES_PATH := "res://data/recipes/recipes_cloudreach.json"
 const STORMWOOD_RECIPES_PATH := "res://data/recipes/recipes_stormwood.json"
 const WATER_CRAFTING_PATH := "res://data/config/water_crafting.json"
+const F33_GEAR_PATH := "res://data/config/gear.json"
 
 ## Fallback stack size for an id with no definition. One, so an unknown item
 ## cannot merge with anything and quietly lose itself.
@@ -47,7 +48,11 @@ func _init(
 	stormwood_recipes_path: String = STORMWOOD_RECIPES_PATH
 ) -> void:
 	_items = _read(items_path).get("items", {})
-	_buildables = _read(buildables_path).get("buildables", [])
+	var catalogue := _read(buildables_path)
+	_buildables = catalogue.get("buildables", [])
+	if buildables_path == BUILDABLES_PATH:
+		_buildables = preload("res://scripts/build/station_rules.gd").active_catalogue(
+			catalogue, _read("res://data/config/stations.json"))
 	_recipes = _read(recipes_path).get("recipes", {})
 	# SD18/SF31: merge the two progression tiers in, base first. A duplicate id
 	# would silently favour whichever file merges last; the three tables are
@@ -63,6 +68,21 @@ func _init(
 			_items[id] = water.item_registration_proposals[id]
 		for id: String in water.get("recipes", {}):
 			_recipes[id] = water.recipes[id]
+		var feasts := _read("res://data/recipes/feasts.json")
+		for id: String in feasts.get("items", {}):
+			if not _items.has(id): _items[id] = feasts.items[id]
+		_items = preload("res://scripts/world/f32_catalogue_registration.gd").apply_items(_items)
+		var gear := _read(F33_GEAR_PATH)
+		for id: String in gear.get("items", {}): _items[id] = gear.items[id]
+		if gear.get("feature_flags", {}).get("runtime_enabled") == true:
+			for id: String in gear.get("recipes", {}): _recipes[id] = gear.recipes[id]
+		var camps := _read("res://data/config/forward_camps.json")
+		# Item remains known while OFF so future additive saves retain the kit.
+		for id: String in camps.get("items",{}): _items[id]=camps.items[id]
+		if camps.get("runtime_enabled") == true:
+			for id: String in camps.get("recipes",{}): _recipes[id]=camps.recipes[id]
+			if buildables_path == BUILDABLES_PATH:
+				for row: Dictionary in catalogue.get("forward_camp_buildables",[]): _buildables.append(row)
 
 
 func _read(path: String) -> Dictionary:

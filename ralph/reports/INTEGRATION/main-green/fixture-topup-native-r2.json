@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "checkout_ref": "30408e3cdd31fb13c12f92bc7a854b8363e07170",
+  "run_id": 37114303780,
+  "artifact_id": 11270668424,
+  "tests": 27,
+  "assertions": 146,
+  "failed": 0,
+  "exit_code": 0,
+  "duration_seconds": 6,
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": []
+  },
+  "original_log_sha256": "9057f7f4148ad2c4d0503948fb5f14d47b88228882fb3c20e1ea7cd0b4faac01",
+  "original_archive_sha256": "a27bcb8d47ce4a85b1644924f50c56e77c5cff7f90de0087e6eb86ff45b348da",
+  "boundary": "Actual provider and PeerRunner compiled; detached refusals and canonical helper cases only. Actual source authorization and F48 producer acceptance pending. Unchanged six R1 files reused."
+}

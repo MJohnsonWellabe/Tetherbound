@@ -7,6 +7,8 @@ const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
+const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -28,6 +30,10 @@ func build(config: Dictionary) -> bool:
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
 	_build_frontage()
+	var catalog := CATALOG_PRESENTATION.new()
+	catalog.name = "MeadowsCatalogPresentation"
+	add_child(catalog)
+	catalog.build("hall")
 	refresh_from_game()
 	set_process(true)
 	return true
@@ -128,6 +134,15 @@ func _build_pedestal(entry: Dictionary) -> void:
 	arrival.position = Vector3(0, .05, 1.8)
 	slot.add_child(arrival)
 	_pedestals[str(entry.biome)] = slot
+	var prompt := preload("res://scripts/world/interactable.gd").new()
+	prompt.configure("Hang your %s relic" % ORDER.display_name(str(entry.biome)), float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
+	prompt.connect("activated", func() -> void:
+		var game := get_node_or_null(^"/root/Game")
+		var session: Node = game.get("session") if game != null else null
+		if session != null:
+			var verdict: Dictionary = session.call("request_relic_hang", str(entry.biome))
+			if verdict.get("ok") != true: game.call("push_world_message", str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))))
+	slot.add_child(prompt)
 
 
 func _add_model(parent: Node3D, path: String) -> void:
@@ -176,12 +191,34 @@ func _process(delta: float) -> void:
 
 func refresh_from_game() -> void:
 	var game := get_node_or_null("/root/Game")
+	var session: Node = game.get("session") if game != null else null
+	_mount_portal_actions(session)
 	var world: RefCounted = game.get("world") if game != null else null
 	var display: Dictionary = world.get("redesign_world") if world != null else {}
 	if display == _last_display:
 		return
 	_last_display = display.duplicate(true)
 	apply_display(display)
+
+
+## Mount the existing input adapter at each actual authored slot only after
+## Session's unchanged runtime gate admits it. Late Session readiness retries
+## here independently of whether the shared display has changed.
+func _mount_portal_actions(session: Node) -> void:
+	if not is_instance_valid(session) or not session.has_method("portal_runtime_ready") \
+		or session.call("portal_runtime_ready") != true: return
+	for id: String in _arches:
+		var slot: Node3D = _arches[id]
+		if not is_instance_valid(slot) or slot.get_parent() != self or slot.is_queued_for_deletion(): continue
+		# Retain the original input component; never adopt or duplicate a
+		# foreign child occupying this owned presentation name.
+		if slot.get_node_or_null(^"PortalAction") != null: continue
+		var action: Node3D = PORTAL_ACTION.new()
+		action.name = "PortalAction"
+		if not action.call("setup", id):
+			action.free()
+			continue
+		slot.add_child(action)
 
 
 func apply_display(display: Dictionary) -> void:

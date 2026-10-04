@@ -1,0 +1,210 @@
+{
+  "feature": "F47#0-#4",
+  "evidence_kind": "source implementation and non-engine arithmetic checks; no acceptance changes",
+  "baseline": "84c24d285490153626c3d94e4a810c761a2d5a15",
+  "permissions_verified": {
+    "approval_policy": "never",
+    "sandbox_mode": "danger-full-access",
+    "source": "effective initial developer permission context"
+  },
+  "branch": "tb/r3-f47",
+  "changed_paths": [
+    "scripts/economy/route_observer.gd",
+    "tools/f47_capture_route.gd",
+    "tools/economy_ledger.mjs",
+    "tools/economy_difficulty.mjs",
+    "tests/test_economy_ledger.mjs",
+    "tests/test_economy_difficulty.mjs",
+    "ralph/reports/R3-F47/source-ledger.json",
+    "ralph/reports/R3-F47/implementation-evidence.json"
+  ],
+  "overlapping_edited_paths": [],
+  "checks_executed": [
+    {
+      "command": "node --test tests/test_economy_ledger.mjs tests/test_economy_difficulty.mjs",
+      "passed": 13,
+      "failed": 0,
+      "scope": "arithmetic, contention, whole-batch rounding, paired C2 seed distributions, observational replay and optional net rates"
+    },
+    {
+      "command": "node --check tools/economy_ledger.mjs",
+      "exit": 0
+    },
+    {
+      "command": "node --check tools/economy_difficulty.mjs",
+      "exit": 0
+    },
+    {
+      "command": "node tools/economy_ledger.mjs --out ralph/reports/R3-F47/source-ledger.json",
+      "exit": 0,
+      "scope": "23 bands, 128 type/upgrade material scenarios; unavailable supply remains null"
+    }
+  ],
+  "dependency_contracts": [
+    {
+      "owner": "F27",
+      "paths": [
+        "scripts/creatures/essence.gd",
+        "scripts/creatures/progression.gd",
+        "scripts/net/session.gd"
+      ],
+      "contract": "Actual host defeat/capture entitlement, canonical admitted caps, same-record CAS, stable receipt and portable owner-save ACK. Ordinary XP remains selected. Ledger mirrors canonical level cost floor/ceiling but does not settle anything."
+    },
+    {
+      "owner": "F28/F31/F32/F33/F34",
+      "paths": [
+        "data/config/masters.json",
+        "data/recipes/feasts.json",
+        "data/config/stations.json",
+        "data/items/buildables.json",
+        "data/config/essence_nodes.json",
+        "data/config/gear.json",
+        "data/config/forward_camps.json",
+        "data/recipes/recipes_forge.json"
+      ],
+      "contract": "Recipes/gear/feasts personal, station attachments and base structures world-shared once. Producer must supply actual walkable route harvest stock, seed/groom/crop receipts, canonical farm readiness and committed crafting. Every upgrade scenario is shown; no unmeasured boss upgrade is assumed."
+    },
+    {
+      "owner": "F43",
+      "paths": [
+        "scripts/world/bounty_board.gd",
+        "data/config/bounties.json"
+      ],
+      "contract": "Three personal slots, immutable instances, host-day rollover, reanchor without rotation on world hop; actual claimant and durable paid receipt required. Declared runtime flag remains off."
+    },
+    {
+      "owner": "F44",
+      "paths": [
+        "scripts/repeatables/rematch_rules.gd",
+        "data/config/rematches.json",
+        "data/config/alpha_respawns.json"
+      ],
+      "contract": "Accepted host outcomes and participants, once-only unique rewards, cycle-limited repeats, departure-gated respawn. OPEN: world-namespaced rematch cooldown can reset eligibility in another world. ROOT/F44 must establish portable cycle/reanchor semantics through existing carrier/ACK, not invent a clock in this lane."
+    },
+    {
+      "owner": "F45",
+      "paths": [
+        "scripts/creatures/research_log.gd",
+        "data/config/research.json",
+        "scripts/ui/research_log_panel.gd"
+      ],
+      "contract": "Producer/config absent at this baseline. UI service projection exists but cannot supply any research essence credit. Unavailable in all ledgers."
+    },
+    {
+      "owner": "F19/F22/F24/F33",
+      "paths": [
+        "data/config/chapter_curve.json",
+        "tests/smoke_f22_pattern_bands.gd",
+        "tests/helpers/f22_pattern_pilot.gd"
+      ],
+      "contract": "All three starters and at least 24 paired C2 seeds per band, owning COMBAT distributions, full F23/F24 policies and actual gear pairs. Existing F22 diagnostic explicitly reports acceptance=false/incomplete policy. OPEN: Meadows last regional exit is 21 versus biome target 22; F19 owns resolving this mismatch."
+    }
+  ],
+  "queued_proof_commands_ROOT_only": [
+    {
+      "name": "F47 real title-to-credits normal route with stock/party observation",
+      "command": "godot --path . --script tools/f47_capture_route.gd -- --out=ralph/reports/R3-F47/normal-route.jsonl --run-id=f47-normal-route",
+      "preconditions": "Use a new output file. Real fresh title/new-game inputs, integrated producers, actual pilot. No injected inventory/flags/caps. ROOT records shortcuts, pauses and route coverage. Run records elapsed observation time, never asserts a normal clear."
+    },
+    {
+      "name": "F47 route observation analysis",
+      "command": "node tools/economy_ledger.mjs --trace ralph/reports/R3-F47/normal-route.jsonl --out ralph/reports/R3-F47/observed-ledger.json",
+      "preconditions": "ROOT reconciles snapshots to exact accepted host receipts/owner ACK and compares each band with required stock, observed two-loss costs and four-character shared supply. This command analyzes observations only."
+    },
+    {
+      "name": "F47 optional loop net throughput",
+      "command": "godot --path . --script tools/f47_capture_route.gd -- --out=ralph/reports/R3-F47/optional-loop.jsonl --run-id=f47-optional-loop",
+      "preconditions": "ROOT pilot brackets ordinary alpha/catch-release/crop/bounty loops using F47RouteObserver.mark(optional_begin, actual_character_id) and mark(optional_end, actual_character_id). mark samples actual stock first. Analyze with --trace; compare net stock/hour and negative Orb spending with the main route. No gross payout/time assumptions."
+    },
+    {
+      "name": "F47 all-band C2 diagnostic",
+      "command": "godot --headless --path . --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=24 --json=ralph/reports/R3-F47/c2-bands.json",
+      "preconditions": "ROOT engine queue only; integrated actual F22/F24 callers. This flat fixture is not normal-world/complete-policy acceptance."
+    },
+    {
+      "name": "F47 C2 paired distributions and coverage",
+      "command": "node tools/economy_difficulty.mjs --input ralph/reports/R3-F47/c2-bands.json --out ralph/reports/R3-F47/c2-analysis.json",
+      "preconditions": "Retains acceptance=false even on arithmetic pass. Named fights, matching-versus-previous gear, worst permitted hit modifiers, ordinary world footage and full-policy proofs remain separate."
+    },
+    {
+      "name": "Meadows named C2 diagnostic",
+      "command": "godot --headless --path . --fixed-fps 60 --script tests/smoke_meadows_named_c2c3.gd -- --seeds=24 --json=ralph/reports/R3-F47/c2-meadows-named.json"
+    },
+    {
+      "name": "Tidewake named C2 diagnostic",
+      "command": "godot --headless --path . --fixed-fps 60 --script tests/smoke_water_named_c2c3.gd -- --seeds=24 --json=ralph/reports/R3-F47/c2-tidewake-named.json",
+      "preconditions": "ROOT must repair/disclose any legacy L43/old-curve fixture defaults before using this witness for redesigned Tidewake. No blanket party-level override certifies all bands."
+    },
+    {
+      "name": "Stormwood named C2 diagnostic",
+      "command": "godot --headless --path . --fixed-fps 60 --script tests/smoke_stormwood_b_named_c2c3.gd -- --seeds=24 --json=ralph/reports/R3-F47/c2-stormwood-named.json",
+      "preconditions": "ROOT must verify fixture entry/loadout/gear uses the new curve. Diagnostic fixture is not ordinary-world proof."
+    },
+    {
+      "name": "F44 real rematch witness",
+      "command": "godot --path . --script tools/f44_rematch_witness.gd -- --biome=meadows --save-dir=ralph/reports/R3-F47/earned-checkpoint-copy --output=ralph/reports/R3-F47/rematch-witness",
+      "preconditions": "Disposable copy of an earned checkpoint; integrate runtime producer first. Repeat same trainer in two distinct real worlds at less than one configured repeat cycle, reload/reconnect and show no second reward after repair. This existing command witnesses one win; operator must retain both world/receipt outcomes."
+    },
+    {
+      "name": "Selected existing bounty and forward-camp contract tests",
+      "command": "godot --headless --path . --script tests/run_tests.gd -- --only=test_bounty_board.gd,test_forward_camp.gd",
+      "preconditions": "ROOT serialized engine batch; source-only lane did not execute this command."
+    },
+    {
+      "name": "Owner normal-clear confirmation",
+      "command": "godot --path . --script tools/f47_capture_route.gd -- --out=ralph/reports/R3-F47/owner-route.jsonl --run-id=f47-owner-route",
+      "preconditions": "Human owner actually plays the ordinary route. ROOT records dated owner feedback; agent observations do not become owner evidence."
+    }
+  ],
+  "runtime_unverified": [
+    "GDScript parser/import",
+    "real earned normal-route time",
+    "owner 15-25-hour confirmation",
+    "main-path essence/material solvency",
+    "two-loss recovery",
+    "four-character contention",
+    "optional grind rate",
+    "C2 bands/named fights/gear pairs",
+    "rest/release/bounty/rematch/alpha reload/reconnect/world-hop receipts"
+  ],
+  "code_remaining_outside_this_lane": [
+    "F45 authoritative research producer/config",
+    "shared production producer/ACK mounts where flags remain off",
+    "F44 portable rematch cycle semantics",
+    "F19 Meadows exit mismatch",
+    "full-policy C2 and ordinary-world band/gear witnesses",
+    "committed gross award/consumption attribution from shared host producers"
+  ],
+  "balance_repairs": "No authored values tuned without measured outcomes; no flags enabled; no shared save/schema edits.",
+  "engine_CI_PR_main_acceptance_actions": "None",
+  "changed_file_digests": [
+    {
+      "path": "scripts/economy/route_observer.gd",
+      "sha256": "09fc3b533f7919486693abf3a72679ebf493aa7be754ca0f6b0a5d33c6966933"
+    },
+    {
+      "path": "tools/f47_capture_route.gd",
+      "sha256": "82a4d6cbaa555c6218aa7721cf1adb5050177dde23f94034fa7ea2921306e1b8"
+    },
+    {
+      "path": "tools/economy_ledger.mjs",
+      "sha256": "8f6fd67f622a0964252c5d4977cc2e936a5a2f62b75606dea6c40fde7e656300"
+    },
+    {
+      "path": "tools/economy_difficulty.mjs",
+      "sha256": "5e41e823d014d91acad0a027e2c820e5234dc2631f51895a355c9cc606783a31"
+    },
+    {
+      "path": "tests/test_economy_ledger.mjs",
+      "sha256": "70ee113ac182a435767c0f26b102b0d4dbd5238cdaac863ef6e4055cdbafecc2"
+    },
+    {
+      "path": "tests/test_economy_difficulty.mjs",
+      "sha256": "aceb57d5effe41babe1c712715987cec3e4b6592c816e0e71019cdf85c95f682"
+    },
+    {
+      "path": "ralph/reports/R3-F47/source-ledger.json",
+      "sha256": "cc8bc8b19bdc556773dc885251c64ebc693b4c946bcc8adc1722b6859ee97140"
+    }
+  ]
+}

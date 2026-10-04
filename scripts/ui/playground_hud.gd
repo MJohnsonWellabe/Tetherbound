@@ -124,6 +124,7 @@ const HOTBAR_ASSIGNED_SLOT_HEIGHT := 132.0
 ## Action name IS the glyph id (input_glyph.gd's GLYPHS dict uses the same
 ## keys), so one list serves both jobs.
 const HOTBAR_ACTIONS := ["hotbar_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
+const COMBAT_HOTBAR_ACTIONS := ["combat_item_1", "hotbar_2", "hotbar_3", "hotbar_4", "hotbar_5"]
 ## Named constants (not the magic 28/16 this used to inline directly into the
 ## bbcode format string) so `smoke_hud_handheld_legibility.gd` can assert real
 ## physical pixel sizes against the values actually drawn, the way it already
@@ -774,6 +775,11 @@ const STUCK_AXES_EPSILON := 0.05
 var _player: CharacterBody3D = null
 var _arbiter: Node = null
 var _game: Node = null
+## True from the first idle poll that sees an orb aim until every hotbar button
+## is released. A press that began while aiming belongs to the aim: the B that
+## backs out is consumed by ThrowAim on a physics tick, and the HUD's next idle
+## poll would otherwise read the same edge as slot one (one press, two verbs).
+var _aim_hotbar_latch := false
 var _party: RefCounted = null
 
 var _since_readout := 0.0
@@ -4285,7 +4291,7 @@ func _update_hotbar(inventory: RefCounted) -> void:
 		# A blind critic separately flagged the hotbar numerals as visibly
 		# more pixelated than the legend's -- same vendored PNGs, same
 		# `icon()` call, the only difference was this smaller target size.
-		var glyph := INPUT_GLYPH.icon(HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
+		var glyph := INPUT_GLYPH.icon(COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i], HOTBAR_GLYPH_PX)
 		var text: String
 		if id.is_empty():
 			# Blank second line, not a "-" glyph: a blind critic read the old
@@ -4366,6 +4372,10 @@ func _hotbar_assignments_are_empty(assignments: Array) -> bool:
 func _read_hotbar_input() -> void:
 	if _game == null:
 		return
+	if _combat_is_aiming():
+		_aim_hotbar_latch = true
+	elif _aim_hotbar_latch and not _any_hotbar_action_live():
+		_aim_hotbar_latch = false
 	# OW10: one gate, shared with `_read_world_hotkeys`. This poll used to carry
 	# its own two-thirds of the answer (a fight, the arbiter's modal flag) and
 	# not the third -- `_build_menu_is_open()` was written onto the world-hotkey
@@ -4380,12 +4390,25 @@ func _read_hotbar_input() -> void:
 	# same one-press-two-verbs bug in a smaller window.
 	if not _world_input_allowed(false, true):
 		return
-	if _combat_is_aiming():
+	# The latch also covers the idle frame right after a physics-tick cancel,
+	# when the aim has already closed but the backing-out press is still live.
+	if _aim_hotbar_latch:
 		return
 	for i in HOTBAR_SLOTS:
-		if Input.is_action_just_pressed(HOTBAR_ACTIONS[i]):
+		var action: String = COMBAT_HOTBAR_ACTIONS[i] if _combat_is_running() else HOTBAR_ACTIONS[i]
+		if Input.is_action_just_pressed(action):
 			_use_hotbar_slot(i)
 			return
+
+
+## Held, or pressed at any point since the last idle frame: a tap whose press
+## and release both land on physics ticks between two idle polls is no longer
+## held but still reads `just_pressed` here, and is still the aim's press.
+func _any_hotbar_action_live() -> bool:
+	for action in HOTBAR_ACTIONS + COMBAT_HOTBAR_ACTIONS:
+		if Input.is_action_pressed(action) or Input.is_action_just_pressed(action):
+			return true
+	return false
 
 
 ## The same defensive CombatManager lookup the minimap dim uses; false when
@@ -4546,6 +4569,9 @@ func _use_hotbar_slot(slot_index: int) -> void:
 		return
 	var stack: Dictionary = inventory.call("stack_at", index)
 	if stack.is_empty():
+		return
+	if id == "home_key":
+		_game.call("use_home_key")
 		return
 
 	# Owner directive: "press slot, tool in hand". A tool slot EQUIPS now --

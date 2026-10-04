@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "baseline_sha": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "seed": 2042,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "presets": [
+    "High",
+    "Medium"
+  ],
+  "weather": [
+    "clear",
+    "rain"
+  ],
+  "times": [
+    "day",
+    "golden",
+    "night"
+  ],
+  "views": [
+    {
+      "id": "approach",
+      "offset_m": 32,
+      "heading_offset_deg": 0
+    },
+    {
+      "id": "gameplay",
+      "offset_m": 8,
+      "heading_offset_deg": 0
+    },
+    {
+      "id": "reverse",
+      "offset_m": 8,
+      "heading_offset_deg": 180
+    },
+    {
+      "id": "detail",
+      "offset_m": 3,
+      "heading_offset_deg": 0
+    }
+  ],
+  "sites": [
+    {
+      "id": "band1_lower_meadows_1",
+      "region": "band1_lower_meadows",
+      "at": [
+        9.0,
+        1300.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:The South Bridge"
+    },
+    {
+      "id": "band2_stone_and_root_0",
+      "region": "band2_stone_and_root",
+      "at": [
+        403.0,
+        1794.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:The Old Quarry"
+    },
+    {
+      "id": "band2_stone_and_root_1",
+      "region": "band2_stone_and_root",
+      "at": [
+        -328.7,
+        2581.7
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:The Burrow Warrens"
+    },
+    {
+      "id": "band3_the_river_lock_0",
+      "region": "band3_the_river_lock",
+      "at": [
+        350.0,
+        3760.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:The Tether Relay"
+    },
+    {
+      "id": "band3_the_river_lock_1",
+      "region": "band3_the_river_lock",
+      "at": [
+        -152.0,
+        4170.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:Old Mill Crossing"
+    },
+    {
+      "id": "band4_upper_meadows_ironwood_0",
+      "region": "band4_upper_meadows_ironwood",
+      "at": [
+        -345.0,
+        5060.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:The Ironwood Grove"
+    },
+    {
+      "id": "band4_upper_meadows_ironwood_1",
+      "region": "band4_upper_meadows_ironwood",
+      "at": [
+        -250.0,
+        6490.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:The Ridgeline Watch"
+    },
+    {
+      "id": "band5_stronghold_approach_0",
+      "region": "band5_stronghold_approach",
+      "at": [
+        0.0,
+        7000.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:Stronghold Approach"
+    },
+    {
+      "id": "band5_stronghold_approach_1",
+      "region": "band5_stronghold_approach",
+      "at": [
+        8.0,
+        7590.0
+      ],
+      "heading_deg": 0,
+      "source": "debug_teleport_spots.json:Meadows Hall"
+    },
+    {
+      "id": "farm_to_hall",
+      "region": "village",
+      "at": [
+        98,
+        14
+      ],
+      "heading_deg": 90,
+      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+    },
+    {
+      "id": "village_road",
+      "region": "village",
+      "at": [
+        63,
+        14
+      ],
+      "heading_deg": 90,
+      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+    },
+    {
+      "id": "hall_front",
+      "region": "village",
+      "at": [
+        91.5,
+        14
+      ],
+      "heading_deg": 90,
+      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+    },
+    {
+      "id": "hall_nave",
+      "region": "village",
+      "at": [
+        107,
+        14
+      ],
+      "heading_deg": 90,
+      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+    },
+    {
+      "id": "shrine_room",
+      "region": "village",
+      "at": [
+        107,
+        2
+      ],
+      "heading_deg": 90,
+      "source": "F17 village/crossing_hall coordinates; strict stand support required"
+    },
+    {
+      "id": "arch_home",
+      "region": "hall",
+      "at": [
+        94.2,
+        14
+      ],
+      "heading_deg": 90,
+      "source": "crossing_hall.json arches:home"
+    },
+    {
+      "id": "arch_tidewake",
+      "region": "hall",
+      "at": [
+        98,
+        19.9
+      ],
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:tidewake"
+    },
+    {
+      "id": "arch_cloudreach",
+      "region": "hall",
+      "at": [
+        104,
+        19.9
+      ],
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:cloudreach"
+    },
+    {
+      "id": "arch_stormwood",
+      "region": "hall",
+      "at": [
+        110,
+        19.9
+      ],
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:stormwood"
+    },
+    {
+      "id": "arch_biome5",
+      "region": "hall",
+      "at": [
+        116,
+        19.9
+      ],
+      "heading_deg": 180,
+      "source": "crossing_hall.json arches:biome5"
+    },
+    {
+      "id": "arch_biome6",
+      "region": "hall",
+      "at": [
+        98,
+        8.1
+      ],
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:biome6"
+    },
+    {
+      "id": "arch_biome7",
+      "region": "hall",
+      "at": [
+        104,
+        8.1
+      ],
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:biome7"
+    },
+    {
+      "id": "arch_biome8",
+      "region": "hall",
+      "at": [
+        110,
+        8.1
+      ],
+      "heading_deg": 0,
+      "source": "crossing_hall.json arches:biome8"
+    }
+  ],
+  "pairing": "Same integrated SHA, seed, character, renderer/preset, time, weather and fixed stand. Baseline/candidate switches only. Reject unmatched player/camera/size or support failure; retain missing rows.",
+  "per_run_planned_frames": 528,
+  "required_additional_proofs": [
+    "Earned opening walk farm -> street -> Hall -> all arches/shrine, preserving prompts/colliders (F17/F38).",
+    "Real Meadows fight on High and Medium, ordinary inputs and camera; no fixture body/camera staging.",
+    "Code-blind before/after judge for all top20 and every impact>12 catalog row; include frames owned by F36/F42/camera dependencies.",
+    "Low Compatibility 1280x800 readability control.",
+    "Owner ROG Ally renderer/default gate (F26); no promotion from these source checks."
+  ],
+  "commands": [
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=High --f38-baseline --output=res://ralph/reports/R2-F38/native/High/baseline",
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=High --f38-candidate --output=res://ralph/reports/R2-F38/native/High/candidate",
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Medium --f38-baseline --output=res://ralph/reports/R2-F38/native/Medium/baseline",
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Medium --f38-candidate --output=res://ralph/reports/R2-F38/native/Medium/candidate"
+  ],
+  "status": "PENDING shared engine queue; these definitions are not captured evidence",
+  "fight_commands": [
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.5 --attack --dodge --tell-frames --f38-preset=High --f38-baseline --out=res://ralph/reports/R2-F38/native/High/fight-baseline",
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.5 --attack --dodge --tell-frames --f38-preset=High --f38-candidate --out=res://ralph/reports/R2-F38/native/High/fight-candidate",
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.5 --attack --dodge --tell-frames --f38-preset=Medium --f38-baseline --out=res://ralph/reports/R2-F38/native/Medium/fight-baseline",
+    "& $Godot --path D:/tetherbound/r2-f38 --rendering-method forward_plus --resolution 1920x1080 --script tools/capture_f38_fight.gd -- --trainer=south_bridge_grunt,warden_aldis --frames=32 --interval=0.5 --attack --dodge --tell-frames --f38-preset=Medium --f38-candidate --out=res://ralph/reports/R2-F38/native/Medium/fight-candidate"
+  ],
+  "regression_commands": [
+    "& $Godot --headless --path D:/tetherbound/r2-f38 --editor --quit",
+    "& $Godot --headless --path D:/tetherbound/r2-f38 --script tests/smoke_opening.gd",
+    "& $Godot --headless --path D:/tetherbound/r2-f38 --script tests/smoke_crossing_hall_circuit.gd"
+  ],
+  "regression_limits": "Run only through ROOT shared engine/import queue after repair. These regression harnesses do not replace earned opening walk or real ENet join/reconnect presentation agreement. Candidate and baseline opening/circuit runs required.",
+  "low_control_command": "& $Godot --path D:/tetherbound/r2-f38 --rendering-method gl_compatibility --resolution 1280x800 --script tools/capture_f38_matrix.gd -- --seed=2042 --f38-preset=Low --f38-candidate --subset=hall_front --subset=village_road --output=res://ralph/reports/R2-F38/native/Low/control"
+}

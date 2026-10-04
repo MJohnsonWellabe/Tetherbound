@@ -651,12 +651,11 @@ func test_the_ironwood_tier_needs_no_unlock_flag() -> void:
 		assert_true(state.recipe_known(id), "'%s' must be known with no flag ever set" % id)
 
 
-## SF31's DONE-WHEN, asserted directly and over the WHOLE recipe book rather
-## than one tier: spec §10 lists exactly six materials for the Meadows
-## (wood/stone/fiber/berries baseline, rootstone, ironwood) plus items crafted
-## from them. A seventh gathered material appearing in any cost -- the "third
-## new material" SF31 exists to prevent -- fails here, whichever file added it.
-func test_no_recipe_anywhere_needs_a_third_progression_material() -> void:
+## Keep SF31's six-material restriction for the legacy Meadows book. The
+## active homestead book additionally follows HOMESTEAD §5–§7: each
+## gear tier uses its own ingot and approved local fibre/charm material;
+## F34's travel kit alone adds Rootiron to its baseline materials (§8).
+func test_legacy_and_homestead_recipes_keep_their_approved_material_limits() -> void:
 	const MATERIALS := ["wood", "stone", "fiber", "berries", "rootstone", "ironwood"]
 	# Ids a recipe may legitimately cost that are NOT raw materials: things the
 	# player crafts or is handed. Kept explicit so a genuinely new material
@@ -664,13 +663,50 @@ func test_no_recipe_anywhere_needs_a_third_progression_material() -> void:
 	const CRAFTED_OR_GIVEN := ["saddle_frame", "orb_basic", "orb_greater", "orb_prime",
 		"potion_small", "potion_large", "revive", "coin", "axe", "pickaxe", "hammer",
 		"knife", "fishing_rod"]
+	const TIER_MATERIALS := {1: ["rootiron_ingot", "fiber", "sunleaf"],
+		2: ["tidesteel_ingot", "reed_fiber", "tide_pearl"],
+		3: ["skyglass_ingot", "skyplume"], 4: ["stormglass_plate", "sparkfur"]}
+	const CAMP_MATERIALS := ["wood", "fiber", "stone", "rootiron_ingot"]
+	var gear: Dictionary = _load_json("res://data/config/gear.json")
+	var camps: Dictionary = _load_json("res://data/config/forward_camps.json")
+	assert_true(gear.get("feature_flags", {}).get("runtime_enabled") == true)
+	assert_true(camps.get("runtime_enabled") == true)
+	var typed_recipes: Dictionary = gear.get("recipes", {})
+	for id: String in typed_recipes:
+		assert_eq(db.recipe(id), typed_recipes[id], "active F33 recipe must reach the canonical book")
+	assert_eq(db.recipe("forward_camp_kit"), camps.get("recipes", {}).get("forward_camp_kit", {}))
+	var seen_tiers := {}
 	for id in db.recipe_ids():
-		if str(db.recipe(str(id)).get("realm_id", "meadows")) != "meadows":
+		var recipe: Dictionary = db.recipe(str(id))
+		if typed_recipes.has(id):
+			var tier := int(recipe.get("personal_gear_tier", recipe.get("station_tier", 0)))
+			assert_true(TIER_MATERIALS.has(tier), "gear must use one of the four approved live tiers")
+			if not TIER_MATERIALS.has(tier): continue
+			seen_tiers[tier] = true
+			var ingredients: Array[String] = []
+			for requirement: Dictionary in recipe.get("cost", []):
+				var ingredient := str(requirement.get("id", ""))
+				assert_false(ingredients.has(ingredient), "gear cost cannot duplicate an ingredient")
+				ingredients.append(ingredient)
+				assert_true(TIER_MATERIALS[tier].has(ingredient), "%s cannot consume another tier's material: %s" % [id, ingredient])
+			assert_eq(ingredients.size(), 2, "gear costs its tier ingot and one local material")
+			assert_true(ingredients.has(TIER_MATERIALS[tier][0]), "%s must consume its tier ingot" % id)
+			continue
+		if id == "forward_camp_kit":
+			var camp_ingredients: Array[String] = []
+			for requirement: Dictionary in recipe.get("cost", []): camp_ingredients.append(str(requirement.get("id", "")))
+			camp_ingredients.sort()
+			var expected := CAMP_MATERIALS.duplicate()
+			expected.sort()
+			assert_eq(camp_ingredients, expected, "F34 kit uses baseline materials and Rootiron ingot")
+			continue
+		if str(recipe.get("realm_id", "meadows")) != "meadows":
 			continue # Cloudreach recipes must not add a Meadows stronghold cost.
-		for requirement in (db.recipe(str(id)).get("cost", []) as Array):
+		for requirement in (recipe.get("cost", []) as Array):
 			var ingredient := str((requirement as Dictionary).get("id", ""))
 			assert_true(MATERIALS.has(ingredient) or CRAFTED_OR_GIVEN.has(ingredient),
-				"'%s' costs '%s', a material outside spec §10's list -- SF31's done-when is that nothing needed for the stronghold requires a third new material" % [id, ingredient])
+				"legacy Meadows recipe '%s' adds unapproved material '%s'" % [id, ingredient])
+	assert_eq(seen_tiers.size(), 4, "all four active gear tiers must remain covered")
 
 
 ## The three recipe files are merged into one book by item_db.gd, and a

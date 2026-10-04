@@ -10,6 +10,8 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const FIT := preload("res://scripts/combat/fight_camera.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 
 const SETTLE_FRAMES := 300
 const RIGHT_X := JOY_AXIS_RIGHT_X
@@ -39,6 +41,11 @@ func _init() -> void:
 
 
 func _run() -> void:
+	await process_frame
+	create_timer(900.0).timeout.connect(func() -> void: _fail("bounded camera witness exceeded 900s"); _report())
+	if not _matrix_renderer_preflight():
+		_report()
+		return
 	_world = (load(SCENE) as PackedScene).instantiate() as Node3D
 	root.add_child(_world)
 	# Raw B/LB events also reach the autoload menu. A manually-instanced world
@@ -59,6 +66,11 @@ func _run() -> void:
 		_report()
 		return
 	await _capture_combat_entry()
+	await _capture_size_matrix()
+	if int(_manager.get("state")) != 1: # State.ACTIVE
+		_fail("matrix encounter ended before the retained ordinary control checks")
+		_report()
+		return
 	await _prove_combat_entry_follow_and_orbit()
 	await _prove_camera_fits_both_separations()
 	await _prove_neutral_camera_keeps_the_opponent_in_frame()
@@ -82,6 +94,444 @@ func _capture_combat_entry() -> void:
 		if error != OK:
 			_fail("could not save the ordinary combat camera frame: %s" % error)
 		return
+
+
+## Fail before the expensive world boot if the requested matrix would only
+## capture a fallback preset or the wrong viewport. Source identity is checked
+## by the external clean-HEAD launcher; runtime checks its receipt syntax.
+func _matrix_renderer_preflight() -> bool:
+	var requested := false
+	var preset := "Low"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--matrix-dir="): requested = true
+		elif argument.begins_with("--matrix-preset="): preset = argument.trim_prefix("--matrix-preset=")
+	if not requested: return true
+	if DisplayServer.get_name() == "headless" or GRAPHICS.choose(preset) != OK \
+			or GRAPHICS.restart_required() or RenderingServer.get_current_rendering_method() != GRAPHICS.requested_renderer() \
+			or root.get_visible_rect().size != Vector2(1920,1080):
+		_fail("matrix refused before world boot: actual renderer/preset and1920x1080 required")
+		return false
+	return true
+
+## Optional F21#4 pixels from the normal production rig. All original input,
+## aim/exit and render-corner checks continue after restoring this scoped fixture.
+## Only the three actual authored species are swapped, never their scales.
+func _capture_size_matrix() -> void:
+	var directory := ""
+	var source := ""
+	var preset := "Low"
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--matrix-dir="): directory = argument.trim_prefix("--matrix-dir=")
+		elif argument.begins_with("--source-commit="): source = argument.trim_prefix("--source-commit=")
+		elif argument.begins_with("--matrix-preset="): preset = argument.trim_prefix("--matrix-preset=")
+	if directory.is_empty(): return
+	var pattern := RegEx.new()
+	pattern.compile("^[0-9a-f]{40}$")
+	if DisplayServer.get_name() == "headless" or pattern.search(source) == null \
+			or DirAccess.dir_exists_absolute(directory) or GRAPHICS.choose(preset) != OK \
+			or GRAPHICS.restart_required() or RenderingServer.get_current_rendering_method() != GRAPHICS.requested_renderer() \
+			or root.get_visible_rect().size != Vector2(1920,1080):
+		_fail("matrix needs matching actual renderer/preset,1920x1080,exact source SHA and fresh output directory")
+		return
+	if DirAccess.make_dir_recursive_absolute(directory) != OK:
+		_fail("could not create fresh matrix output")
+		return
+	for look: Node in get_nodes_in_group("day_cycle"):
+		if look.has_method("refresh_graphics"): look.call("refresh_graphics")
+	GRAPHICS.apply_viewport(root)
+	GRAPHICS.apply_camera(_camera)
+	if "--matrix-live" in OS.get_cmdline_user_args():
+		await _capture_live_size_matrix(directory, source, preset)
+		return
+	var saved_party: Array = (_manager.get("_party") as Array).duplicate()
+	var active_index := int(_manager.get("_active_index"))
+	var saved_enemy: RefCounted = _manager.get("_enemy")
+	var saved_ally_species := str(_ally.get("species_id"))
+	var saved_enemy_species := str(_wild.get("species_id"))
+	var saved_ally_at := _ally.global_transform
+	var saved_foe_at := _wild.global_transform
+	var manager_physics := _manager.is_physics_processing()
+	var ally_physics := _ally.is_physics_processing()
+	var foe_physics := _wild.is_physics_processing()
+	_manager.set_physics_process(false)
+	_ally.set_physics_process(false)
+	_wild.set_physics_process(false)
+	var kinds := {"small":"mudsnout", "normal":"terrapup", "giant":"veridian"}
+	var cfg := FIT.config()
+	var cases: Array[Dictionary] = []
+	var case_index := 0
+	print("MATRIX SCOPE: direct species/roster and position fixture in physically entered real encounter; only actor/manager simulation held during captures, live normal rig/world/weather/UI; no rescale, earned campaign, combat difficulty or fight-FPS claim")
+	for ally_class: String in kinds:
+		for foe_class: String in kinds:
+			var ally_instance := SPECIES.spawn(str(kinds[ally_class]))
+			var foe_instance := SPECIES.spawn(str(kinds[foe_class]))
+			var staged_party := saved_party.duplicate()
+			staged_party[active_index] = ally_instance
+			_manager.set("_party", staged_party)
+			_manager.set("_enemy", foe_instance)
+			_wild.set("instance", foe_instance)
+			_ally.call("setup", str(kinds[ally_class]))
+			_wild.call("setup", str(kinds[foe_class]))
+			_ally.global_transform = saved_ally_at
+			_wild.global_transform = saved_foe_at
+			var ally_bounds: AABB = _manager.call("_body_world_bounds", _ally)
+			var foe_bounds: AABB = _manager.call("_body_world_bounds", _wild)
+			var gap := (ally_bounds.size.x + foe_bounds.size.x) * 0.5 + 0.6
+			var foe_at := _ally.global_position + Vector3(gap,0,0)
+			foe_at.y = float(_world.call("ground_height_at",foe_at.x,foe_at.z))
+			_wild.global_position = foe_at
+			_ally.call("face_towards", _wild.global_position)
+			_wild.call("face_towards", _ally.global_position)
+			_manager.call("_take_camera")
+			_manager.emit_signal("state_changed")
+			var last_frame := Time.get_ticks_usec()
+			var samples: Array[float] = []
+			for frame: int in 180:
+				await physics_frame
+				_manager.call("_update_combat_camera_framing",1.0/60.0)
+				var now := Time.get_ticks_usec()
+				samples.append(float(now-last_frame)/1000.0)
+				last_frame = now
+			await RenderingServer.frame_post_draw
+			ally_bounds = _manager.call("_body_world_bounds",_ally)
+			foe_bounds = _manager.call("_body_world_bounds",_wild)
+			var viewport := _camera.get_viewport().get_visible_rect().size
+			var aspect := viewport.x/maxf(viewport.y,1.0)
+			var a := FIT.project_box(ally_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+			var b := FIT.project_box(foe_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+			var measured_pair := FIT.size_class(ally_bounds.size.y,cfg)+"/"+FIT.size_class(foe_bounds.size.y,cfg)
+			var pair := ally_class+"/"+foe_class
+			var framed := bool(a.get("in_frame",false)) and bool(b.get("in_frame",false))
+			var overlap := FIT.overlap_ratio(a.rect,b.rect) if bool(a.get("valid",false)) and bool(b.get("valid",false)) else 1.0
+			var image := root.get_texture().get_image()
+			var pixels := _pixel_summary(image)
+			var pixels_present := bool(pixels.get("nonblank",false))
+			var filename := "%02d.png" % case_index
+			var wrote := pixels_present and image.save_png(directory.path_join(filename)) == OK
+			var passed := measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap) and wrote
+			if not passed: _fail("actual matrix "+pair+" failed: measured="+measured_pair+" framed="+str(framed)+" overlap="+str(overlap)+" png="+str(wrote))
+			cases.append({"pair":pair,"measured_pair":measured_pair,"ally_species":kinds[ally_class],"foe_species":kinds[foe_class],
+				"ally_bounds":_bounds_record(ally_bounds),"foe_bounds":_bounds_record(foe_bounds),"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),
+				"framed":framed,"overlap":overlap,"pass":passed,"png":filename,"pixels":pixels,"physics_interval_ms":samples,"spring_length":_rig.spring_length,
+				"resolution":[image.get_width(),image.get_height()] if image != null else [],"actual_camera_position":_point_record(_camera.global_position),
+				"requested_solution":_camera_solution_record(),"actual_rig_yaw":float(_rig.yaw),"actual_rig_pivot":_point_record(_rig.global_position),
+				"requested_pivot_offset":_point_record(_rig.framing_pivot_offset()),"manual_grace_seconds":float(_rig.get("_tracking_manual_left"))})
+			case_index += 1
+	_manager.set("_party",saved_party)
+	_manager.set("_enemy",saved_enemy)
+	_wild.set("instance",saved_enemy)
+	_ally.call("setup",saved_ally_species)
+	_wild.call("setup",saved_enemy_species)
+	_ally.global_transform = saved_ally_at
+	_wild.global_transform = saved_foe_at
+	_manager.call("_take_camera")
+	_manager.set_physics_process(manager_physics)
+	_ally.set_physics_process(ally_physics)
+	_wild.set_physics_process(foe_physics)
+	var output := FileAccess.open(directory.path_join("matrix.json"),FileAccess.WRITE)
+	if output == null:
+		_fail("could not write matrix receipt")
+	else:
+		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
+			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
+			"scope":"Staged actual authored bodies and roster/positions; actor/manager simulation held temporarily. Normal production rig, live world/weather/UI. No species rescale, earned campaign, code-blind result or fight-FPS claim.","cases":cases,
+			"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
+		output.close()
+	for frame: int in 30: await physics_frame
+
+## Optional current-cut motion evidence. Setup replaces only the staged roster,
+## species and start poses, with fresh-encounter action/Wind/poise baselines.
+## From the first settling tick onwards, manager, actors, enemy AI, collision,
+## HUD and rig run normally. No framing function is driven by this harness.
+func _capture_live_size_matrix(directory: String, source: String, preset: String) -> void:
+	var saved_party: Array = (_manager.get("_party") as Array).duplicate()
+	var active_index := int(_manager.get("_active_index"))
+	var saved_enemy: RefCounted = _manager.get("_enemy")
+	var saved_director_ally: RefCounted = _director.get("_ally")
+	var saved_ally_species := str(_ally.get("species_id"))
+	var saved_foe_species := str(_wild.get("species_id"))
+	var saved_ally_at := _ally.global_transform
+	var saved_foe_at := _wild.global_transform
+	var kinds := {"small":"mudsnout", "normal":"terrapup", "giant":"veridian"}
+	var cfg := FIT.config()
+	var cases: Array[Dictionary] = []
+	var case_index := 0
+	print("LIVE MATRIX SCOPE: physically entered solo encounter; staged authored roster/start poses and fresh action/Wind/poise per pair; all simulation, AI, collision, HUD and camera live throughout 120 settling + 180 observed physics boundaries; every actual post-draw view scored after settling; no rescale, invulnerability, HP grants during observation or earned-campaign claim")
+	for ally_class: String in kinds:
+		for foe_class: String in kinds:
+			if int(_manager.get("state")) != 1: # State.ACTIVE
+				break
+			var ally_instance := SPECIES.spawn(str(kinds[ally_class]))
+			var foe_instance := SPECIES.spawn(str(kinds[foe_class]))
+			var staged_party := saved_party.duplicate()
+			staged_party[active_index] = ally_instance
+			_manager.set("_party", staged_party)
+			_manager.set("_enemy", foe_instance)
+			_director.set("_ally", ally_instance)
+			_wild.set("instance", foe_instance)
+			_ally.call("setup", str(kinds[ally_class]))
+			_wild.call("setup", str(kinds[foe_class]))
+			_ally.global_transform = saved_ally_at
+			_wild.global_transform = saved_foe_at
+			var start_a: AABB = _manager.call("_body_world_bounds", _ally)
+			var start_b: AABB = _manager.call("_body_world_bounds", _wild)
+			var gap := (start_a.size.x + start_b.size.x) * 0.5 + 0.6
+			var foe_at := _ally.global_position + Vector3(gap, 0, 0)
+			foe_at.y = float(_world.call("ground_height_at", foe_at.x, foe_at.z))
+			_wild.global_position = foe_at
+			_ally.set("velocity", Vector3.ZERO)
+			_wild.set("velocity", Vector3.ZERO)
+			_ally.call("face_towards", _wild.global_position)
+			_wild.call("face_towards", _ally.global_position)
+			# These are setup-only baselines, matching begin(), never changes to
+			# damage, resources, action timers, poses or AI during observation.
+			_manager.call("_end_hitstop")
+			_manager.set("_action", 0) # Action.READY
+			_manager.set("_action_timer", 0.0)
+			_manager.set("_pending_move", {})
+			_manager.set("_quick_cooldown", 0.0)
+			_manager.set("_charged_cooldown", 0.0)
+			_manager.set("_buffered_attack", "")
+			_manager.set("_buffer_left", 0.0)
+			_manager.call("_initialize_wind")
+			_manager.call("_reset_player_poise")
+			_wild.call("set_engaged", true, _ally)
+			_manager.call("_take_camera")
+			_manager.emit_signal("state_changed")
+			_send_axis(LEFT_Y, 0.0)
+			_send_axis(RIGHT_X, 0.0)
+			_send_axis(RIGHT_Y, 0.0)
+			_send_button(JOY_BUTTON_X, false)
+			var pair := ally_class + "/" + foe_class
+			var case_started := Time.get_ticks_msec()
+			var samples: Array[Dictionary] = []
+			var render_samples: Array[Dictionary] = []
+			var pictures: Array[Dictionary] = []
+			var ctx := {"clock":0,"quick_seen":false,"ally_motion":0.0,"foe_motion":0.0,"rig_motion":0.0,
+				"previous_ally":_ally.global_position,"previous_foe":_wild.global_position,"previous_rig":_rig.global_position,
+				"movement_start":_ally.global_position,"movement_end":_ally.global_position}
+			# Input timing belongs to physics, independent of PNG/readback speed.
+			# Sample each pre-physics boundary; rendered geometry is separately
+			# sampled after EVERY draw, when the production idle rig has run.
+			var drive := func() -> void:
+				if int(ctx.clock) >= 300: return
+				var observed_frame := int(ctx.clock)-120
+				if observed_frame == 30:
+					ctx.movement_start = _ally.global_position
+					_send_axis(LEFT_Y,-0.85)
+				elif observed_frame == 90:
+					ctx.movement_end = _ally.global_position
+					_send_axis(LEFT_Y,0.0)
+				elif observed_frame == 120:
+					_send_button(JOY_BUTTON_X, true)
+					# This edge is scheduled inside physics_frame, after the
+					# engine's normal input flush. Deliver the physical event
+					# before the manager reads it; slow draws must not coalesce
+					# both edges of the two-tick tap into a released button.
+					Input.flush_buffered_events()
+				elif observed_frame == 122:
+					_send_button(JOY_BUTTON_X, false)
+					Input.flush_buffered_events()
+				var pending: Dictionary = _manager.get("_pending_move") as Dictionary
+				var action := int(_manager.get("_action"))
+				if observed_frame >= 120 and action in [1,2] and bool(pending.get("is_quick",false)): ctx.quick_seen = true
+				ctx.ally_motion += _ally.global_position.distance_to(ctx.previous_ally)
+				ctx.foe_motion += _wild.global_position.distance_to(ctx.previous_foe)
+				ctx.rig_motion += _rig.global_position.distance_to(ctx.previous_rig)
+				ctx.previous_ally = _ally.global_position
+				ctx.previous_foe = _wild.global_position
+				ctx.previous_rig = _rig.global_position
+				samples.append({"frame":int(ctx.clock),"observed_frame":observed_frame,"ticks_ms":Time.get_ticks_msec(),
+					"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),
+					"input":[Input.get_joy_axis(0,JOY_AXIS_LEFT_Y),Input.get_action_strength("move_forward"),Input.get_action_strength("combat_quick")],
+					"ally_position":_point_record(_ally.global_position),"foe_position":_point_record(_wild.global_position),
+					"ally_hp":int(ally_instance.get("hp")),"foe_hp":int(foe_instance.get("hp")),"action":action,
+					"pending_quick":bool(pending.get("is_quick",false)),"foe_intent":int(_wild.get("_intent")),
+					"ally_on_floor":bool(_ally.call("is_on_floor")),"foe_on_floor":bool(_wild.call("is_on_floor")),
+					"manager_state":int(_manager.get("state")),"camera_position":_point_record(_camera.global_position)})
+				ctx.clock += 1
+			physics_frame.connect(drive)
+			var passed := true
+			var milestones := [0,30,60,90,120,179]
+			while int(ctx.clock) < 300:
+				await RenderingServer.frame_post_draw
+				# Retain the actual final/aborted view too, even if this draw
+				# follows boundary300 or an encounter ending in that interval.
+				var observed_frame := int(ctx.clock)-120
+				# Canonical hitstop deliberately disables actor physics for a
+				# bounded interval; its live manager releases the same bodies.
+				# A held actor, faint, stale binding or stopped manager still fails.
+				var stop_left := float(_manager.get("_hitstop_left"))
+				var hitstop: Dictionary = MATH.config().get("hitstop",{})
+				var stop_max := maxf(float(hitstop.get("quick_seconds",0.03)),
+					maxf(float(hitstop.get("charged_seconds",0.07)),float(hitstop.get("stagger_crit_seconds",0.12))))
+				var manager_live: bool = _manager.is_physics_processing() and int(_manager.get("state"))==1
+				var bounded_stop: bool = manager_live and is_finite(stop_left) and stop_left>0.0 and stop_left<=stop_max+0.000001 \
+					and _manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild
+				var ally_stop: bool = bounded_stop and bool(_ally.get("_combat_hitstop_active")) \
+					and bool(_ally.get("_combat_hitstop_physics_was_active")) and int(ally_instance.get("hp"))>0
+				var foe_stop: bool = bounded_stop and bool(_wild.get("_combat_hitstop_active")) \
+					and bool(_wild.get("_combat_hitstop_physics_was_active")) and int(foe_instance.get("hp"))>0
+				var ally_live: bool = _ally.is_physics_processing() or ally_stop
+				var foe_live: bool = _wild.is_physics_processing() or foe_stop
+				var live: bool = manager_live and ally_live and foe_live and bool(_wild.get("engaged")) and _rig.is_processing()
+				var a_bounds: AABB = _manager.call("_body_world_bounds",_ally)
+				var b_bounds: AABB = _manager.call("_body_world_bounds",_wild)
+				var a_points: PackedVector3Array = _manager.call("_body_world_corners",_ally)
+				var b_points: PackedVector3Array = _manager.call("_body_world_corners",_wild)
+				var a_corners: Array = []
+				var b_corners: Array = []
+				for point: Vector3 in a_points: a_corners.append(_point_record(point))
+				for point: Vector3 in b_points: b_corners.append(_point_record(point))
+				var viewport := root.get_visible_rect().size
+				var aspect := viewport.x/maxf(viewport.y,1.0)
+				var a := FIT.project_points(a_points,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var b := FIT.project_points(b_points,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var axis_a := FIT.project_box(a_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var axis_b := FIT.project_box(b_bounds,_camera.get_camera_transform(),_camera.fov,aspect,_camera.near)
+				var measured_pair := FIT.size_class(a_bounds.size.y,cfg)+"/"+FIT.size_class(b_bounds.size.y,cfg)
+				var framed := bool(a.get("in_frame",false)) and bool(b.get("in_frame",false))
+				var overlap := FIT.overlap_ratio(a.rect,b.rect) if bool(a.get("valid",false)) and bool(b.get("valid",false)) else 1.0
+				# Re-measure current post-draw HUD/sight, rather than trusting
+				# only a requested solution or its earlier idle diagnostics.
+				var visibility_context: Dictionary = _manager.call("_fight_visibility_context",_camera,cfg.get("readability",{}))
+				var visibility: Dictionary = _manager.call("_fight_visibility_score",_camera.get_camera_transform(),
+					a.get("rect",Rect2()),b.get("rect",Rect2()),visibility_context)
+				var good: bool = live and measured_pair == pair and framed and overlap <= float(cfg.max_actor_overlap) \
+					and bool(visibility.get("pass",false))
+				var body_limit: float = _rig.call("body_limit")
+				if observed_frame >= 0 and not good: passed = false
+				render_samples.append({"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),
+					"observed_frame":observed_frame,"ticks_ms":Time.get_ticks_msec(),"live":live,"measured_pair":measured_pair,
+					"simulation":{"manager_physics":_manager.is_physics_processing(),"rig_process":_rig.is_processing(),
+						"manager_state":int(_manager.get("state")),"ally_hp":int(ally_instance.get("hp")),"foe_hp":int(foe_instance.get("hp")),
+						"ally_physics":_ally.is_physics_processing(),"foe_physics":_wild.is_physics_processing(),
+						"ally_hitstop_active":bool(_ally.get("_combat_hitstop_active")),"foe_hitstop_active":bool(_wild.get("_combat_hitstop_active")),
+						"ally_physics_before_hitstop":bool(_ally.get("_combat_hitstop_physics_was_active")),
+						"foe_physics_before_hitstop":bool(_wild.get("_combat_hitstop_physics_was_active")),
+						"same_actor_binding":_manager.get("_ally_body")==_ally and _manager.get("_wild")==_wild,
+						"hitstop_remaining_seconds":stop_left,"hitstop_maximum_seconds":stop_max,
+						"bounded_hitstop":bounded_stop,"ally_accepted_hitstop":ally_stop,"foe_accepted_hitstop":foe_stop},
+					"ally_bounds":_bounds_record(a_bounds),"foe_bounds":_bounds_record(b_bounds),"ally_model_corners":a_corners,"foe_model_corners":b_corners,
+					"ally_rect":_rect_record(a),"foe_rect":_rect_record(b),"framed":framed,"overlap":overlap,"visibility":visibility,
+					"world_aabb_ally_rect":_rect_record(axis_a),"world_aabb_foe_rect":_rect_record(axis_b),
+					"world_aabb_overlap":FIT.overlap_ratio(axis_a.rect,axis_b.rect) if bool(axis_a.get("valid",false)) and bool(axis_b.get("valid",false)) else 1.0,
+					"actual_camera_position":_point_record(_camera.global_position),"actual_camera_basis":[_point_record(_camera.global_basis.x),_point_record(_camera.global_basis.y),_point_record(_camera.global_basis.z)],
+					"actual_rig_pivot":_point_record(_rig.global_position),"actual_rig_yaw":float(_rig.yaw),"spring_length":_rig.spring_length,
+					"arm_hit_length":_rig.get_hit_length(),"body_limit":body_limit if is_finite(body_limit) else null,
+					"requested_solution":_camera_solution_record(),"manual_grace_seconds":float(_rig.get("_tracking_manual_left"))})
+				if pictures.size() < milestones.size() and observed_frame >= int(milestones[pictures.size()]):
+					var image := root.get_texture().get_image()
+					var pixels := _pixel_summary(image)
+					var filename := "%02d-%03d.png" % [case_index,int(milestones[pictures.size()])]
+					var wrote := bool(pixels.get("nonblank",false)) and image != null \
+						and image.get_width() == 1920 and image.get_height() == 1080 and image.save_png(directory.path_join(filename)) == OK
+					if not wrote: passed = false
+					pictures.append({"png":filename,"requested_observed_frame":milestones[pictures.size()],"actual_observed_frame":observed_frame,
+						"physics_frame":Engine.get_physics_frames(),"process_frame":Engine.get_process_frames(),"pass":wrote,"pixels":pixels})
+				if int(_manager.get("state")) != 1 or Time.get_ticks_msec()-case_started > 30000:
+					_fail("live matrix "+pair+" ended or exceeded its 30s budget at physics boundary "+str(ctx.clock))
+					passed = false
+					break
+			physics_frame.disconnect(drive)
+			_send_axis(LEFT_Y,0.0)
+			_send_button(JOY_BUTTON_X, false)
+			var input_travel: float = (ctx.movement_end as Vector3).distance_to(ctx.movement_start as Vector3)
+			var scored_renders := 0
+			for row: Dictionary in render_samples:
+				if int(row.observed_frame) >= 0: scored_renders += 1
+			passed = passed and samples.size() == 300 and pictures.size() == 6 and scored_renders >= 6 \
+				and input_travel >= 0.5 and float(ctx.foe_motion) >= 0.05 and float(ctx.rig_motion) >= 0.3 and bool(ctx.quick_seen)
+			if not passed: _fail("live matrix "+pair+" failed strict rendered framing/live motion/quick evidence; input travel="+str(input_travel))
+			cases.append({"pair":pair,"ally_species":kinds[ally_class],"foe_species":kinds[foe_class],"pass":passed,
+				"elapsed_ms":Time.get_ticks_msec()-case_started,"input_travel_m":input_travel,"ally_path_m":ctx.ally_motion,
+				"foe_path_m":ctx.foe_motion,"rig_path_m":ctx.rig_motion,"quick_action_observed":ctx.quick_seen,
+				"samples":samples,"render_samples":render_samples,"scored_render_count":scored_renders,"pictures":pictures})
+			case_index += 1
+	# Do not turn an ended/failed encounter back into ACTIVE to restore a fixture.
+	# Such a run aborts truthfully before the retained original control sequence.
+	if int(_manager.get("state")) == 1: # State.ACTIVE
+		_manager.call("_end_hitstop")
+		_manager.set("_action", 0)
+		_manager.set("_action_timer", 0.0)
+		_manager.set("_pending_move", {})
+		_manager.set("_buffered_attack", "")
+		_manager.set("_buffer_left", 0.0)
+		_manager.set("_party", saved_party)
+		_manager.set("_enemy", saved_enemy)
+		_director.set("_ally", saved_director_ally)
+		_wild.set("instance", saved_enemy)
+		_ally.call("setup", saved_ally_species)
+		_wild.call("setup", saved_foe_species)
+		_ally.global_transform = saved_ally_at
+		_wild.global_transform = saved_foe_at
+		_ally.set("velocity", Vector3.ZERO)
+		_wild.set("velocity", Vector3.ZERO)
+		_wild.call("set_engaged", true, _ally)
+		_manager.call("_initialize_wind")
+		_manager.call("_reset_player_poise")
+		_manager.call("_take_camera")
+		_manager.emit_signal("state_changed")
+	var output := FileAccess.open(directory.path_join("matrix.json"), FileAccess.WRITE)
+	if output == null:
+		_fail("could not write live matrix receipt")
+	else:
+		output.store_string(JSON.stringify({"source_commit":source,"camera_config_sha256":FileAccess.get_sha256("res://data/config/camera.json"),
+			"engine":Engine.get_version_info(),"renderer":RenderingServer.get_current_rendering_method(),"preset":GRAPHICS.selected(),"requested_preset":preset,
+			"resolution":[1920,1080],"mode":"live","settling_physics_ticks":120,"observed_physics_ticks":180,"geometry_scoring":"Every actual post-draw frame after setup settling; model-transformed corners, strict0 overlap/full frame plus actual HUD exclusion and approximate foreground head/torso sight; inflated world-AABB diagnostics also retained","case_wall_budget_ms":30000,
+			"physics_ticks_per_second":Engine.physics_ticks_per_second,"input_timing":"Pre-physics boundaries: left Y -0.85 at observed30, release90; physical quick trigger at120, release122, buffered-event flush at both trigger edges before manager physics. Six PNG milestones0/30/60/90/120/179 use distinct actual draws with actual boundary recorded; every post-draw view including terminal/aborted view retained.",
+			"scope":"Physically entered solo encounter; staged actual authored roster/positions and fresh action/Wind/poise baselines per pair. Manager, actors, enemy AI, collision, HUD and rig remain live during all recorded physics ticks and rendered observations. No species rescale, invulnerability, mid-observation HP grants, earned campaign, device, blind verdict or performance claim.",
+			"cases":cases,"all_nine_complete":cases.size()==9,"failures":_failures.duplicate()},"  "))
+		output.close()
+	for frame: int in 30: await physics_frame
+
+func _camera_solution_record() -> Dictionary:
+	var solution: Dictionary = (_manager.get("_fight_camera_solution") as Dictionary).duplicate(true)
+	for key: String in ["pivot","requested_pivot","selected_pivot"]:
+		if solution.get(key) is Vector3: solution[key] = _point_record(solution[key])
+	for key: String in ["transform","selected_transform"]:
+		if solution.get(key) is Transform3D:
+			var pose: Transform3D = solution[key]
+			solution[key] = {"position":_point_record(pose.origin),"basis":[_point_record(pose.basis.x),_point_record(pose.basis.y),_point_record(pose.basis.z)]}
+	for key: String in ["ally_rect","foe_rect"]:
+		if solution.get(key) is Rect2:
+			var rect: Rect2 = solution[key]
+			solution[key] = [rect.position.x,rect.position.y,rect.size.x,rect.size.y]
+	for key: String in ["world_room","model_room"]:
+		if solution.get(key) is float and not is_finite(float(solution[key])): solution[key] = null
+	return solution
+
+## Refuse uniform opaque or transparent frames as evidence. This is only a
+## bounded capture-validity guard; it does not judge art or actor readability.
+func _pixel_summary(image: Image) -> Dictionary:
+	if image == null or image.get_width() <= 0 or image.get_height() <= 0:
+		return {"nonblank":false}
+	var low := 1.0
+	var high := 0.0
+	var visible := 0
+	for y: int in 9:
+		for x: int in 16:
+			var px := mini(image.get_width()-1, int((float(x)+0.5)*float(image.get_width())/16.0))
+			var py := mini(image.get_height()-1, int((float(y)+0.5)*float(image.get_height())/9.0))
+			var colour := image.get_pixel(px,py)
+			if colour.a <= 0.01: continue
+			var luma := colour.r*0.2126+colour.g*0.7152+colour.b*0.0722
+			low = minf(low,luma)
+			high = maxf(high,luma)
+			visible += 1
+	return {"nonblank":visible > 0 and high > 0.02 and high-low > 0.03,
+		"sample_count":144,"visible":visible,"minimum_luminance":low,"maximum_luminance":high}
+
+func _point_record(point: Vector3) -> Array:
+	return [point.x,point.y,point.z]
+
+func _bounds_record(bounds: AABB) -> Dictionary:
+	return {"position":_point_record(bounds.position),"size":_point_record(bounds.size)}
+
+func _rect_record(projection: Dictionary) -> Dictionary:
+	if not bool(projection.get("valid",false)): return {"valid":false}
+	var rect: Rect2 = projection.rect
+	return {"valid":true,"position":[rect.position.x,rect.position.y],"size":[rect.size.x,rect.size.y]}
 
 
 func _collect_and_stage() -> bool:
@@ -271,6 +721,8 @@ func _measure_requested_framing(gap: float) -> float:
 	var requested := float(_rig.get("_distance"))
 	var basis := _rig.global_basis.orthonormalized()
 	var pivot := _ally.global_position + Vector3.UP * float(_rig.get("_height"))
+	if _rig.has_method("framing_pivot_offset"):
+		pivot += _rig.call("framing_pivot_offset") as Vector3
 	pivot += Basis(Vector3.UP, float(_rig.get("yaw"))).x * float(_rig.get("_shoulder"))
 	var probe := Camera3D.new()
 	probe.current = false
@@ -385,12 +837,12 @@ func _prove_neutral_camera_keeps_the_opponent_in_frame() -> void:
 
 
 func _prove_creature_switch_keeps_the_camera() -> void:
-	await _press_button(JOY_BUTTON_DPAD_RIGHT)
+	await _press_button(JOY_BUTTON_LEFT_SHOULDER)
 	for i in 20:
 		await physics_frame
 	var active: RefCounted = _manager.call("active_creature")
 	if active == null or str(active.get("species_id")) != "ripplet":
-		_fail("physical D-pad switch did not make the second creature active")
+		_fail("physical LB switch did not make the second creature active")
 	if _rig.get("_target") != _ally:
 		_fail("switching left the camera on a stale/non-deployed target")
 	if not _rig.is_processing():
@@ -399,18 +851,18 @@ func _prove_creature_switch_keeps_the_camera() -> void:
 
 
 func _prove_aim_cancel_returns_combat_orbit() -> void:
-	# CONTROLLER-MAP: the orb is a hotbar item thrown with X, so `interact`
-	# (raw button 2) is what opens throw aim on a pad now -- `combat_throw`
-	# kept only its keyboard F. RB, which used to carry it, is
-	# `creature_recall`, which combat_manager.gd::_flee_pressed() reads as
-	# DISENGAGE: pressing it here ended the fight instead of opening the aim.
-	await _press_button(JOY_BUTTON_X)
+	# F23 gives aim its own LT tap; X is reserved for release once aim owns input.
+	_send_axis(JOY_AXIS_TRIGGER_LEFT, 1.0)
+	await process_frame
+	await physics_frame
+	_send_axis(JOY_AXIS_TRIGGER_LEFT, 0.0)
+	await process_frame
 	for i in 30:
 		if bool(_manager.call("is_aiming")):
 			break
 		await physics_frame
 	if not bool(_manager.call("is_aiming")):
-		_fail("physical X did not enter throw aim despite available orbs")
+		_fail("physical LT did not enter throw aim despite available orbs")
 		return
 	print("camera target in aim: %s" % _node_label(_rig.get("_target")))
 	if _rig.get("_target") != _player:
@@ -433,18 +885,15 @@ func _prove_aim_cancel_returns_combat_orbit() -> void:
 	await _assert_raw_orbit_changes("after aim cancel")
 
 
-## CONTROLLER-MAP: "Fleeing is RB. Putting the creature away IS disengaging."
-## `combat_run` kept its keyboard Escape and lost its pad button;
-## `combat_manager.gd::_flee_pressed()` reads `creature_recall` (RB) instead. B
-## is `hotbar_1`/`build_cancel` now and does not end a fight.
+## RT is flee in combat; RB recall remains an exploration action.
 func _prove_combat_exit_restores_exploration() -> void:
-	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	await _tap_trigger(JOY_AXIS_TRIGGER_RIGHT)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
 		await physics_frame
 	if bool(_manager.call("is_fighting")):
-		_fail("physical RB did not disengage from combat")
+		_fail("physical RT did not disengage from combat")
 		return
 	print("camera target on exit: %s" % _node_label(_rig.get("_target")))
 	if _rig.get("_target") != _player:
@@ -487,7 +936,7 @@ func _prove_a_second_entry_exit_cycle() -> void:
 	for i in 20:
 		await physics_frame
 	await _assert_raw_orbit_changes("second combat cycle")
-	await _press_button(JOY_BUTTON_RIGHT_SHOULDER)
+	await _tap_trigger(JOY_AXIS_TRIGGER_RIGHT)
 	for i in 180:
 		if not bool(_manager.call("is_fighting")):
 			break
@@ -672,6 +1121,21 @@ func _send_axis(axis: JoyAxis, value: float) -> void:
 	event.axis_value = value
 	Input.parse_input_event(event)
 
+func _send_button(button: JoyButton, pressed: bool) -> void:
+	var event := InputEventJoypadButton.new()
+	event.device = 0
+	event.button_index = button
+	event.pressed = pressed
+	Input.parse_input_event(event)
+
+func _tap_trigger(axis: JoyAxis) -> void:
+	_send_axis(axis, 1.0)
+	await process_frame
+	await process_frame
+	_send_axis(axis, 0.0)
+	for i in 3:
+		await process_frame
+
 
 func _node_label(value: Variant) -> String:
 	var node := value as Node
@@ -686,6 +1150,9 @@ func _report() -> void:
 	_send_axis(RIGHT_X, 0.0)
 	_send_axis(RIGHT_Y, 0.0)
 	_send_axis(LEFT_Y, 0.0)
+	_send_axis(JOY_AXIS_TRIGGER_RIGHT, 0.0)
+	_send_axis(JOY_AXIS_TRIGGER_LEFT, 0.0)
+	_send_button(JOY_BUTTON_X, false)
 	print("")
 	if _failures.is_empty():
 		print("PASS: combat camera follows the active creature, keeps free controller orbit, survives switch/aim, and restores exploration repeatedly")

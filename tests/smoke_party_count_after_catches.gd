@@ -298,12 +298,18 @@ func _catch_real_creature(target: Node3D) -> void:
 			creature.hp = creature.max_hp
 
 		var before := _resolutions.size()
+		var began := Time.get_ticks_msec()
+		var frame := Engine.get_physics_frames()
+		var orbs_before := int(_manager.call("orbs_left"))
 		if not await _throw_at_the_target(target):
+			_catch_attempt_trace(target, attempt, began, frame, orbs_before, before, "aim_not_opened")
 			continue
 		for i in 700:
 			await physics_frame
 			if _resolutions.size() > before:
 				break
+		_catch_attempt_trace(target, attempt, began, frame, orbs_before, before,
+			"resolved" if _resolutions.size() > before else "resolution_wait_expired")
 		if _resolutions.size() > before and _resolutions[-1]:
 			caught = true
 			break
@@ -319,6 +325,28 @@ func _catch_real_creature(target: Node3D) -> void:
 		_fail("a successful catch did not end the fight for %s" % str(target.get_path()))
 
 
+## At most one diagnostic per original throw attempt (3 x 25). Observes only;
+## no extra frame, resolution, refill, retry or success condition is introduced.
+func _catch_attempt_trace(target: Node3D, attempt: int, began: int, frame: int,
+		orbs_before: int, resolutions_before: int, observation: String) -> void:
+	var valid_target := is_instance_valid(target) and target.is_inside_tree()
+	print("CATCH_SMOKE_ATTEMPT=" + JSON.stringify({
+		"attempt": attempt + 1, "attempt_limit": MAX_ATTEMPTS,
+		"target": str(target.get_path()) if valid_target else "<freed>",
+		"target_position": str(target.global_position) if valid_target else "<freed>",
+		"target_queued_for_deletion": target.is_queued_for_deletion() if valid_target else null,
+		"player_position": str(_player.global_position),
+		"elapsed_ms": Time.get_ticks_msec() - began,
+		"physics_frames": Engine.get_physics_frames() - frame,
+		"fighting": bool(_manager.call("is_fighting")),
+		"aiming": bool(_manager.call("is_aiming")),
+		"orbs_before": orbs_before, "orbs_after": int(_manager.call("orbs_left")),
+		"resolutions_delta": _resolutions.size() - resolutions_before,
+		"last_resolution": _resolutions[-1] if _resolutions.size() > resolutions_before else null,
+		"observation": observation,
+	}))
+
+
 func _throw_at_the_target(target: Node3D) -> bool:
 	if not bool(_manager.call("is_aiming")):
 		if not await _open_aim():
@@ -328,10 +356,10 @@ func _throw_at_the_target(target: Node3D) -> bool:
 	_aim_at_the_target(target)
 	for i in 4:
 		await physics_frame
-	Input.action_press("combat_throw")
+	Input.action_press("combat_orb_release")
 	await physics_frame
 	await physics_frame
-	Input.action_release("combat_throw")
+	Input.action_release("combat_orb_release")
 	await physics_frame
 	return true
 

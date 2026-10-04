@@ -1,0 +1,212 @@
+[
+  {
+    "job": "110548567437",
+    "line": 4521,
+    "raw_line": "2026-10-01T19:41:47.1405899Z \u001b[36;1mif grep -qiE 'SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open' /tmp/import.log; then\u001b[0m"
+  },
+  {
+    "job": "110548567437",
+    "line": 4736,
+    "raw_line": "2026-10-01T19:43:23.4007788Z wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.90077, 14.0), (20.0, 0.90077, -12.0), (20.0, 0.90077, -18.0), (20.0, 0.90077, -26.0), (14.6, 0.90077, -31.0), (21.0, 0.90077, -37.5), (30.0, 0.90077, -40.0)]"
+  },
+  {
+    "job": "110548567437",
+    "line": 4737,
+    "raw_line": "2026-10-01T19:44:06.9252545Z ERROR: natural travel did not reach and engage the tutorial Bramblebun"
+  },
+  {
+    "job": "110548567437",
+    "line": 4744,
+    "raw_line": "2026-10-01T19:44:06.9256592Z wild approach: exhausted after closest 49.57m; final 54.69m; visible=true alive=true prompt='[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Bud away' winner=EncounterDirector:<Node#351415569045>"
+  },
+  {
+    "job": "110548567437",
+    "line": 4745,
+    "raw_line": "2026-10-01T19:44:06.9257871Z ERROR: opening: natural travel did not reach and engage the tutorial Bramblebun"
+  },
+  {
+    "job": "110548567437",
+    "line": 4922,
+    "raw_line": "2026-10-01T19:45:12.4747920Z wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.900844, 14.0), (20.0, 0.900844, -12.0), (20.0, 0.900844, -18.0), (20.0, 0.900844, -26.0), (14.6, 0.900844, -31.0), (21.0, 0.900844, -37.5), (30.0, 0.900844, -40.0)]"
+  },
+  {
+    "job": "110548567437",
+    "line": 4923,
+    "raw_line": "2026-10-01T19:45:29.0545614Z wild approach: ready at 2.74m with '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Bramblebun'"
+  },
+  {
+    "job": "110548567437",
+    "line": 4994,
+    "raw_line": "2026-10-01T19:46:08.4062710Z GATE A NPC/GATHER +16.47s \u2014 Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue"
+  },
+  {
+    "job": "110548567437",
+    "line": 5066,
+    "raw_line": "2026-10-01T19:47:04.0065170Z GATE A NPC/GATHER +72.07s \u2014 Bram cycle 1 exited and movement resumed"
+  },
+  {
+    "job": "110548567437",
+    "line": 5067,
+    "raw_line": "2026-10-01T19:47:05.3171274Z GATE A NPC/GATHER +73.38s \u2014 Bram cycle 2 exited and movement resumed"
+  },
+  {
+    "job": "110548567437",
+    "line": 5070,
+    "raw_line": "2026-10-01T19:47:05.4290634Z ERROR: Native opening refused: actual production walk lost grounded floor"
+  },
+  {
+    "job": "110548567437",
+    "line": 5076,
+    "raw_line": "2026-10-01T19:47:05.4294327Z ERROR: natural controller travel could not activate Bram cycle 3 (4.4m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Bram means something nearer took the interact line."
+  },
+  {
+    "job": "110548567437",
+    "line": 5084,
+    "raw_line": "2026-10-01T19:47:05.4299261Z ERROR: village tools: Native opening refused: actual production walk lost grounded floor"
+  },
+  {
+    "job": "110548567437",
+    "line": 5094,
+    "raw_line": "2026-10-01T19:47:05.4303448Z ERROR: village tools: natural controller travel could not activate Bram cycle 3 (4.4m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Bram means something nearer took the interact line."
+  },
+  {
+    "job": "110548567437",
+    "line": 5106,
+    "raw_line": "2026-10-01T19:47:05.4308353Z gate B continuous FAIL: village tools: natural controller travel could not activate Bram cycle 3 (4.4m away, arbiter winner=EncounterDirector under MeadowsPlayground). A winner that is not Bram means something nearer took the interact line."
+  },
+  {
+    "job": "110548567544",
+    "line": 4510,
+    "raw_line": "2026-10-01T19:38:57.4433130Z \u001b[36;1mif grep -qiE 'SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open' /tmp/import.log; then\u001b[0m"
+  },
+  {
+    "job": "110548567544",
+    "line": 4712,
+    "raw_line": "2026-10-01T19:40:52.4701679Z wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.900844, 14.0), (20.0, 0.900844, -12.0), (20.0, 0.900844, -18.0), (20.0, 0.900844, -26.0), (14.6, 0.900844, -31.0), (21.0, 0.900844, -37.5), (30.0, 0.900844, -40.0)]"
+  },
+  {
+    "job": "110548567544",
+    "line": 4713,
+    "raw_line": "2026-10-01T19:41:14.9367743Z wild approach: ready at 2.75m with '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Bramblebun'"
+  },
+  {
+    "job": "110548567544",
+    "line": 4780,
+    "raw_line": "2026-10-01T19:41:50.1901618Z GATE A NPC/GATHER +17.78s \u2014 Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue"
+  },
+  {
+    "job": "110548567544",
+    "line": 4786,
+    "raw_line": "2026-10-01T19:41:52.8051408Z ERROR: Native opening refused during movement resume: deep actual overlap: zero-motion recovery exceeds unchanged skin"
+  },
+  {
+    "job": "110548567544",
+    "line": 4791,
+    "raw_line": "2026-10-01T19:41:52.8055919Z ERROR: Tam cycle 1 returned visually but world movement stayed dead"
+  },
+  {
+    "job": "110548567544",
+    "line": 4797,
+    "raw_line": "2026-10-01T19:41:52.8061194Z ERROR: village tools: Native opening refused during movement resume: deep actual overlap: zero-motion recovery exceeds unchanged skin"
+  },
+  {
+    "job": "110548567544",
+    "line": 4805,
+    "raw_line": "2026-10-01T19:41:52.8067630Z ERROR: village tools: Tam cycle 1 returned visually but world movement stayed dead"
+  },
+  {
+    "job": "110548567294",
+    "line": 4512,
+    "raw_line": "2026-10-01T19:39:24.8135046Z \u001b[36;1mif grep -qiE 'SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open' /tmp/import.log; then\u001b[0m"
+  },
+  {
+    "job": "110548567294",
+    "line": 4556,
+    "raw_line": "2026-10-01T19:39:30.3414583Z \u001b[36;1mif grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/aim-wander.log; then\u001b[0m"
+  },
+  {
+    "job": "110548567294",
+    "line": 4570,
+    "raw_line": "2026-10-01T19:39:33.3231420Z \u001b[36;1mif grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then\u001b[0m"
+  },
+  {
+    "job": "110548567294",
+    "line": 4766,
+    "raw_line": "2026-10-01T19:42:15.1255134Z wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.900844, 14.0), (20.0, 0.900844, -12.0), (20.0, 0.900844, -18.0), (20.0, 0.900844, -26.0), (14.6, 0.900844, -31.0), (21.0, 0.900844, -37.5), (30.0, 0.900844, -40.0)]"
+  },
+  {
+    "job": "110548567294",
+    "line": 4767,
+    "raw_line": "2026-10-01T19:42:58.6740184Z ERROR: natural travel did not reach and engage the tutorial Bramblebun"
+  },
+  {
+    "job": "110548567294",
+    "line": 4768,
+    "raw_line": "2026-10-01T19:42:58.6741758Z wild approach: exhausted after closest 37.89m; final 38.02m; visible=true alive=true prompt='[img=36x36]res://assets/ui/input_prompts/xbox_rb.png[/img]   Put Bud away' winner=EncounterDirector:<Node#351918885525>"
+  },
+  {
+    "job": "110548567294",
+    "line": 4813,
+    "raw_line": "2026-10-01T19:43:04.2328115Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4815,
+    "raw_line": "2026-10-01T19:43:04.4569123Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4817,
+    "raw_line": "2026-10-01T19:43:04.4571867Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4819,
+    "raw_line": "2026-10-01T19:43:04.4573942Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4821,
+    "raw_line": "2026-10-01T19:43:04.4575510Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4823,
+    "raw_line": "2026-10-01T19:43:04.4576794Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4825,
+    "raw_line": "2026-10-01T19:43:05.1532648Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4827,
+    "raw_line": "2026-10-01T19:43:05.1534522Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 4830,
+    "raw_line": "2026-10-01T19:43:06.0977927Z ERROR: Parameter \"material\" is null."
+  },
+  {
+    "job": "110548567294",
+    "line": 5720,
+    "raw_line": "2026-10-01T19:49:15.2415013Z ERROR: 5 resources still in use at exit (run with --verbose for details)."
+  },
+  {
+    "job": "110548567294",
+    "line": 5885,
+    "raw_line": "2026-10-01T19:50:15.7209324Z Bram cycle 1: control returned via move_forward (0.95m)"
+  },
+  {
+    "job": "110548567294",
+    "line": 5895,
+    "raw_line": "2026-10-01T19:50:25.7612975Z Bram cycle 2: control returned via move_forward (0.83m)"
+  },
+  {
+    "job": "110548567294",
+    "line": 5905,
+    "raw_line": "2026-10-01T19:50:35.6970668Z Bram cycle 3: control returned via move_forward (0.94m)"
+  }
+]

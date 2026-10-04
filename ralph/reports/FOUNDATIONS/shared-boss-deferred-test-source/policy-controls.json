@@ -1,0 +1,230 @@
+{
+  "checks": [
+    {
+      "name": "ROOT selected preimage matches reviewed core",
+      "passed": true
+    },
+    {
+      "name": "one relocated case shared_boss_guest_survives_next_round_before_and_after_faint_pause",
+      "passed": true
+    },
+    {
+      "name": "one deferred invocation shared_boss_guest_survives_next_round_before_and_after_faint_pause",
+      "passed": true
+    },
+    {
+      "name": "one relocated case shared_round_wait_requires_host_boolean_and_matching_card",
+      "passed": true
+    },
+    {
+      "name": "one deferred invocation shared_round_wait_requires_host_boolean_and_matching_card",
+      "passed": true
+    },
+    {
+      "name": "one relocated case shared_round_terminal_close_and_disconnect_release_the_wait",
+      "passed": true
+    },
+    {
+      "name": "one deferred invocation shared_round_terminal_close_and_disconnect_release_the_wait",
+      "passed": true
+    },
+    {
+      "name": "one relocated case shared_round_loss_flee_and_wild_keep_normal_finish",
+      "passed": true
+    },
+    {
+      "name": "one deferred invocation shared_round_loss_flee_and_wild_keep_normal_finish",
+      "passed": true
+    },
+    {
+      "name": "all prior helper/case bodies and assertions exact inverse",
+      "passed": true
+    },
+    {
+      "name": "pre-boss original hosted-case prefix unchanged",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget scripts/combat/combat_manager.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget scripts/combat/encounter_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget scripts/net/encounter_host.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget scripts/story/sequence_director.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget tools/net/peer_runner.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget tests/helpers/net_harness.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget tests/smoke_net_shared_boss.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget tests/smoke_net_meadows_identity_fresh_join.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget scripts/combat/combat_math.gd",
+      "passed": true
+    },
+    {
+      "name": "unchanged production/scenario/budget tests/run_tests.gd",
+      "passed": true
+    },
+    {
+      "name": "deferred initialized SceneTree",
+      "passed": true
+    },
+    {
+      "name": "real lifecycle assertion count",
+      "passed": true
+    },
+    {
+      "name": "parent checks exact completed count",
+      "passed": true
+    },
+    {
+      "name": "nonblocking direct child",
+      "passed": true
+    },
+    {
+      "name": "finite focused child cap",
+      "passed": true
+    },
+    {
+      "name": "deadline checked while draining",
+      "passed": true
+    },
+    {
+      "name": "per-drain bounded work",
+      "passed": true
+    },
+    {
+      "name": "timeout kills actual child",
+      "passed": true
+    },
+    {
+      "name": "bounded kill confirmation",
+      "passed": true
+    },
+    {
+      "name": "timed out child fails",
+      "passed": true
+    },
+    {
+      "name": "remaining child fails",
+      "passed": true
+    },
+    {
+      "name": "reads actual native exit",
+      "passed": true
+    },
+    {
+      "name": "nonzero and unknown exit fail",
+      "passed": true
+    },
+    {
+      "name": "stdout and stderr retained",
+      "passed": true
+    },
+    {
+      "name": "native log required",
+      "passed": true
+    },
+    {
+      "name": "native log scanned",
+      "passed": true
+    },
+    {
+      "name": "script/native errors fail",
+      "passed": true
+    },
+    {
+      "name": "object and resource leaks fail",
+      "passed": true
+    },
+    {
+      "name": "old log cannot supply stale proof",
+      "passed": true
+    },
+    {
+      "name": "pipe handles closed",
+      "passed": true
+    },
+    {
+      "name": "result model clean complete child accepted",
+      "passed": true
+    },
+    {
+      "name": "result model refuses nonzero",
+      "passed": true
+    },
+    {
+      "name": "result model refuses unknown code",
+      "passed": true
+    },
+    {
+      "name": "result model refuses timeout",
+      "passed": true
+    },
+    {
+      "name": "result model refuses surviving child",
+      "passed": true
+    },
+    {
+      "name": "result model refuses missing result",
+      "passed": true
+    },
+    {
+      "name": "result model refuses partial assertions",
+      "passed": true
+    },
+    {
+      "name": "result model refuses failed case",
+      "passed": true
+    },
+    {
+      "name": "result model refuses missing log",
+      "passed": true
+    },
+    {
+      "name": "result model refuses SCRIPT ERROR",
+      "passed": true
+    },
+    {
+      "name": "result model refuses native ERROR",
+      "passed": true
+    },
+    {
+      "name": "result model refuses ObjectDB leak",
+      "passed": true
+    },
+    {
+      "name": "result model refuses resource leak",
+      "passed": true
+    },
+    {
+      "name": "read-only ROOT apply check",
+      "passed": true
+    },
+    {
+      "name": "diff whitespace check",
+      "passed": true
+    }
+  ],
+  "passed": 56,
+  "failed": 0
+}

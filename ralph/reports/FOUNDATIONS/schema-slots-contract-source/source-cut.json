@@ -1,0 +1,43 @@
+{
+  "integration": "41f03d7f4f7b2cf7687fab4ddbe418a8245196b9",
+  "ci_runtime_source": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+  "original_test_sha256_lf": "92f431dfde3808a67a44e5b446ed729f77cd19e881aa7fa7aaa40d66f48d1642",
+  "proposed_test_sha256_lf": "80836f807cb37cef96d2d1ce5e620e515a2e00e125eb249b152e83fe02312cce",
+  "patch_sha256": "907ff5757731fce8fdd8c1143944cf7562d1bb2b31c752d736155f80659f6518",
+  "original_ci_log_sha256": "6aa22f8f9759f4fdfce3fdb1fce372037582ca809f71d5f08304c8ff76b7b3ce",
+  "only_change": "bind the authored schema retirement assertion to strict boolean false in canonical JSON",
+  "all_other_test_bytes_preserved": true,
+  "runtime_sources_unchanged": true,
+  "catalogue_counts": {
+    "material_tiers": {
+      "live": 4,
+      "reserved": 4
+    },
+    "gear_tiers": {
+      "live": 4,
+      "reserved": 4
+    },
+    "portals": {
+      "live": 4,
+      "reserved": 4
+    }
+  },
+  "preserved_sources": {
+    "scripts/data/biome_order.gd": "818ebfd253aa8ca03fb35f2cdfd2587977428474207623667ae0026657949cd4",
+    "scripts/data/redesign_data.gd": "3086392d2eeb4cb3fa155b435f9372ee0d54bf9b7c3749be4631c278cafdab99",
+    "data/config/biome_order.json": "b90bab991b347df3bdc4677526d4bc9101b5c898cca37ebf5ce1d6af5a626f11",
+    "data/config/multiplayer.json": "01ce69dc7966e79f4cdb035d0e6b42cc52f206445059a3c0d88a3e2742faa2bd",
+    "tests/test_portal_admission_mode.gd": "fd8568913f9c74606e54c4dac2634b0c2c33941c2aaf85a52c9edb3c46e6387a",
+    "data/schema/material_tiers.json": "49eeb918eb204bdb2ef8c1fd49654d0740c998dbaf3ae2d2c3b44ce649928087",
+    "data/schema/material_tiers.schema.json": "7420744520b25762569adf41f15bc8bfddf4168cf819797440a9a37c380a0041",
+    "data/schema/gear_tiers.json": "e21ec632c7eb4d33aa08af83670430afa87820f9de3e1c73a15f5f805fdfce07",
+    "data/schema/gear_tiers.schema.json": "3944cbd0a36f9443c06648a6359ae00a17769d8e0447ed71210311b9611d71f6",
+    "data/schema/portals.json": "3cddb8f60babae3c55f7ba9f406c1efab85838c6382410dcf036d20f2c20ea0c",
+    "data/schema/portals.schema.json": "caf106092c008704f197a31bf8d1a924635e3febcf5f27c97eaa220bf315f4da"
+  },
+  "existing_runtime_mode_tests": "Five test_portal_admission_mode cases were green in this exact CI log; reuse for unchanged runtime source",
+  "named_affected_selector": "tests/test_schema_redesign.gd::test_eight_slots_have_exactly_four_live_and_four_sealed",
+  "engine_jobs_run_here": false,
+  "runtime_verdict": "Pending independent review and coordinator named contract validation",
+  "autosave_cause": "Separate unresolved failure; no rejecting snapshot or correction in this packet"
+}

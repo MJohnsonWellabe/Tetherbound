@@ -1,0 +1,294 @@
+{
+  "source_commit": "faa42a1d10859df9e14bfc0f02585347e69328bc",
+  "generator_sha256": "4fc0b9d55e4a3d80ccbbb3a9d4d49875a4e71c986296f7c360b245d90d5accc0",
+  "recipe_sha256": "7e7dc01421314137690192fe08bfa0306f379d18da74e452081f107b04de8325",
+  "scope": "Actual decoded inactive candidate PCM only; no listener/game/device/native acceptance",
+  "source_master_directory": "D:\\tetherbound\\vfx-audio-source-masters-r15",
+  "rate": 48000,
+  "width_bytes": 3,
+  "channels": 1,
+  "files": [
+    {
+      "file": "stone_throw_launch.wav",
+      "sha256": "d9cad04f5aac379702efe72b9d2e785f5b9e21d521d8195cbf4b4ab784c44cf3",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -7.359323788657816,
+      "rms": 0.07999999929075581,
+      "mapped": false
+    },
+    {
+      "file": "stone_throw_travel.wav",
+      "sha256": "7238c08f971d0559f5a0e5f38e825ed1eba86c1ec1a4ba7e9d1f8a181e17ce4b",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -10.904367199028943,
+      "rms": 0.06500000026661293,
+      "mapped": false
+    },
+    {
+      "file": "stone_throw_launch_travel.wav",
+      "sha256": "9ab21a60a9d4514ea0dee4e88f94caeef601a712e1f53ccfc29bc2598ab537ae",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -4.000000322645464,
+      "rms": 0.0740701950283457,
+      "mapped": false
+    },
+    {
+      "file": "stone_throw_impact.wav",
+      "sha256": "070565e084cd6c7f0a007fc773241854539c29ed634a622766e8c3ecb8b5a08e",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -4.000000322645464,
+      "rms": 0.06350368615354497,
+      "mapped": false
+    },
+    {
+      "file": "stone_throw_launch_mastery.wav",
+      "sha256": "bb9d7b5955caabd470c19ee77450fc1602830e786d15f5caed89574bc746e47e",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -7.3385978123104945,
+      "rms": 0.0800000001513521,
+      "mapped": false
+    },
+    {
+      "file": "stone_throw_launch_travel_mastery.wav",
+      "sha256": "155e9ee959efbac28f44ba0757a4c1afb536a6749671198ad2ab08ad4f8c4dab",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -4.061914477078481,
+      "rms": 0.07407019496627736,
+      "mapped": false
+    },
+    {
+      "file": "stone_throw_impact_mastery.wav",
+      "sha256": "aa8938ffffc1f41eba91cd35d78d016ede8f2a67c0232a4b68b324631a310808",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -4.2199428076333065,
+      "rms": 0.06350368588088143,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_launch.wav",
+      "sha256": "8aed635658b971749a4ae866f2ccbb171425492c0263c6d738e1f5abc78cef30",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -11.505662853574712,
+      "rms": 0.08000000040307809,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_travel.wav",
+      "sha256": "9b556f1fb960c94bdad3e8cbfd9f91953efae47bfd27c32fa7aa0979891f79b7",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -8.829675821996066,
+      "rms": 0.06500000002221114,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_launch_travel.wav",
+      "sha256": "77a3c68174e4debf8a9a6aa09b54add42bbec090cce2d11af830f78c81ac73dd",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -7.940527861336538,
+      "rms": 0.07500000020466323,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_impact.wav",
+      "sha256": "512e77c6028014d682bf923064f557a57fe3bb53871eab4465fc5ef34aee4c38",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -6.199868996042117,
+      "rms": 0.1000000000921218,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_launch_mastery.wav",
+      "sha256": "3da51ee4d7648d477f6d5ca450bbb7f74de576506ec81730acf59d7e013cd9ea",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -11.112825729261067,
+      "rms": 0.08000000089554275,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_launch_travel_mastery.wav",
+      "sha256": "aaafd4d8d648e1b0068dfc5346f611c2273eced34ed56e87f94c0da35b85b063",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -7.378786849258658,
+      "rms": 0.07499999992590166,
+      "mapped": false
+    },
+    {
+      "file": "stone_boulder_impact_mastery.wav",
+      "sha256": "83cc2f7113c18d6669bdb712d1c384bd70a05d201e75383d3d3d85ac1e12e52c",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -5.742374239800912,
+      "rms": 0.10000000025338342,
+      "mapped": false
+    },
+    {
+      "file": "fireball_launch.wav",
+      "sha256": "ff625eba7c55f257823e6e69f2e75343c86fdafeda7cc5cb50f72903fd5ade4a",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -10.949497870312166,
+      "rms": 0.08000000042076397,
+      "mapped": false
+    },
+    {
+      "file": "fireball_travel.wav",
+      "sha256": "c7f0b324983c8931bfc4b2be682bac92bc2e76b67f1b98091efb04c8f2a73f12",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -11.098158910374355,
+      "rms": 0.06499999994863198,
+      "mapped": false
+    },
+    {
+      "file": "fireball_launch_travel.wav",
+      "sha256": "1d4ea704bb40427438b26594f7db7243dc0985878f5243dde5a451962e9d8b3f",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -9.194009196464366,
+      "rms": 0.07500000014149494,
+      "mapped": false
+    },
+    {
+      "file": "fireball_impact.wav",
+      "sha256": "a37ee28db7034c092a76cefd8097e8d7ca61f8ebc5061899926f1c43b1f5f8db",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -4.486088461834408,
+      "rms": 0.10000000006984879,
+      "mapped": false
+    },
+    {
+      "file": "fireball_launch_mastery.wav",
+      "sha256": "069e3fa022f6298f294de3831904f368daf381ffb764dbe680c439492db4f9b0",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -9.786782089882509,
+      "rms": 0.07999999954898694,
+      "mapped": false
+    },
+    {
+      "file": "fireball_launch_travel_mastery.wav",
+      "sha256": "a962b97d81c36582fb760cdae01011a0df9e4c12e0f29e7966ad397336798860",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -8.057774706734582,
+      "rms": 0.07499999999723175,
+      "mapped": false
+    },
+    {
+      "file": "fireball_impact_mastery.wav",
+      "sha256": "852531f5529fe140df448fe332ad748cf7434de5fa8237fd4d8af7ae00ff9c1e",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -4.269822697345449,
+      "rms": 0.100000000173438,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_launch.wav",
+      "sha256": "434681bf3aead40995a40c16c3db381b597cb6be4f378676ac630801bce90c93",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -8.504192166758882,
+      "rms": 0.07999999965160971,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_travel.wav",
+      "sha256": "317f7afd7fede4258a9a9960093658405dc71040b0dbc84a56f9e3327f85ba12",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -12.390861155247839,
+      "rms": 0.06499999989126158,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_launch_travel.wav",
+      "sha256": "2981b30930fabf5066ca2d68bb57382be1be1036c88fb3e50e075b6555eb4d38",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -5.009822213615922,
+      "rms": 0.07500000012704529,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_impact.wav",
+      "sha256": "f9e2f19cb89e4a855c476a9b422369e8c5f4f3669c6a5b51d1f319b955556a25",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -4.1461933477114945,
+      "rms": 0.08059408379639721,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_launch_mastery.wav",
+      "sha256": "c18b2b7e8ecc7bb8abc1e1f7932615a13ed607e48107926a66f756e1df35260f",
+      "bytes": 23084,
+      "frames": 7680,
+      "seconds": 0.16,
+      "sample_peak_dbfs": -8.736338812123172,
+      "rms": 0.08000000068331378,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_launch_travel_mastery.wav",
+      "sha256": "94004e71a414a0359ec93d2c0d3addd2090940d77789df55cfc763196f2e2e70",
+      "bytes": 80684,
+      "frames": 26880,
+      "seconds": 0.56,
+      "sample_peak_dbfs": -4.785482967434608,
+      "rms": 0.0750000003007275,
+      "mapped": false
+    },
+    {
+      "file": "sky_lightning_impact_mastery.wav",
+      "sha256": "0e75205af051b2451c9ff87c1ad4c135c4ec23dc38f5d45e026581383a5715e3",
+      "bytes": 54764,
+      "frames": 18240,
+      "seconds": 0.38,
+      "sample_peak_dbfs": -4.000000322645464,
+      "rms": 0.08059408435658347,
+      "mapped": false
+    }
+  ],
+  "mastery_rms_matches_base": true,
+  "active_bank_unchanged": true
+}

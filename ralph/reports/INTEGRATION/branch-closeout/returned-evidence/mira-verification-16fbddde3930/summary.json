@@ -1,0 +1,137 @@
+{
+  "tested_head": "16fbddde393036eeea3c4dccbe0b451734e1636e",
+  "result": "FULL MIRA VERIFICATION OPEN",
+  "focused_native": {
+    "result": "PASS",
+    "actual_assertions": 23,
+    "scope": "Actual production controller and built shop floor, disclosed synthetic registration and starting pose; idle, lock, resume, and removed-support gravity."
+  },
+  "prior_full_path": {
+    "head": "19aed44342ed",
+    "result": "FAIL",
+    "elapsed_seconds": 453.922,
+    "first_blocker": "Mira cycle1 movement resume: flat shop floor recovery exceeds original skin after actual dialogue/modal exit."
+  },
+  "current_full_path": {
+    "head": "16fbddde393036eeea3c4dccbe0b451734e1636e",
+    "result": "FAIL",
+    "elapsed_seconds": 442.9679999999935,
+    "timed_out": false,
+    "first_blocker": "Actual uphill terrain return before reaching Mira.",
+    "actual_refusal_pose": [
+      25.9917221069336,
+      0.393634110689163,
+      -34.0621566772461
+    ],
+    "recovery": [
+      0.0001068115234375,
+      0.00104472041130066,
+      4.9591064453125e-05
+    ],
+    "active_heading": [
+      -0.267944842576981,
+      0.0,
+      -0.963434278964996
+    ]
+  },
+  "independent_review": "source_review verified original causal probe and focused23 assertion native receipt. Current full trace has active input and sloped terrain; flat-idle fix cannot execute in that sampled state. The two full runs started their road returns from different actual catch positions, so this is not a same-pose regression comparison. Indirect trajectory effects remain unproven.",
+  "constraints": "No skin, capsule, contact budget, movement allowance, teleport, or original required CORE assertions relaxed. No criterion credit; main unchanged.",
+  "members": {
+    "mira-idle-probe-19aed44342ed--native.log.gz": {
+      "source": "mira-idle-probe-19aed44342ed/native.log",
+      "raw_bytes": 4813,
+      "raw_sha256": "755e9ecdaad31ebc18b6bf14b5474ec6c63a21dce4420eef0c14bcd3ecc86026",
+      "gzip_sha256": "27887d48bf80de281a504237bae6f6a6a509edf0ae995f0180c456ed9dfaaa43"
+    },
+    "mira-idle-probe-19aed44342ed--receipt.json.gz": {
+      "source": "mira-idle-probe-19aed44342ed/receipt.json",
+      "raw_bytes": 761103,
+      "raw_sha256": "400553034dd1ccd29457cf183de213e9dde71cd7fb2a1e2cefd391505dd0d180",
+      "gzip_sha256": "fc9c275ee5ea2a292b358c6be5640280f55844570722a9ec31dd9ca184c98fc5"
+    },
+    "returned-smoke-19aed44342ed-smoke_gate_b_continuous--result.json.gz": {
+      "source": "returned-smoke-19aed44342ed-smoke_gate_b_continuous/result.json",
+      "raw_bytes": 913,
+      "raw_sha256": "fd3116bf1cacc2c3d8c3d9f0e5a852594da9f6ec9418c2bc654bbb181290bcd2",
+      "gzip_sha256": "c5fd781a5b18210167446e0693da3e89293a835086873f897be1af93faa72d43"
+    },
+    "returned-smoke-19aed44342ed-smoke_gate_b_continuous--smoke.log.gz": {
+      "source": "returned-smoke-19aed44342ed-smoke_gate_b_continuous/smoke.log",
+      "raw_bytes": 1392305,
+      "raw_sha256": "ea0cbfd506ae9647e6f85455c575056057098f36bf9e0f855bc0a4d1e3b5d991",
+      "gzip_sha256": "d8369e07c69de55481af2fa2f6cd94e161efbb50a6f9a9dfa057550ff21aadb2"
+    },
+    "returned-smoke-16fbddde3930-smoke_gate_b_continuous--result.json.gz": {
+      "source": "returned-smoke-16fbddde3930-smoke_gate_b_continuous/result.json",
+      "raw_bytes": 1350,
+      "raw_sha256": "ab06cc7882e505c27f265efbf6952ab46b4eefe20cfbc8fa554fa163edf5bb33",
+      "gzip_sha256": "b8aa84fa4f0a50d060e75b5781f45bff4b5c61d1ad3af3ac02f5fa1c3cc51579"
+    },
+    "returned-smoke-16fbddde3930-smoke_gate_b_continuous--smoke.log.gz": {
+      "source": "returned-smoke-16fbddde3930-smoke_gate_b_continuous/smoke.log",
+      "raw_bytes": 1362506,
+      "raw_sha256": "bf7ea3940309b33a81a20932d4265aea2c1182d220d8b271d428f815c1b97957",
+      "gzip_sha256": "e0789c90ce63773be5899ee74c00b7924f94f32f3aeca8428a6a8832828d33b3"
+    },
+    "returned-unit-16fbddde3930-f19b8122--result.json.gz": {
+      "source": "returned-unit-16fbddde3930-f19b8122/result.json",
+      "raw_bytes": 448,
+      "raw_sha256": "56f219851c35a98c5b253a153344d871c95b3d2691b0a3cc4b710a3682aa1fc7",
+      "gzip_sha256": "f1286097b0cc23595fafe3d6ea5f7b8f43730a07f9e13b8926958c16933eb297"
+    },
+    "returned-unit-16fbddde3930-f19b8122--tests.log.gz": {
+      "source": "returned-unit-16fbddde3930-f19b8122/tests.log",
+      "raw_bytes": 18343,
+      "raw_sha256": "b6b28e3cc79682753854e96f232e0d94135ea02d72165ee90e765b8f9c6fb701",
+      "gzip_sha256": "8ff2b5ece73e2eca2e433b0b98b38553d663e7abd35519e04835cfb56a14ae83"
+    },
+    "returned-unit-16fbddde3930-f19b8122--user--Godot--app_userdata--Tetherbound--shop-floor-support-child.log.gz": {
+      "source": "returned-unit-16fbddde3930-f19b8122/user/Godot/app_userdata/Tetherbound/shop-floor-support-child.log",
+      "raw_bytes": 146,
+      "raw_sha256": "93eea2f4a3b651bfe308befaddce51b5e15e16d6b560a132a5ac4b3abdb5982d",
+      "gzip_sha256": "c462015265a388aaaccec9d3dddb4db6877b6697d32207c315e7b6683ce102b0"
+    },
+    "combined-check-only-16fbddde3930--0.log.gz": {
+      "source": "combined-check-only-16fbddde3930/0.log",
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-16fbddde3930--1.log.gz": {
+      "source": "combined-check-only-16fbddde3930/1.log",
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-16fbddde3930--receipt.json.gz": {
+      "source": "combined-check-only-16fbddde3930/receipt.json",
+      "raw_bytes": 756032,
+      "raw_sha256": "d90f8f29abbc01e14d2fab875a6e1f6220c65de42afa2cc8b6361eca891bef78",
+      "gzip_sha256": "de1d5f46a704839ae4a28034bcc32125310b81d3677531e8c05a11726e9ee58e"
+    },
+    "combined-smokes-19aed44342ed-ca2aa895.json.gz": {
+      "source": "combined-smokes-19aed44342ed-ca2aa895.json",
+      "raw_bytes": 755763,
+      "raw_sha256": "5e48323e7e7d27cd2d49ef78e18773e9b7ec00bba60cb45f5fb19a6d92ee16d1",
+      "gzip_sha256": "ef65cf8e14f4e70a804ac27ae028f2579b1529876e0c1c850c7b85da51c9f3b0"
+    },
+    "combined-smokes-16fbddde3930-ca2aa895.json.gz": {
+      "source": "combined-smokes-16fbddde3930-ca2aa895.json",
+      "raw_bytes": 756218,
+      "raw_sha256": "01535aa61d74c924cc3f940a9c9a32c2a380efbf046c7cc29f53fef7bb72f33e",
+      "gzip_sha256": "ae43579c3db3f10e66cf61b863cddc9889ddd822029b491854cb7f776474980f"
+    },
+    "combined-affected-16fbddde3930-f19b8122.json.gz": {
+      "source": "combined-affected-16fbddde3930-f19b8122.json",
+      "raw_bytes": 754734,
+      "raw_sha256": "506e3b13ee75735fe0b270a3e661f58ca3b2c7e4b6c21511b74660af22a8c7fc",
+      "gzip_sha256": "411bf02a9f7697cf9d1cf13ec915b5cf40e7d0ef4323237049b6b0025a4ad657"
+    },
+    "probe_mira_idle_floor.gd.gz": {
+      "source": "probe_mira_idle_floor.gd",
+      "raw_bytes": 2670,
+      "raw_sha256": "e1284955e69fa08e6f1a4b32201c8eb9f14b6efe069e6b7b73738fde4854bb19",
+      "gzip_sha256": "81e2f0da358440696bce4545943b7d75c56e80f57ecbbaf126b022348251e99a"
+    }
+  }
+}

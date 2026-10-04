@@ -1,0 +1,29 @@
+{
+  "status": "SOURCE_CANDIDATE_NATIVE_OPEN",
+  "acceptance_credit": false,
+  "baseline": "bcb20a0d29",
+  "source_files": {
+    "tests/helpers/f48_net_proof.gd": "8cccdb4ece152c9d1c05d1576434221f797f22e8774cba62566b70e8795e1196",
+    "tools/net/proof_steps_f48.gd": "7ac3c80ee6e5af3a6b718ca083f82119a184a20dce2f2809f363bf419cde549f",
+    "tools/net/f48_profile_fixture.py": "c84ad28202e5a833be1837b592f04c3c19ee0811c30ee009e0c74341dd9b1aba",
+    "ralph/reports/R3-F48/profile.schema.json": "a94d8a8cfbca483ae698ccbc578d07c80f1ae3f3b27890c8965b5d717dd6babc"
+  },
+  "spec": "ACCEPTANCE F48#1 requires disconnect/rejoin with no duplicate/loss; no transaction-history UI is required",
+  "cases": "All6transactions x4originalcuts retained, original3600s/300s/10s bounds unchanged",
+  "before_input": "Ordinary control reopen then first commit after original process crash; preparation actions not repeated",
+  "committed_cuts": "Actual original retained journal replay during authenticated returning admission, real owner BOOL/save+ACK; no new operation ID/button commit",
+  "second_replay": "Ordinary leave+returning admission repeats exact accepted journal, immutable intent, original receipt/delivery ID",
+  "oracles": "Exact fixed personal outcome; memory/disk receipt once; host durable journal equals guest actual accepted row; both replay states identical; host bystander unchanged; original native marker receipt/ID when cut exists",
+  "checks": {
+    "standalone_gdscript_grammar": "PASS",
+    "python_ast": "PASS",
+    "fixture_generator": "PASS",
+    "original_hashes_unchanged": "PASS",
+    "engine": "NOT_RUN"
+  },
+  "remaining": [
+    "Independent source review",
+    "Actual original native24cuts/profile",
+    "Authentic paid Altar/caught companion/full loop/four distinct original peers"
+  ]
+}

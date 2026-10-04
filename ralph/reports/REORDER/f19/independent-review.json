@@ -1,0 +1,32 @@
+{
+  "feature": "F19",
+  "reviewer": "/root/f19_strict_review",
+  "review_mode": "independent_read_only_non_author",
+  "source": "cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a",
+  "record_provenance": "Transcript of independent reviewer tool-agent verdict delivered to the author; this file was recorded by the author, not authored as a self-review.",
+  "selected_source_content_batch": "PASS",
+  "criterion_verdicts": {
+    "F19#0": "OPEN",
+    "F19#1": "OPEN",
+    "F19#2": "OPEN",
+    "F19#3": "OPEN",
+    "F19#4": "OPEN",
+    "F19#5": "OPEN"
+  },
+  "observed": {
+    "named_teams": 88,
+    "wild_tables": 36,
+    "gate_fields": 1272,
+    "negative_gate_fixtures": 16,
+    "disabled_requires_fly_allowed": true,
+    "seeded_live_identity_preserved": true,
+    "baseline_prefix_preserved": 15,
+    "existing_test_strength_preserved": true,
+    "canonical_regional_ids_bound": true,
+    "ceremony_delivery_phase_contract_corrected": true,
+    "scanner_sha256": "9b55da4ee4189ad4548d072f2c28fbf90807e391adaeb0804196f8517117a086"
+  },
+  "verdict_quote": "Independent selected source/content batch: PASS at cbc4f9dfe4f2a7d483d8bf7f001eeca49988f40a. F19#0–#5 remain OPEN. This verdict approves the bounded source/content batch, not runtime integration, participant transactions, legendary offer matrices, earned checkpoints, traversal or presentation evidence. Shared live offer-level integration remains pending.",
+  "godot_or_gpu_runs": 0,
+  "reviewer_file_writes": 0
+}

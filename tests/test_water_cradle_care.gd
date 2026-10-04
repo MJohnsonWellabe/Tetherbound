@@ -111,8 +111,10 @@ func test_swimmer_species_come_from_the_live_catalogue() -> void:
 		return
 	var species: Array = rules.call("swimmer_species")
 	species.sort()
-	assert_eq(species, ["water_aquaryn", "water_cannonback", "water_mosshell", "water_riverdrake", "water_sirenseal"],
-		"The five swim-mount compatible species, as the live catalogue registers them")
+	# RD-32/F37 adds Ripplet's authorized Tidewake surface mount. Keep the
+	# original five and Meadows exclusions exact rather than deriving an oracle.
+	assert_eq(species, ["ripplet", "water_aquaryn", "water_cannonback", "water_mosshell", "water_riverdrake", "water_sirenseal"],
+		"The five original water mounts plus the authorized Ripplet starter")
 	assert_false(species.has("mosshell"), "The Meadows Mosshell is not a swim mount")
 
 # --- host rule -------------------------------------------------------------------

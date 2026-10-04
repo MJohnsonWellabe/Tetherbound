@@ -1,0 +1,515 @@
+{
+  "_comment_w18_density": "W18-DENSITY-B4-B5, 2026-09-04 (CL-O4). Orders 4032-4050 raise this band from 26 nodes (7.6/km over 3436m) toward band 1's 20/km, sited where the chainage census (tools/_probe_band_density.gd) found the road empty of gathering: the old-growth swing (0 nodes over 300m), the Juno-Halder pasture, the ridge fork, the climb, the run-out and the seam. Ironwood stays the band's tier and gets three more trees at the places a player would otherwise walk 2km back for; berries arrive for the first time (no food existed above the river). The stand, the captains, the Sigil gate, the herd bull and Rue are untouched; the wind ridge traverse gets two nodes, not more, because MACRO_LAYOUT 3.2 wants it sparse for the vista. Every `at` was probed on the real world before it shipped.",
+  "_comment": "BAND-SPLIT. Band-local nodes for band4_upper_meadows_ironwood. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. Existing entries keep the index they had before the split because the merged array order is the order harvest nodes are added to the scene tree. A new entry in this band takes an unused order in this band's reserved range 4000-4999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_ironwood_d4": "GATE-D4/prompt 65. Ironwood is Band 4's whole material tier (spec Band 4, `data/recipes/recipes_ironwood.json`) and this file held zero nodes at package start -- the only ironwood anywhere in the chapter was five nodes in `data/config/bands/band2_stone_and_root/harvest.json`, sited around the Burrow Warrens, a Band 2 site the D2 lane owns and this lane does not touch. A player who reaches Band 4's captains without having taken the Warrens spur had no ironwood at all, and one who had could not restock without a ~2km walk back through a region already cleared. These five nodes put the tier where spec Band 4 actually names it: the old-growth on the western swing, the same pocket `spawns.json`'s order-4000 trailpup cluster already sites, so gathering the region's own resource happens inside the region's own old-growth rather than a neighbour's dungeon. MEASURED with `tools/_probe_band4_sites.gd` (heights 1.3-3.8m, worst local slope 5.3-9.1 degrees over a 3m pad -- the five flattest of eight candidates walked across the same old-growth pocket). Model/scale pattern matches band2's own ironwood nodes (`TwistedTree_1/2/3`, ~0.28-0.32) so the two stands read as the same species rather than two different trees that both happen to drop the same item. Amounts and scales TUNABLE.",
+  "_comment_stand_d4b": "GATE-D4b, round 1 of the blind visual pass (docs/AGENT_WORKFLOW.md). The critic, shown shots/band4/ and nothing about what changed, named this stand twice: `ironwood-grove does not read as a grove -- four isolated trees on open lawn', and `constant scale at even intervals ... that is a scatter pass, not a placement'. Both were true of the numbers it was judging: the five nodes stood 35-70m apart in a rough line across the old-growth at model_scale 0.28-0.32, a 14 percent spread that reads as one repeated tree. Re-sited into a clustered stand -- a four-tree core inside ~15m at (-342,5078) (-336,5069) (-352,5074) (-345,5088), with a fifth at (-339,5060) carrying the group south -- so the mass clusters and the ground between the trees reads as a clearing rather than as the default state of the region. Scales spread to 0.26-0.42, an elder tree and a young one in the same stand, still centred on band2's own 0.28-0.32 so the two ironwood stands stay the same species rather than becoming two trees that happen to drop the same item. Every position MEASURED with tools/_probe_band4_sites.gd (heights 1.48-2.09m, worst local slope 3.0-9.1 degrees over a 2m pad -- the five flattest of twelve candidates walked across the pocket), all of them 8-25m from clearings[4002]'s camp pad so the fire stands beside the stand it supplies. What the critic named that this does NOT fix is the region's scatter density, which is not this lane's file to edit: see the standing density_scale request in archive/ralph/DONE.md.",
+  "_comment_red_leak_d4b": "GATE-D4b, round 2 of the blind pass. The critic, given only the frames, wrote `oxblood has leaked onto friendly scenery -- the red ironwood canopies are the largest saturated red mass anywhere in the survey' and `the same asset is two different colours in adjacent frames'. Both are one bug, and the repo already knew it: data/config/vegetation.json's `grove' layer carries `_comment_leak' -- `R9.4. THE RED LEAK, found by two independent blind reviews eleven days apart. Leaves_TwistedTree_C.png is RGB(167,23,23)' -- and retextures those leaves to Leaves_NormalTree_C at #78c86e so the meadow's biggest trees are not blood red. harvest_node.gd::_material_fixups_for_model() applies that same layer data to a harvest node, BY MODEL PATH, and the `grove' layer lists only TwistedTree_2 and TwistedTree_4. So a node built from TwistedTree_1 or _3 gets no fixup at all and renders the pack's raw crimson. This stand was authored from _2, _1 and _3, which is why one stand rendered in two colours and why the red half landed on the one hue spec 21 reserves for Team Tether. Re-authored across TwistedTree_2 and TwistedTree_4 only -- the two forms that actually receive the meadow's own retexture -- keeping two forms and the 0.26-0.42 scale spread, so the stand reads as one species in the Meadows palette. NOT fixed here, and flagged for the coordinator: band2_stone_and_root/harvest.json's five ironwood nodes use _1/_2/_3 and carry the identical leak, and the underlying gap is that a harvest node whose model no scatter layer lists silently gets no material fixup -- both are other lanes' files. GATE-D4b round 3: re-authored again onto TwistedTree_4 ALONE. The grove layer's `variant_retint' is a deliberate three-step family -- TwistedTree_2 takes #325f3c, a deep dark green, and TwistedTree_4 takes #c4d696, a pale yellow-green -- which works across a scattered wood, where the steps average into one canopy, and does not work across a five-tree stand, where three dark and two pale trees are two trees rather than one species. Round 3's blind critic, told nothing, read the result as `bone-white trunks under near-black desaturated canopies ... blight/dead-forest/enemy-territory language, not friendly wilderness', and said a player walking in would assume they had crossed into hostile ground -- the same off-palette failure as the crimson, one variant along. All five nodes now take the pale variant, so the stand is one species in the lit half of the meadow's own green, and the 0.26-0.42 scale spread does the differentiating that model choice was doing badly. The grey bark stays: `Bark_TwistedTree' is untouched by any layer and is what separates an ironwood from the terracotta-trunked trees around it -- species identity carried by the trunk, not by a canopy in the wrong palette.",
+  "_comment_landmark_scale_visual_groundcover": "VISUAL-GROUNDCOVER. ASSESSMENT_2026-08-23's blind critique measured this stand's trees at orchard scale (6-9m) against the key art board's 15-20m landmark oaks. TwistedTree_4's own raw height is 18.74m (tools/measure_models.gd) so the previous 0.26-0.42 model_scale span put every node at 4.9-7.9m -- exactly that orchard reading, on the one species this band names in its own title. Two of the five nodes (4000, 4003) are raised toward the keyart's 15-20m band, modest scale variation rather than uniformly regrading the whole stand: `_comment_stand_d4b` above already fixed 'four isolated trees on open lawn' by making these read as one clustered stand with an elder/young spread, and turning every tree into a landmark would undo that same finding by making all five compete for the eye instead of one or two anchoring the group while the rest read as its younger understorey. No new asset -- same TwistedTree_4/pale-variant fixup this stand already used, per `_comment_red_leak_d4b` round 3.",
+  "_comment_commercial_grove_0910": "Fresh named-location frames still read one elder against ordinary open grass, not an old-growth grove. The composition already clusters five distinct measured seats, so keep those seats and the one pale ironwood family, but restore a full age ladder: 0.38/0.44 young trees, a 0.62 mature tree, then 0.78/0.85 elders. Three overlapping 11.6-15.9m crowns now form the grove mass while two 7.1-8.2m trees preserve the scale story. This changes presentation and harvest silhouette only; item, amount and interaction stay intact.",
+  "_comment_ironwood_identity_r2": "IRONWOOD-GROVE-R2-0911. Current production evidence finally showed the baked crown glade rather than the stale pre-glade strip. The grove reads from inside but still loses its pale trunks and crown hierarchy behind ordinary orange-bark scatter on arrival. The two existing elders grow within the visual bible's measured 15-20m old-growth target (0.85->0.98 = 18.4m; 0.78->0.90 = 16.9m). Seats, species, yield, interaction and the younger three-tree ladder stay unchanged. This is a landmark silhouette correction, not a corridor-wide tree change.",
+  "nodes": [
+    {
+      "order": 4000,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-342.0, 5078.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.98,
+      "_why_landmark": "VISUAL-GROUNDCOVER established this tree as the elder/landmark anchor. IRONWOOD-GROVE-R2 grows it from 0.85 to 0.98 (~18.4m), still inside the key-art old-growth target, after current production evidence showed the pale crown losing to ordinary approach scatter."
+    },
+    {
+      "order": 4001,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-336.0, 5069.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.44
+    },
+    {
+      "order": 4002,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-352.0, 5074.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.62
+    },
+    {
+      "order": 4003,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-345.0, 5088.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.90,
+      "_why_landmark": "VISUAL-GROUNDCOVER established this second landmark so the stand reads from more than one approach. IRONWOOD-GROVE-R2 grows it from 0.78 to 0.90 (~16.9m), still below order 4000 so the elders do not tie."
+    },
+    {
+      "order": 4004,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-339.0, 5060.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.38
+    },
+    {
+      "order": 4005,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [-300.0, 5090.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "ASSESS-REDS/test_camp_supply_reaches_every_band: band4's own harvest.json fielded ironwood only, so a camp or creature bed (buildables.json, which charges wood/stone/fiber alongside ironwood-tier materials) could not be paid for from this band's own ground. Sited 30m east of the ironwood camp pad (vegetation.json clearings order 4002, at (-330,5090)) so the rest point can actually be resupplied from beside itself -- MEASURED with tools/_probe_band4_sites.gd's own pattern (h=-3.71m, worst local slope 5.3 degrees over a 2m pad, the flattest of five wood candidates walked around the grove's eastern edge)."
+    },
+    {
+      "order": 4006,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-360.0, 5105.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.1,
+      "_why": "ASSESS-REDS. Same ironwood camp pad, 33m out on the grove's northern rim -- MEASURED (h=0.39m, worst local slope 5.4 degrees over a 2m pad, the flattest of four stone candidates)."
+    },
+    {
+      "order": 4007,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [-305.0, 5075.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "ASSESS-REDS. Same ironwood camp pad, 29m out toward the trailpup cluster (spawns.json order 4000) -- MEASURED (h=-1.87m, worst local slope 9.1 degrees over a 2m pad, the flattest of four fiber candidates that still clears the camp clearing's own 12m radius)."
+    },
+    {
+      "order": 4008,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [385.0, 6020.0],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why": "ASSESS-REDS. The eastern loop's own field-camp clearing (vegetation.json clearings order 4001, at (400,6040), between captain_field and captain_ridge) had the same gap -- ironwood-only band, no local wood/stone/fiber. Sited 25m southwest of the pad, clear of its 15m clearing radius -- MEASURED (h=-2.14m, worst local slope 8.1 degrees over a 2m pad)."
+    },
+    {
+      "order": 4009,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [380.0, 6060.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why": "ASSESS-REDS. Same eastern camp pad, 28m out on the loop's northern side -- MEASURED (h=-4.71m, worst local slope 7.2 degrees over a 2m pad)."
+    },
+    {
+      "order": 4010,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [410.0, 6010.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why": "ASSESS-REDS. Same eastern camp pad, 32m out toward the burrowback cluster (spawns.json order 4009) that already dresses this stop -- MEASURED (h=-1.24m, worst local slope 6.1 degrees over a 2m pad, the flattest of four fiber candidates)."
+    },
+    {
+      "order": 4011,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-56.0, 4818.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.32,
+      "_why": "T3-BAND4. ralph/reports/finding-post-tournament-cadence-2026-08-29.md's single biggest authored-content gap (1,064m) sat right where Band 3's river country becomes Band 4's Ironwood -- the region's own name-tier resource was 280m further in (order 4000's stand) with nothing announcing the change at the boundary itself. This is that announcement: the first three ironwood trees a player crosses, at the tree line (band3/4 spine seam runs 0,4760 -> -140,4870). Same TwistedTree_4/pale-variant-only choice order 4000's own `_comment_red_leak_d4b` fixes the whole stand to, so this reads as the same species rather than a second tree that happens to drop the same item. MEASURED, flattest candidate within the corridor probe's own 30m notice radius (tools/_probe_t3band4_grove2.gd; the first siting pass measured slope/height only and missed distance-to-spine, corrected here -- h=0.24m, 0.62m spread, worst slope 6.5 degrees over a 4m pad, 11.0m off the route)."
+    },
+    {
+      "order": 4012,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-63.0, 4826.0],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.38,
+      "_why": "T3-BAND4. Second of the tree-line trio, 11m from order 4011 -- clustered rather than a line, the same 'a grove is a mass, not evenly spaced repeats' lesson order 4000's own `_comment_stand_d4b` already paid for. 13.0m off the route."
+    },
+    {
+      "order": 4013,
+      "item": "fiber",
+      "amount": 3,
+      "label": "Cut fiber",
+      "at": [-50.0, 4812.0],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.1,
+      "_why": "T3-BAND4. The tree-line grove's understorey, so the beat is 'a place with more than one reason to stop' rather than a single resource type -- the same layered-discovery shape docs/owner/TETHERBOUND_MEADOWS_MIDGAME_FUN_REBUILD.md section 13 asks for, kept small on purpose. 10.0m off the route."
+    },
+    {
+      "order": 4020,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [-178.0, 6643.0],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.05,
+      "_why": "T3-RELAY, band4-seams follow-up. The band4/5 seam gap (852m in the original finding; `ralph/T3-BAND4` had already cut it to 475m, Captain Ridge -> this branch's own RuinedWatchtower/tm_riptide_lance beat, before this pass merged that work in) is closed further here rather than left at 475m. Sited on the spine's own points 15->16 (`terrain_playground.json`), checked against `tools/_probe_gate_f_corridor.gd`'s own 30m/spine-segment geometry the way T3-BAND4's own siting-bug writeup insists on -- entry at chapter distance ~10329, splitting the gap into ~210m/~265m, both inside the owner's 60-90s/240-360m cadence band. Rock_Medium_3 rather than _1/_2 (already used at orders 4006/4009) for the same visual-variety reason band3's own stone nodes vary their model."
+    },
+    {
+      "order": 4021,
+      "item": "revive",
+      "amount": 1,
+      "label": "A stashed revive",
+      "at": [55.0, 6815.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. Beside the ruined watchtower (playground_world.gd WATCHTOWER_AT (40,6800)) and its own tm_riptide_lance -- 'a Team Tether patrol never got to ship out' its own TM comment says, and neither did this. A fight was fought here; a revive is what a player finds picking through it."
+    },
+    {
+      "order": 4022,
+      "item": "potion_large",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [-270.0, 5240.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner directive 2026-08-29. Deep in the ironwood grove's night-duskhush pocket -- a genuine detour off the tree-line stand, not visible from the spine."
+    },
+    {
+      "order": 4023,
+      "item": "hide_helm",
+      "amount": 1,
+      "label": "A dropped helm",
+      "at": [-358.0, 5058.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "T3-REWARD found `hide_helm` fully modelled with zero acquisition path anywhere in the game. Beside the tree-line ironwood stand -- gear left where the region's own first-crossing beat already stops the player. stack:1; a respawning crate is harmless."
+    },
+    {
+      "order": 4024,
+      "item": "swift_tonic",
+      "amount": 1,
+      "label": "A stashed tonic",
+      "at": [155.0, 5605.0],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "model_scale": 0.85,
+      "_why_t3_pickups": "Owner board docs/reference/owner-board-2026-08-15-systems-and-castle.png, POTIONS & ITEMS panel: swift_tonic was shop-only at Mira's before this pass, no world presence. Near Captain Field's own position ((170,5590), trainers.json) -- readiness before the first of the three regional captains, matching the coordinator's own guidance that a temporary tonic suits a cache near a fight about to happen."
+    },
+    {
+      "order": 4025,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [-263.7, 5369.1],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.30,
+      "_why_t3_density": "T3-DENSITY, Gap A. Band 4 is the chapter's longest band (3436m) and its OWN worst on-route resource gap ran a full 1380m (order 4006's stone to order 4010's fiber, spine points 3-10) -- close to a third of the band's whole length with no reachable crafting material on the required path, despite this being the region spec names as Ironwood's own tier. This is the first of three nodes splitting that single gap into four ~345m segments, each inside the owner's 60-90s/240-360m cadence band. 15m off the spine (`tools/_probe_gate_f_corridor.gd` point-to-segment geometry), ground-checked (`tools/_probe_density_sites.gd`, worst slope 12.9 degrees over a 2m pad -- inside the 3.5-13.9 degree range T3-PICKUPS' own siting pass already accepted for this band). TwistedTree_4 ONLY, pale variant, matching order 4000's `_comment_red_leak_d4b` finding exactly -- the scatter layer's material fixup only covers this one model, and any other TwistedTree number reintroduces the crimson-canopy bug two blind visual passes already spent fixing. Ironwood rather than wood/stone: the region's own signature material, with real Band-4 sinks (recipes_ironwood.json's `orb_prime` at 4, `ironwood_haft_axe`/`_pickaxe` at 3 each, `potion_large` at 2)."
+    },
+    {
+      "order": 4026,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [40.6, 5531.3],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why_t3_density": "T3-DENSITY, Gap A. Second of the three nodes splitting the 1380m gap (see order 4025). 15m off the spine, ground-checked (worst slope 9.8 degrees, `tools/_probe_density_sites.gd`). Stone rather than a second ironwood -- material variety, and this segment sits closer to Captain Field's own approach (170,5590) than to the ironwood grove, so ordinary stone reads truer to the ground here."
+    },
+    {
+      "order": 4027,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [323.7, 5716.6],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_t3_density": "T3-DENSITY, Gap A. Third of the three nodes splitting the 1380m gap (see order 4025), landing near Captain Field's own position ((170,5590), trainers.json) -- a real 'gather before the fight' beat matching owner-direction section 9's preparation loop for every Captain. 15m off the spine, ground-checked (worst slope 5.5 degrees, `tools/_probe_density_sites.gd`)."
+    },
+    {
+      "order": 4028,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [82.3, 6201.2],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.34,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's second on-route resource gap, 986m (order 4009's stone to order 4020's stone, spine points 10-15) -- spanning the whole run from Captain Field's aftermath past Captain Ridge's own approach with no reachable crafting material. First of two nodes splitting it into three ~330m segments. 15m off the spine, ground-checked (worst slope 5.6 degrees, `tools/_probe_density_sites.gd`). TwistedTree_4 pale-variant only, per order 4000's own `_comment_red_leak_d4b`. Ironwood again, deliberately -- Captain Ridge's own reward is `elixir_guard` (T3-REWARD) rather than a tool/orb upgrade, so a player who wants the Prime Orb or a reinforced tool before that fight has to gather for it, and this is the only ironwood anywhere near his approach."
+    },
+    {
+      "order": 4029,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [-194.9, 6381.5],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_t3_density": "T3-DENSITY, Gap A. Second of two nodes splitting the 986m gap (see order 4028). 15m off the spine, ground-checked (worst slope 3.5 degrees, `tools/_probe_density_sites.gd`, the flattest of every candidate this pass measured)."
+    },
+    {
+      "order": 4030,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [14.5, 6794.3],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.28,
+      "_why_t3_density": "T3-DENSITY, Gap A. The band's own tail: after order 4020's stone (spine point 15-16), nothing resource-kind was reachable for the remaining 510m to the band4/5 seam, right where the region hands off to the Stronghold Approach. Beside the ruined watchtower (playground_world.gd WATCHTOWER_AT (40,6800)) and order 4021's revive -- 'a Team Tether patrol never got to ship out' reads equally well for a felled ironwood as for a dropped revive. 15m off the spine, ground-checked (worst slope 4.7 degrees, `tools/_probe_density_sites.gd`). TwistedTree_4 pale-variant only, per order 4000's own `_comment_red_leak_d4b`. Splits the tail into ~245m/~265m, both inside the owner's 60-90s/240-360m cadence band; D70 leaves Band 5 itself alone, so this is the last place in the required path this fix belongs."
+    },
+    {
+      "order": 4031,
+      "item": "orb_greater",
+      "amount": 1,
+      "label": "A stashed orb",
+      "at": [206.8, 6144.4],
+      "model": "res://assets/props/quaternius_fantasy/Crate_Wooden.gltf",
+      "_why": "T5-CADENCE. What the Wind Overlook (props.json order 4003) pays. Exit criterion G9 forbids an empty reward and G4 asks that 'every major region creates genuine roster temptation' -- T4-REGIONS scored band 4's temptation FAIL outright ('zero new species across 3436m'), which this lane cannot fix from a harvest node, but an orb the band otherwise has none of is the one thing that changes what a player can DO about the alpha two hundred metres back. Tucked behind the outcrop, 2.4m clear of the nearest stone, so it is found by walking up to the markers rather than seen from the road."
+    },
+    {
+      "order": 4032,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -150.0,
+        4905.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.34,
+      "_why_w18_density": "W18-DENSITY. The old-growth swing (spine 100-400m) held no harvest at all between the seam pair and the stand; a lone ironwood at the first bend puts the band's tier on the road it names."
+    },
+    {
+      "order": 4033,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -195.0,
+        4925.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. Deadfall under the old-growth at the second bend; wood was 3 nodes in 3.4km."
+    },
+    {
+      "order": 4034,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        -230.0,
+        4990.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. Tussocks by the mudsnout wallow (order 4017), the swing's first fiber."
+    },
+    {
+      "order": 4035,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -320.0,
+        5020.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_3.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. The stand's rock foot, where the burrowback three (order 4103) dig; stone on the way in to the grove."
+    },
+    {
+      "order": 4036,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        -250.0,
+        4900.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. Band 4 had no food at all; a berry bush on the old-growth's sunny side gives the light-satiety loop something to find up here (CLAUDE.md: food restores, no starvation)."
+    },
+    {
+      "order": 4037,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        -120.0,
+        5440.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_w18_density": "W18-DENSITY. The pasture between Juno and Halder (spine 900-1300m) had one node; tussocks on the road's west verge."
+    },
+    {
+      "order": 4038,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        -100.0,
+        5395.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. A blown-down tree on the pasture's edge, 50m from Juno's paddock."
+    },
+    {
+      "order": 4039,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        100.0,
+        5470.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. Field stone above the burrowback shelf (order 4032), on the approach to Captain Halder."
+    },
+    {
+      "order": 4040,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        200.0,
+        5520.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. The pasture hedge below the pipwing roost (order 4036): food before the first captain."
+    },
+    {
+      "order": 4041,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        300.0,
+        5740.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.3,
+      "_why_w18_density": "W18-DENSITY. The Highfield's lone ironwood at the ridge fork: a player heading up the traverse can restock the tier without walking back to the stand."
+    },
+    {
+      "order": 4042,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        451.0,
+        5901.7
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. Wind-bent grass on the ridge crest, beside the traverse loop."
+    },
+    {
+      "order": 4043,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        480.0,
+        5860.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.05,
+      "_why_w18_density": "W18-DENSITY. The ridge's exposed stone at the traverse's high point -- the wind ridge stays thin on purpose (MACRO_LAYOUT 3.2), so one stone, not a quarry."
+    },
+    {
+      "order": 4044,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        420.0,
+        6070.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. Deadfall past the severed conduit post, on the descent to the camp pad."
+    },
+    {
+      "order": 4045,
+      "item": "berries",
+      "amount": 3,
+      "label": "Pick berries",
+      "at": [
+        -58.0,
+        6270.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Bush_Common_Flowers.gltf",
+      "model_scale": 1.2,
+      "_why_w18_density": "W18-DENSITY. A hedge on the high pasture before the picket and the rest-free climb: food where a player decides whether to camp first."
+    },
+    {
+      "order": 4046,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -140.0,
+        6390.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_2.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. The climb's rock shoulder (spine 2400-2600m held one node); stone under the new burrowback three (order 4109)."
+    },
+    {
+      "order": 4047,
+      "item": "ironwood",
+      "amount": 3,
+      "label": "Fell an ironwood",
+      "at": [
+        -296.5,
+        6542.0
+      ],
+      "model": "res://assets/environment/stylized_nature/TwistedTree_4.gltf",
+      "model_scale": 0.3,
+      "_why_w18_density": "W18-DENSITY. The last ironwood before the Hall, on the watchtower spur at the watch's back -- restock for the final assault's recipes without the 2km walk to the stand."
+    },
+    {
+      "order": 4048,
+      "item": "fiber",
+      "amount": 4,
+      "label": "Cut fiber",
+      "at": [
+        -150.0,
+        6690.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Plant_7_Big.gltf",
+      "model_scale": 1.3,
+      "_why_w18_density": "W18-DENSITY. The run-out meadow (spine 2900-3100m held one node); tussocks by the night duskhush roost (order 4110)."
+    },
+    {
+      "order": 4049,
+      "item": "wood",
+      "amount": 4,
+      "label": "Gather deadwood",
+      "at": [
+        102.0,
+        6870.0
+      ],
+      "model": "res://assets/environment/stylized_nature/DeadTree_2.gltf",
+      "model_scale": 0.22,
+      "_why_w18_density": "W18-DENSITY. Deadfall below the Broken Tower on the last meadow."
+    },
+    {
+      "order": 4050,
+      "item": "stone",
+      "amount": 3,
+      "label": "Prise loose stones",
+      "at": [
+        -30.0,
+        6960.0
+      ],
+      "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+      "model_scale": 1.0,
+      "_why_w18_density": "W18-DENSITY. Stone at the seam into band 5, the last gather before the approach (spine 3400m held nothing)."
+    }
+  ]
+}

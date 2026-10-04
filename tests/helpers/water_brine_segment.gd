@@ -117,8 +117,10 @@ static func trainer_contract(trainer: Dictionary) -> bool:
 	return str(trainer.get("id", "")) == TOVIN_ID \
 		and str(trainer.get("npc_entity_id", "")) == "water_tovin" \
 		and bool(trainer.get("critical", false)) \
-		and int(trainer.get("ace_level", 0)) == 46 \
-		and (trainer.get("team", []) as Array).size() == 2
+		and int(trainer.get("ace_level", 0)) == 24 \
+		and (trainer.get("team", []) as Array).size() == 2 \
+		and int(trainer.team[0].get("level", 0)) == 23 \
+		and int(trainer.team[1].get("level", 0)) == 24
 
 
 static func placement_contract(npc: Dictionary) -> bool:

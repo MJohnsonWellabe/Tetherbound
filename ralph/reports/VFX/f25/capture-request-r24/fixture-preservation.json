@@ -1,0 +1,18 @@
+{
+  "baseline_source": "9a6dbc823c4a4b05695ac00be51150312fee470f",
+  "candidate_source": "05ccfe3b3449727ddf8a18b070565c0ea22e5314",
+  "original_harness": "tests/smoke_move_effects_library.gd",
+  "original_harness_sha256_lf": "7df4fc6948ad1e68b9aef338a83de01edd0fe6df160613a71fb80fe7c1753c61",
+  "derived_fixture_sha256_lf": "b887637bcf76b6549d60368b4eafbed0177b86c370c87500d045ea6d06edf759",
+  "changed_methods": [
+    "_run",
+    "_transit_shutter"
+  ],
+  "all_existing_failure_checks_retained": true,
+  "all_exercise_capture_timing_arrival_budget_release_assertions_byte_unchanged": true,
+  "all_18_light_preflight_checks_byte_unchanged": "Retained function; original mastery branch does not call it. Reuse selected R17 pass, no repeat.",
+  "default_24_archetypes_all_five_ranks_retained": true,
+  "scope": "Explicit selected synthetic visual diagnostic, not unit skipping or earned path; no tracked test edits",
+  "ice_envelope": "Stronger analytic prism bound, matching unchanged installed geometry; no shutter minimum, origin, target or camera changes",
+  "engine_executed": false
+}

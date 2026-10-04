@@ -1,0 +1,368 @@
+{
+  "classification": "ACTUAL CI6170 TERMINAL FAILURE; SCOPED SUCCESSES RETAINED WITH RAW ERRORS",
+  "observed_utc": "2026-10-01T16:30:12.190702+00:00",
+  "run_id": 36882902951,
+  "pushed_head": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+  "current_local_head": "85ba143150d08d1e30efe7fc55c7671c2fc02b73",
+  "run_status": "completed",
+  "run_conclusion": "failure",
+  "first_page_job_count": 30,
+  "assertion_pass_does_not_mean_zero_errors": true,
+  "ci_warden": {
+    "artifact_id": 11174329186,
+    "zip_verified_sha256": "915c3fa3d04eb97aa9aebea92d52bb2f6dcc4eec01a0bb10c3a8d98ef86da135",
+    "native_smoke_assertions": "ALL CHECKS PASSED",
+    "NET_RUN_failures": [],
+    "both_peers_exited": true,
+    "raw_errors": [
+      {
+        "file": "peer-0.log",
+        "line": "ERROR: unscoped flag: reward:trainer:warden_aldis:xp:1"
+      },
+      {
+        "file": "peer-0.log",
+        "line": "ERROR: unscoped flag: reward:trainer:warden_aldis:xp:1790841056"
+      },
+      {
+        "file": "peer-0.log",
+        "line": "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead."
+      },
+      {
+        "file": "home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+        "line": "ERROR: unscoped flag: reward:trainer:warden_aldis:xp:1"
+      },
+      {
+        "file": "home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+        "line": "ERROR: unscoped flag: reward:trainer:warden_aldis:xp:1790841056"
+      },
+      {
+        "file": "home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+        "line": "ERROR: Lambda capture at index 0 was freed. Passed \"null\" instead."
+      }
+    ],
+    "distinct_peer0_errors": 3,
+    "mirrored_in_home0_log": true,
+    "limits": "Pushed91c3 before c856/6af. Synthetic original fixture. Smoke assertion pass is not strict-error pass or acceptance credit. Local49d original failure remains unretired."
+  },
+  "net2": {
+    "artifact_id": 11175522838,
+    "zip_verified_sha256": "b6d8b432ae830498023e363a84cb8e2aa9f7865e77169190cf4e261ab9224395",
+    "native_receipts": [
+      {
+        "path": "net-cloudreach_riding-20261001T153858Z/NET_RUN.json",
+        "run_id": "net-20261001T153858Z-2468",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "74be967156535c1eb42e7a7ffa4639b034d635f8d4080fa3de2fee25b05f168a"
+      },
+      {
+        "path": "net-farm_race-20261001T155610Z/NET_RUN.json",
+        "run_id": "net-20261001T155610Z-4024",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "c87ee3496dae651321e91ad27099c6715f97dcdb77dec0708efcf29c18e79a59"
+      },
+      {
+        "path": "net-fog_is_personal-20261001T155406Z/NET_RUN.json",
+        "run_id": "net-20261001T155406Z-3830",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "decaaee7a3f8b9efcdfc4e7981cfa87fb918843c3ee6dce90d0f70eb8e369063"
+      },
+      {
+        "path": "net-menu_does_not_freeze_peer-20261001T155111Z/NET_RUN.json",
+        "run_id": "net-20261001T155111Z-3580",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "a142ca31c2f23c6c4d9aea18051b469009bcd94469d0ac123b4bebfbb1c8b476"
+      },
+      {
+        "path": "net-session_host_first_realm-20261001T154519Z/NET_RUN.json",
+        "run_id": "net-20261001T154519Z-3053",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "d28be48bd9e0d9e4c66eec45ad0a0a4bd54335be5ce8dccc5c4eb41f4bda5fd8"
+      },
+      {
+        "path": "net-sleep_vote-20261001T160018Z/NET_RUN.json",
+        "run_id": "net-20261001T160018Z-4411",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "4b7bb50e8b91b3dbb666b077f4d0667be9679bef5bfb647482c823e861df6718"
+      },
+      {
+        "path": "net-veridian_mixed-20261001T154853Z/NET_RUN.json",
+        "run_id": "net-20261001T154853Z-3340",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "496eec80455c101945c06a2b0643d47a9f14f4ce68c614a4f58a711707d8eec1"
+      },
+      {
+        "path": "net-water_alpha-20261001T155808Z/NET_RUN.json",
+        "run_id": "net-20261001T155808Z-4206",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "c80a86b054b49837fb4fad46e3ebfac572209d3f7e7cf4da0bc6984c65448123"
+      },
+      {
+        "path": "net-water_swim_stone_late_join-20261001T160214Z/NET_RUN.json",
+        "run_id": "net-20261001T160214Z-4586",
+        "reported_exited": [
+          true,
+          true
+        ],
+        "raw_sha256": "37d1fbe15bfd0859c67c22463912ba946014ee168c3f0c82be7b9a805291e10f"
+      }
+    ],
+    "job_status_not_in_first_page": true,
+    "limits": "Nine NET_RUN receipts have no listed failure/fatal; this is not a verified omitted job conclusion or strict-log audit."
+  },
+  "fresh_fetched_remote_refs": [
+    {
+      "ref": "origin",
+      "sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/main",
+      "sha": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/combat",
+      "sha": "bc07a6c6df6b05befc66963ba6b7b3833f8aee0b",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f18",
+      "sha": "f69d5a6ce26cc8f7a5e6f1c753113544108a12e8",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f19",
+      "sha": "f09e16cdb33d6da8ba564a9e964ff6eb6d4aa5f9",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f20",
+      "sha": "e7829fba3ceec4d31a1bcb45b2e1f4d53a0b94ff",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f22",
+      "sha": "f7c775464db47bfdfd46fbf58c09c6266839dd6a",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f23",
+      "sha": "1e24ef9f5037fbd5f8b00cfb5d37dc32f169b943",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f24",
+      "sha": "5e0481bb5ac80b17906e7b2756251766d6678c0b",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f25",
+      "sha": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f28",
+      "sha": "a07c26cc5866d4845f8dd7c76e4807e452535173",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f29",
+      "sha": "0c1b7151f1772ede073e9e21604be2a785550c3b",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f30",
+      "sha": "26b0a1a0e008fe65c0f20fc4ad9c10ee3e4e9227",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f31",
+      "sha": "ae65eb81949f7f72deaf4c5a58c532790a2f7978",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f32",
+      "sha": "810881e7a8ff4056eeafd5fbbf30994825fd06fd",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f33",
+      "sha": "ac662d34b5962a758eea8048b2af9ea1d9f93303",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/f35",
+      "sha": "532f2842615256a844a5672a124b4ae08fe86699",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/foundations",
+      "sha": "13edb2afac29928690ec7e7edb52590414883767",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/homestead",
+      "sha": "499e8e38e6b4e6d9be37dcdabe01c447693e1276",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/hub",
+      "sha": "c21be258900a2de22ac4eef61cf71f9b55c6e426",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/integration",
+      "sha": "91c3e4a344489dd4fb38f461769fcd98d2bdf150",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/lookdev",
+      "sha": "ade7b9258dc0e9d5642fc4e45a1c28574255f169",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/redesign-board",
+      "sha": "5ff1f37a17f7db1ec61a49a8f8d9cf38dcd7400b",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/reorder",
+      "sha": "567798bce2e6eeedefbbb0e46d7bdfed9149572b",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/training",
+      "sha": "94612ec95c91aba7d64d7424359970f21a4844f2",
+      "in_local_integration": true
+    },
+    {
+      "ref": "origin/tb/vfx",
+      "sha": "a9ef7a0328190ec11838aa8ef38663812455d38d",
+      "in_local_integration": true
+    }
+  ],
+  "main_unchanged": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "all_fetched_remote_heads_in_local_integration": true,
+  "criteria_or_MET_credit": false,
+  "sealed_files": [
+    {
+      "file": "api-terminal-snapshot.json.gz",
+      "raw_bytes": 43894,
+      "raw_sha256": "cedb8e6c5552f3d9962a92b7f99ebd44b3b1e5e13723cfc628aa7093f674e8a0"
+    },
+    {
+      "file": "warden-NET_RUN.json.gz",
+      "raw_bytes": 2485,
+      "raw_sha256": "2986d549c058ecd11bb5b4fca60ecae1455b701752efd631456fd1286ac66602"
+    },
+    {
+      "file": "warden-SUMMARY.md.gz",
+      "raw_bytes": 238,
+      "raw_sha256": "45661e51bc5d43ff9362cfc7a043cc092322cfaeb09bcec9e4cd0fdbf0b5977c"
+    },
+    {
+      "file": "warden-peer-0.log.gz",
+      "raw_bytes": 14147,
+      "raw_sha256": "e0e04eb907b14de6163129c19242786673e63986da70d2e6e767272f18f9c54d"
+    },
+    {
+      "file": "warden-peer-1.log.gz",
+      "raw_bytes": 22262,
+      "raw_sha256": "8327c2434ecb2351cab677310ba7350ce209438d8518823db64f8d39c96a3c9f"
+    },
+    {
+      "file": "warden-home-0-godot-app_userdata-Tetherbound-logs-godot.log.gz",
+      "raw_bytes": 14033,
+      "raw_sha256": "73f6fc590bae44aeb14114c8d8a9ed87eba4cae9b300fa13a763fb0e52ba993b"
+    },
+    {
+      "file": "warden-home-1-godot-app_userdata-Tetherbound-logs-godot.log.gz",
+      "raw_bytes": 22062,
+      "raw_sha256": "d7e5100ac92dc853104510d0ee16594997a85707fda359ca90dcc67e61d39667"
+    },
+    {
+      "file": "foundations-NET_RUN.json.gz",
+      "raw_bytes": 1861,
+      "raw_sha256": "e33b43eb719cecf03772baf5f0758f1020f51be5cee81ca79f07289f15956f83"
+    },
+    {
+      "file": "foundations-SUMMARY.md.gz",
+      "raw_bytes": 295,
+      "raw_sha256": "c7ac96df9fc5ec8b60062d556de346bad343f0fd86ca3fa26c9f63b2167a0994"
+    },
+    {
+      "file": "foundations-peer-0.log.gz",
+      "raw_bytes": 4201852,
+      "raw_sha256": "14c6f10d3692283243044ff1d03294df1e8a6ded2dc19dca21624d02fa59edf8"
+    },
+    {
+      "file": "net2-net-cloudreach_riding-20261001T153858Z-NET_RUN.json.gz",
+      "raw_bytes": 2505,
+      "raw_sha256": "74be967156535c1eb42e7a7ffa4639b034d635f8d4080fa3de2fee25b05f168a"
+    },
+    {
+      "file": "net2-net-farm_race-20261001T155610Z-NET_RUN.json.gz",
+      "raw_bytes": 2480,
+      "raw_sha256": "c87ee3496dae651321e91ad27099c6715f97dcdb77dec0708efcf29c18e79a59"
+    },
+    {
+      "file": "net2-net-fog_is_personal-20261001T155406Z-NET_RUN.json.gz",
+      "raw_bytes": 2487,
+      "raw_sha256": "decaaee7a3f8b9efcdfc4e7981cfa87fb918843c3ee6dce90d0f70eb8e369063"
+    },
+    {
+      "file": "net2-net-menu_does_not_freeze_peer-20261001T155111Z-NET_RUN.json.gz",
+      "raw_bytes": 2512,
+      "raw_sha256": "a142ca31c2f23c6c4d9aea18051b469009bcd94469d0ac123b4bebfbb1c8b476"
+    },
+    {
+      "file": "net2-net-session_host_first_realm-20261001T154519Z-NET_RUN.json.gz",
+      "raw_bytes": 2464,
+      "raw_sha256": "d28be48bd9e0d9e4c66eec45ad0a0a4bd54335be5ce8dccc5c4eb41f4bda5fd8"
+    },
+    {
+      "file": "net2-net-sleep_vote-20261001T160018Z-NET_RUN.json.gz",
+      "raw_bytes": 2480,
+      "raw_sha256": "4b7bb50e8b91b3dbb666b077f4d0667be9679bef5bfb647482c823e861df6718"
+    },
+    {
+      "file": "net2-net-veridian_mixed-20261001T154853Z-NET_RUN.json.gz",
+      "raw_bytes": 2486,
+      "raw_sha256": "496eec80455c101945c06a2b0643d47a9f14f4ce68c614a4f58a711707d8eec1"
+    },
+    {
+      "file": "net2-net-water_alpha-20261001T155808Z-NET_RUN.json.gz",
+      "raw_bytes": 2465,
+      "raw_sha256": "c80a86b054b49837fb4fad46e3ebfac572209d3f7e7cf4da0bc6984c65448123"
+    },
+    {
+      "file": "net2-net-water_swim_stone_late_join-20261001T160214Z-NET_RUN.json.gz",
+      "raw_bytes": 2474,
+      "raw_sha256": "37d1fbe15bfd0859c67c22463912ba946014ee168c3f0c82be7b9a805291e10f"
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+{
+  "run_id": 37125934951,
+  "artifact_id": 11275455922,
+  "checkout_ref": "fff7bc51740f71009ac75805706e0f1c5ed72326",
+  "result": "FAIL BEFORE actual producer: imported F18 declarations failed strict Godot typing. driver_ref requires WeakRef, personal_only requires bool. No R13 resolution-fix runtime conclusion.",
+  "archive_sha256": "0489de8039fd77d932d4a399f9bc4f7c3573bade12c143c78592cf9fed4b4a7b",
+  "files": {
+    "MANIFEST.txt": {
+      "retained_file": "four-r14-37125934951-0-MANIFEST.txt.gz",
+      "sha256": "05702b7434713bbaa3533c1abe28ff0cbff32845c1dc9837555e56291a76cf05"
+    },
+    "run.log": {
+      "retained_file": "four-r14-37125934951-1-run.log.gz",
+      "sha256": "2ac347f5a5b4e2aa0992cf6f73aa7743a7ad302ec99063c9ae320ccf1c752030"
+    },
+    "tree/data/config/alpha_respawns.json": {
+      "retained_file": "four-r14-37125934951-2-alpha_respawns.json.gz",
+      "sha256": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851"
+    },
+    "tree/data/config/essence.json": {
+      "retained_file": "four-r14-37125934951-3-essence.json.gz",
+      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+    },
+    "tree/data/config/hud.json": {
+      "retained_file": "four-r14-37125934951-4-hud.json.gz",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+    },
+    "tree/data/config/multiplayer.json": {
+      "retained_file": "four-r14-37125934951-5-multiplayer.json.gz",
+      "sha256": "f8b37f2736c75f20889649f8467caec67c4a09bf7dbefd04c2553d55bd3dd699"
+    },
+    "tree/data/config/stations.json": {
+      "retained_file": "four-r14-37125934951-6-stations.json.gz",
+      "sha256": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9"
+    },
+    "tree/data/config/traits.json": {
+      "retained_file": "four-r14-37125934951-7-traits.json.gz",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator-home/godot/app_userdata/Tetherbound/f48-prepare_boss_four-scenario.json": {
+      "retained_file": "four-r14-37125934951-8-f48-prepare_boss_four-scenario.json.gz",
+      "sha256": "a0bdeef8894091c1a0ca66b3ce54912765a8a7b8dd52d5103e6e82bc816c5003"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator-home/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r14-37125934951-9-godot.log.gz",
+      "sha256": "82ffedcb9765600f8b8e6a37c9045b84f77e0c225df00af2644f6c57106ffafe"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/coordinator.log": {
+      "retained_file": "four-r14-37125934951-10-coordinator.log.gz",
+      "sha256": "e6cabdf5ec50fcd0d0afbbb0e230027b1036be05a84ae400408ac9aef4685437"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/invocation.json": {
+      "retained_file": "four-r14-37125934951-11-invocation.json.gz",
+      "sha256": "894dcde527414ecb0e668e01d500d551adf22b51d1bb31c2e7cbfc016ff26385"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/fixture-manifest.json": {
+      "retained_file": "four-r14-37125934951-12-fixture-manifest.json.gz",
+      "sha256": "047584c59579945cee1f7739be9a999c81a98ee3654e3626e906a1b0248b0e2f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r14-37125934951-13-character.json.gz",
+      "sha256": "48289d457580a72f0a791d4d2e8c4451f4e19d9b3a42c935dc661a01c15b36e5"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-0/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r14-37125934951-14-slot_0.json.gz",
+      "sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-0/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "four-r14-37125934951-15-world.json.gz",
+      "sha256": "71b59819d2a8bcae12d555d05d819ea0755e49909138e7447e7574f1a6c95324"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r14-37125934951-16-character.json.gz",
+      "sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-2/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r14-37125934951-17-character.json.gz",
+      "sha256": "db9aabfcae6742630b79549af8b5dd30b524e6fd317474a76abf998fcf67dc00"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/profile.json": {
+      "retained_file": "four-r14-37125934951-18-profile.json.gz",
+      "sha256": "aa1ee49f6457449b223c2a5644ad586f8b9af1de5b93dabe8ac9993b2aba2f12"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/peer-3/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r14-37125934951-19-character.json.gz",
+      "sha256": "0c835a1f7a0b284235995504d78fc223a881e4ba96cadf146830d7178b11ed39"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/alpha_respawns.json": {
+      "retained_file": "four-r14-37125934951-20-alpha_respawns.json.gz",
+      "sha256": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/essence.json": {
+      "retained_file": "four-r14-37125934951-21-essence.json.gz",
+      "sha256": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/hud.json": {
+      "retained_file": "four-r14-37125934951-22-hud.json.gz",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/multiplayer.json": {
+      "retained_file": "four-r14-37125934951-23-multiplayer.json.gz",
+      "sha256": "ca39e27adee3d8b18cd3c19c4a6fd045b66ee0f92b1892467f70a0c9013acf79"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/stations.json": {
+      "retained_file": "four-r14-37125934951-24-stations.json.gz",
+      "sha256": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/mechanics-start/test-configuration/data/config/traits.json": {
+      "retained_file": "four-r14-37125934951-25-traits.json.gz",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/NET_RUN.json": {
+      "retained_file": "four-r14-37125934951-26-NET_RUN.json.gz",
+      "sha256": "038cfc51dc3ef1a9e9d96598bba372b78eb2d26c7d8e82f75168d9006d6e4708"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/SUMMARY.md": {
+      "retained_file": "four-r14-37125934951-27-SUMMARY.md.gz",
+      "sha256": "1e189782a0f12135db34bb41513b32faa2d01c6553bdec7df406084f533aa776"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-0/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r14-37125934951-28-godot.log.gz",
+      "sha256": "1da181c9c934bff5b6966afd6ec37d456042848642fb1577b60fd154f6bb695b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-1/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r14-37125934951-29-godot.log.gz",
+      "sha256": "1da181c9c934bff5b6966afd6ec37d456042848642fb1577b60fd154f6bb695b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-2/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r14-37125934951-30-godot.log.gz",
+      "sha256": "1da181c9c934bff5b6966afd6ec37d456042848642fb1577b60fd154f6bb695b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/home-3/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r14-37125934951-31-godot.log.gz",
+      "sha256": "1da181c9c934bff5b6966afd6ec37d456042848642fb1577b60fd154f6bb695b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-0.log": {
+      "retained_file": "four-r14-37125934951-32-peer-0.log.gz",
+      "sha256": "51e6bfd7b37b2abbe3bcd7e1ae9b2745509b42c7c50c2b8172061a6310b9baaf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-1.log": {
+      "retained_file": "four-r14-37125934951-33-peer-1.log.gz",
+      "sha256": "51e6bfd7b37b2abbe3bcd7e1ae9b2745509b42c7c50c2b8172061a6310b9baaf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-2.log": {
+      "retained_file": "four-r14-37125934951-34-peer-2.log.gz",
+      "sha256": "51e6bfd7b37b2abbe3bcd7e1ae9b2745509b42c7c50c2b8172061a6310b9baaf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/net-run/peer-3.log": {
+      "retained_file": "four-r14-37125934951-35-peer-3.log.gz",
+      "sha256": "51e6bfd7b37b2abbe3bcd7e1ae9b2745509b42c7c50c2b8172061a6310b9baaf"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json": {
+      "retained_file": "four-r14-37125934951-36-character.json.gz",
+      "sha256": "06fea685d133a680a4d7dcc887fbd6179b7675f36b2c87a54753c7b7c81d2063"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-0/saves/redesign-v28/slot_0.json": {
+      "retained_file": "four-r14-37125934951-37-slot_0.json.gz",
+      "sha256": "b187d4f8abeffd9bbe6e6d4daedf28a472368ce1d849bf0f69d27d2f9562fe2b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-0/worlds/redesign-v28/slot-0/world.json": {
+      "retained_file": "four-r14-37125934951-38-world.json.gz",
+      "sha256": "4e5b04e982f85a10d38c07865306bb0f1e13fa08b0e1624e501873c3ac2f35bc"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json": {
+      "retained_file": "four-r14-37125934951-39-character.json.gz",
+      "sha256": "8d2deab960882f4f25172de6147a965fe3fb2b9366ebea9b40402a55e4b37172"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-2/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json": {
+      "retained_file": "four-r14-37125934951-40-character.json.gz",
+      "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/originals/peer-3/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json": {
+      "retained_file": "four-r14-37125934951-41-character.json.gz",
+      "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/producer-profile/profile.json": {
+      "retained_file": "four-r14-37125934951-42-profile.json.gz",
+      "sha256": "5f05b49156971ee7dfbb542f849c89d399dcaa0fa20c9975122531856c7bf203"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/producer-profile/source.json": {
+      "retained_file": "four-r14-37125934951-43-source.json.gz",
+      "sha256": "b7f90f51208901d1be055b034e5edd02efd0e3ba8e9363291e99bfcc00c1526d"
+    },
+    "tree/ralph/reports/INTEGRATION/main-green/native-f48-boss_four/proof/PROOF.md": {
+      "retained_file": "four-r14-37125934951-44-PROOF.md.gz",
+      "sha256": "e2d025efcd60241add3a71d2176e95e0e9adacbd7de31db6a7a9ea9ed9d2687a"
+    },
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": {
+      "retained_file": "four-r14-37125934951-52-boot_log.txt.gz",
+      "sha256": "e29b0877bb354c699ee3432cea66bc422b57636404cefa1f69aa08d43f7b834b"
+    },
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": {
+      "retained_file": "four-r14-37125934951-53-godot.log.gz",
+      "sha256": "2ac347f5a5b4e2aa0992cf6f73aa7743a7ad302ec99063c9ae320ccf1c752030"
+    }
+  }
+}

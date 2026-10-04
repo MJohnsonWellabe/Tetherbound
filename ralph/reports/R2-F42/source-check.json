@@ -1,0 +1,113 @@
+{
+  "evidence_kind": "non-engine grammar/preload/config only",
+  "hash_basis": "UTF-8 with LF newlines (Git canonical source)",
+  "gdtoolkit_version": "4.5.0",
+  "files": [
+    {
+      "path": "scripts/ui/system_screen.gd",
+      "sha256": "24e95ff4b9861fc170cd954b5d10cfe54b45ddea15321c2a794e400c7a1a31ff",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/companion_details_panel.gd",
+      "sha256": "27021391d9b7a97e72a69578dfd5a24fb9fe17a7580c72e85b6c226a3e2dd8c5",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/bounty_board_panel.gd",
+      "sha256": "0b3dbf72827a8eaf9cda0a1367cbfae367698e6aecedfcd8e720942d28ede42a",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/research_log_panel.gd",
+      "sha256": "9345de3e9c81e061be9378f4ff9762a1a71a487b950650799c8783a5bd899aea",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/combat_system_overlay.gd",
+      "sha256": "4224ed59af790fbf1145139ef0827cb6889fbbd655776e736358879809ed2cab",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/altar_panel.gd",
+      "sha256": "b9f369b2a0c0e495bf2af5db6a1c708720a4e656673dfa53bc7ab98753f70e57",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/altar_service.gd",
+      "sha256": "5e3bfebc0b61aec27aebe12d391a1b0864dfadffbc46ef10e02dc60e3d71763d",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/altar_traits_panel.gd",
+      "sha256": "69788be73e4881cf7bcee1fa4372534aad6c671958d59b192ef77dbc40b6a990",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/altar_traits_service.gd",
+      "sha256": "3182619bd334f3d5ee2ff6a979c58e39a3452215ce8a80718b5603ceddaee407",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/combat_hud.gd",
+      "sha256": "2cdb5c93477ebf45a827668c93bbe522c121cb8f0b80edd536076a8d06271523",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/craft_panel.gd",
+      "sha256": "3a8d7eed2edef8a2003ef6d8bcf1f3dc26380cca87978ec7db7f16d800adbf0c",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/game_menu.gd",
+      "sha256": "4221f155d6d30acaabdbce70206be46b80c4fb21ac06729c66e52cda9ba8bb25",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/tab_creatures.gd",
+      "sha256": "e6ae1d80fde8ad9ba9620455242087cd350e5d5fe767a15eb9f037eeec850857",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/tab_quest_log.gd",
+      "sha256": "6b56e3fbeb9dc5175ca00b33956da6e11776362b0ee898596e44bfd78609b38e",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "scripts/ui/tether_command_meter.gd",
+      "sha256": "a9a512d9f328588579f2be9a52ec14990de2dd7386d5e99e44a561caf7ad798f",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "tests/smoke_f42_system_screen.gd",
+      "sha256": "be23dc51f8adb52451e5296c7d043f239f63ec7beee97b548ea937e4694a70da",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    },
+    {
+      "path": "tools/capture_f42_layout_fixtures.gd",
+      "sha256": "391191125fcfcb8fc5f970a2cc21ca734f915643b50a61ab8c91cacbcab8a215",
+      "grammar": "pass",
+      "preload_paths": "pass"
+    }
+  ],
+  "json": "pass",
+  "candidate_default_off": true,
+  "engine_run": false,
+  "runtime_service_save_coop_device_visual_acceptance": false
+}

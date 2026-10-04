@@ -1,0 +1,114 @@
+{
+  "owned_commit": "39ca697f876f463b555b022e183f0747a6ffdc20",
+  "owned_baseline": "b7cb96de89",
+  "shared_baseline": "a5f16a39c25c2c562014baca22911153afc15ea6",
+  "runtime_activation": "OFF",
+  "acceptance": {
+    "F23#0": "OPEN",
+    "F23#1": "OPEN",
+    "F23#2": "OPEN",
+    "F23#3": "OPEN",
+    "F23#4": "OPEN",
+    "F23#5": "OPEN"
+  },
+  "owned": [
+    {
+      "path": "data/moves/moves.json",
+      "sha256": "3da86de7bd8f45918ce4b9037d7f9bc1cfd0382d512de7a3a2deb0fce6987e6e",
+      "git_blob": "59751bb7ca2fe2f6a0f9b2c80b5558d0e8597162"
+    },
+    {
+      "path": "data/moves/learnsets.json",
+      "sha256": "308b2d1c82c19b135f361089bda61eb3a18777db9e7bb02e57fd01c355c8afc5",
+      "git_blob": "8fa23c678c10116738786730e3765842cdc572c7"
+    },
+    {
+      "path": "data/moves/tms.json",
+      "sha256": "1025822885d17e93800ee26cd16cd2940d87dc6e2e9ea6a0b8cd5914cc3a6e27",
+      "git_blob": "4d822c3be7fecc5c5951cc92b80df3f9afb70cea"
+    },
+    {
+      "path": "data/creatures/species.json",
+      "sha256": "80c0505a67e561d751bf8ee9cb29a3bcc17264986285c84472b82a8ad62402f3",
+      "git_blob": "35b3f5435f05ffbb71bcc00ea1525c2aad878fea"
+    },
+    {
+      "path": "scripts/creatures/teaching.gd",
+      "sha256": "4128cf4a87384270412150ecb3bf24afdb497c049c2298ad89d7db57f77faac4",
+      "git_blob": "80727c7e018af35fe30b5004b5e6bc1152d6063b"
+    },
+    {
+      "path": "scripts/creatures/move_mastery.gd",
+      "sha256": "68642e587972f1ed5970c2a7e9e9c32c630582646a3f37c98b34145d2c309929",
+      "git_blob": "f318df9f0e25065e22e11ff496f73fb2fa552210"
+    }
+  ],
+  "shared_patch_sha256": "9479e602c6289e20501b0e518e30dc97a590a17182933e9275fd010377a26ec2",
+  "shared_source_cut_sha256": "3ef53cf4931bb1e79a68df738e0b4622157d48558ee37b53d4100a8683ab1d99",
+  "shared_paths": [
+    {
+      "path": "data/config/combat.json",
+      "before_sha256": "eb308771d96f62fea40dd62780998596490fc1c46bc0d0fc9bf031fae49fb00e",
+      "after_sha256": "b923e00e9af6d2a569d6c03ed5fc2300c029523e5c83878079851cba4a94d16f",
+      "activation": "OFF"
+    },
+    {
+      "path": "data/schema/character_state.schema.json",
+      "before_sha256": "570af49adaf61f63d41c2fa77d44c0fa17d716bfe6f2ce72d1f883df3d08b442",
+      "after_sha256": "a11c81c4dd0f9e6d1eeb6e81e1e6d2309d16775e96fa8a7b32cad2fec315b99b",
+      "activation": "OFF"
+    },
+    {
+      "path": "project.godot",
+      "before_sha256": "5dca735e571b5de266b48510f1dbd376a6ff3c8943a97d694b28cbfd4dbbbb4f",
+      "after_sha256": "d0dceeb2264c6ef605072d1c693f89447c7d417db98e1c05f50a1b6ea03c8f09",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/combat/combat_manager.gd",
+      "before_sha256": "aebc9180c141f4fd7a01be664fbbf5a2a7b5e305dc748ed50a62dc2cc695b7f2",
+      "after_sha256": "7544f866a11944f384b44c0c745cb6d782e7d41f3bfb604572bcb1de40a63647",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/creatures/move_loadout_client.gd",
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "d00a06184f45b51073a5d1e3fd38b7a536d053fc8279dec68660551b1635dda6",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/ui/combat_hud.gd",
+      "before_sha256": "c43f4ca780b17818c9d2f1c8f2da9c17d4f54f414739bae25bf68e94cf757ede",
+      "after_sha256": "67c654195e28501a9504675f4784a8029fb9cb533bdbbfb57fdc4965cca0627f",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/ui/input_glyph.gd",
+      "before_sha256": "783ae67488f1fd52c35bbd27c9b92b1448a1a45a4615840c06c60bf95fad775c",
+      "after_sha256": "e17ccd9adfd28e33e820fd8f730c0d9e69f97f3f91039b8dbb2ef3f838040f98",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/ui/move_loadout_panel.gd",
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "01b3a61c1bdac3b95ecee09e1bf2d01fab4e13a9dd8553d540ffa6410cf1ec8a",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/ui/move_station_interaction.gd",
+      "before_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "after_sha256": "684292c236f410881da5391c8e9f9808e5a2663d07ca39fbbd7e53662f3a4f1c",
+      "activation": "OFF"
+    },
+    {
+      "path": "scripts/ui/tab_backpack.gd",
+      "before_sha256": "5d96cfddcf04e13907b7d5403c7a566bf68b83a145a3eab7615cfaf0a69e4107",
+      "after_sha256": "4d4385ec1948481a5e08e6d8b44650a378ae4a945943a25327343c409cb32c41",
+      "activation": "OFF"
+    }
+  ],
+  "f29_delta": {
+    "commit": "0c1b7151f1",
+    "sha256": "2a4eb26dfa223a0613409ae19b78d75d05f22376a4ca12f39e2911769871d832"
+  }
+}

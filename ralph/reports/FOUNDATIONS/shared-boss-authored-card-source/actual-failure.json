@@ -1,0 +1,113 @@
+{
+  "evidence_commit": "68cd25df29fa22e1e9bccc710c49a4d9e020a7a7",
+  "source_pin": "7a76a506beccd51aa04b81ab743b1140e33bfeb2",
+  "members": [
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/native-return.json",
+      "bytes": 3141,
+      "sha256": "8ad0e957cc8ff126173868b541f0230c0cf7a2bf48aefcf517a2e134526c311e"
+    },
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/NET_RUN.json.gz",
+      "bytes": 1444,
+      "sha256": "74413f22dfb5362f5646993260e21929b9247ca25cb94156804bb8132bd4df2c"
+    },
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/source-and-runtime-receipt.json.gz",
+      "bytes": 321381,
+      "sha256": "b3a7d4ae86f62550d4c6b28c7408df001b48f68d8345cbc260356ff36dfa8dd4"
+    },
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/native-0.log.gz",
+      "bytes": 4082,
+      "sha256": "2abc6e3a609100d4da8cfec69019a32fd3c38cedc877642578f00d8b145b842a"
+    },
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/native-1.log.gz",
+      "bytes": 4069,
+      "sha256": "513ed6bfc7fe620c664c179e09c94fdc8beb21dc65b49c710ba7a8228f6e16dd"
+    },
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/native-2.log.gz",
+      "bytes": 3404,
+      "sha256": "9595aba3db561f4a07eff57dd7a61259b824b3d2d9a6aa19faded651aa91643f"
+    },
+    {
+      "path": "ralph/reports/INTEGRATION/branch-closeout/returned-evidence/ci6173-owner-returns/shared-boss/original-native-return/native-3.log.gz",
+      "bytes": 3322,
+      "sha256": "7cd7fd608d95c62b44fb947999ec35b1876ccd0d465a7861f6167b927e79523c"
+    }
+  ],
+  "selected_raw_lines": [
+    {
+      "line": 125,
+      "text": "PASS: original starter fixture: peer 0 retained that SAME UID in actual party/body and host-admitted roster"
+    },
+    {
+      "line": 126,
+      "text": "PASS: original starter fixture: peer 1 retained that SAME UID in actual party/body and host-admitted roster"
+    },
+    {
+      "line": 161,
+      "text": "PASS: the host has the Warden's SECOND creature on the field (species 'galecrest')"
+    },
+    {
+      "line": 176,
+      "text": "FAIL: peer 1's local stand-in was moved onto where the host holds the boss (this peer has no opponent body to move)"
+    },
+    {
+      "line": 179,
+      "text": "FAIL: and both peers draw the same boss health bar after it (host 203.270, guest -1.000)"
+    },
+    {
+      "line": 180,
+      "text": "FAIL: peer 1 swung at the boss (this peer is not in a networked fight)"
+    },
+    {
+      "line": 182,
+      "text": "FAIL: and both peers draw the same boss health bar after it (host 203.270, guest -1.000)"
+    },
+    {
+      "line": 186,
+      "text": "FAIL: peer 1's swing at its teammate's creature reached the host (this peer is not in a networked fight)"
+    },
+    {
+      "line": 208,
+      "text": "FAIL: peer 1's local stand-in was moved onto where the host holds the boss (this peer has no opponent body to move)"
+    },
+    {
+      "line": 209,
+      "text": "FAIL: and both peers draw the same boss health bar after it (host 203.270, guest -1.000)"
+    },
+    {
+      "line": 210,
+      "text": "FAIL: peer 1 swung at the boss (this peer is not in a networked fight)"
+    },
+    {
+      "line": 212,
+      "text": "FAIL: and both peers draw the same boss health bar after it (host 203.270, guest -1.000)"
+    },
+    {
+      "line": 213,
+      "text": "FAIL: peer 1's swing at its teammate's creature reached the host (this peer is not in a networked fight)"
+    }
+  ],
+  "actual_failures": [
+    "peer 1's local stand-in was moved onto where the host holds the boss (this peer has no opponent body to move)",
+    "and both peers draw the same boss health bar after it (host 203.270, guest -1.000)",
+    "peer 1 swung at the boss (this peer is not in a networked fight)",
+    "peer 1 landed a blow on the SHARED boss: 203.3 -> 203.3 on the host, in 1 swing(s) over 5 placement attempt(s); the host last held its creature 2.90 m from the boss",
+    "and both peers draw the same boss health bar after it (host 203.270, guest -1.000)",
+    "peer 1's swing at its teammate's creature reached the host (this peer is not in a networked fight)",
+    "and the client's own local answer was `pending` -- the host being asked, not a refusal (ok=true pending=false code='')",
+    "the host refused it with `friendly_target` in the BOSS fight (got code '', reason '')",
+    "and the sentence a player can be shown travelled back to the striker",
+    "and it is measured over a window the boss itself did not act in -- `pick_struck` chose peer 1 2 time(s) before and 2 after, over 12 attempt(s)"
+  ],
+  "actual_result": "FAIL, exit 1, 231.828s, no timeout; four strict clean logs, source frozen, handles gone.",
+  "limits": [
+    "Individual record/RPC/card contents and timer interleaving were not logged.",
+    "The codec/UID defect below is demonstrated from pinned source/data, not asserted observed wire bytes.",
+    "No original smoke pass or criterion/main completion claimed."
+  ]
+}

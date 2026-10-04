@@ -1,0 +1,9 @@
+{
+  "parent": "00c521aabdaba5a183ec20e3829797ce3f6750ff",
+  "raw_failure_sha256": {
+    "receipt.json": "d82e70558ce1e20f2a62b729976224aac7cb39fd9d14099e751026f12503967e",
+    "native.txt": "d7804bd4f3df274b6432e350a0a9366114283d4014e864a4a64d8be4bccdb269",
+    "parser.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+  },
+  "diagnostic_sha256": "b28f313e1b5d5aff18a194d9663e913a00b6ee6d277939985bd37bec74977662"
+}

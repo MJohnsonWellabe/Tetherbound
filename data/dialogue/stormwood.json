@@ -16,7 +16,7 @@
       "state": "arrival",
       "requires_flags": [],
       "lines": [
-        "You came down from Cloudreach? Then you remember what a storm sounds like when it ends. Ours no longer does.",
+        "Welcome to Stormwood. A storm should have an ending. Ours no longer does.",
         "The outer trees are dying. Our arches have gone dark, and the rod lines carry every strike toward Team Tether's works in the split tree.",
         "Stay under Ashfoot's shelter when the light begins to build. Tamsin will show you how to read a Break. We need stormglass to light the road to the Lantern Pools again."
       ]
@@ -699,7 +699,7 @@
       "lines": [
         "The Stormheart lowers its crown of sparks and crosses the ruined ring to you. This is an offer, not another tether.",
         "If your belt already holds five companions, accepting means choosing one farewell. You may also keep the five who carried you here and let the Stormheart walk free.",
-        "The Spark it guarded is yours either way. Carry it home to its stone in the Meadows shrine circle.",
+        "The Spark it guarded is yours either way. Bring your relic to the Hall Shrine in Crossing Hall.",
         {
           "text": "Will you walk out with the Stormheart? Yes: it joins you, and at five you choose one farewell. No: it stays free.",
           "confirm_effect": "stormheart:accept"
@@ -714,7 +714,7 @@
         "stormwood:waterward_revealed"
       ],
       "lines": [
-        "At its Meadows stone, Livewire makes every creature move recover twenty-five percent faster while the Spark is active. Activating another relic releases it.",
+        "While the Spark's Livewire blessing is active, creature moves recover twenty-five percent faster. Only one relic blessing is active at a time.",
         "From the Dynamo's high platform, the broken storm no longer hides the sea. Islands stand beyond the bright water, and an old route descends toward their first shore.",
         "Tidewake lies beyond. The Waterward route is charted, and its key is yours."
       ]

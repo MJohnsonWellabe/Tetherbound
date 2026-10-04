@@ -1,0 +1,119 @@
+diff --git a/tests/helpers/gate_a_npc_gather_segment.gd b/tests/helpers/gate_a_npc_gather_segment.gd
+index 1fa80aa1e0..141d9c3d02 100644
+--- a/tests/helpers/gate_a_npc_gather_segment.gd
++++ b/tests/helpers/gate_a_npc_gather_segment.gd
+@@ -30,6 +30,7 @@ const DOOR_SCRIPT := "res://scripts/world/village_door.gd"
+ const HARVEST_NODE_SCRIPT := "res://scripts/world/harvest_node.gd"
+ const BACKPACK_COLUMNS := 6
+ const NAVIGATOR := preload("res://tests/helpers/opening_geometry_navigator.gd")
++const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
+ 
+ ## Metres out along a door's own outward normal that the approach stands off
+ ## before asking for the prompt, and metres in past the leaf once it is open.
+@@ -319,10 +320,20 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
+ 		return false
+ 	# The direct wood leg crossed Grandpa's furnished yard and lost actual floor.
+ 	# Follow the existing Pond road to its nearest authored node, then leave it
+-	# for the resource. From wood, nearby stone is west of the yard; approach it
+-	# directly instead of returning east through the yard to Practice Meadow.
++	# for the resource. Nearest live nodes vary with the real NPC arrival pose.
++	# A stone heading that crosses the concave fence uses the existing meadow
++	# road; an interior heading stays direct. This hint admits no native contact.
+ 	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
+ 	var road := "The Pond" if item_id == "wood" else ""
++	if item_id == "stone":
++		var outline := VILLAGE_BOUNDARY.outline(VILLAGE_BOUNDARY.load_config())
++		var hint := stone_road_hint(Vector2(_player.global_position.x, _player.global_position.z),
++			Vector2(node.global_position.x, node.global_position.z), outline, 1.55)
++		if hint == StoneRoadHint.INVALID:
++			_fail("actual stone approach is outside the bounded village fence hint")
++			return false
++		if hint == StoneRoadHint.MEADOW:
++			road = "Practice Meadow"
+ 	if not await _walk_toward(node.global_position, 1800, 1.55, road, item_id == "wood"):
+ 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
+ 		return false
+@@ -463,6 +474,36 @@ func _wait_for_tool_idle() -> bool:
+ 	return false
+ 
+ 
++enum StoneRoadHint { INVALID, DIRECT, MEADOW }
++
++
++## Bounded layout guidance only. Inside endpoints can still cross a concave
++## fence twice, leaving via an open gate and returning through a solid panel.
++## Native production movement, floor, skin and raw contact checks still decide
++## whether the unchanged actual target is physically reached.
++static func stone_road_hint(from: Vector2, goal: Vector2, outline: PackedVector2Array, clearance: float) -> int:
++	if not from.is_finite() or not goal.is_finite() or outline.size() < 3 or outline.size() > 64 \
++			or from.distance_to(goal) > 180.0 or not is_finite(clearance) or clearance <= 0.0 or clearance > 1.65:
++		return StoneRoadHint.INVALID
++	for index in outline.size():
++		if not outline[index].is_finite() or outline[index] == outline[(index + 1) % outline.size()]:
++			return StoneRoadHint.INVALID
++	if not Geometry2D.is_point_in_polygon(from, outline) or not Geometry2D.is_point_in_polygon(goal, outline):
++		return StoneRoadHint.INVALID
++	for index in outline.size():
++		var a := outline[index]
++		var b := outline[(index + 1) % outline.size()]
++		if Geometry2D.segment_intersects_segment(from, goal, a, b) != null:
++			return StoneRoadHint.MEADOW
++		var gap := minf(from.distance_to(Geometry2D.get_closest_point_to_segment(from, a, b)),
++			goal.distance_to(Geometry2D.get_closest_point_to_segment(goal, a, b)))
++		gap = minf(gap, a.distance_to(Geometry2D.get_closest_point_to_segment(a, from, goal)))
++		gap = minf(gap, b.distance_to(Geometry2D.get_closest_point_to_segment(b, from, goal)))
++		if gap <= clearance:
++			return StoneRoadHint.MEADOW
++	return StoneRoadHint.DIRECT
++
++
+ func _nearest_authored_node(item_id: String) -> Node3D:
+ 	var best: Node3D = null
+ 	var distance := INF
+diff --git a/tests/test_gate_a_npc_gather_segment_contract.gd b/tests/test_gate_a_npc_gather_segment_contract.gd
+index 66557a48ea..1f7e0a8495 100644
+--- a/tests/test_gate_a_npc_gather_segment_contract.gd
++++ b/tests/test_gate_a_npc_gather_segment_contract.gd
+@@ -100,3 +100,42 @@ func test_road_prefix_refuses_malformed_and_out_of_scope_inputs() -> void:
+ 	for index in 65:
+ 		oversized.append(Vector2(float(index), 0.0))
+ 	assert_eq(NAVIGATOR._road_prefix_to_goal(oversized, Vector2.ZERO), [], "the original64 road-input bound is retained")
++
++
++func test_actual_stone_heading_accounts_for_the_concave_fence() -> void:
++	var boundary := preload("res://scripts/world/village_boundary.gd")
++	var outline := boundary.outline(boundary.load_config())
++	var west_wood := Vector2(-8.0, 8.0)
++	var east_wood := Vector2(36.0, -16.0)
++	var east_stone := Vector2(47.0, -34.5)
++	assert_true(Geometry2D.is_point_in_polygon(east_wood, outline), "the real wood goal is inside")
++	assert_true(Geometry2D.is_point_in_polygon(east_stone, outline), "the real stone goal is inside")
++	assert_eq(SEGMENT.stone_road_hint(east_wood, east_stone, outline, 1.55), SEGMENT.StoneRoadHint.MEADOW,
++		"inside endpoints must not imply a direct route across the southeast fence notch")
++	for stone: Vector2 in [Vector2(-18.0, 6.0), Vector2(22.0, -34.0), east_stone]:
++		assert_eq(SEGMENT.stone_road_hint(west_wood, stone, outline, 1.55), SEGMENT.StoneRoadHint.DIRECT,
++			"the current western wood site retains interior direct stone headings")
++	for stone: Vector2 in [Vector2(-18.0, 6.0), Vector2(22.0, -34.0)]:
++		assert_eq(SEGMENT.stone_road_hint(east_wood, stone, outline, 1.55), SEGMENT.StoneRoadHint.DIRECT,
++			"nearby eastern wood does not force every stone errand through the meadow")
++
++
++func test_stone_fence_hint_keeps_clearance_and_refuses_invalid_scope() -> void:
++	var square := PackedVector2Array([Vector2.ZERO, Vector2(10.0, 0.0), Vector2(10.0, 10.0), Vector2(0.0, 10.0)])
++	assert_eq(SEGMENT.stone_road_hint(Vector2(1.0, 2.0), Vector2(1.0, 8.0), square, 1.55), SEGMENT.StoneRoadHint.MEADOW,
++		"a parallel interior heading inside the arrival clearance prefers the road")
++	assert_eq(SEGMENT.stone_road_hint(Vector2(5.0, 2.0), Vector2(5.0, 8.0), square, 1.55), SEGMENT.StoneRoadHint.DIRECT)
++	assert_eq(SEGMENT.stone_road_hint(Vector2.INF, Vector2.ONE, square, 1.55), SEGMENT.StoneRoadHint.INVALID)
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.INF, square, 1.55), SEGMENT.StoneRoadHint.INVALID)
++	assert_eq(SEGMENT.stone_road_hint(Vector2(-1.0, 2.0), Vector2.ONE, square, 1.55), SEGMENT.StoneRoadHint.INVALID)
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.ONE, PackedVector2Array(), 1.55), SEGMENT.StoneRoadHint.INVALID)
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.ONE, square, INF), SEGMENT.StoneRoadHint.INVALID)
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.ONE, square, 1.66), SEGMENT.StoneRoadHint.INVALID)
++	var too_long := PackedVector2Array([Vector2.ZERO, Vector2(400.0, 0.0), Vector2(400.0, 10.0), Vector2(0.0, 10.0)])
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2(200.0, 1.0), too_long, 1.55), SEGMENT.StoneRoadHint.INVALID)
++	var malformed := PackedVector2Array([Vector2.ZERO, Vector2.INF, Vector2.ONE])
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.ONE, malformed, 1.55), SEGMENT.StoneRoadHint.INVALID)
++	var oversized := PackedVector2Array()
++	for index in 65:
++		oversized.append(Vector2(float(index), float(index % 2)))
++	assert_eq(SEGMENT.stone_road_hint(Vector2.ONE, Vector2.ONE, oversized, 1.55), SEGMENT.StoneRoadHint.INVALID)

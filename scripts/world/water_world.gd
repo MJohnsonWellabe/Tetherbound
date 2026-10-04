@@ -179,6 +179,14 @@ func _ready() -> void:
 		add_child(swimming_mount)
 		swimming_mount.setup(self, riding, director)
 	var pickups := PICKUPS.new()
+	var ripplet_service := preload("res://scripts/world/ripplet_water_service.gd").new()
+	ripplet_service.name = "RippletWaterService"
+	ripplet_service.world = self
+	add_child(ripplet_service)
+	var sunken := preload("res://scripts/world/ripplet_sunken_content.gd").new()
+	sunken.name = "RippletSunkenContent"
+	sunken.world = self
+	add_child(sunken)
 	pickups.name = "WaterPickups"
 	pickups.build(self)
 	if not simulation_only:

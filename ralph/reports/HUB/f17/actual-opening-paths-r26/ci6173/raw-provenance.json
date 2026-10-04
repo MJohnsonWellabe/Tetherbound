@@ -1,0 +1,23 @@
+{
+  "110548567437": {
+    "bytes": 621453,
+    "sha256": "3f46912ea003e9cefd47da3521a864df94142517957afa5db174d86bdec1256f",
+    "original_root_path": ".tmp/closeout/ci6173-job-110548567437.log",
+    "compression": "lossless gzip mtime0",
+    "root_reported_source_head": "63429ee77e31341ed82b106ce5489b6479916e3f"
+  },
+  "110548567544": {
+    "bytes": 513708,
+    "sha256": "63dd06178e65314f8630e5453b321289635d6dbd3a8e3dcf780c7786ee7e2607",
+    "original_root_path": ".tmp/closeout/ci6173-job-110548567544.log",
+    "compression": "lossless gzip mtime0",
+    "root_reported_source_head": "63429ee77e31341ed82b106ce5489b6479916e3f"
+  },
+  "110548567294": {
+    "bytes": 550411,
+    "sha256": "5625bfa758a0480fc546df406783c35322faaa9a01bf0058278fa5a87b8238c1",
+    "original_root_path": ".tmp/closeout/ci6173-job-110548567294.log",
+    "compression": "lossless gzip mtime0",
+    "root_reported_source_head": "63429ee77e31341ed82b106ce5489b6479916e3f"
+  }
+}

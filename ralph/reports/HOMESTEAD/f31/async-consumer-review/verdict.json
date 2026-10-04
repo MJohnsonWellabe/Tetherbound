@@ -1,0 +1,37 @@
+{
+  "source_commit": "efb9a77b25accd63ae1c664945499a7f891c666a",
+  "predecessor": "09aa5402db311de1a533e6dc0b5e17a7f383d7f5",
+  "verdict": "PASS_FOR_FLAG_OFF_ASYNC_CONSUMER_DELTA",
+  "scope": ["scripts/ui/craft_panel.gd", "scripts/build/build_placer.gd"],
+  "manifest_hashes_match": true,
+  "diff_check": "PASS",
+  "engine_or_unit_tests_run": false,
+  "acceptance_F31_0_through_6": "OPEN",
+  "runtime_visual_acceptance": "OPEN",
+  "flags": "OFF; unchanged by bounded two-file delta",
+  "open_P1_P2_findings": [],
+  "repaired_findings": [{
+    "priority": "P2",
+    "file": "scripts/ui/craft_panel.gd",
+    "lines": [139, 144],
+    "title": "Restore pending refresh focus to an enabled Retry control",
+    "trigger": "Host-view notification rebuilds a Den panel while the original rest, groom or gear operation is pending and focus was on its action button.",
+    "defect": "Stable key matching schedules grab_focus on a newly disabled action button and returns without selecting the sole enabled Retry control. The first-button automatic focus and generic station fallback also ignore disabled state.",
+    "repair": "Skip disabled restoration candidates; while pending explicitly focus enabled Retry original transaction before generic fallbacks, and skip disabled fallback controls.",
+    "transaction_identity_change_required": false,
+    "fixed_in": "efb9a77b25accd63ae1c664945499a7f891c666a",
+    "recheck": "Semantic restoration skips disabled controls; pending refresh explicitly focuses the enabled Retry before generic recipe fallback; no-row fallback skips disabled station controls."
+  }],
+  "source_observations": [
+    "No-argument notification schedules deferred, coalesced current-producer cache reread.",
+    "Refresh retains original operation, intent, WeakRef source and registry revision; it does not retry or settle the pending transaction.",
+    "Pending source and producer switching is blocked; destroyed station cannot fall through legacy crafting.",
+    "BuildPlacer notification updates preview presentation without mutating paid tickets or world state.",
+    "Duplicate visible label focus defect is repaired with stable action, UID, slot and item keys and recipe ID restoration."
+  ],
+  "residual_producer_obligations": [
+    "Return an empty cache until a real authenticated readonly full8 host view plus registry revision is available; emit no-argument completion notification after cache replacement.",
+    "Reconcile retained immutable journal before any fresh validation when retry source WeakRef resolves null; null source cannot begin a fresh mutation.",
+    "Durable save and exact operation plus intent completion, rollback/refusal, ACK loss and rejoin behavior require combined producer runtime proof."
+  ]
+}

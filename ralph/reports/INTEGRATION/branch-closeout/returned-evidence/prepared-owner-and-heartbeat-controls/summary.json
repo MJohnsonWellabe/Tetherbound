@@ -1,0 +1,72 @@
+{
+  "acceptance_credit": false,
+  "owner_and_epoch": "77024 native83tests722assertions0failed/exit0/notTO/source3376exact/handles0. Includes real SaveGame preparation+CharacterSave disk Altar false\u2192original retry/foreign ID refusal/fullv2/v3 eight-field pending writes, nine saved-edge/epoch controls and original save-authority/format suite. One expected original identity-mint refusal warning retained.",
+  "heartbeat": "e993 native5tests81assertions0failed/exit0/notTO/source3378exact/handles0/strict errors0/warnings0/leaks0. Actual physics callback samples fresh original packet on original60frames OR1000ms elapsed; no background/stale/synthetic sampler, original15s/case/command guards intact.",
+  "compile": "e993 all changed dependent roots since74e actualGodot4.7 compilePASS/sourceexact/handles0.",
+  "open": "Actual paid Altar host-owner save/ACK in live two-peer world, remote guest saves/ACKs, full original input producer, complete bundle, all24cut cases, CI/main and individual acceptance remain OPEN.",
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-affected-77024f7bef15-2cd5474e.json",
+      "sealed": "000-combined-affected-77024f7bef15-2cd5474e.json.gz",
+      "raw_bytes": 760412,
+      "raw_sha256": "f1b8a26075c75ea78ce525c8d2715e901a7a594c19cdc590df291c7dddca4d3a",
+      "gzip_sha256": "4fa934eec67657794c83aa3c61d7213bf48589ab2b017832c0ef8fe5c36adc3f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-affected-e9939e185e93-6bdfb904.json",
+      "sealed": "001-combined-affected-e9939e185e93-6bdfb904.json.gz",
+      "raw_bytes": 760783,
+      "raw_sha256": "809d2631c271b27f3b6a6068e69c51d5b693f1e3271b0a3f08eed27b04a601d6",
+      "gzip_sha256": "bb3966f9a37c1d94b55c26a9ae8ce0f292b1f95f66114e2bd20a4a644eae92c2"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-e9939e185e93\\0.log",
+      "sealed": "002-0.log.gz",
+      "raw_bytes": 439,
+      "raw_sha256": "2a6e19b6135b159459b9e078e32d0202ae7f7efbae861721c13960e47d038b54",
+      "gzip_sha256": "0826758816d11eb456587c2b36050d3a864b89b9f1f52f8532ef48ff5c74989f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-e9939e185e93\\receipt.json",
+      "sealed": "003-receipt.json.gz",
+      "raw_bytes": 761825,
+      "raw_sha256": "3dece3ed02e446fdf0d210ba5123d7b94800d4c374c8c301a461c757ca33411f",
+      "gzip_sha256": "a081bd700513c9f9ee53f549fc7e2db49634c25861fd21c83d36d583f1e59b01"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\combined-compile-batch-e9939e185e93\\scripts.json",
+      "sealed": "004-scripts.json.gz",
+      "raw_bytes": 252,
+      "raw_sha256": "246305abb728e2732c66f4af3c9bcbfd4ec6ce1aed2d57c753a2ead1118133fd",
+      "gzip_sha256": "b18e27b48986f400ba929f8250b391256cefac95b444540dae2598e255241556"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-77024f7bef15-2cd5474e\\result.json",
+      "sealed": "005-result.json.gz",
+      "raw_bytes": 500,
+      "raw_sha256": "828a37057ddc1206612f15816d63552b3443ab9dec18357a6c0cd253210384f3",
+      "gzip_sha256": "08c2756ab0709e6335e7837dca1f8681c825120355f22c546ec9e3414a7e5d25"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-77024f7bef15-2cd5474e\\tests.log",
+      "sealed": "006-tests.log.gz",
+      "raw_bytes": 37547,
+      "raw_sha256": "291a16a9f96d3ff0c3ab381541847372322efe7e2cf2974a151d7df8436bcf95",
+      "gzip_sha256": "5f0f20f024e5652e260691c3feddfe4702b0f9aaf5937d8e5b21c72821bae4a4"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-e9939e185e93-6bdfb904\\result.json",
+      "sealed": "007-result.json.gz",
+      "raw_bytes": 415,
+      "raw_sha256": "e7529e0421b5c6668dac9a0558b79eda4297ada0375ab3008504cc4202800494",
+      "gzip_sha256": "ef76abf14082d7136174c115edfd6e022ce74255c505c41a1eaa4bca4e20ed80"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-e9939e185e93-6bdfb904\\tests.log",
+      "sealed": "008-tests.log.gz",
+      "raw_bytes": 13126,
+      "raw_sha256": "755434ceebaf0d4a52e7d694026a3934f193ce871b4a5c4a0ffe4e62a4866a20",
+      "gzip_sha256": "b302583d99cc5582ed9efd9c2c43e1a6f7e2f5a85468c73f6d2543183657a114"
+    }
+  ]
+}

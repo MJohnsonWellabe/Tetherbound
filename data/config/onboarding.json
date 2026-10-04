@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "enabled": true,
+  "_gate": "Production lessons follow this character's actual progression. Home return requires F18 grounded arrival_applied:true,durable:true result; a permit is insufficient. Native controller, save/reconnect and player comprehension proofs remain separate acceptance requirements.",
+  "_receipts": "opening:lesson:<id> and opening:lesson:trigger:home_return use existing declared opening: player scope and grant_player_flag transaction, recipient omitted so only authenticated submitter receives it. Dismiss/skip acknowledges teaching, never grants progression. Normal character persistence applies; ledger acceptance is not durable-save proof.",
+  "lessons": [
+    {"id":"home_key","title":"Home Key","teacher_node":"Grandpa","radius_m":5.0,"dialogue_path":"res://data/dialogue/opening.json","conversation":"lesson_home_key","goal":"Catch a second creature, then return to Grandpa."},
+    {"id":"homestead","title":"Homestead and stations","teacher_node":"Grandpa","radius_m":5.0,"dialogue_path":"res://data/dialogue/opening.json","conversation":"lesson_homestead","goal":"Build the station your team needs at the homestead."},
+    {"id":"altar","title":"Altar and essence","teacher_node":"Grandpa","radius_m":5.0,"dialogue_path":"res://data/dialogue/opening.json","conversation":"lesson_altar","goal":"At your Altar, choose a creature and spend its type essence."},
+    {"id":"masters","title":"Breakthroughs and Masters","teacher_node":"Tam","radius_m":5.0,"dialogue_path":"res://data/dialogue/village.json","conversation":"lesson_masters","goal":"Challenge Orin Stonewake at the Old Quarry for the L10 feast recipe.","goal_realm":"meadows","goal_at":[440,1780]},
+    {"id":"feasts","title":"Ascension Feasts","teacher_node":"Tam","radius_m":5.0,"dialogue_path":"res://data/dialogue/village.json","conversation":"lesson_feasts","goal":"Cook the learned feast at your Kitchen, then feed a creature at its matching cap."},
+    {"id":"traits","title":"Traits and Trait Seeds","teacher_node":"Grandpa","radius_m":5.0,"dialogue_path":"res://data/dialogue/opening.json","conversation":"lesson_traits","goal":"Choose an owned creature at the Altar to teach a compatible Trait Seed."},
+    {"id":"portals","title":"Portals, keys and waystones","teacher_node":"Tam","radius_m":5.0,"dialogue_path":"res://data/dialogue/village.json","conversation":"lesson_portals","goal":"Use your portal key at its signed arch in the Crossing Hall.","goal_realm":"meadows","goal_at":[107,14]},
+    {"id":"shrines","title":"Shrine Room and relic power","teacher_node":"Tam","radius_m":5.0,"dialogue_path":"res://data/dialogue/village.json","conversation":"lesson_shrines","goal":"Hang your relic on its pedestal in the Crossing Hall's Shrine Room.","goal_realm":"meadows","goal_at":[107,14]}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "status": "PASS limited non-engine checks",
+  "command": "C:/Users/mattj/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe -X utf8 tools/check_cloudreach_f40_source.py",
+  "checked": [
+    "production and retained candidate defaults remain off",
+    "crown numeric clearance/spacing/light-count budget",
+    "middle-ground configured offsets and support budget",
+    "384 planned frames per preset and real production time/weather names",
+    "all new preload resource paths present",
+    "no new collision/state/RPC API in presentation components",
+    "Python utility syntax",
+    "git diff --check"
+  ],
+  "not_checked": [
+    "Godot parse/types/import",
+    "runtime geometry/seating",
+    "native captures",
+    "visual quality or independent review",
+    "multiplayer/Fly regression",
+    "Ally timing",
+    "main acceptance"
+  ],
+  "engine_policy": "ROOT owns queue; no editor/import/render/export/headless/native run started; RENDER_LOCK untouched."
+}

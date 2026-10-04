@@ -31,11 +31,41 @@ extends "res://tests/test_case.gd"
 const COMBAT_MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
+const CREATURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
+const ACCEPTED_ACTION_HOST := preload("res://scripts/combat/accepted_action_host.gd")
+const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
+const F48_ACTOR_TOPUP := preload("res://tools/net/f48_actor_topup.gd")
+const F48_PEER_RUNNER := preload("res://tools/net/peer_runner.gd")
+const F48_PROOF_PEER_RUNNER := preload("res://tools/net/proof_peer_runner.gd")
+
+## Disclosed ownership-answer seam; canonical host proof is tested separately.
+class DurableTrainerRewardsFixture extends Node:
+	var owned_encounter := "host-owned-round"
+	var answer: Variant = true
+	var release_ready: bool = false
+	var vitals_pending: bool = false
+	func uses_durable_trainer_rewards(encounter_id: String) -> Variant:
+		return answer if encounter_id == owned_encounter else false
+	func ordinary_combat_round_release_ready(_encounter_id: String) -> bool:
+		return release_ready
+	func ordinary_actor_vitals_pending(_encounter_id: String) -> bool:
+		return vitals_pending
 
 const DEFINITION := {
 	"display_name": "Terrapup", "type": "ground",
 	"base_hp": 100.0, "base_attack": 20.0, "base_defence": 20.0,
 }
+
+var _managers: Array[Node] = []
+
+
+func after_each() -> void:
+	# Bare Nodes have no tree to own their lifetime; RefCounted test teardown
+	# alone cannot free the manager or the party records it still holds.
+	for manager: Node in _managers:
+		if is_instance_valid(manager):
+			manager.free()
+	_managers.clear()
 
 
 func _creature(level: int, nickname: String) -> RefCounted:
@@ -46,7 +76,9 @@ func _creature(level: int, nickname: String) -> RefCounted:
 
 
 func _manager() -> Node:
-	return COMBAT_MANAGER.new()
+	var manager: Node = COMBAT_MANAGER.new()
+	_managers.append(manager)
+	return manager
 
 
 ## A manager pre-set to a live, active fight with `party` seated and `active`
@@ -81,6 +113,13 @@ func test_award_victory_splits_xp_between_the_active_creature_and_its_bench() ->
 	# to move).
 	var award: int = PROGRESSION.xp_award_for(enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
+	# The live legacy award stays ordinary while the hybrid host transaction
+	# remains inactive. Detached reduced-XP staging does not activate this path.
+	var award_cfg: Dictionary = cfg.get("xp_award", {})
+	var ordinary: int = int(float(award_cfg.get("base", 18.0))
+		+ float(award_cfg.get("per_enemy_level", 6.0)) * float(enemy.level))
+	assert_eq(award, ordinary, "inactive hybrid staging preserves the full ordinary victory award")
+	assert_true(award > 0 and share > 0)
 	var reference_winner := _creature(3, "")
 	reference_winner.gain_xp(award, cfg)
 	var reference_bench := _creature(3, "")
@@ -98,6 +137,11 @@ func test_award_victory_splits_xp_between_the_active_creature_and_its_bench() ->
 		"the bench's xp should match a direct gain_xp(party_share)")
 	assert_eq(fainted_bench.xp, 0, "a fainted party member should not gain xp")
 	assert_eq(fainted_bench.level, 3, "a fainted party member should not level up")
+	var winner_xp: int = int(winner.xp)
+	var bench_xp: int = int(bench.xp)
+	mgr.call("_award_victory")
+	assert_eq(winner.xp, winner_xp, "re-reading the same done fight cannot grant XP again")
+	assert_eq(bench.xp, bench_xp)
 
 
 ## OWNER-0901-BOND-MILESTONES: `battles_fought` (also prompt 67's release-
@@ -152,6 +196,52 @@ func test_award_victory_does_nothing_with_no_enemy_recorded() -> void:
 	mgr.call("_award_victory")
 	assert_eq(winner.xp, 0)
 	assert_eq(winner.battles_fought, 0, "no fight happened, so no bond-ladder credit either")
+
+
+func test_exact_durable_trainer_round_never_duplicates_local_xp_or_history() -> void:
+	for kind: String in ["trainer", "boss"]:
+		var mgr := _manager()
+		var link := DurableTrainerRewardsFixture.new()
+		mgr.add_child(link)
+		var winner := _creature(3, "Champ")
+		var bench := _creature(3, "Bench")
+		mgr.set("_party", [winner, bench] as Array[RefCounted])
+		mgr.set("_active_index", 0)
+		mgr.set("_enemy", _creature(4, ""))
+		mgr.set("_encounter_link", link)
+		mgr.set("_encounter_id", link.owned_encounter)
+		mgr.set("_encounter_kind", kind)
+		var before: Array[Dictionary] = [CREATURE_CODEC.encode(winner), CREATURE_CODEC.encode(bench)]
+		mgr.call("_award_victory")
+		mgr.call("_award_victory")
+		assert_eq([CREATURE_CODEC.encode(winner), CREATURE_CODEC.encode(bench)], before,
+			"host journal owns all XP, HP, history, moves and condition changes")
+		assert_eq(mgr.get("last_xp_award"), {})
+		assert_false(mgr.get("_victory_awarded"))
+
+
+func test_unowned_or_malformed_durable_answer_preserves_ordinary_award() -> void:
+	for scenario: Dictionary in [{"id": "other-round", "kind": "trainer", "answer": true},
+		{"id": "", "kind": "boss", "answer": true},
+		{"id": "host-owned-round", "kind": "wild", "answer": true},
+		{"id": "host-owned-round", "kind": "trainer", "answer": false},
+		{"id": "host-owned-round", "kind": "trainer", "answer": "true"},
+		{"id": "host-owned-round", "kind": "trainer", "answer": 1},
+		{"id": "host-owned-round", "kind": "trainer", "answer": null}]:
+		var mgr := _manager()
+		var link := DurableTrainerRewardsFixture.new()
+		link.answer = scenario.answer
+		mgr.add_child(link)
+		var winner := _creature(3, "Champ")
+		mgr.set("_party", [winner] as Array[RefCounted])
+		mgr.set("_active_index", 0)
+		mgr.set("_enemy", _creature(4, ""))
+		mgr.set("_encounter_link", link)
+		mgr.set("_encounter_id", scenario.id)
+		mgr.set("_encounter_kind", scenario.kind)
+		mgr.call("_award_victory")
+		assert_eq(winner.battles_fought, 1, str(scenario))
+		assert_true(winner.level > 3 or winner.xp > 0, str(scenario))
 
 
 # --- the switch seam (D32) ---------------------------------------------------
@@ -331,3 +421,240 @@ func test_request_switch_preserves_the_switched_out_creatures_hp_and_energy() ->
 
 	assert_eq(a.hp, 41.0, "the switched-out creature must keep its hp")
 	assert_eq(a.energy, 60.0, "the switched-out creature must keep its energy")
+
+
+func test_owned_round_finish_retains_actual_enemy_and_link_until_saved_ack() -> void:
+	var manager: Node = _manager()
+	var link: Node = DurableTrainerRewardsFixture.new()
+	manager.add_child(link)
+	var enemy: RefCounted = _creature(4, "Original opponent")
+	manager.set("_enemy", enemy)
+	manager.set("_encounter_link", link)
+	manager.set("_encounter_id", "host-owned-round")
+	manager.set("_encounter_kind", "trainer")
+	manager.set("_outcome", "won")
+	manager.set("state", COMBAT_MANAGER.State.RESOLVING)
+	manager.call("_finish")
+	assert_eq(manager.get("state"), COMBAT_MANAGER.State.RESOLVING)
+	assert_eq(manager.get("_enemy"), enemy, "the actual defeated source remains available for the writer")
+	assert_eq(manager.get("_encounter_link"), link, "save failure cannot release the exact owner")
+
+
+func test_owned_pending_health_refuses_switch_without_changing_party() -> void:
+	var first: RefCounted = _creature(3, "First")
+	var second: RefCounted = _creature(3, "Second")
+	var manager: Node = _in_combat([first, second] as Array[RefCounted], 0)
+	var link: Node = DurableTrainerRewardsFixture.new()
+	link.set("vitals_pending", true)
+	manager.add_child(link)
+	manager.set("_encounter_link", link)
+	manager.set("_encounter_id", "host-owned-round")
+	assert_false(bool(manager.call("request_switch", 1)))
+	assert_eq(manager.get("_active_index"), 0)
+	assert_eq(first.hp, first.max_hp)
+	assert_eq(second.hp, second.max_hp)
+
+
+func test_validated_owned_binding_never_downgrades_after_writer_or_epoch_change() -> void:
+	var manager: Node = _manager()
+	var link: Node = DurableTrainerRewardsFixture.new()
+	manager.add_child(link)
+	var winner: RefCounted = _creature(3, "Owned winner")
+	manager.set("_party", [winner] as Array[RefCounted])
+	manager.set("_active_index", 0)
+	manager.set("_enemy", _creature(4, "Enemy"))
+	manager.call("bind_encounter", link, "host-owned-round", "trainer")
+	var before: Dictionary = CREATURE_CODEC.encode(winner)
+	link.set("answer", false) # The actual bound proof was ready; a later source may be unavailable.
+	manager.call("_award_victory")
+	assert_eq(CREATURE_CODEC.encode(winner), before)
+	manager.call("bind_encounter", link, "host-owned-round", "trainer")
+	manager.call("_award_victory")
+	assert_eq(CREATURE_CODEC.encode(winner), before, "same-ID rebinding cannot enable a legacy double award")
+	assert_eq(manager.get("_ordinary_reward_owned_id"), "host-owned-round")
+	manager.call("bind_encounter", link, "different-round", "trainer")
+	assert_eq(manager.get("_ordinary_reward_owned_id"), "")
+	manager.call("_award_victory")
+	assert_true(winner.xp > 0)
+	assert_eq(winner.battles_fought, 1, "ownership cannot bleed into a different ordinary source")
+
+
+func test_original_typed_damage_survives_terminal_but_rejects_changed_body_and_duplicate() -> void:
+	var host: RefCounted = ACCEPTED_ACTION_HOST.new()
+	var owned: Dictionary = CREATURE_CODEC.encode(_creature(3, "Owned"))
+	var rec: Dictionary = host.call("open", 1, "meadows", "trainer",
+		{"hp": 100.0, "hp_max": 100.0, "owner_npc": "risha", "card": {"uid": "original-enemy"}, "body_generation": 1},
+		str(owned.uid), "original-owner")
+	var id: String = str(rec.encounter_id)
+	rec["ordinary_combat_reward_owner"] = COMBAT_ROUND_REWARD.scope("original-world", "original-epoch", "meadows", "risha", id)
+	var bound: Dictionary = host.call("bind_actor_body", id, 1, "original-owner", owned, 123)
+	assert_true(bound.get("ok") == true)
+	var proposal: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid),
+		int(bound.vitals.body_generation), 0, "original-hit", "damage", 7.5, 4096)
+	assert_true(proposal.get("ok") == true)
+	var original: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	host.call("set_phase", id, "done")
+	var fresh: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid),
+		int(bound.vitals.body_generation), 0, "fresh-hit", "damage", 7.5, 4096)
+	assert_false(fresh.get("ok") == true, "terminal does not admit a fresh HP producer")
+	assert_true(host.call("verify_original_actor_vitals", proposal, original) == true)
+	var altered: Dictionary = proposal.duplicate(true)
+	altered["hp_after"] = float(altered.hp_after) - 1.0
+	assert_false(host.call("verify_original_actor_vitals", altered, original) == true)
+	var actor: Dictionary = rec.participants[1].actor_vitals[owned.uid]
+	actor["body_instance_id"] = 124
+	assert_false(host.call("verify_original_actor_vitals", proposal, original) == true)
+	actor["body_instance_id"] = 123
+	var original_scope: Dictionary = rec.ordinary_combat_reward_owner.duplicate(true)
+	rec.ordinary_combat_reward_owner["session_id"] = "different-epoch"
+	assert_false(host.call("verify_original_actor_vitals", proposal, original) == true)
+	rec["ordinary_combat_reward_owner"] = original_scope
+	rec.opponent.card["uid"] = "replacement-enemy"
+	assert_false(host.call("verify_original_actor_vitals", proposal, original) == true)
+	rec.opponent.card["uid"] = "original-enemy"
+	var committed: Dictionary = host.call("commit_original_actor_vitals", proposal, original)
+	assert_true(committed.get("ok") == true)
+	assert_eq(actor.hp, float(owned.hp) - 7.5)
+	assert_eq(original.participants[1].actor_vitals[owned.uid].hp, owned.hp, "the original baseline stays immutable")
+	assert_false(host.call("verify_original_actor_vitals", proposal, original) == true)
+	assert_false((host.call("commit_original_actor_vitals", proposal, original) as Dictionary).get("ok") == true)
+	assert_eq((host.call("pending_actor_vitals", id) as Array).size(), 1)
+	assert_false(host.call("acknowledge_actor_vitals", id, "original-owner", owned.uid, int(proposal.revision), {}) == true)
+	assert_true(host.call("acknowledge_actor_vitals", id, "original-owner", owned.uid, int(proposal.revision), proposal.settlement_receipt) == true)
+	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+
+
+func test_original_typed_damage_targets_same_retained_actor_after_actual_leave() -> void:
+	var host: RefCounted = ACCEPTED_ACTION_HOST.new()
+	var owned: Dictionary = CREATURE_CODEC.encode(_creature(3, "Departed owned"))
+	var rec: Dictionary = host.call("open", 2, "meadows", "boss",
+		{"hp": 100.0, "hp_max": 100.0, "owner_npc": "risha", "card": {"uid": "original-enemy"}, "body_generation": 1},
+		str(owned.uid), "departed-owner")
+	var id: String = str(rec.encounter_id)
+	rec["ordinary_combat_reward_owner"] = COMBAT_ROUND_REWARD.scope("original-world", "original-epoch", "meadows", "risha", id)
+	var bound: Dictionary = host.call("bind_actor_body", id, 2, "departed-owner", owned, 321)
+	assert_true(bound.get("ok") == true)
+	var proposal: Dictionary = host.call("stage_actor_vitals", id, 2, str(owned.uid),
+		int(bound.vitals.body_generation), 0, "original-departed-hit", "damage", 8.0, 4096)
+	assert_true(proposal.get("ok") == true)
+	var original: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	var left: Dictionary = host.call("leave", id, 2)
+	assert_true(left.get("ok") == true)
+	assert_true(rec.participants.is_empty())
+	assert_true(host.call("verify_original_actor_vitals", proposal, original) == true)
+	assert_true((host.call("commit_original_actor_vitals", proposal, original) as Dictionary).get("ok") == true)
+	assert_eq(rec.retained_actor_participants["departed-owner"].actor_vitals[owned.uid].hp, float(owned.hp) - 8.0)
+	assert_true(host.call("acknowledge_actor_vitals", id, "departed-owner", owned.uid,
+		int(proposal.revision), proposal.settlement_receipt) == true)
+	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+
+
+func test_disclosed_original_full_topup_uses_exact_actor_receipt_and_survives_terminal() -> void:
+	var host: RefCounted = ACCEPTED_ACTION_HOST.new()
+	var owned: Dictionary = CREATURE_CODEC.encode(_creature(3, "Fixture owned"))
+	var rec: Dictionary = host.call("open", 1, "meadows", "boss",
+		{"hp": 100.0, "hp_max": 100.0, "owner_npc": "warden_aldis",
+			"card": {"uid": "fixture-original-enemy"}, "body_generation": 1},
+		str(owned.uid), "fixture-owner")
+	var id: String = str(rec.encounter_id)
+	rec["ordinary_combat_reward_owner"] = COMBAT_ROUND_REWARD.scope("fixture-world", "fixture-epoch", "meadows", "warden_aldis", id)
+	var bound: Dictionary = host.call("bind_actor_body", id, 1, "fixture-owner", owned, 456)
+	assert_true(bound.get("ok") == true)
+	var generation: int = int(bound.vitals.body_generation)
+	var damage: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		0, "fixture-original-damage", "damage", 7.5, 4096)
+	assert_true(damage.get("ok") == true)
+	var damage_source: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	assert_true((host.call("commit_original_actor_vitals", damage, damage_source) as Dictionary).get("ok") == true)
+	assert_true(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(damage.revision), damage.settlement_receipt) == true)
+	var actor: Dictionary = rec.participants[1].actor_vitals[owned.uid]
+	assert_eq(actor.hp, float(owned.hp) - 7.5)
+	var topup: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-original-topup", "heal", float(actor.max_hp) - float(actor.hp), 4096)
+	assert_true(topup.get("ok") == true)
+	var original: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	assert_true(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	assert_false(host.call("verify_original_actor_vitals", topup, original) == true,
+		"the normal damage source cannot authorize a fixture heal")
+	var partial: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-partial-topup", "heal", 3.0, 4096)
+	assert_true(partial.get("ok") == true)
+	assert_false(host.call("verify_original_fixture_actor_topup", partial, original) == true,
+		"even a valid smaller heal is not the disclosed full-topup source")
+	var changed: Dictionary = topup.duplicate(true)
+	changed["hp_after"] = float(changed.hp_after) - 1.0
+	assert_false(host.call("verify_original_fixture_actor_topup", changed, original) == true)
+	changed = topup.duplicate(true)
+	changed["peer_id"] = 2
+	assert_false(host.call("verify_original_fixture_actor_topup", changed, original) == true)
+	actor["body_instance_id"] = 457
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	actor["body_instance_id"] = 456
+	var original_scope: Dictionary = rec.ordinary_combat_reward_owner.duplicate(true)
+	rec.ordinary_combat_reward_owner["session_id"] = "different-fixture-epoch"
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	rec["ordinary_combat_reward_owner"] = original_scope
+	rec.opponent.card["uid"] = "replacement-enemy"
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	rec.opponent.card["uid"] = "fixture-original-enemy"
+	actor["hp"] = 0.0
+	actor["fainted"] = true
+	var fainted_source: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	var revive: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-forbidden-revive", "heal", float(actor.max_hp), 4096)
+	assert_false(revive.get("ok") == true)
+	assert_false(host.call("verify_original_fixture_actor_topup", topup, fainted_source) == true)
+	actor["hp"] = topup.hp_before
+	actor["fainted"] = false
+	host.call("set_phase", id, "done")
+	var fresh: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-fresh-terminal-topup", "heal", 7.5, 4096)
+	assert_false(fresh.get("ok") == true)
+	assert_true(host.call("verify_original_fixture_actor_topup", topup, original) == true)
+	assert_true((host.call("commit_original_fixture_actor_topup", topup, original) as Dictionary).get("ok") == true)
+	assert_eq(actor.hp, owned.max_hp)
+	assert_false(actor.fainted)
+	assert_eq(original.participants[1].actor_vitals[owned.uid].hp, float(owned.hp) - 7.5,
+		"settlement cannot rewrite the original damaged source")
+	assert_false((host.call("commit_original_fixture_actor_topup", topup, original) as Dictionary).get("ok") == true)
+	assert_eq((host.call("pending_actor_vitals", id) as Array).size(), 1)
+	assert_false(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(topup.revision), damage.settlement_receipt) == true)
+	assert_true(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(topup.revision), topup.settlement_receipt) == true)
+	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+	host.call("set_phase", id, "active")
+	var full: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-full-again", "heal", 7.5, 4096)
+	assert_false(full.get("ok") == true, "full HP cannot mint another topup receipt")
+	var next_damage: Dictionary = host.call("stage_actor_vitals", id, 1, str(owned.uid), generation,
+		int(actor.revision), "fixture-next-damage", "damage", 5.0, 4096)
+	var next_source: Dictionary = ACCEPTED_ACTION_HOST._original(rec)
+	assert_true(next_damage.get("ok") == true)
+	assert_eq(next_damage.hp_before, owned.max_hp)
+	assert_true((host.call("commit_original_actor_vitals", next_damage, next_source) as Dictionary).get("ok") == true)
+	assert_eq(actor.hp, float(owned.max_hp) - 5.0)
+	assert_true(host.call("acknowledge_actor_vitals", id, "fixture-owner", owned.uid,
+		int(next_damage.revision), next_damage.settlement_receipt) == true)
+	assert_true((host.call("pending_actor_vitals", id) as Array).is_empty())
+
+
+func test_actual_fixture_provider_refuses_non_runner_tree_and_detached_request() -> void:
+	var driver: Script = F48_PEER_RUNNER
+	assert_eq(driver.resource_path, "res://tools/net/peer_runner.gd",
+		"the actual driver is compiled by the focused native check")
+	var proof_driver: Script = F48_PROOF_PEER_RUNNER
+	assert_true(F48_ACTOR_TOPUP.runner_script_valid(driver))
+	assert_true(F48_ACTOR_TOPUP.runner_script_valid(proof_driver),
+		"the actual proof launch script extends the exact allowed base runner")
+	assert_false(F48_ACTOR_TOPUP.runner_script_valid(null))
+	var actual_test_script: Script = get_script()
+	assert_false(F48_ACTOR_TOPUP.runner_script_valid(actual_test_script))
+	var tree: SceneTree = Engine.get_main_loop() as SceneTree
+	assert_eq(F48_ACTOR_TOPUP.install(tree, F48_ACTOR_TOPUP.DISCLOSURE), null,
+		"the native test loop cannot install the PeerRunner-only aid")
+	var provider: Node = F48_ACTOR_TOPUP.new()
+	var refused: Dictionary = provider.call("request_topup", null, null)
+	assert_eq(refused, {"ok": false, "pending": false, "code": "fixture_source_required"})
+	provider.free()

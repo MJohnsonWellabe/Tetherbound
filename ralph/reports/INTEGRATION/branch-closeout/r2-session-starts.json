@@ -1,0 +1,89 @@
+{
+  "owner_request": "Start the next ten uncoded features, each in an individual session named R2; keep them off current integration and consolidate only after all ten ready and prior batch green on main.",
+  "base": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "scope": "next consolidated batch; excluded from current tb/integration/PR519 landing audit",
+  "sessions": [
+    {
+      "feature": "F34",
+      "thread_id": "01a0f880-b92c-7552-b374-b95959c2a6cf",
+      "title": "R2 F34 — Forward camps",
+      "checkout": "D:/tetherbound/r2-f34",
+      "branch": "tb/r2-f34",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F36",
+      "thread_id": "01a0f880-bd92-74b3-ad99-5c3e498ff5c3",
+      "title": "R2 F36 — Creature art, poses and scale",
+      "checkout": "D:/tetherbound/r2-f36",
+      "branch": "tb/r2-f36",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F37",
+      "thread_id": "01a0f881-8523-7261-bc41-6f4a3056abc3",
+      "title": "R2 F37 — Ripplet swim and dive",
+      "checkout": "D:/tetherbound/r2-f37",
+      "branch": "tb/r2-f37",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F38",
+      "thread_id": "01a0f882-c46f-7e61-98e4-9c70cb4d5fd2",
+      "title": "R2 F38 — Meadows and village visuals",
+      "checkout": "D:/tetherbound/r2-f38",
+      "branch": "tb/r2-f38",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F39",
+      "thread_id": "01a0f882-c784-7f91-bc6d-d79566fa7903",
+      "title": "R2 F39 — Tidewake visuals",
+      "checkout": "D:/tetherbound/r2-f39",
+      "branch": "tb/r2-f39",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F40",
+      "thread_id": "01a0f884-99bb-7660-9de4-b758008ded9b",
+      "title": "R2 F40 — Cloudreach visuals",
+      "checkout": "D:/tetherbound/r2-f40",
+      "branch": "tb/r2-f40",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F41",
+      "thread_id": "01a0f885-798f-7ca0-aee0-7de910483fcc",
+      "title": "R2 F41 — Stormwood visuals",
+      "checkout": "D:/tetherbound/r2-f41",
+      "branch": "tb/r2-f41",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F42",
+      "thread_id": "01a0f885-7c56-7181-904f-ca92fc353573",
+      "title": "R2 F42 — HUD and system menus",
+      "checkout": "D:/tetherbound/r2-f42",
+      "branch": "tb/r2-f42",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F43",
+      "thread_id": "01a0f886-ed92-7e80-af08-759d56e94267",
+      "title": "R2 F43 — Bounty board",
+      "checkout": "D:/tetherbound/r2-f43",
+      "branch": "tb/r2-f43",
+      "verified_start_status": "active"
+    },
+    {
+      "feature": "F44",
+      "thread_id": "01a0f886-f01f-7fd0-9385-00ceb092742f",
+      "title": "R2 F44 — Rematches and alpha respawns",
+      "checkout": "D:/tetherbound/r2-f44",
+      "branch": "tb/r2-f44",
+      "verified_start_status": "active"
+    }
+  ],
+  "criteria_credit": 0,
+  "current_batch_main_gate_pending": true
+}

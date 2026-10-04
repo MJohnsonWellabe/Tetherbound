@@ -1,0 +1,42 @@
+{
+  "head": "ca855bad9a1d9545f457c7592e8912d33ae2c29b",
+  "tree_review": "F29 R16 independent217-check SOURCE PASS ONLY",
+  "tree_native": "FAIL despite valid current kept886 fixture: never touches actual trunk; groundedtrue, unsticks0, distance4.444895m exceeds original2.6radius, no errors/leaks. Returned same F17; terrain/input/contact cause unproved. No budget/geometry/test waiver.",
+  "net_source": "CI6169 sourceaba; artifact11163725543 originalZIP digest066b336bf9ac3fffdc29a3629d5e429b7d91c881dd3a7d34ba049074f1a3c406, preserved ignored Foundation scratch.",
+  "net_failure": "Original5400/60+5=95s Warden step wall deadline expires, no verdict. Bothcombatheartbeats physics4560/hashagree, hoststilllive. No saved strike/refusal/HP receipts: exact cause unproved, no payout/durability failure inferred.",
+  "transport_defect": "Six unknown-peer RPC errors after guest leaves, distinct from earlier timeout. F22 owns director perCODEX_START_HERE; existing conversation reopened and allocated bounded actualtransport guard source repair. No new session.",
+  "coordinator_save_error": "user://saves error occurs in coordinator job output; Foundation reports absent from both actualpeer logs. Cause explanation under read-only investigation; not Warden victory cause.",
+  "files": [
+    {
+      "name": "tree-native.log.gz",
+      "bytes": 15243,
+      "sha256": "3a52d544b8ad1a74b193480ffb5f4a3cdb288652f1aedf5087c36eda947bc1bb"
+    },
+    {
+      "name": "tree-result.json.gz",
+      "bytes": 399,
+      "sha256": "b0223a28242eb7e1676ffab3b13f7079c2194935baba99fa17300bddf21ddc31"
+    },
+    {
+      "name": "warden-NET_RUN.json.gz",
+      "bytes": 2508,
+      "sha256": "c8ae2dc461f7d9ffa29fd14ce221f92303ce6687216c08bbc3086d03852469ba"
+    },
+    {
+      "name": "warden-peer-0.log.gz",
+      "bytes": 16329,
+      "sha256": "abce04558bb31ac0050cce2ea39b35268beda40806aa3c11e859e1fed90c916c"
+    },
+    {
+      "name": "warden-peer-1.log.gz",
+      "bytes": 11302,
+      "sha256": "e8ace0053648f2dfb1adb86f197c508a663d0adc88101b7733817739dfdbea97"
+    },
+    {
+      "name": "warden-SUMMARY.md.gz",
+      "bytes": 275,
+      "sha256": "d47e6be0a484c2379403067da362b7f5dce71df11f26603484672cdc5412e950"
+    }
+  ],
+  "acceptance": "Unchanged110/280 MET; no main landing or full earned acceptance"
+}

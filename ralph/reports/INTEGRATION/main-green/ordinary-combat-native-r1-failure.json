@@ -1,0 +1,19 @@
+{
+  "run": 37111869729,
+  "artifact": 11269099882,
+  "checkout": "c7570922aa1df8af6e89abb81777fa5202fd065e",
+  "zip_sha256": "d36db93515d095e45f7ff46c225ed839ad2687396dd185b7421a4f815dd2daf6",
+  "verdict": "FAIL",
+  "original_summary": "138 tests, 2676 assertions, 5 failed",
+  "original_failures": [
+    "FAIL  test_actor_vitals_authority.gd :: test_owner_write_loss_keeps_accepted_hp_and_requires_real_retry_write",
+    "FAIL  test_combat_round_reward.gd :: test_actual_settled_HP_and_reduced_round_award_keep_all_five_original_cards",
+    "FAIL  test_combat_round_reward.gd :: test_authored_completion_bonus_is_separate_without_an_extra_victory",
+    "FAIL  test_combat_round_reward.gd :: test_full_care_replay_plus_typed_terminal_HP_checkpoint_has_exact_authority_CAS",
+    "FAIL  test_combat_round_reward.gd :: test_typed_faint_owner_disk_loss_retry_and_recovery_do_not_repeat_condition"
+  ],
+  "script_error_count": 9,
+  "source_cause": "Enemy projection removed canonical creature_type/secondary_type required by original species validator; every actual duty refuses. Preserve actual typed fields, not weaken validator.",
+  "fixture_cause": "Existing unparented Session fixture has no actual Game/passive stream; new strict hook refuses before live HP. Disclosed legacy-only fixture contract will preserve original actual ActorDelivery/failed BOOL assertions; production hook remains strict.",
+  "native_credit": "Four Session recovery cases executed, completion aborted before assertions despite original runner ok; no clean-batch or production/ENet credit."
+}

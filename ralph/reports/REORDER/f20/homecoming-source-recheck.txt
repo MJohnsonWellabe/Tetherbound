@@ -1,0 +1,13 @@
+Independent read-only bounded source review: SOURCE PASS; no F20 acceptance closure.
+Base: 22f89d1c380de43d8ae6b16eefea0ea9f0b6131c.
+Scope: only tracked regional_homecoming.gd and existing test_regional_homecoming.gd changes in redesign-reorder; frozen files beside this report.
+Source SHA256: 519bd167f1ad4606a27dd05a39d090b5ea3752e95319da9bf20f9ea2b1ff8632.
+Fixture SHA256: cd964eb18f7b3a08429f18dd2093bf31ee20281859b4fa1aa435c551c0f5d189.
+
+The changed eligible() requires actual personal relics_held OR relics_hung to be an Array containing canonical biome ID stormwood, AND the existing four-part Home Return receipt naming the nonempty stable character ID, while in Meadows with a world. Receipt alone, world aftermath flags, missing/malformed relic carriers and another character's receipt do not satisfy that gate. Both carriers and stormwood ID match character schema and the existing QuestLog traveler getter contract. Credits/conversation entry and acknowledgement still use eligible(); no travel grant, world flag or later-biome key mutation was added.
+
+WORLD 2.8 permits legendary names only after that character accepted. Veridian/Solmane refusal and Stormheart refusal text now use unnamed freed-companion language. Accepted personal flags retain their existing explicit names. No world answer or resurrected companion was added.
+
+The existing fixture adds receipt-without-relic refusal and personal hung relic acceptance, retains actual synthetic held relic setup, and checks generic refusal plus named accepted Solmane. This is source review of fixture assertions, not their execution. Fixtures explicitly synthesize receipts and do not prove actual Home Key travel. Existing has_return_receipt validates shape and stable character attribution; protected producer/durability/authenticity remains dependent on F18/F19 integration. No source-only claim that a fabricated receipt is an actual earned trip.
+
+git diff --check passed. No engine, import, GPU, unit suite or full CI ran. No main/STATE/board edits, criterion MET claim or dependency bypass. F18/F19 landing and real earned solo/co-op ending, save/reconnect and credits proofs remain required for F20.

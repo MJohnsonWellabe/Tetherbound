@@ -64,6 +64,34 @@ func after_each() -> void:
 func _seed() -> void:
 	assert_true(ATOMIC.new().write(_path, '{"value":"previous"}'))
 
+func test_malformed_codec_canonical_recovers_exact_previous_values() -> void:
+	var value := 100.0 - (1.0 / 60.0) * 0.2
+	var encoded := preload("res://scripts/save/save_document.gd").stringify({"value": value})
+	assert_true(ATOMIC.new().write(_path, encoded))
+	assert_eq(DirAccess.rename_absolute(_path, _path + ".previous"), OK)
+	var corrupt := FileAccess.open(_path, FileAccess.WRITE)
+	corrupt.store_string('{"format":"tetherbound-save","codec_version":1,"payload":{"value":{"$tb_float64":"bad"}}}')
+	corrupt.close()
+	assert_eq(ATOMIC.readable_path(_path), _path + ".previous")
+	var restored: Dictionary = preload("res://scripts/save/save_document.gd").parse(FileAccess.get_file_as_string(ATOMIC.readable_path(_path)))
+	assert_eq(var_to_bytes(restored.value), var_to_bytes(value))
+	assert_false(ShortWrite.new().write(_path, encoded))
+	assert_eq(FileAccess.get_file_as_string(ATOMIC.readable_path(_path)), encoded)
+
+func test_encoded_slot_owner_survives_missing_live_identity_and_atomic_recovery() -> void:
+	var saver := SAVE.new(_dir)
+	var game := SPLIT_FIXTURE.populated_game(ITEM_DB.new())
+	assert_true(saver.save(game, 1))
+	var original := str(game.local.character_id)
+	assert_false(original.is_empty())
+	assert_eq(saver.slot_locator_character(1), original)
+	assert_eq(DirAccess.rename_absolute(saver.slot_path(1), saver.slot_path(1) + ".previous"), OK)
+	assert_eq(saver.slot_locator_character(1), original)
+	game.local.character_id = ""
+	assert_false(saver.save(game, 1), "must not mint a replacement identity over encoded owned slot")
+	assert_eq(game.local.character_id, "")
+	assert_eq(saver.slot_locator_character(1), original)
+
 func _assert_previous() -> void:
 	assert_eq(FileAccess.get_file_as_string(ATOMIC.readable_path(_path)), '{"value":"previous"}')
 

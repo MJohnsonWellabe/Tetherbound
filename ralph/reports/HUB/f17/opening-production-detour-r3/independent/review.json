@@ -1,0 +1,846 @@
+{
+  "verdict": "SOURCEPASS",
+  "scope": "source readiness only; F17#4 OPEN",
+  "parent": "00c521aabdaba5a183ec20e3829797ce3f6750ff",
+  "source_sha256": {
+    "tests/helpers/opening_geometry_navigator.gd": "9bb958c945f85cbd297066b5027f20cee4a158b7a0077e05e90aef21c7eb4661",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "414f2b939bd356062f811af3aa528ecbbdcbc92200c39445a13f7c7ed526af6d"
+  },
+  "patch_sha256": "afb2eaa88392fc015127410e697f34a15e1a9da96d2a9c970413919d87144cb2",
+  "engine_executed": false,
+  "tracked_writes": false,
+  "script_sha256": "2837e64b1da22211d16aa88f67cae7c22d732fff01e8bc4af5c2878a265c38c0",
+  "freeze_sha256": "db99457f0ca9bc3ffea679b6db128bc3eb1830f100d4093a68348f8fa00dc745",
+  "protected_archives": 346,
+  "raw_failure_sha256": {
+    "receipt.json": "d82e70558ce1e20f2a62b729976224aac7cb39fd9d14099e751026f12503967e",
+    "native.txt": "d7804bd4f3df274b6432e350a0a9366114283d4014e864a4a64d8be4bccdb269",
+    "parser.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+  },
+  "checks": [
+    {
+      "check": "pinned HEAD",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned lane",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact tracked diff scope",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "no staged changes",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact frozen files and hashes",
+      "passed": true,
+      "details": 27
+    },
+    {
+      "check": "frozen parent",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "frozen patch exact",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact new source tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "current source frozen tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "exact new source tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "current source frozen tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "independently regenerated whole patch",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live tests/helpers/meadows_earned_team_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live tests/helpers/stick_navigator.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live tests/smoke_four_biome_continuous.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash data/config/village.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original data/config/village.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live data/config/village.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash data/config/terrain_playground.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original data/config/terrain_playground.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live data/config/terrain_playground.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash scripts/player/player_controller.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original scripts/player/player_controller.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live scripts/player/player_controller.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash scripts/world/grandpa_house.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original scripts/world/grandpa_house.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live scripts/world/grandpa_house.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash autoload/game_state.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original autoload/game_state.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live autoload/game_state.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash scripts/net/encounter_host.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original scripts/net/encounter_host.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live scripts/net/encounter_host.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash scripts/combat/utility_effects.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original scripts/combat/utility_effects.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live scripts/combat/utility_effects.gd",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash data/config/combat.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original data/config/combat.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live data/config/combat.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash data/config/village_boundary.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original data/config/village_boundary.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live data/config/village_boundary.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "original hash data/config/building_prefabs.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "pinned Git original data/config/building_prefabs.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged protected live data/config/building_prefabs.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "all prior archive hashes",
+      "passed": true,
+      "details": {
+        "count": 346,
+        "mismatches": []
+      }
+    },
+    {
+      "check": "exact protected tracked archive set",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "immutable raw failure receipt.json",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "immutable raw failure native.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "immutable raw failure parser.txt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "prior real failure source retained",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "receipt output parser",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "receipt output native",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "prior run disposition",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "failed campaign not acceptance",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "terminal cap evidence",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "eight prefix points not exact duplicates",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "deferred print observed range",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "navigator only intended functions changed",
+      "passed": true,
+      "details": [
+        "_choose_route",
+        "_init",
+        "_production_record",
+        "reset",
+        "walk_to"
+      ]
+    },
+    {
+      "check": "unchanged navigator function _config",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _append_road",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function refused",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function refusal_reason",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _stop_geometry",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function set_approach_radius",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function step",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function push_once",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _spend",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _motion",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _trainer_contract",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _registered_body_contract",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _foot",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _paired_floor_skin",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _floor_contacts",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _start_clear_impl",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _supported_step_from",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _choose",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _native_tick_impl",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function departure_pending",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _leaf",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _open_leaf",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _prepare_departure",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _xz",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_init",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_mark",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_stage_at",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_capture",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_vector",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_pose",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _contact_dump",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _native_tick",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _supported_step",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _supported_step_at",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _start_clear",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function diagnose_supported_pose",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _production_contract",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _observed_live_clear",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _production_live_check",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _production_stop_input",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged navigator function _production_observe",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "gather only heading and forwarding changed",
+      "passed": true,
+      "details": [
+        "_gather_authored_node",
+        "_walk_toward"
+      ]
+    },
+    {
+      "check": "unchanged earned helper function run",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _progression_has",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _visit_villager",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _assign_tools_in_satchel",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _focus_satchel_slot",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _wait_for_tool_idle",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _nearest_authored_node",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _enter_through",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _exit_through",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _door_outward",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _nearest_door",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _npc_prompt",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _walk_to_and_activate",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _one_approach",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _press_and_observe_activation",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _on_arbiter_activated",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _walk_diagnosis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _prove_movement_resumed",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _wait_dialogue_open",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _close_dialogue",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _wait_open_panel",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _wait_world_owned",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _tap_action",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _event_for",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _required_pad_actions_exist",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _send_axis",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _send_stick",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _stop_left_stick",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _script_path",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _descendants",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _checkpoint",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "unchanged earned helper function _fail",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "all original gather assertions exactly retained",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "single shared walk budget",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "guidance gated by mandatory departure",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "guidance bounded original point storage",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "nearest authored to end then target",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "scope and candidate limits intact",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "aggregate all contact guards byte unchanged",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "added counters bounded eight cached scalars",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "point prefix still bounded eight",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "Practice Meadow label existing and unique",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "new road metadata equals immutable authored road",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "all constants unchanged",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "official analyzer allows containing child argument range",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "walk override includes parent allowed arguments and equal first types",
+      "passed": true,
+      "details": null
+    },
+    {
+      "check": "immutable packet after audit",
+      "passed": true,
+      "details": null
+    }
+  ],
+  "failed": [],
+  "parser_primary": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/gdscript/gdscript_analyzer.cpp",
+    "sha256": "f7dc2b3c314a762c579e64d18542924b637f58b6be92a7c4009fdb5f80341f90",
+    "lines": "1770-1790",
+    "engine_parser_executed": false
+  }
+}

@@ -20,6 +20,7 @@ const INN_EXTERIOR_IDENTITY := preload("res://scripts/world/inn_exterior_identit
 const MILL_POND_IDENTITY := preload("res://scripts/world/mill_pond_identity.gd")
 const VILLAGE_WELL_PRESENTATION := preload("res://scripts/world/village_well_presentation.gd")
 const CROSSING_HALL := preload("res://scripts/world/crossing_hall.gd")
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 ## Read for its group and meta names only -- see `_declare_ground`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 
@@ -72,6 +73,10 @@ func build(slicer: RefCounted = null) -> void:
 		_place(entry as Dictionary)
 		await _breathe(slicer)
 	print("[village] placed %d structures" % _placed)
+	var catalog := CATALOG_PRESENTATION.new()
+	catalog.name = "MeadowsCatalogPresentation"
+	add_child(catalog)
+	catalog.build("village", Callable(self, "_ground_height"))
 
 
 ## `vegetation.gd::_breathe()`'s own pattern, verbatim: `slicer == null` (every

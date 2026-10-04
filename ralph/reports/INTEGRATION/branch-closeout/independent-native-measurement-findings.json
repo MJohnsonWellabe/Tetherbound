@@ -1,0 +1,48 @@
+{
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "verdict": "Read-only source/math evidence changes the diagnosis; no replacement measurement or controller repair approved",
+  "failed_head": "8f29e7b3a1d19795d66892a3986dc47e6b2f5a2d",
+  "failed_native_sha256": "cc0f4409e0d33e898a4eb372e7cc99daf95d30dcb72e1ee2d43600b813fe3856",
+  "native_commit": "5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88",
+  "authority": {
+    "criterion": "ACCEPTANCE M1/F17#4 require the actual fresh ordinary opening; scoped canonical documents do not specify a raw recovery travel inequality",
+    "guard_origin": "a6cd51105b5ec5425da058764726b61463709074 introduced the raw travel inequality as a deep actual overlap check; earlier reviews preserve it as implementation history",
+    "status": "No explicit human raw-displacement numerical instruction recovered. Keep original failed verdict and guard until an independently reviewed correction proves intended geometric meaning. No bar waived."
+  },
+  "observed_terminal": {
+    "travel_norm_m": 0.001133909594634719,
+    "skin_plus_epsilon_m": 0.00101000004749745,
+    "reported_contact_depth_m": 0.00021912639203947,
+    "phase": "pre_refused",
+    "current_frame_controller_observed": false,
+    "grounded": true,
+    "wall": false,
+    "recoveries": 0
+  },
+  "metric_distinction": {
+    "fact": "Native recovery travel includes margin separation and iterative corrections; reported rest contacts are queried after recovery. Neither alone is an initial true-shape penetration certificate.",
+    "godot_fixed_plane_formula": "R=(1-0.6^4)*(margin+physical_penetration-0.05*margin)",
+    "example_physical_penetration_m": 0.00035,
+    "example_margin_m": 0.00100000004749745,
+    "example_recovery_m": 0.001131520039274692,
+    "example_returned_depth_m": 0.0002184800082227585,
+    "actual_contact_plane_inference_m": 0.000353149442824,
+    "inference_limit": "The actual capsule/point/normal calculation supports a shallow terminal plane contact; intervening/initial native contacts and exact cancellation branch were not logged. No universal inversion or bug-free controller claim."
+  },
+  "primary_sources": {
+    "godot_space": "https://github.com/godotengine/godot/blob/5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88/modules/godot_physics_3d/godot_space_3d.cpp",
+    "godot_space_raw_sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a",
+    "jolt_space": "https://github.com/godotengine/godot/blob/5b4e0cb0fd279832bbdd69fed5354d4e5ad26f88/modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.cpp",
+    "jolt_space_raw_sha256": "2aa03826e4807d6a87a2b1cc59f47d51a73b730a9ba1137287a477afd4e248f9"
+  },
+  "backend_provenance": "No explicit selection or CLI override in retained input; source registration points to GodotPhysics3D DEFAULT. Runtime backend/override contents were not recorded; no demonstrated Jolt defect claimed.",
+  "initial_pair_query_limits": {
+    "common_cull": "Godot body_test_motion and collide_shape both cull up to2048 broadphase candidates before masks/areas/self filters. This common native bound is not a replacement regression or demonstrated actual overflow.",
+    "required_scope": "Finite authored opening activation includes areas, masked entries, native Terrain3D and streamed/spawned/deferred shape entries; body/startup resident count alone is insufficient. No unbounded-world proof or unbounded per-frame scan required.",
+    "depth": "Capsule support flattening has backend-specific tolerances; pair distances do not expose original SAT/deepest axis, collider identity or all internal contacts. A conservative complete geometric envelope has not been proved; no pair-only admission approved.",
+    "possible_diagnostic": "Failure-only FIRST PRE actual unshrunk pair/rest queries within original total3 queries and original deadline/lifetime/mask/self policy; original refusal/FAIL stays unchanged. No extra POST queries. Source packet and independent review pending."
+  },
+  "next_actual_failure": "Diagnostic-only bbe430 run ended earlier at stone-route grounded-floor loss after wood harvest. No save diagnostic payload captured. Existing F17 owns the route repair; actual save rejection remains unproved.",
+  "criterion_credit": false,
+  "main_landed": false
+}

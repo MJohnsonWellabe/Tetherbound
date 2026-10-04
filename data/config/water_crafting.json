@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "realm_id": "water",
-  "status": "authored_proposals_not_runtime_registered",
-  "_comment": "Ten recipes and nine item proposals for integration through the existing ItemDB and crafting transaction. Data alone does not grant unlocks, craft, equip or consume Skill Candy. No global catalogue is changed by this file.",
+  "status": "runtime_registered_by_existing_item_db",
+  "_comment": "All nine proposed item definitions and ten recipes are loaded by the existing ItemDB constructor at baseline30fcc38f. Registration is source fact; ordinary crafting/player proof remains open. Existing personal recipe gates and travel-tier behavior are preserved.",
   "_comment_ids": "Owner orchestration settled five resource IDs as reef_stone, driftwood, reed_fiber, tide_bloom and sluice_metal. These exactly match water_pickups.json planned registrations; earlier plan aliases reefstone, saltbloom and tideglass are not new item IDs.",
   "_comment_schema": "Item proposals use existing items.json fields. Skill Candy intentionally has kind skill_candy and no level_up field, preventing accidental creature-candy routing. Tier amounts remain solely in player_skills.json candy_levels. Recipes use existing cost/output/unlocked_by fields. Extra region, station and prerequisite metadata needs an integration consumer or validation.",
   "_comment_tuning": "Resource stack caps 50 or 30, Candy10, saddle1; recipe costs and quantities are starting tuning. Three-to-one camp material conversion follows existing Cloudreach recipes. Medicines trade renewable gathered ingredients for familiar recovery, never permanent levels. The costly Revive preserves a reason to rest.",

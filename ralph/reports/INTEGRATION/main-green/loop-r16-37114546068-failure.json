@@ -1,0 +1,90 @@
+{
+  "verdict": "FAIL",
+  "run_id": 37114546068,
+  "artifact_id": 11270954192,
+  "checkout_ref": "30408e3cdd31fb13c12f92bc7a854b8363e07170",
+  "failures": [
+    "#71 peer 0 wait -> FAIL -- no verdict"
+  ],
+  "archive_sha256": "7ab34fcb6991624a704ec3af046fcd9832359242a2b4e293edf21c0f61beed0c",
+  "original_run_log_sha256": "83b897d0bf6967142dce958596d352601d185fb89aac244390f5039ac7d7e7d2",
+  "all_peer_errors": {
+    "peer-0.log": [],
+    "peer-1.log": []
+  },
+  "timeout_observation": {
+    "action": "wait",
+    "coordinator_deadline_ms": 519462.0,
+    "coordinator_observed_ms": 519531,
+    "heartbeat": {
+      "context": "panel:@CanvasLayer@70094",
+      "frame": 1876.0,
+      "last_panel_press": {
+        "action": "ui_cancel",
+        "after": {
+          "craft": {
+            "groom_waiting_release": false,
+            "open": true,
+            "pending_intent": false,
+            "station_operation": "",
+            "status": ""
+          },
+          "focus_path": "/root/@CanvasLayer@70094/@Control@74121/@CenterContainer@74123/@PanelContainer@74124/@VBoxContainer@74125/@ScrollContainer@74180/@VBoxContainer@74181/@Button@74185",
+          "owner_path": "/root/@CanvasLayer@70094",
+          "owner_script": "res://scripts/ui/craft_panel.gd",
+          "tree_paused": false
+        },
+        "before": {
+          "craft": {
+            "groom_waiting_release": false,
+            "open": true,
+            "pending_intent": false,
+            "station_operation": "",
+            "status": ""
+          },
+          "focus_path": "/root/@CanvasLayer@70094/@Control@73711/@CenterContainer@73713/@PanelContainer@73714/@VBoxContainer@73715/@ScrollContainer@73770/@VBoxContainer@73771/@Button@73775",
+          "owner_path": "/root/@CanvasLayer@70094",
+          "owner_script": "res://scripts/ui/craft_panel.gd",
+          "tree_paused": false
+        },
+        "binding_button": null,
+        "binding_class": "InputEventKey",
+        "binding_menu_cancel": false,
+        "sampled_ms": 441440.0
+      },
+      "panel_observation": {
+        "craft": {
+          "groom_waiting_release": false,
+          "open": true,
+          "pending_intent": false,
+          "station_operation": "",
+          "status": ""
+        },
+        "focus_path": "/root/@CanvasLayer@70094/@Control@75925/@CenterContainer@75927/@PanelContainer@75928/@VBoxContainer@75929/@ScrollContainer@75984/@VBoxContainer@75985/@Button@75989",
+        "owner_path": "/root/@CanvasLayer@70094",
+        "owner_script": "res://scripts/ui/craft_panel.gd",
+        "tree_paused": false
+      },
+      "physics_frame": 9111.0,
+      "pos": [
+        -18.0,
+        1.49099910259247,
+        11.0500001907349
+      ],
+      "session_peers": [
+        1.0,
+        1441571757.0
+      ],
+      "state_hash": 2875188998.0,
+      "t": 511.891,
+      "type": "heartbeat"
+    },
+    "heartbeat_known": true,
+    "heartbeat_receive_age_ms": 1870.00000000006,
+    "heartbeat_receive_time_known": true,
+    "heartbeat_received_ms": 517661.0,
+    "id": "s99",
+    "phase": "timeout_before_finish"
+  },
+  "boundary": "Actual Forge CraftPanel remains open without pending intent; ui_cancel binding has no menu_cancel alias. Button step65 only proved injection; exact activation/lifetime cause remains unproved."
+}

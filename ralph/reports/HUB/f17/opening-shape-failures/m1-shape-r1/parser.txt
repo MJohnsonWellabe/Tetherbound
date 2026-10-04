@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "ceiling" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tests/helpers/opening_geometry_navigator.gd:308)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/gate_a_npc_gather_segment.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/gate_a_opening_drive.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/fresh_opening_segment.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/smoke_four_biome_continuous.gd:0)
+ERROR: Failed to load script "res://tests/smoke_four_biome_continuous.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

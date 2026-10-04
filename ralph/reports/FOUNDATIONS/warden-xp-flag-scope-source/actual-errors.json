@@ -1,0 +1,68 @@
+{
+  "artifact_id": 11174329186,
+  "zip_sha256": "915c3fa3d04eb97aa9aebea92d52bb2f6dcc4eec01a0bb10c3a8d98ef86da135",
+  "ci_merge_head": "8d3bf7eaadde51ebb18c363aeb47c3233309972c",
+  "run_id": "net-20261001T153750Z-2691",
+  "assertion_failures": [],
+  "fatal": "",
+  "strict_error_clean": false,
+  "host_scope_errors": [
+    {
+      "line": 165,
+      "id": "reward:trainer:warden_aldis:xp:1",
+      "raw_stack": [
+        "ERROR: unscoped flag: reward:trainer:warden_aldis:xp:1",
+        "   at: push_error (core/variant/variant_utility.cpp:1023)",
+        "   GDScript backtrace (most recent call first):",
+        "       [0] load_data (res://autoload/merged_progression.gd:148)",
+        "       [1] load_slot (res://scripts/save/save_game.gd:822)",
+        "       [2] _step_save_reload_here (res://tools/net/peer_runner.gd:7080)",
+        "       [3] _execute_step (res://tools/net/peer_runner.gd:712)",
+        "       [4] _handle_message (res://tools/net/peer_runner.gd:492)",
+        "       [5] _main_loop (res://tools/net/peer_runner.gd:484)"
+      ]
+    },
+    {
+      "line": 174,
+      "id": "reward:trainer:warden_aldis:xp:1790841056",
+      "raw_stack": [
+        "ERROR: unscoped flag: reward:trainer:warden_aldis:xp:1790841056",
+        "   at: push_error (core/variant/variant_utility.cpp:1023)",
+        "   GDScript backtrace (most recent call first):",
+        "       [0] load_data (res://autoload/merged_progression.gd:148)",
+        "       [1] load_slot (res://scripts/save/save_game.gd:822)",
+        "       [2] _step_save_reload_here (res://tools/net/peer_runner.gd:7080)",
+        "       [3] _execute_step (res://tools/net/peer_runner.gd:712)",
+        "       [4] _handle_message (res://tools/net/peer_runner.gd:492)",
+        "       [5] _main_loop (res://tools/net/peer_runner.gd:484)"
+      ]
+    }
+  ],
+  "original_files": [
+    {
+      "path": "home-0/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 14033,
+      "sha256": "73f6fc590bae44aeb14114c8d8a9ed87eba4cae9b300fa13a763fb0e52ba993b"
+    },
+    {
+      "path": "home-1/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 22062,
+      "sha256": "d7e5100ac92dc853104510d0ee16594997a85707fda359ca90dcc67e61d39667"
+    },
+    {
+      "path": "NET_RUN.json",
+      "bytes": 2485,
+      "sha256": "2986d549c058ecd11bb5b4fca60ecae1455b701752efd631456fd1286ac66602"
+    },
+    {
+      "path": "peer-0.log",
+      "bytes": 14147,
+      "sha256": "e0e04eb907b14de6163129c19242786673e63986da70d2e6e767272f18f9c54d"
+    },
+    {
+      "path": "peer-1.log",
+      "bytes": 22262,
+      "sha256": "8327c2434ecb2351cab677310ba7350ce209438d8518823db64f8d39c96a3c9f"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "head": "bdf3d5771985c2d37f35c0c071423729930a018c",
+  "exit": 0,
+  "timed_out": false,
+  "selection": "test_gate_a_npc_gather_segment_contract.gd",
+  "summary": [
+    "9 tests, 44 assertions, 0 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-bdf3d5771985-dd5323eb\\tests.log",
+  "raw_log_sha256": "095645b80bda4ac363d9041e28b3de9daa6ba4950857a28c0a00451190e135fe",
+  "verdict": "PASS: exact named nine-test contract, zero script/native/resource/cleanup errors",
+  "source_lf_sha256": {
+    "tests/helpers/gate_a_npc_gather_segment.gd": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d",
+    "tests/test_gate_a_npc_gather_segment_contract.gd": "3c2a81db5fe378fe009ebcdd3794cea5e9b89edb8b876044042cbd771238c3d7",
+    "tests/helpers/opening_geometry_navigator.gd": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+  },
+  "scope": "Routing regression and preserved original seven tests only; no traversal/save/earned acceptance."
+}

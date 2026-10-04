@@ -1,0 +1,372 @@
+{
+  "classification": "AUTHOR SOURCE AND IMMUTABLE RECORD AUDIT ONLY; NATIVE/PARSER UNRUN; F17#4 OPEN",
+  "checks": [
+    {
+      "name": "sealed bytes .gitattributes",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes originals/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes prior-failure/smoke.log",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/data/config/vegetation.json",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/data/scatter/playground/region_0_-1.bin",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scenes/player/player.tscn",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scripts/player/player_controller.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scripts/world/interaction_arbiter.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scripts/world/playground_heightfield.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scripts/world/scatter_bake.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scripts/world/vegetation.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes production/scripts/world/vegetation_harvest_point.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes proposal/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes records/current.bin",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes records/pre-promotion.bin",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes records/probe-introduction-vegetation.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes records/probe-introduction-vegetation.json",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes records/probe-introduction.bin",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes repair.patch",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes review-context.txt",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes root-failed/region_0_-1.bin",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes root-failed/tools/_probe_scatter_tree_prompt_height.gd",
+      "pass": true
+    },
+    {
+      "name": "sealed bytes source-check.py",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scripts/world/scatter_bake.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scripts/world/vegetation.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scripts/world/playground_heightfield.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scripts/world/vegetation_harvest_point.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scripts/world/interaction_arbiter.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scripts/player/player_controller.gd",
+      "pass": true
+    },
+    {
+      "name": "unchanged production scenes/player/player.tscn",
+      "pass": true
+    },
+    {
+      "name": "unchanged production data/config/vegetation.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged production data/config/terrain_playground.json",
+      "pass": true
+    },
+    {
+      "name": "unchanged production data/scatter/playground/region_0_-1.bin",
+      "pass": true
+    },
+    {
+      "name": "working proposal exact",
+      "pass": true
+    },
+    {
+      "name": "old target occurs once",
+      "pass": true
+    },
+    {
+      "name": "only target and provenance comments changed",
+      "pass": true
+    },
+    {
+      "name": "entire original recovered by reversing target refresh",
+      "pass": true
+    },
+    {
+      "name": "ROOT failure used exact original probe",
+      "pass": true
+    },
+    {
+      "name": "probe-introduction all records counted",
+      "pass": true
+    },
+    {
+      "name": "probe-introduction expected count",
+      "pass": true
+    },
+    {
+      "name": "probe-introduction old fixture unique kept record",
+      "pass": true
+    },
+    {
+      "name": "probe-introduction original full identity",
+      "pass": true
+    },
+    {
+      "name": "pre-promotion all records counted",
+      "pass": true
+    },
+    {
+      "name": "pre-promotion expected count",
+      "pass": true
+    },
+    {
+      "name": "pre-promotion old fixture unique kept record",
+      "pass": true
+    },
+    {
+      "name": "pre-promotion original full identity",
+      "pass": true
+    },
+    {
+      "name": "current all records counted",
+      "pass": true
+    },
+    {
+      "name": "current expected count",
+      "pass": true
+    },
+    {
+      "name": "current old coordinate absent including drained",
+      "pass": true
+    },
+    {
+      "name": "ROOT failed bake equals current immutable records",
+      "pass": true
+    },
+    {
+      "name": "replacement unique at unchanged .01m tolerance",
+      "pass": true
+    },
+    {
+      "name": "replacement full frozen identity",
+      "pass": true
+    },
+    {
+      "name": "replacement is kept trees#886",
+      "pass": true
+    },
+    {
+      "name": "same original model and layer",
+      "pass": true
+    },
+    {
+      "name": "same world-up collider orientation",
+      "pass": true
+    },
+    {
+      "name": "scale never reduced",
+      "pass": true
+    },
+    {
+      "name": "closest non-smaller same-model scale in this region",
+      "pass": true
+    },
+    {
+      "name": "scale growth below four percent",
+      "pass": true
+    },
+    {
+      "name": "same collidable tree layer",
+      "pass": true
+    },
+    {
+      "name": "current source collision radius pinned",
+      "pass": true
+    },
+    {
+      "name": "original and current layer cylinder radius agree",
+      "pass": true
+    },
+    {
+      "name": "current optional canopy defaults empty",
+      "pass": true
+    },
+    {
+      "name": "original trunk body equals current trunk body with unused canopy omitted",
+      "pass": true
+    },
+    {
+      "name": "production cylinder radius and height cannot shrink",
+      "pass": true
+    },
+    {
+      "name": "missing exact-record refusal",
+      "pass": true
+    },
+    {
+      "name": "real joypad input",
+      "pass": true
+    },
+    {
+      "name": "actual trunk contact",
+      "pass": true
+    },
+    {
+      "name": "actual production cylinder",
+      "pass": true
+    },
+    {
+      "name": "30 settle frames",
+      "pass": true
+    },
+    {
+      "name": "180 approach frames",
+      "pass": true
+    },
+    {
+      "name": "actual offer",
+      "pass": true
+    },
+    {
+      "name": "exact prompt activation",
+      "pass": true
+    },
+    {
+      "name": "arbiter winner",
+      "pass": true
+    },
+    {
+      "name": "grounded success",
+      "pass": true
+    },
+    {
+      "name": "touched success",
+      "pass": true
+    },
+    {
+      "name": "unchanged interact frame limits",
+      "pass": true
+    },
+    {
+      "name": "release frame limits",
+      "pass": true
+    },
+    {
+      "name": "no campaign receipt",
+      "pass": true
+    },
+    {
+      "name": "metadata-only branch preserved",
+      "pass": true
+    },
+    {
+      "name": "actual failure before fixture",
+      "pass": true
+    },
+    {
+      "name": "truncated current record rejected",
+      "pass": true
+    },
+    {
+      "name": "trailing current data rejected",
+      "pass": true
+    },
+    {
+      "name": "bad magic rejected",
+      "pass": true
+    }
+  ],
+  "passed": 84,
+  "same_model_non_smaller_candidates_in_current_region": 6,
+  "original_record": {
+    "layer": "trees",
+    "state": "kept",
+    "order": 320,
+    "model": "res://assets/environment/stylized_nature/CommonTree_2.gltf",
+    "position": [
+      45.44734573364258,
+      -0.18858742713928223,
+      -62.50096893310547
+    ],
+    "yaw": 4.354415416717529,
+    "scale": 1.598110499382019,
+    "normal": null
+  },
+  "replacement_record": {
+    "layer": "trees",
+    "state": "kept",
+    "order": 886,
+    "model": "res://assets/environment/stylized_nature/CommonTree_2.gltf",
+    "position": [
+      98.15209197998047,
+      5.79111909866333,
+      -35.932098388671875
+    ],
+    "yaw": 1.8715863227844238,
+    "scale": 1.6529272198677063,
+    "normal": null
+  }
+}
+

@@ -1,0 +1,15 @@
+# Deliberate Hall guest departure: source proposal
+
+Executed source: `784b5cee71a4ba42b7fd6b5b3b39bea76b67910e`; engine `4.7.stable.official.5b4e0cb0f`. Original host log, coordinator output and receipt are copied byte-for-byte beside this report. Original four ENet errors remain failures. No engine, parser, test, tracked executable change or acceptance verdict was produced here.
+
+The host's production `_rpc_goodbye` sets its existing `_departing_peers` flag, then requests ENet disconnect immediately. Its replicated body senders remain visible under the current realm policies. Their visibility is refreshed later from `_on_peer_disconnected` through `RealmTransition.peer_disconnected`. There is therefore an interval between requested teardown and retirement of scene synchronization recipients.
+
+The exact engine source explains why that interval matters. [`ENetMultiplayerPeer.disconnect_peer`](https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/enet/enet_multiplayer_peer.cpp) leaves the endpoint in its map until a later poll. Its packet path maps application channel zero unreliable sends to ENet's internal channel 1. Application ledger channel 1 maps to internal channel 2. [`SceneReplicationInterface`](https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/multiplayer/scene_replication_interface.cpp) issues synchronization through application channel zero unreliably, using its cached synchronizer recipients. [`ENetPacketPeer.send`](https://github.com/godotengine/godot/blob/5b4e0cb0f/modules/enet/enet_packet_peer.cpp) checks available endpoint channels and reports the observed max-channels-zero error when teardown has cleared them.
+
+This establishes a concrete scene-send teardown race; it does not identify the body responsible for each individual original packet because that run captured no packet call stack. The original channel number does not support attributing those errors to the game's ledger RPC channel.
+
+The proposed fix consumes the existing goodbye flag in the existing coordinator's outgoing, admission and scene-RPC recipient predicates, then refreshes its currently registered replication scopes while the endpoint still has channels, before requesting the unchanged graceful disconnect. Every actual synchronizer's state and admission visibility then retires the recipient before the next native send pass. Healthy peers, initial admission, saves, stable identity, held seats and later disconnect cleanup keep their existing rules. No transport or readiness registry is added.
+
+Ownership: Foundation only; two proposed existing paths, `scripts/net/session.gd` and `scripts/net/realm_transition.gd`. Full before/after bytes and hashes are in `source-cut.patch.json`, with `proposal.patch` for review. Both before blobs match the executed receipt pins. The proposal is ignored and unapplied.
+
+Required remaining gate: independent source review, followed only if authorized by a bounded actual deliberate leave/rejoin check inspecting both ERROR and SCRIPT ERROR. Abrupt unannounced transport loss, other channels and unrelated senders have not earned a fix verdict from this proposal.

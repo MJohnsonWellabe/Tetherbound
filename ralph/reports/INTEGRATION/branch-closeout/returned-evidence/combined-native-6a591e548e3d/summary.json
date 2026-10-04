@@ -1,0 +1,218 @@
+{
+  "tested_head": "6a591e548e3d9a1aa3b46411862245792013d09e",
+  "scope": "Combined R1/R2/R3 initial feature source with reviewed integration repairs. Source and scoped native results do not close acceptance criteria.",
+  "affected_units": {
+    "result": "PASS",
+    "tests": 87,
+    "assertions": 763,
+    "failed": 0,
+    "independent_review": "source_review independently verified native raw hash, terminal counts and absence of runtime/leak diagnostics"
+  },
+  "changed_script_compile": {
+    "result": "PASS",
+    "tested_head": "fa0eda783d5c262cc8ad67a206b380e16b5c4170",
+    "scripts": 368,
+    "unavailable": 0,
+    "later_changes": "Targeted native compilation PASS at7c15b10ea4bc and6a591e548e3d; full native receipts retained."
+  },
+  "final_import": {
+    "result": "PASS",
+    "runs": [
+      {
+        "name": "warm-import",
+        "command": [
+          "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--path",
+          "D:\\tetherbound\\foundations-batch-check",
+          "--import"
+        ],
+        "watchdog_seconds": 900,
+        "started_utc": "2026-10-02T00:10:45.194055+00:00",
+        "pid": 1020,
+        "exit": 0,
+        "elapsed_seconds": 697.0929999999935,
+        "raw_bytes": 560289,
+        "raw_sha256": "030ab795cd092e25b8b0bf11e94f2b1aea0f174c5b1198f78bf878ab8a025721",
+        "ci_errors": [],
+        "strict_errors": []
+      },
+      {
+        "name": "verify-import",
+        "command": [
+          "C:\\Users\\mattj\\.cache\\tetherbound-tools\\godot-4.7\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--path",
+          "D:\\tetherbound\\foundations-batch-check",
+          "--import"
+        ],
+        "watchdog_seconds": 900,
+        "started_utc": "2026-10-02T00:22:22.342012+00:00",
+        "pid": 18616,
+        "exit": 0,
+        "elapsed_seconds": 17.703000000095926,
+        "raw_bytes": 2355,
+        "raw_sha256": "8578ab83fe7d010fd656e01adb1316f1474c8dccb69d4fa6bf179352e10e233c",
+        "ci_errors": [],
+        "strict_errors": []
+      }
+    ],
+    "source_unchanged": true,
+    "asset_evidence_reuse": "No committed assets changed from full audited140c441; prior full asset/import byte closure reused. Current source and every import metadata file hashed again."
+  },
+  "hosted_ci": {
+    "run": 6175,
+    "url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/36944890249",
+    "state_at_start": "in_progress",
+    "head": "6a591e548e3d9a1aa3b46411862245792013d09e"
+  },
+  "limits": [
+    "Windows native results do not prove Linux CI parity.",
+    "Original physical opening and shared-boss repairs need actual runtime results.",
+    "F48 complete authentic saved-input routes and enabled production prerequisites remain open.",
+    "Unintegrated subsequent ending/retry/fixture cuts are outside this tested candidate.",
+    "Main30fcc remains unchanged; MET110/280; no acceptance credit."
+  ],
+  "members": {
+    "affected-outer.json.gz": {
+      "raw_bytes": 754346,
+      "raw_sha256": "340e1c5ea475567ab72617ac4197a7378bdac1d8b1e4a4c1d414dffe2f86c238",
+      "gzip_sha256": "dedcd31cfa1bfae4dd2c7efa03284ea45edf3266a44b9ea38e224b00cecb9e6b"
+    },
+    "affected-result.json.gz": {
+      "raw_bytes": 752,
+      "raw_sha256": "0cc16ad7578af71154945862debf8b3dd9b330957d6856112f6503b6e8c06981",
+      "gzip_sha256": "ea17585ca547f2929ba681a0a01ea415befa66c5142a202f4f0fd5b5661ee1c6"
+    },
+    "affected-parent.log.gz": {
+      "raw_bytes": 38118,
+      "raw_sha256": "ba9fc7e57f6e42b96963c82aeba418efc5b81ddbf46061809276bf16c04720dc",
+      "gzip_sha256": "3dea37c44a8015d034eeb0b430f154b9f719a9d3232f95afeea51b4d9c072d02"
+    },
+    "affected-child.log.gz": {
+      "raw_bytes": 140,
+      "raw_sha256": "be4826d631d04639b77eba601678a896ec21c3a91fa9be845ad4dc1deb0c63ba",
+      "gzip_sha256": "6327bdf80cc9c0eeb29e1eecd97e0710c7b1fb5d9a63d1cf287913ef09d02c78"
+    },
+    "combined-import-140c44169408--receipt.json.gz": {
+      "raw_bytes": 3704365,
+      "raw_sha256": "786d6954a1ebe4f94478de9b9dec86325b9c0a14b31106d67d0ef16cfab93647",
+      "gzip_sha256": "a8ba93f8b15d7a524eb78427b7a99b8b9cb350c4f12c08ae4260bce199b96066"
+    },
+    "combined-import-140c44169408--verify-import.log.gz": {
+      "raw_bytes": 5507,
+      "raw_sha256": "7f51e4a028169ac9b411e56544ac455e9bbc233aee79f23eb9ccb9e83563fccd",
+      "gzip_sha256": "fa497fec6a3f38d7ef3d90293c32cb72de12c770a56d2d3ef63f68de21a72047"
+    },
+    "combined-import-140c44169408--warm-import.log.gz": {
+      "raw_bytes": 726145,
+      "raw_sha256": "71af6ee9ac789494ddb1057efc11c5cb188667483e4808832b16241f7d62f442",
+      "gzip_sha256": "60f4b830ebca01b537087b3d77cd994df88dea28b802f3733828b40c4a4c8161"
+    },
+    "combined-compile-batch-abbee8d567fb--0.log.gz": {
+      "raw_bytes": 39030,
+      "raw_sha256": "81548dc963a92d986c7383391eb5eb5de2f4dbdd25b55b32c9b8a3840c8f692b",
+      "gzip_sha256": "14041d34fe5c40d32e19bdb386353856191a313f8dd1b5824f26e88b1917f28e"
+    },
+    "combined-compile-batch-abbee8d567fb--receipt.json.gz": {
+      "raw_bytes": 768444,
+      "raw_sha256": "bec6c1e518bbff68ee5a488e86690925afd2e95f0146727ccdfffb9a6daea1ad",
+      "gzip_sha256": "8bf216da136c7129bbef336f3af5f92172c799d4e5183dae695d752a772117e9"
+    },
+    "combined-compile-batch-abbee8d567fb--scripts.json.gz": {
+      "raw_bytes": 13817,
+      "raw_sha256": "c023d2547bfad6c24ecb6f2e9e4a1ce3dea91474ae7597c58c9e9dc538ca4d03",
+      "gzip_sha256": "0eaa509b71e2be1994148f9cdbc9e48fafe8b0ac70b5b91083d776c394f84532"
+    },
+    "combined-compile-batch-fa0eda783d5c--0.log.gz": {
+      "raw_bytes": 18048,
+      "raw_sha256": "29e0978c22b6fd34b5282838098bd9d7e2d49aace8086fcc24582aa2959a6190",
+      "gzip_sha256": "2ea0672b3b13b1df75521fd578558b86fd3ffefcce5e3e280a361526db21a3a8"
+    },
+    "combined-compile-batch-fa0eda783d5c--receipt.json.gz": {
+      "raw_bytes": 754205,
+      "raw_sha256": "1f1273f8655e1fcc3c4521e597f95c704daf47205e8249bf257cdcef7c449b99",
+      "gzip_sha256": "25e0e464d2ed3daba1ead1d84cda2cf52fc547a37806f3670046264a52c699e1"
+    },
+    "combined-compile-batch-fa0eda783d5c--scripts.json.gz": {
+      "raw_bytes": 13888,
+      "raw_sha256": "358493742f708afd90f164762eb40c9f28f9d18fcf23b4a7993628833c3fcc16",
+      "gzip_sha256": "0606d87dbbceaae3dc0ea199268c397e097a29b2711fb92127d5a34a3c1288c4"
+    },
+    "combined-check-only-7c15b10ea4bc--0.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-7c15b10ea4bc--1.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-7c15b10ea4bc--2.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-7c15b10ea4bc--receipt.json.gz": {
+      "raw_bytes": 755460,
+      "raw_sha256": "c7ac0548741b9e398b309e0838cb805e10f1c2da16359118ebcfd357b406f638",
+      "gzip_sha256": "8cb689882277146665cab34352a20a3db019d5a2bdd54a7fa6e0467aac08bd1f"
+    },
+    "combined-check-only-6a591e548e3d--0.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-6a591e548e3d--1.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-6a591e548e3d--2.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-6a591e548e3d--3.log.gz": {
+      "raw_bytes": 73,
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769"
+    },
+    "combined-check-only-6a591e548e3d--receipt.json.gz": {
+      "raw_bytes": 756581,
+      "raw_sha256": "20212801caea9aa9e384e90bfd0cfef19d888697dec1e746a4f3f4eaf3bec90d",
+      "gzip_sha256": "3d972397132a8efcf27f6384bccc72b580deef405482440a92eda824e3b0f5ae"
+    },
+    "combined-import-6a591e548e3d--receipt.json.gz": {
+      "raw_bytes": 2803375,
+      "raw_sha256": "bf926311e11c01fbedcffe1b4a995f7f500ea683e357537ecb4f9ae260ee8075",
+      "gzip_sha256": "f07badcb7062a947beac5635597a7467c5aba2a218977fe714f7c042748072b3"
+    },
+    "combined-import-6a591e548e3d--verify-import.log.gz": {
+      "raw_bytes": 2355,
+      "raw_sha256": "8578ab83fe7d010fd656e01adb1316f1474c8dccb69d4fa6bf179352e10e233c",
+      "gzip_sha256": "04e152c3e47d7e08ce80d98e2447a53994ad9771c8f1ce584be301811e2ccb13"
+    },
+    "combined-import-6a591e548e3d--warm-import.log.gz": {
+      "raw_bytes": 560289,
+      "raw_sha256": "030ab795cd092e25b8b0bf11e94f2b1aea0f174c5b1198f78bf878ab8a025721",
+      "gzip_sha256": "db2c2d12c0750a21b5ce2dee4fae328f3da881216827bffaf7d7e077b34aa38b"
+    },
+    "prior-six-fail-result.json.gz": {
+      "raw_bytes": 1405,
+      "raw_sha256": "7919d77ffbf085b56f31c1b8cf1202e9e7c4f79be45ec4d475f597085d04daf4",
+      "gzip_sha256": "75c91c6d29c73eebf2aa6721ce1c226c623853ca371952b4b0be1d0fcea47fc5"
+    },
+    "prior-six-fail-parent.log.gz": {
+      "raw_bytes": 40291,
+      "raw_sha256": "3b7249cf14d2d6d833fb244bf42e72a2e95db97591508a6b92f408ef338e62b5",
+      "gzip_sha256": "5d1db1e26ebf7a966d8c07a2b79fd6f8eb6db25d32a7754b107673486c4401a3"
+    },
+    "actual-ci-start.json.gz": {
+      "raw_bytes": 9627,
+      "raw_sha256": "b6b2a7404e630cdf150327a39ac822d90f7457ef1dabf440735fef4eab1cbc94",
+      "gzip_sha256": "23d873e98868912d3d872624216d17c521f4370687a7d5ed493bce8996aa56aa"
+    }
+  }
+}

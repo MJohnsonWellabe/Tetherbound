@@ -1,0 +1,53 @@
+{
+  "parent_training_pin": "4839e34afb9f134bdcdda74e25dd96d4a9f2a0bb",
+  "inspected_main_pin": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "bases": {
+    "scripts/creatures/essence.gd": "4839 frozen Altar patch after SHA256 in source-provenance.json",
+    "scripts/creatures/progression.gd": "7dcd2a8649660553f38702f2de71390efc6f1343",
+    "data/config/essence.json": "4839 frozen Altar patch after SHA256 in source-provenance.json"
+  },
+  "before_sha256": {
+    "scripts/creatures/essence.gd": "a4dfbdda05577c130b121d5d310f4aa67953d3ecf06a09ba3fb22455030a4004",
+    "scripts/creatures/progression.gd": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9",
+    "data/config/essence.json": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4"
+  },
+  "after_sha256": {
+    "scripts/creatures/essence.gd": "9ed6a1501800cb716f1462d51eff375462de5107c75ab563c26263b06024b657",
+    "scripts/creatures/progression.gd": "cc9ba113abee3dd6528c8a27a71fdae376254b96a7569450d25bfe2f8071ad51",
+    "data/config/essence.json": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4"
+  },
+  "patch_sha256": "fbdb281c38a2d33f7fa51e63f334dc17e368cf2524eab96707d840a820eca90a",
+  "all_existing_progression_methods_byte_preserved": [
+    "config",
+    "xp_to_next",
+    "xp_award_for",
+    "party_share",
+    "rest_xp",
+    "creature_bed_full_heal_seconds",
+    "rest_seconds_remaining",
+    "stat_at_level",
+    "roll_wild_level",
+    "bond_stat_scale",
+    "individuality_multiplier",
+    "appraisal_stars",
+    "trait_unlocked"
+  ],
+  "config_numeric_changes": false,
+  "altered_frozen_altar_packet": false,
+  "shared_source_changed": false,
+  "source_identity_read_pins": {
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "scripts/data/redesign_state.gd": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed"
+  },
+  "authoring_checks": [
+    "exact old progression function byte comparison",
+    "JSON parse and LF/hash binding",
+    "lossless patch serialisation",
+    "owned-path allowlist; live working tree unchanged",
+    "git diff --check/cached diff --check"
+  ],
+  "engine_unit_ci_gpu_runs": 0,
+  "independent_verdict": "Pending ROOT source review of exact packet; no acceptance credit"
+}

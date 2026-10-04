@@ -1,0 +1,245 @@
+{
+  "policy": "Latest explicit user override: archive when committed source is on a consolidated branch; native/CI proof and criteria may remain OPEN. Reopen original session for attributable CI repairs. Preserve all branches, checkouts and diagnostic evidence.",
+  "consolidated_head": "c03cd139ae39dacfeef88e7f684cae7debd6bfd6",
+  "main_head": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "ci_run": 36820599627,
+  "full_ci": "FAILED; no merge inferred",
+  "criterion_status": "Unchanged: 110/280 MET; feature criteria OPEN. Archives are sidebar cleanup only.",
+  "checked": "Each exact branch head is an ancestor of consolidated HEAD; each feature checkout has no tracked or untracked outstanding files. CI failure excerpts and source ownership checked. No new sessions or branch deletions.",
+  "archived": [
+    {
+      "threadId": "01a0f52e-4cbe-79b0-82d4-31dc392af2cd",
+      "title": "F24 â€” Tether Commands, complete featureâ€¦",
+      "branch": "tb/f24",
+      "head": "5e0481bb5ac80b17906e7b2756251766d6678c0b",
+      "confirmed_archived": true
+    },
+    {
+      "threadId": "01a0f512-ab97-7c93-a96c-45705ff3d26a",
+      "title": "F28 â€” Masters, breakthroughs and feasts",
+      "branch": "tb/f28",
+      "head": "a07c26cc5866d4845f8dd7c76e4807e452535173",
+      "confirmed_archived": true
+    },
+    {
+      "threadId": "01a0f512-b8f3-7522-a5bf-59c1a4a901da",
+      "title": "F30 â€” Wild traits and Trait Seeds",
+      "branch": "tb/f30",
+      "head": "26b0a1a0e008fe65c0f20fc4ad9c10ee3e4e9227",
+      "confirmed_archived": true
+    },
+    {
+      "threadId": "01a0f512-a7d7-7f91-b47f-922a18d234d6",
+      "title": "F23 â€” Move slots, learnsets and mastery",
+      "branch": "tb/f23",
+      "head": "1e24ef9f5037fbd5f8b00cfb5d37dc32f169b943",
+      "confirmed_archived": true
+    },
+    {
+      "threadId": "01a0f538-279e-74f1-8b67-e9d9baacab02",
+      "title": "F32 â€” Materials, essence nodes and farming,â€¦",
+      "branch": "tb/f32",
+      "head": "810881e7a8ff4056eeafd5fbbf30994825fd06fd",
+      "confirmed_archived": true
+    },
+    {
+      "threadId": "01a0f546-24b0-7e61-930f-07eae74b0746",
+      "title": "F25 — Move effects library, complete…",
+      "branch": "tb/f25",
+      "head": "66b24e8aa01e9a6f51cf4b985e14fdfde9a71de7",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "426de65195cafa5a5c7659eb514b7a590fe6348b",
+      "audit": "f25-archive-source-audit.json",
+      "reason": "Original cue mappings were lost in the assembled audio config, not absent in F25. All original mappings are restored; actual unchanged Move Effects tests pass. Complete feature branch ancestry and clean worktree verified."
+    },
+    {
+      "threadId": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "title": "F20 — Homecoming and regional ending",
+      "branch": "tb/f20",
+      "head": "e7829fba3ceec4d31a1bcb45b2e1f4d53a0b94ff",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
+      "currently_archived": true,
+      "reopened_reason": "Concrete CI6172 regional credits smoke parser failure; same F20 session reopened for test-only async API alignment. No new session.",
+      "rearchived_after_source_consolidation": true
+    },
+    {
+      "threadId": "01a0f510-cc96-7090-8e99-bf47054aed88",
+      "title": "F22 — Enemy patterns and combat roles",
+      "branch": "tb/f22",
+      "head": "6bc07fac4500e3d2adb48fc2954ba61834b59a22",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved.",
+      "currently_archived": true,
+      "reopened_reason": "Concrete CI6169 post-disconnect encounter director publication fault, owned F22. Same session reopened; source branch preserved. Warden timeout earlier causal relation unproved.",
+      "rearchived_after_source_consolidation": true
+    },
+    {
+      "threadId": "01a0f53f-0dcd-7070-a370-e361e9e308f6",
+      "title": "F35 — Signature ultimates, complete…",
+      "branch": "tb/f35",
+      "head": "532f2842615256a844a5672a124b4ae08fe86699",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+    },
+    {
+      "threadId": "01a0f547-bca4-77c3-a5e2-1c5ee16e340e",
+      "title": "F33 — Creature and trainer gear, complete…",
+      "branch": "tb/f33",
+      "head": "ac662d34b5962a758eea8048b2af9ea1d9f93303",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+      "reason": "Inactive/notLoaded; exact HEAD is an ancestor of pushed consolidated candidate; tracked and untracked status empty; no currently attributed failure requiring this session. App archive result confirmed true. Branch and worktree preserved."
+    },
+    {
+      "threadId": "01a0f4f8-e11a-71d2-8984-caa18c9bad04",
+      "title": "F18 — HomeKey, portals and waystones",
+      "branch": "tb/f18",
+      "head": "f69d5a6ce26cc8f7a5e6f1c753113544108a12e8",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+      "reason": "Current idle status, tracked/untracked checkout clean and exact full head contained in pushed candidate verified. No current source-attributed failure needs this owner. Latest user cleanup override; criteria remain OPEN; same session can reopen."
+    },
+    {
+      "threadId": "01a0f4f8-e65f-7591-94a7-b4799df734b7",
+      "title": "F19 — Chapter order, levels and rewards",
+      "branch": "tb/f19",
+      "head": "15ce6ff7ac8bb7852564bf9eb4ba23a292797cee",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+      "reason": "Current idle status, tracked/untracked checkout clean and exact full head contained in pushed candidate verified. No current source-attributed failure needs this owner. Latest user cleanup override; criteria remain OPEN; same session can reopen."
+    },
+    {
+      "threadId": "01a0f533-294e-71c1-9ec1-328527aa8d21",
+      "title": "F31 — Homestead stations, complete feature…",
+      "branch": "tb/f31",
+      "head": "ae65eb81949f7f72deaf4c5a58c532790a2f7978",
+      "confirmed_archived": true,
+      "checked_consolidated_head": "aba5268a53de6724ad5ec5097c063dc0363bcc09",
+      "reason": "Current idle status, tracked/untracked checkout clean and exact full head contained in pushed candidate verified. No current source-attributed failure needs this owner. Latest user cleanup override; criteria remain OPEN; same session can reopen."
+    }
+  ],
+  "retained": "F17, F18, F19, Foundation and F31 own current returned failures; existing F29 reviews their fixes. Ten confirmed sidebar archives; main and criteria remain unchanged.",
+  "latest_archive_consolidated_head": "a795173a3c82058e0bef9558a5ab83487dbe0e1a",
+  "latest_archive_ci_run": 36854264014,
+  "latest_archive_ci_status": "Actual unit/runtime failures returned to existing owners; shared CI remains unaccepted.",
+  "total_confirmed_archived": 13,
+  "currently_archived_count": 11,
+  "source_archive_events_2026_10_01": [
+    {
+      "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "head": "d22e8453ede7c880e840d16cce1eea423f3c8a70",
+      "feature": "F20",
+      "confirmed_archived": true,
+      "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "tracked_clean": true,
+      "untracked_source": []
+    },
+    {
+      "thread_id": "01a0f510-cc96-7090-8e99-bf47054aed88",
+      "head": "134e72b70989848a5adeac949e11880f193fbccf",
+      "feature": "F22",
+      "confirmed_archived": true,
+      "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "tracked_clean": true,
+      "untracked_source": []
+    },
+    {
+      "thread_id": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+      "head": "b15039048291cb66f7c218f59982776cef683183",
+      "feature": "Foundation",
+      "confirmed_archived": true,
+      "source_contained_at": "3fcc09a8c752b8fbbe5d0d621ac8e85e87837272",
+      "tracked_clean": true,
+      "untracked_source": []
+    },
+    {
+      "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+      "feature": "F17",
+      "head": "6edcdd507074b8ab8d85cd56c086bfd2b2bb20bc",
+      "confirmed_archived": true,
+      "tracked_clean": true,
+      "source_contained_at": "eb854927e0",
+      "untracked_evidence": "Lossless 41-file diagnostic archive in current-repairs-3fcc09; original worktree retained"
+    },
+    {
+      "thread_id": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+      "feature": "F29",
+      "head": "6f8ee829c5bd670b411b66a676e3b3d57484733b",
+      "confirmed_archived": true,
+      "tracked_clean": true,
+      "untracked_source": [],
+      "source_contained_at": "eb854927e0",
+      "reason": "All assigned independent source/native receipt reviews complete; restore same reviewer when needed"
+    }
+  ],
+  "next_batch_archives": "All ten R2 and five R3 feature authors confirmed archived; exact sources contained on pushed tb/integration-next. R3 Foundation remains active for production wiring. No NEXT engine or CI.",
+  "latest_reopened": {
+    "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+    "currently_archived": true,
+    "reason": "Actual CI6173 opening failure on63429; original session restored for source repair"
+  },
+  "ci6173_reopened": [
+    {
+      "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+      "feature": "F17",
+      "reason": "Actual original opening failures in CI6173 jobs437,544,294; candidate1c7e04b source review pending",
+      "currently_archived": true,
+      "confirmed_reopened": true,
+      "current_reason": "Reviewed source merged and clean; confirmed archived again after source containment"
+    },
+    {
+      "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "feature": "F20",
+      "reason": "Actual Waterward reveal-name predicate failure before traversal; source66d90261 independently PASS252 and merged23f48d78; original native proof recorded separately",
+      "currently_archived": true,
+      "confirmed_reopened": true,
+      "current_reason": "Reviewed source merged and clean; confirmed archived again after source containment"
+    },
+    {
+      "thread_id": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+      "feature": "F29",
+      "reason": "Independent review of attributable existing-owner source repairs",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+      "feature": "Foundation",
+      "reason": "Actual multiplayer shard5 guest loses shared boss presentation/binding after first Warden round; source investigation pending",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    }
+  ],
+  "ci6173_repaired_source_archive_events": [
+    {
+      "feature": "F17",
+      "head": "1c7e04b350dd2a559f71492655bd31ae8bc5287f",
+      "expected_head": true,
+      "tracked_clean": true,
+      "contained_in_local_consolidated_head": true,
+      "untracked_production_source": [],
+      "untracked_nonproduction_files_retained": 676,
+      "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+      "confirmed_archived": true,
+      "local_consolidated_head": "b9391ee21b67589b209fe96711a67f4a33aaa057",
+      "proof_limit": "Source cleanup only; original full route CI/criteria unverified. Reviewed source is locally committed; coherent remote push waits for remaining boss repair, preventing an incomplete new full CI."
+    },
+    {
+      "feature": "F20",
+      "head": "66d90261efe9b4ffbb3fb3255ab44652fdd14bba",
+      "expected_head": true,
+      "tracked_clean": true,
+      "contained_in_local_consolidated_head": true,
+      "untracked_production_source": [],
+      "untracked_nonproduction_files_retained": 0,
+      "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "confirmed_archived": true,
+      "local_consolidated_head": "b9391ee21b67589b209fe96711a67f4a33aaa057",
+      "proof_limit": "Source cleanup only; original full route CI/criteria unverified. Reviewed source is locally committed; coherent remote push waits for remaining boss repair, preventing an incomplete new full CI."
+    }
+  ]
+}

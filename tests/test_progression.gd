@@ -96,6 +96,62 @@ func test_xp_award_for_grows_with_enemy_level() -> void:
 	assert_true(high > low, "a tougher enemy should pay out more xp")
 
 
+## Raw arithmetic remains unreduced; the active typed victory transaction
+## applies the configured hybrid reduction exactly once at its boundary.
+func test_base_combat_xp_preserves_raw_awards_and_legacy_party_floor() -> void:
+	var cfg := PROGRESSION.config()
+	var rate := preload("res://scripts/creatures/essence.gd").config()
+	assert_true(rate.get("wild_victory_runtime_enabled") is bool)
+	assert_eq(rate.get("wild_victory_runtime_enabled"), true, "the typed victory producer is active")
+	var award_cfg: Dictionary = cfg.get("xp_award", {})
+	for level: int in range(1, 101):
+		var ordinary := int(float(award_cfg.get("base", 18.0))
+			+ float(award_cfg.get("per_enemy_level", 6.0)) * float(level))
+		assert_eq(PROGRESSION.xp_award_for(level, cfg), ordinary,
+			"base arithmetic retains the unreduced award before transaction staging")
+		assert_true(ordinary > 0)
+		assert_eq(PROGRESSION.party_share(ordinary, cfg),
+			int(floorf(float(ordinary) * float(award_cfg.get("party_share", 0.35)))))
+	var tuned := {"xp_award": {"base": 10.75, "per_enemy_level": 2.5, "party_share": 0.25}}
+	assert_eq(PROGRESSION.xp_award_for(1, tuned), 13)
+	assert_eq(PROGRESSION.xp_award_for(2, tuned), 15)
+	assert_eq(PROGRESSION.xp_award_for(100, tuned), 260)
+	assert_eq(PROGRESSION.party_share(13, tuned), 3)
+	assert_eq(PROGRESSION.party_share(1, tuned), 0, "ordinary party XP retains its legacy floor")
+	assert_eq(PROGRESSION.xp_award_for(1, {"xp_award": {"base": 1, "per_enemy_level": 0}}), 1)
+
+
+func test_explicit_staged_combat_xp_uses_one_positive_configured_reduction() -> void:
+	var cfg := PROGRESSION.config()
+	var before := cfg.duplicate(true)
+	var rate := preload("res://scripts/creatures/essence.gd").config()
+	var rate_before := rate.duplicate(true)
+	assert_true(rate.get("wild_victory_runtime_enabled") is bool)
+	assert_eq(rate.get("wild_victory_runtime_enabled"), true)
+	var scale := float(rate.get("auto_xp_scale", 0.0))
+	assert_true(scale > 0.0 and scale < 1.0)
+	for level: int in range(1, 101):
+		var raw: int = PROGRESSION.raw_xp_award_for(level, cfg)
+		var award: int = PROGRESSION.scaled_combat_xp(level, cfg, rate)
+		assert_eq(award, maxi(1, int(floorf(float(raw) * scale))))
+		assert_true(award > 0 and award < raw, "explicit staging retains a reduced positive award")
+		assert_eq(PROGRESSION.scaled_combat_xp(level, cfg, {"auto_xp_scale": 0.5}),
+			maxi(1, int(floorf(float(raw) * 0.5))))
+		assert_eq(PROGRESSION.scaled_party_combat_xp(level, cfg, rate),
+			maxi(1, PROGRESSION.party_share(award, cfg)))
+		assert_eq(PROGRESSION.xp_award_for(level, cfg), raw,
+			"a scaled quote cannot mutate the base formula or scale it twice")
+	var tiny := {"xp_award": {"base": 1, "per_enemy_level": 0, "party_share": 0.5}}
+	assert_eq(PROGRESSION.scaled_combat_xp(1, tiny, {"auto_xp_scale": 0.01}), 1)
+	assert_eq(PROGRESSION.scaled_party_combat_xp(1, tiny, {"auto_xp_scale": 0.01}), 1)
+	assert_eq(PROGRESSION.party_share(1, tiny), 0, "positive staging floor does not change legacy party math")
+	for invalid: Variant in [false, true, 0, -0.1, 1.0, INF, NAN]:
+		assert_eq(PROGRESSION.scaled_combat_xp(1, cfg, {"auto_xp_scale": invalid}), 0)
+		assert_eq(PROGRESSION.scaled_party_combat_xp(1, cfg, {"auto_xp_scale": invalid}), 0)
+	assert_eq(cfg, before)
+	assert_eq(rate, rate_before, "explicit pure staging cannot activate or mutate shipping config")
+
+
 func test_party_share_floors_the_split() -> void:
 	var cfg := PROGRESSION.config()
 	var share := float(cfg.get("xp_award", {}).get("party_share", 0.35))

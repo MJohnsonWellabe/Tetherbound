@@ -1,0 +1,468 @@
+{
+  "scope": "native trace associations and necessary geometric/source feasibility bounds only; not a mesh or route certificate",
+  "samples": [
+    {
+      "approach_frame": 0,
+      "contacts": [
+        {
+          "point": [
+            98.32475,
+            3.22643,
+            -32.10476
+          ],
+          "normal": [
+            -0.432645,
+            0.790967,
+            0.432655
+          ],
+          "slope_degrees": 37.72405992858235,
+          "reported_depth": 0.00117015698925,
+          "candidate_facet": null,
+          "facet_association_stable_at_print_precision": false,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 1,
+      "contacts": [
+        {
+          "point": [
+            98.32475,
+            3.22643,
+            -32.10476
+          ],
+          "normal": [
+            -0.432645,
+            0.790967,
+            0.432655
+          ],
+          "slope_degrees": 37.72405992858235,
+          "reported_depth": 0.00117015698925,
+          "candidate_facet": null,
+          "facet_association_stable_at_print_precision": false,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 15,
+      "contacts": [
+        {
+          "point": [
+            98.37769,
+            3.507984,
+            -32.80259
+          ],
+          "normal": [
+            -0.576714,
+            0.77185,
+            0.267673
+          ],
+          "slope_degrees": 39.479701132696576,
+          "reported_depth": 0.00095329183387,
+          "candidate_facet": [
+            0,
+            3,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            98.335,
+            3.584366,
+            -32.99678
+          ],
+          "normal": [
+            -0.470884,
+            0.630212,
+            0.617333
+          ],
+          "slope_degrees": 50.93421009127273,
+          "reported_depth": 0.00103770149872,
+          "candidate_facet": [
+            0,
+            2,
+            1
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            98.33456,
+            3.583823,
+            -32.99656
+          ],
+          "normal": [
+            -0.470884,
+            0.630212,
+            0.617333
+          ],
+          "slope_degrees": 50.93421009127273,
+          "reported_depth": 0.00016086311371,
+          "candidate_facet": [
+            0,
+            2,
+            1
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 30,
+      "contacts": [
+        {
+          "point": [
+            97.32096,
+            3.642104,
+            -33.77061
+          ],
+          "normal": [
+            -0.5061,
+            0.739948,
+            0.443102
+          ],
+          "slope_degrees": 42.273002343914065,
+          "reported_depth": 0.00090418296168,
+          "candidate_facet": [
+            -1,
+            2,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            97.25987,
+            3.628246,
+            -33.81724
+          ],
+          "normal": [
+            -0.5061,
+            0.739948,
+            0.443102
+          ],
+          "slope_degrees": 42.273002343914065,
+          "reported_depth": 0.00015461753355,
+          "candidate_facet": [
+            -1,
+            2,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 60,
+      "contacts": [
+        {
+          "point": [
+            96.4405,
+            4.069617,
+            -34.79417
+          ],
+          "normal": [
+            -0.50868,
+            0.708818,
+            0.488694
+          ],
+          "slope_degrees": 44.86117784249891,
+          "reported_depth": 0.00097960885614,
+          "candidate_facet": [
+            -2,
+            1,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            96.48879,
+            4.127471,
+            -34.82782
+          ],
+          "normal": [
+            -0.50868,
+            0.708818,
+            0.488694
+          ],
+          "slope_degrees": 44.86117784249891,
+          "reported_depth": 0.00015453055676,
+          "candidate_facet": [
+            -2,
+            1,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 90,
+      "contacts": [
+        {
+          "point": [
+            94.67434,
+            3.594356,
+            -35.43653
+          ],
+          "normal": [
+            -0.267544,
+            0.781214,
+            0.564026
+          ],
+          "slope_degrees": 38.628152697477866,
+          "reported_depth": 0.00094821321545,
+          "candidate_facet": [
+            -4,
+            0,
+            1
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 120,
+      "contacts": [
+        {
+          "point": [
+            95.20583,
+            3.705241,
+            -35.30396
+          ],
+          "normal": [
+            -0.544301,
+            0.680147,
+            0.491057
+          ],
+          "slope_degrees": 47.14488201209515,
+          "reported_depth": 0.00092412088998,
+          "candidate_facet": [
+            -3,
+            0,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            95.20855,
+            3.70535,
+            -35.30109
+          ],
+          "normal": [
+            -0.544301,
+            0.680147,
+            0.491057
+          ],
+          "slope_degrees": 47.14488201209515,
+          "reported_depth": 0.00014428008581,
+          "candidate_facet": [
+            -3,
+            0,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 150,
+      "contacts": [
+        {
+          "point": [
+            93.38177,
+            3.107457,
+            -35.83455
+          ],
+          "normal": [
+            -0.456382,
+            0.848063,
+            0.269267
+          ],
+          "slope_degrees": 31.998393082013052,
+          "reported_depth": 0.00090118957451,
+          "candidate_facet": [
+            -5,
+            0,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            93.37592,
+            3.107033,
+            -35.8431
+          ],
+          "normal": [
+            -0.456382,
+            0.848063,
+            0.269267
+          ],
+          "slope_degrees": 31.998393082013052,
+          "reported_depth": 0.00015243302914,
+          "candidate_facet": [
+            -5,
+            0,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    },
+    {
+      "approach_frame": 180,
+      "contacts": [
+        {
+          "point": [
+            95.28809,
+            3.945229,
+            -35.54517
+          ],
+          "normal": [
+            -0.544301,
+            0.680147,
+            0.491057
+          ],
+          "slope_degrees": 47.14488201209515,
+          "reported_depth": 0.00113574380521,
+          "candidate_facet": [
+            -3,
+            0,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        },
+        {
+          "point": [
+            95.29042,
+            3.901932,
+            -35.48262
+          ],
+          "normal": [
+            -0.544301,
+            0.680147,
+            0.491057
+          ],
+          "slope_degrees": 47.14488201209515,
+          "reported_depth": 0.00016872238484,
+          "candidate_facet": [
+            -3,
+            0,
+            0
+          ],
+          "facet_association_stable_at_print_precision": true,
+          "full_facet_geometry_certified": false
+        }
+      ]
+    }
+  ],
+  "stable_candidate_facets": [
+    [
+      -5,
+      0,
+      0
+    ],
+    [
+      -4,
+      0,
+      1
+    ],
+    [
+      -3,
+      0,
+      0
+    ],
+    [
+      -2,
+      1,
+      0
+    ],
+    [
+      -1,
+      2,
+      0
+    ],
+    [
+      0,
+      2,
+      1
+    ],
+    [
+      0,
+      3,
+      0
+    ]
+  ],
+  "steep_candidate_facets": [
+    [
+      -3,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      1
+    ]
+  ],
+  "total_mesh_triangles": 392,
+  "total_mesh_vertices": 225,
+  "exact_vertices_frozen": false,
+  "exact_facet_grades_known": false,
+  "full_capsule_width_corridor_proven": false,
+  "route_feasible": "UNPROVED; not disproved by distance-only bound",
+  "native_success": false,
+  "nominal_contact_ring_radius_m": 1.1190233528614044,
+  "direct_planar_distance_lower_bound_m": 2.8809766471385956,
+  "optimistic180frame60hz_walk_distance_m": 15.0,
+  "isolated1m_triangle_inradius_m": 0.2928932188134524,
+  "fullcapsule_radius_m": 0.4000000059604645,
+  "nominal_contact_ring_offer_requires_player_y_at_least": 4.844251644447353,
+  "recipe_provenance": {
+    "seed": 20260803,
+    "hills": {
+      "_comment": "The base rolling ground. Low frequency, gentle. This is what most of the walking happens on.",
+      "frequency": 0.0035,
+      "octaves": 4,
+      "amplitude": 15.0
+    },
+    "detail": {
+      "_comment": "Surface break-up so slopes are not billiard-smooth. Small enough not to trip the character controller's step offset.",
+      "frequency": 0.018,
+      "octaves": 3,
+      "amplitude": 2.2
+    },
+    "vertex_spacing": 2.0,
+    "rise_peak0": {
+      "centre": [
+        140.0,
+        -90.0
+      ],
+      "radius": 78.0,
+      "height": 46.0
+    },
+    "bench_core_width": 3.2,
+    "bench_skirt": 4.5
+  },
+  "same_target_and_mesh": true,
+  "admission": false
+}

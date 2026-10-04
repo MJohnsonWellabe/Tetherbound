@@ -1,0 +1,13 @@
+{
+  "head": "06cb7c3f825213b55965b0cf607d7a2085163f9c",
+  "exit": 1,
+  "selection": "test_level_curve_policy.gd,test_redesign_chapter_curve.gd,test_f19_curve.gd,test_evolution.gd,test_evolution_links.gd,test_evolution_discoverability.gd,test_water_species_catalog.gd,test_bond.gd,test_dialogue_portraits.gd,test_stormwood_portrait_presentation.gd,test_catalogue_capture_stand.gd",
+  "summary": [
+    "  FAIL  test_redesign_chapter_curve.gd :: test_inactive_curve_retains_legacy_chapter_arrival_prerequisites",
+    "  FAIL  test_redesign_chapter_curve.gd :: test_stormwood_aftermath_closes_the_chapter_without_another_key_grant",
+    "130 tests, 9089 assertions, 2 failed"
+  ],
+  "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-06cb7c3f8252-4fb3e513\\tests.log",
+  "raw_log_sha256": "c5492689ad3622be64792c1286b1713d93505987b5f38b2c5f3d25ef3cc0fd58",
+  "scope": "Exact tested source only; no criterion closure, main landing or archive inferred."
+}

@@ -37,6 +37,7 @@ extends RefCounted
 ## twice.
 
 const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const WORLD_SAVE := preload("res://scripts/save/world_save.gd")
 
@@ -185,15 +186,21 @@ static func _flag_ids(raw: Variant) -> Array:
 func write(character_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
 	if character_id.is_empty():
 		return false
-	if not preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id).is_empty() \
-			or not preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id).is_empty():
+	var escrow_errors: Array = preload("res://scripts/net/portal_escrow_validation.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id)
+	escrow_errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").escrow_errors(payload.get("satchel_escrow", {}), character_id))
+	if not escrow_errors.is_empty():
+		push_warning("character save refused for '%s': escrow %s" % [character_id, str(escrow_errors)])
 		return false
-	if not preload("res://scripts/creatures/teaching.gd").party_loadout_errors(payload.get("party",[]),payload.get("redesign_character",{})).is_empty():
+	var loadout_errors: Array = preload("res://scripts/creatures/teaching.gd").party_loadout_errors(payload.get("party",[]),payload.get("redesign_character",{}))
+	if not loadout_errors.is_empty():
+		push_warning("character save refused for '%s': party loadout %s" % [character_id, str(loadout_errors)])
 		return false
 	payload = payload.duplicate(true)
 	payload["redesign_character"] = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(payload.get("party",[]),payload.get("redesign_character",preload("res://scripts/data/redesign_state.gd").defaults("character")))
 	var contract := preload("res://scripts/data/redesign_state.gd")
-	if not contract.validate("character", payload.get("redesign_character", contract.defaults("character")), contract.uids(payload.get("party", []))).is_empty():
+	var character_errors: Array = contract.validate("character", payload.get("redesign_character", contract.defaults("character")), contract.uids(payload.get("party", [])))
+	if not character_errors.is_empty():
+		push_warning("character save refused for '%s': redesign character %s" % [character_id, str(character_errors)])
 		return false
 	var dir := dir_for(character_id)
 	if DirAccess.make_dir_recursive_absolute(dir) != OK:
@@ -213,7 +220,9 @@ func write(character_id: String, payload: Dictionary, envelope: Dictionary = {},
 	data["last_world_instance_id"] = instance_raw as String \
 		if typeof(instance_raw) == TYPE_STRING else ""
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), JSON.stringify(data, "\t"), retain_previous):
+	var encoded := SAVE_DOCUMENT.stringify(data)
+	if encoded.is_empty(): return false
+	if not ATOMIC_SAVE_FILE.new().write(path_for(character_id), encoded, retain_previous):
 		push_warning("character save: could not commit %s" % path_for(character_id))
 		return false
 	_envelope_cache[character_id] = _envelope_of(data)
@@ -251,7 +260,7 @@ func read(character_id: String) -> Dictionary:
 	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(_read_path(character_id)), FileAccess.READ)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = SAVE_DOCUMENT.parse(file.get_as_text())
 	file.close()
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}

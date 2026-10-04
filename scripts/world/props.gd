@@ -14,6 +14,7 @@ extends Node3D
 
 const PROPS_DIR := "res://assets/props/quaternius_fantasy"
 const CONFIG_PATH := "res://data/config/props.json"
+const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 
 ## BAND-SPLIT. The `clusters` array is cut per corridor band under
 ## `data/config/bands/<band>/props.json` and merged back here.
@@ -97,6 +98,10 @@ func build() -> void:
 						float(threshold_cfg.get("yaw_deg", 0.0)))
 	print("[props] placed %d props in %d clusters (%d usable rest points)"
 		% [_placed, parsed.get("clusters", []).size(), _rest_points])
+	var catalog := CATALOG_PRESENTATION.new()
+	catalog.name = "MeadowsCatalogPresentation"
+	add_child(catalog)
+	catalog.build("landscape", Callable(self, "_ground_height"))
 
 
 ## How many authored camps stood up a working rest offer this run. Read by

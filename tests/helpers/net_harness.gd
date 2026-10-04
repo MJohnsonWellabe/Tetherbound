@@ -245,6 +245,12 @@ func launch(peer_count: int, scene: String, extra_args: Array = [],
 	_run_dir = _resolve_run_dir()
 	DirAccess.make_dir_recursive_absolute(_run_dir)
 	_isolate_coordinator()
+	# SceneTree._initialize runs before autoload _ready. Keep the private home
+	# above, then relinquish again after Game finishes reclaiming its new world.
+	var coordinator_game := root.get_node_or_null(^"Game")
+	if coordinator_game != null and not coordinator_game.is_node_ready():
+		await coordinator_game.ready
+	_isolate_coordinator()
 
 	# ENet still needs a predictable port before child argv is built. TCP control
 	# ports do not: reserve OS-selected listeners atomically, before any child.
@@ -527,6 +533,8 @@ func _handle_peer_line(p: Dictionary, line: String) -> void:
 	var kind := str((msg as Dictionary).get("type", ""))
 	match kind:
 		"hello":
+			p.erase("session_observation")
+			p.erase("session_probe_id")
 			p["hello"] = msg
 			# Item 10 (review): the reference point a silence check needs
 			# BEFORE the first heartbeat has ever arrived -- `last_heartbeat_t`
@@ -548,8 +556,14 @@ func _handle_peer_line(p: Dictionary, line: String) -> void:
 					_fatal_reason = why
 		"value":
 			p["last_value"] = msg
+			# Retain an existing correlated read-only Session probe. Crossing
+			# attribution never issues another probe or infers host from lane role.
+			if str(msg.get("id", "")) == str(p.get("session_probe_id", "missing")):
+				var session_value: Variant = msg.get("value")
+				if session_value is Dictionary: p["session_observation"] = session_value.duplicate(true)
 		"heartbeat":
 			p["last_heartbeat_t"] = Time.get_ticks_msec() / 1000.0
+			p["last_heartbeat_received_s"] = p["last_heartbeat_t"]
 			p["last_heartbeat"] = msg
 			# Item 2 (review): `null` means the peer could not produce a hash
 			# at all (peer_runner.gd::_compute_state_hash's own contract) --
@@ -729,29 +743,131 @@ func step(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary
 	p["last_verdict"] = null
 	var build_allowance_s := maxf(world_build_allowance_s(action),
 		float(world_build_allowance_floor_s.get(action, 0.0)))
+	var sent_at_s := Time.get_ticks_msec() / 1000.0
+	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
+	var shell_host := host_shell_peer_for_crossing(_peers, peer, action, args, sent_at_s)
+	if shell_host >= 0:
+		var host: Dictionary = _peers[shell_host]
+		host["host_shell_step_id"] = id
+		host["heartbeat_deferred_until_s"] = minf(sent_at_s + REALM_CROSSING_BUILD_ALLOWANCE_S, deadline / 1000.0)
+		print("coordinator: %s enter_realm '%s' attributes the existing bounded shell window to connected host peer %d" % [id, args.realm, shell_host])
+	if action in ["host", "join", "production_host", "production_join", "leave", "load_save", "boot", "title_load"]:
+		p.erase("session_observation")
+		p.erase("session_probe_id")
 	if build_allowance_s > 0.0:
 		p["heartbeat_deferred_until_s"] = Time.get_ticks_msec() / 1000.0 + build_allowance_s
 	_send_to(p, {"type": "step", "id": id, "action": action, "args": args, "budget_frames": budget})
-	var deadline := Time.get_ticks_msec() + float(budget) * NOMINAL_MS_PER_PHYSICS_FRAME + WALL_SLACK_MS
+	var verdict_at_s := -1.0
 	while true:
 		await process_frame
 		_pump_once()
-		var v = p.get("last_verdict")
-		if v != null and str((v as Dictionary).get("id", "")) == id:
-			_complete_step_heartbeat_allowance(p, action, v as Dictionary,
-				Time.get_ticks_msec() / 1000.0)
-			return v
+		# The pump can receive this step's PASS and detect a host/peer fault
+		# in the same frame. A packet cannot override that terminal failure or
+		# earn heartbeat credit after the run has already died.
 		if not _fatal_reason.is_empty():
 			p["heartbeat_deferred_until_s"] = 0.0
+			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
 			return {"id": id, "verdict": "ERROR", "detail": _fatal_reason, "frames_used": 0}
 		if bool(p.get("exited", false)):
 			p["heartbeat_deferred_until_s"] = 0.0
+			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
 			return {"id": id, "verdict": "ERROR", "detail": "peer %d exited before a verdict for '%s'"
 				% [peer, action], "frames_used": 0}
+		var v = p.get("last_verdict")
+		if v != null and str((v as Dictionary).get("id", "")) == id:
+			if verdict_at_s < 0.0:
+				verdict_at_s = Time.get_ticks_msec() / 1000.0
+				_complete_step_heartbeat_allowance(p, action, v as Dictionary, verdict_at_s)
+			# A guest verdict is not host liveness. Let the existing host
+			# heartbeat actually resume within this same command deadline.
+			if shell_host < 0 or str(v.get("verdict", "")) != "PASS" \
+				or host_shell_heartbeat_resumed(_peers[shell_host], verdict_at_s):
+				if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
+				return v
 		if Time.get_ticks_msec() > deadline:
+			var observed_ms := Time.get_ticks_msec()
+			var timeout_heartbeat: Variant = p.get("last_heartbeat")
+			var received_s: Variant = p.get("last_heartbeat_received_s")
+			var receive_time_known := timeout_heartbeat is Dictionary and received_s != null
+			# One detached copy of our bounded peer heartbeat, before finish()
+			# pumps cleanup frames. Receive age is not the peer's sample age.
+			p["command_timeout_observation"] = {
+				"id": id, "action": action.left(96), "phase": "timeout_before_finish",
+				"coordinator_observed_ms": observed_ms, "coordinator_deadline_ms": deadline,
+				"heartbeat_known": timeout_heartbeat is Dictionary,
+				"heartbeat_receive_time_known": receive_time_known,
+				"heartbeat_received_ms": float(received_s) * 1000.0 if receive_time_known else null,
+				"heartbeat_receive_age_ms": float(observed_ms) - float(received_s) * 1000.0 if receive_time_known else null,
+				"heartbeat": (timeout_heartbeat as Dictionary).duplicate(true) if timeout_heartbeat is Dictionary else null,
+			}
 			p["heartbeat_deferred_until_s"] = 0.0
-			return {"id": id, "verdict": "FAIL", "detail": "no verdict", "frames_used": 0}
+			if shell_host >= 0: clear_host_shell_allowance(_peers[shell_host], id)
+			return {"id": id, "verdict": "FAIL", "detail": "host shell heartbeat did not resume" if verdict_at_s >= 0.0 else "no verdict", "frames_used": 0}
 	return {} # unreachable; satisfies static return-path analysis on `while true`
+
+
+static func _session_identity_row(session: Dictionary, peer_id: int) -> Dictionary:
+	var rows: Variant = session.get("rows")
+	if not rows is Array or peer_id <= 0: return {}
+	var found: Dictionary = {}
+	for raw: Variant in rows:
+		if not raw is Dictionary: return {}
+		var id: Variant = raw.get("peer_id")
+		if not (id is int or id is float) or not is_finite(float(id)) or floor(float(id)) != float(id): return {}
+		if id != peer_id: continue
+		if not found.is_empty() or not raw.get("character_id") is String or str(raw.character_id).is_empty(): return {}
+		found = raw
+	return found
+
+
+static func _session_peer_number(value: Variant) -> int:
+	if not (value is int or value is float) or not is_finite(float(value)) \
+		or floor(float(value)) != float(value) or value < 1 or value > 2147483647: return 0
+	return int(value)
+
+
+## Only a connected actual host building a foreign destination for this
+## admitted client shares enter_realm's existing bound. All observations came
+## from ordinary existing Session probes; no probes/heartbeats are synthesized.
+static func host_shell_peer_for_crossing(peers: Array, crossing: int, action: String, args: Dictionary, now_s: float) -> int:
+	if action != "enter_realm" or crossing < 0 or crossing >= peers.size() \
+		or not args.get("realm") is String or str(args.realm).is_empty(): return -1
+	var client: Dictionary = peers[crossing].get("session_observation", {})
+	if client.get("available") != true or client.get("active") != true or client.get("is_host") != false or client.get("snapshot_ready") != true: return -1
+	var client_id := _session_peer_number(client.get("peer_id"))
+	var own := _session_identity_row(client, client_id)
+	if own.is_empty() or not own.get("realm") is String or str(own.realm).is_empty() or own.realm == args.realm: return -1
+	var matches: Array[int] = []
+	for index: int in peers.size():
+		if index == crossing: continue
+		var peer: Dictionary = peers[index]
+		var host: Dictionary = peer.get("session_observation", {})
+		if peer.get("exited", false) == true or float(peer.get("heartbeat_deferred_until_s", 0.0)) > now_s: continue
+		var received := float(peer.get("last_heartbeat_received_s", peer.get("hello_at", 0.0)))
+		if received <= 0.0 or now_s - received > HEARTBEAT_SILENT_TIMEOUT_S: continue
+		if host.get("available") != true or host.get("active") != true or host.get("is_host") != true: continue
+		var host_id := _session_peer_number(host.get("peer_id"))
+		if host_id == client_id: continue
+		var host_own := _session_identity_row(host, host_id)
+		var client_host := _session_identity_row(client, host_id)
+		if host_own.is_empty() or client_host.is_empty() or host_own.character_id != client_host.character_id or host_own.get("realm") == args.realm: continue
+		# The client's applied host snapshot contains its own admitted stable
+		# identity and this host's stable identity, not just matching ENet IDs.
+		var admitted := _session_identity_row(host, client_id)
+		if not admitted.is_empty() and admitted.character_id != own.character_id: continue
+		matches.append(index)
+	return matches[0] if matches.size() == 1 else -1
+
+
+static func host_shell_heartbeat_resumed(peer: Dictionary, verdict_at_s: float) -> bool:
+	return float(peer.get("last_heartbeat_received_s", -1.0)) >= verdict_at_s
+
+
+static func clear_host_shell_allowance(peer: Dictionary, step_id: String) -> void:
+	if peer.get("host_shell_step_id") != step_id: return
+	peer["heartbeat_deferred_until_s"] = 0.0
+	peer.erase("host_shell_step_id")
+	# Keep every original heartbeat payload/reference/receive time unchanged.
 
 
 ## Seconds a named world-building step may run without heartbeats, or 0.
@@ -856,6 +972,7 @@ func probe(peer: int, what: String, args := {}) -> Variant:
 	var id := "p%d" % _next_step_id
 	_next_step_id += 1
 	p["last_value"] = null
+	if what == "session": p["session_probe_id"] = id
 	_send_to(p, {"type": "probe", "id": id, "what": what, "args": args})
 	var deadline := Time.get_ticks_msec() + 20000.0
 	while true:
@@ -1057,6 +1174,7 @@ func _write_run_json() -> void:
 			"control_port": p.get("control_port"), "hello": p.get("hello"),
 			"exited": p.get("exited"), "unexpected_exit": p.get("unexpected_exit"),
 			"last_heartbeat": p.get("last_heartbeat"), "hashes": p.get("hashes", []),
+			"command_timeout_observation": p.get("command_timeout_observation"),
 		})
 	var doc := {
 		"run_id": _run_id, "scene": _scene_for_run, "peers": peers_out,

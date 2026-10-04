@@ -28,6 +28,50 @@ extends "res://scripts/ui/menu_tab.gd"
 ## Still no state of its own, still one reader, still no condition in the data.
 
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
+const RESEARCH_PANEL := preload("res://scripts/ui/research_log_panel.gd")
+const RESEARCH_LOG := preload("res://scripts/creatures/research_log.gd")
+const BOUNTY_BOARD := preload("res://scripts/world/bounty_board.gd")
+var _research_panel: CanvasLayer
+var _research_reader := Callable()
+var _research_button: Button
+
+## F45 supplies its character-bound read-only task projection here.
+func configure_research_view(reader: Callable) -> bool:
+	if not reader.is_valid(): return false
+	_research_reader = reader
+	return true
+
+func _research_view(biome: String) -> Dictionary:
+	if _research_reader.is_valid():
+		var raw: Variant = _research_reader.call(biome)
+		return raw if raw is Dictionary else {"ready": false}
+	var game := state()
+	var local: RefCounted = game.get("local") if game != null else null
+	if local == null: return {"ready": false}
+	return RESEARCH_LOG.view(local.get("redesign_character"), str(local.get("character_id")), biome)
+
+func _claim_research(species: String, task: String) -> Dictionary:
+	var game := state()
+	var session: Node = game.get("session") if game != null else null
+	if session == null or not session.has_method("request_research_claim"): return {"ok": false, "code": "Research rewards are unavailable."}
+	return session.call("request_research_claim", {"species_id": species, "task_id": task})
+
+func _open_research() -> void:
+	var game := state()
+	if game == null: return
+	if not is_instance_valid(_research_panel):
+		_research_panel = RESEARCH_PANEL.new()
+		_research_panel.set("return_to", _return_to_journal)
+		_research_panel.set("claim_task", _claim_research)
+		game.add_child(_research_panel)
+	menu.call("close")
+	if _research_panel.call("open", _research_view) != true: menu.call("open", "quest_log")
+
+func _return_to_journal() -> void:
+	if is_instance_valid(menu): menu.call("open", "quest_log")
+
+func first_focus() -> Control:
+	return _research_button if is_instance_valid(_research_button) else null
 
 const DONE_MARK := "✓"  ## a check
 const OPEN_MARK := "▸"  ## a small right-pointing triangle, matches the tab row's own ◆ accent language
@@ -44,12 +88,25 @@ var _scroll: ScrollContainer = null
 var _main_list: VBoxContainer = null
 var _local_list: VBoxContainer = null
 var _last_progression_revision: int = -1
+var _last_lesson_goal := ""
+var _bounty_list: VBoxContainer
+var _last_bounty_view := ""
 
 
 func build() -> void:
 	for child in get_children():
 		child.queue_free()
 	_last_progression_revision = -1
+	_research_button = null
+	_bounty_list = null
+	_last_bounty_view = ""
+	if RESEARCH_PANEL.config().get("enabled") == true:
+		_research_button = Button.new()
+		_research_button.text = "Research log · Species and task rewards"
+		_research_button.custom_minimum_size.y = 66
+		_research_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
+		_research_button.pressed.connect(_open_research)
+		add_child(_research_button)
 
 	# ONE scroll container for the whole tab (mirrors tab_settings.gd's own
 	# `_scroll`, OP21-04): the log's last line used to clip against the
@@ -76,9 +133,42 @@ func build() -> void:
 	if game != null: _log.call("set_realm", str(game.get("current_realm")))
 	_main_list = _section(page, str(_log.call("chapter_heading")))
 	_local_list = _section(page, "LOCAL REQUESTS")
+	if RESEARCH_PANEL.config().get("enabled") == true: _build_bounties(page)
 
 	poll()
 	UITokens.make_text_legible(self)
+
+func _build_bounties(page: VBoxContainer) -> void:
+	_bounty_list = _section(page, "ACTIVE BOUNTIES · Claim at Halda's board")
+	_poll_bounties()
+
+func _poll_bounties() -> void:
+	if not is_instance_valid(_bounty_list): return
+	var game := state()
+	var local: RefCounted = game.get("local") if game != null else null
+	if local == null: return
+	var personal: Dictionary = local.get("redesign_character")
+	var signature := JSON.stringify([local.get("character_id"), personal.get("bounties", {}), personal.get("bounty_receipts", [])])
+	if signature == _last_bounty_view: return
+	_last_bounty_view = signature
+	var raw := BOUNTY_BOARD.view(personal, str(local.get("character_id")))
+	# Daily rotation and personal claims don't change story progression.
+	# Refresh their own rows without rebuilding the focused Research button.
+	for child: Node in _bounty_list.get_children():
+		_bounty_list.remove_child(child)
+		child.queue_free()
+	for row: Dictionary in raw.get("rows", []):
+		var label := Label.new()
+		label.text = "%s · %s · %s" % [str(row.get("title", "Bounty")), str(row.get("biome", "")).capitalize(),
+			"Claimed" if row.get("paid") == true else "Return to board" if row.get("complete") == true else "In progress"]
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		_bounty_list.add_child(label)
+	if _bounty_list.get_child_count() == 0:
+		var empty := Label.new()
+		empty.text = "Visit Halda's board to read your notices."
+		empty.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		_bounty_list.add_child(empty)
 
 
 func _section(parent: VBoxContainer, heading_text: String) -> VBoxContainer:
@@ -102,14 +192,17 @@ func poll() -> void:
 	if _main_list == null:
 		return
 	_read_scroll()
+	_poll_bounties()
 	var game := state()
 	var progression: RefCounted = game.get("progression") if game != null else null
 	if progression == null:
 		return
 	var revision := int(progression.get("revision"))
 	var realm_changed := bool(_log.call("set_realm", str(game.get("current_realm"))))
-	if revision == _last_progression_revision and not realm_changed:
+	var lesson_goal := str(_log.call("lesson_goal_signature"))
+	if revision == _last_progression_revision and not realm_changed and lesson_goal == _last_lesson_goal:
 		return
+	_last_lesson_goal = lesson_goal
 	_last_progression_revision = revision
 	_fill(
 		_main_list,

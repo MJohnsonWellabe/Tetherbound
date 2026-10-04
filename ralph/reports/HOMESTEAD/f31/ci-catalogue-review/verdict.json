@@ -1,0 +1,41 @@
+{
+  "source_commit": "d2ca82a501ef753090438c4d6cc0208ff9532a51",
+  "predecessor": "f37e2e1bc5533849466370ca0227f9a11ab48cc2",
+  "legacy_baseline": "30fcc38fc591d5df3a7cfb122b9da58445467021",
+  "returned_ci_run": "36820599627",
+  "verdict": "PASS_FOR_FLAG_OFF_CI_CATALOGUE_REPAIR_SOURCE",
+  "scope": [
+    "data/items/buildables.json",
+    "scripts/build/station_rules.gd",
+    "tests/test_build_catalogue.gd",
+    "tests/test_build_placer_preview.gd"
+  ],
+  "open_P1_P2_findings": [],
+  "before_after_git_sha256_blob_oids_and_working_hashes_match": true,
+  "scope_exact_four_paths": true,
+  "diff_check": "PASS",
+  "static_data_source_comparisons": "9/9 PASS; comparisons only, no engine or unit execution",
+  "engine_import_check_only_runtime_ci_or_unit_execution": false,
+  "parser_status": "No concrete parser defect found by source inspection; engine parsing remains unverified.",
+  "source_observations": [
+    "The buildables array restores all twelve legacy rows exactly from baseline, including Workbench mesh, costs and field policy.",
+    "homestead_buildables contains exactly the unchanged twenty-three prior typed definitions: Workbench override plus twenty-two new typed pieces. Typed IDs are unique and reserved attachment IDs are absent.",
+    "active_catalogue returns a deeply detached legacy array unless runtime_enabled is exactly boolean true. Typed overlay data cannot become active from missing, false, integer, float, string, null, dictionary or array flags.",
+    "Under canonical validated station config, duplicate or malformed typed row identity/cost and reserved/non-admitted typed identities return the complete legacy fallback atomically. Only complete successful projection returns replacement/appended rows.",
+    "Both initial legacy projection and all successful typed replacements are deep copies; the helper mutates only its local result and seen index.",
+    "Workbench replacement uses its existing unique baseline identity; the canonical enabled overlay has thirty-four unique entries.",
+    "All existing legacy catalogue assertions, including mesh and item resolution, are preserved byte-for-byte after the original marker. Chapter obtainability test source is unchanged. Preview runtime assertions are unchanged.",
+    "Preview textual assertions are scoped to actual preview_placement wrapper, its source_spot delegated evaluate_placement call and returned evaluated result; they no longer require the old direct-return spelling.",
+    "New named GDScript assertions cover exact activation, enabled overlay uniqueness/reserved absence/input copy isolation, duplicate typed identity and malformed typed cost. Their execution is NOTRUN."
+  ],
+  "external_binding": {
+    "shared_ItemDB": "OPEN: actual shared ItemDB source in this owned branch still reads canonical buildables directly. Foundation is sole writer and must bind canonical BUILDABLES_PATH through active_catalogue with canonical stations config; custom fixture paths remain unchanged.",
+    "material_and_visual_producers": "OPEN: isolating typed costs does not register sluice_metal or reef_stone, create obtainability, or accept procedural station geometry.",
+    "root_affected_checks": "OPEN: ROOT owns engine parsing, named affected test runs and CI after composing the actual shared binding owner SHA."
+  },
+  "flags": "All flags remain OFF; stations config unchanged by this delta.",
+  "acceptance_credit": 0,
+  "acceptance_F31_0_through_6": "OPEN",
+  "runtime_visual_acceptance": "OPEN",
+  "reviewer_writes": "Ignored .tmp/f31-ci-catalogue-review evidence only; no source or shared edits."
+}

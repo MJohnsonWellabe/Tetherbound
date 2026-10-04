@@ -1,0 +1,1213 @@
+{
+  "_comment": "BAND-SPLIT. Band-local clusters for band3_the_river_lock. `order` is this entry's index in the merged array and is the ONLY thing that decides merge position -- never file order, never band order. A new entry in this band takes an unused order in this band's reserved range 3000-3999, which no other band can collide with; do not renumber an existing one.",
+  "_comment_why_this_was_empty": "GATE-D3. This file existed with an empty `clusters` array -- nothing built anywhere in 1580m of river country. tether_relay.json's own `_comment_props` invited exactly this: 'The site's loose gear ... belongs in data/config/props.json as a `relay_station` cluster ... That cluster is not authored yet.' The four clusters below are that invitation plus the region's other two missing beats: Team Tether presence building on the approach BEFORE the pickets (prompt 64: 'The route should not jump from wilderness directly into the four-person relay gauntlet'), and the mill/crossing structures §3 Band 3 asks the river region to read as a landmark rather than decorative terrain. Every model is one the settlement already uses (D24, one prop family) -- nothing here is new.",
+  "clusters": [
+    {
+      "order": 3000,
+      "name": "riverwatch_rest",
+      "_why_clustered": "GATE-D3 round 4. The blind critic read this twice as loose props on a lawn -- 'four objects, four regular intervals, one line... a campsite is legible because everything faces the fire.' It was: six pieces strung along the road over 6m with no centre. Pulled into a 2.5m ring around one centre at (211.0, 3700.0), bench and bedroll turned inward, kit against the bench leg, crate closing the far side. This kit has no fire, brazier or tent -- the honest limit of one prop family (D24) -- so the ring itself has to carry it, and a ring of used gear facing a gap where a fire would go is what this catalogue can actually say. If a campfire prop is ever added, it goes at that centre.",
+      "_why": "GATE-D3, the region's camp/rest siting (prompt 64: 'a reasonable recovery/staging point before or around the relay approach should exist'). Sited on the flattest ground measured anywhere in the band (vegetation.json order 3000, 0.35m of spread over an 8m box), right past the spine's bend into the relay road and well short of either picket. Deliberately NOT a healer or a second camp mechanic -- the game has exactly one rest structure (scripts/build/camp.gd) and this is not a second one. What stands here is evidence a traveller already used this spot: a seat, a set-down pack, a water barrel. It reads as an obvious place to plant your own camp before pushing into Team Tether ground, not as a free-heal station inside the gauntlet.",
+      "rest": {
+        "_why": "T5-CADENCE, overturning this cluster's own line above -- named rather than quietly overwritten. The `_why` reads 'Deliberately NOT a healer or a second camp mechanic -- the game has exactly one rest structure (scripts/build/camp.gd) and this is not a second one.' That was a coherent decision while rest lived in one buildable. T4-REGIONS measured what it cost: a site literally named \"rest\", holding a bed, scored FAIL on exit criterion E's 'a sensible camp/recovery opportunity', in a band whose player arrives across 668m of empty spine and walks into a four-stage Team Tether gauntlet. It is STILL not a second rest mechanic. `scripts/world/rest_point.gd` calls `night_rest.gd`, which is the same single definition `camp.gd` calls -- one mechanic, reachable from the camps the world already advertises. What changes is that the promise the name makes is now kept.\n\nThe 'free-heal station inside the gauntlet' worry the old note raises is worth answering rather than ignoring: this camp is 60m SHORT of the first picket, on the approach side, and resting costs a night and an autosave. It is the place you prepare before pushing in, which is what the note itself says it should read as -- not a mid-fight refill, because rest is not reachable mid-fight.\n\nRE-SITED, OP-0905-08 sweep (owner playtest 2026-09-05, filed against band 1's `trail_camp` but the same siting defect exists here). The original `at` [215.3, 3697.0] sat 5.2m from this cluster's own documented centre (`_why_clustered` above: 'a 2.5m ring around one centre at (211.0, 3700.0)') -- so at radius 3.2 the fire (1.5m from the old point, in reach) was nearly the only thing that was: the Bench (3.9m), the Barrel (6.9m), the Crate (6.9m) and the Bag (4.8m) were all outside. Moved onto the cluster's own documented ring centre, radius raised so the fire (the farthest authored prop from that centre, at 3.28m) sits inside with margin; the Bench, Barrel, Crate, Bag and Axe are all under 2.5m from here.",
+        "at": [211.0, 3700.0],
+        "radius": 4.0,
+        "label": "Rest until morning",
+        "craft_at": [212.9, 3696.4],
+        "creature_bed": {
+          "_why": "The bedroll this site already advertised, made real, at the exact position and yaw the `Bed_Twin1` prop held. The mesh changes to `generated_camp/camp_bed.glb` for the same reason band 2's ranger camp swaps it: `creature_bed.gd`'s header records two independent blind critics calling `Bed_Twin1` 'a human bed labelled creature bed', and the camp set has since shipped a lashed-log bed that belongs to this game. What it buys the player is the thing this band most needs before the relay -- `game_state.gd::_tick_creature_bed_recovery()` heals an occupant over real time whether or not the player stands here, so an injured creature can be left at the last safe ground and collected after, which is exit criterion H3's expedition decision in the one place in the chapter it most obviously belongs.",
+          "at": [212.4, 3701.3],
+          "yaw_deg": -65.0,
+          "bed_index": -13
+        }
+      },
+      "props": [
+        {
+          "model": "Bench",
+          "at": [211.9, 3698.9],
+          "yaw_deg": 25.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the cluster's anchor -- somewhere to sit before the approach"
+        },
+        {
+          "model": "Barrel",
+          "at": [209.8, 3701.2],
+          "yaw_deg": -10.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water, kept within reach of the bench"
+        },
+        {
+          "model": "Bag",
+          "at": [211.3, 3699.6],
+          "yaw_deg": 110.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set down against the bench leg, not merely near it -- the same 'touching pile reads as one load' rule the quarry and ranger-camp clusters already use"
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [213.9, 3697.6],
+          "yaw_deg": 40.0,
+          "scale": 0.95,
+          "sink_m": 0.04,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "T5-CADENCE. This site is named `riverwatch_rest`, is sited on the flattest measured ground in the band, and had no fire -- the one cue this world uses everywhere else to say 'you can stop here'. Band 1's trail camp and band 4's ridge posting both pair this owner-referenced ring (docs/specs/ASSET_LEDGER.md, already committed -- nothing generated) with a scaled `Bonfire_Fire`; this is the third use, not a new asset. Sited 2.4m off the bench's own face, the same fire-to-bench distance band 1's camp measures, on the open side away from the bed and the crate."
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [213.9, 3697.6],
+          "yaw_deg": -20.0,
+          "scale": 0.45,
+          "sink_m": 0.03,
+          "dir": "res://assets/props/quaternius_survival",
+          "glow": "campfire",
+          "_why": "T5-CADENCE. The fire in that ring, band 1's own solved combination (`Bonfire_Fire.obj`'s real `Fire` surface + `ignite()` + `campfire_glow.gd`'s light/embers/smoke overlay). It is also what makes this camp findable at all from the relay road at dusk, which matters more here than anywhere: T4-REGIONS measured 668m of structurally empty spine arriving into this band, and a lit fire is visible long before a bench is."
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [210.2, 3698.4],
+          "yaw_deg": 40.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "left by the bench with the firewood it cut. Two pieces of evidence of work beat one, and an axe set down is the cheapest thing in this kit that reads as an interrupted human activity"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [210.5, 3701.9],
+          "yaw_deg": -15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the fourth corner of the group, closing it into a camp with a middle rather than a line of objects along the road"
+        }
+      ]
+    },
+    {
+      "order": 3001,
+      "name": "relay_approach_checkpoint",
+      "_why": "GATE-D3. The first physical sign of Team Tether on the road, well short of Hess -- a barricade rather than a person, because a fight here would just be a third picket and prompt 64 asks for presence BUILDING before the gauntlet, not another battle. At s=12.5m along the (230,3670)->(350,3760) spine leg, 10m short of Hess at s=22.5 so the two do not compete for the player's stopping point.",
+      "_why_asymmetric": "GATE-D3 round 4. The rebuild below was laid out symmetrically -- barrel+crate left, crate+barrel right, matching distances either side of the centreline -- and a blind critic named that immediately as reading generated rather than built. The east line is now angled off the road bearing, spaced wider and run 1.6m further out than the west. The 6.4m gap is unchanged: the asymmetry is in how the two sides are built, not in how wide the road stays.",
+      "_why_vp5": "VP5 visual-parity pass. The blind judge (ralph/reports/audit/E-locations/JUDGE-AUDIT-E-locations-2026-08-31.md) read the picket's own camp as 'a supply cache... scattered across open grass', with no fire the eye could land on -- the bench, bag and bucket sat 3-8m from the brazier with nothing tangential to it, and the second supply pile sat a further 7m out, disconnected from the fire entirely. The road barricade is untouched (the road is where it is); the camp behind it now gathers around the enlarged fire: bench and log seat tangential 2.1-2.4m off, bucket radial and close, one touching supply pile 3.5-4m NE clear of the seating arc, and a tent pitched 5.2m SE with its mouth turned toward the fire -- the grunt's own bivouac, the reason this post exists here rather than a further-out grass patch.",
+      "_why_rebuilt": "GATE-D3 round 2, and it is two defects in one cluster. The driven run (tools/_probe_band3_driven.gd) WEDGED the real player body here: the crate and barrel stood 0.4m and 1.2m from the spine centreline, so a body walking the road pushed straight into them for ninety frames and stopped. Three props dropped on the walking line of the region's main road. Second, the blind critic was shown this spot and said plainly that nothing here reads as a picket -- two identical crates on a path, no camp, no barrier, no reason. Both are answered the same way: the barricade is now a LINE ACROSS the road with a 6.4m gap walked through the middle of it, and the picket's own camp sits off the verge behind it. A checkpoint you steer through reads as a checkpoint; a checkpoint you get stuck on reads as a bug. Every lateral offset below is measured on that leg's own normal (-0.6,0.8), so the gap stays a gap if the road is ever re-cut.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [238.1, 3680.1],
+          "yaw_deg": 36.9,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "west end of the barricade, 3.2m off the centreline and squared to the road rather than to the world -- yaw 36.9 is the leg's own bearing, so the crate face reads as blocking the road instead of sitting at an accident of an angle"
+        },
+        {
+          "model": "Barrel",
+          "at": [237.1, 3681.3],
+          "yaw_deg": -25.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "set against the crate, one load, further out"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [236.2, 3682.6],
+          "yaw_deg": 36.9,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the west line run out to 6.4m so the barricade has length -- two crates read as luggage, a line of three reads as something put there on purpose"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [244.3, 3669.9],
+          "yaw_deg": 22.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "VP5. Moved 3.5m NE of the fire into one touching supply pile, clear of the seating arc -- the second east-line piece read as a disconnected scatter 7m out; grouped it against the barrel and rope so it reads as one load rather than three unrelated crates"
+        },
+        {
+          "model": "Barrel",
+          "at": [245.1, 3670.7],
+          "yaw_deg": 15.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "VP5. Set touching the crate, one load rather than a scattered second stack"
+        },
+        {
+          "model": "Rope_1",
+          "at": [244.9, 3669.0],
+          "yaw_deg": 37.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "VP5. Closes the touching pile against the crate and barrel"
+        },
+        {
+          "model": "Bench",
+          "at": [241.7, 3669.4],
+          "yaw_deg": -160.7,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "VP5. Pulled in to sit tangential to the fire, 2.1m north of it, so the picket's own seat actually faces the fire it used to sit 3-8m away from -- the piece the blind judge's 'scattered across open grass' read names directly"
+        },
+        {
+          "model": "Bag",
+          "at": [243.6, 3669.5],
+          "yaw_deg": 150.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "VP5. Leaning against the supply pile below rather than the bench leg, now that the pile sits close enough to lean against"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [243.0, 3666.4],
+          "yaw_deg": 0.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5. Set radial to the fire, 1.8m SE and clear of the enlarged ring -- water at the watch post, close enough to read as part of the camp rather than a stray object"
+        },
+        {
+          "model": "Bonfire_Fire",
+          "at": [241.4, 3667.3],
+          "yaw_deg": 60.0,
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
+          "dir": "res://assets/props/quaternius_survival",
+          "glow": "campfire",
+          "_why": "SITE-DRESSING: the watch post's own brazier -- the D1 fire (Bonfire_Fire.obj's real `Fire` surface + ignite()), scaled down to a held checkpoint's small fire rather than a rest camp's. Set at the bench's other end from the bag, so the seat sits between fire and water the way the picket actually uses it -- this is the 'tent or brazier' the checkpoint's own camp was still missing.",
+          "_why_vp5": "VP5. The blind judge could not find a fire to read this camp around; scale 0.38 and no glow_scale made it the smallest, dimmest fire in the band's own picket. Grown to 0.45 with glow_scale 1.5 so it stands as a legible focal point the moved seating, supply pile and tent now arrange around, without matching a full rest camp's size.",
+          "_why_vp5_round9": "VP5 round9, coordinator spec 'a larger fire pit ring'. Grown again, 0.45->0.6 and glow_scale 1.5->1.9, now that a third seat and the ring's own firewood sit close around it -- the composition needed a bigger flame to be the thing they gather around rather than a brazier a bench happens to stand near."
+        },
+        {
+          "model": "campfire_stone_ring",
+          "at": [241.4, 3667.3],
+          "yaw_deg": -10.0,
+          "sink_m": 0.04,
+          "scale": 1.05,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "SITE-DRESSING: matches the brazier's own footprint, the same D1 owner-referenced ring mesh (already committed, no new generation).",
+          "_why_vp5": "VP5. Grown from 0.5 to 0.8 to match the brazier's own enlargement above; sink_m raised to 0.03 to keep the ring's base seated against the taller fire.",
+          "_why_vp5_round9": "VP5 round9. Grown again to 1.05 (from 0.8) to match the enlarged brazier above and give the fire pit the 'larger ring, logs and stones around it' read the coordinator's spec asks for; sink_m raised to 0.04 to keep the taller ring's base seated."
+        },
+        {
+          "model": "tree-log-small",
+          "at": [242.55, 3667.65],
+          "yaw_deg": 73.0,
+          "pitch_deg": 3.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5 round9. Firewood laid radial against the enlarged ring's own east edge -- 'built with logs and stones around it', the same radial-vs-tangential rule this chapter's other camps use to tell firewood from a seat. Kenney's textured CC0 log, the same mesh the checkpoint's own seating already uses."
+        },
+        {
+          "model": "tree-log",
+          "at": [240.0, 3666.3],
+          "yaw_deg": -22.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5 round9. A third seat, 0.7m from the existing SW log so the two read as one pulled-together perch rather than a matched pair set at even distances -- the Bench stays the camp's one unpaired seat across the fire from this touching pair, the asymmetric read the coordinator's spec names directly ('two pieces touching and one unpaired'). Within 1.7m of the fire, closer than its neighbour, so the pairing is uneven rather than mirrored."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [243.9, 3670.6],
+          "yaw_deg": 100.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5 round9. Set against the east supply pile's own crate -- the checkpoint's kettle, standing in for the model this catalogue does not have (no kettle/pot mesh is installed; the bucket already carries this role at `riverwatch_rest` and `northbank_ironwood_cut`). Touching the crate rather than merely near it, closing the pile into 3.9m of the fire."
+        },
+        {
+          "model": "tree-log",
+          "at": [239.5, 3665.8],
+          "yaw_deg": -38.5,
+          "sink_m": 0.03,
+          "scale": 1.15,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "VP5. A second seat, tangential to the fire 2.4m SW, opposite the bench -- one bench alone read as a single sentry post rather than a manned camp with more than one place to sit. Kenney's textured CC0 log, the same mesh every other camp in the chapter uses for this role."
+        },
+        {
+          "model": "camp_tent",
+          "at": [245.8, 3664.6],
+          "yaw_deg": 120.0,
+          "sink_m": -0.58,
+          "scale": 0.9,
+          "dir": "res://assets/props/generated_camp",
+          "_why": "VP5. The grunt's own bivouac, 5.2m SE of the fire with its mouth turned toward it -- the visible reason a picket sleeps here rather than on the open road. The D1 owner-referenced tent mesh (already committed, no new generation), sized between band1's rest-camp tent (1.05) and band4's patrol tent (0.85)."
+        },
+        {
+          "model": "Banner_1",
+          "at": [237.6, 3679.0],
+          "yaw_deg": 36.9,
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
+          "retint": {
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
+          },
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The former castle cloth cutout is replaced by the already-installed 2.39m Banner_1 standard, using the accepted Hallward 1.55x seating and the same oxblood faction material. It remains at the west end of the barricade, squared to the road bearing, with route clearance unchanged."
+        },
+        {
+          "model": "Stool",
+          "dir": "res://assets/props/quaternius_furniture",
+          "at": [239.5, 3677.5],
+          "yaw_deg": 216.9,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "VP5 round8. The fire/bench group reads as a bivouac, not a watch -- nothing in the cluster looks down the road. A second, unpaired seat between the road barricade and the camp, turned 216.9 degrees (reciprocal of the checkpoint's own 36.9 road bearing) to face back down the approach the barricade is set on -- a picket sits here to watch the road, not the fire. Deliberately not paired with the bench: one seat faces in, one faces out."
+        },
+        {
+          "model": "Whetstone",
+          "at": [242.6, 3670.6],
+          "yaw_deg": -15.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "VP5 round8. Tucked against the bench's near end -- gear kept maintained reads as a post settled in for a stay, the same cue `ridge_patrol_camp` and `highfield_stockcamp` already use for a manned camp rather than a passing bivouac."
+        }
+      ]
+    },
+    {
+      "order": 3002,
+      "name": "relay_station",
+      "_why": "GATE-D3, adopting tether_relay.json's own open invitation (`_comment_props`): the site's loose gear, placed inside the compound yard rather than duplicated in that file. Positions are the site's own (s,t) local frame (tether_relay.json's `_frame`) converted to world metres -- s around -7..-9 (just inside the gate, off the road axis every fight stands on) so the crates sit in the yard corner rather than in the walk line between Hess/Orrin/Dell and the console.",
+      "_why_added_e3": "E3-RELAY-POPULATION (ralph/reports/audit/E-2026-08-31.md §E3). The five props above all sit at t=+6..+10 (the east side of the yard) or s=-9.4/t=+11 (near the gate but off to the west) -- every one of them is off the camera axis `06-relay-standing`/`06-relay-apparatus` actually look down (the eye-to-apparatus line runs from local (-8,-2) to (7,-9), i.e. toward NEGATIVE t), which the audit's own fresh capture confirmed: the clutter is in the scene but not in the frame, the same 'built but not legible' defect the Hall's own occupation layer has. The three items below sit ON that sightline (local s -1..-4, t -3.6..-5.3, next to the `Relay Watch` grunt in relay_site.json) instead of duplicating the existing cluster's own corner.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [350.4, 3770.0],
+          "yaw_deg": 40.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the anchor -- requisitioned stock, still crated"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [349.0, 3770.3],
+          "yaw_deg": -30.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "against the first crate's side, one load"
+        },
+        {
+          "model": "Barrel",
+          "at": [352.8, 3769.2],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "a second stack, a couple of paces off -- the yard has an edge instead of a boundary"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [339.4, 3764.9],
+          "yaw_deg": 70.0,
+          "pitch_deg": -70.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "left leaning near the gate, the excavation tool that dug the spoil the burrowback cluster now lives in"
+        },
+        {
+          "model": "Bag",
+          "at": [344.5, 3753.8],
+          "yaw_deg": 150.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "near the pad's foot -- somebody's kit, the detail that makes the site occupied rather than merely built"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [346.13, 3758.57],
+          "yaw_deg": -15.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "E3-RELAY-POPULATION. On the standing-shot sightline (local -1.0, -4.0), a couple of paces from the `Relay Watch` grunt -- the crate a working post has open beside it, not the sealed stock in the corner cluster."
+        },
+        {
+          "model": "Whetstone",
+          "at": [344.77, 3761.27],
+          "yaw_deg": 60.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "E3-RELAY-POPULATION. Set down at local (-4.0, -3.6), on the same sightline -- a tool actually in use, not stock in storage."
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [343.81, 3759.65],
+          "yaw_deg": 20.0,
+          "pitch_deg": -75.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "E3-RELAY-POPULATION. Leaned at local (-3.2, -5.3), beside the whetstone -- the two read as one workstation rather than two unrelated props."
+        }
+      ]
+    },
+    {
+      "order": 3003,
+      "name": "old_mill_crossing_gear",
+      "_why": "GATE-D3, spec's own 'mill/crossing structures' beat. mill_crossing.gd and terrain_playground.json's `crossings[old_mill_crossing]` already build the deck, the channel and the gate logic -- this is the loose gear around it, the same treatment the quarry's working face gets: tools left where the crew stopped, which is also the honest reason a bridge missing one gear (data/dialogue/relay.json's `relay_captive_freed`) reads as abandoned rather than never-finished.",
+      "_why_resited": "GATE-D3 round 2. This cluster was authored at (-60,4160): 101m from the Old Mill Crossing it is named for and 54m off the spine, dressing nothing and seen by nobody. The driven run never came within reach of it and the blind critic, shown the crossing, said the mill stands alone on bare ground with no yard, no track and no reason -- both are the same defect. It now stands on the SOUTH bank landing where the player actually stops at a shut gate, 13-17m short of the narrows: the channel is 15m deep with a 3.6m half-width and a 3.4m rim, and terrain_playground.json fades the carve out to z=4191, so everything below sits at z<=4189 and never hangs over a cut edge. Laterally it is 4-5m off the road centreline (x=-152), on the verges, because the wedge this same run found at the relay checkpoint was three props standing on the walking line and that mistake is not worth making twice.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [-156.6, 4187.4],
+          "yaw_deg": 8.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the anchor -- spare deck timber, crated, on the west verge of the landing where a crew working the bridge would stack it"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-155.9, 4186.1],
+          "yaw_deg": -20.0,
+          "sink_m": 0.03,
+          "scale": 1.1,
+          "_why": "coiled rigging line for the deck, set down against the crate"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [-157.4, 4185.2],
+          "yaw_deg": 140.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "tipped a couple of paces off -- the group has an edge, not a boundary"
+        },
+        {
+          "model": "Workbench",
+          "at": [-147.6, 4188.6],
+          "yaw_deg": -75.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the east verge, facing the narrows. The gate is shut because the mechanism is missing a gear, and a bench turned toward the work is what says somebody was in the middle of fixing it when Team Tether took the person who knew how"
+        },
+        {
+          "model": "Anvil_Log",
+          "at": [-148.4, 4187.1],
+          "yaw_deg": 20.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "beside the bench -- mill gearing is iron, and this is the pack's only piece that says iron was worked here"
+        },
+        {
+          "model": "Barrel",
+          "at": [-146.9, 4185.9],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "closes the east group at three pieces, matching the west"
+        }
+      ]
+    },
+    {
+      "order": 3004,
+      "name": "old_mill_yard",
+      "_why_regrouped": "GATE-D3 round 3. Round 2's version put five pieces at five separate spots across an open apron, and the critic read exactly that back: 'nothing grouped into a working area, nothing pointed at anything else... a mill yard should have material staged where the mill needs it.' Regrouped into one loading face 4-8m off the mill's own south-east corner, crates touching, barrel closing the stack, bench and bucket turned toward the door. The whole group now spans 4m instead of 8m and every piece faces the building it serves.",
+      "_why": "GATE-D3 round 2, and it exists because of one specific piece of blind criticism: shown the Old Mill Crossing, the critic said the half-timbered mill 'stands alone on a bare hilltop on a stone plinth, with no path to its door, no fence, no outbuilding, no garden' -- a prop dropped on grass rather than a place someone worked. The mill itself is built by mill_crossing.gd from the crossing's own `mill` block and is not this file's to move; what it has never had is a yard. This is that yard: the working clutter of a water mill, on the north bank clear of the mill's own footprint and well clear of the channel carve (everything at z>=4218, against a fade that ends at 4215). Same prop family as every other cluster in the region (D24) -- no new models.",
+      "props": [
+        {
+          "model": "FarmCrate_Apple",
+          "at": [-139.9, 4217.4],
+          "yaw_deg": 25.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "grain in, flour out: a mill's yard is stacked with what it is milling, and a filled crate says the place worked recently rather than being a ruin"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [-138.6, 4216.4],
+          "yaw_deg": -40.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "emptied and re-stacked beside the full one, the pair reading as a load part-worked"
+        },
+        {
+          "model": "Barrel",
+          "at": [-141.0, 4218.6],
+          "yaw_deg": 0.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "set out from the crates so the yard has depth instead of being one touching pile"
+        },
+        {
+          "model": "Bench",
+          "at": [-142.2, 4220.3],
+          "yaw_deg": 105.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "turned toward the mill door -- the yard's one human-scale object, and the thing that makes the group read as somewhere people sat rather than storage"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [-141.3, 4221.2],
+          "yaw_deg": 60.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "water from the race, left at the bench end"
+        },
+        {
+          "model": "Floor_UnevenBrick",
+          "at": [-140.46, 4219.83],
+          "yaw_deg": 105.0,
+          "sink_m": 0.03,
+          "scale": 0.55,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "SITE-DRESSING: the first of two flagstones laid along the bench's own facing bearing (105 deg, 'turned toward the mill door') -- the Medieval Village kit's own real-textured floor module (village.gd already builds every settlement floor from this family, so this is the same installed prop family, not a new one), standing in for the worn track the blind critic's 'no path to its own door' named. `data/config/terrain_playground.json`'s `paths`/`building_aprons` own the real ground-texture version of this and no site-dressing lane may edit that file; these are the loose-prop substitute the same way band1's fire ring stands in for a ground-wear decal it also cannot author."
+        },
+        {
+          "model": "Floor_UnevenBrick",
+          "at": [-138.72, 4219.36],
+          "yaw_deg": 105.0,
+          "sink_m": 0.03,
+          "scale": 0.55,
+          "dir": "res://assets/buildings/quaternius_medieval",
+          "_why": "SITE-DRESSING: second flagstone, closer to the mill, continuing the same bearing so the two read as one track rather than two loose tiles."
+        }
+      ]
+    },
+    {
+      "order": 3005,
+      "name": "tether_haulage_wreck",
+      "_why": "T5-CADENCE, closing the first 168m of T4-REGIONS' measured 668m dead run at this band's opening (ralph/reports/REGION_AUDIT_2026-08-30.md: 'The player crosses from Stone & Root into the band named for the chapter's biggest landmark and walks for over two minutes past ordinary spawns before anything acknowledges it'). Nothing tier-A stood in the whole opening -- no trainer, no camp, no landmark, no structure, no alpha.\n\nWHAT IT IS, and why it is this and not filler. Band 2 is where Rootstone and Ironwood are introduced; band 3 is where Team Tether's relay is. The road between them is the road their haulage uses, and this is a sled that shed its load on the descent and was never recovered -- Team Tether presence and environmental storytelling (fun-rebuild §12's activity vocabulary) doing the same job as a signpost saying whose country this now is. It is also where band 3's rootstone comes from (harvest.json orders 3023-3025, the tier regression the same audit ranked fifth): the material is spilled out of the wreck rather than growing out of the ground, which is the honest reading for a stone that comes 'only from deep seams' (data/items/items.json) in a band that has none.\n\nSited 1.4m off the spine at arc 100, on ground measured at 1.44m of relief over a 6m pad (tools/_probe_cadence_sites.gd) -- rough for a camp, right for a load that came off on a slope. Every prop is from a family already in the world: the shared fantasy prop kit, one nature rock, and the castle kit's Banner retinted oxblood exactly as `relay_approach_checkpoint` already does in this same band.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [-71.4, 3250.6],
+          "yaw_deg": 25.0,
+          "roll_deg": 72.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the sled's own crate, tipped onto its side where the load let go"
+        },
+        {
+          "model": "FarmCrate_Empty",
+          "at": [-68.2, 3251.2],
+          "yaw_deg": -40.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "a second crate, upright but emptied -- whatever was portable went with whoever walked away"
+        },
+        {
+          "model": "Barrel",
+          "at": [-72.3, 3253.9],
+          "yaw_deg": 15.0,
+          "roll_deg": 86.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "rolled clear of the spill and left where it stopped -- the piece that says this happened rather than was arranged"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-69.6, 3253.2],
+          "yaw_deg": 100.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "the lashing that held the load, come loose with it"
+        },
+        {
+          "model": "Bag",
+          "at": [-67.4, 3253.9],
+          "yaw_deg": 150.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "a hauler's kit, set down and not picked back up -- the same detail the quarry, the ranger camp and the ridge posting all use, told a fourth time on the road that connects them"
+        },
+        {
+          "model": "Pickaxe_Bronze",
+          "at": [-70.6, 3254.6],
+          "yaw_deg": 60.0,
+          "pitch_deg": -68.0,
+          "sink_m": 0.02,
+          "scale": 1.0,
+          "_why": "leaning against the tipped crate, pitched off vertical the same way `quarry_station`'s own pickaxe leans -- the tool that says what the load was"
+        },
+        {
+          "model": "Banner_1",
+          "at": [-68.0, 3248.0],
+          "yaw_deg": 42.0,
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
+          "retint": {
+            "MI_Banner": {"color": "#d86870", "profile": "dimensional_cloth"}
+          },
+          "_why": "STONEWATER-0912. One installed route standard remains on the dry eastern shoulder, clear of the wagon silhouette; its lighter Tether-red colour is preserved while the dimensional cloth profile remaps the dark source atlas so the panel remains readable at road distance."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [-66.5, 3249.8],
+          "yaw_deg": 80.0,
+          "sink_m": 0.03,
+          "scale": 0.2,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the outcrop the sled clipped -- one stone, at the meadow scatter's own scale (0.2, matching `old_champion_rest`'s rocks), so it reads as ground rather than as debris"
+        },
+        {
+          "model": "Bush_Common",
+          "at": [-75.1, 3255.8],
+          "yaw_deg": 0.0,
+          "scale": 0.4,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "authored scenery closing the site's open side, the same edge-breaking job band 1's trail camp gives its own bushes"
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [-64.8, 3254.2],
+          "yaw_deg": 0.0,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "a tall tuft on the road side, so the wreck reads as something the meadow is taking back"
+        }
+      ]
+    },
+    {
+      "order": 3006,
+      "name": "lockwater_overlook",
+      "_why": "T5-CADENCE, the middle beat of the band-3 opening. Fun-rebuild §12 names 'overlook' and 'anticipate something clearly visible ahead' in its own activity vocabulary, and this band needs that more than any other: T4-REGIONS' tenth finding is that the river -- the landmark the whole region is named for -- is a 12m-deep gorge and therefore a NEGATIVE-space feature with no silhouette, unmistakable only once you are standing on the rim. An overlook is the cheapest honest answer to that: a place the ground opens north and the player can see the country they are walking into before they are in it.\n\nSited at the spine's westernmost bend (arc 339), on the shelf the first siting pass measured at 4.64m elevation with 1.93m of relief across a 6m pad (tools/_probe_cadence_sites.gd) -- relief is what makes an overlook read, so unlike a camp this site wanted the rougher ground, not the flatter.\n\nIT PAYS. Exit criterion G9 forbids an empty reward, so the climb carries a Greater Orb (harvest.json order 3026): the one piece of gear that changes what a player can do with the next thing they meet, in the band whose two unique species are both conditional singletons. VISUAL NOTE: sited from measured terrain, not from a frame -- whether the view actually opens is the one claim here a capture has to settle.",
+      "props": [
+        {
+          "model": "Rock_Medium_1",
+          "at": [-130.2, 3452.4],
+          "yaw_deg": 35.0,
+          "sink_m": 0.1,
+          "scale": 0.55,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the shelf's own stone, the piece that makes this a place rather than a patch of grass. Scale 0.55 (raw 3.23 x 2.26 x 2.99m, so ~1.8 x 1.2 x 1.6m) -- chest-high, the largest of the three, and well past the meadow scatter's own 0.14-0.19 ceiling so it reads as bedrock the trail bends around"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [-126.4, 3453.1],
+          "yaw_deg": 200.0,
+          "sink_m": 0.08,
+          "scale": 0.42,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "second stone of the shelf, a different mesh and a different rotation so the pair never reads as one boulder duplicated"
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [-129.1, 3447.6],
+          "yaw_deg": 310.0,
+          "sink_m": 0.06,
+          "scale": 0.34,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "third and lowest, on the downhill side -- the step you actually stand on to look out"
+        },
+        {
+          "model": "tree-log",
+          "at": [-126.8, 3449.4],
+          "yaw_deg": 108.0,
+          "sink_m": 0.04,
+          "scale": 1.15,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "a seat facing out over the drop, tangential to the view the way band 1's trail-camp bench sits tangential to its fire. Kenney's textured log, the same CC0 mesh that camp uses after the untextured nature-pack log was found and replaced"
+        },
+        {
+          "model": "Bag",
+          "at": [-127.6, 3450.4],
+          "yaw_deg": 20.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "set down against the log rather than merely near it -- somebody else stopped here to look, which is the whole difference between a viewpoint and a slope"
+        },
+        {
+          "model": "Rope_1",
+          "at": [-129.6, 3449.9],
+          "yaw_deg": 70.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "coiled beside the pack; a traveller's kit, not a posting's"
+        },
+        {
+          "model": "Bush_Common_Flowers",
+          "at": [-131.8, 3446.8],
+          "yaw_deg": 0.0,
+          "scale": 0.4,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the shelf's uphill edge, breaking the silhouette so the stones do not sit on bare lawn"
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [-124.6, 3454.2],
+          "yaw_deg": 0.0,
+          "scale": 0.5,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "tall tuft on the approach side, the foreground the view is framed past"
+        }
+      ]
+    },
+    {
+      "order": 3007,
+      "name": "the_springhead",
+      "_why": "T5-CADENCE, the third and last beat of the band-3 opening, and the one that closes the run into `riverwatch_rest`'s own coverage. Fun-rebuild §12's vocabulary again, two entries at once: 'rare habitat' and 'creature nest / feeding patch', with 'stronger Alpha/Elder non-starter creature' supplied by spawns.json order 3102 standing in it.\n\nWHY HERE AND WHY THIS. T4-REGIONS scored band 3's team-building temptation PARTIAL for a reason worth quoting: its two new species are 'conditional singletons ... A player who crosses this band in clear weather by day sees ZERO new species.' A Brooktail alpha at a spring pool is not a new species, but it is a visibly larger individual of the band's own water animal, unconditional, on the route, in the region named for water -- one credible reason to stop and reconsider the five, available to every player rather than to the ones who happen to arrive at night in the rain.\n\nSited in the hollow at (8,3560), measured 2.5m LOWER than the ground 14m west and the flatter of the two candidates (1.62m relief, tools/_probe_cadence_sites.gd) -- water gathers in a dip, and this is the dip. Stone, fern and bush only: there is no water-surface prop in any installed family and this cluster does not invent one; the pool is read through what rings it, the same way `ranger_camp` read a lean-to through what was left of it.",
+      "props": [
+        {
+          "model": "Rock_Medium_1",
+          "at": [-4.0, 3568.5],
+          "yaw_deg": 25.0,
+          "sink_m": 0.08,
+          "scale": 0.34,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "STONEWATER-0912. The spring's largest lip stone now sits outside the widened water ellipse on the north-west bank, framing the pool without becoming a dry island inside its surface."
+        },
+        {
+          "model": "Rock_Medium_2",
+          "at": [19.5, 3567.0],
+          "yaw_deg": 190.0,
+          "sink_m": 0.06,
+          "scale": 0.28,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "STONEWATER-0912. Opposite bank stone, beyond the widened pool's inner water rather than intersecting it; different mesh and rotation preserve the asymmetric ring."
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [7.0, 3569.5],
+          "yaw_deg": 300.0,
+          "sink_m": 0.06,
+          "scale": 0.3,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "STONEWATER-0912. Third stone moved to the dry north lip, where it marks the basin edge instead of punching through the water sheet."
+        },
+        {
+          "model": "Fern_1",
+          "at": [18.5, 3564.0],
+          "yaw_deg": 0.0,
+          "scale": 0.34,
+          "dir": "res://assets/environment/stylized_nature",
+          "name": "spring_fern_east",
+          "_why": "STONEWATER-0912. Ferns still identify wet ground, now rooted on the east bank outside the visible water rather than growing through its centre."
+        },
+        {
+          "model": "Fern_1",
+          "at": [-2.5, 3566.5],
+          "yaw_deg": 0.0,
+          "scale": 0.28,
+          "dir": "res://assets/environment/stylized_nature",
+          "name": "spring_fern_west",
+          "_why": "STONEWATER-0912. Second named fern on the west bank, keeping the wet-ground ring while remaining outside the widened pool surface."
+        },
+        {
+          "model": "Bush_Common",
+          "at": [20.0, 3560.0],
+          "yaw_deg": 0.0,
+          "scale": 0.38,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "STONEWATER-0912. The shaded-edge bush now stands beyond the east waterline instead of intersecting the basin."
+        },
+        {
+          "model": "Grass_Wide_Tall",
+          "at": [-3.5, 3554.5],
+          "yaw_deg": 0.0,
+          "scale": 0.55,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "STONEWATER-0912. Reed-tall approach grass remains a trail pull on the dry south-west bank and no longer rises through the pool."
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [17.5, 3569.0],
+          "yaw_deg": -30.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "STONEWATER-0912. The upright bucket now sits on the dry north-east intake step: somebody fills here, but the prop no longer appears abandoned in the middle of the water."
+        }
+      ]
+    },
+    {
+      "order": 3008,
+      "name": "northbank_ironwood_cut",
+      "_why": "T5-CADENCE. First of two beats closing T4-REGIONS' 519m dead run out of this band (arc 1855-2375), and simultaneously half the fix for the same audit's fifth finding, the resource ladder going backwards: band 2 introduces Rootstone and Ironwood, band 3 shipped wood/fiber/stone/berries and nothing else, so 'a player arriving from Stone & Root finds the resource ladder has gone backwards.'\n\nThe north bank is the right place for the Ironwood half. items.json calls Ironwood 'close-grained wood cut from the old-growth stands', band 4 is named for its Ironwood Grove, and this stretch is the climb out of the river country INTO band 4 -- so four trees here are a taste and a foreshadow, not a second grove (band 4 keeps its ten). What stands among them is a cutting someone stopped mid-job: fun-rebuild §12's 'resource formation' and 'environmental storytelling' in one site.\n\nSited at (78,4500), the flattest ground measured anywhere in this stretch (0.97m of relief over a 6m pad, tools/_probe_cadence_sites.gd).",
+      "props": [
+        {
+          "model": "tree-log",
+          "at": [75.6, 4498.4],
+          "yaw_deg": 30.0,
+          "sink_m": 0.04,
+          "scale": 1.2,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "a felled round, already limbed -- the work that was under way. Kenney's textured log, the same mesh band 1's trail camp uses"
+        },
+        {
+          "model": "tree-log-small",
+          "at": [81.0, 4501.9],
+          "yaw_deg": 12.0,
+          "pitch_deg": 3.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "dir": "res://assets/props/kenney_survival",
+          "_why": "a second, shorter round cut off the same stem, stacked clear of the first"
+        },
+        {
+          "model": "Axe_Bronze",
+          "at": [78.9, 4501.6],
+          "yaw_deg": 55.0,
+          "pitch_deg": -66.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "left leaning against the round it was cutting, pitched off vertical -- an interrupted human activity, the cheapest thing in this kit that reads as one (`riverwatch_rest`'s own axe note)"
+        },
+        {
+          "model": "Crate_Wooden",
+          "at": [80.2, 4498.9],
+          "yaw_deg": -20.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "what the cut wood was going into"
+        },
+        {
+          "model": "Rope_1",
+          "at": [76.8, 4501.2],
+          "yaw_deg": 95.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "for dragging rounds down to the crossing, coiled and not yet used on this one"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [79.6, 4503.0],
+          "yaw_deg": 40.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "water for the saw and the sawyer, upright"
+        },
+        {
+          "model": "Bag",
+          "at": [77.2, 4503.4],
+          "yaw_deg": 165.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the cutter's own kit against the crate"
+        },
+        {
+          "model": "Bush_Common",
+          "at": [83.4, 4504.6],
+          "yaw_deg": 0.0,
+          "scale": 0.42,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the cut's ragged edge back into standing scrub"
+        }
+      ]
+    },
+    {
+      "order": 3009,
+      "name": "crossing_watchpost",
+      "_why": "T5-CADENCE, second of the two beats closing the 519m run out of band 3, and the one that makes the exit stretch about something. The player reaches this point having just taken the Relay and put the Old Mill Crossing back into service (`mill_crossing.gd`, flag `mill_crossing_restored`); this is the post on the bluff above it, the eyes that told the relay who was on the road, and it is empty. Exit criterion G6 asks that a major victory change world state, and F2 asks that Team Tether escalate as a hierarchy rather than a series of unrelated fights -- an abandoned post 450m past the fight the player just won is that, told without a line of dialogue.\n\nSited at (127,4649) at arc 2200, 2.00m of relief over a 6m pad (tools/_probe_cadence_sites.gd) -- a bluff, which is what a watchpost wants. Every prop is a family the world already has; the banner is the same castle Banner module and the same oxblood hex as this band's own picket and the haulage wreck below.\n\nUNMANNED, and that is a file-ownership fact rather than a design one: data/config/bands/band3_the_river_lock/trainers.json is held by another lane this session (ralph/T3-ACTIVITIES) and this lane stayed off it. A picket standing here would be better and is recorded as such in ralph/reports/handover-T5-CADENCE-2026-08-30.md.",
+      "props": [
+        {
+          "model": "Crate_Wooden",
+          "at": [125.6, 4647.6],
+          "yaw_deg": 20.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "the post's supply crate, upright -- they left in order, not in a rout"
+        },
+        {
+          "model": "Barrel",
+          "at": [128.9, 4648.2],
+          "yaw_deg": -35.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a posting on a dry bluff, set touching the crate so the two read as one load"
+        },
+        {
+          "model": "Bench",
+          "at": [126.4, 4650.6],
+          "yaw_deg": 70.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "the seat that faced the road below -- what a watch actually does, which is sit and look"
+        },
+        {
+          "model": "Bag",
+          "at": [127.9, 4650.0],
+          "yaw_deg": 140.0,
+          "sink_m": 0.06,
+          "scale": 1.0,
+          "_why": "a picket's kit against the bench leg, still here"
+        },
+        {
+          "model": "Banner_1",
+          "at": [123.8, 4651.4],
+          "yaw_deg": 55.0,
+          "sink_m": -2.4,
+          "scale": 1.55,
+          "dir": "res://assets/props/quaternius_fantasy",
+          "retint": {
+            "MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}
+          },
+          "_why": "MEADOWS-VERTICAL-STANDARDS-0912. The abandoned watchpost now carries the same installed vertical Banner_1 standard, seating, scale and oxblood material as the other Team Tether sites. Position and route clearance are unchanged; the full pole silhouette supplies the hierarchy read without a paper-cutout lean."
+        },
+        {
+          "model": "Rope_1",
+          "at": [129.4, 4650.8],
+          "yaw_deg": 100.0,
+          "sink_m": 0.03,
+          "scale": 1.0,
+          "_why": "coiled by the crate; what tied the banner's stake and the crate's lid alike"
+        },
+        {
+          "model": "Bucket_Wooden_1",
+          "at": [124.6, 4646.8],
+          "yaw_deg": -60.0,
+          "roll_deg": 74.0,
+          "sink_m": 0.04,
+          "scale": 1.0,
+          "_why": "tipped, unlike the crate and barrel -- the one thing that says the last hour here was not orderly"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [130.6, 4646.4],
+          "yaw_deg": 140.0,
+          "sink_m": 0.04,
+          "scale": 0.2,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the bluff's own stone, at the same 0.2 the meadow scatter uses, anchoring the post to the ground it was sited on"
+        }
+      ]
+    },
+    {
+      "order": 3010,
+      "name": "riverwatch_post",
+      "_why": "GATE3_ENCOUNTER_CONTRACTS.md C-2, G3-BAND3-0903: 'give his stand a three-prop Riverwatch post... so the draw reads as a posting, not a man on grass.' Captain Oreth (data/config/bands/band3_the_river_lock/trainers.json, `captain_riverwatch`) stands at (-100,4350) with nothing around him -- the same defect this band's own `crossing_watchpost` cluster (order 3009) answers 450m north for an abandoned Team Tether post. This is Oreth's own equivalent, sited 2-4m off his own position on the flat floor of the draw his `_why_here` already describes (measured, not guessed: tools/_probe_cadence_sites.gd's own `height_at` sampled -1.66..-2.15m over this footprint, well inside the 1.48m spread/10.5-degree worst slope his trainers.json entry already records for this site).",
+      "_why_no_banner": "C-2's own text names 'the crossing_watchpost cluster's own kit', which includes an oxblood-retinted Team Tether Banner -- Oreth is a Meadows captain, not Team Tether, and planting that faction's own mark at his post would misread as his site being an occupied Tether position rather than a legitimate posting. Reused the kit's seating/storage vocabulary (bench, barrel, stone anchor) and left the banner out rather than retint it into a colour this catalogue has not authored for an ordinary captain.",
+      "props": [
+        {
+          "model": "Bench",
+          "at": [-97.0, 4353.0],
+          "yaw_deg": 19.5,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "turned to face back down the draw toward the Old Mill Crossing (bearing -160.5, the same reciprocal Oreth's own re-sited `facing_deg` now uses) -- the seat that watches the crossing, the same 'what a watch actually does' reasoning `crossing_watchpost`'s own bench already carries"
+        },
+        {
+          "model": "Barrel",
+          "at": [-98.5, 4354.0],
+          "yaw_deg": -10.0,
+          "sink_m": 0.05,
+          "scale": 1.0,
+          "_why": "water for a posting on open ground, set touching the bench's own side so the two read as one load rather than two stray objects"
+        },
+        {
+          "model": "Rock_Medium_3",
+          "at": [-96.0, 4352.0],
+          "yaw_deg": 140.0,
+          "sink_m": 0.04,
+          "scale": 0.2,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the draw's own stone, at the same 0.2 the meadow scatter uses -- anchors the post to the ground it was sited on, the same closing piece `crossing_watchpost`'s own kit ends on"
+        }
+      ]
+    },
+    {
+      "order": 3011,
+      "name": "long_water_reach",
+      "_why": "LONG-WATER-IDENTITY-0911 through FINAL-LONG-WATER-05. The retained near-bank lip, reeds and sparse toe stones frame open water without obstructing the accepted route arrival. R5 adds widely spaced shoulder stones and wet-grass clumps on the new north-bank floodplain lobes so the low land reads as inhabited shoreline rather than bare cut terrain. Every piece remains ground-seated by the production prop builder; the broad open channel and Old Mill isolation stay clear.",
+      "props": [
+        {
+          "name": "OverlookCrownWest",
+          "model": "Rock_Medium_2",
+          "at": [-289.4, 4177.1],
+          "yaw_deg": 24.0,
+          "scale_xyz": [0.82, 0.72, 1.02],
+          "sink_m": 0.34,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "largest of three low, partly buried lip stones; shifted away from the ordinary stand and reduced so it frames rather than eclipses the water axis"
+        },
+        {
+          "name": "OverlookCrownMiddle",
+          "model": "Rock_Medium_3",
+          "at": [-286.6, 4177.4],
+          "yaw_deg": 109.0,
+          "scale_xyz": [0.60, 0.54, 0.72],
+          "sink_m": 0.25,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "small companion lip stone offset in depth and height, joining the west rock without forming a pale three-boulder wall"
+        },
+        {
+          "name": "OverlookCrownEast",
+          "model": "Rock_Medium_1",
+          "at": [-283.9, 4177.0],
+          "yaw_deg": -38.0,
+          "scale_xyz": [0.42, 0.38, 0.55],
+          "sink_m": 0.18,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smallest closing lip stone, kept below the player's silhouette with the east side fully open toward the hero water"
+        },
+        {
+          "name": "NearShelfWest",
+          "model": "Rock_Medium_1",
+          "at": [-305.0, 4182.3],
+          "yaw_deg": 72.0,
+          "scale_xyz": [1.10, 0.48, 1.75],
+          "sink_m": 0.82,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low wide shelf following the water edge without repeating the crown's upright silhouette"
+        },
+        {
+          "name": "NearShelfEast",
+          "model": "Rock_Medium_2",
+          "at": [-257.0, 4181.4],
+          "yaw_deg": -68.0,
+          "scale_xyz": [0.92, 0.42, 1.45],
+          "sink_m": 0.70,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "an unpaired shelf well east of the hero crown; the 48m gap keeps the near bank navigable and lets open water dominate"
+        },
+        {
+          "name": "FarShelfWest",
+          "model": "Rock_Medium_3",
+          "at": [-307.0, 4204.0],
+          "yaw_deg": 12.0,
+          "scale_xyz": [1.35, 1.20, 1.65],
+          "sink_m": 0.15,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "largest waterline shelf, seated on the flat bed just inside the far toe so it rises naturally from the water instead of bridging the steep wall from one sampled point"
+        },
+        {
+          "name": "FarShelfMiddle",
+          "model": "Rock_Medium_1",
+          "at": [-293.5, 4204.4],
+          "yaw_deg": 81.0,
+          "scale_xyz": [0.90, 0.80, 1.05],
+          "sink_m": 0.12,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller waterline stone thirteen metres east, deliberately different in height and footprint so the toe cannot read as repeated wall blocks"
+        },
+        {
+          "name": "FarShelfEast",
+          "model": "Rock_Medium_2",
+          "at": [-266.0, 4203.8],
+          "yaw_deg": -37.0,
+          "scale_xyz": [1.15, 1.00, 1.35],
+          "sink_m": 0.14,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "third waterline shelf after a longer open run, leaving broad passages of exposed bank and open water between natural toe beats"
+        },
+        {
+          "name": "FarRimOutcropWest",
+          "model": "Rock_Medium_2",
+          "at": [-315.0, 4211.8],
+          "yaw_deg": 29.0,
+          "scale_xyz": [1.28, 1.82, 1.46],
+          "sink_m": 0.22,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "tallest rim-top mass, above but offset from the west waterline shelf; its deliberately high shoulder starts a varied plateau silhouette without occupying the steep face"
+        },
+        {
+          "name": "FarRimOutcropMiddle",
+          "model": "Rock_Medium_3",
+          "at": [-281.0, 4211.5],
+          "yaw_deg": -54.0,
+          "scale_xyz": [0.68, 0.70, 0.88],
+          "sink_m": 0.16,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low central rim stone with no matching toe rock beneath it; the pronounced height drop prevents a constant parapet rhythm"
+        },
+        {
+          "name": "FarRimOutcropEast",
+          "model": "Rock_Medium_1",
+          "at": [-250.0, 4212.2],
+          "yaw_deg": 74.0,
+          "scale_xyz": [1.08, 1.42, 1.34],
+          "sink_m": 0.18,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "mid-height east rim end-cap after the longest open interval, grounded on the plateau and kept well clear of Old Mill Crossing"
+        },
+        {
+          "name": "NearReedsWestTall",
+          "model": "Grass_Wheat",
+          "at": [-299.0, 4178.2],
+          "yaw_deg": 24.0,
+          "scale_xyz": [1.15, 1.35, 1.15],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "tall lead plant beside the west shelf; Grass_Wheat's vertical blade-and-seed silhouette supplies the installed kit's closest reed vocabulary"
+        },
+        {
+          "name": "NearReedsWestLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-296.8, 4178.6],
+          "yaw_deg": -18.0,
+          "scale": 0.85,
+          "sink_m": 0.06,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "short companion touching the tall plant, one clump rather than two repeated specimens"
+        },
+        {
+          "name": "NearReedsCrown",
+          "model": "Grass_Wide_Tall",
+          "at": [-278.6, 4178.0],
+          "yaw_deg": 67.0,
+          "scale_xyz": [0.90, 1.05, 0.90],
+          "sink_m": 0.06,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "single green accent at the open side of the overlook crown, tying the hero stones to the water edge"
+        },
+        {
+          "name": "NearReedsEastTall",
+          "model": "Grass_Wheat",
+          "at": [-251.5, 4178.3],
+          "yaw_deg": 119.0,
+          "scale_xyz": [1.0, 1.25, 1.0],
+          "sink_m": 0.07,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "the second near-bank beat after a long clear run, avoiding a continuous decorative fringe"
+        },
+        {
+          "name": "NearReedsEastLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-249.7, 4178.8],
+          "yaw_deg": 8.0,
+          "scale": 0.78,
+          "sink_m": 0.05,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller plant touching the eastern lead, preserving the tall/low clump grammar"
+        },
+        {
+          "name": "FarReedsWestTall",
+          "model": "Grass_Wheat",
+          "at": [-313.0, 4214.2],
+          "yaw_deg": -42.0,
+          "scale_xyz": [1.65, 2.55, 1.65],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "far-bank vertical accent beside the largest shelf, interrupting the pale terrain face in the approach composition"
+        },
+        {
+          "name": "FarReedsWestLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-310.6, 4214.6],
+          "yaw_deg": 15.0,
+          "scale_xyz": [1.20, 1.45, 1.20],
+          "sink_m": 0.05,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "short companion tucked between shelf and tall plant"
+        },
+        {
+          "name": "FarReedsMiddle",
+          "model": "Grass_Wide_Tall",
+          "at": [-284.0, 4214.0],
+          "yaw_deg": 91.0,
+          "scale_xyz": [1.35, 1.85, 1.35],
+          "sink_m": 0.07,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "isolated middle clump, offset from both stone shelves so flora and geology do not repeat as paired stamps"
+        },
+        {
+          "name": "FarReedsEastTall",
+          "model": "Grass_Wheat",
+          "at": [-258.0, 4214.3],
+          "yaw_deg": 31.0,
+          "scale_xyz": [1.55, 2.30, 1.55],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "far-bank end cap after the last shelf, broadening the authored rhythm across the frame"
+        },
+        {
+          "name": "FarReedsEastLow",
+          "model": "Grass_Wispy_Tall",
+          "at": [-255.8, 4214.8],
+          "yaw_deg": -25.0,
+          "scale_xyz": [1.10, 1.35, 1.10],
+          "sink_m": 0.05,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low companion on the outer side, keeping the clump asymmetric"
+        },
+        {
+          "name": "FloodplainWestShoulderStone",
+          "model": "Rock_Medium_1",
+          "at": [-389.0, 4231.0],
+          "yaw_deg": 18.0,
+          "scale_xyz": [1.35, 0.72, 1.65],
+          "sink_m": 0.30,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low stone on the west lobe's inland rise, separated from the waterline rocks by a broad planted bench"
+        },
+        {
+          "name": "FloodplainWestWetGrass",
+          "model": "Grass_Wide_Tall",
+          "at": [-374.0, 4218.5],
+          "yaw_deg": -31.0,
+          "scale_xyz": [1.55, 1.80, 1.55],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "isolated wet-grass mass inside the widest low shelf; no continuous ornamental fringe"
+        },
+        {
+          "name": "FloodplainMiddleShoulderStone",
+          "model": "Rock_Medium_3",
+          "at": [-307.0, 4233.0],
+          "yaw_deg": 67.0,
+          "scale_xyz": [0.92, 0.58, 1.24],
+          "sink_m": 0.24,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "smaller stone marks the higher middle shoulder and keeps the three lobes unequal"
+        },
+        {
+          "name": "FloodplainMiddleWetGrass",
+          "model": "Grass_Wheat",
+          "at": [-292.0, 4219.0],
+          "yaw_deg": 103.0,
+          "scale_xyz": [1.35, 1.70, 1.35],
+          "sink_m": 0.08,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "single reed-like break across the middle floodplain shelf"
+        },
+        {
+          "name": "FloodplainEastShoulderStone",
+          "model": "Rock_Medium_2",
+          "at": [-226.0, 4229.0],
+          "yaw_deg": -48.0,
+          "scale_xyz": [1.18, 0.84, 1.42],
+          "sink_m": 0.28,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "east shoulder stone ends the natural-bank rhythm before the protected Old Mill gap"
+        },
+        {
+          "name": "FloodplainEastWetGrass",
+          "model": "Grass_Wispy_Tall",
+          "at": [-244.0, 4218.0],
+          "yaw_deg": 22.0,
+          "scale_xyz": [1.45, 1.65, 1.45],
+          "sink_m": 0.06,
+          "dir": "res://assets/environment/stylized_nature",
+          "_why": "low vegetation on the east inset shelf ties the bend to the new floodplain without hiding the tower"
+        }
+      ]
+    },
+    {
+      "order": 3012,
+      "name": "doss_ranger_camp",
+      "_why": "F03 lure cue, coordinator ruling (b): a tall cue visible from the road, then readable on approach; the site is not moved. Doss's perch is 62.8 m from the nearest clear river-loop view at [-80,4165]; he and the buckled boards were a speck from the road. A ranger's large signal fire (scale 0.6, glow 1.9) 8 m behind him (east, away from the road; moved beside him on the crest's road side with the 2026-09-27 site move, see the fire's `_why_f03_0_site`), clear of the perch boards, marks the site from the loop with a 28 m dark smoke column (12 m wide at the top, alpha 0.9) that clears the trees. No interaction, reward or collider path changes.",
+      "props": [
+        {
+          "model": "Bonfire_Fire",
+          "dir": "res://assets/props/quaternius_survival",
+          "sink_m": 0.03,
+          "scale": 0.6,
+          "glow_scale": 1.9,
+          "smoke_top_m": 42.0,
+          "smoke_alpha": 1.0,
+          "smoke_top_size_m": 14.0,
+          "smoke_fade": 0.2,
+          "smoke_base_size_m": 2.5,
+          "smoke_colour": "#2e2a27",
+          "_why_f03_0_smoke": "Coordinator ruling on #356 (12:00, 2026-09-27): reuse the Tether holding camp's column values (TetherHoldingFire as set in f46b6669; batch 47 later dropped that column from Juno's camp). Code-blind lure judge C failed this 28 m #4f4a45 column as thin and pale against the sky from the road; Juno's 42 m #2e2a27 column is the one the judges read. It is a data reuse of an in-game treatment, with no new asset.",
+          "glow": "campfire",
+          "name": "DossCampFire",
+          "_why_f03_0_site": "Moved with Doss (playground_world.gd RIVER_NEST_AT, lure judge D): the fire sits 5.7 m south-west of him on the crest's road-facing edge instead of 8 m behind him on the far side of it, so the flames and glow read from the river loop with the column.",
+          "at": [
+            -23.5,
+            4160.5
+          ],
+          "yaw_deg": 10.0
+        },
+        {
+          "model": "Banner_2",
+          "dir": "res://assets/props/quaternius_fantasy",
+          "name": "DossRiverPennant",
+          "at": [
+            -31.0,
+            4171.0
+          ],
+          "yaw_deg": 105.0,
+          "sink_m": -3.57,
+          "scale": 2.9,
+          "retint": {"MI_Banner": {"color": "#2f7fa0", "profile": "dimensional_cloth"}},
+          "_why": "VERIFIER full-bar judge (#356 5859347449): from 60-148 m nothing marked Doss's camp as its own place; its black column is the same one Juno's and Bram's use, and the judge took it for the Relay's smoke. A tall river-blue pennant on the crest north-west of the perch (moved from (-25.5,4168) after a re-judge read the signal column in front of it from the loop: here it stands ~14 m across the loop's line of sight from the fire, so pennant and column separate) (the installed fantasy-prop family's Banner_2 -- Banner_1 is Team Tether's roadside standard, oxblood only, test_meadows_banner_standards_0912.gd -- in river blue, at 2.9 scale, seated by its own 1.23 m below-origin extent: sink -3.57) gives the ranger's camp a silhouette of its own against the sky from the river loop. Probe --camp-grid: the crest edge here is in the loop's sightline."
+        }
+      ]
+    }
+  ]
+}

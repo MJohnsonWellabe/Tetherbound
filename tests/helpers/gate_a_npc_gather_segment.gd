@@ -29,13 +29,64 @@ const INTERACTABLE_SCRIPT := "res://scripts/world/interactable.gd"
 const DOOR_SCRIPT := "res://scripts/world/village_door.gd"
 const HARVEST_NODE_SCRIPT := "res://scripts/world/harvest_node.gd"
 const BACKPACK_COLUMNS := 6
-const NAVIGATOR := preload("res://tests/helpers/stick_navigator.gd")
+const NAVIGATOR := preload("res://tests/helpers/opening_geometry_navigator.gd")
+const VILLAGE_BOUNDARY := preload("res://scripts/world/village_boundary.gd")
 
 ## Metres out along a door's own outward normal that the approach stands off
 ## before asking for the prompt, and metres in past the leaf once it is open.
 const DOOR_STANDOFF := 2.6
 const DOOR_STEP_IN := 2.2
 
+## Real auto-run taps during the meadow return. Physics ticks already spent
+## walking service the press/release edges; this adds no wait or walk allowance.
+class RoadRunTap extends RefCounted:
+	enum Phase { ARMED, ON_RELEASE, ON_GAP, RUNNING, OFF_RELEASE, OFF_GAP, DONE, FAILED }
+	enum Edge { NONE, PRESS, RELEASE }
+	var phase := Phase.ARMED
+	var finish := false
+	var _cutoff: float
+	var _edge_frame := -1
+	var _started_frame := -1
+	func _init(cutoff: float) -> void:
+		_cutoff = cutoff
+	func advance(frame: int, z: float, driving: bool, running: bool) -> int:
+		if phase == Phase.ARMED:
+			if finish or z >= _cutoff:
+				phase = Phase.DONE
+			elif driving:
+				if running:
+					phase = Phase.FAILED
+				else:
+					phase = Phase.ON_RELEASE
+					_edge_frame = frame
+					_started_frame = frame
+					return Edge.PRESS
+		elif phase == Phase.ON_RELEASE and frame - _edge_frame >= 3:
+			phase = Phase.ON_GAP if running else Phase.FAILED
+			_edge_frame = frame
+			return Edge.RELEASE
+		elif phase == Phase.ON_GAP and frame - _edge_frame >= 5:
+			phase = Phase.RUNNING
+		elif phase == Phase.OFF_RELEASE and frame - _edge_frame >= 3:
+			phase = Phase.OFF_GAP if not running else Phase.FAILED
+			_edge_frame = frame
+			return Edge.RELEASE
+		elif phase == Phase.OFF_GAP and frame - _edge_frame >= 5:
+			phase = Phase.DONE
+		# Reserve the existing3press+5release ticks and two callback-order ticks
+		# before the original900frame deadline; this never adds a tick.
+		if phase == Phase.RUNNING and (finish or (driving and z >= _cutoff) or frame - _started_frame >= 900 - 3 - 5 - 2):
+			if running:
+				phase = Phase.OFF_RELEASE
+				_edge_frame = frame
+				return Edge.PRESS
+			phase = Phase.DONE
+		return Edge.NONE
+
+var _mira_road_run: RoadRunTap = null
+var _mira_run_refused := false
+var _mira_walk_started := -1
+var _mira_run_trace: Array[Dictionary] = []
 var _tree: SceneTree = null
 var _world: Node = null
 var _game: Node = null
@@ -91,7 +142,7 @@ func run(tree: SceneTree, world: Node, game: Node, player: CharacterBody3D,
 		return _failures
 	if not _required_pad_actions_exist():
 		return _failures
-	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick)
+	_nav = NAVIGATOR.new(_tree, _player, _rig, _send_stick, true) # Observe actual production steering.
 	var activation_handler := Callable(self, "_on_arbiter_activated")
 	if not _arbiter.is_connected("activated", activation_handler):
 		_arbiter.connect("activated", activation_handler)
@@ -195,7 +246,7 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		# two cottages and a wagon between them. Derived from the leg.
 		if not await _walk_to_and_activate(prompt,
 				maxi(1400, 600 + int(_player.global_position.distance_to(
-					prompt.global_position) * 120.0))):
+					prompt.global_position) * 120.0)), who == "Oskar"):
 			var holder: Variant = _arbiter.call("winning_provider")
 			_fail(("natural controller travel could not activate %s cycle %d "
 				+ "(%.1fm away, arbiter winner=%s under %s). A winner that is not %s "
@@ -225,7 +276,7 @@ func _visit_villager(who: String, expected_panel_suffix: String, cycles: int) ->
 		elif not await _wait_world_owned(30):
 			_fail("%s cycle %d left stale dialogue ownership" % [who, cycle + 1])
 			return false
-		if not await _prove_movement_resumed():
+		if not await _prove_movement_resumed(door, npc.global_position):
 			_fail("%s cycle %d returned visually but world movement stayed dead" % [who, cycle + 1])
 			return false
 		_checkpoint("%s cycle %d exited and movement resumed" % [who, cycle + 1])
@@ -279,7 +330,14 @@ func _assign_tools_in_satchel() -> bool:
 		if not await _focus_satchel_slot(buttons, inventory_slot):
 			_fail("controller focus could not reach %s in Satchel slot %d" % [item_id, inventory_slot + 1])
 			return false
-		for _press in destination + 1:
+		# The verb cycles unbound -> 1 -> ... -> 5 -> unbound. The HUD autofills
+		# a wholly empty bar from the Satchel, so the tool may already sit on a
+		# slot: press as a player watching the badge does, until it lands, and
+		# never more than one full cycle.
+		var hotbar_size := (_game.get("hotbar") as Array).size()
+		for _press in hotbar_size + 1:
+			if str((_game.get("hotbar") as Array)[destination]) == item_id:
+				break
 			await _tap_action(&"backpack_assign")
 		if str((_game.get("hotbar") as Array)[destination]) != item_id:
 			_fail("Satchel controller assignment did not put %s on quick slot %d" % [item_id, destination + 1])
@@ -317,8 +375,23 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	if node == null:
 		_fail("no unspent authored %s node exists in the opening route" % item_id)
 		return false
-	if not await _walk_toward(node.global_position, 1800, 1.55) \
-			and not await _go_around_to(node.global_position, 1.55):
+	# The direct wood leg crossed Grandpa's furnished yard and lost actual floor.
+	# Follow the existing Pond road to its nearest authored node, then leave it
+	# for the resource. Nearest live nodes vary with the real NPC arrival pose.
+	# A stone heading that crosses the concave fence uses the existing meadow
+	# road; an interior heading stays direct. This hint admits no native contact.
+	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
+	var road := "The Pond" if item_id == "wood" else ""
+	if item_id == "stone":
+		var outline := VILLAGE_BOUNDARY.outline(VILLAGE_BOUNDARY.load_config())
+		var hint := stone_road_hint(Vector2(_player.global_position.x, _player.global_position.z),
+			Vector2(node.global_position.x, node.global_position.z), outline, 1.55)
+		if hint == StoneRoadHint.INVALID:
+			_fail("actual stone approach is outside the bounded village fence hint")
+			return false
+		if hint == StoneRoadHint.MEADOW:
+			road = "Practice Meadow"
+	if not await _walk_toward(node.global_position, 1800, 1.55, road, item_id == "wood"):
 		_fail("natural controller travel could not reach the authored %s node (%s)" % [item_id, _walk_diagnosis(node.global_position)])
 		return false
 	# A visible swing owns the held prop for its full production animation.  Do
@@ -458,6 +531,36 @@ func _wait_for_tool_idle() -> bool:
 	return false
 
 
+enum StoneRoadHint { INVALID, DIRECT, MEADOW }
+
+
+## Bounded layout guidance only. Inside endpoints can still cross a concave
+## fence twice, leaving via an open gate and returning through a solid panel.
+## Native production movement, floor, skin and raw contact checks still decide
+## whether the unchanged actual target is physically reached.
+static func stone_road_hint(from: Vector2, goal: Vector2, outline: PackedVector2Array, clearance: float) -> int:
+	if not from.is_finite() or not goal.is_finite() or outline.size() < 3 or outline.size() > 64 \
+			or from.distance_to(goal) > 180.0 or not is_finite(clearance) or clearance <= 0.0 or clearance > 1.65:
+		return StoneRoadHint.INVALID
+	for index in outline.size():
+		if not outline[index].is_finite() or outline[index] == outline[(index + 1) % outline.size()]:
+			return StoneRoadHint.INVALID
+	if not Geometry2D.is_point_in_polygon(from, outline) or not Geometry2D.is_point_in_polygon(goal, outline):
+		return StoneRoadHint.INVALID
+	for index in outline.size():
+		var a := outline[index]
+		var b := outline[(index + 1) % outline.size()]
+		if Geometry2D.segment_intersects_segment(from, goal, a, b) != null:
+			return StoneRoadHint.MEADOW
+		var gap := minf(from.distance_to(Geometry2D.get_closest_point_to_segment(from, a, b)),
+			goal.distance_to(Geometry2D.get_closest_point_to_segment(goal, a, b)))
+		gap = minf(gap, a.distance_to(Geometry2D.get_closest_point_to_segment(a, from, goal)))
+		gap = minf(gap, b.distance_to(Geometry2D.get_closest_point_to_segment(b, from, goal)))
+		if gap <= clearance:
+			return StoneRoadHint.MEADOW
+	return StoneRoadHint.DIRECT
+
+
 func _nearest_authored_node(item_id: String) -> Node3D:
 	var best: Node3D = null
 	var distance := INF
@@ -489,11 +592,21 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 		return false
 	var outward := _door_outward(door, inside_target)
 	if not bool(door.call("is_open")):
-		# Stand in front of the door before asking for it. Best effort on
-		# purpose: if the standoff is unreachable the walk below still gets its
-		# full budget and its own diagnosis, which is better evidence than a
-		# second failure message about a point the player never needed to reach.
-		await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0)
+		# Require the actual axial standoff within its existing 900-frame budget.
+		var hints: Array[Vector2] = []
+		if _nav.uses_production_steering() and str(door.get_parent().get_meta("village_role", "")) == "mira_shop":
+			hints = _mira_approach_hint(door)
+			if hints.is_empty():
+				_fail("missing bounded Mira road/doorstep approach metadata")
+				return false
+			print("MIRA PROVISIONAL APPROACH ", hints, " original_standoff=", door.global_position + outward * DOOR_STANDOFF)
+			if not _begin_mira_road_run(hints):
+				return false
+		var arrived := await _walk_toward(door.global_position + outward * DOOR_STANDOFF, 900, 1.0, "", false, hints)
+		var run_restored := await _finish_mira_road_run()
+		if not arrived or not run_restored:
+			_fail("could not reach actual door standoff: " + _walk_diagnosis(door.global_position))
+			return false
 		if not await _walk_to_and_activate(prompt, 1200):
 			var winner: Variant = _arbiter.call("winning_provider")
 			_fail(("could not reach or activate door '%s' in 1200 frames "
@@ -522,6 +635,143 @@ func _enter_through(door: Node3D, inside_target: Vector3) -> bool:
 			door.name, str(step.round()), _player.global_position.distance_to(step)])
 		return false
 	return true
+
+
+func _mira_approach_hint(door: Node3D) -> Array[Vector2]:
+	var village := _world.get_node_or_null(^"Village")
+	var capsule := _player.get_node_or_null(^"Collision") as CollisionShape3D
+	if village == null or village.get_child_count() > NAVIGATOR.MAX_ROAD_INPUTS \
+			or capsule == null or not capsule.shape is CapsuleShape3D \
+			or absf(capsule.shape.height - 1.8) > 0.000001 \
+			or capsule.transform.origin.distance_to(Vector3(0, 0.9, 0)) > 0.000001:
+		return []
+	var threshold: Node3D = null
+	for candidate: Node in village.get_children():
+		if str(candidate.get_meta("village_role", "")) == "mira_shop_threshold":
+			if threshold != null or not candidate is Node3D:
+				return []
+			threshold = candidate as Node3D
+	if threshold == null:
+		return []
+	var body := threshold.get_node_or_null(^"Collision") as StaticBody3D
+	if body == null or body.get_child_count() != 1:
+		return []
+	var shape := body.get_child(0) as CollisionShape3D
+	if shape == null or shape.disabled or not shape.shape is BoxShape3D \
+			or shape.global_transform.basis != Basis.IDENTITY or door.global_transform.basis != Basis.IDENTITY:
+		return []
+	return mira_approach_hint(_player.global_position, door.global_position, shape.global_position,
+		shape.shape.size, capsule.shape.radius, _player.safe_margin, _nav.authored_road_points("Practice Meadow"))
+
+
+## Current Mira only: return along the painted road, then approach sideways
+## inside the ORIGINAL standoff radius from the terrain strip behind the lip.
+## These are ordinary stick hints. Neither this box nor any road is admitted.
+static func mira_approach_hint(from: Vector3, door: Vector3, box: Vector3, size: Vector3,
+		radius: float, skin: float, road: Array[Vector2]) -> Array[Vector2]:
+	if not from.is_finite() or not door.is_finite() or not box.is_finite() or not size.is_finite() \
+			or not is_finite(radius) or not is_finite(skin) or absf(radius - 0.4) > 0.00001 \
+			or absf(skin - 0.001) > 0.00000001 or size.distance_to(Vector3(4, 0.1, 2)) > 0.0001 \
+			or absf(door.x - 27.0) > 0.0001 or absf(door.z - 5.0) > 0.0001 \
+			or absf(box.x - door.x) > 0.0001 or absf(box.z - door.z - 2.9) > 0.0001 \
+			or absf(box.y - door.y - 0.05) > 0.0001:
+		return []
+	var strip_z := door.z + DOOR_STANDOFF - 0.95
+	var gap := box.z - size.z * 0.5 - strip_z - 0.04 # SOURCE tracking reserve at the lip.
+	var expanded := radius + skin
+	if gap <= 0.0 or gap >= expanded or radius - sqrt(expanded * expanded - gap * gap) <= size.y * 0.5 + skin:
+		return [] # Full bottom hemisphere, not a point-sized or smaller trainer.
+	var corner := Vector2(20, strip_z - 0.35)
+	var result := NAVIGATOR.road_slice(road, Vector2(from.x, from.z), corner)
+	# The actual catch can finish north of the nearest southern road segment.
+	# Joining its projection then walks away from the shop over an uphill chord.
+	# In that case join the nearest forward authored node in this same slice;
+	# retain every remaining bend and the original walking/contact allowances.
+	var origin := Vector2(from.x, from.z)
+	var return_axis := corner - origin
+	if not result.is_empty() and (result.front() - origin).dot(return_axis) < 0.0:
+		var join_index := -1
+		var join_distance := INF
+		for index in range(1, result.size()):
+			if (result[index] - origin).dot(return_axis) < 0.0:
+				continue
+			var distance := origin.distance_squared_to(result[index])
+			if distance < join_distance:
+				join_index = index
+				join_distance = distance
+		if join_index < 0:
+			return []
+		result = result.slice(join_index)
+	if result.is_empty() or result.back().distance_to(corner) > 0.0001 or result.size() >= NAVIGATOR.MAX_CHOICES:
+		return []
+	result.append(Vector2(door.x, strip_z))
+	return result
+
+
+## The same painted return and original900frames. Tap the existing auto-run
+## control for the long field leg, then walk from the original(20,-12) node
+## through the village turn and low-lip standoff. Stamina and speed are earned
+## by the ordinary production controller; no flag or velocity is written here.
+func _begin_mira_road_run(hints: Array[Vector2]) -> bool:
+	if not hints.has(Vector2(20, -12)) or _player.global_position.z >= -12.0 or bool(_game.get("auto_run")):
+		return true # Short returns and an existing player preference stay unchanged.
+	if not _event_for(&"auto_run", true) is InputEventJoypadButton:
+		_fail("Mira meadow return has no physical auto-run tap binding")
+		return false
+	_mira_road_run = RoadRunTap.new(-12.0)
+	_mira_walk_started = Engine.get_physics_frames()
+	_mira_run_trace.clear()
+	_tree.connect("physics_frame", Callable(self, "_service_mira_road_run"))
+	return true
+
+
+func _service_mira_road_run() -> void:
+	_mira_road_run_edge(false) # Release edges only, except failure-path cleanup.
+
+
+func _mira_road_run_edge(driving: bool) -> void:
+	if _mira_road_run == null:
+		return
+	var edge := _mira_road_run.advance(Engine.get_physics_frames(), _player.global_position.z,
+		driving, bool(_game.get("auto_run")))
+	if edge != RoadRunTap.Edge.NONE:
+		var event := _event_for(&"auto_run", edge == RoadRunTap.Edge.PRESS) as InputEventJoypadButton
+		_mira_run_trace.append({"physics_frame": Engine.get_physics_frames(), "pressed": event.pressed,
+			"pad_button": event.button_index, "auto_run_before_dispatch": bool(_game.get("auto_run")),
+			"player": [_player.global_position.x, _player.global_position.y, _player.global_position.z]})
+		Input.parse_input_event(event)
+		# The native movement callback flushes a press before the controller.
+		# A release must also reach the controller when a refused walk has ended.
+		if not driving:
+			Input.flush_buffered_events()
+	if _mira_road_run.phase == RoadRunTap.Phase.FAILED:
+		_mira_run_refused = true
+		_fail("physical Mira auto-run tap did not restore the observed production state")
+	if _mira_road_run.phase in [RoadRunTap.Phase.DONE, RoadRunTap.Phase.FAILED]:
+		_tree.disconnect("physics_frame", Callable(self, "_service_mira_road_run"))
+		_mira_road_run = null
+
+
+func _finish_mira_road_run() -> bool:
+	if _mira_road_run != null:
+		_mira_road_run.finish = true
+		_mira_road_run_edge(false)
+		# A refused walk can finish its physical off tap using only unused
+		# ticks from the ORIGINAL900 allowance. It remains refused throughout.
+		var remaining := maxi(0, 900 - int(Engine.get_physics_frames() - _mira_walk_started))
+		while _mira_road_run != null and remaining > 0:
+			_stop_left_stick()
+			Input.flush_buffered_events()
+			remaining -= 1
+			await _tree.physics_frame
+		# Never extend the budget or accept an arrival with an owned run toggle.
+		if _mira_road_run != null:
+			_fail("Mira road run did not finish within the original standoff allowance")
+			return false
+	if not _mira_run_trace.is_empty():
+		print("MIRA ROAD RUN INPUT ", JSON.stringify({"acceptance": false, "edges": _mira_run_trace,
+			"auto_run_after": bool(_game.get("auto_run")), "refused": _mira_run_refused}))
+	return _failures.is_empty()
 
 
 ## Reproduced twice running this segment for real (OWNER-0901-PLAYER-SLEEP-V2):
@@ -613,9 +863,24 @@ func _npc_prompt(npc: Node3D) -> Node3D:
 ##
 ##   natural controller travel could not activate Mira cycle 1
 ##   (7.0m away, arbiter winner=EncounterDirector under MeadowsPlayground)
-func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
+func _walk_to_and_activate(target: Node3D, budget: int, oskar_road: bool = false) -> bool:
 	for attempt in 3:
-		if await _one_approach(target, budget):
+		var headings: Array[Vector2] = []
+		if oskar_road:
+			var npc := _world.find_child("Oskar", true, false) as Node3D
+			if npc == null or target != _npc_prompt(npc) or not _world.is_ancestor_of(target):
+				_fail("authored Oskar guidance lacks the actual current-world prompt")
+				return false
+			var from := Vector2(_player.global_position.x, _player.global_position.z)
+			var goal := Vector2(target.global_position.x, target.global_position.z)
+			if from.distance_to(goal) > 4.0:
+				headings = oskar_approach_path(_nav.authored_road_points("Practice Meadow"),
+					_nav.authored_approach_points("village_main_street"),
+					_nav.authored_approach_points("oskar_house_walk"), from, goal)
+				if headings.is_empty() or _nav.refused():
+					_fail("missing/malformed bounded authored Oskar approach")
+					return false
+		if await _one_approach(target, budget, headings):
 			return true
 		if not _failures.is_empty():
 			return false
@@ -630,10 +895,12 @@ func _walk_to_and_activate(target: Node3D, budget: int) -> bool:
 ## fight that freezes the body for twenty seconds is not twenty seconds of
 ## failing to get somewhere. Counting them spent the whole allowance waiting
 ## and then reported the villager as unreachable from twenty-nine metres away.
-func _one_approach(target: Node3D, budget: int) -> bool:
+func _one_approach(target: Node3D, budget: int, headings: Array[Vector2] = []) -> bool:
 	_nav.reset()
+	_nav.set_approach_radius(1.65 if headings.is_empty() else 0.8)
 	var walked := 0
 	var held := 0
+	var heading_index := 0
 	while walked < budget:
 		if not _nav.can_walk():
 			# Hands off while a fight owns the body; nothing learned during it
@@ -645,8 +912,26 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			_nav.reset()
 			await _tree.physics_frame
 			continue
+		if _nav.refused():
+			_fail("Native opening refused: " + _nav.refusal_reason())
+			return false
 		walked += 1
-		if _arbiter.call("winning_provider") == target:
+		# Keep the same walking allowance and index through fights/resets. Every
+		# authored bend is reached by observed real motion before the next one.
+		if heading_index < headings.size() and not _nav.departure_pending(target.global_position):
+			var at := Vector2(_player.global_position.x, _player.global_position.z)
+			if at.distance_to(headings[heading_index]) <= 0.8:
+				heading_index += 1
+				_nav.reset()
+				_nav.set_approach_radius(1.65 if heading_index == headings.size() else 0.8)
+			if heading_index < headings.size():
+				var next := headings[heading_index]
+				await _nav.step(Vector3(next.x, target.global_position.y, next.y))
+				if _nav.refused():
+					_fail("Native authored Oskar approach refused: " + _nav.refusal_reason())
+					return false
+				continue
+		if heading_index == headings.size() and not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
 			var activation := await _press_and_observe_activation(target)
 			if activation == ActivationVerdict.TARGET:
 				return true
@@ -661,7 +946,7 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			continue
 		var to := target.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= 1.65:
+		if heading_index == headings.size() and not _nav.departure_pending(target.global_position) and to.length() <= 1.65:
 			# Close enough, and something ELSE is holding the interact line.
 			#
 			# The village stands in open meadow and the arbiter ranks by
@@ -684,18 +969,24 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 			for _j in 10:
 				_nav.push_once(aside.normalized())
 				await _tree.physics_frame
+				if _nav.refused():
+					_fail("Native opening shuffle refused: " + _nav.refusal_reason())
+					return false
 			_stop_left_stick()
 			for _j in 6:
 				await _tree.physics_frame
 			_nav.reset()
 			continue
 		await _nav.step(target.global_position)
+		if _nav.refused():
+			_fail("Native opening refused: " + _nav.refusal_reason())
+			return false
 	_stop_left_stick()
 	# Standing close and still not winning: give the arbiter a few frames to
 	# settle before giving up, which is what the previous version did and is
 	# still right once the walking is over.
 	for _i in 30:
-		if _arbiter.call("winning_provider") == target:
+		if heading_index == headings.size() and not _nav.departure_pending(target.global_position) and _arbiter.call("winning_provider") == target:
 			var activation := await _press_and_observe_activation(target)
 			if activation == ActivationVerdict.TARGET:
 				return true
@@ -705,6 +996,60 @@ func _one_approach(target: Node3D, budget: int) -> bool:
 				return false
 		await _tree.physics_frame
 	return false
+
+
+## Join existing painted roads without claiming their geometry is clear. Only
+## same-direction collinear intermediate coordinates may be compressed; bends
+## and the unchanged eight-choice/edge bounds are preserved.
+static func oskar_approach_path(meadow: Array[Vector2], street: Array[Vector2], approach: Array[Vector2], from: Vector2, goal: Vector2) -> Array[Vector2]:
+	if not from.is_finite() or not goal.is_finite():
+		return []
+	for road: Array[Vector2] in [meadow, street, approach]:
+		if road.size() < 2 or road.size() > NAVIGATOR.MAX_ROAD_INPUTS:
+			return []
+		for index in road.size():
+			if not road[index].is_finite() or (index > 0 \
+					and (road[index - 1].distance_to(road[index]) <= NAVIGATOR.CONTACT_EPS \
+					or road[index - 1].distance_to(road[index]) > NAVIGATOR.MAX_EDGE)):
+				return []
+	var street_join := NAVIGATOR.road_slice(street, meadow[0], approach[0])
+	if street_join.is_empty() or street_join[0].distance_to(meadow[0]) > NAVIGATOR.CONTACT_EPS \
+			or street_join.back().distance_to(approach[0]) > NAVIGATOR.CONTACT_EPS \
+			or approach.back().distance_to(goal) > 1.65:
+		return []
+	var meadow_leg := NAVIGATOR.road_slice(meadow, from, meadow[0])
+	var street_leg := NAVIGATOR.road_slice(street, from, approach[0])
+	if meadow_leg.is_empty() or street_leg.is_empty():
+		return []
+	var raw: Array[Vector2] = []
+	if from.distance_to(meadow_leg[0]) < from.distance_to(street_leg[0]):
+		raw.append_array(meadow_leg)
+		raw.append_array(street_join)
+	else:
+		raw.append_array(street_leg)
+	raw.append_array(approach)
+	# The actual prompt remains _one_approach's final activation/walking target.
+	# Count only authored headings here; appending that same prompt made an
+	# otherwise valid eight-bend deep-meadow return incorrectly require nine.
+	var result: Array[Vector2] = []
+	for point: Vector2 in raw:
+		if not result.is_empty() and result.back().distance_to(point) <= NAVIGATOR.CONTACT_EPS:
+			continue
+		if result.size() >= 2:
+			var incoming: Vector2 = result.back() - result[result.size() - 2]
+			var outgoing: Vector2 = point - result.back()
+			if absf(incoming.cross(outgoing)) <= NAVIGATOR.CONTACT_EPS \
+					and incoming.dot(outgoing) > 0.0:
+				result.pop_back()
+		result.append(point)
+	if result.size() > NAVIGATOR.MAX_CHOICES:
+		return []
+	var previous := from
+	for point: Vector2 in result:
+		if previous.distance_to(point) > NAVIGATOR.MAX_EDGE:
+			return []
+		previous = point
+	return result
 
 
 ## A physical press succeeds only when the live arbiter says the requested
@@ -734,28 +1079,7 @@ static func activation_verdict(provider: Object, target: Object) -> int:
 	return ActivationVerdict.TARGET if provider == target else ActivationVerdict.COMPETING
 
 
-## Travel one leg. The detour logic lives in `stick_navigator.gd`; this only
-## adds the settle frames the callers here rely on after arriving.
-## One go-around after a timed-out approach, as a player walks round what the
-## straight line keeps meeting: ten metres to either side of the heading, then
-## the target again. Seed-15 runs twice failed the first wood node here with
-## no position logged (CI r18 36291504880, a local run at 145a2229).
-const GO_AROUND_M := 10.0
-
-
-func _go_around_to(point: Vector3, close_enough: float) -> bool:
-	var at := _player.global_position
-	var heading := point - at
-	heading.y = 0.0
-	if heading.length() < 0.01:
-		return false
-	var side := Vector3(-heading.z, 0.0, heading.x).normalized() * GO_AROUND_M
-	for sign: float in [1.0, -1.0]:
-		print("GATE A NPC/GATHER go-around: player=%s target=%s via=%s" % [at, point, at + side * sign])
-		await _walk_toward(at + side * sign, 600, 1.5)
-		if await _walk_toward(point, 1200, close_enough):
-			return true
-	return false
+## Native opening queries share the real stick seam and original frame budgets.
 
 
 func _walk_diagnosis(point: Vector3) -> String:
@@ -767,16 +1091,19 @@ func _walk_diagnosis(point: Vector3) -> String:
 		Vector2(point.x - _player.global_position.x, point.z - _player.global_position.z).length(), colliders]
 
 
-func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8) -> bool:
-	var arrived: bool = await _nav.walk_to(point, budget, close_enough)
+func _walk_toward(point: Vector3, budget: int, close_enough: float = 0.8, authored_road: String = "", end_road_at_goal: bool = false, provisional_path: Array[Vector2] = []) -> bool:
+	var arrived: bool = await _nav.walk_to(point, budget, close_enough, authored_road, end_road_at_goal, provisional_path)
 	_stop_left_stick()
+	if _nav.refused():
+		_fail("Native opening refused: " + _nav.refusal_reason())
+		return false
 	if arrived:
 		for _i in 5:
 			await _tree.physics_frame
 	return arrived
 
 
-func _prove_movement_resumed() -> bool:
+func _prove_movement_resumed(door: Node3D = null, inside_target: Vector3 = Vector3.ZERO) -> bool:
 	# Say WHICH of the four ways this fails. "Movement stayed dead" covers a
 	# paused tree, a stale input owner, a cleared locomotion flag and a player
 	# who simply could not walk anywhere, and those are four different bugs
@@ -805,19 +1132,41 @@ func _prove_movement_resumed() -> bool:
 	if not bool(_player.call("locomotion_enabled")):
 		print("movement dead: locomotion_enabled is false after two seconds of waiting")
 		return false
+	# An indoor greeting first returns toward the SAME doorway-axis point already
+	# used by _exit_through. The camera's forward nudge pointed into guest
+	# furniture in CI6173; the aisle uses these existing frames instead.
+	var aisle := Vector3.INF
+	if door != null:
+		aisle = doorway_resume_goal(door.global_position, _door_outward(door, inside_target))
+		if not aisle.is_finite():
+			_fail("invalid doorway-axis movement-resume hint")
+			return false
 	# Try four physical directions because a villager counter or wall can block
 	# one without implying dead world input.  This is ordinary walking, not a
 	# relocation shortcut, and leaves the player wherever the successful step
 	# naturally ended.
 	for axis: Vector2 in [Vector2(0, -1), Vector2(1, 0), Vector2(0, 1), Vector2(-1, 0)]:
 		var before := _player.global_position
-		_send_axis(JOY_AXIS_LEFT_X, axis.x)
-		_send_axis(JOY_AXIS_LEFT_Y, axis.y)
+		_nav.reset()
 		for _i in 22:
-			await _tree.physics_frame
+			if axis == Vector2(0, -1) and aisle.is_finite():
+				await _nav.step(aisle)
+			else:
+				var basis: Basis = _rig.call("planar_basis")
+				var requested := basis * Vector3(axis.x, 0.0, axis.y)
+				_nav.push_once(requested)
+				await _tree.physics_frame
+			if _nav.refused():
+				_stop_left_stick()
+				_fail("Native opening refused during movement resume: " + _nav.refusal_reason())
+				return false
 		_stop_left_stick()
 		for _i in 4:
+			_nav.push_once(Vector3.ZERO)
 			await _tree.physics_frame
+			if _nav.refused():
+				_fail("Native opening refused during movement-resume settle: " + _nav.refusal_reason())
+				return false
 		if Vector2(_player.global_position.x - before.x,
 				_player.global_position.z - before.z).length() >= 0.3:
 			return true
@@ -825,6 +1174,15 @@ func _prove_movement_resumed() -> bool:
 		_player.global_position.x, _player.global_position.y, _player.global_position.z,
 	])
 	return false
+
+
+## Heading only. Original door, inward distance, stick input, frame allowance,
+## displacement witness and both actual native guards remain decisive.
+static func doorway_resume_goal(door: Vector3, outward: Vector3) -> Vector3:
+	if not door.is_finite() or not outward.is_finite() or absf(outward.y) > 0.00001 \
+			or absf(outward.length_squared() - 1.0) > 0.00001:
+		return Vector3.INF
+	return door - outward * DOOR_STEP_IN
 
 
 func _wait_dialogue_open(budget: int) -> bool:
@@ -870,6 +1228,12 @@ func _tap_action(action: StringName) -> void:
 	Input.parse_input_event(event)
 	for _i in 3:
 		await _tree.physics_frame
+	# Menus poll `is_action_just_pressed` from `_process`. On a slow runner the
+	# three physics ticks above can all fall inside one rendered frame, and a
+	# release parsed before any `_process` poll ran drops the tap entirely.
+	# Hold through two rendered frames as well, as a real finger does.
+	for _i in 2:
+		await _tree.process_frame
 	var released := event.duplicate() as InputEvent
 	if released is InputEventJoypadButton:
 		(released as InputEventJoypadButton).pressed = false
@@ -922,6 +1286,10 @@ func _send_axis(axis: JoyAxis, value: float) -> void:
 ## would not have been travel by the player's own left stick, and this segment's
 ## header makes that a load-bearing constraint.
 func _send_stick(x: float, y: float) -> void:
+	_mira_road_run_edge(x != 0.0 or y != 0.0)
+	if _mira_run_refused:
+		x = 0.0
+		y = 0.0
 	_send_axis(JOY_AXIS_LEFT_X, x)
 	_send_axis(JOY_AXIS_LEFT_Y, y)
 

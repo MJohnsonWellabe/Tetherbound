@@ -1,0 +1,46 @@
+{
+  "source_commit": "ee097eeffab09ce4b9d120e164412f1f5416a13c",
+  "predecessor": "517d5ff18fbe28d8a71d29fac3d6d4b4f87db2e3",
+  "verdict": "PASS_FOR_BOUNDED_GRID_GROUND_SOURCE_FIX",
+  "scope": ["scripts/build/build_placer.gd", "tests/test_build_placer_preview.gd"],
+  "open_P1_P2_findings": [],
+  "diff_check": "PASS",
+  "parser_status": "No concrete parser defect found by source inspection; engine parsing remains unverified.",
+  "static_comparisons": {
+    "production_exact_except_15_line_insert": true,
+    "all_prior_case_bodies_assertions_data_and_fixture_cleanup_exact": true,
+    "four_added_cases_use_registered_fixture_factory": true,
+    "exact_two_owned_paths": true
+  },
+  "source_observations": [
+    "The new center sample is inside the existing not-snapped-to-neighbour branch. Structural and same-ID neighbor paths preserve their inherited height and existing slope exemption.",
+    "Resolved grid center ground replaces both returned spot.y and the corner-rise baseline; this removes raw-aim grid-phase dependence from actual placement height and slope.",
+    "Missing resolved center ground returns the same no-ground result shape as missing raw ground, before occupancy, affordability or paid placement paths can run.",
+    "The original four corner offsets and MAX_SLOPE_RISE=0.8 remain unchanged. Occupancy, tent containment, affordability, station/altar/arch policy and actual controller submission code remain exactly unchanged outside the inserted center block.",
+    "New gentle callback case compares two aims resolving to one cell and asserts both legality and exact center height. Gentle center rise is 0.6 while the original raw-edge baseline would yield 1.1.",
+    "New actual-steep callback case asserts refusal at 1.08 rise; missing-center case asserts no-ground and infinite position; neighbor case asserts inherited y=12 with slope exemption.",
+    "The new tests are meaningful regressions against the old implementation, and all fourteen node-allocating cases use the existing registered fixture factory with after_each synchronous cleanup. Test execution remains NOTRUN."
+  ],
+  "offline_terrain_evidence": {
+    "source": "Parent-reported file-only decode of committed terrain3d_00_00.res; reviewer inspected read-terrain.py source but did not execute its native decoder.",
+    "raw_70_67_old_rise": 1.056756711,
+    "snapped_70_68_center_rise": 0.7680577755,
+    "passing_aligned_70_70_rise": 0.416708565,
+    "interpretation": "Reported authored heights predict the original failing versus passing aim-phase contrast at the unchanged 0.8 threshold. Actual live refusal confirmation remains ROOT-owned."
+  },
+  "hashes": "Independent base/new Git SHA256, base/new blob OIDs and observed working SHA256 are recorded in observed-hashes.json.",
+  "reviewer_engine_import_check_only_ci_unit_or_native_execution": false,
+  "runtime_claim": false,
+  "ROOT_observational_diagnostic": {
+    "status": "240-second timeout during loading before F31_BED_DIAG samples; no live CI-cause attribution.",
+    "root_head": "3e7bc7cfe0",
+    "parent_reported_log_sha256": "07a956b20951385fa73dd5fa984853aa43ad8340340cba356c348900535f5fa0",
+    "limit": "Concrete source semantics and parent-attributed terrain inference support this bounded repair; they do not establish successful original smoke behavior."
+  },
+  "ROOT_followup": "OPEN: inspect observational live ghost/refusal capture, compose source, and run named affected callback/unit and original controller smokes; preserve controller and behavior assertions.",
+  "flags": "OFF; unchanged by exact two-path delta",
+  "acceptance_credit": 0,
+  "acceptance_F31_0_through_6": "OPEN",
+  "runtime_visual_acceptance": "OPEN",
+  "reviewer_writes": "Ignored .tmp/f31-grid-ground-review evidence only."
+}

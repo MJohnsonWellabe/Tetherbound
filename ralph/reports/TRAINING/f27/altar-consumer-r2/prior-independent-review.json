@@ -1,0 +1,381 @@
+{
+  "scope": "Independent READ-ONLY strict source/contract review, no engine or acceptance",
+  "consumer_head": "4839e34afb9f134bdcdda74e25dd96d4a9f2a0bb",
+  "canonical_main": "7dcd2a8649660553f38702f2de71390efc6f1343",
+  "before": [
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/foundation-interface.json",
+      "bytes": 7803,
+      "sha256": "2395eda1b4aa2d8ef1d0aaf302f7986efb802de236a74af2c6159e3a29026824"
+    },
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/minimal-schema.json",
+      "bytes": 8255,
+      "sha256": "2b029897120ee3fe7d8e16a29d1caae51ecdfd38c3065d22d3294d890977426e"
+    },
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/source-cut.patch.json",
+      "bytes": 19145,
+      "sha256": "409fee82113b34db8a14cf36a2314cf0dfb0f261ec193c8e608169bf068afa02"
+    },
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/source-provenance.json",
+      "bytes": 2870,
+      "sha256": "b0ffe97ccf03d8a82ab2c493a69fa1ef304fd4f1df32c3069b2a9d51d3fc5ecb"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/data/config/essence.json",
+      "bytes": 1533,
+      "sha256": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/creatures/essence.gd",
+      "bytes": 47509,
+      "sha256": "a4dfbdda05577c130b121d5d310f4aa67953d3ecf06a09ba3fb22455030a4004"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_panel.gd",
+      "bytes": 17474,
+      "sha256": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_service.gd",
+      "bytes": 18118,
+      "sha256": "bbebf43b20e583ec0592318d51b9629e91fa386c8721ee5ce44246847ce1c405"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_station_interaction.gd",
+      "bytes": 4887,
+      "sha256": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88"
+    }
+  ],
+  "tracked_status_before": "",
+  "lookdev_head_before": "ade7b9258dc0e9d5642fc4e45a1c28574255f169",
+  "lookdev_status_before": "",
+  "canonical_sources_before": [
+    {
+      "path": "scripts/net/session.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539"
+    },
+    {
+      "path": "scripts/net/ledger_rpc.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57"
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1"
+    },
+    {
+      "path": "scripts/build/build_placer.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "b58ec9ee3dfb76f03a0f0cf080cf414cc1ca98fe55b7b9e2019ca3e327a968d4"
+    },
+    {
+      "path": "scripts/creatures/progression.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9"
+    },
+    {
+      "path": "autoload/player_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "403f03fd5ecb162a43e6d0b85b02eaa7da2c45c27e7cde265cc8c3bb20f98400"
+    },
+    {
+      "path": "autoload/party.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "d2ae303789477f9027faa7e2bb675c2b76ddc64ddb8c794c49a3a4a9febb6f70"
+    },
+    {
+      "path": "autoload/game_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5"
+    },
+    {
+      "path": "autoload/world_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "fd5b167d8cc9a63cf3b4d27d75d467a4c9908c29a3227f5204f5c66e82fc58a6"
+    },
+    {
+      "path": "scripts/net/world_ledger.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830"
+    },
+    {
+      "path": "scripts/world/interactable.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "f4e70c406ca61d210edc4a19335cb57cf74678459eb3f313a2fdd758b53a3e9a"
+    },
+    {
+      "path": "scripts/world/realm_world_records.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "dd1c60141bf9935103de6b4474f423d2b321893d4d3507e9101b31fc4c536644"
+    },
+    {
+      "path": "scripts/data/redesign_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed"
+    },
+    {
+      "path": "data/items/items.json",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff"
+    }
+  ],
+  "patch_verification": {
+    "owned_embedded_patch_sha256": "79751d6aaf8a91108173793b90143182a09b8dfbc727ca4e4c98047e7d27e990",
+    "owned_declared_patch_sha256": "79751d6aaf8a91108173793b90143182a09b8dfbc727ca4e4c98047e7d27e990",
+    "shared_embedded_patch_sha256": "4ffb80064ccab93ada73bb83bc128c9ff3cf5af36b05ad2a9d0b81d3aca3ff46",
+    "shared_declared_patch_sha256": "4ffb80064ccab93ada73bb83bc128c9ff3cf5af36b05ad2a9d0b81d3aca3ff46",
+    "paths": [
+      {
+        "path": "scripts/ui/altar_service.gd",
+        "reconstructed_matches_after": true,
+        "canonical_after_sha256": "bbebf43b20e583ec0592318d51b9629e91fa386c8721ee5ce44246847ce1c405"
+      },
+      {
+        "path": "scripts/ui/altar_panel.gd",
+        "reconstructed_matches_after": true,
+        "canonical_after_sha256": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969"
+      },
+      {
+        "path": "scripts/ui/altar_station_interaction.gd",
+        "reconstructed_matches_after": true,
+        "canonical_after_sha256": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88"
+      },
+      {
+        "path": "scripts/creatures/essence.gd",
+        "reconstructed_matches_after": true,
+        "canonical_after_sha256": "a4dfbdda05577c130b121d5d310f4aa67953d3ecf06a09ba3fb22455030a4004"
+      },
+      {
+        "path": "data/config/essence.json",
+        "reconstructed_matches_after": true,
+        "canonical_after_sha256": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4"
+      }
+    ]
+  },
+  "critical_api_comparison": {
+    "scripts/net/session.gd": {
+      "bcb_to_7dcd_identical": true
+    },
+    "scripts/net/character_authority.gd": {
+      "bcb_to_7dcd_identical": true
+    },
+    "scripts/net/ledger_rpc.gd": {
+      "bcb_to_7dcd_identical": true
+    },
+    "scripts/save/save_game.gd": {
+      "bcb_to_7dcd_identical": true
+    },
+    "scripts/build/build_placer.gd": {
+      "bcb_to_7dcd_identical": true
+    }
+  },
+  "after": [
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/foundation-interface.json",
+      "bytes": 7803,
+      "sha256": "2395eda1b4aa2d8ef1d0aaf302f7986efb802de236a74af2c6159e3a29026824"
+    },
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/minimal-schema.json",
+      "bytes": 8255,
+      "sha256": "2b029897120ee3fe7d8e16a29d1caae51ecdfd38c3065d22d3294d890977426e"
+    },
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/source-cut.patch.json",
+      "bytes": 19145,
+      "sha256": "409fee82113b34db8a14cf36a2314cf0dfb0f261ec193c8e608169bf068afa02"
+    },
+    {
+      "path": "ralph/reports/TRAINING/f27/altar-mounted/source-provenance.json",
+      "bytes": 2870,
+      "sha256": "b0ffe97ccf03d8a82ab2c493a69fa1ef304fd4f1df32c3069b2a9d51d3fc5ecb"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/data/config/essence.json",
+      "bytes": 1533,
+      "sha256": "a232807812b1d41960596b6dab6f6ea6ea897aceaa02f95fe0a7d9da40510ff4"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/creatures/essence.gd",
+      "bytes": 47509,
+      "sha256": "a4dfbdda05577c130b121d5d310f4aa67953d3ecf06a09ba3fb22455030a4004"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_panel.gd",
+      "bytes": 17474,
+      "sha256": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_service.gd",
+      "bytes": 18118,
+      "sha256": "bbebf43b20e583ec0592318d51b9629e91fa386c8721ee5ce44246847ce1c405"
+    },
+    {
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_station_interaction.gd",
+      "bytes": 4887,
+      "sha256": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88"
+    }
+  ],
+  "inputs_unchanged": true,
+  "canonical_sources_after": [
+    {
+      "path": "scripts/net/session.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571"
+    },
+    {
+      "path": "scripts/net/character_authority.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539"
+    },
+    {
+      "path": "scripts/net/ledger_rpc.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "428454a234a86742557af763e5f6d61b2982a40f0f83fa2363a7496d99908a57"
+    },
+    {
+      "path": "scripts/save/save_game.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "f34d55dc056ddd3283e5ebb275896daea0b252480dab231a9035615a026762b1"
+    },
+    {
+      "path": "scripts/build/build_placer.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "b58ec9ee3dfb76f03a0f0cf080cf414cc1ca98fe55b7b9e2019ca3e327a968d4"
+    },
+    {
+      "path": "scripts/creatures/progression.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9"
+    },
+    {
+      "path": "autoload/player_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "403f03fd5ecb162a43e6d0b85b02eaa7da2c45c27e7cde265cc8c3bb20f98400"
+    },
+    {
+      "path": "autoload/party.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "d2ae303789477f9027faa7e2bb675c2b76ddc64ddb8c794c49a3a4a9febb6f70"
+    },
+    {
+      "path": "autoload/game_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "bcb3a242b1041cd5e7563d447cf4684d9d92e9e718fce5c73936cc47bce083f5"
+    },
+    {
+      "path": "autoload/world_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "fd5b167d8cc9a63cf3b4d27d75d467a4c9908c29a3227f5204f5c66e82fc58a6"
+    },
+    {
+      "path": "scripts/net/world_ledger.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "e450ab598502bbdf41eeec255d9b3611e17e0746d3e61a4dd5afb653f524c830"
+    },
+    {
+      "path": "scripts/world/interactable.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "f4e70c406ca61d210edc4a19335cb57cf74678459eb3f313a2fdd758b53a3e9a"
+    },
+    {
+      "path": "scripts/world/realm_world_records.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "dd1c60141bf9935103de6b4474f423d2b321893d4d3507e9101b31fc4c536644"
+    },
+    {
+      "path": "scripts/data/redesign_state.gd",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed"
+    },
+    {
+      "path": "data/items/items.json",
+      "commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "sha256": "71b1957c7ea9af6a7ee4464a36d7817a4ca9203e65a8eafc6cbb7de2114a26ff"
+    }
+  ],
+  "canonical_pins_unchanged": true,
+  "consumer_head_after": "4839e34afb9f134bdcdda74e25dd96d4a9f2a0bb",
+  "tracked_status_after": "",
+  "lookdev_head_after": "ade7b9258dc0e9d5642fc4e45a1c28574255f169",
+  "lookdev_status_after": "",
+  "preservation": {
+    "consumer_head_unchanged": true,
+    "training_tracked_status_unchanged": true,
+    "lookdev_head_unchanged": true,
+    "lookdev_status_unchanged": true,
+    "review_writes_only": [
+      ".tmp/altar-consumer-independent-r1/strict-review.txt",
+      ".tmp/altar-consumer-independent-r1/review.json"
+    ]
+  },
+  "source_verdict": "HOLD",
+  "activation_verdict": "BLOCKED; actual canonical main producer absent, availability must remain false",
+  "acceptance_claim": false,
+  "native_claim": false,
+  "mocked_producer_approval": false,
+  "engine_import_render_export_runs": 0,
+  "unit_ci_runs": 0,
+  "git_mutations": 0,
+  "tracked_changes": 0,
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "medium",
+      "classification": "conditional consumer protocol-hardening gap",
+      "path": ".tmp/altar-mounted-next/after/scripts/ui/altar_service.gd",
+      "line": 254,
+      "counterexample": "Bound same-ID result {ok:false,resolved:true,code:decision_unavailable}, before durability evidence arrives, clears the original intent at line 268 and then clears panel ID.",
+      "limitation": "Violates proposed producer schema; no actual producer emitting it observed or mocked. Require strict known-precommit refusal validation or verify this invariant in actual adapter."
+    },
+    {
+      "id": "R2",
+      "severity": "high",
+      "classification": "activation/integration prerequisite",
+      "path": ".tmp/altar-mounted-next/after/scripts/creatures/essence.gd",
+      "line": 196,
+      "counterexample": "Narrow five-file patch assumes b00 baseline and Progression.staged_next_level/staged_training_condition present in Training but absent from main7dcd; this patch alone cannot supply the required helpers.",
+      "limitation": "Static comparison only, no launched parser. Pin/review bounded pure prerequisite source; do not land whole lane or XP reduction without earned-route gate."
+    },
+    {
+      "id": "R3",
+      "severity": "required dependency",
+      "classification": "declared missing producer, no fallback approved",
+      "canonical_commit": "7dcd2a8649660553f38702f2de71390efc6f1343",
+      "counterexamples": [
+        "admitted_character_state returns masked actor_stat_state; using it would lose relic/heart baseline compared to full eight-field registry state",
+        "Main generic reward journal/accept protects actor_vitals only; nominal training rows are not typed owner-save/ACK evidence through generic reward doors",
+        "Session method presence/dummy saved:true is not actual bool SaveCharacter/SaveWorld and central guard proof"
+      ],
+      "limitation": "Main has no Altar quote/spend/reconcile/registry training/journal/save-settlement implementation; Foundation independently owns it."
+    }
+  ],
+  "safeguards": {
+    "mounted_uid_input_owner": "source present, shared builder mount proposal not applied",
+    "initial_five_owned_uid": "max five, unique UIDs and owned initial spend source checks present",
+    "immutable_five_field_intent": "deep copy before call, original retry, revision-bound receipt",
+    "async_quote": "ID/key/UID/stable context/current Node fences, 8s timeout, solo synchronous callback handling",
+    "pending": "2s reconcile, close retains ID, no retry debit; conditional R1 terminal uncertainty gap",
+    "success": "owner marker replay plus accepted matching world history required; actual producer bool save/ACK unproved",
+    "full_baseline": "pure proposal duplicates full record; actual Session producer must use SAME registry state not combat projection",
+    "no_fabricated_reward_cap": "one-level canonical staging, typed live cap, source/producer activation gates"
+  },
+  "acceptable_limitations": [
+    "Producer capability and real mounted catalogue/plot absent; dormant consumer is expected",
+    "Network epoch fences delegated to missing Session adapter, not implemented by Node identity alone",
+    "Process restart reconstruction and all writer/snapshot exclusions are Foundation dependencies",
+    "Seven-field conflicting draft receipt history refuses; any external accepted history needs explicit provenance/compatibility review",
+    "No native/controller/mount/earned-route/rejoin/actual bool IO proof or acceptance"
+  ],
+  "raw_review_sha256": "793878b0b5f7ddb43eb3a2c5fe6734d9068e3ec52e06772cd7b4b700fc2b0309"
+}

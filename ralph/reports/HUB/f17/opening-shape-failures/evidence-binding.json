@@ -1,0 +1,82 @@
+{
+  "verdict": "F17#4 OPEN; all native attempts failed",
+  "source_before_archive": "dff2f6c7a4111cb26d36ae22c0428b97180799fb",
+  "files": [
+    {
+      "path": "m1-shape-r1/parser.txt",
+      "raw_sha256": "ef1e2a8ef8fce5d984362a052c5b88991118f2409858f4689768aca38cf35131"
+    },
+    {
+      "path": "m1-shape-r1/receipt.json",
+      "raw_sha256": "b45b7884a6eca5ce0f481fa96cd9022ebe187306c3d5c57a34817490f5c8dbc7"
+    },
+    {
+      "path": "m1-shape-r2/native.txt",
+      "raw_sha256": "c284f680401f71e5f4a91938b0a313ce4b6ef77b9017f26771ebc7107f238286"
+    },
+    {
+      "path": "m1-shape-r2/parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "m1-shape-r2/receipt.json",
+      "raw_sha256": "3c203545913e5f816832c51151ba4992d7acab1a2e9ffbe28439ff81b419aad0"
+    },
+    {
+      "path": "m1-shape-r3/native.txt",
+      "raw_sha256": "020ad89b9bbe9efbdb19e544b03de94938a4d7f171a3c7f8b4468b55b663bfef"
+    },
+    {
+      "path": "m1-shape-r3/parser.txt",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    {
+      "path": "m1-shape-r3/receipt.json",
+      "raw_sha256": "21096b037a5e182199f257a5acfc87f2d715716cbaf6951153ff2456bbef5c24"
+    },
+    {
+      "path": "registered-result-source/strict-review.txt",
+      "raw_sha256": "1c3eefef257a8212e07cdc82a5014073d71a8e38f9a17dd79f669d3253c21cc0"
+    },
+    {
+      "path": "registered-result-source/review.json",
+      "raw_sha256": "7449e20549344b321202da1adde8051e2b118e4d467e61000f201c111521589d"
+    },
+    {
+      "path": "registered-result-source/capture.json",
+      "raw_sha256": "9b4bc5cc488674cf0efa45a414eed75b15aec059b9b6ab0c7e27fcc65cc6025d"
+    },
+    {
+      "path": "ceiling-type-source/strict-review.txt",
+      "raw_sha256": "90f3d7be1768abb77f0dc7ccad103c754411ebccf74cb95622b9eace1835fd39"
+    },
+    {
+      "path": "ceiling-type-source/review.json",
+      "raw_sha256": "c0635873e0837845f1178baaa7a4b064562886c37891a818dcb0cb0b449f908c"
+    },
+    {
+      "path": "ceiling-type-source/capture.json",
+      "raw_sha256": "56ec08eb2ced5284da869a1fc0789e4eda3ebf2f2d9e42d661afa9925d557314"
+    },
+    {
+      "path": "local-step-source/strict-review.txt",
+      "raw_sha256": "77cac83f83621dca25c72208064658e91cf4e0151e249ac41d5c814fbb541d61"
+    },
+    {
+      "path": "local-step-source/review.json",
+      "raw_sha256": "a8ce54eb37e857b02130b09aaf77834cf153e578fb119ab96a339a60041d5307"
+    },
+    {
+      "path": "local-step-source/exactsourcepins.json",
+      "raw_sha256": "716fd1c349e403d35c907a17489ae1a063327d58f6c53ea259311b002ff89c78"
+    }
+  ],
+  "limits": [
+    "Source gates permit bounded execution only; no transfer of source PASS to runtime",
+    "r1 parser native0 had SCRIPT ERROR: unable to infer ceiling; no gameplay executed",
+    "r2 actual original-budget fresh path reached road gate, route chooser rejected long horizontal terrain sweep before Mira",
+    "r3 actual original-budget fresh path reached road gate, current local support/clearance refused before Mira; no grant/checkpoint/HP pin",
+    "Raw native receipts bind exact source and before/after hashes; refusal diagnostics needed before another fix",
+    "No criterion, chapter, visual, co-op, or integrated F49 PASS"
+  ]
+}

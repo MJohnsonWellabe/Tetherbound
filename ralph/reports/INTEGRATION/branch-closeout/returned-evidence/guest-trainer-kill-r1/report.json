@@ -1,0 +1,135 @@
+{
+  "classification": "ACTUAL SAME-NATIVE-REGRESSION BEFORE FAIL / AFTER PASS; NO CRITERION CREDIT",
+  "source_review": {
+    "reviewer": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+    "independent_source_checks": 484,
+    "fixture": "5bd5451401aafdab9af79552b08315afabe2edb2",
+    "repair": "c856147f4cab68123d0577bcd3725a5d3447b575",
+    "manifest_sha256": "7705765ef219ab7ed7f2c2b1f935f8d243327080774169ffc891d2c265e52852"
+  },
+  "runs": [
+    {
+      "kind": "before",
+      "head": "bacde32ba3fcea8cf6023f7e6b9f08253b4366a5",
+      "outer": [
+        "  FAIL  test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once",
+        "5 tests, 30 assertions, 1 failed"
+      ],
+      "exit": 1,
+      "raw_errors_or_leaks": false,
+      "native_child": {
+        "assertions": 79,
+        "completed": true,
+        "failures": [
+          "expected 2, got 1  (a guest kill must start the host's ordinary faint pause)",
+          "expected [\"won\"], got []  (the real manager exit advances the host trainer round exactly once)",
+          "expected 0, got 1",
+          "expected 1, got 0  (production trainer round teardown notifies the original fainted body)",
+          "expected <null>, got @Node3D@33:<Node3D#175288354793>",
+          "expected true, got false  (the ordinary next-send-out clock is armed)",
+          "expected 1, got 0  (the observing host receives one ordinary round award)",
+          "expected [\"won\"], got []",
+          "expected 1, got 0",
+          "expected 1, got 0"
+        ],
+        "observation": {
+          "author": 1649465691,
+          "enemy_fainted": true,
+          "enemy_hp": 0.0,
+          "guest_id": 1649465691,
+          "guest_round_awards": 1,
+          "guest_state": 2,
+          "host_exits": [],
+          "host_round_awards": 0,
+          "host_state": 1,
+          "host_state_after_pause": 1,
+          "queued": 1,
+          "record_phase": "resolving",
+          "send_delay": 0.0
+        }
+      },
+      "files": [
+        {
+          "file": "before-outer.log.gz",
+          "raw_bytes": 24277,
+          "raw_sha256": "58a17b5b4bf03c7dd08e9a514056fdf23f9a96259428e6656fc1805480a80a0f"
+        },
+        {
+          "file": "before-outer-result.json.gz",
+          "raw_bytes": 530,
+          "raw_sha256": "bf47835c2721841ebd59479607d4be8998674e079ee6a8a6dbfe8eb74c686fbd"
+        },
+        {
+          "file": "before-guest-native-child.log.gz",
+          "raw_bytes": 1146,
+          "raw_sha256": "158bb2ffa3cc53140e02bdd0d11bdc0e923f1e39d4c398d86fb5b8a2f6b558e7"
+        },
+        {
+          "file": "before-transport-native-child.log.gz",
+          "raw_bytes": 129,
+          "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344"
+        }
+      ]
+    },
+    {
+      "kind": "after",
+      "head": "c6c25935e90193a78031ec6e7edddc027433396f",
+      "outer": [
+        "5 tests, 30 assertions, 0 failed"
+      ],
+      "exit": 0,
+      "raw_errors_or_leaks": false,
+      "native_child": {
+        "assertions": 79,
+        "completed": true,
+        "failures": [],
+        "observation": {
+          "author": 1795932844,
+          "enemy_fainted": true,
+          "enemy_hp": 0.0,
+          "guest_id": 1795932844,
+          "guest_round_awards": 1,
+          "guest_state": 2,
+          "host_exits": [
+            "won"
+          ],
+          "host_round_awards": 1,
+          "host_state": 2,
+          "host_state_after_pause": 0,
+          "queued": 1,
+          "record_phase": "done",
+          "send_delay": 1.6
+        }
+      },
+      "files": [
+        {
+          "file": "after-outer.log.gz",
+          "raw_bytes": 18199,
+          "raw_sha256": "17a75152e122a114d48de386c9215a6ae528bd18da786468bd6c3071be36c3d4"
+        },
+        {
+          "file": "after-outer-result.json.gz",
+          "raw_bytes": 414,
+          "raw_sha256": "0a43bf0bed4a035e9eaf5ec45f3757b38eb3c79bcd778b3df819d49022ef03f6"
+        },
+        {
+          "file": "after-guest-native-child.log.gz",
+          "raw_bytes": 579,
+          "raw_sha256": "59158dd71efacd4dd75206d0066bbbe008ff0596ac64ae433cfe3305b0d71870"
+        },
+        {
+          "file": "after-transport-native-child.log.gz",
+          "raw_bytes": 129,
+          "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Real SceneMultiplayer and ENet guest identity/admission, production manager damage/full-natural-HP faint, cooldown, snapshot and verdict. No HP cap or forced victory.",
+    "Presentation bodies/arena/placement and Session ownership registry are fixture surfaces. Director process and automatic manager physics disabled; resolution advances through unchanged manager physics method with1/60 delta.",
+    "Proof ends at one real host round exit and next-send-out scheduling. It does not spawn the next opponent, complete the whole trainer battle, or test final payout.",
+    "The tracked actor-enabled terminal writer is source-reviewed but this fixture explicitly leaves runtime_enabled=false.",
+    "This separate guest-author failure does not establish the cause or success of the original host-driven95s Warden smoke."
+  ]
+}

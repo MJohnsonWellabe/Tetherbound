@@ -24,6 +24,7 @@ var _shape_lane_lock_left := -1.0
 ## Set by a route cue and consumed by the telegraph that follows it in the same
 ## tell: only then is the drawn lane carried over instead of redrawn.
 var _shape_route_pending := false
+var _pattern_fields: Array[Dictionary] = []
 
 
 func configure_presentation(card: RefCounted, generation: int, feet: Vector3, facing_now: Vector3,
@@ -31,6 +32,7 @@ func configure_presentation(card: RefCounted, generation: int, feet: Vector3, fa
 	if card == null or generation <= 0 or not feet.is_finite() or not facing_now.is_finite() \
 			or not is_finite(interpolation_half_life_s):
 		return false
+	_clear_shape(true)
 	instance = card
 	body_generation = generation
 	_interpolation_half_life_s = maxf(0.001, interpolation_half_life_s)
@@ -122,6 +124,7 @@ func shape_guard_cone() -> MeshInstance3D:
 ## shape (an older host, or an ordinary strike) leaves nothing stale behind.
 ## A lane already drawn for this tell's route cue is kept, not redrawn.
 func _present_shape(shape: Dictionary) -> void:
+	apply_pattern_shape(last_cue_serial, shape)
 	var length := _shape_number(shape, "lane_length")
 	var half := _shape_number(shape, "lane_half_width")
 	if length > 0.0 and half > 0.0:
@@ -146,19 +149,31 @@ func _present_shape(shape: Dictionary) -> void:
 
 ## An orb took the body: whatever tell was showing ended with it on the host.
 func play_absorb(world_point: Vector3, seconds: float) -> void:
-	_clear_shape()
+	_clear_shape(true)
 	super(world_point, seconds)
 
 
-func _clear_shape() -> void:
+func _clear_shape(clear_fields: bool = false) -> void:
 	_free_shape_lane()
 	_hide_guard_cone()
+	_clear_pattern_cue()
+	_pattern_geometry.clear()
+	if clear_fields:
+		for field: Dictionary in _pattern_fields:
+			if is_instance_valid(field.node): field.node.queue_free()
+		_pattern_fields.clear()
 	_shape_route_pending = false
 
 
 ## The strike: a travelling lane stays where it was drawn and fades under the
 ## running body, as the host's does; a route line ends with its tell.
 func _release_shape() -> void:
+	if is_instance_valid(_pattern_cue) and str(_pattern_geometry.get("profile", {}).get("telegraph_shape", "")) == "field":
+		_pattern_fields.append({"node": _pattern_cue,
+			"left": float(_pattern_geometry.profile.get("field_duration_s", 0.0))})
+		_pattern_cue = null
+	_clear_pattern_cue()
+	_pattern_geometry.clear()
 	var lane := shape_lane()
 	if lane != null and _shape_lane_travels:
 		if not bool(lane.call("is_locked")):
@@ -200,7 +215,45 @@ static func _shape_number(shape: Dictionary, key: String, fallback: float = 0.0)
 	return float(value)
 
 
+## Only authenticated host cues/poses reach this read-only presentation path.
+## An old unreliable pose cannot replace a newer reliable tell or strike.
+func apply_pattern_shape(serial: int, shape: Dictionary) -> void:
+	if serial != last_cue_serial: return
+	var raw: Variant = shape.get("pattern")
+	if not raw is Dictionary or not raw.get("profile") is Dictionary:
+		_clear_pattern_cue()
+		_pattern_geometry.clear()
+		return
+	var origin: Variant = _pattern_vector(raw.get("origin"))
+	var heading: Variant = _pattern_vector(raw.get("heading"))
+	var marker: Variant = _pattern_vector(raw.get("marker"))
+	if origin == null or heading == null or marker == null: return
+	_pattern_geometry = {"profile": raw.profile.duplicate(true), "origin": origin,
+		"heading": heading, "marker": marker}
+	if str(raw.profile.get("telegraph_shape", "")) == "lane":
+		_clear_pattern_cue()
+		return
+	if not is_instance_valid(_pattern_cue):
+		_pattern_cue = PATTERN_CUE.begin(self, raw.profile, origin, heading, marker,
+			MATH.config().get("patterns", {}).get("presentation", {}),
+			Color(str(MATH.config().get("telegraph", {}).get("colour", "#ff5a3c"))))
+	else:
+		_pattern_cue.call("aim", origin, heading, marker)
+
+
+static func _pattern_vector(raw: Variant) -> Variant:
+	if not raw is Array or raw.size() != 3: return null
+	for value: Variant in raw:
+		if not (value is int or value is float) or not is_finite(float(value)): return null
+	return Vector3(raw[0], raw[1], raw[2])
+
+
 func _physics_process(delta: float) -> void:
+	for index: int in range(_pattern_fields.size() - 1, -1, -1):
+		_pattern_fields[index].left -= delta
+		if _pattern_fields[index].left <= 0.0:
+			if is_instance_valid(_pattern_fields[index].node): _pattern_fields[index].node.queue_free()
+			_pattern_fields.remove_at(index)
 	if not _pose_received:
 		return
 	var before := global_position
@@ -212,6 +265,10 @@ func _physics_process(delta: float) -> void:
 		var speed := global_position.distance_to(before) / maxf(delta, 0.0001)
 		_animator.call("tick", delta, speed, _speed)
 	_advance_shape_lane(delta)
+
+
+func _exit_tree() -> void:
+	_clear_shape(true)
 
 
 func _face_exact(direction: Vector3) -> void:

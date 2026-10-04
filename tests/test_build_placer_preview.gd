@@ -16,6 +16,20 @@ class FakeGame extends Node:
 	func can_afford(_id: String) -> bool:
 		return affordable
 
+var _fixtures: Array[FakeGame] = []
+
+func _new_game() -> FakeGame:
+	var fixture := FakeGame.new()
+	_fixtures.append(fixture)
+	return fixture
+
+func after_each() -> void:
+	# These bare Nodes never enter a tree, so queue_free cannot depend on a
+	# future frame. Release them after every case, including failed assertions.
+	for fixture: FakeGame in _fixtures:
+		if is_instance_valid(fixture): fixture.free()
+	_fixtures.clear()
+
 
 func _flat_ground(_at: Vector3) -> float:
 	return 0.0
@@ -30,20 +44,81 @@ func test_public_preview_and_live_ghost_share_one_legality_core() -> void:
 	var source := FileAccess.get_file_as_string(SOURCE_PATH)
 	assert_true(source.contains("var preview := preview_placement(game, armed, raw_spot)"),
 		"the live ghost must consume the public preview result")
-	assert_true(source.contains("return evaluate_placement(game, armed, raw_spot, buildings"),
-		"the public wrapper must delegate to the shared legality core")
+	var wrapper_begin := source.find("func preview_placement(")
+	var wrapper_end := source.find("static func evaluate_placement(",wrapper_begin)
+	assert_true(wrapper_begin >= 0 and wrapper_end > wrapper_begin,
+		"the public wrapper and shared legality core must both exist")
+	if wrapper_begin < 0 or wrapper_end <= wrapper_begin: return
+	var wrapper := source.substr(wrapper_begin,wrapper_end-wrapper_begin)
+	assert_true(wrapper.contains("var source_spot := raw_spot"),
+		"ordinary placement must retain the caller's raw aim")
+	assert_true(wrapper.contains("var result := evaluate_placement(game, armed, source_spot, buildings, Callable(self, \"_ground_height\"), _yaw_deg)"),
+		"the public wrapper must evaluate the shared core before station policy")
+	assert_true(wrapper.contains("\n\treturn result\n"),
+		"the wrapper must return the evaluated result with its station postchecks")
 
 
 func test_preview_agrees_with_live_for_a_legal_floor() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	var preview := _evaluate(game, "floor")
 	assert_true(bool(preview.get("ok", false)))
 	assert_false(bool(preview.get("structural", false)), "a free grid floor is legal but has no structural snap")
 	assert_eq(str(preview.get("reason", "")), "")
 
 
+func _gentle_ground(at: Vector3) -> float:
+	return at.z * 0.5
+
+
+func _steep_ground(at: Vector3) -> float:
+	return at.z * 0.9
+
+
+func _missing_grid_ground(at: Vector3) -> float:
+	return NAN if at.x == 0.0 and at.z == 2.0 else 0.0
+
+
+func test_grid_aim_phase_does_not_change_slope_or_ground_height() -> void:
+	var game := _new_game()
+	var terrain := Callable(self, "_gentle_ground")
+	# Both aims resolve to the same 2m grid cell. Its real 1.2m slope rise
+	# is 0.6m; comparing to raw z=1 instead would falsely report 1.1m.
+	var edge := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), [], terrain)
+	var centre := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 2), [], terrain)
+	assert_true(bool(edge.ok), "a legal cell must remain legal when aimed from its grid edge")
+	assert_true(bool(centre.ok))
+	assert_eq(edge.position, Vector3(0, 1, 2), "the bed must sit on the snapped cell's ground")
+	assert_eq(edge.position, centre.position)
+	assert_eq(edge.reason, centre.reason)
+
+
+func test_grid_centre_still_refuses_a_truly_steep_slope() -> void:
+	var game := _new_game()
+	var preview := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), [], Callable(self, "_steep_ground"))
+	assert_false(bool(preview.ok), "a 1.08m centre rise must still exceed the existing 0.8m limit")
+	assert_eq(preview.reason, "Too steep to build here")
+
+
+func test_grid_destination_without_ground_is_refused() -> void:
+	var game := _new_game()
+	var preview := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), [], Callable(self, "_missing_grid_ground"))
+	assert_false(bool(preview.has_ground), "ground at the raw aim cannot authorize a grid cell without ground")
+	assert_false(bool(preview.ok))
+	assert_eq(preview.position, Vector3.INF)
+
+
+func test_neighbour_snap_keeps_inherited_height_and_skips_terrain_slope() -> void:
+	var game := _new_game()
+	var records := [{"id": "creature_bed", "position": [0.0, 12.0, 0.0]}]
+	var preview := BUILD_PLACER.evaluate_placement(game, "creature_bed", Vector3(0, 0, 1), records, Callable(self, "_steep_ground"))
+	assert_true(bool(preview.snapped_to_neighbour))
+	assert_true(bool(preview.ok), "neighbour height inheritance must retain its existing slope exemption")
+	var spot: Vector3 = preview.position
+	assert_eq(spot.y, 12.0)
+
+
 func test_preview_agrees_with_live_for_an_occupied_structural_anchor() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	var floor_record := {"id": "floor", "position": [0.0, 0.0, 1.0]}
 	# Ask the placer where it WOULD stand a wall against this floor's edge,
 	# then stand one exactly there and prove it refuses a second. Unlike
@@ -72,7 +147,7 @@ func test_preview_agrees_with_live_for_an_occupied_structural_anchor() -> void:
 
 
 func test_preview_preserves_live_floor_neighbour_push_before_occupancy() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	var preview := _evaluate(game, "floor", [{"id": "floor", "position": [0.0, 0.0, 0.0]}])
 	assert_true(bool(preview.get("ok", false)))
 	var resolved: Vector3 = preview.get("position", Vector3.INF)
@@ -81,7 +156,7 @@ func test_preview_preserves_live_floor_neighbour_push_before_occupancy() -> void
 
 
 func test_preview_reports_an_unsupported_roof_exactly_as_live_grid_fallback() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	var preview := _evaluate(game, "roof")
 	assert_true(bool(preview.get("ok", false)), "the existing live placer permits its ordinary grid fallback")
 	assert_false(bool(preview.get("structural", false)),
@@ -89,7 +164,7 @@ func test_preview_reports_an_unsupported_roof_exactly_as_live_grid_fallback() ->
 
 
 func test_preview_agrees_with_live_for_an_unaffordable_piece() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	game.affordable = false
 	var preview := _evaluate(game, "floor")
 	assert_false(bool(preview.get("ok", false)))
@@ -99,7 +174,7 @@ func test_preview_agrees_with_live_for_an_unaffordable_piece() -> void:
 # --- CAMP-SHELTER-0903: a bedroll needs a tent ------------------------------
 
 func test_bedroll_inside_a_placed_tent_is_accepted() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	# `_flat_ground` always answers 0.0 and `Vector3.ZERO`'s own snap lands
 	# the bedroll ghost's raw aim exactly at the origin -- the same spot a
 	# tent placed at the origin (yaw 0) sits at, so this is the ordinary
@@ -110,7 +185,7 @@ func test_bedroll_inside_a_placed_tent_is_accepted() -> void:
 
 
 func test_bedroll_outside_every_tent_is_refused_with_a_clear_reason() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	# The tent sits 20m away -- nowhere near this bedroll's own aim (the
 	# origin) once `_bedroll_has_tent` rotates the aim into the tent's own
 	# local frame and checks it against `camp_tent.gd::INTERIOR_HALF_X`/`_Z`.
@@ -120,7 +195,7 @@ func test_bedroll_outside_every_tent_is_refused_with_a_clear_reason() -> void:
 
 
 func test_bedroll_with_no_tent_placed_at_all_is_refused() -> void:
-	var game := FakeGame.new()
+	var game := _new_game()
 	var preview := _evaluate(game, "bedroll")
 	assert_false(bool(preview.get("ok", false)))
 	assert_eq(str(preview.get("reason", "")), "A bedroll needs to be inside a tent")
@@ -132,7 +207,7 @@ func test_a_removed_tent_no_longer_shelters_a_bedroll() -> void:
 	# dismantle does (`build_placer.gd::dismantle_piece` marks a record
 	# removed rather than deleting it outright is out of scope here; what
 	# matters is this planner-facing check honours the same flag).
-	var game := FakeGame.new()
+	var game := _new_game()
 	var preview := _evaluate(game, "bedroll",
 		[{"id": "tent", "position": [0.0, 0.0, 0.0], "yaw_deg": 0.0, "removed": true}])
 	assert_false(bool(preview.get("ok", false)))
@@ -142,7 +217,7 @@ func test_a_removed_tent_no_longer_shelters_a_bedroll() -> void:
 func test_other_ids_are_unaffected_by_the_tent_requirement() -> void:
 	# The constraint is bedroll-specific -- a floor (or any other buildable)
 	# with no tent anywhere nearby must place exactly as it always has.
-	var game := FakeGame.new()
+	var game := _new_game()
 	var preview := _evaluate(game, "floor")
 	assert_true(bool(preview.get("ok", false)))
 	assert_eq(str(preview.get("reason", "")), "")

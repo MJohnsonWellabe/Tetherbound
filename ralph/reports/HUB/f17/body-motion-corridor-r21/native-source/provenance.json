@@ -1,0 +1,32 @@
+{
+  "modules/godot_physics_3d/godot_space_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_space_3d.cpp",
+    "bytes": 43185,
+    "sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a"
+  },
+  "modules/godot_physics_3d/godot_space_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_space_3d.h",
+    "bytes": 9468,
+    "sha256": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae"
+  },
+  "modules/godot_physics_3d/godot_physics_server_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_physics_server_3d.cpp",
+    "bytes": 58416,
+    "sha256": "3d0abb21d322589d7f6ffa5850e3a3ac75897ce66559a747e2297d15a721fe83"
+  },
+  "modules/godot_physics_3d/godot_collision_object_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_collision_object_3d.h",
+    "bytes": 7268,
+    "sha256": "dc0fafea48a774cc60f1266f8639a7722952359e16186180b6f6117e7dec62b5"
+  },
+  "modules/godot_physics_3d/godot_body_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_body_3d.h",
+    "bytes": 14769,
+    "sha256": "b0ba9328eb19ed31902624d04495b11ec6f11dd3ec5f65301613013d43e304af"
+  },
+  "core/math/math_defs.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/math/math_defs.h",
+    "bytes": 5880,
+    "sha256": "db5046323f7cc8a6d6340c0303c0bd02e399768a8b11b2df8b88654540eb3fdd"
+  }
+}

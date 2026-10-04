@@ -34,6 +34,7 @@ extends RefCounted
 ## applied to a slot (D15).
 
 const ATOMIC_SAVE_FILE := preload("res://scripts/save/atomic_save_file.gd")
+const SAVE_DOCUMENT := preload("res://scripts/save/save_document.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REALM_REWARD_MIGRATION := preload("res://scripts/save/realm_reward_migration.gd")
 
@@ -153,10 +154,15 @@ static func scope_flags(v22: Dictionary, scope: String) -> Array:
 ## preserved from any file already there, so re-saving a world does not
 ## repeatedly claim it was created just now.
 func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}, retain_previous: bool = false) -> bool:
+	if not preload("res://autoload/world_state.gd").foundation_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id, payload.get("placed_buildings", [])).is_empty(): return false
 	var contract := preload("res://scripts/data/redesign_state.gd")
-	if not contract.validate("world", payload.get("redesign_world", contract.defaults("world"))).is_empty():
+	if not contract.validate("world", payload.get("redesign_world", contract.defaults("world")), [], str(payload.get("reward_delivery_namespace", ""))).is_empty():
+		return false
+	if not preload("res://autoload/world_state.gd").training_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id, payload.get("placed_buildings", [])).is_empty():
 		return false
 	if not preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id).is_empty():
+		return false
+	if not preload("res://autoload/world_state.gd").portal_world_errors(payload.get("reward_deliveries", {}), str(payload.get("reward_delivery_namespace", "")), world_id).is_empty():
 		return false
 	if world_id.is_empty():
 		return false
@@ -173,7 +179,9 @@ func write(world_id: String, payload: Dictionary, envelope: Dictionary = {}, ret
 	data["created_at"] = str(existing.get("created_at", now))
 	data["last_played"] = now
 	data["migrated_from"] = str(envelope.get("migrated_from", existing.get("migrated_from", "")))
-	if not ATOMIC_SAVE_FILE.new().write(path_for(world_id), JSON.stringify(data, "\t"), retain_previous):
+	var encoded := SAVE_DOCUMENT.stringify(data)
+	if encoded.is_empty(): return false
+	if not ATOMIC_SAVE_FILE.new().write(path_for(world_id), encoded, retain_previous):
 		push_warning("world save: could not commit %s" % path_for(world_id))
 		return false
 	_envelope_cache[world_id] = _envelope_of(data)
@@ -210,7 +218,7 @@ func read(world_id: String) -> Dictionary:
 	var file := FileAccess.open(ATOMIC_SAVE_FILE.readable_path(path_for(world_id)), FileAccess.READ)
 	if file == null:
 		return {}
-	var parsed: Variant = JSON.parse_string(file.get_as_text())
+	var parsed: Variant = SAVE_DOCUMENT.parse(file.get_as_text())
 	file.close()
 	if typeof(parsed) != TYPE_DICTIONARY:
 		return {}
@@ -228,8 +236,11 @@ func read(world_id: String) -> Dictionary:
 			world_id, version, VERSION,
 		])
 		return {}
-	var errors := preload("res://scripts/data/redesign_state.gd").validate("world", data.get("redesign_world", preload("res://scripts/data/redesign_state.gd").defaults("world")))
+	var errors := preload("res://scripts/data/redesign_state.gd").validate("world", data.get("redesign_world", preload("res://scripts/data/redesign_state.gd").defaults("world")), [], str(data.get("reward_delivery_namespace", "")))
+	errors.append_array(preload("res://autoload/world_state.gd").foundation_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id, data.get("placed_buildings", [])))
 	errors.append_array(preload("res://scripts/net/actor_vitals_delivery.gd").world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id))
+	errors.append_array(preload("res://autoload/world_state.gd").portal_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id))
+	errors.append_array(preload("res://autoload/world_state.gd").training_world_errors(data.get("reward_deliveries", {}), str(data.get("reward_delivery_namespace", "")), world_id, data.get("placed_buildings", [])))
 	if not errors.is_empty():
 		last_load_result = {"ok": false, "code": "invalid_schema", "message": "That world contains invalid data.", "errors": errors}
 		return {}

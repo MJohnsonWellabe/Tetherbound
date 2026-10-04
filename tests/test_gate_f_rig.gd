@@ -1274,6 +1274,9 @@ func test_the_run_level_inventory_checks_the_debt_was_paid() -> void:
 # ask the guard the same questions a run asks, against the real InputMap and
 # the real `input_contexts.json`, and drive the real `press` step through a
 # harness instance to show the guard is wired in front of the injection.
+# F23's physical combat map moved the charged attack to Y and gave LT to
+# `combat_throw` (aim), so the LT-bound combat verb that collides with
+# `build_shortcut` outside a fight is now `combat_throw`.
 
 class _ContextStub extends RefCounted:
 	var context := "world"
@@ -1285,16 +1288,16 @@ class _ContextStub extends RefCounted:
 
 func test_the_physical_collision_the_press_guard_exists_for_is_real() -> void:
 	# The premise, from the engine rather than from prose: injecting
-	# `combat_charged`'s joypad binding marks `build_shortcut` pressed too.
+	# `combat_throw`'s joypad binding marks `build_shortcut` pressed too.
 	# This is what the harness's `_edge()` sends, and what a real LT pull does.
-	var binding := HARNESS._physical_binding(&"combat_charged", "joypad")
-	assert_true(binding is InputEventJoypadMotion, "combat_charged binds a joypad axis")
+	var binding := HARNESS._physical_binding(&"combat_throw", "joypad")
+	assert_true(binding is InputEventJoypadMotion, "combat_throw (LT aim) binds a joypad axis")
 	var down := InputEventJoypadMotion.new()
 	down.axis = (binding as InputEventJoypadMotion).axis
 	down.axis_value = (binding as InputEventJoypadMotion).axis_value
 	Input.parse_input_event(down)
 	Input.flush_buffered_events()
-	var charged := Input.is_action_pressed(&"combat_charged")
+	var aimed := Input.is_action_pressed(&"combat_throw")
 	var shortcut := Input.is_action_pressed(&"build_shortcut")
 	# Release BEFORE asserting, so a failed assertion cannot leave the axis
 	# held under every later test in the run.
@@ -1303,7 +1306,7 @@ func test_the_physical_collision_the_press_guard_exists_for_is_real() -> void:
 	up.axis_value = 0.0
 	Input.parse_input_event(up)
 	Input.flush_buffered_events()
-	assert_true(charged, "the injected axis event reaches combat_charged")
+	assert_true(aimed, "the injected axis event reaches combat_throw")
 	assert_true(shortcut,
 		"the SAME axis event reaches build_shortcut: one trigger pull is both actions, and "
 		+ "only the game's input context decides which one is read")
@@ -1311,17 +1314,17 @@ func test_the_physical_collision_the_press_guard_exists_for_is_real() -> void:
 
 
 func test_a_press_the_live_context_does_not_list_is_refused_and_names_the_collision() -> void:
-	# S08-93 / S07-57's shape: a charged attack with no fight running.
-	var r: Dictionary = HARNESS._resolve_press("combat_charged", "world", "")
+	# S08-93 / S07-57's shape: an LT combat verb with no fight running.
+	var r: Dictionary = HARNESS._resolve_press("combat_throw", "world", "")
 	assert_true(bool(r["checked"]), "world is a mapped context, so the press is checked")
-	assert_false(bool(r["ok"]), "combat_charged is not live in world and must be refused")
+	assert_false(bool(r["ok"]), "combat_throw is not live in world and must be refused")
 	assert_eq(str(r["raw"]), "JoyAxis:4:1.0", "the refusal names the physical binding")
 	assert_true((r["fires_live"] as Array).has("build_shortcut"),
 		"the refusal names what the binding WOULD have done: opened the Build catalogue")
 	assert_true(str(r["why"]).contains("build_shortcut"), "the sentence carries the collision")
 	# In a fight the same press is the verb the step named.
-	var fight: Dictionary = HARNESS._resolve_press("combat_charged", "combat", "")
-	assert_true(bool(fight["ok"]) and bool(fight["checked"]), "combat_charged is live in combat")
+	var fight: Dictionary = HARNESS._resolve_press("combat_throw", "combat", "")
+	assert_true(bool(fight["ok"]) and bool(fight["checked"]), "combat_throw is live in combat")
 	# G3-BAND3's mouse routing (S07-57, kept): out of a fight it is still not
 	# the verb the step named -- but it is inert, and the guard says which.
 	var mouse: Dictionary = HARNESS._resolve_press("combat_charged", "world", "mouse")
@@ -1357,7 +1360,7 @@ func test_the_press_guard_passes_through_what_the_map_does_not_describe() -> voi
 
 func test_the_press_step_refuses_before_it_injects() -> void:
 	# The wiring, driven through the real `_step_press`: with the world in
-	# `world`, a charged attack must come back FAIL from the guard without a
+	# `world`, an LT aim must come back FAIL from the guard without a
 	# single edge sent. The harness is a SceneTree; the refusal path returns
 	# before its first `await`, which is what makes it callable here, and the
 	# instance is freed before its deferred `_run` can fire.
@@ -1370,17 +1373,17 @@ func test_the_press_step_refuses_before_it_injects() -> void:
 	# when the function returns before its first await -- the refusal path --
 	# and a suspended function state when it does not, which is exactly the
 	# broken case (a press that went in) and fails the `is String` check.
-	var result: Variant = harness.callv("_step_press", [{"control": "combat_charged", "hold": "long"}, "T-93"])
+	var result: Variant = harness.callv("_step_press", [{"control": "combat_throw", "hold": "long"}, "T-93"])
 	var after := Input.is_action_pressed(&"build_shortcut")
-	var hold: Variant = harness._step_hold({"control": "combat_charged"}, "T-hold")
-	var held := Input.is_action_pressed(&"combat_charged")
+	var hold: Variant = harness._step_hold({"control": "combat_throw"}, "T-hold")
+	var held := Input.is_action_pressed(&"combat_throw")
 	# Do not leave anything down whatever the verdict.
-	Input.action_release(&"combat_charged")
+	Input.action_release(&"combat_throw")
 	Input.action_release(&"build_shortcut")
 	harness.free()
 	assert_true(result is String, "the refusal returns synchronously, before any await")
 	assert_true(str(result).begins_with("FAIL press guard"),
-		"a charged attack in the world is refused: got '%s'" % str(result))
+		"an LT aim in the world is refused: got '%s'" % str(result))
 	assert_true(str(result).contains("build_shortcut"), "the step result names the collision")
 	assert_true(str(result).contains("0 of 1"), "no press landed")
 	assert_false(before or after, "nothing was injected: build_shortcut never went down")

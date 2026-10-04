@@ -1,0 +1,24 @@
+{
+  "verdict": "FAIL",
+  "checkout_ref": "e8571918d793d1af62bbd9359012a11f68d236c4",
+  "run_id": 37116632716,
+  "artifact_id": 11271747103,
+  "github_conclusion": "success",
+  "tests": 27,
+  "assertions": 147,
+  "reported_failed": 0,
+  "exit_code": 0,
+  "all_original_log_errors": {
+    "MANIFEST.txt": [],
+    "run.log": [
+      "SCRIPT ERROR: Cannot call method 'get_script' on a null value."
+    ],
+    "user/godot/app_userdata/Tetherbound/boot_log.txt": [],
+    "user/godot/app_userdata/Tetherbound/logs/godot.log": [
+      "SCRIPT ERROR: Cannot call method 'get_script' on a null value."
+    ]
+  },
+  "original_log_sha256": "bf678f16fee1f2b5212629ab8c047f1a19f6b8be42a99621c540593586c35788",
+  "original_archive_sha256": "34d5cf93c7005c84cce8cc69459a6e39deb50ca1cd3578084c731ca74e71a8c4",
+  "boundary": "Strict acceptance rejects a test setup SCRIPT ERROR: SceneTree.root unavailable during runner _init. Native production wrapper acceptance is not claimed; affected corrected test will run with Craft component."
+}

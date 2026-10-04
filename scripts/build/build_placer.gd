@@ -75,6 +75,251 @@ const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const AUDIO_CUES := preload("res://scripts/ui/audio_cues.gd")
 const AUDIO_MANAGER := preload("res://scripts/audio/audio_manager.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const STATION_RULES := preload("res://scripts/build/station_rules.gd")
+const FORWARD_CAMP := preload("res://scripts/build/forward_camp.gd")
+const CAMP_RULES := preload("res://scripts/build/forward_camp_rules.gd")
+const STATION_PIECE := preload("res://scripts/build/station_piece.gd")
+const STATION_MENU := preload("res://scripts/build/station_menu.gd")
+const HOME_PLOT := preload("res://scripts/build/home_plot_rules.gd")
+const REDESIGN_DATA := preload("res://scripts/data/redesign_data.gd")
+const BUILDING_UID_META := "building_uid"
+const STATIONS_CONFIG := "res://data/config/stations.json"
+const ALTAR_INTERACTION := "res://scripts/ui/altar_station_interaction.gd"
+var _station_view_producer: Node
+var _station_view_refresh_pending := false
+static var _home_config: Dictionary = {}
+static var _home_config_loaded := false
+
+
+static func _station_path(id: String) -> bool:
+	var cfg := STATION_RULES.config()
+	# Preserve the old Workbench while the new system is off. Newly authored
+	# station IDs always take the gated route, including when the flag is off.
+	return STATION_RULES.homestead_id(id) and (id != "workbench" or cfg.get("runtime_enabled") == true)
+
+
+static func _station_personal_view(game: Node) -> Dictionary:
+	var session: Node = game.get("session") as Node if game != null else null
+	if session == null or not session.has_method("homestead_personal_view"): return {}
+	var raw: Variant = session.call("homestead_personal_view")
+	return raw if raw is Dictionary else {}
+
+
+static func _station_preview_personal_view(game: Node, attachment: Dictionary) -> Dictionary:
+	# Base placement reads no personal attachment recipes. Avoid a full
+	# admitted-character refresh (or guest view RPC) on every ghost tick.
+	# Attachment previews keep the original authenticated view doorway.
+	return {} if attachment.is_empty() else _station_personal_view(game)
+
+
+static func _station_building_available(game: Node, id: String) -> bool:
+	if STATION_RULES.config().get("runtime_enabled") != true: return false
+	if id == "altar": return _altar_placement_available(game)
+	var session: Node = game.get("session") as Node if game != null else null
+	return session != null and session.has_method("homestead_building_available") \
+		and session.call("homestead_building_available", id) == true
+
+
+func _station_pose_valid(game: Node, id: String, realm: String, at: Vector3, yaw: float) -> Dictionary:
+	var cfg := STATION_RULES.config()
+	var result := STATION_RULES.pose(cfg,id,realm,at,yaw)
+	if result.get("ok") != true: return result
+	var base := _ground_height(at)
+	if not is_finite(base) or absf(base-at.y) > float(cfg.ground_tolerance_m): return STATION_RULES.deny("station_ground")
+	var footprint := STATION_RULES.bounds_config(cfg,id)
+	for point: Vector2 in HOME_PLOT.corners(footprint,at,yaw):
+		var height := _ground_height(Vector3(point.x,at.y,point.y))
+		if not is_finite(height) or absf(height-base) > float(cfg.maximum_slope_rise_m): return STATION_RULES.deny("station_slope")
+	var size: Array = cfg.pieces.get(id,STATION_RULES.attachment(cfg,id)).get("size_m",[])
+	if size.size() != 3: return STATION_RULES.deny("station_data_invalid")
+	var shape := BoxShape3D.new()
+	shape.size=Vector3(size[0],size[1],size[2])
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape=shape
+	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+0.05,0))
+	query.collision_mask=3
+	query.exclude=_bodies_that_are_not_buildings()
+	var world := get_parent() as Node3D
+	if world == null or world.get_world_3d() == null: return STATION_RULES.deny("station_world_invalid")
+	if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return STATION_RULES.deny("station_occupied")
+	return {"ok":true}
+
+## Same host geometry probe used by preview and Foundation's paid stage.
+## Nine footprint samples avoid treating a centre on shore as a dry camp.
+func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: float) -> Dictionary:
+	var cfg := CAMP_RULES.config()
+	var world := get_parent() as Node3D
+	if cfg.get("runtime_enabled") != true: return CAMP_RULES.deny("camp_disabled")
+	if game != _game() or world == null or not is_inside_tree() or world.get_world_3d() == null \
+			or realm != WORLD_RECORDS.active(game) or not at.is_finite() or not is_finite(yaw): return CAMP_RULES.deny("camp_ground")
+	var size: Array = cfg.size_m
+	var base := _ground_height(at)
+	if not is_finite(base) or absf(base-at.y) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
+	for x: float in [-float(size[0])*0.5,0.0,float(size[0])*0.5]:
+		for z: float in [-float(size[2])*0.5,0.0,float(size[2])*0.5]:
+			var sample := at + Basis(Vector3.UP,deg_to_rad(yaw))*Vector3(x,0,z)
+			var height := _ground_height(sample)
+			if not is_finite(height) or absf(height-base) > float(cfg.maximum_slope_rise_m): return CAMP_RULES.deny("camp_ground")
+			sample.y=height
+			if world.has_method("water_depth_at") and float(world.call("water_depth_at",sample)) > 0.0: return CAMP_RULES.deny("camp_ground")
+			if preload("res://scripts/data/biome_order.gd").canonical_id(realm) == "tidewake" and not world.has_method("water_depth_at"): return CAMP_RULES.deny("camp_ground")
+			# Actual support must exist, independently of analytic terrain height.
+			var ray := PhysicsRayQueryParameters3D.create(sample+Vector3.UP*0.5,sample-Vector3.UP*0.5,1)
+			ray.exclude=_bodies_that_are_not_buildings()
+			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
+			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
+	var shape := BoxShape3D.new()
+	shape.size=Vector3(size[0]+2*float(cfg.clearance_m),size[1],size[2]+2*float(cfg.clearance_m))
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape=shape
+	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+0.05,0))
+	query.collision_mask=3
+	query.collide_with_areas=true
+	query.exclude=_bodies_that_are_not_buildings()
+	if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return CAMP_RULES.deny("camp_ground")
+	return {"ok":true}
+
+
+## Foundation calls this with the sender's admitted inventory, personal
+## blueprints and actual body before its existing paid transaction is staged.
+func validate_station_placement(game: Node, id: String, realm: String, at: Vector3,
+		yaw: float, inventory: RefCounted, actor: Node3D, personal: Dictionary,
+		parent_uid: String = "") -> Dictionary:
+	if game != _game() or not is_inside_tree() or game.call("is_host") != true \
+			or not is_instance_valid(actor) or not actor.is_inside_tree() \
+			or not get_parent().is_ancestor_of(actor): return STATION_RULES.deny("station_actor_invalid")
+	var cfg := STATION_RULES.config()
+	if not actor.global_position.is_finite() or actor.get_world_3d() != (get_parent() as Node3D).get_world_3d() \
+			or actor.global_position.distance_to(at) > float(cfg.get("maximum_place_distance_m",0)): return STATION_RULES.deny("station_reach")
+	var result := STATION_RULES.placement(cfg,game.get("placed_buildings"),id,realm,at,yaw,personal,parent_uid)
+	if result.get("ok") != true: return result
+	var ground := _station_pose_valid(game,id,realm,at,yaw)
+	if ground.get("ok") != true: return ground
+	var cost: Array = game.get("items").call("buildable",id).get("cost",[])
+	if not STATION_RULES.valid_cost(cost) or not _altar_can_afford(inventory,cost): return STATION_RULES.deny("station_materials")
+	result.merge({"id":id,"realm":realm,"position":[at.x,at.y,at.z],"yaw_deg":yaw,"paid":true,"cost":cost},true)
+	return result
+
+
+func resolve_station(game: Node, key: String, building: Node3D) -> Dictionary:
+	if game != _game() or not is_inside_tree() or not is_instance_valid(building) \
+			or not building.is_inside_tree() or building.is_queued_for_deletion() \
+			or not get_parent().is_ancestor_of(building) or not building.is_in_group(PLACED_GROUP) \
+			or building.scale != Vector3.ONE: return STATION_RULES.deny("station_node_invalid")
+	var id: String = str(building.get_meta(BUILDING_ID_META,""))
+	if id == "altar": return resolve_altar_station(game,key,building)
+	if building.get_script() != STATION_PIECE: return STATION_RULES.deny("station_node_invalid")
+	var cfg := STATION_RULES.config()
+	var result := STATION_RULES.record(cfg,game.get("placed_buildings"),str(building.get_meta(BUILDING_UID_META,"")))
+	if result.get("ok") != true: return result
+	if result.key != key or result.record.id != id or building.get_meta("realm","") != "meadows" \
+			or building.get_meta(PLACED_INDEX_META,-1) != result.index: return STATION_RULES.deny("station_node_invalid")
+	var count := 0
+	for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META,"") == result.record.uid: count += 1
+	if count != 1: return STATION_RULES.deny("station_uid_duplicate")
+	var p: Array = result.record.position
+	if building.global_position.distance_to(Vector3(p[0],p[1],p[2])) > 0.01 \
+			or absf(wrapf(rad_to_deg(building.global_rotation.y)-float(result.record.yaw_deg),-180,180)) > 0.01: return STATION_RULES.deny("station_pose_invalid")
+	result.building=building
+	return result
+
+
+## Only a trusted authenticated host caller supplies actor, character and
+## combat state. Derive F28 Kitchen facts from this very node/prompt/record.
+func station_context(game: Node, building: Node3D, actor: Node3D,
+		character_id: String, revision: int, in_combat: bool) -> Dictionary:
+	var id: String = str(building.get_meta(BUILDING_ID_META,"")) if is_instance_valid(building) else ""
+	var uid: String = str(building.get_meta(BUILDING_UID_META,"")) if is_instance_valid(building) else ""
+	var key := "%s:meadows:%s" % [id,uid]
+	var source := resolve_station(game,key,building)
+	if source.get("ok") != true or not is_instance_valid(actor) or not actor.is_inside_tree() \
+			or not get_parent().is_ancestor_of(actor) or not actor.global_position.is_finite() \
+			or actor.get_world_3d() != building.get_world_3d() or character_id.is_empty() or revision < 0: return {}
+	var cfg := STATION_RULES.config()
+	var tier := STATION_RULES.effective_tier(cfg,game.get("placed_buildings"),uid)
+	if tier.get("ok") != true: return {}
+	var origin: Vector3 = building.call("interaction_origin") if building.has_method("interaction_origin") else building.global_position
+	var overview := building.get_node_or_null(^"StationOverview")
+	if overview != null and overview.has_method("interaction_origin"): origin=overview.call("interaction_origin")
+	return {"station_id":id,"homestead":true,"in_range":actor.global_position.distance_to(origin) <= float(cfg.interaction_radius_m),
+		"in_combat":in_combat,"effective_tier":int(tier.effective_tier),"character_id":character_id,
+		"expected_revision":revision,"source_key":key}
+
+
+func _mount_station(game: Node, building: Node3D) -> void:
+	var cfg := STATION_RULES.config()
+	if cfg.get("runtime_enabled") != true or not is_instance_valid(building): return
+	var id: String = str(building.get_meta(BUILDING_ID_META,""))
+	if not STATION_RULES.station(cfg,id): return
+	var key := "%s:meadows:%s" % [id,str(building.get_meta(BUILDING_UID_META,""))]
+	if resolve_station(game,key,building).get("ok") != true: return
+	var session: Node = game.get("session") as Node
+	if session == null or not session.has_method("_register_homestead_station_node"): return
+	if session.call("_register_homestead_station_node",key,building) != true: return
+	if building.has_method("mount_interaction"): building.call("mount_interaction")
+	if id == "altar" and building.get_node_or_null(^"StationOverview") == null:
+		var overview := STATION_MENU.new()
+		overview.name="StationOverview"
+		building.add_child(overview)
+		overview.mount(building)
+
+
+func _place_station(game: Node, id: String) -> void:
+	if not _pending_placements.is_empty() or not _pending_dismantles.is_empty():
+		game.call("push_world_message","Wait for the previous building transaction.")
+		return
+	if not _station_building_available(game,id):
+		var host_only: bool = STATION_RULES.config().get("runtime_enabled") == true and game.call("is_host") != true
+		game.call("push_world_message",STATION_RULES.reason("station_host_only" if host_only else "station_disabled"))
+		return
+	var at := _ghost.global_position
+	var preview := preview_placement(game,id,at)
+	if preview.get("ok") != true:
+		game.call("push_world_message",str(preview.get("reason","The station cannot be built here.")))
+		return
+	var txn := Crypto.new().generate_random_bytes(16).hex_encode()
+	var realm := WORLD_RECORDS.active(game)
+	var intent := {"kind":"place_building","realm":realm,"id":id,"position":[at.x,at.y,at.z],"yaw_deg":_yaw_deg,"paid":true,"txn_id":txn}
+	if id != "altar": intent.parent_uid=str(preview.get("parent_uid",""))
+	var ticket := {"id":id,"realm":realm,"position":at,"yaw_deg":_yaw_deg,"cost":[],"paid":true,"txn_id":txn,"canonical_station":true}
+	_pending_placements.append(ticket)
+	var transport := _transport(game)
+	var verdict: Dictionary = transport.call("submit",intent) if transport != null else {"ok":false,"reason":"The building transaction is unavailable."}
+	if verdict.get("ok") != true and verdict.get("pending") != true:
+		_pending_placements.erase(ticket)
+		game.call("push_world_message",str(verdict.get("reason","The building transaction was refused.")))
+
+
+func _dismantle_station(game: Node, target: Node3D) -> bool:
+	if not _pending_placements.is_empty() or not _pending_dismantles.is_empty(): return false
+	var id: String = str(target.get_meta(BUILDING_ID_META,""))
+	var uid: String = str(target.get_meta(BUILDING_UID_META,""))
+	var key := "%s:meadows:%s" % [id,uid]
+	if not _station_building_available(game,id) or resolve_station(game,key,target).get("ok") != true: return false
+	var legal := STATION_RULES.dismantle(STATION_RULES.config(),game.get("placed_buildings"),uid)
+	if legal.get("ok") == true and id == "den":
+		var session: Node = game.get("session") as Node
+		# Complete admitted host/guest parties are checked again under the
+		# producer mutation fence; this preview never certifies local parties.
+		if session == null or not session.has_method("homestead_validate_dismantle"):
+			legal=STATION_RULES.deny("den_owners_unavailable")
+		else:
+			var gate: Variant = session.call("homestead_validate_dismantle",uid)
+			if not gate is Dictionary or gate.get("ok") != true:
+				legal=gate if gate is Dictionary else STATION_RULES.deny("den_owners_unavailable")
+	if legal.get("ok") != true:
+		game.call("push_world_message",str(legal.reason))
+		return false
+	var txn := Crypto.new().generate_random_bytes(16).hex_encode()
+	var ticket := {"id":id,"uid":uid,"index":legal.index,"realm":"meadows","txn_id":txn,"refund":[],"canonical_station":true}
+	_pending_dismantles.append(ticket)
+	var transport := _transport(game)
+	var verdict: Dictionary = transport.call("submit",{"kind":"dismantle","realm":"meadows","uid":uid,"txn_id":txn}) if transport != null else {"ok":false}
+	if verdict.get("ok") == true or verdict.get("pending") == true: return true
+	_pending_dismantles.erase(ticket)
+	game.call("push_world_message",str(verdict.get("reason","Dismantling was refused.")))
+	return false
 
 ## Ids placed by their own hand-authored script rather than build_piece.gd's
 ## generic path — kept as one list so the "is this a special id" question is
@@ -263,7 +508,38 @@ func _ready() -> void:
 	_camera_rig = get_node_or_null(camera_rig_path)
 	add_to_group(BUILD_PLACER_GROUP)
 	_connect_ledger()
+	_connect_station_view(_game())
 	restore_from_game(_game())
+
+func _connect_station_view(game: Node) -> void:
+	if game == null or STATION_RULES.config().get("runtime_enabled") != true: return
+	var producer := game.get("session") as Node
+	if producer == _station_view_producer: return
+	if is_instance_valid(_station_view_producer) and _station_view_producer.has_signal("homestead_personal_view_completed") \
+			and _station_view_producer.is_connected("homestead_personal_view_completed",_station_view_completed):
+		_station_view_producer.disconnect("homestead_personal_view_completed",_station_view_completed)
+	_station_view_producer=producer
+	if producer != null and producer.has_signal("homestead_personal_view_completed"):
+		producer.connect("homestead_personal_view_completed",_station_view_completed)
+
+func _station_view_completed() -> void:
+	if _station_view_refresh_pending: return
+	_station_view_refresh_pending=true
+	call_deferred("_refresh_station_preview")
+
+func _refresh_station_preview() -> void:
+	_station_view_refresh_pending=false
+	var game := _game()
+	if game == null or game.get("session") != _station_view_producer \
+			or not is_instance_valid(_player) or not _pending_placements.is_empty() \
+			or not _pending_dismantles.is_empty(): return
+	var armed := str(game.get("pending_build"))
+	if not armed.is_empty() and _station_path(armed): _show_ghost(game,armed)
+
+func _exit_tree() -> void:
+	if is_instance_valid(_station_view_producer) and _station_view_producer.has_signal("homestead_personal_view_completed") \
+			and _station_view_producer.is_connected("homestead_personal_view_completed",_station_view_completed):
+		_station_view_producer.disconnect("homestead_personal_view_completed",_station_view_completed)
 
 
 func _game() -> Node:
@@ -303,6 +579,10 @@ func _physics_process(_delta: float) -> void:
 	var game := _game()
 	if game == null or _player == null:
 		return
+	_connect_station_view(game)
+	# Capability can arrive after scene restoration. Retry mounting the same
+	# committed nodes; the frozen Training attach() is idempotent.
+	_mount_current_altars(game)
 	var armed := str(game.get("pending_build"))
 	# Arming — including swapping straight from one piece to another without
 	# disarming in between — bars the place action until it is released. See
@@ -438,7 +718,13 @@ func _show_ghost(game: Node, armed: String) -> void:
 
 	if _ghost == null or not is_instance_valid(_ghost):
 		_ghost_id = armed
-		if armed == "stormglass_arch":
+		if armed == CAMP_RULES.ID:
+			_ghost=FORWARD_CAMP.new()
+			_ghost.call("build_ghost")
+		elif _station_path(armed) and armed != "altar":
+			_ghost = STATION_PIECE.new()
+			_ghost.build(armed, true)
+		elif armed == "stormglass_arch":
 			_ghost = STORMWOOD_ARCH_PIECE.new()
 			_ghost.name = "StormglassArchGhost"
 			_ghost.build_ghost()
@@ -583,14 +869,60 @@ func preview_placement(game: Node, armed: String, raw_spot: Vector3,
 			if not planned.has("realm"):
 				planned["realm"] = WORLD_RECORDS.active(game)
 			buildings.append(planned)
-	return evaluate_placement(game, armed, raw_spot, buildings, Callable(self, "_ground_height"))
+	var source_spot := raw_spot
+	var parent_uid := ""
+	var cfg := STATION_RULES.config()
+	var def := STATION_RULES.attachment(cfg, armed)
+	if not def.is_empty():
+		var best := INF
+		for row: Variant in buildings:
+			if not row is Dictionary or row.get("id") != def.station_id: continue
+			var canonical := STATION_RULES.record(cfg, buildings, str(row.get("uid", "")))
+			if canonical.get("ok") != true: continue
+			var at := STATION_RULES.socket(cfg, canonical.record, int(def.tier))
+			var distance := Vector2(at.x, at.z).distance_to(Vector2(raw_spot.x, raw_spot.z))
+			if distance < best and distance < float(cfg.maximum_place_distance_m):
+				best = distance
+				source_spot = at
+				parent_uid = canonical.record.uid
+				_yaw_deg = float(canonical.record.yaw_deg)
+	var result := evaluate_placement(game, armed, source_spot, buildings, Callable(self, "_ground_height"), _yaw_deg)
+	if armed == CAMP_RULES.ID:
+		var plan := validate_forward_camp_ground(game,WORLD_RECORDS.active(game),result.position,_yaw_deg)
+		var producer: Node = game.get("session") as Node
+		if plan.get("ok") != true or producer == null or not producer.has_method("forward_camp_placement_available") \
+				or producer.call("forward_camp_placement_available") != true:
+			result.ok=false
+			result.reason=str(plan.get("reason",CAMP_RULES.deny("camp_unavailable").reason))
+	if _station_path(armed):
+		if not def.is_empty() and not parent_uid.is_empty():
+			source_spot.y = _ground_height(source_spot)
+			result.position = source_spot
+			result.yaw_deg = _yaw_deg
+			result.snapped_to_neighbour = true
+		var view := _station_preview_personal_view(game, def)
+		var plan := STATION_RULES.placement(cfg, buildings, armed, WORLD_RECORDS.active(game), result.position, _yaw_deg, view.get("redesign_character", {}), parent_uid)
+		if plan.get("ok") == true:
+			plan = _station_pose_valid(game, armed, WORLD_RECORDS.active(game), result.position, _yaw_deg)
+		if plan.get("ok") != true or not _station_building_available(game, armed):
+			result.ok = false
+			result.reason = STATION_RULES.reason(str(plan.get("code", "station_transaction_unavailable")))
+		result.parent_uid = parent_uid
+	if armed == "altar" and bool(result.get("has_ground", false)):
+		var station := _altar_pose_valid(game, WORLD_RECORDS.active(game), result.position, _yaw_deg)
+		if station.ok and not _altar_placement_available(game):
+			station = HOME_PLOT.refusal("station_transaction_unavailable")
+		if not station.ok:
+			result["ok"] = false
+			result["reason"] = _altar_refusal_text(str(station.code))
+	return result
 
 
 ## Pure legality core shared by the live ghost and `preview_placement`.
 ## Tests use a flat callback here to prove every planner-facing result stays in
 ## lockstep with the calculation that `_show_ghost` consumes.
 static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
-		buildings: Array, ground_height: Callable) -> Dictionary:
+		buildings: Array, ground_height: Callable, yaw_deg: float = 0.0) -> Dictionary:
 	buildings = WORLD_RECORDS.for_realm(buildings, WORLD_RECORDS.active(game))
 	var ground := float(ground_height.call(raw_spot))
 	if is_nan(ground):
@@ -616,6 +948,21 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 	# ghost: the target inherits its placed neighbour's ground-clamped height.
 	var rise := 0.0
 	if not snapped_to_neighbour:
+		# Grid snapping moves X/Z away from the raw aim. Ground-clamp and
+		# measure slope around that resolved centre, or a legal cell can turn
+		# red just because the aim sits on its uphill/downhill edge.
+		ground = float(ground_height.call(spot))
+		if is_nan(ground):
+			return {
+				"has_ground": false,
+				"ok": false,
+				"reason": "",
+				"position": Vector3.INF,
+				"snapped_to_neighbour": false,
+				"structural": false,
+				"yaw_deg": NAN,
+			}
+		spot.y = ground
 		for corner: Vector3 in [Vector3(1.2, 0, 0), Vector3(-1.2, 0, 0), Vector3(0, 0, 1.2), Vector3(0, 0, -1.2)]:
 			var h := float(ground_height.call(spot + corner))
 			if not is_nan(h):
@@ -628,6 +975,15 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 	# buildable stay exactly as legal as they were.
 	var needs_tent := armed == "bedroll" and not _bedroll_has_tent(spot, buildings)
 	var afford := _can_afford(game, armed)
+	var station_reason := ""
+	if armed == "altar":
+		var cfg := _altar_config(game)
+		if cfg.is_empty():
+			station_reason = "station_data_invalid"
+		else:
+			var plan := HOME_PLOT.placement(cfg, WORLD_RECORDS.active(game), spot, yaw_deg)
+			if not plan.ok: station_reason = str(plan.code)
+			afford = _altar_can_afford(game.get("inventory"), _altar_cost(game))
 	var arch_reason := ""
 	if armed == "stormglass_arch":
 		var plan := STORMWOOD_ARCH_RULES.placement(spot, WORLD_RECORDS.active(game), game.get("progression"), buildings)
@@ -640,7 +996,9 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 	elif not socket.is_empty():
 		arch_reason = "This old footing accepts only a Stormglass Arch"
 	var reason := ""
-	if not arch_reason.is_empty():
+	if not station_reason.is_empty():
+		reason = _altar_refusal_text(station_reason)
+	elif not arch_reason.is_empty():
 		reason = arch_reason
 	elif occupied:
 		reason = "Something is already here"
@@ -652,7 +1010,7 @@ static func evaluate_placement(game: Node, armed: String, raw_spot: Vector3,
 		reason = "Can't afford this — check the build menu for what's short"
 	return {
 		"has_ground": true,
-		"ok": arch_reason.is_empty() and not too_steep and not occupied and not needs_tent and afford,
+		"ok": station_reason.is_empty() and arch_reason.is_empty() and not too_steep and not occupied and not needs_tent and afford,
 		"reason": reason,
 		"position": spot,
 		"snapped_to_neighbour": snapped_to_neighbour,
@@ -700,8 +1058,36 @@ static func _bedroll_has_tent(spot: Vector3, buildings: Array) -> bool:
 ## a fresh placement (not a load) always passes null, since there is nothing
 ## yet to restore.
 func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = -1, state_data: Variant = null) -> Node3D:
+	if id == CAMP_RULES.ID:
+		var rows: Array = game.get("placed_buildings")
+		if index < 0 or index >= rows.size() or not rows[index] is Dictionary: return null
+		var camp := CAMP_RULES.record(rows,str(rows[index].get("uid","")))
+		if camp.get("ok") != true or camp.index != index: return null
+		for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+			if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META,"") == camp.record.uid: return null
+	if _station_path(id) and id != "altar":
+		var records: Array = game.get("placed_buildings")
+		if index < 0 or index >= records.size() or not records[index] is Dictionary: return null
+		var restored := STATION_RULES.record(STATION_RULES.config(),records,str(records[index].get("uid","")))
+		if restored.get("ok") != true or restored.index != index or restored.record.id != id: return null
+		for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+			if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META,"") == restored.record.uid: return null
+	var altar_record: Dictionary = {}
+	if id == "altar":
+		var cfg := _altar_config(game)
+		var rows: Array = game.get("placed_buildings")
+		if cfg.is_empty() or index < 0 or index >= rows.size() or not rows[index] is Dictionary: return null
+		altar_record = HOME_PLOT.record(cfg, rows, str(rows[index].get("uid", "")))
+		if not altar_record.ok or int(altar_record.index) != index: return null
+		for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+			if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META, "") == altar_record.record.uid:
+				return null
 	var placed: Node3D = null
-	if id == "stormglass_arch":
+	if id == CAMP_RULES.ID:
+		placed=FORWARD_CAMP.new()
+		get_parent().add_child(placed)
+		placed.call("build_real")
+	elif id == "stormglass_arch":
 		placed = STORMWOOD_ARCH_PIECE.new()
 		placed.name = "StormglassArch"
 		get_parent().add_child(placed)
@@ -735,6 +1121,13 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		placed.name = "CreatureBed"
 		get_parent().add_child(placed)
 		placed.call("build_real")
+	elif _station_path(id) and id != "altar":
+		placed = STATION_PIECE.new()
+		# Same scene name as every other catalogue piece (tools and smokes
+		# address a planted Workbench as Piece_workbench*).
+		placed.name = "Piece_%s" % id
+		get_parent().add_child(placed)
+		placed.build(id)
 	elif id == "door":
 		placed = BUILD_DOOR.new()
 		placed.name = "Door"
@@ -772,6 +1165,10 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 		if id == "creature_bed" and placed.has_method("set_build_index"):
 			placed.call("set_build_index", index)
 	placed.add_to_group(PLACED_GROUP)
+	if _station_path(id) or id == CAMP_RULES.ID:
+		var records: Array = game.get("placed_buildings")
+		if index >= 0 and index < records.size():
+			placed.set_meta(BUILDING_UID_META, str(records[index].get("uid", "")))
 	return placed
 
 
@@ -779,6 +1176,233 @@ func _spawn_building(game: Node, id: String, yaw_deg: float = 0.0, index: int = 
 ## instance, lazily built, exactly as campfire.gd::_on_craft() keeps its own --
 ## two stations, one screen, zero copies of the recipe logic.
 var _craft_panel: CanvasLayer = null
+
+
+## Authoritative catalogue lookup: unknown/duplicate build or cost IDs fail
+## closed. Costs remain in buildables.json; no duplicated price table.
+static func _altar_cost(game: Node) -> Array:
+	if not is_instance_valid(game): return []
+	var items: Variant = game.get("items")
+	if not items is RefCounted or not items.has_method("buildables") or not items.has_method("definition"): return []
+	var matches := 0
+	var definition: Dictionary = {}
+	for raw: Variant in items.call("buildables"):
+		if raw is Dictionary and raw.get("id") == "altar":
+			matches += 1
+			definition = raw
+	if matches != 1 or definition.get("mesh") != "res://assets/props/quaternius_fantasy/BookStand.gltf" \
+			or definition.get("scale", [1, 1, 1]) != [1, 1, 1]: return []
+	var cost: Variant = definition.get("cost")
+	if not cost is Array or cost.is_empty(): return []
+	var ids: Array = []
+	for need: Variant in cost:
+		if not need is Dictionary or not need.get("id") is String or ids.has(need.id): return []
+		var n: Variant = need.get("n")
+		if not (n is int or n is float) or not is_finite(float(n)) \
+				or float(n) <= 0.0 or float(n) != floor(float(n)): return []
+		var item: Variant = items.call("definition", need.id)
+		if not item is Dictionary or item.is_empty(): return []
+		ids.append(need.id)
+	return cost.duplicate(true)
+
+
+static func _altar_can_afford(inventory: Variant, cost: Array) -> bool:
+	if cost.is_empty() or not inventory is RefCounted or not inventory.has_method("count"): return false
+	for need: Dictionary in cost:
+		if int(inventory.call("count", str(need.id))) < int(need.n): return false
+	return true
+
+
+static func _altar_config(game: Node) -> Dictionary:
+	if not _home_config_loaded:
+		_home_config_loaded = true
+		var cfg: Variant = REDESIGN_DATA.json(STATIONS_CONFIG)
+		var schema: Variant = REDESIGN_DATA.json("res://data/schema/stations.schema.json")
+		var canonical := REDESIGN_DATA.load_catalog("stations")
+		if canonical.get("ok") == true and schema is Dictionary \
+				and HOME_PLOT.config_valid(cfg, schema, canonical.data):
+			# Use the real imported resource so exported builds do not need the
+			# raw glTF JSON. This pinned asset has one identity mesh node.
+			if _altar_model_bounds_match(cfg): _home_config = cfg.duplicate(true)
+		if _home_config.is_empty(): push_error("Altar refused: invalid canonical station/plot/model data")
+	if _home_config.is_empty() or _altar_cost(game).is_empty(): return {}
+	return _home_config
+
+
+static func _altar_model_bounds_match(cfg: Dictionary) -> bool:
+	if not ResourceLoader.exists(str(cfg.altar.mesh)): return false
+	var resource: Resource = load(str(cfg.altar.mesh))
+	if not resource is PackedScene: return false
+	var model: Node = (resource as PackedScene).instantiate()
+	var nodes: Array[Node] = model.find_children("*", "MeshInstance3D", true, false)
+	if model is MeshInstance3D: nodes.append(model)
+	var valid := nodes.size() == 1
+	if valid:
+		var mesh_node := nodes[0] as MeshInstance3D
+		valid = mesh_node.mesh != null
+		var cursor := mesh_node as Node3D
+		while cursor != null:
+			if cursor.transform != Transform3D.IDENTITY: valid = false
+			cursor = cursor.get_parent() as Node3D
+		if valid:
+			var actual := mesh_node.mesh.get_aabb()
+			var lo: Array = cfg.altar.model_min
+			var hi: Array = cfg.altar.model_max
+			valid = actual.position.is_equal_approx(Vector3(float(lo[0]), float(lo[1]), float(lo[2]))) \
+				and actual.end.is_equal_approx(Vector3(float(hi[0]), float(hi[1]), float(hi[2])))
+	model.free()
+	return valid
+
+
+static func _altar_refusal_text(code: String) -> String:
+	match code:
+		"station_home_only": return "station_home_only — Place the Altar in the homestead yard, clear of the house, road and crops"
+		"station_materials": return "The Altar needs its building materials"
+		"station_occupied": return "Something is already here"
+		"station_ground": return "The Altar needs level ground"
+		"station_reach": return "Move closer to place the Altar"
+		"station_transaction_unavailable": return "Altar placement is not ready yet"
+		_: return "Altar placement is unavailable"
+
+
+## Contract to Foundation: true only when the ACTUAL existing placement
+## transaction has host recipe/realm/footprint/body/cost validation, atomic
+## debit+one UID/record, durable settlement/replay and guarded dismantle.
+## Missing producer on main7dcd returns false. Method presence is insufficient.
+static func _altar_placement_available(game: Node) -> bool:
+	var session: Variant = game.get("session") if is_instance_valid(game) else null
+	if not session is Node or not is_instance_valid(session) \
+			or not session.has_method("altar_building_placement_available"): return false
+	var available: Variant = session.call("altar_building_placement_available")
+	return available is bool and available == true
+
+
+## Actual terrain/physics query owned by the live host placer. Pose is exact,
+## never resnapped here: Foundation validates the requested final pose before
+## its existing place_building transaction mints a UID or changes inventory.
+func _altar_pose_valid(game: Node, realm: String, position: Vector3, yaw_deg: float) -> Dictionary:
+	var cfg := _altar_config(game)
+	if cfg.is_empty(): return HOME_PLOT.refusal("station_data_invalid")
+	var plan := HOME_PLOT.placement(cfg, realm, position, yaw_deg)
+	if not plan.ok: return plan
+	if not is_inside_tree() or get_parent() == null or get_world_3d_space() == null:
+		return HOME_PLOT.refusal("station_context_missing")
+	var base := _ground_height(position)
+	if not is_finite(base) or absf(base - position.y) > float(cfg.altar.ground_tolerance_m):
+		return HOME_PLOT.refusal("station_ground")
+	for corner: Vector2 in HOME_PLOT.corners(cfg, position, yaw_deg):
+		var height := _ground_height(Vector3(corner.x, position.y, corner.y))
+		if not is_finite(height) or absf(height - base) > float(cfg.altar.maximum_slope_rise_m):
+			return HOME_PLOT.refusal("station_ground")
+	var lo: Array = cfg.altar.model_min
+	var hi: Array = cfg.altar.model_max
+	var margin := float(cfg.altar.placement_clearance_m)
+	var shape := BoxShape3D.new()
+	# Raise the lower face above terrain; ground was checked independently.
+	shape.size = Vector3(float(hi[0]) - float(lo[0]) + 2.0 * margin,
+		float(hi[1]) - 0.1, float(hi[2]) - float(lo[2]) + 2.0 * margin)
+	var rotation := Basis(Vector3.UP, deg_to_rad(yaw_deg))
+	var centre := Vector3((float(lo[0]) + float(hi[0])) * 0.5,
+		(float(hi[1]) + 0.1) * 0.5, (float(lo[2]) + float(hi[2])) * 0.5)
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = Transform3D(rotation, position + rotation * centre)
+	query.collision_mask = 0xFFFFFFFF
+	query.collide_with_areas = false
+	if not get_world_3d_space().intersect_shape(query, 1).is_empty():
+		return HOME_PLOT.refusal("station_occupied")
+	return {"ok": true, "code": ""}
+
+
+func get_world_3d_space() -> PhysicsDirectSpaceState3D:
+	var world_node := get_parent() as Node3D
+	if not is_instance_valid(world_node) or not world_node.is_inside_tree(): return null
+	return world_node.get_world_3d().direct_space_state
+
+
+## Host-only read API. Foundation supplies the sender-bound actual actor and
+## its canonical full-registry inventory view, never request-supplied stock.
+## Returned cost is a read plan, not a debit or permission to publish a delta.
+func validate_altar_placement(game: Node, realm: String, position: Vector3,
+		yaw_deg: float, inventory: RefCounted, actor: Node3D) -> Dictionary:
+	if not is_instance_valid(game) or not is_inside_tree() or get_parent() == null \
+			or game != _game() or not bool(game.call("is_host")) or realm != "meadows":
+		return HOME_PLOT.refusal("station_home_only")
+	if not is_instance_valid(actor) or not actor.is_inside_tree() \
+			or not get_parent().is_ancestor_of(actor) or not actor.global_position.is_finite():
+		return HOME_PLOT.refusal("station_actor_invalid")
+	var cfg := _altar_config(game)
+	if cfg.is_empty(): return HOME_PLOT.refusal("station_data_invalid")
+	if actor.global_position.distance_to(position) > float(cfg.altar.maximum_place_distance_m):
+		return HOME_PLOT.refusal("station_reach")
+	var plan := _altar_pose_valid(game, realm, position, yaw_deg)
+	if not plan.ok: return plan
+	var cost := _altar_cost(game)
+	if not _altar_can_afford(inventory, cost): return HOME_PLOT.refusal("station_materials")
+	return {"ok": true, "code": "", "cost": cost, "realm": realm,
+		"position": [position.x, position.y, position.z], "yaw_deg": yaw_deg, "paid": true}
+
+
+## Current node + unique canonical record resolver. No cached index is an
+## authority: it must still point to this UID, pose and live owning scene.
+func resolve_altar_station(game: Node, key: String, building: Node3D) -> Dictionary:
+	if not is_instance_valid(game) or not is_inside_tree() or get_parent() == null \
+			or game != _game() or WORLD_RECORDS.active(game) != "meadows" \
+			or not is_instance_valid(building) or not building.is_inside_tree() \
+			or building.is_queued_for_deletion() or not get_parent().is_ancestor_of(building) \
+			or building.get_script() != BUILD_PIECE or not building.is_in_group(PLACED_GROUP) \
+			or building.get_meta(BUILDING_ID_META, "") != "altar" \
+			or building.get_meta("realm", "") != "meadows" or building.scale != Vector3.ONE:
+		return HOME_PLOT.refusal("station_node_invalid")
+	if building.call("mesh_instances").is_empty(): return HOME_PLOT.refusal("station_node_invalid")
+	var cfg := _altar_config(game)
+	if cfg.is_empty(): return HOME_PLOT.refusal("station_data_invalid")
+	var uid: Variant = building.get_meta(BUILDING_UID_META, "")
+	if not uid is String: return HOME_PLOT.refusal("station_uid_invalid")
+	var resolved := HOME_PLOT.record(cfg, game.get("placed_buildings"), uid)
+	if not resolved.ok: return resolved
+	if key != resolved.key or building.get_meta(PLACED_INDEX_META, -1) != resolved.index:
+		return HOME_PLOT.refusal("station_node_invalid")
+	var matches := 0
+	for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if get_parent().is_ancestor_of(node) and node.get_meta(BUILDING_UID_META, "") == uid: matches += 1
+	if matches != 1: return HOME_PLOT.refusal("station_uid_duplicate")
+	var p: Array = resolved.record.position
+	if building.global_position.distance_to(Vector3(float(p[0]), float(p[1]), float(p[2]))) > 0.01 \
+			or absf(wrapf(rad_to_deg(building.global_rotation.y) - float(resolved.record.yaw_deg), -180.0, 180.0)) > 0.01:
+		return HOME_PLOT.refusal("station_pose_invalid")
+	resolved["building"] = building
+	return resolved
+
+
+static func _altar_spend_producer_available(game: Node) -> bool:
+	var session: Variant = game.get("session") if is_instance_valid(game) else null
+	if not session is Node or not is_instance_valid(session): return false
+	for method: String in ["altar_canonical_producer_available", "_register_altar_station_node",
+		"_unregister_altar_station_node", "altar_station_available", "quote_altar_essence_spend",
+		"submit_altar_essence_spend", "reconcile_altar_essence_spend"]:
+		if not session.has_method(method): return false
+	if not session.has_signal("altar_essence_quote_completed") or not session.has_signal("altar_essence_spend_completed"): return false
+	var available: Variant = session.call("altar_canonical_producer_available")
+	return available is bool and available == true
+
+
+func _mount_altar(game: Node, building: Node3D) -> void:
+	if not _altar_spend_producer_available(game) or not ResourceLoader.exists(ALTAR_INTERACTION): return
+	var key := "altar:meadows:" + str(building.get_meta(BUILDING_UID_META, ""))
+	if not resolve_altar_station(game, key, building).ok: return
+	# Exact frozen Training dependency; same hook for placement and restoration.
+	var interaction: Script = load(ALTAR_INTERACTION)
+	interaction.attach(building, game)
+
+
+func _mount_current_altars(game: Node) -> void:
+	if not _altar_spend_producer_available(game): return
+	for node: Node in get_tree().get_nodes_in_group(PLACED_GROUP):
+		if node is Node3D and get_parent().is_ancestor_of(node) \
+				and node.get_meta(BUILDING_ID_META, "") == "altar" \
+				and node.get_node_or_null(^"AltarInteraction") == null:
+			_mount_altar(game, node)
 
 
 func _open_craft_panel() -> void:
@@ -795,6 +1419,29 @@ func _open_craft_panel() -> void:
 ## complete inside this call, because `submit()` commits in-process and emits
 ## the delta before it returns.
 func _place(game: Node, armed: String) -> void:
+	if armed == CAMP_RULES.ID:
+		var preview := preview_placement(game,armed,_ghost.global_position)
+		var producer: Node = game.get("session") as Node
+		if preview.get("ok") != true or producer == null or not producer.has_method("forward_camp_submit_build"):
+			game.call("push_world_message",str(preview.get("reason",CAMP_RULES.deny("camp_unavailable").reason)))
+			return
+		var at: Vector3 = preview.position
+		var intent := {"action":"place","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
+			"realm":WORLD_RECORDS.active(game),"position":[at.x,at.y,at.z],"yaw_deg":_yaw_deg}
+		# Producer retains original ID and admission revision through lost ACK.
+		producer.call("forward_camp_submit_build",intent,self)
+		return
+	if _station_path(armed):
+		_place_station(game, armed)
+		return
+	if armed == "altar":
+		var plan := _altar_pose_valid(game, WORLD_RECORDS.active(game), _ghost.global_position, _yaw_deg)
+		if not plan.ok or not _altar_placement_available(game):
+			game.call("push_world_message", _altar_refusal_text(str(plan.get("code", "station_transaction_unavailable")) if not plan.ok else "station_transaction_unavailable"))
+			return
+		if not _pending_placements.is_empty():
+			game.call("push_world_message", "Let the previous placement settle first")
+			return
 	if armed == "stormglass_arch" and not _pending_placements.is_empty():
 		game.call("push_world_message", "Let the previous placement settle first")
 		return
@@ -819,12 +1466,18 @@ func _place(game: Node, armed: String) -> void:
 		"cost": (STORMWOOD_ARCH_RULES.cost(spot) if armed == "stormglass_arch" and not bool(game.get("free_build")) else game.call("build_cost_for", armed)).duplicate(true),
 		"paid": not bool(game.get("free_build")),
 	}
+	if armed == "altar":
+		# Foundation's existing place_building transaction owns the canonical
+		# debit before publication. No free grant or post-delta second debit.
+		ticket["cost"] = []
+		ticket["paid"] = true
+		ticket["txn_id"] = Crypto.new().generate_random_bytes(16).hex_encode()
 	_pending_placements.append(ticket)
 	var available_materials := {}
 	if armed == "stormglass_arch":
 		for need: Dictionary in STORMWOOD_ARCH_RULES.cost(spot):
 			available_materials[str(need.id)] = int(game.get("inventory").count(str(need.id)))
-	var verdict: Dictionary = transport.call("submit", {
+	var intent := {
 		"kind": "place_building",
 		"realm": realm,
 		"id": armed,
@@ -832,7 +1485,9 @@ func _place(game: Node, armed: String) -> void:
 		"yaw_deg": yaw_deg,
 		"paid": ticket["paid"],
 		"available_materials": available_materials,
-	})
+	}
+	if armed == "altar": intent["txn_id"] = ticket.txn_id
+	var verdict: Dictionary = transport.call("submit", intent)
 	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
 		# `ok` means the delta already landed and `_on_delta_applied` has
 		# already retired this ticket. `pending` means a client is waiting on
@@ -853,7 +1508,7 @@ func _place(game: Node, armed: String) -> void:
 func _settle_placement(game: Node, ticket: Dictionary, at: Vector3) -> void:
 	# Spend all-or-nothing; the inventory refuses partial removals.
 	var inventory: RefCounted = game.get("inventory")
-	if inventory != null:
+	if inventory != null and not ticket.get("canonical_station", false):
 		for requirement: Variant in (ticket.get("cost", []) as Array):
 			var need: Dictionary = requirement
 			if not bool(inventory.call("remove", str(need.get("id", "")), int(need.get("n", 0)))):
@@ -927,12 +1582,26 @@ func _plant_from_delta(game: Node, op: Dictionary, index: int) -> void:
 	var realm := str(op.get("realm", "meadows"))
 	var at := _delta_position(op.get("position"))
 	var yaw_deg := float(op.get("yaw_deg", 0.0))
+	if id == "altar":
+		var cfg := _altar_config(game)
+		if cfg.is_empty(): return
+		var canonical := HOME_PLOT.record(cfg, game.get("placed_buildings"), str(op.get("uid", "")))
+		if not canonical.ok or canonical.record.position != op.get("position") \
+				or canonical.record.yaw_deg != op.get("yaw_deg") or op.get("paid") != true: return
+		index = int(canonical.index)
+	if _station_path(id) and id != "altar":
+		var canonical := STATION_RULES.record(STATION_RULES.config(), game.get("placed_buildings"), str(op.get("uid", "")))
+		if canonical.get("ok") != true or canonical.record.position != op.get("position") or op.get("paid") != true: return
+		index = int(canonical.index)
 	if realm == WORLD_RECORDS.active(game):
 		var placed := _spawn_building(game, id, yaw_deg, index)
-		placed.global_position = at
+		if placed != null:
+			placed.global_position = at
+			if id == "altar": _mount_altar(game, placed)
+			if _station_path(id): _mount_station(game, placed)
 	# The ticket is retired whether or not the structure was DRAWN: a player
 	# whose realm changed inside one round trip still paid for their house.
-	var ticket := _take_placement_ticket(id, realm, at)
+	var ticket := _take_placement_ticket(id, realm, at, str(op.get("txn_id", "")))
 	if not ticket.is_empty():
 		_settle_placement(game, ticket, at)
 
@@ -958,7 +1627,7 @@ func _uproot_from_delta(game: Node, op: Dictionary) -> void:
 			_clear_dismantle_target()
 		target.queue_free()
 	_reindex_placed_nodes(index, game)
-	var ticket := _take_dismantle_ticket(index, realm)
+	var ticket := _take_dismantle_ticket(index, realm, str(op.get("uid", "")), str(op.get("txn_id", "")))
 	if not ticket.is_empty():
 		_settle_dismantle(game, ticket)
 
@@ -966,7 +1635,7 @@ func _uproot_from_delta(game: Node, op: Dictionary) -> void:
 ## The refund, the line and the sound, run once, on the peer that pressed.
 func _settle_dismantle(game: Node, ticket: Dictionary) -> void:
 	var inventory: RefCounted = game.get("inventory")
-	if inventory != null:
+	if inventory != null and not ticket.get("canonical_station", false):
 		for requirement: Variant in (ticket.get("refund", []) as Array):
 			var need := requirement as Dictionary
 			inventory.call("add", str(need.get("id", "")), int(need.get("n", 0)))
@@ -981,12 +1650,17 @@ func _settle_dismantle(game: Node, ticket: Dictionary) -> void:
 ## and a host's own refusal was answered synchronously in `_place` /
 ## `dismantle_piece`. All that is left is to drop the ticket, which is what
 ## keeps the player's wood in their satchel.
-func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: Dictionary) -> void:
-	if kind == "place_building" and not _pending_placements.is_empty():
-		_pending_placements.pop_front()
-		AUDIO_CUES.play(&"ui_error")
-	elif kind == "dismantle" and not _pending_dismantles.is_empty():
-		_pending_dismantles.pop_front()
+func _on_intent_refused(kind: String, _code: String, _reason: String, detail: Dictionary) -> void:
+	var tickets: Array = _pending_placements if kind == "place_building" else _pending_dismantles if kind == "dismantle" else []
+	var txn: String = str(detail.get("txn_id", ""))
+	if not txn.is_empty():
+		for i: int in tickets.size():
+			if tickets[i].get("canonical_station", false) and tickets[i].get("txn_id") == txn:
+				tickets.remove_at(i)
+				AUDIO_CUES.play(&"ui_error")
+				return
+	elif not tickets.is_empty() and not tickets[0].get("canonical_station", false):
+		tickets.pop_front()
 		AUDIO_CUES.play(&"ui_error")
 
 
@@ -994,11 +1668,12 @@ func _on_intent_refused(kind: String, _code: String, _reason: String, _detail: D
 ## `{}` when it is somebody else's structure. Matched on id, realm and spot:
 ## a placement is grid-snapped and `_cell_occupied` refuses a second piece in
 ## the same cell, so no two live tickets can share a position.
-func _take_placement_ticket(id: String, realm: String, at: Vector3) -> Dictionary:
+func _take_placement_ticket(id: String, realm: String, at: Vector3, txn_id: String = "") -> Dictionary:
 	for i in _pending_placements.size():
 		var ticket: Dictionary = _pending_placements[i]
 		if str(ticket.get("id", "")) != id or str(ticket.get("realm", "")) != realm:
 			continue
+		if ticket.get("canonical_station", false) and ticket.get("txn_id", "") != txn_id: continue
 		if (ticket.get("position", Vector3.ZERO) as Vector3).distance_to(at) > PENDING_MATCH_EPSILON:
 			continue
 		_pending_placements.remove_at(i)
@@ -1006,11 +1681,15 @@ func _take_placement_ticket(id: String, realm: String, at: Vector3) -> Dictionar
 	return {}
 
 
-func _take_dismantle_ticket(index: int, realm: String) -> Dictionary:
+func _take_dismantle_ticket(index: int, realm: String, uid: String = "", txn: String = "") -> Dictionary:
 	for i in _pending_dismantles.size():
 		var ticket: Dictionary = _pending_dismantles[i]
-		if int(ticket.get("index", -1)) != index or str(ticket.get("realm", "")) != realm:
-			continue
+		if str(ticket.get("realm", "")) != realm: continue
+		if ticket.get("canonical_station", false):
+			# The canonical host may have removed another piece below this press.
+			# This frozen Altar UID+txn survives array renumbering and replay.
+			if uid.is_empty() or txn.is_empty() or ticket.get("uid") != uid or ticket.get("txn_id") != txn: continue
+		elif int(ticket.get("index", -1)) != index: continue
 		_pending_dismantles.remove_at(i)
 		return ticket
 	return {}
@@ -1060,9 +1739,12 @@ func restore_from_game(game: Node) -> void:
 		# a save written before this shipped) — `_spawn_building` already
 		# treats null as "nothing to restore."
 		var placed := _spawn_building(game, id, yaw_deg, i, record.get("state"))
+		if placed == null: continue
 		placed.global_position = Vector3(float(position[0]), float(position[1]), float(position[2]))
 		# R3.1 VERSION 2: buildings placed before yaw was tracked default to 0.
 		placed.rotation.y = deg_to_rad(float(record.get("yaw_deg", 0.0)))
+		if id == "altar": _mount_altar(game, placed)
+		if _station_path(id): _mount_station(game, placed)
 	# GATEB-FLAGS: an older save whose player already met the piece count
 	# before this flag existed must resolve to it being done, not stuck
 	# re-asking for a home that is already standing.
@@ -1118,6 +1800,14 @@ func _building_uid_at(index: int) -> String:
 ## targeted player-built root (the centre-screen ray does that in production),
 ## which also makes the economic/save transaction independently testable.
 func dismantle_piece(game: Node, target: Node3D) -> bool:
+	if is_instance_valid(target) and target.get_meta(BUILDING_ID_META,"") == CAMP_RULES.ID:
+		var producer: Node = game.get("session") as Node if game != null else null
+		if producer == null or not producer.has_method("forward_camp_submit_build"): return false
+		var result: Variant = producer.call("forward_camp_submit_build",{"action":"pack","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
+			"uid":str(target.get_meta(BUILDING_UID_META,""))},self)
+		return result is Dictionary and (result.get("ok") == true or result.get("pending") == true)
+	if is_instance_valid(target) and _station_path(str(target.get_meta(BUILDING_ID_META, ""))):
+		return _dismantle_station(game, target)
 	if game == null or target == null or not is_instance_valid(target) \
 			or not target.is_in_group(PLACED_GROUP):
 		return false
@@ -1132,6 +1822,10 @@ func dismantle_piece(game: Node, target: Node3D) -> bool:
 	var id := str(record.get("id", ""))
 	if id.is_empty() or str(target.get_meta(BUILDING_ID_META, "")) != id:
 		return false
+	if id == "altar":
+		var key := "altar:meadows:" + str(target.get_meta(BUILDING_UID_META, ""))
+		if not resolve_altar_station(game, key, target).ok or not _altar_placement_available(game): return false
+		if not _pending_dismantles.is_empty(): return false
 	if id == "storage":
 		var storage_state: RefCounted = target.get("state")
 		if storage_state != null:
@@ -1177,9 +1871,15 @@ func dismantle_piece(game: Node, target: Node3D) -> bool:
 	var uid := _building_uid_at(index)
 	var ticket := {"index": index, "uid": uid, "realm": realm, "id": id,
 		"refund": refund.duplicate(true)}
+	if id == "altar":
+		# Host canonical dismantle owns the full refund atomically. Retain local
+		# room preview above; never grant it again when its delta arrives.
+		ticket["refund"] = []
+		ticket["txn_id"] = Crypto.new().generate_random_bytes(16).hex_encode()
 	_pending_dismantles.append(ticket)
-	var verdict: Dictionary = transport.call("submit",
-		{"kind": "dismantle", "realm": realm, "uid": uid, "index": index})
+	var intent := {"kind": "dismantle", "realm": realm, "uid": uid, "index": index}
+	if id == "altar": intent["txn_id"] = ticket.txn_id
+	var verdict: Dictionary = transport.call("submit", intent)
 	if bool(verdict.get("ok", false)) or bool(verdict.get("pending", false)):
 		# `ok`: the delta already landed and `_uproot_from_delta` has already
 		# taken the piece down, paid the refund and said so. `pending`: a

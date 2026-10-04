@@ -44,6 +44,8 @@ extends Node3D
 ## `Game.push_world_message()` the instant a round's flag flips true.
 
 const CONFIG_PATH := "res://data/config/tournament.json"
+## Foundation pollers find the board by group instead of walking every node.
+const FOUNDATION_GROUP := &"foundation_tournaments"
 const GROUND_PRESENTATION := preload("res://scripts/world/tournament_ground_presentation.gd")
 
 ## The statement prompt bolted to the board. Same node every berry bush and
@@ -154,6 +156,10 @@ var _party_revision := -1
 ## which is what "just won it" actually means. Keyed by flag id rather than
 ## round index so a round with no `won_flag` cannot collide with round 0.
 var _announced_won_flags: Dictionary = {}
+
+
+func _enter_tree() -> void:
+	add_to_group(FOUNDATION_GROUP)
 
 
 ## `world` is asked for ground height the same way `signpost.gd` and

@@ -321,6 +321,10 @@ func _build_deck() -> void:
 ## the animating span) is ever enterable, and this does not exist until the
 ## span is standing.
 func _build_trigger() -> void:
+	# RD-17: keep the authored span as regional scenery. No shipping boundary
+	# area can request a later realm; historical debug fixtures retain opt-in.
+	if not preload("res://scripts/data/biome_order.gd").legacy_physical_crossings():
+		return
 	var depth := float(_crossing_config.get("trigger_depth_m", 10.0))
 	var width := float(_crossing_config.get("trigger_width_m", 10.0))
 	var span := float(_crossing_config.get("trigger_length_m", 6.0))

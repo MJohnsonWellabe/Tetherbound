@@ -1,0 +1,58 @@
+{
+  "ci_run": 36915534683,
+  "ci_head": "63429ee77e31341ed82b106ce5489b6479916e3f",
+  "ci_merge": "c6d0670585d2776e4931126f00dedca9d8a2d048",
+  "raw_logs": [
+    {
+      "job": 110548567294,
+      "raw_bytes": 550411,
+      "raw_sha256": "5625bfa758a0480fc546df406783c35322faaa9a01bf0058278fa5a87b8238c1",
+      "lossless_gzip": "job-110548567294.log.gz"
+    },
+    {
+      "job": 110548567621,
+      "raw_bytes": 491857,
+      "raw_sha256": "405f8001805c0f3930cfdbcf8f12155f8e34fe434b85896de88483e279084c1e",
+      "lossless_gzip": "job-110548567621.log.gz"
+    },
+    {
+      "job": 110549151039,
+      "raw_bytes": 528416,
+      "raw_sha256": "1173018e179cc173022d61400e88ca51b47d099821cee488ede5753ab6e9bf4f",
+      "lossless_gzip": "job-110549151039.log.gz"
+    }
+  ],
+  "returned_original_sessions": [
+    {
+      "thread_id": "01a0f519-0f68-7f12-b4a0-f3c4051860c0",
+      "feature": "F17",
+      "reason": "Actual original opening failures in CI6173 jobs437,544,294; candidate1c7e04b source review pending",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f4f8-ea18-7a02-a7d3-5ced23916bbf",
+      "feature": "F20",
+      "reason": "Actual Waterward reveal-name predicate failure before traversal; source66d90261 independently PASS252 and merged23f48d78; original native proof recorded separately",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+      "feature": "F29",
+      "reason": "Independent review of attributable existing-owner source repairs",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    },
+    {
+      "thread_id": "01a0f51f-eae6-7400-8a76-16b642c262ad",
+      "feature": "Foundation",
+      "reason": "Actual multiplayer shard5 guest loses shared boss presentation/binding after first Warden round; source investigation pending",
+      "currently_archived": false,
+      "confirmed_reopened": true
+    }
+  ],
+  "attribution": "Stormwood Waterward native exit1 is the failed step; Arches leaks/Dynamo freed lambda/trainer_rank errors occur in separate processes and are not assigned to the passed clock tests. Warden world outcome/reload passing does not repair guest second-round binding. Cancelled jobs are not classified as code failures.",
+  "next_batch": "All15 R2/R3 feature sourceheads preserved and archived on tb/integration-next; R3 Foundation still implementing reviewed production paths. No NEXT engine/CI.",
+  "criterion_status": "UNCHANGED;110/280 MET, no additional acceptance from source/archives"
+}

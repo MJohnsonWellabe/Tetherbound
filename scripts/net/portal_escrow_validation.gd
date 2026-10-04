@@ -10,13 +10,19 @@ const ROW_KEYS := ["version", "kind", "status", "biome", "item", "character_id",
 	"world_id", "world_instance_id", "receipt", "key_slot"]
 
 
-static func receipt(biome: String, character_id: String) -> String:
+static func receipt(biome: String, character_id: String, world_instance: String = "") -> String:
+	# Existing v28 receipts keep their original meaning. New spends are tied
+	# to the immutable host instance, independently of its save locator.
+	if not world_instance.is_empty():
+		return preload("res://scripts/net/portal_delivery.gd").receipt(world_instance, biome, character_id)
 	return "portal_unlock:%s:%s" % [biome, character_id]
 
 
 static func valid_row(raw: Variant, character_id: String) -> bool:
 	if not raw is Dictionary or character_id.is_empty() or character_id.contains(":"):
 		return false
+	if raw.get("version") == 2:
+		return preload("res://scripts/net/portal_delivery.gd").valid(raw, character_id) and raw.get("status") in ["pending", "settled"]
 	var row: Dictionary = raw
 	if row.size() != ROW_KEYS.size():
 		return false

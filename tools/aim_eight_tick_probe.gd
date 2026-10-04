@@ -9,7 +9,8 @@ class OpeningCombat extends "res://tools/aim_controller_phase_probe.gd".Combat:
 	func enemy() -> RefCounted:
 		return target.get("instance")
 	func _physics_process(_delta: float) -> void:
-		if not is_aiming() and Input.is_action_just_pressed("interact"):
+		# Mirrors combat_manager.gd::_throw_pressed(): physical LT opens aim.
+		if not is_aiming() and Input.is_action_just_pressed("combat_throw"):
 			if aim.call("try_begin_aim", true, ""):
 				opens += 1
 
@@ -17,6 +18,7 @@ class EventReceipt extends Node:
 	var presses := 0
 	var releases := 0
 	func _input(event: InputEvent) -> void:
+		# LT aim is a trigger axis; X release is a button. Count both edges.
 		if event is InputEventJoypadButton:
 			if event.pressed:
 				presses += 1
@@ -24,6 +26,14 @@ class EventReceipt extends Node:
 				releases += 1
 			print("NATIVE_INPUT physics=", Engine.get_physics_frames(), " process=",
 				Engine.get_process_frames(), " button=", event.button_index, " pressed=", event.pressed)
+		elif event is InputEventJoypadMotion and event.axis in [JOY_AXIS_TRIGGER_LEFT, JOY_AXIS_TRIGGER_RIGHT]:
+			var held := absf(event.axis_value) >= 0.5
+			if held:
+				presses += 1
+			else:
+				releases += 1
+			print("NATIVE_INPUT physics=", Engine.get_physics_frames(), " process=",
+				Engine.get_process_frames(), " axis=", event.axis, " pressed=", held)
 
 var stage_name := ""
 
@@ -86,7 +96,7 @@ func _run() -> void:
 	watching = true
 	_sample("exact_tap.dispatch")
 	before = Engine.get_physics_frames()
-	await f.opening._tap_action(&"interact")
+	await f.opening._tap_action(&"combat_orb_release")
 	_sample("exact_tap.return")
 	if not _require(Engine.get_physics_frames() - before == 8 and events.presses >= 1
 			and f.aim.commits == 1 and helper.observed,
@@ -117,5 +127,5 @@ func _sample(stage: String) -> void:
 			"guard_positive": float(f.aim.get("_guard")) > 0.0,
 			"guard_precise": "%.20f" % float(f.aim.get("_guard")),
 			"state": f.aim.state, "committed": str(f.aim.get("_committed_assist_point")),
-			"pressed": Input.is_action_pressed("interact"),
-			"just_pressed": Input.is_action_just_pressed("interact")})
+			"pressed": Input.is_action_pressed("combat_orb_release"),
+			"just_pressed": Input.is_action_just_pressed("combat_orb_release")})

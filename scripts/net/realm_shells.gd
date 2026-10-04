@@ -167,6 +167,11 @@ func shell(realm: String) -> Node:
 	return node if node is Node and is_instance_valid(node) else null
 
 
+func destination_results_settled(realm: String) -> bool:
+	var node := shell(realm)
+	return node == null or _outcomes_settled(node)
+
+
 ## What this lane measures itself with, and what the net smokes probe.
 func report() -> Dictionary:
 	var rows: Dictionary = {}
@@ -330,6 +335,7 @@ func _collect_scene(realm: String, scene: String) -> PackedScene:
 ## its nodes are still in the groups `game_state.gd`'s four sync seams walk.
 func _tear_down(realm: String) -> void:
 	var node: Node = shell(realm)
+	if node != null and not _outcomes_settled(node): return
 	_shells.erase(realm)
 	_cost.erase(realm)
 	_loading.erase(realm)
@@ -346,6 +352,19 @@ func _tear_down(realm: String) -> void:
 		print("[realms] shell for '%s' folded back into the world (save %s)"
 			% [realm, "written" if wrote else "REFUSED"])
 	node.queue_free()
+
+
+## The existing director owns accepted hits, catch and rematch obligations.
+## A failed first journal must retain that same authority until its normal
+## retry writes durably; saving unrelated world state cannot stand in for it.
+static func _outcomes_settled(world: Node) -> bool:
+	var nodes: Array[Node] = [world]
+	while not nodes.is_empty():
+		var node: Node = nodes.pop_back()
+		for child: Node in node.get_children(): nodes.append(child)
+		if node.has_method("realm_transition_results_settled") \
+			and node.call("realm_transition_results_settled") != true: return false
+	return true
 
 
 # --- simulation focus ---------------------------------------------------------

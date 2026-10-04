@@ -1,0 +1,27 @@
+{
+  "verdict": "Independent bounded SOURCE PASS; no source blocker found",
+  "reviewer_thread": "01a0f512-b160-7053-8f6a-e84f072c2d94",
+  "author_head": "6efd879fb113c43fe25384ee2ef9cb77ec607ff3",
+  "author_parent": "cc7ca14e428b74dea165725c49c5fc5ad9d3dfde",
+  "author_tree": "380b3f7fffdb57551c4f61254164517d45e96939",
+  "frozen_root_head": "90ab83a7fe09f447d4f259155847c932af2c4a62",
+  "integration_head": "bdf3d5771985c2d37f35c0c071423729930a018c",
+  "source_lf_sha256": {
+    "tests/helpers/gate_a_npc_gather_segment.gd": "7d774b03bc7ae5b5b4bb111dc8a7f41d1624ab85e2f0fa6960b8cb64649efa2d",
+    "tests/test_gate_a_npc_gather_segment_contract.gd": "3c2a81db5fe378fe009ebcdd3794cea5e9b89edb8b876044042cbd771238c3d7",
+    "tests/helpers/opening_geometry_navigator.gd": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+  },
+  "repair_patch_sha256": "1273d32f2768592ccbcf3658216fea04a6df0789b18f96a9b996fc5299d0400e",
+  "manifest_sha256": "3c69a9961e48f55ff1a38d9dc8492bbdb61b485d56818bc647f721450a4876da",
+  "source_results_sha256": "5c873c89966067e2f10f299ad08d84d55cbe5c2f42ef6383ab8dc12dfb700079",
+  "seal_sha256": "c147ca05d3bb6b8b378aa30bef73529e2ef104922922f9f652a3c9971b05071c",
+  "independent_immutable_checks": 296,
+  "independent_geometry_checks": 187,
+  "seal_entries": 45,
+  "root_input_pins": 26,
+  "preservation": "Only preload, routing comment, stone hint block and bounded pure helper change in gather. Reversal restores the entire original file; original seven contract functions and25 executed assertions preserved, two contract functions added. Live nearest selection, wood Pond prefix, equipment/resources/payout, one1800-frame1.55m walk and all native skin/floor/recovery/contact/query/callback/lifetime/request/stall/travel limits unchanged.",
+  "scope": "Actual current playerXZ and selected stoneXZ determine advisory choice of direct or existing Practice Meadow road. No new waypoint/query/contact admission/prototype/physics change. Invalid/nonfinite/outside/oversized/distant inputs refuse.",
+  "source_geometry": "Six illustrative node pairs; only eastwood36,-16 to eaststone47,-34.5 uses meadow. Illustrated road67.814153523m, minimum fence gap3.167679705m. These examples do not constrain selection or prove every future route.",
+  "caveats": "Actual selection-time pose unlogged.1.55m hint clearance is not a capsule corridor certificate; terrain/props/vegetation/adaptive trajectory and native contacts require actual runtime proof. Declared unrelated HUB/ROOT integration differences remain; compose only reviewed source changes.",
+  "runtime": "Named9-test/44-assertion contract PASS at integration head. Original fresh earned path/save/fullCI/main pending; F17#4 OPEN/no MET. Previous actual failures remain FAILED."
+}

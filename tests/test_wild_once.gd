@@ -23,7 +23,8 @@ extends "res://tests/test_case.gd"
 ##   * the SHAPE of the wiring in source, `test_wild_alphas.gd`'s own proven
 ##     style for a mechanism this suite cannot run live -- that `spawn_wild()`
 ##     actually checks `once_id` before building a body, that the cluster loop
-##     actually skips a cleared alpha/elder's own slot, that a won/caught fight
+##     actually skips a cleared alpha/elder's own slot unless F44 supplies
+##     a retained active alpha cycle (elders and the guardian remain once-only), that a won/caught fight
 ##     actually fires the flag and skips the ordinary respawn timer, and that
 ##     the guardian's own once-id is the dungeon's existing clear flag rather
 ##     than a duplicate.
@@ -35,6 +36,8 @@ extends "res://tests/test_case.gd"
 const ENCOUNTER_DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const BURROW_WARRENS := preload("res://scripts/world/burrow_warrens.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
+const ALPHA_RESPAWNS := preload("res://scripts/repeatables/alpha_respawns.gd")
+const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 
 const BAND_DIRS := [
 	"band1_lower_meadows",
@@ -214,15 +217,63 @@ func test_spawn_wild_refuses_a_body_whose_once_id_already_fired() -> void:
 		+ "could never find the id to fire")
 
 
+## F44#2 permits a new retained alpha generation after its saved cooldown and
+## departures. This never makes a cleared elder/guardian repeatable; only the
+## named slot may consume a retained packet, and a waiting cycle stays absent.
+func _named_slot_exclusion_is_wired(source: String) -> bool:
+	var start := source.find("func _spawn_creatures(")
+	if start < 0: return false
+	var end := source.find("\nfunc ", start + 1)
+	var wrapper := source.substr(start, (end - start) if end > start else -1)
+	if not wrapper.contains("await _spawn_authored_creatures(entries)"): return false
+	start = source.find("func _spawn_authored_creatures(")
+	if start < 0: return false
+	end = source.find("\nfunc ", start + 1)
+	var body := source.substr(start, (end - start) if end > start else -1)
+	return body.contains('if n == 0 and (cycle.get("status") == "waiting" or (once_already_cleared and spawn_packet.is_empty())') \
+		and body.contains('if spawn_packet.is_empty() and cycle.get("status") == "active":') \
+		and body.contains('retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)') \
+		and body.contains('var member_packet: Dictionary = spawn_packet if n == 0 else {}') \
+		and body.contains('once_id = "wild_once_%d" % int(spawn.get("order"')
+
+
 func test_spawn_creatures_skips_a_clusters_own_alpha_or_elder_slot_once_cleared() -> void:
+	assert_true(_named_slot_exclusion_is_wired(_director_source()),
+		"cleared legacy individuals and waiting alphas must stay absent; only a retained active alpha packet may return in named slot zero")
+
+
+func test_negative_controls_keep_cleared_waiting_and_ordinary_cluster_guards() -> void:
 	var source := _director_source()
-	assert_true(source.contains("once_already_cleared"),
-		"_spawn_creatures no longer computes whether this entry's own alpha/elder "
-		+ "already fired")
-	assert_true(source.contains("if n == 0 and once_already_cleared:"),
-		"_spawn_creatures does not skip the cluster's own named slot once its flag has fired")
-	assert_true(source.contains('once_id = "wild_once_%d" % int(spawn.get("order"'),
-		"the once-id is no longer derived from the spawn entry's own stable `order`")
+	for old: String in [
+		"await _spawn_authored_creatures(entries)",
+		'if n == 0 and (cycle.get("status") == "waiting"',
+		'once_already_cleared and spawn_packet.is_empty()',
+		'cycle.get("status") == "active"',
+		'retained_spawn(get_node("/root/Game").world.redesign_world, alpha_site)',
+		'var member_packet: Dictionary = spawn_packet if n == 0 else {}',
+	]:
+		assert_true(source.contains(old), "negative control must actually mutate its production guard")
+		assert_false(_named_slot_exclusion_is_wired(source.replace(old, "false")),
+			"removing a named-slot/cycle/legacy exclusion must fail: " + old)
+
+
+func test_alpha_respawn_registry_never_reopens_warrens_elders_or_guardian() -> void:
+	var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/burrow_warrens.json"))
+	assert_true(cfg is Dictionary)
+	if not cfg is Dictionary: return
+	var ids: Array[String] = ["warrens_cleared"]
+	var warrens: Node3D = BURROW_WARRENS.new()
+	for entry: Dictionary in cfg.get("spawns", []):
+		var nickname := str(entry.get("nickname", ""))
+		if not nickname.is_empty(): ids.append(str(warrens.call("_once_flag_for_nickname", nickname)))
+	warrens.free()
+	for row: Dictionary in _once_entries():
+		if row.entry.has("elder"): ids.append("wild_once_%d" % int(row.entry.order))
+	assert_true(ids.size() > 1, "the actual named resident and guardian must be checked")
+	for id: String in ids:
+		assert_true(ALPHA_RESPAWNS.site(id).is_empty(), "a once-only elder or guardian must not be registered as a repeatable alpha: " + id)
+		assert_true(ALPHA_RESPAWNS.first_spawn(REDESIGN_STATE.defaults("world"), id, "world_once_guard", false, false).is_empty(),
+			"the actual alpha planner must refuse this once-only individual: " + id)
 
 
 func test_combat_exit_marks_once_only_wilds_only_after_their_receipt_is_accepted() -> void:

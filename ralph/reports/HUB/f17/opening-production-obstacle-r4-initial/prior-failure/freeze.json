@@ -1,0 +1,11 @@
+{
+  "state": "FROZEN_ACTUAL_FAIL",
+  "head": "8189ef734addce12d446c6c9a0f9d4016a0d657d",
+  "files_sha256": {
+    "native.txt": "3d7124bd986062c8b23ef1dae4053849341760e7ff42f8f6f6037840d158b3d6",
+    "parser.txt": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "receipt.json": "4382ef99fa02e3dbab66c918ed16b604302ef827020f87574bf7fbd7084649cd",
+    "diagnostic.json": "7b3e0b57ea6cfb3250e1828dc3c8bab6f2a00ab40061849adc14efda5338372c",
+    "freeze-failure.py": "cbf97330e6bfa789de6dc1d0c1a0c547993d177584fb6a2d80e8a4e771824544"
+  }
+}

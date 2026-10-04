@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "result": {
+        "head": "22520ec3f8d31694c087ed67e700294e565cfd53",
+        "exit": 0,
+        "timed_out": false,
+        "selection": "test_stormwood_road_surface.gd",
+        "summary": [
+          "9 tests, 162 assertions, 0 failed"
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-22520ec3f8d3-f8065f5a\\tests.log",
+        "raw_log_sha256": "afd8bf9c10bfc35143269fc01aba94e7d75b0fece74bab380e33215757d3aa3f"
+      },
+      "independent_source_review": "F29 independent137-check road fixture cache SOURCE PASS: all9methods/48assertion sites/25other helpers/tests byte exact; original CI12min cap intact; runtime source/data unchanged.",
+      "files": [
+        {
+          "name": "returned-unit-22520ec3f8d3-f8065f5a-tests.log.gz",
+          "raw_bytes": 445463,
+          "raw_sha256": "afd8bf9c10bfc35143269fc01aba94e7d75b0fece74bab380e33215757d3aa3f"
+        },
+        {
+          "name": "returned-unit-22520ec3f8d3-f8065f5a-result.json.gz",
+          "raw_bytes": 415,
+          "raw_sha256": "c57ba3214fc7648366ae72a37c7cb054fdb120df210c3d36a95f05b618ae76f8"
+        }
+      ]
+    },
+    {
+      "result": {
+        "head": "371138847a3b459a6844296c7dd269e7ef229c72",
+        "exit": 0,
+        "timed_out": false,
+        "selection": "test_wall_foliage_normals.gd",
+        "summary": [
+          "3 tests, 188 assertions, 0 failed"
+        ],
+        "log": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-unit-371138847a3b-aae7e721\\tests.log",
+        "raw_log_sha256": "0736a789c75d963f0b599fb56e28b4d89d712c37d5bcd0c1d90fb26881f73509"
+      },
+      "independent_source_review": "F29 cache86/typing14/robustrotation86 SOURCE PASS: all3cases/28assertion sites, lifetime/material/scale/pose obligations unchanged; float32 original0.0001-radian effective sensitivity preserved. Held f7 acos-dot alone remains unapproved.",
+      "files": [
+        {
+          "name": "returned-unit-371138847a3b-aae7e721-tests.log.gz",
+          "raw_bytes": 14924,
+          "raw_sha256": "0736a789c75d963f0b599fb56e28b4d89d712c37d5bcd0c1d90fb26881f73509"
+        },
+        {
+          "name": "returned-unit-371138847a3b-aae7e721-result.json.gz",
+          "raw_bytes": 413,
+          "raw_sha256": "e0c67115ef3a3f3acb682b270bd5cfe4b05ceb34412de1e1fc6e41d994420374"
+        }
+      ]
+    }
+  ],
+  "total_tests": 12,
+  "total_assertions": 350,
+  "failed": 0,
+  "no_errors_or_leaks": true,
+  "limits": "Scoped regression success only; no full CI/campaign/main acceptance, speedup or local240s timeout-resolution claim. Historical parser/yaw failures and original tree absent failure retained."
+}

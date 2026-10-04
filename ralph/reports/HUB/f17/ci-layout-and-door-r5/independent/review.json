@@ -1,0 +1,2323 @@
+{
+  "verdict": "SOURCEPASS",
+  "acceptance": "F17#4 OPEN; retained actual run FAILED; source readiness only",
+  "manifest_sha256": "72302312c4b770714639742dc852aa0979c7775542f5cb61107cb8861572d551",
+  "passed": 403,
+  "total": 403,
+  "checks": [
+    {
+      "name": "exact manifest",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "before commit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact 16 scope paths",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/pond_npc.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/pond_npc.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band2_stone_and_root/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band2_stone_and_root/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band2_stone_and_root/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band2_stone_and_root/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band2_stone_and_root/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band2_stone_and_root/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band2_stone_and_root/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band2_stone_and_root/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band2_stone_and_root/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band2_stone_and_root/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band2_stone_and_root/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band2_stone_and_root/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band3_the_river_lock/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band3_the_river_lock/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band3_the_river_lock/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band3_the_river_lock/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band3_the_river_lock/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band3_the_river_lock/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band3_the_river_lock/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band3_the_river_lock/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band3_the_river_lock/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band3_the_river_lock/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band3_the_river_lock/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band3_the_river_lock/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band4_upper_meadows_ironwood/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band4_upper_meadows_ironwood/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band4_upper_meadows_ironwood/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band4_upper_meadows_ironwood/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band5_stronghold_approach/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band5_stronghold_approach/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band5_stronghold_approach/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band5_stronghold_approach/pickups.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band5_stronghold_approach/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band5_stronghold_approach/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band5_stronghold_approach/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band5_stronghold_approach/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band5_stronghold_approach/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band5_stronghold_approach/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/bands/band5_stronghold_approach/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/bands/band5_stronghold_approach/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/building_prefabs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/building_prefabs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/farm.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/farm.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/terrain_playground.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/dialogue/relay.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/dialogue/relay.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/data/dialogue/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/data/dialogue/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/data/band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/data/band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/npc/npc_body.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/npc/npc_body.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/world/building_prefabs.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/world/building_prefabs.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/world/inn_interior.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/world/inn_interior.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/world/scatter_bake.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/world/scatter_bake.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/world/shop_interior.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/world/shop_interior.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/world/vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/world/vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/scripts/world/village_boundary.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/scripts/world/village_boundary.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/fixtures/band_split_baseline/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/fixtures/band_split_baseline/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/fixtures/band_split_baseline/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/fixtures/band_split_baseline/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/fixtures/band_split_baseline/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/fixtures/band_split_baseline/spawns.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/fixtures/band_split_baseline/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/fixtures/band_split_baseline/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/fixtures/band_split_baseline/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/fixtures/band_split_baseline/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_band_vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_band_vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_farming.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_farming.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_gate_f_segments.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_gate_f_segments.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_gate_f_village_passage.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_gate_f_village_passage.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_grandpa_yard_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_grandpa_yard_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_inn_interior_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_inn_interior_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_meadows_south_trail_pulls_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_meadows_south_trail_pulls_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_vegetation_human_prompt_height.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_vegetation_human_prompt_height.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tests/test_village_street_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tests/test_village_street_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S01.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S01.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S01C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S01C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S02.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S02.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S02C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S02C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03CT.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03CT.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03Cp1.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03Cp1.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03Cp2.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03Cp2.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03Cp3.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03Cp3.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03p1.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03p1.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03p2.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03p2.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S03p3.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S03p3.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S04.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S04.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S04C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S04C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S05.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S05.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S05C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S05C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S06.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S06.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S06C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S06C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S07.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S07.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S07C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S07C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S08.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S08.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S08C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S08C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S09.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S09.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S09C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S09C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10a.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10a.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10aC.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10aC.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10b.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10b.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10bC.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10bC.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10c.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10c.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10cC.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10cC.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10d.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10d.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/S10e.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/S10e.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_capture.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_capture.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_context.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_context.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_menu.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_menu.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_reach.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_reach.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_record.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_record.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_save_handoff.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_save_handoff.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/before/tools/gate_f/segments/selfcheck_walk.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest frozen/candidate/tools/gate_f/segments/selfcheck_walk.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest retained-native-failure/native.log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest retained-native-failure/receipt.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "manifest historical-tree/region_0_-1.bin",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "logical delta equals declared scope",
+      "passed": true,
+      "detail": [
+        "tests/test_band_content.gd",
+        "tests/test_band_vegetation.gd",
+        "tests/test_farming.gd",
+        "tests/test_gate_f_village_passage.gd",
+        "tests/test_grandpa_yard_visual_identity.gd",
+        "tests/test_inn_interior_visual_identity.gd",
+        "tests/test_meadows_south_trail_pulls_0912.gd",
+        "tests/test_vegetation_human_prompt_height.gd",
+        "tests/test_village_street_0912.gd",
+        "data/config/village_npcs.json",
+        "tests/helpers/opening_geometry_navigator.gd",
+        "tests/fixtures/band_split_baseline/props.json",
+        "tests/fixtures/band_split_baseline/vegetation.json",
+        "tools/gate_f/segments/S03.json",
+        "tools/gate_f/segments/S03C.json",
+        "tools/gate_f/segments/S10e.json"
+      ]
+    },
+    {
+      "name": "eight representation-only context files",
+      "passed": true,
+      "detail": [
+        "data/config/building_prefabs.json",
+        "data/config/farm.json",
+        "data/config/village.json",
+        "data/config/village_boundary.json",
+        "data/config/bands/band1_lower_meadows/harvest.json",
+        "data/config/bands/band1_lower_meadows/props.json",
+        "data/config/bands/band1_lower_meadows/trainers.json",
+        "data/config/bands/band1_lower_meadows/vegetation.json"
+      ]
+    },
+    {
+      "name": "context JSON identity data/config/building_prefabs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/farm.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/village.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/village_boundary.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/bands/band1_lower_meadows/harvest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/bands/band1_lower_meadows/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/bands/band1_lower_meadows/trainers.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "context JSON identity data/config/bands/band1_lower_meadows/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair data/config/village_npcs.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/fixtures/band_split_baseline/props.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/fixtures/band_split_baseline/vegetation.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/helpers/opening_geometry_navigator.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_band_vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_farming.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_gate_f_village_passage.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_grandpa_yard_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_inn_interior_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_meadows_south_trail_pulls_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_vegetation_human_prompt_height.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tests/test_village_street_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tools/gate_f/segments/S03.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tools/gate_f/segments/S03C.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "candidate equals current raw repair tools/gate_f/segments/S10e.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "navigator exact six logical lines",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only production heading function changed",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "finite MAX_EDGE guard before clipping before query",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "single prospective query unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "position direction is current route displacement",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "tiny direction early stop before heading",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged functional source tests/helpers/gate_a_npc_gather_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged functional source tests/helpers/fresh_opening_segment.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged functional source scripts/player/player_controller.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged functional source scripts/world/shop_interior.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged functional source scripts/world/vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_band_content.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_band_vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_band_vegetation.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_farming.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_farming.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_gate_f_village_passage.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_gate_f_village_passage.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_grandpa_yard_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_grandpa_yard_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_inn_interior_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_inn_interior_visual_identity.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_meadows_south_trail_pulls_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_meadows_south_trail_pulls_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_vegetation_human_prompt_height.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_vegetation_human_prompt_height.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact test entrypoints retained tests/test_village_street_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no skip or quarantine tests/test_village_street_0912.gd",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "fixture coordinate leaves only props",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "fixture coordinate leaves only vegetation",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "complete strict prefix props.clusters",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects deletion props.clusters",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects reversal props.clusters",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "complete strict prefix harvest.nodes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects deletion harvest.nodes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects reversal harvest.nodes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "complete strict prefix vegetation.clearings",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects deletion vegetation.clearings",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects reversal vegetation.clearings",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "complete strict prefix vegetation.footprints",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects deletion vegetation.footprints",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "strict prefix detects reversal vegetation.footprints",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only two facing production leaves",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened mira_shop0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing mira_shop0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened mira_shop1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing mira_shop1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened mira_shop2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing mira_shop2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened mira_shop3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing mira_shop3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened mira_shop4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing mira_shop4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened tam_workshop0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing tam_workshop0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened tam_workshop1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing tam_workshop1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened tam_workshop2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing tam_workshop2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened tam_workshop3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing tam_workshop3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened tam_workshop4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing tam_workshop4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened bram_inn0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing bram_inn0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened bram_inn1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing bram_inn1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened bram_inn2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing bram_inn2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened bram_inn3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing bram_inn3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened bram_inn4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing bram_inn4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened halda_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing halda_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened halda_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing halda_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened halda_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing halda_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened halda_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing halda_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened halda_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing halda_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened research_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing research_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened research_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing research_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened research_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing research_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened research_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing research_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened research_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing research_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened oskar_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing oskar_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened oskar_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing oskar_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened oskar_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing oskar_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened oskar_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing oskar_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened oskar_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing oskar_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened alder_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing alder_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened alder_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing alder_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened alder_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing alder_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened alder_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing alder_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened alder_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing alder_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened orchard_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing orchard_house0",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened orchard_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing orchard_house1",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened orchard_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing orchard_house2",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened orchard_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing orchard_house3",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall flattened orchard_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "whole ground wall clearing orchard_house4",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "40 complete ground rectangles checked",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only target/title/expected leaves S03",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact moved target ids S03",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged complete action/budget/control sequence S03",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only target/title/expected leaves S03C",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact moved target ids S03C",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged complete action/budget/control sequence S03C",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "only target/title/expected leaves S10e",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact moved target ids S10e",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "unchanged complete action/budget/control sequence S10e",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact retained failed log",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact retained failed receipt",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "retained campaign failed and source closure",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "actual Mira refusal retained",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "recorded horizon matches route direction",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "counter dimensions source-bound",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "counter source pose",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "old advisory capsule reaches future counter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "clipped advisory capsule clears future counter",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "before-target obstacle remains hit",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "historical raw input pinned",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "historical producer header",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "exact unique old producer record",
+      "passed": true,
+      "detail": [
+        [
+          "res://assets/environment/stylized_nature/CommonTree_2.gltf",
+          [
+            45.44734573364258,
+            -0.18858742713928223,
+            -62.50096893310547
+          ],
+          4.354415416717529,
+          1.598110499382019,
+          null
+        ]
+      ]
+    },
+    {
+      "name": "historical decode consumes complete bytes",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "numeric fixture matches original producer record",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "details": {
+    "props_fixture_delta": [
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          0,
+          "at",
+          0
+        ],
+        -24.0,
+        0.0
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          0,
+          "at",
+          1
+        ],
+        -25.0,
+        5.0
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          1,
+          "at",
+          0
+        ],
+        -24.9,
+        -0.9
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          1,
+          "at",
+          1
+        ],
+        -24.6,
+        5.4
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          2,
+          "at",
+          0
+        ],
+        -23.3,
+        0.7
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          2,
+          "at",
+          1
+        ],
+        -24.7,
+        5.3
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          3,
+          "at",
+          0
+        ],
+        -24.3,
+        -0.3
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          3,
+          "at",
+          1
+        ],
+        -26.0,
+        4.0
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          4,
+          "at",
+          0
+        ],
+        -23.2,
+        0.8
+      ],
+      [
+        [
+          "clusters",
+          1,
+          "props",
+          4,
+          "at",
+          1
+        ],
+        -26.1,
+        3.9
+      ]
+    ],
+    "vegetation_fixture_delta": [
+      [
+        [
+          "clearings",
+          2,
+          "x"
+        ],
+        -22.0,
+        2.0
+      ],
+      [
+        [
+          "clearings",
+          2,
+          "z"
+        ],
+        -16.0,
+        14.0
+      ],
+      [
+        [
+          "clearings",
+          4,
+          "x"
+        ],
+        13.0,
+        78.0
+      ],
+      [
+        [
+          "clearings",
+          4,
+          "z"
+        ],
+        9.0,
+        44.0
+      ],
+      [
+        [
+          "footprints",
+          0,
+          "x"
+        ],
+        -22.0,
+        2.0
+      ],
+      [
+        [
+          "footprints",
+          0,
+          "z"
+        ],
+        -16.0,
+        14.0
+      ],
+      [
+        [
+          "footprints",
+          6,
+          "x"
+        ],
+        -2.5,
+        44.0
+      ],
+      [
+        [
+          "footprints",
+          6,
+          "z"
+        ],
+        -6.0,
+        2.0
+      ]
+    ],
+    "independent_planar": {
+      "start": [
+        27.334413528442344,
+        3.8757972717285205
+      ],
+      "goal": [
+        27.0,
+        2.79999995231628
+      ],
+      "counter_from_production": [
+        24.4,
+        1.4,
+        26.9,
+        1.9
+      ],
+      "old_distance": 0.06594333648682049,
+      "clipped_distance": 0.9055384664216684,
+      "before_target_obstacle_distance": 0.12517679018845893
+    },
+    "representation_only_paths": [
+      "data/config/building_prefabs.json",
+      "data/config/farm.json",
+      "data/config/village.json",
+      "data/config/village_boundary.json",
+      "data/config/bands/band1_lower_meadows/harvest.json",
+      "data/config/bands/band1_lower_meadows/props.json",
+      "data/config/bands/band1_lower_meadows/trainers.json",
+      "data/config/bands/band1_lower_meadows/vegetation.json"
+    ],
+    "manual_findings": [
+      "Every original actual pre/post full-capsule guard, aggregate-eight admission, shape/mask, finite/deep-overlap/recovery/door checks, 10ms pre+post accounting and final metadata guard, 1800 gather/3600 team/90 stall/26 retry/query/lifetime caps remain identical after removal of the six approved logical lines.",
+      "Current waypoint displacement is horizontal and nonzero before heading; raw directional mode bypasses clipping. One original fullbody advisory query remains. No provisional clearance, arrival, inventory or earned milestone credit is added.",
+      "Changed tests retain functional constraints: exact cast and opening five plus accepted research residents; named eight house parcels/thresholds, road facing/alignment; actual ground colliders and clearings; translated yard and whole beds; one-time Nessa gift and unchanged supply tests; closed-fence outside chord; real production vegetation prompt/radius regression. Comments and historical names do not imply current path success.",
+      "Mira/Bram 180 to 0 facing is a real data correction. village_npcs assigns facing_deg to rotation.y; npc_body uses +Z facing. Both native yaw-zero buildings open toward positive Z public road. Near-player NPC tracking remains unchanged.",
+      "Historical tree fixture preserves exact old producer input instead of depending on a retired live tree; production spawning/contact-distance/radius assertions remain. This independent script decodes the entire pinned raw record and confirms the unique kept trees#320 input including model, all float32 coordinates, yaw/scale and absent normal; no present-tree integration claim follows.",
+      "Unchanged spawns/trainers strict baseline drift is existing and outside this repair. No full CI green, parser success, engine replay, or acceptance credit claimed.",
+      "Planar counter controls support an advisory overreach hypothesis only. They do not prove native contact classification, 10ms runtime, unobstructed doors, or earned completion. ROOT must run required fresh actual path and land to main; F17#4 OPEN."
+    ],
+    "frozen_hashes": {
+      "data/config/village_npcs.json": "63f33c42989e9a4df930cd1e4dfb0ee2e4ae858fc855feff668ccb096bfd5b07",
+      "tests/fixtures/band_split_baseline/props.json": "a89b03461acb6018aedaa2c27cf5eccb48dfbd2b03c35c832905e720d029fcb9",
+      "tests/fixtures/band_split_baseline/vegetation.json": "cb98c0f4952c21ec978ab9c7539ddb82bd429e8684926cd7e3ab8d2e2697a156",
+      "tests/helpers/opening_geometry_navigator.gd": "6fc78635d4da5f84b90b25603746db831b6c217831f323e1daaab1ab98554b55",
+      "tests/test_band_content.gd": "d80301f5015e405871f4de89aee74e1f2b23e18e8b922d914fbee2a550d55652",
+      "tests/test_band_vegetation.gd": "b52cd81eb233e0aece51fb28b9a8f07eb673c8805ef0af4a2d5ec3a4b9768030",
+      "tests/test_farming.gd": "1e7fcf6143113bd342799b0cf7b43b965399ad517c65d6272da9f4a640f0aa98",
+      "tests/test_gate_f_village_passage.gd": "e5274680acacd5886b5d6640de84f4fb74decea9b790c21afdb0308035e2c68a",
+      "tests/test_grandpa_yard_visual_identity.gd": "3cca71faefcd2a4dfc4559c39c5f874a2a3cf4dc23d0a443d008466a4338afc9",
+      "tests/test_inn_interior_visual_identity.gd": "e3852dbea6fdd4c7a271e65e24f99446c007009833c5663e02f8ffbb3f4a609e",
+      "tests/test_meadows_south_trail_pulls_0912.gd": "88090d26c241c910cb9764b1cfc4c8ab0d7962854d90afab522368c5addc9c9b",
+      "tests/test_vegetation_human_prompt_height.gd": "96b395849b5208a0f2d524c330f12e77db19dab0658262a1a6fa4d40f934b65b",
+      "tests/test_village_street_0912.gd": "6e73456a167a66f34d656e6ada78387880e6f5d08c1937d8d496333ee4845408",
+      "tools/gate_f/segments/S03.json": "d3cc41098d8ff0216468e9a1e13d3d568fcf41892f9c567b4ffa6b1352eb632d",
+      "tools/gate_f/segments/S03C.json": "c08065ae4678bbef59bb984cd804f2134ae617868d1859ea8fc66496f2aa54a6",
+      "tools/gate_f/segments/S10e.json": "362d2d0748c40ea5cd84df88206fbaee9555a16132e18dda9cb3dd6d010e3103"
+    },
+    "copied_author_audit": {
+      "passed": 2976,
+      "total": 2976,
+      "script_sha256": "a00b7ee66f7c35cf89f2d661b0afef81d0dea57394e8c28280e7e4f0bd389397",
+      "results_sha256": "01ceeff2726d53dbb1084fa4962e0c17433cfc707a4766205d8e9e0fd326227b",
+      "execution": "Authorized static copied audit only; no Godot/CI."
+    }
+  }
+}

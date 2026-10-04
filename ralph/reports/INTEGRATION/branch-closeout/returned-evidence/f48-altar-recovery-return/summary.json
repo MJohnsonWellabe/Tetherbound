@@ -1,0 +1,121 @@
+{
+  "head": "90f3907a5f70461af5cb9cbe50c4a898b69941e8",
+  "profile_sha256": "478a3ff3e465447b625737f4d17ae05e6b12fcb1c92cd4bc8a14ffe1713da015",
+  "acceptance_credit": false,
+  "producer": "FAIL exit1/464.766s; original menu steps9..16 and actual placement passed; original paidAltar oracle17 failed: authentic pending row, memory debit/receipt present, owner disk debit/receipt absent. Repeated production equipment Dictionary SCRIPT ERROR at CharacterAuthority742 and final native material-null ERROR retained. Source exact/config restored/handles0; no outer watchdog timeout.",
+  "diagnostic": "FAIL28.25s full-state-change guard; four categories and twelve callbacks completed; errors0. Trace timings include stdout observer overhead; no paid/durability credit.",
+  "files": [
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\build-menu-phase-diagnostic-90f3907a5f70\\invocation.json",
+      "sealed": "000-invocation.json.gz",
+      "raw_bytes": 1558,
+      "raw_sha256": "2730b3fa9d13ea0e806bd0763ba3a691afed257d171be851e05739e87595fe90",
+      "gzip_sha256": "1dfe1be1ae6582fb2d7f7cc74349d28d63d060c81b1e753fa6e92bb226220e4a"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\build-menu-phase-diagnostic-90f3907a5f70\\native.log",
+      "sealed": "001-native.log.gz",
+      "raw_bytes": 20741,
+      "raw_sha256": "09c7687f43b8ad95ceda3ab4cd17db5805595c57a3fbc830172f3e326382dba8",
+      "gzip_sha256": "1cfc9fa884fb7beb92db21d013fbe09f420dca07c946fede5bc7b51f14aad8f1"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\coordinator.log",
+      "sealed": "002-coordinator.log.gz",
+      "raw_bytes": 4572,
+      "raw_sha256": "5b29d9ffa336b3769c8863174e42d23a366b369f1b3a98409a9b5202e85a409e",
+      "gzip_sha256": "1d8ae76ed94ff70d5ff074c89ee92690a2d5c4eb45607292f8ce8e07d7a2ae06"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\invocation.json",
+      "sealed": "003-invocation.json.gz",
+      "raw_bytes": 1732,
+      "raw_sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "gzip_sha256": "a52e68067c8dde41c0b3cb84df1bb9e4f5ed8f2a6db55ae90c891d062f740829"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\net-run\\NET_RUN.json",
+      "sealed": "004-NET_RUN.json.gz",
+      "raw_bytes": 2974,
+      "raw_sha256": "de1b7cea26f0cd54f2b3353ba12816feecb078a8b995567fc6a0a39935ec00ee",
+      "gzip_sha256": "6c66b42f93397e504153b7e776464bff77153d7ac95bd3d6c847f96ccb408612"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\net-run\\SUMMARY.md",
+      "sealed": "005-SUMMARY.md.gz",
+      "raw_bytes": 566,
+      "raw_sha256": "b8f25e350ba94dad2f19c12627417541a7a3a6097d0bd2d8978a774614ba34b5",
+      "gzip_sha256": "02c5023b0ca06fabeee7f1bed897b8b526108e4c7f322373ead4b4aa401b7d2b"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\net-run\\peer-0.log",
+      "sealed": "006-peer-0.log.gz",
+      "raw_bytes": 46042,
+      "raw_sha256": "b85f800c04903155d64557334afbcdd8cc6aacdff9221204811312e1eeedfa64",
+      "gzip_sha256": "bdab1598ee149625b1790825460166246b77ab34d1a9b9490e64c0f134a39147"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\net-run\\peer-1.log",
+      "sealed": "007-peer-1.log.gz",
+      "raw_bytes": 11766,
+      "raw_sha256": "794185505624ce80e6645fbe2e1027aeb9efcbe482ea304b376cf306cd579bc9",
+      "gzip_sha256": "5bb663b1e57ae2318e6d6226d1c63c2a6723a69e85c2b3c4cd7a3841f43fd8c8"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\proof\\PROOF.md",
+      "sealed": "008-PROOF.md.gz",
+      "raw_bytes": 5540,
+      "raw_sha256": "1adf76cba59d2ad0d2afe547663854ea079d5ae795bf13dd173b421c6f1e9900",
+      "gzip_sha256": "344872942c8df7c41a224710348ad0165406a06e2f0182b2daaa75249d46e02e"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\proof\\f48-observations\\f48_assert_altar_build-20528-449842017.json",
+      "sealed": "009-f48_assert_altar_build-20528-449842017.json.gz",
+      "raw_bytes": 5648487,
+      "raw_sha256": "52e368c97fabab1c0d9609a528df90dceeaf9dde3146ab9274623c2b031316c4",
+      "gzip_sha256": "e66e6716fab70176351607599196935a87e47ac0b81bb7b7d8bea4b3a9676214"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\proof\\f48-witnesses\\character-626300bee616b52bfa1d40ab32fb776a\\initial-bootstrap.json",
+      "sealed": "010-initial-bootstrap.json.gz",
+      "raw_bytes": 5612227,
+      "raw_sha256": "4e4d391e344e027f7bb1812691aed3c70543dbe6d6ce6625b00954a93913b9e3",
+      "gzip_sha256": "82c5476f45338d0ce3df4c8265537ff087313e3c92c67bdddac4ec35c1ec2d5e"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-menu-trace-v6\\proof\\f48-witnesses\\character-a79c7bee9128c2ef03d266ce0352c666\\initial-bootstrap.json",
+      "sealed": "011-initial-bootstrap.json.gz",
+      "raw_bytes": 5584908,
+      "raw_sha256": "f30e5f697247182c11e829c580ff0da0679e5ab036be6ef7f6c5fc6093f34902",
+      "gzip_sha256": "922d9901e3d9b1595c446301a54d3f803c5a21c68ae379d18168aaad25069b2d"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-menu-trace-wrapper-90f3907a5f70\\receipt.json",
+      "sealed": "012-receipt.json.gz",
+      "raw_bytes": 764372,
+      "raw_sha256": "f343c0a2dccb4fdecf51d1086ce523afc91ff1bdea4c7139ce97ef633594f9e6",
+      "gzip_sha256": "2b7aba5baa5a6e95db92e4d414fdf367195f80d96f7623063202769c451b1e9f"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-menu-trace-wrapper-90f3907a5f70\\wrapper.log",
+      "sealed": "013-wrapper.log.gz",
+      "raw_bytes": 159,
+      "raw_sha256": "1655a80c52651d674d32823db0c60d3cef1bfd57965115de09edb1dc065a91dc",
+      "gzip_sha256": "5e86d7f109ec7663fe1241aa194234efb16ce0c511ce7826e364793555ba9855"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\menu-phase-wrapper-90f3907a5f70\\receipt.json",
+      "sealed": "014-receipt.json.gz",
+      "raw_bytes": 759709,
+      "raw_sha256": "68b62d595207f6a9d2e8eba965a613ed1b1df79635b30519c35332b4f6cc7df2",
+      "gzip_sha256": "6447a0db092eafad3f98f307069b87e87c71d5f95295189d4893d9ba589d9866"
+    },
+    {
+      "source": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\menu-phase-wrapper-90f3907a5f70\\wrapper.log",
+      "sealed": "015-wrapper.log.gz",
+      "raw_bytes": 153,
+      "raw_sha256": "4dcd041248c20dec5662e19f67a793c901086770e4c71fcec34e12a8f642f831",
+      "gzip_sha256": "a7a20f75ced89e06b1689227e823fa914c4dbd4bbc8d4129d3bc1b83e91c89d4"
+    }
+  ]
+}

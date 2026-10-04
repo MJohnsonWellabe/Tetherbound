@@ -49,6 +49,12 @@ uniform float visual_cell_length_m = 11.0;
 uniform float visual_density = 0.62;
 uniform float visual_breakup = 0.55;
 uniform float visual_band_gain = 0.55;
+// F39 standing-wave candidate. Broad asymmetric crests stay world anchored;
+// small foam flows over them in the physics direction. No vertex displacement.
+uniform bool visual_ridges_enabled = false;
+uniform float visual_ridge_spacing_m = 23.0;
+uniform float visual_ridge_width_m = 4.5;
+uniform float visual_ridge_gain = 0.7;
 varying vec3 v_world;
 varying float v_distance;
 
@@ -156,6 +162,25 @@ void fragment() {
 	float mask = edge * ends * fade * mix(0.55, 1.0, calm_scale);
 	// The comets say which way, not how hard: they are not dimmed by strength.
 	float foam = clamp(max(opacity * streak * mix(0.45, 1.0, strength), opacity * comet), 0.0, 1.0);
+	float ridge_shadow = 0.0;
+	if (visual_groups_enabled && visual_ridges_enabled) {
+		// Adjacent cross-flow patches offset each other, avoiding ruler-straight
+		// guide lanes. A gentle upstream ramp terminates at a sharp downstream
+		// lip. The same flow basis is encoded by the production field.
+		float spacing = max(visual_ridge_spacing_m, 8.0);
+		float bend = noise(vec2(across_m / 22.0, 3.7)) * spacing * 0.55;
+		float phase_m = mod(along + bend, spacing);
+		float width = clamp(visual_ridge_width_m, 1.0, spacing * 0.45);
+		float ramp = smoothstep(0.0, width * 0.8, phase_m);
+		float lip = 1.0 - smoothstep(width * 0.8, width, phase_m);
+		float patches = smoothstep(0.18, 0.65, noise(vec2(across_m / 13.0, floor((along + bend) / spacing))));
+		// The replicated restored look controls both amplitude and chop: crests
+		// settle when restored, including load/reconnect, without a new receipt.
+		float gain = visual_ridge_gain * fleck_amount * calm_scale * patches;
+		foam = clamp(foam + opacity * ramp * lip * gain, 0.0, 1.0);
+		ridge_shadow = smoothstep(width, width + 0.35, phase_m)
+			* (1.0 - smoothstep(width + 0.35, width * 1.8, phase_m)) * gain * 0.3;
+	}
 	float band = lane_opacity * mix(0.5, 1.0, strength)
 		* (0.6 + 0.4 * noise(vec2(across_m / 6.0, (along - TIME * speed * 0.5) / 25.0)));
 	if (visual_groups_enabled) {
@@ -164,6 +189,7 @@ void fragment() {
 	}
 	float alpha = foam + band * (1.0 - foam);
 	ALBEDO = brightness * (foam_colour.rgb * foam + lane_colour.rgb * band * (1.0 - foam)) / max(alpha, 0.001);
+	ALBEDO *= 1.0 - ridge_shadow;
 	ROUGHNESS = 0.7;
 	ALPHA = alpha * mask;
 }

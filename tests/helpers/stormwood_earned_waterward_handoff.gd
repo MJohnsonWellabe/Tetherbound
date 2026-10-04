@@ -114,8 +114,8 @@ func _decline_pending_stormheart() -> bool:
 	var menu: Node = _game.call("menu")
 	var pending: RefCounted = _game.get("pending_catch")
 	if pending == null or str(pending.get("species_id")) != "fulgocobra" \
-			or int(pending.get("level")) != 44 or _party_before.has(pending.get_instance_id()) or menu == null:
-		return _fail("actual offered Stormheart is not the distinct level44 pending newcomer")
+			or int(pending.get("level")) != 55 or _party_before.has(pending.get_instance_id()) or menu == null:
+		return _fail("actual offered Stormheart is not the distinct level55 pending newcomer")
 	var tab: Node
 	for index in (menu.get("_tabs") as Array).size():
 		if str(menu.get("_tabs")[index].get("id", "")) == "creatures":

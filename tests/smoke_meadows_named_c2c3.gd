@@ -47,7 +47,7 @@ extends SceneTree
 ## Not covered: terrain/arena geometry, manual switch/burst, co-op scaling,
 ## framing (rendered captures), an earned-save party.
 
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -168,7 +168,10 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
-					var result: Dictionary = await PILOT.new().fight(self, party, foes, bool(entry.owned),
+					var pilot := PILOT.new()
+					pilot.context = {"chapter": "meadows", "band": entry.band,
+						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
+					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
 						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
 					var tells: Array = []
 					var diver_tells: Array = []

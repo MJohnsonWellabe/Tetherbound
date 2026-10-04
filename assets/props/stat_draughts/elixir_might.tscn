@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/props/stat_draughts/bottle_base.glb" id="1"]
+[ext_resource type="PackedScene" path="res://assets/props/stat_draughts/elixir_might_badge.glb" id="2"]
+
+[node name="elixir_might" type="Node3D"]
+
+[node name="Bottle" parent="." instance=ExtResource("1")]
+
+[node name="Badge" parent="." instance=ExtResource("2")]

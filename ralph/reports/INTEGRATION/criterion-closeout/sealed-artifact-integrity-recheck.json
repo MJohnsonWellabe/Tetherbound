@@ -1,0 +1,2909 @@
+{
+  "source_commit": "582b2f13cc531f5cf733c43281c1100a6baa319b",
+  "reviewer": "criterion-evidence-closeout (independent of implementation authors)",
+  "recorded_utc": "2026-10-02T02:31:10.216937+00:00",
+  "platform": "Windows; Python/Git static inspection only",
+  "input": "read-only Git objects",
+  "package_hash": null,
+  "engine_runs": 0,
+  "acceptance_credit_added": 0,
+  "scope": "sealed byte/hash binding only; never converts source/failed/partial artifacts to acceptance",
+  "gzip_files": 296,
+  "gzip_with_a_matching_raw_manifest": 75,
+  "failures": [],
+  "files": [
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6165-batch\\bed-diagnostic.log.gz",
+      "gzip_sha256": "b816804d2c452280357873050707f3aeecf7edf04d8396f3220a1911d264aaf5",
+      "raw_sha256": "07a956b20951385fa73dd5fa984853aa43ad8340340cba356c348900535f5fa0",
+      "raw_bytes": 1384561,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6165-batch\\first-unit.log.gz",
+      "gzip_sha256": "13c77f4b30e6a8a463698da6a7fb9eb86a95dd333b7848c87aed6cf121219055",
+      "raw_sha256": "6626482cde763a44c2c2e8c8a51a394c328ce82f68ba6b69a27e9ae5446d0c4c",
+      "raw_bytes": 39857,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6165-batch\\remaining-unit.log.gz",
+      "gzip_sha256": "105baedacb10695644366dfdcea5c52c87e16eb6e54fd9566ecd39bf43b9e476",
+      "raw_sha256": "d404187309d039b9ec2054b20ff57a69dc91a9ed5e4bca57bf5076f5b3568618",
+      "raw_bytes": 110310,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6165-batch\\rest-controller.log.gz",
+      "gzip_sha256": "3ebc585b1818ef7b1f11a99b329acb7011b7ef11893063090f49feadbd2ab3ae",
+      "raw_sha256": "e5f0b08225171c8fb9b0e1ffd391e247ecc612796a79a042b8a93d5f350c9da2",
+      "raw_bytes": 1245398,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6169-snapshot\\cache-parse-failure-result.json.gz",
+      "gzip_sha256": "1a1eadfecb2761790fd67f64cd5e7ffa6d49219e7d5e5ee30c4fe55ef9cb1281",
+      "raw_sha256": "f4f93a704520e47670e1566a2de61c4ee39d28bf729a74865f50b620cc07ffca",
+      "raw_bytes": 846,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6169-snapshot\\cache-parse-failure-tests.log.gz",
+      "gzip_sha256": "5ecc1cef6b03d8a978f85b3d334a4a3569b1a2dc4560f1992d8a7902c7f3ea1c",
+      "raw_sha256": "bd8147f4d26d2db39b32a4f014dc6d72ce62309be106b0c1b30066df226ede78",
+      "raw_bytes": 12319,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6169-snapshot\\job-110368008351.log.gz",
+      "gzip_sha256": "607c515e9eccf86b8d94ab233185aa15974d3b134d1d0e56cc364d37120ee750",
+      "raw_sha256": "caa59ff195f182dc8c5c43b2f1a2e8259bababeba87c7cd14034b0e1ab489dee",
+      "raw_bytes": 769872,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6169-snapshot\\job-110368008856.log.gz",
+      "gzip_sha256": "f463a47adb5c78d17449d524e3833dd395546a9bddbe5cffc804aa02b81fdac2",
+      "raw_sha256": "c6e7c3945b35ed0d64bbb5492498c2d0507ce4c424fe83878aed7b379ea10559",
+      "raw_bytes": 542862,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6169-snapshot\\job-110368008873.log.gz",
+      "gzip_sha256": "cec57cb19bf30b1dbbbc2cfb297f007b77abd17c7cb4e3bbf609ac9bb3705c22",
+      "raw_sha256": "3518be2b903775184544187d6d7e3dcd7743d570b179d0e508ffeebbe1d76c38",
+      "raw_bytes": 551602,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-foundation-autosave\\job-110443557525-decoded.log.gz",
+      "gzip_sha256": "6e133a65b75cdc7b1954ea3364ca4d68a4e1efca51438bb9f2238c16a0e329db",
+      "raw_sha256": "ef839f14120d120ca62de6b67deab2a69466b317c0eb2e17994c77b33a72d915",
+      "raw_bytes": 529911,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-live\\job-110442934417-decoded.log.gz",
+      "gzip_sha256": "23fe1aeb17252b798e9e645077784b7471479d8c57e0ff9ff0075bf20b5dbf13",
+      "raw_sha256": "81f7a912df8d8b808778f27b27bd2f2a22d736fbc9d611dcb64140d02e33da77",
+      "raw_bytes": 839579,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-live\\job-110442934661-decoded.log.gz",
+      "gzip_sha256": "48e4047a7d3c4bf14f587f2e523845aa29dd2cc81f8b315ea0f96c5d258f12d1",
+      "raw_sha256": "406a1c30795b2ae31a764edea4d857757883868afcbf81cc18907d986f06f1cd",
+      "raw_bytes": 573338,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\api-terminal-snapshot.json.gz",
+      "gzip_sha256": "66d1ea437d8697e1e41cf9541278512c24ad3b78c363a0522a038e3398a93458",
+      "raw_sha256": "cedb8e6c5552f3d9962a92b7f99ebd44b3b1e5e13723cfc628aa7093f674e8a0",
+      "raw_bytes": 43894,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\foundations-NET_RUN.json.gz",
+      "gzip_sha256": "1148bfb84b4a0d77d1e00a7123bad6e553f3a885233d77419593bf274258ffcb",
+      "raw_sha256": "e33b43eb719cecf03772baf5f0758f1020f51be5cee81ca79f07289f15956f83",
+      "raw_bytes": 1861,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\foundations-peer-0.log.gz",
+      "gzip_sha256": "b5cc36f359eb7d3f86c4185addfdea9ea899de1ef71550a69f3c7230f533d533",
+      "raw_sha256": "14c6f10d3692283243044ff1d03294df1e8a6ded2dc19dca21624d02fa59edf8",
+      "raw_bytes": 4201852,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\foundations-SUMMARY.md.gz",
+      "gzip_sha256": "03b61cc972764fb482fceafab4816c8d11786ab01963a22d1e894f9edc4e7ed9",
+      "raw_sha256": "c7ac96df9fc5ec8b60062d556de346bad343f0fd86ca3fa26c9f63b2167a0994",
+      "raw_bytes": 295,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-cloudreach_riding-20261001T153858Z-NET_RUN.json.gz",
+      "gzip_sha256": "a5975be832de2787b67d63aef2818434bb225abfe79ff39c1700166c3ab719fc",
+      "raw_sha256": "74be967156535c1eb42e7a7ffa4639b034d635f8d4080fa3de2fee25b05f168a",
+      "raw_bytes": 2505,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-farm_race-20261001T155610Z-NET_RUN.json.gz",
+      "gzip_sha256": "bf5077922ff46b7ec46bea74fc581cef048f889801bc88139dfeab62038fe9de",
+      "raw_sha256": "c87ee3496dae651321e91ad27099c6715f97dcdb77dec0708efcf29c18e79a59",
+      "raw_bytes": 2480,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-fog_is_personal-20261001T155406Z-NET_RUN.json.gz",
+      "gzip_sha256": "941d804a72a7e4468a9b361d26b9084cba73f8c079680ae700b26fe9a2547889",
+      "raw_sha256": "decaaee7a3f8b9efcdfc4e7981cfa87fb918843c3ee6dce90d0f70eb8e369063",
+      "raw_bytes": 2487,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-menu_does_not_freeze_peer-20261001T155111Z-NET_RUN.json.gz",
+      "gzip_sha256": "99fe5ddb12533a07843fdc1d39c2bfaa040577c7a1acc9e57eaa438be1fc396d",
+      "raw_sha256": "a142ca31c2f23c6c4d9aea18051b469009bcd94469d0ac123b4bebfbb1c8b476",
+      "raw_bytes": 2512,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-session_host_first_realm-20261001T154519Z-NET_RUN.json.gz",
+      "gzip_sha256": "adf7a4c219eca411c99d4f6bec77df15489886836887171ecb094cfc0f08f2a4",
+      "raw_sha256": "d28be48bd9e0d9e4c66eec45ad0a0a4bd54335be5ce8dccc5c4eb41f4bda5fd8",
+      "raw_bytes": 2464,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-sleep_vote-20261001T160018Z-NET_RUN.json.gz",
+      "gzip_sha256": "f3deed8bd0a27f2a8116be5206aa4d3b1795711abe95135d8b67bbe36517815a",
+      "raw_sha256": "4b7bb50e8b91b3dbb666b077f4d0667be9679bef5bfb647482c823e861df6718",
+      "raw_bytes": 2480,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-veridian_mixed-20261001T154853Z-NET_RUN.json.gz",
+      "gzip_sha256": "f066cc9e8530fa16c45ef75a9bb56e5d07782bf4ab5919361628e07a2983f8a2",
+      "raw_sha256": "496eec80455c101945c06a2b0643d47a9f14f4ce68c614a4f58a711707d8eec1",
+      "raw_bytes": 2486,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-water_alpha-20261001T155808Z-NET_RUN.json.gz",
+      "gzip_sha256": "87d2d29bfa678fd59543c01ef9b144786e051cb814c800061f2227584880ea7f",
+      "raw_sha256": "c80a86b054b49837fb4fad46e3ebfac572209d3f7e7cf4da0bc6984c65448123",
+      "raw_bytes": 2465,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\net2-net-water_swim_stone_late_join-20261001T160214Z-NET_RUN.json.gz",
+      "gzip_sha256": "f04c420fdb17a31cb33e82984b00c8f34b83f8aa26d37f95d7f6be7d68413091",
+      "raw_sha256": "37d1fbe15bfd0859c67c22463912ba946014ee168c3f0c82be7b9a805291e10f",
+      "raw_bytes": 2474,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\warden-home-0-godot-app_userdata-Tetherbound-logs-godot.log.gz",
+      "gzip_sha256": "86350cb3a99be18559038d3275cb10524f11e4e246abd5b6d9f091d06d04b62a",
+      "raw_sha256": "73f6fc590bae44aeb14114c8d8a9ed87eba4cae9b300fa13a763fb0e52ba993b",
+      "raw_bytes": 14033,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\warden-home-1-godot-app_userdata-Tetherbound-logs-godot.log.gz",
+      "gzip_sha256": "108232b31a90d436435451ca56fdbe207572ddc7af059659f2e59f98f359391b",
+      "raw_sha256": "d7e5100ac92dc853104510d0ee16594997a85707fda359ca90dcc67e61d39667",
+      "raw_bytes": 22062,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\warden-NET_RUN.json.gz",
+      "gzip_sha256": "474af9c9562367db4f9462dbfd3c264dd06992ede0a5153f8566e23c68e41d77",
+      "raw_sha256": "2986d549c058ecd11bb5b4fca60ecae1455b701752efd631456fd1286ac66602",
+      "raw_bytes": 2485,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\warden-peer-0.log.gz",
+      "gzip_sha256": "33521046d79a402d79f01081413ded2ce3973c60722f530f064d13150841c0be",
+      "raw_sha256": "e0e04eb907b14de6163129c19242786673e63986da70d2e6e767272f18f9c54d",
+      "raw_bytes": 14147,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\warden-peer-1.log.gz",
+      "gzip_sha256": "de22e1765d400095a35396c5881ec64011810586a5b069b65971c9b196b595fb",
+      "raw_sha256": "8327c2434ecb2351cab677310ba7350ce209438d8518823db64f8d39c96a3c9f",
+      "raw_bytes": 22262,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6170-terminal\\warden-SUMMARY.md.gz",
+      "gzip_sha256": "1b5f98cae5143e0b01cd1c25036cdb2e477550356384a55f5fb5ddb690ae78b4",
+      "raw_sha256": "45661e51bc5d43ff9362cfc7a043cc092322cfaeb09bcec9e4cd0fdbf0b5977c",
+      "raw_bytes": 238,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\ci6172-changes.log.gz",
+      "gzip_sha256": "71da15bf4dcb83218abd055e64db6d25be735013edbd99103aa46cd485fece8a",
+      "raw_sha256": "4cbe60b1b64092d87cc7d7c3456bde7f73f3d40474a2f206eee4ff63657b55f7",
+      "raw_bytes": 322941,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\ci6172-job-110511919635.log.gz",
+      "gzip_sha256": "5cd9e3cd9815dc05f5ec6022e2d8105120dc765eda1cb43b002c683404d6deb3",
+      "raw_sha256": "58ca2f7a0bf4d65da639ab0d265117170754fdb8c908fb50a87b8197fe694789",
+      "raw_bytes": 589541,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\ci6172-job-110511919652.log.gz",
+      "gzip_sha256": "15bfe508a35808ecf6b408bac4d77105fb8ce35a75b2c4cb4dd7b6c9c8549e73",
+      "raw_sha256": "87906d8d2a44d1f4c52216590536268add3f928c167cd591e5459bfb92eaae8a",
+      "raw_bytes": 495704,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\ci6172-job-110511919754.log.gz",
+      "gzip_sha256": "9bb2f784353bff77e72d99fb3c639d802ab7689b33213b96427e43b190b17da7",
+      "raw_sha256": "3ccb89de6088c560476bba004c1a19b43241486da1b8e4dd60f4497bc64a271f",
+      "raw_bytes": 540209,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\ci6172-job-110511919968.log.gz",
+      "gzip_sha256": "77bc9542204aa50c913919aa7687ef41c1bc0ce962a09f10e81c14cc571eb63d",
+      "raw_sha256": "0bde4f36383bd4a2bcdcd234ced38d48d228ce55ababc42208e0f813f5bc6b66",
+      "raw_bytes": 487605,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\ci6172-timings.json.gz",
+      "gzip_sha256": "1b6e5c2ecb74ce030f1d6c11adac4a4b0fe0421444199bc9522ca8da3edd6f9a",
+      "raw_sha256": "1cc5e8219a4d172a6f795a44c3398a1e1a1da036fc814b5b588b86dd4ae1596b",
+      "raw_bytes": 70533,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\current-branch-reachability.json.gz",
+      "gzip_sha256": "f6b951c38393e21cd5864a2853dbc9dddf0845ec6f44ea0d704d77048fd74aec",
+      "raw_sha256": "659d3d96ad1dfa1a2c8b19e69c18954696db2ab262c282ef33388f4e397b1ddf",
+      "raw_bytes": 29856,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6172-first-results\\current-remote-reachability.json.gz",
+      "gzip_sha256": "c7f8e7ed0e7cbbad5fb17c22179f8ed85f668c1075eefa5569dda24bea9eadb2",
+      "raw_sha256": "d930f5f1cb7e1c2a57ebeda852d40d2a040d1a9e84e035884fb7eb15c2ed3db9",
+      "raw_bytes": 5946,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\gate-b-core-return\\smoke.log.gz",
+      "gzip_sha256": "3f8fe49b6a6e910f5516cde1c031e06cd9130476f992f2177a7faa480dfc7961",
+      "raw_sha256": "ee552a1fd9553539d6e33a3e14709756666e07067d38e236a763dfa9ca3cb7ef",
+      "raw_bytes": 1394919,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tests.log.gz",
+      "gzip_sha256": "1de2482814e7a3636d25fd46ea56d5ba2abf2c46caa80cca5fd6bc98f475441a",
+      "raw_sha256": "efbbcfcc4546d159bff85bb2deca69c95569d226e6b7bb7f65776cc7358e5b1c",
+      "raw_bytes": 25774,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tutorial-travel-return-7f485cb05470\\launcher.log.gz",
+      "gzip_sha256": "0394aed4bf02ba23c6030700541ba7fc4c84764ef8130affba81be31ed1c6c3c",
+      "raw_sha256": "e9aed806b7df65d08d556b229ec35c433400c9f1648ccda99c2518a7b534df5e",
+      "raw_bytes": 597,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tutorial-travel-return-7f485cb05470\\native-return.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tutorial-travel-return-7f485cb05470\\result.json.gz",
+      "gzip_sha256": "f1d9c985026148ea468bffadea640414d1d54e79d5be1079a4d66ad99d89cdcb",
+      "raw_sha256": "8391ef67dd12ab9088dc917a56b90ecbec5bb0e646b5ba1173182601246fc0e7",
+      "raw_bytes": 643,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tutorial-travel-return-7f485cb05470\\native-return.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tutorial-travel-return-7f485cb05470\\smoke.log.gz",
+      "gzip_sha256": "7dc96f7ad97d8c0fe5c67bea28be0d8884b2c00bcdbfb373af316927d10c3e16",
+      "raw_sha256": "3bf2ab6cdd668a0a0a26a44b38e5c7ad4928d265cca9a18782f5e188dd412475",
+      "raw_bytes": 1319865,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f17\\tutorial-travel-return-7f485cb05470\\native-return.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f20\\candidate.patch.gz",
+      "gzip_sha256": "4ddd06b387fc89ed759cd80879c7d160b9627facba548d19fed671213ae24b90",
+      "raw_sha256": "28780eaf4de47a59aa5fd45f2d7bcb35dfad8dc8392c0f7af8b12c3b7c039768",
+      "raw_bytes": 907,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f20\\review-and-native.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": null,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f20\\native.log.gz",
+      "gzip_sha256": "6b968d2b744cec4c23f50a5902d0ae87a75e11dfe5527913cd29ca3fb3dca6c9",
+      "raw_sha256": "a876a3475623adff7e5cd3d9ce90c219e57daac1aa3d276f20bdb160b4a024d0",
+      "raw_bytes": 733304,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f20\\review-and-native.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": null,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f20\\source-pins.json.gz",
+      "gzip_sha256": "2406257008ca5e332f1a363cbddd75d9f9c4ea591e201e8a016a48552f94bb27",
+      "raw_sha256": "73c58e4b66240d2eadff59fc494fbd7861386fef9b9327d991e14ddd4737e5e3",
+      "raw_bytes": 8932,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\f20\\review-and-native.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": null,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\job-110548567294.log.gz",
+      "gzip_sha256": "d1e299e93d25ec204b9e88dbe11dc211d1a18b424f9e6da87c210d3ef0d4e408",
+      "raw_sha256": "5625bfa758a0480fc546df406783c35322faaa9a01bf0058278fa5a87b8238c1",
+      "raw_bytes": 550411,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\job-110548567621.log.gz",
+      "gzip_sha256": "75793490a234d68391f0d2bb27ec4dc12e2e2e532e262997d3f76e4983d20d55",
+      "raw_sha256": "405f8001805c0f3930cfdbcf8f12155f8e34fe434b85896de88483e279084c1e",
+      "raw_bytes": 491857,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\job-110549151039.log.gz",
+      "gzip_sha256": "c9263bba5a5339cf885a466037a9d07f678f79d9027837e14b4f89ba59f42efe",
+      "raw_sha256": "1173018e179cc173022d61400e88ca51b47d099821cee488ede5753ab6e9bf4f",
+      "raw_bytes": 528416,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\actual-main-status.json.gz",
+      "gzip_sha256": "6a4eaedc9cd2933bc850d648c078c90149dac7a3d4803d67bee3c8b63aa13038",
+      "raw_sha256": "75a8a620f74b53da8d8bed0590b0a857db3d523397315b384b4594ba136ec13c",
+      "raw_bytes": 5804,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\native-0.log.gz",
+      "gzip_sha256": "c10c2b24a24ae515d3bd5c01d23bdd95a2fc22ee2a090e935e8d3d7172c7ba5b",
+      "raw_sha256": "05ccbb5200177a60a9714f6fa635c1988892ced7bec46a4cdc5923c799f2ae4e",
+      "raw_bytes": 18610,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\native-1.log.gz",
+      "gzip_sha256": "0a0baefb0e7af127e736ce901ae00e403fb7a02bba0026edcca67e5da3a4f183",
+      "raw_sha256": "a796f7a15128c017f8f3d412d75be33c9f5112745d5889d780e47ab860ec629c",
+      "raw_bytes": 18403,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\native-2.log.gz",
+      "gzip_sha256": "3c08c9e02602660f5bdacacd7dd68e24e7658870bae6602f22df721db1238f44",
+      "raw_sha256": "6a52dd70399f877a43c9a2ac309c3a65cb9424bc0aab8013c99fb2da7771a9b9",
+      "raw_bytes": 12315,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\native-3.log.gz",
+      "gzip_sha256": "6d53d377f912b7f7a662424e6aab864c75a402c48a88b9bd1f13ec349e4e05e7",
+      "raw_sha256": "81426ec1553d068655a26f6549ef7cbc765e052d1a71fcccb4e4e433c66e048e",
+      "raw_bytes": 11660,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\net-receipt.json.gz",
+      "gzip_sha256": "8dbdddc6bddd55d3e33aed57c315ae9afd996b7ddc44779bf058ccb6ef74ebc1",
+      "raw_sha256": "1731d89ac2b082c2468f46636bcb94d74f60bb0d11ac52b293baed83a2e2d4d2",
+      "raw_bytes": 738063,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\NET_RUN.json.gz",
+      "gzip_sha256": "fd73c8e54fb9258931641988422571d9ec8786dae025e95dd994887dd219fab7",
+      "raw_sha256": "86159e1bf0f8bc104ac1faa9b718f58f573a0c2cb79ffcd4922c34c6571fb131",
+      "raw_bytes": 2858,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\unit-child.log.gz",
+      "gzip_sha256": "6327bdf80cc9c0eeb29e1eecd97e0710c7b1fb5d9a63d1cf287913ef09d02c78",
+      "raw_sha256": "be4826d631d04639b77eba601678a896ec21c3a91fa9be845ad4dc1deb0c63ba",
+      "raw_bytes": 140,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\unit-parent.log.gz",
+      "gzip_sha256": "4b9b0615e221dbc3db9c4331b0a84a9d5d9f8d4876dd43604fdca545c17c69b6",
+      "raw_sha256": "da5b524c01371d2c68c833881974a18e48d32c59044543a21fc6b892b569708e",
+      "raw_bytes": 32213,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\unit-result.json.gz",
+      "gzip_sha256": "11821c0c03910c1b259e2fbafe9a6bd05fe5de7aa4152dd82c6db149bb6c1ac3",
+      "raw_sha256": "19e05935557e166d8015e0c79c788a6694edf53c91d9f9b2c20bfad414f3b519",
+      "raw_bytes": 558,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\r1-repair-native-9696b2c32862\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\native-child.log.gz",
+      "gzip_sha256": "eb7dc200c641bf0613c6fc523b6a6dd753f25dc6222d4a475a7fe0700e05fd74",
+      "raw_sha256": "b8af434e56eb110ced3c15036b7c618c74c8476aa6f75fe275da7a9ca90ee858",
+      "raw_bytes": 131,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\original-native-return\\native-0.log.gz",
+      "gzip_sha256": "2abc6e3a609100d4da8cfec69019a32fd3c38cedc877642578f00d8b145b842a",
+      "raw_sha256": "901bf58d35280fa3dddbf96dd40f7ddbeb1f92b8b6015cd35fc930fe384f6057",
+      "raw_bytes": 19483,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\original-native-return\\native-1.log.gz",
+      "gzip_sha256": "513ed6bfc7fe620c664c179e09c94fdc8beb21dc65b49c710ba7a8228f6e16dd",
+      "raw_sha256": "fb741bb101d69abc8e4eac632929b8be0f93e55fcf30f2cc1b8f7244341f41db",
+      "raw_bytes": 19266,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\original-native-return\\native-2.log.gz",
+      "gzip_sha256": "9595aba3db561f4a07eff57dd7a61259b824b3d2d9a6aa19faded651aa91643f",
+      "raw_sha256": "b4b386aa50d184cd4001d5d178a08f90b758502c736b5dba7b2bf977c92f696e",
+      "raw_bytes": 12028,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\original-native-return\\native-3.log.gz",
+      "gzip_sha256": "7cd7fd608d95c62b44fb947999ec35b1876ccd0d465a7861f6167b927e79523c",
+      "raw_sha256": "2c1fd1619ba5dfd7e02c95e2f86e20369e7f1a8bcf475dd06649795fb2599c39",
+      "raw_bytes": 11738,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\original-native-return\\NET_RUN.json.gz",
+      "gzip_sha256": "74413f22dfb5362f5646993260e21929b9247ca25cb94156804bb8132bd4df2c",
+      "raw_sha256": "79be20ddc544a60ed242c3a6d1186887bb3e60f19d05279cbdd30dacb691d112",
+      "raw_bytes": 3759,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\original-native-return\\source-and-runtime-receipt.json.gz",
+      "gzip_sha256": "b3a7d4ae86f62550d4c6b28c7408df001b48f68d8345cbc260356ff36dfa8dd4",
+      "raw_sha256": "7453817faf86613112bd5085cb86a98d82c5e0d15acc6a50b7f099717a1af10b",
+      "raw_bytes": 738768,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\owned-starter-unit\\tests.log.gz",
+      "gzip_sha256": "b7f83879adab2ece75e62dd9fd6ed09d2b8604aeebbfd0fa7d695fe12fdcd153",
+      "raw_sha256": "366cbceb5079061dceb1b783d7b3bd31e1bd52455485c919cdc1e27a49e1c4e9",
+      "raw_bytes": 20744,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-owner-returns\\shared-boss\\parent-tests.log.gz",
+      "gzip_sha256": "cc6bf630099abbd3df4af022a8277684cf7322d7d94409f8bd69398c147b4bd1",
+      "raw_sha256": "b6b90afc949b72502ff7e2d72d8fee99473b3b9b42467a8a900af4ff18bdb98d",
+      "raw_bytes": 18348,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-partial\\ci6173-job-110548567267.log.gz",
+      "gzip_sha256": "c221a534961f3c784aa6007bfef2ede80fb60ae101fe86f4f743b1d0e6baf6d8",
+      "raw_sha256": "176441f647b66c006dad1546a7bf26aed832cd54eec84367eb5647c6e49f1260",
+      "raw_bytes": 1760935,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-partial\\ci6173-job-110548567437.log.gz",
+      "gzip_sha256": "847fcdc4476e0b7f1285fed918e627a22c7e5d35022d3cb9bb0ba4ec9ac9a79d",
+      "raw_sha256": "3f46912ea003e9cefd47da3521a864df94142517957afa5db174d86bdec1256f",
+      "raw_bytes": 621453,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-partial\\ci6173-job-110548567544.log.gz",
+      "gzip_sha256": "d9bf7d1c8f1560c7860680ae3d41116bc4fbbd4590bf2ad0e3d22fe7bde51ba2",
+      "raw_sha256": "63dd06178e65314f8630e5453b321289635d6dbd3a8e3dcf780c7786ee7e2607",
+      "raw_bytes": 513708,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\ci6173-partial\\current-ci-63429ee77e31.json.gz",
+      "gzip_sha256": "89952a6332514c149c0270edab9ef5da655a20271d3cbdc899ddeae6fda97335",
+      "raw_sha256": "d65052f551774698d0b17c616cd12fef1772fd61eb1e58bc083fcaa83286332a",
+      "raw_bytes": 10263,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\actual-ci-start.json.gz",
+      "gzip_sha256": "23d873e98868912d3d872624216d17c521f4370687a7d5ed493bce8996aa56aa",
+      "raw_sha256": "b6b2a7404e630cdf150327a39ac822d90f7457ef1dabf440735fef4eab1cbc94",
+      "raw_bytes": 9627,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\affected-child.log.gz",
+      "gzip_sha256": "6327bdf80cc9c0eeb29e1eecd97e0710c7b1fb5d9a63d1cf287913ef09d02c78",
+      "raw_sha256": "be4826d631d04639b77eba601678a896ec21c3a91fa9be845ad4dc1deb0c63ba",
+      "raw_bytes": 140,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\affected-outer.json.gz",
+      "gzip_sha256": "dedcd31cfa1bfae4dd2c7efa03284ea45edf3266a44b9ea38e224b00cecb9e6b",
+      "raw_sha256": "340e1c5ea475567ab72617ac4197a7378bdac1d8b1e4a4c1d414dffe2f86c238",
+      "raw_bytes": 754346,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\affected-parent.log.gz",
+      "gzip_sha256": "3dea37c44a8015d034eeb0b430f154b9f719a9d3232f95afeea51b4d9c072d02",
+      "raw_sha256": "ba9fc7e57f6e42b96963c82aeba418efc5b81ddbf46061809276bf16c04720dc",
+      "raw_bytes": 38118,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\affected-result.json.gz",
+      "gzip_sha256": "ea17585ca547f2929ba681a0a01ea415befa66c5142a202f4f0fd5b5661ee1c6",
+      "raw_sha256": "0cc16ad7578af71154945862debf8b3dd9b330957d6856112f6503b6e8c06981",
+      "raw_bytes": 752,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-6a591e548e3d--0.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-6a591e548e3d--1.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-6a591e548e3d--2.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-6a591e548e3d--3.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-6a591e548e3d--receipt.json.gz",
+      "gzip_sha256": "3d972397132a8efcf27f6384bccc72b580deef405482440a92eda824e3b0f5ae",
+      "raw_sha256": "20212801caea9aa9e384e90bfd0cfef19d888697dec1e746a4f3f4eaf3bec90d",
+      "raw_bytes": 756581,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-7c15b10ea4bc--0.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-7c15b10ea4bc--1.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-7c15b10ea4bc--2.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-check-only-7c15b10ea4bc--receipt.json.gz",
+      "gzip_sha256": "8cb689882277146665cab34352a20a3db019d5a2bdd54a7fa6e0467aac08bd1f",
+      "raw_sha256": "c7ac0548741b9e398b309e0838cb805e10f1c2da16359118ebcfd357b406f638",
+      "raw_bytes": 755460,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-compile-batch-abbee8d567fb--0.log.gz",
+      "gzip_sha256": "14041d34fe5c40d32e19bdb386353856191a313f8dd1b5824f26e88b1917f28e",
+      "raw_sha256": "81548dc963a92d986c7383391eb5eb5de2f4dbdd25b55b32c9b8a3840c8f692b",
+      "raw_bytes": 39030,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-compile-batch-abbee8d567fb--receipt.json.gz",
+      "gzip_sha256": "8bf216da136c7129bbef336f3af5f92172c799d4e5183dae695d752a772117e9",
+      "raw_sha256": "bec6c1e518bbff68ee5a488e86690925afd2e95f0146727ccdfffb9a6daea1ad",
+      "raw_bytes": 768444,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-compile-batch-abbee8d567fb--scripts.json.gz",
+      "gzip_sha256": "0eaa509b71e2be1994148f9cdbc9e48fafe8b0ac70b5b91083d776c394f84532",
+      "raw_sha256": "c023d2547bfad6c24ecb6f2e9e4a1ce3dea91474ae7597c58c9e9dc538ca4d03",
+      "raw_bytes": 13817,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-compile-batch-fa0eda783d5c--0.log.gz",
+      "gzip_sha256": "2ea0672b3b13b1df75521fd578558b86fd3ffefcce5e3e280a361526db21a3a8",
+      "raw_sha256": "29e0978c22b6fd34b5282838098bd9d7e2d49aace8086fcc24582aa2959a6190",
+      "raw_bytes": 18048,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-compile-batch-fa0eda783d5c--receipt.json.gz",
+      "gzip_sha256": "25e0e464d2ed3daba1ead1d84cda2cf52fc547a37806f3670046264a52c699e1",
+      "raw_sha256": "1f1273f8655e1fcc3c4521e597f95c704daf47205e8249bf257cdcef7c449b99",
+      "raw_bytes": 754205,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-compile-batch-fa0eda783d5c--scripts.json.gz",
+      "gzip_sha256": "0606d87dbbceaae3dc0ea199268c397e097a29b2711fb92127d5a34a3c1288c4",
+      "raw_sha256": "358493742f708afd90f164762eb40c9f28f9d18fcf23b4a7993628833c3fcc16",
+      "raw_bytes": 13888,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-import-140c44169408--receipt.json.gz",
+      "gzip_sha256": "a8ba93f8b15d7a524eb78427b7a99b8b9cb350c4f12c08ae4260bce199b96066",
+      "raw_sha256": "786d6954a1ebe4f94478de9b9dec86325b9c0a14b31106d67d0ef16cfab93647",
+      "raw_bytes": 3704365,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-import-140c44169408--verify-import.log.gz",
+      "gzip_sha256": "fa497fec6a3f38d7ef3d90293c32cb72de12c770a56d2d3ef63f68de21a72047",
+      "raw_sha256": "7f51e4a028169ac9b411e56544ac455e9bbc233aee79f23eb9ccb9e83563fccd",
+      "raw_bytes": 5507,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-import-140c44169408--warm-import.log.gz",
+      "gzip_sha256": "60f4b830ebca01b537087b3d77cd994df88dea28b802f3733828b40c4a4c8161",
+      "raw_sha256": "71af6ee9ac789494ddb1057efc11c5cb188667483e4808832b16241f7d62f442",
+      "raw_bytes": 726145,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-import-6a591e548e3d--receipt.json.gz",
+      "gzip_sha256": "f07badcb7062a947beac5635597a7467c5aba2a218977fe714f7c042748072b3",
+      "raw_sha256": "bf926311e11c01fbedcffe1b4a995f7f500ea683e357537ecb4f9ae260ee8075",
+      "raw_bytes": 2803375,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-import-6a591e548e3d--verify-import.log.gz",
+      "gzip_sha256": "04e152c3e47d7e08ce80d98e2447a53994ad9771c8f1ce584be301811e2ccb13",
+      "raw_sha256": "8578ab83fe7d010fd656e01adb1316f1474c8dccb69d4fa6bf179352e10e233c",
+      "raw_bytes": 2355,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\combined-import-6a591e548e3d--warm-import.log.gz",
+      "gzip_sha256": "db2c2d12c0750a21b5ce2dee4fae328f3da881216827bffaf7d7e077b34aa38b",
+      "raw_sha256": "030ab795cd092e25b8b0bf11e94f2b1aea0f174c5b1198f78bf878ab8a025721",
+      "raw_bytes": 560289,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\prior-six-fail-parent.log.gz",
+      "gzip_sha256": "5d1db1e26ebf7a966d8c07a2b79fd6f8eb6db25d32a7754b107673486c4401a3",
+      "raw_sha256": "3b7249cf14d2d6d833fb244bf42e72a2e95db97591508a6b92f408ef338e62b5",
+      "raw_bytes": 40291,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\prior-six-fail-result.json.gz",
+      "gzip_sha256": "75c91c6d29c73eebf2aa6721ce1c226c623853ca371952b4b0be1d0fcea47fc5",
+      "raw_sha256": "7919d77ffbf085b56f31c1b8cf1202e9e7c4f79be45ec4d475f597085d04daf4",
+      "raw_bytes": 1405,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\combined-native-6a591e548e3d\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\catching-source.json.gz",
+      "gzip_sha256": "11c2cb165313bf7a243dbf3d3624bcb9109d0b6182cf007d86df3228ecbfc381",
+      "raw_sha256": "8219b5dd038e0bcdd02b65b468b303a8147fff260c15c8762053ce772a300942",
+      "raw_bytes": 8077,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\catching-source.patch.gz",
+      "gzip_sha256": "ec44d88fc19b2ce956ecca837d6ac821a751f078a2b2e6ad54ae77b78c8b1475",
+      "raw_sha256": "2aaa9b21ea01dd66df16a1007ab9e779d7205fcb81356b5ac223644048c68610",
+      "raw_bytes": 2149,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\catching-timeout-result.json.gz",
+      "gzip_sha256": "109a3cbd772252bae238c615a439eaccc12d3b57ad35d07543a4cfd917f67b61",
+      "raw_sha256": "00320e71ec05fc8ef52b6a52a60be2bc57e2b28e02c4b3530997713333401be8",
+      "raw_bytes": 411,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\catching-timeout-smoke.log.gz",
+      "gzip_sha256": "63adcbe88ff3bbcafbe51f56a3550dbfcf05283017e75d68096330b3ea2b1bbf",
+      "raw_sha256": "4da9e31fb448d691a233d828ccb185099be05011693e351d3f09cd7d665a2e33",
+      "raw_bytes": 1065913,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-job-110511919518.log.gz",
+      "gzip_sha256": "ec089ce41479d2841b9e9824423ec88a35b7add44f61ac7701a40eef41531b9c",
+      "raw_sha256": "128619f3be337aaf34f8bdf3d9f29868a1c45b12046dbc872a29d8b7091f798b",
+      "raw_bytes": 474318,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-job-110511919850.log.gz",
+      "gzip_sha256": "3a2072b9ed1862d1b3cad7a258d5d51b98d71517e91b0c45fa0c0c0526df8a26",
+      "raw_sha256": "c26d66df0faa9ab583536222240a10bdc2b876b232acf4c4358444cd060b31ed",
+      "raw_bytes": 3817531,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-job-110511920160.log.gz",
+      "gzip_sha256": "1100601e9a55c8969ceb7c3e59d19d38ff82bfb561bc747f6abb9da00215e3e5",
+      "raw_sha256": "15c05b75aa9a63a59915feb6bdf2296bc5675870f4301ca3468db80b5b300a92",
+      "raw_bytes": 1757119,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-job-110512543034.log.gz",
+      "gzip_sha256": "c4b506b5d54b821d9d2ea8b95a0ae201dbb8240758c031971773b1a987a03802",
+      "raw_sha256": "4a7cb9f6e86f2d99931dad005a2b0cce15f0d495e91c3363f667f61f941aa32b",
+      "raw_bytes": 506215,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-job-110512543070.log.gz",
+      "gzip_sha256": "a33a425f93be1c26e456db2e0491933a9edb98226024a1b7c1dd0330d74481f3",
+      "raw_sha256": "64837da466b98e21bd7ae816c4d7675b87c020de33136c39e8a5a3d652db1339",
+      "raw_bytes": 529169,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-job-110512543105.log.gz",
+      "gzip_sha256": "b5210d79371064dbb9446599aea43c1916830416e4715b710e5aee4bb84b23f1",
+      "raw_sha256": "46968ca302f0ffd4e98cb7e158cde7191040d9a3d55b0264fb98b9cc82a38d18",
+      "raw_bytes": 518732,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\ci6172-terminal-timing.json.gz",
+      "gzip_sha256": "e847ac517ea8e7cf39978e1fc2bcc61fdb86fcd5c4576a8acbe70e11da6aeb89",
+      "raw_sha256": "2a888a996e0a5bda54c8af21fbe0d1db55a81bf09387eb051c644ffa177f040d",
+      "raw_bytes": 82200,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-0.gz",
+      "gzip_sha256": "b88df72f31aae23075bf9e93aa6f8f1a3dbe81ad1ef7c69cb1e4308c274e4727",
+      "raw_sha256": "361612038356c12bec74037317377071d37b17b58dcf58c6f41f416d717b2c6c",
+      "raw_bytes": 15,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-1.gz",
+      "gzip_sha256": "8c22d3b6e6ea60891b829caa7d4fa47d16ace8d98ebf03f1c37b32010fb9007e",
+      "raw_sha256": "4d397791e24c42fe3ff431d9be17536686aea24f4b9a3d46080753ea50b6cef2",
+      "raw_bytes": 92763,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-10.gz",
+      "gzip_sha256": "43c49b12b10c9ce6915c866ed468647196a10ce112db4bd9de9cf5cee2881c3f",
+      "raw_sha256": "d7d6f78841e0e7e3bfa9bead35bf5049f7b945151a77c32bdf3feb38dd32f5ab",
+      "raw_bytes": 3986,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-11.gz",
+      "gzip_sha256": "92b7405c042abd050ec736d6569fc21c63849481f365cfd7c1aa7fe038e186b1",
+      "raw_sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a",
+      "raw_bytes": 19706,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-12.gz",
+      "gzip_sha256": "6c1ffda5b97f87ac0e35ddea828a99a6e8e4969440b7b813769ebdd6a9f48796",
+      "raw_sha256": "5807ae64deb8482e996aa5beb039746e5781f235e53aab6a4b949331110c7340",
+      "raw_bytes": 42994,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-13.gz",
+      "gzip_sha256": "437a5a1f9a884fadc1db57d4158cbfb858b2cd146490c412c573669ff6cc1f26",
+      "raw_sha256": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a",
+      "raw_bytes": 50044,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-14.gz",
+      "gzip_sha256": "7dc91e529a3a6b283374179953a23ce3eab8791feaeb5adec9cba9229d4bb6e1",
+      "raw_sha256": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303",
+      "raw_bytes": 71351,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-15.gz",
+      "gzip_sha256": "f8b8354f31d3a61db4e291f1079aac60406699dee91a11137921d6808f2988e5",
+      "raw_sha256": "dfb31f68681c633d7840a36dbb7252c76948a74440105cff7b22b2c595b85f0f",
+      "raw_bytes": 3557,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-16.gz",
+      "gzip_sha256": "bd6ad3dd4e186ffb2472a4d20361fc7e88a79c7d6ac6e09b0dd272fd3a511049",
+      "raw_sha256": "a425439c1bb93006c927956d0c7b48f323a6a98904112272d4b8caedd11589ef",
+      "raw_bytes": 6824,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-17.gz",
+      "gzip_sha256": "2c87f8f5832885980fedbfbb677efba6004964537b1c892a0e620bcc3c500375",
+      "raw_sha256": "12842cbd7b31018d730f28045207f259ee03f983753131d5c2269889ba2512a6",
+      "raw_bytes": 21337,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-18.gz",
+      "gzip_sha256": "4c14520aaf7cd51567d822d42803deaf00d85c6bfda93b5e4a8336eefe198fdc",
+      "raw_sha256": "537e909c5dae414f7551325dd7df6459e18e04e041d03bd5a06c34b0fe8e63d7",
+      "raw_bytes": 80251,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-19.gz",
+      "gzip_sha256": "3ad448ee40a47c0bf14afe45be4858b0d19f34ee4c2d03514902f6a3beb92748",
+      "raw_sha256": "3d0abb21d322589d7f6ffa5850e3a3ac75897ce66559a747e2297d15a721fe83",
+      "raw_bytes": 58416,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-2.gz",
+      "gzip_sha256": "ecf2163cd0fa3cccd2df246c5e6e815921b482cd12783f8af5d6efac7d92a82a",
+      "raw_sha256": "5c79e3420c5e2f509bab9c86cfe7d6f2676c16a666ba422712e3636b52bf7e58",
+      "raw_bytes": 62824,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-20.gz",
+      "gzip_sha256": "89809a43ca497922ec7c0fbdc2284dcaad17c30178de77619ca003b6fca38a6f",
+      "raw_sha256": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75",
+      "raw_bytes": 63744,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-21.gz",
+      "gzip_sha256": "ecf0b2f81c42440e4cfe6dfbe23cc4f87e24c1a8d7750bc238742b6ab4a31a8b",
+      "raw_sha256": "0bb868854b2038bfb229da2a605820b927873568cadb11864e68c0c31d5c2c6d",
+      "raw_bytes": 21434,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-22.gz",
+      "gzip_sha256": "ca1eb90a8429953469545b8b0ad3e951f264e50fb4df22bc81b2a7f6e3764a20",
+      "raw_sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a",
+      "raw_bytes": 43185,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-23.gz",
+      "gzip_sha256": "7ef76ff675e9dadc5570b361ec70198244c29a6c17304f43dceddb6fe7f2d337",
+      "raw_sha256": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae",
+      "raw_bytes": 9468,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-24.gz",
+      "gzip_sha256": "c96abfc63fc92c5d085b3113d5e2db5eecd857f6a2366f4dd96b8bbf98875539",
+      "raw_sha256": "7247640aa2ae0b15055d26d5a05c6b97a9ee73bfa2da78f65b7819f50a573d0d",
+      "raw_bytes": 11050,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-25.gz",
+      "gzip_sha256": "dcea0240dba6d56fd4d0cca8c1d472a3b3d78358c2940867a0e6ee01f9147054",
+      "raw_sha256": "2aa03826e4807d6a87a2b1cc59f47d51a73b730a9ba1137287a477afd4e248f9",
+      "raw_bytes": 36522,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-26.gz",
+      "gzip_sha256": "61ad9e8808ad2457240e57b2974cc7ccf450d1af272b7a06e6d92e4dd8dcbc91",
+      "raw_sha256": "22bdae2229c956c95d32052af944c2139fe3db95922411a8a6ee0d61264dac8a",
+      "raw_bytes": 7567,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-27.gz",
+      "gzip_sha256": "3f7cd6c3af05848f232b8168586e74964c6cdcb6206b8d56bd6faade58ebde61",
+      "raw_sha256": "61b46de6b8ba0d49cfd59092c4d54fef39c863e29b6d31dd39f51e249cd49ae8",
+      "raw_bytes": 4431,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-28.gz",
+      "gzip_sha256": "c6491d55a5da781815c96189fd52910e9f5472f933faf995e823800e6d55980d",
+      "raw_sha256": "dbc4a1452c1de609c463d540d97c096b495a9e3a680ccc52091a206ba2172104",
+      "raw_bytes": 6604,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-29.gz",
+      "gzip_sha256": "db8cd40e478206abf1b284e04b6417b858a04b29b07070a76f3246899cf83a5e",
+      "raw_sha256": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f",
+      "raw_bytes": 69031,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-3.gz",
+      "gzip_sha256": "f31aadf156ddb5c61add752e6dd3a38cc7b452d8a27bbde39ab7761666ba36f6",
+      "raw_sha256": "cab4480e252b14df4d24ed4daad4fb97171d57917d737c38e37c82a60ec4c031",
+      "raw_bytes": 96139,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-30.gz",
+      "gzip_sha256": "c73f2ba56f6a60af0a8230f1fdd65073c22143e97b4c8e15a1b29ffc2af20a14",
+      "raw_sha256": "f767b3fb64ca27939a8cc6ff97bc3e8ddcce6a725a741794841c28bbeddc2d66",
+      "raw_bytes": 7228,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-31.gz",
+      "gzip_sha256": "8f8dccf23d2bd45f73f44e1af7a94cb78ac9c14bc8024dec55476bfd74e7dbe5",
+      "raw_sha256": "7fe92fcbbe248512aba2556e2dd09d282b53505a577395f1d2ed40083421098d",
+      "raw_bytes": 5459,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-32.gz",
+      "gzip_sha256": "1cefab8e9ca09cbe1942bb3d3221359b381dafb618c0e49a648eede65ffc32e8",
+      "raw_sha256": "9fb1239d7e9fe3d3ff3ea571eeab58836f2a64204503ecce47152e3fc971f3ad",
+      "raw_bytes": 8399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-33.gz",
+      "gzip_sha256": "748a81c4fa44096490673fff2c16beb5021799cbfcb47c650e0d670a72e52652",
+      "raw_sha256": "81d7204dc3300b6bb406129f3a0c0040b141d673c977a2fc6cae33b216721d4d",
+      "raw_bytes": 10373,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-34.gz",
+      "gzip_sha256": "9509c208fbb86dc87672b61f463e5c2d5edb11c2faf8331ff7a377d94c953546",
+      "raw_sha256": "e55c98858904bc1138b7c10a302dfc1da5b63a9794514879b8772927343ea123",
+      "raw_bytes": 2607,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-35.gz",
+      "gzip_sha256": "f1c630b6c33220f92de523baa8d3af6a897b7ae764462544a9999e7f7cae16af",
+      "raw_sha256": "3acefa0928076d7935a1084e0e2d5915cc6639751e6e5b339f7e0cb367976d06",
+      "raw_bytes": 15129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-36.gz",
+      "gzip_sha256": "b978752246439dad71d2a51383750928e26e2745151d0a43b63c27c7822daa8f",
+      "raw_sha256": "d10927dffe9552251d2190888cd91d08cdd2621cc59e63c9901ce319dfd0167c",
+      "raw_bytes": 5589,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-37.gz",
+      "gzip_sha256": "ac0d1675386ca0dad6811ea4806238c07c2606c8aa6fbd6ef8e57cc6016f3a49",
+      "raw_sha256": "0f65d2251eaa7487a9c73cbe4cabac1683eb5302e12298492456600c0484a924",
+      "raw_bytes": 6816,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-38.gz",
+      "gzip_sha256": "8ded256b2f9246543bea1f4fcdc0009f6d8caef268d6360c7ea78067ab1c3fd3",
+      "raw_sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+      "raw_bytes": 43509,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-39.gz",
+      "gzip_sha256": "e73cb61bdc9e805f4a679e620d1c7e61ca4e1507f7b59a5875083e9745f56119",
+      "raw_sha256": "bfbf19d766c3331dc8a517bfb10cce190cfda47fd963d6218d408e1962fc5c18",
+      "raw_bytes": 495705,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-4.gz",
+      "gzip_sha256": "ce20285a36b853cc76b8de33515c5ddb1858eca2832267a5cd7a9de88bc339e2",
+      "raw_sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a",
+      "raw_bytes": 15052,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-40.gz",
+      "gzip_sha256": "720f2fd232e6699a707d6851ff6b6233f596466961082175c509dc9a28ff6e60",
+      "raw_sha256": "727137c2ceb91e07000388a8d5e45e97ede122e959f2dab64ba89cf18c02a183",
+      "raw_bytes": 2670,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-5.gz",
+      "gzip_sha256": "cabd38d3c63536df3d5b76f500d4f67b7f0debec4f4750fd2f18cfd9bdb1d136",
+      "raw_sha256": "bf2ee2b20bcd71c46937868acc009ae85673748472bd30c90f3f3b4dcf80a147",
+      "raw_bytes": 22187,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-6.gz",
+      "gzip_sha256": "4b22807a4bc0cc95dd05f870846f5c7e40f61cf41a082404c157acb688346921",
+      "raw_sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7",
+      "raw_bytes": 1478,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-7.gz",
+      "gzip_sha256": "e35b70fa29fa5ca66d63683bd7dfd84a93c102aa39ede10b8275fbb5044fa384",
+      "raw_sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a",
+      "raw_bytes": 244351,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-8.gz",
+      "gzip_sha256": "8532dcdb5b9fd6cc6b4161f082be0cc669b6234e9bd7bd43cdaf7bf46fb4ccc9",
+      "raw_sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162",
+      "raw_bytes": 355711,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f17-retained-r9-evidence-9.gz",
+      "gzip_sha256": "8ded256b2f9246543bea1f4fcdc0009f6d8caef268d6360c7ea78067ab1c3fd3",
+      "raw_sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b",
+      "raw_bytes": 43509,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f20-failed-result.json.gz",
+      "gzip_sha256": "bdb1ea517c077f7aea180b0fac54398b80ebe013a04a1940c56684cd294ad226",
+      "raw_sha256": "f8f12744c0da6afde277332aab6a2e749a9d4725226b583751a17d70db7cd0d7",
+      "raw_bytes": 625,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f20-failed-smoke.log.gz",
+      "gzip_sha256": "2524fd049896f5a6903c8551bc323cbc1350c091bb141e5e413d80af63f57b1b",
+      "raw_sha256": "f804cd1d5a574581814c339a976aed7d2b7237fd41f09091690926cd9cb8270d",
+      "raw_bytes": 11997,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f20-pass-result.json.gz",
+      "gzip_sha256": "cbf4874d3a0a0136c49e46976b7e361e708767a68295189aeee2ff7d8779bb8d",
+      "raw_sha256": "f368388dce4cb4e8dd05bcead5e88777a017a348c5aedc5ec037bbada329fb3f",
+      "raw_bytes": 506,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f20-pass-smoke.log.gz",
+      "gzip_sha256": "3de66567e97012fa458444a7451427f3c9c7a73428dae376e1e10530d956480c",
+      "raw_sha256": "0bd56de4d29bd9bca578a4d45746a08c505fcf455538f4a3b76414db15c2a3cc",
+      "raw_bytes": 11707,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f20-source-pins.json.gz",
+      "gzip_sha256": "785c982e0958ee242d108ef3466786a93098b5805c703687aac9fd7908e6ffcd",
+      "raw_sha256": "8649ad06ff32b20051c59213099389d96f694499cd17b9a394b3978e2aaf2447",
+      "raw_bytes": 7179,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\f20-source.patch.gz",
+      "gzip_sha256": "b2d54d0aab8b51ad5196f69bb4f9c5b27b8d257755ef2ac782cd52fe52b4fc7d",
+      "raw_sha256": "e5a4e2a72c9ff249c8af7357d23daa88aeebf534f000ae47450d636e911ebfed",
+      "raw_bytes": 880,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\r25-unit-result.json.gz",
+      "gzip_sha256": "7516f494505d23316ac28275620c29460534e8f3c755d7fc0cc0c60dad1ce3ba",
+      "raw_sha256": "2463e0f7898696cd185a6035d9d1a9e320d0481a51a1cfbe5b646ce2bbbf7e38",
+      "raw_bytes": 427,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\r25-unit-tests.log.gz",
+      "gzip_sha256": "7e0d99abf6011fd6d3f8d357227f4e5150ca2cac2d1000737a785b6956fd24dc",
+      "raw_sha256": "069d387dc14d3046f6e0ddaadaeffe9a5a859c81160126d46c813c7c8f90697e",
+      "raw_bytes": 20718,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\stormheart-pass-result.json.gz",
+      "gzip_sha256": "f01b90b400229d97afca802f2761d1abde759cf63896204c544c684356f6eb58",
+      "raw_sha256": "be3dd914bf1aa47cf48567923b4532e1383bee466251560aec328bc14fe018a1",
+      "raw_bytes": 519,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\current-repairs-3fcc09\\stormheart-pass-smoke.log.gz",
+      "gzip_sha256": "eaaec55f89ac0796e6567829d2aa59719431f799e0a248ba7c21d58ed96522a9",
+      "raw_sha256": "a79fae38b714e004bbf1ae46b43460fbbad00845e19d9aea13f7b2de89ef6608",
+      "raw_bytes": 43982,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\earned-opening-90d88dc6b24f\\native.log.gz",
+      "gzip_sha256": "05067d8d265d8da1fc332954815cab6af6fdd3400fdff6f3c1d85fe97bfb57a8",
+      "raw_sha256": "e1d040ee06ac0181bf68b716cf529ad75b1ab83c08bead519dff6ad0d152a130",
+      "raw_bytes": 148680,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\earned-opening-90d88dc6b24f\\parser.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\earned-opening-90d88dc6b24f\\receipt.json.gz",
+      "gzip_sha256": "f8c7f5312a7006ffa49efe706c174d5cd797084612546a900fb7e2505d27a535",
+      "raw_sha256": "8f78bd3700db33de436f960e376053431a9a5c7e1e92b99aac80c709c579bd5a",
+      "raw_bytes": 498899,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\earned-opening-aba5268a53de\\native.log.gz",
+      "gzip_sha256": "6bf448bf5707668ccc06d945bb61c5fd3ff8cf151c85bac5bc3c2b34f89dbd9d",
+      "raw_sha256": "83134c1592a40f597fd175b11b98458a3b0238145ecab7b23c7b8d426e94e856",
+      "raw_bytes": 142607,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\earned-opening-aba5268a53de\\parser.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\earned-opening-aba5268a53de\\receipt.json.gz",
+      "gzip_sha256": "7802f37ce75d69cef32424c072c0ab5b48dac6722643a4a0eadbcddbbd56e6a4",
+      "raw_sha256": "d7bfca783aa1904f9428a0b5545ea9096301c7750e384edf198f14967bd7d094",
+      "raw_bytes": 498379,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\callback_repaired_wall_observer_failed-director-guest-trainer-regression-child.log.gz",
+      "gzip_sha256": "92677ba655f7cd8a1a9c11a5d57f32a15579b33b44c48ff88abc3cce95e2d998",
+      "raw_sha256": "74013fbaed38945de0fe4a1ac498b79f1469135dbffdbc17625102511b1db761",
+      "raw_bytes": 579,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\callback_repaired_wall_observer_failed-director-hp-fixture-regression-child.log.gz",
+      "gzip_sha256": "ae15f3d89d91cfcd09ea4a864dd415caea7822304dc461aad0600edfa0823bdb",
+      "raw_sha256": "fa788dbffd4846084b08316542af2330f0994308ab97b55ce5117f8c7dc4b925",
+      "raw_bytes": 316,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\callback_repaired_wall_observer_failed-director-transport-regression-child.log.gz",
+      "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8",
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+      "raw_bytes": 129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\callback_repaired_wall_observer_failed-result.json.gz",
+      "gzip_sha256": "bd99562072f5639d500382460a9ebc3b04116a8588e771707c51d2fcc8024bef",
+      "raw_sha256": "8cf1a6e0d43c42584190534c683acb8b596354d591e8fd9b0151a81e6c719920",
+      "raw_bytes": 549,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\callback_repaired_wall_observer_failed-tests.log.gz",
+      "gzip_sha256": "74ec6e7970a9a9fdaa1d69073fc1571be5ffa6cd94e9db068f42ec0256a6d31f",
+      "raw_sha256": "2663a925d8840bcced078be28d1eba970a21e05a9e960ea21292e49a2bee61af",
+      "raw_bytes": 22229,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\callback_repaired_wall_observer_failed-trainer-aftermath-lifecycle-child.log.gz",
+      "gzip_sha256": "d361cb9756a8d720c3f290521675eb1da26ba08a3d88326513facf0909067db0",
+      "raw_sha256": "115923934da6acb943e9b06515090855d59ce146c8631d0c78a110033d3ff6c8",
+      "raw_bytes": 464,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\original-result.json.gz",
+      "gzip_sha256": "8e859880a3c69841b89ce4379049c0bcd19a25cda8c1c49fc9f475084ce63e32",
+      "raw_sha256": "4fbd9584ab8832404d9eb4a813e7c60bc5f4b25e3d64b2e2c70dafc2c9195bbf",
+      "raw_bytes": 2364,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\original-tests.log.gz",
+      "gzip_sha256": "cdfee7e053a1b07c34a712f2f658c6492f1e96dae625d162dcaf9ff7ba05d411",
+      "raw_sha256": "4fdc67c1f7b5eae4c8b525b5e7df1dfb69a62ae0b787a1b5527bad2caed8da08",
+      "raw_bytes": 19535,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\original-trainer-aftermath-lifecycle-child.log.gz",
+      "gzip_sha256": "a2e16dad29a5e949f6c00a430a10acedd61bb48514551d59d8a5d8475099416f",
+      "raw_sha256": "2b7e7eb7be6fe7339d6fca0f949b3a4e316528339d42eb8ac9c40b33d1a2e9f7",
+      "raw_bytes": 988,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\scene_clock_corrected-director-guest-trainer-regression-child.log.gz",
+      "gzip_sha256": "985b3302c6d7885f1d87cce02bdfc5efede116532661056a3a639dcd7045a36b",
+      "raw_sha256": "5e55a67e107d21826c0b1d330286fe00a0182f3f0bf16bfa32872f6aff9f87dc",
+      "raw_bytes": 579,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\scene_clock_corrected-director-hp-fixture-regression-child.log.gz",
+      "gzip_sha256": "4f26fe90a6c543ff7fc82898f64dec539f7105a2fc3d5213a1092bc8fd210506",
+      "raw_sha256": "a993808ae42c6d381e805f65783f6e02d1fe9d23c4a90b19c13df8040b5e1b69",
+      "raw_bytes": 316,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\scene_clock_corrected-director-transport-regression-child.log.gz",
+      "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8",
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+      "raw_bytes": 129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\scene_clock_corrected-result.json.gz",
+      "gzip_sha256": "f82659b044ce26fb1d43d68d032ccf3d4d9879e03bc3bc6df5e4f3d96be1c2f9",
+      "raw_sha256": "57c7ac9295809a349748165b43d845994c0315a8bc81adfccc21ac1eb811dcac",
+      "raw_bytes": 442,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\scene_clock_corrected-tests.log.gz",
+      "gzip_sha256": "009ad7abee46156ef6140e52153f4bc36668716a45301257de847151ea25fe2e",
+      "raw_sha256": "d3913ae07aa08796425cf0d9c9d68b47f9732ffd2ec819d0f984555c28a9089e",
+      "raw_bytes": 19859,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\scene_clock_corrected-trainer-aftermath-lifecycle-child.log.gz",
+      "gzip_sha256": "0d95f77f034185a6267c3f489f41af9276eead95a51355ad452bbe793a89794d",
+      "raw_sha256": "f6ef1f15f1c1fa6dcaf0bc5128e27b7bb1b16f1d701011dffbc33424b2c4c128",
+      "raw_bytes": 411,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\f22-clock-native\\report.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\foundations-storage-pass-752f\\native-log-0.gz",
+      "gzip_sha256": "88bd382f9bba4e93e7d39c5bdfe8053f0facf485616d62deb6e8a9fc36199ae3",
+      "raw_sha256": "28888e7720bd95f691e16df3faf599190462331f454cddb02ea3c5f98235b0fc",
+      "raw_bytes": 3912,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\foundations-storage-pass-752f\\native-log-1.gz",
+      "gzip_sha256": "262f6c8c5c9f0a2d9be41c57561bdb1ca48dfa3b014ac7f217605916895c83ee",
+      "raw_sha256": "7f299ce8c124c1ef01ef8a15b8f798268012ff2bf26bda6cf0294f19c5fa3acd",
+      "raw_bytes": 3866,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\foundations-storage-pass-752f\\native-log-2.gz",
+      "gzip_sha256": "2bfd44f57d77946f9be7b85990cf46977cd4f0c8f3f98cffdf617c3fc2731777",
+      "raw_sha256": "bc4e395909372eda6bcfb38ab660894215b759da9e2a6c265ed151589bcc2e1a",
+      "raw_bytes": 19309,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\foundations-storage-pass-752f\\native-log-3.gz",
+      "gzip_sha256": "7aa472b04bd6fbcfc9f21bfb7f3f8e3a2480ab6f60dbdf047ac6cea6302ce38a",
+      "raw_sha256": "13da437022c237025244ec538b82dbd62210bc5923c7355b8a8feb03f299eea7",
+      "raw_bytes": 30533,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\foundations-storage-pass-752f\\NET_RUN.json.gz",
+      "gzip_sha256": "90904825af357ba8174f2fadbceeebe6bb9201cdddce60c28f54422b3519c8b9",
+      "raw_sha256": "e5b45411cea3ca22247800d9f3edef57f88f5cb4f3b753442832f3574b260dac",
+      "raw_bytes": 2629,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\foundations-storage-pass-752f\\receipt.json.gz",
+      "gzip_sha256": "c3b516db789c6ae4d545ca910e18533b5ed884eb697784b2af306977c36ba9f7",
+      "raw_sha256": "9fb4c2ccc3c24aab8a6e106e33fa9c1d8c0a2e6ef8cc122f1bddd83458c6c91b",
+      "raw_bytes": 736821,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\after-guest-native-child.log.gz",
+      "gzip_sha256": "d691d75580cbb44fbbf92111937c98f2b5474f53253bff95ac28084438497163",
+      "raw_sha256": "59158dd71efacd4dd75206d0066bbbe008ff0596ac64ae433cfe3305b0d71870",
+      "raw_bytes": 579,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\after-outer-result.json.gz",
+      "gzip_sha256": "53fdff0e7b84670d4081998e3a06e7cc2ad3d0b1b4a93cee268866c0ff921812",
+      "raw_sha256": "0a43bf0bed4a035e9eaf5ec45f3757b38eb3c79bcd778b3df819d49022ef03f6",
+      "raw_bytes": 414,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\after-outer.log.gz",
+      "gzip_sha256": "8ef83ccefa192909e7f5c5c7867c89d9da5702b23f72c7556ce59a5a4ae323a0",
+      "raw_sha256": "17a75152e122a114d48de386c9215a6ae528bd18da786468bd6c3071be36c3d4",
+      "raw_bytes": 18199,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\after-transport-native-child.log.gz",
+      "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8",
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+      "raw_bytes": 129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\before-guest-native-child.log.gz",
+      "gzip_sha256": "9ac4658e106fd6496e870ba7788be8ef68790bebfb1207e056d21edfe143f12d",
+      "raw_sha256": "158bb2ffa3cc53140e02bdd0d11bdc0e923f1e39d4c398d86fb5b8a2f6b558e7",
+      "raw_bytes": 1146,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\before-outer-result.json.gz",
+      "gzip_sha256": "91b22aa8f9d94e5187e32add00aacdbe241353df3fb7f26b6bb3368e1cd9a3b3",
+      "raw_sha256": "bf47835c2721841ebd59479607d4be8998674e079ee6a8a6dbfe8eb74c686fbd",
+      "raw_bytes": 530,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\before-outer.log.gz",
+      "gzip_sha256": "3f49b7736f89eb72649d5ef2520652f7b196920e2848719ff617d0f65d53c9f1",
+      "raw_sha256": "58a17b5b4bf03c7dd08e9a514056fdf23f9a96259428e6656fc1805480a80a0f",
+      "raw_bytes": 24277,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\guest-trainer-kill-r1\\before-transport-native-child.log.gz",
+      "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8",
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+      "raw_bytes": 129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\local-successor-checks\\opening-parser-r15-fb186f6a7a72-parser.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\local-successor-checks\\opening-parser-r15-fb186f6a7a72-result.json.gz",
+      "gzip_sha256": "5b5d3a6569b3ccbe0260026a148e9e614740d946bbe075bd0d29526d30ec199d",
+      "raw_sha256": "838f378b824fc60019106ecda3fe7fce4a4b4a6f870388e620e8c8c668e38804",
+      "raw_bytes": 369,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\local-successor-checks\\returned-smoke-b90fa9576b9b-_probe_scatter_tree_prompt_height-result.json.gz",
+      "gzip_sha256": "f60b640aef3f0ce2d76ecc2852501d58fa900519dd44bcd0523bd27b7835e274",
+      "raw_sha256": "b17af2dab582a83b39949a6c359dcde7ed971b47de98d233dfc6c4fd8f39845b",
+      "raw_bytes": 399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\local-successor-checks\\returned-smoke-b90fa9576b9b-_probe_scatter_tree_prompt_height-smoke.log.gz",
+      "gzip_sha256": "844e41e0bb7c819a096e29591a5471ca85cc371d093a2cfea44ce7c68597032d",
+      "raw_sha256": "81219368f42c3e3090230b3d82b44994d222aeb1d1e25b678ce452213f1c9ab5",
+      "raw_bytes": 12823,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\local-successor-checks\\returned-unit-b42e92f90f22-aae7e721-result.json.gz",
+      "gzip_sha256": "407574f9283b562807134b1dc62c81c6a577214058b7d9efe3dba0afb22046df",
+      "raw_sha256": "290c52ada2b5593ae55e00dc3cb545dc23e1cc5ff79f293a69791926ff4c1a23",
+      "raw_bytes": 531,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\local-successor-checks\\returned-unit-b42e92f90f22-aae7e721-tests.log.gz",
+      "gzip_sha256": "70373af88663018763014d29a096556f060c49e569492239cae376d26b575258",
+      "raw_sha256": "89e38301a2a1c773b616804c33b3e78e19ecc29671583201dc37eded36048d26",
+      "raw_bytes": 15138,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\combined-affected-16fbddde3930-f19b8122.json.gz",
+      "gzip_sha256": "411bf02a9f7697cf9d1cf13ec915b5cf40e7d0ef4323237049b6b0025a4ad657",
+      "raw_sha256": "506e3b13ee75735fe0b270a3e661f58ca3b2c7e4b6c21511b74660af22a8c7fc",
+      "raw_bytes": 754734,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\combined-check-only-16fbddde3930--0.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\combined-check-only-16fbddde3930--1.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\combined-check-only-16fbddde3930--receipt.json.gz",
+      "gzip_sha256": "de1d5f46a704839ae4a28034bcc32125310b81d3677531e8c05a11726e9ee58e",
+      "raw_sha256": "d90f8f29abbc01e14d2fab875a6e1f6220c65de42afa2cc8b6361eca891bef78",
+      "raw_bytes": 756032,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\combined-smokes-16fbddde3930-ca2aa895.json.gz",
+      "gzip_sha256": "ae43579c3db3f10e66cf61b863cddc9889ddd822029b491854cb7f776474980f",
+      "raw_sha256": "01535aa61d74c924cc3f940a9c9a32c2a380efbf046c7cc29f53fef7bb72f33e",
+      "raw_bytes": 756218,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\combined-smokes-19aed44342ed-ca2aa895.json.gz",
+      "gzip_sha256": "ef65cf8e14f4e70a804ac27ae028f2579b1529876e0c1c850c7b85da51c9f3b0",
+      "raw_sha256": "5e48323e7e7d27cd2d49ef78e18773e9b7ec00bba60cb45f5fb19a6d92ee16d1",
+      "raw_bytes": 755763,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\mira-idle-probe-19aed44342ed--native.log.gz",
+      "gzip_sha256": "27887d48bf80de281a504237bae6f6a6a509edf0ae995f0180c456ed9dfaaa43",
+      "raw_sha256": "755e9ecdaad31ebc18b6bf14b5474ec6c63a21dce4420eef0c14bcd3ecc86026",
+      "raw_bytes": 4813,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\mira-idle-probe-19aed44342ed--receipt.json.gz",
+      "gzip_sha256": "fc9c275ee5ea2a292b358c6be5640280f55844570722a9ec31dd9ca184c98fc5",
+      "raw_sha256": "400553034dd1ccd29457cf183de213e9dde71cd7fb2a1e2cefd391505dd0d180",
+      "raw_bytes": 761103,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\probe_mira_idle_floor.gd.gz",
+      "gzip_sha256": "81e2f0da358440696bce4545943b7d75c56e80f57ecbbaf126b022348251e99a",
+      "raw_sha256": "e1284955e69fa08e6f1a4b32201c8eb9f14b6efe069e6b7b73738fde4854bb19",
+      "raw_bytes": 2670,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-smoke-16fbddde3930-smoke_gate_b_continuous--result.json.gz",
+      "gzip_sha256": "b8aa84fa4f0a50d060e75b5781f45bff4b5c61d1ad3af3ac02f5fa1c3cc51579",
+      "raw_sha256": "ab06cc7882e505c27f265efbf6952ab46b4eefe20cfbc8fa554fa163edf5bb33",
+      "raw_bytes": 1350,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-smoke-16fbddde3930-smoke_gate_b_continuous--smoke.log.gz",
+      "gzip_sha256": "e0789c90ce63773be5899ee74c00b7924f94f32f3aeca8428a6a8832828d33b3",
+      "raw_sha256": "bf7ea3940309b33a81a20932d4265aea2c1182d220d8b271d428f815c1b97957",
+      "raw_bytes": 1362506,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-smoke-19aed44342ed-smoke_gate_b_continuous--result.json.gz",
+      "gzip_sha256": "c5fd781a5b18210167446e0693da3e89293a835086873f897be1af93faa72d43",
+      "raw_sha256": "fd3116bf1cacc2c3d8c3d9f0e5a852594da9f6ec9418c2bc654bbb181290bcd2",
+      "raw_bytes": 913,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-smoke-19aed44342ed-smoke_gate_b_continuous--smoke.log.gz",
+      "gzip_sha256": "d8369e07c69de55481af2fa2f6cd94e161efbb50a6f9a9dfa057550ff21aadb2",
+      "raw_sha256": "ea0cbfd506ae9647e6f85455c575056057098f36bf9e0f855bc0a4d1e3b5d991",
+      "raw_bytes": 1392305,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-unit-16fbddde3930-f19b8122--result.json.gz",
+      "gzip_sha256": "f1286097b0cc23595fafe3d6ea5f7b8f43730a07f9e13b8926958c16933eb297",
+      "raw_sha256": "56f219851c35a98c5b253a153344d871c95b3d2691b0a3cc4b710a3682aa1fc7",
+      "raw_bytes": 448,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-unit-16fbddde3930-f19b8122--tests.log.gz",
+      "gzip_sha256": "8ff2b5ece73e2eca2e433b0b98b38553d663e7abd35519e04835cfb56a14ae83",
+      "raw_sha256": "b6b28e3cc79682753854e96f232e0d94135ea02d72165ee90e765b8f9c6fb701",
+      "raw_bytes": 18343,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\returned-unit-16fbddde3930-f19b8122--user--Godot--app_userdata--Tetherbound--shop-floor-support-child.log.gz",
+      "gzip_sha256": "c462015265a388aaaccec9d3dddb4db6877b6697d32207c315e7b6683ce102b0",
+      "raw_sha256": "93eea2f4a3b651bfe308befaddce51b5e15e16d6b560a132a5ac4b3abdb5982d",
+      "raw_bytes": 146,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": [
+        {
+          "manifest": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\mira-verification-16fbddde3930\\summary.json",
+          "raw_sha256_matches": true,
+          "gzip_sha256_matches": true,
+          "raw_length_matches": true
+        }
+      ]
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\director-parser-result.json.gz",
+      "gzip_sha256": "a07e7bf6910caa59004ee176a355cc3b26bfce7e3ffcba8c8eb166c438f3ca86",
+      "raw_sha256": "d50a0dff408fcb730589644082660860d96be29f7198c3d75ffdbc4f1543faad",
+      "raw_bytes": 1155,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\director-parser-tests.log.gz",
+      "gzip_sha256": "43346acb83303a1c5b9feed4e98338fd482f1763f6fc6d1fc724b99bf70713cc",
+      "raw_sha256": "84700f38db5da751049e57bc61454884b40bb1a9e45fbbad37e16d5228c97c50",
+      "raw_bytes": 13339,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-coordinator.log.gz",
+      "gzip_sha256": "7d2c2379639cdf22a6ea1542cb2c2343f89beccabc5529abc5aa18550c456aa1",
+      "raw_sha256": "99800537686aa5dcf7e986bdf782d23283312b17ef0a2307f054e3261c56423d",
+      "raw_bytes": 2424,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-initial-home_Godot_app_userdata_Tetherbound_logs_godot.log.gz",
+      "gzip_sha256": "000824f2233d5b44ed70c087457c27dea312811d627da9d2f1c45826ae23e42a",
+      "raw_sha256": "9b272bbf66a36e759a354f62aa02927c4c21333b73980b70fdc1fe05a745a5d8",
+      "raw_bytes": 2400,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-net-run_NET_RUN.json.gz",
+      "gzip_sha256": "cfeca89a53e02dce76257b06c37a200896157e4425c07371359288c534db68aa",
+      "raw_sha256": "cfcbad0de8ac20f3e2f9116280594f7ae6209e00e800892f39b121a118b41381",
+      "raw_bytes": 2532,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-net-run_peer-0.log.gz",
+      "gzip_sha256": "811b2f28f065982ab6b956fcd165e3440aa5e8c4dc912ba27bc7181daba7f60a",
+      "raw_sha256": "f6d66a165617448d48bf588042e32221c58a299b48efee4997a75a192a2b57ec",
+      "raw_bytes": 10085,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-net-run_peer-1.log.gz",
+      "gzip_sha256": "df92a2103c3ed1345553290b8c7f86c9e5e2a73436453f6bd5393457be76b0fa",
+      "raw_sha256": "44e4368d174c322e09939e8ea206e14eb64947d9472619a96adab770144e3ba3",
+      "raw_bytes": 10087,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-net-run_SUMMARY.md.gz",
+      "gzip_sha256": "08ac8f99e6ec5eac3164f4964657adcc05087404fbd9328112c796890243e99d",
+      "raw_sha256": "b9111ebbd878cfd5a59883cf3ba6ff0a4c14815ad0dd63ad0f43219c55de9ded",
+      "raw_bytes": 247,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\net-startup-and-director-parse\\startup-receipt.json.gz",
+      "gzip_sha256": "6d8e3d4b92348da8736427b4dea83c16c82ffd2730baa3442918b232c69460c5",
+      "raw_sha256": "571bc20395d9a74474e9f1d5e272f8f160ffc261c26af619a59fac7046ed7e23",
+      "raw_bytes": 736703,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-native-mesh-r22\\native-result.json.gz",
+      "gzip_sha256": "5691d448eb2fdfdf154e5521215bec8e51eb227db79bc66dff1c4c9b3c459d83",
+      "raw_sha256": "44dc8d9ea1c8173a88324aa110a102e59dd5f66c8f9e6c4ecc0949c6cb092b8e",
+      "raw_bytes": 399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-native-mesh-r22\\smoke.log.gz",
+      "gzip_sha256": "8cfdfa5fe7372c6b1319550ce7bc6a438fcd2d18333a7a982e37a1dc271b6ccf",
+      "raw_sha256": "7d7de091fbf727de1af2fe9430f8183fe5e3b0566bfc064f98cf0366a7ba72d7",
+      "raw_bytes": 46864,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-native-mesh-r22\\tree-geometry.json.gz",
+      "gzip_sha256": "a2e30885258a07a8d603f477c3daa8239efc7e50585b511f39dc0eb0fa3161d0",
+      "raw_sha256": "a2865c7c39c7be4d3b10d185f5ad90f1d9b81044df0ed7a1d53a8a086294073b",
+      "raw_bytes": 23583,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r16-and-net3\\tree-native.log.gz",
+      "gzip_sha256": "b888a1652dbf1ef33e42daedd31317b0508c6471c2fddc37e0fdcaf2fb1b1a46",
+      "raw_sha256": "3a52d544b8ad1a74b193480ffb5f4a3cdb288652f1aedf5087c36eda947bc1bb",
+      "raw_bytes": 15243,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r16-and-net3\\tree-result.json.gz",
+      "gzip_sha256": "0e7610541403fdd891dff4b3e322e81fdcca0b500c66a4d9dbbffa8b261bc5ae",
+      "raw_sha256": "b0223a28242eb7e1676ffab3b13f7079c2194935baba99fa17300bddf21ddc31",
+      "raw_bytes": 399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r16-and-net3\\warden-NET_RUN.json.gz",
+      "gzip_sha256": "7c97d60321000797fd27cd8bb952f1b5fca12db7458413f6404839237608e548",
+      "raw_sha256": "c8ae2dc461f7d9ffa29fd14ce221f92303ce6687216c08bbc3086d03852469ba",
+      "raw_bytes": 2508,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r16-and-net3\\warden-peer-0.log.gz",
+      "gzip_sha256": "84e00370a44b32a1bd1ad363dcce92a6fff2cb8b23f7e5c84adc2e021aceed65",
+      "raw_sha256": "abce04558bb31ac0050cce2ea39b35268beda40806aa3c11e859e1fed90c916c",
+      "raw_bytes": 16329,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r16-and-net3\\warden-peer-1.log.gz",
+      "gzip_sha256": "f20a0c6742754ddc470dbecfea2d4bd93d0a5085566f9235a8e5b77cb3bc29a6",
+      "raw_sha256": "e8ace0053648f2dfb1adb86f197c508a663d0adc88101b7733817739dfdbea97",
+      "raw_bytes": 11302,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r16-and-net3\\warden-SUMMARY.md.gz",
+      "gzip_sha256": "7d1c59baf1429bfd420e99e8b9a633ce6431ccb4096a1ab8963c872bd01d9116",
+      "raw_sha256": "d47e6be0a484c2379403067da362b7f5dce71df11f26603484672cdc5412e950",
+      "raw_bytes": 275,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r17\\result.json.gz",
+      "gzip_sha256": "c0878fc5a2d194ee020cee56b3ed5598805051be3217990cb8ddbc8d40b1a44b",
+      "raw_sha256": "a4f8be5ca3af2c6a3f9361302abd367b699b0c0e6e6a95cafa6212a8bf5f03a5",
+      "raw_bytes": 399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r17\\smoke.log.gz",
+      "gzip_sha256": "77ef0ef868c251a2f6ab59f78a793914594d6b3157a021f78e7ba4d7aaed3a83",
+      "raw_sha256": "024872c3b2f7fa2007afc99f2d87b705b9e6abc9f09f950cb27cee33e834cb8c",
+      "raw_bytes": 22955,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\tree-native-result.json.gz",
+      "gzip_sha256": "656dbbdb9142e3c2e01de6892c239212ad84359ad43f11657a5ca8d14f3374b0",
+      "raw_sha256": "d0e11b2042d4fe115cd623670e9347facb8758fe35d24904df7cd9bf59522090",
+      "raw_bytes": 399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\tree-native-smoke.log.gz",
+      "gzip_sha256": "2629c37c88a1c47a8775b24aaebb74e19a72aa3b1bceae340b112066e34e9611",
+      "raw_sha256": "16fcbd180067148e87c60a9aeaecbcf77eb8eb2a42b1f93b914f030e4273c0f1",
+      "raw_bytes": 45642,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\tree-unit-result.json.gz",
+      "gzip_sha256": "d8fd79073839894f2c1de520734db5053554508dac482f26b0995bbe66e9866c",
+      "raw_sha256": "585e58d183bea40c06371c5cde87d850c5b450b16bae7a3283d135c9d09f590c",
+      "raw_bytes": 422,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\tree-unit-tests.log.gz",
+      "gzip_sha256": "c0f70fe64fd9fba7175019db87f680f777c7a34113f2789315c6ea8dfd847404",
+      "raw_sha256": "9db2bf37cca08e4e498d331755334d33544ec1ccb3176492885c5c2090f67523",
+      "raw_bytes": 14054,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-log-0.gz",
+      "gzip_sha256": "af6b0844a833f5c50a28c7ddbe60ad339ccca16e2deb3ecc546bddb3777faced",
+      "raw_sha256": "31671adca392c4757abe830178acd9525e0f71f4a52556396280426a14c445ea",
+      "raw_bytes": 3260,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-log-1.gz",
+      "gzip_sha256": "12dfd653cf9ced14cd2c2c13b93755d16198ab2c8cf25926a0e9475a862bec4a",
+      "raw_sha256": "c26543f75a051248c8f36bc87a3587770f8fcca2ae025a7599a99c6e2fa63242",
+      "raw_bytes": 3234,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-log-2.gz",
+      "gzip_sha256": "07215090cef7d01ac88a476d6749be3f597fdb31975c688c168413773534722a",
+      "raw_sha256": "48ffa3601419155bc0d3c0ae81338cc38e2f43c30a35d9037e30a238ee237b61",
+      "raw_bytes": 12178,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-log-3.gz",
+      "gzip_sha256": "71830e452a341f347bea1d48f0ce26c624c723b59d38205f754c079fe85bf1fc",
+      "raw_sha256": "e9b5e9911839ca28c886466dcc91ad27fadc821469aa43b5f30c54536114dfdd",
+      "raw_bytes": 11329,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-net-run-NET_RUN.json.gz",
+      "gzip_sha256": "09fd7aa7763803b7a699d748f09164372554992ad2e94c0251fd07d3d083acf5",
+      "raw_sha256": "93cd7a5dae6cd2b48bfce44a91312a0a0264de906aa30e50ea4b3ba1f98aa1fb",
+      "raw_bytes": 2857,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-net-run-SUMMARY.md.gz",
+      "gzip_sha256": "e436ddd07c42d8fa04c2d1c68f50ee804268909cb8c452ccdb76c6260370d3aa",
+      "raw_sha256": "be125f6b3001ca76fe7f545fe153da555d6740265a53beef632488180a2de0e5",
+      "raw_bytes": 326,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\tree-r24-and-warden-binding\\warden-receipt.json.gz",
+      "gzip_sha256": "773bf36041c244d3631590ff81f4043d59b3a9f2af6924362b490ba4e903c473",
+      "raw_sha256": "9266e48cba018ca95ada5a6ed33ae0f29e7664ab32c8d84911260087d60b1e2c",
+      "raw_bytes": 737103,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-successors\\returned-unit-22520ec3f8d3-f8065f5a-result.json.gz",
+      "gzip_sha256": "18f040d988926a0151397c8b801f98c544e4b729f2ae8344dc4a8e2dfab9208d",
+      "raw_sha256": "c57ba3214fc7648366ae72a37c7cb054fdb120df210c3d36a95f05b618ae76f8",
+      "raw_bytes": 415,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-successors\\returned-unit-22520ec3f8d3-f8065f5a-tests.log.gz",
+      "gzip_sha256": "4237c09cf7c77cd3a1124d40af951792900ec763f3febb7a80172f595afc949a",
+      "raw_sha256": "afd8bf9c10bfc35143269fc01aba94e7d75b0fece74bab380e33215757d3aa3f",
+      "raw_bytes": 445463,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-successors\\returned-unit-371138847a3b-aae7e721-result.json.gz",
+      "gzip_sha256": "478e2f1db72a65032b94935cb9a3f0ebff47b8b279ba8139ca8a319525070909",
+      "raw_sha256": "e0c67115ef3a3f3acb682b270bd5cfe4b05ceb34412de1e1fc6e41d994420374",
+      "raw_bytes": 413,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-successors\\returned-unit-371138847a3b-aae7e721-tests.log.gz",
+      "gzip_sha256": "09bf818faae1ec0a9cf7a3a0515f87934064d727e8fef3bc078ae0e2088ce6f5",
+      "raw_sha256": "0736a789c75d963f0b599fb56e28b4d89d712c37d5bcd0c1d90fb26881f73509",
+      "raw_bytes": 14924,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\director-native-child.log.gz",
+      "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8",
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+      "raw_bytes": 129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\director-pass-result.json.gz",
+      "gzip_sha256": "906008c6dc7daae13ba8201bf3f564b4691168be51758d0dadd4d6f69636e8ba",
+      "raw_sha256": "1cba16ee5e3729558ff0e42697e572e03fcb8d382f4ed3b9153dc974ac252e79",
+      "raw_bytes": 414,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\director-pass-tests.log.gz",
+      "gzip_sha256": "fb56c28c17dce22165abeac084949c7bfcc364436454167411fea51b193da25d",
+      "raw_sha256": "e3c6b8a1342d785800b1763c2a0a051709927be0d6e8ed1691a3b36fa5bb2a15",
+      "raw_bytes": 18090,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\earned-native.log.gz",
+      "gzip_sha256": "e70ef0452e2ace2056e24b994ddc041ae1b03d42888cdf8ca72284b1f52af0cf",
+      "raw_sha256": "feccf36f0470fc1a095d6b3aaeb8e9b346ffe13742f049929b1bec27248c1a2a",
+      "raw_bytes": 55077,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\earned-parser.log.gz",
+      "gzip_sha256": "d77d302321da4ed105e50a79a40bfc4ed9fdb0775ad9b7fa5bd86905aeefc769",
+      "raw_sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+      "raw_bytes": 73,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\earned-receipt.json.gz",
+      "gzip_sha256": "8e0fa5b9e7ad77ca0f390cc3ca1cdc421fd2511172df60052eb9a26e407843f5",
+      "raw_sha256": "dfed9541b69b2682442ce229bac5593237715e620622a80aacafbeb42af5f908",
+      "raw_bytes": 499642,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\tree-native-result.json.gz",
+      "gzip_sha256": "b1dd3ea6ba9fb5fa58d9f93c4db579f182fcef6996159f0a57337af487c551d4",
+      "raw_sha256": "2ae87037e7cdd43ca6f9a8d4264545d15378d34c9f902ebdd50a4523aa6117ca",
+      "raw_bytes": 399,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\tree-native-smoke.log.gz",
+      "gzip_sha256": "0ddd106d37cd7dde3724ad83086c5d5e40ef9df3d4382ecc0eb13cdcc90a0937",
+      "raw_sha256": "0e267141c080a2bca82fbec627606fe35e4db822ad7bb1b4c49be7e96b9626a7",
+      "raw_bytes": 23277,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\tree-unit-result.json.gz",
+      "gzip_sha256": "a3bd08a8d5a2e64f817f223624f00a98279fdd251437edb5bb950703c49a0bf9",
+      "raw_sha256": "bcbecdd0b6dfbbc5b218a2ff440d262a6dcaa3fb865b0c5bf5d3157b4f1748ff",
+      "raw_bytes": 422,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\tree-unit-tests.log.gz",
+      "gzip_sha256": "b56d9d9b52b5b8ea95fdbbaf2146540d0f8e920e1c573918a39fb3adfc5cecb9",
+      "raw_sha256": "5c5f149d53c61e7c24c254a0672d9d2f0be336b02c1734878e77d6ad9c5934a3",
+      "raw_bytes": 13685,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-coordinator.log.gz",
+      "gzip_sha256": "4eab6559b5fe8dee1c3ebabf13ebea2cc34dfa761682f02a6d39770e4178f712",
+      "raw_sha256": "fbb316a73f99e39230210e211d8e668ffd7073691a070118eb4c5e9c593aab6f",
+      "raw_bytes": 3069,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-initial-home_Godot_app_userdata_Tetherbound_logs_godot.log.gz",
+      "gzip_sha256": "fda276b4a9805eecbe6df9a05e34cb232fa2a28dd7160eb3a4b53e8ba6475f2d",
+      "raw_sha256": "4236ce120b87619937c46c0a3886a100ee5de80d1164d0a876b2f13d72d11391",
+      "raw_bytes": 3044,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-net-run_NET_RUN.json.gz",
+      "gzip_sha256": "25c148a696a0bb083f6b80e22cd2377c5f4ccec7d0297890e2a787c541affc38",
+      "raw_sha256": "f3e76bd1852a959e76cc0a24a6ced60a98ce7ab72d7f287dd68e67db11a1470a",
+      "raw_bytes": 8672,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-net-run_peer-0.log.gz",
+      "gzip_sha256": "6ae366e844dda3d1587d6e5c7fd9289c4ae78d8410d0afc5d082db3fb41698a6",
+      "raw_sha256": "b8770a84164489c8c42eac2be334d97b32f053911dfa8933993723a237287b9c",
+      "raw_bytes": 12211,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-net-run_peer-1.log.gz",
+      "gzip_sha256": "2a2b541e80ce1f45302e4e8b5118431420bcb7b7d61e578866511871f996b210",
+      "raw_sha256": "c653050ae40f3839ce5139cfc93cedd6a7c2a7acfe1c94a84c98c32c8f9e113d",
+      "raw_bytes": 11326,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-net-run_SUMMARY.md.gz",
+      "gzip_sha256": "c5ed4a6c67b534e29f94df9795c85f0880f545902176fa8894e497b0a397fc32",
+      "raw_sha256": "00d3c512bf057fe2238a7ae5f61de20cd633d2e9acc767dfb31dc9ad2a66bb3e",
+      "raw_bytes": 287,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\verified-transport-and-current-failures\\warden-receipt.json.gz",
+      "gzip_sha256": "70af2e1dec288fd554f309b749ad997173c17f7b8f77c1d9512b2f038d93bfac",
+      "raw_sha256": "40422d2bf2d08b568c345da75dea9505d11f40f75b58af81cb260cb738fdafce",
+      "raw_bytes": 744971,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\director-guest-trainer-regression-child.log.gz",
+      "gzip_sha256": "fc8f72c8e32cfa13df83f4e9860dbaf89bf10657965c65e2b7504a3c721dde65",
+      "raw_sha256": "40e5ef2a65996827b6ea7e69c9b4843bee9f3f61f2102d189fbdd2e88fd8834e",
+      "raw_bytes": 577,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\director-hp-fixture-regression-child.log.gz",
+      "gzip_sha256": "581671a63c9b5568e5c03e8c903b97565dbef4d4a19e2c9245ecc2e8639d6cdd",
+      "raw_sha256": "2bf113a692aba5ed433d1d23b35a786b521d620a4fa7b59552c3f6097d067e07",
+      "raw_bytes": 650,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\director-transport-regression-child.log.gz",
+      "gzip_sha256": "aedcffcd277297af7ea5d7dabcc6231d23e6a88c7f98609d5c054299287515a8",
+      "raw_sha256": "7165201eca512a44c26e45deba48f659faf4f144cd6be5aa75be30b3e3036344",
+      "raw_bytes": 129,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-log-0.gz",
+      "gzip_sha256": "adc6e8be7f399f7bcc85020986ddefd5e89a7286e2711cadad4033891bcb1bb4",
+      "raw_sha256": "82c833ca873a0f961864bc3da6a12bd450e1fba854efc716c2d595139e68b839",
+      "raw_bytes": 6725,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-log-1.gz",
+      "gzip_sha256": "9f94221334626076b0a4f49eac4cefe5373db06e14db2331b6840326a94e20ee",
+      "raw_sha256": "7fa7f3edf5cc61de2be2f4a5b2c9a09eb7b8aa50ec09d97e84393a65c7e40d5d",
+      "raw_bytes": 6676,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-log-2.gz",
+      "gzip_sha256": "695ba623d2ba2f8ff22faf545a152e1c189aa3678ec14413fb1a6e83f47e9bbb",
+      "raw_sha256": "fab6175d8e9cbdc6a1a9e6e2f01e1197a8a03f28fbd371ed5ebe133d114b6429",
+      "raw_bytes": 12892,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-log-3.gz",
+      "gzip_sha256": "e6f5c895fe5ae0d357e1b2bae8bbaf9a79a5a00d00bc6a844fe03a874187c646",
+      "raw_sha256": "1d06f4cef5a2721bc42fdf2c07fe16a7d24b95c31e21a33d787a49bccd2c4dba",
+      "raw_bytes": 22068,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-net-run-NET_RUN.json.gz",
+      "gzip_sha256": "ae0785a6894bf673e1ad4675525b30c57e48ddce16d03c0ddaf8aa0e723bec70",
+      "raw_sha256": "b64bbf0113c474b31167a1f22f697358ef11c6fae4c34541432c47b9a8bf4563",
+      "raw_bytes": 2685,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-net-run-SUMMARY.md.gz",
+      "gzip_sha256": "aa82f23768a6aab9057ed08ca42d5f6130d4ba3b6b216603ef9d241458550d40",
+      "raw_sha256": "58fdb3e95016c12cb8b5e97e87058fb5583df009d535cd8989afc9e4dc1ee097",
+      "raw_bytes": 251,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\net-receipt.json.gz",
+      "gzip_sha256": "1d65dc495a8e1bc65d72c106ee8a2ec2c257770e0ce219394d454ebbff3b25b2",
+      "raw_sha256": "3c50625b0535445689f89dbb8788966824acd5c39d1d3bfcab35bbca96e16f37",
+      "raw_bytes": 737165,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\source-candidate.patch.gz",
+      "gzip_sha256": "c558070ee1bce204da9a0edf760821cf08515e4778c6003cab4bf8a9eb409f50",
+      "raw_sha256": "ce9a99dc8582f325807fc3818858b86b84c823683aead09340341b33f3ac9f90",
+      "raw_bytes": 10424,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\source-source-evidence.json.gz",
+      "gzip_sha256": "ad7fcd9299ffd1797e58b85a063a4b1f6d31cadb88f1c078f14539720c2da73f",
+      "raw_sha256": "98e876e141d4e738e1a949a48144c0c2a8a37a7c3cdf44b47e512d58d8d5cbb4",
+      "raw_bytes": 7571,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\unit-result.json.gz",
+      "gzip_sha256": "4b0ad8d9b41e68e86995c1d9358ff3c070adea2cc4dc79b6a0dee1793dab9c0b",
+      "raw_sha256": "08fd9700b8f2bdb7ddb2cc6b5d6b91323d5a368bf42bd02f9ecb5965933e15b9",
+      "raw_bytes": 414,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-kind-pass-624b\\unit-tests.log.gz",
+      "gzip_sha256": "3d8224a3fc138cb5e837c2549130f11c543eed7f54f53add6c1ff768082170a7",
+      "raw_sha256": "d72517d2c8ccf1683a5cecbb7bb6ac0991e93548a28d6c3dec73261480a667ca",
+      "raw_bytes": 18302,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-predeadline-49d\\native-log-0.gz",
+      "gzip_sha256": "2c14f5e1ee768406c173d5ef3e6e76b5f1871c8ddd187621dd8a41de58612ff9",
+      "raw_sha256": "1bf27527e1923472e45f4369f0f93894552fad9ec16c0844c5fd89ef60b644a2",
+      "raw_bytes": 3069,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-predeadline-49d\\native-log-1.gz",
+      "gzip_sha256": "b0552f555970775038d3f2f90324c1ab4ba851e6dde017304b6a533e0d708ab3",
+      "raw_sha256": "d190bc3ffd57dffd0b1838ea5eb60201ff539db08269c3056d258374a1e7407d",
+      "raw_bytes": 3044,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-predeadline-49d\\native-log-2.gz",
+      "gzip_sha256": "f4afc232c1c25230ff138d89865c81700e6fdb33115ad9db67dac2700a71b0a1",
+      "raw_sha256": "9865cde2c7b8e13b1518d3e5fd03165c193f4ce985c65d508b895ac33d62c858",
+      "raw_bytes": 12211,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-predeadline-49d\\native-log-3.gz",
+      "gzip_sha256": "f62989b33ae2e8dc83d245a8334457ec6f911961de229883ea0adc8ac8c77dcc",
+      "raw_sha256": "11e7fa3844e92bd8f1177723595c921e1a42e134eb9bc4e6ed119759e329d8ec",
+      "raw_bytes": 11326,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-predeadline-49d\\NET_RUN.gz",
+      "gzip_sha256": "8fba870bcf676d3ac57e7b1983b3ae3746c2914d3ab06f6bc779d763641b67d6",
+      "raw_sha256": "2716bb98ad089454e9bd0cd589ceaaacc0722722aa0066b6cc045d32ca8eb651",
+      "raw_bytes": 24787,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-predeadline-49d\\receipt.gz",
+      "gzip_sha256": "321bcf15db4a126fe942037e738ca240959c86a1a5f4855f0c6988db3221002e",
+      "raw_sha256": "84a427f99b849717fb15a4ac7e401b4ecddd3d01c61dcdb031d60ff0e5661ca6",
+      "raw_bytes": 766560,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-scope-native-866b\\incorrect-selector-result.json.gz",
+      "gzip_sha256": "a83178046ba2b4b306d71f141b1ad1344c65adbcbb280213658b90bce2dbeca3",
+      "raw_sha256": "e4097d8659ff33a4362edd793288b11d85e1e8165629a7709187a0c405c166a3",
+      "raw_bytes": 438,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-scope-native-866b\\incorrect-selector-tests.log.gz",
+      "gzip_sha256": "4f1b85fe008fb29693557b2fde7e57b9c6a4de07439568c1f71b7bfcf1261d9e",
+      "raw_sha256": "d202ba9aa1629a9d03960a71a7e8e7c6158a61a710c647231da51a0006c47584",
+      "raw_bytes": 11528,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-scope-native-866b\\result.json.gz",
+      "gzip_sha256": "56dd6b318407431c7ae107396df4fa9e0fc848d55b61a080d7b7e16d9a6b3288",
+      "raw_sha256": "3e6ddf02e68866944a3e9b342923b5567e6d7de67cbf28b7c0966d3bb106803f",
+      "raw_bytes": 405,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    },
+    {
+      "path": "ralph\\reports\\INTEGRATION\\branch-closeout\\returned-evidence\\warden-scope-native-866b\\tests.log.gz",
+      "gzip_sha256": "99e6b9ad9512d6b01ca099673bb85e2cf95c35e6d885ac5b278611312f2e3a46",
+      "raw_sha256": "ddb52bfaaca3700656418dbec2c23cf3ed0993b4d02ec9d6369382c68265cfad",
+      "raw_bytes": 12525,
+      "gzip_crc_and_length_valid": true,
+      "manifest_checks": []
+    }
+  ]
+}

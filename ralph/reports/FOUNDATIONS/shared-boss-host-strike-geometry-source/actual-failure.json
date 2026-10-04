@@ -1,0 +1,100 @@
+{
+  "source_pin": "9696b2c3286209b825428ec0b3d8ee548e907503",
+  "original_root_path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\returned-net-9696b2c32862-shared_boss",
+  "retained_author_path": "D:\\tetherbound\\redesign-foundations\\.tmp\\shared-boss-9696",
+  "members": [
+    {
+      "path": "receipt.json",
+      "bytes": 738063,
+      "sha256": "1731d89ac2b082c2468f46636bcb94d74f60bb0d11ac52b293baed83a2e2d4d2"
+    },
+    {
+      "path": "net-run/NET_RUN.json",
+      "bytes": 2858,
+      "sha256": "86159e1bf0f8bc104ac1faa9b718f58f573a0c2cb79ffcd4922c34c6571fb131"
+    },
+    {
+      "path": "coordinator.log",
+      "bytes": 18610,
+      "sha256": "05ccbb5200177a60a9714f6fa635c1988892ced7bec46a4cdc5923c799f2ae4e"
+    },
+    {
+      "path": "initial-home/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 18403,
+      "sha256": "a796f7a15128c017f8f3d412d75be33c9f5112745d5889d780e47ab860ec629c"
+    },
+    {
+      "path": "net-run/peer-0.log",
+      "bytes": 12315,
+      "sha256": "6a52dd70399f877a43c9a2ac309c3a65cb9424bc0aab8013c99fb2da7771a9b9"
+    },
+    {
+      "path": "net-run/peer-1.log",
+      "bytes": 11660,
+      "sha256": "81426ec1553d068655a26f6549ef7cbc765e052d1a71fcccb4e4e433c66e048e"
+    }
+  ],
+  "selected_raw_lines": [
+    {
+      "line": 125,
+      "text": "PASS: original starter fixture: peer 0 retained that SAME UID in actual party/body and host-admitted roster"
+    },
+    {
+      "line": 126,
+      "text": "PASS: original starter fixture: peer 1 retained that SAME UID in actual party/body and host-admitted roster"
+    },
+    {
+      "line": 161,
+      "text": "PASS: the host has the Warden's SECOND creature on the field (species 'galecrest')"
+    },
+    {
+      "line": 176,
+      "text": "PASS: peer 1's local stand-in was moved onto where the host holds the boss (local stand-in 'LegacyOpponent_1_1' stands at (4.62, 6.19, 7654.83))"
+    },
+    {
+      "line": 178,
+      "text": "FAIL: peer 0 landed a blow on the SHARED boss: 212.1 -> 212.1 on the host, in 1 swing(s) over 28 placement attempt(s); the host last held its creature 4.47 m from the boss"
+    },
+    {
+      "line": 179,
+      "text": "PASS: and both peers draw the same boss health bar after it (host 212.100, guest 212.100)"
+    },
+    {
+      "line": 180,
+      "text": "PASS: peer 1 landed a blow on the SHARED boss: 212.1 -> 203.7 on the host, in 2 swing(s) over 2 placement attempt(s); the host last held its creature 2.41 m from the boss"
+    },
+    {
+      "line": 181,
+      "text": "PASS: and both peers draw the same boss health bar after it (host 203.662, guest 203.662)"
+    },
+    {
+      "line": 187,
+      "text": "PASS: the host refused it with `friendly_target` in the BOSS fight (got code 'friendly_target', reason 'You can't attack your own side.')"
+    },
+    {
+      "line": 192,
+      "text": "PASS: the two of them fought the Warden's whole team of 5 down (battle won in 809 frames / 6 swings against 4 of their creatures)"
+    },
+    {
+      "line": 204,
+      "text": "PASS: peer 0 retained the Warden world outcome and its no-personal-receipt journal across reload"
+    },
+    {
+      "line": 205,
+      "text": "PASS: peer 1 retained the Warden world outcome and its no-personal-receipt journal across reload"
+    },
+    {
+      "line": 207,
+      "text": "FAIL: peer 0 landed a blow on the SHARED boss: 212.1 -> 212.1 on the host, in 1 swing(s) over 28 placement attempt(s); the host last held its creature 4.47 m from the boss"
+    }
+  ],
+  "failures": [
+    "peer 0 landed a blow on the SHARED boss: 212.1 -> 212.1 on the host, in 1 swing(s) over 28 placement attempt(s); the host last held its creature 4.47 m from the boss"
+  ],
+  "actual_status": "FAIL, native 1, 273.922s, no timeout, all four logs strict clean, frozen source, no engine handles.",
+  "limits": [
+    "Individual placement geometry and the submitted host swing verdict were not retained in this return.",
+    "No actual range/cone/clock/RPC ordering cause is asserted from a 4.47 m final diagnostic.",
+    "Earlier card/lifetime fixes now pass this actual original guest path; original smoke remains FAIL."
+  ]
+}

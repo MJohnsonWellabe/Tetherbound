@@ -24,7 +24,7 @@ func test_current_warden_and_machine_chain_are_the_authored_finale() -> void:
 	var levels: Array = []
 	for member: Dictionary in spec.team:
 		levels.append(int(member.level))
-	assert_eq(levels, [18, 18, 19, 19, 20])
+	assert_eq(levels, [21, 21, 21, 22, 22], "F19 / RD-10 authored Meadows finale")
 	assert_eq(SEGMENT.reward_items(spec.reward), {"coin": 150, "revive": 2, "potion_small": 4})
 	assert_eq(SEGMENT.TRAINERS.reward_xp_bonus(spec), 400)
 	assert_eq(SEGMENT.TRAINERS.reward_flags(spec), ["realm_key_cloudreach", "realm_heart_meadows_earned"])

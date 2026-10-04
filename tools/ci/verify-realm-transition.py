@@ -22,6 +22,20 @@ EXPECTED_GAME_ERRORS = collections.Counter({
 })
 
 
+
+PORTAL_COUNTS = {"baseline": {"host": 40, "departing": 33, "staying": 23},
+                 "cancel": {"host": 33, "departing": 36, "staying": 23},
+                 "latejoin": {"host": 37, "departing": 33, "latejoin": 27}}
+SHIPPING_COUNTS = {"baseline": {"host": 29, "departing": 29, "staying": 23},
+                   "cancel": {"host": 22, "departing": 32, "staying": 23},
+                   "latejoin": {"host": 26, "departing": 29, "latejoin": 27}}
+
+
+def portal_runtime_enabled():
+    """The same switch Session.portal_runtime_ready() reads."""
+    config = json.loads((ROOT / "data" / "config" / "multiplayer.json").read_text())
+    return config.get("session", {}).get("redesign_portal_runtime_enabled") is True
+
 def read(row, stream):
     return row[stream].read_text(encoding="utf-8", errors="replace")
 
@@ -138,9 +152,12 @@ def native(mode, port):
                 if row["process"].poll() not in (None, 0):
                     raise RuntimeError(row["role"] + " exited nonzero")
             time.sleep(0.05)
-        fixed_counts = {"baseline": {"host": 29, "departing": 29, "staying": 23},
-                        "cancel": {"host": 22, "departing": 32, "staying": 23},
-                        "latejoin": {"host": 26, "departing": 29, "latejoin": 27}}
+        # With F18's portal runtime on, the host adds three prepared-permit
+        # controls and the exact checkpoint cleanup check at arrival, and the
+        # departing peer proves the raw-call refusal first. Off, a raw crossing
+        # is the shipping path and the counts are main's. Every other check is
+        # required either way.
+        fixed_counts = PORTAL_COUNTS if portal_runtime_enabled() else SHIPPING_COUNTS
         for row in rows:
             count = str(fixed_counts[mode][row["role"]])
             expected = rf"^ADAPTER RESULT {row['role']} checks={count} failed=false$"

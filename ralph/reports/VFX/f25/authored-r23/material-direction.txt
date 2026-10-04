@@ -1,0 +1,23 @@
+Fireball thermal aftermath source candidate, extending e10ec32604; library OFF.
+Target original independent R14 full-craft failures: similar contact/impact mass
+and high-mastery plume covering the muzzle/front silhouette. R14 originals and
+raw failure remain intact; no source change supplies a visual PASS.
+
+Keep the installed flame_tongue_v2 flight artwork, warm orb, trails, count,
+mastery, geometry size, light/particle/voice limits, endpoint and all timing.
+Existing explosion core/layers/secondary/puffs now opt into a data-configured
+thermal aftermath: narrow hot folds cool into lit ash colour with growing
+advected holes and falling emission over their existing normalized lifetime.
+Core/layer/puff alpha is reduced without changing extent, lifetime or nodes.
+The existing embers and small smoke layer supply termination; no new emitter,
+particle, mesh, image generation or light is added. Other profiles default to
+zero afterburn strength and unchanged output; the R17 frozen candidate stays
+immutable. The only new age value is a shader uniform, never gameplay timing.
+
+Reference direction comes from the restored owner forest-combat/Meadows boards
+and installed flame asset provenance. No external pixels/assets are acquired.
+Fresh code-blind original captures and motion must judge contact/burst/aftermath,
+target silhouette/readability, coherent family identity and all mastery tiers
+at the complete Palworld/Animo/Valheim bar. Synthetic plain-floor capture cannot
+prove world integration, real player/HP authority, performance or audience appeal.
+All F25 criteria remain OPEN; native/parser/material proof is pending GPU grant.

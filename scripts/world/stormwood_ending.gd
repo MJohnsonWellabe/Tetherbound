@@ -60,7 +60,8 @@ const OFFER_ACCEPT_EFFECT := "stormheart:accept"
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const LEGENDARY_SPECIES := "fulgocobra"
 const LEGENDARY_NAME := "the Stormheart"
-const LEGENDARY_LEVEL := 44
+const LEGENDARY_LEVEL := 55
+const DYNAMO_CONFIG_PATH := "res://data/config/stormwood_dynamo.json"
 const CORE_POSITION := Vector3(-100.0, 262.21, 5470.0)
 const OFFER_RADIUS_M := 14.0
 const VIEW_RADIUS_M := 18.0
@@ -80,6 +81,9 @@ var _waterward_sea: MeshInstance3D
 var _local_claim: Dictionary = {}
 var _local_creature: RefCounted
 var _waiting_for_offer_dialogue := false
+var _homecoming_handoff_pending := false
+var _homecoming_handoff_presented := false
+var _homecoming_handoff_left := 0.0
 ## This conversation reached its Yes/No line, and whether Yes or the panel's
 ## explicit No was chosen. Neither set means the conversation was cut off.
 var _offer_reached_choice := false
@@ -101,10 +105,12 @@ var _legacy_receipts_checked := false
 ## recorded fighters, or for a save from before the list existed the host's
 ## fallback (see `participants_for_claim()`).
 var _participants: Array = []
+var _foundation_world_binding: WeakRef
 
 
 func mount(owner_world: Node3D) -> void:
 	world = owner_world
+	_foundation_world_binding = weakref(get_node("/root/Game").world)
 	hub = world.get_node("StormwoodEncounterHub")
 	session = get_node("/root/Game/Session")
 	_chapter = world.get_node("StormwoodChapter")
@@ -152,11 +158,14 @@ func receive(event: Dictionary) -> void:
 			_aftermath_announced = bool(event.get("waterward_revealed", false))
 			_participants = (event.get("participants", []) as Array).duplicate()
 			_refresh_presentation()
+			if _released_announced:
+				_queue_homecoming_handoff()
 		"ending_release":
 			_released_announced = true
 			_refresh_presentation()
 			_animate_release()
 			_start_dialogue_when_free("stormwood_stormheart_release")
+			_queue_homecoming_handoff()
 		"ending_offer":
 			var claim: Variant = event.get("claim", {})
 			if claim is Dictionary and not (claim as Dictionary).is_empty():
@@ -164,7 +173,10 @@ func receive(event: Dictionary) -> void:
 		"ending_aftermath":
 			_aftermath_announced = true
 			_refresh_presentation()
-			_start_dialogue_when_free("stormwood_waterward_aftermath")
+			if _homecoming_runtime_enabled():
+				_queue_homecoming_handoff()
+			else:
+				_start_dialogue_when_free("stormwood_waterward_aftermath")
 		"ending_water_gate_opened":
 			get_node("/root/Game").push_world_message("The Waterward gate is open.")
 		"ending_refused":
@@ -187,6 +199,7 @@ func restore_progression_from_game(_game: Node) -> void:
 
 
 func _process(delta: float) -> void:
+	_process_homecoming_handoff(delta)
 	var progression: RefCounted = get_node("/root/Game").get("progression")
 	if progression != null and int(progression.get("revision")) != _progression_revision:
 		_refresh_presentation()
@@ -241,9 +254,7 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 		# still let the world move on: the freeing's single offer fact must
 		# never wait on a participant who is absent or already resolved.
 		if not _has(OFFER_FLAG):
-			var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
-			if bool(result.get("accepted", false)) or _has(OFFER_FLAG):
-				_save_world_claim()
+			if _commit_world_decision(peer, false, false):
 				_broadcast(_state_event())
 				_refuse(peer, "The Stormheart has seen you. Its bond is for the trainers who fought for it, and they may still answer.")
 				return
@@ -284,6 +295,19 @@ func _claim_for(peer: int, client_hint_accepted := false) -> void:
 
 
 func _settle_for(peer: int, intent: Dictionary) -> void:
+	# Drain the actual fallback before reading the answer we will freeze. It
+	# may run callbacks, so reacquire claim/character only after the owner fence.
+	var owner_game := get_node("/root/Game")
+	var owner_world: RefCounted = owner_game.get("world")
+	var owner_saver: RefCounted = owner_game.get("save_system")
+	if owner_saver != null and owner_world != null and not str(owner_world.world_id).is_empty():
+		var owner_namespace := str(owner_world.reward_delivery_namespace)
+		var owner_epoch := str(session.call("_altar_current_epoch"))
+		owner_saver.call("finish_fallback")
+		if owner_saver.call("fallback_busy") == true or owner_game.world != owner_world or owner_game.save_system != owner_saver \
+			or owner_game.session != session or owner_world.reward_delivery_namespace != owner_namespace or session.call("_altar_current_epoch") != owner_epoch:
+			_refuse(peer, "The world is still saving. Try the ceremony again.")
+			return
 	var character := _character_for_peer(peer)
 	var state := _saved_state()
 	var claims: Dictionary = state.get("claims", {})
@@ -292,26 +316,91 @@ func _settle_for(peer: int, intent: Dictionary) -> void:
 		_refuse(peer, "Only a trainer answering the Stormheart can settle its offer.")
 		return
 	if bool(claim.get("settled", false)):
+		# Repeat only the saved original handoff. An ignored failed world write
+		# must not leave an in-memory settled claim that silences all retries.
+		if _save_world_claim(): session.call("foundation_stormwood_answer", self, peer, claim)
 		return
-	claim["kept"] = bool(intent.get("kept", false))
-	claim["settled"] = true
-	claims[character] = claim
-	state["claims"] = claims
-	_store_state(state)
-	# The first decision records the world's single offer fact; later
-	# participants' decisions are personal and need no second world write.
-	if not _has(OFFER_FLAG):
-		var result: Dictionary = _chapter.call("emit_event", "legendary:offer_shown")
-		if not bool(result.get("accepted", false)) and not _has(OFFER_FLAG):
-			claim["settled"] = false
-			claims[character] = claim
-			state["claims"] = claims
-			_store_state(state)
-			_refuse(peer, "The world could not record the ceremony. Try again.")
-			return
-	_submit_resolution(bool(claim["kept"]), character)
-	_save_world_claim()
+	if not _commit_world_decision(peer, bool(intent.get("kept", false)), true):
+		_refuse(peer, "The world could not save the ceremony. Try again.")
+		return
+	claim = _saved_state().get("claims", {}).get(character, {})
+	session.call("foundation_stormwood_answer", self, peer, claim)
 	_broadcast(_state_event())
+
+## The existing host ledger stages the claim, authored offer flags and exact
+## character resolution as one unpublished world cut. Only the bool writer
+## permits publication; a failed write restores flags, environment and sequence.
+func _commit_world_decision(peer: int, kept: bool, settle: bool) -> bool:
+	if session == null or session.call("is_host") != true: return false
+	var game := _decision_game()
+	if game == null: return false
+	var original: RefCounted = game.world
+	var transport: Node = game.get("ledger")
+	var ledger: RefCounted = transport.get("ledger") if transport != null else null
+	if original == null or ledger == null or ledger.get("world") != original \
+		or _foundation_world_binding == null or _foundation_world_binding.get_ref() != original: return false
+	var character := _character_for_peer(peer)
+	if character.is_empty() or not _has(FREED_FLAG): return false
+	var namespace_id := str(original.reward_delivery_namespace)
+	var instance_id := str(original.world_id)
+	var epoch := str(session.call("_altar_current_epoch"))
+	var saver: RefCounted = game.get("save_system")
+	if saver != null:
+		saver.call("finish_fallback")
+		if saver.call("fallback_busy") == true or game.world != original or game.save_system != saver \
+			or original.reward_delivery_namespace != namespace_id or original.world_id != instance_id \
+			or session.call("_altar_current_epoch") != epoch: return false
+	var state := _saved_state()
+	var claims: Dictionary = state.get("claims", {})
+	if settle:
+		var claim: Dictionary = claims.get(character, {})
+		if claim.is_empty() or claim.get("settled") == true: return false
+		claim = claim.duplicate(true)
+		claim.kept = kept
+		claim.settled = true
+		claims = claims.duplicate(true)
+		claims[character] = claim
+		state.claims = claims
+	var before: Dictionary = original.call("save_data")
+	var revision := int(original.revision)
+	var flags_revision := int(original.flags.get("revision"))
+	var sequence := int(ledger.get("seq"))
+	var storage: Dictionary = ledger.get("_storage_revisions").duplicate(true)
+	var seen: Dictionary = ledger.get("_seen_txns").duplicate(true)
+	var deltas: Array[Dictionary] = []
+	var failed := [false]
+	var writer := func(flag: String) -> Dictionary:
+		# This shared write is owned by the authenticated host controller.
+		# The answering guest remains the actor/claim owner, not the writer.
+		var result: Dictionary = ledger.call("commit", {"kind": "set_world_flag", "realm": "stormwood",
+			"id": flag, "value": true, "_actor_character_id": character}, 1)
+		if result.get("ok") != true: failed[0] = true
+		elif not result.get("delta", {}).get("ops", []).is_empty(): deltas.append(result.delta)
+		return result
+	_store_state(state)
+	if not _has(OFFER_FLAG):
+		var authored: Dictionary = _chapter.get("chapter")
+		var offer := preload("res://scripts/world/realm_chapter_progression.gd").dispatch(game.progression,
+			authored, "legendary:offer_shown", writer)
+		if offer.get("accepted") != true or not _has(OFFER_FLAG): failed[0] = true
+	if settle: writer.call(resolution_flag(kept, character))
+	if failed[0] or not _save_world_claim() or game.world != original or ledger.get("world") != original \
+		or game.get("save_system") != saver or original.reward_delivery_namespace != namespace_id \
+		or original.world_id != instance_id or session.call("_altar_current_epoch") != epoch:
+		if game.world == original and ledger.get("world") == original and original.reward_delivery_namespace == namespace_id \
+			and original.world_id == instance_id and session.call("_altar_current_epoch") == epoch:
+			original.call("load_data", before)
+			original.revision = revision
+			original.flags.set("revision", flags_revision)
+			ledger.set("seq", sequence)
+			ledger.set("_storage_revisions", storage)
+			ledger.set("_seen_txns", seen)
+		return false
+	for delta: Dictionary in deltas: transport.call("publish_journaled_delta", delta)
+	return true
+
+func _decision_game() -> Node:
+	return get_node_or_null(^"/root/Game")
 
 
 func _reveal_for(peer: int) -> void:
@@ -593,6 +682,11 @@ static func record_answer(player_flags: RefCounted, id: String, kept: bool, part
 	player_flags.call("set_flag", PERSONAL_RECEIPT_FLAG)
 	if not id.is_empty():
 		player_flags.call("set_flag", answer_flag(id, kept))
+		var original := ""
+		for flag: String in player_flags.call("all_set"):
+			if flag.begins_with("stormwood:regional_outcome:"): original = flag
+		if original.is_empty():
+			player_flags.call("set_flag", "stormwood:regional_outcome:%s:%s" % [id, "accepted" if kept else "refused"])
 	# Only a Stormheart that actually joined (or was kept through the release
 	# ceremony) is an acceptance another world must respect.
 	if kept:
@@ -661,7 +755,7 @@ func _refresh_presentation() -> void:
 		var revealed := _has(WATERWARD_FLAG) or _aftermath_announced
 		_view_prompt.set("enabled", _has(OFFER_FLAG) and not bool(world.get("simulation_only")))
 		_view_prompt.set("actionable", not revealed)
-		_view_prompt.set("label", "Waterward route charted" if revealed else "Look beyond the broken storm")
+		_view_prompt.set("label", "Stormwood aftermath acknowledged" if revealed else "Look beyond the broken storm")
 	if _waterward_sea != null:
 		_waterward_sea.visible = _has(OFFER_FLAG)
 
@@ -727,14 +821,14 @@ func _build_waterward_view() -> void:
 	_view_prompt = INTERACTABLE.new()
 	_view_prompt.name = "WaterwardView"
 	_view_prompt.position = Vector3(0.0, 1.4, 17.0)
-	_view_prompt.call("configure", "Look beyond the broken storm", VIEW_RADIUS_M, false)
+	_view_prompt.call("configure", "Look over the cleared sky", VIEW_RADIUS_M, false)
 	_view_prompt.connect("activated", _on_waterward_view)
 	add_child(_view_prompt)
 	if bool(world.get("simulation_only")):
 		return
-	# The view remains a horizon and has no collision. The deliberate gate on
-	# this same platform is built separately and stays sealed until this view
-	# grants the one-time key.
+	# The view is a quiet aftermath horizon with no collision. The protected
+	# boss payout owns the fifth key; this existing view event closes the chapter
+	# and directs the traveler home through the Hall.
 	_waterward_sea = MeshInstance3D.new()
 	_waterward_sea.name = "DistantWaterwardSea"
 	var plane := PlaneMesh.new()
@@ -763,11 +857,19 @@ func _build_water_gate() -> void:
 func _make_legendary() -> RefCounted:
 	var creature: RefCounted = TRAINER_NPC.creature_for({
 		"species": LEGENDARY_SPECIES,
-		"level": LEGENDARY_LEVEL,
+		"level": legendary_level(),
 	})
 	if creature != null:
 		creature.set("nickname", LEGENDARY_NAME)
 	return creature
+
+
+static func legendary_level() -> int:
+	var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(DYNAMO_CONFIG_PATH))
+	if not raw is Dictionary:
+		return LEGENDARY_LEVEL
+	var captive: Variant = raw.get("captive", {})
+	return int(captive.get("level", LEGENDARY_LEVEL)) if captive is Dictionary else LEGENDARY_LEVEL
 
 
 ## The party holds this claim's own Stormheart (by its uid, so levelling or
@@ -778,6 +880,50 @@ func _party_holds_claim(party: RefCounted, claim: Dictionary) -> bool:
 		return false
 	for creature: RefCounted in party.call("members"):
 		if str(creature.get("uid")) == id:
+			return true
+	return false
+
+
+## The release/event can arrive before canonical personal context. Remember
+## only a presentation request, then wait for the owner's accepted lineage.
+## It grants nothing to spectators and is disposed with this realm's node.
+func _queue_homecoming_handoff() -> void:
+	if _homecoming_runtime_enabled() and not _homecoming_handoff_presented:
+		_homecoming_handoff_pending = true
+		_homecoming_handoff_left = 0.0
+
+
+func _process_homecoming_handoff(delta: float) -> void:
+	if not _homecoming_handoff_pending or bool(world.get("simulation_only")):
+		return
+	if not _homecoming_runtime_enabled():
+		_homecoming_handoff_pending = false
+		return
+	_homecoming_handoff_left -= delta
+	if _homecoming_handoff_left > 0.0:
+		return
+	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
+	_homecoming_handoff_left = homecoming.handoff_retry_seconds()
+	var handoff := homecoming.aftermath_conversation(get_node("/root/Game"))
+	if handoff.is_empty() or preload("res://scripts/ui/input_owner.gd").current(get_tree()) != null:
+		return
+	if _start_dialogue_when_free(handoff):
+		_homecoming_handoff_pending = false
+		_homecoming_handoff_presented = true
+
+
+func _homecoming_runtime_enabled() -> bool:
+	var game := get_node_or_null(^"/root/Game")
+	var owner: Object = game.get("session") as Object if game != null else null
+	if owner == null or not owner.has_method("config"):
+		return false
+	var config: Variant = owner.call("config")
+	return config is Dictionary and homecoming_runtime_enabled(config)
+
+
+static func homecoming_runtime_enabled(config: Dictionary) -> bool:
+	for field: String in ["redesign_ending_runtime_enabled", "redesign_portal_runtime_enabled"]:
+		if config.get(field) is bool and config[field] == true:
 			return true
 	return false
 
@@ -863,7 +1009,18 @@ func _save_world_claim() -> bool:
 	var world_state: RefCounted = game.get("world")
 	if saver == null or world_state == null or str(world_state.get("world_id")).is_empty():
 		return true
-	var saved := bool(saver.call("save_world", game, str(world_state.get("world_id"))))
+	var id := str(world_state.world_id)
+	var namespace_id := str(world_state.reward_delivery_namespace)
+	var epoch := str(session.call("_altar_current_epoch"))
+	var expected_environment: Dictionary = world_state.realm_environment.duplicate(true)
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true or game.world != world_state or game.save_system != saver \
+		or game.session != session or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
+		or session.call("_altar_current_epoch") != epoch or world_state.realm_environment != expected_environment: return false
+	var saved: bool = saver.call("save_world_prepared", game, id) == true
+	if game.world != world_state or game.save_system != saver or game.session != session \
+		or str(world_state.world_id) != id or str(world_state.reward_delivery_namespace) != namespace_id \
+		or session.call("_altar_current_epoch") != epoch: return false
 	if not saved:
 		push_error("Stormwood ending could not persist the reserved legendary ceremony")
 	return saved

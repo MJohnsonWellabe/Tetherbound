@@ -1,0 +1,2746 @@
+{
+  "scope": "AUTHOR SOURCE ONLY; GD/native tests UNRUN; F17#4 OPEN; R9 HOLD",
+  "passed_checks": 75,
+  "checks": [
+    "exact native failure log",
+    "actual geometry complete and not acceptance",
+    "geometry paired byte provenance with actual failure log",
+    "actual backend class",
+    "complete original grid topology and shared heights",
+    "225 vertices 392 triangles",
+    "mesh original registered parity",
+    "mesh original unit shape basis",
+    "trunk original registered parity",
+    "trunk original unit shape basis",
+    "player original registered parity",
+    "player original unit shape basis",
+    "native capsule full height unchanged",
+    "native capsule full radius unchanged",
+    "native skin unchanged",
+    "native floor angle unchanged",
+    "fixed original +Z4 start",
+    "continuous seven waypoint corridor",
+    "continuous final contact ray",
+    "approach route stays outside same trunk full capsule ring",
+    "direct bank chord refused",
+    "single facet cannot fit full capsule",
+    "missing vertex refused",
+    "duplicated face refused",
+    "discontinuous shared height refused",
+    "new steep facet on corridor refused",
+    "nonfinite mesh refused",
+    "mesh boundary refused",
+    "capsule-width edge proximity refused",
+    "whole capsule goal support finite",
+    "goal support facets remain floor-like",
+    "prompt sphere contains conservative goal tube",
+    "vertical full capsule intersects original trunk span",
+    "virtual float32 endpoint overlaps same trunk by 2mm within8um",
+    "ideal model reaches within original180 False",
+    "ideal model tracking fits reserve False",
+    "ideal model reaches within original180 True",
+    "ideal model tracking fits reserve True",
+    "original five test cases byte preserved",
+    "three new meaningful test cases",
+    "same 180 approach frame loop",
+    "original frame budget for frame in 30: await physics_frame",
+    "original frame budget for frame in 8: await physics_frame",
+    "original frame budget for frame in 3: await physics_frame",
+    "original frame budget for frame in 5: await physics_frame",
+    "same number of physics awaits",
+    "unchanged _build_floor",
+    "unchanged _fixture_geometry",
+    "unchanged _registered_geometry",
+    "unchanged _geometry_vector",
+    "unchanged _geometry_transform",
+    "unchanged _axis",
+    "unchanged _contacts",
+    "unchanged bank_tangent",
+    "unchanged _terrain_bank_normal",
+    "unchanged _approach_sample",
+    "same native success conjunction",
+    "same stick event calls",
+    "same original fixture pose references",
+    "no body pose or collision parameter writes added",
+    "no added collision query API",
+    "model route matches exact source waypoint literals",
+    "tracking reserve source constant",
+    "arrival radius source constant",
+    "runtime validates both full capsule sweeps",
+    "runtime refuses different radius skin angle or tree",
+    "unchanged dependency scripts/world/playground_heightfield.gd",
+    "unchanged dependency scripts/world/vegetation.gd",
+    "unchanged dependency scripts/player/player_controller.gd",
+    "unchanged dependency scenes/player/player.tscn",
+    "unchanged dependency tests/helpers/opening_geometry_navigator.gd",
+    "unchanged dependency data/config/terrain_playground.json",
+    "unchanged dependency data/config/movement.json",
+    "unchanged dependency data/scatter/playground/region_0_-1.bin",
+    "unchanged dependency project.godot"
+  ],
+  "full_capsule": {
+    "radius": 0.4000000059604645,
+    "height": 1.7999999523162842,
+    "skin": 0.0010000000474974513,
+    "tracking_allowance": 0.22,
+    "required_swept_clearance": 0.6210000060079619,
+    "floor_max_angle": 0.7853999733924866
+  },
+  "route": {
+    "offsets_xz": [
+      [
+        0.0,
+        4.0
+      ],
+      [
+        0.6999969482421875,
+        4.700000762939453
+      ],
+      [
+        4.3000030517578125,
+        4.700000762939453
+      ],
+      [
+        4.6999969482421875,
+        4.299999237060547
+      ],
+      [
+        4.6999969482421875,
+        2.700000762939453
+      ],
+      [
+        4.3000030517578125,
+        2.299999237060547
+      ],
+      [
+        1.5,
+        0.5
+      ]
+    ],
+    "leg_min_distance_to_every_steep_triangle": [
+      0.7071087079001472,
+      0.7000007629394531,
+      0.7071067811543917,
+      0.6999969482421875,
+      0.7071067811543917,
+      0.7071067811865476
+    ],
+    "final_ray_min_distance": 0.6324555320336759,
+    "exact_piecewise_ground_3d_leg_lengths": [
+      0.9931803935754512,
+      3.975997895991051,
+      0.7726184202723805,
+      1.827893532439697,
+      0.5724363948939999,
+      3.3939886039560507
+    ],
+    "exact_piecewise_ground_3d_final_ray_length": 0.5097556272332059,
+    "total_piecewise_ground_length_with_final_ray": 12.045870868361837,
+    "ground_length_is_not_native_path_bound": true
+  },
+  "whole_capsule_envelope": {
+    "definition": "max over ALL projected faces of height(q)+sqrt((radius+skin)^2-|q-p|^2) minus lower segment center local Y",
+    "goal_virtual_node_y": 5.806535981089071,
+    "goal_active_face_indices": [
+      238
+    ],
+    "goal_prompt_distance": 1.7789908881396543,
+    "walkable_union_max_gradient": 0.9970470441533077,
+    "goal_prompt_distance_with_tracking_bound": 2.088116474788203,
+    "goal_virtual_xz": [
+      1.0597000122070312,
+      0.35323333740234375
+    ],
+    "trunk_bottom": 5.79111909866333,
+    "body_pose_writes": 0,
+    "limits": "continuous height graph / upright full capsule only; no hidden candidate, recovery, native-floor/contact or disabled-server-state completeness claim"
+  },
+  "ideal_models": [
+    {
+      "kind": "ideal kinematic SOURCE model only",
+      "native_acceptance": false,
+      "terrain_constant_speed": false,
+      "frames": 137,
+      "contact_ring_reached": true,
+      "max_tracking_error": 0.07223650000648074,
+      "rows": [
+        {
+          "frame": 1,
+          "xz": [
+            0.008249556635456474,
+            4.008249601592168
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 9.20057822024764e-17
+        },
+        {
+          "frame": 2,
+          "xz": [
+            0.02474866990636942,
+            4.024748804776505
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 2.7476618026966064e-16
+        },
+        {
+          "frame": 3,
+          "xz": [
+            0.049497339812738836,
+            4.0494976095530095
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 5.446479226842273e-16
+        },
+        {
+          "frame": 4,
+          "xz": [
+            0.08249556635456472,
+            4.082496015921683
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 2.7476618026966064e-16
+        },
+        {
+          "frame": 5,
+          "xz": [
+            0.12374334953184707,
+            4.123744023882526
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 8.886119947416683e-17
+        },
+        {
+          "frame": 6,
+          "xz": [
+            0.17324068934458592,
+            4.173241633435536
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 2.7755575615628914e-17
+        },
+        {
+          "frame": 7,
+          "xz": [
+            0.23098758579278122,
+            4.230988844580715
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 2.7755575615628914e-17
+        },
+        {
+          "frame": 8,
+          "xz": [
+            0.28991299033175605,
+            4.28991457023906
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 2.3551386880256624e-16
+        },
+        {
+          "frame": 9,
+          "xz": [
+            0.3488383948707309,
+            4.348840295897405
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 4.775249788392736e-16
+        },
+        {
+          "frame": 10,
+          "xz": [
+            0.40776379940970564,
+            4.407766021555751
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 6.280369834735101e-16
+        },
+        {
+          "frame": 11,
+          "xz": [
+            0.4666892039486804,
+            4.466691747214096
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 8.252325904466732e-16
+        },
+        {
+          "frame": 12,
+          "xz": [
+            0.5256146084876551,
+            4.525617472872442
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 3.1401849173675503e-16
+        },
+        {
+          "frame": 13,
+          "xz": [
+            0.5845400130266298,
+            4.584543198530787
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 4.002966042486721e-16
+        },
+        {
+          "frame": 14,
+          "xz": [
+            0.6480969448008846,
+            4.632760980101683
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010846632484548414
+        },
+        {
+          "frame": 15,
+          "xz": [
+            0.7162019189288039,
+            4.670235092752679
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.029765670186773896
+        },
+        {
+          "frame": 16,
+          "xz": [
+            0.7887690017089011,
+            4.696929562668999
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.003071200270453822
+        },
+        {
+          "frame": 17,
+          "xz": [
+            0.8657101275761451,
+            4.712808356083921
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.012807593144468221
+        },
+        {
+          "frame": 18,
+          "xz": [
+            0.9469354480968225,
+            4.7178355695547705
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.017834806615317333
+        },
+        {
+          "frame": 19,
+          "xz": [
+            1.0302676026529392,
+            4.717392329800307
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.01739156686085419
+        },
+        {
+          "frame": 20,
+          "xz": [
+            1.1135997572090557,
+            4.716949090045844
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.016948327106391048
+        },
+        {
+          "frame": 21,
+          "xz": [
+            1.1969319117651722,
+            4.716505850291381
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.016505087351927905
+        },
+        {
+          "frame": 22,
+          "xz": [
+            1.2802640663212888,
+            4.716062610536918
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.016061847597464762
+        },
+        {
+          "frame": 23,
+          "xz": [
+            1.3635962208774053,
+            4.715619370782455
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.01561860784300162
+        },
+        {
+          "frame": 24,
+          "xz": [
+            1.4469283754335218,
+            4.715176131027992
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.015175368088538477
+        },
+        {
+          "frame": 25,
+          "xz": [
+            1.5302605299896384,
+            4.7147328912735285
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.014732128334075334
+        },
+        {
+          "frame": 26,
+          "xz": [
+            1.6135926845457549,
+            4.714289651519065
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.014288888579612191
+        },
+        {
+          "frame": 27,
+          "xz": [
+            1.6969248391018714,
+            4.713846411764602
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.013845648825149048
+        },
+        {
+          "frame": 28,
+          "xz": [
+            1.780256993657988,
+            4.713403172010139
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.013402409070685906
+        },
+        {
+          "frame": 29,
+          "xz": [
+            1.8635891482141045,
+            4.712959932255676
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.012959169316222763
+        },
+        {
+          "frame": 30,
+          "xz": [
+            1.946921302770221,
+            4.712516692501213
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.01251592956175962
+        },
+        {
+          "frame": 31,
+          "xz": [
+            2.0302534573263378,
+            4.712073452746749
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.012072689807295589
+        },
+        {
+          "frame": 32,
+          "xz": [
+            2.1135856118824545,
+            4.711630212992286
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.011629450052832446
+        },
+        {
+          "frame": 33,
+          "xz": [
+            2.1969177664385713,
+            4.7111869732378215
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.011186210298368415
+        },
+        {
+          "frame": 34,
+          "xz": [
+            2.280249920994688,
+            4.710743733483358
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010742970543905273
+        },
+        {
+          "frame": 35,
+          "xz": [
+            2.363582075550805,
+            4.710300493728894
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010299730789441242
+        },
+        {
+          "frame": 36,
+          "xz": [
+            2.4469142301069216,
+            4.709857253974431
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.009856491034978099
+        },
+        {
+          "frame": 37,
+          "xz": [
+            2.5302463846630383,
+            4.709414014219967
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.009413251280514068
+        },
+        {
+          "frame": 38,
+          "xz": [
+            2.613578539219155,
+            4.708970774465504
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008970011526050925
+        },
+        {
+          "frame": 39,
+          "xz": [
+            2.696910693775272,
+            4.70852753471104
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008526771771586894
+        },
+        {
+          "frame": 40,
+          "xz": [
+            2.7802428483313886,
+            4.708084294956577
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008083532017123751
+        },
+        {
+          "frame": 41,
+          "xz": [
+            2.8635750028875053,
+            4.707641055202113
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.00764029226265972
+        },
+        {
+          "frame": 42,
+          "xz": [
+            2.946907157443622,
+            4.70719781544765
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0071970525081965775
+        },
+        {
+          "frame": 43,
+          "xz": [
+            3.030239311999739,
+            4.706754575693186
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0067538127537325465
+        },
+        {
+          "frame": 44,
+          "xz": [
+            3.1135714665558556,
+            4.7063113359387225
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.006310572999269404
+        },
+        {
+          "frame": 45,
+          "xz": [
+            3.1969036211119723,
+            4.7058680961842585
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.005867333244805373
+        },
+        {
+          "frame": 46,
+          "xz": [
+            3.280235775668089,
+            4.705424856429795
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.00542409349034223
+        },
+        {
+          "frame": 47,
+          "xz": [
+            3.363567930224206,
+            4.704981616675331
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.004980853735878199
+        },
+        {
+          "frame": 48,
+          "xz": [
+            3.4469000847803226,
+            4.704538376920868
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.004537613981415056
+        },
+        {
+          "frame": 49,
+          "xz": [
+            3.5302322393364394,
+            4.704095137166404
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.004094374226951025
+        },
+        {
+          "frame": 50,
+          "xz": [
+            3.613564393892556,
+            4.703651897411941
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0036511344724878825
+        },
+        {
+          "frame": 51,
+          "xz": [
+            3.696896548448673,
+            4.703208657657477
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0032078947180238515
+        },
+        {
+          "frame": 52,
+          "xz": [
+            3.7802287030047896,
+            4.702765417903014
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0027646549635607087
+        },
+        {
+          "frame": 53,
+          "xz": [
+            3.8635608575609064,
+            4.70232217814855
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0023214152090966778
+        },
+        {
+          "frame": 54,
+          "xz": [
+            3.946893012117023,
+            4.701878938394087
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.001878175454633535
+        },
+        {
+          "frame": 55,
+          "xz": [
+            4.03022516667314,
+            4.701435698639623
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.001434935700169504
+        },
+        {
+          "frame": 56,
+          "xz": [
+            4.113557321229257,
+            4.7009924588851595
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0009916959457063612
+        },
+        {
+          "frame": 57,
+          "xz": [
+            4.193413480669785,
+            4.689412407689915
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.010588355249538495
+        },
+        {
+          "frame": 58,
+          "xz": [
+            4.269399350769334,
+            4.666826359423609
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.03317440351584455
+        },
+        {
+          "frame": 59,
+          "xz": [
+            4.341061643128127,
+            4.6334043623464805
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.01805723210203298
+        },
+        {
+          "frame": 60,
+          "xz": [
+            4.407889434342638,
+            4.589364516626757
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.001942973674373693
+        },
+        {
+          "frame": 61,
+          "xz": [
+            4.469318475862854,
+            4.534982301118178
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.0030406657612595017
+        },
+        {
+          "frame": 62,
+          "xz": [
+            4.5276968367321215,
+            4.475514566785499
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.0022711570972622722
+        },
+        {
+          "frame": 63,
+          "xz": [
+            4.586075197601389,
+            4.41604683245282
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.001501648433265043
+        },
+        {
+          "frame": 64,
+          "xz": [
+            4.633806673775327,
+            4.351808882465111
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.01016943606372854
+        },
+        {
+          "frame": 65,
+          "xz": [
+            4.67081498245285,
+            4.282974761249637
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.029181965789337738
+        },
+        {
+          "frame": 66,
+          "xz": [
+            4.697022433661743,
+            4.209730131100553
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.0029745145804440654
+        },
+        {
+          "frame": 67,
+          "xz": [
+            4.7123509474391145,
+            4.132271259445321
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.012353999196927035
+        },
+        {
+          "frame": 68,
+          "xz": [
+            4.716723117683359,
+            4.050803691306788
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.016726169441171557
+        },
+        {
+          "frame": 69,
+          "xz": [
+            4.715691330898184,
+            3.967476745722095
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.01569438265599654
+        },
+        {
+          "frame": 70,
+          "xz": [
+            4.714659544113009,
+            3.8841498001374024
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.014662595870821526
+        },
+        {
+          "frame": 71,
+          "xz": [
+            4.713627757327834,
+            3.8008228545527096
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.013630809085646511
+        },
+        {
+          "frame": 72,
+          "xz": [
+            4.712595970542659,
+            3.717495908968017
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.012599022300471496
+        },
+        {
+          "frame": 73,
+          "xz": [
+            4.711564183757484,
+            3.634168963383324
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.011567235515296481
+        },
+        {
+          "frame": 74,
+          "xz": [
+            4.710532396972309,
+            3.5508420177986313
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.010535448730121466
+        },
+        {
+          "frame": 75,
+          "xz": [
+            4.709500610187134,
+            3.4675150722139385
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.009503661944946451
+        },
+        {
+          "frame": 76,
+          "xz": [
+            4.708468823401959,
+            3.3841881266292457
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.008471875159771436
+        },
+        {
+          "frame": 77,
+          "xz": [
+            4.707437036616784,
+            3.300861181044553
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.007440088374596421
+        },
+        {
+          "frame": 78,
+          "xz": [
+            4.70640524983161,
+            3.21753423545986
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.006408301589422294
+        },
+        {
+          "frame": 79,
+          "xz": [
+            4.705373463046435,
+            3.1342072898751674
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.005376514804247279
+        },
+        {
+          "frame": 80,
+          "xz": [
+            4.704341676261261,
+            3.0508803442904746
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.004344728019073152
+        },
+        {
+          "frame": 81,
+          "xz": [
+            4.703309889476086,
+            2.967553398705782
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.0033129412338981368
+        },
+        {
+          "frame": 82,
+          "xz": [
+            4.7022781026909115,
+            2.884226453121089
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.00228115444872401
+        },
+        {
+          "frame": 83,
+          "xz": [
+            4.690127580086074,
+            2.804432894705055
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.009869368156113723
+        },
+        {
+          "frame": 84,
+          "xz": [
+            4.666990621233322,
+            2.7285648081946197
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.03300632700886563
+        },
+        {
+          "frame": 85,
+          "xz": [
+            4.6330388867296,
+            2.6570729916404687
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.016992722182034747
+        },
+        {
+          "frame": 86,
+          "xz": [
+            4.588492099858331,
+            2.590465433109811
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.0013941505173286437
+        },
+        {
+          "frame": 87,
+          "xz": [
+            4.5336270982013245,
+            2.5293026477375595
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.0030582726165977276
+        },
+        {
+          "frame": 88,
+          "xz": [
+            4.474154154067074,
+            2.4709295943614618
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.00227973770444699
+        },
+        {
+          "frame": 89,
+          "xz": [
+            4.414681209932824,
+            2.412556540985364
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.0015012027922962907
+        },
+        {
+          "frame": 90,
+          "xz": [
+            4.347886994727583,
+            2.3632669946971805
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.010877250115650492
+        },
+        {
+          "frame": 91,
+          "xz": [
+            4.2781528430495275,
+            2.317642521722839
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.026656811437219645
+        },
+        {
+          "frame": 92,
+          "xz": [
+            4.208418691371472,
+            2.2720180487484973
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.025987701335280194
+        },
+        {
+          "frame": 93,
+          "xz": [
+            4.138684539693417,
+            2.2263935757741558
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.025318591233340758
+        },
+        {
+          "frame": 94,
+          "xz": [
+            4.068950388015361,
+            2.180769102799814
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.024649481131401307
+        },
+        {
+          "frame": 95,
+          "xz": [
+            3.999216236337306,
+            2.1351446298254726
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.02398037102946186
+        },
+        {
+          "frame": 96,
+          "xz": [
+            3.9294820846592504,
+            2.089520156851131
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.023311260927522386
+        },
+        {
+          "frame": 97,
+          "xz": [
+            3.859747932981195,
+            2.0438956838767894
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.022642150825582987
+        },
+        {
+          "frame": 98,
+          "xz": [
+            3.7900137813031396,
+            1.9982712109024479
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.02197304072364349
+        },
+        {
+          "frame": 99,
+          "xz": [
+            3.720279629625084,
+            1.9526467379281063
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.021303930621704093
+        },
+        {
+          "frame": 100,
+          "xz": [
+            3.6505454779470288,
+            1.9070222649537647
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.02063482051976462
+        },
+        {
+          "frame": 101,
+          "xz": [
+            3.5808113262689734,
+            1.8613977919794231
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.01996571041782519
+        },
+        {
+          "frame": 102,
+          "xz": [
+            3.511077174590918,
+            1.8157733190050815
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.019296600315885728
+        },
+        {
+          "frame": 103,
+          "xz": [
+            3.4413430229128625,
+            1.77014884603074
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.018627490213946295
+        },
+        {
+          "frame": 104,
+          "xz": [
+            3.371608871234807,
+            1.7245243730563984
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.017958380112006806
+        },
+        {
+          "frame": 105,
+          "xz": [
+            3.3018747195567517,
+            1.6788999000820568
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.017289270010067345
+        },
+        {
+          "frame": 106,
+          "xz": [
+            3.2321405678786963,
+            1.6332754271077152
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.01662015990812795
+        },
+        {
+          "frame": 107,
+          "xz": [
+            3.162406416200641,
+            1.5876509541333736
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.015951049806188545
+        },
+        {
+          "frame": 108,
+          "xz": [
+            3.0926722645225855,
+            1.542026481159032
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.015281939704248996
+        },
+        {
+          "frame": 109,
+          "xz": [
+            3.02293811284453,
+            1.4964020081846905
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.014612829602309594
+        },
+        {
+          "frame": 110,
+          "xz": [
+            2.9532039611664747,
+            1.450777535210349
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.01394371950037007
+        },
+        {
+          "frame": 111,
+          "xz": [
+            2.8834698094884192,
+            1.4051530622360073
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.013274609398430708
+        },
+        {
+          "frame": 112,
+          "xz": [
+            2.813735657810364,
+            1.3595285892616658
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.012605499296491213
+        },
+        {
+          "frame": 113,
+          "xz": [
+            2.7440015061323084,
+            1.3139041162873242
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.011936389194551809
+        },
+        {
+          "frame": 114,
+          "xz": [
+            2.674267354454253,
+            1.2682796433129826
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.011267279092612353
+        },
+        {
+          "frame": 115,
+          "xz": [
+            2.6045332027761976,
+            1.222655170338641
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.010598168990672856
+        },
+        {
+          "frame": 116,
+          "xz": [
+            2.534799051098142,
+            1.1770306973642994
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.009929058888733494
+        },
+        {
+          "frame": 117,
+          "xz": [
+            2.4650648994200868,
+            1.1314062243899579
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.009259948786793998
+        },
+        {
+          "frame": 118,
+          "xz": [
+            2.3953307477420314,
+            1.0857817514156163
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.00859083868485445
+        },
+        {
+          "frame": 119,
+          "xz": [
+            2.325596596063976,
+            1.0401572784412747
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.00792172858291514
+        },
+        {
+          "frame": 120,
+          "xz": [
+            2.2558624443859205,
+            0.994532805466933
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.007252618480975523
+        },
+        {
+          "frame": 121,
+          "xz": [
+            2.186128292707865,
+            0.9489083324925913
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.006583508379035974
+        },
+        {
+          "frame": 122,
+          "xz": [
+            2.1163941410298097,
+            0.9032838595182496
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.005914398277096291
+        },
+        {
+          "frame": 123,
+          "xz": [
+            2.0466599893517543,
+            0.8576593865439079
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.005245288175156741
+        },
+        {
+          "frame": 124,
+          "xz": [
+            1.9769258376736991,
+            0.8120349135695663
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.004576178073217432
+        },
+        {
+          "frame": 125,
+          "xz": [
+            1.907191685995644,
+            0.7664104405952246
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.003907067971277456
+        },
+        {
+          "frame": 126,
+          "xz": [
+            1.8374575343175887,
+            0.7207859676208829
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.003237957869337773
+        },
+        {
+          "frame": 127,
+          "xz": [
+            1.7677233826395335,
+            0.6751614946465412
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.002568847767398224
+        },
+        {
+          "frame": 128,
+          "xz": [
+            1.6979892309614784,
+            0.6295370216721995
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0018997376654586744
+        },
+        {
+          "frame": 129,
+          "xz": [
+            1.6282550792834232,
+            0.5839125486978577
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0012306275635188047
+        },
+        {
+          "frame": 130,
+          "xz": [
+            1.5533222392578154,
+            0.5487324402602474
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.07223650000648074
+        },
+        {
+          "frame": 131,
+          "xz": [
+            1.474747669476842,
+            0.5209748930310814
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.027884018765040063
+        },
+        {
+          "frame": 132,
+          "xz": [
+            1.3961730996958686,
+            0.4932173458019154
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.026398357981453378
+        },
+        {
+          "frame": 133,
+          "xz": [
+            1.3175985299148951,
+            0.46545979857274944
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.024912697197866682
+        },
+        {
+          "frame": 134,
+          "xz": [
+            1.2390239601339217,
+            0.4377022513435835
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.023427036414279998
+        },
+        {
+          "frame": 135,
+          "xz": [
+            1.1604493903529483,
+            0.4099447041144175
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.0219413756306933
+        },
+        {
+          "frame": 136,
+          "xz": [
+            1.0818748205719748,
+            0.38218715688525157
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.020455714847106614
+        },
+        {
+          "frame": 137,
+          "xz": [
+            1.0033002507910014,
+            0.3544296096560856
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.05641244680999189
+        }
+      ]
+    },
+    {
+      "kind": "ideal kinematic SOURCE model only",
+      "native_acceptance": false,
+      "terrain_constant_speed": true,
+      "frames": 148,
+      "contact_ring_reached": true,
+      "max_tracking_error": 0.046729644595094294,
+      "rows": [
+        {
+          "frame": 1,
+          "xz": [
+            0.008230801760440882,
+            4.008230846614946
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 4.0497527310531634e-17
+        },
+        {
+          "frame": 2,
+          "xz": [
+            0.024692405281322646,
+            4.024692539844839
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 1.2514079215147517e-16
+        },
+        {
+          "frame": 3,
+          "xz": [
+            0.04938481056264529,
+            4.049385079689678
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 2.5028158430295033e-16
+        },
+        {
+          "frame": 4,
+          "xz": [
+            0.08230801760440881,
+            4.082308466149463
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 4.1214927040449093e-16
+        },
+        {
+          "frame": 5,
+          "xz": [
+            0.12346202640661322,
+            4.123462699224195
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 6.084108277399628e-16
+        },
+        {
+          "frame": 6,
+          "xz": [
+            0.17284683696925848,
+            4.172847778913873
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 8.242985408089819e-16
+        },
+        {
+          "frame": 7,
+          "xz": [
+            0.2304624492923446,
+            4.230463705218498
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 4.726604209672303e-16
+        },
+        {
+          "frame": 8,
+          "xz": [
+            0.28925389043835087,
+            4.289255466753829
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 6.280369834735101e-16
+        },
+        {
+          "frame": 9,
+          "xz": [
+            0.34804533158435713,
+            4.34804722828916
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 8.252325904466732e-16
+        },
+        {
+          "frame": 10,
+          "xz": [
+            0.40683677273036334,
+            4.406838989824491
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 9.883479487474066e-16
+        },
+        {
+          "frame": 11,
+          "xz": [
+            0.4656282138763695,
+            4.465630751359822
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 1.1018648905114063e-15
+        },
+        {
+          "frame": 12,
+          "xz": [
+            0.5243468254665947,
+            4.524349682942482
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 5.551115123125783e-16
+        },
+        {
+          "frame": 13,
+          "xz": [
+            0.5829363802460962,
+            4.582939557011111
+          ],
+          "waypoint_index": 1,
+          "tracking_error": 4.002966042486721e-16
+        },
+        {
+          "frame": 14,
+          "xz": [
+            0.6454832701814838,
+            4.630390348076751
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010674765814538424
+        },
+        {
+          "frame": 15,
+          "xz": [
+            0.7114747553078982,
+            4.666700828679871
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.03166260249216758
+        },
+        {
+          "frame": 16,
+          "xz": [
+            0.780461504705383,
+            4.692078858539856
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.007921904399597501
+        },
+        {
+          "frame": 17,
+          "xz": [
+            0.852158074269849,
+            4.7068798284630695
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.00687906552361639
+        },
+        {
+          "frame": 18,
+          "xz": [
+            0.926470384225625,
+            4.711492102342297
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.01149133940284397
+        },
+        {
+          "frame": 19,
+          "xz": [
+            1.0020252505803853,
+            4.711234738119572
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.011233975180118705
+        },
+        {
+          "frame": 20,
+          "xz": [
+            1.0760364798331075,
+            4.71098263202226
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010981869082806739
+        },
+        {
+          "frame": 21,
+          "xz": [
+            1.1500477090858297,
+            4.710730525924948
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010729762985494773
+        },
+        {
+          "frame": 22,
+          "xz": [
+            1.2240589383385518,
+            4.710478419827636
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010477656888182807
+        },
+        {
+          "frame": 23,
+          "xz": [
+            1.2978637430028277,
+            4.710227016878994
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.010226253939540797
+        },
+        {
+          "frame": 24,
+          "xz": [
+            1.369967113150538,
+            4.709981409564611
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.009980646625157519
+        },
+        {
+          "frame": 25,
+          "xz": [
+            1.4420704832982483,
+            4.709735802250227
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.00973503931077424
+        },
+        {
+          "frame": 26,
+          "xz": [
+            1.5141738534459586,
+            4.709490194935844
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.009489431996390962
+        },
+        {
+          "frame": 27,
+          "xz": [
+            1.5862772235936689,
+            4.709244587621461
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.009243824682007684
+        },
+        {
+          "frame": 28,
+          "xz": [
+            1.6583805937413791,
+            4.7089989803070775
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008998217367624406
+        },
+        {
+          "frame": 29,
+          "xz": [
+            1.7304839638890894,
+            4.708753372992694
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008752610053241128
+        },
+        {
+          "frame": 30,
+          "xz": [
+            1.8025873340367997,
+            4.708507765678311
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.00850700273885785
+        },
+        {
+          "frame": 31,
+          "xz": [
+            1.87469070418451,
+            4.708262158363928
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008261395424474571
+        },
+        {
+          "frame": 32,
+          "xz": [
+            1.9467940743322203,
+            4.708016551049544
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.008015788110091293
+        },
+        {
+          "frame": 33,
+          "xz": [
+            2.019060049974576,
+            4.707770389848446
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.007769626908992855
+        },
+        {
+          "frame": 34,
+          "xz": [
+            2.091777890774533,
+            4.707522689449005
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.007521926509552301
+        },
+        {
+          "frame": 35,
+          "xz": [
+            2.1644957315744895,
+            4.707274989049565
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.007274226110111748
+        },
+        {
+          "frame": 36,
+          "xz": [
+            2.237213572374446,
+            4.707027288650124
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.007026525710671194
+        },
+        {
+          "frame": 37,
+          "xz": [
+            2.312502767467573,
+            4.706770829389329
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.006770066449876211
+        },
+        {
+          "frame": 38,
+          "xz": [
+            2.393754642521098,
+            4.706494059319087
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.006493296379633584
+        },
+        {
+          "frame": 39,
+          "xz": [
+            2.475006517574623,
+            4.706217289248844
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.006216526309390957
+        },
+        {
+          "frame": 40,
+          "xz": [
+            2.5562583926281484,
+            4.705940519178602
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.005939756239149219
+        },
+        {
+          "frame": 41,
+          "xz": [
+            2.6375102676816735,
+            4.70566374910836
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.005662986168906592
+        },
+        {
+          "frame": 42,
+          "xz": [
+            2.7187621427351987,
+            4.705386979038118
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.005386216098664853
+        },
+        {
+          "frame": 43,
+          "xz": [
+            2.800014017788724,
+            4.705110208967875
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0051094460284222265
+        },
+        {
+          "frame": 44,
+          "xz": [
+            2.881265892842249,
+            4.704833438897634
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.004832675958180488
+        },
+        {
+          "frame": 45,
+          "xz": [
+            2.962517767895774,
+            4.704556668827391
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.004555905887937861
+        },
+        {
+          "frame": 46,
+          "xz": [
+            3.0389675083603125,
+            4.70429625637507
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0042954934356167485
+        },
+        {
+          "frame": 47,
+          "xz": [
+            3.109412339218624,
+            4.704056298579979
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.004055535640525854
+        },
+        {
+          "frame": 48,
+          "xz": [
+            3.179857170076936,
+            4.703816340784888
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0038155778454349587
+        },
+        {
+          "frame": 49,
+          "xz": [
+            3.2503020009352475,
+            4.703576382989797
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.003575620050344064
+        },
+        {
+          "frame": 50,
+          "xz": [
+            3.3235891323288227,
+            4.703326743403138
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.003325980463684708
+        },
+        {
+          "frame": 51,
+          "xz": [
+            3.4013372928423657,
+            4.703061908113708
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.003061145174254598
+        },
+        {
+          "frame": 52,
+          "xz": [
+            3.479085453355909,
+            4.702797072824278
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0027963098848244883
+        },
+        {
+          "frame": 53,
+          "xz": [
+            3.556833613869452,
+            4.7025322375348475
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0025314745953943785
+        },
+        {
+          "frame": 54,
+          "xz": [
+            3.634581774382995,
+            4.702267402245417
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0022666393059642687
+        },
+        {
+          "frame": 55,
+          "xz": [
+            3.712329934896538,
+            4.702002566955987
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.002001804016534159
+        },
+        {
+          "frame": 56,
+          "xz": [
+            3.790078095410081,
+            4.701737731666557
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.001736968727104049
+        },
+        {
+          "frame": 57,
+          "xz": [
+            3.867826255923624,
+            4.701472896377127
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0014721334376739392
+        },
+        {
+          "frame": 58,
+          "xz": [
+            3.945574416437167,
+            4.701208061087697
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0012072981482438294
+        },
+        {
+          "frame": 59,
+          "xz": [
+            4.0225126240659055,
+            4.700945984758804
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0009452218193510831
+        },
+        {
+          "frame": 60,
+          "xz": [
+            4.097362316926445,
+            4.7006910225842455
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.0006902596447924125
+        },
+        {
+          "frame": 61,
+          "xz": [
+            4.172212009786984,
+            4.700436060409687
+          ],
+          "waypoint_index": 2,
+          "tracking_error": 0.000435297470233742
+        },
+        {
+          "frame": 62,
+          "xz": [
+            4.2405050898878835,
+            4.690710259264568
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.009290503674884931
+        },
+        {
+          "frame": 63,
+          "xz": [
+            4.302300119407014,
+            4.672492894154934
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.01782652745050532
+        },
+        {
+          "frame": 64,
+          "xz": [
+            4.3578968563960645,
+            4.646630241374498
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.003199194449014726
+        },
+        {
+          "frame": 65,
+          "xz": [
+            4.407691783776285,
+            4.613753230860565
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.015162525689225478
+        },
+        {
+          "frame": 66,
+          "xz": [
+            4.452321039525162,
+            4.574030863152054
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.01863278832500424
+        },
+        {
+          "frame": 67,
+          "xz": [
+            4.493038237041965,
+            4.528980862515269
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.01556961223150423
+        },
+        {
+          "frame": 68,
+          "xz": [
+            4.533755434558768,
+            4.483930861878483
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.01250643613800424
+        },
+        {
+          "frame": 69,
+          "xz": [
+            4.574472632075571,
+            4.438880861241698
+          ],
+          "waypoint_index": 3,
+          "tracking_error": 0.00944326004450425
+        },
+        {
+          "frame": 70,
+          "xz": [
+            4.607133302664357,
+            4.390842829703175
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.0014296319648436995
+        },
+        {
+          "frame": 71,
+          "xz": [
+            4.631947698325062,
+            4.339675816903277
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.020063233861894285
+        },
+        {
+          "frame": 72,
+          "xz": [
+            4.649129103974302,
+            4.284781724164169
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.046729644595094294
+        },
+        {
+          "frame": 73,
+          "xz": [
+            4.658561602822873,
+            4.225609714167381
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.04143534541931437
+        },
+        {
+          "frame": 74,
+          "xz": [
+            4.660292329036436,
+            4.161886065267698
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.03970461920575108
+        },
+        {
+          "frame": 75,
+          "xz": [
+            4.66202305525,
+            4.098162416368015
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.037973892992187785
+        },
+        {
+          "frame": 76,
+          "xz": [
+            4.663753781463563,
+            4.034438767468332
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.03624316677862449
+        },
+        {
+          "frame": 77,
+          "xz": [
+            4.665712655060694,
+            3.9623149547219034
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.03428429318149373
+        },
+        {
+          "frame": 78,
+          "xz": [
+            4.66785689092253,
+            3.883366284419856
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.03214005731965752
+        },
+        {
+          "frame": 79,
+          "xz": [
+            4.670001126784366,
+            3.804417614117809
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.029995821457821314
+        },
+        {
+          "frame": 80,
+          "xz": [
+            4.672145362646202,
+            3.7254689438157618
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.027851585595985107
+        },
+        {
+          "frame": 81,
+          "xz": [
+            4.674289598508039,
+            3.6465202735137145
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.0257073497341489
+        },
+        {
+          "frame": 82,
+          "xz": [
+            4.676433834369875,
+            3.5675716032116673
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.02356311387231269
+        },
+        {
+          "frame": 83,
+          "xz": [
+            4.678578070231711,
+            3.48862293290962
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.021418878010476483
+        },
+        {
+          "frame": 84,
+          "xz": [
+            4.680722306093547,
+            3.409674262607573
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.019274642148640275
+        },
+        {
+          "frame": 85,
+          "xz": [
+            4.682866541955383,
+            3.3307255923055257
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.017130406286804067
+        },
+        {
+          "frame": 86,
+          "xz": [
+            4.684674588932799,
+            3.264155068394812
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.015322359309388744
+        },
+        {
+          "frame": 87,
+          "xz": [
+            4.686387748418159,
+            3.201078209271304
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.013609199824028195
+        },
+        {
+          "frame": 88,
+          "xz": [
+            4.688100907903521,
+            3.138001350147796
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.011896040338666758
+        },
+        {
+          "frame": 89,
+          "xz": [
+            4.689814067388881,
+            3.074924491024288
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.010182880853306209
+        },
+        {
+          "frame": 90,
+          "xz": [
+            4.691527226874243,
+            3.01184763190078
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.008469721367944771
+        },
+        {
+          "frame": 91,
+          "xz": [
+            4.693786934332921,
+            2.928647410176344
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.006210013909266898
+        },
+        {
+          "frame": 92,
+          "xz": [
+            4.69600501601962,
+            2.846979808723062
+          ],
+          "waypoint_index": 4,
+          "tracking_error": 0.003991932222567662
+        },
+        {
+          "frame": 93,
+          "xz": [
+            4.687281152366883,
+            2.768561441079194
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.012715795875304359
+        },
+        {
+          "frame": 94,
+          "xz": [
+            4.667710001238264,
+            2.6937860531954763
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.018436115403619075
+        },
+        {
+          "frame": 95,
+          "xz": [
+            4.63741664554204,
+            2.6231386938503194
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.01009779352609145
+        },
+        {
+          "frame": 96,
+          "xz": [
+            4.596583511440688,
+            2.5572052137033805
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.027845698439917074
+        },
+        {
+          "frame": 97,
+          "xz": [
+            4.5454837225711255,
+            2.496673184006676
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.034514547097267714
+        },
+        {
+          "frame": 98,
+          "xz": [
+            4.484930415541461,
+            2.442692115011865
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.029866500648963294
+        },
+        {
+          "frame": 99,
+          "xz": [
+            4.419879621513478,
+            2.3924978937622132
+          ],
+          "waypoint_index": 5,
+          "tracking_error": 0.019360540133972395
+        },
+        {
+          "frame": 100,
+          "xz": [
+            4.350744448204038,
+            2.3476884540479888
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0021588805628286645
+        },
+        {
+          "frame": 101,
+          "xz": [
+            4.281609274894598,
+            2.3028790143337643
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.012368971546192351
+        },
+        {
+          "frame": 102,
+          "xz": [
+            4.212474101585158,
+            2.25806957461954
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.012061548429932387
+        },
+        {
+          "frame": 103,
+          "xz": [
+            4.1433389282757185,
+            2.2132601349053154
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.011754125313672419
+        },
+        {
+          "frame": 104,
+          "xz": [
+            4.074203754966279,
+            2.168450695191091
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.011446702197412442
+        },
+        {
+          "frame": 105,
+          "xz": [
+            4.005068581656839,
+            2.1236412554768664
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.011139279081152455
+        },
+        {
+          "frame": 106,
+          "xz": [
+            3.9397150224298136,
+            2.0812828403299775
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.010848671654071619
+        },
+        {
+          "frame": 107,
+          "xz": [
+            3.8698469461862035,
+            2.0359983751218835
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.010537989541078976
+        },
+        {
+          "frame": 108,
+          "xz": [
+            3.800612829834415,
+            1.9911248062230626
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.010230126455163078
+        },
+        {
+          "frame": 109,
+          "xz": [
+            3.7314413854678294,
+            1.9462918576974657
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.009922542052529227
+        },
+        {
+          "frame": 110,
+          "xz": [
+            3.662269941101244,
+            1.9014589091718688
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.009614957649895376
+        },
+        {
+          "frame": 111,
+          "xz": [
+            3.593098496734658,
+            1.8566259606462718
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.009307373247261524
+        },
+        {
+          "frame": 112,
+          "xz": [
+            3.5239270523680726,
+            1.811793012120675
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.008999788844627734
+        },
+        {
+          "frame": 113,
+          "xz": [
+            3.454755608001487,
+            1.766960063595078
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.00869220444199385
+        },
+        {
+          "frame": 114,
+          "xz": [
+            3.3855841636349013,
+            1.722127115069481
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.008384620039360025
+        },
+        {
+          "frame": 115,
+          "xz": [
+            3.3162535551005208,
+            1.6771910054922794
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.00807632788201729
+        },
+        {
+          "frame": 116,
+          "xz": [
+            3.247029404744783,
+            1.6323238959784265
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.007768509111858834
+        },
+        {
+          "frame": 117,
+          "xz": [
+            3.177805254389045,
+            1.5874567864645737
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.007460690341700383
+        },
+        {
+          "frame": 118,
+          "xz": [
+            3.1085811040333073,
+            1.5425896769507208
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.007152871571541866
+        },
+        {
+          "frame": 119,
+          "xz": [
+            3.0393569536775695,
+            1.497722567436868
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.006845052801383536
+        },
+        {
+          "frame": 120,
+          "xz": [
+            2.9697098341117725,
+            1.4525813136284127
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.006535353215622544
+        },
+        {
+          "frame": 121,
+          "xz": [
+            2.899796137698034,
+            1.4072672800520734
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.006224468243590043
+        },
+        {
+          "frame": 122,
+          "xz": [
+            2.829882441284296,
+            1.361953246475734
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.005913583271557637
+        },
+        {
+          "frame": 123,
+          "xz": [
+            2.7599687448705574,
+            1.3166392128993947
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.005602698299525256
+        },
+        {
+          "frame": 124,
+          "xz": [
+            2.690223015712719,
+            1.271434046029638
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.005292560226860693
+        },
+        {
+          "frame": 125,
+          "xz": [
+            2.6213427901717634,
+            1.2267898487833977
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.004986270785888069
+        },
+        {
+          "frame": 126,
+          "xz": [
+            2.5524625646308077,
+            1.1821456515371573
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0046799813449154995
+        },
+        {
+          "frame": 127,
+          "xz": [
+            2.483582339089852,
+            1.137501454290917
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.004373691903942876
+        },
+        {
+          "frame": 128,
+          "xz": [
+            2.414702113548896,
+            1.0928572570446766
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.004067402462970065
+        },
+        {
+          "frame": 129,
+          "xz": [
+            2.3458218880079404,
+            1.0482130597984363
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.003761113021997495
+        },
+        {
+          "frame": 130,
+          "xz": [
+            2.2769416624669847,
+            1.003568862552196
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0034548235810249917
+        },
+        {
+          "frame": 131,
+          "xz": [
+            2.2072328796031635,
+            0.9583876421434832
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.003144849797307624
+        },
+        {
+          "frame": 132,
+          "xz": [
+            2.1376608613827632,
+            0.913295064704059
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0028354841644181376
+        },
+        {
+          "frame": 133,
+          "xz": [
+            2.0694921896200706,
+            0.8691120556577501
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0025323587869671123
+        },
+        {
+          "frame": 134,
+          "xz": [
+            2.0031717245378005,
+            0.8261269477934506
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0022374518232406186
+        },
+        {
+          "frame": 135,
+          "xz": [
+            1.9363946367732359,
+            0.7828458833910394
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0019405143971424187
+        },
+        {
+          "frame": 136,
+          "xz": [
+            1.8695954120764144,
+            0.7395504711034067
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.001643478534830889
+        },
+        {
+          "frame": 137,
+          "xz": [
+            1.802796187379593,
+            0.6962550588157739
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.0013464426725189858
+        },
+        {
+          "frame": 138,
+          "xz": [
+            1.7359969626827716,
+            0.6529596465281411
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.001049406810207216
+        },
+        {
+          "frame": 139,
+          "xz": [
+            1.6691977379859502,
+            0.6096642342405083
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.000752370947895633
+        },
+        {
+          "frame": 140,
+          "xz": [
+            1.6023985132891285,
+            0.5663688219528755
+          ],
+          "waypoint_index": 6,
+          "tracking_error": 0.00045533508558391665
+        },
+        {
+          "frame": 141,
+          "xz": [
+            1.5295921115491529,
+            0.5325682153489314
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.044004337478842664
+        },
+        {
+          "frame": 142,
+          "xz": [
+            1.451057192246988,
+            0.5052241923904407
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.02043317882494026
+        },
+        {
+          "frame": 143,
+          "xz": [
+            1.3793567655568566,
+            0.4802597799867664
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.019423523486603655
+        },
+        {
+          "frame": 144,
+          "xz": [
+            1.3076563388667253,
+            0.4552953675830921
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.018413868148267044
+        },
+        {
+          "frame": 145,
+          "xz": [
+            1.235955912176594,
+            0.4303309551794178
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.017404212809930444
+        },
+        {
+          "frame": 146,
+          "xz": [
+            1.1642554854864628,
+            0.40536654277574347
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.01639455747159376
+        },
+        {
+          "frame": 147,
+          "xz": [
+            1.0925550587963317,
+            0.38040213037206916
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.015384902133257078
+        },
+        {
+          "frame": 148,
+          "xz": [
+            1.0208546321062004,
+            0.35543771796839485
+          ],
+          "waypoint_index": 7,
+          "tracking_error": 0.03890787643727177
+        }
+      ]
+    }
+  ],
+  "native": "UNRUN locally; retained ROOT R22 FAIL; source models do not assert collision or activation"
+}

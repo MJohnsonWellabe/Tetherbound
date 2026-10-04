@@ -1,7 +1,8 @@
 extends SceneTree
 
-## F15 / T3: "Credits occur once and reload resumes a safe completed world with
-## local requests, without a fifth key or invented sequel prompt."
+## F20 isolated ending persistence: credits occur once and reload preserves the
+## safe completed-world state. The explicit receipt fixture below is synthetic;
+## this smoke does not prove an earned Stormwood win or actual Home Key travel.
 ##
 ##   godot --headless --path . --script tests/smoke_regional_credits_reload.gd
 ##
@@ -12,13 +13,13 @@ extends SceneTree
 ## then a New Game reset that empties memory and a `load_game` that must bring
 ## the completed ending back from the files alone.
 ##
-## Driven the way `sequence_director.gd` drives it: the initial homecoming
-## conversation runs to `completed` with the live substitutions, then
-## `regional_homecoming.gd::complete`, then the production credits roll opens
-## and its Continue emits `acknowledged`, which calls `complete_credits`. No
-## world scene is booted: Grandpa's prompt and the director's choice of
-## conversation are the same `conversation_id()` read this file makes, and the
-## scene-level interaction witness is REGIONAL-HOMECOMING's report, not this.
+## The conversation awaits a frozen-context acknowledgement. The production
+## credits UI owns its async acknowledgement; this smoke only observes its signal.
+## A SYNTHETIC facade occupies /root/Game while the original autoload remains
+## alive under /root/RegionalCreditsRealGame. Reset, save and load all use that
+## original autoload and its unchanged split writer. Destroy the facade before
+## reset and recreate it only AFTER disk reload. Production ending APIs are
+## absent on this source; this cannot prove earned finale/Home Key provenance.
 
 const HOMECOMING := preload("res://scripts/story/regional_homecoming.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
@@ -26,6 +27,7 @@ const CREDITS := preload("res://scripts/ui/regional_credits.gd")
 const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const SPLIT_FIXTURE := preload("res://tests/helpers/split_save_fixture.gd")
+const DISK_OWNER := preload("res://tests/fixtures/regional_credits_disk_owner.gd")
 
 const TEST_DIR := "user://smoke_regional_credits_reload/"
 const SLOT := 2
@@ -34,6 +36,9 @@ const GUARD_TIMEOUT_MSEC := 5000
 var _failures: Array[String] = []
 var _checks := 0
 var _game: Node = null
+var _fixture: Node = null
+var _credits: CanvasLayer = null
+var _completed := false
 
 
 func _init() -> void:
@@ -64,15 +69,17 @@ func _run() -> void:
 	var character_id := HOMECOMING.character_id(_game)
 	_check(not character_id.is_empty(), "portable character id was minted")
 
-	# Explicit completed-Tidewake fixture: the world's currents are restored and
-	# it still holds the Water key Stormwood granted. One Local Request is
+	# Explicit completed-Stormwood fixture. One Local Request is
 	# revealed so "local requests remain" is a visible row, not an empty list.
 	var world_flags: RefCounted = _game.get("world").flags
-	for flag: String in ["water_captain_nerissa_defeated", "water_currents_restored",
+	for flag: String in ["stormwood:long_storm_ended", "water_captain_nerissa_defeated", "water_currents_restored",
 			"realm_key_water", "realm_gate_water_unlocked"]:
 		world_flags.set_flag(flag)
 	_game.get("progression").set_flag("old_champion_met")
 	var local: RefCounted = _game.get("local")
+	var return_receipt: String = DISK_OWNER.return_marker(character_id)
+	local.flags.set_flag(return_receipt) # Test-only personal marker, not earned Home Key travel.
+	world_flags.set_flag(HOMECOMING.WORLD_FLAG)
 	var party: RefCounted = local.party
 	for row: Array in [["terrapup", "Pip"], ["brooktail", "Rill"], ["mosshell", "Shelby"]]:
 		var creature: RefCounted = local.make_creature(str(row[0]), str(row[1]))
@@ -81,51 +88,85 @@ func _run() -> void:
 		_check(bool(party.add(creature)), "fixture creature joins: " + str(row[1]))
 	# Rill is released before the homecoming; nothing may bring it back.
 	party.remove_at(1)
+	_check(party.MAX_CREATURES == 5 and party.size() == 2 and HOMECOMING.valid_party(party),
+		"real party retains the five-owned cap and current two creatures")
+	_mount_fixture()
+	print("SYNTHETIC ending context/receipt facade; real Game, split writer, UI and disk reload")
 
 	var keys_before := _realm_keys()
 	var party_before := _party_fingerprint()
 	var local_rows_before: Array = _log().local_entries(_game.get("progression"))
 	_check(not local_rows_before.is_empty(), "fixture reveals at least one Local Request")
 
-	# ---- the first, real ending --------------------------------------------
-	var initial := HOMECOMING.conversation_id(_game)
+	# ---- synthetic owner; real conversation, writer and credits UI ----------
+	var initial := HOMECOMING.conversation_id(_fixture)
 	_check(initial == "regional_homecoming_2", "initial homecoming counts the current two")
-	var spoken := _talk(initial, HOMECOMING.substitutions(_game))
+	var spoken := _talk(initial, HOMECOMING.substitutions(_fixture))
 	_check(not "\n".join(spoken).contains("Rill"), "released Rill is not acknowledged")
-	_check(HOMECOMING.complete(_game, character_id), "homecoming saves for this character")
-	_check(HOMECOMING.credits_pending(_game), "credits are pending after the saved homecoming")
+	var frozen := HOMECOMING.context(_fixture)
+	_fixture.set("reject_write", true)
+	_check(not await HOMECOMING.complete(_fixture, character_id, frozen), "rejected write cannot complete homecoming")
+	_check(not local.flags.has(HOMECOMING.SEEN_FLAG), "rejected write leaves personal stage unset")
+	_fixture.set("reject_write", false)
+	_fixture.set("receipt_overrides", {"durable": "true"})
+	_check(not await HOMECOMING.complete(_fixture, character_id, frozen), "untyped durability cannot complete homecoming")
+	_check(not local.flags.has(HOMECOMING.SEEN_FLAG) and int(_fixture.get("writes")) == 0,
+		"corrupt receipt leaves character and disk writer untouched")
+	_fixture.set("receipt_overrides", {})
+	_check(await HOMECOMING.complete(_fixture, character_id, frozen), "homecoming saves for this character")
+	_check(int(_fixture.get("polls")) == 3 and int(_fixture.get("writes")) == 1,
+		"pending homecoming waits for the typed receipt and performs one real character write")
+	_check_split_flags(character_id, return_receipt, false)
+	_check(HOMECOMING.credits_pending(_fixture), "credits are pending after the saved homecoming")
 
 	var credits: CanvasLayer = CREDITS.new()
+	_credits = credits
 	root.add_child(credits)
 	await process_frame
 	var acknowledgements: Array[String] = []
-	credits.acknowledged.connect(func(id: String) -> void:
-		acknowledgements.append(id)
-		HOMECOMING.complete_credits(_game, id))
+	credits.acknowledged.connect(func(id: String) -> void: acknowledgements.append(id))
 	_check(bool(credits.open_for(character_id, _game.get("world"))), "production credits roll opens")
 	await _past_input_guard(credits)
 	credits.call("_on_continue_pressed")
-	await process_frame
+	_check(bool(credits.get("_acknowledging")) and bool(credits.get("_save_status").visible),
+		"Continue shows saving while the receipt is pending")
+	_check(acknowledgements.is_empty(), "pending Continue emits no early acknowledgement")
+	var ack_deadline := Time.get_ticks_msec() + GUARD_TIMEOUT_MSEC
+	while bool(credits.call("is_open")) and Time.get_ticks_msec() < ack_deadline:
+		await process_frame
+	_check(not bool(credits.call("is_open")), "async Continue finished within the unchanged guard budget")
 	_check(acknowledgements == [character_id], "Continue acknowledges the roll exactly once")
 	_check(not bool(credits.call("is_open")), "credits close on Continue")
 	_check(local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG), "credits receipt is on the character")
-	_check(not HOMECOMING.credits_pending(_game), "credits no longer pending")
+	_check(not HOMECOMING.credits_pending(_fixture), "credits no longer pending")
+	_check(int(_fixture.get("writes")) == 2 and int(_fixture.get("polls")) == 4,
+		"credits UI submits one async acknowledgement and one real character write")
+	_check_split_flags(character_id, return_receipt, true)
 
 	_check(bool(_game.call("save_game", SLOT)), "completed ending saves to the slot")
 
 	# ---- empty memory, then reload from the files alone ---------------------
+	_unmount_fixture() # Destroy synthetic context and pending intent caches.
 	_game.call("reset_for_new_game")
 	_check(not _game.get("local").flags.has(HOMECOMING.SEEN_FLAG), "reset really emptied memory")
+	_check(not _game.get("local").flags.has(return_receipt)
+		and not _game.get("local").flags.has(HOMECOMING.CREDITS_SEEN_FLAG)
+		and not _game.get("world").flags.has(HOMECOMING.WORLD_FLAG)
+		and _game.get("party").size() == 0, "reset clears fixture marker, credits, world outcome and party")
 	_check(bool(_game.call("load_game", SLOT)), "load_game reads the completed ending back")
 	await process_frame
 	local = _game.get("local")
+	_mount_fixture()
+	_check(int(_fixture.get("writes")) == 0 and int(_fixture.get("polls")) == 0,
+		"reload uses a fresh synthetic facade with no acknowledgement cache")
 
 	_check(HOMECOMING.character_id(_game) == character_id, "same portable character reloaded")
 	_check(local.flags.has(HOMECOMING.SEEN_FLAG), "homecoming receipt survived reload")
 	_check(local.flags.has(HOMECOMING.CREDITS_SEEN_FLAG), "credits receipt survived reload")
-	_check(_game.get("world").flags.has(HOMECOMING.WORLD_FLAG), "restored currents survived reload")
-	_check(not HOMECOMING.credits_pending(_game), "credits do not replay after reload")
-	_check(HOMECOMING.conversation_id(_game) == HOMECOMING.REPEAT_ID,
+	_check(_game.get("world").flags.has("stormwood:long_storm_ended"), "completed Stormwood world fact survived reload")
+	_check(local.flags.has(return_receipt), "synthetic personal return fixture marker survived reload")
+	_check(not HOMECOMING.credits_pending(_fixture), "credits do not replay after reload")
+	_check(HOMECOMING.conversation_id(_fixture) == HOMECOMING.REPEAT_ID,
 		"Grandpa offers only the repeat greeting after reload")
 	_check(_realm_keys() == keys_before, "no realm key added or removed across the ending and reload")
 	_check(_party_fingerprint() == party_before, "party ids/species/names/levels/XP unchanged, released Rill absent")
@@ -133,7 +174,7 @@ func _run() -> void:
 	# The director opens credits after the repeat greeting only while pending.
 	var repeat_completed := _talk_completed(HOMECOMING.REPEAT_ID, {})
 	_check(repeat_completed == [HOMECOMING.REPEAT_ID], "repeat greeting completes normally")
-	_check(not HOMECOMING.credits_pending(_game), "repeat greeting does not re-arm credits")
+	_check(not HOMECOMING.credits_pending(_fixture), "repeat greeting does not re-arm credits")
 	# Defence in depth: even a stray open cannot acknowledge a finished ending;
 	# the roll's own context check closes it on its next frame.
 	var acks_before := acknowledgements.size()
@@ -145,10 +186,11 @@ func _run() -> void:
 
 	var reader := _log()
 	var progression: RefCounted = _game.get("progression")
-	_check(reader.tracked_id(progression) == "", "completed ending leaves no active ending objective")
+	_check(HOMECOMING.objective_rows(_fixture).is_empty()
+		and reader.tracked_id(progression) not in [HOMECOMING.SEEN_FLAG, HOMECOMING.CREDITS_SEEN_FLAG],
+		"completed ending leaves no active ending objective and resumes ordinary guidance")
 	_check(reader.local_entries(progression) == local_rows_before, "Local Requests feed is intact after reload")
-	# With no tracked ending objective the tracked text is empty, so also scan
-	# the resumed Local Requests rows the player actually sees.
+	# Ordinary guidance resumes; scan it and the intact Local Requests.
 	var shown: Array[String] = [reader.tracked_text(progression), reader.tracked_hint(progression)]
 	for row: Variant in reader.local_entries(progression):
 		shown.append(JSON.stringify(row))
@@ -157,14 +199,18 @@ func _run() -> void:
 		_check(not text.to_lower().contains("chapter") and not text.to_lower().contains("sequel"),
 			"no chapter or sequel prompt in the resumed objectives: " + text)
 
-	credits.queue_free()
+	_completed = true
 	_finish()
 
 
 func _finish() -> void:
+	if is_instance_valid(_credits):
+		_credits.free()
+		_credits = null
+	_unmount_fixture()
 	SPLIT_FIXTURE.wipe(TEST_DIR)
 	print("Regional credits reload smoke: ", _checks, " checks, ", _failures.size(), " failures")
-	quit(0 if _failures.is_empty() and _checks > 0 else 1)
+	quit(0 if _completed and _failures.is_empty() and _checks > 0 else 1)
 
 
 ## Waits out the credits' authored input guard (regional_credits.json
@@ -182,7 +228,9 @@ func _past_input_guard(credits: CanvasLayer) -> void:
 
 func _talk(id: String, values: Dictionary) -> Array[String]:
 	var spoken: Array[String] = []
+	var completed: Array[String] = []
 	var runner := RUNNER.new()
+	runner.completed.connect(func(done: String) -> void: completed.append(done))
 	runner.set_values(values)
 	_check(runner.start(id), "conversation starts: " + id)
 	var guard := 0
@@ -190,6 +238,8 @@ func _talk(id: String, values: Dictionary) -> Array[String]:
 		spoken.append(str(runner.line().get("text", "")))
 		runner.advance()
 		guard += 1
+	_check(not runner.is_active() and completed == [id],
+		"initial conversation reaches completed within the unchanged 64-step budget")
 	return spoken
 
 
@@ -207,7 +257,7 @@ func _talk_completed(id: String, values: Dictionary) -> Array[String]:
 
 
 func _log() -> RefCounted:
-	var reader: RefCounted = QUEST_LOG.new()
+	var reader: RefCounted = QUEST_LOG.new(_fixture)
 	reader.set_realm("meadows")
 	return reader
 
@@ -228,3 +278,36 @@ func _party_fingerprint() -> String:
 		rows.append([str(creature.get("uid")), str(creature.get("species_id")),
 			str(creature.get("nickname")), int(creature.get("level")), int(creature.get("xp"))])
 	return JSON.stringify(rows)
+
+
+func _mount_fixture() -> void:
+	_game.name = "RegionalCreditsRealGame"
+	_fixture = DISK_OWNER.new()
+	_fixture.name = "Game"
+	_fixture.call("bind", _game)
+	root.add_child(_fixture)
+	_check(root.get_node(^"Game") == _fixture and _game.is_inside_tree(),
+		"synthetic facade routes UI reads while the original Game remains alive")
+
+
+func _unmount_fixture() -> void:
+	if is_instance_valid(_fixture):
+		_fixture.free()
+		_fixture = null
+	if is_instance_valid(_game):
+		_game.name = "Game"
+
+
+func _check_split_flags(character_id: String, marker: String, credits_seen: bool) -> void:
+	var saver: RefCounted = _game.get("save_system")
+	var personal: Dictionary = saver.characters().state(character_id)
+	var shared: Dictionary = saver.worlds().state(str(_game.get("world").world_id))
+	_check(not personal.is_empty() and not shared.is_empty(), "actual split character and world files are readable")
+	var personal_flags: Array = personal.get("flags", {}).get("flags", [])
+	var shared_flags: Array = shared.get("flags", {}).get("flags", [])
+	_check(personal_flags.has(HOMECOMING.SEEN_FLAG) and personal_flags.has(marker)
+		and personal_flags.has(HOMECOMING.CREDITS_SEEN_FLAG) == credits_seen,
+		"actual character split contains the acknowledged personal stages and synthetic marker")
+	_check(not shared_flags.has(HOMECOMING.SEEN_FLAG)
+		and not shared_flags.has(HOMECOMING.CREDITS_SEEN_FLAG) and not shared_flags.has(marker),
+		"ending acknowledgements and synthetic marker never enter the world split")

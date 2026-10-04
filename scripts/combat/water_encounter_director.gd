@@ -13,6 +13,26 @@ var _restoring_surface_position := Vector3.INF
 ## own trainer fight, so only those are switched back on afterwards.
 var _muted_greetings: Dictionary = {}
 
+func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
+	var service := get_parent().get_node_or_null("RippletWaterService")
+	if service != null and service.is_submerged(peer_id) and str(intent.get("kind", "")) in ["engage","move_start","strike_intent","catch_attempt"]:
+		return {"ok":false,"kind":str(intent.kind),"peer":peer_id,"code":"submerged",
+			"reason":"Surface before fighting or catching.","pending":false,"delta":{}}
+	return super._host_commit_encounter(intent,peer_id)
+
+func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
+	var riding := get_parent().get_node_or_null("RidingController")
+	if riding != null and bool(riding.diving): return
+	super._start_fight(wild, opponent_owned)
+
+func can_challenge(spec: Dictionary) -> bool:
+	var riding := get_parent().get_node_or_null("RidingController")
+	return not (riding != null and bool(riding.diving)) and super.can_challenge(spec)
+
+func join_encounter(encounter_id: String) -> bool:
+	var riding := get_parent().get_node_or_null("RidingController")
+	return not (riding != null and bool(riding.diving)) and super.join_encounter(encounter_id)
+
 
 ## Surface sites are explicit open-water ecology, never land bodies with their Y
 ## spoofed once at spawn. CreatureBody still owns all horizontal peace/combat
@@ -112,7 +132,8 @@ static func site_spawn_plans(site: Dictionary, table: Dictionary,
 ## A surface swimmer must not be placed on the seabed by the land spawn helper.
 func restore_swim_mount(saved: Dictionary) -> bool:
 	var party := _party()
-	var creature: RefCounted = party.at(int(saved.party_index)) if party != null else null
+	var index := preload("res://scripts/save/water_traversal_save.gd").mount_index(saved, party.members()) if party != null else -1
+	var creature: RefCounted = party.at(index) if party != null and index >= 0 else null
 	if creature == null or str(creature.species_id) != str(saved.species_id) \
 			or creature.fainted or creature.resting:
 		return false
@@ -126,10 +147,13 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 		riding.dismount()
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
 		return false
-	if not party.set_active(int(saved.party_index)):
+	if not party.set_active(index):
 		return false
 	var raw: Array = saved.position
 	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	# Submerged reconnects always use the validated surface, preserving the
+	# creature's existing stamina. Never let an old dive pose seat it in terrain.
+	if saved.has("dive"): _restoring_surface_position.y = realm_world.field.water_level() - 0.7
 	var spawned := await _spawn_ally_body(creature)
 	_restoring_surface_position = Vector3.INF
 	if not spawned:
@@ -137,7 +161,13 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	# No frame advances between revealing the body and attaching its rider.
 	_player.global_position = _ally_body.global_position + Vector3.UP
 	_ally_body.velocity = Vector3.ZERO
-	return riding.mount()
+	var mounted: bool = riding.mount()
+	if not mounted and str(creature.species_id) == "ripplet":
+		for attempt in 120:
+			await get_tree().physics_frame
+			if not is_instance_valid(_ally_body): return false
+			if riding.is_mounted(): return true
+	return mounted
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	if _restoring_surface_position.is_finite() and body == _ally_body:
@@ -235,6 +265,25 @@ func _spawn_available_sites() -> void:
 		var plans := site_spawn_plans(site, table,
 			encounter_config.get("named_encounters", []), world_seed())
 		var authored_members: Array = site.get("member_anchors", [])
+		if plans.size() == 1 and not str(plans[0].id).is_empty():
+			var cycle := foundation_alpha_cycle(str(plans[0].id))
+			if cycle.is_empty() and not _once_cleared(str(plans[0].opts.get("once_id", ""))) \
+				and _session != null and preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") == true \
+				and not preload("res://scripts/repeatables/alpha_respawns.gd").site(str(plans[0].id)).is_empty():
+				var first_packet: Dictionary = _session.call("foundation_alpha_first_spawn", self, str(plans[0].id))
+				if first_packet.is_empty(): continue
+				cycle = foundation_alpha_cycle(str(plans[0].id))
+			if cycle.get("status") == "waiting":
+				_site_members[id] = members
+				_site_spawned[id] = true
+				continue
+			if cycle.get("status") == "active":
+				var packet := preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(get_node("/root/Game").world.redesign_world, str(plans[0].id))
+				foundation_publish_alpha(str(plans[0].id), packet)
+				# Successful publication installs the actual member. Failed footing
+				# stays retryable through the existing alpha service.
+				if not _site_members.get(id, []).is_empty(): _site_spawned[id] = true
+				continue
 		# A valid named reservation whose once flag already fired is complete,
 		# not a broken spawn. Settle it as intentionally absent so returning to
 		# the island (or loading a completed save) stays quiet and deterministic.
@@ -279,6 +328,7 @@ func _spawn_available_sites() -> void:
 					keep_trainer_corridor_clear(wild as CollisionObject3D,
 						_player as CollisionObject3D)
 				if not str(plan.id).is_empty():
+					foundation_register_alpha(wild, str(plan.id))
 					# Named identity has to reach both the exploration prompt (the
 					# body) and combat/catch presentation (the live instance).
 					wild.set("display_name", str(plan.display_name))
@@ -301,6 +351,48 @@ func _spawn_available_sites() -> void:
 			_site_failures[id] = true
 			push_warning("Water site lacks a valid authored encounter or supported creature footing: " + id)
 
+func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
+	if not _is_host() or preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+	var game := get_node_or_null("/root/Game")
+	if game == null or preload("res://scripts/repeatables/alpha_respawns.gd").retained_spawn(game.world.redesign_world, site_id) != packet: return
+	for wild: Node3D in _wild_creatures:
+		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
+			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
+	for site: Dictionary in _wanted_sites.values():
+		if site.get("named_replacement_id") != site_id: continue
+		var plan := named_spawn_plan(site, encounter_config.get("named_encounters", []))
+		if plan.is_empty(): return
+		var original_once := str(plan.opts.get("once_id", ""))
+		var opts: Dictionary = plan.opts.duplicate(true)
+		# The original once flag continues to suppress first rewards. The new
+		# durable generation admits only this fresh authored body and UID.
+		if int(packet.captured_from.spawn_generation) > 1: opts.once_id = ""
+		opts.name = "%s_generation_%d" % [site_id, packet.captured_from.spawn_generation]
+		var at := _vector3_of(plan.position)
+		opts.site_anchor = at
+		var wild: Node3D
+		if str(site.get("placement_mode", "ground")) == "water_surface":
+			wild = _spawn_surface_wild(str(plan.species), at, opts, float(site.get("surface_y_m", at.y)), float(site.get("surface_submerge_fraction", 0.28)))
+		else: wild = spawn_wild(str(plan.species), at, opts)
+		if wild == null: return
+		wild.visible = false
+		if not foundation_register_alpha(wild, site_id, packet):
+			_wild_creatures.erase(wild)
+			wild.queue_free()
+			return
+		wild.display_name = str(plan.display_name)
+		wild.get("instance").set("display_name", str(plan.display_name))
+		wild.set_meta("water_named_encounter", site_id)
+		if int(packet.captured_from.spawn_generation) == 1: wild.set_meta("water_reward_role", str(plan.reward_role))
+		wild.set_meta("water_site_id", str(site.id))
+		wild.set_meta("water_placement_mode", str(site.get("placement_mode", "ground")))
+		if plan.get("combat_camera") is Dictionary and not plan.combat_camera.is_empty(): wild.set_meta("combat_camera", plan.combat_camera.duplicate(true))
+		_once_only[wild] = original_once
+		settle_spawn_transform(wild)
+		wild.visible = true
+		_site_members[str(site.id)] = [wild]
+		return
+
 
 ## A wild body enters the tree at the origin and is placed afterwards. For a
 ## kinematic body the physics server reads that placement as one step of
@@ -311,7 +403,7 @@ func _spawn_available_sites() -> void:
 ## heartbeat. Committing the placed transform as a static body and handing it
 ## back as kinematic makes the placement a teleport instead of a motion.
 static func settle_spawn_transform(wild: Node3D) -> void:
-	if wild is PhysicsBody3D:
+	if wild is PhysicsBody3D and wild.is_inside_tree():
 		REMOTE_CREATURE_BODY.teleport_body(wild as PhysicsBody3D, wild.global_position)
 
 

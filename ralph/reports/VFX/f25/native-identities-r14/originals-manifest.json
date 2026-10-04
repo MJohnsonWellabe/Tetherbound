@@ -1,0 +1,222 @@
+[
+  {
+    "file": "batch-receipt.json",
+    "bytes": 2178,
+    "sha256": "04dfd78c2deafb0428ebbb1fba4f1e499b21bc2aa89f64101664feebbecb6ed6"
+  },
+  {
+    "file": "identities-motion.avi",
+    "bytes": 26778956,
+    "sha256": "98ebc3830f7a56606aca3ab4aabe7cfa2c7fe32cebfd9a9945f7695b44f450da"
+  },
+  {
+    "file": "light-unit-receipt.json",
+    "bytes": 757,
+    "sha256": "371943670abc0ee8cd90581f00b0b3dbc1900527c3dabecf763b889533bc0889"
+  },
+  {
+    "file": "light-unit.txt",
+    "bytes": 319,
+    "sha256": "f4e1eb3fa242c4869e391db8f49e2a427b978255a8f4496a687710f9aa2baa46"
+  },
+  {
+    "file": "native-receipt.json",
+    "bytes": 1077,
+    "sha256": "46b69ef7780a653325b31589eb7fc02a9bf34c7887d8c64d5592ca8654b3cb40"
+  },
+  {
+    "file": "native.txt",
+    "bytes": 896,
+    "sha256": "ec215bfded9176829ada238f481a4ec6a2b84970f66782388620b16893ae5ff9"
+  },
+  {
+    "file": "results.json",
+    "bytes": 20253,
+    "sha256": "94ed05fd18599cd3ce48bf3a5ee3b1f6cf1c296fa1234442d08ac4f49a63bb52"
+  },
+  {
+    "file": "run_batch.py",
+    "bytes": 4865,
+    "sha256": "1d26bf96f3fcbf763dfd31f19efb710f825e65a0202fcfa57e3e43fa763a1cdd"
+  },
+  {
+    "file": "sequence-00-contact.png",
+    "bytes": 77076,
+    "sha256": "3e00d5139390679960dd074ec01e99c204994ab0b5a7abfd992ed1a4290de8f3"
+  },
+  {
+    "file": "sequence-00-flight.png",
+    "bytes": 83857,
+    "sha256": "7f3e29f7b3874bc04b671065a0e784f02fbfe0ab48e7701918702309a66aa63b"
+  },
+  {
+    "file": "sequence-00-impact.png",
+    "bytes": 78189,
+    "sha256": "159140f647d30c43c1594508b4c122ad78baa55c897222934ba2573e983da1e6"
+  },
+  {
+    "file": "sequence-01-contact.png",
+    "bytes": 81246,
+    "sha256": "10f20683aef821320e8577e8dc37586bceec452641bb259233af81aa5ec7414a"
+  },
+  {
+    "file": "sequence-01-flight.png",
+    "bytes": 91028,
+    "sha256": "3b11356167e2b9b3f663f988b8392fac48c486886e0fdd26e1ee55707f41d271"
+  },
+  {
+    "file": "sequence-01-impact.png",
+    "bytes": 82556,
+    "sha256": "0a3f89d996cf7c3783a0eed7c1f2ca2a80e14a6e702ea61e9993d1fa81176a5b"
+  },
+  {
+    "file": "sequence-02-contact.png",
+    "bytes": 90656,
+    "sha256": "9e9252d56ee39274f6f0a668734902b8cba2d97fc5c9c6129995eba6287b12fe"
+  },
+  {
+    "file": "sequence-02-flight.png",
+    "bytes": 87656,
+    "sha256": "9aacd53c2c57d013f5e4e3607602986dc39f1bfc9c109346919b3b4b2e7e17f7"
+  },
+  {
+    "file": "sequence-02-impact.png",
+    "bytes": 91025,
+    "sha256": "3b3a939d741138c2a0a13ede4f0d7d3ac323756000f63c5471800575b742f47e"
+  },
+  {
+    "file": "sequence-03-contact.png",
+    "bytes": 81115,
+    "sha256": "3628b8354411deb45fec990074b9986819bc8d4a683b3e1b6ca143841f1ac49d"
+  },
+  {
+    "file": "sequence-03-flight.png",
+    "bytes": 86106,
+    "sha256": "6e9bd448ce3b313d035acea2e419cd51d5d1b5de03264d1dc9ffa09b46874e3b"
+  },
+  {
+    "file": "sequence-03-impact.png",
+    "bytes": 82510,
+    "sha256": "0d2efeadc55652918b5be96dd2dd4a7aebd7d6039e4e0f3235e5223aad9b8a49"
+  },
+  {
+    "file": "sequence-04-contact.png",
+    "bytes": 86608,
+    "sha256": "47483b9bcd0a48f0d34b160db4035b0d9de5613c50e9cefbcbb65d2e7629f5bf"
+  },
+  {
+    "file": "sequence-04-flight.png",
+    "bytes": 91089,
+    "sha256": "206f4700656b9757f0900d2f9809ad8090ef89e0c2bf854f5497396c8db68048"
+  },
+  {
+    "file": "sequence-04-impact.png",
+    "bytes": 89151,
+    "sha256": "b17eba36a2d9d753cb97a8e1ca12d8a8f9fad8e7ed831805b95c75b093dd482c"
+  },
+  {
+    "file": "sequence-05-contact.png",
+    "bytes": 104017,
+    "sha256": "2810187b2ecb0a853b69fad2c29edc0bcec73f118302398d9871c23b47cb0f9a"
+  },
+  {
+    "file": "sequence-05-flight.png",
+    "bytes": 100181,
+    "sha256": "3cb28570da03943a574b79b95ed020644d718d7f7b2747d3226ab6fdec65d524"
+  },
+  {
+    "file": "sequence-05-impact.png",
+    "bytes": 110347,
+    "sha256": "5fbc1bfb94848878da724fc2dbafd897dc104ffa3eff570accb2328c748f380c"
+  },
+  {
+    "file": "sequence-06-contact.png",
+    "bytes": 90077,
+    "sha256": "73a5a412e5ee9833d9bb70c54286c9b9b62349ba590daed59d1aaad65671fbbf"
+  },
+  {
+    "file": "sequence-06-flight.png",
+    "bytes": 90375,
+    "sha256": "ce94c23b3abc65126f6cb4eaee7ba2c847287b73bf257744cbc9df48718cbdd1"
+  },
+  {
+    "file": "sequence-06-impact.png",
+    "bytes": 89447,
+    "sha256": "03280a6df079142a187466f0122e7cf0e0f469bd1b73e2e3005b9d043b647b14"
+  },
+  {
+    "file": "sequence-07-contact.png",
+    "bytes": 96700,
+    "sha256": "44622f20f2e6feac188315d20fe18c245e9e3ac5c41fc517ce75cec33cc4d842"
+  },
+  {
+    "file": "sequence-07-flight.png",
+    "bytes": 95173,
+    "sha256": "e108d33084becf04bd2cd0b62a272ead16e1fa0ed9f2ccd0f7b58d32e1e4d579"
+  },
+  {
+    "file": "sequence-07-impact.png",
+    "bytes": 95550,
+    "sha256": "83ed960961748283a4daa9d3def3db50c4caa913874ade9cd4237891ced04838"
+  },
+  {
+    "file": "sequence-08-contact.png",
+    "bytes": 110032,
+    "sha256": "3aa89350cb08f7117ad7a5e91905842339b5ba656f2e7a33a6de3fb81302c4ba"
+  },
+  {
+    "file": "sequence-08-flight.png",
+    "bytes": 101260,
+    "sha256": "25f1c6ca69d5f091e2cd6d155aa101dc724b05476ec115fac926d58076df7e7d"
+  },
+  {
+    "file": "sequence-08-impact.png",
+    "bytes": 109424,
+    "sha256": "f402e651c9841c442ddeb0554555b8bf90b41ae69977570611b0244e745fd237"
+  },
+  {
+    "file": "sequence-09-contact.png",
+    "bytes": 100351,
+    "sha256": "fe51ff27174becca2501fa56746ed0db060965e7366a26cd123d6f13b6ca2b7c"
+  },
+  {
+    "file": "sequence-09-flight.png",
+    "bytes": 88155,
+    "sha256": "48f8fed8272e1b61cab47715a464267227ab12bfade1f8a54949fa7ffca71d93"
+  },
+  {
+    "file": "sequence-09-impact.png",
+    "bytes": 100962,
+    "sha256": "cfcb7a99bf5f837ab188bd790ed42b9b9d6c9488839786e1d563bddf24586fea"
+  },
+  {
+    "file": "sequence-10-contact.png",
+    "bytes": 106114,
+    "sha256": "5ab7868f42347c41a7975269952842698c8a3b0ecc1fc50220b66519b186268a"
+  },
+  {
+    "file": "sequence-10-flight.png",
+    "bytes": 97282,
+    "sha256": "cbc22efc18ecc4f7fd5e93b4d6e03405e48baf6e9117e32e747d3c165e0cb497"
+  },
+  {
+    "file": "sequence-10-impact.png",
+    "bytes": 107225,
+    "sha256": "4898cd59f10c9d5161a1d0dae0d2cf2f68b3009cc84314c417ef474ed19d2432"
+  },
+  {
+    "file": "sequence-11-contact.png",
+    "bytes": 127756,
+    "sha256": "b4c9a3add0de42cae16bf92c78cd460d516bc147830233915ca3935c858374f5"
+  },
+  {
+    "file": "sequence-11-flight.png",
+    "bytes": 110757,
+    "sha256": "a7e747560314cb86cb12edc5f4d0884438109ccbcbfcddd9162f0b8909102470"
+  },
+  {
+    "file": "sequence-11-impact.png",
+    "bytes": 134194,
+    "sha256": "60be0ad1d7ff1ca229829d818605ed6d6d683114ce6d35982b3cff8cc0ddfa2d"
+  }
+]

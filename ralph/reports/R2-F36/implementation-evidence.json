@@ -1,0 +1,86 @@
+{
+  "baseline": "7f18f5e75dc2744bb283bb1c3576da4e5d61b87d",
+  "branch": "tb/r2-f36",
+  "acceptance_status": "F36#0-3 OPEN; source implementation is not earned/native/device/visual acceptance",
+  "implemented": [
+    "Five flag-off candidate pose roles for all57 installed species, deduplicated into six measured rig profiles; namespaced water aliases reuse exact source model identities.",
+    "Per-instance AnimationLibrary retains installed clips, checks source SHA256 and bones, derives rolled fitted-envelope ground lift, and restores pivot on ordinary locomotion/revive. Candidate hurt can restart on repeated hits.",
+    "Presentation-only traversal hook; no save/carrier/identity/authority/transaction mutation.",
+    "Growth-only scale tool preserves already-large bodies, footprint allowance and proportional mount geometry; full fitted source census57+12.",
+    "30-subject priority source inventory including six repeated NPC families; Fulgocobra replaces former Sparkit captive placeholder slot.",
+    "Drafted and author-inspected Stormursa imagegen reference, exact prompt/hash, F29 existing identities/gates unchanged.",
+    "F36 Meshy cap entry point: atomic reservation-before-submit, exclusive writer, task-ID receipt, unknown outcomes retain count; zero real submissions."
+  ],
+  "completed_checks": [
+    {
+      "name": "creature_scale_ladder.py --report",
+      "result": "PASS;57 base1.90-7.20m and12 water2.50-7.20m clear1.80m by source fitting; not skinned/native poses"
+    },
+    {
+      "name": "test_f36_source_contracts.py",
+      "result": "2 tests PASS: oversized source/water body geometry preservation and idempotence;30-task cap plus uncertain submission receipt, using mocked service only"
+    },
+    {
+      "name": "gdtoolkit parser",
+      "result": "5 scripts syntactically parse; no Godot type-check/import/runtime performed",
+      "files": [
+        "scripts/creatures/creature_pose_candidates.gd",
+        "scripts/creatures/creature_animator.gd",
+        "scripts/creatures/creature_body.gd",
+        "tools/art_pipeline/capture_f36_poses.gd",
+        "tests/test_f36_pose_candidates.gd"
+      ]
+    },
+    {
+      "name": "pose profile structural coverage",
+      "result": "57 source species, five roles, valid bone maps, all enable gates OFF"
+    },
+    {
+      "name": "git diff --check",
+      "result": "PASS"
+    },
+    {
+      "name": "pose generation reproducibility",
+      "result": "byte-identical second generation PASS",
+      "sha256": "6c2bc9ef4cd8324c65410abe2ba423351c646ef26e504d764d76d30e303011f1"
+    }
+  ],
+  "exact_overlapping_edits": [
+    "scripts/creatures/creature_body.gd::_build_animator, new POSE_CANDIDATES preload, set_traversal_pose",
+    "scripts/creatures/creature_animator.gd::tick,play_once,revive,_play and new traversal/candidate-pivot helpers",
+    "docs/design/ART_DIRECTION.md::priority row14 and provenance table",
+    "tools/art_pipeline/creature_scale_ladder.py::apply_scale,validate"
+  ],
+  "unmodified_dependency_seams": [
+    "F37 scripts/world/water_mounted_swim.gd and riding controller: call set_traversal_pose('swim'/'ride'/'') from already-authorized traversal state. F37 also supplies Ripplet dive path; no permission/ability granted by these clips.",
+    "scripts/world/riding_controller.gd and scripts/player/fly_controller.gd need canonical ride/fly-grip presentation wiring; dedicated flying raw mesh must reuse verified pose library rather than bypass it.",
+    "scripts/creatures/remote_creature.gd must reconstruct presentation from existing canonical peer traversal state, clear on disconnect/dismount and agree after rejoin. No new save/packet fields were introduced here.",
+    "F29 stormursa source/species_candidate.json,reference_brief.json,provenance.json: preserved. Candidate still has no model, no4.10m measurement and no enabled evolution. Add model only after Meshy/rig/native PASS.",
+    "F26 look-bar and prior consolidated batch GREEN ON MAIN remain landing dependencies; reconcile pinned source after landing."
+  ],
+  "pending_runtime_commands": [
+    {
+      "proof": "F36 native wiring/regressions",
+      "command": "& $F36Godot --headless --path D:/tetherbound/r2-f36 --script res://tests/run_tests.gd -- --only=test_f36_pose_candidates.gd,test_creature_scale_ladder.gd,test_creature_rest_pose.gd,test_creature_attack_telegraph_animation.gd",
+      "status": "NOT RUN; ROOT engine queue"
+    },
+    {
+      "proof": "Matched baseline poses; repeat for all57 source and12 water adapter identities",
+      "command": "& $F36Godot --path D:/tetherbound/r2-f36 --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=terrapup --out=res://ralph/reports/R2-F36/native/baseline/terrapup",
+      "status": "NOT RUN; stage-only deformation frames"
+    },
+    {
+      "proof": "Flag-off candidate poses, same stage",
+      "command": "& $F36Godot --path D:/tetherbound/r2-f36 --rendering-driver opengl3 --resolution 1920x1080 --script res://tools/art_pipeline/capture_f36_poses.gd -- --species=terrapup --candidate --out=res://ralph/reports/R2-F36/native/candidate/terrapup",
+      "status": "NOT RUN; stage-only frames cannot close ordinary traversal"
+    }
+  ],
+  "remaining_required_evidence": [
+    "ROOT selects its actual Godot executable as $F36Godot after releasing queue; the commands above are prepared, not executed.",
+    "Actual High/Medium and Compatibility frame/motion matrices, posed-vertex/slope contact, grounded terminal faint and repeat-hit reaction judged code-blind by an independent reviewer; no independent agent was spawned.",
+    "Canonical player ride/swim/fly-grip paths and same stable creature identity after save/reload and two-peer rejoin, without granting unsupported traversal.",
+    "All30 priority asset drafted-reference/confirmation-or-rebuild/native before-after dispositions including six NPC families; this source audit does not confirm their art. Only Stormursa has a new drafted reference in this pass.",
+    "Meshy credential through established installed licence, attended submissions through cap guard, actual task IDs/provenance, mesh/rig/pose/scale and before-after native PASS. No purchases and no Meshy task have occurred.",
+    "Owner Ally/device evidence; flags remain OFF until required actual PASS. No PR or CI dispatch or self-landing."
+  ]
+}

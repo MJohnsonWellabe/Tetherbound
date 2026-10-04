@@ -1,0 +1,122 @@
+{
+  "parent_training_pin": "d3b25bf811c80414f473bfe2f8fa00666e3a7b17",
+  "canonical_main_pin": "49b93d9b9a7ce439c130b759aabe3ba45ef3bc5b",
+  "main_patch_sha256": "8c3593b8436241714a5dfebc4d9b9b96102fbdc8f79a4bb4b8c01dab236f3646",
+  "successor_patch_sha256": "be096234a71b2891f2256b9d5e816d789756947cad412aa451ac54537b0a52b2",
+  "before_sha256": {
+    "scripts/creatures/essence.gd": null,
+    "scripts/creatures/progression.gd": "b82be9c7b70c4f672d25143f2f2c3ed87ef5b4f04900f411c220213b6ac086e9",
+    "scripts/creatures/wild_victory_adapter.gd": null,
+    "data/config/essence.json": null,
+    "scripts/ui/altar_service.gd": null,
+    "scripts/ui/altar_panel.gd": null,
+    "scripts/ui/altar_station_interaction.gd": null,
+    "scripts/ui/creature_training_readout.gd": null
+  },
+  "after_sha256": {
+    "scripts/creatures/essence.gd": "f2eff3cfdeb36798a09dfc1aec8b8315b6b34d62878f117ec817d9047786f9c4",
+    "scripts/creatures/progression.gd": "0f5692a09a8347dca4c22c31fdf4889e02d3987e7b7736373fe033d3d585258c",
+    "scripts/creatures/wild_victory_adapter.gd": "032fc44f419dcb35f94d984811abb866282d60ce6720107e68c810218ad9731e",
+    "data/config/essence.json": "2ad1c587e43e2ca9cf866fea1ba3338eb8ed73ac7208e728c3fe1e57e86d3c9b",
+    "scripts/ui/altar_service.gd": "c338d05065c701baa92e01f8a67a89547dbcb8575cf8cf680ad32b4c7cdb75b5",
+    "scripts/ui/altar_panel.gd": "5422ac50e1ad95a21c67e8383e77fd0f5ac54c03a105adb999fc36eb6be1e969",
+    "scripts/ui/altar_station_interaction.gd": "908f55cceead292d2aea46c5216813b25304b2297f1de7ae335bd04d16b17e88",
+    "scripts/ui/creature_training_readout.gd": "305d185d8fc817970137a173656143fc34d8ce2e0e0c68039757d1ba9f1b8311"
+  },
+  "owned_successor_paths": [
+    "scripts/creatures/essence.gd",
+    "scripts/creatures/progression.gd",
+    "scripts/creatures/wild_victory_adapter.gd",
+    "data/config/essence.json"
+  ],
+  "same13_main_progression_functions_preserved": [
+    "config",
+    "xp_to_next",
+    "xp_award_for",
+    "party_share",
+    "rest_xp",
+    "creature_bed_full_heal_seconds",
+    "rest_seconds_remaining",
+    "stat_at_level",
+    "roll_wild_level",
+    "bond_stat_scale",
+    "individuality_multiplier",
+    "appraisal_stars",
+    "trait_unlocked"
+  ],
+  "same_reviewed_altar_functions_preserved": [
+    "creature_cap",
+    "quote_spend",
+    "stage_spend",
+    "stage_core_spend",
+    "stage_training_owner",
+    "apply_training_owner",
+    "commit_host_training"
+  ],
+  "same_reviewed_altar_UI_bytes": true,
+  "static_preload_closure": {
+    "scripts/creatures/essence.gd": [
+      "scripts/data/redesign_data.gd",
+      "scripts/data/redesign_state.gd",
+      "scripts/creatures/progression.gd",
+      "scripts/world/death_satchel_rules.gd",
+      "autoload/inventory.gd",
+      "autoload/party.gd",
+      "scripts/data/biome_order.gd",
+      "scripts/creatures/water_species_catalog.gd"
+    ],
+    "scripts/creatures/progression.gd": [
+      "scripts/creatures/creature_condition.gd"
+    ],
+    "scripts/creatures/wild_victory_adapter.gd": [
+      "scripts/creatures/essence.gd",
+      "scripts/save/water_capture_codec.gd"
+    ],
+    "scripts/ui/altar_service.gd": [
+      "scripts/ui/altar_panel.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/creatures/progression.gd",
+      "scripts/world/death_satchel_rules.gd",
+      "autoload/party.gd"
+    ],
+    "scripts/ui/altar_panel.gd": [
+      "scripts/ui/input_owner.gd",
+      "scripts/ui/ui_tokens.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/ui/creature_training_readout.gd",
+      "autoload/party.gd"
+    ],
+    "scripts/ui/altar_station_interaction.gd": [
+      "scripts/world/interactable.gd",
+      "scripts/ui/altar_service.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/world/realm_world_records.gd"
+    ],
+    "scripts/ui/creature_training_readout.gd": [
+      "scripts/data/redesign_data.gd",
+      "scripts/creatures/essence.gd",
+      "scripts/world/death_satchel_rules.gd",
+      "autoload/party.gd"
+    ]
+  },
+  "source_read_pins": {
+    "scripts/combat/encounter_director.gd": "d97f895f467075c319cc77e84e4aa03b64de193dbc7a64c28a2f7f2c01c6595f",
+    "scripts/combat/combat_manager.gd": "3d4c8da671d64e4aacb41ff346858ae6506468981d6bf1b8cb9d9dd3973da723",
+    "scripts/net/encounter_host.gd": "658ecd7f1812d6687b5b96438c8c85f0861f3bad350f1ee3d0ecd6ef71456785",
+    "scripts/net/session.gd": "4c6b2a51e041c4cefb21c0d801209b9617b43ce01b8f9dd49591645366503571",
+    "scripts/net/character_authority.gd": "541692c5e40255f09b7a4eaf7f1e8d3800d78c9ad3a4838ebe397248b5d32539",
+    "scripts/data/redesign_state.gd": "036ade30eaf6d565052c61fd78534b1eab6a3e6dfd02eed51d2042ea148a1fed",
+    "scripts/save/water_capture_codec.gd": "7384e429ead564d6b02a2ddada4dac04264f23de9107dd44133e1009f3a4af4d",
+    "scripts/combat/shared_wild_host_fight.gd": "95af48f2dfe0cfb71155b820acd27e679c4b1d3ef3765b0b960cbd8a82cee25d"
+  },
+  "config_numeric_changes": false,
+  "config_host_mode": "ordinary",
+  "schema_intent_addition": "xp_mode, host-derived immutable; Foundation owner must converge before activation",
+  "shared_source_writes": false,
+  "live_source_writes": false,
+  "engine_unit_ci_gpu_runs": 0,
+  "independent_verdict": "Pending ROOT exact source gate; no acceptance credit",
+  "landing_ready": false,
+  "checks": "JSON/LF/hash/source preservation/preload closure and exact patch reconstruction only; no parser/native/protocol proof",
+  "exact_main_patch_reconstruction": "git apply --check/apply in ignored reconstruction; all8 after hashes exact, no tracked source activation"
+}

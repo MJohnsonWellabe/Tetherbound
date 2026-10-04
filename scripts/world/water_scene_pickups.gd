@@ -175,10 +175,37 @@ static func admitted(row: Dictionary, world_flags: Variant) -> bool:
 
 func _taken(row: Dictionary) -> bool:
 	if str(row.placement_kind) == "harvest" and str(row.get("claim_policy", "")) != "character_once":
+		var stock := _ordinary_harvest_stock(row)
+		if not stock.is_empty():
+			return int(_game.get("day")) < int(stock.get("next_ready_day", 1))
 		return HARVEST.was_taken(_game, "order:" + str(row.id))
 	if str(row.get("claim_policy", "")) == "character_once":
 		return _game.get("local").flags.has(PERSONAL.personal_flag(str(row.id)))
 	return CACHE.was_taken(_game, str(row.item_id), str(row.id).trim_prefix("water:"), "water")
+
+
+## Only host-registered ordinary resource sites enter the typed renewable
+## path. Personal discoveries, story caches and all stable row IDs stay as-is.
+func _ordinary_harvest_stock(row: Dictionary) -> Dictionary:
+	if _game == null or str(row.get("claim_policy", "")) == "character_once":
+		return {}
+	var state: Variant = _game.get("world")
+	if not state is Object or not state.has_method("renewable_stock_state"):
+		return {}
+	var stock: Variant = state.call("renewable_stock_state", "water", str(row.get("id", "")))
+	return stock.duplicate(true) if stock is Dictionary else {}
+
+
+func _setup_ordinary_harvest(node: Node3D, row: Dictionary, spot: Vector3,
+		definition: Dictionary, model: Array) -> bool:
+	var stock := _ordinary_harvest_stock(row)
+	if stock.is_empty():
+		return false
+	node.call("setup", {"order": str(row.id), "realm": "water", "item": row.item_id,
+		"amount": int(row.get("yield", 1)), "at": [spot.x, spot.y, spot.z],
+		"label": "Gather " + str(definition.name), "model": model[0], "model_scale": model[1],
+		"renewable_site_id": str(row.id), "renewable_stock": stock})
+	return true
 
 func _spawn(row: Dictionary) -> void:
 	var id := str(row.id)
@@ -201,8 +228,9 @@ func _spawn(row: Dictionary) -> void:
 		add_child(node)
 		node.global_position = spot
 		var model: Array = RESOURCE_MODELS.get(str(row.item_id), [CRATE, 0.35])
-		node.call("setup", {"order": id, "realm": "water", "item": row.item_id, "amount": int(row.get("yield", 1)),
-			"at": [spot.x, spot.y, spot.z], "label": "Gather " + str(definition.name), "model": model[0], "model_scale": model[1]})
+		if personal_patch or not _setup_ordinary_harvest(node, row, spot, definition, model):
+			node.call("setup", {"order": id, "realm": "water", "item": row.item_id, "amount": int(row.get("yield", 1)),
+				"at": [spot.x, spot.y, spot.z], "label": "Gather " + str(definition.name), "model": model[0], "model_scale": model[1]})
 	else:
 		var personal := str(row.get("claim_policy", "")) == "character_once"
 		node = PersonalCandy.new() if personal else CACHE.new()

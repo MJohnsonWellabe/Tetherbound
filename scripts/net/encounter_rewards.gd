@@ -65,10 +65,119 @@ const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 ## rewards module, so the shared encounter director never loads one realm's
 ## reward controller into every other realm's script closure.
 const SOLO_WIN_JOURNAL_TRAINERS := ["water_trainer_nerissa"]
+const CHAPTER_REWARDS_PATH := "res://data/config/chapter_rewards.json"
 
 
 static func journals_solo_win(trainer_key: String) -> bool:
 	return SOLO_WIN_JOURNAL_TRAINERS.has(trainer_key)
+
+
+## F19's authored boss hand-off, with runtime and canonical biome namespaces
+## kept distinct. The foundation ledger validates these component sources
+## against its admitted stable-character snapshot; this pure projection is
+## never authority to create a participant or commit an entitlement.
+static func chapter_hand_off(trainer_id: String, realm: String, config: Dictionary = {}) -> Dictionary:
+	var data := config
+	if data.is_empty():
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER_REWARDS_PATH))
+		if not raw is Dictionary:
+			return {}
+		data = raw as Dictionary
+	var hand_offs: Variant = data.get("boss_handoffs", {})
+	if not hand_offs is Dictionary:
+		return {}
+	var raw_row: Variant = hand_offs.get(trainer_id, {})
+	if not raw_row is Dictionary:
+		return {}
+	var row: Dictionary = raw_row
+	var order := preload("res://scripts/data/biome_order.gd")
+	var biome := str(row.get("biome", ""))
+	var next_biome := str(row.get("next_biome", ""))
+	var ids := order.ids()
+	var index := ids.find(biome)
+	if index < 0 or not order.ids(false).has(biome) or index + 1 >= ids.size() \
+			or ids[index + 1] != next_biome or order.runtime_id(biome) != realm \
+			or order.canonical_id(str(row.get("relic_biome", ""))) != biome \
+			or not row.get("key_item") is String or row.key_item.is_empty() \
+			or row.get("delivery_phase") not in ["accepted_boss_victory", "accepted_legendary_settlement"] \
+			or not row.get("delivery_requires_world_flags") is Array:
+		return {}
+	var required: Array = row.delivery_requires_world_flags
+	if (row.delivery_phase == "accepted_boss_victory") != required.is_empty():
+		return {}
+	var seen := {}
+	for flag: Variant in required:
+		if not flag is String or flag.is_empty() or seen.has(flag): return {}
+		seen[flag] = true
+	var resolutions: Variant = row.get("delivery_requires_any_resolution_prefix", [])
+	if not resolutions is Array: return {}
+	for prefix: Variant in resolutions:
+		if row.delivery_phase != "accepted_legendary_settlement" or not prefix is String \
+				or prefix.is_empty() or not prefix.ends_with(":") or seen.has(prefix): return {}
+		seen[prefix] = true
+	# Schema key IDs and inventory SKUs deliberately have different names.
+	# Resolve both from the authored portal catalogues, never a second reward map.
+	var portals: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/schema/portals.json"))
+	var arches: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
+	if not portals is Array or not arches is Dictionary or not arches.get("arches") is Array: return {}
+	var key_id := ""
+	for portal: Dictionary in portals:
+		if portal.get("biome") == next_biome: key_id = str(portal.get("key_id", ""))
+	var item_matches := false
+	for arch: Dictionary in arches.arches:
+		if arch.get("biome") == next_biome and arch.get("key_item") == row.key_item: item_matches = true
+	if key_id.is_empty() or not item_matches: return {}
+	var result := row.duplicate(true)
+	result.runtime_realm = realm
+	result.relic_biome = biome
+	result.portal_key_item = row.key_item
+	result.portal_key_id = key_id
+	return result
+
+
+## The host's saved world flags release a retained boss obligation. An offer
+## being displayed does not settle a ceremony. Stormwood also advances its
+## offer fact for non-owed visitors, so require its actual answer receipt.
+static func chapter_delivery_ready(row: Dictionary, world_flags: Array) -> bool:
+	if row.is_empty() or not row.get("delivery_requires_world_flags") is Array: return false
+	for flag: Variant in row.delivery_requires_world_flags:
+		if not world_flags.has(flag): return false
+	var resolutions: Variant = row.get("delivery_requires_any_resolution_prefix", [])
+	if not resolutions is Array: return false
+	if not resolutions.is_empty():
+		for prefix: String in resolutions:
+			for flag: Variant in world_flags:
+				if flag is String and flag.begins_with(prefix) \
+						and preload("res://scripts/creatures/essence.gd")._opaque_id(flag.trim_prefix(prefix)): return true
+		return false
+	return true
+
+
+static func is_chapter_settlement_flag(id: String) -> bool:
+	var data: Variant = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER_REWARDS_PATH))
+	if not data is Dictionary or not data.get("boss_handoffs") is Dictionary: return false
+	for row: Dictionary in data.boss_handoffs.values():
+		if row.get("delivery_phase") != "accepted_legendary_settlement": continue
+		if row.get("delivery_requires_world_flags", []).has(id): return true
+		for prefix: String in row.get("delivery_requires_any_resolution_prefix", []):
+			if id.begins_with(prefix): return true
+	return false
+
+
+static func chapter_grants(trainer_id: String, realm: String, participants: Array,
+		config: Dictionary = {}) -> Array:
+	var row := chapter_hand_off(trainer_id, realm, config)
+	var peers := unique_peers(participants)
+	if row.is_empty() or peers.is_empty():
+		return []
+	var item := str(row.get("portal_key_item", ""))
+	var biome := str(row.get("relic_biome", ""))
+	if item.is_empty() or biome.is_empty():
+		return []
+	var key := _grant(realm, source_for(trainer_id, "item:" + item), peers, item, 1, "")
+	var relic := _grant(realm, source_for(trainer_id, "relic:" + biome), peers, "", 0, "")
+	relic["relic_biome"] = biome
+	return [key, relic]
 
 
 ## The trainer id every source below is built from. "" for a spec with no id,

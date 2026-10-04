@@ -1,0 +1,191 @@
+{
+  "scope": "Original478 disclosed mechanics input producer; no earned campaign or acceptance credit.",
+  "native_source_head": "2ddf4e58219562c8703f1e8e04e15909b01508fc",
+  "producer_profile_sha256": "478a3ff3e465447b625737f4d17ae05e6b12fcb1c92cd4bc8a14ffe1713da015",
+  "engine_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+  "terminal": {
+    "exit": 2,
+    "elapsed_seconds": 451.844000000041,
+    "engine_handles_after": "0",
+    "source_unchanged": true,
+    "watchdog_seconds": 3900,
+    "watchdog_basis": "Original full input-producer scenario3600 plus build300; internal heartbeat and transaction bounds unchanged",
+    "fatal": "ERROR: peer silent (peer 0, no heartbeat for >15 s)",
+    "failures": [
+      "#17 peer 0 wait (bootstrap_altar: ordinary input) -> ERROR -- ERROR: peer silent (peer 0, no heartbeat for >15 s)"
+    ]
+  },
+  "independently_checked_source_manifest_equal": true,
+  "actual_successes": [
+    "PASS: #1 peer 0 f48_watch_owner_saves (Arm actual saved-edge observation before production admission; no save or ACK) -> PASS -- Read-only producer actual owner BOOL-save observer",
+    "PASS: #1 peer 1 f48_watch_owner_saves (Arm actual saved-edge observation before production admission; no save or ACK) -> PASS -- Read-only producer actual owner BOOL-save observer",
+    "PASS: #2 peer 0 f48_require_configuration (Pin disclosed effective mechanics configuration before any saved-input admission) -> PASS -- Exact effective test configuration pinned separately; production defaults unchanged",
+    "PASS: #2 peer 1 f48_require_configuration (Pin disclosed effective mechanics configuration before any saved-input admission) -> PASS -- Exact effective test configuration pinned separately; production defaults unchanged",
+    "PASS: #3 peer 0 load_save (DISCLOSED saved-input setup; original guest character only, no borrowed world) -> PASS -- loaded peer-0 (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-626300bee616b52bfa1d40ab32fb776a'",
+    "PASS: #4 peer 1 load_save (DISCLOSED saved-input setup; original guest character only, no borrowed world) -> PASS -- Restored only authentic portable character through production owner; no world or locator copied",
+    "PASS: #5 peer 0 host -> PASS -- hosting udp/32141 as peer 1",
+    "PASS: #6 peer 1 production_join -> PASS -- title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32141 as peer 1846841957 after 412 frames",
+    "PASS: #7 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)",
+    "PASS: #7 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)",
+    "PASS: #8 peer 0 f48_witness -> PASS -- Read actual files without autosave; full immutable witness retained",
+    "PASS: #8 peer 1 f48_witness -> PASS -- Read actual files without autosave; full immutable witness retained",
+    "PASS: #9 peer 0 f48_watch_altar_save (Read-only actual transaction owner BOOL-save edge; no care exclusions or state writes) -> PASS -- Read-only exact host/owner save edges armed before original paid build input",
+    "PASS: #10 peer 0 press (bootstrap_altar: ordinary input) -> PASS -- pressed 'build_open' x1",
+    "PASS: #11 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 30 physics frames",
+    "PASS: #12 peer 0 f48_button (bootstrap_altar: ordinary input) -> PASS -- pressed 'ui_accept' x1",
+    "PASS: #13 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 15 physics frames",
+    "PASS: #14 peer 0 f48_build_cell (bootstrap_altar: ordinary input) -> PASS -- pressed 'ui_accept' x1",
+    "PASS: #15 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 30 physics frames",
+    "PASS: #16 peer 0 press (bootstrap_altar: ordinary input) -> PASS -- pressed 'build_place' x1"
+  ],
+  "last_host_heartbeat": {
+    "context": "panel:Session",
+    "frame": 261.0,
+    "physics_frame": 1440.0,
+    "pos": [
+      -16.0,
+      1.11597406864166,
+      14.0
+    ],
+    "session_peers": [
+      1.0,
+      1846841957.0
+    ],
+    "state_hash": 132203473.0,
+    "t": 437.425,
+    "type": "heartbeat"
+  },
+  "actual_saved_altar": {
+    "kind": "altar_building",
+    "status": "pending",
+    "delivery_id": "altar_building:aec13ff39dc9fda3261d0587d618bfb153137d7b4636893db80392ac32e01a50",
+    "receipt": "craft:character-626300bee616b52bfa1d40ab32fb776a:altar_build:bea129f97f68acf75072e77510928e1fd0be8c169c436f0067a6a386fc95810f:df9d73686d5c9c2917ac12fb4c213f2a:place_building:b4",
+    "action_id": "df9d73686d5c9c2917ac12fb4c213f2a",
+    "record": {
+      "id": "altar",
+      "paid": true,
+      "position": [
+        -14.0,
+        0.947130501270294,
+        12.0
+      ],
+      "realm": "meadows",
+      "uid": "b4",
+      "yaw_deg": 0.0
+    },
+    "owner_disk_has_receipt": false,
+    "paid_altar_acceptance_credit": false,
+    "owner_entire_file_equals_original_disclosed_input": true,
+    "original_owner_input_path": "D:\\tetherbound\\r3-f48\\.tmp\\f48-preboss-actual8a-measured-v3\\peer-0\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+    "original_owner_input_sha256": "186c04274b0651cc4e2a2e08467547fe809dd432408eea59024d0c50e013d35b"
+  },
+  "bounded_attribution": {
+    "observed": "Native host world contains real pending Altar journal. Owner file remains original, without the new receipt. No genuine saved-edge artifact and no second _observe begin exist.",
+    "not_entered": [
+      "Full snapshot _observe after initial-bootstrap",
+      "Detached Altar saved-edge publication",
+      "Detached generic owner saved-edge publication"
+    ],
+    "last_logged_menu_grid_duration_usec": 86741,
+    "inference": "The silence precedes full observer snapshot/publication and owner persistence; this does not prove that the callback or its initial validation guard was never entered.",
+    "unresolved": "Exact blocking function after prepared world save/before owner save and full boundary observation; needs narrow production phase timing, retaining heartbeat15 and exact journal/write/ACK fences.",
+    "engine_errors_in_retained_logs": [],
+    "do_not_claim": [
+      "Paid-Altar owner save",
+      "Accepted ACK",
+      "Catch",
+      "Full loop",
+      "Complete profile bundle",
+      "All24 cut proof",
+      "CI/main green",
+      "Menu stall permanently fixed"
+    ]
+  },
+  "source_predicted_later_limits": [
+    "Frozen source lacks subsequently reviewed ordinary AltarInteraction mount; original hub routes require it.",
+    "Observed clock chain rejects legitimate nonpassive bond/distance/landmark changes unless an independently reviewed actual newer save boundary applies; no field exclusions.",
+    "Guest ordinary leave saves character, tears down client mode, and changes _altar_current_epoch to the guest own epoch while inactive. Old lifetime anchor must not be reused; ordinary rejoin assertions remain required.",
+    "Fallback ordinary autosave can change the exact owner file after last observed typed BOOL edge. Conservative missing/stale-edge failure is intentional."
+  ],
+  "raw_artifacts": [
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-recovery-wrapper-2ddf4e582195\\receipt.json",
+      "sha256": "7fc70e1072c623064a7d05e3fb2a199aed6e83de06e8fe1459fb49e188562b64",
+      "bytes": 761411,
+      "modified_utc": "2026-10-02T05:16:56.198556+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\NET_RUN.json",
+      "sha256": "236115e040f682175f5e6e80007026e58bf874e493911e1ac7c16641acd42c12",
+      "bytes": 2794,
+      "modified_utc": "2026-10-02T05:16:53.190914+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\invocation.json",
+      "sha256": "4710f4a90d8227d7159186ff77f9dd568722e852a76559da67b8ec35fba177c1",
+      "bytes": 1732,
+      "modified_utc": "2026-10-02T05:09:21.768997+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\coordinator.log",
+      "sha256": "cfe588300d875b1717952e3626314a21572d9d75ffe0b7e08b7b5e969d874ce0",
+      "bytes": 4492,
+      "modified_utc": "2026-10-02T05:16:53.191873+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\peer-0.log",
+      "sha256": "e4a4205857b3bb966bdfc8505aae71ae56e560ed8abd7a239a422b6bb0160a85",
+      "bytes": 27213,
+      "modified_utc": "2026-10-02T05:16:50.463683+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\peer-1.log",
+      "sha256": "9a8da212ddd4ba7b03ae875e2eeea3658efd27d5d731130a5bf8207bdfc4d838",
+      "bytes": 11773,
+      "modified_utc": "2026-10-02T05:15:00.704690+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\worlds\\redesign-v28\\slot-0\\world.json",
+      "sha256": "62c1b602e06d1cd4e256e1f79c73895a916894ffdad9deeee9d66ac6b948af96",
+      "bytes": 35347,
+      "modified_utc": "2026-10-02T05:16:00.559226+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\net-run\\home-0\\Godot\\app_userdata\\Tetherbound\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+      "sha256": "186c04274b0651cc4e2a2e08467547fe809dd432408eea59024d0c50e013d35b",
+      "bytes": 2779501,
+      "modified_utc": "2026-10-02T05:09:46.675872+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\proof\\PROOF.md",
+      "sha256": "b6e021b231e057d82bb7cb84e6993781034aed41ae38e5d8f85ac239c8fc313d",
+      "bytes": 5179,
+      "modified_utc": "2026-10-02T05:16:53.233797+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\proof\\f48-passive\\actual-14680.jsonl",
+      "sha256": "fbc6f433be0196de4274d4ed29f2e7712a4dcc8d859bb0df323cad8b7b71da90",
+      "bytes": 8192,
+      "modified_utc": "2026-10-02T05:15:28.015092+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\proof\\f48-passive\\actual-5848.jsonl",
+      "sha256": "2a29a4ada36cac5557fe7e7a8947253919e5839e8c4f80d8498d39b10303b8ca",
+      "bytes": 359341,
+      "modified_utc": "2026-10-02T05:16:50.098659+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\proof\\f48-witnesses\\character-626300bee616b52bfa1d40ab32fb776a\\initial-bootstrap.json",
+      "sha256": "59be2de99e0c23324a8eddb60b72d688f01bee3e1ea5989ee49154288a19bc35",
+      "bytes": 5612225,
+      "modified_utc": "2026-10-02T05:14:58.986326+00:00"
+    },
+    {
+      "path": "D:\\tetherbound\\foundations-batch-check\\.tmp\\closeout\\f48-complete-input-producer-recovery-v7\\proof\\f48-witnesses\\character-a79c7bee9128c2ef03d266ce0352c666\\initial-bootstrap.json",
+      "sha256": "fedd63b775d3449ace6a4028aab55c62a3ef777fc736a558a0daca5f1aa6a594",
+      "bytes": 5584909,
+      "modified_utc": "2026-10-02T05:15:00.573042+00:00"
+    }
+  ],
+  "acceptance_credit": false
+}

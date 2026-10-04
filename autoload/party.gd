@@ -22,6 +22,10 @@ const MAX_CREATURES := 5
 ## for why.
 var revision: int = 0
 
+var _owner_mutation_guard := Callable()
+var _owner_training_release_guard := Callable()
+var _owner_training_release_rollback_guard := Callable()
+var _owner_capture_roster_guard := Callable()
 var _creatures: Array = []
 var _active: int = 0
 var _tournament_selection: Array[String] = []
@@ -60,6 +64,7 @@ func at(index: int) -> RefCounted:
 
 ## The only way a creature enters the party.
 func add(creature: RefCounted) -> bool:
+	if _owner_mutation_blocked(): return false
 	if creature == null:
 		return false
 	if is_full():
@@ -74,6 +79,7 @@ func add(creature: RefCounted) -> bool:
 ## Remove a creature by slot. Used by the release ceremony (M5) and by nothing else
 ## yet; returns the instance so the caller can show it one last time.
 func remove_at(index: int) -> RefCounted:
+	if _owner_mutation_blocked() and (not _owner_training_release_guard.is_valid() or _owner_training_release_guard.call(index) != true): return null
 	if index < 0 or index >= _creatures.size():
 		return null
 	var gone: RefCounted = _creatures[index]
@@ -94,6 +100,7 @@ func remove_at(index: int) -> RefCounted:
 ## Reorder. The party's order is the order the player sees and the order a
 ## future deploy wheel will offer, so it is state worth letting them set.
 func move(from: int, to: int) -> void:
+	if _owner_mutation_blocked(): return
 	if from == to:
 		return
 	if from < 0 or to < 0 or from >= _creatures.size() or to >= _creatures.size():
@@ -129,6 +136,7 @@ func active() -> RefCounted:
 ## Choose who takes the field. A fainted creature refuses, which is why this returns
 ## a bool rather than assigning blindly.
 func set_active(index: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	var creature: RefCounted = at(index)
 	if creature == null:
 		return false
@@ -142,6 +150,7 @@ func set_active(index: int) -> bool:
 ## Gate A / owner: one-second previous/next party selection in exploration.
 ## Direction is -1 or +1; wraps and skips anything that cannot take the field.
 func set_resting(index: int, value: bool, bed_index: int = -1) -> bool:
+	if _owner_mutation_blocked(): return false
 	var creature: RefCounted = at(index)
 	if creature == null:
 		return false
@@ -156,6 +165,7 @@ func set_resting(index: int, value: bool, bed_index: int = -1) -> bool:
 
 
 func cycle_active(direction: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	if _creatures.is_empty() or direction == 0:
 		return false
 	var step := -1 if direction < 0 else 1
@@ -188,6 +198,7 @@ func best() -> RefCounted:
 ## Unlike `set_active`, a fainted creature is still allowed: this is a
 ## standing title earned by play, not "who takes the field next."
 func set_best(index: int) -> bool:
+	if _owner_mutation_blocked(): return false
 	if index < 0 or index >= _creatures.size():
 		return false
 	_best = -1 if _best == index else index
@@ -199,6 +210,7 @@ func set_best(index: int) -> bool:
 ## Indices are accepted at the UI boundary but immediately converted to stable
 ## creature ids, so party reordering never changes the registered team.
 func set_tournament_selection(indices: Array) -> bool:
+	if _owner_mutation_blocked(): return false
 	if indices.size() != 3:
 		return false
 	var selected: Array[String] = []
@@ -239,6 +251,7 @@ func tournament_selection() -> Array[RefCounted]:
 ## Save/load seam. A malformed, partial, missing or ambiguous selection becomes
 ## explicitly unregistered; it is never repaired by choosing substitutes.
 func restore_tournament_selection(ids: Variant) -> bool:
+	if _owner_mutation_blocked(): return false
 	_tournament_selection.clear()
 	if typeof(ids) != TYPE_ARRAY or (ids as Array).size() != 3:
 		return false
@@ -256,6 +269,7 @@ func restore_tournament_selection(ids: Variant) -> bool:
 
 
 func clear_tournament_selection() -> void:
+	if _owner_mutation_blocked(): return
 	if _tournament_selection.is_empty():
 		return
 	_tournament_selection.clear()
@@ -274,6 +288,7 @@ func _members_with_uid(id: String) -> Array:
 ## without leaving whichever creatures were already in it mixed in with the loaded
 ## ones.
 func clear() -> void:
+	if _owner_mutation_blocked(): return
 	_creatures.clear()
 	_active = 0
 	_best = -1
@@ -288,4 +303,64 @@ func all_fainted() -> bool:
 	for creature in _creatures:
 		if not bool(creature.get("fainted")):
 			return false
+	return true
+
+
+func bind_owner_mutation_guard(blocked: Callable, release_allowed := Callable(), rollback_allowed := Callable(), capture_allowed := Callable()) -> void:
+	_owner_mutation_guard = blocked
+	_owner_training_release_guard = release_allowed
+	_owner_training_release_rollback_guard = rollback_allowed
+	_owner_capture_roster_guard = capture_allowed
+
+
+func _owner_mutation_blocked() -> bool:
+	return _owner_mutation_guard.is_valid() and _owner_mutation_guard.call() == true
+
+
+## Read-only: would `add()` (and every other owner write) be refused right now
+## because a saved owner decision is still in flight? A caller that must not
+## spend a one-shot grant on a refused add asks this first and waits.
+func owner_mutation_blocked() -> bool:
+	return _owner_mutation_blocked()
+
+
+## Local stack rollback material, never persisted or sent across a network.
+## The caller keeps only this transaction's original five live instances.
+func owner_training_release_snapshot() -> Dictionary:
+	return {"members": _creatures.duplicate(), "active": _active, "best": _best,
+		"tournament": _tournament_selection.duplicate(), "revision": revision}
+
+
+func restore_owner_training_release(snapshot: Dictionary) -> bool:
+	if not _owner_training_release_rollback_guard.is_valid() or _owner_training_release_rollback_guard.call(snapshot) != true:
+		return false
+	if not snapshot.get("members") is Array or snapshot.members.is_empty() or snapshot.members.size() > MAX_CREATURES: return false
+	_creatures = snapshot.members.duplicate()
+	_active = int(snapshot.active)
+	_best = int(snapshot.best)
+	_tournament_selection.assign(snapshot.tournament)
+	revision = int(snapshot.revision)
+	return true
+
+## Exact typed catch promotion only; survivors keep their original objects.
+func install_owner_capture_roster(members: Array) -> bool:
+	if not _owner_capture_roster_guard.is_valid() or _owner_capture_roster_guard.call(members, false) != true: return false
+	var active_uid := str(at(_active).get("uid")) if at(_active) != null else ""
+	var best_uid := str(at(_best).get("uid")) if at(_best) != null else ""
+	var next: Array[RefCounted] = []
+	for member: RefCounted in members: next.append(member)
+	_creatures = next
+	_active = 0
+	_best = -1
+	for index: int in _creatures.size():
+		if _creatures[index].get("uid") == active_uid: _active = index
+		if _creatures[index].get("uid") == best_uid: _best = index
+	for uid: String in _tournament_selection:
+		var present := false
+		for member: RefCounted in _creatures:
+			if member.get("uid") == uid: present = true
+		if not present:
+			_tournament_selection.clear()
+			break
+	revision += 1
 	return true

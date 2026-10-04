@@ -1,0 +1,138 @@
+{
+  "base": "ba1e41d575836303febc782cdc5176105bcf36c8",
+  "patches": {
+    "f32-greenhouse-batch-v2.patch": {
+      "sha256": "93f4b63fdfba961b46efbd862f070cedfa165f5a3a3ff60c0f1adbcabe90db43",
+      "paths": [
+        "data/config/farm.json",
+        "scripts/world/farm_logic.gd"
+      ],
+      "packet_stable": true
+    },
+    "f32-tide-pearl-inward-candidate.patch": {
+      "sha256": "b1290cb99e5037753c1e0c0a319599838ad18b784ab58a0b1ae18b2f20995222",
+      "paths": [
+        "data/config/water_pickups.json"
+      ],
+      "packet_stable": true
+    }
+  },
+  "greenhouse_existing_config_exact_after_removing_two_off_blocks": true,
+  "greenhouse_candidate_disabled": true,
+  "visual_disabled_and_unproven": true,
+  "farm_logic_only_appended_accessor": true,
+  "farm_accessor_deep_duplicate": true,
+  "asset_modules": [
+    {
+      "path": "res://assets/buildings/quaternius_medieval/DoorFrame_Flat_WoodDark.gltf",
+      "git_exists": true,
+      "accessor_bounds": [
+        [
+          [
+            -0.7862095236778259,
+            -0.008544828742742538,
+            -0.24328981339931488
+          ],
+          [
+            0.7877825498580933,
+            2.3037145137786865,
+            0.14516234397888184
+          ]
+        ]
+      ]
+    },
+    {
+      "path": "res://assets/buildings/quaternius_medieval/Window_Wide_Flat1.gltf",
+      "git_exists": true,
+      "accessor_bounds": [
+        [
+          [
+            -0.8041191101074219,
+            0.94417804479599,
+            -0.26658084988594055
+          ],
+          [
+            0.8041172027587891,
+            2.5242888927459717,
+            0.4168574810028076
+          ]
+        ],
+        [
+          [
+            -0.5054721832275391,
+            1.0971393585205078,
+            0.0038878247141838074
+          ],
+          [
+            0.5054702758789062,
+            2.355356216430664,
+            0.003888234496116638
+          ]
+        ]
+      ]
+    },
+    {
+      "path": "res://assets/buildings/quaternius_medieval/Floor_UnevenBrick.gltf",
+      "git_exists": true,
+      "accessor_bounds": [
+        [
+          [
+            -1,
+            -0.010000384412705898,
+            -1
+          ],
+          [
+            1,
+            0.009999990463256836,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "path": "res://assets/buildings/quaternius_medieval/Roof_FrontSupports.gltf",
+      "git_exists": true,
+      "accessor_bounds": [
+        [
+          [
+            -2.7431302070617676,
+            -0.11826205253601074,
+            -0.027265047654509544
+          ],
+          [
+            2.7431282997131348,
+            0.11292797327041626,
+            0.6272619962692261
+          ]
+        ]
+      ]
+    }
+  ],
+  "frame_raw_outer_width_m": 1.5739920735359192,
+  "target_entry_clear_width_m": 1.6,
+  "raw_frame_width_below_clear_target_at_scale_one": true,
+  "pearl_other_document_content_exact": true,
+  "pearl_identity_stock_outputs_timer_model_no_dive_and_false_proof_unchanged": true,
+  "pearl_stays_unmounted": true,
+  "pearl_same_anchor_id": true,
+  "pearl_actual_anchor_position": [
+    552.0,
+    1.8793,
+    534.0
+  ],
+  "pearl_old_at": [
+    560.0,
+    534.0
+  ],
+  "pearl_new_at": [
+    544.0,
+    534.0
+  ],
+  "pearl_world_displacement_m": 16.0,
+  "pearl_actual_offset_matches_anchor": true,
+  "authored_island_radius_m": 190.0,
+  "old_authored_radial_distance_m": 188.35073665903195,
+  "new_authored_radial_distance_m": 176.7823520603796,
+  "authored_radial_inward_reduction_m": 11.568384598652358,
+  "method": "Independent exact pinned-base patch reconstruction, JSON delta/identity checks and raw glTF/accessor plus authored island radius inspection. No Godot, tests, visual judge or physical proof."
+}

@@ -94,11 +94,15 @@ const GLYPHS := {
 	## Series/Default/`, same CC0 pack `xbox_lb.png`/`xbox_rb.png` came
 	## from) and just needed extracting -- no new asset generation, no new
 	## licence to track.
-	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_rt.png"},
-	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_lt.png"},
+	"quick": {"keyboard": "mouse_left.png", "gamepad": "xbox_button_x.png"},
+	"charged": {"keyboard": "mouse_right.png", "gamepad": "xbox_button_y.png"},
+	"combat_utility": {"keyboard": "keyboard_q.png", "gamepad": "xbox_button_b.png"},
+	"combat_ultimate_arm": {"keyboard": "keyboard_r.png", "gamepad": "xbox_rb.png"},
+	"combat_orb_release": {"keyboard": "keyboard_f.png", "gamepad": "xbox_button_x.png"},
+	"combat_item_1": {},
 	## CONTROLLER-MAP: the orb is selected on the hotbar and thrown with
 	## interact, so the pad glyph is X, the same button `interact` draws.
-	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_button_x.png"},
+	"throw": {"keyboard": "keyboard_f.png", "gamepad": "xbox_lt.png"},
 	## `combat_run` binds to Escape/gamepad-B -- physically identical to
 	## `cancel` above, so combat_hud.gd's Run AND Cancel verbs both reach for
 	## the `cancel` id directly rather than this duplicating its two files.
@@ -287,8 +291,6 @@ const GLYPHS := {
 ## `objectives.json`'s own gather rung already does) rather than a resolver one,
 ## and are reported in `ralph/reports/bindings-log.md` rather than guessed at.
 const PAD_VERB_ALIAS := {
-	"combat_throw": "interact",
-	"combat_run": "creature_recall",
 	"use_tool": "interact",
 }
 
@@ -375,6 +377,9 @@ static func pad_button_name_for_action(id: String) -> String:
 	if not InputMap.has_action(id):
 		return ""
 	for event in InputMap.action_get_events(id):
+		if event is InputEventJoypadMotion and event.axis_value > 0.0:
+			if event.axis == JOY_AXIS_TRIGGER_LEFT: return "LT"
+			if event.axis == JOY_AXIS_TRIGGER_RIGHT: return "RT"
 		var button := event as InputEventJoypadButton
 		if button == null:
 			continue

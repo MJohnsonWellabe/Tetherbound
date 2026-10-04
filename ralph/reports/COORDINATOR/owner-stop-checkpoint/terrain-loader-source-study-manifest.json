@@ -1,0 +1,442 @@
+[
+  {
+    "path": "api-source-manifest.json",
+    "bytes": 4641,
+    "sha256": "d921e12e3b4e96f70de90e530deb89d1ee94495a8b81625d3f866e6b477f1124"
+  },
+  {
+    "path": "assemble_successor.py",
+    "bytes": 8157,
+    "sha256": "841d80513be18ed46fa56d5a6f0e234d53e56150225cf6e2210e0dc1020137eb"
+  },
+  {
+    "path": "fetch_primary.py",
+    "bytes": 2236,
+    "sha256": "448caf773a2e984d3e89e1caead9c19f1add0dbb8a6fcc16bb38686a7e109d91"
+  },
+  {
+    "path": "fetch_support.py",
+    "bytes": 2210,
+    "sha256": "5b5b3b79efd264deb5c9e1d504ebc53b85f0c2ef6d1a5c863eef6c1a011138d9"
+  },
+  {
+    "path": "pinned-api-and-region-inputs.json",
+    "bytes": 13655,
+    "sha256": "12e6d288d5fcd17d15c80fd2637972d68950603d8ec756e6ef7b8b0a699c181f"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/annotated-tag.json",
+    "bytes": 692,
+    "sha256": "576597521e77961fc7694c9c17af4808d844f4ecaa30459036c7e96cd964feb4"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/constants.h",
+    "bytes": 3725,
+    "sha256": "7c9ca41380bd48d22aa78240ecde1817e2e6cc50531ddd15822dbb9fa1ad9d8e"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/generated_texture.cpp",
+    "bytes": 1554,
+    "sha256": "a58a505d39324a3099b9aa106bfe4d441a6057f2fb4e8d007b5e0a60e5ca7f0e"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/generated_texture.h",
+    "bytes": 706,
+    "sha256": "4bf8ebdd626db8221b49c39783e7d72b96432549d9d5e640ded29e19c50505d6"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/godot-4.7-resourceloader.rst",
+    "bytes": 28116,
+    "sha256": "d2a76b2f87eebe088ac6a98c0c2d1797c16609abe6145511a7a0b2cce8f2e01f"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/release.json",
+    "bytes": 5015,
+    "sha256": "d4dd1c31813f54af366372eb86f9b382de5ecf17129da38ebfe21e280be5885e"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/tag.json",
+    "bytes": 363,
+    "sha256": "bdd237f5efc0f80b62ae19baac9b23368257c27738ec788165d90c8430214c54"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/Terrain3D_v1.0.2-stable.zip",
+    "bytes": 42312488,
+    "sha256": "a071850250ec5e596aa54da61c01d75768774eb379ee997584d426a45f4884a2"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d.cpp",
+    "bytes": 49328,
+    "sha256": "9967667c52ac9e928871212644a7491f3697f0f8d86d34d6b633960a22d9ffdd"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_collision.cpp",
+    "bytes": 23136,
+    "sha256": "36c6cfb5d85d91588a3a1464c6a5ae263a94480bb813b7da3ed3357ca1eef6bd"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_collision.h",
+    "bytes": 3424,
+    "sha256": "da26b10688d7e55b474e5cd98bd85a523b10af9e00ceec4e73040489f3455669"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_data.cpp",
+    "bytes": 50680,
+    "sha256": "b203be1544bef384452d33aa65221b62e3f3125f1d59196c10861899ed8c058b"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_data.h",
+    "bytes": 19034,
+    "sha256": "5a6bea43d1066a408b7417158020541c0e1fb15e7657c657520c83065c0e375b"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_instancer.cpp",
+    "bytes": 44807,
+    "sha256": "4e164766070f3d502503156266227be93f1fd8f218e1e7934c84d0c57d948fc0"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_material.cpp",
+    "bytes": 38729,
+    "sha256": "253e8077fd1694bb6ce3db8ee88cd0051e09757641d0881cd90839adfed1e0c3"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_region.cpp",
+    "bytes": 15761,
+    "sha256": "08ef19be3db4b9b0b23051dd66ba74061c404f842f7c743c646c7d516a46e42d"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_region.h",
+    "bytes": 5188,
+    "sha256": "1634343ec3f9326b1c588206ed50162e0b50e3b4a575ca9339564b42bf79db40"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_util.cpp",
+    "bytes": 20427,
+    "sha256": "cf6588d0dc745a3a680677ed2d7294dafa1ea09e788a2e65958451b86a10adca"
+  },
+  {
+    "path": "primary-source-v1.0.2-stable/terrain_3d_util.h",
+    "bytes": 12282,
+    "sha256": "12e4377cb2d20f1162e6a12039da481c531590def33549f94c301481eb52ae68"
+  },
+  {
+    "path": "proposal.md",
+    "bytes": 6893,
+    "sha256": "a232ba03e45aeedb1a4bcfc93e90a18dafbc23910ad890075b9629d010b80657"
+  },
+  {
+    "path": "successor-r1/after/data/config/performance.json",
+    "bytes": 12524,
+    "sha256": "5160210cc806dc337814cad42959c95e33da37909b5b3e125faf1380d8b62ab8"
+  },
+  {
+    "path": "successor-r1/after/scripts/world/playground_world.gd",
+    "bytes": 126398,
+    "sha256": "ceb732ba9bd7e9eed5c3226907038cb317a450c56d9a441cfbce3fb23cdf4f17"
+  },
+  {
+    "path": "successor-r1/after/scripts/world/terrain_region_preloader.gd",
+    "bytes": 8214,
+    "sha256": "744f4b21e133ce11c4a7e4e21ab7574f4578df2fb9384397707be6e2560a57ff"
+  },
+  {
+    "path": "successor-r1/before/data/config/performance.json",
+    "bytes": 11954,
+    "sha256": "15b57d5a90dc19e6f39a7e361b30bbc0c82b6ca5fc1f81c17061e9986ea21f0b"
+  },
+  {
+    "path": "successor-r1/before/scripts/world/playground_world.gd",
+    "bytes": 122478,
+    "sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241"
+  },
+  {
+    "path": "successor-r1/before/scripts/world/terrain_region_preloader.gd",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "successor-r1/freeze.json",
+    "bytes": 1747,
+    "sha256": "23fd654c68d02d82878f534873dcc132e4c3cd86b8ee9f1b646e9379c999f670"
+  },
+  {
+    "path": "successor-r1/HANDOFF.md",
+    "bytes": 4915,
+    "sha256": "6ab2e63ddc559a552d501adbf7dca26b24145084a394d1accffe239a5d992914"
+  },
+  {
+    "path": "successor-r1/independent/pins.json",
+    "bytes": 16923,
+    "sha256": "d4a321daabbf40f01bce32f30652ce14f011b98df37d27c743146be13fbacef3"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/native.txt",
+    "bytes": 1145,
+    "sha256": "e04bdb07510966b4abda4283d4c3dc5f095c69ecc662ecba765352d9544f2fd5"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/net/DEPARTURE_WITNESS.json",
+    "bytes": 445,
+    "sha256": "b519ab6f0afbfd1dde8882c31d4f0135e0af40248731c1c2c99e222fdc7f94e2"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/net/NET_RUN.json",
+    "bytes": 2379,
+    "sha256": "ecee52d6b067a759b59d343b73d98222de59058a46db899b1daa0e87ea3b7f78"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/net/peer-0.log",
+    "bytes": 8105,
+    "sha256": "4c34c38411f79c728bf64e11b637b1d3281958107a8d0c4e25e2745964f1dcf4"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/net/peer-1.log",
+    "bytes": 306,
+    "sha256": "e6b8a113e7f16347a0f5a0be198941bf41bb710c0a32ca857f7a7afd89d53cb8"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/net/SUMMARY.md",
+    "bytes": 276,
+    "sha256": "80cccc3dfe7bc760d5d1740513ea6cf52aa0e6ac42dade5da4e7c31ce77307ab"
+  },
+  {
+    "path": "successor-r1/independent/preserved-runtime-R3/receipt.json",
+    "bytes": 16105,
+    "sha256": "adb9641e6f3cc3f9ac1f4cc3c0a6c261eaa04bf3f3b577272d50cc3d4b145e6c"
+  },
+  {
+    "path": "successor-r1/independent/review.json",
+    "bytes": 32282,
+    "sha256": "ff714a96738cd6efe9ad7127315cb9e4e20680aab70679fecdd6f3c9c826542e"
+  },
+  {
+    "path": "successor-r1/independent/review_source.py",
+    "bytes": 17563,
+    "sha256": "a5198ff0d77c08d76bc4e84bba15c29d789ba35bcf8c799851cc2ec59ae16397"
+  },
+  {
+    "path": "successor-r1/independent/runtime-directory-callsite-audit.txt",
+    "bytes": 1482,
+    "sha256": "dfba030f1cfdca8ed8521767c018c5752586e7c889bcb5e1dd6a3e0f1083a7b6"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/Git/data/config/performance.json",
+    "bytes": 11954,
+    "sha256": "15b57d5a90dc19e6f39a7e361b30bbc0c82b6ca5fc1f81c17061e9986ea21f0b"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/Git/data/config/terrain_playground.json",
+    "bytes": 258199,
+    "sha256": "4552d95dc3b945ec4606fd9586c5ee65ebfb0d5e8331d9f8b9da0ae230cd6bf2"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/Git/scripts/mp/join_driver.gd",
+    "bytes": 11693,
+    "sha256": "d26efaf9043d5b1bb04996f82c06f2e5c9c49d5557ebf6e97ddd351efd2c9ccf"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/Git/scripts/world/performance_config.gd",
+    "bytes": 1499,
+    "sha256": "3eb7179d6aaf6bcde657aa59ffb0e60743a50b2410a150be2785b5e991b0d717"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/Git/scripts/world/playground_world.gd",
+    "bytes": 122478,
+    "sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/Git/scripts/world/shell_build_budget.gd",
+    "bytes": 15053,
+    "sha256": "99fd62ec0a92573b31ef0e96b7e10b1cd3e626e205347cb4e19bb60f2dd4595b"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/annotated-tag.json",
+    "bytes": 692,
+    "sha256": "576597521e77961fc7694c9c17af4808d844f4ecaa30459036c7e96cd964feb4"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/constants.h",
+    "bytes": 3725,
+    "sha256": "7c9ca41380bd48d22aa78240ecde1817e2e6cc50531ddd15822dbb9fa1ad9d8e"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/generated_texture.cpp",
+    "bytes": 1554,
+    "sha256": "a58a505d39324a3099b9aa106bfe4d441a6057f2fb4e8d007b5e0a60e5ca7f0e"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/generated_texture.h",
+    "bytes": 706,
+    "sha256": "4bf8ebdd626db8221b49c39783e7d72b96432549d9d5e640ded29e19c50505d6"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/godot-4.7-resourceloader.rst",
+    "bytes": 28116,
+    "sha256": "d2a76b2f87eebe088ac6a98c0c2d1797c16609abe6145511a7a0b2cce8f2e01f"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/godot-5b4e0cb0f-resource_loader.cpp",
+    "bytes": 59294,
+    "sha256": "35de9b6e4771228fcb61d90248b5f79cc036768c6a046635647970ebd4db9173"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/release.json",
+    "bytes": 5015,
+    "sha256": "d4dd1c31813f54af366372eb86f9b382de5ecf17129da38ebfe21e280be5885e"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/tag.json",
+    "bytes": 363,
+    "sha256": "bdd237f5efc0f80b62ae19baac9b23368257c27738ec788165d90c8430214c54"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d.cpp",
+    "bytes": 49328,
+    "sha256": "9967667c52ac9e928871212644a7491f3697f0f8d86d34d6b633960a22d9ffdd"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_collision.cpp",
+    "bytes": 23136,
+    "sha256": "36c6cfb5d85d91588a3a1464c6a5ae263a94480bb813b7da3ed3357ca1eef6bd"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_collision.h",
+    "bytes": 3424,
+    "sha256": "da26b10688d7e55b474e5cd98bd85a523b10af9e00ceec4e73040489f3455669"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_data.cpp",
+    "bytes": 50680,
+    "sha256": "b203be1544bef384452d33aa65221b62e3f3125f1d59196c10861899ed8c058b"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_data.h",
+    "bytes": 19034,
+    "sha256": "5a6bea43d1066a408b7417158020541c0e1fb15e7657c657520c83065c0e375b"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_instancer.cpp",
+    "bytes": 44807,
+    "sha256": "4e164766070f3d502503156266227be93f1fd8f218e1e7934c84d0c57d948fc0"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_material.cpp",
+    "bytes": 38729,
+    "sha256": "253e8077fd1694bb6ce3db8ee88cd0051e09757641d0881cd90839adfed1e0c3"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_region.cpp",
+    "bytes": 15761,
+    "sha256": "08ef19be3db4b9b0b23051dd66ba74061c404f842f7c743c646c7d516a46e42d"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_region.h",
+    "bytes": 5188,
+    "sha256": "1634343ec3f9326b1c588206ed50162e0b50e3b4a575ca9339564b42bf79db40"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_util.cpp",
+    "bytes": 20427,
+    "sha256": "cf6588d0dc745a3a680677ed2d7294dafa1ea09e788a2e65958451b86a10adca"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/native/terrain_3d_util.h",
+    "bytes": 12282,
+    "sha256": "12e4377cb2d20f1162e6a12039da481c531590def33549f94c301481eb52ae68"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/after/data/config/performance.json",
+    "bytes": 12524,
+    "sha256": "5160210cc806dc337814cad42959c95e33da37909b5b3e125faf1380d8b62ab8"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/after/scripts/world/playground_world.gd",
+    "bytes": 126398,
+    "sha256": "ceb732ba9bd7e9eed5c3226907038cb317a450c56d9a441cfbce3fb23cdf4f17"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/after/scripts/world/terrain_region_preloader.gd",
+    "bytes": 8214,
+    "sha256": "744f4b21e133ce11c4a7e4e21ab7574f4578df2fb9384397707be6e2560a57ff"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/api-source-manifest.json",
+    "bytes": 4641,
+    "sha256": "d921e12e3b4e96f70de90e530deb89d1ee94495a8b81625d3f866e6b477f1124"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/before/data/config/performance.json",
+    "bytes": 11954,
+    "sha256": "15b57d5a90dc19e6f39a7e361b30bbc0c82b6ca5fc1f81c17061e9986ea21f0b"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/before/scripts/world/playground_world.gd",
+    "bytes": 122478,
+    "sha256": "0decd5c2c649459f88be97dbf2852e5b85e244b305dca7b69dc662c56acff241"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/before/scripts/world/terrain_region_preloader.gd",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/freeze.json",
+    "bytes": 1747,
+    "sha256": "23fd654c68d02d82878f534873dcc132e4c3cd86b8ee9f1b646e9379c999f670"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/HANDOFF.md",
+    "bytes": 4915,
+    "sha256": "6ab2e63ddc559a552d501adbf7dca26b24145084a394d1accffe239a5d992914"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/manifest.json",
+    "bytes": 2237,
+    "sha256": "949bd6a05e1f2e2f49c88984dfdb513546691d708e3747d74ecb56ad07fe55a0"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/pinned-api-and-region-inputs.json",
+    "bytes": 13655,
+    "sha256": "12e6d288d5fcd17d15c80fd2637972d68950603d8ec756e6ef7b8b0a699c181f"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/source.patch",
+    "bytes": 15833,
+    "sha256": "4de195819a3272c88a5f562dc9acf0ffa5704c850ffeea787c4da9414c5ac8ae"
+  },
+  {
+    "path": "successor-r1/independent/source-pinned/packet/support-source-manifest.json",
+    "bytes": 3013,
+    "sha256": "dbe8b1a862e469d178555dd29ef7d583f51209834ca56f76454688e1218950ce"
+  },
+  {
+    "path": "successor-r1/independent/strict-review.txt",
+    "bytes": 32358,
+    "sha256": "000908991b3e6d7827ebe83e10adbd870ebdfbe693d52e0c8106906f6485a7ee"
+  },
+  {
+    "path": "successor-r1/manifest.json",
+    "bytes": 2237,
+    "sha256": "949bd6a05e1f2e2f49c88984dfdb513546691d708e3747d74ecb56ad07fe55a0"
+  },
+  {
+    "path": "successor-r1/source.patch",
+    "bytes": 15833,
+    "sha256": "4de195819a3272c88a5f562dc9acf0ffa5704c850ffeea787c4da9414c5ac8ae"
+  },
+  {
+    "path": "support-source-manifest.json",
+    "bytes": 3013,
+    "sha256": "dbe8b1a862e469d178555dd29ef7d583f51209834ca56f76454688e1218950ce"
+  },
+  {
+    "path": "terrain_region_preloader.gd.txt",
+    "bytes": 8214,
+    "sha256": "744f4b21e133ce11c4a7e4e21ab7574f4578df2fb9384397707be6e2560a57ff"
+  },
+  {
+    "path": "verify_api_sources.py",
+    "bytes": 1777,
+    "sha256": "925626d436aea7ca8788c3f4e9f5ea24efc16e7e51a2b4a8f724c9cdab74000a"
+  }
+]

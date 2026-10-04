@@ -32,7 +32,9 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	if not await launch(3, "world"):
+	# Only the traveller joins other worlds. Relinquish its world-save ownership
+	# before scene boot, as the production JoinDriver does; both hosts still own theirs.
+	if not await launch(3, "world", [], {2: ["--joiner"]}):
 		quit(await finish())
 		return
 	var port_a := int(((_peers[0] as Dictionary).get("hello", {}) as Dictionary).get("enet_port", 0))
