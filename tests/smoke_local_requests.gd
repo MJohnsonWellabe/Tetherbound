@@ -388,7 +388,12 @@ func _lost_creature() -> void:
 	await _capture_activity("juno")
 	await _press("menu_cancel")
 	if bool(_panel.call("is_open")):
-		_fail("lost_creature: choosing Later did not close Juno's acknowledgement")
+		var later_runner: RefCounted = _panel.call("runner") as RefCounted
+		_fail("lost_creature: choosing Later did not close Juno's acknowledgement (conversation=%s line=%s input_owner=%s log=%s)" % [
+			str(later_runner.call("conversation_id")) if later_runner != null else "?",
+			str(later_runner.call("line")) if later_runner != null else "?",
+			str(INPUT_OWNER.current(self).get_path()) if INPUT_OWNER.current(self) != null else "none",
+			str(_conversation_log.slice(-4))])
 	if bool(_director.call("trainer_battle_active")):
 		_fail("lost_creature: choosing Later from Juno's acknowledgement started her optional battle")
 	await _verify_juno_disk_round_trip(reunion)
