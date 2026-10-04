@@ -8,6 +8,7 @@ extends SceneTree
 ## unchanged. Actual terrain/body, controller approach, prompt, host context,
 ## typed stock transaction, owner disk write and ACK remain production paths.
 ## This local approach is not an earned inter-region/campaign or ENet proof.
+## --essence walks to and gathers every registered essence node of the realm.
 ## --ordinary instead walks to and gathers one already-registered renewable
 ## site per tier material of the realm (the per-biome gather census); those
 ## need no registry fixture. --realm also takes cloudreach and stormwood.
@@ -133,7 +134,12 @@ func _run() -> void:
 	var selected := 0
 	var rows: Array = config.get("additional_material_node_candidates", {}).get("nodes", [])
 	if _args.has("ordinary"): rows = _ordinary_rows()
-	_report.mode = "ordinary" if _args.has("ordinary") else "additional_candidates"
+	if _args.has("essence"):
+		# F32#2: every registered essence node of the realm, as production resolves it.
+		rows = []
+		for node: Dictionary in preload("res://scripts/world/essence_node_catalog.gd").nodes_for(_realm):
+			rows.append(SITES.by_id(_realm, str(node.id)))
+	_report.mode = "ordinary" if _args.has("ordinary") else ("essence" if _args.has("essence") else "additional_candidates")
 	for raw: Dictionary in rows:
 		if raw.has("candidates"):
 			# Production placement may refuse a site (and then never mounts it);
@@ -192,6 +198,7 @@ func _site(raw: Dictionary, source_path: String) -> bool:
 	print("F32 MATERIAL BEGIN ", id)
 	var tuning: Dictionary = _read("res://data/config/essence_nodes.json").get("placement_validation", {})
 	var at := Vector2(float(raw.at[0]), float(raw.at[1]))
+	var authored_at := at
 	# These are disclosed start fixtures. Only the later walked segment counts.
 	# Cliff sites: the first 6m ring point on baked ground near the site height.
 	var start := at + Vector2(0, 6)
@@ -251,7 +258,7 @@ func _site(raw: Dictionary, source_path: String) -> bool:
 	if not _check(not parent.is_empty(), id + " ordinary source anchor exists"): return false
 	if raw.has("anchor"):
 		var expected := Vector2(float(parent.at[0]), float(parent.at[1])) + Vector2(float(raw.anchor.offset_xz_m[0]), float(raw.anchor.offset_xz_m[1]))
-		if not _check(expected.is_equal_approx(at), id + " authored offset matches canonical anchor"): return false
+		if not _check(expected.is_equal_approx(authored_at), id + " authored offset matches canonical anchor"): return false
 	if SITES.by_id(_realm, id).is_empty():
 		# Test-only admission permits gathering an unshipped candidate; the false
 		# source proof field is preserved. Runtime host admission is not mocked.
@@ -277,6 +284,7 @@ func _site(raw: Dictionary, source_path: String) -> bool:
 	result.controller_approach = arrived and result.walked_metres >= 3.0 and _player.is_on_floor()
 	if not _check(result.controller_approach, id + " actual controller approach moved at least 3m and remained grounded"): return false
 	if not _check(await _driver.call("_prompt_holds_the_line", prompt.get_instance_id()), id + " exact candidate prompt wins ordinary interaction"): return false
+	if _args.has("essence"): _gate_fixture(raw, result)
 	var tool: String = str(_game.get("items").call("gathered_with", str(raw.get("item", ""))))
 	if tool.is_empty() and _soft:
 		_game.set("equipped_tool", "")
@@ -355,6 +363,31 @@ func _actor_baseline_diagnostic() -> Dictionary:
 			row.encounter_count = host.get("encounters").size()
 		result.directors.append(row)
 	return result
+
+## Disclosed --essence fixture for authored gates the census cannot earn in a
+## fresh world: the anchor's world/route flag is set, and for a Stormwood seam
+## the saved storm clock is moved into a phase the seam opens in (>= 60 s left).
+## The host still evaluates both rules exactly as in play.
+func _gate_fixture(raw: Dictionary, result: Dictionary) -> void:
+	var world: RefCounted = _game.get("world")
+	var required := str(raw.get("requires_flag", ""))
+	if not required.is_empty() and not world.flags.call("has", required):
+		world.flags.call("set_flag", required)
+		result.fixture_world_flag = required
+	if _realm != "stormwood": return
+	var rules := preload("res://scripts/world/stormwood_harvest_rules.gd").new()
+	var origin := str(raw.get("anchor", {}).get("id", raw.id))
+	if not rules.refusal(origin, world).contains("Break"): return
+	var site: Dictionary = rules.get("sites")[origin]
+	var allowed: Array = site.get("availability", [])
+	for second in 4000:
+		var info: Dictionary = rules.get("surge").call("phase_at", float(second), str(site.region_id))
+		if allowed.has(info.get("phase")) and float(info.get("remaining", 0.0)) >= 60.0:
+			var environment: Dictionary = world.get("realm_environment")
+			if not environment.get("stormwood") is Dictionary: environment["stormwood"] = {}
+			environment.stormwood["elapsed"] = float(second)
+			result.fixture_storm_elapsed = float(second)
+			break
 
 ## Read-only: the session's own actor-baseline verdict for each pending
 ## creature_training row, so a refusal names its inner reason in the report.

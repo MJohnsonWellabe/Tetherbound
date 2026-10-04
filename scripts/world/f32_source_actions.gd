@@ -259,7 +259,9 @@ static func _deny(code: String) -> Dictionary:
 ## carry the bare code as their reason; the HUD never shows a code.
 static func refusal_text(code: String) -> String:
 	var messages := {"stale_stock": "Someone else gathered this first.",
-		"source_or_revision_changed": "Someone else gathered this first.",
+		# The host's generic "context unavailable" (range, held tool, gate, phase,
+		# a changed record): never claim a competitor when none may exist.
+		"source_or_revision_changed": "That can't be gathered right now. Try again in a moment.",
 		"regrowing": "This has been gathered. It will grow back in a few days.",
 		"equipped_tool_required": "You need the right tool in hand to gather this.",
 		"working_tool_required": "You need a working tool to gather this.",
