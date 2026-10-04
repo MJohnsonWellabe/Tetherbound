@@ -427,6 +427,15 @@ func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 				var stone := _f18_find_stone(str(args.stone))
 				var target := F18_STONE.resolve_position(current_scene, stone.get("_row"), true) if stone != null else Vector3(INF, INF, INF)
 				ok = ok and target.is_finite() and _f18_vector(state.position).distance_to(target) < 1.0
+			if args.get("hall") == true:
+				# Home-only home arch (STATE decision #11): the Hall's own home
+				# arrival, at the anchor or one of its authored co-op slots.
+				var at_hall := false
+				for hall: Node in get_nodes_in_group("crossing_halls"):
+					var home: Vector3 = hall.call("home_arrival")
+					for slot: Vector3 in preload("res://scripts/net/foundation_portal_arrival.gd").arrival_slots(home):
+						if Vector2(slot.x, slot.z).distance_to(Vector2(_f18_vector(state.position).x, _f18_vector(state.position).z)) < 1.0: at_hall = true
+				ok = ok and at_hall
 		state.observed_reply = reply
 		return _f18_verdict(ok, "actual prompt " + mode + " requires bound durable reply and exact portable outcome", state)
 	return _f18_verdict(false, "actual arch produced no authoritative outcome within bounded deadline", _f18_state(game, {}))

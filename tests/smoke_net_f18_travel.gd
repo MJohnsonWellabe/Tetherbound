@@ -126,10 +126,22 @@ func _run() -> void:
 	# Cross-world safe spawning is production-owned; HomeKey finds the actual
 	# Hall from that position, rather than staging another actor teleport.
 	if not await _f18_pass(1, "f18_home_key", {}, 12000): return
-	if not await _f18_pass(1, "f18_arch", {"arch": "home", "mode": "enter", "realm": "meadows", "stone": F18_STONE_ID}, 12000): return
+	# STATE decision #11 (owner-pending): the shipped home arch is home-only;
+	# portals.json home_arch.returns_to_last_meadows_waystone=true restores the
+	# recommendation, and this step then proves the personal-stone return.
+	var meadows_return := preload("res://scripts/net/portal_action_policy.gd").meadows_waystone_return(
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json")))
+	var home_args := {"arch": "home", "mode": "enter", "realm": "meadows"}
+	if meadows_return: home_args.stone = F18_STONE_ID
+	else: home_args.hall = true
+	if not await _f18_pass(1, "f18_arch", home_args, 12000): return
 	var return_host := await _f18_observe(2, guest_id)
-	check(_f18_accepted(return_host, guest_id, "portal_arrival", "", F18_STONE_ID),
-		"actual home arch returns rejoined guest to its prior personal stone, with accepted disk arrival")
+	if meadows_return:
+		check(_f18_accepted(return_host, guest_id, "portal_arrival", "", F18_STONE_ID),
+			"actual home arch returns rejoined guest to its prior personal stone, with accepted disk arrival")
+	else:
+		check(_f18_accepted(return_host, guest_id, "portal_arrival", "", "meadows_entry"),
+			"home-only home arch lands the rejoined guest at the Hall entry, with accepted disk arrival")
 	check(_f18_position_same(host_b, return_host) and return_host.get("home_key_count") == 1,
 		"second host stays put with its own HomeKey during guest personal-stone return")
 	if not await _f18_pass(1, "f18_home_key", {}, 12000): return
