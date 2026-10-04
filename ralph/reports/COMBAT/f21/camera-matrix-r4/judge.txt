@@ -1,0 +1,30 @@
+CODE-BLIND FIGHT-CAMERA JUDGE, size matrix r4. Fresh sub-agent, pixels only. All 36 frames were viewed individually at full 1920x1080 and every view succeeded, plus the palworld-01, palworld-03 and Meadows keyart references. No code, docs, git or config was read.
+
+| Pairing | Verdict |
+| 00 small/small | PASS |
+| 01 small/normal | PASS |
+| 02 small/giant | PASS |
+| 03 normal/small | PASS |
+| 04 normal/normal | PASS |
+| 05 normal/giant | PASS (background boulder merges with Terrapup's head in 060/071; behind it, not occluding) |
+| 06 giant/small | PASS |
+| 07 giant/normal | PASS (the giant reads no larger than the nearer normal body because of depth) |
+| 08 giant/giant | PASS, borderline on criterion 4 (the stags fill about x560-1340/y340-740 with empty foreground; faces still readable, about 60 px; fix: 10-15% closer or a lower look-at) |
+
+Criterion detail:
+1. Both combatants are fully on screen in every frame, with no combatant under any HUD panel.
+2. The combatants never overlap. The tightest gaps are about 60-90 px (01-060/071, 03-071, 04-071).
+3. No foreground non-combatant covers a combatant. No dithered body reads as a bug. The trainer sometimes stands under a HUD panel; the trainer is not a combatant, so this is untidy but not a failure.
+4. Faces and feet are resolvable in every pairing. Giants are about 350-480 px tall on screen.
+5. The fight is always legible: the chevron, facing and telegraph mark the two combatants, including same-species pairs.
+Pose self-occlusion: the player creature walks away from the camera in the 036/060/071 frames of most pairings. The opponent's face is visible in every frame.
+
+OVERALL VERDICT FOR THE CRITERION: PASS.
+
+Craft notes (not part of the verdict):
+- The high three-quarter camera stops giants from looming the way the low Palworld camera does.
+- Hit feedback is sparse in these non-hit stills.
+- The stag's antler crown and tail tuft fragment into separate shapes.
+- The arena reads as a flat green carpet with no sky or depth layering.
+- The magenta telegraph is the one off-palette colour.
+- Creature-to-trainer scale reads correctly.
