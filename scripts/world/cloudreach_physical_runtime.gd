@@ -610,12 +610,27 @@ func restore_progression_from_game(game: Node) -> void:
 	_previous = Vector3.INF
 	# Rebuild disposable placements: loading an earlier save must restore a
 	# previously taken cache and remove a camp unlocked only in the later save.
-	for candidate: Variant in _placements.values():
-		if is_instance_valid(candidate):
-			var node := candidate as Node3D
-			PICKUP_GLOW.detach(node)
-			node.queue_free()
-	_placements.clear()
+	# A guest runs this on every host world delta (ledger_rpc.gd
+	# `_restore_progression`), so each node leaves the tree NOW: freed in place,
+	# it still held its id when the rebuild added the replacement, which Godot
+	# then renamed, and lookups by id lost it (re-proof F07-1).
+	# Personal rewards are not disposable: `offered()` reads this character's
+	# claimed flag and the world unlock live, so they are kept and refreshed,
+	# and a guest's claim in flight is not torn down by its own delivery delta.
+	var kept: Dictionary = {}
+	for id: Variant in _placements:
+		var candidate: Variant = _placements[id]
+		if not is_instance_valid(candidate):
+			continue
+		var node := candidate as Node3D
+		if node.get_script() == PERSONAL_REWARD:
+			kept[id] = node
+			continue
+		PICKUP_GLOW.detach(node)
+		if node.get_parent() != null:
+			node.get_parent().remove_child(node)
+		node.queue_free()
+	_placements = kept
 	_npc_positions.clear()
 	sync_progression()
 

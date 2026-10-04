@@ -406,7 +406,19 @@ func _run_vault_activity() -> void:
 		_report_vault_activity()
 		return
 	if int((game.get("inventory") as RefCounted).call("count", "potion_large")) != recovery_before + 2:
-		_fail("vault activity: Elder victory did not pay two retained-team recovery potions")
+		var paid_world: Variant = game.get("world")
+		var deliveries: Variant = (paid_world as RefCounted).get("reward_deliveries") if paid_world != null else null
+		var elder_sources: Array = []
+		if deliveries is Dictionary:
+			for raw: Variant in (deliveries as Dictionary).values():
+				if raw is Dictionary and str((raw as Dictionary).get("source", "")).contains("warrens"):
+					elder_sources.append([str((raw as Dictionary).get("source", "")), str((raw as Dictionary).get("item_id", (raw as Dictionary).get("item", ""))), (raw as Dictionary).get("count", null), str((raw as Dictionary).get("status", ""))])
+		_fail("vault activity: Elder victory did not pay two retained-team recovery potions (potion_large %d -> %d; elder valid=%s reward_meta=%s once_id=%s; warrens deliveries=%s)" % [
+			recovery_before, int((game.get("inventory") as RefCounted).call("count", "potion_large")),
+			str(is_instance_valid(elder)),
+			str(elder.get_meta("once_completion_reward", "<none>")) if is_instance_valid(elder) else "?",
+			str((director.get("_once_only") as Dictionary).get(elder, "<none>")) if is_instance_valid(elder) and director.get("_once_only") is Dictionary else "?",
+			str(elder_sources)])
 
 	var heartstone := warrens.get_node_or_null(^"Heartstone") as Node3D
 	if heartstone == null:
