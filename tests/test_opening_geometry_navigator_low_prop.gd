@@ -14,6 +14,7 @@ func test_a_woodpile_log_is_a_low_prop_climb() -> void:
 
 func test_floor_contacts_and_walls_are_not_low_prop_climbs() -> void:
 	assert_false(NAV.is_low_prop_climb(0.0, 0.35), "level floor")
-	assert_false(NAV.is_low_prop_climb(0.117, 0.35), "a 45-degree floor-cone capsule contact")
+	assert_true(NAV.is_low_prop_climb(0.12, 0.35), "a low campfire stone ring is still climbed clutter")
+	assert_false(NAV.is_low_prop_climb(0.03, 0.35), "a contact at foot height is the prop's own floor skin")
 	assert_false(NAV.is_low_prop_climb(0.30, 0.0), "no configured step")
 	assert_false(NAV.is_low_prop_climb(NAN, 0.35))
