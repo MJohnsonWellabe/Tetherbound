@@ -1,0 +1,17 @@
+SURGE CAPTURE [ 134.5s] world mounted
+SURGE CAPTURE [ 232.4s] captured forest_calm
+SURGE CAPTURE [ 417.9s] captured forest_break
+SURGE CAPTURE [ 475.2s] captured giant_calm
+SURGE CAPTURE [ 795.9s] captured giant_break
+SURGE CAPTURE [ 816.9s] captured glass_calm
+SURGE CAPTURE [ 971.5s] captured glass_break
+SURGE CAPTURE [ 998.4s] captured rod_line_calm
+SURGE CAPTURE [1334.8s] captured rod_line_break
+SURGE CAPTURE [1364.7s] captured stormheart_calm
+SURGE CAPTURE [1546.0s] captured stormheart_break
+SURGE CAPTURE [1601.5s] captured forest_aftermath_calm
+SURGE CAPTURE [1657.8s] captured giant_aftermath_calm
+SURGE CAPTURE [1677.7s] captured glass_aftermath_calm
+SURGE CAPTURE [1704.1s] captured rod_line_aftermath_calm
+SURGE CAPTURE [1729.6s] captured stormheart_aftermath_calm
+SURGE CAPTURE [1729.6s] DONE 15 frames, 0 failures
