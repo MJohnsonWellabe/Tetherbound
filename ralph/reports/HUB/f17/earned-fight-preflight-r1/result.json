@@ -1,0 +1,21 @@
+{
+  "source": "38b655d684d4da586a964fae933a516b448e0b27",
+  "run": 37085044430,
+  "job": 111093447101,
+  "artifact": 11259993567,
+  "native_exit": 1,
+  "workflow_conclusion": "failure",
+  "expected_preflight_refusal": true,
+  "reached": "title",
+  "script_error_count": 0,
+  "error_count": 0,
+  "scope": "actual script compiled/loaded and native headless preflight refused before gameplay as intended; not an acceptance, runtime capture, frame or motion pass",
+  "hashes": {
+    "job.log": "6db08752ebbae5a28d505cb3875218334c5ed04b4c79e287ba14bc810a8d7893",
+    "native.log": "4ca54b99a2d47a63713098a453bf29c51bfbae34ea041bbf9f29c3ba856b65c1",
+    "request.json": "aa6560e563d7fb261f525ce713ba7dabe73183a63c47ae74c14b3fd0376b9a07",
+    "runtime-artifact.zip": "1bb2344f1f2a1a78a1536281eee7d22743388f5c1f8e9701c107a888f8cb7498",
+    "workflow-artifacts.json": "237b9ca6ebac3f643ae5f27b86c4d247c9d67f244a762fccc495a126bb097368",
+    "workflow-jobs.json": "93c57cdd8353cb1a64f6fc488e9daca0e5395bbc3278d37e6d3087aab8df3a23"
+  }
+}

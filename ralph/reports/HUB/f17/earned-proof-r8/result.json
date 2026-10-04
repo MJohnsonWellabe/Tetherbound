@@ -1,0 +1,65 @@
+{
+  "source": "6a13e6e44a2cfadd4c3488909bd656c4890e29f2",
+  "run": 37086098279,
+  "job": 111096616203,
+  "artifact": 11261227819,
+  "native_exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 1550.647,
+  "campaign_result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": false,
+    "cumulative_elapsed_seconds": 1550.647,
+    "dry_run": false,
+    "elapsed_seconds": 1550.647,
+    "failures": [],
+    "local_chains": [],
+    "reached": "tournament_won",
+    "requested_prefix_passed": true,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://f49_campaign_2452_8665"
+  },
+  "script_error_count": 0,
+  "error_count": 1,
+  "catch_loss_wait_branch_executed": false,
+  "encounter_override_seed": 4,
+  "saved_game_world_seed": 1434901555,
+  "saved_state_scope": "Earned rested-team export is pre-bracket. Final scratch autosave does not certify a saved post-final tournament win. Reproducible encounter populations require retaining TB_WORLD_SEED=4.",
+  "scope": "Fresh earned controller M1 prefix through three real tournament wins; no whole-campaign, F19 solvency, rendered visual, device, or multiplayer claim. Actual same-run earned rested-team checkpoint exported and reloaded; no resumed starting checkpoint.",
+  "tournament": {
+    "tournament_quarter_mira": {
+      "outcome": "won",
+      "rounds_won": 2,
+      "landed_attacks": 22,
+      "actual_witness": true
+    },
+    "tournament_semi_tam": {
+      "outcome": "won",
+      "rounds_won": 2,
+      "landed_attacks": 28,
+      "actual_witness": true
+    },
+    "tournament_final_oskar": {
+      "outcome": "won",
+      "rounds_won": 3,
+      "landed_attacks": 64,
+      "actual_witness": true
+    }
+  },
+  "hashes": {
+    "artifact-manifest.txt": "e469973709b6c3b6d1827c178d8051fc7436d8cc46d9f5caf014fe9f31239cd0",
+    "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "job.log": "4be83892cd3e8cf1d5382f5a6b7c3769e831cc43db8c6e9d9396521b8a766cbd",
+    "native.log": "a0149c198fb6f926f42a5d258cde20280c3942b168837f1d858aa9ed887ca6bc",
+    "request.json": "89d66b2e392cb55548eb72f8cc0fd5f1785b82f854719fbb5c7d1cef88f69347",
+    "runtime-artifact.zip": "901882ea6cbbcd72cf17d09a1ce9931bd4da3916d3ccfa5879c46d56f73a54b8",
+    "workflow-artifacts.json": "31e07b190741565326b48d3284815f9fc2363dc291c5d2844ec74bf124e8733a",
+    "workflow-jobs.json": "217112853222c19cefeb9e9a2aecd642c08d5984dcb720c585f33176b0b40073",
+    "earned-rested-team/checkpoint.json": "2aa0182dd571acdbb2e0ac097b411f098ce69849f3029359f639ce25aa7a7613",
+    "earned-rested-team/save/slot_0.json": "f573ad6e8d09752b47de8a16743d0228a7abf0289ff6e2116d7ee44bfb74f106",
+    "earned-rested-team/save/characters/character-2908456aad7e87d80d8f7a05000aab0c/character.json": "c63c0a1c285c8ce3456619b9c50323b77c1afa9a055db01c8ae24e3ddd7a2ebf",
+    "earned-rested-team/save/worlds/slot-0/world.json": "f4ad777208255f03211d07555e7cc8d16ac6ea67b85943b06674e244abcfc2c6"
+  }
+}

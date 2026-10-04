@@ -1,0 +1,3 @@
+Actual native runtime regression PASS at `ec40283309c7fcc1513223bcea0c1fe208dec86c`, [run37081572825](https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37081572825), job111083039777:1test,7assertions,0failed,native0/took4s,zeroSCRIPTERROR. Exact archive/log/exit/request/job/artifact metadata and source-aware independent review are retained; result.json binds original SHA256 values.
+
+The actual production static selector returns typed strings for singleLow, singleMedium and pairedMedium/High. The test constructs no SceneTree and launches no world. This establishes the specific runtime repair, not native saved stills/motion or Bars A/B. Previous full Low capture remains failed in visual-low-r1-failure; fresh capture on repaired source remains necessary.

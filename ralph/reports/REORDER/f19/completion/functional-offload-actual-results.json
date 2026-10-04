@@ -1,0 +1,365 @@
+{
+  "kind": "f19_functional_offload_actual_results",
+  "source_commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+  "engine": "Godot 4.7; real gl_compatibility backend; reviewed Dummy audio workflow",
+  "source_review": "Coordinator independently approved 1351af5394 functional runner; source approval does not imply acceptance",
+  "veridian": {
+    "run": 37081325571,
+    "artifact": 11259339637,
+    "process_exit": 0,
+    "selected_cases": [
+      "space-accept",
+      "space-refuse",
+      "capacity-refuse-at-prompt",
+      "capacity-accept-then-let-newcomer-go",
+      "capacity-accept-release-one",
+      "save-while-choice-open"
+    ],
+    "native_result": "veridian offer choice smoke test passed",
+    "engine_errors": 136,
+    "script_errors": 0,
+    "unique_engine_error": "Parameter material is null; four GLES3 material dependency functions",
+    "accepted_clean_witness": false,
+    "fixtures": "Original declared victory, party and pose fixtures retained; actual choice controller and save/reload",
+    "log": "ci-veridian-functional-rejected-37081325571.log.gz"
+  },
+  "campaign": {
+    "run": 37081328436,
+    "artifact": 11258664305,
+    "accepted_clean_witness": false,
+    "campaign_complete": false,
+    "counts_as_proof": false,
+    "checkpoints": [],
+    "reached": "village",
+    "elapsed_seconds": 1061.635,
+    "engine_errors": 4,
+    "script_errors": 0,
+    "failures": [
+      "Native opening refused: actual production contact observation cap"
+    ],
+    "last_observation": {
+      "requests": 6227,
+      "frame": 6226,
+      "progress_m": 512.758859934285,
+      "stall_frames": 0,
+      "callback_own_us": 563,
+      "callback_cap_us": 10000,
+      "player": [
+        -49.9696350097656,
+        0.911674201488495,
+        54.1063346862793
+      ],
+      "request": [
+        -34.5519676208496,
+        -2.99817681312561,
+        79.7608489990234
+      ]
+    },
+    "shared_helper_owner": "Coordinator relays actual contact-cap evidence to F17; F19 does not edit competing helper",
+    "log": "ci-campaign-functional-rejected-37081328436.log.gz",
+    "next_comparator": "F17 R8 proves a fresh earned prefix under encounter-only TB_WORLD_SEED=4, while saved Game.world_seed differs. Do not claim same-world/terrain reproduction or contact-cap fix. Full F19 seed strategy held pending coordinator disposition; all guards remain.",
+    "observed_encounter_director_seed": 920716524
+  },
+  "solmane": {
+    "run": 37081327114,
+    "artifact": 11259732238,
+    "source_commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+    "process_exit": 0,
+    "elapsed_seconds": 2552,
+    "native_result": "solmane offer choice smoke test passed",
+    "scenarios": [
+      "space-accept",
+      "space-refuse",
+      "capacity-refuse-at-prompt",
+      "capacity-accept-then-let-newcomer-go",
+      "capacity-accept-release-one",
+      "save-while-choice-open"
+    ],
+    "engine_errors": 4,
+    "script_errors": 0,
+    "accepted_clean_witness": false,
+    "error_location": "First Cloudreach world boot before the first scenario; material-null GLES3 dependency functions",
+    "caveat": "This source predates fd329; old cancelled source reproduced freed resource-cache reads, this run did not. Absence here does not replace the independent actual-node regression.",
+    "log": "ci-solmane-functional-rejected-37081327114.log.gz",
+    "fixtures": "Original declared victory/party/pose fixtures; actual native choice UI, capacity and split save/reload"
+  },
+  "body_diagnostic": {
+    "source_commit": "9c2034f0f6367c8271d7ca708cd6a62bd56f5592",
+    "run": 37082873789,
+    "artifact": 11259429217,
+    "process_exit": 0,
+    "engine_errors": 0,
+    "actual_body_model": true,
+    "camera": true,
+    "real_draw_frames": true,
+    "outcome": "Negative material-error reproduction; no product fix justified",
+    "log": "ci-legendary-body-lifetime-37082873789.log"
+  },
+  "exclusions": "No earned fixtures promoted, no visual/audio/owner-play/device-performance acceptance. All engine work remains offloaded while user plays Valheim.",
+  "build_component_diagnostic": {
+    "run": 37083791397,
+    "artifact": 11260045718,
+    "source_commit": "742ed94d2af49924d5048b45914f143326a82a57",
+    "process_exit": 0,
+    "elapsed_seconds": 9,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "cases": "drawing true/false x settled frames 0/3",
+    "actual_methods": "Station Altar geometry/tint, BuildPlacer _ensure_overlay/_drop_ghost/_set_overlay_visible, world/overlay teardown",
+    "fixtures": "Startup and interaction disabled in component subclasses; no paid placement, mounted world, reward or earned claim",
+    "outcome": "Negative material-error reproduction; no build material production fix",
+    "log": "ci-build-material-lifetime-37083791397.log",
+    "scope_correction": "Earlier StationPiece procedural Altar differs from production BuildPiece BookStand; see actual-altar-material-r1.json."
+  },
+  "chamber_material_diagnostic_r1": {
+    "source_commit": "31ec521f93407ba1c3d4af7b85acf95e75b6160b",
+    "run": 37084465536,
+    "accepted_clean_witness": false,
+    "workflow_conclusion": "failure",
+    "engine_errors": 48,
+    "script_errors": 0,
+    "result": "Eight active chamber Material references retained did not reduce post-choice errors:16 in each case. Original prompt placement assertion failed in baseline and remains preserved.",
+    "evidence": "chamber-material-counterfactual-r1.json"
+  },
+  "chamber_label_diagnostic_r2": {
+    "kind": "f19_actual_chamber_label_counterfactual",
+    "source_commit": "0679bb12aafa61028acb6a8917b0c485df5983bc",
+    "run": 37086324872,
+    "artifact": 11260792086,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 665,
+    "accepted_clean_witness": false,
+    "script_errors": 0,
+    "engine_errors": 48,
+    "original_assertion_failures": [],
+    "scopes": {
+      "baseline": {
+        "errors_after_choice_before_release": 16
+      },
+      "label_base_detached": {
+        "errors_before_choice": 8,
+        "errors_after_choice_before_release": 16,
+        "errors_after_end": 8,
+        "actual_predelete_detach_markers": 2
+      }
+    },
+    "actual_transactions": "Both original space-accept cases retained party maximum five, personal receipts, actual save/reload and no-reoffer assertions. All passed; raw engine errors prohibit clean acceptance.",
+    "actual_labels": [
+      "StrongholdClimax/VeridianAcceptPromptAnchor/AnswerCaption",
+      "StrongholdClimax/VeridianRefusePromptAnchor/AnswerCaption"
+    ],
+    "live_properties_unchanged": true,
+    "conclusion": "Detaching both actual chamber caption bases before native Label3D destruction did not reduce the post-choice errors. No product caption fix justified.",
+    "raw_log": "ci-chamber-label-negative-37086324872.log.gz",
+    "raw_log_sha256": "a63e1f849ffc636680d558763a34a52287d6958e05a4051b65371ebfe55c61cd",
+    "next_diagnostic": "Actual installed Terrain3D MouseQuad lifecycle: baseline versus retained active ShaderMaterial versus base detached at permanent world destruction; drawing true/false. Empty terrain component fixture, never acceptance.",
+    "exclusions": "No product patch, original assertion waiver, clean native choice proof, earned save fixture or completed campaign."
+  },
+  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
+  "terrain_component_diagnostic": {
+    "kind": "f19_actual_terrain_component_lifetime",
+    "source_commit": "1544456506522ff102c7d116b980f37ae492921c",
+    "run": 37088068152,
+    "artifact": 11260778973,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 10,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "cases": 6,
+    "drawing_states": [
+      true,
+      false
+    ],
+    "treatments": [
+      "baseline",
+      "retain-quad-material",
+      "detach-quad-base"
+    ],
+    "actual_installed_terrain_version": "1.0.2",
+    "actual_mouse_quad_observed_in_each_case": true,
+    "original_guards_failures": [],
+    "result": "Negative reproduction: empty actual Terrain3D lifetime did not reproduce material errors; neither retention nor detachment establishes a product fix.",
+    "fixtures": "Empty installed terrain and camera, no mounted world or gameplay",
+    "accepted_clean_witness": false,
+    "raw_log": "ci-terrain-material-negative-37088068152.log",
+    "raw_log_sha256": "37ebe50b8b3c39dc08ad8017ad83c127fcaad85f1f15ed84d43eef614dbee864",
+    "next_diagnostic": "Original space-accept/save/reload with whole actual world material retention versus scriptless world Label3D permanent-deletion observers, retaining a baseline. Previous isolated lifetime negatives do not certify actual batched world destruction."
+  },
+  "population_provenance_native": {
+    "source_commit": "6f7ebb70b8dde3b9332dfbb3461866d05d6be223",
+    "run": 37089232408,
+    "artifact": 11261532342,
+    "process_exit": 0,
+    "elapsed_seconds": 3,
+    "checks": 12,
+    "failures": [],
+    "engine_errors": 0,
+    "script_errors": 0,
+    "scope": "Actual WorldState/WorldSave disk bytes and read-only seed observation under absent/present capture override; save and WorldState unchanged",
+    "log": "ci-population-provenance-37089232408.log"
+  },
+  "actual_saved_seed_samples": "canonical-meadows-prefix-r8.json",
+  "world_material_diagnostic_r3": {
+    "kind": "f19_actual_world_material_counterfactual",
+    "source_commit": "6c3572a5645190f6377cc41c70a121fb2534311a",
+    "run": 37088521645,
+    "artifact": 11261936821,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 1074,
+    "engine_errors": 72,
+    "script_errors": 0,
+    "original_assertion_failures": [],
+    "accepted_clean_witness": false,
+    "scopes": {
+      "baseline": {
+        "post_choice_errors": 16
+      },
+      "retained_mesh_multimesh_terrain_resources": {
+        "peak_references": 3992,
+        "post_choice_errors": 16,
+        "prior_world_teardown_errors": 8
+      },
+      "scriptless_world_label_base_detachment": {
+        "labels_observed_per_world": [
+          139,
+          141
+        ],
+        "predelete_detach_markers": 421,
+        "existing_product_scripts_replaced": 0,
+        "post_choice_errors": 16,
+        "prior_world_teardown_errors": 8,
+        "final_teardown_errors": 8
+      }
+    },
+    "actual_geometry_count_range": [
+      48102,
+      48240
+    ],
+    "retained_scope": "Geometry override/overlay, MeshInstance active surface Materials, MultiMesh surface Materials and Terrain3D material Resource. GPUParticles draw passes and CPUParticles mesh resources were outside this set.",
+    "result": "Neither declared resource retention nor scriptless Label3D PREDELETE detachment reduced post-choice errors. All original choice/party/save/reload guards passed; raw engine errors prohibit clean acceptance.",
+    "raw_log": "ci-world-material-negative-37088521645.log.gz",
+    "raw_log_sha256": "8de7ea95653c77f95d87efe612aba88b6e23b9d8f1b8a428946768d972290fde",
+    "next_diagnostic": "Same original full-world spaceaccept/reload, baseline versus retained actual particle draw Meshes/Materials/process Material. Log geometry class histogram and actual particle owner paths; no product edits."
+  },
+  "next_diagnostic": {
+    "source_commit": "d77bc8f4ef28c36d71b4ce2a20c334c5ac8b2830",
+    "run": 37093868386,
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original full-world spaceaccept/save/reload; baseline versus exposed Mesh/MultiMesh/Material and particle resources rescanned immediately before actual world deletion; new Material owner samples; diagnosis only",
+    "status": "Dispatched; checkout step confirmed live; no terminal result"
+  },
+  "particle_material_counterfactual_r4": {
+    "kind": "f19_actual_world_particle_material_counterfactual",
+    "source_commit": "be1c10b18f6191d950e1dc5648a12e9024b4f154",
+    "run": 37090546213,
+    "job": 111109766132,
+    "artifact": 11262318995,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 702,
+    "engine_errors": 48,
+    "script_errors": 0,
+    "original_assertion_failures": [],
+    "accepted_clean_witness": false,
+    "scopes": {
+      "baseline": {
+        "post_choice_errors": 16
+      },
+      "retained_particle_mesh_materials": {
+        "peak_references": 219,
+        "actual_GPUParticles3D": 73,
+        "actual_CPUParticles3D": 0,
+        "post_choice_errors": 16,
+        "prior_world_teardown_errors": 8,
+        "final_teardown_errors": 8
+      }
+    },
+    "choice_geometry_classes": {
+      "GPUParticles3D": 73,
+      "Label3D": 141,
+      "MeshInstance3D": 15112,
+      "MultiMeshInstance3D": 32916,
+      "Sprite3D": 1
+    },
+    "result": "Holding actual particle draw Meshes, surface Materials, process Materials and geometry override/overlay references did not reduce original full-world post-choice errors. All original gameplay guards passed; raw engine errors prohibit acceptance.",
+    "raw_log": "ci-particle-material-negative-37090546213.log.gz",
+    "raw_log_sha256": "9dd63f653b02007467d0d81001363c3d027e020456774073aa5e74fd1e39d160",
+    "next_diagnostic": "Actual scriptless world Sprite3D PREDELETE rendering-base detachment; unchanged live properties, original spaceaccept/save/reload; no product edit or acceptance claim."
+  },
+  "sprite_material_counterfactual_r5": {
+    "kind": "f19_actual_world_sprite_material_counterfactual",
+    "source_commit": "9f94af3b1b5f321336fbaf57ebf1f8fe4c7eaacb",
+    "run": 37091898727,
+    "job": 111113822263,
+    "artifact": 11263276695,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 745,
+    "engine_errors": 48,
+    "script_errors": 0,
+    "original_assertion_failures": [],
+    "accepted_clean_witness": false,
+    "actual_sprite_path": "/root/MeadowsPlayground/IronwoodGrovePresentation/IronwoodLightningHeart/LightningHeartAura",
+    "predelete_detach_markers": 3,
+    "live_properties_unchanged": true,
+    "existing_product_scripts_replaced": 0,
+    "scopes": {
+      "baseline": {
+        "post_choice_errors": 16
+      },
+      "actual_sprite_base_detachment": {
+        "post_choice_errors": 16,
+        "prior_world_teardown_errors": 8,
+        "final_teardown_errors": 8
+      }
+    },
+    "result": "Actual scriptless Sprite3D PREDELETE base detachment did not reduce original full-world post-choice errors. All original gameplay guards passed; raw engine errors prohibit acceptance. No aura production change is justified.",
+    "raw_log": "ci-sprite-material-negative-37091898727.log.gz",
+    "raw_log_sha256": "1f0d32dd22b9e40ff22ca2007164a74020e1c29d4774ef3f293bae5e4dd6a6be",
+    "next_diagnostic": "Installed Terrain3D with actual committed Meadows region data and production terrain/material factory methods. Compare default versus authored material with drawing true/false. Earlier empty Terrain3D probe did not cover populated native mesher/region lifecycle; no world actors or acceptance claim."
+  },
+  "populated_terrain_preflight_cancel": {
+    "run": 37093005552,
+    "source_commit": "47f166ab7d0f73318c1267adbf80f63d476895aa",
+    "cancel_requested": true,
+    "reason": "Inherited playground onready fields require Player and CameraRig/Camera3D nodes; original component host omitted them. Add blank structurally correct fixture nodes before tree entry. No reproduction or acceptance verdict from this handle.",
+    "workflow_conclusion": "cancelled",
+    "artifact": 11262968002,
+    "artifact_contents": "MANIFEST.txt only; no run.log, no engine reproduction verdict"
+  },
+  "populated_terrain_component_r2": {
+    "kind": "f19_actual_populated_terrain_component",
+    "source_commit": "0d0ba1dabf65112e76bbd5f5ef97bfe5cf696624",
+    "run": 37093187450,
+    "job": 111117691688,
+    "artifact": 11263617640,
+    "workflow_conclusion": "success",
+    "process_exit": 0,
+    "elapsed_seconds": 23,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "failures": [],
+    "cases": 4,
+    "resident_regions_each": 64,
+    "installed_terrain_version": "1.0.2",
+    "drawing": [
+      true,
+      false
+    ],
+    "material_variants": [
+      "default",
+      "production ground material factory"
+    ],
+    "result": "Negative reproduction: populated actual Terrain3D with committed Meadows region data and production material methods completed all four component teardowns without the full-world material errors. Does not certify full-world deletion batches or justify a terrain product fix.",
+    "fixtures": "Blank Player/CameraRig/Camera3D structure for inherited onready fields; production full-world ready/process suppressed. Actual terrain factory and authored material methods retained; no region generation, write, actors, campaign or earned-save claim.",
+    "accepted_full_world_witness": false,
+    "raw_log": "ci-populated-terrain-negative-37093187450.log",
+    "raw_log_sha256": "ded91a11922da4328358b2926659a0c0060f548b0ffba25c2827c896949c9025",
+    "next_diagnostic": "Original full-world spaceaccept/save/reload; baseline versus all exposed geometry Mesh/Material resources sampled again immediately before actual world deletion. Prior readiness-only scans could miss post-choice or post-load creations/replacements. Log newly retained Material owner paths without altering product state."
+  },
+  "final_world_resource_diagnostic": "final-resource-counterfactual-r7.json",
+  "actual_altar_owner_isolation": "actual-altar-hidden-override-r2.json"
+}

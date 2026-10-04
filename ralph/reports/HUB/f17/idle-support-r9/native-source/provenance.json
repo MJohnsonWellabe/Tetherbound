@@ -1,0 +1,111 @@
+{
+  "modules/godot_physics_3d/godot_space_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_space_3d.cpp",
+    "bytes": 43185,
+    "sha256": "1f8f112d1d72c87201fd714b1f67ab6acdaad4e501d25106a7de059cd311dc5a"
+  },
+  "modules/godot_physics_3d/godot_physics_server_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_physics_server_3d.cpp",
+    "bytes": 58416,
+    "sha256": "3d0abb21d322589d7f6ffa5850e3a3ac75897ce66559a747e2297d15a721fe83"
+  },
+  "modules/godot_physics_3d/godot_collision_solver_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_collision_solver_3d.cpp",
+    "bytes": 21337,
+    "sha256": "12842cbd7b31018d730f28045207f259ee03f983753131d5c2269889ba2512a6"
+  },
+  "modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/jolt_physics/spaces/jolt_physics_direct_space_state_3d.cpp",
+    "bytes": 36522,
+    "sha256": "2aa03826e4807d6a87a2b1cc59f47d51a73b730a9ba1137287a477afd4e248f9"
+  },
+  "modules/jolt_physics/spaces/jolt_query_collectors.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/jolt_physics/spaces/jolt_query_collectors.h",
+    "bytes": 7567,
+    "sha256": "22bdae2229c956c95d32052af944c2139fe3db95922411a8a6ee0d61264dac8a"
+  },
+  "doc/classes/PhysicsDirectSpaceState3D.xml": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/doc/classes/PhysicsDirectSpaceState3D.xml",
+    "bytes": 6824,
+    "sha256": "a425439c1bb93006c927956d0c7b48f323a6a98904112272d4b8caedd11589ef"
+  },
+  "servers/physics_server_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/servers/physics_server_3d.cpp",
+    "error": "HTTP Error 404: Not Found"
+  },
+  "modules/godot_physics_3d/godot_collision_solver_3d_sat.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_collision_solver_3d_sat.cpp",
+    "bytes": 80251,
+    "sha256": "537e909c5dae414f7551325dd7df6459e18e04e041d03bd5a06c34b0fe8e63d7"
+  },
+  "modules/godot_physics_3d/godot_space_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_space_3d.h",
+    "bytes": 9468,
+    "sha256": "c7a6cb8a795679a0d5dd94705725f048c40d636de42368b8984c38952b5493ae"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.cpp",
+    "bytes": 10373,
+    "sha256": "81d7204dc3300b6bb406129f3a0c0040b141d673c977a2fc6cae33b216721d4d"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/Collision/ManifoldBetweenTwoFaces.h",
+    "bytes": 2607,
+    "sha256": "e55c98858904bc1138b7c10a302dfc1da5b63a9794514879b8772927343ea123"
+  },
+  "servers/physics_3d/physics_server_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/servers/physics_3d/physics_server_3d.cpp",
+    "bytes": 69031,
+    "sha256": "c99c8ebc59ac06d2785d24a1c4ddf2be4a806d5360367f56878cac765b34e70f"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/Collision/Shape/CapsuleShape.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/Collision/Shape/CapsuleShape.cpp",
+    "bytes": 15129,
+    "sha256": "3acefa0928076d7935a1084e0e2d5915cc6639751e6e5b339f7e0cb367976d06"
+  },
+  "thirdparty/jolt_physics/Jolt/Geometry/ClipPoly.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Geometry/ClipPoly.h",
+    "bytes": 7228,
+    "sha256": "f767b3fb64ca27939a8cc6ff97bc3e8ddcce6a725a741794841c28bbeddc2d66"
+  },
+  "modules/godot_physics_3d/godot_shape_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_shape_3d.cpp",
+    "bytes": 63744,
+    "sha256": "02651752ed888a64470d17e415b9f88b581c88b7ad9b96e5194b11c0e364fe75"
+  },
+  "modules/jolt_physics/spaces/jolt_query_filter_3d.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/jolt_physics/spaces/jolt_query_filter_3d.cpp",
+    "bytes": 4431,
+    "sha256": "61b46de6b8ba0d49cfd59092c4d54fef39c863e29b6d31dd39f51e249cd49ae8"
+  },
+  "modules/jolt_physics/jolt_project_settings.cpp": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/jolt_physics/jolt_project_settings.cpp",
+    "bytes": 11050,
+    "sha256": "7247640aa2ae0b15055d26d5a05c6b97a9ee73bfa2da78f65b7819f50a573d0d"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/Collision/Shape/CapsuleShape.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/Collision/Shape/CapsuleShape.h",
+    "bytes": 5589,
+    "sha256": "d10927dffe9552251d2190888cd91d08cdd2621cc59e63c9901ce319dfd0167c"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/Collision/CollisionDispatch.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/Collision/CollisionDispatch.h",
+    "bytes": 8399,
+    "sha256": "9fb1239d7e9fe3d3ff3ea571eeab58836f2a64204503ecce47152e3fc971f3ad"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/Collision/CollideShape.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/Collision/CollideShape.h",
+    "bytes": 5459,
+    "sha256": "7fe92fcbbe248512aba2556e2dd09d282b53505a577395f1d2ed40083421098d"
+  },
+  "thirdparty/jolt_physics/Jolt/Physics/PhysicsSettings.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/thirdparty/jolt_physics/Jolt/Physics/PhysicsSettings.h",
+    "bytes": 6816,
+    "sha256": "0f65d2251eaa7487a9c73cbe4cabac1683eb5302e12298492456600c0484a924"
+  },
+  "modules/godot_physics_3d/godot_shape_3d.h": {
+    "url": "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/godot_physics_3d/godot_shape_3d.h",
+    "bytes": 21434,
+    "sha256": "0bb868854b2038bfb229da2a605820b927873568cadb11864e68c0c31d5c2c6d"
+  }
+}

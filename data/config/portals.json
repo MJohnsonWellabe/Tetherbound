@@ -7,6 +7,8 @@
     "opening_conversation": "grandpa_first_catch",
     "opening_effect": "home_key:grant",
     "raise_seconds": 2.0,
+    "fade_out_seconds": 0.18,
+    "fade_in_seconds": 0.20,
     "refusal_interval_seconds": 2.0,
     "response_timeout_seconds": 12.0,
     "max_abandoned_begins": 16,

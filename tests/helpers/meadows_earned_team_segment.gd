@@ -835,6 +835,7 @@ var _catch_retries := 0
 func _catch_with_retries(wild: Node3D) -> Dictionary:
 	var caught: Dictionary = {}
 	for attempt in MAX_CATCH_ATTEMPTS:
+		var retained_ids := _party_ids()
 		var catch_driver := CATCH.new()
 		caught = await catch_driver.catch_existing(_tree, _world, _game, _player, _rig, wild)
 		if bool(caught.get("passed", false)):
@@ -844,6 +845,27 @@ func _catch_with_retries(wild: Node3D) -> Dictionary:
 			"fighting": _fighting(), "party": _party_snapshot()})
 		if _catch_retries > MAX_CATCH_ATTEMPTS * 2:
 			return caught
+		var active: RefCounted = _combat.call("active_creature")
+		if active != null and bool(active.get("fainted")) \
+				and str(_combat.call("outcome")) == "lost":
+			# is_fighting includes the real1.6s result banner. R7 burned its
+			# remaining catch attempts in that same tick against a fainted lead.
+			# Await the already-decided ordinary loss inside the existing240tick
+			# cleanup bound; never retry, heal or force resolution during it.
+			_stick(0, 0)
+			Input.flush_buffered_events()
+			var began := Engine.get_physics_frames()
+			for _frame in 240:
+				if not _fighting() and INPUT_OWNER.current(_tree) == null:
+					if str(_combat.call("outcome")) != "lost" or _party_ids() != retained_ids:
+						return caught
+					_receipt("catch_loss_resolved", {"attempt": attempt + 1, "failed_attempts": _catch_retries,
+						"outcome": str(_combat.call("outcome")), "waited_physics_frames": Engine.get_physics_frames() - began,
+						"party": _party_snapshot(), "party_ids_unchanged": _party_ids() == retained_ids,
+						"failures": caught.get("failures", []), "scope": "actual lost encounter settled; no catch or victory credit"})
+					return {}
+				await _tree.physics_frame
+			return caught # An unresolved loss remains a real failed capture.
 		if not _fighting() or not is_instance_valid(wild):
 			for _frame in 240:
 				if INPUT_OWNER.current(_tree) == null:
@@ -862,8 +884,30 @@ func _win_live_fight(allow_loss := false) -> bool:
 	var pilot := CLOUDREACH.CampaignPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
+	# Observational evidence only: preserve actual actor states and emitted hit
+	# counters so a loss cannot be diagnosed from a guessed combat policy.
+	var start_party := _party_snapshot()
+	var start_enemy: RefCounted = _combat.call("enemy")
+	var start_opponent := {"species": str(start_enemy.get("species_id")), "level": int(start_enemy.get("level")), "hp": float(start_enemy.get("hp"))} if start_enemy != null else {}
+	var previous_connections := {}
+	for signal_name: String in ["hit_landed", "attack_missed", "hit_effectiveness"]:
+		previous_connections[signal_name] = _combat.get_signal_connection_list(signal_name)
+	pilot.listen()
+	var observation_connections: Array[Dictionary] = []
+	for signal_name: String in previous_connections:
+		for connection: Dictionary in _combat.get_signal_connection_list(signal_name):
+			if not previous_connections[signal_name].has(connection):
+				observation_connections.append({"signal": signal_name, "callable": connection["callable"]})
 	var observed: Dictionary = await pilot.fight_to_the_end()
 	pilot._move_toward(Vector3.ZERO)
+	for connection: Dictionary in observation_connections:
+		if _combat.is_connected(connection["signal"], connection["callable"]):
+			_combat.disconnect(connection["signal"], connection["callable"])
+	_receipt("training_combat_observation", {"scope": "read-only actual states and emitted combat counters; no policy change",
+		"before": start_party, "enemy_before": start_opponent, "after": _party_snapshot(), "observed": observed,
+		"hits_dealt": pilot.hits_dealt, "hits_taken": pilot.hits_taken, "damage_dealt": pilot.damage_dealt,
+		"damage_taken": pilot.damage_taken, "misses": pilot.misses, "quick_inputs": pilot.quick_thrown,
+		"charged_inputs": pilot.charged_thrown, "voluntary_switches": pilot.voluntary_switches})
 	var lost := not bool(observed.get("timed_out", true)) and str(observed.get("outcome", "")) == "lost"
 	if lost and allow_loss and _training_losses < MAX_TRAINING_LOSSES:
 		_training_losses += 1

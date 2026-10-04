@@ -58,6 +58,9 @@ func _install_row(fixture: Dictionary, event: Dictionary, status: String) -> Dic
 	context.merge({"character_id": DATA.CHARACTER, "expected_revision": 0,
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true,
 		"retained_event": event.delivery_id, "boss_settlement_world_flags": []})
+	# session._retry_foundation_events stages a boss duty in the current world
+	# (F19 world-scoped drops), so its accepted receipt carries that namespace.
+	if duty.action == "boss_relic": context.world_namespace = fixture.world.reward_delivery_namespace
 	var proposal: Dictionary = CHARACTER_ACTIONS.stage(before, 0, duty.action, duty.intent, context, RECORD.errors) \
 		if duty.action in CHARACTER_ACTIONS.ACTIONS else ACTIONS.stage(before, 0, duty.action, duty.intent, context, RECORD.errors)
 	assert_true(proposal.get("ok") == true, str(proposal))

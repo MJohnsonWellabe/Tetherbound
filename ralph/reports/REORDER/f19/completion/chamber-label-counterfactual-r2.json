@@ -1,0 +1,35 @@
+{
+  "kind": "f19_actual_chamber_label_counterfactual",
+  "source_commit": "0679bb12aafa61028acb6a8917b0c485df5983bc",
+  "run": 37086324872,
+  "artifact": 11260792086,
+  "workflow_conclusion": "success",
+  "process_exit": 0,
+  "elapsed_seconds": 665,
+  "accepted_clean_witness": false,
+  "script_errors": 0,
+  "engine_errors": 48,
+  "original_assertion_failures": [],
+  "scopes": {
+    "baseline": {
+      "errors_after_choice_before_release": 16
+    },
+    "label_base_detached": {
+      "errors_before_choice": 8,
+      "errors_after_choice_before_release": 16,
+      "errors_after_end": 8,
+      "actual_predelete_detach_markers": 2
+    }
+  },
+  "actual_transactions": "Both original space-accept cases retained party maximum five, personal receipts, actual save/reload and no-reoffer assertions. All passed; raw engine errors prohibit clean acceptance.",
+  "actual_labels": [
+    "StrongholdClimax/VeridianAcceptPromptAnchor/AnswerCaption",
+    "StrongholdClimax/VeridianRefusePromptAnchor/AnswerCaption"
+  ],
+  "live_properties_unchanged": true,
+  "conclusion": "Detaching both actual chamber caption bases before native Label3D destruction did not reduce the post-choice errors. No product caption fix justified.",
+  "raw_log": "ci-chamber-label-negative-37086324872.log.gz",
+  "raw_log_sha256": "a63e1f849ffc636680d558763a34a52287d6958e05a4051b65371ebfe55c61cd",
+  "next_diagnostic": "Actual installed Terrain3D MouseQuad lifecycle: baseline versus retained active ShaderMaterial versus base detached at permanent world destruction; drawing true/false. Empty terrain component fixture, never acceptance.",
+  "exclusions": "No product patch, original assertion waiver, clean native choice proof, earned save fixture or completed campaign."
+}

@@ -1,0 +1,22 @@
+{
+  "source": "18e29847b48b5f47aa4dd377600ef0653a76af08",
+  "run": 37082769375,
+  "job": 111086680406,
+  "artifact": 11258723717,
+  "passed": true,
+  "native_exit": 0,
+  "timed_out": false,
+  "elapsed_seconds": 5,
+  "script_error_count": 0,
+  "error_count": 0,
+  "scope": "14 tests,193 assertions,0failed: production circle component/state and tournament presentation contracts; no current placement, prompt, visual or route certification",
+  "hashes": {
+    "exit_code": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "job.log": "bc3080ee040c39b7113601b5bcf41a2a49ff4624e0fe1d14a9b7486ef5800aac",
+    "native.log": "6ad1497c422ae992259d0aaac49d635b2f88232fab877b77bc77aac963ac4291",
+    "request.json": "37640b52dea7f8b94c48d681e0335f9cf07d0de679da95a149ca72804b3e838d",
+    "runtime-artifact.zip": "1ca4c5fe961240f4fedc02b1f69e1dcf6d0424270f818e9ddf546fd3a6033f9a",
+    "workflow-artifacts.json": "9b1ad219f3ebb917a5a7ee5c7f89309543d19d72061eeed84a22cb5717d4885d",
+    "workflow-jobs.json": "85ee57acdf74d93bfc810e29b6c45a0d584e5ed7dbc1c2708c4397093e6cc353"
+  }
+}

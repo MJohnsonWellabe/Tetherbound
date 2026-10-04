@@ -1,0 +1,20 @@
+{
+  "kind": "f19_production_boss_delivery",
+  "changes": [
+    "Strip host-derived settlement flags and derived namespace before comparing the immutable victory capture, preserving the original fight epoch across restart/retry.",
+    "New personal boss receipts include the real host world namespace, as chapter_rewards.boss_handoff_contract specifies. A portable held/hung relic never duplicates or prevents another host world's key from being earned.",
+    "The actual admitted registry rejects missing or mismatched boss namespace. New version-3 delivery rows fence host context against their envelope namespace.",
+    "Existing unscoped v3 snapshots still reconstruct their original receipt; a pre-existing legacy global receipt conservatively prevents repayment. No save version or carrier was replaced."
+  ],
+  "validation": {
+    "command": "Godot 4.7 --headless --script tests/run_tests.gd -- --only=test_f19_boss_delivery.gd,test_f19_boss_handoffs.gd,test_redesign_chapter_curve.gd,test_foundation_resource_save.gd,test_foundation_resources.gd,test_f19_stormwood_settlement.gd",
+    "tests": 29,
+    "assertions": 5394,
+    "failures": 0,
+    "engine_errors": 0,
+    "log": "boss-delivery-validated.log",
+    "scope": "Actual admitted registry, prepared LedgerRpc, WorldLedger, WorldSave and CharacterSave files, original epoch, world-write rollback, owner-write refusal/retry, key/relic nonduplication, namespace fences, legacy row preservation. Victory capture and physical actor baseline are declared transaction fixtures, not earned fights.",
+    "rejected_attempts": "world-receipt-check.log (wrong RefCounted cleanup type), world-receipt-corrected.log (wrong Party API), world-receipt-validated.log (initial owner save attempted after hidden registry staging, correctly refused). None count as proof."
+  },
+  "remaining": "Actual continuous new-order earned checkpoints and live legendary choice matrix. World/render slot still reserved by F17."
+}

@@ -1,0 +1,14 @@
+{
+  "kind": "f19_offload_environment_diagnostic",
+  "source_run": 37078490408,
+  "source_commit": "e2c0354783d8f5fb919df50a17e16b89ef47470a",
+  "artifact": 11258187956,
+  "outcome": "Cancelled by lane after replacement with complete reviewed codec source; no earned proof",
+  "observed_renderer": "Mesa llvmpipe OpenGL 4.5 compatibility on remote GitHub runner",
+  "observed_error": "ERROR: Condition status < 0 is true. Returning ERR_CANT_OPEN; init_output_device drivers/alsa/audio_driver_alsa.cpp:97",
+  "observed_fallback": "All audio drivers failed, falling back to the dummy driver",
+  "missing_environment": "libpulse.so.0 and ALSA default card",
+  "ownership": "Coordinator notified to fix render.yml startup; lane did not change shared workflow or weaken engine-error rejection",
+  "proof_status": "Rejected as clean-engine evidence",
+  "disclosure": "Runtime-functional offloads can explicitly use dummy audio but cannot attest audio acceptance. Remote software rendering elapsed time cannot attest owner/device performance."
+}

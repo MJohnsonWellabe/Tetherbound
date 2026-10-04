@@ -1,0 +1,63 @@
+{
+  "kind": "f19_reviewed_meadows_dependency",
+  "upstream_source": "38b655d684d4da586a964fae933a516b448e0b27",
+  "independent_review": "Coordinator relayed approval of38b655d684; original review at ralph/reports/HUB/f17/care-basket-r2/source-review.md in that source",
+  "files": [
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "source_blob": "c3b9274533ec3143bbe4bad7c7186fa0d6bfce3e",
+      "source_sha256": "1534dc93fb43eedba55deca90c0790a5dd5ae01d71b0f90ba8216b9ef52e9433",
+      "checkout_sha256": "1534dc93fb43eedba55deca90c0790a5dd5ae01d71b0f90ba8216b9ef52e9433"
+    },
+    {
+      "path": "tests/helpers/meadows_earned_team_segment.gd",
+      "source_blob": "f926699382de7f48d17d9fdb0b84ea0e14c316dd",
+      "source_sha256": "2590bea1be44e5c2848bb7bd7b43dd5634a08d25cfd2ed412db9d3459682df8d",
+      "checkout_sha256": "2590bea1be44e5c2848bb7bd7b43dd5634a08d25cfd2ed412db9d3459682df8d"
+    },
+    {
+      "path": "tests/smoke_four_biome_continuous.gd",
+      "source_blob": "2c2739d9df5e26cd4208b31248d4d92c22fee23a",
+      "source_sha256": "f3a2424fe2247026fae5d4b5d29ce3a903eba792b9042693ea39b7288888ddf1",
+      "checkout_sha256": "f3a2424fe2247026fae5d4b5d29ce3a903eba792b9042693ea39b7288888ddf1"
+    }
+  ],
+  "changes": [
+    "Opt-in first Mira paid care purchases using actual controller GUI input and exact coin/potion/unchanged-party receipts; general input helper unchanged",
+    "Fresh ordinary campaign opts into five authored-price purchases; legacy diagnostic and other village callers keep prior default",
+    "Read-only actual training actor/enemy snapshots and existing signal-listener hit/damage/input counters, with only newly added callbacks disconnected"
+  ],
+  "ownership": "Exact reviewed dependency snapshots imported only into isolated F19 checkout; competing F17 checkout, camps and product code untouched",
+  "preserved": [
+    "F19 full fresh journey and immutable disk handoff machinery",
+    "Tent catalogue identity fix",
+    "40 fight budget",
+    "three loss cap",
+    "health care/readiness assertions",
+    "No direct trade, inventory grant, private party switch or owner guard bypass"
+  ],
+  "reused_native_evidence": {
+    "source": "12b0553e7a966476b96a6544eb2151d3f2947d58",
+    "run": 37082489973,
+    "scope": "Only four actual paid Mira purchases proven. Full M1 failed after training; original one material error remains.",
+    "actual_coin": [
+      140,
+      112,
+      84,
+      56,
+      28
+    ],
+    "actual_potions": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "full_route_passed": false
+  },
+  "candidate_status": "Fifth paid purchase and new fight observations independently source-reviewed; actual F17 fresh R7 still required. No native pass inferred.",
+  "new_full_f19_dispatch": false,
+  "remaining": "Actual native contact-count failure (9 cached points versus8 observer cap) remains owned by F17; no cap waived. Full fresh F19 replay waits for evidence-driven dependencies.",
+  "exclusions": "No earned boundary, completed campaign, clean-engine, visual/audio, owner-play or device-performance acceptance"
+}

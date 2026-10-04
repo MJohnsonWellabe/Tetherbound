@@ -1,0 +1,23 @@
+{
+  "criterion": "F19-5",
+  "scope": "Exact production save handoff and promotion reader compatibility; earned campaign remains open",
+  "dependency": {
+    "reviewed_source": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5",
+    "lane_import": "3e7435b763",
+    "includes": "All codec writers, native readers, Python consumers and upstream evidence",
+    "excluded": "Coordinator-owned docs/STATE.md"
+  },
+  "changes": [
+    "Immutable F49 receipts use the same lossless codec as the copied production bytes",
+    "F19 promoter reads both lossless codec and legacy plain JSON without rewriting source files",
+    "Node decoder preserves binary float bits and signed 64-bit integers, refuses malformed tags and envelopes",
+    "Promotion provenance distinguishes visible OpenGL engine initialization from headless runs"
+  ],
+  "validation": {
+    "native": {"log": "save-codec-f19-native.log", "tests": 9, "assertions": 269, "failures": 0, "engine_errors": 0},
+    "receipt_script_parse": {"log": "handoff-codec-parse.log", "exit": 0, "engine_errors": 0},
+    "shared_wire_parity": {"log": "save-codec-node-parity.log", "exact_float_bits": 4, "signed_int64_boundaries": 2, "rejection_controls": 23, "result": "PASS"},
+    "promotion_rejection": {"log": "promotion-codec-negative.log", "checks": 11, "result": "PASS"}
+  },
+  "disclosure": "Codec tests and deliberately forged rejection controls do not prove earned play. No earned boundary fixture has been generated or promoted. Full campaign proof must come from the ordinary fresh continuous driver."
+}

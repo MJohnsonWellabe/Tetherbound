@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+BUILD PROBE BEFORE { "affordable": true, "focus": @Button@56:<Button#243689064650>, "category": 0, "pieces": ["tent", "campfire", "bedroll", "forward_camp"] }
+BUILD PROBE PRESSED tent
+BUILD PROBE AFTER { "selected": false, "pending": "", "failures": ["selected tent and the live pending selection is \'\'"], "focus": @Button@65:<Button#244947355880>, "open": true }

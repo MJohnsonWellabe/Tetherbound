@@ -1,0 +1,14 @@
+{
+  "kind": "f19_legacy_boss_retry_review_followup",
+  "review": "Coordinator found that a completed old global boss receipt could repeatedly refuse a new namespaced stage and starve the next owed duty for that character.",
+  "change": "Retry recognizes completed legacy personal boss receipts and continues to later duties. Pending delivery reconciliation retains its existing separate save/ACK path.",
+  "validation": {
+    "command": "Godot 4.7 --headless --script tests/run_tests.gd -- --only=test_f19_boss_delivery.gd",
+    "tests": 2,
+    "assertions": 37,
+    "failures": 0,
+    "engine_errors": 0,
+    "log": "legacy-retry.log",
+    "scope": "Actual Session retry loop and actual admitted registry with a paid legacy Warden duty followed by an owed Veyra duty for the same character. A disclosed refusing writer records which later obligation was attempted; separate prepared/file test retains actual disk rollback and owner retry proof. No live fight or route claim."
+  }
+}

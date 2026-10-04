@@ -1,0 +1,27 @@
+{
+  "kind": "f19_exact_reviewed_loss_wait_dependency",
+  "upstream_source": "6a13e6e44a2cfadd4c3488909bd656c4890e29f2",
+  "file": "tests/helpers/meadows_earned_team_segment.gd",
+  "source_blob": "fe7e6ae9cd6cdf404e5bd33ad61b57e32749cadc",
+  "source_sha256": "bc9a0d6f87af976a5e97543a5cce3b3ae3a4ee02d2d42aa23493db7685cf8fcc",
+  "checkout_sha256": "bc9a0d6f87af976a5e97543a5cce3b3ae3a4ee02d2d42aa23493db7685cf8fcc",
+  "independent_source_review": {
+    "commit": "6a13e6e44a2cfadd4c3488909bd656c4890e29f2",
+    "path": "ralph/reports/HUB/f17/earned-proof-r7/source-review.md",
+    "blob": "558985011b5c4bcb24f80851718044eb47e8c493",
+    "verdict": "No remaining source blocker for bounded native retry on exact corrected SHA256"
+  },
+  "independent_m1_review": {
+    "commit": "e2eacbb4e51bbbc1a71d0cc094050af6988fdc13",
+    "path": "ralph/reports/HUB/f17/earned-proof-r8/source-review.md",
+    "scope": "Literal F17#4 PASS on exact6a13; encounteroverride4, one retained dummy material error; catch-loss wait branch not exercised; pre-bracket snapshot only."
+  },
+  "delta": "22 lines observe actual fainted/lost encounter until existing240tick resolution; preserves party IDs, outcome, ownership and all budgets; neutralizes only physical inputs.",
+  "excluded": [
+    "F17 STATE, archive, legacy-circle and unrelated source",
+    "Other checkouts and local engine",
+    "Native catch-loss-branch acceptance",
+    "Clean-engine, ordinary saved-world population and complete F19 campaign claims"
+  ],
+  "full_f19_route": "Normal no-override original fresh journey, no resume or copied fixture; material error still under actual world diagnostic."
+}

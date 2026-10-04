@@ -27,6 +27,7 @@ func _context(boss: String, settled: bool = true) -> Dictionary:
 	var flags: Array = row.get("delivery_requires_world_flags", []).duplicate() if settled else []
 	if settled and boss == "captain_marrow_dynamo_core": flags.append("stormwood:legendary_resolution:refused:character-b")
 	return {"source_key": "boss:" + boss, "realm": BOSSES[boss][0],
+		"world_namespace": "namespace-a",
 		"validated_host_outcome": "win", "encounter_id": "earned-fight-1",
 		"participants": ["character-a", "character-b"],
 		"boss_settlement_world_flags": flags}
@@ -134,3 +135,21 @@ func test_stormwood_display_and_non_owed_visit_do_not_release_a_boss_drop() -> v
 		assert_false(REWARDS.chapter_delivery_ready(row, shown + [invalid]))
 	for answer: String in ["accepted", "refused"]:
 		assert_true(REWARDS.chapter_delivery_ready(row, shown + ["stormwood:legendary_resolution:" + answer + ":character-b"]))
+
+func test_world_scoped_boss_drops_preserve_portable_relic_and_independent_keys() -> void:
+	for boss: String in BOSSES:
+		var first := ACTIONS._relic(_current(), "boss_relic", _intent(boss), _context(boss))
+		assert_true(first.get("ok", false))
+		if not first.get("ok", false): continue
+		var other := _context(boss)
+		other.world_namespace = "namespace-b"
+		var second := ACTIONS._relic(first.state, "boss_relic", _intent(boss), other)
+		assert_true(second.get("ok", false), "same portable participant earns this world's key")
+		if not second.get("ok", false): continue
+		assert_eq(second.state.redesign_character.relics_held, [BOSSES[boss][1]], "portable relic never duplicates")
+		assert_eq(BAGS.inventory_from(second.state.inventory).count(BOSSES[boss][2]), 2)
+		assert_true(first.receipt != second.receipt)
+		assert_eq(ACTIONS._relic(second.state, "boss_relic", _intent(boss), other).get("code"), "reconcile_original_decision")
+		var legacy := _current()
+		legacy.redesign_character.transaction_receipts.append("defeat:boss_%s:%s" % [boss, legacy.character_id])
+		assert_eq(ACTIONS._relic(legacy, "boss_relic", _intent(boss), other).get("code"), "reconcile_original_decision", "legacy receipt cannot be re-paid through a new identity")

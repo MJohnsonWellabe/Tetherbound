@@ -1,0 +1,265 @@
+{
+  "reviewer": "independent GPT-6.1 Sol read-only",
+  "outcome": "APPROVE source and original scoped native geometry evidence",
+  "coordinator_authorization": "Reserve only relevant water_world.json transition coordinate; smallest supported authored coordinate within First Shore dry bounds; original ID, permits, physical guards preserved; do not edit root or import until requested.",
+  "production_change": {
+    "path": "data/config/water_world.json",
+    "json_pointer": "/entry_anchors/from_stormwood/position/2",
+    "before": 162.0,
+    "after": 162.5,
+    "only_one_value_changed": true,
+    "inside_original_departure_safe_radius_m": 3,
+    "move_m": 0.5,
+    "terrain_bake_heightfield_and_other_anchors_unchanged": true
+  },
+  "harness_change": {
+    "path": "tests/smoke_f18_earned_loop.gd",
+    "scope": "scalar int instanceID-to-bool registry to connect resource lifetime observer once per actual instance; no Node/Material retention, await, inherited route/budget/NAV or production cleanup changes"
+  },
+  "original_failures_retained": [
+    37100730912,
+    37100334560
+  ],
+  "runtime_requirements": [
+    "actual shifted target full capsule clear",
+    "all five shifted footprint floor witnesses",
+    "actual Player60consecutivefloorframes/final strict support",
+    "all five Water stones unchanged",
+    "zero engine/script errors"
+  ],
+  "primary_sources": [
+    "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/modules/godot_physics_3d/godot_shape_3d.cpp",
+    "https://raw.githubusercontent.com/godotengine/godot/5b4e0cb0f/core/math/geometry_3d.h"
+  ],
+  "all_six_f18_criteria": "UNPROVEN",
+  "runtime_status": {
+    "WaterR6": {
+      "id": 37101531880,
+      "display_title": "render f18-native-stones-water-r6 @ ce5c6224567836c82191a8585423ea0987718329",
+      "head_sha": "12961eaaf0ff955f0bef45eb205e1388fa45f180",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37101531880",
+      "checkout": "ce5c6224567836c82191a8585423ea0987718329",
+      "artifact_id": 11266876299,
+      "raw_artifact": "native-water-r6-remote.zip",
+      "sha256": "28814b4f11c998e6544d8e60f0f2cd87a40d55767563c1c0a7fee034b2a4074a",
+      "bytes": 53518,
+      "native_exit_code": "0",
+      "error_lines": [],
+      "script_error_lines": [],
+      "native_summary": {
+        "checks": 74,
+        "failures": [],
+        "realm": "water",
+        "portal_entries": [
+          {
+            "consecutive_floor_frames": 60,
+            "final_supported": true,
+            "fixture": "direct scene boot; observe existing actual Player; no harness pose writes or controller changes",
+            "id": "water_arrival_from_stormwood",
+            "landing": [
+              0.0,
+              1.87912511825562,
+              162.5
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              0.0,
+              1.87745237350464,
+              162.5
+            ],
+            "shape_radius": 0.400000005960464,
+            "stable_contact": true,
+            "target": [
+              0.0,
+              2.02500009536743,
+              162.5
+            ]
+          }
+        ],
+        "stones": [
+          {
+            "consecutive_floor_frames": 69,
+            "final_supported": true,
+            "id": "tidewake_first_shore",
+            "landing": [
+              7.0,
+              8.25479221343994,
+              132.0
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              7.0,
+              8.25183010101318,
+              132.0
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              7.0,
+              7.84568166732788,
+              135.0
+            ],
+            "stable_contact": true,
+            "target": [
+              7.0,
+              8.24441432952881,
+              132.0
+            ]
+          },
+          {
+            "consecutive_floor_frames": 90,
+            "final_supported": true,
+            "id": "tidewake_shellwatch",
+            "landing": [
+              359.289459228516,
+              3.24492287635803,
+              961.46923828125
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              359.289459228516,
+              3.24379444122314,
+              961.46923828125
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              359.289459228516,
+              4.08132362365723,
+              964.46923828125
+            ],
+            "stable_contact": true,
+            "target": [
+              359.289459228516,
+              3.2306821346283,
+              961.46923828125
+            ]
+          },
+          {
+            "consecutive_floor_frames": 77,
+            "final_supported": true,
+            "id": "tidewake_tidal_cradle",
+            "landing": [
+              556.092163085938,
+              4.66839265823364,
+              1357.17846679688
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              556.092163085938,
+              4.66688346862793,
+              1357.17846679688
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              556.092163085938,
+              5.4042911529541,
+              1360.17846679688
+            ],
+            "stable_contact": true,
+            "target": [
+              556.092163085938,
+              4.6521110534668,
+              1357.17846679688
+            ]
+          },
+          {
+            "consecutive_floor_frames": 92,
+            "final_supported": true,
+            "id": "tidewake_salt_crown",
+            "landing": [
+              287.932739257812,
+              2.41122317314148,
+              2116.56884765625
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              287.932739257812,
+              2.40984082221985,
+              2116.56884765625
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              287.932739257812,
+              2.79995441436768,
+              2119.56884765625
+            ],
+            "stable_contact": true,
+            "target": [
+              287.932739257812,
+              2.40764713287354,
+              2116.56884765625
+            ]
+          },
+          {
+            "consecutive_floor_frames": 76,
+            "final_supported": true,
+            "id": "tidewake_sluice_isle",
+            "landing": [
+              672.336120605469,
+              4.23657846450806,
+              2778.5263671875
+            ],
+            "mask": 1,
+            "safe_margin": 0.00100000004749745,
+            "settled": [
+              672.336120605469,
+              4.23378562927246,
+              2778.5263671875
+            ],
+            "shape_height": 1.79999995231628,
+            "shape_radius": 0.400000005960464,
+            "shrine": [
+              672.336120605469,
+              4.93346643447876,
+              2781.5263671875
+            ],
+            "stable_contact": true,
+            "target": [
+              672.336120605469,
+              4.2216682434082,
+              2778.5263671875
+            ]
+          }
+        ]
+      },
+      "independent_review": "GPT-6.1 Sol original artifact/source audit APPROVE scoped geometry; same exact guards, actual Player unchanged by fixture; all19 config/all5Water mounts/no skipped count; actual shifted entry60floorframes/fullcapsule/fivefloor/final support PASS.",
+      "outcome": "74checks/0fail, exit0, run.log40s, zero engine/script errors in both run.log/Godotlog; actual canonical entry and all5actual Waterstones PASS.",
+      "evidence_limit": "Direct scene/native geometry and controller support only. Artifact manifest is a file list; source/run/workflow identity binding uses retained API/dispatch provenance. Earned consumption/touch/reload/co-op/render/audio and fullsixF18 acceptance remain UNPROVEN."
+    },
+    "earnedR9": {
+      "id": 37101535389,
+      "status": "in_progress at latest poll, no original result yet"
+    }
+  },
+  "patch": {
+    "path": "water-entry-authoring-v1.patch",
+    "bytes": 341,
+    "sha256": "31d0674df826073b7b6ba8a231edba627de4c918931e3ad8a42609de92e82ab0",
+    "preimage_lf_sha256": "0bfd81abc16641a32b0e706573ccb99f8ff0f370bd6b821b946479e0624ecaba",
+    "postimage_lf_sha256": "32736997eea5481a099d0cddd8caa68c7ef4c915ce7154602816b32ed1b12883",
+    "coordinator_preimage_matches": true,
+    "isolated_explicit_path_apply_check_and_actual_apply_matches_postimage": true,
+    "only_path": "data/config/water_world.json",
+    "only_value": "entry_anchors.from_stormwood.position[2]162.0->162.5"
+  },
+  "coordinator_native_dependencies_verified_identical": [
+    "scripts/world/water_world.gd",
+    "scripts/player/player_controller.gd",
+    "scenes/player/player.tscn",
+    "scripts/world/terrain_height.gd",
+    "all tracked data/terrain/water files",
+    "addons/terrain_3d/bin/libterrain.linux.release.x86_64.so",
+    "PortalArrival _capsule_landing/_contacts_on_support/_supported_capsule/_landing_hit/_ground_height/_arrival_target functions"
+  ],
+  "bake_provenance": "No rebake or manifest hash rewrite. Original bake records its original input; entry coordinate is not read by water_heightfield geometry or builder geometry paths. All baked region files and heightfield/runtime samplers unchanged; actual native proof observes them."
+}

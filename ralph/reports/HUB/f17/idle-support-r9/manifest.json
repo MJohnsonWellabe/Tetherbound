@@ -1,0 +1,78 @@
+{
+  "base_commit": "5ab1c5c269c591ee42101fc8489d60f904f3959f",
+  "root_actual_runtime_head": "8f29e7b3a1d19795d66892a3986dc47e6b2f5a2d",
+  "classification": "SOURCE CANDIDATE ONLY; F17#4 OPEN; actual failure immutable",
+  "files": {
+    "inputs/data/config/movement.json": {
+      "bytes": 15052,
+      "sha256": "adf75e7c18e0cf5f466f6675279f02bbc19e89b1dbcdde5a7df1444df1ae409a"
+    },
+    "inputs/project.godot": {
+      "bytes": 22187,
+      "sha256": "bf2ee2b20bcd71c46937868acc009ae85673748472bd30c90f3f3b4dcf80a147"
+    },
+    "inputs/scenes/player/player.tscn": {
+      "bytes": 1478,
+      "sha256": "d40e0e3da55093c6cbb200408789b281e59581cbd2db48c9f4e06ccdbbdf4ad7"
+    },
+    "inputs/scripts/combat/combat_manager.gd": {
+      "bytes": 244351,
+      "sha256": "46f933eccb10680237110d7aa5df6f32e9f3502b662f4395c078ec23766b7b4a"
+    },
+    "inputs/scripts/combat/encounter_director.gd": {
+      "bytes": 355711,
+      "sha256": "5ab27801defc6870a7fc84b5a7761f74782248ae478c92da1a9bac54eb6fe162"
+    },
+    "inputs/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "inputs/scripts/world/environment_velocity_modifiers.gd": {
+      "bytes": 3986,
+      "sha256": "d7d6f78841e0e7e3bfa9bead35bf5049f7b945151a77c32bdf3feb38dd32f5ab"
+    },
+    "inputs/tests/helpers/fresh_opening_segment.gd": {
+      "bytes": 19706,
+      "sha256": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+    },
+    "inputs/tests/helpers/gate_a_npc_gather_segment.gd": {
+      "bytes": 42994,
+      "sha256": "5807ae64deb8482e996aa5beb039746e5781f235e53aab6a4b949331110c7340"
+    },
+    "inputs/tests/helpers/meadows_earned_team_segment.gd": {
+      "bytes": 50044,
+      "sha256": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a"
+    },
+    "inputs/tests/helpers/opening_geometry_navigator.gd": {
+      "bytes": 71351,
+      "sha256": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303"
+    },
+    "originals/scripts/player/player_controller.gd": {
+      "bytes": 43509,
+      "sha256": "d40c0c61afcf77d155fadef27b2b8bdc6ae2f9fade97cd9d4dd36ce869ea642b"
+    },
+    "prior-failure/native.log": {
+      "bytes": 229724,
+      "sha256": "cc0f4409e0d33e898a4eb372e7cc99daf95d30dcb72e1ee2d43600b813fe3856"
+    },
+    "prior-failure/parser.log": {
+      "bytes": 73,
+      "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+    },
+    "prior-failure/receipt.json": {
+      "bytes": 495705,
+      "sha256": "bfbf19d766c3331dc8a517bfb10cce190cfda47fd963d6218d408e1962fc5c18"
+    }
+  },
+  "protected_helper_sha256": {
+    "tests/helpers/opening_geometry_navigator.gd": "201f24c5b4fb2385d5ad1ad4f8d7ef11f81e1b3c00d1c50aff1c992c3748a303",
+    "tests/helpers/gate_a_npc_gather_segment.gd": "5807ae64deb8482e996aa5beb039746e5781f235e53aab6a4b949331110c7340",
+    "tests/helpers/meadows_earned_team_segment.gd": "e8f12f29ced8c9d69969f95ca8863688b779158123f99f307084bc8f4255321a",
+    "tests/helpers/fresh_opening_segment.gd": "7b61133e88e534786562a3a7e3e4502bffd433002270990e6d9313cbc086ea9a"
+  },
+  "upstream_urls": [
+    "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/scene/3d/physics/physics_body_3d.cpp",
+    "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/scene/3d/physics/character_body_3d.cpp"
+  ],
+  "backend_provenance": "No tracked physics/3d/physics_engine or wrapper override; GodotPhysics3D registered default; runtime selection unlogged. Do not infer Jolt."
+}

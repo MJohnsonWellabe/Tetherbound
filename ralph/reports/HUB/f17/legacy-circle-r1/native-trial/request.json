@@ -1,0 +1,10 @@
+{
+  "inputs": {
+    "label": "f17-legacy-circle-r1",
+    "mode": "headless",
+    "timeout_minutes": "20",
+    "checkout_ref": "18e29847b48b5f47aa4dd377600ef0653a76af08",
+    "script": "tests/smoke_f17_legacy_circle.gd"
+  },
+  "ref": "main"
+}

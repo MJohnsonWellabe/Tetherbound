@@ -1,0 +1,683 @@
+{
+  "kind": "f19_review_manifest",
+  "branch": "tb/f19-completion",
+  "base": "f48a0ba1ea54bf39149e37695804fdc976a1f9e7",
+  "already_independently_approved": [
+    {
+      "commit": "8ab9637e107eaac3a07704b2baa657b22ccc1fe3",
+      "purpose": "Shipped boss handoff schema and deferred delivery authority",
+      "coordinator_integrations": [
+        "275cd8a7a6",
+        "4d3bf864f4"
+      ]
+    },
+    {
+      "commit": "d8b18de7160613c5e8207d509e9ded006acb9b74",
+      "purpose": "Actual Stormwood settlement required; guest-first host writer"
+    },
+    {
+      "commit": "508867805939671ed93cb4f9feb58f5b80be783b",
+      "branch": "tb/f19-epoch-only",
+      "purpose": "Minimal retained epoch comparison fix and independent regression; subset of6206 below",
+      "coordinator_integration": "f4f914cc02"
+    },
+    {
+      "commit": "abdab9e7e1ca72159bea5331b1e911a35a723e2b",
+      "purpose": "Admission proofs preserve authenticated ceremony restrictions and lower-level ownership guards",
+      "coordinator_integration": "d21f0a970d",
+      "validation": "ledger-admission-contract-r2.log:17 tests/113 assertions/0 failures/0 engine errors"
+    },
+    {
+      "commit": "1351af5394bd0a5a7394f3b627df420545bc0518",
+      "purpose": "Functional offload runner; actual failed/errorful results retained separately"
+    },
+    {
+      "commit": "fd329e6f60c1af217a5199357dd58095505dbc65",
+      "purpose": "Bounded F32 freed adopted-node read and actual native lifecycle regression",
+      "validation": "8 checks, 0 failures, 0 engine errors; resource-mount-and-material-audit.json",
+      "coordinator_integration": "e9707f1608 (pushed in40e7)"
+    }
+  ],
+  "remaining_review_sequence": [
+    {
+      "commit": "6206b4971bee4b3a1e94b1ea237f999db20f7657",
+      "purpose": "World-scoped new boss receipts with preserved legacy reconstruction; also contains already-approved epoch fix"
+    },
+    {
+      "commit": "d417fbead5c7ecec72124a7a533876f3e8d513e3",
+      "purpose": "Required follow-up: paid legacy duties cannot starve the next owed delivery"
+    },
+    {
+      "commit": "879068624cc9f7896db6ffb11685fd16332a6226",
+      "purpose": "Visible portal recommendations, real production-consumer checks and earned-boundary promotion validator"
+    },
+    {
+      "commit": "ad344eb032",
+      "purpose": "Actual Stormheart capacity UI smoke and saved-byte entitlement validation"
+    },
+    {
+      "commit": "6b4a1a5592",
+      "purpose": "All four two-owner persisted handoffs, retained CI witnesses and explicit artifact relocation validation"
+    },
+    {
+      "commit": "76dfac7c5011d79e3d2725c6d04ae54d25501d20",
+      "dependency": "38b655d684d4da586a964fae933a516b448e0b27",
+      "purpose": "Exact reviewed ordinary Mira purchases and bounded combat observations; actual fifth purchase/full route still unproven",
+      "evidence": "reviewed-meadows-care-dependency.json"
+    }
+  ],
+  "separate_dependency": {
+    "upstream_commit": "2e24263a81f8410fe000bbccfc707b2580ec5d41",
+    "lane_cherry_pick": "588411be6e0090e705faddcbb60fab6e19968050",
+    "owner": "F17",
+    "purpose": "Reviewed native buffered-axis dispatch and earned deployment verification; used by the actual continuous campaign",
+    "local_validation": {
+      "log": "opening-axis-dependency.log",
+      "tests": 1,
+      "assertions": 4,
+      "failures": 0,
+      "engine_errors": 0
+    }
+  },
+  "subsequent_cuts": [
+    {
+      "commit": "25dbbd7cdaa9942315c1297c90ecaf76aec3f89b",
+      "purpose": "Solmane fixture mirror reset and renewable-node presentation lifecycle",
+      "evidence": "choice-rejections-and-lifecycle.json"
+    },
+    {
+      "commit": "7373775733",
+      "dependency": "52f5a077bf8994617ccff83c111892cd7198e6a2",
+      "purpose": "Reviewed F18 durable waystone/portal traversal producer; coordinator STATE excluded"
+    },
+    {
+      "commit": "c118a589f4",
+      "dependency": "b25623fb4534284351f4d504c20790c7cfb73183",
+      "purpose": "Reviewed Tidewake support pad"
+    },
+    {
+      "commit": "c0a8951cfb",
+      "dependency": "538c971f6fa9355113efdd0f4756aa34f889e210",
+      "purpose": "Reviewed monotonic HomeKey travel clock"
+    },
+    {
+      "commit": "e2c0354783d8f5fb919df50a17e16b89ef47470a",
+      "purpose": "Actual Tent catalogue identity in controller route helper",
+      "evidence": "campaign-r1-and-catalogue-fix.json"
+    },
+    {
+      "commit": "3e7435b763",
+      "dependency": "6405e9facacbeae7bed5f60118e1b7599ebfd8d5",
+      "purpose": "Full reviewed lossless save codec and all consumers; coordinator STATE excluded"
+    },
+    {
+      "commit": "beb28e24f1aafce360e4257625e1995fdabecb06",
+      "purpose": "Lossless immutable F49 receipts and compatible strict F19 promotion reader",
+      "evidence": "lossless-handoff-codec.json"
+    }
+  ],
+  "acceptance_evidence": {
+    "F19#0": [
+      "order-consumers-corrected.log: config/journal/map/credits/sign production consumers"
+    ],
+    "F19#1": [
+      "boss-delivery-validated.log: production curve readers and tables",
+      "node tests/test_f19_curve.mjs:88 named teams/36 wild tables",
+      "native-band-baseline.json:6 native tests/1474 assertions/0 failures/0 engine errors"
+    ],
+    "F19#2": [
+      "participant-delivery-world-flags.log:128 assertions, actual two-owner files for all four handoffs",
+      "boss-delivery-validated.log:durable journal and failure/retry fences",
+      "legacy-retry.log:paid-legacy follow-up regression",
+      "settlement-followup-validated.log:guest-first actual controller persistence"
+    ],
+    "F19#3": [
+      "node tests/test_f19_gate_scan.mjs:1275 prerequisite fields and negative controls"
+    ],
+    "F19#4": [
+      "legendary-contract-check.log:105 tests/773 assertions",
+      "ci-guardian-37074149226.log:120 checks",
+      "ci-stormheart-37074151200.log:44 assertions",
+      "stormheart-capacity-r2.log:89 assertions",
+      "veridian-complete-clean.json:all six actual native choice/save/reload cases,1872s/0failures/0engine+script errors; original guards unchanged",
+      "veridian-harvest-fixed-clean.json:all six original native cases,1455s/0engine+script+leak errors on6809 cleanup source; original guards intact",
+      "solmane-harvest-fixed-clean.json:all six original native cases,2597s/0engine+script+leak errors on6809 cleanup source; original guards intact"
+    ],
+    "F19#5": [
+      "order-consumers-corrected.log:recommendations visible; host policy accepts level1 with earned unlock",
+      "promotion-codec-negative.log:11 rejection controls",
+      "lossless-handoff-codec.json:exact reader compatibility, no earned progression claim"
+    ]
+  },
+  "open_acceptance": [
+    "Full fresh F49 campaign and five genuinely earned immutable v28 boundaries; actual attempt failed at village production contact observation cap, no checkpoints.",
+    "Independent review and coordinator integration of broader receipt/consumer/proof follow-ups.",
+    "fresh-contact-overflow-rejected.json: normal route reached paid_camp then generic tournament-picker failure after13 frames; four initial gather-stage material errors; no earned checkpoints. Broader rerun held until matched green main.",
+    "held-tool-material-fix.json: scoped tool cleanup passes62 checks including replacement, owner and external-mount parent deletion. Independent coordinator review/integration pending; normal fresh gather4 causal closure still requires actual route remeasurement after matched green main."
+  ],
+  "important_scope": "Focused transaction and choice tests declare victory/party/pose/transport fixtures. They do not attest an earned campaign, ENet full-party replication, owner play, visuals or device performance. Only an actual successful continuous fresh campaign can supply regenerated earned-save bytes.",
+  "latest_remote_audit": "functional-offload-actual-results.json",
+  "latest_material_diagnostic": "stronghold-surfaces-r11.json",
+  "latest_material_probe": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Baseline versus Materials only, including masked per-surface overrides and post-choice CPU particle Materials; no retained Mesh/MultiMesh objects. Actual Altar counterfactual demonstrated active-material census misses hidden override owners.",
+    "status": "Terminal: world-material-reference-r8.json; baseline16 errors/treatment0; original baseline prompt guard failed; no clean acceptance",
+    "source_commit": "08083abbf093f21e5291b2b5e257b1ff3c45b716",
+    "run": 37095874691,
+    "job": 111125570872
+  },
+  "canonical_meadows_prefix_comparator": "canonical-meadows-prefix-r8.json",
+  "seed_provenance_correction": "See canonical-meadows-prefix-r8.json: seed4 is an encounter-only environment override, not saved seed or terrain/contact identity. No fullseed4 dispatch executed.",
+  "latest_population_proof": "seed-provenance-correction.json",
+  "latest_m1_dependency": "reviewed-meadows-loss-wait-dependency.json",
+  "latest_band_baseline_proof": "native-band-baseline.json",
+  "main_required_altar_diagnostic": "actual-altar-hidden-override-r2.json",
+  "main_required_altar_fix": "actual-altar-material-fix.json",
+  "main_required_altar_handoff": {
+    "production_commit": "8d4b78c11b0b32668137fa14b3ae8b82efa932f3",
+    "coordinator_thread": "01a0fe96-225e-7f92-9b62-d9818a7f2e15",
+    "status": "Independently reviewed and integrated1fbd41c0f0; actual paid Altar native loop37097792318 PASS on fc91 source, peer-0 zero engine/script errors. Whole producer later failed distinct catch reply assertion; main-green/package remains unproven."
+  },
+  "next_component_diagnostic": {
+    "script": "tests/probe_f19_menu_preview_material_lifetime.gd",
+    "scope": "Actual CreatureViewport, Veridian/Solmane model replacement and backdrop deletion; Game menu outside disposable world census; baseline versus all exposed preview Material refs",
+    "status": "Terminal negative: menu-preview-component.json,0errors both cases"
+  },
+  "next_owner_diagnostic": {
+    "script": "tests/probe_f19_healing_dust_material_lifetime.gd",
+    "scope": "Actual authored MeadowHealing late CPU dust factory, early parent teardown and actual authored lifetime timer; baseline versus only dust Material retention, no Mesh retention.",
+    "status": "Terminal negative: healing-dust-component.json, 4cases/0errors",
+    "source_commit": "eef2360f438c815be0555f8374b0b4156b3066da",
+    "run": 37097131914,
+    "job": 111129241607
+  },
+  "next_world_owner_diagnostic": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original full-world baseline versus only late CPUParticles3D mesh surface Materials. No other material, Mesh, MultiMesh or Terrain resource retained. Read-only prompt positions/live state before and after choice dialogue; original assertions retained.",
+    "status": "Terminal negative: late-cpu-world-r9.json, baseline16/treatment32 errors; original guards passed but no acceptance",
+    "source_commit": "5ed2e306334e0d4df35db3dd5c92e13a6cb6ae52",
+    "run": 37097475220,
+    "job": 111130248583
+  },
+  "next_compatibility_component": {
+    "script": "tests/probe_f19_healing_dust_material_lifetime.gd",
+    "args": "--compatibility-offload",
+    "scope": "Same actual dust component on world-failure backend: real X11 Compatibility with continuous drawing disabled. Headless negative did not cover GLES material_casts_shadows queries.",
+    "status": "Terminal: healing-dust-compatibility-component.json"
+  },
+  "next_masked_material_diagnostic": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original baseline versus only non-active per-surface override and mesh-surface Material refs hidden by active overrides, including MultiMesh bases. No active Material, particle Mesh/Material, Terrain or Mesh/MultiMesh resources retained. Read-only original prompt guard trace preserved.",
+    "status": "Terminal positive: masked-materials-r10.json baseline16/treatment0 errors, all original guards passed; diagnosis only",
+    "source_commit": "8bbfcf4eb41c0adb3f6ef51910e0d36770d84f6d",
+    "run": 37098727171,
+    "job": 111133868125
+  },
+  "next_occupation_component": {
+    "script": "tests/probe_f19_occupation_material_lifetime.gd",
+    "scope": "Actual Stronghold glow factory plus occupation._unlight, baseline versus hidden surface copy retained; Compatibility/drawingfalse; report active emission versus hidden copy.",
+    "status": "Terminal negative lifetime reproduction: occupation-material-component.json; active emission stays enabled; no production correction justified by isolated teardown result",
+    "source_commit": "9aa835b18d8956913a60f7267b16be487cea4ad0",
+    "run": 37099817944,
+    "job": 111136999807,
+    "artifact": 11265860516
+  },
+  "next_stronghold_masked_surface_diagnostic": {
+    "script": "tests/probe_f19_world_material_lifetime.gd",
+    "scope": "Original baseline versus only hidden per-surface override Materials under actual Stronghold. No mesh-surface Materials, MultiMesh, active Materials, particle, Terrain or Mesh resources retained. Original prompt guards and save/reload remain unchanged.",
+    "status": "Terminal positive: stronghold-surfaces-r11.json; baseline16/treatment0, original guards pass; diagnosis only",
+    "source_commit": "35b0fe616be4b60230cba8635b1926b3695dcebb",
+    "run": 37100322208,
+    "job": 111138410545,
+    "artifact": 11266531406
+  },
+  "siphon_component_source_correction": {
+    "run": 37100956165,
+    "source_commit": "65d49017cf456a31950cdc5cbee412b72e741a0a",
+    "reason": "Invalid fixture read site.retrofit instead of shipping hall_occupation; cancellation requested while checkout active, no lifetime result claimed. Corrected fixture calls actual factory._occupation.",
+    "acceptance": false,
+    "job": 111140224273,
+    "artifact": 11266555724,
+    "status": "Terminal cancelled in checkout; engine setup and Run steps skipped; artifact only MANIFEST.txt"
+  },
+  "siphon_component": {
+    "script": "tests/probe_f19_siphon_material_lifetime.gd",
+    "source_commit": "193f5109bf544e7ba4143b4c29aea0e9c8d74950",
+    "run": 37101041988,
+    "job": 111140469987,
+    "artifact": 11265956855,
+    "status": "Terminal positive native ownership reproduction; siphon-material-component.json; before withdrawal0/baseline8/hold-only3copies0 errors; no acceptance"
+  },
+  "occupation_override_fix": {
+    "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+    "files": [
+      "scripts/world/stronghold_occupation.gd",
+      "tests/smoke_f19_occupation_override.gd"
+    ],
+    "problem": "Withdrawal copied geometry overrides into masked surface slots; the active material stayed emissive and three shared-mesh siphons reproduced eight native material errors.",
+    "change": "Duplicate the active geometry override into the geometry override slot. Existing per-surface fallback retained; reported affected-surface count preserved. No delayed cleanup or reference cache.",
+    "baseline": "siphon-material-component.json and stronghold-surfaces-r11.json",
+    "status": "Native original reproduction8s and45-check lifecycle7s PASS, zero engine/script errors, no retained Materials; occupation-override-fix.json. Original full six-case matrices and independent review still required.",
+    "native_original_reproduction": {
+      "run": 37101523304,
+      "job": 111141839736,
+      "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+      "status": "PASS exact original reproduction",
+      "artifact": 11266801374
+    },
+    "native_lifecycle_regression": {
+      "run": 37101526190,
+      "job": 111141848634,
+      "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+      "status": "PASS45checks",
+      "artifact": 11266201977
+    },
+    "acceptance": false,
+    "full_native_witnesses": {
+      "source_commit": "c5107aad70541d2182f05082f35f48c974168d63",
+      "scope": "Entire original six-case native choice/save/reload drivers, no reference retention or diagnostic behavior. Original fixtures, assertions and prompt guards unchanged; no earned play claim.",
+      "veridian": {
+        "run": 37101815341,
+        "job": 111142677312,
+        "status": "Terminal PASS:all six original cases,1872s/0errors",
+        "script": "tests/smoke_f19_veridian_functional.gd",
+        "artifact": 11266764847
+      },
+      "solmane": {
+        "run": 37101816593,
+        "job": 111142681335,
+        "status": "Terminal gameplay PASS but rejected for four original cold-transition engine errors",
+        "script": "tests/smoke_f19_solmane_functional.gd",
+        "artifact": 11267041523
+      }
+    },
+    "review_delivery_source": "6106c3760628f767cc97ae886d7bf29c133ae43d",
+    "standalone_lifecycle_native": {
+      "run": 37102421114,
+      "job": 111144416782,
+      "artifact": 11265794052,
+      "source_commit": "6106c3760628f767cc97ae886d7bf29c133ae43d",
+      "production_blob": "bf5e68b0c4169474382fe983c4f41627a552afed",
+      "production_identical_to_c510": true,
+      "process_exit": 0,
+      "elapsed_seconds": 11,
+      "checks": 45,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "failures": [],
+      "scope": "Standalone SceneTree regression; only shipping Stronghold/Occupation preloads, actual factory/config and same45 assertions. Observer state IDs/WeakRefs only; no diagnostic-script dependency.",
+      "raw_log": "ci-occupation-override-standalone-37102421114.log.gz",
+      "raw_log_sha256": "83bc501046d43d86a607b62f85a2bd66ca67eceb745c7c37dc11496e74c6103c"
+    },
+    "independent_review_request": "Coordinator request sent: cumulative53ef452d0d→6106 two-file bundle, standalone native45checks clean. Pending verdict."
+  },
+  "solmane_cold_material_diagnostic": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "scope": "First original bootstrap/reset/reboot only; all root children masked Material census, no active/particle/Terrain/Mesh refs or gameplay mutation added; baseline and retained copies in distinct processes.",
+    "status": "Terminal: solmane-cold-masked-negative.json; baseline8/held8 errors,4 at original reboot and4 final; diagnosis only",
+    "source_commit": "ef33ae27f5738b40f64980047c0f2d9b7d018f56",
+    "baseline": {
+      "run": 37104723866,
+      "job": 111150900215
+    },
+    "retain_masked_materials": {
+      "run": 37104725293,
+      "job": 111150904967,
+      "args": "--retain-masked-materials"
+    }
+  },
+  "solmane_cold_active_surface_diagnostic": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "args": "--retain-active-surface-overrides",
+    "scope": "Same original cold lifecycle; hold only per-surface overrides equal to actual get_active_material, no geometry override/base, Mesh, particle or Terrain resources.",
+    "status": "Terminal positive: solmane-cold-active-positive.json; baseline8/masked8/active0 errors. Diagnostic retention only; owner factory still unproven.",
+    "source_commit": "c825fad9b47271282dae90c2d1a171a6a8dc251a",
+    "run": 37106042367,
+    "job": 111154649960,
+    "artifact": 11267797962
+  },
+  "solmane_cold_owner_partition": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "scope": "Same original cold lifecycle; retain only active per-surface override Materials in Landmarks or its complement. No additional resources or gameplay modifications.",
+    "status": "Terminal: solmane-cold-landmarks-partition.json; Landmarks-only8 errors versus complement0; diagnosis only",
+    "source_commit": "2a2c412a711d6199dcc1a986aa49063812f8956f",
+    "landmarks": {
+      "run": 37106639601,
+      "job": 111156354429,
+      "artifact": 11268375993
+    },
+    "except_landmarks": {
+      "run": 37106640734,
+      "job": 111156358760,
+      "artifact": 11268351041
+    },
+    "selection": [
+      "--retain-active-surface-overrides --active-owner-root=Landmarks",
+      "--retain-active-surface-overrides --exclude-active-owner-root=Landmarks"
+    ]
+  },
+  "solmane_cold_resource_partition": {
+    "script": "tests/probe_f19_solmane_cold_material_lifetime.gd",
+    "status": "Terminal: solmane-cold-resource-partition.json; resources0/complement8; diagnosis only",
+    "source_commit": "13ead2b4318d4b627f4e17eb58c72f040b1bd62a",
+    "resources": {
+      "run": 37107215424,
+      "job": 111157991749,
+      "artifact": 11268221957
+    },
+    "except_resources_landmarks": {
+      "run": 37107216842,
+      "job": 111157998170,
+      "artifact": 11268721343
+    },
+    "scope": "Only active surface override refs under CloudreachResources/RenewableResources versus remaining non-Landmarks roots. Original cold lifecycle unchanged; diagnosis only."
+  },
+  "harvest_material_fix": {
+    "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+    "files": [
+      "scripts/world/harvest_node.gd",
+      "tests/smoke_f19_harvest_material_lifecycle.gd"
+    ],
+    "scope": "PREDELETE clears only actual harvest visual surface bindings while mesh children are alive; removal/re-entry remains unchanged. No retained reference cache, stock or gameplay changes.",
+    "baseline": "harvest-material-component.json",
+    "status": "Actual component10s,137-check lifecycle11s and original cold transition292s all clean, no retained Materials in baseline/regression/cold. Full original choice witnesses dispatched; independent review pending.",
+    "fixed_component": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "run": 37107889673,
+      "job": 111159887938,
+      "artifact": 11268926505,
+      "process_exit": 0,
+      "elapsed_seconds": 10,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "leak_warnings": [],
+      "failures": [],
+      "raw_log": "ci-f19-harvest-fixed-component-37107889673.log.gz",
+      "raw_log_sha256": "5544dd3809a9575c5e7e954f4fd8d9388672291fea43a352f49f267feca1383e",
+      "scope": "Exact original fifteen-crop factory reproduction; baseline and retained comparison both0 errors. Normal baseline retains no Material references."
+    },
+    "lifecycle": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "run": 37107890850,
+      "job": 111159893142,
+      "artifact": 11268542510,
+      "process_exit": 0,
+      "elapsed_seconds": 11,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "leak_warnings": [],
+      "failures": [],
+      "raw_log": "ci-f19-harvest-lifecycle-37107890850.log.gz",
+      "raw_log_sha256": "23275eb0ee3488294ee8b935b7ee4d214c27e1f0a566dde07dde45d6e78a830d",
+      "checks": 137,
+      "observer_state": "IDs and WeakRefs only",
+      "scope": "All actual15 Cloudreach crop specs, original active/source/mesh identities preserved through removal/re-entry; copied Materials expire after actual deletion. No Game/stock/gathering or earned-play claim."
+    },
+    "cold_no_retention": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "run": 37107891893,
+      "job": 111159894349,
+      "artifact": 11268353038,
+      "process_exit": 0,
+      "elapsed_seconds": 292,
+      "engine_errors": 0,
+      "script_errors": 0,
+      "leak_warnings": [],
+      "failures": [],
+      "held_materials_all_observations": 0,
+      "raw_log": "ci-solmane-cold-harvest-fixed-37107891893.log.gz",
+      "raw_log_sha256": "1438e7c11e781d9cd3b83b581d154542682b1b4688b65caebdf28fdef88eb655",
+      "scope": "Original bootstrap/reset/reboot and explicit final deletion, same baseline treatment, no reference retention. Original gameplay fixtures remain disclosed; no choice or earned-play credit."
+    },
+    "acceptance": false,
+    "full_choice_witnesses": {
+      "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+      "status": "Both complete original choice witnesses clean on6809; Veridian1455s/Solmane2597s/0errors",
+      "veridian": {
+        "kind": "f19_actual_veridian_full_harvest_fixed_choice_witness",
+        "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+        "run": 37108379739,
+        "job": 111161260966,
+        "artifact": 11269326853,
+        "process_exit": 0,
+        "elapsed_seconds": 1455,
+        "engine_errors": 0,
+        "script_errors": 0,
+        "leak_warnings": [],
+        "failures": [],
+        "cases": [
+          "space-accept",
+          "space-refuse",
+          "capacity-refuse-at-prompt",
+          "capacity-accept-then-let-newcomer-go",
+          "capacity-accept-release-one",
+          "save-while-choice-open"
+        ],
+        "scope": "Entire original six-case native choice/save/reload driver on the Harvest cleanup source; X11 Compatibility/drawingfalse, selected group all. Original staged victory/party/pose fixtures and original assertions/prompt/cap guards retained. No diagnostic resource retention, earned play, ENet or visual/device credit.",
+        "original_prompt_guards_passed": true,
+        "original_party_cap_guard_passed": true,
+        "choice_open_reload_marker": true,
+        "accepted_clean_choice_witness": true,
+        "earned_campaign": false,
+        "raw_log": "ci-veridian-full-harvest-fixed-37108379739.log.gz",
+        "raw_log_sha256": "4d83727a5314829eda5500a9710fd02242d98912ab102c61dfcf503f2120c4d9",
+        "status": "Terminal clean PASS; all six original cases,1455s/0errors",
+        "script": "tests/smoke_f19_veridian_functional.gd"
+      },
+      "solmane": {
+        "kind": "f19_actual_solmane_full_harvest_fixed_choice_witness",
+        "source_commit": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+        "run": 37108381309,
+        "job": 111161263274,
+        "artifact": 11269492847,
+        "process_exit": 0,
+        "elapsed_seconds": 2597,
+        "engine_errors": 0,
+        "script_errors": 0,
+        "leak_warnings": [],
+        "failures": [],
+        "cases": [
+          "space-accept",
+          "space-refuse",
+          "capacity-refuse-at-prompt",
+          "capacity-accept-then-let-newcomer-go",
+          "capacity-accept-release-one",
+          "save-while-choice-open"
+        ],
+        "scope": "Entire original six-case native choice/save/reload driver on the Harvest cleanup source; X11 Compatibility/drawingfalse. Original staged victory/party/pose fixtures and original assertions/prompt/cap guards retained. No diagnostic resource retention, earned play, ENet or visual/device credit.",
+        "original_prompt_guards_passed": true,
+        "original_party_cap_guard_passed": true,
+        "choice_open_reload_marker": true,
+        "accepted_clean_choice_witness": true,
+        "earned_campaign": false,
+        "raw_log": "ci-solmane-full-harvest-fixed-37108381309.log.gz",
+        "raw_log_sha256": "5b26808496c2f108417c6828faf9b690c014fee72e3d640424d0eaaa9ddab766",
+        "status": "Terminal clean PASS; all six original cases,2597s/0errors",
+        "script": "tests/smoke_f19_solmane_functional.gd"
+      },
+      "scope": "Entire original six-case choice/save/reload matrices; no resource retention, original guards unchanged"
+    }
+  },
+  "fresh_contact_overflow_diagnostic": {
+    "script": "tests/probe_f19_fresh_contact_overflow.gd",
+    "source_commit": "27d2fc2ebb773b85dda2690c9e500f0c925e9bb1",
+    "run": 37109365598,
+    "job": 111164127200,
+    "status": "Terminal rejected: paid-camp rest failure, four gather-stage material errors, zero checkpoints; previous cap event did not reproduce",
+    "scope": "Original normal fresh F49 route with read-only post-refusal observer. Shipping/F17 helper source identical to6809. No seed override, resume, cap change, material retention, setup fixture, checkpoint promotion or earned acceptance credit.",
+    "shipping_and_f17_helper_identical_to": "6809a7aedfb1f22bb15015eb49735e04060499cb",
+    "acceptance": false,
+    "kind": "f19_original_normal_fresh_contact_diagnostic_rejected",
+    "artifact": 11269562670,
+    "job_conclusion": "failure",
+    "process_exit": null,
+    "process_exit_note": "Raw artifact has no exit footer or exit_code file; job conclusion is authoritative.",
+    "engine_errors": 4,
+    "engine_error_messages": [
+      "ERROR: Parameter \"material\" is null.",
+      "ERROR: Parameter \"material\" is null.",
+      "ERROR: Parameter \"material\" is null.",
+      "ERROR: Parameter \"material\" is null."
+    ],
+    "script_errors": 0,
+    "leak_warnings": [],
+    "result": {
+      "campaign_complete": false,
+      "checkpoints": [],
+      "counts_as_proof": false,
+      "cumulative_elapsed_seconds": 1628.581,
+      "dry_run": false,
+      "elapsed_seconds": 1628.581,
+      "failures": [
+        "Earned rest could not reach Halda's tournament picker"
+      ],
+      "local_chains": [],
+      "reached": "paid_camp",
+      "requested_prefix_passed": false,
+      "resume": {},
+      "resumed_from": "",
+      "scratch": "user://f49_campaign_2544_11927"
+    },
+    "material_error_context": "All four material-null errors occur in initial village tool/gather stage, after production observation frame2160 and before pickaxe gathered +4 Stone. Owning factory not proved.",
+    "rest_context": {
+      "entry_frame": 50705,
+      "return_frame": 50718,
+      "player": [
+        29.76292,
+        0.204819,
+        -42.01878
+      ],
+      "failure": "Earned rest could not reach Halda's tournament picker",
+      "actual_tournament_marshal_walk_start_logged": false,
+      "source_branches": "Rest fails if prompt is missing or TAIL._walk_to_prompt returns false. TAIL first stows pending build and hammer before starting actual walk. Raw evidence does not distinguish those branches; private TAIL failures are not propagated into the generic rest result."
+    },
+    "overflow_event_count": 0,
+    "production_observation_count": 143,
+    "max_sampled_slide_points": 4,
+    "sampled_refusals": [],
+    "previous_ninth_contact_failure_closed": false,
+    "broader_journey_rerun": "Held by coordinator pending matched green main baseline.",
+    "raw_log": "ci-fresh-contact-overflow-rejected-37109365598.log.gz",
+    "raw_log_sha256": "08805e896779e06ccf1f998d31241762b576c0868e04b48deb0c1dd19ed048bc",
+    "prepared_paid_camp_observation": {
+      "source_commit": "044a1a26e5",
+      "script": "tests/probe_f19_fresh_contact_overflow.gd",
+      "status": "Prepared, unexecuted; broader campaign still held pending matched green main",
+      "scope": "First32 original paid_camp physics samples: existing build/equipped/hammer-slot state, actual marshal/prompt paths, physical build-cancel pressed state and input-group member paths. No input-owner methods, physics queries, grants, pose/input writes, cap changes or F17 helper edits. Deferred serialization/output; records no scene/resource references.",
+      "acceptance": false
+    }
+  },
+  "coordinator_disposition": {
+    "status": "No harvest integration/import approval yet; review deferred until a required root green gate needs the material dependency. Preserve existing root Harvest ready/stock guards. No matched moving portal group approved before actual main green.",
+    "home_key": "Preserve already reviewed monotonic candidate upstream538c971f6fa9355113efdd0f4756aa34f889e210, lane c0a8951cfb; root still has older frame-delta blob.",
+    "fresh_route": "Original contact cap remains8. New normal run did not reproduce the overflow (sampled maximum4), so historical ninth owner remains unproved. Fresh route instead failed at paid-camp rest. No F17 helper edit or cap waiver; broader reruns held pending matched green main."
+  },
+  "held_tool_material_component": {
+    "source_commit": "9e3a1f884f1812c0c212d449cbe79ea3099a0b73",
+    "run": 37113063213,
+    "script": "tests/probe_f19_held_tool_material_lifetime.gd",
+    "status": "Terminal: actual axe4/pickaxe4 errors on deletion; retain active finish0/0. Component defect isolated; actual fresh cause unproved.",
+    "scope": "Authored axe/pickaxe model loader and actual BuildMaterialFinish.apply as used by ToolHold. Component baseline deletes props; counterfactual retains only one active surface finish per prop. No Game, equip input, gathering, rewards, route or earned acceptance supplied.",
+    "acceptance": false,
+    "kind": "f19_actual_authored_held_tool_finish_component",
+    "job": 111174561905,
+    "artifact": 11271280515,
+    "process_exit": 0,
+    "elapsed_seconds": 7,
+    "cases": {
+      "baseline axe": {
+        "engine_errors": 4,
+        "held": 0,
+        "item": "axe",
+        "model_path": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
+        "owners": [
+          "Axe_Bronze:0:MI_Trim_Props_Vertex"
+        ],
+        "surfaces": 1,
+        "treatment": "baseline",
+        "unique_active_materials": 1
+      },
+      "baseline pickaxe": {
+        "engine_errors": 4,
+        "held": 0,
+        "item": "pickaxe",
+        "model_path": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
+        "owners": [
+          "Pickaxe_Bronze:0:MI_Trim_Props_Vertex"
+        ],
+        "surfaces": 1,
+        "treatment": "baseline",
+        "unique_active_materials": 1
+      },
+      "retain-active-surface-overrides axe": {
+        "engine_errors": 0,
+        "held": 1,
+        "item": "axe",
+        "model_path": "res://assets/props/quaternius_fantasy/Axe_Bronze.gltf",
+        "owners": [
+          "Axe_Bronze:0:MI_Trim_Props_Vertex"
+        ],
+        "surfaces": 1,
+        "treatment": "retain-active-surface-overrides",
+        "unique_active_materials": 1
+      },
+      "retain-active-surface-overrides pickaxe": {
+        "engine_errors": 0,
+        "held": 1,
+        "item": "pickaxe",
+        "model_path": "res://assets/props/quaternius_fantasy/Pickaxe_Bronze.gltf",
+        "owners": [
+          "Pickaxe_Bronze:0:MI_Trim_Props_Vertex"
+        ],
+        "surfaces": 1,
+        "treatment": "retain-active-surface-overrides",
+        "unique_active_materials": 1
+      }
+    },
+    "engine_errors": 8,
+    "script_errors": 0,
+    "leak_warnings": [],
+    "actual_fresh_material_owner_proved": false,
+    "raw_log": "ci-held-tool-component-37113063213.log.gz",
+    "raw_log_sha256": "faf995df37fc2430198bc39f95c11b5788bcf4ef0db20b5557f4b4ca5246404a"
+  },
+  "held_tool_material_fix": {
+    "source_commit": "6ad7445fb9a193f6f4b9e3ba4ae01f91cb4a8899",
+    "files": [
+      "scripts/player/tool_hold.gd",
+      "tests/smoke_f19_held_tool_material_lifecycle.gd"
+    ],
+    "scope": "Authored axe/pickaxe finish fixtures assigned to actual shipping ToolHold. Production replacement and PREDELETE paths, including earlier external mount under parent deletion. Active/source/mesh identity retained across removal/re-entry; all private finish WeakRefs expire after actual deletion. Observer holds IDs/WeakRefs only; no Game, equip input, gather or earned acceptance supplied.",
+    "status": "Terminal clean component lifecycle:62 checks/10s/0engine-script-leak errors; coordinator review/integration and actual fresh remeasurement pending",
+    "acceptance": false,
+    "run": 37113450923,
+    "job": 111175627177,
+    "kind": "f19_held_tool_material_cleanup_lifecycle",
+    "artifact": 11271011653,
+    "process_exit": 0,
+    "elapsed_seconds": 10,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "leak_warnings": [],
+    "result": {
+      "checks": 62,
+      "earned_campaign": false,
+      "failures": [],
+      "fixture": "Authored axe/pickaxe props assigned to shipping ToolHold; no Game/input/gather",
+      "observer_state": "IDs and WeakRefs only"
+    },
+    "cases": [
+      "replace axe",
+      "replace pickaxe",
+      "delete-owner axe",
+      "delete-owner pickaxe",
+      "delete-player-with-external-prop axe",
+      "delete-player-with-external-prop pickaxe"
+    ],
+    "actual_fresh_material_errors_closed": false,
+    "independent_review_pending": true,
+    "integration_pending": true,
+    "raw_log": "ci-held-tool-lifecycle-fixed-37113450923.log.gz",
+    "raw_log_sha256": "91d76608f8c7bbbd43cb1da772b9ac37539b0dc2f8949b270fcf8a910dda1f48"
+  }
+}

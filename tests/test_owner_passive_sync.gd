@@ -393,6 +393,38 @@ func test_gate_binds_real_retained_duty_and_reuses_original_checkpoint() -> void
 	assert_eq(service.gate(2, "research_event", {}, rejected).code, "owner_passive_original_duty_required")
 	assert_eq(var_to_bytes(stream.checkpoint), original)
 
+func test_gate_binds_a_remote_boss_relic_duty_with_its_world_namespace() -> void:
+	# F19 world-scoped drops: the host's retry adds the settlement flags and the
+	# current world namespace to a retained boss duty before it stages. A remote
+	# owner's gate must expect exactly those fields, or no guest's relic or
+	# portal key is ever delivered and its later duties starve behind it.
+	var boss_context := {"source_key": "boss:warden_aldis", "realm": "meadows",
+		"validated_host_outcome": "win", "encounter_id": "encounter-boss", "participants": [before.character_id]}
+	var intent := {"trainer_id": "warden_aldis", "biome": "meadows", "encounter_id": "encounter-boss"}
+	var boss := SOURCE.EVENT.make(SOURCE.DATA.new()._world(), "original-epoch", "boss:warden_aldis:encounter-boss",
+		[{"character_id": before.character_id, "action": "boss_relic", "intent": intent, "context": boss_context}])
+	assert_false(boss.is_empty())
+	game.world.reward_deliveries[boss.delivery_id] = boss.duplicate(true)
+	var stream := _host_stream()
+	var context := boss_context.duplicate(true)
+	context.boss_settlement_world_flags = []
+	context.world_namespace = game.world.reward_delivery_namespace
+	context.character_id = before.character_id
+	context.expected_revision = 0
+	context.in_range = true
+	context.retained_event = boss.delivery_id
+	context.in_combat = false
+	context.foundation_runtime_authorized = true
+	assert_eq(service.gate(2, "boss_relic", intent, context).code, "owner_passive_checkpoint_pending",
+		"the retry's own context binds the retained boss duty")
+	assert_false(stream.checkpoint.is_empty())
+	var other_world := context.duplicate(true)
+	other_world.world_namespace = "another-world"
+	stream.checkpoint = {}
+	assert_eq(service.gate(2, "boss_relic", intent, other_world).code, "owner_passive_original_duty_required",
+		"a different world's namespace never binds")
+
+
 func test_legacy_typed_accepted_row_rebases_full_record_and_duplicate_keeps_progress() -> void:
 	const ESSENCE := preload("res://scripts/creatures/essence.gd")
 	const TEACHING := preload("res://scripts/creatures/teaching.gd")

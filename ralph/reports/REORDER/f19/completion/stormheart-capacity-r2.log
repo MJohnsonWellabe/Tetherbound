@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+F19 STORMHEART CAPACITY CASE {"case":"refuse-at-prompt","failures":[],"party":["creature-49f620beeacc413cc7c2bec1141eb132","creature-fe687a5883ca18c0a79e40a39ece1e9a","creature-2918779277fd46d54896b0d1c2828cdf","creature-c2760845aa942c6fe32eac16b4ec34ed","creature-548cfa7ea59fb4d08f76d79a14d54791"],"pending":false}
+F19 STORMHEART CAPACITY CASE {"case":"accept-let-newcomer-go","failures":[],"party":["creature-14f57be5b3b6267e21a1f61c2d0a6384","creature-7b7f768a122faa4fd52d83f99ed85068","creature-b2dbc917a7ac47ffee1669c38082a5d9","creature-7e3ec2905344fffc5d7e5b846df71b71","creature-db45d4dc92944158f46883bb9670058d"],"pending":false}
+F19 STORMHEART CAPACITY CASE {"case":"accept-release-owned-holder","failures":[],"party":["creature-8917f558e27d504c47822cc3e667c2b4","creature-fa4283a1533c31b2aa5e342390de6564","creature-b3bf65c8ad27413d1276a8dad1de1308","creature-05438169bda2a0cacc1ca9f46c9f2104","creature-2aabef42406ef89c7471951c6f0db7a8"],"pending":false}
+STORMWOOD STORMHEART CHOICE OK: 89 assertions, 0 failures

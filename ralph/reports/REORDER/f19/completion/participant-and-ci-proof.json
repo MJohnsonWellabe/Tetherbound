@@ -1,0 +1,49 @@
+{
+  "kind": "f19_participant_delivery_and_remote_choices",
+  "participant_delivery": {
+    "command": "Godot 4.7 --headless --script tests/run_tests.gd -- --only=test_f19_participant_delivery.gd",
+    "log": "participant-delivery-world-flags.log",
+    "tests": 1,
+    "assertions": 128,
+    "failures": 0,
+    "engine_errors": 0,
+    "scope": "All four boss handoffs, two distinct owners, guest-first actual registry/prepared LedgerRpc/WorldSave/CharacterSave path, identity refusal and duplicate owner retries. Captured victories, admitted identities, settled world flags and shared world snapshot are declared fixtures; no ENet or earned-fight claim."
+  },
+  "remote_choices": [
+    {
+      "legendary": "Abyssal Guardian",
+      "script": "tests/smoke_water_guardian_ceremony.gd",
+      "source_commit": "879068624cc9f7896db6ffb11685fd16332a6226",
+      "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37074149226",
+      "artifact_id": 11256375709,
+      "log": "ci-guardian-37074149226.log",
+      "checks": 120,
+      "failures": 0,
+      "engine_errors": 0,
+      "exit_code": 0,
+      "scope": "Actual Water world, real offer/roster ceremony, space/capacity accept/refuse, retry/presentation checks. Declared freed-Guardian, roster and pose fixtures; no Nerissa-fight claim."
+    },
+    {
+      "legendary": "Fulgocobra (Stormheart)",
+      "script": "tests/smoke_stormwood_stormheart_choice.gd",
+      "source_commit": "879068624cc9f7896db6ffb11685fd16332a6226",
+      "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37074151200",
+      "artifact_id": 11256535511,
+      "log": "ci-stormheart-37074151200.log",
+      "assertions": 44,
+      "failures": 0,
+      "engine_errors": 0,
+      "exit_code": 0,
+      "scope": "Real dialogue offer/space accept/refuse/world-scope interruption with inherited hub/chapter/Dynamo stubs. Capacity is covered by stormheart-capacity-r2.log (89 assertions). No host ACK or earned-fight claim."
+    }
+  ],
+  "promotion_transport": {
+    "command": "node tests/test_f19_earned_promotion.mjs",
+    "result": "PASS",
+    "checks": 9,
+    "change": "Explicit --relocated-from-ci supports downloaded immutable artifacts, retains original runner paths in provenance, requires one original root and exact boundary names, receipts and saved-byte hashes.",
+    "scope": "Negative rejection controls only. No earned fixture generated."
+  },
+  "remaining": ["Veridian and Solmane choice runs still in progress at this report.", "Full fresh F49 campaign run37075247824 still in progress; earned checkpoint criterion remains open."],
+  "resource_coordination": "Two-owner test uses own isolated APPDATA/warmed cache and no full world. Live choices and campaign are offloaded to GitHub, leaving other sessions' local leases undisturbed."
+}

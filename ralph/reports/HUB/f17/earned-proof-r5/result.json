@@ -1,0 +1,20 @@
+{
+  "source": "d652595bb411dde4f076270fe443598bfbecb454",
+  "run": 37081117622,
+  "job": 111081639547,
+  "artifact": 11258881853,
+  "passed": false,
+  "exit": 1,
+  "timed_out": false,
+  "elapsed_seconds": 157.012,
+  "reached": "road_gate",
+  "requested_prefix_passed": false,
+  "failure": "care purchase did not spend exact earned coins for one potion with unchanged party",
+  "hashes": {
+    "native.log": "f349a9736808ae1d359e8fa58a968e244c850451a3fa6ae963e91f67ca6bdbb0",
+    "request.json": "42a1dedcbd1cba4de7449f41a3276b39d0be83404bf3aa9e6e387bf6dba14a4a",
+    "runtime-artifact.zip": "dafd0ad750a8edeca7f72398fd5cb502e2537faae56ab9d48a8417b7f55a6c8a",
+    "workflow-artifacts.json": "e5bd094e1d2d06cea1c39da64527e253cf2f997ebecd259994b1cf3a9336fccd",
+    "workflow-jobs.json": "1225105724fb37cc85c19d9af4d5a04f407614eb16090bbdf6b38af38bc79830"
+  }
+}

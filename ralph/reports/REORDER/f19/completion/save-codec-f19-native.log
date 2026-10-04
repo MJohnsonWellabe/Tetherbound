@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only save_document,f19_boss_delivery,f19_participant_delivery,f19_boss_epoch: 4 of 739 test files
+  ok    test_f19_boss_delivery.gd :: test_captured_boss_duty_keeps_original_epoch_through_real_prepared_and_owner_save_retry
+  ok    test_f19_boss_delivery.gd :: test_paid_legacy_boss_duty_never_starves_the_next_owed_duty_for_that_character
+  ok    test_f19_boss_epoch.gd :: test_derived_settlement_flags_preserve_the_original_retained_boss_epoch
+  ok    test_f19_participant_delivery.gd :: test_all_four_handoffs_save_each_participants_entire_personal_key_and_relic
+  ok    test_save_document.gd :: test_collision_dictionaries_and_original_strings_survive
+  ok    test_save_document.gd :: test_exact_numeric_bits_survive_repeated_json_storage
+  ok    test_save_document.gd :: test_malformed_or_nonfinite_numeric_tags_are_refused
+  ok    test_save_document.gd :: test_plain_json_remains_readable_and_old_readers_cannot_use_envelope
+  ok    test_save_document.gd :: test_python_and_native_codec_share_one_exact_wire_fixture
+
+9 tests, 269 assertions, 0 failed

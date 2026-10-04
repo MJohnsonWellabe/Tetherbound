@@ -1,0 +1,17 @@
+{
+  "source": "2a4dd0c6f4d1eb632a017750f37bcb7d74de4d37",
+  "run": 37077498995,
+  "job": 111070547610,
+  "artifact": 11257463782,
+  "passed": false,
+  "scope": "failed earned M1 prefix",
+  "run_step_exit": 1,
+  "timed_out": false,
+  "hashes": {
+    "native.log": "0569e7313505e20799c7fd81ca74de4f2420cb465b408c8f80afff8e38292bf4",
+    "request.json": "422b5f805759fe1e99e7e158001fbf4ca7aad54272ded94f4894c1cbb00ae988",
+    "runtime-artifact.zip": "43dc073a85c805ef7ce8f3bce69d0294b0cb74895322f534e007e64e44adb0b0",
+    "workflow-artifacts.json": "398bf1cc9e459fb8addeffa034698d278d96dcc70ab3d966c22037bbfc0c208e",
+    "workflow-jobs.json": "693a92cd591709dc8fcd4d1336b60e8735dccac099f0878f882b9f4734fe3459"
+  }
+}

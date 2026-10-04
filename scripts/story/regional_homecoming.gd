@@ -16,6 +16,41 @@ const CONTEXT_FIELDS := ["world_instance_id", "session_epoch", "character_id",
 	"outcome_id", "home_return_receipt", "party_revision", "party_signature"]
 
 
+## An original personal finale answer, never a shared world win or roster guess.
+static func personal_outcome(flags: Dictionary) -> String:
+	if flags.get("stormwood:legendary_ceremony_settled") != true:
+		return ""
+	var originals: Array[String] = []
+	var answers: Array[String] = []
+	for flag: String in flags:
+		if flags[flag] != true: continue
+		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
+		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	if originals.size() > 1 or (originals.is_empty() and answers.size() != 1): return ""
+	var outcome: String = answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	if not answers.has(outcome) or outcome.get_slice(":", outcome.get_slice_count(":") - 1) not in ["accepted", "refused"]: return ""
+	return outcome
+
+
+## Only the authority's grounded Home Key arrival after this finale mints this
+## marker. Earlier home visits and the Hall's home portal cannot satisfy F20.
+static func return_prefix(world_id: String, outcome: String) -> String:
+	if world_id.is_empty() or outcome.is_empty(): return ""
+	return "craft:ending_home_return_%s_%s_" % [world_id, outcome.sha256_text()]
+
+
+static func home_return_receipt(receipts: Array, world_id: String, character: String, outcome: String) -> String:
+	var prefix := return_prefix(world_id, outcome)
+	if prefix.is_empty() or character.is_empty(): return ""
+	var found := ""
+	for raw: Variant in receipts:
+		if raw is String and raw.begins_with(prefix) and raw.ends_with(":" + character):
+			# Both owner and host choose the same marker regardless of receipt order.
+			# A new return is disallowed while presentation/ACK owns input.
+			if found.is_empty() or raw < found: found = raw
+	return found
+
+
 static func context(game: Object) -> Dictionary:
 	var value := journey_context(game)
 	if value.is_empty() or value.get("realm") != "meadows" \

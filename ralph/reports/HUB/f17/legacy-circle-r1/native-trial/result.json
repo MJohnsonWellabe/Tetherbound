@@ -1,0 +1,17 @@
+{
+  "source": "18e29847b48b5f47aa4dd377600ef0653a76af08",
+  "run": 37082601424,
+  "job": 111086166621,
+  "artifact": 11258989644,
+  "passed": false,
+  "exit": 1,
+  "timed_out": false,
+  "scope": "failed controller witness on overlong return road leg; no garden arrival or visual claim",
+  "hashes": {
+    "native.log": "e696079bcefc2e3b19b4a1169615c38a8d4f66f92e5ab36bdc2d7325c7cc1d4d",
+    "request.json": "d86da421a40e69cb99c0e689159b500c94777173ad8d04327088db035646fc6c",
+    "runtime-artifact.zip": "ab0524d2e45ab83036670e44774eb2dfdbe20705aac0088e0fd5d0142dcd2d04",
+    "workflow-artifacts.json": "e0046309cb1ab951950970d3f91c1d1c22c4327e43b52f34be4997418bf5cf55",
+    "workflow-jobs.json": "d2e475acb39039b2005d0a181dcfd200ae9325a0deb7272c4d1c5e7dcf149f9b"
+  }
+}

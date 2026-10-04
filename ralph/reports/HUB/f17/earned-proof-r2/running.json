@@ -1,0 +1,17 @@
+{
+  "source": "34e92d996f36807dfa836a33c139b52ae14eb98d",
+  "pid": 18800,
+  "command": [
+    "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "D:\\tetherbound\\redesign-hub",
+    "--script",
+    "tests/smoke_four_biome_continuous.gd",
+    "--",
+    "--through-tournament",
+    "--world-seed=4",
+    "--no-checkpoints"
+  ]
+}

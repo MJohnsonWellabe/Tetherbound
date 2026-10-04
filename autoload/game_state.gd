@@ -3118,6 +3118,7 @@ func home_key_refusal() -> String:
 
 func use_home_key() -> bool:
 	if local == null or local.inventory.count("home_key") != 1 or session == null: return false
+	if session.call("_owner_training_mutation_blocked", local) == true: return false
 	var key := get_node_or_null(^"HomeKey")
 	if key == null:
 		key = preload("res://scripts/world/home_key.gd").new()
@@ -3211,11 +3212,11 @@ func regional_ending_context() -> Dictionary:
 		var refused: bool = local.flags.call("has", prefix + "legendary_refused")
 		if joined or refused: choices.append(biome + (":accepted" if joined else ":refused"))
 	choices.append("stormwood:" + storm_answer)
-	var home := ""
+	var home := ending.home_return_receipt(local.redesign_character.transaction_receipts,
+		world.reward_delivery_namespace, local.character_id, outcome)
 	var home_seen := false
 	var credits_seen := false
 	for receipt: String in local.redesign_character.transaction_receipts:
-		if receipt.begins_with("craft:home_return_" + world.reward_delivery_namespace + "_") and receipt.ends_with(":" + local.character_id): home = receipt
 		if receipt == "craft:regional_ending_homecoming_seen:" + local.character_id: home_seen = true
 		if receipt == "craft:regional_ending_regional_credits_seen:" + local.character_id: credits_seen = true
 	var player := find_player() as CharacterBody3D
@@ -3241,10 +3242,8 @@ func regional_ending_context() -> Dictionary:
 	var owner := preload("res://scripts/ui/input_owner.gd").current(get_tree())
 	var ending_owner := false
 	if farm_source != null and owner != null:
-		var panel: Node = farm_source.get("_dialogue")
 		var credits: Node = farm_source.get("_regional_credits")
-		ending_owner = (owner == panel or owner == farm_source) \
-			and str(farm_source.get("_f18_opening_conversation_id")).begins_with("regional_homecoming_")
+		ending_owner = farm_source.call("owns_regional_presentation", owner, self) == true
 		if owner == credits and credits != null:
 			ending_owner = credits.get("_expected_character_id") == local.character_id and credits.get("_expected_world") == world
 	if safety.get("cutscene") == true and not ending_owner: safe = false
@@ -3281,7 +3280,8 @@ func regional_ending_ack_result(transaction_id: String) -> Dictionary:
 
 
 func grant_home_key_from_opening(source: Node) -> bool:
-	if session == null or not is_host() or not bool(session.call("portal_runtime_ready")) or source == null: return false
+	if session == null or not bool(session.call("portal_runtime_ready")) or source == null: return false
+	if session.call("_owner_training_mutation_blocked", local) == true: return false
 	var scene := get_tree().current_scene
 	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
 	if source.get("_f18_opening_conversation_id") != "grandpa_first_catch" or current_realm != "meadows": return false
@@ -3294,8 +3294,7 @@ func grant_home_key_from_opening(source: Node) -> bool:
 	# A finite gift already owed by a former world follows its character even
 	# with a full bag; another Grandpa interaction cannot produce another key.
 	for row: Variant in local.satchel_escrow.values():
-		if row is Dictionary and row.get("kind") == "reward_delivery" and row.get("source") == "home_key:grant:" + local.character_id:
-			return row.get("status") in ["grant_due", "settled"]
+		if preload("res://scripts/net/home_key_action.gd").valid_escrow(row, local.character_id): return true
 	var ledger := session.get_node_or_null("LedgerRpc")
 	if ledger == null or save_system == null or not bool(save_system.call("finish_fallback")): return false
-	return bool(ledger.call("journal_opening_home_key_prepared", session.call("local_peer_id"), source).get("durable", false))
+	return bool(session.call("request_opening_home_key", source))

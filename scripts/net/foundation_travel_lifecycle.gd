@@ -30,12 +30,7 @@ func _process(delta: float) -> void:
 	var forge_ready: bool = stations.get("runtime_enabled") == true and stations.get("forge", {}).get("runtime_enabled") == true
 	if not portal_ready and not forge_ready: return
 	if owner.call("is_host") == true:
-		if not portal_ready: return
-		for peer: int in _observations.keys():
-			var context := host_context(peer)
-			if context.is_empty():
-				context = {"character_id": _observations[peer].sample.character_id, "combat": true}
-			owner.get("_portal_policy").call("cancel_invalid", context)
+		# HomeKeyChannels owns host cancellation and observer cleanup together.
 		return
 	if owner.call("is_active") != true: return
 	publish_now()
@@ -221,7 +216,7 @@ func host_context(peer: int) -> Dictionary:
 		"equipped_tool": str(sample.get("equipped_tool", "")),
 		"swimming": sample.swimming or aquatic.get("mode") != preload("res://scripts/player/swim_state.gd").Mode.LAND,
 		"flying": sample.flying or actor.get("net_flying") == true or actor.get("net_carried") == true,
-		"downed": sample.downed or (downed.get("_downed_peers") as Dictionary).has(peer), "home_key_owned": key_count == 1,
+		"downed": sample.downed or (downed.get("_downed_peers") as Dictionary).has(peer), "home_key_owned": owner.call("_home_key_authoritative_owned", peer),
 		"character_unlocks": personal.redesign_character.portal_unlocks.duplicate(),
 		"world_unlocks": game.get("world").redesign_world.portal_unlocks.duplicate(),
 		"character_stirred": owner.get("_character_authority").call("character_fifth_stirred", sample.character_id),
@@ -261,11 +256,11 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 	if originals.size() > 1 or (originals.is_empty() and answers.size() != 1): return {}
 	var outcome: String = answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
 	if not answers.has(outcome) or outcome.get_slice(":", outcome.get_slice_count(":") - 1) not in ["accepted", "refused"]: return {}
-	var home: String = ""
+	var home: String = preload("res://scripts/story/regional_homecoming.gd").home_return_receipt(
+		personal.get("redesign_character", {}).get("transaction_receipts", []),
+		str(sample.world_instance_id), str(sample.character_id), outcome)
 	var starter: String = ""
 	for receipt: String in personal.get("redesign_character", {}).get("transaction_receipts", []):
-		if receipt.begins_with("craft:home_return_" + str(sample.world_instance_id) + "_") \
-			and receipt.ends_with(":" + str(sample.character_id)): home = receipt
 		var prefix: String = "starter_choice:%s:" % sample.character_id
 		if receipt.begins_with(prefix):
 			var uid: String = receipt.trim_prefix(prefix)

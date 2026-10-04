@@ -50,7 +50,7 @@ func _ready() -> void:
 	refresh()
 	# Restoring saved presentation is silent. A durable use result alone starts
 	# the moment; loading a stirred world never repeats its sound or line.
-	_stir_seen = bool(_view().get("fifth_arch_stirred", false))
+	_stir_seen = bool(_view().get("character_stirred", false))
 
 
 func _process(delta: float) -> void:
@@ -102,7 +102,7 @@ static func prompt_text(row: Dictionary, view: Dictionary) -> String:
 		return sign + " · Travel is not ready yet"
 	var key_name := "%s Portal Key" % name
 	if bool(view.get("has_key", false)) and not bool(view.get("character_open", false)):
-		return "Use %s · open permanently for your character" % key_name
+		return "Use %s · Recommended Lv %d · open permanently for your character" % [key_name, level]
 	if bool(view.get("open", false)):
 		return "Enter %s · to %s" % [sign, str(view.get("destination_label", "biome entry"))]
 	if bool(view.get("has_key", false)):

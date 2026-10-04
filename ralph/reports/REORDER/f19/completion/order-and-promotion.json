@@ -1,0 +1,24 @@
+{
+  "kind": "f19_order_consumers_and_earned_promotion",
+  "changes": [
+    "Keep each live portal's recommended level visible while its owned key is offered for use.",
+    "Add off-tree production config/journal/map/credits/sign checks and actual host portal-policy check showing an unlocked level-one traveler is not level-gated.",
+    "Add fail-closed earned-boundary promotion tool: only a successful fresh continuous new-order campaign, five exact immutable F49 handoffs, current split schema, exact source/hash/realm/character/relic/boss receipts. Copy production bytes unchanged and never overwrite an existing earned fixture."
+  ],
+  "validation": {
+    "order": {"command": "Godot 4.7 --headless --script tests/run_tests.gd -- --only=test_f19_order_consumers.gd", "tests": 3, "assertions": 44, "failures": 0, "engine_errors": 0, "log": "order-consumers-corrected.log"},
+    "curve": {"command": "node tests/test_f19_curve.mjs", "result": "PASS", "named_teams": 88, "regional_wild_tables": 36},
+    "gates": {"command": "node tests/test_f19_gate_scan.mjs", "result": "PASS", "prerequisite_fields": 1275},
+    "promotion_negative_controls": {"command": "node tests/test_f19_earned_promotion.mjs", "result": "PASS", "checks": 6, "scope": "Deliberately fabricated rejection controls only; no earned saves generated."},
+    "rejected_order_attempts": "order-consumers.log (Variant annotation omitted), order-consumers-validated.log (incorrect fixture result nesting). Corrected test uses actual prepared.travel_permit and completed without engine errors."
+  },
+  "criteria": {
+    "F19#0": "Production consumers return the new order; no visual/earned-journey claim from off-tree checks.",
+    "F19#1": "Live authored levels/tables and runtime reader pins pass; combat feel and earned party growth remain other criteria.",
+    "F19#2": "Reward source repaired, coordinator independently approved baseline repair+settlement+epoch cuts. World-scoped follow-up awaits independent review; live multiplayer proof still separate.",
+    "F19#3": "Authored gate scan passes including negative controls; actual traversal journey still outstanding.",
+    "F19#4": "105 focused legendary contract tests/773 assertions passed without engine errors; actual live choice smokes outstanding.",
+    "F19#5": "Signs and host policy verified, promotion implementation tested for rejection. Five genuinely earned new-order save boundaries still outstanding and no old fixture was relabelled."
+  },
+  "resource_coordination": "No local import/render/full-world process used during F17/F20 world leases. Pure warmed-cache headless tests used isolated APPDATA."
+}

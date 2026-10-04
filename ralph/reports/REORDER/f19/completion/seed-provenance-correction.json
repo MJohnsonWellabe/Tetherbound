@@ -1,0 +1,39 @@
+{
+  "kind": "f19_earned_population_provenance",
+  "problem": "Actual F17 capture used effective encounter seed4 while unchanged v28 save records1434901555; that capture does not prove the normal saved population or final tournament persistence.",
+  "actual_source_evidence": "canonical-meadows-prefix-r8.json",
+  "coordinator_disposition": "Keep original normal no-override fresh route and assertions; record actual saved/effective seeds, do not promote inconsistent saved/resumed population. Broader F19 proof work independent of main-green integration.",
+  "changes": [
+    "Read-only saved/effective seed and environment override recorded in immutable native receipt and exact original log.",
+    "Actual persisted world seed joins state comparison through production Title Load.",
+    "Promotion compares receipt/log seed provenance and actual world bytes, refuses mismatch or missing seed evidence, retains original seed across all five boundaries."
+  ],
+  "unchanged": [
+    "Normal newgame seed policy",
+    "Game and WorldState values",
+    "Actual split-save bytes and hashes",
+    "Controller input, HP, pose, grants, readiness, eight-contact limit",
+    "All five original fresh earned boundaries and source identity"
+  ],
+  "node_negative_controls": {
+    "checks": 15,
+    "result": "PASS",
+    "scope": "Original eleven refusals plus four seed provenance contradictions; all fabricated refusal controls, no earned artifact produced"
+  },
+  "native_probe": "tests/probe_f19_population_provenance.gd",
+  "native_status": {
+    "source_commit": "6f7ebb70b8dde3b9332dfbb3461866d05d6be223",
+    "run": 37089232408,
+    "artifact": 11261532342,
+    "process_exit": 0,
+    "elapsed_seconds": 3,
+    "checks": 12,
+    "failures": [],
+    "engine_errors": 0,
+    "script_errors": 0,
+    "scope": "Actual WorldState/WorldSave disk bytes and read-only seed observation under absent/present capture override; save and WorldState unchanged",
+    "log": "ci-population-provenance-37089232408.log"
+  },
+  "full_route": "No override, no resume, no source-fixture supplied saves; prepared seed4 dispatch remains held",
+  "integration": "No main-required production delta in this proof-only change; independent broader review still needed after coordinator main-green priority."
+}

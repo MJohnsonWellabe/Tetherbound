@@ -1,0 +1,21 @@
+{
+  "kind": "f19_actual_stronghold_glow_occupation_component",
+  "source_commit": "9aa835b18d8956913a60f7267b16be487cea4ad0",
+  "run": 37099817944,
+  "job": 111136999807,
+  "artifact": 11265860516,
+  "process_exit": 0,
+  "elapsed_seconds": 12,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "failures": [],
+  "baseline_errors": 0,
+  "retain_masked_surface_errors": 0,
+  "active_emission_after_unlight": true,
+  "hidden_surface_emission_after_unlight": false,
+  "scope": "Actual Stronghold._glow_card plus StrongholdOccupation._unlight, real X11 Compatibility drawing disabled; direct factory/camera component fixtures. No full world/progression/victory state.",
+  "result": "Negative isolated lifetime reproduction. Confirms masked nonemissive clone leaves active material emission enabled, but does not establish this clone as the full-world error owner. No production fix based on this component.",
+  "acceptance": false,
+  "raw_log": "ci-occupation-material-negative-37099817944.log.gz",
+  "raw_log_sha256": "3569fc1bfecfa50314b64f11855bbc37bea523bdf7df2d5d21983f750d607a74"
+}

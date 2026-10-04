@@ -1,0 +1,39 @@
+{
+  "status": "Scoped rules/real synthetic physics PASS; live arrival and six F18 criteria UNPROVEN",
+  "source_sha256": {
+    "scripts/net/foundation_portal_arrival.gd": "bbd78f707eefcf14dfee3c762318e7ceeedc3718068b0628a86ddb6a82dd89ce",
+    "scripts/net/session.gd": "40b37b079078b1345d24227e712f100a750e7cf4c35cd20fe2166845f1a0096e",
+    "scripts/world/home_key.gd": "fc62be45a5e57a13a6bdb55cde5a74051e0432cd46bd615de73ae1718f473ef8",
+    "data/config/portals.json": "cf10730115c9c865730463a28d0c1ac18456a16f48457fc2490b1724f618f83f",
+    "tests/test_f18_arrival_lifecycle.gd": "998719f2d6d519d647166a786f5b4115408de6ad611fc75efd8c10194d63cfb2",
+    "tests/test_home_key_clock.gd": "d6d7ba83a1c2b1d670fe6f531b31a8f3be7ae4899c335742a851afb30ec3761d",
+    "tests/smoke_f18_arrival_support.gd": "a71ec5b379d75acc62d18612ea8969cab69f2b5d5b2b7d65b84daa998e720546"
+  },
+  "scope": {
+    "rules_tests": 29,
+    "assertions": 377,
+    "failures": 0,
+    "script_diagnostics": [],
+    "synthetic_real_physics_checks": 9,
+    "synthetic_failures": 0
+  },
+  "trigger": "F20 actual Hall target terrain 0.89999997615814; same Hall collider ray hit floor0.91, normalUP; original capsule collided with that slab.",
+  "preserved": [
+    "exact consumed permit and owner/world/session fences",
+    "own-RID-only collision exclusion",
+    "complete real capsule obstruction query",
+    "ordinary new walkable floor contact before first durable arrival",
+    "original typed immutable journal and BOOL-save/host ACK"
+  ],
+  "lifecycle": [
+    "consumed-permit fade handoff retains original pending finish through cold loading",
+    "post-contact save waiting releases movement after12s and retains exact retry",
+    "durable typed original row owns retries after walking",
+    "identity or epoch loss retires only stale presentation"
+  ],
+  "limits": [
+    "synthetic slab/wall fixture is not an earned or real-world acceptance",
+    "native raise/glow/audio/fade and actual Terrain3D return still require live proof",
+    "detached writer/contact doubles isolate retry rules"
+  ]
+}

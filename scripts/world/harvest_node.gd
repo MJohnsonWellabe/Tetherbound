@@ -103,6 +103,20 @@ var _renewable_stock: Dictionary = {}
 var _source_service: Node
 
 
+func _notification(what: int) -> void:
+	if what != NOTIFICATION_PREDELETE or not is_instance_valid(_visual): return
+	# Imported models share meshes, but their harvest retints belong to these
+	# instances. Clear the native surface bindings while the children are alive.
+	# Temporary tree removal/re-entry must preserve their appearance.
+	var meshes: Array[Node] = _visual.find_children("*", "MeshInstance3D", true, false)
+	if _visual is MeshInstance3D: meshes.append(_visual)
+	for node: Node in meshes:
+		var instance := node as MeshInstance3D
+		if instance.mesh == null: continue
+		for surface in instance.mesh.get_surface_count():
+			instance.set_surface_override_material(surface, null)
+
+
 func bind_source_service(service: Node) -> void:
 	_source_service = service
 	if service != null and not service.is_connected("settled", _on_source_settled):
@@ -688,6 +702,9 @@ func _ready() -> void:
 	var transport := LEDGER_CLAIM.transport(self)
 	if transport != null and not transport.is_connected("intent_refused", _on_renewable_refused):
 		transport.connect("intent_refused", _on_renewable_refused)
+	if not _renewable_site_id.is_empty():
+		_read_renewable_stock(get_node_or_null(^"/root/Game"))
+		_refresh_renewable_presentation()
 
 
 func _process(_delta: float) -> void:
@@ -724,6 +741,9 @@ func set_renewable_stock(stock: Dictionary) -> void:
 
 func _refresh_renewable_presentation() -> void:
 	# Stock reconciliation survives a swap; the outgoing presentation does not.
+	# Registered-world construction may supply stock before this shell enters
+	# the tree. Keep that record until ready instead of resolving an absolute
+	# Game path on a detached node or changing its presentation prematurely.
 	if not is_inside_tree() or is_queued_for_deletion(): return
 	var ready := _renewable_ready(get_node_or_null(^"/root/Game"))
 	if not ready:

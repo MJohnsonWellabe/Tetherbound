@@ -1,0 +1,67 @@
+{
+  "classification": "SOURCE REASONING ONLY; analytic fixtures are not actual native negative tests or runtime acceptance",
+  "capsule": {
+    "radius_m": 0.4,
+    "height_m": 1.8,
+    "half_cylinder_m": 0.5
+  },
+  "failed_actual_observation": {
+    "raw_recovery_length_m": 0.0011339095946347189,
+    "safe_margin_m": 0.00100000004749745,
+    "comparison_epsilon_m": 1e-05,
+    "returned_post_recovery_depth_m": 0.00021912639203947,
+    "returned_initial_contacts_logged": false
+  },
+  "godot_capsule_feature": {
+    "edge_threshold_ny": 0.00019999999883714138,
+    "maximum_radial_support_deficit_m": 7.999999995789153e-09,
+    "pair_collection_max": 8,
+    "broadphase_candidate_max_before_mask": 2048
+  },
+  "jolt_capsule_feature": {
+    "projection_slop_m": 0.02,
+    "edge_ny_bound_for_this_capsule": 0.02,
+    "maximum_radial_support_deficit_m": 8.000800160039568e-05,
+    "pairs_per_retained_hit_min": 1,
+    "pairs_per_retained_hit_max": 2,
+    "hit_cap": 8,
+    "public_pair_cap": 8
+  },
+  "negative_analytic_curved_support_fixture": {
+    "unit_normal": [
+      0.999819483706934,
+      0.019,
+      0
+    ],
+    "line_feature_projection_difference_m": 0.019,
+    "line_feature_selected": true,
+    "full_capsule_support_radius_m": 0.4,
+    "flattened_radial_support_projection_m": 0.39992779348277363,
+    "deficit_m": 7.220651722641414e-05,
+    "assumed_deepest_flattened_pair_gap_m": 0.001,
+    "true_capsule_support_gap_to_same_plane_m": 0.001072206517226414,
+    "naive_pair_gap_passes": true,
+    "full_support_gap_refuses": true,
+    "limit": "This demonstrates a geometric support-feature counterexample; it does not claim a native Godot/Jolt run reproduced these exact returned pairs."
+  },
+  "corner_fixture": {
+    "two_orthogonal_plane_penetrations_m": [
+      0.0008,
+      0.0008
+    ],
+    "minimum_combined_depenetration_norm_m": 0.001131370849898476,
+    "each_physical_penetration_below_skin": true,
+    "limit": "Recovery norm is not the maximum of individual initial contact depths; this is analytic geometry, not a native fixture."
+  },
+  "required_native_negative_tests_not_run": [
+    "actual failing terrain pose full initial contacts",
+    "deep floor above unchanged skin",
+    "deep wall and ceiling",
+    "two-plane corner with one hidden deep contact",
+    "curved capsule tip/edge and near-side feature tolerance",
+    ">=8 raw initial pairs saturation with no dedup",
+    "invalid/nonfinite pair geometry",
+    "unchanged mask, self-only exclusion, registered shape transform",
+    "per-frame/lifetime/deadline exhaustion and no post-3query diagnostics"
+  ]
+}

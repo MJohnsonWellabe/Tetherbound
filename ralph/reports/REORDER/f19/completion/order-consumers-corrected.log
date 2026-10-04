@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f19_order_consumers.gd: 1 of 731 test files
+  ok    test_f19_order_consumers.gd :: test_config_journal_map_and_credits_consume_the_same_new_chapter_order
+  ok    test_f19_order_consumers.gd :: test_every_live_portal_prompt_keeps_its_recommendation_in_every_travel_state
+  ok    test_f19_order_consumers.gd :: test_recommended_levels_never_gate_the_actual_host_portal_policy
+
+3 tests, 44 assertions, 0 failed

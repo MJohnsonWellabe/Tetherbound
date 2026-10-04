@@ -1,0 +1,21 @@
+{
+  "kind": "f19_native_band_baseline_proof",
+  "source_commit": "1e1305644f832c55f6a4917e97a38239aa927422",
+  "run": 37094152698,
+  "artifact": 11263053140,
+  "workflow_conclusion": "success",
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_band_content.gd",
+  "tests": 6,
+  "assertions": 1474,
+  "failures": 0,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "process_exit": 0,
+  "elapsed_seconds": 2,
+  "scope": "Existing strict native merge-versus-tracked-mirror checks: full baseline entries, level fields, ordering, uniqueness, retained global fields, no dropped band entries and exact authored-band list. No assertions or fixture rows changed for this proof.",
+  "test_blob": "e5d22b8d8ae54f0133f696d0a867dad318ec7ec2",
+  "raw_log": "ci-band-baseline-native-37094152698.log.gz",
+  "raw_log_sha256": "5dd7939758e8ab917b6a5adca5a508fd13ed5a9a3c45e75c9d0e4b3aa1efec87",
+  "exclusions": "No earned checkpoint generation, route readiness, fight, visuals or complete F19 closure."
+}

@@ -1,0 +1,23 @@
+{
+  "source_commit": "2237e692cfef621cc71c962ffdce08ef8a2e4ce0",
+  "run_id": "local-10432311",
+  "classification": "Interrupted for user resource constraint: Valheim playing. No gameplay acceptance.",
+  "observed": [
+    "All three isolated title/control hellos passed.",
+    "First sequential actual Meadows world boot was in progress; no fixture/admission/travel assertions completed.",
+    "Original native Terrain3D interpolation and MeadowTorch visual warnings retained; strict harness correctly reports warning failure."
+  ],
+  "termination": {
+    "verified_owned_pids": [
+      19912,
+      19572,
+      12036,
+      1968,
+      15632
+    ],
+    "scope": "Only exact f18-net-travel-r2.log or f18_net_peer/run-id process identities. Harness also cleaned owned peers after first interrupted peer. Coordinator concurrently assisted verified same owned run. No Valheim/unrelated process touched.",
+    "after_cleanup": "All five verified absent; owned F18 RENDER_LOCK lease removed.",
+    "wrapper_exit_code": 2
+  },
+  "remaining_work": "Use remote offloads while user plays; no further local Godot/render/import/full-suite launches. F18 criteria remain UNPROVEN."
+}

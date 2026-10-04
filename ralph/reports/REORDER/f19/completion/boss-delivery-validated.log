@@ -1,0 +1,34 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f19_boss_delivery.gd,test_f19_boss_handoffs.gd,test_redesign_chapter_curve.gd,test_foundation_resource_save.gd,test_foundation_resources.gd,test_f19_stormwood_settlement.gd: 6 of 732 test files
+  ok    test_f19_boss_delivery.gd :: test_captured_boss_duty_keeps_original_epoch_through_real_prepared_and_owner_save_retry
+  ok    test_f19_boss_handoffs.gd :: test_all_four_shipped_bosses_resolve_canonical_keys_and_personal_relics
+  ok    test_f19_boss_handoffs.gd :: test_boss_obligation_preserves_both_stable_characters_across_world_reload
+  ok    test_f19_boss_handoffs.gd :: test_ceremony_rewards_wait_for_first_settlement_and_never_for_every_participant
+  ok    test_f19_boss_handoffs.gd :: test_full_inventory_retains_the_entire_reward_until_room_exists
+  ok    test_f19_boss_handoffs.gd :: test_guest_generic_flag_rpc_cannot_release_or_clear_boss_settlement
+  ok    test_f19_boss_handoffs.gd :: test_malformed_or_drifting_authored_handoff_fails_closed
+  ok    test_f19_boss_handoffs.gd :: test_stormwood_display_and_non_owed_visit_do_not_release_a_boss_drop
+  ok    test_f19_boss_handoffs.gd :: test_world_scoped_boss_drops_preserve_portable_relic_and_independent_keys
+  ok    test_f19_stormwood_settlement.gd :: test_failed_guest_first_write_rolls_back_and_retries_the_original_claim
+  ok    test_f19_stormwood_settlement.gd :: test_guest_first_acceptance_is_saved_and_releases_every_captured_boss_drop
+  ok    test_f19_stormwood_settlement.gd :: test_guest_first_refusal_is_saved_and_releases_every_captured_boss_drop
+  ok    test_f19_stormwood_settlement.gd :: test_non_owed_visibility_advancement_never_counts_as_a_ceremony_answer
+  ok    test_foundation_resource_save.gd :: test_resource_world_bool_failure_rolls_back_then_owner_disk_retry_never_pays_twice
+  ok    test_foundation_resources.gd :: test_authored_farm_till_uses_same_world_and_owner_commit
+  ok    test_foundation_resources.gd :: test_host_stock_and_inventory_share_one_journal_and_survive_json_reload_without_repaying
+  ok    test_foundation_resources.gd :: test_legacy_depletion_wait_is_saved_once_and_does_not_move_when_reloaded
+  ok    test_foundation_resources.gd :: test_resource_refusals_and_forged_stock_ops_leave_both_records_unchanged
+  ok    test_redesign_chapter_curve.gd :: test_authored_traversal_gates_do_not_require_fly_in_tidewake_or_later_rewards
+  ok    test_redesign_chapter_curve.gd :: test_boss_hand_offs_keep_typed_keys_distinct_from_item_skus
+  ok    test_redesign_chapter_curve.gd :: test_chapter_trainers_have_no_active_hidden_level_gate
+  ok    test_redesign_chapter_curve.gd :: test_each_named_boss_team_matches_the_pinned_curve
+  ok    test_redesign_chapter_curve.gd :: test_four_chapter_curve_uses_foundation_order_and_pins_owner_envelopes
+  ok    test_redesign_chapter_curve.gd :: test_meadows_alpha_ceiling_preserves_bonuses_within_chapter_exit
+  ok    test_redesign_chapter_curve.gd :: test_meadows_retains_contiguous_split_and_replacement_catches
+  ok    test_redesign_chapter_curve.gd :: test_numeric_activation_preserves_chapter_arrival_prerequisite_identities
+  ok    test_redesign_chapter_curve.gd :: test_numeric_activation_preserves_saved_stormwood_aftermath_and_consumed_key_contract
+  ok    test_redesign_chapter_curve.gd :: test_runtime_wild_tables_span_the_new_chapter_envelopes
+  ok    test_redesign_chapter_curve.gd :: test_stormheart_uses_existing_legendary_and_volunteers
+
+29 tests, 5394 assertions, 0 failed
