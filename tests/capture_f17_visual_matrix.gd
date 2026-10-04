@@ -10,8 +10,9 @@ extends "res://tests/smoke_crossing_hall_circuit.gd"
 ##     --audio-driver Dummy --resolution 1920x1080 \
 ##     --script tests/capture_f17_visual_matrix.gd -- --capture-dir=/abs/out
 ##
-## Stations: farm door (approach), mid street (left/right frontage), Hall
-## approach (forward, reverse down the road), nave (forward, both arch walls,
+## Stations: farm door (approach), mid street (left/right frontage, starter
+## called out), Hall approach from the last houses (forward, reverse down the
+## road), nave (forward, both arch walls,
 ## reverse to the door), Shrine Room (pedestals). Each station is shot at day,
 ## golden, night and in rain; the clock is frozen per shot. The 3D view is off
 ## while walking (software rendering) and on for each photograph only.
@@ -23,6 +24,7 @@ const RAIN_SETTLE_FRAMES := 14
 var _out := ""
 var _rows: Array[Dictionary] = []
 var _mid_done := false
+var _approach_done := false
 var _shot_events: Dictionary = {}
 
 
@@ -43,28 +45,35 @@ func _capture(label: String) -> void:
 	if _world == null or _player == null:
 		return
 	if label == "travel":
-		# First travel stop past the street's midpoint: both frontages.
-		if not _mid_done and _player.global_position.x > 50.0:
+		var x := _player.global_position.x
+		if not _mid_done and x > 50.0:
+			# Mid street: call the starter out (a creature on screen, as
+			# played) and look at both frontages.
 			_mid_done = true
+			await _press("creature_recall")
+			for _frame in 60:
+				await physics_frame
 			var heading := float(_rig.get("yaw"))
 			await _turn_to(heading + PI * 0.5)
 			await _station("street-mid-left", false)
 			await _turn_to(heading - PI * 0.5)
 			await _station("street-mid-right", false)
 			await _turn_to(heading)
-		return
-	if _shot_events.has(label):
-		return
-	_shot_events[label] = true
-	match label:
-		"actual farmhouse doorway":
-			await _station("farm-door", true)
-		"Main Street end / Hall approach":
+		elif not _approach_done and x > 78.0:
+			# Hall approach from the last houses, far enough back that the
+			# roofline and tower are in frame; then back down the road.
+			_approach_done = true
 			var heading := float(_rig.get("yaw"))
 			await _station("hall-approach", true)
 			await _turn_to(heading + PI)
 			await _station("hall-approach-reverse", false)
 			await _turn_to(heading)
+		return
+	if _shot_events.has(label):
+		return
+	_shot_events[label] = true
+	if label == "actual farmhouse doorway":
+		await _station("farm-door", true)
 
 
 func _after_hall_arrival(hall: Node3D) -> bool:
@@ -75,7 +84,7 @@ func _after_hall_arrival(hall: Node3D) -> bool:
 		var count := 0
 		for arch: Node in get_nodes_in_group("crossing_hall_arches"):
 			var local := hall.to_local((arch as Node3D).global_position)
-			if (local.z < 0.0) == (side == "left"):
+			if absf(local.x) > 1.0 and (local.x < 0.0) == (side == "left"):
 				centroid += (arch as Node3D).global_position
 				count += 1
 		if count > 0:

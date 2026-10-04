@@ -29,7 +29,10 @@ func build(config: Dictionary) -> bool:
 		_build_pedestal(entry)
 	_add_light(Vector3(0, 5.8, 5))
 	_add_light(Vector3(12, 4.8, 0))
+	for row: Dictionary in _config.get("interior_lights", []):
+		_add_light(_position(row.at), float(row.get("yaw_deg", 0)))
 	_build_frontage()
+	_close_shell()
 	var catalog := CATALOG_PRESENTATION.new()
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
@@ -166,19 +169,80 @@ func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
 	return label
 
 
-func _add_light(at: Vector3) -> void:
+func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	var lantern := Node3D.new()
 	lantern.position = at
+	lantern.rotation.y = deg_to_rad(yaw_deg)
 	add_child(lantern)
 	_add_model(lantern, LANTERN_MODEL)
+	var settings: Dictionary = _config.get("light", {})
+	# A visible flame, so the lantern reads as the light's source.
+	var flame_material := StandardMaterial3D.new()
+	flame_material.albedo_color = Color(str(settings.get("colour", "#ffd7a4")))
+	flame_material.emission_enabled = true
+	flame_material.emission = flame_material.albedo_color
+	flame_material.emission_energy_multiplier = float(settings.get("flame_energy", 1.5))
+	var flame := MeshInstance3D.new()
+	var sphere := SphereMesh.new()
+	sphere.radius = float(settings.get("flame_radius_m", .07))
+	sphere.height = sphere.radius * 2
+	flame.mesh = sphere
+	flame.material_override = flame_material
+	flame.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	flame.position = _position(settings.get("flame_at", [0, .15, .12]))
+	lantern.add_child(flame)
 	var light := OmniLight3D.new()
 	light.position = at
-	var settings: Dictionary = _config.get("light", {})
 	light.light_color = Color(str(settings.get("colour", "#ffd7a4")))
 	light.light_energy = float(settings.get("energy", 1.15))
 	light.omni_range = float(settings.get("range_m", 8.5))
 	light.shadow_enabled = false
 	add_child(light)
+
+
+## The installed roof tiles are single-sided, so from the nave they were
+## culled and the sky showed between the rafters, and sun or moonlight fell
+## straight onto the floor. The Hall's own shell (its building's modules and
+## the frontage/tower) casts double-sided shadows and its roof tiles render
+## both faces. Materials are duplicated per surface: the kit's materials are
+## shared with every other house.
+func _close_shell() -> void:
+	var building := get_parent() as Node3D
+	if building == null:
+		return
+	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		if mesh.mesh == null or mesh.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+			continue
+		var roof := false
+		var walk: Node = mesh
+		while walk != null and walk != building:
+			if str(walk.name).begins_with("Roof_"):
+				roof = true
+				break
+			walk = walk.get_parent()
+		if not roof and not _is_shell_module(mesh, building):
+			continue
+		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_DOUBLE_SIDED
+		if not roof:
+			continue
+		for index in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(index) as BaseMaterial3D
+			if material == null or material.cull_mode == BaseMaterial3D.CULL_DISABLED:
+				continue
+			var both := material.duplicate() as BaseMaterial3D
+			both.cull_mode = BaseMaterial3D.CULL_DISABLED
+			mesh.set_surface_override_material(index, both)
+
+
+func _is_shell_module(mesh: Node, building: Node) -> bool:
+	var walk: Node = mesh
+	while walk != null and walk != building:
+		var name := str(walk.name)
+		if name.begins_with("Wall_") or name.begins_with("Corner_") or name.begins_with("Floor_"):
+			return true
+		walk = walk.get_parent()
+	return false
 
 
 func _process(delta: float) -> void:

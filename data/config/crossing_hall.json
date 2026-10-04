@@ -206,6 +206,15 @@
     0.15,
     -15
   ],
+  "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools without covering any arch. Lanterns show an emissive flame so the light has a visible source.",
+  "interior_lights": [
+    {"at": [-6.4, 3.4, -6], "yaw_deg": 90},
+    {"at": [6.4, 3.4, -6], "yaw_deg": -90},
+    {"at": [-6.4, 3.4, 0], "yaw_deg": 90},
+    {"at": [6.4, 3.4, 0], "yaw_deg": -90},
+    {"at": [-6.4, 3.4, 6], "yaw_deg": 90},
+    {"at": [6.4, 3.4, 6], "yaw_deg": -90}
+  ],
   "frontage": {
     "_why": "F17 destination r1 DAY NO/NIGHT NO: complete the installed central gable/clerestory at the existing road-facing end, identify the public threshold and put warm practical fixtures on that real facade. Native module scale; no new floor/collider, entrance, route or camera changes.",
     "_why_tower": "F17#1/#6 code-blind judges: the Hall read as the road's end only because of the layout and was barely taller than the inn. A stone crossing tower (installed MegaKit UnevenBrick walls, 4x4 round-tile roof, brick gables) rises over the nave entrance to about 17.5 m so the Hall is the tallest village roofline and a stone mass against the timber houses. Visual only: no floor, collider, entrance or route change.",
