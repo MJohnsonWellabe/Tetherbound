@@ -10,16 +10,11 @@ var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
 var _moves: RefCounted = MOVE_DB.new()
-var _diag_last: Dictionary = {}
 var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
 var _fields: Array[Dictionary] = []
 var _pending_field: Dictionary = {}
 
-
-func _on_hit(on_enemy: bool, damage: float) -> void:
-	super._on_hit(on_enemy, damage)
-	if not on_enemy: (_tally.events as Array).append({"event": "diag", "frame": _frames, "ally": _ally.global_position, "last": _diag_last.duplicate(true)})
 
 
 func _act(policy: String) -> void:
@@ -41,7 +36,7 @@ func _act(policy: String) -> void:
 		var enemy: RefCounted = _wild.get("instance")
 		var current := context.duplicate(true)
 		current.merge({"species_id": str(enemy.get("species_id")),
-			"role": AI.species_role(str(enemy.get("species_id")), patterns),
+			"role": str(context.get("role", AI.species_role(str(enemy.get("species_id")), patterns))),
 			"trainer_owned": bool(_wild.get("trainer_owned")),
 			"move_quick": str(enemy.get("move_quick")),
 			"move_charged": str(enemy.get("move_charged"))}, true)
@@ -64,11 +59,6 @@ func _act(policy: String) -> void:
 ## remaining beat and the recovery/stagger state. Never RNG or future input.
 func _read(_policy: String) -> void:
 	var telling := bool(_manager.enemy_is_winding_up())
-	if OS.has_environment("F22_TRACE") and (telling or not _fields.is_empty()):
-		var g: Dictionary = _wild.call("pattern_geometry")
-		(_tally.events as Array).append({"event": "trace", "frame": _frames, "telling": telling, "beat": float(_wild.get("_beat_left")),
-			"pos": _ally.global_position, "wind": _manager.wind_value(), "committed": _manager.player_is_committed(), "action": int(_manager.get("_action")),
-			"marker": g.get("marker", Vector3.ZERO), "heading": g.get("heading", Vector3.ZERO), "fields": _fields.size(), "escdir": _escape_dir})
 	if not telling:
 		_tell_seen_frame = -1
 	elif _tell_seen_frame < 0:
@@ -97,9 +87,6 @@ func _read(_policy: String) -> void:
 				escape.distance = escape.own_distance
 				escape.walk_s = float(escape.distance) / maxf(0.1, _speed())
 			_escape_dir = escape.direction
-			_diag_last = {"frame": _frames, "seen": seen, "escape": escape.duplicate(true), "here": _ally.global_position, "locked": _last_shape.duplicate(),
-				"geometry": (_wild.call("pattern_geometry") as Dictionary).duplicate(), "beat": float(_wild.get("_beat_left")), "wind": _manager.wind_value()}
-			_diag_last.geometry.erase("body")
 			_walk(_escape_dir)
 			# The burst is a fixed hop that nothing follows up: walk first and
 			# spend it to finish the exit, or as the last chance before release.
@@ -110,7 +97,6 @@ func _read(_policy: String) -> void:
 					and _manager.wind_value() >= _manager.wind_cost("burst"):
 				_press("jump")
 				_tally.burst_uses += 1
-				(_tally.events as Array).append({"event": "burst", "frame": _frames, "pos": _ally.global_position, "marker": (_wild.call("pattern_geometry") as Dictionary).get("marker", Vector3.ZERO), "wind": _manager.wind_value(), "esc": escape.duplicate(), "shape": str((_wild.call("pattern_geometry") as Dictionary).get("profile", {}).get("telegraph_shape", "?"))})
 			_tally["read_escapes"] = int(_tally.get("read_escapes", 0)) + 1
 			return
 		# Outside the shown shape: strike if a quick lands first, else hold,
@@ -271,18 +257,26 @@ func _escape_from_tell() -> Dictionary:
 	if not AI.pattern_contains(profile, origin, heading, marker, here, radius):
 		return {}
 	var arena: Node3D = _manager.arena()
-	var limit := float(arena.get("radius")) - radius
+	var limit := float(arena.get("radius")) - radius - 0.5
 	var speed := float(MATH.config().get("creature_movement", {}).get("speed", 5.6))
+	var outward := here - arena.global_position
+	outward.y = 0.0
+	outward = outward.normalized() if outward.length() > 0.05 else Vector3.ZERO
 	var best := {}
-	for index: int in 8:
-		var direction := Vector3.FORWARD.rotated(Vector3.UP, TAU * index / 8.0)
+	var best_cost := INF
+	for index: int in 16:
+		var direction := Vector3.FORWARD.rotated(Vector3.UP, TAU * index / 16.0)
 		var step := 0.25
 		while step <= 6.0:
 			var point := here + direction * step
 			var flat := Vector2(point.x - arena.global_position.x, point.z - arena.global_position.z)
 			if flat.length() > limit: break
 			if not AI.pattern_contains(profile, origin, heading, marker, point, radius):
-				if best.is_empty() or step < float(best.distance):
+				# Prefer exits that do not run toward the arena edge, where the
+				# body slides and the next tell has no room.
+				var cost := step + maxf(0.0, direction.dot(outward)) * 0.75
+				if cost < best_cost:
+					best_cost = cost
 					best = {"direction": direction, "distance": step}
 				break
 			step += 0.25
