@@ -35,3 +35,8 @@ The new smoke `tests/smoke_net_owner_passive_rejoin.gd` (with its peer script) r
 - **Real conflict** (fixture: the guest's creature is +1 level on the guest only): not admitted. The guest receives `admission_refused: owner_passive_admission_conflict: /party[0]/max_hp, /attack, /defence, /hp, /level, …`, and both peers log warnings.
 
 The smoke's ack check was corrected in `e7827cda`. A walking owner always has a few inputs in flight, so the check requires the host to ack inputs recorded *after* the rejoin, rather than `acked == sequence` at the sampling instant.
+
+## Confirmation and regression
+
+- `green-run2.txt`: a second rejoin run at `5a3d9a7e` is also green.
+- `regression-cloudreach-activity-payoffs.txt`: `cloudreach_activity_payoffs` passes, exit 0, 96 PASS. It includes a real guest leave, rejoin and character reload. It ran on `ca16cd2b` + `8dd16d2d`, before the clock reset in `5a3d9a7e`.
