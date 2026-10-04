@@ -458,6 +458,9 @@ func _place_walkable_segment(into: Node3D, spec: Dictionary) -> void:
 
 	var body := StaticBody3D.new()
 	body.name = "%s_Collision" % mesh_instance.name
+	# Walkable ground, not clutter: route helpers that steer round low props
+	# (tests/helpers/opening_geometry_navigator.gd) read this to walk onto it.
+	body.set_meta(&"walkable_segment", true)
 	var shape := CollisionShape3D.new()
 	# R16: a chain of closed BoxShapes has a vertical leading face at every
 	# internal joint. The Player capsule's lower hemisphere catches those faces

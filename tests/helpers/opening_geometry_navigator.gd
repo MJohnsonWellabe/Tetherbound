@@ -1517,11 +1517,14 @@ static func is_low_prop_climb(rise: float, step_height: float) -> bool:
 	return is_finite(rise) and is_finite(step_height) and step_height > 0.0 and rise > LOW_PROP_RISE
 
 
-## Only colliders under the world's authored Props root (clutter, never
-## terrain, houses, bridges or walkable floors) are steered round this way.
+## Only clutter colliders under the world's authored Props root are steered
+## round this way. Terrain and houses live elsewhere; the Props root also holds
+## walkable trail treads (props.gd marks them `walkable_segment`), which are
+## ground to walk onto, not obstacles.
 func _is_prop_collider(collider: Object) -> bool:
 	var props := _world.get_node_or_null(^"Props") if _world != null else null
-	return props != null and collider is Node and props.is_ancestor_of(collider as Node)
+	return props != null and collider is Node and props.is_ancestor_of(collider as Node) \
+		and not bool((collider as Node).get_meta(&"walkable_segment", false))
 
 
 func _production_heading(direction: Vector3) -> Vector3:
