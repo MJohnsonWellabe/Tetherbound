@@ -403,7 +403,11 @@ func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> D
 		if action != "research_event":
 			expected.in_combat = false
 			expected.foundation_runtime_authorized = true
-		if action == "boss_relic": expected.boss_settlement_world_flags = world.flags.call("all_set").duplicate()
+		if action == "boss_relic":
+			# Exactly the two host fields session._retry_foundation_events adds
+			# to a retained boss duty before it stages (F19 world-scoped drops).
+			expected.boss_settlement_world_flags = world.flags.call("all_set").duplicate()
+			expected.world_namespace = world.reward_delivery_namespace
 		if E._equivalent(expected, event): matching.append(duty)
 	if matching.size() != 1: return _deny("owner_passive_original_duty_required")
 	return _checkpoint(peer, stream, binding, retained, matching[0])
