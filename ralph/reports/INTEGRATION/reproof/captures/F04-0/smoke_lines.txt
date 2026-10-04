@@ -1,0 +1,26 @@
+         [2] _run_guardian_attacks (res://tests/smoke_warrens.gd:624)
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+guardian camera control: seed_start=hall:(-372.5564, 4.1484, 2625.556) supported_y=4.15 guardian_distance=21.6; fixture teleport only
+guardian camera control: guardian naturally admitted after 17.1m input walk
+guardian capture guardian_00_engage
+guardian capture guardian_01_burrow_strike_tell_mid
+guardian capture guardian_01_burrow_strike_strike_hits1_misses0
+guardian capture guardian_02_earth_fist_tell_mid
+guardian capture guardian_02_earth_fist_strike_hits1_misses1
+guardian capture guardian_03_burrow_strike_tell_mid
+guardian capture guardian_03_burrow_strike_strike_hits2_misses1
+guardian capture guardian_04_earth_fist_tell_mid
+guardian attack sequence: Q, C, Q, C
+guardian attacks resolved through CombatManager: 3 hit(s), 1 miss(es)
+  FAIL: guardian attacks: attack 1 used tell/recovery 1.00/0.90, expected 0.85/1.10
+  FAIL: guardian attacks: quick attack did not retain generic enemy geometry
+  FAIL: guardian attacks: attack 1 signal interval was 1.00s, expected 0.85s
+  FAIL: guardian attacks: Earth Fist cone_degrees did not come from MoveDB
+  FAIL: guardian attacks: Earth Fist lunge did not come from MoveDB
+  FAIL: guardian attacks: attack 3 used tell/recovery 1.00/0.90, expected 0.85/1.10
+  FAIL: guardian attacks: quick attack did not retain generic enemy geometry
+  FAIL: guardian attacks: attack 3 signal interval was 1.00s, expected 0.85s
+  FAIL: guardian attacks: Earth Fist cone_degrees did not come from MoveDB
+  FAIL: guardian attacks: Earth Fist lunge did not come from MoveDB
+exit=1
