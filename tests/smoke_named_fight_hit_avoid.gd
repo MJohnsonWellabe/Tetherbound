@@ -135,6 +135,16 @@ func _witness_one() -> bool:
 				stick = _stick_away_from_opponent()
 				stick = _steer_around_obstacle(stick)
 		_left_stick(stick)
+		# The gap and the opponent's own travel on the last tick BEFORE the
+		# outcome: `gap_at_strike` is read after the blow's knockback has
+		# already moved the struck creature, so it cannot say whether the swing
+		# connected inside its reach (re-proof F04-4).
+		if not _strikes.is_empty() and not (_strikes.back() as Dictionary).has("outcome"):
+			var open_strike: Dictionary = _strikes.back()
+			open_strike["gap_pre"] = _gap()
+			if _body != null and is_instance_valid(_body):
+				open_strike["foe_moved"] = (_body as Node3D).global_position.distance_to(
+					open_strike.get("foe_at_tell", (_body as Node3D).global_position))
 		# A player who means to step out of the next swing is watching for
 		# it, not mashing: a quick roots the creature through its wind-up and
 		# recovery (combat_manager.gd `_drive_player_creature`). So attacks
@@ -161,12 +171,12 @@ func _witness_one() -> bool:
 	var dodge_miss := 0
 	var dodged := 0
 	for s in _strikes:
-		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f" % [
+		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f gap_pre=%.2f foe_moved=%.2f" % [
 			_tid, str(s.opponent), int(s.n), str(s.move), float(s.seconds), str(s.policy),
 			str(s.get("outcome", "none")), float(s.get("damage", 0.0)),
 			float(s.get("gap_at_tell", -1.0)), float(s.get("gap_at_strike", -1.0)),
 			float(s.get("moved", -1.0)), float(s.reach), float(s.cone), int(s.action),
-			float(s.arena_off)])
+			float(s.arena_off), float(s.get("gap_pre", -1.0)), float(s.get("foe_moved", -1.0))])
 		if str(s.policy) == "stand" and str(s.get("outcome", "")) == "hit":
 			stand_hit += 1
 		if str(s.policy).begins_with("dodge"):
@@ -210,6 +220,7 @@ func _on_witness_tell(seconds: float) -> void:
 		"frame": Engine.get_physics_frames(),
 		"ally_at_tell": _ally_pos(),
 		"gap_at_tell": _gap(),
+		"foe_at_tell": (_body as Node3D).global_position if _body != null and is_instance_valid(_body) else Vector3.ZERO,
 		"reach": float(cfg.get("range", -1.0)),
 		"cone": float(cfg.get("cone_degrees", -1.0)),
 		"action": int(_manager.get("_action")),

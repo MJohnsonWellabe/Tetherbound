@@ -1699,6 +1699,13 @@ func _tournament_hit(peer: int) -> bool:
 			str(seated.get("detail", "(host)")), str(placed.get("detail", "")),
 			str(struck.get("verdict", "")) + " " + str(struck.get("detail", "")),
 			await _host_receipt_reason(after, peer)]
+		# The host's refusal as the striker received it: a refusal before
+		# validate_strike leaves no host receipt, so this is the only place
+		# its code shows (re-proof F01-6).
+		if peer != 0:
+			var mine: Variant = await probe(peer, "encounter")
+			_tournament_hit_detail += "; guest refusal=%s" % (str((mine as Dictionary).get("refusal", {})) \
+				if mine is Dictionary else "?")
 	return false
 
 
