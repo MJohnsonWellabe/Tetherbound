@@ -2,6 +2,13 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
+## LEGACY PATH: asserts the shipped portal-off behaviour (the old physical Water
+## -> Stormwood return gate). Superseded by RD-10/RD-17/RD-22 (biomes connect
+## only through the Crossing Hall portals and the Home Key, F18#2) once F18
+## turns redesign_portal_runtime_enabled on; retire this test or give it a
+## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## point.
+##
 ## Fixture-only network proof for the ordinary Water return connection. Both
 ## peers boot the production Water scene and form a real Session. The host
 ## ledger supplies only the two route prerequisites an earned save would have;

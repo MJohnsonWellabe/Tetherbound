@@ -2,7 +2,16 @@ extends SceneTree
 
 ## Retired-path regression fixture: RD-35 redesign saves are current schema,
 ## but this probe deliberately enables the single legacy physical-crossing
-## flag. Production remains default-off; this is not portal-loop acceptance.
+## flag. Production ships this legacy crossing while portals are off
+## (biome_order.legacy_physical_crossings() is true whenever
+## redesign_portal_runtime_enabled is false); this is not portal-loop acceptance.
+##
+## LEGACY PATH: asserts the shipped portal-off behaviour (the old Meadows ->
+## Cloudreach physical crossing). Superseded by RD-10/RD-17 (Meadows now leads
+## to Tidewake through the Crossing Hall portals, F18#2/F19) once F18 turns
+## redesign_portal_runtime_enabled on; retire this test or give it a
+## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## point.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 ## F05 (ROADMAP §3) / ACCEPTANCE §6.1 F05 and card M4: "the gate opens exactly

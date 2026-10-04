@@ -2,6 +2,14 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
+## LEGACY PATH: asserts the shipped portal-off behaviour (the old Meadows ->
+## Cloudreach physical crossing behind a world-scoped `realm_key_cloudreach`).
+## Superseded by RD-10/RD-17/RD-21 (the same five now reach Tidewake through the
+## portal their own key unlocks, F18/F19) once F18 turns
+## redesign_portal_runtime_enabled on; retire this test or give it a
+## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## point.
+##
 ## F05 (ACCEPTANCE §6.1, card M4): "the gate opens ... and the SAME five enter
 ## Cloudreach through the physical crossing", for two peers in one session.
 ##

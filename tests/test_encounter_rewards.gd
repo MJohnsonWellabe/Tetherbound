@@ -1,5 +1,9 @@
 extends "res://tests/test_case.gd"
 
+## Parts of this file assert the LEGACY PATH (world-scoped realm keys); see
+## the LEGACY PATH note in
+## test_a_world_scoped_reward_flag_travels_with_the_world_fact_not_the_payout.
+##
 ## Stage B Wave 4 lane 4.D. ONE WORLD FACT, TWO PAYCHEQUES.
 ##
 ## `docs/specs/MP_ENCOUNTER_PROTOCOL.md` §7 and §10. A trainer beaten by two
@@ -75,6 +79,13 @@ func test_the_defeat_flag_is_one_world_intent_however_many_people_won_it() -> vo
 
 
 func test_a_world_scoped_reward_flag_travels_with_the_world_fact_not_the_payout() -> void:
+	# LEGACY PATH: asserts the shipped portal-off behaviour (a world-scoped
+	# realm-key flag paid once for the world, not per participant). Superseded by
+	# RD-20/RD-21 (each fight participant now receives their own portal key item,
+	# F19#2/F48#2) once F18 turns redesign_portal_runtime_enabled on; retire this
+	# test or give it a requires-flag hold (inverted, so it runs only while that
+	# flag is off) at that point. The general world-fact versus payout split it
+	# checks is not legacy.
 	# `realm_key_cloudreach` is world-scoped in data/progression/flag_scopes.json.
 	# Granting it per participant would write the same world fact once per
 	# player, which is the duplication §7's first sentence forbids.

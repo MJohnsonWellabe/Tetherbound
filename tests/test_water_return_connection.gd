@@ -1,5 +1,9 @@
 extends "res://tests/test_case.gd"
 
+## Parts of this file assert the LEGACY PATH (the physical Water -> Stormwood
+## return gate while portals are off); see the LEGACY PATH note in
+## test_durable_world_unlock_routes_to_existing_stormwood_destination_without_key_write.
+
 const WATER_WORLD := preload("res://scripts/world/water_world.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
 const PROGRESSION := preload("res://autoload/progression_state.gd")
@@ -200,6 +204,12 @@ func test_return_refuses_personal_unlock_and_water_key_shortcuts_without_mutatio
 
 
 func test_durable_world_unlock_routes_to_existing_stormwood_destination_without_key_write() -> void:
+	# LEGACY PATH: asserts the shipped portal-off behaviour (the old physical Water
+	# -> Stormwood return gate behind a world-scoped unlock). Superseded by
+	# RD-10/RD-17/RD-22 (biomes connect only through the Crossing Hall portals and
+	# the Home Key, F18#2) once F18 turns redesign_portal_runtime_enabled on;
+	# retire this test or give it a requires-flag hold (inverted, so it runs only
+	# while that flag is off) at that point.
 	BIOME_ORDER.clear_test_overrides()
 	var mounted := _mounted_gate()
 	var water: Node3D = mounted.world

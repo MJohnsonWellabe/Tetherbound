@@ -4,6 +4,14 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## The fixture varies durable fields across all five members, then freezes only
 ## the observation window so real-time condition decay cannot race the reads.
 ##
+## LEGACY PATH: asserts the shipped portal-off behaviour (its F08 tail includes
+## the world-scoped Stormwood realm-key flag). Superseded by RD-20/RD-21 for
+## that key (Veyra now grants each participant their own Stormwood key item,
+## F19#2; F08#1 is history) once F18 turns redesign_portal_runtime_enabled on;
+## retire this test or give it a requires-flag hold (inverted, so it runs only
+## while that flag is off) at that point. The wind-road and Wings assertions are
+## not legacy.
+##
 ## F08 tail: the chapter's end-state -- restored wind roads, the Wings of
 ## Cloudreach with the Sky Shrine reached, and the Stormwood key -- must survive
 ## the same real disk reload. The live store is a set, so a reload cannot show a

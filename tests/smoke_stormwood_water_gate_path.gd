@@ -2,7 +2,17 @@ extends SceneTree
 
 ## Retired-path regression fixture: RD-35 redesign saves are current schema,
 ## but this probe deliberately enables the single legacy physical-crossing
-## flag. Production remains default-off; this is not portal-loop acceptance.
+## flag. Production ships this legacy crossing while portals are off
+## (biome_order.legacy_physical_crossings() is true whenever
+## redesign_portal_runtime_enabled is false); this is not portal-loop acceptance.
+##
+## LEGACY PATH: asserts the shipped portal-off behaviour (the old Stormwood ->
+## Water physical gate and its world-scoped Water key). Superseded by
+## RD-10/RD-17/RD-22 (Stormwood is now the last chapter: its finale grants a
+## fifth portal key and the Home Key homecoming follows, F19#2/F20) once F18
+## turns redesign_portal_runtime_enabled on; retire this test or give it a
+## requires-flag hold (inverted, so it runs only while that flag is off) at that
+## point.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 ## Production Stormwood -> Water seam proof.

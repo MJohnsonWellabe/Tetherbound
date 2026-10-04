@@ -92,6 +92,13 @@ func test_ending_sources_never_name_a_realm_key() -> void:
 
 
 func test_ending_path_adds_no_realm_key_to_either_store() -> void:
+	# LEGACY PATH: asserts the shipped portal-off behaviour (its fixture carries
+	# the world-scoped `realm_key_water` from the old Stormwood -> Water hand-off).
+	# Superseded by RD-10/RD-21/RD-22 (the Stormwood finale now grants each
+	# participant a fifth portal key item, F19#2/F20#2) once F18 turns
+	# redesign_portal_runtime_enabled on; retire this test or give it a
+	# requires-flag hold (inverted, so it runs only while that flag is off) at that
+	# point. The no-key-from-the-ending invariant itself is current.
 	# The fixture world legitimately holds the spent Water key from Stormwood's
 	# finale; the ending may neither add another key nor touch that one.
 	var game := _ending_game([["terrapup", "Pip"]])
