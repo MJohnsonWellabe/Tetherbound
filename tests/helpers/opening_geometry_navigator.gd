@@ -22,6 +22,36 @@ const CIRCLE_RADIUS := 1.65
 const CIRCLE_FRAMES := 90
 const CONTACT_EPS := 0.00001 # Numerical comparison only, never a smaller shape.
 const LOW_PROP_RISE := 0.05
+## Coordinator ruling 2026-10-04 (F02#1 Oskar refusal on a loaded runner): a
+## wall-clock cooperative deadline is host speed, not geometry. Exceeding one
+## releases the stick and retries on the next physics frame, bounded by this
+## many CONSECUTIVE deferred frames (a frame count, never wall time). Deferred
+## frames still spend the caller's unchanged walk budget. Identity, count and
+## contact-saturation guards stay hard refusals.
+const MAX_DEFERRAL_FRAMES := 30
+
+## Frame-counted deferral ledger for the cooperative deadline (see
+## MAX_DEFERRAL_FRAMES). One deferral per physics frame at most.
+class DeadlineDeferral extends RefCounted:
+	var total := 0
+	var consecutive := 0
+	var this_frame := false
+	var last_where := ""
+	## Call once at the start of every physics frame.
+	func new_frame() -> void:
+		if not this_frame:
+			consecutive = 0
+		this_frame = false
+	## Records a deferral; false once the consecutive-frame bound is exhausted.
+	func defer(where: String) -> bool:
+		last_where = where
+		if not this_frame:
+			this_frame = true
+			total += 1
+			consecutive += 1
+			print("OPENING_NAV_DEFERRAL " + JSON.stringify({"where": where, "total": total,
+				"consecutive": consecutive, "cap_frames": MAX_DEFERRAL_FRAMES}))
+		return consecutive <= MAX_DEFERRAL_FRAMES
 
 class NativeTick extends Node:
 	var navigator: WeakRef
@@ -91,6 +121,10 @@ var _circle_at := Vector2.INF
 var _circle_best := INF
 var _circle_frames := 0
 var _checked_start := false
+var _deferral := DeadlineDeferral.new()
+## True from a deadline deferral until this frame's callbacks finish. Later
+## refusals in the same callback are artifacts of the blocked queries.
+var _deferred := false
 
 
 func _init(tree: SceneTree, player: Node3D, rig: Node3D, drive: Callable, production_steering: bool = false) -> void:
@@ -187,7 +221,23 @@ func refusal_reason() -> String:
 	return _reason
 
 
+## Internal stop test: refused, or deferred for the rest of this frame.
+func _halted() -> bool:
+	return refused() or _deferred
+
+
+## Total frames deferred on the cooperative deadline (logged per deferral).
+func deferral_count() -> int:
+	return _deferral.total
+
+
 func _stop_geometry(reason: String) -> void:
+	if _deferred:
+		# Downstream of a deadline deferral: release only, never refuse.
+		_requested = false
+		_owns_input = false
+		_drive.call(0.0, 0.0)
+		return
 	if not refused():
 		_reason = reason
 	_requested = false
@@ -435,13 +485,37 @@ static func _road_prefix_to_goal(road: Array[Vector2], goal: Vector2) -> Array[V
 
 
 func _spend() -> bool:
+	if refused() or _deferred:
+		return false
 	_queries += 1
 	_total_queries += 1
-	if refused() or _queries > MAX_QUERIES_FRAME or _total_queries > MAX_QUERIES_LIFETIME \
-			or Time.get_ticks_usec() > _deadline:
-		_stop_geometry("native query count/lifetime/cooperative deadline cap")
+	if _queries > MAX_QUERIES_FRAME or _total_queries > MAX_QUERIES_LIFETIME:
+		_stop_geometry("native query per-frame/lifetime count cap")
+		return false
+	if Time.get_ticks_usec() > _deadline:
+		_defer_deadline("native query budget")
 		return false
 	return true
+
+
+## A cooperative wall-clock deadline was exceeded: release the stick and retry
+## next frame, up to MAX_DEFERRAL_FRAMES consecutive frames, then refuse.
+func _defer_deadline(where: String) -> void:
+	if refused() or _deferred:
+		return
+	if not _deferral.defer(where):
+		_stop_geometry("cooperative deadline exceeded on %d consecutive frames (%s; %d deferred frames total)" % [
+			_deferral.consecutive, where, _deferral.total])
+		return
+	_deferred = true
+	_requested = false
+	_owns_input = false
+	_production_driven = false
+	_checked_start = false
+	if _production_steering and OS.get_thread_caller_id() == OS.get_main_thread_id():
+		_production_stop_input()
+	else:
+		_drive.call(0.0, 0.0)
 
 
 func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dictionary:
@@ -479,7 +553,7 @@ func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dicti
 		_stop_geometry("native query body identity changed")
 		return {"blocked": true, "hit": null}
 	if Time.get_ticks_usec() > _deadline:
-		_stop_geometry("native query cooperative frame deadline exceeded")
+		_defer_deadline("native query cooperative frame deadline")
 		return {"blocked": true, "hit": null}
 	if hit.get_collision_count() >= CONTACTS:
 		_stop_geometry("native query contact saturation (%d contacts)" % hit.get_collision_count())
@@ -649,8 +723,12 @@ func _start_clear_impl(pose: Transform3D) -> bool:
 	var overlaps := _body.get_world_3d().direct_space_state.intersect_shape(query, CONTACTS)
 	if _contact_enabled:
 		_contact_overlaps = overlaps
-	if not _registered_body_contract() or overlaps.size() >= CONTACTS or Time.get_ticks_usec() > _deadline:
-		_stop_geometry("starting overlap saturation/deadline")
+	if not _registered_body_contract() or overlaps.size() >= CONTACTS:
+		_stop_geometry("starting overlap saturation/registration")
+		_contact_mark(&"overlap_saturation_registration_or_deadline")
+		return false
+	if Time.get_ticks_usec() > _deadline:
+		_defer_deadline("starting overlap query deadline")
 		_contact_mark(&"overlap_saturation_registration_or_deadline")
 		return false
 	# Identity of an overlapping floor shape does not prove there is no wall
@@ -661,7 +739,7 @@ func _start_clear_impl(pose: Transform3D) -> bool:
 		_contact_mark(&"exact_overlap")
 		return false
 	var recovery := _motion(pose, Vector3.ZERO, true)
-	if refused() or recovery.hit == null:
+	if _halted() or recovery.hit == null:
 		_contact_mark(&"zero_recovery_missing_or_refused")
 		return false
 	var hit: PhysicsTestMotionResult3D = recovery.hit
@@ -684,7 +762,7 @@ func _supported_step_from(pose: Transform3D, direction: Vector3) -> bool:
 		_contact_forward = forward
 	_contact_stage_at(&"forward")
 	var sweep := _motion(pose, forward)
-	if refused():
+	if _halted():
 		_contact_mark(&"forward_motion_refused")
 		return false
 	var landing := pose.translated(forward)
@@ -692,7 +770,7 @@ func _supported_step_from(pose: Transform3D, direction: Vector3) -> bool:
 	if sweep.blocked:
 		# Read-only counterpart of production's bounded step probes. Never apply poses.
 		_contact_stage_at(&"step_up")
-		if _motion(pose, Vector3.UP * _step_height).blocked or refused():
+		if _motion(pose, Vector3.UP * _step_height).blocked or _halted():
 			_contact_mark(&"step_up_blocked_or_refused")
 			return false
 		var raised := pose.translated(Vector3.UP * _step_height)
@@ -700,7 +778,7 @@ func _supported_step_from(pose: Transform3D, direction: Vector3) -> bool:
 		if not _start_clear(raised):
 			return false
 		_contact_stage_at(&"raised_forward")
-		if _motion(raised, forward).blocked or refused():
+		if _motion(raised, forward).blocked or _halted():
 			_contact_mark(&"raised_forward_blocked_or_refused")
 			return false
 		landing = raised.translated(forward)
@@ -710,7 +788,7 @@ func _supported_step_from(pose: Transform3D, direction: Vector3) -> bool:
 		return false
 	_contact_stage_at(&"support_down")
 	var support := _motion(landing, Vector3.DOWN * drop, true)
-	if not support.blocked or support.hit == null or refused():
+	if not support.blocked or support.hit == null or _halted():
 		_contact_mark(&"support_missing_or_refused")
 		return false
 	var travel: Vector3 = support.hit.get_travel()
@@ -736,7 +814,7 @@ func _supported_step_from(pose: Transform3D, direction: Vector3) -> bool:
 	_contact_stage_at(&"safe_landing_start_clear")
 	if not _start_clear(landing):
 		return false
-	return not refused()
+	return not _halted()
 
 
 func _choose(point: Vector2, tolerance: float) -> bool:
@@ -767,7 +845,7 @@ func _choose(point: Vector2, tolerance: float) -> bool:
 			if index >= 0:
 				_route.append(point)
 			return true
-		if refused():
+		if _halted():
 			return false
 	_stop_geometry("no admitted direct/existing-road leg; uneven floor or multiple bends may be incomplete")
 	return false
@@ -789,7 +867,7 @@ func _native_tick_impl(_delta: float) -> void:
 	_requests += 1
 	_queries = 0
 	_deadline = Time.get_ticks_usec() + FRAME_QUERY_US
-	if refused() or _requests > MAX_REQUESTS or not _request.is_finite():
+	if _halted() or _requests > MAX_REQUESTS or not _request.is_finite():
 		_stop_geometry("native request/lifetime/finite-input cap")
 		return
 	if not can_walk():
@@ -871,14 +949,16 @@ func _native_tick_impl(_delta: float) -> void:
 		var steering_began: int = Time.get_ticks_usec()
 		direction = _production_heading(direction)
 		_production_steering_us = Time.get_ticks_usec() - steering_began
-		if refused():
+		if _halted():
 			return
+	if refused() or _deferred:
+		return
+	if Time.get_ticks_usec() > _deadline:
+		_defer_deadline("native callback deadline before stick input")
+		return
 	_owns_input = true
 	if _production_steering:
 		_production_driven = true
-	if refused() or Time.get_ticks_usec() > _deadline:
-		_stop_geometry("native callback cooperative deadline before stick input")
-		return
 	_push(direction.normalized() * clampf(direction.length() / EASE_METRES, EASE_FLOOR, 1.0))
 	if _production_steering:
 		# parse_input_event queues the real joypad events under Godot's default
@@ -889,7 +969,7 @@ func _native_tick_impl(_delta: float) -> void:
 		_production_flush_us = Time.get_ticks_usec() - flush_began
 		_production_input = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
 		if Time.get_ticks_usec() > _deadline:
-			_stop_geometry("production input dispatch cooperative callback deadline")
+			_defer_deadline("production input dispatch deadline")
 
 
 func departure_pending(target: Vector3) -> bool:
@@ -1189,6 +1269,8 @@ func _contact_dump() -> void:
 
 
 func _native_tick(delta: float) -> void:
+	_deferral.new_frame()
+	_deferred = false
 	if _production_steering:
 		var began: int = Time.get_ticks_usec()
 		_production_delta = delta
@@ -1214,7 +1296,7 @@ func _native_tick(delta: float) -> void:
 		_production_pre_end = Time.get_ticks_usec()
 		_pre_observe_us = _production_pre_end - began
 		if _production_pending and _pre_observe_us > FRAME_QUERY_US:
-			_stop_geometry("production pre callback cooperative deadline")
+			_defer_deadline("production pre callback deadline")
 		if refused() and OS.get_thread_caller_id() == OS.get_main_thread_id():
 			_production_stop_input()
 			var record: Dictionary = _production_record()
@@ -1374,7 +1456,7 @@ func _observed_live_clear() -> bool:
 				or _observed_live.get_collision_local_shape(index) != _capsule_index:
 			_stop_geometry("invalid/deep actual live contact or changed trainer local shape")
 			return false
-	return not refused()
+	return not _halted()
 
 
 func _production_live_check(post: bool) -> bool:
@@ -1540,7 +1622,7 @@ func _production_heading(direction: Vector3) -> Vector3:
 	var wanted := Vector3(direction.x, 0.0, direction.z).normalized()
 	var walls := _production_wall_normals(_observed_live) # Actual pre pose result.
 	_production_hint_source = &"live_pre"
-	if refused():
+	if _halted():
 		return Vector3.ZERO
 	if walls.is_empty():
 		# ONE advisory cast from the real pose, covering the ordinary step plus
@@ -1568,10 +1650,10 @@ func _production_heading(direction: Vector3) -> Vector3:
 		_production_prediction_motion = wanted * reach
 		var predicted: Dictionary = _motion(_body.global_transform, _production_prediction_motion)
 		_production_hint_source = &"prospective_step"
-		if refused():
+		if _halted():
 			return Vector3.ZERO
 		walls = _production_wall_normals(predicted.hit as PhysicsTestMotionResult3D)
-		if refused():
+		if _halted():
 			return Vector3.ZERO
 	var opposing := Vector3.ZERO
 	var incoming := -CONTACT_EPS
@@ -1717,7 +1799,10 @@ func _production_observe() -> void:
 	_production_pending = false
 	# One 10ms allowance for the two harness callbacks' own work, excluding the
 	# intervening production controller. Native query counts share the frame cap.
-	_deadline = began + maxi(0, FRAME_QUERY_US - _pre_observe_us)
+	# After a deferred pre callback the stick is released and the controller's
+	# actual movement is still validated in full, on its own allowance.
+	_deadline = began + (FRAME_QUERY_US if _deferred else maxi(0, FRAME_QUERY_US - _pre_observe_us))
+	_deferred = false
 	_checked_start = false
 	if refused():
 		_production_stop_input()
@@ -1759,11 +1844,11 @@ func _production_observe() -> void:
 					if collision.get_local_shape(index) != _cap or not normal.is_finite() or not point.is_finite():
 						_stop_geometry("invalid actual slide contact/shape owner")
 						break
-				if refused():
+				if _halted():
 					break
 	var slides_us: int = Time.get_ticks_usec() - slides_began - _production_live_post_us
 	var movement_began: int = Time.get_ticks_usec()
-	if not refused():
+	if not _halted():
 		# Cached real velocity is computed by move_and_slide before the production
 		# step-up. Read it; never write it. Additional motion must fit that actual
 		# controller's step/drop bounds, so a respawn/pose jump cannot earn travel.
@@ -1778,7 +1863,7 @@ func _production_observe() -> void:
 				or _xz(extra).length() > maxf(_probe, speed_cap * _production_delta) + skin \
 				or extra.y > _step_height + skin or extra.y < -_body.floor_snap_length - skin:
 			_stop_geometry("actual movement exceeded production slide/step/drop bounds")
-	if not refused():
+	if not _halted():
 		_observed_frames += 1
 		_observed_distance += _body.global_position.distance_to(_production_before)
 		_observed_wall_frames += int(_body.is_on_wall())
@@ -1791,7 +1876,7 @@ func _production_observe() -> void:
 				_retry_at = STALL_FRAMES
 			if _stalled > 90:
 				_stop_geometry("real production stick travel made no progress within 90 requested frames")
-		_checked_start = not refused() # Only AFTER actual controller movement.
+		_checked_start = not _halted() # Only AFTER actual controller movement.
 	var movement_us: int = Time.get_ticks_usec() - movement_began
 	var snapshot_began: int = Time.get_ticks_usec()
 	var record: Dictionary = _production_record()
@@ -1812,7 +1897,7 @@ func _production_observe() -> void:
 	# Only refused cleanup/terminal diagnostic updates may follow this guard.
 	if Time.get_ticks_usec() > _deadline:
 		_checked_start = false
-		_stop_geometry("production observation cooperative callback deadline")
+		_defer_deadline("production observation callback deadline")
 	if refused():
 		_production_stop_input()
 		if record.is_empty():
