@@ -105,8 +105,16 @@ func _run() -> void:
 	if not _pass(await step(1,"water_remount",{}),"actual nearby remount without fixture teleport"):
 		quit(await finish())
 		return
-	await step(0,"wait",{"frames":60})
-	var remount: Dictionary=await probe(0,"water_mounted")
+	# The remount reaches the host on the owner's next rider and aquatic
+	# packets; wait (bounded) for both to arrive rather than one fixed-delay
+	# read (PR #521 run 37206982241 read the host before the aquatic one).
+	var remount: Dictionary={}
+	for _poll in 8:
+		await step(0,"wait",{"frames":30})
+		remount=await probe(0,"water_mounted")
+		if bool(remount.riding.remote.get(owner,{}).get("riding",false)) \
+				and int(remount.remote_mounts.get(owner,{}).get("applied_aquatic",{}).get("mode",-1))==2:
+			break
 	var owned: Dictionary=await probe(1,"water_mounted")
 	check(bool(remount.riding.remote.get(owner,{}).get("riding",false)),"host restores mounted rider")
 	check(is_zero_approx(float(owned.owned_mount.swim_stamina_fraction)),"remount does not refill exhausted resource")
