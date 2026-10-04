@@ -743,6 +743,10 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 	var rings: Array[float] = [reach]
 	if reach > near + 0.1:
 		rings.append_array([(reach + near) * 0.5, near])
+	# A verified spot in the camera's line is kept only as the fallback before
+	# the shared footprint: skipping it outright put a narrow summit road's
+	# companion inside the trainer's capsule (F08#4 row 33).
+	var lens_fallback := Vector3.INF
 	for ring: float in rings:
 		for index: int in order:
 			var candidate := origin + directions[index] * ring
@@ -750,11 +754,16 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 			if is_nan(floor_y):
 				continue
 			var spot := Vector3(candidate.x, floor_y, candidate.z)
-			if _in_lens_corridor(origin, spot, body, radius):
+			var in_lens := _in_lens_corridor(origin, spot, body, radius)
+			if in_lens and lens_fallback.is_finite():
 				continue
 			if _recall_path_on_level(trainer, origin, spot, level, body) \
 					and _recall_body_fits(trainer, spot, body):
-				return spot
+				if not in_lens:
+					return spot
+				lens_fallback = spot
+	if lens_fallback.is_finite():
+		return lens_fallback
 	if not allow_footprint:
 		return Vector3.INF
 	# Last rung: the trainer's own footprint. The follower's mask still meets
@@ -770,9 +779,9 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 ## check on a narrow bridge or terrace, the ring walks round to the spots behind
 ## the trainer -- straight down the exploration camera's line, where a 3 m
 ## companion fills the frame or stands on the lens. A spot whose footprint lies
-## in the corridor from just behind the camera to the trainer is skipped; when
-## every ring spot is skipped the follower closes on the trainer as it does on
-## any unverified station (or a snap takes the shared footprint).
+## in the corridor from just behind the camera to the trainer is passed over
+## while any other ring spot verifies; only when none does is the first verified
+## corridor spot used, still ahead of the trainer's shared footprint.
 func _in_lens_corridor(origin: Vector3, spot: Vector3, body: Node3D, radius: float) -> bool:
 	if not is_inside_tree():
 		return false
