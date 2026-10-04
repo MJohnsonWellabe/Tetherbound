@@ -1,0 +1,41 @@
+[village-walk] OPENING title interactive
+[village-walk] OPENING answered the character-choice step
+[village-walk] OPENING confirmed the configured trainer-name prefill
+[village-walk] OPENING new game world entered
+[village-walk] OPENING wake/Get Up complete
+[village-walk] OPENING Grandpa briefing and pack complete
+[village-walk] OPENING starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+[village-walk] OPENING starter selected and named (terrapup, uid creature-56eef56ba763833fb4f4c85562a105fe)
+[village-walk] OPENING Grandpa's first-catch supplies received (50 Basic Orbs)
+[village-walk] OPENING usable house/front doorway exited
+[village-walk] OPENING played: starter=terrapup at (7.982977, 0.900843, 14.03946)
+[village-walk] OPENING companion put away: true
+[village-walk] START route=visits time=night capture_dir=/tmp/claude-0/cap/F01-3/frames headless=false path_m=2.5 road_arcs=[inf,-inf] events=0
+[village-walk] CAPTURE 001 label="start-after-opening" pos=(8.19,0.90,14.04) heading_deg=360.0 image=visits_night_001_start-after-opening.png
+[village-walk] VISITS Grandpa, Mira, Oskar, Tam, Bram, Nessa, Maren, the old key, Practice Meadow camp, gate RoadGate, gate PondGate, gate TrailGate
+[village-walk] CAPTURE 002 label="travel" pos=(2.37,1.02,14.98) heading_deg=292.6 image=visits_night_002_travel.png
+[village-walk] CAPTURE 003 label="end" pos=(1.23,1.02,14.96) heading_deg=223.0 image=visits_night_003_end.png
+[village-walk] CAPTURE 004 label="reached Grandpa" pos=(0.64,1.02,15.60) heading_deg=245.1 image=visits_night_004_reached-grandpa.png
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.11 prompt="Talk to Grandpa"
+[village-walk] CAPTURE 005 label="travel" pos=(6.53,1.02,13.78) heading_deg=78.0 image=visits_night_005_travel.png
+[village-walk] CAPTURE 006 label="travel" pos=(12.90,0.90,14.31) heading_deg=91.9 image=visits_night_006_travel.png
+[village-walk] CAPTURE 007 label="travel" pos=(20.09,0.90,14.04) heading_deg=87.5 image=visits_night_007_travel.png
+[village-walk] CAPTURE 008 label="travel" pos=(27.45,0.90,13.72) heading_deg=87.5 image=visits_night_008_travel.png
+[village-walk] CAPTURE 009 label="travel" pos=(34.76,0.90,13.98) heading_deg=82.0 image=visits_night_009_travel.png
+[village-walk] CAPTURE 010 label="travel" pos=(39.47,0.90,16.24) heading_deg=167.9 image=visits_night_010_travel.png
+[village-walk] CAPTURE 011 label="travel" pos=(35.81,0.90,18.75) heading_deg=284.9 image=visits_night_011_travel.png
+[village-walk] CAPTURE 012 label="travel" pos=(28.54,0.90,19.11) heading_deg=276.6 image=visits_night_012_travel.png
+[village-walk] CAPTURE 013 label="end" pos=(26.49,0.95,18.93) heading_deg=271.1 image=visits_night_013_end.png
+[village-walk] CAPTURE 014 label="reached Tam" pos=(26.03,0.95,18.92) heading_deg=135.5 image=visits_night_014_reached-tam.png
+[village-walk] VISIT Tam kind=villager dist_m=1.08 prompt="Greet Tam"
+[village-walk] CAPTURE 015 label="travel" pos=(32.29,0.90,18.83) heading_deg=118.7 image=visits_night_015_travel.png
+[village-walk] CAPTURE 016 label="travel" pos=(38.71,0.90,19.10) heading_deg=53.1 image=visits_night_016_travel.png
+[village-walk] CAPTURE 017 label="travel" pos=(38.12,0.90,14.26) heading_deg=249.6 image=visits_night_017_travel.png
+[village-walk] CAPTURE 018 label="travel" pos=(31.55,0.90,13.77) heading_deg=286.1 image=visits_night_018_travel.png
+[village-walk] CAPTURE 019 label="travel" pos=(24.79,0.90,14.07) heading_deg=273.6 image=visits_night_019_travel.png
+[village-walk] CAPTURE 020 label="travel" pos=(20.38,0.90,11.25) heading_deg=348.9 image=visits_night_020_travel.png
+[village-walk] CAPTURE 021 label="travel" pos=(20.25,0.90,4.28) heading_deg=0.5 image=visits_night_021_travel.png
+[village-walk] CAPTURE 022 label="travel" pos=(15.85,0.90,3.56) heading_deg=247.8 image=visits_night_022_travel.png
+[village-walk] CAPTURE 023 label="end" pos=(16.85,0.90,3.91) heading_deg=94.6 image=visits_night_023_end.png
+[village-walk] CAPTURE 024 label="failure" pos=(17.30,0.90,3.95) heading_deg=116.9 image=visits_night_024_failure.png
+[village-walk] FAIL route=visits time=night: ended 9.32m from Mira (needs 3.0m) (captures=24)

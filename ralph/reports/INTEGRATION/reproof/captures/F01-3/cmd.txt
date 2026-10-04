@@ -1,0 +1,1 @@
+CMD: xvfb-run -a -s "-screen 0 1280x720x24" godot --path .  --rendering-driver opengl3 --audio-driver Dummy --resolution 1280x720 --script tests/capture_village_walk.gd -- --route=visits --time=night --from-title --capture-dir=/tmp/claude-0/cap/F01-3/frames
