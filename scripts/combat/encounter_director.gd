@@ -5008,20 +5008,18 @@ func _sync_active_creature() -> void:
 	var revision: int = int(party.get("revision"))
 	if revision == _party_revision_seen:
 		return
-	# Checked before the revision is marked seen, so a change held back by a
-	# fight is applied once it ends rather than skipped.
+	_party_revision_seen = revision
+	if _ally_body == null or not is_instance_valid(_ally_body):
+		return  # Nothing out to swap; the new active creature comes out on next recall.
 	if _manager != null and bool(_manager.call("is_fighting")):
 		return  # Never mid-fight — `_start_fight` already snapshotted who is in it.
 	if trainer_battle_active():
 		return  # Nor between its rounds; the next round re-deploys the same body.
-	# Nor while this peer is a participant in someone else's shared fight. Its
-	# round rewards change the party between rounds; a dismiss and re-summon
-	# there leaves the host with no body for this pilot mid-fight.
+	# Nor while this peer is a participant in a shared fight. Its round rewards
+	# change the party between rounds; a dismiss and re-summon there leaves the
+	# host with no body for this pilot mid-fight.
 	if not _shared_active_id.is_empty():
 		return
-	_party_revision_seen = revision
-	if _ally_body == null or not is_instance_valid(_ally_body):
-		return  # Nothing out to swap; the new active creature comes out on next recall.
 	var active_creature: RefCounted = party.call("active")
 	if _ally != null and bool(_ally.get("resting")):
 		dismiss_active_creature()
