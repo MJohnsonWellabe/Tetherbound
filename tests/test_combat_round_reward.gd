@@ -414,7 +414,11 @@ func test_typed_faint_owner_disk_loss_retry_and_recovery_do_not_repeat_condition
 	assert_true(VITALS.apply_owner(game, row).ok)
 	assert_eq(writer.writes, writes + 1)
 	var saved: Dictionary = writer.store.call("read", "owner_a")
-	assert_eq(saved.party[0], expected)
+	# The saved card keeps its in-fight energy; the portable projection
+	# the expectation comes from does not carry it.
+	var saved_card: Dictionary = saved.party[0].duplicate(true)
+	saved_card.erase("energy")
+	assert_eq(saved_card, expected)
 	assert_true(VITALS.apply_owner(game, row).duplicate)
 	assert_eq(fixture._portable(game.local).party[0], expected)
 	var authority := AUTH.new()
