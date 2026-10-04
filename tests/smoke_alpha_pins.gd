@@ -410,12 +410,31 @@ func _run_hall_activity() -> void:
 	# The pack's own aggression usually starts the fight on arrival; when it
 	# has not (1 in 3 runs stopped beside a quiet alpha), a player presses the
 	# alpha's Engage prompt. Re-close and press, with real input, up to 3 times.
-	for attempt in 3:
+	# Since F03#0 stands the alpha on the pack's centre, a wandering packmate
+	# (Wild_galecrest_5001_*) can reach the trainer first; a wild fight is one
+	# creature, so that is its own fight. Fight it out as a player would, then
+	# keep closing on the alpha (re-proof F03-3: enemy Wild_galecrest_5001_3).
+	var packmate_fights: Array[String] = []
+	var attempt := 0
+	while attempt < 3:
 		if bool(manager.call("is_fighting")):
-			break
+			var foe := manager.call("enemy_body") as Node3D
+			if foe == alpha or foe == null or packmate_fights.size() >= 2 \
+					or not str(foe.name).begins_with("Wild_galecrest_5001_"):
+				break
+			var packmate: Dictionary = await pilot.fight_to_the_end()
+			packmate_fights.append("%s:%s" % [str(foe.name), str(packmate.get("outcome", "?"))])
+			if bool(manager.call("is_fighting")) or str(packmate.get("outcome", "")) != "won":
+				_fail("hall activity: could not clear the packmate that engaged first (%s)" % str(packmate_fights))
+				_report()
+				return
+			for _frame in 60:
+				await physics_frame
+			continue
+		attempt += 1
 		gap = await pilot.walk_trainer_to(player, alpha, 2.5, 900)
 		if bool(manager.call("is_fighting")):
-			break
+			continue
 		Input.action_press("interact")
 		await physics_frame
 		Input.action_release("interact")
@@ -423,10 +442,10 @@ func _run_hall_activity() -> void:
 			await physics_frame
 	if not bool(manager.call("is_fighting")) or manager.call("enemy_body") != alpha:
 		var alpha_floor := float(world.call("ground_height_at", alpha.global_position.x, alpha.global_position.z)) if is_instance_valid(alpha) else NAN
-		_fail("hall activity: real road input did not reach and engage Alpha Galecrest (gap %.2f; trainer %s on_floor=%s vel=%s; alpha %s terrain_y=%.2f fighting=%s enemy=%s)" % [
+		_fail("hall activity: real road input did not reach and engage Alpha Galecrest (gap %.2f; trainer %s on_floor=%s vel=%s; alpha %s terrain_y=%.2f fighting=%s enemy=%s; packmate fights %s)" % [
 			gap, str(player.global_position), str(player.is_on_floor()), str(player.velocity),
 			str(alpha.global_position) if is_instance_valid(alpha) else "?", alpha_floor,
-			str(manager.call("is_fighting")), str(manager.call("enemy_body"))])
+			str(manager.call("is_fighting")), str(manager.call("enemy_body")), str(packmate_fights)])
 		_report()
 		return
 	await _hall_capture(world, capture_dir, "hall-approach")
