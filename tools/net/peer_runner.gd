@@ -2595,6 +2595,32 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			% bind_budget}
 
 
+## A harness placement is a jump no player can make. The host's owner-passive
+## replay accepts a long discontinuity only while its own copy of this body
+## stands within 2 m of the new spot (owner_passive_sync.gd _inputs_host), so a
+## step that places the player and moves on at once can strand that input for
+## good: CI 37189095290 client_trainer_rewards waited on 'discontinuity to
+## (80.0, 0.9, 46.0), host body at (81.06, 0.9, 50.45)' and every round reward
+## behind it stalled. On a client, give the discovery tick time to record the
+## jump, then wait (bounded) until the host has acknowledged every recorded
+## input, as a real arrival would before play continues.
+func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
+	var game := root.get_node_or_null(^"Game")
+	var session: Variant = game.get("session") if game != null else null
+	if not session is Node or not (session as Node).has_method("is_host") \
+			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
+		return
+	var passive: Variant = (session as Node).get("_owner_passive")
+	if passive == null:
+		return
+	for frame in budget_frames:
+		var local: Dictionary = passive.get("local")
+		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
+				or (local.get("inputs", []) as Array).is_empty()):
+			return
+		await physics_frame
+
+
 ## Stand the trainer at a point. The travel itself, not a game action.
 ##
 ## A joining player walks to the fight; a headless harness cannot, and must not
@@ -2617,6 +2643,7 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	player.velocity = Vector3.ZERO
 	for i in maxi(0, int(args.get("settle", 30))):
 		await physics_frame
+	await _await_owner_passive_caught_up()
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
@@ -4024,6 +4051,7 @@ func _step_trainer_battle(args: Dictionary) -> Dictionary:
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
+		await _await_owner_passive_caught_up()
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
 			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
@@ -4894,6 +4922,7 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
+	await _await_owner_passive_caught_up()
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
