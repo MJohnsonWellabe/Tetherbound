@@ -531,6 +531,9 @@ func _supported_floor(at: Vector3, level: float, body: Node3D) -> float:
 ## The trainer's capsule at `spot` touches no world collision (the mount's
 ## physics body excluded) and does not overlap the mount's own capsule,
 ## measured geometrically so the answer does not depend on the mount's layer.
+## Tested exactly where `dismount` sets the trainer down: `spot` already holds
+## the settle lift, and a second lift let a capsule clipping a slope or a lip
+## under the lower Cloudreach ledge pass while the placed trainer overlapped it.
 func _capsule_fits(spot: Vector3, body: Node3D) -> bool:
 	var collision := _player.get_node_or_null(^"Collision") as CollisionShape3D
 	if collision == null or collision.shape == null:
@@ -538,7 +541,7 @@ func _capsule_fits(spot: Vector3, body: Node3D) -> bool:
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
 	query.collision_mask = _standing_mask
-	query.transform = Transform3D(Basis.IDENTITY, spot + collision.position + Vector3.UP * SETTLE_LIFT_M)
+	query.transform = Transform3D(Basis.IDENTITY, spot + collision.position)
 	query.exclude = _excluded(body)
 	if not _player.get_world_3d().direct_space_state.intersect_shape(query, 1).is_empty():
 		return false
