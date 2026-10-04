@@ -1,73 +1,13 @@
-# F01-6 — Opening/tournament state survives two-peer join
-
-**Verdict: FAIL**
-
-Criterion: Opening/tournament state survives two-peer join. Code under test: 826d273c3.
-
-Commands:
-- Tournament: `tools/net/run_net_smoke.sh` does not forward user args, so `--tournament` was run with the launcher's environment (TB_NET_RUN_ID/TB_NET_OUT_DIR/TB_NET_PEERS=2) via a thin wrapper: `godot --headless --path . --script tests/smoke_net_shared_boss.gd -- --tournament`.
-- Opening join: the "PR174 two fresh peers opening" witness is not named on the board; the current equivalent is `tools/net/run_net_smoke.sh meadows_identity_fresh_join` (two real title boots, host New Game continuation, guest production_join into the opening village).
-
-Results:
-- Opening join: PASS — 74 PASS / 0 FAIL, exit 0, 250 s.
-- Tournament: **FAIL** — exit 1, 376 s. Both peers prepared, deployed, round `tournament_quarter_mira` minted one shared encounter and peer 1 joined it; peer 0 reduced the shared HP, but
-  `FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 ... stand_in=local stand-in 'LegacyOpponent_1_1'`, then `FAIL: both peers completed 'tournament_quarter_mira'`.
-
-Root-cause hypothesis: the guest's strikes land on its local legacy opponent stand-in (`LegacyOpponent_1_1`, ~1 m below the host's opponent position) instead of being routed to the host's shared encounter record, so host HP never moves. A recent change to the shared-encounter/stand-in hit routing on the client side (or the stand-in's collider height) is the likely regression.
-
-## Run `F01-6-tournament`
-
-```
-cmd: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/netrun.sh shared_boss --tournament
-commit: 826d273c3dbdcb1002034812041b1dfb59d84120
-start: 2026-10-04T17:09:24Z
-duration_s: 376
-exit: 1
-```
-
-Key lines:
-
-```
-PASS: tournament host opened a world
-PASS: second peer joined the tournament world
-PASS: peer 0 prepared five ordinary creatures and registered three
-PASS: peer 0's production readiness and three selected IDs are visible
-PASS: peer 0 deployed its selected lead
-PASS: peer 1 prepared five ordinary creatures and registered three
-PASS: peer 1's production readiness and three selected IDs are visible
-PASS: peer 1 deployed its selected lead
-PASS: opened authored tournament round 'tournament_quarter_mira'
-PASS: 'tournament_quarter_mira' minted one shared encounter record
-PASS: peer 1 joined 'tournament_quarter_mira' rather than opening another fight
-PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
-FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 at (-5.09, 1.93, 7.74); stand_in=local stand-in 'LegacyOpponent_1_1' stands at (-5.09, 0.91, 7.74) place=creature stands at (-1.79, 0.90, 7.74) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending); no host receipt for peer 1040276346
-FAIL: both peers completed 'tournament_quarter_mira'
-FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 at (-5.09, 1.93, 7.74); stand_in=local stand-in 'LegacyOpponent_1_1' stands at (-5.09, 0.91, 7.74) place=creature stands at (-1.79, 0.90, 7.74) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending); no host receipt for peer 1040276346
-FAIL: both peers completed 'tournament_quarter_mira'
-=== SUMMARY.md ===
-# Net smoke run net-20261004T170924Z-11670
-- peer 0 (host) pid=11917 exited=false unexpected_exit=false
-- peer 1 (client) pid=11918 exited=true unexpected_exit=false
-FAILURES:
-- peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 at (-5.09, 1.93, 7.74); stand_in=local stand-in 'LegacyOpponent_1_1' stands at (-5.09, 0.91, 7.74) place=creature stands at (-1.79, 0.90, 7.74) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending); no host receipt for peer 1040276346
-```
-
-Trimmed log: `F01-6.F01-6-tournament.txt` (37 raw lines).
-
-## Run `F01-6-openingjoin`
-
-```
-cmd: tools/net/run_net_smoke.sh meadows_identity_fresh_join --out=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin
-commit: 826d273c3dbdcb1002034812041b1dfb59d84120
-start: 2026-10-04T17:15:40Z
-duration_s: 250
-exit: 0
-```
-
-Key lines:
-
-```
+run id:  net-20261004T171540Z-12227
+run dir: /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z
 smoke:   tests/smoke_net_meadows_identity_fresh_join.gd  (--peers=2 advisory, see this script's header)
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=12452 control_port=33609 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/home-0 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/peer-0.log
+coordinator: launched peer 1 (client) pid=12453 control_port=43889 home=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/home-1 log=/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29461.0,"godot_version":"4.7-stable (official)","main_sha":"826d273c3dbd","peer":0.0,"pid":12452.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29462.0,"godot_version":"4.7-stable (official)","main_sha":"826d273c3dbd","peer":1.0,"pid":12453.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
 PASS: coordinator tracked exactly two peers
 PASS: the harness assigned the host a positive isolated UDP port (29461)
 PASS: the chosen host identity entered through the production title and hosted (title fresh identity 'Rowan'/kael entered 'MeadowsPlayground' and hosted udp/29461 after 2 frames)
@@ -87,7 +27,32 @@ PASS: host PlayerState retained chosen appearance 'kael'
 PASS: host has a minted portable character id
 PASS: host has a real Player body under its current production scene
 PASS: host's live Player/Model built real art for chosen appearance 'kael'
-…
+PASS: fresh client PlayerState retained chosen name 'Juniper'
+PASS: fresh client PlayerState retained chosen appearance 'sera'
+PASS: fresh client has a minted portable character id
+PASS: fresh client has a real Player body under its current production scene
+PASS: fresh client's live Player/Model built real art for chosen appearance 'sera'
+PASS: the fresh client ended in the Meadows realm
+PASS: the fresh client's real Player transform is inside Grandpa's Village ([-1.40000009536743, 4.65094184875488, 14.2999992370605])
+PASS: viewer 0 has exactly two production trainer bodies in its scene (got 2)
+PASS: viewer 0 body 1 exists
+PASS: viewer 0 body 1 belongs to the viewer's current production scene
+PASS: viewer 0 body 1 carries chosen display name 'Rowan'
+PASS: viewer 0 body 1 and its live Model carry built art for chosen appearance 'kael'
+PASS: viewer 0 body 1's actual Nameplate shows chosen name 'Rowan'
+PASS: viewer 0 body 1 uses compact fixed-size nameplate settings (font 30, outline 6)
+PASS: viewer 0 body 1087946362 exists
+PASS: viewer 0 body 1087946362 belongs to the viewer's current production scene
+PASS: viewer 0 body 1087946362 carries chosen display name 'Juniper'
+PASS: viewer 0 body 1087946362 and its live Model carry built art for chosen appearance 'sera'
+PASS: viewer 0 body 1087946362's actual Nameplate shows chosen name 'Juniper'
+PASS: viewer 0 body 1087946362 uses compact fixed-size nameplate settings (font 30, outline 6)
+PASS: viewer 0 body 1087946362 is the other player and both its body and chosen-name badge are visible
+PASS: viewer 1 has exactly two production trainer bodies in its scene (got 2)
+PASS: viewer 1 body 1 exists
+PASS: viewer 1 body 1 belongs to the viewer's current production scene
+PASS: viewer 1 body 1 carries chosen display name 'Rowan'
+PASS: viewer 1 body 1 and its live Model carry built art for chosen appearance 'kael'
 PASS: viewer 1 body 1's actual Nameplate shows chosen name 'Rowan'
 PASS: viewer 1 body 1 uses compact fixed-size nameplate settings (font 30, outline 6)
 PASS: viewer 1 body 1 is the other player and both its body and chosen-name badge are visible
@@ -120,15 +85,24 @@ PASS: the re-armed late-arrival path did not duplicate or replace the starter ([
 assertions run: 74
 ALL CHECKS PASSED
 # Net smoke run net-20261004T171540Z-12227
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
 - peer 0 (host) pid=12452 exited=true unexpected_exit=false
 - peer 1 (client) pid=12453 exited=true unexpected_exit=false
+
 ALL CHECKS PASSED
+
 === /tmp/claude-0/-home-user-Tetherbound/6050aa73-5362-5e48-a427-17c5687ec66b/scratchpad/proofs/F01-6-openingjoin/net-meadows_identity_fresh_join-20261004T171540Z/SUMMARY.md ===
 # Net smoke run net-20261004T171540Z-12227
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
 - peer 0 (host) pid=12452 exited=true unexpected_exit=false
 - peer 1 (client) pid=12453 exited=true unexpected_exit=false
+
 ALL CHECKS PASSED
-```
-
-Trimmed log: `F01-6.F01-6-openingjoin.txt` (108 raw lines).
-

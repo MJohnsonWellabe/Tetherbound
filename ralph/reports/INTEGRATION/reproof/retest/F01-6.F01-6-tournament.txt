@@ -1,0 +1,37 @@
+run dir: /tmp/claude-0/netout/net-shared_boss-20261004T170924Z
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=11917 control_port=46263 home=/tmp/claude-0/netout/net-shared_boss-20261004T170924Z/home-0 log=/tmp/claude-0/netout/net-shared_boss-20261004T170924Z/peer-0.log
+coordinator: launched peer 1 (client) pid=11918 control_port=37087 home=/tmp/claude-0/netout/net-shared_boss-20261004T170924Z/home-1 log=/tmp/claude-0/netout/net-shared_boss-20261004T170924Z/peer-1.log
+coordinator: peer 0 hello: {"enet_port":35661.0,"godot_version":"4.7-stable (official)","main_sha":"826d273c3dbd","peer":0.0,"pid":11917.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/netout/net-shared_boss-20261004T170924Z/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":35662.0,"godot_version":"4.7-stable (official)","main_sha":"826d273c3dbd","peer":1.0,"pid":11918.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/netout/net-shared_boss-20261004T170924Z/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: tournament host opened a world
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+PASS: peer 1 joined 'tournament_quarter_mira' rather than opening another fight
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 at (-5.09, 1.93, 7.74); stand_in=local stand-in 'LegacyOpponent_1_1' stands at (-5.09, 0.91, 7.74) place=creature stands at (-1.79, 0.90, 7.74) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending); no host receipt for peer 1040276346
+FAIL: both peers completed 'tournament_quarter_mira'
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 at (-5.09, 1.93, 7.74); stand_in=local stand-in 'LegacyOpponent_1_1' stands at (-5.09, 0.91, 7.74) place=creature stands at (-1.79, 0.90, 7.74) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending); no host receipt for peer 1040276346
+FAIL: both peers completed 'tournament_quarter_mira'
+=== SUMMARY.md ===
+# Net smoke run net-20261004T170924Z-11670
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=11917 exited=false unexpected_exit=false
+- peer 1 (client) pid=11918 exited=true unexpected_exit=false
+
+FAILURES:
+- peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.329 -> 121.329 at (-5.09, 1.93, 7.74); stand_in=local stand-in 'LegacyOpponent_1_1' stands at (-5.09, 0.91, 7.74) place=creature stands at (-1.79, 0.90, 7.74) strike=PASS submitted quick strike (local verdict ok=false pending=true code=pending); no host receipt for peer 1040276346
+- both peers completed 'tournament_quarter_mira'

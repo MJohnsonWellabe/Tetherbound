@@ -1,0 +1,20 @@
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[warrens] 5 crest trees standing on the bank
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[trainers] Trainer_1040276346 stands up: authority 1040276346, this peer is 1 (another player)
+[creatures] AllyCreature_1 stands up: owner 1, authority 1, this peer is 1 (our own proxy)
+[creatures] AllyCreature_1040276346 stands up: owner 1040276346, authority 1040276346, this peer is 1 (another player's creature)
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[warrens] 5 crest trees standing on the bank
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[trainers] Trainer_1 stands up: authority 1, this peer is 1040276346 (another player)
+[trainers] Trainer_1040276346 stands up: authority 1040276346, this peer is 1040276346 (our own proxy)
+[creatures] AllyCreature_1 stands up: owner 1, authority 1, this peer is 1040276346 (another player's creature)
+[creatures] AllyCreature_1040276346 stands up: owner 1040276346, authority 1040276346, this peer is 1040276346 (our own proxy)
