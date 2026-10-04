@@ -473,9 +473,16 @@ func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dicti
 		_contact_hit = hit
 		_contact_blocked = blocked
 	# Check AFTER each native call too; one call can exceed the cooperative cap.
-	if not _registered_body_contract() or Time.get_ticks_usec() > _deadline \
-			or hit.get_collision_count() >= CONTACTS:
-		_stop_geometry("native query body identity/deadline/contact saturation")
+	# Same three refusals as before, reported separately so a failing run says
+	# which one fired (F02#3 r3 could not tell a slow host from a crowd).
+	if not _registered_body_contract():
+		_stop_geometry("native query body identity changed")
+		return {"blocked": true, "hit": null}
+	if Time.get_ticks_usec() > _deadline:
+		_stop_geometry("native query cooperative frame deadline exceeded")
+		return {"blocked": true, "hit": null}
+	if hit.get_collision_count() >= CONTACTS:
+		_stop_geometry("native query contact saturation (%d contacts)" % hit.get_collision_count())
 		return {"blocked": true, "hit": null}
 	var safe := hit.get_collision_safe_fraction()
 	var unsafe := hit.get_collision_unsafe_fraction()
