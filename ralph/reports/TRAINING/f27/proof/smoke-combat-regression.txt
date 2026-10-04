@@ -1,0 +1,2 @@
+combat: OK — a fight can be entered, piloted, won and left.
+exit 0

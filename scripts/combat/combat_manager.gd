@@ -3533,15 +3533,22 @@ func _award_victory() -> void:
 	var condition_cfg: Dictionary = CONDITION.config()
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
+	# F27: a canonical host wild victory pays its reduced XP and essence in the
+	# host training transaction, staged from this party. A legacy award here
+	# would be counted on top of it, so only the non-XP credit below remains.
+	var host_owns_xp: bool = _encounter_link != null and not _encounter_id.is_empty() \
+		and _encounter_link.has_method("canonical_wild_encounter") \
+		and _encounter_link.call("canonical_wild_encounter", _encounter_id) == true
 
 	last_xp_award.clear()
 	for i in _party.size():
 		var member: RefCounted = _party[i]
 		if member == null or member.fainted:
 			continue
-		var amount: int = award if i == _active_index else share
-		var levels_gained: int = member.gain_xp(amount, cfg)
-		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+		var amount: int = 0 if host_owns_xp else (award if i == _active_index else share)
+		var levels_gained: int = member.gain_xp(amount, cfg) if amount > 0 else 0
+		if not host_owns_xp:
+			last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
 		# Prompt 67's history, recorded where the facts already are. This loop
 		# already skips a fainted member ("it did not fight"), so the same rule
 		# decides what counts as a battle fought -- one definition, one place.

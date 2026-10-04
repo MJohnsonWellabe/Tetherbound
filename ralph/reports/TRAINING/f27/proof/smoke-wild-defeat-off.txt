@@ -1,0 +1,8 @@
+before: essence { "essence_ground": 0, "essence_water": 0, "essence_air": 0, "essence_electric": 0, "essence_fire": 0, "essence_dark": 0, "essence_ice": 0, "essence_psychic": 0 }, receipts 0, ally L3 xp 0
+victory runtime: none retained
+after: foe bramblebun L2 types ["ground"], essence gained {  }
+ally L3 xp 0 -> L3 xp 62
+combat FAIL: OFF: combat.json actor_vitals.runtime_enabled is false, so the canonical wild-victory transaction (essence + hybrid XP) never runs
+combat FAIL: wild defeat paid 0 essence, expected 1 (base 1 + level bonus)
+combat FAIL: expected exactly one durable defeat receipt, saw []
+exit 1
