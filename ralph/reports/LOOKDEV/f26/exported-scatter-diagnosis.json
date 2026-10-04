@@ -1,0 +1,216 @@
+{
+  "scope": "Read-only actual source/PCK bake freshness and source availability; no native or Ally claim.",
+  "steps": [
+    {
+      "name": "source",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "elapsed_seconds": 8.85999999998603,
+      "log_sha256": "d37febc99aa335329ac1265aec9b215be4a720f83169ae713f25070fd492f1a3",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--script",
+        "D:/tetherbound/.artifacts/f26_scatter_pack_probe.gd",
+        "--",
+        "--output=D:/tetherbound/.artifacts/f26-scatter-probe-20261004T235043Z/source.json"
+      ],
+      "result": {
+        "fingerprint": 7093781362005384,
+        "fresh": true,
+        "manifest_fingerprint": 7093781362005384.0,
+        "manifest_regions": 108,
+        "missing_regions": [],
+        "sources": [
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_vegetation.json",
+            "text_length": 7426
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_settlements.json",
+            "text_length": 1675
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/terrain_stormwood.json",
+            "text_length": 3332
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_world.json",
+            "text_length": 9374
+          },
+          {
+            "exists": true,
+            "path": "res://scripts/world/stormwood_heightfield.gd",
+            "text_length": 4570
+          },
+          {
+            "exists": true,
+            "path": "res://scripts/world/stormwood_scatter.gd",
+            "text_length": 17520
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_pockets.json",
+            "text_length": 11603
+          },
+          {
+            "exists": true,
+            "path": "res://scripts/world/stormwood_pocket_frame.gd",
+            "text_length": 925
+          }
+        ]
+      }
+    },
+    {
+      "name": "exported-PCK",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "elapsed_seconds": 5.187000000034459,
+      "log_sha256": "9de398e5d6b0850b2f6b7829d8a542595859f0db5dec19c5b6124b1dd51ca5b0",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\f26-ally-launcher-ac76f19c6-20261004T232608Z\\package",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\f26-ally-launcher-ac76f19c6-20261004T232608Z\\package\\Tetherbound.pck",
+        "--script",
+        "D:/tetherbound/.artifacts/f26_scatter_pack_probe.gd",
+        "--",
+        "--output=D:/tetherbound/.artifacts/f26-scatter-probe-20261004T235043Z/exported-PCK.json"
+      ],
+      "result": {
+        "fingerprint": 1523573971508866,
+        "fresh": false,
+        "manifest_fingerprint": 7093781362005384.0,
+        "manifest_regions": 108,
+        "missing_regions": [],
+        "sources": [
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_vegetation.json",
+            "text_length": 7426
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_settlements.json",
+            "text_length": 1675
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/terrain_stormwood.json",
+            "text_length": 3332
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_world.json",
+            "text_length": 9374
+          },
+          {
+            "exists": false,
+            "path": "res://scripts/world/stormwood_heightfield.gd",
+            "text_length": 0
+          },
+          {
+            "exists": false,
+            "path": "res://scripts/world/stormwood_scatter.gd",
+            "text_length": 0
+          },
+          {
+            "exists": true,
+            "path": "res://data/config/stormwood_pockets.json",
+            "text_length": 11603
+          },
+          {
+            "exists": false,
+            "path": "res://scripts/world/stormwood_pocket_frame.gd",
+            "text_length": 0
+          }
+        ]
+      }
+    }
+  ],
+  "raw_bundle": "exported-scatter-diagnosis.zip",
+  "raw_bundle_sha256": "eeac845ff8107fb8fc06dd73b91bda578ad5f00df02e88dd1fcb8315a145e99b",
+  "source_bake_fresh": true,
+  "exported_bake_fresh": false,
+  "all_108_regions_present": true,
+  "confirmed_cause": "Compressed GDScript export removes three plaintext fingerprint inputs. Source has them; actual PCK does not. Full stale guard correctly rejects mismatched fingerprint.",
+  "correction": "Export scripts as text in Windows Desktop and Linux Test. No bake/fingerprint/stale guard or renderer-default change.",
+  "failed_native_attempt_preserved": "D:\\tetherbound\\.artifacts\\f26-native-20261004T233322Z",
+  "isolated_editor_support_preflight": {
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "errors": [],
+    "result": {
+      "fingerprint": 1523573971508866,
+      "fresh": false,
+      "manifest_fingerprint": 7093781362005384.0,
+      "manifest_regions": 108,
+      "missing_regions": [],
+      "sources": [
+        {
+          "exists": true,
+          "path": "res://data/config/stormwood_vegetation.json",
+          "text_length": 7426
+        },
+        {
+          "exists": true,
+          "path": "res://data/config/stormwood_settlements.json",
+          "text_length": 1675
+        },
+        {
+          "exists": true,
+          "path": "res://data/config/terrain_stormwood.json",
+          "text_length": 3332
+        },
+        {
+          "exists": true,
+          "path": "res://data/config/stormwood_world.json",
+          "text_length": 9374
+        },
+        {
+          "exists": false,
+          "path": "res://scripts/world/stormwood_heightfield.gd",
+          "text_length": 0
+        },
+        {
+          "exists": false,
+          "path": "res://scripts/world/stormwood_scatter.gd",
+          "text_length": 0
+        },
+        {
+          "exists": true,
+          "path": "res://data/config/stormwood_pockets.json",
+          "text_length": 11603
+        },
+        {
+          "exists": false,
+          "path": "res://scripts/world/stormwood_pocket_frame.gd",
+          "text_length": 0
+        }
+      ]
+    },
+    "command": [
+      "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+      "--headless",
+      "--path",
+      "D:\\tetherbound\\.artifacts\\f26-probe-support-20261004T235711Z\\host",
+      "--main-pack",
+      "D:\\tetherbound\\.artifacts\\f26-probe-support-20261004T235711Z\\host\\Tetherbound.pck",
+      "--script",
+      "D:\\tetherbound\\redesign-lookdev\\tools\\check_exported_stormwood_scatter.gd",
+      "--",
+      "--output=D:/tetherbound/.artifacts/f26-probe-support-20261004T235711Z/result.json"
+    ],
+    "log_sha256": "103d85dc54f0d04e91a419775cbca25c9f11d8192cb7da715f2b0b210770a9c9",
+    "debug_dll_sha256": "bf72686a7e1d8d8370ba9ba5eaa70c59375ee2cb5638d63b8942f1ad7d448cda",
+    "scope": "Actual old PCK still refused after adding only editor debug support outside shipping package; no source fallback."
+  }
+}

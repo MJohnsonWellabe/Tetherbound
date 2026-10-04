@@ -126,3 +126,27 @@ fresh assembled package: runtime source_commit and launcher_source_commit must
 remain distinct, runtime hashes must match, and manifest/ZIP must be regenerated.
 Actual assembly verification and all four corrected native routes are still
 required. This external-launcher fix establishes no Ally result.
+
+## Exported Stormwood scatter inputs
+
+The far-floor packaged native run reached Meadows, Tidewake and Cloudreach
+successfully, then correctly refused Stormwood's missing/stale bake ERROR.
+The entire attempt is preserved INCOMPLETE. A read-only source/PCK comparison
+confirmed source fingerprint 7093781362005384 is fresh, whereas the exported
+PCK computes 1523573971508866. All 108 regions exist in both, but three plaintext
+script inputs are absent from the compressed-script export.
+[Diagnosis and raw bundle](exported-scatter-diagnosis.json).
+
+Windows Desktop and Linux Test now export scripts as text, preserving the full
+production fingerprint and stale guard. The read-only packed-bake checker
+verifies a freshly written receipt after close. CPU inspection uses an isolated
+PCK link and editor debug Terrain3D DLL outside the shipping package, with no
+plaintext source fallback. That setup still refuses the defective old PCK with
+exit 1 and zero engine errors. Fresh export and all four native routes remain
+required before delivery; neither this diagnosis nor source review is an Ally
+or full visual acceptance result.
+
+Independent final scoped review by `/root/f26_lookbar_review`: **PASS** for the
+two text-mode edits, receipt publication verification and isolated CPU probe.
+The reviewer confirmed the support host contains only the actual PCK and debug
+DLL, and corroborated its recorded zero-error refusal of the defective PCK.
