@@ -153,7 +153,118 @@
     "fallback": "mesh_compatibility",
     "scene_light_cap": 4,
     "ultimate_overrides": {
-      "_comment": "Owner direction 2026-10-04: water ultimates read as a crashing wave or a water ball (like the fireball) depending on the move, drawn by this library through ultimate_library.launch. Breakthroughs select the growth tier.",
+      "ultimate_terrapup": {
+        "archetype": "root_stone_spikes",
+        "count": 6,
+        "size": 0.75,
+        "colour": "#a88a62",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 1.5,
+        "trail": 1.3,
+        "impact_scale": 1.6,
+        "mastery_owner": "f25"
+      },
+      "ultimate_tuskroot": {
+        "archetype": "quake_ring",
+        "count": 1,
+        "size": 1.4,
+        "colour": "#8a6b45",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.8,
+        "mastery_owner": "f25",
+        "presentation_variant": "rootquake"
+      },
+      "ultimate_veridian": {
+        "archetype": "root_stone_spikes",
+        "count": 5,
+        "size": 0.6,
+        "colour": "#5f9e45",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 1.2,
+        "trail": 1.3,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25",
+        "presentation_variant": "living_roots"
+      },
+      "ultimate_ashtusk": {
+        "archetype": "fireball",
+        "count": 3,
+        "size": 0.55,
+        "colour": "#ff7a1f",
+        "arc": 0.3,
+        "speed": 24.0,
+        "spread": 0.6,
+        "trail": 1.3,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25"
+      },
+      "ultimate_galewisp": {
+        "archetype": "tornado",
+        "count": 1,
+        "size": 1.3,
+        "colour": "#e6f3fb",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "ultimate_solmane": {
+        "archetype": "wind_blade",
+        "count": 5,
+        "size": 0.9,
+        "colour": "#ffd35a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.8,
+        "trail": 1.3,
+        "impact_scale": 1.4,
+        "mastery_owner": "f25",
+        "presentation_variant": "solar_blades"
+      },
+      "ultimate_stormcapra": {
+        "archetype": "sky_lightning",
+        "count": 1,
+        "size": 0.6,
+        "colour": "#cfe8ff",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.6,
+        "mastery_owner": "f25"
+      },
+      "ultimate_fulgocobra": {
+        "archetype": "chain_lightning",
+        "count": 1,
+        "size": 0.55,
+        "colour": "#f5d24a",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 0.0,
+        "trail": 1.3,
+        "impact_scale": 1.6,
+        "mastery_owner": "f25"
+      },
+      "ultimate_stormursa": {
+        "archetype": "sky_lightning",
+        "count": 3,
+        "size": 0.45,
+        "colour": "#9fd0ff",
+        "arc": 0.0,
+        "speed": 24.0,
+        "spread": 1.4,
+        "trail": 1.3,
+        "impact_scale": 1.5,
+        "mastery_owner": "f25"
+      },
+      "_comment": "Owner direction 2026-10-04: signature ultimates draw as big element-true effects (water: a crashing wave or a water ball like the fireball; the other uniques as the owner approved) depending on the move, drawn by this library through ultimate_library.launch. Breakthroughs select the growth tier.",
       "ultimate_abyssal_guardian": {
         "archetype": "tidal_wave",
         "presentation_variant": "great_wave",
@@ -2536,6 +2647,39 @@
         }
       },
       "wind_blade": {
+        "presentation_variants": {
+          "solar_blades": {
+            "body": {
+              "crest_colour": "#fff2b8"
+            },
+            "impact": {
+              "stages": {
+                "glow": {
+                  "size_scale": 3.0,
+                  "min_m": 0.9,
+                  "max_m": 1.8,
+                  "duration": 0.5,
+                  "core_colour": "#fff6cf",
+                  "edge_colour": "#ffb92e",
+                  "opacity": 0.75,
+                  "streaks": 0,
+                  "streak_strength": 0.0
+                },
+                "flash": {
+                  "size_scale": 2.4,
+                  "min_m": 0.6,
+                  "max_m": 1.4,
+                  "duration": 0.12,
+                  "core_colour": "#ffffff",
+                  "edge_colour": "#ffc94a",
+                  "opacity": 0.9,
+                  "streaks": 12,
+                  "streak_strength": 0.8
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "crescent",
           "air_surface": true,
@@ -3570,6 +3714,49 @@
         }
       },
       "root_stone_spikes": {
+        "presentation_variants": {
+          "living_roots": {
+            "body": {
+              "stone_colour": "#3c6a2c",
+              "mineral_colour": "#9ccf62",
+              "texture_blend": 0.35
+            },
+            "impact": {
+              "stone_colour": "#3c6a2c",
+              "mineral_colour": "#9ccf62",
+              "stages": {
+                "flash": {
+                  "size_scale": 2.0,
+                  "min_m": 0.5,
+                  "max_m": 1.2,
+                  "duration": 0.12,
+                  "core_colour": "#f6ffd8",
+                  "edge_colour": "#8fd060",
+                  "opacity": 0.7,
+                  "streaks": 8,
+                  "streak_strength": 0.5
+                },
+                "mark": {
+                  "style": "dust",
+                  "radius_scale": 4.0,
+                  "min_m": 1.4,
+                  "max_m": 3.0,
+                  "duration": 2.0,
+                  "colour": "#3d5a2c",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.6,
+                  "hold": 0.6,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.0,
+                  "initial_scale": 0.4,
+                  "spread_time": 0.25,
+                  "crack_count": 7
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "spike",
           "root_stone_surface": true,
@@ -3744,6 +3931,47 @@
         }
       },
       "quake_ring": {
+        "presentation_variants": {
+          "rootquake": {
+            "impact": {
+              "stages": {
+                "shockwave": {
+                  "style": "shockwave",
+                  "radius_scale": 4.0,
+                  "min_m": 2.0,
+                  "max_m": 4.0,
+                  "duration": 0.55,
+                  "colour": "#cbb68a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.65,
+                  "ring_width": 0.16,
+                  "lift_m": 0.035,
+                  "hold": 0.0,
+                  "fade_in": 0.02,
+                  "initial_scale": 1.0
+                },
+                "mark": {
+                  "style": "burn",
+                  "radius_scale": 3.0,
+                  "min_m": 2.0,
+                  "max_m": 3.6,
+                  "duration": 2.2,
+                  "colour": "#2e241a",
+                  "glow_colour": "#000000",
+                  "glow_strength": 0.0,
+                  "opacity": 0.8,
+                  "hold": 0.65,
+                  "lift_m": 0.02,
+                  "toward_source_scale": 0.0,
+                  "initial_scale": 0.3,
+                  "spread_time": 0.25,
+                  "crack_count": 11
+                }
+              }
+            }
+          }
+        },
         "body": {
           "shape": "ring",
           "motion": "pulse",

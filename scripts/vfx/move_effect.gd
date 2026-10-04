@@ -228,6 +228,10 @@ func _update_bodies(t: float) -> void:
 				var height := float((_row.body as Dictionary).get("sky_height", 6.0))
 				var points: Array[Vector3] = []
 				var contact: Vector3 = _context.get("target_ground", _to) if str(_row.body.get("contact_anchor", "target")) == "target_ground" else _to
+				if _bodies.size() > 1:
+					# Several bolts strike distinct points around the target
+					# instead of drawing one stroke many times.
+					contact += (side * cos(angle) + direction * sin(angle)) * float(_params.get("spread", 0.0)) * float(i > 0)
 				var start := contact + Vector3.UP * height
 				var across := side.cross(Vector3.UP).normalized()
 				var phase := float(int(_context.get("seed", 0)) % 97) * 0.1
