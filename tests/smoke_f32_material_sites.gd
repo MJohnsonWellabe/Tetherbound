@@ -8,6 +8,9 @@ extends SceneTree
 ## unchanged. Actual terrain/body, controller approach, prompt, host context,
 ## typed stock transaction, owner disk write and ACK remain production paths.
 ## This local approach is not an earned inter-region/campaign or ENet proof.
+## --ordinary instead walks to and gathers one already-registered renewable
+## site per tier material of the realm (the per-biome gather census); those
+## need no registry fixture. --realm also takes cloudreach and stormwood.
 const SITES := preload("res://scripts/world/renewable_site_catalog.gd")
 const VALIDATOR := preload("res://scripts/world/essence_node_mount.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
@@ -17,8 +20,11 @@ const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const ADAPTER := preload("res://scripts/net/foundation_resources.gd")
 const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const SCENES := {"meadows": "res://scenes/world/meadows_playground.tscn",
-	"water": "res://scenes/world/water_archipelago.tscn"}
-const CONFIGS := {"meadows": "res://data/config/harvest.json", "water": "res://data/config/water_pickups.json"}
+	"water": "res://scenes/world/water_archipelago.tscn",
+	"cloudreach": "res://scenes/world/cloudreach_cliffs.tscn",
+	"stormwood": "res://scenes/world/stormwood.tscn"}
+const CONFIGS := {"meadows": "res://data/config/harvest.json", "water": "res://data/config/water_pickups.json",
+	"cloudreach": "res://data/config/cloudreach_resources.json", "stormwood": "res://data/config/stormwood_harvests.json"}
 var _args: Dictionary = {}
 var _report := {"checks": [], "sites": [], "earned_campaign": false, "two_peer_rejoin": false,
 	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation"}
@@ -33,9 +39,18 @@ var _failed := false
 var _finished := false
 var _realm := "meadows"
 var _output := ""
+var _soft := false # ordinary census: pre-gather placement refusals try the next site
 
 func _init() -> void:
 	_run.call_deferred()
+
+## Placement-stage gate. In the ordinary census a refused placement is
+## recorded as skipped (production would not mount it either) instead of failing.
+func _pre(value: bool, label: String) -> bool:
+	if value or not _soft: return _check(value, label)
+	_report.checks.append({"ok": true, "skipped": true, "label": label})
+	print("F32 MATERIAL SKIP: ", label)
+	return false
 
 func _check(value: bool, label: String) -> bool:
 	_report.checks.append({"ok": value, "label": label})
@@ -74,6 +89,11 @@ func _run() -> void:
 	_game.get("world").set("world_id", "f32-site-world")
 	_game.get("party").call("add", preload("res://scripts/creatures/creature_species.gd").spawn("terrapup"))
 	_game.get("progression").call("set_flag", "opening:beat:free_play")
+	if _args.has("ordinary"):
+		# Disclosed fixture, granted before admission like the Terrapup: one of
+		# each gathering tool, so tier sites can be gathered with the right tool.
+		for tool: String in ["axe", "pickaxe", "sickle", "hoe"]:
+			if _game.get("items").call("has", tool): _game.get("inventory").call("add", tool, 1)
 	var source_path: String = CONFIGS[_realm]
 	_report.source_path = source_path
 	_report.source_sha256 = FileAccess.get_sha256(source_path)
@@ -111,7 +131,24 @@ func _run() -> void:
 	_driver.set("_nav", NAV.new(self, _player, rig, Callable(_driver, "_send_stick")))
 	await _frames(30)
 	var selected := 0
-	for raw: Dictionary in config.get("additional_material_node_candidates", {}).get("nodes", []):
+	var rows: Array = config.get("additional_material_node_candidates", {}).get("nodes", [])
+	if _args.has("ordinary"): rows = _ordinary_rows()
+	_report.mode = "ordinary" if _args.has("ordinary") else "additional_candidates"
+	for raw: Dictionary in rows:
+		if raw.has("candidates"):
+			# Production placement may refuse a site (and then never mounts it);
+			# the census needs one mountable, gatherable site of the material.
+			selected += 1
+			_soft = true
+			var gathered := false
+			for candidate: Dictionary in raw.candidates:
+				gathered = await _site(candidate, source_path)
+				if gathered:
+					_report.ordinary_census[raw.item] = candidate.id
+					break
+			_soft = false
+			_check(gathered, "census: %s has a mountable, controller-reachable, saved gather" % raw.item)
+			continue
 		if _args.has("site") and _args.site != raw.id: continue
 		selected += 1
 		await _site(raw, source_path)
@@ -119,7 +156,35 @@ func _run() -> void:
 	_check(FileAccess.get_sha256(source_path) == _report.source_sha256, "production source bytes and proof gates unchanged")
 	_finish()
 
-func _site(raw: Dictionary, source_path: String) -> void:
+## One registered ungated renewable site per tier material, lowest ID first.
+## A material with no ungated site is reported as a failed census entry.
+func _ordinary_rows() -> Array:
+	var tiers: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/schema/material_tiers.json"))
+	var biome: String = {"water": "tidewake"}.get(_realm, _realm)
+	var materials: Array = []
+	for tier: Dictionary in tiers:
+		if tier.get("biome") == biome: materials = tier.get("raws", [])
+	var sites := SITES.sites_for(_realm)
+	sites.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return str(a.id) < str(b.id))
+	var result: Array = []
+	_report.ordinary_census = {}
+	for item: String in materials:
+		var chosen: Array = []
+		for site: Dictionary in sites:
+			if site.get("source_additional_material", false) or str(site.get("source_config", "")).ends_with("essence_nodes.json"): continue
+			if site.get("outputs", {}).keys() != [item] or not str(site.get("requires_flag", "")).is_empty() \
+				or not site.get("requires_world_flags", []).is_empty(): continue
+			if _args.has("site") and _args.site != site.id: continue
+			chosen.append(site)
+			if chosen.size() >= 4: break
+		_report.ordinary_census[item] = ""
+		if chosen.is_empty():
+			print("F32 MATERIAL CENSUS no ungated registered renewable site for ", item)
+			continue
+		result.append({"item": item, "candidates": chosen})
+	return result
+
+func _site(raw: Dictionary, source_path: String) -> bool:
 	var id := str(raw.id)
 	var result := {"id": id, "source_evidence": raw.get("terrain_and_player_path_proven"), "authored_at": raw.at,
 		"placement": {}, "controller_approach": false, "accepted_disk_gather": false}
@@ -128,9 +193,18 @@ func _site(raw: Dictionary, source_path: String) -> void:
 	var tuning: Dictionary = _read("res://data/config/essence_nodes.json").get("placement_validation", {})
 	var at := Vector2(float(raw.at[0]), float(raw.at[1]))
 	# These are disclosed start fixtures. Only the later walked segment counts.
+	# Cliff sites: the first 6m ring point on baked ground near the site height.
 	var start := at + Vector2(0, 6)
 	var ground := float(_world.call("ground_height_at", start.x, start.y))
-	if not _check(is_finite(ground), id + " fixture start resolves actual baked ground"): return
+	var site_y := float(raw.get("authored_height", ground))
+	for offset: Vector2 in [Vector2(0, 6), Vector2(6, 0), Vector2(-6, 0), Vector2(0, -6),
+			Vector2(4.5, 4.5), Vector2(-4.5, 4.5), Vector2(4.5, -4.5), Vector2(-4.5, -4.5)]:
+		var y := float(_world.call("ground_height_at", at.x + offset.x, at.y + offset.y))
+		if is_finite(y) and absf(y - site_y) <= 2.0:
+			start = at + offset
+			ground = y
+			break
+	if not _pre(is_finite(ground), id + " fixture start resolves actual baked ground"): return false
 	# Terrain3D streams collision around the render camera. Match the real
 	# arrival staging: hold gravity at the disclosed start while that camera
 	# reaches it, then require actual floor contact before measuring movement.
@@ -153,14 +227,15 @@ func _site(raw: Dictionary, source_path: String) -> void:
 	result.fixture_start = _player.global_position
 	var verdict := VALIDATOR.placement_verdict(_world, raw, _player, tuning)
 	result.placement = verdict
-	if not _check(verdict.get("ok") == true, id + " actual terrain slope and trainer capsule: " + str(verdict)): return
-	if _realm == "water" and not _check(VALIDATOR._additional_water_dry(_world, verdict.position, tuning), id + " actual water plane establishes a dry bed"): return
+	if not _pre(verdict.get("ok") == true, id + " actual terrain slope and trainer capsule: " + str(verdict)): return false
+	if _realm == "water" and not _check(VALIDATOR._additional_water_dry(_world, verdict.position, tuning), id + " actual water plane establishes a dry bed"): return false
 	if not _check(_player.is_on_floor() and _player.global_position.distance_to(verdict.position) >= 4.5,
-		id + " disclosed start is grounded and outside interaction range"): return
-	var parent := SITES.by_id(_realm, str(raw.get("anchor", {}).get("id", "")))
-	if not _check(not parent.is_empty(), id + " ordinary source anchor exists"): return
-	var expected := Vector2(float(parent.at[0]), float(parent.at[1])) + Vector2(float(raw.anchor.offset_xz_m[0]), float(raw.anchor.offset_xz_m[1]))
-	if not _check(expected.is_equal_approx(at), id + " authored offset matches canonical anchor"): return
+		id + " disclosed start is grounded and outside interaction range"): return false
+	var parent := SITES.by_id(_realm, str(raw.get("anchor", {}).get("id", ""))) if raw.has("anchor") else SITES.by_id(_realm, id)
+	if not _check(not parent.is_empty(), id + " ordinary source anchor exists"): return false
+	if raw.has("anchor"):
+		var expected := Vector2(float(parent.at[0]), float(parent.at[1])) + Vector2(float(raw.anchor.offset_xz_m[0]), float(raw.anchor.offset_xz_m[1]))
+		if not _check(expected.is_equal_approx(at), id + " authored offset matches canonical anchor"): return false
 	if SITES.by_id(_realm, id).is_empty():
 		# Test-only admission permits gathering an unshipped candidate; the false
 		# source proof field is preserved. Runtime host admission is not mocked.
@@ -174,9 +249,9 @@ func _site(raw: Dictionary, source_path: String) -> void:
 	_resources.get("_mount_retry").erase(_realm)
 	_resources.call("_mount_realm", _realm, _player)
 	var node: Node3D = _resources.call("_source", _realm, id)
-	if not _check(node != null, id + " production world mount accepts validated candidate"): return
+	if not _check(node != null, id + " production world mount accepts validated candidate"): return false
 	var prompt := node.get_node_or_null(^"Interactable") as Node3D
-	if not _check(prompt != null, id + " actual gather prompt exists"): return
+	if not _check(prompt != null, id + " actual gather prompt exists"): return false
 	_driver.set("_active_walk_purpose", "F32 candidate " + id)
 	var before: Vector3 = _player.global_position
 	var arrived: bool = await _driver.call("_walk_to", node.global_position, 1.6, 600)
@@ -184,12 +259,19 @@ func _site(raw: Dictionary, source_path: String) -> void:
 	result.walk_end = _player.global_position
 	result.walked_metres = Vector2(before.x, before.z).distance_to(Vector2(_player.global_position.x, _player.global_position.z))
 	result.controller_approach = arrived and result.walked_metres >= 3.0 and _player.is_on_floor()
-	if not _check(result.controller_approach, id + " actual controller approach moved at least 3m and remained grounded"): return
-	if not _check(await _driver.call("_prompt_holds_the_line", prompt.get_instance_id()), id + " exact candidate prompt wins ordinary interaction"): return
+	if not _check(result.controller_approach, id + " actual controller approach moved at least 3m and remained grounded"): return false
+	if not _check(await _driver.call("_prompt_holds_the_line", prompt.get_instance_id()), id + " exact candidate prompt wins ordinary interaction"): return false
+	var tool: String = str(_game.get("items").call("gathered_with", str(raw.get("item", ""))))
+	if not tool.is_empty():
+		# Disclosed fixture: equip the item's gathering tool (granted at setup). The host
+		# rule that refuses an unequipped tier gather is unchanged.
+		_game.set("equipped_tool", tool)
+		result.fixture_tool = tool
+		await _frames(10)
 	_saver.call("finish_fallback")
 	if not _check(_saver.call("save_world_prepared", _game, str(_game.get("world").world_id)) == true \
 		and _saver.call("save_character_prepared", _game, str(_game.get("local").character_id)) == true,
-		id + " pre-gather owner and world fixtures saved to isolated disk"): return
+		id + " pre-gather owner and world fixtures saved to isolated disk"): return false
 	var before_disk := _disk("before_" + id.replace(":", "_"))
 	result.lifecycle_before = _resources.get_parent().get_node(^"TravelLifecycle").call("local_sample")
 	result.host_context_before = _resources.call("host_context", int(_game.get("session").call("local_peer_id")),
@@ -200,7 +282,7 @@ func _site(raw: Dictionary, source_path: String) -> void:
 		if _settled.has(id): break
 		await physics_frame
 	result.settlement = _settled.get(id, {})
-	if not _check(ADAPTER.saved_decision(result.settlement.get("verdict", {})), id + " ordinary gather reaches real owner save and ACK"): return
+	if not _check(ADAPTER.saved_decision(result.settlement.get("verdict", {})), id + " ordinary gather reaches real owner save and ACK"): return false
 	var after_disk := _disk("after_" + id.replace(":", "_"))
 	var row: Dictionary = {}
 	for value: Variant in after_disk.world.get("reward_deliveries", {}).values():
@@ -218,6 +300,7 @@ func _site(raw: Dictionary, source_path: String) -> void:
 	var reloaded := preload("res://autoload/world_state.gd").new()
 	reloaded.load_data(after_disk.world)
 	_check(ESSENCE._equivalent(reloaded.renewable_stock_state(_realm, id), stock), id + " actual saved stock survives JSON world reload")
+	return result.accepted_disk_gather
 
 func _on_settled(op: String, id: String, action: String, verdict: Dictionary) -> void:
 	if op == "node": _settled[id] = {"action_id": action, "verdict": verdict.duplicate(true)}
