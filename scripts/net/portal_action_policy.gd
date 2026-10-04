@@ -147,6 +147,8 @@ func evaluate(payload: Dictionary, context: Dictionary, config: Dictionary,
 	if not last is Dictionary or not active is Dictionary:
 		return _deny(kind, "Your waystone progress is not ready.")
 	var selected: String = str(last.get(biome, ""))
+	if biome == "meadows" and not meadows_waystone_return(config):
+		selected = ""
 	if not selected.is_empty():
 		var activated: Variant = active.get(biome, [])
 		if not activated is Array or not activated.has(selected):
@@ -159,6 +161,15 @@ func evaluate(payload: Dictionary, context: Dictionary, config: Dictionary,
 				return _deny(kind, "Your saved return point is invalid.")
 			entry = selected
 	return _permit(kind, _mint(character), context, "water" if biome == "tidewake" else biome, entry)
+
+
+## STATE owner decision #11: while false the home arch is home-only and always
+## lands at the Meadows entry; true returns to the last Meadows waystone.
+static func meadows_waystone_return(config: Variant) -> bool:
+	if not config is Dictionary: return false
+	var home: Variant = config.get("home_arch", {})
+	return home is Dictionary and home.get("returns_to_last_meadows_waystone") is bool \
+		and bool(home.returns_to_last_meadows_waystone)
 
 
 ## RealmTransition consumes this permit. Bare client-selected destinations

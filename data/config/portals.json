@@ -34,6 +34,10 @@
       "downed": "You can't use it while down."
     }
   },
+  "home_arch": {
+    "returns_to_last_meadows_waystone": false,
+    "_comment": "STATE owner decision #11 (BLOCKED_OWNER). false is the conservative shipped rule: the home arch always sends you to the Meadows entry (home), and Meadows waystones still activate by touch. true is the recommendation awaiting the owner: the home arch returns you to your last activated Meadows waystone, exactly as the live biome arches do."
+  },
   "arch": {"interaction_radius_m": 3.2, "refresh_seconds": 0.25, "response_timeout_seconds": 12.0},
   "fifth_stir": {
     "line": "It stirred, but it is not ready yet.",
