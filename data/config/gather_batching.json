@@ -1,0 +1,7 @@
+{
+  "_comment": "Coordinator ruling (b) on the F31#5 co-op gap: a guest's frequent gathers (felled piles, harvest nodes, Stormwood sites) pay into the host's character authority through ONE reward delivery per batch rather than one per hit, so world files, join snapshots and guest escrow stay bounded. max_hits flushes a batch at that many gathers; flush_seconds flushes an open batch that long after its first gather. The host and solo keep their immediate grant.",
+  "enabled": true,
+  "max_hits": 8,
+  "flush_seconds": 1.5,
+  "max_open_items": 24
+}

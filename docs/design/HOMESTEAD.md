@@ -102,9 +102,23 @@ Type crops extend the built farm loop (`farm.json`: berries grow 1 in-game day, 
 | Drowning and currents | Tidewake | Built: `water_swimming.json` drowning; current push per WORLD | Lower swim stamina drain, drowning rate and current push |
 | Cold heights | Cloudreach | Not built: an authored local zone only, never a survival meter (hard rule) | Reduce that zone's stamina-regen penalty |
 | Storm static | Stormwood | Built: `storm_mitigation()` insulation fields | Reduce strike damage |
-| Hazard terrain | Stormwood, Tidewake | Partial: charged ground, `water_hazard.json` submersion | Reduce contact damage |
+| Hazard terrain | Stormwood, Tidewake | Owner 2026-10-05: Stormwood charged ground deals light, never-lethal contact damage to the trainer only; `water_hazard.json` submersion counts as drowning | Reduce contact damage (Rootiron, Stormglass) |
 
 The Stormwood insulated recipes move from field crafting to the home Workbench (big stations only at home, RD-15).
+
+### 7.1 Owner idea: one signature protective piece per biome (2026-10-05, not yet scheduled)
+
+The owner proposed that every biome after the Meadows gives the trainer one recognisable thing to build that protects them from that biome's terrain. Each piece should read at a glance as the answer to that place:
+
+| Biome | Signature piece | Protects against |
+|---|---|---|
+| Cloudreach | A cape | Fall damage |
+| Tidewake | A snorkel | Drowning |
+| Stormwood | Armour or rubber-soled boots | Electrocution (storm static and charged ground) |
+| Volcano mountain (future biome) | Warm-weather gear | Heat |
+| Ice mountain (future biome) | Cold-weather gear | Cold |
+
+This is an idea, not a settled spec. It gives the existing F33#3 hazard mitigation above a concrete item identity per biome; it adds no new hazard, meter or mandatory gear, and §7's limits still apply (protection only, no weapon, shield or creature stat). The volcano and ice mountains belong to the reserved biomes 5–8 (RD-09) and are built in a later pass. Turning any row into built content needs an owner go-ahead and an ACCEPTANCE criterion.
 
 **Tether Command pouch (RD-12, F33#4):** a Workbench-crafted pouch in tiers 1–4 that extends Tether Commands (*starting* per-tier gains: meter capacity, item-throw charges, Snare strength; COMBAT owns the commands and numbers). *Starting design:* the pouch is a backpack-slot item, so the five-slot rule holds (§12 Q3). All trainer gear is personal, persists with the character and follows the existing worn-gear death rule (SYSTEMS §6).
 

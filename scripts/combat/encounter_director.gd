@@ -3107,6 +3107,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
 	var delta: Dictionary = verdict["delta"]
+	if not started.is_empty():
+		# COMBAT §4 forced break: the host's own committed start tick, added
+		# only after validation (which compares the move to the frozen start).
+		move["started_at_ms"] = int(started.get("started_at_ms", -1))
 	var wind_delta: Dictionary = _encounter_host.call("commit_wind", encounter_id,
 		peer_id, int(intent.get("action", 0)), wind_profile, cost, now_ms,
 		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))

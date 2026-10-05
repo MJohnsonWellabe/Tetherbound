@@ -1,0 +1,8 @@
+run1: F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup,
+run2: F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup,
+run3: [village-walk] NOTE sidestep 1 at (107.7,9.6)
+run3: F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup,
+run4: [village-walk] NOTE sidestep 1 at (107.1,11.6)
+run4: F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup,
+run5: [village-walk] NOTE sidestep 1 at (107.6,10.6)
+run5: F17 Hall circuit physical access PASS: all eight arches and eight pedestals reached on actual collision/floor, parsed joypad/look only after inherited initial placement. No mid-route teleport, collision removal, speedup,
