@@ -504,6 +504,14 @@ func _owner_passive_probe(args: Dictionary) -> Dictionary:
 			"checkpoint": (stream.get("checkpoint", {}) as Dictionary).keys(),
 			"cursor_sequence": (stream.get("cursor", {}) as Dictionary).get("sequence"),
 			"refused": (service.get("refused") as Dictionary).keys()}}
+	# The states the two sides fingerprint, so a projection conflict names its field.
+	if not local.is_empty():
+		data.owner["projection"] = service.call("_projection")
+	if not stream.is_empty():
+		var checkpoint: Dictionary = stream.get("checkpoint", {})
+		data.host["cursor_state"] = (stream.get("cursor", {}) as Dictionary).get("state", {})
+		data.host["prefix_match"] = str((checkpoint.get("frozen", {}) as Dictionary).get("prefix_hash", "")) \
+			== str((stream.get("cursor", {}) as Dictionary).get("prefix_hash", "-"))
 	return {"verdict": "PASS", "detail": "owner-passive state", "data": data}
 
 func _craft_count(args: Dictionary) -> Dictionary:

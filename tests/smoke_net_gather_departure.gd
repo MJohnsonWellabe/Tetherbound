@@ -72,8 +72,9 @@ func _run() -> void:
 	await step(1, "wait", {"frames": 180})
 	var crafted := await _dep_data(1, "craft_at_host_kitchen", {"kitchen_uid": placed.kitchen_uid}, 3000)
 	# Diagnostic: both peers' owner-passive state right after the craft.
-	await _dep_data(1, "owner_passive_probe", {"character_id": guest_id})
-	await _dep_data(0, "owner_passive_probe", {"character_id": guest_id})
+	var owner_probe := await _dep_data(1, "owner_passive_probe", {"character_id": guest_id})
+	var host_probe := await _dep_data(0, "owner_passive_probe", {"character_id": guest_id})
+	_print_projection_diff(owner_probe.get("owner", {}).get("projection", {}), host_probe.get("host", {}).get("cursor_state", {}))
 	if not crafted.is_empty():
 		check(int(crafted.after.potion_small) == int(crafted.before.potion_small) + 1,
 			"the rejoined guest's owner-passive stream is alive: it crafts at the host's Kitchen")
@@ -82,6 +83,22 @@ func _run() -> void:
 	if not final_held.is_empty() and not final_back.is_empty():
 		check(final_held.counts == final_back.counts, "host authority still equals the guest after the craft %s" % str(final_held.counts))
 	await _dep_finish()
+
+
+## Diagnostic only: the fields where the owner's projection and the host's
+## replayed cursor state differ (top level, then redesign_character keys).
+func _print_projection_diff(owner_state: Dictionary, host_state: Dictionary) -> void:
+	if owner_state.is_empty() or host_state.is_empty(): return
+	for key: Variant in owner_state.keys() + host_state.keys():
+		var a: Variant = owner_state.get(key)
+		var b: Variant = host_state.get(key)
+		if JSON.stringify(a) == JSON.stringify(b): continue
+		if a is Dictionary and b is Dictionary:
+			for sub: Variant in a.keys() + b.keys():
+				if JSON.stringify(a.get(sub)) != JSON.stringify(b.get(sub)):
+					print("G1 DIFF %s.%s owner=%s host=%s" % [key, sub, JSON.stringify(a.get(sub)).left(1500), JSON.stringify(b.get(sub)).left(1500)])
+		else:
+			print("G1 DIFF %s owner=%s host=%s" % [key, JSON.stringify(a).left(3000), JSON.stringify(b).left(3000)])
 
 
 func _dep_step(peer: int, action: String, args: Dictionary, frames: int = 3000) -> bool:
