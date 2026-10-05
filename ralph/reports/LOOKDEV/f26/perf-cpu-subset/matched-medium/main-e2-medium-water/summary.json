@@ -1,0 +1,68 @@
+{
+  "case": "main-e2-medium-water",
+  "source_commit": "e2fa5e4e6bb0060e5f98f9129f2f2e949f8a37f3",
+  "complete": true,
+  "exit_code": 0,
+  "frames": 120,
+  "average_fps": 9.826906413702442,
+  "one_percent_low_fps": 6.1160770258740635,
+  "minimum_fps": 6.076958603757991,
+  "slow_one_percent_frames": 2,
+  "wall_sum_ms": 12211.371,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "renderer": "forward_plus",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "camera": {
+    "far": 6500.0,
+    "fov": 70.0,
+    "near": 0.0500000007450581,
+    "path": "CameraRig/Camera3D"
+  },
+  "waypoints_reached": 2,
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "native_errors": [],
+  "native_warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: 'res://scenes/masters/master_t3.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+  ],
+  "environment_start": {
+    "hour": 8.14884893333333,
+    "position": [
+      12.0,
+      3.4628279209137,
+      150.0
+    ],
+    "time_of_day": "day"
+  },
+  "environment_end": {
+    "hour": 8.62119001333333,
+    "position": [
+      21.1797637939453,
+      1.11810886859894,
+      168.265579223633
+    ],
+    "time_of_day": "day"
+  },
+  "meets_current_medium_target": false,
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\Tetherbound.pck",
+      "size": 1123167960,
+      "sha256": "66ae5866241f795382753657b941b88b884d4ff7e7aa3dcb50413956fb9e5f7d"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "inventory_path": "main-e2-medium-water/inventory.json"
+}
