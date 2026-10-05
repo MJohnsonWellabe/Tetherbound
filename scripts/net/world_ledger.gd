@@ -154,6 +154,7 @@ const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
 const OWNED_FLAG_PREFIX_MARK := "legendary_resolution:"
 const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
 const DROPPED_FLAG_PREFIX := "dropped:" # dropped_item.gd FLAG_PREFIX
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 ## `reward_grant` sources only host code may journal. These trainers' delivery
 ## rows are the Guardian's and the Warden climax's participant journals, and
 ## since client trainer wins are host-journaled (`trainer_victory`) the host is
@@ -489,8 +490,11 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	if not item.is_empty():
 		var character_id := str(intent.get("_actor_character_id", ""))
 		# Without an admitted character (no session identity to key the receipt
-		# on) the claim keeps the direct grant, as before.
-		if peer_id != HOST_PEER and guest_pickup_routed(flag) and not character_id.is_empty():
+		# on), or for a find the host's world never stood up (nothing to check
+		# the request against), the claim keeps the direct local-only grant, as
+		# before; it never reaches the host's character authority.
+		if peer_id != HOST_PEER and guest_pickup_routed(flag) and not character_id.is_empty() \
+				and not PICKUP_SPECS.lookup(flag).is_empty():
 			# A guest's find is a personal grant from a world source: a journaled
 			# reward delivery, so the host's character authority gains it exactly
 			# once when the guest applies and saves it (owner_passive_sync's
@@ -500,7 +504,11 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 			var gated := _flag_gate(ops, "claim_pickup", peer_id)
 			if not gated.is_empty():
 				return gated
-			var delivery := guest_pickup_delivery(world, flag, character_id, item, count)
+			# The host's own world says what this find holds; the request's item
+			# and count are never trusted on this path (review: a forged claim
+			# would otherwise mint into the host's record).
+			var spec := PICKUP_SPECS.lookup(flag)
+			var delivery := guest_pickup_delivery(world, flag, character_id, str(spec.item), int(spec.count))
 			if delivery.is_empty():
 				return _refuse("claim_pickup", peer_id, "world_not_ready", "Save this world before gathering.")
 			if (world.get("reward_deliveries") as Dictionary).has(str(delivery.delivery_id)):

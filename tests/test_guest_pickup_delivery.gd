@@ -9,6 +9,7 @@ extends "res://tests/test_case.gd"
 const WORLD_STATE := preload("res://autoload/world_state.gd")
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
 const REWARD_DELIVERY := preload("res://scripts/net/reward_delivery.gd")
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 
 const HOST := WORLD_LEDGER.HOST_PEER
 const GUEST := 771_240_190
@@ -23,6 +24,16 @@ func before_each() -> void:
 	world.world_id = "slot-0"
 	world.reward_delivery_namespace = "0123456789abcdef0123456789abcdef"
 	ledger = WORLD_LEDGER.new(world)
+	PICKUP_SPECS.clear()
+	# What the host's own world stood up (item_cache_pickup.gd registers these).
+	PICKUP_SPECS.register("cache:f31_berries", "berries", 4)
+	PICKUP_SPECS.register("cache:once", "fiber", 1)
+	PICKUP_SPECS.register("cache:early", "berries", 1)
+	PICKUP_SPECS.register("cache:anon", "berries", 1)
+
+
+func after_each() -> void:
+	PICKUP_SPECS.clear()
 
 
 func _claim(flag: String, item: String, count: int, character: String) -> Dictionary:
@@ -89,3 +100,26 @@ func test_without_an_admitted_character_the_claim_keeps_the_direct_grant() -> vo
 	var verdict: Dictionary = ledger.call("commit", _claim("cache:anon", "berries", 1, ""), GUEST)
 	assert_true(verdict.get("ok"))
 	assert_eq(str(_ops(verdict, GUEST)[0].get("op")), "item_grant", "nothing to key a receipt on, so behaviour is unchanged")
+
+
+func test_a_forged_item_or_count_is_corrected_from_the_hosts_own_find() -> void:
+	var verdict: Dictionary = ledger.call("commit", _claim("cache:f31_berries", "rare_candy", 99, GUEST_CHARACTER), GUEST)
+	assert_true(verdict.get("ok"))
+	var delivery: Dictionary = _ops(verdict, GUEST)[0].delivery
+	assert_eq(delivery.stacks, [{"id": "berries", "n": 4}],
+		"the host pays what its own world holds there, never the request's item or count")
+
+
+func test_a_find_the_host_never_stood_up_never_reaches_the_authority() -> void:
+	var verdict: Dictionary = ledger.call("commit", _claim("cache:invented_spot", "rare_candy", 99, GUEST_CHARACTER), GUEST)
+	assert_true(verdict.get("ok"), "the legacy local claim still works")
+	assert_eq(str(_ops(verdict, GUEST)[0].get("op")), "item_grant",
+		"but as the local-only grant, so a forged find cannot enter the host's record")
+	assert_true(world.reward_deliveries.is_empty())
+
+
+func test_key_and_tm_finds_take_their_item_from_the_flag() -> void:
+	var key: Dictionary = ledger.call("commit", _claim("pickup:pond_key", "rare_candy", 9, GUEST_CHARACTER), GUEST)
+	assert_eq(_ops(key, GUEST)[0].delivery.stacks, [{"id": "pond_key", "n": 1}])
+	var tm: Dictionary = ledger.call("commit", _claim("tm:tm_gust", "rare_candy", 9, GUEST_CHARACTER), GUEST)
+	assert_eq(_ops(tm, GUEST)[0].delivery.stacks, [{"id": "tm_gust", "n": 1}])

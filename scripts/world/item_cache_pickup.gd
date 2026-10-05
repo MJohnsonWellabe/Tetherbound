@@ -35,6 +35,7 @@ const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 
 const FLAG_PREFIX := "cache:"
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 
 ## The ledger said no, with one sentence a player can act on and the machine tag
 ## behind it. The same surface `storage_container.gd::storage_refused` gives its
@@ -72,6 +73,7 @@ func setup(item_id: String, label: String, model_path: String, model_scale: floa
 	_placement_id = placement_id
 	_realm_id = realm_id
 	_count = maxi(1, count)
+	PICKUP_SPECS.register(flag_id(_item_id, _placement_id, _realm_id), _item_id, _count)
 	add_to_group("progression_restore")
 	_build_visual()
 	_prompt = INTERACTABLE.new()

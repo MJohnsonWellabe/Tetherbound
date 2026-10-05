@@ -64,6 +64,7 @@ const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 ## channel, so a joiner's world snapshot cannot queue behind somebody's gather.
 
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 const SESSION := preload("res://scripts/net/session.gd")
 ## OP-0905-18: a no-op unless the granted item is a known evolution catalyst.
 ## Called from `_apply_player_ops()`'s `item_grant` case, which is already
@@ -401,7 +402,8 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	# A guest's one-time find pays through a journaled reward delivery
 	# (world_ledger._claim_pickup), so it saves like any other reward.
 	var guest_pickup := kind == "claim_pickup" and peer_id != _local_peer_id() and not str(intent.get("item", "")).is_empty() \
-		and WORLD_LEDGER.guest_pickup_routed(str(intent.get("flag", ""))) and not _registered_character(peer_id).is_empty()
+		and WORLD_LEDGER.guest_pickup_routed(str(intent.get("flag", ""))) and not _registered_character(peer_id).is_empty() \
+		and not PICKUP_SPECS.lookup(str(intent.get("flag", ""))).is_empty()
 	var durable_world_transaction := satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:

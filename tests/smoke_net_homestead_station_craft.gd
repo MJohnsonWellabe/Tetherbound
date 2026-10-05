@@ -32,6 +32,9 @@ func _run() -> void:
 	# guest's find pays through a journaled reward delivery, so the host's own
 	# character record (what station crafts read) must gain exactly the find.
 	for find: Array in [["f31_craft_berries", "berries", 4], ["f31_craft_fiber", "fiber", 1]]:
+		# Both peers stand the same find, as both run the same world scene: the
+		# host takes the item and count from its own copy, never the request.
+		if not await _craft_step(0, "pickup_stand", {"id": find[0], "item": find[1], "realm": "meadows", "count": find[2]}): return
 		if not await _craft_step(1, "pickup_stand", {"id": find[0], "item": find[1], "realm": "meadows", "count": find[2]}): return
 		if not await _craft_step(1, "pickup_take", {}): return
 		await step(1, "wait", {"frames": 180})
