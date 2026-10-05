@@ -13,8 +13,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## through the production host strike (host pick -> admitted geared card ->
 ## host_deliver_enemy_hit -> RPC -> guest apply_host_enemy_hit). Asserted:
 ##   * the host's s (from the admitted record) is the Harness's authored s;
-##   * the guest's bar shows max x the HOST's s, at the stored HP fraction;
-##   * the guest's stored HP fell by less than the bar did (damage / s);
+##   * the guest's bar shows max x the HOST's s, at the stored HP fraction,
+##     after the guest dropped the Harness from its own record (so only the
+##     host's s can explain it);
+##   * the guest's stored HP fell by the rolled hit (its own hit_landed) / s;
 ##   * the guest's saved party row holds the base maximum, mid-fight and after.
 ## DISCLOSED FIXTURES (peer side: tests/helpers/harness_hp_net_peer.gd): gear
 ## written into the guest's own record before join; the host's swing placed
@@ -47,6 +49,10 @@ func _run() -> void:
 	var port := int((host_session as Dictionary).get("enet_port", 0)) if host_session is Dictionary else 0
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(joined.get("verdict") == "PASS", "peer 1 joins (%s)" % str(joined.get("detail", "")))
+	# The guest drops its own Harness now, before any fight: the host admitted
+	# it at join, so only the host's s can raise the guest's bar from here on.
+	var unworn: Dictionary = await _hstep(1, "harness_unwear")
+	check(unworn.get("verdict") == "PASS", "the guest's local record no longer carries the Harness")
 	var guest_session: Variant = await probe(1, "session")
 	var guest_peer := int((guest_session as Dictionary).get("peer_id", 0)) if guest_session is Dictionary else 0
 	check(guest_peer > 1, "the guest has a real peer id (%d)" % guest_peer)
@@ -84,6 +90,8 @@ func _run() -> void:
 
 	var before: Dictionary = await _hstep(1, "harness_read")
 	check(bool(before.get("fighting", false)), "the guest is in the fight")
+	check(absf(float(before.get("shown_max", 0.0)) - float(before.get("max_hp", -1.0))) < 0.01,
+		"before the host's hit the guest's own (bare) record shows no raise")
 	var hit: Dictionary = await _hstep(0, "harness_host_hit", {"peer_id": guest_peer})
 	check(hit.get("verdict") == "PASS", "the host's opponent strikes the guest's creature (%s)" % str(hit.get("detail", "")))
 	var host_s := float(hit.get("host_s", 0.0))
@@ -94,7 +102,7 @@ func _run() -> void:
 		after = await _hstep(1, "harness_read")
 		if float(after.get("hp", 0.0)) < float(before.get("hp", 0.0)) - 0.001: break
 	var stored_loss := float(before.get("hp", 0.0)) - float(after.get("hp", 0.0))
-	var shown_loss := float(before.get("shown_hp", 0.0)) - float(after.get("shown_hp", 0.0))
+	var rolled := float(after.get("last_incoming", -1.0))
 	print("harness hit: before %s | after %s" % [str(before.get("detail", "")), str(after.get("detail", ""))])
 	check(stored_loss > 0.0, "the hit reached the guest's creature (stored -%.2f)" % stored_loss)
 	check(absf(float(after.get("shown_max", 0.0)) - float(after.get("max_hp", 0.0)) * host_s) < 0.01,
@@ -102,7 +110,8 @@ func _run() -> void:
 	check(absf(float(after.get("shown_hp", 0.0)) / maxf(0.001, float(after.get("shown_max", 1.0)))
 		- float(after.get("hp", 0.0)) / maxf(0.001, float(after.get("max_hp", 1.0)))) < 0.0001,
 		"the bar shows the stored HP fraction")
-	check(absf(shown_loss - stored_loss * host_s) < 0.01, "the bar fell by the rolled damage, stored HP by damage / s (%.2f vs %.2f)" % [shown_loss, stored_loss])
+	check(rolled > 0.0 and absf(stored_loss - rolled / host_s) < 0.01,
+		"stored HP fell by the rolled hit / the host's s (%.2f = %.2f / %.4f)" % [stored_loss, rolled, host_s])
 	check(absf(float(after.get("saved_max", 0.0)) - float(after.get("max_hp", -1.0))) < 0.0001
 		and float(after.get("saved_max", 0.0)) < float(after.get("shown_max", 0.0)),
 		"mid-fight the guest's saved party row holds the base maximum (%.2f)" % float(after.get("saved_max", 0.0)))

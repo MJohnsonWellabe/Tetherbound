@@ -126,6 +126,13 @@ func _run_initialized_cases() -> void:
 	assert_almost_eq(base_max * 0.5 * host_s - manager.display_hp(creature).x, 100.0, 0.0001,
 		"session hit: a rolled hit of 100 drops the displayed bar by exactly 100")
 	assert_almost_eq(manager.display_hp(creature).y, base_max * host_s, 0.001, "session hit: the bar shows the host's maximum")
+	# A flat potion heals in shown HP: 50 shown = 50 / s stored.
+	var healed: float = manager.scaled_heal(creature, 50.0)
+	assert_almost_eq(healed, 50.0, 0.0001, "a 50 HP potion restores 50 on the raised bar")
+	assert_almost_eq(base_max * 0.5 - 100.0 / host_s + 50.0 / host_s, creature.hp, 0.0001, "and 50 / s of stored HP")
+	# A hit addressed to another creature (switched out meanwhile) does not re-scale this one.
+	manager.apply_host_enemy_hit({"damage": 1.0, "move_id": "", "type_mult": 1.0, "lunge": 0.0, "hp_scale": 1.5, "creature_uid": "creature-other"})
+	assert_almost_eq(float(manager._party_hp_scale[uid]), host_s, 0.0001, "another creature's s is not adopted")
 	manager._party_hp_scale.clear()
 	manager.apply_host_enemy_hit({"damage": 100.0, "move_id": "", "type_mult": 1.0, "lunge": 0.0, "hp_scale": 99.0})
 	assert_true(float(manager._party_hp_scale[uid]) <= float(manager._max_hp_scale()) + 0.0001,
@@ -154,7 +161,7 @@ func test_harness_max_hp_is_fight_scoped_on_the_production_combat_paths() -> voi
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	assert_true(file != null)
 	if file == null: return
-	file.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_harness_max_hp.gd").new()\n\ttest._run_initialized_cases()\n\tprint("HARNESS_HP_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count >= 18 else 1)\n')
+	file.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_harness_max_hp.gd").new()\n\ttest._run_initialized_cases()\n\tprint("HARNESS_HP_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count >= 22 else 1)\n')
 	file.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(path)
@@ -168,5 +175,5 @@ func test_harness_max_hp_is_fight_scoped_on_the_production_combat_paths() -> voi
 	for line: String in combined.split("\n"):
 		if line.begins_with("HARNESS_HP_RESULT="):
 			result = JSON.parse_string(line.trim_prefix("HARNESS_HP_RESULT="))
-	assert_true(int(result.get("assertions", 0)) >= 18, combined)
+	assert_true(int(result.get("assertions", 0)) >= 22, combined)
 	assert_eq(result.get("failures", ["missing result"]), [])

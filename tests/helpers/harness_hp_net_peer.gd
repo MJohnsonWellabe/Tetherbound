@@ -11,12 +11,23 @@ extends "res://tools/net/peer_runner.gd"
 ##     through the PRODUCTION combat_manager._host_resolve_enemy_strike_for_a_
 ##     participant (host pick -> admitted geared card -> host_deliver_enemy_hit
 ##     -> RPC -> the guest's apply_host_enemy_hit).
+##   * `harness_unwear`: removes that Harness from this peer's own record
+##     again (after join), so only the host's s can explain the raised bar.
+##   * `harness_read` also reports the last rolled incoming hit this peer's
+##     CombatManager announced (its production `hit_landed(false, amount)`).
 ##   * `harness_flee`: the production combat_manager.try_flee (what the flee
 ##     button calls), so the fight ends by the ordinary exit.
 ##   * `harness_read`: this peer's active creature as stored, as displayed by
 ##     combat_manager.display_hp, and as the save writes its party row.
 
 const SAVE := preload("res://scripts/save/save_game.gd")
+
+var _last_incoming := -1.0
+var _incoming_listening := false
+
+
+func _on_hit_landed(on_enemy: bool, amount: float) -> void:
+	if not on_enemy: _last_incoming = amount
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -64,6 +75,11 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 			return {"verdict": "PASS" if handled and bool(manager.get("_enemy_strike_connected")) else "FAIL",
 				"detail": "host s %.4f, connected %s" % [host_s, str(manager.get("_enemy_strike_connected"))],
 				"host_s": host_s}
+		"harness_unwear":
+			var uid := str((members[0] as RefCounted).get("uid"))
+			var row: Dictionary = (local.get("redesign_character") as Dictionary).get("creatures", {}).get(uid, {})
+			row.erase("gear")
+			return {"verdict": "PASS", "detail": "%s wears nothing locally" % uid}
 		"harness_flee":
 			var manager := _combat_manager()
 			if manager == null: return {"verdict": "ERROR", "detail": "no CombatManager"}
@@ -71,6 +87,9 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 			return {"verdict": "PASS" if fled else "FAIL", "detail": "try_flee %s (%s)" % [str(fled), str(manager.call("flee_refusal"))]}
 		"harness_read":
 			var manager := _combat_manager()
+			if manager != null and not _incoming_listening:
+				manager.connect("hit_landed", _on_hit_landed)
+				_incoming_listening = true
 			var creature: RefCounted = manager.call("active_creature") if manager != null and manager.call("is_fighting") else members[0]
 			var shown: Vector2 = manager.call("display_hp", creature) if manager != null else Vector2.ZERO
 			var row: Dictionary = SAVE.new("user://harness_hp_probe")._party_to_array(local.get("party"))[0]
@@ -78,5 +97,5 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 				float(creature.get("hp")), float(creature.get("max_hp")), shown.x, shown.y, float(row.max_hp)],
 				"hp": float(creature.get("hp")), "max_hp": float(creature.get("max_hp")),
 				"shown_hp": shown.x, "shown_max": shown.y, "saved_max": float(row.max_hp),
-				"fighting": manager != null and bool(manager.call("is_fighting"))}
+				"fighting": manager != null and bool(manager.call("is_fighting")), "last_incoming": _last_incoming}
 	return {"verdict": "ERROR", "detail": "unknown action " + action}

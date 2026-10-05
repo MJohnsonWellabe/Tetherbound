@@ -3430,6 +3430,7 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 			"move_id": move_id,
 			"lunge": float(cfg.get("lunge", 3.4)),
 			"hp_scale": maxf(1.0, float(card.get("hp_scale", 1.0))),
+			"creature_uid": str(card.get("creature_uid", "")),
 		})
 	return true
 
@@ -4115,16 +4116,32 @@ func _gear_hp_scale(creature: RefCounted) -> float:
 func _adopt_host_hp_scale(creature: RefCounted, payload: Dictionary) -> void:
 	var value: Variant = payload.get("hp_scale")
 	if creature == null or not (value is float or value is int) or not is_finite(float(value)): return
+	# A hit aimed at a creature switched out meanwhile does not re-scale this one.
+	if not str(payload.get("creature_uid", "")) in ["", str(creature.get("uid"))]: return
 	_party_hp_scale[str(creature.get("uid"))] = clampf(float(value), 1.0, _max_hp_scale())
 
 
+static var _max_hp_scale_cached := 0.0
+
+
 static func _max_hp_scale() -> float:
+	if _max_hp_scale_cached > 0.0: return _max_hp_scale_cached
 	var gear := preload("res://scripts/creatures/creature_gear.gd")
 	var cfg: Dictionary = gear.config()
 	var bonus := 0.0
 	for tier: Dictionary in cfg.get("tiers", []):
 		bonus = maxf(bonus, float(tier.get("bonuses", {}).get("max_hp", 0.0)))
-	return 1.0 + bonus * (1.0 + int(cfg.get("max_upgrade", 0)) * float(cfg.get("upgrade_bonus_step", 0.0)))
+	_max_hp_scale_cached = 1.0 + clampf(bonus, 0.0, 1.0) * (1.0 + int(cfg.get("max_upgrade", 0)) * float(cfg.get("upgrade_bonus_step", 0.0)))
+	return _max_hp_scale_cached
+
+
+## A flat heal (potion) in shown HP: in a fight it restores amount / s of
+## stored HP, the share of the raised maximum it would restore; returns the
+## shown HP restored. Out of a fight s is 1 and this is creature.heal().
+func scaled_heal(creature: RefCounted, amount: float) -> float:
+	if creature == null: return 0.0
+	var hp_scale := _gear_hp_scale(creature)
+	return float(creature.call("heal", amount / hp_scale)) * hp_scale
 
 
 ## The HP a fighting creature shows: [hp, max] x its Harness s in a fight,

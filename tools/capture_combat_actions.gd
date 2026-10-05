@@ -43,6 +43,7 @@ var _wild: Node3D = null
 var _ally: Node3D = null
 
 var _written: Array[String] = []
+var _suffix := ""
 var _failures: Array[String] = []
 
 
@@ -64,6 +65,7 @@ func _run() -> void:
 		await physics_frame
 
 	await _ensure_ally()
+	_wear_harness()
 	_leave_the_farmhouse()
 	if not _collect_nodes():
 		_finish()
@@ -98,6 +100,25 @@ func _run() -> void:
 	await _capture("combat_lowhp_charged")
 
 	_finish()
+
+
+## F33 (disclosed fixture): `-- --harness=<item>` writes that Harness into
+## the owner's record for the starter, so the creature block shows the
+## fight-scoped raised HP. Shots then carry a `_harness` suffix.
+func _wear_harness() -> void:
+	var item := ""
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--harness="): item = arg.trim_prefix("--harness=")
+	if item.is_empty(): return
+	var game := root.get_node("Game")
+	var creature: RefCounted = _world.get_node(^"EncounterDirector").call("ally_instance")
+	var character: Dictionary = game.get("local").get("redesign_character")
+	var creatures: Dictionary = character.get("creatures", {})
+	var row: Dictionary = creatures.get(str(creature.get("uid")), {})
+	row["gear"] = {"harness": item, "charm": ""}
+	creatures[str(creature.get("uid"))] = row
+	character["creatures"] = creatures
+	_suffix = "_harness"
 
 
 func _ensure_ally() -> void:
@@ -197,7 +218,7 @@ func _capture(name: String) -> void:
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
 		return
-	var path := "%s/%s.png" % [OUT_DIR, name]
+	var path := "%s/%s%s.png" % [OUT_DIR, name, _suffix]
 	if image.save_png(path) != OK:
 		_failures.append("%s: save_png failed" % name)
 		return

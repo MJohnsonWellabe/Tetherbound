@@ -244,6 +244,8 @@ func test_harness_max_hp_scale_comes_from_the_admitted_record_on_the_host() -> v
 	assert_true(s > 1.24, "Tidesteel +2 raises max HP above its +0 (s=%.3f)" % s)
 	assert_almost_eq(float(director.call("_geared_card", 2, card).hp_scale), s, 0.0001, "the struck card carries the admitted s")
 	assert_almost_eq(float(director.call("_host_hp_scale", 2)), s, 0.0001, "durable vitals stage damage / the admitted s")
+	assert_almost_eq(float(director.call("_ordinary_hit_amount", 2, {"damage": 100.0})), 100.0 / s, 0.0001,
+		"the durable host hit stages rolled damage / s")
 	assert_eq(float(card.max_hp), 100.0, "the announced card's HP is untouched")
 	session.record = _record()
 	assert_eq(float(director.call("_host_hp_scale", 2)), 1.0, "no Harness: s = 1, though the announced card said 1.7")

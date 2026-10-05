@@ -4419,13 +4419,14 @@ func _any_hotbar_action_live() -> bool:
 	return false
 
 
-## The same defensive CombatManager lookup the minimap dim uses; false when
-## no world or no manager is reachable, so menus and tests are unaffected.
+## F33: the scene's CombatManager, or null (menus and tests without a world).
 func _combat_manager_node() -> Node:
 	var world := get_tree().get_current_scene() if is_inside_tree() else null
 	return world.get_node_or_null(^"CombatManager") if world != null else null
 
 
+## The same defensive CombatManager lookup the minimap dim uses; false when
+## no world or no manager is reachable, so menus and tests are unaffected.
 func _combat_is_running() -> bool:
 	var world := get_tree().get_current_scene()
 	if world == null:
@@ -4718,7 +4719,10 @@ func _use_hotbar_slot(slot_index: int) -> void:
 		_show_hotbar_message("Everybody's already at full health.")
 		return
 
-	var restored := float(heal_target.call("heal", heal))
+	# F33: in a fight a Harness raises the shown maximum; the heal is in shown HP.
+	var combat := _combat_manager_node()
+	var restored := float(combat.call("scaled_heal", heal_target, heal)) if combat != null and combat.has_method("scaled_heal") \
+		else float(heal_target.call("heal", heal))
 	inventory.call("remove", id, 1)
 	_show_hotbar_message("%s recovers %d." % [str(heal_target.call("label")), int(restored)])
 

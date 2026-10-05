@@ -3573,7 +3573,13 @@ func _geared_card(peer_id: int, card: Dictionary) -> Dictionary:
 ## Harness max HP for the participant's deployed creature, from the admitted
 ## record (the host's own record for itself). Durable vitals lose damage / s.
 func _host_hp_scale(peer_id: int) -> float:
-	return maxf(1.0, float(_geared_card(peer_id, _creature_card_for(peer_id)).get("hp_scale", 1.0)))
+	return clampf(float(_geared_card(peer_id, _creature_card_for(peer_id)).get("hp_scale", 1.0)),
+		1.0, preload("res://scripts/combat/combat_manager.gd")._max_hp_scale())
+
+
+## The stored HP a durable host hit stages: rolled damage / the admitted s.
+func _ordinary_hit_amount(peer_id: int, resolved: Dictionary) -> float:
+	return float(resolved.get("damage", 0.0)) / _host_hp_scale(peer_id)
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
@@ -3683,7 +3689,7 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	if resolved.is_empty(): return
 	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", id, peer,
 		str(binding.creature_uid), int(binding.actor_generation), int(actor.revision),
-		action_id, "damage", float(resolved.damage) / _host_hp_scale(peer), limit)
+		action_id, "damage", _ordinary_hit_amount(peer, resolved), limit)
 	if proposal.get("ok") != true: return
 	var retained: Dictionary = {"encounter_id": id, "peer_id": peer,
 		"proposal": preload("res://scripts/combat/accepted_action_host.gd")._original(proposal),
