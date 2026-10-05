@@ -287,6 +287,8 @@ static func host_reconcile(session: Node, peer: int, request: Dictionary) -> Dic
 	var authority: RefCounted = session.get("_character_authority")
 	if authority == null or authority.call("_training_locked", bound.character) == true:
 		return {"ok": false, "code": "owner_action_pending"}
+	if _owner_delivery_unsettled(bound.world, bound.character, request.delivery_id):
+		return {"ok": false, "code": "owner_delivery_pending"}
 	if session.call("_altar_peer_in_combat", peer) == true: return {"ok": false, "code": "actor_in_combat"}
 	var source: Variant = bound.personal.get("portal_escrow", {}).get(request.delivery_id)
 	var action := "home_key_deliver"
@@ -318,6 +320,18 @@ static func host_reconcile(session: Node, peer: int, request: Dictionary) -> Dic
 	var actions: Script = load("res://scripts/net/foundation_actions.gd")
 	return actions.commit(authority, session.get_node(^"LedgerRpc"), peer, bound.character,
 		context.expected_revision, action, intent, context)
+
+
+## A reward delivery (a find, a gather batch) the owner may already hold but
+## the host has not yet accepted: the admitted record lacks it, so a
+## full-record Home Key row staged now would conflict on the owner's baseline
+## and hold every later owner write. The owner re-sends its delivery request,
+## so this waits for the next one. Typed rows have their own guards; the gift's
+## own row is the one being reconciled.
+static func _owner_delivery_unsettled(world: RefCounted, character: String, gift_id: String) -> bool:
+	for row: Dictionary in REWARD.pending_for_character(world, character):
+		if row.get("delivery_id") != gift_id and not row.has("kind"): return true
+	return false
 
 
 static func authoritative_owned(session: Node, peer: int) -> bool:

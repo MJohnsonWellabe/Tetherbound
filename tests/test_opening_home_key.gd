@@ -303,3 +303,25 @@ func test_a_rejected_gift_request_records_no_evidence() -> void:
 	assert_eq(probe.noted, [], "no evidence for an unadmitted or foreign request")
 	assert_eq(_game.world.reward_deliveries.size(), 0)
 	probe.free()
+
+
+func test_reconcile_waits_while_another_owner_delivery_is_unsettled() -> void:
+	# render.yml 37378022226: a returning guest past the opening gathered
+	# berries while its legacy Home Key row was staged against an admitted
+	# record without them; the owner apply conflicted and held every write.
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	assert_true(OPENING.host_legacy_grant(_session, 7).get("durable") == true)
+	var request := _settlement()
+	request.origin_namespace = NAMESPACE
+	var find := REWARD.make_record(_game.world.world_id, NAMESPACE, "gather_batch:1", CHARACTER, "berries", 2)
+	_game.world.reward_deliveries[find.delivery_id] = find
+	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "owner_delivery_pending",
+		"a find the owner may already hold blocks the full-record Home Key row")
+	var other := REWARD.make_record(_game.world.world_id, NAMESPACE, "gather_batch:1", "someone-else", "berries", 2)
+	_game.world.reward_deliveries.erase(find.delivery_id)
+	_game.world.reward_deliveries[other.delivery_id] = other
+	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "actor_in_combat",
+		"another character's delivery and the gift's own pending row do not block (the fixture then stops at combat)")
+	find.status = "accepted"
+	_game.world.reward_deliveries[find.delivery_id] = find
+	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "actor_in_combat", "an accepted find no longer blocks")
