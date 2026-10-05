@@ -1,0 +1,136 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 11763,
+      "sha256": "54649dfaf6dc1da6bcce4f9af9dde5105ff253801d4038a9104440b88e0542a3"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 3519017,
+      "sha256": "5e517f3e90cd73f8b547930b1e05ff5400eabc984567636981eb53fa0808469f"
+    },
+    {
+      "path": "raw-evidence-03.zip",
+      "size": 30947673,
+      "sha256": "06777b526cb6e7781e0836d98a51787af49706a738698a10a4696f01b918d073"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 88096,
+      "sha256": "03092dd980ea29eda3567bbf12aeaa91f341421cb184bd028160d7c2e3840c95"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1035,
+      "sha256": "2706fdbbb8613395a36a414ecef20544b76fa35b2de4afa922fd83ac4fdd3d89"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 386,
+      "sha256": "a45afe5d2e7b3d6da9de8bacae624d8e7dfade2daac8bee2df8649ccb92bfb30"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-02.zip",
+      "size": 217615009,
+      "sha256": "ca1ac85a2974067e26063291d08f39d20f0b5d819355d5b97837dc95cf6c104e"
+    },
+    {
+      "path": "frames/manifest.json.previous",
+      "archive": "raw-evidence-03.zip",
+      "size": 217614905,
+      "sha256": "eca3685df2c3e4d72a63aebd41951970155c9b21bfae557591ef586f8a746af7"
+    },
+    {
+      "path": "frames/stormwood__cinder_verge__01__the_struck_sentinel__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2464725,
+      "sha256": "aae2f60d4afce5bdbe444942e958929a9b7f9553a9a67404854483dbaba116fd"
+    },
+    {
+      "path": "frames/stormwood__cinder_verge__02__verge_rod_station__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2204879,
+      "sha256": "dee62f242c4c74cb69f4b2ea224c0b971336a074a43b712ce657cbc3e1769b8e"
+    },
+    {
+      "path": "frames/stormwood__conductor_run__05__rodline_post__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2397425,
+      "sha256": "d853365dd6bc213e7389d68cd9eb944d10991a981c5181421a087374c457a558"
+    },
+    {
+      "path": "frames/stormwood__conductor_run__06__the_capacitor_grove__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2394789,
+      "sha256": "86aa60a76946290a8da10ba4c120863d053892edc0122509919e31bf30baee50"
+    },
+    {
+      "path": "frames/stormwood__deepwood__09__lantern_hollow__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2344931,
+      "sha256": "7ccab92c1f8bad4b747722453ba5d8e3be8529803900156552ce2d125821c0ea"
+    },
+    {
+      "path": "frames/stormwood__deepwood__10__the_fallen_giant__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2171506,
+      "sha256": "534e4e2dc8066aca4da69b134de7e0ec6598e0da20162bfd7d170d2aa3d7f97d"
+    },
+    {
+      "path": "frames/stormwood__dynamo__11__the_glass_field__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2511214,
+      "sha256": "176f676d626a9a3eddbe548fb8e694284cb4b2b98e3b810372e28ec48b8b987d"
+    },
+    {
+      "path": "frames/stormwood__dynamo__12__the_stormheart_tree__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2108620,
+      "sha256": "23f6f1499d008b89485c5d876c271ee5954d9b5b3dd3992e4d9a843fa897ed3e"
+    },
+    {
+      "path": "frames/stormwood__glowmoss_hollows__03__the_lantern_pools__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2405597,
+      "sha256": "b7df4cb2c57bd420c5078ab1edfda433304fdc06ccbbd09f74d23e8686b2ba09"
+    },
+    {
+      "path": "frames/stormwood__glowmoss_hollows__04__crown_overlook__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2306480,
+      "sha256": "c8f5c007363a2edf9c7c5a5d52105980e3d823ea6e58c301b1ff240bbde3b44a"
+    },
+    {
+      "path": "frames/stormwood__hollow_crown__07__the_crown_arch__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 1963383,
+      "sha256": "917718421bdaf5e3086385fe02d2a1c65fc66710811356219b42e996b5eebc2a"
+    },
+    {
+      "path": "frames/stormwood__hollow_crown__08__the_crown_heartstone__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2144414,
+      "sha256": "c913e722aefbc5f6a4beed5875e01d101e035f40667c41259cdad6a84d2b24e6"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
