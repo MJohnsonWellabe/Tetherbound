@@ -1,0 +1,218 @@
+{
+  "source_commit": "bda902bb5aea4159236ec1e5eb23757e4a0020a8",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-f17-356afa08",
+    "--rendering-method",
+    "gl_compatibility",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tests/capture_f17_visual_matrix.gd",
+    "--",
+    "--capture-dir=D:/tetherbound/.artifacts/rs-f17-2/low/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 432.484,
+  "native_elapsed_seconds": 424.094,
+  "native_started_utc": "2026-10-05T14:16:36.277270+00:00",
+  "preset": "Low",
+  "profile": "D:\\tetherbound\\.artifacts\\rs-f17-2\\low\\profile",
+  "scope": "Existing authored route capture fixture; no earned campaign, FPS, co-op or handheld claim.",
+  "failure_lines": [
+    "[village-walk] NOTE sidestep 1 at (106.7,8.5)",
+    "[village-walk] NOTE sidestep 2 at (108.3,9.0)",
+    "[village-walk] NOTE sidestep 3 at (109.7,7.6)"
+  ],
+  "errors": [],
+  "capture_complete": true,
+  "manifest_rows": 43,
+  "png_count": 43,
+  "missing_images": [],
+  "png_dimensions": {
+    "farm-door_day_clear.png": [
+      1920,
+      1061
+    ],
+    "farm-door_day_rain.png": [
+      1920,
+      1061
+    ],
+    "farm-door_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "farm-door_night_clear.png": [
+      1920,
+      1061
+    ],
+    "farm-door_night_rain.png": [
+      1920,
+      1061
+    ],
+    "hall-approach-reverse_day_clear.png": [
+      1920,
+      1061
+    ],
+    "hall-approach-reverse_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "hall-approach-reverse_night_clear.png": [
+      1920,
+      1061
+    ],
+    "hall-approach_day_clear.png": [
+      1920,
+      1061
+    ],
+    "hall-approach_day_rain.png": [
+      1920,
+      1061
+    ],
+    "hall-approach_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "hall-approach_night_clear.png": [
+      1920,
+      1061
+    ],
+    "hall-approach_night_rain.png": [
+      1920,
+      1061
+    ],
+    "nave-arches-left_day_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-arches-left_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-arches-left_night_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-arches-right_day_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-arches-right_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-arches-right_night_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-forward_day_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-forward_day_rain.png": [
+      1920,
+      1061
+    ],
+    "nave-forward_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-forward_night_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-forward_night_rain.png": [
+      1920,
+      1061
+    ],
+    "nave-reverse_day_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-reverse_day_rain.png": [
+      1920,
+      1061
+    ],
+    "nave-reverse_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-reverse_night_clear.png": [
+      1920,
+      1061
+    ],
+    "nave-reverse_night_rain.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals-reverse_day_clear.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals-reverse_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals-reverse_night_clear.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals_day_clear.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals_day_rain.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals_night_clear.png": [
+      1920,
+      1061
+    ],
+    "shrine-pedestals_night_rain.png": [
+      1920,
+      1061
+    ],
+    "street-mid-left_day_clear.png": [
+      1920,
+      1061
+    ],
+    "street-mid-left_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "street-mid-left_night_clear.png": [
+      1920,
+      1061
+    ],
+    "street-mid-right_day_clear.png": [
+      1920,
+      1061
+    ],
+    "street-mid-right_golden_clear.png": [
+      1920,
+      1061
+    ],
+    "street-mid-right_night_clear.png": [
+      1920,
+      1061
+    ]
+  },
+  "runtime_qualification": "PASS",
+  "native_1080_qualification": false,
+  "requested_resolution_acceptance": "F17-2 request explicitly accepts 1920x1061 originals for judging; no resizing.",
+  "source_tool_sha256": "426a4391e315cf09ace1aaf547e6ebcb1410764c491078c536631ee0b01a72a9",
+  "gpu": "NVIDIA GeForce GTX 1060 3GB",
+  "visual_quality": "OPEN; Claude lane judges the frames."
+}

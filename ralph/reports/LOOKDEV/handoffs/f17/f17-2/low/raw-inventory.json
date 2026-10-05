@@ -1,0 +1,316 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 46884959,
+      "sha256": "14e3533e2c0d6f3c63aceedffb7dd1f6f2c157048329fdd2e3208c2f3f5c75d7"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 46237469,
+      "sha256": "1a7fbb2c54182ca0fee527a187e55d5d2d0381d63a3cc1a6295d7bafc8095136"
+    },
+    {
+      "path": "raw-evidence-03.zip",
+      "size": 44353176,
+      "sha256": "b6d48c03b287c1a129032517e5e92540ce1a22a2be645ba8380ceb5340363883"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 13531,
+      "sha256": "aecc0e10fe32e8b9f6f111439d6a511cb68810cb33acb9a3649fe2e10a7cebd5"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 4808,
+      "sha256": "cd1f14223af5a439919f4236b9c3f191f4a8bce09b14a044827fad575fae9f0e"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 109,
+      "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 369,
+      "sha256": "60bf548a9630897929b4daf6a028ca12263b534a3c0aa5af41f6367f612af535"
+    },
+    {
+      "path": "frames/frames.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 15287,
+      "sha256": "28997a23d51c0958874c080f81b776b78a9e439fd0018697fb133e2c86697279"
+    },
+    {
+      "path": "frames/farm-door_day_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3375257,
+      "sha256": "8e1d35b41713d56a6ab77ec612fd025626758cd8d2777b786c711b7f614ed63d"
+    },
+    {
+      "path": "frames/farm-door_day_rain.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3140914,
+      "sha256": "42ffd61dc7c0f15b553cf6a0022141accb95a011b9320e61e8bbe43509d6adb3"
+    },
+    {
+      "path": "frames/farm-door_golden_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3072009,
+      "sha256": "9dd702a1edd00372a5d60a4aef87d03c25edd2bd1b96395b65fff374dd861061"
+    },
+    {
+      "path": "frames/farm-door_night_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2847159,
+      "sha256": "b417697c781ee9192de52c3e0d3ac159689343202485783ce5f7aff1b1acf9dd"
+    },
+    {
+      "path": "frames/farm-door_night_rain.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3030360,
+      "sha256": "175b6ec5b912b91bbd7c37019f668d68cad69f9ca32b3414695ca02076a7ff2b"
+    },
+    {
+      "path": "frames/hall-approach-reverse_day_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3386106,
+      "sha256": "aeaf2761fb77281d5ae92b79b17299d9fa3ef184c9992297df8ae33636ae4520"
+    },
+    {
+      "path": "frames/hall-approach-reverse_golden_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2941392,
+      "sha256": "2df66f3d7a1b55f6b75545d8bdcb1aaeb0e6e62e5091b2ba0eb59f3cd4246204"
+    },
+    {
+      "path": "frames/hall-approach-reverse_night_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2827990,
+      "sha256": "bc4658b42927e906fca2d48d54bb42004c8cdb435f19e25779447fb939a66dba"
+    },
+    {
+      "path": "frames/hall-approach_day_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3521623,
+      "sha256": "0b4746434cbc23e6edc1ec4817507da154b0a4df12526d197dce8921b6a2aba9"
+    },
+    {
+      "path": "frames/hall-approach_day_rain.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3279231,
+      "sha256": "5a782f9c28a197eb788bd0dfe29c1152e57d83c390b09067e9b8cc7c7ae48965"
+    },
+    {
+      "path": "frames/hall-approach_golden_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3339661,
+      "sha256": "9e7cdfdd6447008e520377178dbbbc3feebb01642158af4b0c7cc87679662034"
+    },
+    {
+      "path": "frames/hall-approach_night_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2797703,
+      "sha256": "73bbfa2ab7dbf838be7a4de17f2aadf3be8f3566a8d4e82417f15affda425d18"
+    },
+    {
+      "path": "frames/hall-approach_night_rain.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3081730,
+      "sha256": "6f0a6d8bf2686e6273c83e26cdb0fbccf1d1acc590a1911ceff9f65f25e782fa"
+    },
+    {
+      "path": "frames/nave-arches-left_day_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3177092,
+      "sha256": "ae76437e8a81a0d16528be02f423ec65f9aeb70e40cb6125e62df0ae8054fbcf"
+    },
+    {
+      "path": "frames/nave-arches-left_golden_clear.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3029872,
+      "sha256": "77670f2ec62c5b8cba79457f016bdf205e3f204cf237eecbe581a72ad7edc3f9"
+    },
+    {
+      "path": "frames/nave-arches-left_night_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3056087,
+      "sha256": "5fcebbded202b5b455bef6beb04f59e33878290cefd79dd463033aea49add2d8"
+    },
+    {
+      "path": "frames/nave-arches-right_day_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3368805,
+      "sha256": "3788e2f651c0891017781f6fed34ee41984dc5f565f0bb3fd1278628a423b681"
+    },
+    {
+      "path": "frames/nave-arches-right_golden_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3270950,
+      "sha256": "c3ce4871c70e4721aaed68a22a1e2c34e6b8c4110a83519751aba0a7b90f21a4"
+    },
+    {
+      "path": "frames/nave-arches-right_night_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3536145,
+      "sha256": "c2fbc9965cbb6b7e2a55d5ec84c0067cb66ce1aa7e5c6e792f4dbba97120c5fc"
+    },
+    {
+      "path": "frames/nave-forward_day_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3297546,
+      "sha256": "7421982326ceb4d4eaf5de1558f581a5cef6969bb72a6af83f749a8d937b8451"
+    },
+    {
+      "path": "frames/nave-forward_day_rain.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3439113,
+      "sha256": "6ee15ca89447362c21eecec3363cd95ee35270fd83663ca2a310d4e41c3ef587"
+    },
+    {
+      "path": "frames/nave-forward_golden_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3131042,
+      "sha256": "10b50d7a7ff763dd935762de68b194dc6824030b49c961c0740a371426656cbc"
+    },
+    {
+      "path": "frames/nave-forward_night_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3021047,
+      "sha256": "5de145c43137aae7bb9cf64ef2216b6b770a83361bef4db47a6e4f246bebe715"
+    },
+    {
+      "path": "frames/nave-forward_night_rain.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3203816,
+      "sha256": "8b1b4b769972f75a9219aff9bc4d0338cb48ead9bae1770e69ba461f4bce38ba"
+    },
+    {
+      "path": "frames/nave-reverse_day_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3332616,
+      "sha256": "0a1f931c28ea235e59a5ada4a41ff08912ba74b04f38f169d0f76499eeb4a7b3"
+    },
+    {
+      "path": "frames/nave-reverse_day_rain.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3485926,
+      "sha256": "eee855d1b2a257067d38cf7693f021a8439122f7e25705505dfbe8bc65a5dc43"
+    },
+    {
+      "path": "frames/nave-reverse_golden_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3215310,
+      "sha256": "8ec860e627bfa9918e0d6037f7a0b2ffe79fa6b1ac6803c8e8ae93a579cfd133"
+    },
+    {
+      "path": "frames/nave-reverse_night_clear.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3415914,
+      "sha256": "1e0c9c23524be43e48e27e04e0133f05117673409b85e841e594aa1f0133a527"
+    },
+    {
+      "path": "frames/nave-reverse_night_rain.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3461070,
+      "sha256": "14230723552beb1376f509a3696c8e61c3f41d8e47c0f7c0d9074d77a2438c84"
+    },
+    {
+      "path": "frames/shrine-pedestals-reverse_day_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3176317,
+      "sha256": "72672d91ec4b24d3515020ca6eb9604d358e7c041e5f1ceb4eb03871929b3c0f"
+    },
+    {
+      "path": "frames/shrine-pedestals-reverse_golden_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3077976,
+      "sha256": "500f0b4e9b0f7d8ae8e639921a4899ff932e39d205f481b3a0012ab00c781e2a"
+    },
+    {
+      "path": "frames/shrine-pedestals-reverse_night_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3216104,
+      "sha256": "1b4be4db2185f496bbcdb88df8ab99059d0b0aa82c61960c9722a514c7bc0625"
+    },
+    {
+      "path": "frames/shrine-pedestals_day_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3388025,
+      "sha256": "c9254409e31b070c058a2193b08057fa8562f30a97245f6d7a26a36585d520f2"
+    },
+    {
+      "path": "frames/shrine-pedestals_day_rain.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3464179,
+      "sha256": "808cd5c218b12fd2750fdea5e44ce7cc71294c4de8ecb6381cff9c5002f29d91"
+    },
+    {
+      "path": "frames/shrine-pedestals_golden_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3283777,
+      "sha256": "929b53506c8ff6d9a62c1e8d073c4b1f519a30b2671a96282af5b61f30f21d14"
+    },
+    {
+      "path": "frames/shrine-pedestals_night_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3390660,
+      "sha256": "5d2ae0fef7aded75fb2adc81d0d8da20e9e756de6aa4119ce02e7b68ca8ca364"
+    },
+    {
+      "path": "frames/shrine-pedestals_night_rain.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3397394,
+      "sha256": "fb5d8a671bc124d701deb259c85448e949601da172379c2a6498750b45b6f229"
+    },
+    {
+      "path": "frames/street-mid-left_day_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3377399,
+      "sha256": "fe594c378e1c762feac73fcf6bc9fa5e486f0856a1049198ff7d0b40c64edab5"
+    },
+    {
+      "path": "frames/street-mid-left_golden_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3065384,
+      "sha256": "ba6a790db481cb26ca505abd8b1863745e9b629dcb60a292e0ee483a22f9cb1b"
+    },
+    {
+      "path": "frames/street-mid-left_night_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2902744,
+      "sha256": "55f076d24cb57549b42b3858bbf590869e78582ac487c0593dd67e3629d39244"
+    },
+    {
+      "path": "frames/street-mid-right_day_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3246633,
+      "sha256": "38c684871c483351f343e636303cfb841e76d436429e3e7d4314b845fd380a1c"
+    },
+    {
+      "path": "frames/street-mid-right_golden_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2873828,
+      "sha256": "194e3b1b0de671c28d7dcafdf20ec0c9997467601499345f64cd5894c1852bc1"
+    },
+    {
+      "path": "frames/street-mid-right_night_clear.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2490552,
+      "sha256": "8a66467f545896df9eb7f6780cab3bb6434d0824b20cf2bf4a8dac7a83f2fc91"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 131,
+      "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
+    }
+  ]
+}
