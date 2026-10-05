@@ -21,6 +21,8 @@ per role:
   contract;
 - the state digest, with its readable summary (versions, document keys, realm,
   party, flags, satchel).
+- the sha256 of every committed file, so any hand edit is refused, including
+  a field the digest does not summarise.
 
 The **start contract** of every boundary is one dictionary in
 `tests/helpers/ci_segments.gd` `BOUNDARIES`. Three checks read it:
@@ -41,11 +43,13 @@ The **start contract** of every boundary is one dictionary in
 
    Deliberately stale copies must fail.
 
-**Stale?** The failure says `re-generate checkpoint <boundary> with
-tools/ci/segments/regen.sh <boundary>`. That command re-runs the producer
-segment through the real game and installs what it saved. Regenerate
-upstream boundaries first, because a producer starts from its own upstream
-checkpoint. Then commit the result.
+**Stale?** The failure names the command. Run
+`tools/ci/segments/regen.sh <chain>` (`midride` or `bracket`): one step
+regenerates every boundary of the chain, upstream first, by re-running each
+producer segment through the real game and installing what it saved.
+`regen.sh <boundary>` redoes a single boundary when its upstream is fresh.
+Commit `tests/fixtures/segments/` in the same commit as the change that made
+the checkpoint stale.
 
 ## midride (F06 mid-ride two-peer rejoin)
 

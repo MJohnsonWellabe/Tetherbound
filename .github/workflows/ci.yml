@@ -3351,6 +3351,55 @@ jobs:
           path: ${{ runner.temp }}/f06-midride
           retention-days: 7
 
+  # CI-SEGMENTS: the UNBROKEN versions of the segmented chains (owner's accepted
+  # pushback, 2026-10-04: keep a continuous playthrough on the scheduled full
+  # tier only). Segments start fresh processes from disk, so a buildup a
+  # segment boundary resets -- the same guest process dropped twice, a host
+  # that already saw a rejoin, memory/save growth, timers drifting across
+  # rounds -- is only visible here. Schedule and dispatch only, never a PR,
+  # continue-on-error like the known-red probes: it shows on the board and
+  # never blocks a merge. Segments + verify-segment-handoffs gate every run.
+  verify-unbroken-chains:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chain: [midride, bracket]
+    timeout-minutes: 45
+    needs: changes
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify the unbroken F06 mid-ride rejoin scenario
+        if: ${{ matrix.chain == 'midride' }}
+        timeout-minutes: 35
+        run: |
+          set -uo pipefail
+          out="${RUNNER_TEMP}/f06-midride"
+          mkdir -p "$out/net"
+          TB_PROOF_SCENARIO="$PWD/tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json" \
+          TB_PROOF_OUT="$out" TB_NET_RUN_ID="net-f06mr-ci-${GITHUB_RUN_ID}" \
+          TB_NET_OUT_DIR="$out/net" TB_NET_PEERS=2 \
+            godot --headless --path . --script tests/smoke_cloudreach_rejoin_closed_gate_proof.gd
+          rc=$?
+          echo "::group::PROOF.md"; cat "$out/PROOF.md" 2>/dev/null | head -40; echo "::endgroup::"
+          exit $rc
+      - name: Verify the whole tournament bracket in one process
+        if: ${{ matrix.chain == 'bracket' }}
+        run: timeout 900s godot --headless --path . --script tests/smoke_tournament_bracket.gd
+
   # CI-SEGMENTS (owner 2026-10-04): one HANDOFF job per segmented chain. Per
   # boundary (tests/helpers/ci_segments.gd): the committed checkpoint is at
   # the current save VERSION, loads through the production SaveGame.load_slot,
@@ -3402,6 +3451,7 @@ jobs:
       - verify-veridian-offer
       - verify-cloudreach-midride-rejoin
       - verify-segment-handoffs
+      - verify-unbroken-chains
       - verify-cloudreach-persistence
       - verify-bake-freshness
       - verify-unit-tests

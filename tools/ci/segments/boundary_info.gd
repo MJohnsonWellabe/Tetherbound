@@ -5,6 +5,7 @@ extends SceneTree
 ## table the checks use (tests/helpers/ci_segments.gd) instead of a copy.
 ##
 ##   godot --headless --path . --script tools/ci/segments/boundary_info.gd -- --boundary=midride/setup
+##   godot --headless --path . --script tools/ci/segments/boundary_info.gd -- --chain=midride
 
 const SEGMENTS := preload("res://tests/helpers/ci_segments.gd")
 
@@ -14,6 +15,14 @@ func _initialize() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--boundary="):
 			boundary = arg.substr("--boundary=".length())
+		elif arg.begins_with("--chain="):
+			# `BOUNDARY_LIST a b c`: the chain's boundaries, upstream first.
+			var chain := arg.substr("--chain=".length())
+			var names: Array = SEGMENTS.boundary_names().filter(func(b: String) -> bool:
+				return str(SEGMENTS.BOUNDARIES[b]["chain"]) == chain)
+			print("BOUNDARY_LIST " + " ".join(names))
+			quit(0 if not names.is_empty() else 2)
+			return
 	if not SEGMENTS.BOUNDARIES.has(boundary):
 		printerr("unknown boundary '%s' (known: %s)" % [boundary, ", ".join(SEGMENTS.boundary_names())])
 		quit(2)

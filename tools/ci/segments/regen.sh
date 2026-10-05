@@ -1,24 +1,36 @@
 #!/usr/bin/env bash
-# Re-generate one CI segment checkpoint by RUNNING its producer segment(s)
+# Re-generate CI segment checkpoints by RUNNING their producer segments
 # through the real game and save code, then installing what they saved.
 #
-#   tools/ci/segments/regen.sh <boundary>        e.g. midride/setup
+#   tools/ci/segments/regen.sh <chain>        e.g. midride: every boundary, upstream first
+#   tools/ci/segments/regen.sh <boundary>     e.g. midride/after_b: just that one
 #
-# For each role of the boundary (tests/helpers/ci_segments.gd BOUNDARIES), runs
-# the producer scenario with TB_SEGMENT_REGEN=1; its `seg_checkpoint` step
-# checks the contract on the save it just wrote and records the state digest.
-# Then replaces tests/fixtures/segments/<boundary>/<role>/ with that capture's
-# saves/, worlds/ and characters/ (gzipped, deterministic header) and writes
-# manifest.json (digest, character id, producer fingerprint, commit). Never
-# edit a checkpoint by hand: the handoff check refuses a manifest mismatch.
-# Upstream boundaries must be fresh first (a producer starts from them).
+# For each role of a boundary (tests/helpers/ci_segments.gd BOUNDARIES), runs
+# the producer scenario/smoke with TB_SEGMENT_REGEN=1; its `seg_checkpoint`
+# step checks the contract on the save it just wrote and records the state
+# digest. Then replaces tests/fixtures/segments/<boundary>/<role>/ with that
+# capture's saves/, worlds/ and characters/ (gzipped, deterministic header) and
+# writes manifest.json (digest, per-file sha256, character id, producer
+# fingerprint, commit). Never edit a checkpoint by hand: the handoff check
+# refuses any byte that differs from the manifest. Commit the result with the
+# change that made it stale.
 set -euo pipefail
-[ $# -eq 1 ] || { sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
-boundary="$1"
+[ $# -eq 1 ] || { sed -n '2,16p' "$0" | sed 's/^# \{0,1\}//' >&2; exit 2; }
+target="$1"
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 godot="${GODOT_BIN:-${GODOT:-$(command -v godot || echo "$HOME/godot-bin/godot")}}"
 cd "$repo"
-info="$("$godot" --headless --path . --script tools/ci/segments/boundary_info.gd -- --boundary="$boundary" 2>/dev/null | sed -n 's/^BOUNDARY_INFO //p')"
+if [ "${target#*/}" = "$target" ]; then
+	list="$("$godot" --headless --path . --script tools/ci/segments/boundary_info.gd -- --chain="$target" 2>/dev/null | sed -n 's/^BOUNDARY_LIST //p' || true)"
+	[ -n "$list" ] || { echo "regen: unknown chain '$target'" >&2; exit 2; }
+	for b in $list; do
+		echo "regen: chain $target -> $b"
+		"$0" "$b"
+	done
+	exit 0
+fi
+boundary="$target"
+info="$("$godot" --headless --path . --script tools/ci/segments/boundary_info.gd -- --boundary="$boundary" 2>/dev/null | sed -n 's/^BOUNDARY_INFO //p' || true)"
 [ -n "$info" ] || { echo "regen: unknown boundary '$boundary'" >&2; exit 2; }
 work="$(mktemp -d "${TMPDIR:-/tmp}/ci-segment-regen-XXXXXX")"
 # Kept on failure (the producer's run.log, PROOF.md and peer logs), removed on success.
@@ -50,7 +62,7 @@ for line in "${producers[@]}"; do
 done
 commit="$(git rev-parse HEAD)$(git diff --quiet HEAD -- . ':!tests/fixtures/segments' || echo '+dirty')"
 python3 - "$info" "$work" "$commit" <<'PY'
-import json, os, shutil, subprocess, sys, glob
+import glob, hashlib, json, os, shutil, subprocess, sys
 info, work, commit = json.loads(sys.argv[1]), sys.argv[2], sys.argv[3]
 records = {}
 for path in glob.glob(os.path.join(work, "run-*", "**", "segment_checkpoint.json"), recursive=True):
@@ -74,9 +86,13 @@ for role, spec in info["roles"].items():
             shutil.copytree(os.path.join(src, sub), os.path.join(dst, sub))
     for f in glob.glob(os.path.join(dst, "**", "*.json"), recursive=True):
         subprocess.check_call(["gzip", "-n", "-9", f])
+    files = {}
+    for f in sorted(glob.glob(os.path.join(dst, "**", "*"), recursive=True)):
+        if os.path.isfile(f):
+            files[os.path.relpath(f, dst)] = hashlib.sha256(open(f, "rb").read()).hexdigest()
     manifest["roles"][role] = {"producer": os.path.relpath(spec["producer"]), "producer_peer": spec["peer"],
                                "producer_fingerprint": rec["producer_fingerprint"], "digest": rec["digest"],
-                               "character_id": rec["character_id"], "summary": rec["summary"]}
+                               "character_id": rec["character_id"], "files": files, "summary": rec["summary"]}
     print("regen: installed %s:%s digest %s" % (info["boundary"], role, rec["digest"][:12]))
 with open(info["manifest"], "w") as f:
     json.dump(manifest, f, indent=1, sort_keys=True)

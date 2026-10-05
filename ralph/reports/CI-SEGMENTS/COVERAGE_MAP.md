@@ -18,6 +18,10 @@ checkpoint.
 `verify-segment-handoffs`, chain midride) fails unless each check holds:
 
 - every original (step, peer) instance runs exactly once across the segments;
+- an added `SEGMENT:` step only starts from or writes a checkpoint, re-opens the
+  session, or reads state (`seg_*`, `load_save`, `capture_saves`, `host`,
+  `production_join`, `join`, `expect_peers`, `wait`, the fixture, probes,
+  asserts); a state-writing step such as `party_grant` fails the check;
 - each copy is byte-equal to the original step apart from `peer` and `_comment`;
 - each segment keeps the original order.
 
@@ -167,7 +171,8 @@ The old leg ran the whole bracket in one process. Now:
 
 Both segments run the same per-round code (`_fight_and_win`, `_open_the_round`
 with its registered-three, ownership and field checks). The no-flag run is
-unchanged and still plays the whole bracket. The handoff in between
+unchanged and still plays the whole bracket. It is no longer in a PR-tier
+job; it runs in `verify-unbroken-chains` (section 4). The handoff in between
 (`bracket/after_semi`) has four guards:
 
 - end of `to-semi`: `Game.save_game(0)`, then `check_produced` (contract plus
@@ -209,7 +214,29 @@ shard's first two steps used to run only if everything before them passed;
 now they carry `!cancelled()` like the rest, so they run in more cases, never
 fewer.
 
-## 4. Not segmented (and why)
+## 4. What segmenting gives up, and where it is still covered
+
+A segment starts fresh processes from disk, so anything that builds up across
+a boundary is invisible to it:
+
+- the same guest process dropped twice in a row;
+- a host that has already seen a drop and a rejoin (orig #90 can no longer see
+  proxies left over from part A);
+- the final played straight after a live semi-final instead of after
+  `Game.load_game`;
+- memory or save growth, and timers drifting across rounds.
+
+The UNBROKEN originals cover this. `verify-unbroken-chains` (matrix
+`midride`, `bracket`) runs the original
+`f06_cloudreach_midride_rejoin.json` and the no-flag
+`smoke_tournament_bracket.gd` on the scheduled full tier and on dispatch only.
+It is `continue-on-error`, like the known-red probes, so it shows on the board
+and never blocks a merge. This follows the owner's accepted pushback of
+2026-10-04 (keep a continuous playthrough on the scheduled tier). The existing
+unbroken Gate A/B chains stay where they were: `verify-gate-b-full-known-red`
+and `verify-continuous-core-known-red`.
+
+## 4b. Not segmented (and why)
 
 - **verify-gate-b-core** (`smoke_gate_b_continuous.gd` core): one attempt is
   226 s of smoke (a ~6 min job). That is already inside the 5–8 min target, so
@@ -224,8 +251,13 @@ fewer.
 and also by the unit shards). Every negative must report the failure and name
 `re-generate checkpoint <boundary> with tools/ci/segments/regen.sh <boundary>`:
 
+- `test_unedited_copy_is_fresh` (control): a byte copy with no edit is fresh,
+  so each negative fails because of its own edit;
 - `test_hand_edited_checkpoint_is_stale`: a creature level raised in a copy →
   digest mismatch;
+- `test_edit_outside_the_digest_is_stale`: a creature marked fainted, which
+  the digest does not summarise (reviewer finding) → refused by the per-file
+  sha256 the manifest records;
 - `test_old_version_checkpoint_is_stale`: world document set to version 27 →
   "world document is version 27" plus the production loader's refusal;
 - `test_changed_producer_makes_checkpoint_stale`: producer fingerprint moved →

@@ -7,11 +7,16 @@ scenario exactly once, unchanged.
 Each segment step either carries `_comment` "orig #N" -- then, apart from
 `peer` (mapped through the segment's `_comment_segment.peer_map`) and
 `_comment`, it must equal original step N -- or "SEGMENT: ..." (setup or
-checkpoint steps the split adds). The (step, peer) instances the segments
+checkpoint steps the split adds; only SEGMENT_ACTIONS, `seg_*` or probes, so an
+added step can never write game state). The (step, peer) instances the segments
 cover, with "all" expanded to every peer, must equal the original's instance
 set, each exactly once, and keep their original order within each segment.
 """
 import json, sys
+
+# Actions a SEGMENT step may use besides `seg_*` and probes (which only read).
+SEGMENT_ACTIONS = {"load_save", "capture_saves", "host", "production_join", "join", "expect_peers",
+                   "assert", "wait", "legacy_physical_crossings_fixture"}
 
 
 def instances(peer, n_peers, peer_map=None):
@@ -45,6 +50,14 @@ def main(argv):
         for j, s in enumerate(seg["steps"], 1):
             c = str(s.get("_comment", ""))
             if c.startswith("SEGMENT:"):
+                # An added step may start from / write a checkpoint, re-open
+                # the session, or only READ state (probe/assert). Anything that
+                # writes game state (grants, flags, teleports...) could make a
+                # copied assertion pass trivially, so it is refused.
+                act = s.get("action")
+                if not (act is None or act.startswith("seg_") or act in SEGMENT_ACTIONS):
+                    errors.append("%s step %d: SEGMENT step '%s' is not an allowed checkpoint/session/read-only action"
+                                  % (path, j, act))
                 continue
             if not c.startswith("orig #"):
                 errors.append("%s step %d: neither 'orig #N' nor 'SEGMENT:'" % (path, j))

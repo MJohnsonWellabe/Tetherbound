@@ -69,6 +69,32 @@ func test_every_checkpoint_loads_and_meets_its_start_contract() -> void:
 				% [boundary, role, "; ".join(failures), SEGMENTS.regen_hint(boundary)])
 
 
+## Control for the negatives below: an UNEDITED byte copy is fresh, so each
+## negative fails because of its own edit, not because it is a copy.
+func test_unedited_copy_is_fresh() -> void:
+	for boundary: String in _boundaries():
+		for role: String in _roles(boundary):
+			var stale := SEGMENTS.staleness(boundary, role, WORK, _copy_role(boundary, role))
+			assert_true(stale.is_empty(), "unedited copy of %s:%s: %s" % [boundary, role, "; ".join(stale)])
+
+
+## Negative: an edit the state digest does not summarise (a creature marked
+## fainted) is still refused, by the per-file hashes.
+func test_edit_outside_the_digest_is_stale() -> void:
+	var edited_any := false
+	for boundary: String in _boundaries():
+		for role: String in _roles(boundary):
+			var copy := _copy_role(boundary, role)
+			if not _edit_first(copy.path_join("characters"), RegEx.create_from_string("\"fainted\":\\s*false"),
+					func(_m: RegExMatch) -> String: return "\"fainted\": true"):
+				continue
+			edited_any = true
+			var text := "; ".join(SEGMENTS.staleness(boundary, role, WORK, copy))
+			assert_true(text.contains("differs from what regen.sh installed") and text.contains(SEGMENTS.regen_hint(boundary)),
+				"fainted edit of %s:%s must be stale: %s" % [boundary, role, text])
+	assert_true(edited_any, "found a creature to mark fainted")
+
+
 ## Negative: a checkpoint whose saved state differs from what its producer
 ## recorded (one creature's level raised by hand) is refused by digest.
 func test_hand_edited_checkpoint_is_stale() -> void:
@@ -81,7 +107,7 @@ func test_hand_edited_checkpoint_is_stale() -> void:
 				continue # a role with no creature (the midride host)
 			edited_any = true
 			var text := "; ".join(SEGMENTS.staleness(boundary, role, WORK, copy))
-			assert_true(text.contains(SEGMENTS.regen_hint(boundary)),
+			assert_true(text.contains("no longer match their manifest digest") and text.contains(SEGMENTS.regen_hint(boundary)),
 				"hand-edited %s:%s must be stale and name its regeneration command; got: %s" % [boundary, role, text])
 	assert_true(edited_any, "found a creature level to edit")
 
@@ -124,25 +150,39 @@ func test_contract_mismatch_is_reported() -> void:
 			assert_false(failures.is_empty(), "%s:%s must fail %s:%s's contract" % [boundary, role, other[0], other[1]])
 
 
+## A byte-exact copy of a committed checkpoint role (files stay gzipped).
 func _copy_role(boundary: String, role: String) -> String:
 	var dst := ProjectSettings.globalize_path(SCRATCH).path_join(role)
-	var src := ProjectSettings.globalize_path(SEGMENTS.checkpoint_dir(boundary, role))
 	SEGMENTS.SPLIT_FIXTURE.wipe(dst + "/")
-	for sub: String in ["saves", "worlds", "characters"]:
-		SEGMENTS._copy_tree(src.path_join(sub), dst.path_join(sub))
+	_raw_copy(ProjectSettings.globalize_path(SEGMENTS.checkpoint_dir(boundary, role)), dst)
 	return dst
 
 
-## Rewrite the first match of `re` in the first JSON file under `dir`.
+func _raw_copy(from: String, to: String) -> void:
+	DirAccess.make_dir_recursive_absolute(to)
+	var d := DirAccess.open(from)
+	if d == null:
+		return
+	for f: String in d.get_files():
+		DirAccess.copy_absolute(from.path_join(f), to.path_join(f))
+	for sub: String in d.get_directories():
+		_raw_copy(from.path_join(sub), to.path_join(sub))
+
+
+## Rewrite the first match of `re` in the first save document under `dir`,
+## keeping its gzip form, exactly as a hand edit would.
 func _edit_first(dir: String, re: RegEx, replace: Callable) -> bool:
 	for f: String in SEGMENTS._files(dir):
-		var text := FileAccess.get_file_as_string(f)
+		var text := SEGMENTS._text(f)
 		var m := re.search(text)
 		if m == null:
 			continue
 		text = text.substr(0, m.get_start()) + str(replace.call(m)) + text.substr(m.get_end())
+		var bytes := text.to_utf8_buffer()
+		if f.ends_with(".gz"):
+			bytes = bytes.compress(FileAccess.COMPRESSION_GZIP)
 		var out := FileAccess.open(f, FileAccess.WRITE)
-		out.store_string(text)
+		out.store_buffer(bytes)
 		out.close()
 		return true
 	return false

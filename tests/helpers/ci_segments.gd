@@ -21,6 +21,25 @@ extends RefCounted
 ##     digest, and was produced by the producer scenario as it is now.
 ##
 ## So segment N-1's end assertion and segment N's start assertion cannot drift.
+##
+## ## REGENERATING A CHECKPOINT (do it in the same commit as your game change)
+##
+## When a change alters what a producer segment saves, CI fails with
+##   STALE ... re-generate checkpoint <boundary> with tools/ci/segments/regen.sh <chain>
+## Run that ONE command (needs an imported project; GODOT_BIN overrides
+## ~/godot-bin/godot):
+##
+##   tools/ci/segments/regen.sh midride     # every midride boundary, upstream first (~30 min)
+##   tools/ci/segments/regen.sh bracket     # bracket/after_semi (~7 min)
+##   tools/ci/segments/regen.sh midride/after_b   # one boundary, when its upstream is fresh
+##
+## It re-runs each producer segment through the real game and save code and
+## installs what it saved plus manifest.json (state digest, per-file sha256,
+## producer fingerprint, commit). Then run
+##   godot --headless --path . --script tests/run_tests.gd -- --only=ci_segment_handoffs
+## and commit tests/fixtures/segments/ with the change. Never edit a
+## checkpoint or manifest by hand: the per-file hashes refuse it. Editing a
+## producer scenario/smoke or a contract below also makes its checkpoints stale.
 
 const FIXTURE_ROOT := "res://tests/fixtures/segments/"
 const REGEN_COMMAND := "tools/ci/segments/regen.sh"
@@ -149,7 +168,9 @@ static func manifest_path(boundary: String) -> String:
 
 
 static func regen_hint(boundary: String) -> String:
-	return "re-generate checkpoint %s with %s %s" % [boundary, REGEN_COMMAND, boundary]
+	var chain := str((BOUNDARIES.get(boundary, {}) as Dictionary).get("chain", boundary.get_slice("/", 0)))
+	return "re-generate checkpoint %s with %s %s (the whole chain, upstream first; `%s %s` redoes only this boundary)" \
+		% [boundary, REGEN_COMMAND, chain, REGEN_COMMAND, boundary]
 
 
 static func read_manifest(boundary: String) -> Dictionary:
@@ -359,6 +380,36 @@ static func staleness(boundary: String, role: String, work_dir: String, dir := "
 	if got != str(row.get("digest", "")):
 		out.append("%s:%s files no longer match their manifest digest (hand-edited or partially regenerated): %s"
 			% [boundary, role, hint])
+	# Every committed byte, not only the digest's summary: a hand edit to any
+	# field (hp, fainted, a fallback copy) is refused here.
+	var want_files: Dictionary = row.get("files", {})
+	var have_files := file_hashes(dir)
+	if want_files.is_empty():
+		out.append("%s:%s manifest records no file hashes: %s" % [boundary, role, hint])
+	for rel: String in want_files:
+		if not have_files.has(rel):
+			out.append("%s:%s is missing %s: %s" % [boundary, role, rel, hint])
+		elif str(have_files[rel]) != str(want_files[rel]):
+			out.append("%s:%s %s differs from what regen.sh installed (hand-edited?): %s" % [boundary, role, rel, hint])
+	for rel: String in have_files:
+		if not want_files.has(rel):
+			out.append("%s:%s holds %s, which regen.sh did not install: %s" % [boundary, role, rel, hint])
+	return out
+
+
+## sha256 of every file under a checkpoint role dir, by path relative to it.
+static func file_hashes(dir: String, base := "") -> Dictionary:
+	dir = _abs(dir)
+	if base.is_empty():
+		base = dir
+	var out := {}
+	var d := DirAccess.open(dir)
+	if d == null:
+		return out
+	for f: String in d.get_files():
+		out[dir.path_join(f).trim_prefix(base + "/")] = FileAccess.get_sha256(dir.path_join(f))
+	for sub: String in d.get_directories():
+		out.merge(file_hashes(dir.path_join(sub), base))
 	return out
 
 
