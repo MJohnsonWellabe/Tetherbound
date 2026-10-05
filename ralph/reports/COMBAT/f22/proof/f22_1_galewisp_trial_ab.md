@@ -182,3 +182,77 @@ how the switching reader plays a melee, large-bodied starter, which is test
 equipment. The other possibility is a matchup property of Terrapup's kit.
 Three levers have now failed, so this is escalated for a decision instead of
 another guess.
+
+## Reader improvement (option a, one attempt; pilot commit 5478b0b4)
+
+Full 12-seed table, all starters and chapters. Each cell is the switching reader / masher median lead cost on the shipped head, before and after the pilot change. Verdict uses the floor-trainer form: reader cost ≤ 0.55× the masher's, reader win ≥ 0.9.
+
+```
+meadows    band1_lower_meadows    galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+meadows    band1_lower_meadows    ripplet  before S0.11/0.37 P  after S0.00/0.37 P  minwin 1.00
+meadows    band1_lower_meadows    terrapup before S0.36/0.30 F  after S0.40/0.30 F  minwin 1.00
+meadows    band2_stone_and_root   galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+meadows    band2_stone_and_root   ripplet  before S0.14/0.39 P  after S0.18/0.39 P  minwin 1.00
+meadows    band2_stone_and_root   terrapup before S0.60/0.40 F  after S0.48/0.40 F  minwin 1.00
+meadows    band3_the_river_lock   galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+meadows    band3_the_river_lock   ripplet  before S0.16/0.42 P  after S0.20/0.42 P  minwin 1.00
+meadows    band3_the_river_lock   terrapup before S0.62/0.29 F  after S0.61/0.29 F  minwin 1.00
+meadows    band4_upper_meadows_ir galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+meadows    band4_upper_meadows_ir ripplet  before S0.11/0.57 P  after S0.16/0.57 P  minwin 1.00
+meadows    band4_upper_meadows_ir terrapup before S0.60/0.49 F  after S0.46/0.49 F  minwin 1.00
+meadows    band5_stronghold_appro galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+meadows    band5_stronghold_appro ripplet  before S0.20/0.49 P  after S0.14/0.49 P  minwin 1.00
+meadows    band5_stronghold_appro terrapup before S0.46/0.44 F  after S0.41/0.44 F  minwin 1.00
+tidewake   first_shores           galewisp before S0.40/1.00 P  after S0.47/1.00 P  minwin 1.00
+tidewake   first_shores           ripplet  before S0.00/0.99 P  after S0.00/0.99 P  minwin 1.00
+tidewake   first_shores           terrapup before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+tidewake   marsh_channels         galewisp before S0.30/0.79 P  after S0.26/0.79 P  minwin 1.00
+tidewake   marsh_channels         ripplet  before S0.00/0.88 P  after S0.00/0.88 P  minwin 1.00
+tidewake   marsh_channels         terrapup before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+tidewake   outer_reaches          galewisp before S0.68/0.44 F  after S0.71/0.44 F  minwin 1.00
+tidewake   outer_reaches          ripplet  before S0.00/0.73 P  after S0.00/0.73 P  minwin 1.00
+tidewake   outer_reaches          terrapup before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+tidewake   tether_current         galewisp before S0.50/0.80 F  after S0.41/0.80 P  minwin 1.00
+tidewake   tether_current         ripplet  before S0.00/0.79 P  after S0.00/0.79 P  minwin 1.00
+tidewake   tether_current         terrapup before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+tidewake   tidal_cradle           galewisp before S0.24/0.85 P  after S0.27/0.85 P  minwin 1.00
+tidewake   tidal_cradle           ripplet  before S0.00/0.92 P  after S0.00/0.92 P  minwin 1.00
+tidewake   tidal_cradle           terrapup before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+tidewake   veilfall               galewisp before S0.60/0.83 F  after S0.57/0.83 F  minwin 1.00
+tidewake   veilfall               ripplet  before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+tidewake   veilfall               terrapup before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+cloudreach broken_causeways       galewisp before S0.00/0.94 P  after S0.00/0.94 P  minwin 1.00
+cloudreach broken_causeways       ripplet  before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+cloudreach broken_causeways       terrapup before S0.58/0.37 F  after S0.58/0.37 F  minwin 1.00
+cloudreach gate_lower_cliffs      galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+cloudreach gate_lower_cliffs      ripplet  before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+cloudreach gate_lower_cliffs      terrapup before S0.74/0.57 F  after S0.73/0.57 F  minwin 1.00
+cloudreach upper_cloudreach       galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+cloudreach upper_cloudreach       ripplet  before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+cloudreach upper_cloudreach       terrapup before S0.69/0.58 F  after S0.73/0.58 F  minwin 1.00
+stormwood  cinder_verge           galewisp before S0.00/0.92 P  after S0.00/0.92 P  minwin 1.00
+stormwood  cinder_verge           ripplet  before S0.00/0.87 P  after S0.00/0.87 P  minwin 1.00
+stormwood  cinder_verge           terrapup before S0.40/0.45 F  after S0.41/0.45 F  minwin 1.00
+stormwood  conductor_run          galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+stormwood  conductor_run          ripplet  before S0.00/0.99 P  after S0.00/0.99 P  minwin 1.00
+stormwood  conductor_run          terrapup before S0.71/0.65 F  after S0.68/0.65 F  minwin 1.00
+stormwood  deepwood               galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+stormwood  deepwood               ripplet  before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+stormwood  deepwood               terrapup before S0.70/0.60 F  after S0.71/0.60 F  minwin 1.00
+stormwood  glowmoss_hollows       galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+stormwood  glowmoss_hollows       ripplet  before S0.00/0.90 P  after S0.00/0.90 P  minwin 1.00
+stormwood  glowmoss_hollows       terrapup before S0.71/0.58 F  after S0.71/0.58 F  minwin 1.00
+stormwood  hollow_crown           galewisp before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+stormwood  hollow_crown           ripplet  before S0.00/1.00 P  after S0.00/1.00 P  minwin 1.00
+stormwood  hollow_crown           terrapup before S0.40/0.47 F  after S0.51/0.47 F  minwin 1.00
+```
+
+Result:
+
+- No previously passing row fails, and the reader win rate is 1.00 in every row.
+- Tidewake `tether_current` Galewisp now passes (reader 0.41 against masher 0.80).
+- Terrapup still fails all 13 Meadows, Cloudreach and Stormwood rows, with small movements in both directions.
+
+The one attempt is spent. Under the owner ruling of 2026-10-05 Terrapup must be balanced like the other starters, so the next step is product tuning, proposed to the coordinator before any data change.
+
+Attribution note: the switching reader's lead cost is 0.00 for Galewisp and Ripplet in most rows because it switches them out of visible mismatches. Terrapup's visible matchups are favourable in Cloudreach and Stormwood, so it stays in. Its reader fights also run about twice as long as its masher fights (about 110 s against 49 s) at a similar hit rate.
