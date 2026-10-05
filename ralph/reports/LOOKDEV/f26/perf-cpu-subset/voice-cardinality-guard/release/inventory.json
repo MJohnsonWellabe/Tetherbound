@@ -1,0 +1,67 @@
+{
+  "archive": {
+    "path": "native-export-records.zip",
+    "bytes": 114960,
+    "sha256": "95787810b403f308545c035936dda95a3d5be577ad3078f14da9800868398c7c",
+    "entries": 3
+  },
+  "files": [
+    {
+      "archive_path": "export-release.log",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\export-release.log",
+      "bytes": 1152973,
+      "sha256": "0dd7400250907969cb820d6f64fb3b1ff1d1659a7dcefcfc63ca827fe25882e7"
+    },
+    {
+      "archive_path": "export_presets.original.cfg",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\export_presets.original.cfg",
+      "bytes": 2694,
+      "sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219"
+    },
+    {
+      "archive_path": "receipt.json",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\receipt.json",
+      "bytes": 1559,
+      "sha256": "7acca625285631297fbf8994d01d6ecd66b314cdf37dbd58a478c136d62d7bbd"
+    }
+  ],
+  "package_receipt": {
+    "source_commit": "12e1975ad15f7f32cce17e4e971a6a5ad985c078",
+    "checkout_head": "12e1975ad15f7f32cce17e4e971a6a5ad985c078",
+    "command": [
+      "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+      "--headless",
+      "--verbose",
+      "--path",
+      "D:\\tetherbound\\codex-perf-cpu",
+      "--export-release",
+      "Windows Desktop",
+      "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\package\\Tetherbound.exe"
+    ],
+    "exit_code": 0,
+    "stop_reason": null,
+    "elapsed_seconds": 411.016,
+    "errors": [],
+    "export_cfg_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+    "export_settings_unchanged": true,
+    "payload": [
+      {
+        "path": "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\package\\Tetherbound.exe",
+        "size": 109052928,
+        "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\package\\Tetherbound.pck",
+        "size": 1123179628,
+        "sha256": "0e65c3c1ae7dd2ad2ca04dc1ee4a22002d58ca915d23dda81a2f32cfbf6ba5de"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\f26-perf-voiceguard-12e1975a\\release\\package\\libterrain.windows.release.x86_64.dll",
+        "size": 3549184,
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+      }
+    ],
+    "scope": "Original Windows Desktop release preset, script_export_mode2 unchanged. Packaging only, no FPS or GPU acceptance."
+  },
+  "large_payloads_retained_locally": true
+}
