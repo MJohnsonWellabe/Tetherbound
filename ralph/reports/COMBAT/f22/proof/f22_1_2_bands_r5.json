@@ -1719,6 +1719,621 @@
      ]
     }
    ]
+  },
+  "r5_stormwood": {
+   "switch_value": {
+    "fixed": {
+     "errors": 0,
+     "lead_faint_rate": 0.125,
+     "median_cost": 0.1010156449176,
+     "runs": 216,
+     "tags": 0,
+     "win_rate": 0.875
+    },
+    "pass": false,
+    "switched": {
+     "errors": 22,
+     "lead_faint_rate": 0.0,
+     "median_cost": 0.0455310902371528,
+     "runs": 216,
+     "tags": 0,
+     "win_rate": 0.898148148148148
+    },
+    "tag_combo_live": false
+   },
+   "rows": [
+    {
+     "band": "stormwood/cinder_verge",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0478488378940098,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0751342989138737,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0751342989138737,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/cinder_verge",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0569827771844517,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.166666666666667,
+      "median_cost": 0.132031027270214,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.833333333333333
+     },
+     "switch_reader": {
+      "errors": 1,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0541751324096337,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/cinder_verge",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0813809289546416,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.0910320078390278,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 1,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0581116479031306,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/glowmoss_hollows",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0361089295833177,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0417044538700105,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0417044538700105,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/glowmoss_hollows",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.05306659447568,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.25,
+      "median_cost": 0.101482327703143,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0459072956863622,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/glowmoss_hollows",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0739342075570756,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.166666666666667,
+      "median_cost": 0.123232574282525,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.833333333333333
+     },
+     "switch_reader": {
+      "errors": 3,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0442885675109314,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/conductor_run",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0325455318372563,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0240034885256737,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0240034885256737,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/conductor_run",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0412220774238525,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.166666666666667,
+      "median_cost": 0.0924929588453018,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.833333333333333
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0427256256107082,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/conductor_run",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0748186274963361,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.101336391593853,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0436160686715912,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/hollow_crown",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0392801285934075,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0351128560005303,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0351128560005303,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/hollow_crown",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0585278670594552,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.333333333333333,
+      "median_cost": 0.108076047977806,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "switch_reader": {
+      "errors": 3,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0386697883913738,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/hollow_crown",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0774999834328814,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.0876400262276735,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0421118439686639,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/deepwood",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0623064119991828,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.105404263614335,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.105404263614335,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/deepwood",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0640714214399564,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.135149183769281,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 4,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0403331578727771,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/deepwood",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0791396263922847,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.103780177263056,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 5,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.055339205011685,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.583333333333333
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/dynamo",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.062419984134448,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.138976161257749,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.138976161257749,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/dynamo",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0563432468972498,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.5,
+      "median_cost": 0.216391746567156,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.5
+     },
+     "switch_reader": {
+      "errors": 3,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0423480876765107,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "stormwood/dynamo",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0776034041515497,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.25,
+      "median_cost": 0.102347499472923,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "switch_reader": {
+      "errors": 2,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0502083092648308,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.833333333333333
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    }
+   ]
   }
  }
 }
