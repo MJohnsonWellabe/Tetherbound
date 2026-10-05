@@ -18,3 +18,8 @@ Thirty-two matched pairs were shown to a fresh code-blind judge as X/Y with rand
 
 The four sample pair images here are 960 px per side. Full pair set and frames are kept in the lane container only.
 No frame time was recorded.
+
+Excluded: the after-fix Stormwood route stills (`stills-stormwood`, run at d80a07b5) logged
+`Missing or stale stormwood scatter bake`, because the first Stormwood floor key sat in
+`stormwood_world.json`, which is a bake fingerprint input. Those frames are invalid and are not in the pair set.
+The coordinator moved the key to `data/config/stormwood_camera.json` (d825d181, merged at 0ccd9f95).

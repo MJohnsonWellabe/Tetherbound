@@ -132,7 +132,8 @@ func _build_pedestal(entry: Dictionary) -> void:
 	shape.position = _position(collider.get("at", [0, .72, 0]))
 	body.add_child(shape)
 	slot.add_child(body)
-	_label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 1.35, .15))
+	# Free-standing: readable from every side of the stand, never mirrored.
+	_label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 1.35, .15)).billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 1.8)
