@@ -623,7 +623,10 @@ var _f18_pending_home_key: Dictionary = {}
 var _f18_home_key_retry_at := 0
 ## The first request journals the gift, then the owner-save CAS settles it a
 ## few frames later; retry quickly so the orbs land while Grandpa still talks.
+## A guest's retry is an RPC to the host, so it backs off.
 const F18_HOME_KEY_RETRY_MS := 250
+const F18_HOME_KEY_GUEST_RETRY_MS := [250, 1000, 3000]
+var _f18_home_key_attempts := 0
 
 func _drain_effects() -> void:
 	# A spoken line may couple a physical gift to the fact that it was handed
@@ -641,13 +644,18 @@ func _drain_effects() -> void:
 		if Time.get_ticks_msec() < _f18_home_key_retry_at:
 			_f18_pending_effects = effects.duplicate()
 			return
-		_f18_home_key_retry_at = Time.get_ticks_msec() + F18_HOME_KEY_RETRY_MS
+		var retry_ms := F18_HOME_KEY_RETRY_MS
+		if opening_game.get("session").call("is_host") != true:
+			retry_ms = F18_HOME_KEY_GUEST_RETRY_MS[mini(_f18_home_key_attempts, F18_HOME_KEY_GUEST_RETRY_MS.size() - 1)]
+		_f18_home_key_attempts += 1
+		_f18_home_key_retry_at = Time.get_ticks_msec() + retry_ms
 		if _f18_pending_home_key.is_empty() and opening_game != null and _f18_opening_conversation_id == "grandpa_first_catch":
 			_f18_pending_home_key = {"character_id": opening_game.get("local").character_id, "world_instance_id": opening_game.get("world").reward_delivery_namespace, "session_epoch": opening_game.get("session").call("_altar_current_epoch")}
 		if opening_game == null or opening_game.call("grant_home_key_from_opening", self) != true:
 			_f18_pending_effects = effects.duplicate()
 			return
 		_f18_pending_home_key.clear()
+		_f18_home_key_attempts = 0
 	if not _gift_batch_fits(effects):
 		_dialogue.call("close")
 		var game := _effect_game()

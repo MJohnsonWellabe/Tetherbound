@@ -87,3 +87,30 @@ func test_host_sends_synchronously_and_refuses_without_a_view() -> void:
 	assert_eq(session.sent.size(), 1)
 	assert_eq(session.sent[0].revision, 11)
 	game.free()
+
+func test_guest_two_pending_stages_each_send_once_on_the_next_reply() -> void:
+	var game := _game(false)
+	var session: SessionProbe = game.session
+	var credits := _intent()
+	credits.stage = "regional_credits_seen"
+	credits.transaction_id = "regional_ending:character-ack:regional_credits_seen"
+	game._queue_regional_ack(_intent())
+	game._queue_regional_ack(credits)
+	session.reply({"registry_revision": 9})
+	assert_eq(session.sent.size(), 2)
+	var ids := session.sent.map(func(row: Dictionary) -> String: return row.intent.transaction_id)
+	assert_true(ids.has(_intent().transaction_id))
+	assert_true(ids.has(credits.transaction_id))
+	session.reply({"registry_revision": 10})
+	assert_eq(session.sent.size(), 2, "a later unrelated view reply resends nothing")
+	game.free()
+
+func test_guest_abandoned_wait_never_sends_late() -> void:
+	var game := _game(false)
+	var session: SessionProbe = game.session
+	game._queue_regional_ack(_intent())
+	game._regional_ack_waiting[_intent().transaction_id] = Time.get_ticks_msec() - 60000
+	session.reply({"registry_revision": 12})
+	assert_eq(session.sent.size(), 0)
+	assert_true(game._regional_ack_intents.is_empty())
+	game.free()

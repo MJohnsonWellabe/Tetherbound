@@ -3298,16 +3298,32 @@ func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 	if not bool(session.call("is_host")):
 		# A guest's personal view is the host's async reply; its cache may be
 		# empty or predate the arrival that bumped the revision. Send against
-		# the fresh reply only. The caller polls regional_ending_ack_result.
-		var fresh := Callable(self, "_send_regional_ack").bind(intent.transaction_id)
-		if not session.is_connected("homestead_personal_view_completed", fresh):
-			session.connect("homestead_personal_view_completed", fresh, CONNECT_ONE_SHOT)
+		# the next reply only, and only while the caller is still waiting
+		# (regional_homecoming polls for ack_timeout_seconds).
+		_regional_ack_waiting[intent.transaction_id] = Time.get_ticks_msec()
+		var drain := Callable(self, "_drain_regional_ack_waiting")
+		if not session.is_connected("homestead_personal_view_completed", drain):
+			session.connect("homestead_personal_view_completed", drain)
 		session.call("homestead_personal_view")
 		return regional_ending_ack_result(intent.transaction_id)
 	if not _send_regional_ack(intent.transaction_id):
 		_regional_ack_intents.erase(intent.transaction_id)
 		return {"status": "refused"}
 	return regional_ending_ack_result(intent.transaction_id)
+
+
+var _regional_ack_waiting: Dictionary = {}
+
+func _drain_regional_ack_waiting() -> void:
+	var settings: Dictionary = preload("res://scripts/story/regional_homecoming.gd")._settings()
+	var window_ms := int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
+	var waiting := _regional_ack_waiting.duplicate()
+	_regional_ack_waiting.clear()
+	for transaction_id: String in waiting:
+		if Time.get_ticks_msec() - int(waiting[transaction_id]) <= window_ms:
+			_send_regional_ack(transaction_id)
+		else:
+			_regional_ack_intents.erase(transaction_id) # The caller already gave up.
 
 
 func _send_regional_ack(transaction_id: String) -> bool:
