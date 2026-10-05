@@ -154,6 +154,15 @@ func blocked(player: RefCounted) -> bool:
 	return not pending.is_empty() and session != null and session.call("_game") != null and player == session.call("_game").get("local") \
 		and pending.scope == _scope()
 
+## The pending groom has changed nothing on the local character yet: it is
+## waiting for the host (prepare/resume), was cancelled before any install, or
+## its baseline install has not started. Its fence still holds
+## care actions, but an ordinary character save (a guest's leave) writes the
+## same record it would without it; the host re-derives the preparation on
+## rejoin (groom_resume), so nothing is replayed twice.
+func local_untouched(player: RefCounted) -> bool:
+	return blocked(player) and not installing and pending.get("installed") != true
+
 func snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
 	return blocked(player) and installing and pending.get("prepared") is Dictionary \
 		and E._equivalent(RECORD.portable_projection(payload), pending.prepared.after) \
@@ -537,6 +546,9 @@ func save_owner_baseline() -> Dictionary:
 	if members.size() != current.party.size(): return _deny("groom_baseline_conflict", false)
 	for index: int in members.size():
 		if members[index].get("uid") != current.party[index].uid: return _deny("groom_baseline_conflict", false)
+	# From here the live character carries host-derived values: no ordinary
+	# save may write them until the prepared baseline itself is saved.
+	pending.installed = true
 	var old_maps := {}
 	for realm: String in pending.prepared.discoveries:
 		var map: RefCounted = player.call("map_for", realm)
@@ -546,6 +558,7 @@ func save_owner_baseline() -> Dictionary:
 		for id: String in pending.prepared.discoveries[realm]:
 			if not discovered.has(id):
 				for prior_realm: String in old_maps: player.call("map_for", prior_realm).call("load_data", old_maps[prior_realm])
+				pending.installed = false # Maps restored; no member was touched.
 				return _deny("groom_landmark_view_pending", false)
 	for index: int in members.size():
 		for field: String in FIELDS: members[index].set(field, plan.state.party[index][field])

@@ -80,9 +80,14 @@ func _run() -> void:
 ## the same call `sequence_director.gd` makes once a name is confirmed.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
-	if director == null or director.call("ally_instance") != null:
-		return
-	await director.call("adopt_starter", "terrapup")
+	if director == null: return
+	if director.call("ally_instance") == null: await director.call("adopt_starter", "terrapup")
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted body is a companion only once it is in this character's party.
+	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var party: RefCounted = root.get_node(^"Game").get("party")
+	if party != null and int(party.call("size")) == 0 and director.call("ally_instance") != null:
+		party.call("add", director.call("ally_instance"))
 
 
 ## The opening's staging wakes the player in Grandpa's bed; this test bypasses
@@ -381,11 +386,23 @@ func _a_throw_at_the_sky_misses_and_still_costs_an_orb() -> void:
 		_fail("an orb thrown at nothing never resolved at all; it is still in the air")
 
 
+## With combat.json actor_vitals on, the host decides catches from its own
+## authoritative opponent record, never the local instance: apply this test's
+## direct weakening there as well (the record of the fight this peer is in).
+func _set_host_opponent_hp(hp: float, hp_max: float) -> void:
+	var director := _world.get_node_or_null(^"EncounterDirector")
+	var host: Variant = director.get("_encounter_host") if director != null else null
+	var fight_id := str((director.get("_encounter") as Dictionary).get("encounter_id", "")) if director != null else ""
+	if host != null and not fight_id.is_empty() and not (host.call("record", fight_id) as Dictionary).is_empty():
+		host.call("set_opponent_hp", fight_id, hp, hp_max)
+
+
 func _a_weakened_creature_can_be_caught() -> void:
 	var foe: RefCounted = _manager.call("enemy")
 	# Weakened directly rather than by fighting: this test is about the throw,
 	# and grinding a creature down through combat would be testing M2 again.
 	foe.hp = foe.max_hp * 0.08
+	_set_host_opponent_hp(foe.hp, foe.max_hp)
 
 	var caught := false
 	for attempt in MAX_ATTEMPTS:
@@ -396,6 +413,7 @@ func _a_weakened_creature_can_be_caught() -> void:
 		if int(_manager.call("orbs_left")) <= 1:
 			_seed_orbs()
 		foe.hp = foe.max_hp * 0.08
+		_set_host_opponent_hp(foe.hp, foe.max_hp)
 		# Keep the player's creature standing. Aiming genuinely abandons it — that is
 		# the whole design and _aiming_abandons_your_creature asserts it — so a test
 		# that throws twenty-five times in a row will get its creature knocked out and
@@ -480,6 +498,7 @@ func _a_fainted_creature_cannot_be_caught() -> void:
 
 	var foe: RefCounted = _manager.call("enemy")
 	foe.take_damage(foe.max_hp * 2.0)
+	_set_host_opponent_hp(0.0, foe.max_hp)
 	await physics_frame
 
 	var refusals_before := _refusals.size()
