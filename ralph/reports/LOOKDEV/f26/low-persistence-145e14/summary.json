@@ -1,0 +1,60 @@
+{
+  "source_commit": "145e14b4c64d62c26cdf57c045b490ba4aefbcc6",
+  "scope": "Existing isolated two-process Settings Low selection/reload proof; injected joypad button events, not physical hardware or fullF26 toggles/GPU/visual/FPS/Ally/earned proof. Reload deliberately lacks --rendering-method.",
+  "phases": [
+    {
+      "phase": "low-select",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "tests/smoke_graphics_low_persist.gd",
+        "--rendering-method",
+        "forward_plus",
+        "--",
+        "--graphics-proof",
+        "--low-select"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 13.422
+    },
+    {
+      "phase": "low-reload",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--resolution",
+        "1920x1080",
+        "--fullscreen",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "tests/smoke_graphics_low_persist.gd",
+        "--",
+        "--graphics-proof",
+        "--low-reload"
+      ],
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 11.172
+    }
+  ],
+  "pass_counts": {
+    "low-select": 6,
+    "low-reload": 5
+  },
+  "runtime_errors": {
+    "low-select": [],
+    "low-reload": []
+  },
+  "narrow_low_select_reload_pass": true,
+  "full_f26_1": "OPEN: allfeaturebuttons/High/eachvaluepersistence/GPUranges not certified."
+}
