@@ -1,0 +1,258 @@
+{
+  "source_commit": "be8b7726bf2d1d630b0dc3f60eef1490e4c9071d",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=stormwood",
+    "--preset=High",
+    "--source-commit=be8b7726bf2d1d630b0dc3f60eef1490e4c9071d",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/stormwood-high/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "native_elapsed_seconds": 356.063,
+  "supervisor_elapsed_seconds": 364.625,
+  "runtime_errors": [],
+  "native_complete": true,
+  "frame_count": 12,
+  "planned_frame_count": 12,
+  "native_failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "be8b7726bf2d1d630b0dc3f60eef1490e4c9071d"
+  },
+  "png_dimensions": {
+    "stormwood__cinder_verge__01__the_struck_sentinel__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__cinder_verge__02__verge_rod_station__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__conductor_run__05__rodline_post__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__conductor_run__06__the_capacitor_grove__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__deepwood__09__lantern_hollow__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__deepwood__10__the_fallen_giant__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__dynamo__11__the_glass_field__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__dynamo__12__the_stormheart_tree__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__glowmoss_hollows__03__the_lantern_pools__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__glowmoss_hollows__04__crown_overlook__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__hollow_crown__07__the_crown_arch__day.png": [
+      1920,
+      1080
+    ],
+    "stormwood__hollow_crown__08__the_crown_heartstone__day.png": [
+      1920,
+      1080
+    ]
+  },
+  "material_snapshots": [
+    {
+      "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__cinder_verge__02__verge_rod_station__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__conductor_run__05__rodline_post__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__conductor_run__06__the_capacitor_grove__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__hollow_crown__07__the_crown_arch__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__hollow_crown__08__the_crown_heartstone__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__deepwood__09__lantern_hollow__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__deepwood__10__the_fallen_giant__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    },
+    {
+      "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day",
+      "binding_count": 32436,
+      "classifications": {
+        "other": 7,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 29261,
+        "untextured_material_may_be_authored_requires_source_review": 3165
+      },
+      "resource_count": 1364
+    }
+  ],
+  "unbound_bindings_requiring_source_review": [
+    {
+      "node": "Player/Model/Body",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "Player/Model/Nose",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterSignpost/@MeshInstance3D@22524",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "BoxMesh",
+      "mesh_path": "",
+      "visible_in_tree": true
+    }
+  ],
+  "truncated_resource_graphs": 0,
+  "qualification": "Capture completeness and binding inventory only; full visual/material acceptance OPEN. Mounted/visible flags are not pixel or fallback proof. No FPS, travel, campaign or handheld claim."
+}
