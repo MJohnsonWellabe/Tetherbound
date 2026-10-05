@@ -20,6 +20,14 @@ class ShellSession extends SAVE.FixtureSession:
 class DetachedShells extends "res://scripts/net/realm_shells.gd":
 	func _game() -> Node: return null # World journaling below still uses the real disk writer.
 
+## Test-local: these fixtures exercise the tracked (actor_vitals) path the
+## director uses, independent of the shipped combat.json flag. The cached
+## config is switched for each test and restored after it.
+var _shipped_tracking: Variant = null
+
+func before_each() -> void:
+	_shipped_tracking = _track(true)
+
 func _duty(before: Dictionary) -> Dictionary:
 	var card: Dictionary = before.party[0]
 	return {"character_id": DATA.CHARACTER, "action": "combat_mastery",
@@ -209,8 +217,13 @@ func test_remote_shell_retains_failed_hit_and_retries_before_release() -> void:
 	var owned: Dictionary = before.party[0]
 	var rec: Dictionary = host.open(2, "cloudreach", "wild", {"hp": 100.0, "hp_max": 100.0,
 		"position": [2.0, 0.0, 0.0]}, owned.uid, DATA.CHARACTER)
+	# With combat.json actor_vitals on, every encounter is tracked: the fixture
+	# binds the actor as the director does before the move is published.
+	var bound: Dictionary = host.bind_actor_body(rec.encounter_id, 2, DATA.CHARACTER, owned, 55)
+	assert_true(bound.get("ok") == true, "fixture actor bound " + str(bound))
 	var binding := {"character_id": DATA.CHARACTER, "creature_uid": owned.uid,
-		"deployment_generation": 1, "body_instance_id": 55, "actor_generation": 0}
+		"deployment_generation": 1, "body_instance_id": 55,
+		"actor_generation": int(bound.get("vitals", {}).get("body_generation", 0))}
 	var move := {"move_id": owned.move_quick, "slot": "quick", "range": 3.0, "cone_degrees": 100.0,
 		"windup": 0.3, "recovery": 0.2, "wind_cost": 12.0,
 		"mastery_context": {"world_namespace": "resource-namespace", "session_id": "resource-epoch"}}
@@ -219,7 +232,8 @@ func test_remote_shell_retains_failed_hit_and_retries_before_release() -> void:
 	var start: Dictionary = host.move_commit(rec.encounter_id, 2, 1)
 	assert_true(host.validate_strike({"encounter_id": rec.encounter_id, "action": 1, "slot": "quick",
 		"move_id": owned.move_quick, "move": start.move, "facing": Vector3.RIGHT}, 2,
-		{"now_ms": 1300, "origin": Vector3.ZERO, "bodies": [], "move_actor_binding": binding}).ok)
+		{"now_ms": 1300, "origin": Vector3.ZERO, "bodies": [], "move_actor_binding": binding,
+		"f22_actor_binding": binding}).ok)
 	host.credit_move_hit(rec.encounter_id, 2, 1, 12.0, "remote-opponent", 100.0)
 	writer.refuse_world = true
 	assert_false(session.foundation_combat_mastery(director, rec.encounter_id, 2, 1).durable)
@@ -357,3 +371,14 @@ func test_passive_care_gained_between_stage_and_apply_is_kept() -> void:
 	assert_eq(float(saved.party[0].distance_m_together), walked, "the saved owner keeps it too")
 	assert_true(E.owner_matches_after(RECORD.portable_projection(saved), row.after), "and is otherwise exactly the row")
 	SAVE.new()._close(game, rpc, directory)
+
+
+func after_each() -> void:
+	_track(_shipped_tracking)
+
+
+func _track(value: Variant) -> Variant:
+	var vitals: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("actor_vitals", {})
+	var shipped: Variant = vitals.get("runtime_enabled")
+	vitals["runtime_enabled"] = value
+	return shipped
