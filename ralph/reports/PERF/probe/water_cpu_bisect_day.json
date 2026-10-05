@@ -1,0 +1,196 @@
+{
+	"animation_census": {
+		"active": 65,
+		"in_character_body": 9,
+		"in_dormant_character_body": 1,
+		"mixers": 65,
+		"playing": 64
+	},
+	"biome": "water",
+	"bisect": [
+		{
+			"baseline_wall_ms": 40.6985388888889,
+			"family": "water_first_shore_wild",
+			"members": 6,
+			"wall_ms_saved": 32.9337166666667
+		},
+		{
+			"baseline_wall_ms": 53.2333944444444,
+			"family": "WaterCamps",
+			"members": 1,
+			"wall_ms_saved": 26.7589722222222
+		},
+		{
+			"baseline_wall_ms": 37.2721333333333,
+			"family": "WaterPickups",
+			"members": 1,
+			"wall_ms_saved": 14.4397888888889
+		},
+		{
+			"baseline_wall_ms": 41.6263388888889,
+			"family": "WaterRestShoalMarkers",
+			"members": 1,
+			"wall_ms_saved": 12.0966944444444
+		},
+		{
+			"baseline_wall_ms": 36.4250833333333,
+			"family": "RenewableResources",
+			"members": 1,
+			"wall_ms_saved": 11.5078055555556
+		},
+		{
+			"baseline_wall_ms": 36.6600055555556,
+			"family": "CombatHUD",
+			"members": 1,
+			"wall_ms_saved": 10.1985055555556
+		},
+		{
+			"baseline_wall_ms": 46.0623611111111,
+			"family": "WaterVegetation",
+			"members": 1,
+			"wall_ms_saved": 8.77098333333333
+		},
+		{
+			"baseline_wall_ms": 37.7410833333333,
+			"family": "WaterGroundCover",
+			"members": 1,
+			"wall_ms_saved": 5.51810555555556
+		},
+		{
+			"baseline_wall_ms": 29.2776333333333,
+			"family": "WaterNPCs",
+			"members": 1,
+			"wall_ms_saved": 5.40057777777778
+		},
+		{
+			"baseline_wall_ms": 40.51715,
+			"family": "/root/Game",
+			"members": 1,
+			"wall_ms_saved": 5.32718333333333
+		},
+		{
+			"baseline_wall_ms": 24.457,
+			"family": "WaterVeilfall",
+			"members": 1,
+			"wall_ms_saved": 5.05951111111111
+		},
+		{
+			"baseline_wall_ms": 40.9824666666667,
+			"family": "MasterT",
+			"members": 1,
+			"wall_ms_saved": 3.90304444444445
+		},
+		{
+			"baseline_wall_ms": 36.4444,
+			"family": "WaterGateTideRaces",
+			"members": 1,
+			"wall_ms_saved": 3.15094444444445
+		},
+		{
+			"baseline_wall_ms": 34.1620166666667,
+			"family": "WaterLocalChains",
+			"members": 1,
+			"wall_ms_saved": 2.24060555555555
+		},
+		{
+			"baseline_wall_ms": 36.8912611111111,
+			"family": "WaterDocks",
+			"members": 1,
+			"wall_ms_saved": 1.66726111111111
+		},
+		{
+			"baseline_wall_ms": 25.4247111111111,
+			"family": "WaterReturnRamps",
+			"members": 1,
+			"wall_ms_saved": 0.164555555555555
+		},
+		{
+			"baseline_wall_ms": 25.0004055555556,
+			"family": "WaterDockResidents",
+			"members": 1,
+			"wall_ms_saved": 0.145205555555556
+		},
+		{
+			"baseline_wall_ms": 36.83335,
+			"family": "FirstShoreGateSite",
+			"members": 1,
+			"wall_ms_saved": -2.41668333333333
+		},
+		{
+			"baseline_wall_ms": 23.0189,
+			"family": "GullRestSignalSpire",
+			"members": 1,
+			"wall_ms_saved": -2.48837777777778
+		},
+		{
+			"baseline_wall_ms": 39.7533722222222,
+			"family": "PlaygroundHUD",
+			"members": 1,
+			"wall_ms_saved": -4.81799444444444
+		},
+		{
+			"baseline_wall_ms": 30.3239222222222,
+			"family": "FirstShoreWelcomeBeacon",
+			"members": 1,
+			"wall_ms_saved": -8.69444444444444
+		},
+		{
+			"baseline_wall_ms": 28.7719277777778,
+			"family": "WaterLocalLureDressing",
+			"members": 1,
+			"wall_ms_saved": -18.4206833333333
+		},
+		{
+			"baseline_wall_ms": 27.6849888888889,
+			"family": "WaterDockDressing",
+			"members": 1,
+			"wall_ms_saved": -40.3016777777778
+		}
+	],
+	"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
+	"display_server": "headless",
+	"frames_per_row": 120,
+	"processor_count": 4,
+	"rows": [
+		{
+			"label": "baseline",
+			"physics_step_ms_avg": 17.7546166666667,
+			"physics_steps_per_frame": 2.5,
+			"process_ms_avg": 16.13175,
+			"process_ms_peak": 19.315,
+			"wall_ms_per_frame": 41.9702833333333
+		},
+		{
+			"label": "dormant_creature_animation_paused",
+			"physics_step_ms_avg": 16.8689416666667,
+			"physics_steps_per_frame": 1.35833333333333,
+			"players_paused": 1,
+			"process_ms_avg": 19.389525,
+			"process_ms_peak": 23.326,
+			"wall_ms_per_frame": 22.4850416666667
+		},
+		{
+			"label": "all_animation_paused",
+			"physics_step_ms_avg": 15.1153833333333,
+			"physics_steps_per_frame": 1.69166666666667,
+			"players_paused": 65,
+			"process_ms_avg": 22.2760666666667,
+			"process_ms_peak": 33.27,
+			"wall_ms_per_frame": 27.9970166666667
+		},
+		{
+			"label": "baseline_again",
+			"physics_step_ms_avg": 16.8792666666667,
+			"physics_steps_per_frame": 2.08333333333333,
+			"process_ms_avg": 19.6083333333334,
+			"process_ms_peak": 23.847,
+			"wall_ms_per_frame": 34.62405
+		}
+	],
+	"schema": "perf_cpu_probe/1",
+	"stand": [
+		12.0,
+		3.45006728172302,
+		150.0
+	]
+}

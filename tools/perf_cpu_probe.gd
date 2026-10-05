@@ -73,6 +73,12 @@ func _run() -> void:
 		"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
 		"rows": [],
 	}
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--wait-s="):
+			# Let the world clock reach the hours under study before measuring.
+			var until := Time.get_ticks_msec() + int(float(arg.trim_prefix("--wait-s=")) * 1000.0)
+			while Time.get_ticks_msec() < until:
+				await process_frame
 	var census := _animation_census()
 	_report["animation_census"] = census
 	if OS.get_cmdline_user_args().has("--soak"):
@@ -150,10 +156,10 @@ func _bisect() -> void:
 		var members: Array = families[family]
 		var nodes := 0
 		for node: Node in members:
-			nodes += 1 + node.get_child_count(true)
+			nodes += 1 + node.find_children("*", "", true, false).size()
 			if nodes >= 20:
 				break
-		if nodes < 20:
+		if nodes < 20 and not family.begins_with("/root/"):
 			continue
 		var before := await _wall(90)
 		var modes: Array = []
