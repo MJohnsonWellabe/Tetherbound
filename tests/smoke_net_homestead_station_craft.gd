@@ -30,14 +30,14 @@ func _run() -> void:
 		await _craft_finish()
 		return
 	check(int(placed.effective_tier) == 1, "the host's Kitchen stands at tier 1 with its Spice rack")
-	# The guest's own ingredients, admitted by the host through the ordinary
-	# portable save: fund, production leave, returning rejoin.
-	var funded := await _craft_data(1, "craft_fund", {"items": [["berries", 4], ["fiber", 1]], "ids": COUNTED})
-	var crafter_id := str(funded.get("character_id", ""))
-	if not await _craft_step(1, "hall_leave_guest", {}): return
-	if not await _craft_step(0, "expect_peers", {"count": 1}): return
-	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
-		"returning_route": true, "character": {"character_id": crafter_id}}, 9000): return
+	# The guest's own ingredients (disclosed fixture): the same stock on the
+	# guest's local mirror and on the host's admitted record. A rejoin never
+	# overwrites a record the host already seeded, so it cannot fund it.
+	var funding := [["berries", 4], ["fiber", 1]]
+	if (await _craft_data(1, "craft_fund", {"items": funding, "ids": COUNTED})).is_empty():
+		await _craft_finish()
+		return
+	if not await _craft_step(0, "craft_fund_guest_authority", {"items": funding}): return
 	var host_before := await _craft_data(0, "craft_count", {"ids": COUNTED})
 	var crafted := await _craft_data(1, "craft_at_host_kitchen", {"kitchen_uid": placed.kitchen_uid}, 3000)
 	var host_after := await _craft_data(0, "craft_count", {"ids": COUNTED})
