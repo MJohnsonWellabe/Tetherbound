@@ -4664,10 +4664,11 @@ func _owner_training_row() -> Dictionary:
 	return _owner_training_row_value.duplicate(true)
 
 
-func _owner_training_mutation_blocked(player: RefCounted) -> bool:
+func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom: bool = false) -> bool:
 	var game := _game()
 	if game == null or player == null or player != game.get("local"): return false
-	if _groom_passive != null and _groom_passive.call("blocked", player) == true: return true
+	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
+		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true): return true
 	if _owner_passive != null and _owner_passive.call("blocked", player) == true: return true
 	var row := _owner_training_row()
 	if _pending_portal_for(str(player.character_id)): return true
@@ -4680,7 +4681,8 @@ func _owner_training_mutation_blocked(player: RefCounted) -> bool:
 
 ## Diagnostic only: which of `_owner_training_mutation_blocked`'s holds is set.
 func _owner_snapshot_block_reason(player: RefCounted) -> String:
-	if _groom_passive != null and _groom_passive.call("blocked", player) == true: return "groom passive pending"
+	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
+		and _groom_passive.call("local_untouched", player) != true: return "groom passive pending"
 	if _owner_passive != null and _owner_passive.call("blocked", player) == true:
 		return "owner passive pending phase=%s" % str(_owner_passive.get("pending").get("phase"))
 	if _pending_portal_for(str(player.get("character_id"))): return "portal pending"
@@ -4810,7 +4812,9 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 	if _owner_passive != null and _owner_passive.call("snapshot_allowed", player, payload) == true: return true
 	if _pending_portal_for(str(player.character_id)):
 		return not _owner_portal_conflicting_transaction(player) and _owner_portal_snapshot_allowed(player, payload)
-	if not _owner_training_mutation_blocked(player): return true
+	# A groom still waiting on the host has installed nothing locally: it never
+	# refuses a character save (a guest leaving mid-resume must keep its file).
+	if not _owner_training_mutation_blocked(player, true): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
 		and ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \

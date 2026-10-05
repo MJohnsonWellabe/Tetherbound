@@ -2962,6 +2962,12 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	if not is_instance_valid(wild): return deny
+	# A tracked trainer/boss actor binds lazily on first publication, which
+	# advances its actor generation. Bind it here, before the start freezes its
+	# binding, so the start and its arrival name the same actor generation;
+	# otherwise every participant's first attack of the fight is refused as
+	# move_start_required. A no-op when tracking is off or already bound.
+	_f22_publication_binding(id, peer, body)
 	# The live deployment and admitted loadout are both checked. No per-press
 	# move name, timing, resource claim or rank is accepted from a guest.
 	var binding := _strike_actor_binding(id, peer, body)
@@ -3068,6 +3074,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
 	var delta: Dictionary = verdict["delta"]
+	if not started.is_empty():
+		# COMBAT §4 forced break: the host's own committed start tick, added
+		# only after validation (which compares the move to the frozen start).
+		move["started_at_ms"] = int(started.get("started_at_ms", -1))
 	var wind_delta: Dictionary = _encounter_host.call("commit_wind", encounter_id,
 		peer_id, int(intent.get("action", 0)), wind_profile, cost, now_ms,
 		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))
@@ -8245,7 +8255,13 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 		var peer_id := int(peer)
 		if peer_id == _local_peer_id() or not live.has(peer_id) or not _realm_rpc_allowed(peer_id):
 			continue
-		_encounter_host.call("join", encounter_id, peer_id, "", "")
+		# The guest's host-admitted character, as _host_engage passes it: a
+		# guest that left at the round boundary is restored from its retained
+		# row (actor vitals, move resources, bound creature) instead of
+		# rejoining as a blank participant whose every round-two move is refused.
+		var guest_character := str(_session.call("_authority_character", peer_id)) \
+			if _session != null and _session.has_method("_authority_character") else ""
+		_encounter_host.call("join", encounter_id, peer_id, "", guest_character)
 	return true
 
 

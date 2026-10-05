@@ -1,0 +1,3 @@
+  ok    test_stormwood_audio_assets.gd :: test_every_stormwood_cue_asset_loads
+  ok    test_stormwood_audio_assets.gd :: test_strike_warning_matches_the_telegraph
+2 tests, 48 assertions, 0 failed

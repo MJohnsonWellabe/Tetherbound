@@ -58,7 +58,7 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 2. **Meshy:** keep the cap of 30 generations per night (RD-26).
 3. **Storm bear:** the name *Stormursa* is locked (RD-28).
 4. **Internet co-op:** finish and prove the existing Steam invite path (MULTIPLAYER §1) with Valve's development AppID 480, at no cost. The US$100 product AppID is decided only at ship time, and `ship_steam_runtime` packaging stays off until then. No Epic or other relay work. The two-network proof still needs real accounts, at least two on separate home networks.
-5. **Stormwood audio:** author the nine missing `assets/audio/stormwood/*.wav` from installed sources (AUDIO §10). Acceptance rests on spectral and loop checks; no owner listen is required.
+5. **Stormwood audio:** author the nine missing `assets/audio/stormwood/*.wav` from installed sources (AUDIO §10). Acceptance rests on spectral and loop checks; no owner listen is required. Built on `tb/audio` by `tools/audio/gen_stormwood.py` (provenance `assets/audio/stormwood/MANIFEST.json`), checked by `tools/audio/check_stormwood.py` (94/94); evidence `ralph/reports/AUDIO/stormwood-nine/`.
 6. **Owner play pass (F47/F49):** one pass, at F49, on the complete four-chapter build.
 7. **Final relay:** Stormwood's Stormheart is the final relay. Tidewake's regional link is one of four, and the dock exchange stays Tidewake's chapter close (WORLD follows).
 8. **PRODUCT:** the "Build the best five" sub-line, the demo scope (Meadows, village road, Hall, first homestead loop) and the §6 cut order are confirmed. Price stays open (personal/friends for now). This authorizes no launch or spending.

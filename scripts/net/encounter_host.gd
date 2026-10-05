@@ -1303,7 +1303,11 @@ func _add_participant(rec: Dictionary, peer_id: int, creature_uid: String,
 			authority.erase(character_id)
 		# character_id and active UID are supplied by host admission, never by
 		# the incoming intent. Binding a new body below rechecks owned UID.
-		restored["creature_uid"] = creature_uid
+		# A trainer round's re-seat (`_resume_trainer_encounter`) supplies no
+		# UID: the same character keeps its retained active creature, which
+		# its actor row is still bound to. A supplied UID still relabels, and
+		# a real switch still rebinds through bind_actor_body's generation.
+		if not creature_uid.is_empty(): restored["creature_uid"] = creature_uid
 		(rec["participants"] as Dictionary)[peer_id] = restored
 		return
 	(rec["participants"] as Dictionary)[peer_id] = {

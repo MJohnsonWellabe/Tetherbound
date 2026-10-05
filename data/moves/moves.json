@@ -536,7 +536,7 @@
       "slot": "charged",
       "power": 1.05,
       "energy_cost": 100,
-      "range": 10.0,
+      "_why_range_f22": "Owner ruling 2026-10-05 (per-starter balance): mashing with Galewisp cleared trainer teams from beyond most patterns (10 m charged), so its lead almost never fell. Range matches Ripplet's undertow (6.5 m); power and timing unchanged. Evidence ralph/reports/COMBAT/f22/proof/f22_1_trainers.md.", "range": 6.5,
       "cone_degrees": 30.0,
       "windup": 0.55,
       "recovery": 0.5,

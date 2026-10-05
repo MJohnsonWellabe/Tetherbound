@@ -38,8 +38,10 @@ extends SceneTree
 ##     playthroughs, 1 - product(masher win rate), fights taken as independent.
 ##   named wild (the guardian): READER median lead HP cost <= 0.55 x MASHER's,
 ##     READER win >= 90%.
-##   C3: no single incoming hit >= 50% of an entry creature's HP (worst seen, a
-##     harsher bound than "neutral"), every tell >= 0.8 s, and a tell authored
+##   C3 (COMBAT.md:144): no landed blow, re-rolled at the top of the variance
+##     band with a NEUTRAL type multiplier, removes >= 50% of the entry
+##     creature it struck; the worst hit in any matchup is reported, not gated.
+##     Every tell >= 0.8 s, and a tell authored
 ##     as heavy (>= 1.1 s) observed at >= 1.1 s. DIVER exemption (BOSSES 2:
 ##     "telegraph .4 s only with long positional cue"): a tell from a body whose
 ##     dive travels (the drawn ground lane) after a >= 7 m reposition is held to
@@ -156,7 +158,8 @@ func _run() -> void:
 				"starter": starter, "party_level": party_level, "pilots": {}}
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
-					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "min_tell": INF,
+					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "max_hit_by": {},
+					"neutral_worst": 0.0, "neutral_worst_by": {}, "min_tell": INF,
 					"max_tell": 0.0, "min_diver_tell": INF, "stalled": 0, "incoming_hits": 0, "hits": 0}
 				for seed_index in _seeds:
 					var party: Array[RefCounted] = []
@@ -180,7 +183,10 @@ func _run() -> void:
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
-						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
+						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]),
+						# COMBAT §7's reader switches on a real mismatch (coordinator ruling
+						# 2026-10-05: the acceptance pilot); rows stay labelled READER.
+						"SWITCH_READER" if policy == "READER" else policy)
 					var tells: Array = []
 					var diver_tells: Array = []
 					for event: Dictionary in result.get("events", []):
@@ -200,7 +206,12 @@ func _run() -> void:
 					s.seconds.append(float(result.seconds))
 					s.lead_faints += int(party[0].fainted)
 					s.party_wipes += int(int(result.faints) == party.size())
-					s.max_hit = maxf(float(s.max_hit), float(result.max_hit_frac))
+					if float(result.max_hit_frac) > float(s.max_hit):
+						s.max_hit = float(result.max_hit_frac)
+						s.max_hit_by = result.get("max_hit_by", {})
+					if float(result.get("neutral_worst_frac", 0.0)) > float(s.neutral_worst):
+						s.neutral_worst = float(result.neutral_worst_frac)
+						s.neutral_worst_by = result.get("neutral_worst_by", {})
 					s.stalled += int(bool(result.stalled) or result.has("fixture_error"))
 					s.incoming_hits += int(result.incoming_hits)
 					s.hits += int(result.hits)
@@ -216,7 +227,8 @@ func _run() -> void:
 					"median_lead_cost": _median(s.lead_cost), "median_party_cost": _median(s.party_cost),
 					"median_seconds": _median(s.seconds), "max_seconds": _max(s.seconds),
 					"lead_faint_rate": float(s.lead_faints) / n, "party_wipe_rate": float(s.party_wipes) / n,
-					"max_single_hit_frac": s.max_hit,
+					"max_single_hit_frac": s.max_hit, "max_single_hit_by": s.max_hit_by,
+					"neutral_worst_hit_frac": s.neutral_worst, "neutral_worst_hit_by": s.neutral_worst_by,
 					"min_tell_s": s.min_tell if is_finite(float(s.min_tell)) else -1.0,
 					"max_tell_s": s.max_tell, "stalled": s.stalled,
 					"min_diver_tell_s": s.min_diver_tell if is_finite(float(s.min_diver_tell)) else -1.0,
@@ -227,6 +239,9 @@ func _run() -> void:
 					summary.median_lead_cost, summary.lead_faint_rate, summary.party_wipe_rate,
 					summary.max_single_hit_frac, summary.min_tell_s, summary.max_tell_s, summary.min_diver_tell_s,
 					summary.median_seconds, summary.stalled])
+				print("MEADOWS_C2C3_HITS %s %s %s neutral_worst=%.3f by=%s | any_matchup_worst=%.3f by=%s" % [
+					entry.id, starter, policy, summary.neutral_worst_hit_frac, str(summary.neutral_worst_hit_by),
+					summary.max_single_hit_frac, str(summary.max_single_hit_by)])
 			var verdict := _verdict(entry, row.pilots.get("MASHER", {}), row.pilots.get("READER", {}))
 			row["verdict"] = verdict
 			failures += int(not bool(verdict.pass))
@@ -266,9 +281,13 @@ func _verdict(entry: Dictionary, m: Dictionary, r: Dictionary) -> Dictionary:
 			reasons.append("reader/masher lead cost %.3f/%.3f > %.2f" % [r.median_lead_cost, m.median_lead_cost, WILD_RATIO_MAX])
 		if float(r.win_rate) < WILD_READER_WIN_MIN:
 			reasons.append("reader win %.2f < %.2f" % [r.win_rate, WILD_READER_WIN_MIN])
-	var worst_hit := maxf(float(m.max_single_hit_frac), float(r.max_single_hit_frac))
+	# COMBAT.md:144 (coordinator ruling 2026-10-05): the ceiling is a NEUTRAL
+	# matchup bar at the worst allowed variance, against an uninjured, entry
+	# creature. Type advantage is meant to hurt; the worst hit in any matchup is
+	# still printed (MEADOWS_C2C3_HITS) with its attribution.
+	var worst_hit := maxf(float(m.get("neutral_worst_hit_frac", 0.0)), float(r.get("neutral_worst_hit_frac", 0.0)))
 	if worst_hit >= HIT_CEILING:
-		reasons.append("C3 single hit %.3f >= %.2f" % [worst_hit, HIT_CEILING])
+		reasons.append("C3 neutral worst-variance hit %.3f >= %.2f" % [worst_hit, HIT_CEILING])
 	for p: Dictionary in [m, r]:
 		if float(p.min_tell_s) >= 0.0 and float(p.min_tell_s) < TELL_FLOOR - 0.001:
 			reasons.append("C3 tell %.2f < %.2f" % [p.min_tell_s, TELL_FLOOR])
