@@ -337,6 +337,7 @@ var _combat_flinch_rest_position := Vector3.ZERO
 var _combat_flinch_rest_rotation := Vector3.ZERO
 var _combat_hitstop_active := false
 var _combat_hitstop_physics_was_active := true
+var _combat_hitstop_flinch_tween: Tween = null
 
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow quad, built lazily on
 ## first `_apply_ground_contact_shadow()` call and reused (resized in place)
@@ -2012,12 +2013,19 @@ func set_combat_hitstop(active: bool) -> void:
 	if active:
 		_combat_hitstop_physics_was_active = is_physics_processing()
 		set_physics_process(false)
-		if freeze_visual and _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
-			_combat_flinch_tween.pause()
+		_combat_hitstop_flinch_tween = null
+		if freeze_visual and _combat_flinch_tween != null and _combat_flinch_tween.is_valid() \
+				and _combat_flinch_tween.is_running():
+			_combat_hitstop_flinch_tween = _combat_flinch_tween
+			_combat_hitstop_flinch_tween.pause()
 	else:
 		set_physics_process(_combat_hitstop_physics_was_active)
-		if _combat_flinch_tween != null and _combat_flinch_tween.is_valid():
-			_combat_flinch_tween.play()
+		# A completed flinch can still be valid in its final frame. Resume only
+		# the running Tween this hitstop paused, never an already finished one
+		# or a replacement flinch created during the freeze.
+		if _combat_hitstop_flinch_tween != null and _combat_hitstop_flinch_tween.is_valid():
+			_combat_hitstop_flinch_tween.play()
+		_combat_hitstop_flinch_tween = null
 	# Releasing always reaches the animator; its own guard makes it a no-op
 	# when the freeze was skipped, and it clears a freeze begun before the
 	# setting changed.
