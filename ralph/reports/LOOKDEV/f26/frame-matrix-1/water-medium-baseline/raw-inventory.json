@@ -68,5 +68,5 @@
       "sha256": "94238c9a651315bff0d8e4566b27509bcb716f6738a2f6686615e950384a7caf"
     }
   ],
-  "excluded": "Profile binary shader/cache files omitted; all output PNG/JSON/log/config/receipt and profile text JSON/config/log files preserved byte-identically. No PNG exists."
+  "excluded": "Profile binary shader/cache files, including one generated map-cache PNG, omitted; all capture output PNG/JSON/log/config/receipt and profile text JSON/config/log files preserved byte-identically. No capture PNG exists."
 }

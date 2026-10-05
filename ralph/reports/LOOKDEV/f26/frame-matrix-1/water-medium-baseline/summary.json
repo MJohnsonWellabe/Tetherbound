@@ -4,7 +4,7 @@
   "native_elapsed_seconds": 391.046,
   "planned_frames": 240,
   "captured_frames": 0,
-  "png_count": 1,
+  "png_count": 0,
   "manifest_complete": false,
   "failure_counts": {
     "F39 production weather service unavailable": 181
@@ -17,5 +17,6 @@
     "valid_frames": 0
   },
   "scope": "Owned F26 Tidewake baseline full frame matrix using existingF39tool:24catalogue stands x5headings xday/night clear=240planned. Default-offfall/flowvisuals remainoff(process-localdefaultfalsematchesauthoredflags). Debugtravel/isolatedsave/seed/frozenclock/weather; noearnedroute/fight/FPS/Ally orqualityPASS claim. Sourceincludesunverifiedambientfollowup; exactpinpreserved.",
-  "verdict": "FAIL: missing required weather binding; no valid native frame evidence. Stop reason in separate external-stop receipt; supervisor stop_reason null is not a natural completion."
+  "verdict": "FAIL: missing required weather binding; no valid native frame evidence. Stop reason in separate external-stop receipt; supervisor stop_reason null is not a natural completion.",
+  "png_count_scope": "Capture frames directory only. One generated profile map-cache PNG is not a captured frame and is excluded."
 }
