@@ -56,8 +56,10 @@ func _act(policy: String) -> void:
 ## escape, reacts to a tell only after it has been visible for the declared
 ## observation delay, leaves the DISPLAYED strike geometry (walking when time
 ## allows, bursting when it does not) and spends its charged on recoveries.
-## It reads only what the screen shows: the committed shape, the tell's
-## remaining beat and the recovery/stagger state. Never RNG or future input.
+## It reads the displayed committed shape and the recovery/stagger state, and
+## times tells as a player who knows each pattern's authored length would
+## (exact, via the body's beat clock; the base C2 pilot does the same). It
+## never reads RNG or future input.
 func _read(_policy: String) -> void:
 	var telling := bool(_manager.enemy_is_winding_up())
 	if not telling:
@@ -332,7 +334,7 @@ func _switch_for_matchup() -> void:
 	var spent: bool = float((party[active] as RefCounted).call("hp_fraction")) < 0.3
 	for index: int in candidates:
 		var creature: RefCounted = party[index]
-		if spent and index != active and float(creature.call("hp_fraction")) < 0.6: continue
+		if index != active and float(creature.call("hp_fraction")) < (0.6 if spent else 0.3): continue
 		var outgoing := TYPE_GRAPH.multiplier_dual(_moves.call("type_of", str(creature.get("move_quick"))),
 			str(enemy.get("creature_type")), str(enemy.get("secondary_type")))
 		var incoming := TYPE_GRAPH.multiplier_dual(_moves.call("type_of", str(enemy.get("move_quick"))),

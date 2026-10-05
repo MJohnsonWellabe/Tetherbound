@@ -167,7 +167,9 @@ func _run() -> void:
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
-		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live, "fixed": fixed_total, "switched": switched_total},
+		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live,
+			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+			"fixed": fixed_total, "switched": switched_total},
 		"errors": errors, "rows": rows, "runs": runs}
 	if not _json.is_empty():
 		var output := FileAccess.open(_json, FileAccess.WRITE)
