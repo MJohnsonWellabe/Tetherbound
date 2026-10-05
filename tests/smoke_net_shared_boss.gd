@@ -229,6 +229,10 @@ const SWING_REACH_M := 4.0
 ## Half the widest quick arc (100 deg) plus margin: a boss farther off the
 ## swing line than this cannot be the body the host resolves it onto.
 const FRIENDLY_BOSS_CLEAR_DEG := 65.0
+## Inside-the-ring staging (see `_inside_friendly_side`): candidate directions
+## and how far inside the live arena radius the teammate's stand must be.
+const FRIENDLY_RAYS := 24
+const FRIENDLY_RING_MARGIN_M := 0.3
 
 ## `smoke_boss.gd`'s allowance, by its own name and for its own stated reason.
 ## The Warden fields five creatures at levels 18-20 and a headless peer fights
@@ -778,8 +782,21 @@ func _run() -> void:
 		# swing onto the nearest in-arc body, opponent included
 		# (encounter_host.gd::_friendly_body_struck), so a boss in the arc and
 		# nearer makes the swing an ordinary strike, correctly unrefused.
-		var boss_at := _vec(((await _boss(0)).get("record", {}) as Dictionary).get("position", []))
+		var boss_view: Dictionary = await _boss(0)
+		var boss_at := _vec((boss_view.get("record", {}) as Dictionary).get("position", []))
 		var side: Vector3 = FRIENDLY_SIDES[(staged - 1) % FRIENDLY_SIDES.size()]
+		var ring: Dictionary = boss_view.get("arena", {}) as Dictionary
+		var inside := _inside_friendly_side(guest_at, boss_at, _vec(ring.get("centre", [])),
+			float(ring.get("radius", -1.0)), staged)
+		if inside != Vector3.INF:
+			# A teammate stand inside the live ring, as far off the boss's line
+			# as the ring allows. CI 37314849247: every "away from the boss"
+			# stand was outside the 6.84 m ring, and `combat_arena.hold_inside`
+			# returned the host's creature to its edge before the swing. Only
+			# the host's own creature is placed: a guest's creature is held to
+			# the guest's local stand-in, so moving it does not move the host's.
+			side = inside
+			boss_at = Vector3.INF
 		if boss_at != Vector3.INF:
 			# Stand the teammate on the far side of the striker from the boss,
 			# so the swing line points away from it; retries fan out +-30 deg.
@@ -1875,6 +1892,40 @@ func _tournament_accepted_characters(deliveries: Dictionary, source: String) -> 
 ## This peer's view of the boss fight, from `tools/net/peer_runner.gd`'s `boss`
 ## probe: the host record, the creature actually on the field, the same team
 ## entry rebuilt UNSCALED, and the last refusal this peer was given.
+## A unit direction from the striker (`guest_at`) for the teammate's stand
+## APART_Z away, keeping that stand at least FRIENDLY_RING_MARGIN_M inside the
+## live ring's radius and counting as a clean swing (boss off the line or
+## farther). Among those, attempt n takes the n-th roomiest (cycling through
+## the best three), so a retry is a different stand. INF when the ring, boss or striker is unknown or none fits.
+func _inside_friendly_side(guest_at: Vector3, boss_at: Vector3, centre: Vector3, radius: float, attempt: int) -> Vector3:
+	if guest_at == Vector3.INF or boss_at == Vector3.INF or centre == Vector3.INF or radius <= 0.0:
+		return Vector3.INF
+	var to_boss := boss_at - guest_at
+	to_boss.y = 0.0
+	var fits: Array = []
+	for k in FRIENDLY_RAYS:
+		var u := Vector3.FORWARD.rotated(Vector3.UP, TAU * float(k) / float(FRIENDLY_RAYS))
+		if _planar(guest_at + u * APART_Z - centre) > radius - FRIENDLY_RING_MARGIN_M:
+			continue
+		var off := 180.0 if to_boss.length() < 0.05 else rad_to_deg(u.angle_to(to_boss))
+		# Only a stand the attempt below would count as clean: the boss off the
+		# swing line, or farther than the teammate.
+		if off <= FRIENDLY_BOSS_CLEAR_DEG and to_boss.length() <= APART_Z + 0.5:
+			continue
+		fits.append({"u": u, "room": radius - _planar(guest_at + u * APART_Z - centre)})
+	if fits.is_empty():
+		return Vector3.INF
+	# Roomiest first: the ring is centred on the fight, so its middle is open
+	# floor. A stand near the rim can still be inside a room wall (the Warden
+	# Arena's +Z face cuts the ring), which pushes the creature off it.
+	fits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.room) > float(b.room))
+	return fits[(attempt - 1) % mini(3, fits.size())].u
+
+
+static func _planar(v: Vector3) -> float:
+	return Vector2(v.x, v.z).length()
+
+
 func _boss(peer: int, strike_geometry: bool = false) -> Dictionary:
 	var args := {"trainer": BOSS}
 	if strike_geometry:
