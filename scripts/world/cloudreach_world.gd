@@ -87,6 +87,7 @@ const THREE_BELLS_BRIDGE_PRESENTATION := preload("res://scripts/world/cloudreach
 const BROKEN_SKYROAD_ARCH_PRESENTATION := preload("res://scripts/world/cloudreach_broken_skyroad_arch.gd")
 const FLIGHT_AERIE_PRESENTATION := preload("res://scripts/world/cloudreach_flight_aerie_presentation.gd")
 const HIGH_PERCHES_PRESENTATION := preload("res://scripts/world/cloudreach_high_perches_presentation.gd")
+const HIGH_PERCHES_VISUAL_PATH := "res://data/config/cloudreach_high_perches_visual.json"
 const OLD_WIND_OBSERVATORY_PRESENTATION := preload(
 	"res://scripts/world/cloudreach_old_wind_observatory_presentation.gd")
 const STORMWARD_OVERLOOK_PRESENTATION := preload("res://scripts/world/cloudreach_stormward_overlook.gd")
@@ -2972,6 +2973,17 @@ func _inside_nature_tree_exclusion(at: Vector3) -> bool:
 		if not raw is Dictionary:
 			continue
 		var exclusion := raw as Dictionary
+		# A sightline: no route tree within half_width_m of the from->to segment
+		# (F40#4: the Aviary seen from the finale road at 400 m).
+		if exclusion.has("from_xz") and exclusion.has("to_xz"):
+			var from_raw := exclusion.get("from_xz") as Array
+			var to_raw := exclusion.get("to_xz") as Array
+			var from := Vector2(float(from_raw[0]), float(from_raw[1]))
+			var to := Vector2(float(to_raw[0]), float(to_raw[1]))
+			var nearest := Geometry2D.get_closest_point_to_segment(Vector2(at.x, at.z), from, to)
+			if nearest.distance_to(Vector2(at.x, at.z)) < float(exclusion.get("half_width_m", 0.0)):
+				return true
+			continue
 		var centre_raw: Variant = exclusion.get("centre_xz", [])
 		if not centre_raw is Array or (centre_raw as Array).size() < 2:
 			continue
@@ -4164,12 +4176,24 @@ func _build_flight_aerie(root: Node3D) -> void:
 func _build_high_perches(root: Node3D) -> void:
 	var perch_points: Array[Vector3] = []
 	var perch_radii: Array[float] = []
+	# F08#3: the six visual-only needles stood on the south Fly-arrival line,
+	# either side of the north landing (the production camera sat wedged between
+	# two of them) and on the NW vista line. Their feet are authored in
+	# cloudreach_high_perches_visual.json `needle_feet` ([x, z, radius]) so the
+	# arrival, landing and vista axes stay open; heights are unchanged.
+	var perch_cfg := _read_json(HIGH_PERCHES_VISUAL_PATH)
+	var feet := perch_cfg.get("needle_feet", []) as Array
 	for i in 6:
-		var angle := TAU * float(i) / 6.0 + 0.2
 		var height := 16.0 + float(posmod(i * 7, 5)) * 5.0
 		var radius := 1.8 + float(i % 2)
+		var angle := TAU * float(i) / 6.0 + 0.2
 		var foot := Vector3(cos(angle) * (8.0 + float(i % 2) * 5.0), 0.0,
 			sin(angle) * (7.0 + float((i + 1) % 2) * 5.0))
+		if i < feet.size() and (feet[i] as Array).size() >= 3:
+			var spec := feet[i] as Array
+			foot = Vector3(float(spec[0]), 0.0, float(spec[1]))
+			radius = float(spec[2])
+			angle = atan2(foot.z, foot.x)
 		var outward := Vector3(cos(angle), 0.0, sin(angle))
 		perch_points.append(foot)
 		perch_radii.append(radius)
@@ -4233,9 +4257,11 @@ func _build_high_perches(root: Node3D) -> void:
 	# measured top stays below the controller's 0.35 m step height, so these read
 	# and behave as low ground dressing rather than walk-through furniture.
 	var ground_roosts: Array[Dictionary] = [
-		{"at": Vector2(-6.2, 4.0), "yaw": -25.0},
-		{"at": Vector2(-0.7, 8.5), "yaw": 90.0},
-		{"at": Vector2(10.0, 7.5), "yaw": 25.0},
+		# F08#3: the racks stood across the landing lane and the south stands
+		# and read as "loose planks on grass" at the bottom of the production
+		# lens. They sit at the court's west and north edges now.
+		{"at": Vector2(-9.0, 1.5), "yaw": -10.0},
+		{"at": Vector2(-3.5, 13.5), "yaw": 80.0},
 	]
 	for i in ground_roosts.size():
 		var spec := ground_roosts[i]
@@ -4256,6 +4282,59 @@ func _build_high_perches(root: Node3D) -> void:
 		"half":Vector2(17.5,17.5), "rotation":0.0})
 	_cover_exclusions.append({"centre":root.to_global(Vector3(0.0,0.0,-20.0)),
 		"half":Vector2(4.2,8.0), "rotation":0.0})
+
+
+## `master_site.gd` hook. The generic Master pad is a flat grey 0.35 m disc
+## (StandardMaterial #777969) and, when fly-only, bare 40 m cylinders: from the
+## High Perches it read as "a flat-shaded near-white disc platform on white
+## cylinder legs ... untextured, reads as placeholder" (F08#3 re-proof). Here the
+## floor takes the realm's worn-ground turf, and a fly-only pad sits on a rooted
+## stratified islet (the battle-yard / landmark-ledge mesa, no collision) in
+## place of its columns. The pad's own collision and interactions are untouched.
+func dress_master_site(site: Node3D, definition: Dictionary) -> void:
+	if simulation_only or not is_instance_valid(site):
+		return
+	var radius := float(definition.get("arena_radius_m", 18.0))
+	_dress_master_signpost(definition)
+	var floor_mesh := site.get_node_or_null(^"ArenaFloor") as MeshInstance3D
+	if floor_mesh != null:
+		floor_mesh.material_override = ENVIRONMENT_MATERIALS.worn_ground(site.global_position, radius)
+	if str(definition.get("access", "")) != "fly_only":
+		return
+	for child: Node in site.get_children():
+		if child is MeshInstance3D and child != floor_mesh and (child as MeshInstance3D).mesh is CylinderMesh:
+			(child as MeshInstance3D).visible = false
+	var depth := float(definition.get("support_depth_m", 40.0))
+	var size := Vector3(radius * 2.3, depth, radius * 2.3)
+	_mesa(site, "LandmarkLedge", Vector3(0.0, -size.y * 0.5 - 0.06, 0.0), size, _materials["cliff"],
+		_materials["upland_dry"] if site.global_position.y >= 700.0 else _materials["upland"], false,
+		absi(str(definition.get("id", "master")).hash()) % 997, false, radius + 1.0)
+
+
+## The Master signpost is a bare 2.4 m white box. master_t4's stands at the
+## High Perches' survey centre, where every Fly arrival lands, so the Low judge
+## saw "a plain white untextured pillar ... straight through the trainer's
+## body". The pole takes weathered timber, and a sign on a landmark's landing
+## centre moves to `master_signpost_offsets` (cloudreach_visual.json, local to
+## that landmark) at the court edge facing the Master. Its prompt moves with it.
+func _dress_master_signpost(definition: Dictionary) -> void:
+	var raw: Array = definition.get("sign_position", [])
+	if raw.size() < 3:
+		return
+	var at := Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
+	for sign: Node in find_children("MasterSignpost*", "Node3D", false, false):
+		var post := sign as Node3D
+		if Vector2(post.global_position.x - at.x, post.global_position.z - at.z).length() > 1.0:
+			continue
+		for child: Node in post.get_children():
+			if child is MeshInstance3D and (child as MeshInstance3D).mesh is BoxMesh:
+				(child as MeshInstance3D).material_override = _materials["weathered_timber"]
+		var offsets: Dictionary = _visual_config.get("master_signpost_offsets", {})
+		var offset: Variant = offsets.get(str(definition.get("author_reference", "")))
+		if offset is Array and (offset as Array).size() >= 2:
+			var to := at + Vector3(float(offset[0]), 0.0, float(offset[1]))
+			var floor_y := ground_height_at(to.x, to.z, at.y)
+			post.global_position = Vector3(to.x, at.y if is_nan(floor_y) else floor_y, to.z)
 
 
 func _build_ground_roost_rack(root: Node3D, index: int, at: Vector2, yaw_deg: float) -> void:
