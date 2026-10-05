@@ -18,11 +18,13 @@ func _init(tms_path: String = TMS_PATH) -> void:
 ## One parsed table per process, re-read only when the file changes (see
 ## move_db.gd::load_default). Read-only for callers: accessors hand out copies.
 static var _shared: RefCounted = null
-static var _shared_stamp := -1
+static var _shared_stamp := ""
 
 
 static func load_default() -> RefCounted:
-	var stamp := FileAccess.get_modified_time(TMS_PATH)
+	# Modified time and size: a test writing a temporary table within the same
+	# second still reloads.
+	var stamp := "%d:%d" % [FileAccess.get_modified_time(TMS_PATH), FileAccess.get_size(TMS_PATH)]
 	if _shared == null or stamp != _shared_stamp:
 		_shared = (load("res://scripts/creatures/tm_db.gd") as GDScript).new()
 		_shared_stamp = stamp

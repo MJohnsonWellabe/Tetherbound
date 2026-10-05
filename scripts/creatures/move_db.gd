@@ -29,11 +29,13 @@ func _init(moves_path: String = MOVES_PATH) -> void:
 ## frame for seconds after world facts landed (PERF, 2026-10-05). Read-only
 ## for callers: `move()` hands out copies.
 static var _shared: RefCounted = null
-static var _shared_stamp := -1
+static var _shared_stamp := ""
 
 
 static func load_default() -> RefCounted:
-	var stamp := FileAccess.get_modified_time(MOVES_PATH)
+	# Modified time and size: a test writing a temporary table within the same
+	# second still reloads.
+	var stamp := "%d:%d" % [FileAccess.get_modified_time(MOVES_PATH), FileAccess.get_size(MOVES_PATH)]
 	if _shared == null or stamp != _shared_stamp:
 		_shared = (load("res://scripts/creatures/move_db.gd") as GDScript).new()
 		_shared_stamp = stamp
