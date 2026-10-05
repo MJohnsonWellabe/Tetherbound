@@ -1959,6 +1959,11 @@ func _bodies_that_are_not_buildings() -> Array[RID]:
 	for body in tree.get_nodes_in_group(DEPLOYED_CREATURE_GROUP):
 		if body is CollisionObject3D and is_instance_valid(body):
 			out.append((body as CollisionObject3D).get_rid())
+	# F34#4: a teammate's trainer body is no more an obstacle than this one's;
+	# the host validates a guest's camp with that guest standing beside it.
+	for body in tree.get_nodes_in_group(&"remote_trainer"):
+		if body is CollisionObject3D and is_instance_valid(body):
+			out.append((body as CollisionObject3D).get_rid())
 	return out
 
 

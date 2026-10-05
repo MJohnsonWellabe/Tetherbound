@@ -1,0 +1,24 @@
+ALL CHECKS PASSED
+PASS: after joining the guest still holds its kit (1)
+PASS: after rejoining the guest receives both camps (2 record(s), 2 node(s))
+PASS: after the host reload both camps are in the world (2 record(s), 2 node(s))
+PASS: peer 0 holds one forward-camp kit
+PASS: peer 0 hosts (hosting udp/33041 as peer 1)
+PASS: peer 0 owns a creature
+PASS: peer 0 sees both players
+PASS: peer 1 holds one forward-camp kit
+PASS: peer 1 joins (joined 127.0.0.1:33041 as peer 2091477487 after 36 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 1 owns a creature
+PASS: peer 1 sees both players
+PASS: the guest holds both camps
+PASS: the guest leaves (client left cleanly after 0 frames)
+PASS: the guest places its own camp (placed at (52.0, 0.9, 16.0): 2 record(s), 2 node(s); pending {"character_id":"character-9b65e683a5d1f948db3dd012dd35d0cf","original":{"action":"place","action_id":"f093729be4e73e9812255bebc432c983","position":[52.0,0.899999976158142,16.0],"realm":"meadows","yaw_deg":0.0},"revision":0,"world_namespace":"5e07bb41f12f54acd727f6a15c7c33e5"}; answers [{"code":"awaiting_saved_decision","durable":true,"ok":false,"owner_acknowledged":false,"owner_saved":false,"receipt":"craft:character-9b65e683a5d1f948db3dd012dd35d0cf:camp:f093729be4e73e9812255bebc432c983","resolved":false,"saved":false,"settled":false}])
+PASS: the guest receives the host's camp record and planted camp (1 record(s), 1 node(s))
+PASS: the guest rejoins (joined 127.0.0.1:33041 as peer 387801678 after 90 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the guest's camp request settles (no pending original left)
+PASS: the host debited the guest's own kit (0 left)
+PASS: the host holds the guest's camp with the guest's character id (2 record(s), 2 node(s))
+PASS: the host places its camp (placed at (18.0, 0.9, 14.0): 1 record(s), 1 node(s); pending {"character_id":"character-41d2fbf2984d86f783877c2d56ac5b1a","original":{"action":"place","action_id":"52ec4697df31243f35fbe67a15611928","position":[18.0,0.899999976158142,14.0],"realm":"meadows","yaw_deg":0.0},"revision":5,"world_namespace":"5e07bb41f12f54acd727f6a15c7c33e5"}; answers [{"character_revision":6,"durable":true,"journal_revision":1,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-41d2fbf2984d86f783877c2d56ac5b1a:camp:52ec4697df31243f35fbe67a15611928","resolved":true,"saved":true,"settled":true}])
+PASS: the host saves and reloads its world (host slot reload preserved party=true selection=true hosted_world=true)
+PASS: the host's kit is spent
+PASS: two distinct characters

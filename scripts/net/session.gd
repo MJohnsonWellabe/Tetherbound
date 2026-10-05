@@ -29,6 +29,7 @@ var _homestead_stations: Dictionary = {}
 var _foundation_requests: Dictionary = {}
 var _foundation_personal_cache: Dictionary = {}
 var _foundation_camp_pending: Dictionary = {}
+var _camp_view_requested_ms := -1000000
 var _process_exit_in_flight := false
 var _process_exit_refusal := ""
 
@@ -374,6 +375,14 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 		_foundation_personal_cache = result.duplicate(true)
 		homestead_personal_view_completed.emit()
 	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS:
+		# F34#4: a guest's camp request ends on the host's settled or refused
+		# answer (the host already holds any durable row); the revision moved.
+		if envelope.op == "camp_build" and ESSENCE._equivalent(_foundation_camp_pending.get("original"), envelope.intent) \
+			and (result.get("settled") == true or result.get("terminal_refusal") == true):
+			_foundation_camp_pending.clear()
+			_foundation_requests.erase(correlation)
+			_foundation_personal_cache["registry_revision"] = -1
+			homestead_personal_view()
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
 	elif envelope.op == "refine_start" and result.get("ok") != true:
 		_game().call("push_world_message", str(result.get("reason", result.get("code", "Refining could not start."))))
@@ -1982,12 +1991,25 @@ func forward_camp_prepare_rest(camp: Node3D, original: Dictionary) -> Dictionary
 
 func forward_camp_placement_available() -> bool:
 	return preload("res://scripts/build/forward_camp_rules.gd").config().get("runtime_enabled") == true \
-		and snapshot_ready() and _foundation_camp_pending.is_empty() and not _owner_training_mutation_blocked(_game().get("local"))
+		and snapshot_ready() and _foundation_camp_pending.is_empty() and not _owner_training_mutation_blocked(_game().get("local")) \
+		and _camp_revision_known()
+
+## A guest's camp intent carries its admitted character revision from the
+## host's personal view; until one has arrived it asks (at most once a second).
+func _camp_revision_known() -> bool:
+	if is_host(): return true
+	if int(_foundation_personal_cache.get("registry_revision", -1)) >= 0: return true
+	var now := Time.get_ticks_msec()
+	if now - _camp_view_requested_ms >= 1000:
+		_camp_view_requested_ms = now
+		homestead_personal_view()
+	return false
 
 func forward_camp_submit_build(original: Dictionary, placer: Node) -> Dictionary:
 	if not is_instance_valid(placer) or placer.get_script() != preload("res://scripts/build/build_placer.gd"): return FOUNDATION_ACTIONS.deny("actual_placer_required")
 	if not _foundation_camp_pending.is_empty():
 		return FOUNDATION_ACTIONS.deny("reconcile_original_camp")
+	if not _camp_revision_known(): return FOUNDATION_ACTIONS.deny("camp_unavailable")
 	var view := homestead_personal_view()
 	_foundation_camp_pending = {"original": original.duplicate(true), "revision": int(view.get("registry_revision", -1)),
 		"character_id": _local_character_id(), "world_namespace": _game().get("world").reward_delivery_namespace}
@@ -2003,9 +2025,9 @@ func _retry_foundation_camp() -> Dictionary:
 
 func _foundation_build_context(peer: int, original: Dictionary) -> Dictionary:
 	if preload("res://scripts/build/forward_camp_rules.gd").config().get("runtime_enabled") != true \
-		or peer != local_peer_id() or _altar_peer_in_combat(peer): return {}
+		or not is_host() or _altar_peer_in_combat(peer): return {}
 	var game := _game()
-	var actor := game.call("find_player") as Node3D
+	var actor: Node3D = game.call("find_player") as Node3D if peer == local_peer_id() else _foundation_remote_actor(peer)
 	if actor == null or admitted_character_state(peer).is_empty(): return {}
 	var character := _authority_character(peer)
 	var revision := int(_character_authority.call("revision", character))
@@ -2031,6 +2053,19 @@ func _foundation_build_context(peer: int, original: Dictionary) -> Dictionary:
 	context.world_before = game.get("world").placed_buildings.duplicate(true)
 	context.next_building_uid = int(game.get("world").next_building_uid)
 	return context
+
+## F34#4: a guest's camp is validated against its own host-side trainer body,
+## which must stand in the host's loaded realm (the host's placer and ground
+## decide); its realm comes from the host's own actor transport, never a packet.
+func _foundation_remote_actor(peer: int) -> Node3D:
+	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	var transport := get_node_or_null(^"LedgerRpc")
+	if lifecycle == null or transport == null: return null
+	var body := lifecycle.call("remote_body", peer) as Node3D
+	var seen: Dictionary = transport.call("_water_actor_context", peer, {})
+	if body == null or not body.is_inside_tree() or seen.get("character_id") != _authority_character(peer) \
+		or str(seen.get("realm", "")) != _local_realm(): return null
+	return body
 
 func open_creature_loadouts(camp: Node3D, key: String) -> bool:
 	if not forward_camp_available(camp) or camp.call("source_key") != key: return false
