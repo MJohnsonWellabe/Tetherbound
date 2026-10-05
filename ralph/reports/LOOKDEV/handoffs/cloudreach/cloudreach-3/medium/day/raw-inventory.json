@@ -1,0 +1,310 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 44947965,
+      "sha256": "0804672631cd70484dbdc23292aff3ced7364eb45b2c5686467d2bdb50afb72d"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 45897937,
+      "sha256": "90511fb9817776709880c6c8593c030e0824d79fbfcd4a80129a9f86dfde46cf"
+    },
+    {
+      "path": "raw-evidence-03.zip",
+      "size": 17149479,
+      "sha256": "a744e3fad55783c69d72cc283787bdd038ce3663cfd51a7454e1b8348f4fdd7d"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 34850,
+      "sha256": "281d6f5e56e3a3766cced87555672a04090baf6ba4f9287cf29e21f5e5e91f0e"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 5134,
+      "sha256": "ec22bd5138956d5ba9743c3aa9a7e74db9b5c0b9e80a3df9fc17140a3fd80a38"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 394,
+      "sha256": "f970feca662bfbe3994150a52732a0559b8f42f674001bdc9da3b4f95e1b497f"
+    },
+    {
+      "path": "frames/manifest.txt",
+      "archive": "raw-evidence-01.zip",
+      "size": 17360,
+      "sha256": "4bf2f4ff12a5af6821e6f8a837ad90c62f2baa09a570edb15bdd162839bfc980"
+    },
+    {
+      "path": "frames/01_gate_lower_cliffs_approach_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2424800,
+      "sha256": "cb70f5396c4923be492ed120806b9ce3bf5dd4e30b6a8c9ce9174e02d07bf128"
+    },
+    {
+      "path": "frames/02_gate_lower_cliffs_route_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2325476,
+      "sha256": "c2a79781c1e824a38595ead7abdabd183c9689aeef2ae4ad3fc9ff0a99315ce4"
+    },
+    {
+      "path": "frames/03_gate_lower_cliffs_reverse_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2198973,
+      "sha256": "0c0d90d8b18ba9203c85b80dc946d55dcdfb2934128829733b741f5361950a07"
+    },
+    {
+      "path": "frames/04_gate_lower_cliffs_detail-crag_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2299732,
+      "sha256": "540b01bd0798e6b4d413ba06429eaf5036023d49d3db2ac77a1ecff3b6e45aaa"
+    },
+    {
+      "path": "frames/05_gate_lower_cliffs_settlement-galefoot_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2401509,
+      "sha256": "ef09fdbd97c41e90e6884597b4e336a3e7cdc86aa1f51d0634d83bb016dbad3b"
+    },
+    {
+      "path": "frames/06_broken_causeways_approach_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2951572,
+      "sha256": "f8076f3e20961597d27c68edf5071a6115256eaff0d5a5c2c607336832bee5ff"
+    },
+    {
+      "path": "frames/07_broken_causeways_route_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2866015,
+      "sha256": "069973dfbea339a14293dec071d2ca829bc361393bf74513d8814482cc728e7f"
+    },
+    {
+      "path": "frames/08_broken_causeways_reverse_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2289429,
+      "sha256": "6883a4f280742b3f3b6e2f6562436e1509c25e3effa379009ce59df5a093010d"
+    },
+    {
+      "path": "frames/09_broken_causeways_detail-ropebridge_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1975952,
+      "sha256": "d10344f95ceeffd77924df9b3bfb59f84ce576bebb5bc538d4e2800bdc577657"
+    },
+    {
+      "path": "frames/10_broken_causeways_lure-bells_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1961999,
+      "sha256": "852ea72aeed0a6a0345dc5bc99d8e2dd3209810472647c17095736d90cb5ea45"
+    },
+    {
+      "path": "frames/11_windscar_ravine_approach_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2319428,
+      "sha256": "9338a77b16b0a82b29ced229032a67467503b074f1045f1d14d750509390c6dd"
+    },
+    {
+      "path": "frames/12_windscar_ravine_route_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2160437,
+      "sha256": "34d65f8f26faa0ce46e393b57306a7948c0e217f37067a60da292ed5e5f5564a"
+    },
+    {
+      "path": "frames/13_windscar_ravine_reverse_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2364704,
+      "sha256": "88ef5acbd4747860965d173a84f41acebeaed56e514b36e2ce186224f65d52c8"
+    },
+    {
+      "path": "frames/14_windscar_ravine_detail-beacon_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2240989,
+      "sha256": "469fea1a2121bf1095d3443f3aa4bfb5b51ee264ad91f25a1c3806c6c24c8be3"
+    },
+    {
+      "path": "frames/15_high_roost_sky_shrine_approach_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2304688,
+      "sha256": "95a9c7aa7296765b7637fd27566a8e934fa835640c0e7b992ea172561de55845"
+    },
+    {
+      "path": "frames/16_high_roost_sky_shrine_route_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2358159,
+      "sha256": "48f73774cf0470ffbb9f80e9a40d707e5d1824347ae54ed8c101e3c0e45f99c3"
+    },
+    {
+      "path": "frames/17_high_roost_sky_shrine_reverse_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2184553,
+      "sha256": "2b2e7c4db0b324cbaba64608d72a4f7f9d79004cfcebc599b56c2bd3f2e89637"
+    },
+    {
+      "path": "frames/18_high_roost_sky_shrine_detail-shrine_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2697650,
+      "sha256": "74f38730db093600a69191419b7aaaae85a261ada1157bcc94b7bda554afc557"
+    },
+    {
+      "path": "frames/19_high_roost_sky_shrine_perch-landing_day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2560330,
+      "sha256": "cd139d8fa4aabddb678c2f2b6e20ffbd933d0de83201f3c2d8dd9b10058ad3a0"
+    },
+    {
+      "path": "frames/20_high_roost_sky_shrine_perch-vista_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2280251,
+      "sha256": "044497e0514d5e548f52484bba8b5f66a3f57d47e85b1f5fbe69c6a54307777d"
+    },
+    {
+      "path": "frames/21_upper_cloudreach_approach_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2901950,
+      "sha256": "5a72805f38ff3652ccf68131aa29e8f0f15d77b0772992a713820417511d391c"
+    },
+    {
+      "path": "frames/22_upper_cloudreach_route_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2466193,
+      "sha256": "62b4ca50598d0a7c6924392ba76a89f4cb9f02b78b0ca77c2d5283ae8eafbd90"
+    },
+    {
+      "path": "frames/23_upper_cloudreach_reverse_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2459026,
+      "sha256": "d5e054e5fbee6f0e9493254d6c7f401a7fa8ea357b7bdbda1e6a2db5631f8aba"
+    },
+    {
+      "path": "frames/24_upper_cloudreach_detail-observatory_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2676512,
+      "sha256": "0c96a55c8de9b4a31372dba4eb2f0f498bf9887bfb5d9b6ac8e6dd3eeb57db8d"
+    },
+    {
+      "path": "frames/25_upper_cloudreach_settlement-cliffhold_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2233925,
+      "sha256": "414bb2a2790e43d37ce4b1ca7bf316eba440f59e69d1997f5a1445d345522226"
+    },
+    {
+      "path": "frames/26_summit_final_stronghold_approach_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2482106,
+      "sha256": "930bf6c392dd6da1e7aac9f4d2a039bf40802b3ba44ba1dedf6af617d168b4c8"
+    },
+    {
+      "path": "frames/27_summit_final_stronghold_route_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3195628,
+      "sha256": "25f75c50c3b8c86042e4caee004b6bc84e009918a2c9c2255819c34b4cd0d559"
+    },
+    {
+      "path": "frames/28_summit_final_stronghold_reverse_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2216886,
+      "sha256": "33a944da2798aa2ec2ea3a8604e98858d58a7c2ba00659a539a6f4288b65ee85"
+    },
+    {
+      "path": "frames/29_summit_final_stronghold_detail-aviary_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2386796,
+      "sha256": "d721a9ba432610aa0d93bf1b8744f85c09db0631d77abfb4eb60939ec0701f3b"
+    },
+    {
+      "path": "frames/30_gate_lower_cliffs_approach_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1893571,
+      "sha256": "d2013fa912839d718a461fb45e83b2cc0bf503a989c2f3827ea202156c2cd33c"
+    },
+    {
+      "path": "frames/31_broken_causeways_route_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2041514,
+      "sha256": "215b1b00cf64d58869974a0fab8d608a26bc3a8c1cc475bb76220aa81c420b55"
+    },
+    {
+      "path": "frames/32_upper_cloudreach_approach_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2463472,
+      "sha256": "2de33325bfe19cc23d096f8ea7d6b5891ef003752c8f38a8eb63fe528ab39d7c"
+    },
+    {
+      "path": "frames/33_summit_final_stronghold_finale400_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3226690,
+      "sha256": "63b620eecce95b1901debb823b1dc6e6fdb84ca068596ae3f73a1185dd4fa31d"
+    },
+    {
+      "path": "frames/34_summit_final_stronghold_finale100_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3111524,
+      "sha256": "ca3ecb715d00e516847d257515b410c635d736f791da879dd58caeb260d7f1f8"
+    },
+    {
+      "path": "frames/35_summit_final_stronghold_postfinale_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 3113651,
+      "sha256": "7bce881cdb97992b59a6a98a30a14342c530c478f740095fb38593138e2cecc4"
+    },
+    {
+      "path": "frames/36_gate_lower_cliffs_postfinale-galefoot_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2431458,
+      "sha256": "95dd7ff47f26614e04d0772dd58345954cbcbe003246e7601176710b3213c942"
+    },
+    {
+      "path": "frames/37_gate_lower_cliffs_settlement-galefoot-approach_day.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2313612,
+      "sha256": "bcb2990aa7ee38f0c0c3c0cc18fde7683216f46514f4d3462978da7b2e2bd13e"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 7156982,
+      "sha256": "341d77a38d09098199e16c4329d2467c83804373e3d075019e57a5eabfccffa5"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_day_night.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 1973033,
+      "sha256": "821cf44b065fa5a045b25f0552ed59140988ca770eb134569da04cd1a99e08ce"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_finale.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 1780601,
+      "sha256": "80c0e0bdea971d08ffaf8bf6a85a0e515f5c3e167e9e2e12d8f2a05c077062cc"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_hero.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 1594808,
+      "sha256": "5ae9271ded4c89965abca667b91d35dbc91face8ee4884ee96442bf878583aee"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_regions.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 4643293,
+      "sha256": "6a5c4626d22659dac5d8c3b544061331c52c89dd0bb10e101ec4cd2fde47c3a4"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}

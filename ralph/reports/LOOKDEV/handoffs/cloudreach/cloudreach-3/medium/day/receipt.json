@@ -1,0 +1,212 @@
+{
+  "source_commit": "56ba1bd87fd15f9868ddd627c9e9c73371bbe7c9",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-f06b679a",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--active=terrapup",
+    "--output=D:/tetherbound/.artifacts/rs-cloudreach-3/medium/day/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 704.766,
+  "native_elapsed_seconds": 696.438,
+  "native_started_utc": "2026-10-05T13:34:46.769296+00:00",
+  "preset": "Medium",
+  "profile": "D:\\tetherbound\\.artifacts\\rs-cloudreach-3\\medium\\day\\profile",
+  "scope": "Exact Claude pinned matrix visual capture; no FPS/image-quality claim.",
+  "errors": [
+    "ERROR: unscoped chapter flag: fly_tutorial_completed"
+  ],
+  "capture_complete": true,
+  "capture_frames": 37,
+  "skipped_rows": 0,
+  "contact_sheets": 5,
+  "png_dimensions": {
+    "01_gate_lower_cliffs_approach_day.png": [
+      1920,
+      1061
+    ],
+    "02_gate_lower_cliffs_route_day.png": [
+      1920,
+      1061
+    ],
+    "03_gate_lower_cliffs_reverse_day.png": [
+      1920,
+      1061
+    ],
+    "04_gate_lower_cliffs_detail-crag_day.png": [
+      1920,
+      1061
+    ],
+    "05_gate_lower_cliffs_settlement-galefoot_day.png": [
+      1920,
+      1061
+    ],
+    "06_broken_causeways_approach_day.png": [
+      1920,
+      1061
+    ],
+    "07_broken_causeways_route_day.png": [
+      1920,
+      1061
+    ],
+    "08_broken_causeways_reverse_day.png": [
+      1920,
+      1061
+    ],
+    "09_broken_causeways_detail-ropebridge_day.png": [
+      1920,
+      1061
+    ],
+    "10_broken_causeways_lure-bells_day.png": [
+      1920,
+      1061
+    ],
+    "11_windscar_ravine_approach_day.png": [
+      1920,
+      1061
+    ],
+    "12_windscar_ravine_route_day.png": [
+      1920,
+      1061
+    ],
+    "13_windscar_ravine_reverse_day.png": [
+      1920,
+      1061
+    ],
+    "14_windscar_ravine_detail-beacon_day.png": [
+      1920,
+      1061
+    ],
+    "15_high_roost_sky_shrine_approach_day.png": [
+      1920,
+      1061
+    ],
+    "16_high_roost_sky_shrine_route_day.png": [
+      1920,
+      1061
+    ],
+    "17_high_roost_sky_shrine_reverse_day.png": [
+      1920,
+      1061
+    ],
+    "18_high_roost_sky_shrine_detail-shrine_day.png": [
+      1920,
+      1061
+    ],
+    "19_high_roost_sky_shrine_perch-landing_day.png": [
+      1920,
+      1061
+    ],
+    "20_high_roost_sky_shrine_perch-vista_day.png": [
+      1920,
+      1061
+    ],
+    "21_upper_cloudreach_approach_day.png": [
+      1920,
+      1061
+    ],
+    "22_upper_cloudreach_route_day.png": [
+      1920,
+      1061
+    ],
+    "23_upper_cloudreach_reverse_day.png": [
+      1920,
+      1061
+    ],
+    "24_upper_cloudreach_detail-observatory_day.png": [
+      1920,
+      1061
+    ],
+    "25_upper_cloudreach_settlement-cliffhold_day.png": [
+      1920,
+      1061
+    ],
+    "26_summit_final_stronghold_approach_day.png": [
+      1920,
+      1061
+    ],
+    "27_summit_final_stronghold_route_day.png": [
+      1920,
+      1061
+    ],
+    "28_summit_final_stronghold_reverse_day.png": [
+      1920,
+      1061
+    ],
+    "29_summit_final_stronghold_detail-aviary_day.png": [
+      1920,
+      1061
+    ],
+    "30_gate_lower_cliffs_approach_night.png": [
+      1920,
+      1061
+    ],
+    "31_broken_causeways_route_night.png": [
+      1920,
+      1061
+    ],
+    "32_upper_cloudreach_approach_night.png": [
+      1920,
+      1061
+    ],
+    "33_summit_final_stronghold_finale400_day.png": [
+      1920,
+      1061
+    ],
+    "34_summit_final_stronghold_finale100_day.png": [
+      1920,
+      1061
+    ],
+    "35_summit_final_stronghold_postfinale_day.png": [
+      1920,
+      1061
+    ],
+    "36_gate_lower_cliffs_postfinale-galefoot_day.png": [
+      1920,
+      1061
+    ],
+    "37_gate_lower_cliffs_settlement-galefoot-approach_day.png": [
+      1920,
+      1061
+    ],
+    "_sheet_frame_matrix.png": [
+      1950,
+      2716
+    ],
+    "_sheet_frame_matrix_day_night.png": [
+      1298,
+      1086
+    ],
+    "_sheet_frame_matrix_finale.png": [
+      1944,
+      726
+    ],
+    "_sheet_frame_matrix_hero.png": [
+      1944,
+      726
+    ],
+    "_sheet_frame_matrix_regions.png": [
+      1950,
+      1632
+    ]
+  },
+  "runtime_qualification": "FAIL due unscoped chapter flag error",
+  "native_1080_qualification": false,
+  "boot_frames": 3585,
+  "boot_wall_seconds": null,
+  "boot_budget_seconds": 600,
+  "first_png_delay_from_native_started_seconds": 566.039,
+  "boot_wall_limitation": "Existing tool emits boot frame count, not exact boot wall time. First PNG delay includes startup+boot+first stance/render/write; no added source instrumentation.",
+  "source_tool_sha256": "217f58e12e19f3a024a3c436563faef275ec9c62f9b6b146bb12273581c0d37a"
+}
