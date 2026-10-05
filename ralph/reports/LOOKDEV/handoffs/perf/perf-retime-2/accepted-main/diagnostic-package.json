@@ -1,0 +1,29 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "engine_host": "Identical official Godot4.7 editor-capable host with fresh release PCK; no source filesystem fallback; instrumented diagnostic scope, not shipping EXE/Ally FPS",
+  "shipping_export_pass": true,
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "expected_camera_far_m": {
+    "meadows": 2000,
+    "water": 6500,
+    "cloudreach": 3500,
+    "stormwood": 9000
+  },
+  "files": [
+    {
+      "path": "Tetherbound.exe",
+      "size_bytes": 178485256,
+      "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8"
+    },
+    {
+      "path": "Tetherbound.pck",
+      "size_bytes": 1135760212,
+      "sha256": "ea6ddca0ac0dce521ddd31709592d33d7572c47c4489c5775fdda7d4fe2b4165"
+    },
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "size_bytes": 4220416,
+      "sha256": "bf72686a7e1d8d8370ba9ba5eaa70c59375ee2cb5638d63b8942f1ad7d448cda"
+    }
+  ]
+}

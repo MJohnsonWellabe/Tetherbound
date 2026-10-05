@@ -1,0 +1,23 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "D:\\tetherbound\\render-perf-6632f2fd",
+    "--export-release",
+    "Windows Desktop",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 326.641,
+  "errors": [],
+  "log_sha256": "59e0cb9eee2aff91a56b61157a48a19dc1ccdce4c817f27f481bd2db59c30eef",
+  "original_export_cfg_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+  "used_export_cfg_sha256": "8acd44c72a8fd44919301bb68e79f879e77c7d8d2fabb55bad79b05609eb8416",
+  "adjustment": "Only script_export_mode2 to0, same plaintext diagnostic fingerprint representation as prior A/B; original source config restored",
+  "package": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package",
+  "shipping_export_pass": true
+}
