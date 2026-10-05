@@ -23,6 +23,8 @@ const CROSSING_HALL := preload("res://scripts/world/crossing_hall.gd")
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 ## Read for its group and meta names only -- see `_declare_ground`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const STATIC_BATCH := preload("res://scripts/world/static_mesh_batch.gd")
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 
 ## How far past its own wall line a building's footprint reaches. 0.7m, which
 ## is what `vegetation.json`'s hand-authored footprints already carry over the
@@ -33,6 +35,8 @@ const CONFIG_PATH := "res://data/config/village.json"
 
 var _prefabs: RefCounted = null
 var _placed := 0
+var _batch_usec := 0
+var _batched_meshes := 0
 
 
 ## `slicer` is `scripts/world/shell_build_budget.gd`, handed down by
@@ -72,7 +76,8 @@ func build(slicer: RefCounted = null) -> void:
 			continue
 		_place(entry as Dictionary)
 		await _breathe(slicer)
-	print("[village] placed %d structures" % _placed)
+	print("[village] placed %d structures; static batch folded %d module meshes in %d ms" % [
+		_placed, _batched_meshes, _batch_usec / 1000])
 	var catalog := CATALOG_PRESENTATION.new()
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
@@ -229,7 +234,22 @@ func _place(spec: Dictionary) -> void:
 	_collide(building, prefab_name)
 	_door(building, prefab_name)
 	_interior(building, prefab_name, spec)
+	_batch(building)
 	_placed += 1
+
+
+## PERF (F26#5): fold the building's static kit modules into one draw per
+## material. Doors, interiors and any scripted child keep drawing themselves;
+## see static_mesh_batch.gd. A headless realm shell draws nothing, so it skips.
+func _batch(building: Node3D) -> void:
+	if not bool(PERF_CONFIG.config().get("static_batch_settlements", false)):
+		return
+	var world := get_parent()
+	if world != null and world.get("simulation_only") == true:
+		return
+	var started := Time.get_ticks_usec()
+	_batched_meshes += int(STATIC_BATCH.merge(building).get("meshes", 0))
+	_batch_usec += Time.get_ticks_usec() - started
 
 
 ## The inn shares the settlement's architectural kit, but it must not share a
@@ -358,6 +378,9 @@ func _door(building: Node3D, prefab_name: String) -> void:
 	var leaf := building.get_child(index) as Node3D
 	if leaf == null:
 		return
+	# The leaf is a plain kit module the door script swings by reference, so
+	# it must never be folded into the building's static batch.
+	leaf.set_meta(STATIC_BATCH.SKIP_META, true)
 	var at: Array = spec.get("at", [0.0, 0.0, 0.0])
 	var door: Node3D = DOOR.new()
 	door.name = "Door"

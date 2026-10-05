@@ -34,11 +34,11 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 - Owner 2026-10-04 (8:15–8:25 PM CT): build the game, not test equipment. Equipment is built only where a criterion has no existing way to verify it; co-op, save and economy changes still ship with a new or extended test; visuals, feel, content and balance use a code-blind judge or a playtest. A product change that legitimately changes an asserted behaviour updates that test in the same commit; a CI test blocking a landing goes to the coordinator. Long CI playthroughs are proven as segments plus handoff checks (each segment starts from the previous one's real end-state save); one unbroken playthrough stays on the scheduled 8-hourly tier (non-blocking), and one unbroken F49 run happens before release.
 
 **Owner rulings 2026-10-05 (coordinator interview on the behind-plan bars):**
-- **Codex:** the owner restarts the Codex lane. It works the #525 queue in this order: the perf retime on main after #537, then F17/F22 captures, then F26.
-- **Blocked criteria:** when a feature's only remaining criteria are blocked (on Codex, a flag flip or an owner decision), the lane records them BLOCKED-with-ask, starts its next feature in plan order, and returns when the blocker clears. 
+- **Codex:** restarted by the owner; works the #525 queue, including single-criterion task lanes the coordinator assigns there.
+- **Blocked criteria:** when only blocked criteria remain, the lane records them BLOCKED-with-ask, starts its next feature in plan order, and returns when the blocker clears.
 - **F18 lands per criterion:** portals turn on behind their flag for the proven parts (Home Key gift, one-tap use) now. #4 (guest regional ack) closes after. Each criterion counts as it lands.
 - **F22#2** (switching value) is proven when F24's tag-switch combo lands. F22 closes without it.
-- **Per-starter balance (F22#1):** tune Galewisp up until mashing loses the lead as often as with the other starters. F22#1 closes on all starters.
+- **Per-starter balance (F22#1):** every starter is balanced; Terrapup gets no tank exception (owner). F22#1 is measured by the COMBAT §7 floor-trainer form: reader lead cost ≤55% of the masher's, reader win ≥0.9 (coordinator). The sky_rend trial is dropped.
 - **Forced break (COMBAT §4):** only a charge started after its tell can be broken, with a 0.1 s grace window.
 - **Home arch (F18, former open decision #11):** the Crossing Hall home arch returns to the last Meadows waystone the player touched.
 - **Co-op rejoin authority:** the host world's held record wins inside it (anti-rollback); the guest file counts only where the world has no record.
@@ -46,7 +46,9 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 - **Schedule:** rebaseline the delivery plan to the measured pace; scope kept, old baseline shown as a ghost.
 - **Combat controller map (former open decision #10; COMBAT §1, UX §2.2):** confirmed as written. The ultimate and Tether Commands are tap-then-tap sequences, orb aim is on LT, flee is on RT, the LB+face layout is an optional preset, and the commands unlock at the practice catch and the first two-creature fight.
 
-ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.
+ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests retire when portals turn on.
+
+**Open co-op items:** Stormwood hosted trainers have no durable actor vitals (F27 excludes them); guest catches stay local while alpha_respawns is off (F27); a guest returning after deliveries or offline changes diverges from the host's held record (Lane A).
 
 **Owner-blocked:** F26#5 Ally test (parked) and the F47/F49 owner play pass, plus the other `blocked` rows on the board.
 
@@ -57,15 +59,15 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 1. **ROG Ally test (F26#5):** stays parked until the owner playtests the built game. Compatibility stays the default; Forward+ becomes the default only after that test passes.
 2. **Meshy:** keep the cap of 30 generations per night (RD-26).
 3. **Storm bear:** the name *Stormursa* is locked (RD-28).
-4. **Internet co-op:** finish and prove the existing Steam invite path (MULTIPLAYER §1) with Valve's development AppID 480, at no cost. The US$100 product AppID is decided only at ship time, and `ship_steam_runtime` packaging stays off until then. No Epic or other relay work. The two-network proof still needs real accounts, at least two on separate home networks.
-5. **Stormwood audio:** author the nine missing `assets/audio/stormwood/*.wav` from installed sources (AUDIO §10). Acceptance rests on spectral and loop checks; no owner listen is required. Built on `tb/audio` by `tools/audio/gen_stormwood.py` (provenance `assets/audio/stormwood/MANIFEST.json`), checked by `tools/audio/check_stormwood.py` (94/94); evidence `ralph/reports/AUDIO/stormwood-nine/`.
+4. **Internet co-op:** finish and prove the existing Steam invite path (MULTIPLAYER §1) with Valve's development AppID 480, at no cost. The US$100 product AppID is decided only at ship time, and `ship_steam_runtime` packaging stays off until then. No Epic or other relay work. The two-network proof needs two real accounts on separate home networks.
+5. **Stormwood audio:** the nine missing `assets/audio/stormwood/*.wav` are authored from installed sources (AUDIO §10), landed in #540; spectral and loop checks, no owner listen. Evidence `ralph/reports/AUDIO/stormwood-nine/`.
 6. **Owner play pass (F47/F49):** one pass, at F49, on the complete four-chapter build.
 7. **Final relay:** Stormwood's Stormheart is the final relay. Tidewake's regional link is one of four, and the dock exchange stays Tidewake's chapter close (WORLD follows).
-8. **PRODUCT:** the "Build the best five" sub-line, the demo scope (Meadows, village road, Hall, first homestead loop) and the §6 cut order are confirmed. Price stays open (personal/friends for now). This authorizes no launch or spending.
+8. **PRODUCT:** the "Build the best five" sub-line, the demo scope (Meadows, village road, Hall, first homestead loop) and the §6 cut order are confirmed. Price stays open; this authorizes no launch or spending.
 9. **Design defaults:** every CODEX_START_HERE §8.1 default is owner-confirmed.
 10. **Controller map** and 11. **home arch:** settled; see §0 owner rulings 2026-10-05.
 12. **Repo size:** approved. Existing `ralph/reports` images move to a GitHub release archive with links preserved, and new evidence images go to CI artifacts. Text evidence stays, and history is not rewritten.
-13. **Hazard terrain (F33#3, RD-14):** Stormwood's charged ground deals light contact damage to the trainer only. It never hurts creatures and is never lethal on the ordinary route. Rootiron and Stormglass trainer gear reduce it. Tidewake submersion stays drowning-only (coordinator).
+13. **Hazard terrain (F33#3, RD-14):** Stormwood's charged ground deals light contact damage to the trainer only. It never hurts creatures and is never lethal. Rootiron and Stormglass trainer gear reduce it. Tidewake submersion stays drowning-only (coordinator).
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 

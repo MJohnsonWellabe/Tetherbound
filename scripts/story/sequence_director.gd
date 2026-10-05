@@ -564,6 +564,9 @@ func _process(delta: float) -> void:
 	_tick_fade(delta)
 	_retry_original_starter_save()
 	_drain_effects()
+	# Before the pending early return, so the practice priority always tracks
+	# the beat (F01#4).
+	_sync_practice_engage_priority()
 	if not _pending_starter_adoption.is_empty() or not _f18_pending_home_key.is_empty():
 		_refresh_lockout()
 		return
@@ -2115,10 +2118,34 @@ func _hold_the_tutorial_team_floor() -> void:
 	game.call("push_world_message", "Your creature is back on its feet. Try again.")
 
 
+## F01#4. While the opening's own beats want the practice fight, the engage
+## offer prefers the practice species over a nearer ambient wild (see
+## `encounter_director.gd::choose_engage_target()`). Pushed only on change,
+## and cleared on every other beat so the priority never follows the player
+## past the first catch. `has_method` because bare test scenes carry a
+## stand-in director.
+func _sync_practice_engage_priority() -> void:
+	if _encounter == null or not _encounter.has_method("set_practice_engage_priority"):
+		return
+	var wanted := practice_engage_species_for(_beat, BEATS.encounter())
+	if str(_encounter.call("practice_engage_priority")) != wanted:
+		_encounter.call("set_practice_engage_priority", wanted)
+
+
+## The species the engage offer should prefer at `beat`, or "" for none.
+## Pure: `encounter` is the opening.json `encounter` block.
+static func practice_engage_species_for(beat: String, encounter: Dictionary) -> String:
+	var beats: Variant = encounter.get("practice_engage_priority_beats", [])
+	if not beats is Array or not (beats as Array).has(beat):
+		return ""
+	return str(encounter.get("species", ""))
+
+
 ## Is the fight on screen one the opening's dead-end protections must cover?
 ## Beat alone, not beat AND species. `_engageable()` (encounter_director.gd)
-## offers the nearest wild creature of ANY species in range, not specifically
-## the tutorial Bramblebun, so a player can reach the ENCOUNTER beat against a
+## prefers the practice species during these beats (F01#4) but still offers
+## the nearest wild creature of any species when no Bramblebun is in range, so
+## a player can reach the ENCOUNTER beat against a
 ## different wild creature before ever meeting it -- and that fight can run the
 ## satchel dry or faint the starter exactly like the authored one. Found
 ## 2026-09-02 by `smoke_gate_a_opening_segment`, whose real interact press

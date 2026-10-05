@@ -312,3 +312,17 @@ func test_in_place_condition_batch_equals_the_copying_replay_and_refusal_leaves_
 	assert_eq(var_to_bytes(working), snapshot, "a refused tick leaves the working copy untouched")
 	assert_eq(REPLAY.apply_condition_owned(working, _discovery(working, [1, 0, 0]), _context()), "invalid_packet",
 		"only condition ticks take the in-place path")
+
+
+## PERF (2026-10-05): `_record_valid` remembers verdicts by exact content. A
+## record that turns invalid in place, or differs only by an int/float type,
+## must never reuse an earlier verdict.
+func test_record_verdicts_are_never_reused_for_a_changed_record() -> void:
+	var record: Dictionary = FIXTURE.new()._before()
+	assert_true(REPLAY._record_valid(record), "fixture record is valid")
+	assert_true(REPLAY._record_valid(record.duplicate(true)), "an identical copy shares the verdict")
+	record.party[0].nourishment = -1.0
+	assert_false(REPLAY._record_valid(record), "the same Dictionary, now invalid, is re-judged")
+	record.party[0].nourishment = 30.0
+	record.party[0].landmarks_visited_together = 1.5
+	assert_false(REPLAY._record_valid(record), "a non-integral count is refused, not served from memory")

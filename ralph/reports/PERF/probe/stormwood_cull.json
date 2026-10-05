@@ -1,0 +1,1415 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome": "stormwood",
+	"boot_ms": 34488,
+	"camera": {
+		"far": 9000.0,
+		"far_override": -1.0,
+		"fov": 70.0,
+		"near": 0.0500000007450581
+	},
+	"captured_utc": "2026-10-05T06:37:25",
+	"census": {
+		"by_class": [
+			[
+				"Node3D",
+				37672
+			],
+			[
+				"MultiMeshInstance3D",
+				17489
+			],
+			[
+				"MeshInstance3D",
+				9573
+			],
+			[
+				"CollisionShape3D",
+				1985
+			],
+			[
+				"AnimationPlayer",
+				855
+			],
+			[
+				"Skeleton3D",
+				855
+			],
+			[
+				"CharacterBody3D",
+				810
+			],
+			[
+				"StaticBody3D",
+				168
+			],
+			[
+				"Label",
+				121
+			],
+			[
+				"OmniLight3D",
+				83
+			],
+			[
+				"PanelContainer",
+				53
+			],
+			[
+				"HBoxContainer",
+				46
+			],
+			[
+				"ProgressBar",
+				31
+			],
+			[
+				"Panel",
+				27
+			],
+			[
+				"VBoxContainer",
+				25
+			],
+			[
+				"Control",
+				24
+			],
+			[
+				"ColorRect",
+				21
+			],
+			[
+				"RichTextLabel",
+				21
+			],
+			[
+				"Node",
+				21
+			],
+			[
+				"TextureRect",
+				15
+			],
+			[
+				"MarginContainer",
+				13
+			],
+			[
+				"Area3D",
+				10
+			],
+			[
+				"Label3D",
+				5
+			],
+			[
+				"GPUParticles3D",
+				4
+			],
+			[
+				"CanvasLayer",
+				4
+			],
+			[
+				"MultiplayerSpawner",
+				3
+			],
+			[
+				"DirectionalLight3D",
+				2
+			],
+			[
+				"Camera3D",
+				2
+			],
+			[
+				"WorldEnvironment",
+				1
+			],
+			[
+				"SpringArm3D",
+				1
+			]
+		],
+		"by_subtree": [
+			[
+				"Vegetation",
+				31894
+			],
+			[
+				"Terrain",
+				17429
+			],
+			[
+				"StormwoodRodLine",
+				2957
+			],
+			[
+				"RodfolkSettlements",
+				2084
+			],
+			[
+				"StormwoodPockets",
+				1748
+			],
+			[
+				"StormheartTree",
+				891
+			],
+			[
+				"StormwoodCamps",
+				697
+			],
+			[
+				"StormwoodPickups",
+				628
+			],
+			[
+				"StormwoodRoadCurrent",
+				576
+			],
+			[
+				"StormwoodHarvests",
+				526
+			],
+			[
+				"StormwoodTrainers",
+				235
+			],
+			[
+				"PlaygroundHUD",
+				213
+			],
+			[
+				"CombatHUD",
+				177
+			],
+			[
+				"StormwoodPeople",
+				172
+			],
+			[
+				"StormwoodGroundCover",
+				167
+			],
+			[
+				"StormglassArches",
+				150
+			],
+			[
+				"StormwoodDynamo",
+				140
+			],
+			[
+				"GlassFieldPresentation",
+				110
+			],
+			[
+				"StruckSentinelPresentation",
+				28
+			],
+			[
+				"StormwoodEnding",
+				25
+			],
+			[
+				"CrownRecords",
+				25
+			],
+			[
+				"StormwoodRodStations",
+				21
+			],
+			[
+				"Player",
+				15
+			],
+			[
+				"Rootgate",
+				14
+			],
+			[
+				"Named_hollows_alpha",
+				13
+			],
+			[
+				"Named_capacitor_alpha",
+				13
+			],
+			[
+				"Named_crown_guardian",
+				13
+			],
+			[
+				"Named_old_rodfolk_hall_guardian",
+				13
+			],
+			[
+				"Named_blackwater_elder",
+				13
+			],
+			[
+				"Named_glass_field_alpha",
+				13
+			],
+			[
+				"Wild_sparkit_1846330804_1",
+				11
+			],
+			[
+				"Wild_sparkit_1846330804_2",
+				11
+			],
+			[
+				"Wild_sparkit_1846330828_1",
+				11
+			],
+			[
+				"Wild_sparkit_1846330828_2",
+				11
+			],
+			[
+				"Wild_sparkit_1846330829_1",
+				11
+			],
+			[
+				"Wild_sparkit_1846330829_2",
+				11
+			],
+			[
+				"Wild_voltwig_1846330830_1",
+				11
+			],
+			[
+				"Wild_voltwig_1846330830_2",
+				11
+			],
+			[
+				"Wild_tanglevolt_1846330831_1",
+				11
+			],
+			[
+				"Wild_tanglevolt_1846330831_2",
+				11
+			]
+		],
+		"class_owners": {
+			"AnimationPlayer": [
+				[
+					"StormwoodTrainers/young_trainer_lod0",
+					4
+				],
+				[
+					"StormwoodTrainers/wandering_trainer_lod0",
+					4
+				],
+				[
+					"StormwoodTrainers/officer_b_lod0",
+					3
+				],
+				[
+					"StormwoodPeople/local_historian_lod0",
+					3
+				],
+				[
+					"StormwoodTrainers/officer_a_lod0",
+					2
+				],
+				[
+					"StormwoodPeople/creature_caretaker_lod0",
+					2
+				],
+				[
+					"StormwoodPeople/trader_lod0",
+					2
+				],
+				[
+					"StormwoodTrainers/rival_trainer_lod0",
+					2
+				],
+				[
+					"StormwoodTrainers/lost_traveler_lod0",
+					2
+				],
+				[
+					"Wild_sparkit_1846330803_1/creature_sparkit_lod0",
+					1
+				],
+				[
+					"Wild_sparkit_1846330803_2/creature_sparkit_lod0",
+					1
+				],
+				[
+					"Wild_tanglevolt_1846330802_2/creature_tanglevolt_lod0",
+					1
+				]
+			],
+			"CharacterBody3D": [
+				[
+					"Wild_tanglevolt_1846330837_1",
+					1
+				],
+				[
+					"Wild_tanglevolt_1846330836_2",
+					1
+				],
+				[
+					"Wild_tanglevolt_1846330836_1",
+					1
+				],
+				[
+					"Wild_voltwig_1846330835_2",
+					1
+				],
+				[
+					"Wild_voltwig_1846330835_1",
+					1
+				],
+				[
+					"Wild_sparkit_1846330834_2",
+					1
+				],
+				[
+					"Wild_sparkit_1846330834_1",
+					1
+				],
+				[
+					"Wild_sparkit_1846330833_2",
+					1
+				],
+				[
+					"Wild_sparkit_1846330833_1",
+					1
+				],
+				[
+					"Wild_tanglevolt_1846330832_2",
+					1
+				],
+				[
+					"Wild_tanglevolt_1846330832_1",
+					1
+				],
+				[
+					"Wild_tanglevolt_1846330831_2",
+					1
+				]
+			],
+			"CollisionShape3D": [
+				[
+					"StormheartTree/AscentRailInner",
+					384
+				],
+				[
+					"StormheartTree/AscentRailOuter",
+					384
+				],
+				[
+					"RodfolkSettlements/Collision",
+					72
+				],
+				[
+					"StormwoodDynamo/CoreRail",
+					32
+				],
+				[
+					"StormwoodPockets/Pocket_dynamo_scorch_pen",
+					27
+				],
+				[
+					"StormwoodPockets/Pocket_deepwood_ridge_sh",
+					27
+				],
+				[
+					"StormwoodPockets/Pocket_conductor_ridge_c",
+					27
+				],
+				[
+					"StormwoodPockets/Pocket_hollows_moss_nook",
+					27
+				],
+				[
+					"StormwoodPockets/Pocket_verge_ash_hollow",
+					27
+				],
+				[
+					"StormwoodTrainers/Body",
+					26
+				],
+				[
+					"StormwoodPeople/Body",
+					19
+				],
+				[
+					"StormglassArches/Passage",
+					9
+				]
+			],
+			"GPUParticles3D": [
+				[
+					"StormwoodSurge/StormwoodSurge",
+					2
+				],
+				[
+					"StormwoodSurge/Rain",
+					2
+				]
+			],
+			"Node3D": [
+				[
+					"Vegetation/Vegetation",
+					15940
+				],
+				[
+					"StormwoodRodLine/StormwoodRodLine",
+					284
+				],
+				[
+					"StormwoodPickups/stormwood_pickup_pocket_",
+					208
+				],
+				[
+					"StormwoodPockets/Trail_conductor_ridge_cl",
+					171
+				],
+				[
+					"StormwoodPockets/Trail_verge_ash_hollow",
+					135
+				],
+				[
+					"StormwoodPickups/StormwoodPickups",
+					123
+				],
+				[
+					"Terrain/MMI",
+					108
+				],
+				[
+					"StormwoodHarvests/StormwoodHarvests",
+					105
+				],
+				[
+					"StormwoodPockets/Trail_hollows_moss_nook",
+					91
+				],
+				[
+					"RodfolkSettlements/inn_9",
+					83
+				],
+				[
+					"RodfolkSettlements/inn",
+					80
+				],
+				[
+					"StormwoodPockets/Trail_deepwood_ridge_she",
+					78
+				]
+			],
+			"OmniLight3D": [
+				[
+					"RodfolkSettlements/Interior",
+					11
+				],
+				[
+					"StormwoodCamps/CampCreatureBed",
+					6
+				],
+				[
+					"StormwoodPockets/MouthLamp0",
+					5
+				],
+				[
+					"StormwoodPockets/MouthLamp1",
+					5
+				],
+				[
+					"StormwoodPockets/SpurLamp",
+					5
+				],
+				[
+					"StormwoodPockets/SpurLamp2",
+					5
+				],
+				[
+					"StormheartTree/StormheartTree",
+					4
+				],
+				[
+					"RodfolkSettlements/VillageWellPresentation",
+					3
+				],
+				[
+					"RodfolkSettlements/WestStreetLight",
+					3
+				],
+				[
+					"RodfolkSettlements/SouthStreetLight",
+					3
+				],
+				[
+					"StormwoodPickups/stormwood_pickup_pocket_",
+					3
+				],
+				[
+					"GlassFieldPresentation/StormglassCluster_long_s",
+					1
+				]
+			]
+		},
+		"lights": {
+			"directional": 2,
+			"omni": 83,
+			"shadowed": 12,
+			"shadowed_omni_spot": 11,
+			"spot": 1
+		},
+		"mesh_instances_by_subtree": [
+			[
+				"StormwoodRodLine",
+				2672
+			],
+			[
+				"RodfolkSettlements",
+				1069
+			],
+			[
+				"StormwoodPockets",
+				806
+			],
+			[
+				"StormwoodCamps",
+				600
+			],
+			[
+				"StormwoodRoadCurrent",
+				574
+			],
+			[
+				"StormwoodPickups",
+				132
+			],
+			[
+				"StormwoodHarvests",
+				105
+			],
+			[
+				"GlassFieldPresentation",
+				92
+			],
+			[
+				"StormwoodDynamo",
+				61
+			],
+			[
+				"StormglassArches",
+				57
+			],
+			[
+				"StormheartTree",
+				52
+			],
+			[
+				"StormwoodTrainers",
+				26
+			],
+			[
+				"StormwoodPeople",
+				19
+			],
+			[
+				"StruckSentinelPresentation",
+				17
+			],
+			[
+				"StormwoodEnding",
+				13
+			],
+			[
+				"Rootgate",
+				6
+			],
+			[
+				"CrownRecords",
+				6
+			],
+			[
+				"Named_hollows_alpha",
+				5
+			],
+			[
+				"Named_capacitor_alpha",
+				5
+			],
+			[
+				"Named_crown_guardian",
+				5
+			],
+			[
+				"Named_old_rodfolk_hall_guardian",
+				5
+			],
+			[
+				"Named_blackwater_elder",
+				5
+			],
+			[
+				"Named_glass_field_alpha",
+				5
+			],
+			[
+				"Wild_sparkit_1846330804_1",
+				4
+			],
+			[
+				"Wild_sparkit_1846330804_2",
+				4
+			]
+		],
+		"meshes": {
+			"count": 9573,
+			"shadow_casting": 5766,
+			"shadow_casting_no_range": 1691,
+			"surfaces": 8477,
+			"visible": 7244,
+			"with_visibility_range": 7870
+		},
+		"multimesh": {
+			"by_owner": {
+				"PickupGlowField": {
+					"count": 2,
+					"instances": 258
+				},
+				"StormheartTree": {
+					"count": 6,
+					"instances": 944
+				},
+				"StormwoodGroundCover": {
+					"count": 166,
+					"instances": 94280
+				},
+				"Terrain": {
+					"count": 17315,
+					"instances": 43161
+				}
+			},
+			"count": 17489,
+			"instances": 138643,
+			"shadow_casting": 11950,
+			"visible_instances": 138643,
+			"with_visibility_range": 17482
+		},
+		"particles": {
+			"cpu": 0,
+			"gpu": 4
+		},
+		"physics": {
+			"animatable_bodies": 0,
+			"areas": 10,
+			"character_bodies": 810,
+			"collision_polygons": 0,
+			"collision_shapes": 1985,
+			"rigid_bodies": 0,
+			"static_bodies": 168
+		},
+		"processing": {
+			"animation_players": 855,
+			"animation_trees": 0,
+			"physics_process": 17,
+			"process": 210,
+			"skeletons": 855
+		},
+		"total_nodes": 69945
+	},
+	"clock": {
+		"elapsed_seconds": 200.277703333333,
+		"hour": 8.01110813333333,
+		"requested": "day",
+		"time_of_day": "day"
+	},
+	"disclosure": "Structural counters only. Software-rasterised frame time is never device performance; process/physics ms are CPU costs on this container's CPU.",
+	"display_server": "X11",
+	"failures": [],
+	"label": "cull2",
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		320,
+		180
+	],
+	"scene": "res://scenes/world/stormwood.tscn",
+	"schema": "perf_probe/1",
+	"source_commit": "8ee50b55cacd3c93ee66a0fbe96787a105f643e0",
+	"stands": [
+		{
+			"avg": {
+				"draw_calls": 1211.0,
+				"navigation_ms": 0.000004,
+				"node_count": 71366.0,
+				"objects": 1554.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 1.0,
+				"physics_collision_pairs": 2180.0,
+				"physics_islands": 1.0,
+				"physics_step_ms": 0.006935,
+				"primitives": 3627813.0,
+				"process_ms": 1.66944516666667,
+				"video_mem_mb": 1504.56478881836
+			},
+			"camera_far": 9000.0,
+			"camera_position": [
+				-299.073791503906,
+				35.1037368774414,
+				174.998672485352
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 36,
+						"mm_instances": 19306,
+						"multimesh": 55,
+						"ranged": 88,
+						"shadow_casting": 30
+					},
+					"100-320": {
+						"meshes": 235,
+						"mm_instances": 53,
+						"multimesh": 11,
+						"ranged": 246,
+						"shadow_casting": 175
+					},
+					"1000-3000": {
+						"meshes": 223,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 205,
+						"shadow_casting": 187
+					},
+					"3000+": {
+						"meshes": 90,
+						"mm_instances": 32,
+						"multimesh": 1,
+						"ranged": 33,
+						"shadow_casting": 85
+					},
+					"320-1000": {
+						"meshes": 192,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 192,
+						"shadow_casting": 86
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"RodfolkSettlements",
+						45
+					],
+					[
+						"StormwoodRodLine",
+						41
+					],
+					[
+						"StormheartTree",
+						37
+					],
+					[
+						"StormglassArches",
+						18
+					],
+					[
+						"StormwoodHarvests",
+						16
+					],
+					[
+						"RenewableResources",
+						12
+					],
+					[
+						"GlassFieldPresentation",
+						7
+					],
+					[
+						"Rootgate",
+						6
+					],
+					[
+						"StormwoodPickups",
+						6
+					],
+					[
+						"CrownRecords",
+						3
+					],
+					[
+						"Wild_stormraven_142373790_1",
+						2
+					],
+					[
+						"Wild_stormraven_142373790_2",
+						2
+					],
+					[
+						"Wild_thundertunnel_142373791_1",
+						2
+					],
+					[
+						"Wild_thundertunnel_142373791_2",
+						2
+					],
+					[
+						"Wild_voltwig_142373815_1",
+						2
+					],
+					[
+						"Wild_voltwig_142373815_2",
+						2
+					],
+					[
+						"Wild_voltwig_142373816_1",
+						2
+					],
+					[
+						"Wild_voltwig_142373816_2",
+						2
+					],
+					[
+						"Wild_stormraven_142373817_1",
+						2
+					],
+					[
+						"Wild_stormraven_142373817_2",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 80,
+					"shadowed": [
+						"StormglassArches/Footing_capacitor_grove/CapacitorGrovePresentation/CapacitorAfterglow r=17 d=2993",
+						"RodfolkSettlements/ranger_station_13/Interior/RoomLight r=6 d=5103",
+						"RodfolkSettlements/workshop_11/Interior/WorkshopLight r=6 d=3774",
+						"RodfolkSettlements/cottage_b_10/Interior/RoomLight r=6 d=3801",
+						"RodfolkSettlements/inn_9/Interior/RoomLight r=8 d=3808",
+						"RodfolkSettlements/inn_9/Interior/BarLight r=5 d=3811",
+						"RodfolkSettlements/ranger_station_7/Interior/RoomLight r=6 d=2535",
+						"RodfolkSettlements/cottage_a_4/Interior/RoomLight r=6 d=2176",
+						"RodfolkSettlements/workshop_3/Interior/WorkshopLight r=6 d=2177",
+						"RodfolkSettlements/ranger_station_2/Interior/RoomLight r=6 d=1245",
+						"RodfolkSettlements/ranger_station_0/Interior/RoomLight r=6 d=293"
+					],
+					"shadowed_in_view": 11
+				}
+			},
+			"heading_xz": [
+				-0.182089254260063,
+				0.983281970024109
+			],
+			"peak": {
+				"draw_calls": 1211.0,
+				"navigation_ms": 0.000005,
+				"node_count": 71366.0,
+				"objects": 1554.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 1.0,
+				"physics_collision_pairs": 2180.0,
+				"physics_islands": 1.0,
+				"physics_step_ms": 0.008991,
+				"primitives": 3627813.0,
+				"process_ms": 2.001712,
+				"video_mem_mb": 1504.56478881836
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				-300.0,
+				32.2715530395508,
+				180.0
+			],
+			"stand": "stand_0"
+		},
+		{
+			"avg": {
+				"draw_calls": 1125.0,
+				"navigation_ms": 0.00000466666666666667,
+				"node_count": 71366.0,
+				"objects": 1444.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 3.0,
+				"physics_collision_pairs": 2181.0,
+				"physics_islands": 3.0,
+				"physics_step_ms": 0.0110245,
+				"primitives": 3348686.66666667,
+				"process_ms": 1.92400216666667,
+				"video_mem_mb": 1504.5647277832
+			},
+			"camera_far": 9000.0,
+			"camera_position": [
+				-346.848266601562,
+				34.6430397033691,
+				446.007781982422
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 55,
+						"mm_instances": 30431,
+						"multimesh": 65,
+						"ranged": 118,
+						"shadow_casting": 36
+					},
+					"100-320": {
+						"meshes": 117,
+						"mm_instances": 48,
+						"multimesh": 6,
+						"ranged": 123,
+						"shadow_casting": 28
+					},
+					"1000-3000": {
+						"meshes": 251,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 241,
+						"shadow_casting": 189
+					},
+					"3000+": {
+						"meshes": 85,
+						"mm_instances": 32,
+						"multimesh": 1,
+						"ranged": 29,
+						"shadow_casting": 82
+					},
+					"320-1000": {
+						"meshes": 151,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 151,
+						"shadow_casting": 77
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"RodfolkSettlements",
+						48
+					],
+					[
+						"StormwoodRodLine",
+						39
+					],
+					[
+						"StormheartTree",
+						37
+					],
+					[
+						"StormwoodHarvests",
+						19
+					],
+					[
+						"StormglassArches",
+						17
+					],
+					[
+						"RenewableResources",
+						12
+					],
+					[
+						"GlassFieldPresentation",
+						9
+					],
+					[
+						"Rootgate",
+						6
+					],
+					[
+						"Named_hollows_alpha",
+						3
+					],
+					[
+						"Wild_mosshock_1833585552_1",
+						2
+					],
+					[
+						"Wild_mosshock_1833585552_2",
+						2
+					],
+					[
+						"Wild_mosshock_1833585553_1",
+						2
+					],
+					[
+						"Wild_mosshock_1833585553_2",
+						2
+					],
+					[
+						"Wild_mosshock_1833585578_1",
+						2
+					],
+					[
+						"Wild_mosshock_1833585578_2",
+						2
+					],
+					[
+						"Wild_mosshock_1833585579_1",
+						2
+					],
+					[
+						"Wild_mosshock_1833585579_2",
+						2
+					],
+					[
+						"Wild_mosshock_1833585580_1",
+						2
+					],
+					[
+						"Wild_mosshock_1833585580_2",
+						2
+					],
+					[
+						"Wild_mosshock_1833585581_1",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 64,
+					"shadowed": [
+						"StormglassArches/Footing_capacitor_grove/CapacitorGrovePresentation/CapacitorAfterglow r=17 d=2719",
+						"RodfolkSettlements/ranger_station_13/Interior/RoomLight r=6 d=4834",
+						"RodfolkSettlements/workshop_11/Interior/WorkshopLight r=6 d=3501",
+						"RodfolkSettlements/cottage_b_10/Interior/RoomLight r=6 d=3529",
+						"RodfolkSettlements/inn_9/Interior/RoomLight r=8 d=3535",
+						"RodfolkSettlements/inn_9/Interior/BarLight r=5 d=3538",
+						"RodfolkSettlements/ranger_station_7/Interior/RoomLight r=6 d=2267",
+						"RodfolkSettlements/cottage_a_4/Interior/RoomLight r=6 d=1901",
+						"RodfolkSettlements/workshop_3/Interior/WorkshopLight r=6 d=1902",
+						"RodfolkSettlements/ranger_station_2/Interior/RoomLight r=6 d=971",
+						"RodfolkSettlements/ranger_station_0/Interior/RoomLight r=6 d=23"
+					],
+					"shadowed_in_view": 11
+				}
+			},
+			"heading_xz": [
+				-0.619644284248352,
+				0.784882783889771
+			],
+			"peak": {
+				"draw_calls": 1125.0,
+				"navigation_ms": 0.000007,
+				"node_count": 71366.0,
+				"objects": 1444.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 3.0,
+				"physics_collision_pairs": 2181.0,
+				"physics_islands": 3.0,
+				"physics_step_ms": 0.015936,
+				"primitives": 3348688.0,
+				"process_ms": 2.214471,
+				"video_mem_mb": 1504.56478881836
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				-350.0,
+				30.1609401702881,
+				450.0
+			],
+			"stand": "stand_1"
+		},
+		{
+			"avg": {
+				"draw_calls": 766.0,
+				"navigation_ms": 0.00000433333333333333,
+				"node_count": 71366.0,
+				"objects": 1109.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 3.0,
+				"physics_collision_pairs": 2180.0,
+				"physics_islands": 3.0,
+				"physics_step_ms": 0.00698433333333333,
+				"primitives": 3048878.0,
+				"process_ms": 1.50722366666667,
+				"video_mem_mb": 1504.5684967041
+			},
+			"camera_far": 9000.0,
+			"camera_position": [
+				-653.151733398438,
+				23.6599788665771,
+				833.992248535156
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 25,
+						"mm_instances": 35423,
+						"multimesh": 71,
+						"ranged": 94,
+						"shadow_casting": 15
+					},
+					"100-320": {
+						"meshes": 117,
+						"mm_instances": 41,
+						"multimesh": 12,
+						"ranged": 129,
+						"shadow_casting": 32
+					},
+					"1000-3000": {
+						"meshes": 2,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 1
+					},
+					"3000+": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"320-1000": {
+						"meshes": 256,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 254,
+						"shadow_casting": 134
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"StormwoodRodLine",
+						38
+					],
+					[
+						"StruckSentinelPresentation",
+						17
+					],
+					[
+						"RodfolkSettlements",
+						15
+					],
+					[
+						"StormwoodPickups",
+						4
+					],
+					[
+						"StormwoodCamps",
+						4
+					],
+					[
+						"StormglassArches",
+						3
+					],
+					[
+						"Wild_voltwig_142373683_1",
+						2
+					],
+					[
+						"Wild_voltwig_142373683_2",
+						2
+					],
+					[
+						"Wild_stormraven_142373684_1",
+						2
+					],
+					[
+						"Wild_stormraven_142373684_2",
+						2
+					],
+					[
+						"Wild_stormraven_142373685_1",
+						2
+					],
+					[
+						"Wild_stormraven_142373685_2",
+						2
+					],
+					[
+						"Wild_thundertunnel_142373686_1",
+						2
+					],
+					[
+						"Wild_thundertunnel_142373686_2",
+						2
+					],
+					[
+						"Wild_voltwig_142373687_1",
+						2
+					],
+					[
+						"Wild_voltwig_142373687_2",
+						2
+					],
+					[
+						"Wild_voltwig_142373688_1",
+						2
+					],
+					[
+						"Wild_voltwig_142373688_2",
+						2
+					],
+					[
+						"Wild_stormraven_142373689_1",
+						2
+					],
+					[
+						"Wild_stormraven_142373689_2",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 9,
+					"shadowed": [
+						"RodfolkSettlements/ranger_station_0/Interior/RoomLight r=6 d=472"
+					],
+					"shadowed_in_view": 1
+				}
+			},
+			"heading_xz": [
+				0.619644284248352,
+				-0.784882783889771
+			],
+			"peak": {
+				"draw_calls": 766.0,
+				"navigation_ms": 0.000005,
+				"node_count": 71366.0,
+				"objects": 1109.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 3.0,
+				"physics_collision_pairs": 2180.0,
+				"physics_islands": 3.0,
+				"physics_step_ms": 0.008858,
+				"primitives": 3048878.0,
+				"process_ms": 1.646582,
+				"video_mem_mb": 1504.5684967041
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				-650.0,
+				20.8278465270996,
+				830.0
+			],
+			"stand": "stand_2"
+		}
+	],
+	"terrain": {
+		"cast_shadows": 1,
+		"class": "Terrain3D",
+		"collision_mode": 3,
+		"collision_radius": 64,
+		"collision_shape_size": 16,
+		"instancer_assets": [
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 0,
+				"instance_count": 0,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "New Mesh"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 1,
+				"instance_count": 6518,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Bush_Common"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 2,
+				"instance_count": 6407,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "TwistedTree_4"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 3,
+				"instance_count": 6432,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "TwistedTree_2"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 4,
+				"instance_count": 12286,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Fern_1"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 5,
+				"instance_count": 8355,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Mushroom_Common"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 6,
+				"instance_count": 1551,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Rock_Medium_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 7,
+				"instance_count": 1530,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Rock_Medium_3"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 8,
+				"instance_count": 9,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "DeadTree_3"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 9,
+				"instance_count": 11,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "DeadTree_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 10,
+				"instance_count": 62,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CommonTree_3"
+			}
+		],
+		"instancer_mesh_assets": 11,
+		"mesh_lods": 7,
+		"mesh_size": 48,
+		"present": true,
+		"region_count": 108,
+		"region_size": 256,
+		"render_layers": 2147483649,
+		"vertex_spacing": 2.0
+	}
+}

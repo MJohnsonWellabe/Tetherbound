@@ -470,6 +470,8 @@ func _build_impact() -> void:
 		multimesh.mesh = GEOMETRY.shape(mote_kind, mote_size, profile if mote_kind == "spark" else {})
 		multimesh.instance_count = count
 		_motes = MultiMeshInstance3D.new()
+		# Moved every frame: detail_cull.gd must not range it by its spawn spread.
+		_motes.set_meta(&"detail_cull_skip", true)
 		_motes.multimesh = multimesh
 		_motes.material_override = GEOMETRY.material(Color(str(profile.get("mote_colour", _params.colour))), 0.86, str(profile.get("mote_shape", "orb")) == "stone")
 		if str(profile.get("mote_shape", "")) in ["soft_ember", "stone", "ice_crystal", "bubble"]:
@@ -543,6 +545,8 @@ func _build_puffs(count: int, profile: Dictionary, scale_factor: float) -> void:
 	multimesh.mesh = GEOMETRY.shape(str(profile.get("puff_shape", "fire_bloom")), scale_factor * float(profile.get("puff_size_scale", 1.5)), profile)
 	multimesh.instance_count = count
 	_puffs = MultiMeshInstance3D.new()
+	# Moved every frame: detail_cull.gd must not range it by its spawn spread.
+	_puffs.set_meta(&"detail_cull_skip", true)
 	_puffs.multimesh = multimesh
 	var puff_profile: Dictionary = profile.duplicate(true)
 	puff_profile["opacity"] = float(profile.get("puff_opacity", 0.72))

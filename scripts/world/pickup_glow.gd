@@ -232,6 +232,9 @@ func _build_layer(shader: Shader, look: Dictionary, billboard: bool) -> MultiMes
 	var instance := MultiMeshInstance3D.new()
 	instance.name = "Motes" if billboard else "Auras"
 	instance.multimesh = multimesh
+	# Filled and refilled at runtime with every glowing pickup in the realm:
+	# detail_cull.gd must never range it by its (empty) build-time spread.
+	instance.set_meta(&"detail_cull_skip", true)
 	instance.material_override = material
 	# Transparent, additive and unsorted against each other on purpose: additive
 	# blending is order-independent, which is the reason this can be one
