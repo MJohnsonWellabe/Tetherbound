@@ -1,0 +1,538 @@
+{
+ "_comment": "Baseline delivery plan (owner request 2026-10-04). A sprint is one 8-hour session; sprints run back to back from `start`. Each bar's `start`/`end` are positions on a sprint axis: 0 is the start of sprint 1, 1 the end of sprint 1, 2.5 the middle of sprint 3. `features` lists the F rows whose criteria measure the bar (the redesign row plus F01-F15 rows folded into it). The baseline is frozen; progress is read live from criteria.json. Re-baseline only on an owner decision and record it in `rebaselines`.",
+ "baseline_set": "2026-10-04T23:30:00Z",
+ "start": "2026-10-04T23:00:00Z",
+ "sprint_hours": 8,
+ "sprints": 13,
+ "rebaselines": [
+  "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
+  "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved."
+ ],
+ "lanes": [
+  {
+   "id": "A",
+   "name": "Lane A · Claude (village, homestead, loop)",
+   "session": "tb/f17",
+   "bars": [
+    {
+     "label": "F17 village + Hall (folds F01–F03, F05)",
+     "features": [
+      "F17",
+      "F01",
+      "F02",
+      "F03",
+      "F05"
+     ],
+     "note": "Wild spawn/fence fix, Oskar retry, free home creature bed, F02 earned runs",
+     "start": 0,
+     "end": 2,
+     "baseline_pct": 64.9
+    },
+    {
+     "label": "F31 homestead stations",
+     "features": [
+      "F31"
+     ],
+     "start": 2,
+     "end": 4,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F33 creature + trainer gear",
+     "features": [
+      "F33"
+     ],
+     "depends": [
+      "F31",
+      "F32"
+     ],
+     "start": 4,
+     "end": 5.5,
+     "baseline_pct": 5.0
+    },
+    {
+     "label": "F34 forward camps",
+     "features": [
+      "F34"
+     ],
+     "depends": [
+      "F31"
+     ],
+     "start": 5.5,
+     "end": 6.5,
+     "baseline_pct": 40.0
+    },
+    {
+     "label": "F43 bounty board",
+     "features": [
+      "F43"
+     ],
+     "depends": [
+      "F27",
+      "F30",
+      "F32"
+     ],
+     "start": 6.5,
+     "end": 7.5,
+     "baseline_pct": 25.0
+    },
+    {
+     "label": "F44 rematches + alpha respawns",
+     "features": [
+      "F44"
+     ],
+     "depends": [
+      "F19",
+      "F20"
+     ],
+     "start": 7.5,
+     "end": 8.5,
+     "baseline_pct": 31.2
+    },
+    {
+     "label": "F46 onboarding",
+     "features": [
+      "F46"
+     ],
+     "depends": [
+      "F18",
+      "F27",
+      "F28",
+      "F31"
+     ],
+     "start": 8.5,
+     "end": 10,
+     "baseline_pct": 8.3
+    },
+    {
+     "label": "F49 run, 13 chapter cards, release-wide",
+     "features": [
+      "F49",
+      "CARDS",
+      "XCUT"
+     ],
+     "depends": [
+      "all"
+     ],
+     "start": 11,
+     "end": 13,
+     "baseline_pct": 63.1
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "name": "Lane B · Claude (travel, chapters, co-op)",
+   "session": "tb/f18",
+   "bars": [
+    {
+     "label": "F18 Home Key, portals, waystones",
+     "features": [
+      "F18"
+     ],
+     "note": "Portal flag flip, legacy test retirement, host-exit leak",
+     "start": 0,
+     "end": 1.5,
+     "baseline_pct": 25.0
+    },
+    {
+     "label": "F19 reorder + level curve (folds F06–F09)",
+     "features": [
+      "F19",
+      "F06",
+      "F07",
+      "F08",
+      "F09"
+     ],
+     "depends": [
+      "F18"
+     ],
+     "start": 1.5,
+     "end": 4,
+     "baseline_pct": 65.7
+    },
+    {
+     "label": "F20 ending after Stormwood (folds F10–F15)",
+     "features": [
+      "F20",
+      "F10",
+      "F11",
+      "F12",
+      "F13",
+      "F14",
+      "F15"
+     ],
+     "depends": [
+      "F18",
+      "F19"
+     ],
+     "start": 4,
+     "end": 6.5,
+     "baseline_pct": 59.5
+    },
+    {
+     "label": "F37 Ripplet swim + dive",
+     "features": [
+      "F37"
+     ],
+     "depends": [
+      "F28",
+      "F19"
+     ],
+     "start": 6.5,
+     "end": 7.5,
+     "baseline_pct": 30.0
+    },
+    {
+     "label": "F48 co-op across the new loop",
+     "features": [
+      "F48"
+     ],
+     "depends": [
+      "waves 1-2"
+     ],
+     "start": 7.5,
+     "end": 11,
+     "note": "Includes 3-4 claimant co-op runs across the loop",
+     "baseline_pct": 6.2
+    },
+    {
+     "label": "F49 run, 13 chapter cards, release-wide",
+     "features": [
+      "F49",
+      "CARDS",
+      "XCUT"
+     ],
+     "depends": [
+      "all"
+     ],
+     "start": 11,
+     "end": 13,
+     "baseline_pct": 63.1
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "name": "Lane C · Claude (combat)",
+   "session": "tb/f22",
+   "bars": [
+    {
+     "label": "F22 enemy patterns + anti-mash (folds F04)",
+     "features": [
+      "F22",
+      "F04"
+     ],
+     "note": "Trainer-band sweep, per-role poise, wild tuning after home bed",
+     "start": 0,
+     "end": 2.5,
+     "baseline_pct": 33.9
+    },
+    {
+     "label": "F23 move loadout + mastery",
+     "features": [
+      "F23"
+     ],
+     "start": 2.5,
+     "end": 4.5,
+     "baseline_pct": 12.5
+    },
+    {
+     "label": "F24 Tether Commands",
+     "features": [
+      "F24"
+     ],
+     "depends": [
+      "F21",
+      "F23"
+     ],
+     "start": 4.5,
+     "end": 6.5,
+     "baseline_pct": 20.8
+    },
+    {
+     "label": "F25 move effects library",
+     "features": [
+      "F25"
+     ],
+     "note": "Owner rejected cartoon hit markers; needs judged footage",
+     "start": 6.5,
+     "end": 8,
+     "baseline_pct": 37.5
+    },
+    {
+     "label": "F35 signature ultimates",
+     "features": [
+      "F35"
+     ],
+     "depends": [
+      "F23",
+      "F25",
+      "F29"
+     ],
+     "start": 8,
+     "end": 9.5,
+     "baseline_pct": 20.0
+    },
+    {
+     "label": "F21 GPU close-out (fight feel)",
+     "features": [
+      "F21"
+     ],
+     "depends": [
+      "Codex F21#5 capture"
+     ],
+     "start": 9.5,
+     "end": 10.5,
+     "baseline_pct": 75.0
+    },
+    {
+     "label": "F49 run, 13 chapter cards, release-wide",
+     "features": [
+      "F49",
+      "CARDS",
+      "XCUT"
+     ],
+     "depends": [
+      "all"
+     ],
+     "start": 11,
+     "end": 13,
+     "baseline_pct": 63.1
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "name": "Lane D · Claude (training)",
+   "session": "tb/f27",
+   "bars": [
+    {
+     "label": "F27 type essence + chosen leveling",
+     "features": [
+      "F27"
+     ],
+     "note": "Release payouts, guest wins, actor_vitals flip",
+     "start": 0,
+     "end": 1.5,
+     "baseline_pct": 16.7
+    },
+    {
+     "label": "F30 traits + Trait Seeds",
+     "features": [
+      "F30"
+     ],
+     "depends": [
+      "F27"
+     ],
+     "start": 1.5,
+     "end": 2.5,
+     "baseline_pct": 60.0
+    },
+    {
+     "label": "F32 close-out (win sheds, 4-claimant)",
+     "features": [
+      "F32"
+     ],
+     "depends": [
+      "F27"
+     ],
+     "start": 2.5,
+     "end": 3,
+     "baseline_pct": 83.3
+    },
+    {
+     "label": "F28 breakthroughs, Masters, feasts",
+     "features": [
+      "F28"
+     ],
+     "depends": [
+      "F27",
+      "F31 Kitchen"
+     ],
+     "start": 3,
+     "end": 5,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F45 research log",
+     "features": [
+      "F45"
+     ],
+     "depends": [
+      "F27"
+     ],
+     "start": 5,
+     "end": 5.5,
+     "baseline_pct": 75.0
+    },
+    {
+     "label": "F29 evolution lines",
+     "features": [
+      "F29"
+     ],
+     "depends": [
+      "F28",
+      "storm bear (Codex)"
+     ],
+     "start": 5.5,
+     "end": 7,
+     "note": "Needs the storm bear from lane E early in F36",
+     "baseline_pct": 5.0
+    },
+    {
+     "label": "F42 HUD + new-system screens",
+     "features": [
+      "F42"
+     ],
+     "depends": [
+      "F23",
+      "F27",
+      "F31"
+     ],
+     "start": 7,
+     "end": 8.5,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F47 economy + 15–25 h clear (+ v28 earned checkpoints)",
+     "features": [
+      "F47"
+     ],
+     "depends": [
+      "waves 1-2",
+      "F20"
+     ],
+     "start": 8.5,
+     "end": 11,
+     "baseline_pct": 0.0
+    },
+    {
+     "label": "F49 run, 13 chapter cards, release-wide",
+     "features": [
+      "F49",
+      "CARDS",
+      "XCUT"
+     ],
+     "depends": [
+      "all"
+     ],
+     "start": 11,
+     "end": 13,
+     "baseline_pct": 63.1
+    }
+   ]
+  },
+  {
+   "id": "E",
+   "name": "Lane E · Codex (GPU + Meshy)",
+   "session": "tb/lookdev, tb/creature-art, tb/visual-*",
+   "bars": [
+    {
+     "label": "F26 renderer + look dev (census, timings, presets, judges)",
+     "features": [
+      "F26"
+     ],
+     "start": 0,
+     "end": 3,
+     "baseline_pct": 58.3
+    },
+    {
+     "label": "F36 creature art (Meshy nights, poses, scale)",
+     "features": [
+      "F36"
+     ],
+     "depends": [
+      "F26 look bar"
+     ],
+     "note": "Includes the F29#3 storm bear; RD-26 cap of 30 generations/night",
+     "start": 3,
+     "end": 6.5,
+     "baseline_pct": 6.2
+    },
+    {
+     "label": "F39 Tidewake visual burn-down",
+     "features": [
+      "F39"
+     ],
+     "depends": [
+      "F26"
+     ],
+     "start": 6.5,
+     "end": 8,
+     "baseline_pct": 16.7
+    },
+    {
+     "label": "F40 Cloudreach visual burn-down",
+     "features": [
+      "F40"
+     ],
+     "depends": [
+      "F26"
+     ],
+     "note": "Claude lane already carries part of it",
+     "start": 8,
+     "end": 9,
+     "baseline_pct": 8.3
+    },
+    {
+     "label": "F41 Stormwood visual burn-down",
+     "features": [
+      "F41"
+     ],
+     "depends": [
+      "F26"
+     ],
+     "start": 9,
+     "end": 10.5,
+     "baseline_pct": 4.2
+    },
+    {
+     "label": "F38 Meadows + village visual burn-down",
+     "features": [
+      "F38"
+     ],
+     "depends": [
+      "F26",
+      "F17"
+     ],
+     "start": 10.5,
+     "end": 12,
+     "baseline_pct": 8.3
+    },
+    {
+     "label": "F49 release frames + owner Ally playtest prep",
+     "features": [
+      "F49",
+      "CARDS",
+      "XCUT"
+     ],
+     "depends": [
+      "all"
+     ],
+     "start": 12,
+     "end": 13,
+     "baseline_pct": 63.1
+    }
+   ]
+  },
+  {
+   "id": "P",
+   "name": "Lane P · Claude (performance)",
+   "session": "tb/perf",
+   "bars": [
+    {
+     "label": "Performance to target: Medium ≥60 fps avg on GTX 1060 (Ally ≥30 proxy)",
+     "features": [
+      "XPERF",
+      "F26"
+     ],
+     "start": 0.1,
+     "end": 4,
+     "note": "Added 2026-10-04 after Codex measured 7–17 fps avg in three realms. Measure (Claude probe plus Codex GPU A/B), then fix the top costs without clipping the world.",
+     "baseline_pct": 50.0
+    }
+   ]
+  }
+ ]
+}

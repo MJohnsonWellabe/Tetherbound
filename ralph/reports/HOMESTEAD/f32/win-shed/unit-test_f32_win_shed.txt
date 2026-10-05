@@ -1,0 +1,6 @@
+only test_f32_win_shed: 1 of 779 test files
+  ok    test_f32_win_shed.gd :: test_configured_cloudreach_galecrest_win_sheds_skyplume_once
+  ok    test_f32_win_shed.gd :: test_full_satchel_skips_the_shed_but_pays_victory_xp_and_essence
+  ok    test_f32_win_shed.gd :: test_misses_wrong_realms_and_unlisted_species_shed_nothing
+  ok    test_f32_win_shed.gd :: test_nine_key_legacy_event_validates_without_shed_and_keeps_its_receipt
+4 tests, 27 assertions, 0 failed

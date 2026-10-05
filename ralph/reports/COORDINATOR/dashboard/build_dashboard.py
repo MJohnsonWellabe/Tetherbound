@@ -215,6 +215,124 @@ lane_activity_section = (
     if lane_activity else "")
 legend = "".join(f'<span class="leg">{pill(k)} {counts[k]}</span>' for k in ORDER)
 
+# ---- delivery plan (Gantt) -------------------------------------------------
+# Owner request 2026-10-04: a frozen baseline of five lanes x 8-hour sprints,
+# tracked live. plan.json holds the bars; progress is read from criteria.json.
+import datetime as _dt
+_plan_path = HERE / "plan.json"
+plan_html = ""
+if _plan_path.exists():
+    plan = json.loads(_plan_path.read_text(encoding="utf-8"))
+    p_start = _dt.datetime.fromisoformat(plan["start"].replace("Z", "+00:00"))
+    p_hours = float(plan.get("sprint_hours", 8))
+    n_sprints = int(plan["sprints"])
+    now = _dt.datetime.now(_dt.timezone.utc)
+    now_pos = (now - p_start).total_seconds() / 3600.0 / p_hours
+    W = {"met": 1.0, "blocked": 1.0, "partial": 0.5, "in_progress": 0.25}
+
+    def _items(f):
+        # Pseudo-features: the 13 chapter exit cards and the release-wide
+        # requirements, which F49's integrated run must also close.
+        if f == "CARDS":
+            return crit.get("chapter_cards", [])
+        if f == "XCUT":
+            return crit.get("cross_cutting", [])
+        if f == "XPERF":
+            return [x for x in crit.get("cross_cutting", []) if str(x.get("id", "")).startswith("Ally device")]
+        return rows.get(f, {}).get("criteria", [])
+
+    def feat_pct(feats):
+        cs = [x for f in feats for x in _items(f)]
+        if not cs:
+            return 0.0, 0, 0
+        done = sum(1 for x in cs if norm(x.get("status")) in ("met", "blocked"))
+        return 100.0 * sum(W.get(norm(x.get("status")), 0) for x in cs) / len(cs), done, len(cs)
+
+    # Freeze each bar's starting progress the first time the plan is rendered,
+    # so "expected" measures the remaining work, not work done before the plan.
+    froze = False
+    for lane in plan["lanes"]:
+        for b in lane["bars"]:
+            if "baseline_pct" not in b:
+                b["baseline_pct"] = round(feat_pct(b["features"])[0], 1)
+                froze = True
+    if froze:
+        _plan_path.write_text(json.dumps(plan, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+
+    # Owner, 2026-10-04: show every time in Chicago time.
+    from zoneinfo import ZoneInfo
+    _CT = ZoneInfo("America/Chicago")
+
+    def at(pos):
+        return (p_start + _dt.timedelta(hours=pos * p_hours)).astimezone(_CT)
+
+    def fmt(t):
+        return t.astimezone(_CT).strftime("%a %d %b %-I:%M %p")
+
+    TRACK = {"done": "Done", "on_track": "On track", "behind": "Behind", "late": "Late",
+             "planned": "Planned", "early": "Started early"}
+    track_rows, lane_html, counts_t = [], [], {}
+    for lane in plan["lanes"]:
+        bars = []
+        for b in lane["bars"]:
+            s0, e0 = float(b["start"]), float(b["end"])
+            actual, done, n = feat_pct(b["features"])
+            base = float(b.get("baseline_pct", 0))
+            frac = min(1.0, max(0.0, (now_pos - s0) / max(0.01, e0 - s0)))
+            expected = base + (100.0 - base) * frac
+            if n and done == n:
+                st = "done"
+            elif now_pos < s0:
+                st = "early" if actual > base + 0.5 else "planned"
+            elif now_pos > e0:
+                st = "late"
+            elif actual >= expected - 15:
+                st = "on_track"
+            else:
+                st = "behind"
+            counts_t[st] = counts_t.get(st, 0) + 1
+            left, width = 100 * s0 / n_sprints, 100 * (e0 - s0) / n_sprints
+            tip = (f'{b["label"]}: {fmt(at(s0))} to {fmt(at(e0))} {at(s0).tzname()}. '
+                   f'{done}/{n} criteria done, {actual:.0f}% weighted (expected now {expected:.0f}%). {TRACK[st]}.')
+            bars.append(
+                f'<div class="gbar t-{st}" style="left:{left:.3f}%;width:{width:.3f}%" title="{E(tip)}">'
+                f'<span class="gfill" style="width:{actual:.0f}%"></span>'
+                f'<span class="glabel">{E(b["label"].split(" ")[0])}</span></div>')
+            track_rows.append(
+                f'<tr class="t-{st}"><td>{E(lane["id"])}</td><td>{E(b["label"])}</td>'
+                f'<td>S{int(s0) + 1}{"½" if s0 % 1 else ""} → S{int(e0 - 0.001) + 1}{"½" if e0 % 1 else ""}'
+                f'<br><span class="meta">{fmt(at(s0))} → {fmt(at(e0))}</span></td>'
+                f'<td class="num">{done}/{n}</td><td class="num">{base:.0f}%</td><td class="num">{expected:.0f}%</td>'
+                f'<td class="num">{actual:.0f}%</td><td><span class="tpill t-{st}">{TRACK[st]}</span></td>'
+                f'<td>{E(", ".join(b.get("depends", [])))}{(" · " + E(b["note"])) if b.get("note") else ""}</td></tr>')
+        lane_html.append(
+            f'<div class="glane"><div class="gname">{E(lane["name"])}<span class="meta">{E(lane.get("session", ""))}</span></div>'
+            f'<div class="gtrack">{"".join(bars)}</div></div>')
+    heads = "".join(
+        f'<div class="gs" style="left:{100 * i / n_sprints:.3f}%;width:{100 / n_sprints:.3f}%">'
+        f'<b>S{i + 1}</b><span>{at(i).strftime("%a %-I %p")}</span></div>' for i in range(n_sprints))
+    now_html = (f'<div class="gnow" style="left:{100 * now_pos / n_sprints:.3f}%"><span>now</span></div>'
+                if 0 <= now_pos <= n_sprints else "")
+    cur = int(now_pos) + 1 if now_pos >= 0 else 0
+    finish = at(n_sprints)
+    tsum = " · ".join(f'{TRACK[k]} {v}' for k, v in counts_t.items())
+    plan_html = f"""
+  <section class="panel gantt-panel" aria-labelledby="plan-h"><h2 id="plan-h">Delivery plan</h2>
+    <p class="meta">Baseline set {E(plan.get("baseline_set", ""))} · sprint = {p_hours:.0f} h, back to back from {fmt(p_start)} {at(0).tzname()} ·
+      now in <b>sprint {cur} of {n_sprints}</b> · planned finish {fmt(finish)} {finish.tzname()} · {E(tsum)}</p>
+    <p class="note">Each bar is a feature a lane takes to done (every criterion met or blocked on the owner). The darker fill is the share of that bar's
+      criteria evidenced now. Status compares it with a straight-line expectation from the bar's frozen starting progress: within 15 points is on track.
+      Past its end and not done is late.</p>
+    <div class="gscroll"><div class="gantt">
+      <div class="glane ghead"><div class="gname"></div><div class="gtrack">{heads}{now_html}</div></div>
+      {"".join(lane_html)}
+    </div></div>
+    <div class="glegend">{"".join(f'<span class="tpill t-{k}">{v}</span>' for k, v in TRACK.items())}</div>
+    <div class="tbl"><table><thead><tr><th>Lane</th><th>Feature</th><th>Planned window</th><th>Criteria</th><th>At baseline</th><th>Expected now</th><th>Actual</th><th>Status</th><th>Depends on / notes</th></tr></thead>
+    <tbody>{"".join(track_rows)}</tbody></table></div>
+    <p class="note">Rebaselines: {E("; ".join(plan.get("rebaselines", [])) or "none")}.</p>
+  </section>"""
+
 # A complete document (owner report, 2026-09-30): the board is also served raw by
 # hosts that add no wrapper, where a missing charset turns "·" into "Â·", a missing
 # viewport shrinks the page on phones, and a missing doctype falls into quirks mode.
@@ -292,6 +410,29 @@ th{{font:600 11px "JetBrains Mono",monospace;text-transform:uppercase;letter-spa
 .two{{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}}
 ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 .note{{font-size:13px;color:var(--muted)}}
+.tabs{{display:flex;gap:6px;border-bottom:1px solid var(--line)}}
+.tabs label{{font:600 14px Figtree,sans-serif;padding:8px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--muted);border:1px solid transparent;border-bottom:none}}
+.tabsel{{position:absolute;opacity:0;pointer-events:none}}
+#tab-acc:checked ~ .tabs label[for=tab-acc], #tab-plan:checked ~ .tabs label[for=tab-plan]{{color:var(--ink);background:var(--panel);border-color:var(--line)}}
+#tab-acc:focus-visible ~ .tabs label[for=tab-acc], #tab-plan:focus-visible ~ .tabs label[for=tab-plan]{{outline:2px solid var(--accent)}}
+.pane{{display:none;gap:28px;grid-template-columns:minmax(0,1fr)}} .wrap,.panel{{grid-template-columns:minmax(0,1fr)}} #tab-acc:checked ~ .pane-acc, #tab-plan:checked ~ .pane-plan{{display:grid}}
+.gscroll{{overflow-x:auto}} .gantt{{min-width:880px;display:grid;gap:6px}}
+.glane{{display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;align-items:center}}
+.gname{{font-weight:600;font-size:13px;display:grid}} .gname .meta{{font-weight:400;font-size:11.5px}}
+.gtrack{{position:relative;height:30px;background:repeating-linear-gradient(90deg,var(--tint-none) 0 1px,transparent 1px calc(100%/13));border-radius:6px}}
+.ghead .gtrack{{background:none;height:34px;margin-top:12px}}
+.gs{{position:absolute;top:0;display:grid;font-size:11px;color:var(--muted);padding-left:4px;border-left:1px solid var(--line)}}
+.gs b{{font:600 12px "JetBrains Mono",monospace;color:var(--ink)}}
+.gnow{{position:absolute;top:0;bottom:-600px;border-left:2px solid var(--fail);z-index:3;pointer-events:none}}
+.gnow span{{position:absolute;top:-14px;left:-12px;font:600 10px "JetBrains Mono",monospace;color:var(--fail);text-transform:uppercase}}
+.gbar{{position:absolute;top:3px;height:24px;border-radius:5px;overflow:hidden;background:var(--tc-tint);border:1px solid var(--tc)}}
+.gfill{{position:absolute;inset:0 auto 0 0;background:var(--tc);opacity:.45}}
+.glabel{{position:relative;font:600 11px "JetBrains Mono",monospace;padding:0 5px;line-height:22px;white-space:nowrap;color:var(--ink)}}
+.t-done{{--tc:var(--met);--tc-tint:var(--tint-met)}} .t-on_track{{--tc:var(--prog);--tc-tint:var(--tint-prog)}}
+.t-behind{{--tc:var(--partial);--tc-tint:var(--tint-partial)}} .t-late{{--tc:var(--fail);--tc-tint:var(--tint-fail)}}
+.t-planned{{--tc:var(--none);--tc-tint:var(--tint-none)}} .t-early{{--tc:var(--block);--tc-tint:var(--tint-block)}}
+.tpill{{display:inline-block;font:600 11px/1 "JetBrains Mono",monospace;text-transform:uppercase;letter-spacing:.04em;padding:5px 7px;border-radius:5px;background:var(--tc-tint);color:var(--tc);white-space:nowrap}}
+.glegend{{display:flex;flex-wrap:wrap;gap:8px}} td.num{{font-variant-numeric:tabular-nums;text-align:right}}
 @media (max-width:640px){{
   .frow summary{{grid-template-columns:40px minmax(0,1fr) 44px;grid-template-areas:"id title pct" "id meter meter" "id num num" "id stack stack"}}
   .crits{{padding-left:14px}} .crit dl div{{grid-template-columns:1fr}}
@@ -301,11 +442,16 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
 </head>
 <body>
 <main class="wrap">
+  <input type="radio" name="tab" id="tab-acc" class="tabsel" checked>
+  <input type="radio" name="tab" id="tab-plan" class="tabsel">
   <div class="top">
     <span class="eyebrow">Project update · F01–{E(last_id)} acceptance</span>
     <h1>Tetherbound Acceptance Board</h1>
     <p class="meta">Updated {E(status.get("updated", crit.get("generated_at", "")))} · main <code>{E(crit.get("main_sha", ""))}</code> · batch in flight <code>{E(crit.get("batch4_sha", ""))}</code> · rebuilt hourly by the coordinator</p>
   </div>
+  <nav class="tabs" aria-label="Board views"><label for="tab-acc">Acceptance</label><label for="tab-plan">Delivery plan</label></nav>
+  <div class="pane pane-plan">{plan_html}</div>
+  <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
     <div class="kpi"><b>{overall}%</b><span>Criteria evidenced, weighted (met 1, partial ½, in progress ¼)</span></div>
@@ -332,6 +478,7 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
     <section class="panel"><h3>Needs the owner</h3><ul class="plain">{li(status.get("owner_needs", []))}</ul></section>
   </div>
   <p class="note">Status is strict: fixture-only proof counts as partial, visual criteria need a passing code-blind judge verdict, and co-op criteria need two-peer evidence. Percentages are the coordinator's evidence audit, not a measured play-through.</p>
+  </div>
 </main>
 </body>
 </html>

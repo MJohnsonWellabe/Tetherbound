@@ -57,6 +57,8 @@ const STARTERS := ["terrapup", "ripplet", "galewisp"]
 const RETAINED := ["bramblebun", "mudsnout", "pipwing", "trailpup"]
 ## trainer id -> band id (for the band's region-entry level)
 const TRAINER_CASES := {
+	# F04#1 relay officer (BOSSES 4.2); F22#4 names relay officers.
+	"relay_officer_dell": "band3_the_river_lock",
 	"relay_captain": "band3_the_river_lock",
 	"captain_riverwatch": "band3_the_river_lock",
 	"captain_field": "band4_upper_meadows_ironwood",

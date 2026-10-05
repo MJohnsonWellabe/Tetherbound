@@ -153,7 +153,11 @@ func _run() -> void:
 		if paired.has(str(run.pilot)): (paired[str(run.pilot)] as Array).append(run)
 	var fixed_total := _score(paired.READER)
 	var switched_total := _score(paired.SWITCH_READER)
-	var switch_value := int(switched_total.tags) > 0 \
+	# F24's tag combo is one of three switching sources (COMBAT §12.3); while
+	# its runtime flag is off the comparison measures the other two and says so.
+	var combo_live := false
+	for run: Dictionary in paired.SWITCH_READER: combo_live = combo_live or bool(run.get("tag_combo_available", false))
+	var switch_value := (int(switched_total.tags) > 0 or not combo_live) \
 		and int(switched_total.errors) == 0 \
 		and float(switched_total.win_rate) >= float(fixed_total.win_rate) \
 		and float(switched_total.median_cost) < float(fixed_total.median_cost) \
@@ -163,7 +167,9 @@ func _run() -> void:
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
-		"switch_value": {"pass": switch_value, "fixed": fixed_total, "switched": switched_total},
+		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live,
+			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+			"fixed": fixed_total, "switched": switched_total},
 		"errors": errors, "rows": rows, "runs": runs}
 	if not _json.is_empty():
 		var output := FileAccess.open(_json, FileAccess.WRITE)

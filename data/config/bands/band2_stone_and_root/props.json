@@ -508,12 +508,13 @@
           "glow": "campfire",
           "glow_scale": 0.9,
           "smoke_top_m": 26.0,
-          "smoke_alpha": 0.9,
+          "smoke_alpha": 0.6,
           "smoke_top_size_m": 11.0,
-          "smoke_fade": 0.35,
+          "smoke_fade": 0.55,
           "smoke_base_size_m": 1.4,
-          "smoke_colour": "#4f4a45",
-          "_why": "Waylight post and signal column; see the cluster note."
+          "smoke_colour": "#948f87",
+          "_why": "Waylight post and signal column; see the cluster note.",
+          "_why_smoke_f26": "F26 code-blind judge (Low, burrow_warrens__04): the #4f4a45 / 0.9 / fade 0.35 column read as a black pole, not smoke. Tuned to the accepted Tidewake long-range plume (default campfire smoke grey, alpha 0.55-0.7, fade 0.5-0.6); height and width unchanged so it still reads from the road."
         }
       ]
     }

@@ -173,6 +173,8 @@ jobs:
       actions: read
     outputs:
       code: ${{ steps.filter.outputs.code }}
+      # Whether the multiplayer group must run (see `net` in the filter step).
+      net: ${{ steps.filter.outputs.net }}
       # The FULL tier (see `on:`): scheduled runs, manual dispatches and PRs
       # labelled `full-ci`. Everything else runs the fast tier.
       full: ${{ steps.tier.outputs.full }}
@@ -223,6 +225,7 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
             echo "Explicit full verification requested."
             echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "net=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -278,6 +281,7 @@ jobs:
           if [ -z "$base" ]; then
             echo "No usable base commit; building."
             echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "net=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -311,6 +315,28 @@ jobs:
           else
             echo "Documentation only; skipping the build."
             echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # MULTIPLAYER GROUP SKIP (owner, 2026-10-04: skip jobs a change
+          # cannot affect). The net group (discover-net-smokes, the ten
+          # verify-multiplayer-shard jobs, veridian-offer and the Cloudreach
+          # mid-ride rejoin) is the longest queue in a full run. It is skipped ONLY
+          # when every non-documentation path changed is presentation that a
+          # two-peer smoke cannot observe: image/audio media and their .import
+          # sidecars, .gdshader files, data/config/*_{visual,atmosphere,
+          # horizon,camera,lighting,presentation,audio}.json, unit/capture
+          # test files (unit tests still run in verify-unit-tests), and tools/
+          # outside tools/net/ and tools/ci/. Meshes (.glb/.gltf/.tscn) are NOT
+          # on the list: their collision can move a body. An empty diff, a
+          # missing base, a schedule or a dispatch always runs the group.
+          # Same SIGPIPE-safe capture as `noncode` above.
+          netrelevant="$(printf '%s\n' "$noncode" \
+            | grep -vE '(\.(png|jpe?g|webp|ktx2|exr|hdr|svg|ogg|wav|mp3)(\.import)?$|\.gdshader(\.uid)?$|^data/config/[a-z0-9_]+_(visual|atmosphere|horizon|camera|lighting|presentation|audio)\.json$|^tests/(test|capture)_[a-z0-9_]+\.gd(\.uid)?$|^tools/([^nc]|n[^e]|ne[^t]|net[^/]|c[^i]|ci[^/]))' || true)"
+          if [ -z "$changed" ] || [ -n "$netrelevant" ]; then
+            echo "net=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Presentation-only change; the multiplayer group will skip."
+            echo "net=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Decide the tier (fast on every PR/push, full every 8 hours)
@@ -741,6 +767,42 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
+      # F27 (batch 532): Altar spend and catch-overflow release payout, solo/host
+      # real paths. smoke_f27_wild_defeat_essence joins after the actor_vitals flip.
+      - name: Verify f27_altar_spend
+        if: ${{ !cancelled() }}
+        env: { SMOKE: f27_altar_spend, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
+      - name: Verify release
+        if: ${{ !cancelled() }}
+        env: { SMOKE: release, RETRIES: 1 }
+        run: |
+          set -uo pipefail
+          n=0
+          until [ "$n" -ge "$RETRIES" ]; do
+            n=$((n + 1))
+            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+              echo "::endgroup::"
+              exit 0
+            fi
+            echo "::endgroup::"
+            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+          done
+          exit 1
       - name: Run the harvest regression checks
         run: |
           godot --headless --path . --script tests/run_tests.gd \
@@ -1887,6 +1949,15 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # F22#0: authored role patterns (pure contract), their production node
+      # mount, and live wild reposition/dodge/punish on real bodies.
+      - name: Verify F22 enemy patterns
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
+        run: |
+          set -euo pipefail
+          timeout 120s godot --headless --path . --script tests/smoke_f22_pattern_contract.gd
+          timeout 120s godot --headless --path . --script tests/smoke_f22_live_pattern_mount.gd
+          timeout 600s godot --headless --path . --fixed-fps 60 --script tests/smoke_f22_wild_reactions.gd
       # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
       # shortcuts walked/swum with real stick input in the production scene,
       # split by --case so no step runs past ~8 min. Measured on a GitHub
@@ -2482,7 +2553,11 @@ jobs:
     # on every push made normal CI slower while producing no actionable pass/
     # fail signal. Keep the exact command available to a deliberate manual
     # dispatch, where a developer can inspect its known-red result.
-    if: needs.changes.outputs.full == 'true'
+    # Owner, 2026-10-04: known-red probes run only on the scheduled full
+    # tier and on manual dispatch, never on a `full-ci` pull request. They
+    # cannot block a merge (continue-on-error), so on a PR they only held two
+    # runners for ~9 minutes each.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2544,7 +2619,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    # Owner, 2026-10-04: known-red probes run only on the scheduled full
+    # tier and on manual dispatch, never on a `full-ci` pull request. They
+    # cannot block a merge (continue-on-error), so on a PR they only held two
+    # runners for ~9 minutes each.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2595,7 +2674,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     outputs:
       files: ${{ steps.discover.outputs.files }}
     steps:
@@ -2775,7 +2854,7 @@ jobs:
     needs:
       - changes
       - discover-net-smokes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3139,7 +3218,7 @@ jobs:
         group: [space, capacity, recovery]
     timeout-minutes: 50
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3236,7 +3315,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
