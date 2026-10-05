@@ -5646,11 +5646,13 @@ func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary)
 		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "waystone_touch", request, context)
 		if ready.get("ok") != true:
 			if ready.get("code") not in ["owner_passive_checkpoint_pending", "owner_passive_original_pending"]:
-				_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+				_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again.",
+					"code": "gate:" + str(ready.get("code", ""))})
 			return
 	var committed := _waystone_commit_prepared(peer, envelope, context)
 	if committed.get("durable") != true:
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again.",
+			"code": "commit:" + str(committed.get("code", committed.get("reason", "")))})
 
 
 ## Stages the frozen touch with exactly the context that was (for a guest)
@@ -5687,6 +5689,8 @@ func _waystone_delivery_accepted(peer: int, row: Dictionary) -> void:
 
 func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	if not _portal_envelope_valid(peer, envelope): return
+	if result.get("ok") != true and envelope.payload.get("kind") == "waystone_touch":
+		print("[waystone] host refused peer %d %s: %s" % [peer, str(envelope.payload.get("waystone_id", "")), str(result.get("code", result.get("reason", "")))])
 	var reply := result.duplicate(true)
 	if reply.get("prepared") is Dictionary:
 		for key: Variant in reply.prepared:
