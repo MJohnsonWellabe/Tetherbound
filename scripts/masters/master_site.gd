@@ -49,7 +49,6 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	# Free-standing world text: face the camera upright, never read mirrored.
 	reveal.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	reveal.position = Vector3(0, 3, -4)
-	reveal.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	add_child(reveal)
 	var chest := Node3D.new()
 	chest.name = "RecipeChest"
@@ -120,7 +119,6 @@ func _build_sign(world: Node3D) -> void:
 	words.font_size = 48
 	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	words.position.y = 2.5
-	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	sign.add_child(words)
 	var lead := NPC.new()
 	lead.name = "MasterLead"
