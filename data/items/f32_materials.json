@@ -38,26 +38,6 @@
       "blurb": "Stormwood glass refined at the Forge for Stormglass gear.",
       "description": "Refined from Stormglass and Thunderwood. A Stormwood tier material used to craft gear at the homestead."
     },
-    "sluice_metal": {
-      "name": "Sluice Metal",
-      "kind": "resource",
-      "stack": 50,
-      "colour": "#7f9aa0",
-      "gathered_with": "pickaxe",
-      "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Tide-scoured ore from Tidewake's shallow sluices.",
-      "description": "Metal-bearing rock the tides have washed clean in Tidewake's channels. Refined with Reef Stone into Tidesteel at the Forge, and used for the Tidewake station attachments. Broken loose with a pickaxe."
-    },
-    "reef_stone": {
-      "name": "Reef Stone",
-      "kind": "resource",
-      "stack": 50,
-      "colour": "#9fb7a8",
-      "gathered_with": "pickaxe",
-      "icon": "res://assets/ui/icons/items/stone.png",
-      "blurb": "Dry exposed reef rock from Tidewake's shores.",
-      "description": "Pale, porous stone from Tidewake's shores and low terraces. A Tidewake tier material for the Tidewake station attachments and Tidesteel. Broken loose with a pickaxe."
-    },
     "tide_pearl": {
       "name": "Tide Pearl",
       "kind": "resource",
