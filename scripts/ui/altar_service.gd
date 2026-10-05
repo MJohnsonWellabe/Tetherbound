@@ -214,12 +214,39 @@ func submit_essence_spend(station_key: String, request: Dictionary) -> void:
 	if context.is_empty():
 		_emit_refusal(id, "authority_missing")
 		return
+	request = _host_first_send(station_key, request)
 	# Freeze BEFORE calling: Session may complete synchronously in solo.
 	_pending = {"station_key": station_key, "request": request.duplicate(true),
 		"context": context, "durable": false}
 	_retry_left = _retry_seconds()
 	var raw: Variant = _session.call("submit_altar_essence_spend", station_key, request.duplicate(true))
 	if not _pending.is_empty(): _accept_result(id, raw)
+
+
+## The host's own five accumulate passive care (nourishment, happiness)
+## every tick, and each refresh bumps the admitted revision, so a quote shown
+## a moment ago is always stale by the press. Like the Den groom, the FIRST
+## send adopts a fresh synchronous host quote, but only when it still offers
+## this creature at this level with this payment affordable at the same
+## price. Retries/reconcile keep the original request and never rebase. A
+## guest's quote is answered by the host and is not changed here.
+func _host_first_send(station_key: String, request: Dictionary) -> Dictionary:
+	if _session.call("is_host") != true: return request
+	var fresh: Variant = _session.call("quote_altar_essence_spend", station_key,
+		request.creature_uid, Crypto.new().generate_random_bytes(16).hex_encode())
+	if not fresh is Dictionary or fresh.get("ok") != true or fresh.get("creature_uid") != request.creature_uid \
+			or fresh.get("level") != request.expected_level \
+			or not ESSENCE._integer(fresh.get("expected_character_revision"), 0, 2147483646) \
+			or not fresh.get("payments") is Array: return request
+	var cost := ESSENCE.level_cost(int(request.expected_level), ESSENCE.config(), PROGRESSION.config()) \
+		if request.payment_item != ESSENCE.config().get("tether_candy_item") else int(ESSENCE.config().get("tether_candy_cost", -1))
+	for payment: Variant in fresh.payments:
+		if payment is Dictionary and payment.get("id") == request.payment_item and payment.get("cost") == cost \
+				and ESSENCE._integer(payment.get("available"), cost, 2147483647):
+			var rebased := request.duplicate(true)
+			rebased.expected_character_revision = int(fresh.expected_character_revision)
+			return rebased
+	return request
 
 
 func reconcile_essence_spend(spend_id: String) -> void:

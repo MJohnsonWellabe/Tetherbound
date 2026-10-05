@@ -1,0 +1,13 @@
+extends SceneTree
+var frames := 0
+var path := "res://scenes/world/cloudreach_cliffs.tscn"
+var got := false
+func _process(_d: float) -> bool:
+	frames += 1
+	if frames == 3 and OS.get_environment("WITH_SCENE") == "1": change_scene_to_file("res://scenes/world/meadows_playground.tscn")
+	if frames == 100: print("TMP_REQ ", ResourceLoader.load_threaded_request(path, "", OS.get_environment("SUB") == "1", int(OS.get_environment("CACHE") if OS.get_environment("CACHE") != "" else "1")))
+	if frames > 100 and not got and ResourceLoader.load_threaded_get_status(path) == ResourceLoader.THREAD_LOAD_LOADED:
+		ResourceLoader.load_threaded_get(path); got = true; print("TMP_GOT at ", frames)
+	if got and frames == 300 and OS.get_environment("UNLOAD") == "1":
+		print("TMP_UNLOAD"); unload_current_scene()
+	return got and frames > 400 or frames > 20000

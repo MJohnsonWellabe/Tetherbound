@@ -160,10 +160,16 @@ func test_terminal_source_and_complete_owner_baseline_refuse_forged_fields() -> 
 	var settled := ROUND.settled_before(before, duty.intent, duty.context)
 	assert_true(DELIVERY.owner_plan(settled, row, RECORD.errors).ok)
 	assert_false(DELIVERY.owner_plan(before, row, RECORD.errors).ok, "unsettled owner HP cannot be imported by award")
-	for field: String in ["hp", "xp", "attack", "happiness", "distance_m_together", "battles_fought"]:
+	for field: String in ["hp", "xp", "attack", "battles_fought"]:
 		var current: Dictionary = settled.duplicate(true)
 		current.party[0][field] += 0.000001 if field not in ["xp", "battles_fought"] else 1
 		assert_false(DELIVERY.owner_plan(current, row, RECORD.errors).ok, field)
+	# Passive care is the owner's own (owner-passive replay): drift since the
+	# stage is merged at install (essence.merge_owner_passive), never refused.
+	for field: String in ["happiness", "distance_m_together"]:
+		var drifted: Dictionary = settled.duplicate(true)
+		drifted.party[0][field] += 0.5
+		assert_true(DELIVERY.owner_plan(drifted, row, RECORD.errors).ok, field)
 	assert_true(DELIVERY.owner_plan(row.after, row, RECORD.errors).duplicate)
 	row.status = "accepted"
 	assert_false(DELIVERY.owner_plan(settled, row, RECORD.errors).ok, "accepted history is never new credit")

@@ -185,7 +185,11 @@
   "light": {
     "colour": "#ffd7a4",
     "energy": 1.15,
-    "range_m": 8.5
+    "range_m": 8.5,
+    "_why_flame_at": "F17#6 r4 GPU judge: the flames floated as small white bulbs beside unlit cages. The installed Lantern_Wall bracket reaches about 0.85 m out from the wall and its cage hangs at y 0.3-0.55 (mesh vertex probe), so the flame and the light sit in the cage.",
+    "flame_at": [0, 0.42, 0.85],
+    "flame_radius_m": 0.08,
+    "flame_energy": 2.4
   },
   "refresh_seconds": 0.2,
   "pedestal_collider": {
@@ -206,6 +210,14 @@
     0.15,
     -15
   ],
+  "_why_home_membrane_night": "Coordinator ruling on the F17#6 r4 judge: at night the home arch's open membrane (z=-12.8, straight through the entrance) read as a flat cream card filling the doorway. While WorldLook is dark its emission is scaled down and its colour dimmed so the doorway reads as a lit vestibule, not a lamp. Presentation only; arch state and portal logic are unchanged (F17#5 checks emission_enabled, which stays on). TUNABLE.",
+  "home_membrane_night_emission_scale": 0.3,
+  "home_membrane_night_tint": "#8a8f9c",
+  "_why_interior_volumes": "F17#6 r4 judge: the objective beam showed indoors (through the creature and the nave roof). Hall-local interior boxes (nave x -7..7, z -15..15 under the 9.4 m ridge; Shrine Room x 7..17, z -7..7), measured from the shell's wall and roof modules; objective_beacon.gd hides the beam while the camera is inside one. Presentation only. TUNABLE.",
+  "interior_volumes": [
+    {"min": [-7, -1, -15], "max": [7, 10, 15]},
+    {"min": [7, -1, -7], "max": [17, 7, 7]}
+  ],
   "interior_ambient": {
     "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
     "night_ambient": 0.25
@@ -217,7 +229,10 @@
     {"at": [-6.4, 3.4, 0], "yaw_deg": 90},
     {"at": [6.4, 3.4, 0], "yaw_deg": -90},
     {"at": [-6.4, 3.4, 6], "yaw_deg": 90},
-    {"at": [6.4, 3.4, 6], "yaw_deg": -90}
+    {"at": [6.4, 3.4, 6], "yaw_deg": -90},
+    {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
+    {"at": [12, 3.0, 6.8], "yaw_deg": 180},
+    {"at": [16.8, 3.0, 0], "yaw_deg": -90}
   ],
   "frontage": {
     "_why": "F17 destination r1 DAY NO/NIGHT NO: complete the installed central gable/clerestory at the existing road-facing end, identify the public threshold and put warm practical fixtures on that real facade. Native module scale; no new floor/collider, entrance, route or camera changes.",
@@ -309,17 +324,22 @@
         "yaw_deg": 180
       }
     ],
+    "_why_door_pools": "F17#6 r3 judge: at night the front door read as a flat emissive rectangle (the home arch membrane seen straight through the entrance at z=-15) and no light fell on the ground at the door. A low warm pool on the threshold step outside and one in the vestibule (between the entrance and the home arch at z=-12.8) light the step and the arch reveal so the doorway reads as a lit way in. Lights only: no mesh, collider, route or arch change. TUNABLE.",
+    "door_pools": [
+      {"name": "HallThresholdPool", "at": [0, 1.4, -17.4], "energy": 2.6, "range_m": 6.5},
+      {"name": "HallVestibulePool", "at": [0, 2.7, -14.0], "energy": 1.6, "range_m": 4.5}
+    ],
     "light": {
       "colour": "#ffd09b",
       "energy": 1.7,
       "range_m": 7.5,
-      "glow_energy": 0.5,
+      "glow_energy": 1.5,
       "glow_at": [
         0,
-        0.15,
-        0.12
+        0.42,
+        0.85
       ],
-      "glow_radius_m": 0.065
+      "glow_radius_m": 0.08
     }
   }
 }

@@ -37,6 +37,9 @@ signal lunge_started(heading: Vector3, distance: float)
 ## F10#2: a `route_cue_seconds` phase began (the tell proper follows, with
 ## `telegraph_started`). A host relays it so a guest's proxy draws the route.
 signal route_cue_started(seconds: float)
+## F22#0: an observed player commitment caused a dodge or a punish tell.
+## Presentation/proof only; it decides nothing.
+signal pattern_reacted(kind: String)
 
 ## Live state. The combat manager reads this off the node by name; it is the one
 ## piece of a creature that has to survive being knocked out.
@@ -110,6 +113,9 @@ var _pattern_leap_duration := 0.45
 var _pattern_leap_model_y := 0.0
 var _poise: float = 0.0
 var _poise_quiet_left: float = 0.0
+var _poise_resist_left: float = 0.0
+## Host-authored pool size mirrored onto a guest stand-in (sync_poise).
+var _synced_poise_max: float = -1.0
 var _staggered: bool = false
 var _stagger_critical_ready: bool = false
 
@@ -670,11 +676,13 @@ func _observe_pattern_reaction(delta: float) -> bool:
 		_pattern_dodge_left = float(cfg.get(key, 6.0))
 		_side_sign = float(observation.get("side_sign", 1.0))
 		_enter(AI.Intent.DODGE)
+		pattern_reacted.emit("dodge")
 		return true
 	if reaction == "punish":
 		_pattern_punish = AI.punish_profile(_patterns, _combat_cfg, _current_pattern_context())
 		if not _pattern_punish.is_empty():
 			_enter(AI.Intent.TELEGRAPH)
+			pattern_reacted.emit("punish")
 			return true
 	return false
 
@@ -761,6 +769,7 @@ func _tick_combat(delta: float) -> void:
 			# The punish window ended. A new stagger must earn another break;
 			# leaving zero poise here let every quick chain-lock the opponent.
 			_poise = _poise_max()
+			_poise_resist_left = float(_poise_config().get("break_resist_seconds", 0.0))
 			_stagger_critical_ready = false
 			_enter(AI.Intent.REPOSITION)
 		else:
@@ -1444,12 +1453,32 @@ func _poise_config() -> Dictionary:
 
 
 func _poise_max() -> float:
-	return maxf(1.0, float(_combat_cfg.get("poise_max", _poise_config().get("max", 40.0))))
+	return poise_max()
+
+
+## COMBAT §4 break pool for this body: an encounter's authored `poise_max`
+## wins, then the role pool (`poise.role_pools`), then the shared default.
+## The manager reads this same value so HUD and break threshold agree.
+func poise_max() -> float:
+	if _synced_poise_max > 0.0:
+		return _synced_poise_max
+	if _combat_cfg.has("poise_max"):
+		return maxf(1.0, float(_combat_cfg.poise_max))
+	var pools: Dictionary = _poise_config().get("role_pools", {})
+	if not pools.is_empty() and instance != null:
+		var role := AI.context_role(_patterns, _pattern_context) if not _pattern_context.is_empty() else ""
+		if role.is_empty():
+			role = AI.species_role(str(instance.get("species_id")), MATH.config().get("patterns", {}))
+		if pools.has(role):
+			return maxf(1.0, float(pools[role]))
+	return maxf(1.0, float(_poise_config().get("max", 40.0)))
 
 
 func _reset_poise() -> void:
+	_synced_poise_max = -1.0
 	_poise = _poise_max()
 	_poise_quiet_left = 0.0
+	_poise_resist_left = 0.0
 	_staggered = false
 	_stagger_critical_ready = false
 
@@ -1457,6 +1486,7 @@ func _reset_poise() -> void:
 func _tick_poise(delta: float) -> void:
 	if _staggered:
 		return
+	_poise_resist_left = maxf(0.0, _poise_resist_left - delta)
 	_poise_quiet_left = maxf(0.0, _poise_quiet_left - delta)
 	if _poise_quiet_left <= 0.0:
 		_poise = minf(_poise_max(), _poise + float(_poise_config().get("regen_per_second", 20.0)) * delta)
@@ -1472,6 +1502,11 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	# was measured first and left the break one hit into the tell proper, so a
 	# masher still cancelled every dive (C2 ratio inf / 3.49).
 	if _route_cue_left > 0.0:
+		return false
+	# COMBAT §4: for a short beat after a stagger ends the body cannot be
+	# broken again (forced or not) and its refilled pool is not drained; hits
+	# still deal HP damage. Stops chained zero-poise staggers.
+	if _poise_resist_left > 0.0:
 		return false
 	if not force_stagger:
 		_poise = maxf(0.0, _poise - maxf(0.0, amount))
@@ -1514,7 +1549,11 @@ func is_staggered() -> bool:
 ## an absolute value is idempotent on the host and prevents a client replay
 ## from draining poise twice.
 func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
-		stagger_left: float = -1.0) -> void:
+		stagger_left: float = -1.0, host_poise_max: float = -1.0) -> void:
+	# A guest's stand-in has no authored profile or pattern context: the
+	# host's own pool size is the one its bar must be read against.
+	if host_poise_max > 0.0:
+		_synced_poise_max = host_poise_max
 	_poise = clampf(value, 0.0, _poise_max())
 	_staggered = staggered_now
 	_stagger_critical_ready = staggered_now and critical_ready

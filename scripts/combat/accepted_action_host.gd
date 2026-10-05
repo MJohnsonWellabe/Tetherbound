@@ -299,9 +299,13 @@ func verify_original_actor_vitals(proposal: Dictionary, original: Dictionary) ->
 	var peer: int = int(proposal.get("peer_id", 0))
 	var uid: String = str(proposal.get("creature_uid", ""))
 	var rec: Dictionary = encounters.get(id, {})
+	# F27: a guest's actor in a canonical wild fight is owned by its own
+	# encounter scope (wild_actor_scope.gd), never a trainer round scope.
+	var wild: bool = preload("res://scripts/net/wild_actor_scope.gd").owns(rec.get("wild_actor_owner"), rec, id) \
+		and rec.get("wild_actor_owner") == original.get("wild_actor_owner")
 	if proposal.get("kind") != "damage" or original.get("encounter_id") != id \
-		or not preload("res://scripts/net/combat_round_reward.gd").scope_valid(rec.get("ordinary_combat_reward_owner")) \
-		or rec.get("kind") not in ["trainer", "boss"] \
+		or not (wild or (preload("res://scripts/net/combat_round_reward.gd").scope_valid(rec.get("ordinary_combat_reward_owner")) \
+			and rec.get("kind") in ["trainer", "boss"])) \
 		or original.get("phase") != "active" or rec.get("phase") not in ["active", "resolving", "done"] \
 		or not _tracking_enabled_for(id) or move_action_publication_pending(id) \
 		or rec.get("realm") != original.get("realm") \

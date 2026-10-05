@@ -1,0 +1,108 @@
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5668, 0.910754, 14.17091) Halllocal=(-0.170907, 0.060754, -0.433189) maximum_offroad=0.000
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":1,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":2,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":3,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":4,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":5,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":6,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":7,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":8,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":9,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":10,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":11,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":12,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":13,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":14,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":15,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":16,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":17,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":18,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":19,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":20,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":21,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":22,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":23,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":24,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":25,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":26,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":27,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":28,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":29,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":30,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":31,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":32,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":33,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":34,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":35,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":36,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":37,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":38,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":39,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":5,"total":40,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":6,"total":41,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":7,"total":42,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":8,"total":43,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":9,"total":44,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":10,"total":45,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":46,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":47,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":48,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":49,"where":"native callback deadline before stick input"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":50,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":51,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":52,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":53,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":54,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":55,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":56,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":57,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":58,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":59,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":60,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":61,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":62,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":63,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":64,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":65,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":66,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":5,"total":67,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":6,"total":68,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":7,"total":69,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":8,"total":70,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":9,"total":71,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":10,"total":72,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":11,"total":73,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":12,"total":74,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":75,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":76,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":77,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":78,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":5,"total":79,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":6,"total":80,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":7,"total":81,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":8,"total":82,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":9,"total":83,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":10,"total":84,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":11,"total":85,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":12,"total":86,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":13,"total":87,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":14,"total":88,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":15,"total":89,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":16,"total":90,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":17,"total":91,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":18,"total":92,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":19,"total":93,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":20,"total":94,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":21,"total":95,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":22,"total":96,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":23,"total":97,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":24,"total":98,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":25,"total":99,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":26,"total":100,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":27,"total":101,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":28,"total":102,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":29,"total":103,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":30,"total":104,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":31,"total":105,"where":"native query budget"}
+OPENING_PRODUCTION_OBSERVATION ... "refusal":"cooperative deadline exceeded on 31 consecutive frames (native query budget; 105 deferred frames total)"
+F17 actual Hall walk FAIL: circle controller travel failed at garden approach: cooperative deadline exceeded on 31 consecutive frames (native query budget; 105 deferred frames total)

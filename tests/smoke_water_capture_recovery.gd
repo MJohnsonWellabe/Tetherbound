@@ -101,8 +101,24 @@ func _run() -> void:
 	var rows: Array = tab.get("_rows")
 	rows[2].pressed.emit()
 	check(tab.get("_release_stage") == "confirm", "Actual third holder button opens farewell confirmation")
+	var released_uid := str(game.local.party.at(2).get("uid"))
+	var payout: Array = preload("res://scripts/creatures/essence.gd").release_payout(
+		preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.save_data()).party[2],
+		preload("res://scripts/creatures/essence.gd").config())
+	var essence_before := _essence(game)
 	tab.get("_farewell_release").pressed.emit()
+	# F27#1: the host's typed essence_release pays and frees the holder first,
+	# then the claim saves the newcomer; that settles over a few frames.
+	deadline = Time.get_ticks_msec() + 10000
+	while tab.get("_release_stage") == "waiting" and Time.get_ticks_msec() < deadline:
+		await process_frame
 	check(tab.get("_release_stage") == "done", "Actual farewell button completes durable claim transaction")
+	check(not payout.is_empty(), "Released Keeper has a configured release payout")
+	var essence_after := _essence(game)
+	for stack: Dictionary in payout:
+		check(int(essence_after.get(stack.id, 0)) - int(essence_before.get(stack.id, 0)) == int(stack.n),
+			"Release pays exactly %d %s once" % [int(stack.n), stack.id])
+	check((game.local.redesign_character.release_receipts as Array).count("release:" + released_uid) == 1, "Exactly one durable release receipt")
 	check(game.pending_catch == null and game.local.party.size() == 5, "Completion clears pending capture and retains exactly five owned creatures")
 	check(game.local.party.at(2) == pending, "Captured instance occupies chosen holder")
 	for i in [0, 1, 3, 4]: check(game.local.party.at(i) == original[i], "Other holder identity remains at slot %d" % i)
@@ -116,6 +132,12 @@ func _run() -> void:
 	service.call("_offer_pending")
 	check(game.pending_catch == null and game.local.party.revision == party_revision and game.local.party.size() == 5, "Repeated claim delivery cannot duplicate creature or offer another holder")
 	_finish()
+
+func _essence(game: Node) -> Dictionary:
+	var out := {}
+	for type_id: String in ["ground", "water", "air", "electric", "fire", "dark", "ice", "psychic"]:
+		out["essence_" + type_id] = int(game.inventory.count("essence_" + type_id))
+	return out
 
 func _finish() -> void:
 	print("Water capture recovery smoke: %d checks, %d failures" % [checks, failures])

@@ -7,7 +7,7 @@ extends RefCounted
 const EVENT := preload("res://scripts/net/foundation_event.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
-const PROGRESSION := ["master_win", "boss_relic", "combat_round_reward"]
+const PROGRESSION := ["master_win", "boss_relic", "combat_round_reward", "wild_defeat_share"]
 
 static func ordered(deliveries: Dictionary, namespace_id: String, world_id: String) -> Array[Dictionary]:
 	var progression: Array[Dictionary] = []
@@ -24,7 +24,7 @@ static func ordered(deliveries: Dictionary, namespace_id: String, world_id: Stri
 					absent[duty.character_id] = latest == null
 					accepted[duty.character_id] = WORLD.training_row_valid(latest, namespace_id, world_id) \
 						and latest.character_id == duty.character_id and latest.status == "accepted"
-				if accepted[duty.character_id] or (duty.action == "combat_round_reward" and absent[duty.character_id]):
+				if accepted[duty.character_id] or (duty.action in ["combat_round_reward", "wild_defeat_share"] and absent[duty.character_id]):
 					progression.append(work)
 					continue
 			ordinary.append(work)

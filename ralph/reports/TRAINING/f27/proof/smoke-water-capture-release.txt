@@ -1,0 +1,90 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: Explicit seeded caught result journals exact claim before any handover
+PASS: Actual world file retains interrupted capture claim
+PASS: No newcomer ownership before service reconstruction
+PASS: Production world load restores claim from actual disk journal
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _run (res://tests/smoke_water_capture_recovery.gd:71)
+[water vegetation] 4145 instances in 549 model batches; layers={"groundcover":2801,"rocks":515,"shrubs":373,"trees":456} islands={"brine_steps":304,"deep_watch":228,"drowned_garden":405,"first_shore":432,"gull_rest":225,"lantern_cove":311,"reedhaven":477,"salt_crown":413,"shellwatch":435,"sluice_isle":356,"tidal_cradle":552,"veilfall":7}
+[water vegetation] sheltered grove counts={"brine_steps":{"accepted":4,"attempts":256,"requested":6,"shrubs":18,"trees":20},"deep_watch":{"accepted":5,"attempts":105,"requested":5,"shrubs":22,"trees":31},"drowned_garden":{"accepted":7,"attempts":30,"requested":7,"shrubs":31,"trees":45},"first_shore":{"accepted":11,"attempts":73,"requested":11,"shrubs":49,"trees":64},"gull_rest":{"accepted":6,"attempts":86,"requested":6,"shrubs":27,"trees":37},"lantern_cove":{"accepted":5,"attempts":212,"requested":5,"shrubs":23,"trees":35},"reedhaven":{"accepted":8,"attempts":141,"requested":8,"shrubs":35,"trees":41},"salt_crown":{"accepted":8,"attempts":97,"requested":8,"shrubs":33,"trees":41},"shellwatch":{"accepted":9,"attempts":256,"requested":12,"shrubs":42,"trees":43},"sluice_isle":{"accepted":9,"attempts":37,"requested":9,"shrubs":46,"trees":57},"tidal_cradle":{"accepted":8,"attempts":256,"requested":16,"shrubs":40,"trees":42}}
+[grass_field] grass ring: 32748 instances over 9 lattice layers (tuft_count asked for 30000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2024 instances over 1 lattice layers (count 280)
+[grass_field] cover tier strand_flowers 1868 instances over 1 lattice layers (count 100)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 32748 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PASS: Actual Water world builds after interrupted capture journal
+PASS: Recreated production claim service recovers pending captured creature
+PASS: Interrupted capture retains uid
+PASS: Interrupted capture retains species_id
+PASS: Interrupted capture retains display_name
+PASS: Interrupted capture retains creature_type
+PASS: Interrupted capture retains secondary_type
+PASS: Interrupted capture retains nickname
+PASS: Interrupted capture retains base_hp
+PASS: Interrupted capture retains base_attack
+PASS: Interrupted capture retains base_defence
+PASS: Interrupted capture retains max_hp
+PASS: Interrupted capture retains attack
+PASS: Interrupted capture retains defence
+PASS: Interrupted capture retains hp
+PASS: Interrupted capture retains swim_stamina_fraction
+PASS: Interrupted capture retains energy
+PASS: Interrupted capture retains fainted
+PASS: Interrupted capture retains resting
+PASS: Interrupted capture retains rested
+PASS: Interrupted capture retains rest_bed_index
+PASS: Interrupted capture retains level
+PASS: Interrupted capture retains xp
+PASS: Interrupted capture retains bond
+PASS: Interrupted capture retains battles_fought
+PASS: Interrupted capture retains caught_on_day
+PASS: Interrupted capture retains levels_gained_with_you
+PASS: Interrupted capture retains landmarks_visited_together
+PASS: Interrupted capture retains distance_m_together
+PASS: Interrupted capture retains rest_nights_together
+PASS: Interrupted capture retains feeds_together
+PASS: Interrupted capture retains move_quick
+PASS: Interrupted capture retains move_charged
+PASS: Interrupted capture retains iv_hp
+PASS: Interrupted capture retains iv_attack
+PASS: Interrupted capture retains iv_defence
+PASS: Interrupted capture retains trait_primary
+PASS: Interrupted capture retains trait_secondary
+PASS: Interrupted capture retains shiny
+PASS: Interrupted capture retains boost_hp
+PASS: Interrupted capture retains boost_attack
+PASS: Interrupted capture retains boost_defence
+PASS: Interrupted capture retains nourishment
+PASS: Interrupted capture retains happiness
+PASS: Interrupted capture retains rested_seconds_left
+PASS: Interrupted capture retains move_utility
+PASS: Interrupted capture retains move_ultimate
+PASS: Interrupted capture retains known_moves
+PASS: Interrupted capture retains move_mastery_uses
+PASS: Interrupted capture retains move_mastery_receipts
+PASS: Interrupted capture retains loadout_revision
+PASS: Interrupted capture retains loadout_last_edit
+PASS: Existing five-holder ceremony opens automatically for recovered claim
+PASS: Host claim remains while release decision is still pending
+PASS: Opening ceremony does not prematurely receipt capture
+PASS: Actual third holder button opens farewell confirmation
+PASS: Actual farewell button completes durable claim transaction
+PASS: Released Keeper has a configured release payout
+PASS: Release pays exactly 3 essence_water once
+PASS: Exactly one durable release receipt
+PASS: Completion clears pending capture and retains exactly five owned creatures
+PASS: Captured instance occupies chosen holder
+PASS: Other holder identity remains at slot 0
+PASS: Other holder identity remains at slot 1
+PASS: Other holder identity remains at slot 3
+PASS: Other holder identity remains at slot 4
+PASS: Actual character file contains durable capture receipt
+PASS: Same character file contains resulting five-holder party
+PASS: Acknowledged personal save removes host claim
+PASS: Claim removal is durable in actual world file
+PASS: Repeated claim delivery cannot duplicate creature or offer another holder
+Water capture recovery smoke: 75 checks, 0 failures

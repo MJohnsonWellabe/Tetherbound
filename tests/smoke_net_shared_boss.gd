@@ -226,6 +226,9 @@ const FRIENDLY_SETTLE := 8
 ## for bringing the two allies together; this is not a replacement for the
 ## boss's production body-scaled reach or its centre-to-centre cone predicate.
 const SWING_REACH_M := 4.0
+## Half the widest quick arc (100 deg) plus margin: a boss farther off the
+## swing line than this cannot be the body the host resolves it onto.
+const FRIENDLY_BOSS_CLEAR_DEG := 65.0
 
 ## `smoke_boss.gd`'s allowance, by its own name and for its own stated reason.
 ## The Warden fields five creatures at levels 18-20 and a headless peer fights
@@ -757,6 +760,7 @@ func _run() -> void:
 	var boss_after := -2.0
 	var struck_before := -1
 	var struck_after := -2
+	var clean_staged := 0
 	var friendly: Dictionary = {}
 	var refusal: Dictionary = {}
 	var staged := 0
@@ -770,7 +774,20 @@ func _run() -> void:
 			# rather than giving up on the first read.
 			await step(1, "wait", {"frames": FRIENDLY_SETTLE * 4})
 			continue
+		# Stage the teammate on the side AWAY from the boss: the host resolves a
+		# swing onto the nearest in-arc body, opponent included
+		# (encounter_host.gd::_friendly_body_struck), so a boss in the arc and
+		# nearer makes the swing an ordinary strike, correctly unrefused.
+		var boss_at := _vec(((await _boss(0)).get("record", {}) as Dictionary).get("position", []))
 		var side: Vector3 = FRIENDLY_SIDES[(staged - 1) % FRIENDLY_SIDES.size()]
+		if boss_at != Vector3.INF:
+			# Stand the teammate on the far side of the striker from the boss,
+			# so the swing line points away from it; retries fan out +-30 deg.
+			var away := guest_at - boss_at
+			away.y = 0.0
+			if away.length() > 0.05:
+				var fan: float = [0.0, 30.0, -30.0][(staged - 1) % 3]
+				side = away.normalized().rotated(Vector3.UP, deg_to_rad(fan))
 		var stand := guest_at + side * APART_Z
 		var placed: Dictionary = await step(0, "place_creature",
 			{"at": [stand.x, stand.y, stand.z], "exact": true,
@@ -790,6 +807,20 @@ func _run() -> void:
 			continue
 
 		var pre: Dictionary = await _boss(0)
+		# Count the attempt only when the host would resolve this swing onto
+		# the teammate: the boss either well off the swing's line or farther.
+		var boss_now := _vec((pre.get("record", {}) as Dictionary).get("position", []))
+		var aim := host_creature_at - guest_at
+		aim.y = 0.0
+		if boss_now != Vector3.INF and aim.length() > 0.05:
+			var to_boss := boss_now - guest_at
+			to_boss.y = 0.0
+			var off_line := rad_to_deg(aim.angle_to(to_boss)) > FRIENDLY_BOSS_CLEAR_DEG
+			if not off_line and to_boss.length() <= aim.length() + 0.5:
+				print("[shared-boss friendly] attempt=%d skipped: boss %.2f m at %.0f deg would take the swing"
+					% [staged, to_boss.length(), rad_to_deg(aim.angle_to(to_boss))])
+				continue
+		clean_staged += 1
 		struck_before = _struck(pre, host_peer_id)
 		boss_before = float((pre.get("record", {}) as Dictionary).get("hp", -1.0))
 		victim_hp = float(pre.get("my_creature_hp", -1.0))
@@ -833,6 +864,12 @@ func _run() -> void:
 			and struck_after == struck_before \
 			and not str(refusal.get("code", "")).is_empty()
 
+	# Every assertion below reads the last swing window; with no clean staging
+	# that window does not exist, and this says so first rather than letting a
+	# boss-taken swing read as a friendly-fire result.
+	check(clean_staged > 0,
+		"a clean friendly attempt was staged (teammate nearest in the swing arc, boss clear) within %d attempt(s)"
+			% staged)
 	check(guest_at != Vector3.INF and host_creature_at != Vector3.INF,
 		"the host holds a position for both pilots' creatures (peer 1's %s / peer 0's %s)"
 			% [str(guest_at), str(host_creature_at)])

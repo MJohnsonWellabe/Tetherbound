@@ -1,0 +1,143 @@
+{
+ "boundary": "bracket/after_semi",
+ "generated_by": "tools/ci/segments/regen.sh bracket/after_semi",
+ "produced_at_commit": "3c1747db2090dfe047dc2e3fbcf363000553ad18+dirty",
+ "roles": {
+  "solo": {
+   "character_id": "character-f2d58547c5e35bedf9cda327ef414b70",
+   "digest": "1a922c6d9097922d82e9a2c6e7f6580962664860654260c84f15b80b8c90ffe6",
+   "files": {
+    "characters/redesign-v28/character-f2d58547c5e35bedf9cda327ef414b70/character.json.gz": "75ad915696e9c5f61d58ea6435dd1614c12857d29424164a243d01458335449b",
+    "saves/redesign-v28/slot_0.json.gz": "ba278d2bc4fe1bcb470d0897fd544ac6c840cf9a94069c416a3e70c593ff91df",
+    "worlds/redesign-v28/slot-0/world.json.gz": "24b034a2f25ce8c0939fc23fb28a528dbffec93de4bbb244ea1bb466ebc3a76d"
+   },
+   "producer": "tests/smoke_tournament_bracket.gd",
+   "producer_fingerprint": "0691c12355fbd3b111e1509b681f496abf79f60c5a9456d5e0f104c338400ab3",
+   "producer_peer": 0,
+   "summary": {
+    "flags": [
+     "creature_bed_built",
+     "creature_bed_built_2",
+     "creature_bed_built_3",
+     "home_built",
+     "opening:beat:house",
+     "opening:beat:wake",
+     "opening:tournament_registered",
+     "player_slept_at_home",
+     "tournament_condition_ready",
+     "tournament_entered",
+     "tournament_quarter_at_ring",
+     "tournament_quarter_won",
+     "tournament_semi_at_ring",
+     "tournament_semi_won",
+     "tournament_team_fed",
+     "tournament_team_ready",
+     "tournament_training_ready"
+    ],
+    "items": [
+     "coin:45",
+     "orb_basic:3",
+     "potion_small:2"
+    ],
+    "keys": {
+     "character": [
+      "character_id",
+      "chosen_character",
+      "created_at",
+      "display_name",
+      "equipment",
+      "flags",
+      "hotbar",
+      "inventory",
+      "last_played",
+      "last_world_id",
+      "last_world_instance_id",
+      "migrated_from",
+      "party",
+      "pending_realm_entry",
+      "player_pose",
+      "realm",
+      "realm_hearts",
+      "realm_maps",
+      "redesign_character",
+      "satchel_escrow",
+      "satiety",
+      "skills",
+      "tournament_selection",
+      "version"
+     ],
+     "slot": [
+      "alpha_pins",
+      "chosen_character",
+      "clock_elapsed_seconds",
+      "current_realm",
+      "day",
+      "death_satchels",
+      "equipment",
+      "farm_plots",
+      "felled_vegetation",
+      "harvested_vegetation",
+      "hotbar",
+      "inventory",
+      "map",
+      "party",
+      "pending_realm_entry",
+      "placed_buildings",
+      "player_pose",
+      "progression",
+      "realm_environment",
+      "realm_hearts",
+      "realm_maps",
+      "redesign_character",
+      "redesign_world",
+      "reward_deliveries",
+      "reward_delivery_namespace",
+      "satchel_escrow",
+      "satiety",
+      "skills",
+      "split_locator",
+      "tournament_selection",
+      "version",
+      "water_capture_claims",
+      "world_seed"
+     ],
+     "world": [
+      "clock_elapsed_seconds",
+      "created_at",
+      "day",
+      "death_satchels",
+      "display_name",
+      "farm_plots",
+      "felled_vegetation",
+      "flags",
+      "harvested_vegetation",
+      "last_played",
+      "migrated_from",
+      "placed_buildings",
+      "realm_environment",
+      "redesign_world",
+      "reward_deliveries",
+      "reward_delivery_namespace",
+      "version",
+      "water_capture_claims",
+      "world_id",
+      "world_seed"
+     ]
+    },
+    "party": [
+     "terrapup@7",
+     "terrapup@6",
+     "bramblebun@6",
+     "mudsnout@5",
+     "terrapup@5"
+    ],
+    "realm": "meadows",
+    "versions": {
+     "character": 28,
+     "slot": 28,
+     "world": 28
+    }
+   }
+  }
+ }
+}

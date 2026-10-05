@@ -1,0 +1,329 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1336 reorder[16 layers]=3156
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=4775 mark_harvestable=182 group_by_model=637 register_mesh_assets=39 build_batches_total=5702 (of which harvest_points[56283 nodes]=3179, initial_collision_stream[51210 solid]=175) update_mmis=382
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 266/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 152, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 49, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66333
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66334
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66335
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66336
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66337
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66338
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+F17 shortcuts: authored post-opening flags/starter; one initial farmhouse floor placement; inherited parsed joypad/camera inputs; renderer=headless; no earned tutorial/device/visual claim
+F17 world: terrain64regions actualdoor=(8.3, 0.9, 14.0) Hall=(107.0, 0.85, 14.0) path=[(5.8, 14.0), (8.3, 14.0), (91.0, 14.0), (107.0, 14.0)]
+F17#3 route event actual farmhouse doorway: actual body=(8.350003, 0.900843, 14.14472)
+F17#3 route event travel: actual body=(12.73612, 0.900843, 14.17076)
+F17#3 route event travel: actual body=(20.31945, 0.900843, 14.17078)
+F17#3 route event travel: actual body=(27.90281, 0.900843, 14.1708)
+F17#3 route event travel: actual body=(35.48609, 0.900843, 14.17081)
+F17#3 route event travel: actual body=(43.06928, 0.900843, 14.17082)
+F17#3 route event travel: actual body=(50.65247, 0.900779, 14.17083)
+F17#3 route event travel: actual body=(58.23565, 0.900877, 14.17085)
+F17#3 route event travel: actual body=(65.81893, 0.900843, 14.17086)
+F17#3 route event travel: actual body=(73.40247, 0.900843, 14.17087)
+F17#3 route event travel: actual body=(80.98599, 0.900843, 14.17089)
+F17#3 route event travel: actual body=(88.56953, 0.900779, 14.1709)
+F17#3 route event Main Street end / Hall approach: actual body=(91.0696, 0.900843, 14.17091)
+F17#3 route event travel: actual body=(96.14983, 0.91083, 14.17091)
+F17#3 route event travel: actual body=(103.7334, 0.91083, 14.17091)
+F17#3 route event inside Hall nave: actual body=(106.5667, 0.910842, 14.16609)
+F17#3 route event end: actual body=(106.5667, 0.910842, 14.16609)
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5667, 0.910842, 14.16609) Halllocal=(-0.166094, 0.060843, -0.433334) maximum_offroad=0.000
+F17#3 actual body-clear frontage: nominal=(27.0, 0.85, 6.5) chosen=(27.0, 0.85, 6.5) player_radius=0.400
+F17#3 route event travel: actual body=(100.216, 0.910843, 14.29054)
+F17#3 route event travel: actual body=(92.63311, 0.91083, 14.17512)
+F17#3 route event travel: actual body=(85.05055, 0.900842, 14.05968)
+F17#3 route event travel: actual body=(77.46769, 0.900843, 13.94417)
+F17#3 route event travel: actual body=(69.88483, 0.900843, 13.82874)
+F17#3 route event travel: actual body=(62.30203, 0.900843, 13.71332)
+F17#3 route event travel: actual body=(54.72626, 0.900843, 13.87045)
+F17#3 route event travel: actual body=(47.15715, 0.900843, 14.2027)
+F17#3 route event travel: actual body=(39.58053, 0.900843, 13.88164)
+F17#3 route event travel: actual body=(32.00621, 0.900841, 13.86498)
+F17#3 route event travel: actual body=(26.99333, 0.900817, 10.99517)
+F17#3 route event day house mira_shop: actual body=(26.8682, 0.950816, 6.93977)
+F17#3 route event end: actual body=(26.8682, 0.950816, 6.93977)
+F17#3 actual body-clear frontage: nominal=(26.0, 0.85, 20.5) chosen=(24.89, 0.85, 20.5) player_radius=0.400
+F17#3 route event travel: actual body=(26.62264, 0.900942, 13.15126)
+F17#3 route event travel: actual body=(24.69982, 0.950842, 19.77487)
+F17#3 route event day house tam_workshop: actual body=(24.70456, 0.950741, 20.02469)
+F17#3 route event end: actual body=(24.70456, 0.950741, 20.02469)
+F17#3 actual body-clear frontage: nominal=(44.0, 0.85, 8.5) chosen=(44.0, 0.85, 8.5) player_radius=0.400
+F17#3 route event travel: actual body=(25.39362, 0.900817, 14.48394)
+F17#3 route event travel: actual body=(32.87578, 0.900805, 14.22474)
+F17#3 route event travel: actual body=(40.45866, 0.900843, 14.31394)
+F17#3 route event travel: actual body=(44.12615, 0.932935, 9.464816)
+F17#3 route event day house bram_inn: actual body=(44.14775, 0.900779, 8.965958)
+F17#3 route event end: actual body=(44.14775, 0.900779, 8.965958)
+F17#3 actual body-clear frontage: nominal=(43.0, 0.85, 22.5) chosen=(43.0, 0.85, 22.5) player_radius=0.400
+F17#3 route event travel: actual body=(43.08009, 0.900779, 14.33049)
+F17#3 route event travel: actual body=(43.16025, 0.950842, 21.87438)
+F17#3 route event day house halda_house: actual body=(43.15673, 0.95083, 22.04101)
+F17#3 route event end: actual body=(43.15673, 0.95083, 22.04101)
+F17#3 actual body-clear frontage: nominal=(63.0, 0.85, 6.5) chosen=(63.0, 0.85, 6.5) player_radius=0.400
+F17#3 route event travel: actual body=(43.36796, 0.900843, 15.78378)
+F17#3 route event travel: actual body=(49.47667, 0.900843, 14.04161)
+F17#3 route event travel: actual body=(57.05954, 0.900843, 13.96494)
+F17#3 route event travel: actual body=(62.93219, 0.900843, 11.71017)
+F17#3 route event day house research_house: actual body=(63.11935, 0.950842, 6.982266)
+F17#3 route event end: actual body=(63.11935, 0.950842, 6.982266)
+F17#3 actual body-clear frontage: nominal=(61.0, 0.85, 22.5) chosen=(61.0, 0.85, 22.5) player_radius=0.400
+F17#3 route event travel: actual body=(63.03602, 0.900831, 13.40538)
+F17#3 route event travel: actual body=(60.79941, 0.90083, 19.73814)
+F17#3 route event day house oskar_house: actual body=(60.95112, 1.136716, 22.25545)
+F17#3 route event end: actual body=(60.95112, 1.136716, 22.25545)
+F17#3 actual body-clear frontage: nominal=(81.0, 0.85, 5.5) chosen=(81.0, 0.85, 5.5) player_radius=0.400
+F17#3 route event travel: actual body=(60.7306, 0.900843, 15.84947)
+F17#3 route event travel: actual body=(67.31809, 0.900843, 14.21906)
+F17#3 route event travel: actual body=(74.90096, 0.900842, 14.11317)
+F17#3 route event travel: actual body=(80.92709, 0.900842, 11.80391)
+F17#3 route event day house alder_house: actual body=(81.16524, 0.950817, 5.993855)
+F17#3 route event end: actual body=(81.16524, 0.950817, 5.993855)
+F17#3 actual body-clear frontage: nominal=(79.0, 0.85, 21.5) chosen=(79.0, 0.85, 21.5) player_radius=0.400
+F17#3 route event travel: actual body=(81.43166, 0.900843, 12.15995)
+F17#3 route event travel: actual body=(78.90079, 0.900843, 18.25401)
+F17#3 route event day house orchard_house: actual body=(78.85058, 0.950817, 21.06275)
+F17#3 route event end: actual body=(78.85058, 0.950817, 21.06275)
+F17#3 route event travel: actual body=(78.50156, 0.900942, 14.74998)
+F17#3 route event travel: actual body=(71.53117, 0.900842, 13.85661)
+F17#3 route event travel: actual body=(63.95273, 0.90083, 13.85228)
+F17#3 route event travel: actual body=(56.3716, 0.900842, 14.03213)
+F17#3 route event travel: actual body=(48.7905, 0.900842, 14.21201)
+F17#3 route event travel: actual body=(41.214, 0.900843, 14.16861)
+F17#3 route event travel: actual body=(33.64828, 0.900843, 13.79419)
+F17#3 route event travel: actual body=(27.13497, 0.90083, 12.47635)
+F17#3 route event travel: actual body=(26.74383, 0.900092, 5.62594)
+[village-walk] NOTE pressed interact on "Open Door" at (26.5,5.6)
+F17#3 route event travel: actual body=(26.59334, 0.900818, 5.338287)
+F17#3 route event day service Mira: actual body=(26.2042, 0.920843, 2.924302)
+F17#3 route event end: actual body=(26.2042, 0.920843, 2.924302)
+F17 service actual day Mira: prompt=Greet Mira body=(26.17957, 0.920805, 2.84469) on_floor=true
+F17#3 route event travel: actual body=(27.19011, 0.900848, 9.236317)
+F17#3 route event leave Mira: actual body=(27.19446, 0.90083, 13.56534)
+F17#3 route event end: actual body=(27.19446, 0.90083, 13.56534)
+F17#3 route event day service Tam: actual body=(26.17686, 0.900842, 17.62819)
+F17#3 route event end: actual body=(26.17686, 0.900842, 17.62819)
+F17 service actual day Tam: prompt=Greet Tam body=(26.17686, 0.900843, 17.71153) on_floor=true
+F17#3 route event travel: actual body=(29.25154, 0.90083, 14.09324)
+F17#3 route event travel: actual body=(36.83385, 0.90085, 13.97538)
+F17#3 route event travel: actual body=(43.46083, 0.900842, 13.3141)
+F17#3 route event travel: actual body=(44.59486, 0.900842, 7.625942)
+[village-walk] NOTE pressed interact on "Open Door" at (44.1,7.6)
+F17#3 route event travel: actual body=(43.89059, 0.920817, 5.978229)
+F17#3 route event day service Bram: actual body=(43.8922, 0.92083, -0.013418)
+F17#3 route event end: actual body=(43.8922, 0.92083, -0.013418)
+F17 service actual day Bram: prompt=Greet Bram body=(43.89531, 0.92083, -0.096693) on_floor=true
+F17#3 route event travel: actual body=(44.20974, 0.920817, 6.13489)
+F17#3 route event leave Bram: actual body=(44.11589, 0.900843, 13.52796)
+F17#3 route event end: actual body=(44.11589, 0.900843, 13.52796)
+F17#3 route event travel: actual body=(50.91124, 0.90083, 13.75439)
+F17#3 route event travel: actual body=(58.48925, 0.900765, 14.03579)
+F17#3 route event day service Oskar: actual body=(61.97681, 0.900842, 17.61191)
+F17#3 route event end: actual body=(61.97681, 0.900842, 17.61191)
+F17 service actual day Oskar: prompt=Greet Oskar body=(61.98455, 0.90083, 17.69488) on_floor=true
+F17#3 route event travel: actual body=(64.9793, 0.900843, 14.01343)
+F17#3 route event day service Maren: actual body=(65.81613, 0.900842, 9.350629)
+F17#3 route event end: actual body=(65.81613, 0.900842, 9.350629)
+F17 service actual day Maren: prompt=Greet Maren body=(65.82471, 0.900843, 9.267738) on_floor=true
+F17#3 collider-clear arena column x=76.50 (nominal 78.00)
+F17#3 route event travel: actual body=(68.36339, 0.900842, 13.97087)
+F17#3 route event travel: actual body=(75.80759, 0.900843, 14.28073)
+F17#3 route event travel: actual body=(76.75974, 0.90083, 21.67546)
+F17#3 route event travel: actual body=(76.57919, 0.90083, 29.25661)
+F17#3 route event travel: actual body=(76.39867, 0.90083, 36.83775)
+F17#3 route event travel: actual body=(77.30344, 0.90083, 43.69485)
+F17#3 route event travel: actual body=(81.53938, 0.90083, 44.6793)
+F17#3 route event day tournament keeper: actual body=(86.17033, 0.900831, 45.98495)
+F17#3 route event end: actual body=(86.17033, 0.900831, 45.98495)
+F17#3 route event travel: actual body=(80.03677, 0.90083, 44.69098)
+F17#3 route event travel: actual body=(83.27338, 0.900804, 48.59494)
+F17#3 route event day tournament board: actual body=(83.33256, 0.900842, 48.65362)
+F17#3 route event end: actual body=(83.33256, 0.900842, 48.65362)
+F17#3 actual body-clear frontage: nominal=(27.0, 0.85, 6.5) chosen=(27.0, 0.85, 6.5) player_radius=0.400
+F17#3 route event travel: actual body=(83.62759, 0.900843, 42.37528)
+F17#3 route event travel: actual body=(83.85664, 0.900843, 34.82236)
+F17#3 route event travel: actual body=(83.52345, 0.900817, 27.26258)
+F17#3 route event travel: actual body=(83.77899, 0.900933, 19.70207)
+F17#3 route event travel: actual body=(81.21715, 0.900817, 14.48538)
+F17#3 route event travel: actual body=(73.7227, 0.900843, 14.10801)
+F17#3 route event travel: actual body=(66.18771, 0.900843, 14.2188)
+F17#3 route event travel: actual body=(58.64009, 0.90083, 14.05035)
+F17#3 route event travel: actual body=(51.08978, 0.90083, 13.83045)
+F17#3 route event travel: actual body=(43.5396, 0.900843, 14.06429)
+F17#3 route event travel: actual body=(35.99582, 0.900678, 14.1837)
+F17#3 route event travel: actual body=(28.42454, 0.900779, 13.75845)
+F17#3 route event travel: actual body=(26.81684, 0.950842, 7.220049)
+F17#3 route event night house mira_shop: actual body=(26.79229, 0.95083, 6.971257)
+F17#3 route event end: actual body=(26.79229, 0.95083, 6.971257)
+F17#3 actual body-clear frontage: nominal=(26.0, 0.85, 20.5) chosen=(24.89, 0.85, 20.5) player_radius=0.400
+F17#3 route event travel: actual body=(26.49085, 0.900842, 11.80955)
+F17#3 route event travel: actual body=(24.80084, 0.950843, 18.32212)
+F17#3 route event night house tam_workshop: actual body=(24.91036, 0.950729, 20.05749)
+F17#3 route event end: actual body=(24.91036, 0.950729, 20.05749)
+F17#3 actual body-clear frontage: nominal=(44.0, 0.85, 8.5) chosen=(44.0, 0.85, 8.5) player_radius=0.400
+F17#3 route event travel: actual body=(25.48671, 0.900842, 14.47068)
+F17#3 route event travel: actual body=(33.02002, 0.90083, 13.79322)
+F17#3 route event travel: actual body=(40.56227, 0.900842, 13.944)
+F17#3 route event travel: actual body=(44.07318, 0.900843, 9.26546)
+F17#3 route event night house bram_inn: actual body=(44.11219, 0.900779, 8.934417)
+F17#3 route event end: actual body=(44.11219, 0.900779, 8.934417)
+F17#3 actual body-clear frontage: nominal=(43.0, 0.85, 22.5) chosen=(43.0, 0.85, 22.5) player_radius=0.400
+F17#3 route event travel: actual body=(42.98413, 0.90083, 13.95439)
+F17#3 route event travel: actual body=(43.00849, 0.95083, 20.57635)
+F17#3 route event night house halda_house: actual body=(42.90806, 0.950842, 22.00249)
+F17#3 route event end: actual body=(42.90806, 0.950842, 22.00249)
+F17#3 actual body-clear frontage: nominal=(63.0, 0.85, 6.5) chosen=(63.0, 0.85, 6.5) player_radius=0.400
+F17#3 route event travel: actual body=(42.43726, 0.900843, 16.4631)
+F17#3 route event travel: actual body=(48.63906, 0.900843, 14.12852)
+F17#3 route event travel: actual body=(56.18787, 0.900843, 14.22043)
+F17#3 route event travel: actual body=(62.60311, 0.900843, 12.6997)
+F17#3 route event night house research_house: actual body=(63.00328, 0.950843, 6.997885)
+F17#3 route event end: actual body=(63.00328, 0.950843, 6.997885)
+F17#3 actual body-clear frontage: nominal=(61.0, 0.85, 22.5) chosen=(61.0, 0.85, 22.5) player_radius=0.400
+F17#3 route event travel: actual body=(62.66941, 0.900941, 13.71286)
+F17#3 route event travel: actual body=(60.90203, 0.90083, 19.65899)
+F17#3 route event night house oskar_house: actual body=(61.17754, 1.134982, 22.21139)
+F17#3 route event end: actual body=(61.17754, 1.134982, 22.21139)
+F17#3 actual body-clear frontage: nominal=(81.0, 0.85, 5.5) chosen=(81.0, 0.85, 5.5) player_radius=0.400
+[village-walk] NOTE pressed interact on "Open Door" at (61.2,22.4)
+F17#3 route event travel: actual body=(61.26819, 0.900842, 16.00804)
+F17#3 route event travel: actual body=(67.26492, 0.900843, 14.02211)
+F17#3 route event travel: actual body=(74.82053, 0.900829, 14.19089)
+F17#3 route event travel: actual body=(80.74194, 0.900804, 12.23554)
+F17#3 route event night house alder_house: actual body=(80.83903, 0.95083, 5.977502)
+F17#3 route event end: actual body=(80.83903, 0.95083, 5.977502)
+F17#3 actual body-clear frontage: nominal=(79.0, 0.85, 21.5) chosen=(79.0, 0.85, 21.5) player_radius=0.400
+F17#3 route event travel: actual body=(80.50234, 0.90083, 11.30581)
+F17#3 route event travel: actual body=(78.69282, 0.900942, 16.89673)
+F17#3 route event night house orchard_house: actual body=(78.70635, 0.95083, 21.08207)
+F17#3 route event end: actual body=(78.70635, 0.95083, 21.08207)
+F17#3 route event travel: actual body=(78.64366, 0.900817, 14.90085)
+F17#3 route event travel: actual body=(71.33971, 0.900843, 14.0364)
+F17#3 route event travel: actual body=(63.78024, 0.900843, 13.81203)
+F17#3 route event travel: actual body=(56.23508, 0.900843, 14.07977)
+F17#3 route event travel: actual body=(48.67809, 0.900886, 14.01867)
+F17#3 route event travel: actual body=(41.13828, 0.90083, 13.86766)
+F17#3 route event travel: actual body=(33.55923, 0.900843, 14.12544)
+F17#3 route event travel: actual body=(27.63485, 0.900843, 12.71701)
+F17#3 route event travel: actual body=(27.1451, 0.900843, 6.011213)
+F17#3 route event night service Mira: actual body=(26.02118, 0.920805, 3.021006)
+F17#3 route event end: actual body=(26.02118, 0.920805, 3.021006)
+F17 service actual night Mira: prompt=Greet Mira body=(26.01252, 0.920817, 2.938123) on_floor=true
+F17#3 route event travel: actual body=(26.58425, 0.950843, 7.243095)
+F17#3 route event travel: actual body=(27.09321, 0.90083, 13.37849)
+F17#3 route event leave Mira: actual body=(26.99954, 0.900843, 13.51589)
+F17#3 route event end: actual body=(26.99954, 0.900843, 13.51589)
+F17#3 route event night service Tam: actual body=(26.00198, 0.900931, 17.64084)
+F17#3 route event end: actual body=(26.00198, 0.900931, 17.64084)
+F17 service actual night Tam: prompt=Greet Tam body=(26.00657, 0.900934, 17.72405) on_floor=true
+F17#3 route event travel: actual body=(28.96508, 0.900843, 14.01589)
+F17#3 route event travel: actual body=(36.52689, 0.900805, 14.07906)
+F17#3 route event travel: actual body=(43.27703, 0.90083, 13.57411)
+F17#3 route event travel: actual body=(44.21453, 0.920817, 6.081977)
+F17#3 route event night service Bram: actual body=(43.84129, 0.920817, -0.067228)
+F17#3 route event end: actual body=(43.84129, 0.920817, -0.067228)
+F17 service actual night Bram: prompt=Greet Bram body=(43.85039, 0.920817, -0.150062) on_floor=true
+F17#3 route event travel: actual body=(43.7778, 0.92083, 5.834887)
+F17#3 route event travel: actual body=(44.11899, 0.900754, 12.4228)
+F17#3 route event leave Bram: actual body=(43.73048, 0.900842, 13.56117)
+F17#3 route event end: actual body=(43.73048, 0.900842, 13.56117)
+F17#3 route event travel: actual body=(50.28912, 0.900805, 13.74893)
+F17#3 route event travel: actual body=(57.15517, 0.900942, 13.63935)
+F17#3 route event travel: actual body=(62.17252, 0.900844, 16.34616)
+F17#3 route event night service Oskar: actual body=(61.65817, 0.900942, 17.62985)
+F17#3 route event end: actual body=(61.65817, 0.900942, 17.62985)
+F17 service actual night Oskar: prompt=Greet Oskar body=(61.6386, 0.900942, 17.67766) on_floor=true
+F17#3 route event travel: actual body=(64.85589, 0.900942, 14.07554)
+F17#3 route event night service Maren: actual body=(66.11554, 0.900843, 9.371697)
+F17#3 route event end: actual body=(66.11554, 0.900843, 9.371697)
+F17 service actual night Maren: prompt=Greet Maren body=(66.13367, 0.90083, 9.290361) on_floor=true
+F17#3 collider-clear arena column x=76.50 (nominal 78.00)
+F17#3 route event travel: actual body=(67.93067, 0.90083, 13.57636)
+F17#3 route event travel: actual body=(75.31089, 0.900942, 13.83955)
+F17#3 route event travel: actual body=(76.62818, 0.900843, 20.37916)
+F17#3 route event travel: actual body=(76.42155, 0.90083, 27.7696)
+F17#3 route event travel: actual body=(76.22451, 0.900843, 35.10818)
+F17#3 route event travel: actual body=(76.41447, 0.900938, 42.61652)
+F17#3 route event travel: actual body=(82.18087, 0.90083, 44.83198)
+F17#3 route event night tournament keeper: actual body=(86.20491, 0.900842, 45.88949)
+F17#3 route event end: actual body=(86.20491, 0.900842, 45.88949)
+F17#3 route event travel: actual body=(81.00171, 0.900817, 44.2583)
+F17#3 route event travel: actual body=(82.23377, 0.900843, 47.75727)
+F17#3 route event night tournament board: actual body=(83.42567, 0.900817, 48.51146)
+F17#3 route event end: actual body=(83.42567, 0.900817, 48.51146)
+F17#3 physical day/night circuit PASS: eight unique lived-in houses; actual Mira/Tam/Bram/Oskar/Maren/Halda and board prompts; collision/floor and parsed input. Opening/time fixtures disclosed; no camera quality, device, earned M1 or co-op claim.
