@@ -56,16 +56,6 @@ func _use_home_key() -> bool:
 	await tap("inventory")
 	var menu: Node = game.call("menu")
 	if menu == null or not menu.call("is_open") or menu.call("current_tab_id") != "backpack":
-		var modals: Array[String] = []
-		for node: Node in tree.get_nodes_in_group(&"story_modal"):
-			if node.has_method("is_open") and bool(node.call("is_open")): modals.append(str(node.get_path()))
-		var owner: Node = INPUT_OWNER.current(tree)
-		var beat := ""
-		for node: Node in tree.current_scene.find_children("*", "Node", true, false):
-			if node.get_script() != null and node.get_script().resource_path == "res://scripts/story/sequence_director.gd": beat = str(node.get("_beat"))
-		print("F49 SATCHEL menu=%s open=%s tab=%s refusal=%s modals=%s owner=%s beat=%s" % [str(menu != null),
-			str(menu.call("is_open")) if menu != null else "-", str(menu.call("current_tab_id")) if menu != null else "-",
-			str(menu.call("_refusal_reason")) if menu != null else "-", str(modals), str(owner.get_path()) if owner != null else "none", beat])
 		return _fail("F49 inventory input did not open the actual Satchel")
 	var backpack: Node = (menu.get("_bodies") as Array)[0]
 	var care := CARE.new()
@@ -139,19 +129,6 @@ func _print_home_key_wait(frame: int) -> void:
 		str(_home_result.get("ok", "none")), str(game.current_realm), str(game.pending_realm_entry),
 		str(tree.current_scene != null and bool(game.call("_realm_scene_ready", tree.current_scene, "meadows"))),
 		str(owner.get_path()) if owner != null else "none"])
-	var session: Node = game.get("session")
-	var passive: Variant = session.get("_owner_passive") if session != null else null
-	if passive is RefCounted:
-		var local: Dictionary = passive.get("local")
-		var ops: Array = []
-		for input: Variant in local.get("inputs", []): ops.append(str(input.get("op", "")) if input is Dictionary else "?")
-		var pending: Dictionary = passive.get("pending")
-		var deliveries: Array = []
-		for row: Dictionary in preload("res://scripts/net/reward_delivery.gd").pending_for_character(game.get("world"), str(game.get("local").character_id)):
-			deliveries.append("%s:%s" % [str(row.get("source", row.get("kind", ""))), str(row.get("status", ""))])
-		print("F49 HOME WAIT owner_passive inputs=%s error='%s' rebase=%s pending_phase=%s block='%s' replay_pending=%s deliveries=%s" % [str(ops),
-			str(local.get("error", "")), str(not (local.get("rebase", {}) as Dictionary).is_empty()), str(pending.get("phase", "")),
-			str(session.call("_owner_snapshot_block_reason", game.get("local"))), str(passive.call("reward_replay_pending")), str(deliveries)])
 
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \

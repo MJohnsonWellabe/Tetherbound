@@ -80,7 +80,6 @@ func _run() -> void:
 	# arrival before the owner-gated craft. Skipped, with its reason, while the
 	# portal runtime is off.
 	var trip := await _craft_data(1, "craft_home_key_trip", {}, 12000)
-	await step(0, "owner_passive_host_state", {"character_id": str(seeded.character_id)}, 600) # Diagnostic only.
 	if bool(trip.get("skipped", false)):
 		print("F31#5 craft: guest Home Key trip skipped (portal runtime off in this build)")
 	else:

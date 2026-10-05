@@ -339,27 +339,17 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 		if not context_matches(game, expected) or Time.get_ticks_msec() >= deadline \
 				or not game is Node or not game.is_inside_tree() \
 				or not game.has_method("regional_ending_ack_result"):
-			_give_up(game, flag, "context_changed" if not context_matches(game, expected) else "timeout")
 			_notice(game, failure)
 			return false
 		await game.get_tree().process_frame
 		if not is_instance_valid(game) or not context_matches(game, expected):
-			_give_up(game, flag, "context_changed_while_waiting")
 			return false
 		raw = game.call("regional_ending_ack_result", intent.transaction_id)
 	if receipt_matches(raw, intent) and context_matches(game, expected) \
 			and context(game).get(flag) == true:
 		return true
-	_give_up(game, flag, "status_%s" % str(raw.get("status", "")) if raw is Dictionary else "no_result")
 	_notice(game, failure)
 	return false
-
-
-## Diagnostic only: why a live presentation stopped waiting for its own ack.
-static func _give_up(game: Object, flag: String, reason: String) -> void:
-	var current := journey_context(game) if is_instance_valid(game) else {}
-	print("[regional_ack] presentation gave up %s: %s (at_farm=%s safe=%s durable=%s party_revision=%s)" % [flag, reason,
-		str(current.get("at_farm")), str(current.get("safe")), str(current.get("durable_home_return")), str(current.get("party_revision"))])
 
 
 static func receipt_matches(raw: Variant, intent: Dictionary) -> bool:
