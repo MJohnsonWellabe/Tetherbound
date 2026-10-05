@@ -1444,14 +1444,14 @@
           },
           {
             "sequence": [
-              "charger_rush",
-              "charger_double_rush"
+              "current_volley",
+              "current_zone"
             ]
           },
           {
             "sequence": [
-              "current_volley",
-              "current_zone"
+              "charger_rush",
+              "charger_double_rush"
             ]
           },
           {
