@@ -1,0 +1,55 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "preset": "Medium",
+  "biome": "stormwood",
+  "native_exit_code": 0,
+  "native_elapsed_seconds": 282.891,
+  "command": [
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--log-file",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-medium-stormwood\\engine.log",
+    "--audio-driver",
+    "Dummy",
+    "--",
+    "--f26-route",
+    "--biome=stormwood",
+    "--preset=Medium",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/shipping-medium-stormwood/route"
+  ],
+  "manifest_complete": true,
+  "failures": [],
+  "runtime_errors": [],
+  "png_dimensions": {
+    "end.png": [
+      1920,
+      1080
+    ],
+    "start.png": [
+      1920,
+      1080
+    ]
+  },
+  "metrics": {
+    "frames": 2662,
+    "average_fps": 17.544284225102313,
+    "one_percent_low_fps": 11.967666025879412,
+    "minimum_fps": 5.88553805588907,
+    "slowest_one_percent_frames": 27,
+    "cached_monitors_ms": {
+      "process_ms": 58.99624567993989,
+      "physics_ms": 4.030593914350113
+    }
+  },
+  "camera_far_m": 9000.0,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "actual_shipping": true,
+  "average_fps_floor20_pass": false,
+  "measurement_limitations": "Wall intervals plus cached Performance TIME_PROCESS/TIME_PHYSICS_PROCESS only. Embedded route lacks newer frame_limit/uncapping receipt. Runtime FPS/VSync/time settings not explicitly verified; no per-frame true CPU/GPU/draw attribution. New cases use fullscreen; prior four core cases lacked fullscreen flag. No performance recovery or regression onset established.",
+  "scope": "Actual shipping release EXE/PCK same accepted-main334 payload as prior4core routes. Existing packaged route, no debug/EngineProfiler/gpu-profile. New cases fullscreen1920x1080; desktop GTX1060, not Ally/earned campaign."
+}

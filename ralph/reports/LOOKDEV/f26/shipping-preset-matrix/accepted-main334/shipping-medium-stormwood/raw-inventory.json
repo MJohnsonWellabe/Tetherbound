@@ -1,0 +1,66 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 5268812,
+      "sha256": "17ff2124f1e88244d3a9df807dfc24cfddead679731f4b352bfd893143cf7fdc"
+    }
+  ],
+  "files": [
+    {
+      "path": "engine.log",
+      "size": 82356,
+      "sha256": "46063afb8e6bdbfd4766c9adc72442a87e30139a5b89b422386b12a9c4071d9d",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "native.log",
+      "size": 83174,
+      "sha256": "934d2a4934963bc79f4db42d02053a1e8b88069807e6d0e4de19bafd4e0c5b06",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "preset-receipt.json",
+      "size": 399,
+      "sha256": "ae548f6565859f5a316dd4029441dd09edbc4296e2ff400e2d67ef5e3bc77e06",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "preset.log",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "receipt.json",
+      "size": 2327,
+      "sha256": "d13059a98e1dd057504c9f97888103b2ec0377b5389a623648fc8b1a3ec2ea35",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "route/end.png",
+      "size": 2403582,
+      "sha256": "e7ecb8cb27e94406513761157d415e7420e0ea98a6f78baa6c231a36767fca0f",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "route/route.json",
+      "size": 447836,
+      "sha256": "2d75ea00a7473d1af0a9bf82d47d4e82d0f2e23b8e2395156ae4a05df5021796",
+      "archive": "raw-evidence-01.zip"
+    },
+    {
+      "path": "route/start.png",
+      "size": 2248186,
+      "sha256": "ffee235965c632828231cb425a895c833858705ba7fc7b58a131054d0279c601",
+      "archive": "raw-evidence-01.zip"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
