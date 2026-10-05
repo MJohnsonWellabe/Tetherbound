@@ -108,13 +108,13 @@ func _run() -> void:
 		check(realm is Dictionary and str((realm as Dictionary).get("current", "")) == STORMWOOD,
 			"peer %d current realm is Stormwood" % peer)
 
-	var ticks: Dictionary = await step(0, "charged_host_ticks")
+	var ticks: Dictionary = await _cstep(0, "charged_host_ticks")
 	check(str(ticks.get("verdict", "")) == "PASS" and not bool(ticks.get("simulation_only", true)),
 		"host runs a visible (non-shell) StormwoodLightning (%s)" % str(ticks.get("detail", "")))
-	var quiet: Dictionary = await step(0, "charged_quiet_strikes")
+	var quiet: Dictionary = await _cstep(0, "charged_quiet_strikes")
 	check(str(quiet.get("verdict", "")) == "PASS", "disclosed: host random strike scheduler parked")
 	for peer in 2:
-		var bare: Dictionary = await step(peer, "charged_wear", {"tier": ""})
+		var bare: Dictionary = await _cstep(peer, "charged_wear", {"tier": ""})
 		check(str(bare.get("verdict", "")) == "PASS" and absf(float(bare.get("terrain_reduction", 1.0))) < 0.001,
 			"peer %d wears no terrain gear (%s)" % [peer, str(bare.get("detail", ""))])
 
@@ -148,7 +148,7 @@ func _run() -> void:
 	_summary.append("A guest -%.1f over %d hits, host -%.1f" % [drop_a, hits_a, 100.0 - float(host_a.get("health", 0.0))])
 
 	# ---- Scenario B: the receiver's own gear ------------------------------
-	var worn: Dictionary = await step(1, "charged_wear", {"tier": "stormglass"})
+	var worn: Dictionary = await _cstep(1, "charged_wear", {"tier": "stormglass"})
 	var reduction := float(worn.get("terrain_reduction", 0.0))
 	check(str(worn.get("verdict", "")) == "PASS" and reduction > 0.0,
 		"B: guest wears four Stormglass travel pieces (%s)" % str(worn.get("detail", "")))
@@ -168,7 +168,7 @@ func _run() -> void:
 	_summary.append("B stormglass -%.2f/hit vs bare -%.2f/hit" % [per_hit_b, per_hit_a])
 
 	# ---- Scenario C: never lethal ---------------------------------------
-	var unworn: Dictionary = await step(1, "charged_wear", {"tier": ""})
+	var unworn: Dictionary = await _cstep(1, "charged_wear", {"tier": ""})
 	check(str(unworn.get("verdict", "")) == "PASS", "C: guest removes its gear")
 	var c := await _measure(32.0, 100.0)
 	var guest_c: Dictionary = c.guest
@@ -201,7 +201,7 @@ func _run() -> void:
 	_summary.append("D host -%.1f over %d hits, guest -%.1f" % [drop_d, hits_d, 100.0 - float(guest_d.get("health", 0.0))])
 
 	for peer in 2:
-		await step(peer, "charged_release")
+		await _cstep(peer, "charged_release")
 	print("SMOKE stormwood_charged_ground: %s | %s" % [
 		"PASS" if failures.is_empty() else "FAIL (%d)" % failures.size(), "; ".join(_summary)])
 	quit(await finish())
@@ -210,11 +210,11 @@ func _run() -> void:
 ## Stand `charged_peer` on the sink floor and `island_peer` on the island,
 ## assert what shipping rules call each spot, then let replication settle.
 func _place(charged_peer: int, island_peer: int) -> bool:
-	var on_charged: Dictionary = await step(charged_peer, "charged_stand", {"x": CHARGED_XZ[0], "z": CHARGED_XZ[1]})
+	var on_charged: Dictionary = await _cstep(charged_peer, "charged_stand", {"x": CHARGED_XZ[0], "z": CHARGED_XZ[1]})
 	check(str(on_charged.get("verdict", "")) == "PASS" and bool(on_charged.get("charged", false))
 		and bool(on_charged.get("contact", false)),
 		"peer %d stands in contact with charged ground (%s)" % [charged_peer, str(on_charged.get("detail", ""))])
-	var on_island: Dictionary = await step(island_peer, "charged_stand", {"x": ISLAND_XZ[0], "z": ISLAND_XZ[1]})
+	var on_island: Dictionary = await _cstep(island_peer, "charged_stand", {"x": ISLAND_XZ[0], "z": ISLAND_XZ[1]})
 	check(str(on_island.get("verdict", "")) == "PASS" and not bool(on_island.get("charged", true)),
 		"peer %d stands on the island, not charged ground (%s)" % [island_peer, str(on_island.get("detail", ""))])
 	# Let the host's view of the guest's trainer catch up with both moves, so
@@ -226,11 +226,11 @@ func _place(charged_peer: int, island_peer: int) -> bool:
 ## The host's tick only advances its serial when somebody is hit. Wait (with
 ## a bound) for the first one, so the measured windows start from a live tick.
 func _await_host_ticking(label: String) -> bool:
-	var first: Dictionary = await step(0, "charged_host_ticks")
+	var first: Dictionary = await _cstep(0, "charged_host_ticks")
 	var start := int(first.get("serial", 0))
 	for i in 30:
 		await step(0, "wait", {"frames": 60})
-		var now: Dictionary = await step(0, "charged_host_ticks")
+		var now: Dictionary = await _cstep(0, "charged_host_ticks")
 		if int(now.get("serial", 0)) > start:
 			check(true, "%s: host charged-ground tick is live (serial %d -> %d)" % [label, start, int(now.get("serial", 0))])
 			return true
@@ -241,13 +241,13 @@ func _await_host_ticking(label: String) -> bool:
 ## Reset both peers' health (and their received-hit counters, in the same
 ## frame), wait MEASURE_FRAMES, then read both peers and the host's serial.
 func _measure(guest_health: float, host_health: float) -> Dictionary:
-	await step(1, "charged_set_health", {"value": guest_health})
-	await step(0, "charged_set_health", {"value": host_health})
-	var before: Dictionary = await step(0, "charged_host_ticks")
+	await _cstep(1, "charged_set_health", {"value": guest_health})
+	await _cstep(0, "charged_set_health", {"value": host_health})
+	var before: Dictionary = await _cstep(0, "charged_host_ticks")
 	await step(1, "wait", {"frames": MEASURE_FRAMES})
-	var after: Dictionary = await step(0, "charged_host_ticks")
-	var guest: Dictionary = await step(1, "charged_health")
-	var host: Dictionary = await step(0, "charged_health")
+	var after: Dictionary = await _cstep(0, "charged_host_ticks")
+	var guest: Dictionary = await _cstep(1, "charged_health")
+	var host: Dictionary = await _cstep(0, "charged_health")
 	print("charged window: guest %s | host %s" % [str(guest.get("detail", "")), str(host.get("detail", ""))])
 	return {"guest": guest, "host": host,
 		"serial_span": int(after.get("serial", 0)) - int(before.get("serial", 0))}
@@ -274,3 +274,13 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	for arg: Variant in args:
 		parts.append(_shq(str(arg)))
 	return OS.create_process("/bin/sh", ["-c", "exec %s >%s 2>&1" % [" ".join(parts), _shq(log_path)]])
+
+
+
+## A charged_* step's values arrive under data; flatten them for the checks.
+func _cstep(peer: int, action: String, args := {}, budget: int = -1) -> Dictionary:
+	var result: Dictionary = await step(peer, action, args, budget)
+	var flat := result.duplicate(true)
+	if result.get("data") is Dictionary:
+		flat.merge(result.data, true)
+	return flat

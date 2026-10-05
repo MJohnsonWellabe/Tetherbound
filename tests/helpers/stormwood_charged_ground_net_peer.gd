@@ -37,6 +37,18 @@ var _charged_damage_mine := 0.0
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
+	if not action.begins_with("charged_"):
+		return await _charged_dispatch(msg)
+	# The runner forwards only verdict/detail/data: every other key rides in data.
+	var raw: Dictionary = await _charged_dispatch(msg)
+	var data: Dictionary = {}
+	for key: Variant in raw:
+		if not str(key) in ["verdict", "detail", "data"]: data[key] = raw[key]
+	return {"verdict": raw.get("verdict", "ERROR"), "detail": raw.get("detail", ""), "data": data}
+
+
+func _charged_dispatch(msg: Dictionary) -> Dictionary:
+	var action := str(msg.get("action", ""))
 	var args: Dictionary = msg.get("args", {})
 	if action == "legacy_physical_crossings_fixture" and str(args.get("regression", "")) == "stormwood_charged_ground":
 		var enabled: bool = FOUNDATIONS_ORDER.set_test_overrides({"legacy_physical_crossings": true})
