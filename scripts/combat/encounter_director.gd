@@ -1031,7 +1031,11 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	# Stormwood's 808 wilds held the main thread long enough for a crossing
 	# peer to go heartbeat-silent. Spawn order, the per-cluster rng and every
 	# name are unchanged; only the work is spread across frames.
-	var slice_budget_usec := int(float(PERF_SPAWN_CONFIG.config().get("wild_spawn_slice_ms", 12.0)) * 1000.0)
+	# Sliced only where a peer's heartbeat is at stake: a host's realm shell, or
+	# any world inside a live multi-peer session. A solo boot spawns in one
+	# frame behind its loading transition, as it always has.
+	var slice_budget_usec := int(float(PERF_SPAWN_CONFIG.config().get("wild_spawn_slice_ms", 12.0)) * 1000.0) \
+		if _spawn_slicing_wanted() else 0
 	var slice_started := Time.get_ticks_usec()
 	var slice_world := get_parent()
 	var slice_tree := get_tree()
@@ -1382,6 +1386,14 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		# Preserve the ordinary startup guard and its supported placement.
 		# Publishing a repeat generation never adopts another starter.
 		await adopt_starter(default_starter)
+
+func _spawn_slicing_wanted() -> bool:
+	var world := get_parent()
+	if world != null and world.get("simulation_only") == true:
+		return true
+	var game := get_node_or_null(^"/root/Game")
+	return game != null and game.has_method("is_multi_peer") and bool(game.call("is_multi_peer"))
+
 
 func foundation_alpha_cycle(site_id: String) -> Dictionary:
 	if not is_inside_tree(): return {}
