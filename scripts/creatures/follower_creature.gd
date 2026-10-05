@@ -61,6 +61,7 @@ const DEFAULT_FLANK_RUN_SPEED := 9.0
 ## than a model that appears for fights. Built once here; everything it does
 ## is documented in its own header.
 const PRESENCE := preload("res://scripts/creatures/companion_presence.gd")
+const INTERIOR_BEACON := preload("res://scripts/world/objective_beacon.gd")
 
 ## Placement on the trainer's floor (reviewer findings, Cloudreach narrow
 ## roads): the leash snap seated the body on the terrain HEIGHT ESTIMATE, which
@@ -123,6 +124,7 @@ var _closing: bool = false
 ## Vector3.INF when none. `snap` is the leash teleport (may return the trainer's
 ## own footprint); otherwise it is the walking station. Set by a realm director.
 var station_validator: Callable = Callable()
+var _indoor_station_active := false
 ## Last validated station, as an offset from the trainer so it moves with a
 ## walking trainer between checks. INF = no verified station (close on trainer).
 var _station_offset: Vector3 = Vector3.ZERO
@@ -253,8 +255,9 @@ func _tick_follow() -> void:
 	var stop_distance := _station_stop_distance
 	var resume_distance := _station_resume_distance
 	var moving_stop_distance := _moving_station_stop_distance
-	if station_validator.is_valid():
-		target = _validated_station(target, leader_position)
+	var validator := _station_validator_now(leader_position)
+	if validator.is_valid():
+		target = _validated_station(target, leader_position, validator)
 		if not target.is_finite():
 			# No verified station on the trainer's floor: close on the trainer
 			# itself (the ground it stands on) and stop clear of its capsule.
@@ -352,7 +355,9 @@ func _release_footprint_exception(leader_position: Vector3) -> void:
 ## The walking station, verified by the realm validator on change and at most
 ## every STATION_VALIDATE_FRAMES; between checks the verified offset rides with
 ## the trainer. INF when the validator found no station on the trainer's floor.
-func _validated_station(requested: Vector3, leader_position: Vector3) -> Vector3:
+func _validated_station(requested: Vector3, leader_position: Vector3, validator: Callable = Callable()) -> Vector3:
+	if not validator.is_valid():
+		validator = station_validator
 	var frame := Engine.get_physics_frames()
 	var offset := requested - leader_position
 	var due := not _station_requested.is_finite()
@@ -363,10 +368,70 @@ func _validated_station(requested: Vector3, leader_position: Vector3) -> Vector3
 		_station_checked_frame = frame
 		_station_requested = offset
 		_station_leader = leader_position
-		var spot: Variant = station_validator.call(self, leader, requested, false)
+		var spot: Variant = validator.call(self, leader, requested, false)
 		_station_offset = (spot as Vector3) - leader_position \
 			if spot is Vector3 and (spot as Vector3).is_finite() else Vector3.INF
 	return leader_position + _station_offset if _station_offset.is_finite() else Vector3.INF
+
+
+## F17#6 r4 judge: in the Crossing Hall nave the fixed flank station put the
+## companion inside the arch wall (its head showing through the stone). Meadows
+## has no realm `station_validator`, so while the trainer stands inside a
+## declared interior (objective_beacon.gd INTERIOR_GROUP: the Hall's nave and
+## Shrine Room) the walking station goes through `_indoor_station`. Outdoors,
+## and wherever a realm validator is set, behaviour is unchanged. The leash
+## snap is untouched. Local follower only: no authority change.
+func _station_validator_now(leader_position: Vector3) -> Callable:
+	if station_validator.is_valid():
+		return station_validator
+	var indoors := is_inside_tree() and INTERIOR_BEACON.point_indoors(get_tree(), leader_position)
+	if indoors != _indoor_station_active:
+		_indoor_station_active = indoors
+		_station_requested = Vector3.INF # Re-ask under the new rule at once.
+	return Callable(self, "_indoor_station") if indoors else Callable()
+
+
+## The requested flank if the companion's body fits there with a clear line
+## from the trainer, else the nearest of seven turns round the trainer at the
+## same reach, else INF (the follower then closes on the trainer). At most
+## eight candidates of one ray and two shape queries, on the
+## STATION_VALIDATE_FRAMES cadence.
+func _indoor_station(_body: Node3D, trainer: Node3D, requested: Vector3, _snap: bool) -> Vector3:
+	if not is_instance_valid(trainer) or not is_inside_tree():
+		return Vector3.INF
+	var origin := trainer.global_position
+	var offset := Vector3(requested.x - origin.x, 0.0, requested.z - origin.z)
+	var clearance := maxf(_radius, maxf(_render_half_extents.x, _render_half_extents.y))
+	var reach := maxf(offset.length(), clearance + 0.6)
+	var first := offset.normalized() if offset.length() > 0.01 else Vector3.BACK
+	for turn: float in [0.0, 45.0, -45.0, 90.0, -90.0, 135.0, -135.0, 180.0]:
+		var spot := origin + first.rotated(Vector3.UP, deg_to_rad(turn)) * reach
+		spot.y = origin.y
+		if _indoor_spot_clear(trainer, origin, spot, clearance):
+			return spot
+	return Vector3.INF
+
+
+func _indoor_spot_clear(trainer: Node3D, origin: Vector3, spot: Vector3, clearance: float) -> bool:
+	var space := get_world_3d().direct_space_state
+	var exclude: Array[RID] = [get_rid()]
+	if trainer is CollisionObject3D:
+		exclude.append((trainer as CollisionObject3D).get_rid())
+	var ray := PhysicsRayQueryParameters3D.create(origin + Vector3.UP, spot + Vector3.UP, collision_mask, exclude)
+	if not space.intersect_ray(ray).is_empty():
+		return false
+	var sphere := SphereShape3D.new()
+	sphere.radius = clearance
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = sphere
+	query.collision_mask = collision_mask
+	query.exclude = exclude
+	# Low (above the floor) and high (the head): both must be clear of walls.
+	for height: float in [clearance + 0.15, maxf(clearance + 0.15, body_height() - clearance)]:
+		query.transform = Transform3D(Basis(), spot + Vector3.UP * height)
+		if not space.intersect_shape(query, 1).is_empty():
+			return false
+	return true
 
 
 func _leader_planar_speed() -> float:

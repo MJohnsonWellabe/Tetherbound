@@ -210,6 +210,14 @@
     0.15,
     -15
   ],
+  "_why_home_membrane_night": "Coordinator ruling on the F17#6 r4 judge: at night the home arch's open membrane (z=-12.8, straight through the entrance) read as a flat cream card filling the doorway. While WorldLook is dark its emission is scaled down and its colour dimmed so the doorway reads as a lit vestibule, not a lamp. Presentation only; arch state and portal logic are unchanged (F17#5 checks emission_enabled, which stays on). TUNABLE.",
+  "home_membrane_night_emission_scale": 0.3,
+  "home_membrane_night_tint": "#8a8f9c",
+  "_why_interior_volumes": "F17#6 r4 judge: the objective beam showed indoors (through the creature and the nave roof). Hall-local interior boxes (nave x -7..7, z -15..15 under the 9.4 m ridge; Shrine Room x 7..17, z -7..7), measured from the shell's wall and roof modules; objective_beacon.gd hides the beam while the camera is inside one. Presentation only. TUNABLE.",
+  "interior_volumes": [
+    {"min": [-7, -1, -15], "max": [7, 10, 15]},
+    {"min": [7, -1, -7], "max": [17, 7, 7]}
+  ],
   "interior_ambient": {
     "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
     "night_ambient": 0.25

@@ -6,6 +6,8 @@ const ORDER := preload("res://scripts/data/biome_order.gd")
 const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
+const OPEN_MEMBRANE_EMISSION := .25
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
@@ -34,6 +36,7 @@ func build(config: Dictionary) -> bool:
 	_build_frontage()
 	_close_shell()
 	_build_interior_ambient()
+	_declare_interior_volumes()
 	var catalog := CATALOG_PRESENTATION.new()
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
@@ -282,6 +285,7 @@ func _process(delta: float) -> void:
 	_elapsed = 0
 	refresh_from_game()
 	_refresh_interior_ambient()
+	_refresh_home_membrane()
 
 
 ## The night sky ambient (art.json, energy ~2.3 to keep the outdoors readable)
@@ -351,6 +355,29 @@ func _refresh_interior_ambient() -> void:
 		material.ao_enabled = dark
 
 
+## Coordinator ruling (F17#6 r4): at night the home arch's open membrane, seen
+## straight through the entrance, read as a flat cream card in the doorway.
+## While WorldLook is dark its emission is scaled by
+## `home_membrane_night_emission_scale`. Presentation only: arch state,
+## emission_enabled and portal logic are unchanged.
+func _refresh_home_membrane() -> void:
+	var arch: Node3D = _arches.get("home")
+	if arch == null or str(arch.get_meta("arch_state", "")) != "open":
+		return
+	var surface := arch.get_node_or_null("PortalSurface") as MeshInstance3D
+	var material := surface.material_override as StandardMaterial3D if surface != null else null
+	if material == null:
+		return
+	var tree := get_tree()
+	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
+	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
+	var scale := float(_config.get("home_membrane_night_emission_scale", 1.0)) if dark else 1.0
+	material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION * scale
+	var night_tint := Color(str(_config.get("home_membrane_night_tint", "#ffffff")))
+	material.albedo_color = Color(str((_config.get("arch_materials", {}) as Dictionary).get("open", "#303947"))) * (night_tint if dark else Color.WHITE)
+	material.emission = material.albedo_color
+
+
 func refresh_from_game() -> void:
 	var game := get_node_or_null("/root/Game")
 	var session: Node = game.get("session") if game != null else null
@@ -397,8 +424,9 @@ func apply_display(display: Dictionary) -> void:
 		material.albedo_color = Color(str(colors.get(state, "#303947")))
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
-		material.emission_energy_multiplier = .25 if state == "open" else .1
+		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
+	_refresh_home_membrane()
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
 		pedestal.set_meta("relic_displayed", bool(shrine.get(id, false)))
@@ -580,4 +608,21 @@ static func _relic_refusal_text(verdict: Dictionary) -> String:
 		"personal_relic_required": return "You have no relic for this shrine yet."
 		"actual_shrine_pedestal_required", "source_or_revision_changed": return "Stand at the shrine and try again."
 	return str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))
+
+
+## F17#6 r4 judge: the cyan objective beam showed inside the Hall, in the
+## creature's face and through the nave roof (the shell has no roof
+## collider to test against). The Hall declares its interior boxes (local
+## space, crossing_hall.json `interior_volumes`); objective_beacon.gd stands
+## the beam down while the camera is inside any declared interior.
+func _declare_interior_volumes() -> void:
+	var boxes: Array[AABB] = []
+	for row: Variant in _config.get("interior_volumes", []):
+		if row is Dictionary and (row.get("min", []) as Array).size() == 3 and (row.get("max", []) as Array).size() == 3:
+			var low := _position(row.min)
+			boxes.append(AABB(low, _position(row.max) - low))
+	if boxes.is_empty():
+		return
+	set_meta(OBJECTIVE_BEACON.INTERIOR_BOXES_META, boxes)
+	add_to_group(OBJECTIVE_BEACON.INTERIOR_GROUP)
 
