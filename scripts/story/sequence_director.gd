@@ -38,6 +38,8 @@ extends Node
 ## contains one, which is the difference between a renamed beat and a gate that
 ## silently never opens.
 
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
 const BEATS := preload("res://scripts/story/opening_beats.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
@@ -1180,10 +1182,43 @@ func _give_items(parts: Array) -> void:
 	if items != null and not bool(items.call("has", item_id)):
 		push_error("dialogue gives '%s', which data/items/items.json does not define" % item_id)
 		return
+	# F01#6a part 2. A guest's gift is the host's to record: claimed as an
+	# authored reward_grant and delivered, so the satchel changes only from the
+	# accepted delivery and the host's admitted copy of this character gains it
+	# too (scripts/net/world_ledger.gd DIALOGUE_GIVE_GATES). Host and solo keep
+	# the direct give below.
+	if _gifts_route_through_host(game):
+		var conversation := _speaking_conversation_id()
+		if conversation.is_empty():
+			push_warning("a guest's give:%s:%d has no conversation to claim it under" % [item_id, count])
+			return
+		LEDGER_CLAIM.submit(self, {"kind": "reward_grant", "realm": str(game.get("current_realm")),
+			"source": WORLD_LEDGER.dialogue_give_source(conversation, item_id),
+			"item": item_id, "count": count})
+		return
 	var inventory: RefCounted = game.get("inventory")
 	var leftover := int(inventory.call("add", item_id, count))
 	if leftover > 0:
 		push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
+
+
+## An admitted guest: its own character file is a save candidate and somebody
+## else holds the world. A pending joiner, the host and solo give directly.
+func _gifts_route_through_host(game: Node) -> bool:
+	var session: Variant = game.get("session")
+	return session is Node and bool((session as Node).call("is_multi_peer")) \
+		and not bool((session as Node).call("is_host")) \
+		and (session as Node).has_method("client_character_save_ready") \
+		and bool((session as Node).call("client_character_save_ready"))
+
+
+func _speaking_conversation_id() -> String:
+	if _dialogue == null or not _dialogue.has_method("runner"):
+		return ""
+	var runner: Variant = _dialogue.call("runner")
+	if runner == null or not (runner as RefCounted).has_method("conversation_id"):
+		return ""
+	return str((runner as RefCounted).call("conversation_id"))
 
 
 ## --- what is possible right now -------------------------------------------------

@@ -531,6 +531,8 @@ func _assert_full_map_remote_marker(viewer: int, own_peer_id: int,
 	_check(str(opened.get("verdict", "")) == "PASS",
 		"viewer %d opened the production full map with its physical map shortcut (%s)"
 			% [viewer, str(opened.get("detail", ""))])
+	if str(opened.get("verdict", "")) != "PASS":
+		print("map shortcut refused; viewer %d opening state: %s" % [viewer, str(await _opening(viewer))])
 	await step(viewer, "wait", {"frames": 12})
 	var value: Variant = await probe(viewer, "map_remote_players")
 	var report: Dictionary = value as Dictionary if value is Dictionary else {}
