@@ -293,6 +293,12 @@
       "transaction": "portal_unlock:fifth:<character_id>; idempotent visual fact; never opens arch",
       "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
     },
+    "redesign_world.retained_settlement": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "per retained foundation event: '<character>|<action>' keys added by the creature_training_accept op for combat_mastery and combat_round_reward duties; the event row and its entry are erased together once every duty is settled; optional key, absent reads as empty",
+      "persistence": "atomic world document with the accept op; deterministic on every peer"
+    },
     "redesign_world.gather_batches": {
       "scope": "world",
       "authority": "host",

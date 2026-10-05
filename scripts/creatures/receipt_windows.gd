@@ -5,10 +5,12 @@ extends RefCounted
 ## cap (after which every foundation action refuses receipt_budget).
 ##
 ## Each kind keeps only its newest N receipts (data/config/receipt_windows.json).
-## Receipts are appended in order, so the front is the oldest. NOT windowed:
-## trainer rounds and combat mastery (their retained world duties count as
-## settled only while the receipt exists, so evicting one re-stages the duty;
-## review R1/R2) and care (its receipt carries no world namespace; review R4).
+## Receipts are appended in order, so the front is the oldest. Combat mastery
+## and trainer rounds are retained world duties: they are windowed only because
+## an accepted duty is now settled durably in the world (retained_settlement.gd,
+## ruling R2), so the retry loop never re-stages one whose receipt was evicted
+## (review R1). NOT windowed: care (its receipt carries no world namespace;
+## review R4).
 ## Why an evicted receipt cannot pay twice:
 ## - essence_spend, station_craft: a client request; character authority stages
 ##   only at the current character revision with `before` equal to the live
@@ -44,6 +46,8 @@ static func is_kind(receipt: String, kind: String, character_id: String) -> bool
 		"essence_spend": return receipt.begins_with("essence_spend:%s:" % character_id)
 		"wild_defeat": return receipt.begins_with("defeat:%s:" % character_id)
 		"shed_win": return receipt.begins_with("craft:%s:shed_win:" % character_id)
+		"combat_mastery": return receipt.begins_with("craft:combat_mastery_") and receipt.ends_with(":" + character_id)
+		"trainer_round": return receipt.begins_with("defeat:trainer_round_") and receipt.ends_with(":" + character_id)
 		"groom": return receipt.begins_with("groom:")
 		"bounty_decision": return (receipt.begins_with("bounty:clock_") or receipt.begins_with("bounty:event_")) and receipt.ends_with(":" + character_id)
 		"station_craft":

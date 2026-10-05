@@ -1,4 +1,5 @@
 extends Node
+const RETAINED_SETTLEMENT := preload("res://scripts/net/retained_settlement.gd")
 const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
@@ -908,6 +909,8 @@ func _retry_foundation_events() -> void:
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
+		# Ruling R2: settled durably in the world, whatever its receipt's fate.
+		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(raw.delivery_id), duty): continue
 		if duty.action == "boss_relic":
 			var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
 			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue

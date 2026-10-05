@@ -2,6 +2,7 @@ extends RefCounted
 
 ## Canonical station stages on the existing admitted-character carrier.
 ## No registry, save file or reward history is owned by this helper.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
@@ -97,6 +98,7 @@ static func _combat_mastery(current: Dictionary, intent: Dictionary, context: Di
 			card.move_mastery_uses = plan.uses.duplicate(true)
 			card.move_mastery_receipts = plan.receipts.duplicate(true)
 		next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "combat_mastery", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}
 

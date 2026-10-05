@@ -3,6 +3,7 @@ extends RefCounted
 ## Detached arithmetic for one actual terminal shared trainer/boss round.
 ## The Session producer authenticates the source; no packet party is imported.
 ## The existing Foundation carrier owns the journal, CAS and owner-save ACK.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const E := preload("res://scripts/creatures/essence.gd")
 const P := preload("res://scripts/creatures/progression.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
@@ -167,7 +168,7 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 	if settled.is_empty(): return _deny("actual_terminal_round_required")
 	var decision := receipt(str(current.character_id), intent, context)
 	if current.redesign_character.transaction_receipts.has(decision): return _deny("reconcile_original_decision")
-	if current.redesign_character.transaction_receipts.size() >= int(E.config().maximum_transaction_receipts): return _deny("receipt_budget")
+	if RECEIPT_WINDOWS.compact(current.redesign_character.transaction_receipts, "trainer_round", str(current.character_id)).size() >= int(E.config().maximum_transaction_receipts): return _deny("receipt_budget")
 	var eligible: Array[String] = []
 	var caps := {}
 	for card: Dictionary in settled.party:
@@ -198,6 +199,7 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 		if xp.is_empty(): return _deny("invalid_round_XP_or_cap")
 		next.party = xp.party.duplicate(true)
 		awards = xp.awards.duplicate(true)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "trainer_round", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(decision)
 	next = E.refresh_training_moves(next, TEACHING.available_moves, TEACHING.character_loadout_mirror)
 	if next.is_empty(): return _deny("canonical_power_refresh_unavailable")

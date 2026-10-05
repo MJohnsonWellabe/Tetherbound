@@ -27,6 +27,7 @@ const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
 const GATHER_BATCHES := preload("res://scripts/net/gather_batches.gd")
+const RETAINED_SETTLEMENT := preload("res://scripts/net/retained_settlement.gd")
 ## F31 version-2 Homestead records on the existing Altar building journal.
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
@@ -451,6 +452,26 @@ func _prune_accepted_gather_row(character: String) -> void:
 	_store_gather_batch(character, result[0])
 
 
+## Ruling R2: an accepted training decision settles its retained duty
+## durably (retained_settlement.gd); the event row retires once every duty on
+## it is settled. Deterministic: every peer applies the same accept op.
+func _settle_retained_duty(row: Dictionary) -> void:
+	var context: Variant = row.get("host_context")
+	var event_id := str((context as Dictionary).get("retained_event", "")) if context is Dictionary else ""
+	if event_id.is_empty(): return
+	var event: Variant = reward_deliveries.get(event_id)
+	if not preload("res://scripts/net/foundation_event.gd").valid(event, reward_delivery_namespace, world_id): return
+	var result: Array = RETAINED_SETTLEMENT.after_accept(redesign_world, event, row)
+	if result.is_empty(): return
+	var all: Dictionary = (redesign_world.get(RETAINED_SETTLEMENT.FIELD, {}) as Dictionary).duplicate(true)
+	if bool(result[1]):
+		reward_deliveries.erase(event_id)
+		all.erase(event_id)
+	else:
+		all[event_id] = result[0]
+	redesign_world[RETAINED_SETTLEMENT.FIELD] = all
+
+
 ## A saved number, or the default. Deliberately strict about the TYPE rather
 ## than calling `int()` on whatever arrived: `int([])` is not a conversion, it
 ## is a "Nonexistent 'int' constructor" error that aborts the whole load
@@ -551,6 +572,7 @@ func _apply_op(op: Dictionary) -> bool:
 				reward_deliveries[op.delivery_id] = op.delivery.duplicate(true)
 			else:
 				reward_deliveries[op.delivery_id].status = "accepted"
+				_settle_retained_duty(reward_deliveries[op.delivery_id])
 			revision += 1
 			return true
 		"actor_vitals_journal", "actor_vitals_accept":

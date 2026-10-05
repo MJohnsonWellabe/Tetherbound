@@ -62,15 +62,19 @@ func test_station_craft_matches_only_the_32_hex_craft_receipt() -> void:
 		assert_false(RW.is_kind(other, "station_craft", CHARACTER), "%s is not a station craft" % other)
 
 
-func test_trainer_rounds_and_care_are_never_windowed() -> void:
-	# Review R1/R4: retained trainer-round duties count as settled only while
-	# their receipt exists, and care receipts carry no world namespace.
-	assert_eq(RW.window("trainer_round"), 0)
+func test_care_is_never_windowed_and_retained_kinds_need_durable_settlement() -> void:
+	# Review R4: care receipts carry no world namespace, so care is never
+	# windowed. Review R1 + ruling R2: trainer rounds and combat mastery are
+	# retained world duties, windowed only because an accepted duty is now
+	# settled durably in the world (test_retained_settlement.gd proves a
+	# settled duty never re-stages once its receipt is gone).
 	assert_eq(RW.window("care"), 0)
-	var receipts: Array = ["defeat:trainer_round_%s:%s" % [_hex(1), CHARACTER], "care:%s:3:uid1:2" % CHARACTER]
-	for kind: String in ["essence_spend", "wild_defeat", "shed_win", "groom", "station_craft", "bounty_decision"]:
-		assert_false(RW.is_kind(receipts[0], kind, CHARACTER), "%s never matches a trainer round" % kind)
-		assert_false(RW.is_kind(receipts[1], kind, CHARACTER), "%s never matches care" % kind)
+	assert_true(RW.window("trainer_round") >= 2 and RW.window("combat_mastery") >= 2)
+	assert_eq(preload("res://scripts/net/retained_settlement.gd").SAFE_ACTIONS, ["combat_mastery", "combat_round_reward"],
+		"exactly the windowed retained kinds are settled durably")
+	var care := "care:%s:3:uid1:2" % CHARACTER
+	for kind: String in ["essence_spend", "wild_defeat", "shed_win", "groom", "station_craft", "bounty_decision", "combat_mastery", "trainer_round"]:
+		assert_false(RW.is_kind(care, kind, CHARACTER), "%s never matches care" % kind)
 
 
 func test_a_wild_defeat_at_and_past_4096_receipts_is_paid_not_refused() -> void:
