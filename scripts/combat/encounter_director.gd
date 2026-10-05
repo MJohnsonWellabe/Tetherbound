@@ -5754,7 +5754,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
-		opponent_owned, shared_host_wild
+		opponent_owned, shared_host_wild, shared_host_wild
 	)):
 		return
 	_engaged_with = wild

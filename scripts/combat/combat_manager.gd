@@ -585,7 +585,8 @@ var aftermath_focus: Node3D = null
 func begin(
 	player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted],
 	camera_rig: Node = null, best_creature: RefCounted = null,
-	opponent_owned: bool = false, realm_owned_opponent: bool = false
+	opponent_owned: bool = false, realm_owned_opponent: bool = false,
+	host_started: bool = false
 ) -> bool:
 	if is_fighting():
 		return false
@@ -657,7 +658,13 @@ func begin(
 	_victory_awarded = false
 
 	_open_arena()
-	if realm_owned_opponent:
+	# A realm fight THIS process is starting as its host (a canonical solo wild
+	# with actor_vitals on, or a multi-peer host's own wild) has nobody to defer
+	# to yet: stage it like any local fight so the trainer stands aside and the
+	# camera's ally is seated in formation. Only a participant JOINING someone
+	# else's realm fight keeps the hands-off realm seat below.
+	var joining_realm := realm_owned_opponent and not host_started
+	if joining_realm:
 		# Joining a shared realm encounter must not reposition its enemy or
 		# constrain it to this participant's disposable presentation arena.
 		# The local follower can legitimately arrive here after snagging on world
@@ -675,7 +682,7 @@ func begin(
 	if not realm_owned_opponent:
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
-	_ally_body.set("arena", null if realm_owned_opponent else _arena)
+	_ally_body.set("arena", null if joining_realm else _arena)
 	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
