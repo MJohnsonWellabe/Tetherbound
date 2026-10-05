@@ -114,7 +114,27 @@ func _run() -> void:
 	await _frames(30)
 	await _crop_cycle(config, crop)
 	if not _failed: _check_fresh_mount_time()
+	if not _failed: _check_sequence_directors_are_grouped()
 	_finish()
+
+
+## PERF (2026-10-05): foundation_travel_lifecycle.gd finds the Meadows
+## SequenceDirector through the `progression_restore` group instead of walking
+## the whole world every sample. That is exact only while every director in a
+## real world joins the group.
+func _check_sequence_directors_grouped_list() -> Array:
+	var out: Array = []
+	for node: Node in _world.find_children("*", "Node", true, false):
+		if node.get_script() == preload("res://scripts/story/sequence_director.gd"): out.append(node)
+	return out
+
+
+func _check_sequence_directors_are_grouped() -> void:
+	var directors := _check_sequence_directors_grouped_list()
+	_check(not directors.is_empty(), "the Meadows world has a SequenceDirector")
+	for director: Node in directors:
+		_check(director.is_in_group("progression_restore"),
+			"SequenceDirector %s is in progression_restore" % str(director.get_path()))
 
 
 ## PERF (2026-10-05): a realm mount with every site still to place (as at world
