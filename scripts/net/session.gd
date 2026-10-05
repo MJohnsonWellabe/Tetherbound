@@ -4104,7 +4104,8 @@ func host_ack_creature_vitals(peer_id: int, creature_uid: String,
 			proof["accepted_row"] = row.duplicate(true)
 		director.set_meta("foundation_ordinary_vitals_commits", proofs)
 	# A rejoin admission parked behind this character's in-flight vitals can
-	# now compare the same settled markers the owner already saved.
+	# now compare the settled markers the owner already saved (the owner's own
+	# traffic re-checks too: owner_passive_sync.receive_host).
 	if (_character_authority.call("pending_creature_vitals", character) as Dictionary).is_empty():
 		_owner_passive_service().call("retry_deferred", character)
 	return true
@@ -5264,7 +5265,7 @@ func _guest_wild_share_outstanding(character: String, world: RefCounted) -> bool
 	return false
 
 ## F27: each guest participant of a host wild victory gets one retained
-## `wild_defeat` duty, its event staged once here from the SAME frozen capture
+## `wild_defeat_share` duty, its event staged once here from the SAME frozen capture
 ## (actual killing hit, deployments, mode) against that guest's admitted
 ## record. Retries find the retained event and never restage it.
 func _journal_guest_wild_defeats(frozen: Dictionary, live: Dictionary) -> Dictionary:
@@ -5284,23 +5285,22 @@ func _journal_guest_wild_defeats(frozen: Dictionary, live: Dictionary) -> Dictio
 		if peer == local_peer_id(): continue
 		var character := str((participants[peer] as Dictionary).get("character_id", ""))
 		var admitted: Dictionary = _character_authority.call("state", character) if not character.is_empty() else {}
-		if admitted.is_empty():
-			print("[session] wild_defeat share for peer %s skipped: no admitted record" % str(peer))
-			continue
-		# The guest's host-saved fight HP (wild_actor_scope.gd) settles first, so
-		# eligibility and the owner's own record agree on who fainted.
 		var member: Dictionary = live.get("participants", {}).get(peer, {})
 		if member.is_empty(): member = live.get("retained_actor_participants", {}).get(character, {})
-		var vitals: Array = WILD_ACTOR_SCOPE.settled_vitals(admitted, member)
-		var settled := WILD_ACTOR_SCOPE.settled_before(admitted, {"settled_vitals": vitals})
-		if settled.is_empty():
-			print("[session] wild_defeat share for %s skipped: unsettled vitals" % character)
-			continue
-		var staged := ESSENCE.stage_captured_host_victory(settled, character,
+		var vitals: Array = WILD_ACTOR_SCOPE.settled_vitals(admitted, member) if not admitted.is_empty() else []
+		# Every fight hit must already be owner-saved into the authority record,
+		# so eligibility, the owner and the frozen vitals all agree. Otherwise
+		# retry the whole set later; a partial set is never journaled (one
+		# stamped guest would lose its award).
+		if admitted.is_empty() or not ESSENCE._equivalent(WILD_ACTOR_SCOPE.settled_before(admitted, {"settled_vitals": vitals}), admitted):
+			return {"ok": false, "durable": false, "resolved": false, "code": "guest_wild_vitals_settling"}
+		var staged := ESSENCE.stage_captured_host_victory(admitted, character,
 			int(_character_authority.call("revision", character)), int(peer), frozen,
 			ESSENCE.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
-		if staged.get("ok") != true or staged.get("duplicate") == true:
-			print("[session] wild_defeat share for %s skipped: %s" % [character, str(staged.get("code", "duplicate"))])
+		if staged.get("duplicate") == true: continue # Already holds this win's receipt.
+		if staged.get("ok") != true:
+			# An invalid admitted state for this event (never a transient hold).
+			push_warning("[session] wild_defeat_share for %s refused: %s" % [character, str(staged.get("code", ""))])
 			continue
 		duties.append({"character_id": character, "action": "wild_defeat_share", "intent": staged.intent.duplicate(true),
 			"context": {"source_key": source, "validated_host_outcome": "win", "defeat_event": staged.intent.duplicate(true),

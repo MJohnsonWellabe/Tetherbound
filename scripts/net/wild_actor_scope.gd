@@ -49,8 +49,9 @@ static func settled_vitals(state: Dictionary, member: Dictionary) -> Array:
 	return out
 
 
-## The admitted record with this fight's host-saved HP transitions applied,
-## exactly as combat_round_reward.settled_before does for trainer rounds.
+## The owner-passive replay cursor with this fight's host-saved HP applied,
+## as combat_round_reward.settled_before does for trainer rounds. A card that
+## already holds the saved values (the authority record) is unchanged.
 static func settled_before(current: Dictionary, context: Dictionary) -> Dictionary:
 	var vitals: Variant = context.get("settled_vitals")
 	if not vitals is Array or not current.get("party") is Array or current.party.size() != vitals.size(): return {}
@@ -73,29 +74,30 @@ static func settled_before(current: Dictionary, context: Dictionary) -> Dictiona
 	return next
 
 
-## FoundationActions `wild_defeat`: a guest's share of a host wild victory.
-## The event was frozen by the host from the actual accepted killing hit;
-## XP, essence, shed, battle credit and mood restage on the settled record.
+## FoundationActions `wild_defeat_share`: a guest's share of a host wild
+## victory. The event was frozen by the host from the actual accepted killing
+## hit. It stages on the authority record exactly as it is now: every fight
+## hit was already owner-saved into it, and a later heal or hit is never
+## overwritten by the frozen end-of-fight values.
 static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if context.get("validated_host_outcome") != "win" or not E._equivalent(context.get("defeat_event"), intent) \
 		or intent.get("world_namespace") != context.get("world_namespace"):
 		return {"ok": false, "code": "actual_host_wild_defeat_required", "durable": false, "resolved": false}
-	var settled := settled_before(current, context)
-	if settled.is_empty(): return {"ok": false, "code": "actual_settled_vitals_required", "durable": false, "resolved": false}
-	var proposal := E.stage_core_defeat(settled, str(current.character_id), intent, int(context.get("expected_revision", 0)),
+	if settled_before(current, context).is_empty():
+		return {"ok": false, "code": "actual_settled_vitals_required", "durable": false, "resolved": false}
+	var proposal := E.stage_core_defeat(current, str(current.character_id), intent, int(context.get("expected_revision", 0)),
 		E.config(), preload("res://scripts/creatures/progression.gd").config(),
 		preload("res://scripts/creatures/teaching.gd").available_moves, preload("res://scripts/creatures/teaching.gd").character_loadout_mirror)
 	if proposal.get("ok") != true: return proposal
 	if proposal.get("duplicate") == true: return {"ok": false, "code": "reconcile_original_decision", "durable": false, "resolved": false}
-	return {"ok": true, "state": proposal.state, "receipt": proposal.receipt, "settled_before": settled}
+	return {"ok": true, "state": proposal.state, "receipt": proposal.receipt}
 
 
-## The owner already holds the settled vitals (their own saved rows).
+## The owner already holds the saved fight vitals, as does row.before.
 static func owner_plan(current: Dictionary, row: Dictionary) -> Dictionary:
 	if E.owner_matches_after(current, row.after):
 		return {"ok": true, "duplicate": true, "requires_owner_save": true, "state": current.duplicate(true), "receipt": row.receipt}
-	var settled := settled_before(row.before, row.host_context)
-	if settled.is_empty() or not E.owner_matches_after(current, settled):
+	if not E.owner_matches_after(current, row.before):
 		return {"ok": false, "code": "owner_action_baseline_conflict", "durable": false, "resolved": false}
 	if row.status != "pending": return {"ok": false, "code": "accepted_history_is_not_a_new_award", "durable": false, "resolved": false}
 	return {"ok": true, "duplicate": false, "requires_owner_save": true,

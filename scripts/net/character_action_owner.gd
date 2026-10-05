@@ -162,8 +162,6 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 	var expected: Dictionary = row.before
 	if row.action == "combat_round_reward":
 		expected = preload("res://scripts/net/combat_round_reward.gd").settled_before(row.before, row.intent, row.host_context)
-	elif row.action == "wild_defeat_share":
-		expected = preload("res://scripts/net/wild_actor_scope.gd").settled_before(row.before, row.host_context)
 	var restored := ESSENCE.owner_matches_after(RECORD.portable_projection(player.call("save_data")), expected)
 	session.call("_end_owner_training_install")
 	return {"ok": false, "saved": false, "pending": true, "durable": true, "code": code if restored else "owner_rollback_conflict"}

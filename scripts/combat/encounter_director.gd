@@ -2733,7 +2733,7 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var rematch := _remote_rematch(canonical_id)
 	if rematch != null: return rematch.call("join", peer_id)
 	# F27: a guest contributor to a canonical wild fight is paid by its own
-	# retained `wild_defeat` share (session._journal_guest_wild_defeats).
+	# retained `wild_defeat_share` (session._journal_guest_wild_defeats).
 	var encounter_id := str(intent.get("encounter_id", ""))
 	if encounter_id.is_empty():
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
@@ -8352,13 +8352,16 @@ func _has_canonical_wild_runtime() -> bool:
 ## True only once the host retained this fight's frozen victory source; a
 ## refused capture leaves the legacy award in place so a win always pays.
 func canonical_wild_encounter(encounter_id: String) -> bool:
-	if _is_guest(): return _host_owned_xp.has(encounter_id) # The host said it pays this guest's share.
+	# The host said it pays this guest's share: true even if this session has
+	# since dropped, so a legacy award is never paid on top of the share.
+	if _host_owned_xp.has(encounter_id): return true
+	if _is_guest(): return false
 	var runtime := _shared_host_fight(encounter_id)
 	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
 
 
 ## F27: a guest learns from the host's own copies that its wild win is paid
-## by the host's retained `wild_defeat` share, so its combat manager skips the
+## by the host's retained `wild_defeat_share`, so its combat manager skips the
 ## legacy local award. Only a captured canonical source is ever stamped.
 var _host_owned_xp: Dictionary = {}
 

@@ -333,6 +333,11 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		return
 	if not hosts.has(character):
 		if refused.get(character, {}).get("id") == packet.get("stream_id"): _send_refusal(peer, character)
+		# A parked rejoin admission re-checks on the owner's own traffic once its
+		# in-flight vitals are settled (backstop for a lost ACK-side retry).
+		if deferred.get(character, {}).get("peer") == peer:
+			var authority: RefCounted = owner().get("_character_authority")
+			if (authority.call("pending_creature_vitals", character) as Dictionary).is_empty(): retry_deferred(character)
 		return
 	var stream: Dictionary = hosts[character]
 	if stream.get("departed") == true:
@@ -588,6 +593,10 @@ func action_gate(peer: int, source_kind: String, request: Dictionary, context: D
 	if request.get("character_id") != character or request.get("session_epoch") != session.call("_altar_current_epoch") \
 		or request.get("world_namespace") != world.reward_delivery_namespace: return _deny("owner_passive_request_scope_changed")
 	if stream.has("readmit"): return _deny("owner_passive_readmit_pending")
+	# F27: a wild win's guest share stages on the authority record first.
+	if session.has_method("_guest_wild_share_outstanding") \
+		and session.call("_guest_wild_share_outstanding", character, _game().get("world")) == true:
+		return _deny("owner_passive_wild_share_settling")
 	var binding := {"character": character, "action": request.get("op"), "source_kind": source_kind,
 		"envelope": request.duplicate(true), "event": context.duplicate(true)}
 	if stream.checkpoint.is_empty():

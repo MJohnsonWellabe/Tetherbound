@@ -140,13 +140,15 @@ func test_retained_share_duty_validates_and_rejects_tampering() -> void:
 	assert_false(EVENT.valid(_row([unsettled], source), NAMESPACE, "f27-share-world-id"), "the settled vitals are frozen in the duty")
 
 
+## The authority record already holds every owner-saved fight hit when the
+## share journals (session waits on the vitals ACKs); the share stages on it.
 func test_share_pays_once_on_the_settled_record_with_battle_credit_and_mood() -> void:
 	var before := _admitted()
 	var vitals := _vitals(before, 4.0)
 	var settled := WILD.settled_before(before, {"settled_vitals": vitals})
 	var event := _event(settled)
 	var duty := _duty(event, vitals)
-	var staged := ACTIONS.stage(before, 3, "wild_defeat_share", duty.intent, _context(duty, 3), RECORD.errors)
+	var staged := ACTIONS.stage(settled, 3, "wild_defeat_share", duty.intent, _context(duty, 3), RECORD.errors)
 	assert_true(staged.get("ok") == true, str(staged))
 	assert_eq(float(staged.state.party[0].hp), float(settled.party[0].hp), "the saved fight HP stands")
 	assert_eq(int(staged.state.party[0].battles_fought), int(before.party[0].battles_fought) + 1, "one battle credited")
@@ -166,7 +168,7 @@ func test_a_creature_knocked_out_in_the_fight_earns_no_share() -> void:
 	var event := _event(settled)
 	assert_false((event.eligible_uids as Array).has(before.party[0].uid), "the fainted active is not eligible")
 	var duty := _duty(event, vitals)
-	var staged := ACTIONS.stage(before, 3, "wild_defeat_share", duty.intent, _context(duty, 3), RECORD.errors)
+	var staged := ACTIONS.stage(settled, 3, "wild_defeat_share", duty.intent, _context(duty, 3), RECORD.errors)
 	assert_true(staged.get("ok") == true, str(staged))
 	assert_eq(staged.state.party[0].xp, settled.party[0].xp, "no XP for the fainted card")
 	assert_true(staged.state.party[0].fainted == true, "it stays fainted")
@@ -178,8 +180,8 @@ func test_owner_plan_accepts_only_the_owner_holding_the_settled_vitals() -> void
 	var settled := WILD.settled_before(before, {"settled_vitals": vitals})
 	var duty := _duty(_event(settled), vitals)
 	var context := _context(duty, 3)
-	var staged := ACTIONS.stage(before, 3, "wild_defeat_share", duty.intent, context, RECORD.errors)
-	var row := {"before": before, "after": staged.state, "host_context": context, "receipt": staged.receipt, "status": "pending"}
+	var staged := ACTIONS.stage(settled, 3, "wild_defeat_share", duty.intent, context, RECORD.errors)
+	var row := {"before": settled, "after": staged.state, "host_context": context, "receipt": staged.receipt, "status": "pending"}
 	var plan := WILD.owner_plan(settled, row)
 	assert_true(plan.get("ok") == true and plan.get("duplicate") == false, "the owner already holds its saved HP " + str(plan))
 	assert_eq(WILD.owner_plan(before, row).get("code"), "owner_action_baseline_conflict", "an unsettled owner is not this row's baseline")
@@ -232,3 +234,20 @@ func test_a_v1_training_row_follows_an_accepted_v3_action_row() -> void:
 		E.config(), PROGRESSION.config(), teaching.available_moves, teaching.character_loadout_mirror)
 	assert_false(row.is_empty(), "the Altar spend journals after the accepted share")
 	assert_eq(int(row.get("journal_revision", 0)), int(share_row.journal_revision) + 1, "ordered after it")
+
+
+
+## Review finding: a heal (or a later hit) after the fight is never rewritten
+## by the frozen end-of-fight vitals when the share finally stages.
+func test_a_heal_after_the_fight_is_not_overwritten_by_the_share() -> void:
+	var before := _admitted()
+	var vitals := _vitals(before, 6.0)
+	var settled := WILD.settled_before(before, {"settled_vitals": vitals})
+	var duty := _duty(_event(settled), vitals)
+	var healed := settled.duplicate(true)
+	healed.party[0].hp = healed.party[0].max_hp
+	var staged := ACTIONS.stage(healed, 3, "wild_defeat_share", duty.intent, _context(duty, 3), RECORD.errors)
+	assert_true(staged.get("ok") == true, str(staged))
+	assert_eq(float(staged.state.party[0].hp), float(healed.party[0].max_hp), "the later heal stands")
+	# The owner-passive cursor (which never sees typed vitals) still settles.
+	assert_eq(float(WILD.settled_before(before, {"settled_vitals": vitals}).party[0].hp), float(settled.party[0].hp))
