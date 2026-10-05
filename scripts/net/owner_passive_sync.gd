@@ -167,7 +167,14 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	refused.erase(character)
 	var declared: Variant = summary.get("portable_authority")
 	var discoveries: Dictionary = authority.call("discovered_landmarks", character)
-	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash"):
+	# Review G1: both cursors seed their input prefix from (baseline, landmarks).
+	# A rejoin keeps the host's held landmarks (seed_discovered_landmarks), so an
+	# owner that discovered more before leaving must adopt them (readmit below),
+	# or every later checkpoint ends owner_passive_exact_projection_conflict.
+	var declared_discoveries: Variant = summary.get("discovered_landmarks", {})
+	var discoveries_match: bool = declared_discoveries is Dictionary \
+		and HASH.fingerprint({"discovered": declared_discoveries}) == HASH.fingerprint({"discovered": discoveries})
+	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match:
 		_add_host(peer, character, str(declaration.id), before, discoveries)
 		return
 	# Rejoin: the owner kept ticking care/travel drift the host never
@@ -187,7 +194,8 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		return
 	if not _add_host(peer, character, str(declaration.id), before, discoveries): return
 	hosts[character].readmit = {"op": "readmit", "baseline": before.duplicate(true),
-		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries})}
+		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries}),
+		"discovered": discoveries.duplicate(true)}
 	print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
 	_send_owner(peer, hosts[character], hosts[character].readmit)
 
@@ -1099,6 +1107,15 @@ func _readmit_owner(packet: Dictionary) -> void:
 		_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
 		return
 	var game := _game()
+	var held: Variant = packet.get("discovered")
+	if pending.is_empty() and game != null and held is Dictionary \
+		and HASH.fingerprint({"discovered": held}) == packet.get("discoveries_hash") \
+		and HASH.fingerprint({"discovered": _discoveries()}) != packet.get("discoveries_hash") \
+		and E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
+		# Review G1: the host's held landmarks win inside its world.
+		if owner().call("_groom_service").call("adopt_landmarks", held) != true:
+			_note_ignored("readmit whose landmarks this owner cannot adopt")
+			return
 	if not pending.is_empty() or game == null \
 		or HASH.fingerprint({"discovered": _discoveries()}) != packet.get("discoveries_hash") \
 		or not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
