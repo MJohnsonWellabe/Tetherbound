@@ -1868,6 +1868,8 @@
         }
       }
     },
+    "_comment_wild_power_scale": "COMBAT §7 ordinary wilds: beginner masher win >=90% at 15-30% lead HP cost. Multiplies the selected pattern's power for ordinary (not trainer-owned, not named) wilds per chapter. Meadows held at 1.0 until F17's home bed lands and F02#6 is re-run (coordinator 2026-10-04). TUNABLE.",
+    "wild_power_scale": {"meadows": 1.0, "water": 2.5, "cloudreach": 2.5, "stormwood": 2.5},
     "heavy_tell_floor_s": 1.1,
     "chapter_floors": {
       "meadows": {
