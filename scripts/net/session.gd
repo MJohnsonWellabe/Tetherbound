@@ -609,6 +609,9 @@ func foundation_record_personal_flags(delta: Dictionary) -> void:
 		for peer: int in op.get("peers", []):
 			var character := _authority_character(peer)
 			if not character.is_empty(): _character_authority.call("record_personal_flag", character, str(op.get("id", "")), op.get("value", true) == true)
+			# A guest passing the first catch without its key (an abandoned
+			# opening gift) is reconciled now, not only at its next admission.
+			if str(op.get("id", "")) == OPENING_HOME_KEY.PAST_FIRST_CATCH_FLAG and op.get("value", true) == true: arm_legacy_home_key_check(peer)
 
 ## The actual host ending calls this only after its original claim saves.
 ## Guests cannot replace a flag dictionary or choose another claim/character.

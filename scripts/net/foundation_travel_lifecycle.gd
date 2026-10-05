@@ -286,6 +286,8 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 	# here and keep the guest's own full signature, which its intent carries.
 	if sample.has("party_identity"):
 		if identity.is_empty() or identity != sample.party_identity: return {}
+		# Guest-attested: only its own presentation fence for this ack, never a
+		# host-verified roster. Identity above is the host's check.
 		signature = sample.party_signature
 	elif signature.is_empty() or signature != sample.get("party_signature"): return {}
 	return {"world_instance_id": sample.world_instance_id, "session_epoch": sample.session_epoch,

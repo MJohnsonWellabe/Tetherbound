@@ -18,6 +18,9 @@ class FakeSession extends Node:
 	var blocked := true
 	var hosting := true
 	var epoch := "epoch"
+	var armed: Array = []
+	func local_peer_id() -> int: return 1
+	func arm_legacy_home_key_check(peer: int) -> void: armed.append(peer)
 	func portal_runtime_ready() -> bool: return true
 	func is_host() -> bool: return hosting
 	func _altar_current_epoch() -> String: return epoch
@@ -130,6 +133,7 @@ func test_unsettled_gift_gives_up_after_the_bound() -> void:
 	_drain()
 	assert_false(_director.owns_input(), "the bounded exit restores input")
 	assert_eq(_bag.count("orb_basic"), 50)
+	assert_eq(_session.armed, [1], "the exit arms the host reconcile that redelivers the key")
 
 
 func test_released_gift_still_waits_for_a_held_owner_record_without_holding_input() -> void:

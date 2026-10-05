@@ -629,8 +629,9 @@ const F18_HOME_KEY_GUEST_RETRY_MS := [250, 1000, 3000]
 var _f18_home_key_attempts := 0
 ## Bounded exit: an owed gift that cannot settle (silent host refusal, a lost
 ## session epoch, another character/world) must not lock input forever. The
-## key is dropped from the batch; the host's legacy reconcile
-## (opening_home_key.host_legacy_grant) journals the same grant once the
+## key is dropped from the batch and the host's legacy reconcile
+## (opening_home_key.host_legacy_grant) is armed: on the host here, for a guest
+## when the host records its walk_out beat. It journals the same grant once the
 ## character is past the first catch, and the delivery path settles it.
 const F18_HOME_KEY_GIVE_UP_MS := 20000
 var _f18_home_key_started_at := -1 # -1: no gift in flight
@@ -657,6 +658,9 @@ func _drain_effects() -> void:
 	if effects.has("home_key:grant") and finite_gift_enabled and _f18_home_key_abandon_due(opening_game):
 		push_warning("Grandpa's Home Key could not settle; releasing the player (the host reconcile redelivers it)")
 		effects.erase("home_key:grant")
+		var abandon_session: Node = opening_game.get("session")
+		if abandon_session.has_method("arm_legacy_home_key_check"):
+			abandon_session.call("arm_legacy_home_key_check", int(abandon_session.call("local_peer_id")))
 		_f18_pending_home_key.clear()
 		_f18_home_key_attempts = 0
 		_f18_home_key_started_at = -1
