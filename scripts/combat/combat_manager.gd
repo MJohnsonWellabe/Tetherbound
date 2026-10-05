@@ -4080,6 +4080,18 @@ func active_move_cooldown_multiplier() -> float:
 	return clampf(float(power.get("cooldown_multiplier", 1.0)), 0.1, 1.0)
 
 
+## F33: the active creature's equipped Harness, read from its owner's own
+## record (this process's character). Absent or invalid gear scales by one.
+func _gear_defence_scale(creature: RefCounted) -> float:
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cfg: Dictionary = gear.config()
+	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	var local: Variant = game.get("local") if game != null else null
+	if creature == null or local == null or not gear._runtime_enabled(cfg): return 1.0
+	var record := {"redesign_character": local.get("redesign_character")}
+	return float(gear.modifiers(gear.gear_for(record, str(creature.get("uid"))), cfg).defence)
+
+
 func _uses_host_move_start() -> bool:
 	return _encounter_link != null and _encounter_link.has_method("supports_host_move_start") \
 		and _encounter_link.call("supports_host_move_start") == true \
@@ -4342,7 +4354,7 @@ func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lu
 	)
 	var damage: float = MATH.rolled_damage(
 		float(cfg.get("power", 8.0)),
-		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
+		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability) * _gear_defence_scale(creature),
 		_rng.randf(), _moves.power(move_id), type_mult
 	)
 	damage = _incoming_owned_damage(damage)

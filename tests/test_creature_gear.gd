@@ -191,3 +191,36 @@ func test_charm_reaches_strike_power_through_the_real_freeze_and_host_profile() 
 	var mods := GEAR.modifiers({"harness": "", "charm": "tidesteel_charm_plus_1"}, cfg)
 	assert_almost_eq(float(charmed.power), float(plain.power) * float(mods.move_power), 0.0001, "the Charm scales strike power once")
 	assert_eq(float(charmed.gear_ultimate_gain_multiplier), float(mods.ultimate_gain), "and carries its ultimate gain to the host credit")
+
+
+class AdmittedSession extends Node:
+	var record: Dictionary = {}
+	func local_peer_id() -> int: return 1
+	func admitted_character_state(_peer: int) -> Dictionary: return record.duplicate(true)
+
+
+func test_harness_raises_the_defence_the_host_rolls_a_guest_hit_against() -> void:
+	# The encounter director's struck-participant card (host_pick_struck_
+	# participant -> _geared_card): the guest's equipped Harness comes from the
+	# host's ADMITTED record, never the card the guest announced.
+	var cfg := GEAR.config()
+	var record := _record()
+	var uid := str(record.party[0].uid)
+	record.redesign_character.creatures[uid]["gear"] = {"harness": "stormglass_harness_plus_1", "charm": ""}
+	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
+	var session := AdmittedSession.new()
+	session.record = record
+	director.set("_session", session)
+	var card := {"creature_uid": uid, "defence": 20.0}
+	var geared: Dictionary = director.call("_geared_card", 2, card)
+	var mods := GEAR.modifiers(record.redesign_character.creatures[uid].gear, cfg)
+	assert_almost_eq(float(geared.defence), 20.0 * float(mods.defence), 0.0001, "Harness defence applied once on the host")
+	assert_eq(float(card.defence), 20.0, "the announced card itself is untouched")
+	var forged := card.duplicate(true)
+	forged["gear"] = {"harness": "stormglass_harness_plus_3"}
+	assert_almost_eq(float(director.call("_geared_card", 2, forged).defence), 20.0 * float(mods.defence), 0.0001,
+		"gear named on the card is ignored")
+	session.record = _record()
+	assert_eq(float(director.call("_geared_card", 2, card).defence), 20.0, "no Harness, no change")
+	director.free()
+	session.free()

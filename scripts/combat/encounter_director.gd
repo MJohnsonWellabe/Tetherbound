@@ -3541,7 +3541,27 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 	var body: Node3D = deployed_body_for(struck)
 	if uses_durable_trainer_rewards(encounter_id) \
 		and _ordinary_actor_binding(encounter_id, struck, body).is_empty(): return {}
-	return {"peer_id": struck, "card": _creature_card_for(struck), "body": body}
+	return {"peer_id": struck, "card": _geared_card(struck, _creature_card_for(struck)), "body": body}
+
+
+## F33: the struck creature's equipped Harness raises the defence the host
+## rolls this hit against, once, from the host's own record of its owner (the
+## admitted record for a guest; the host's own for itself), never the card.
+func _geared_card(peer_id: int, card: Dictionary) -> Dictionary:
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cfg: Dictionary = gear.config()
+	if card.is_empty() or not gear._runtime_enabled(cfg): return card
+	var record: Dictionary = {}
+	if peer_id == _local_peer_id():
+		var game := get_node_or_null(^"/root/Game")
+		var local: Variant = game.get("local") if game != null else null
+		if local != null: record = {"redesign_character": local.get("redesign_character")}
+	elif _session != null and _session.has_method("admitted_character_state"):
+		record = _session.call("admitted_character_state", peer_id)
+	var mods: Dictionary = gear.modifiers(gear.gear_for(record, str(card.get("creature_uid", ""))), cfg)
+	var geared := card.duplicate(true)
+	geared["defence"] = float(card.get("defence", 1.0)) * float(mods.defence)
+	return geared
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
