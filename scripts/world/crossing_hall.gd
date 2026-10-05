@@ -482,3 +482,17 @@ func _build_frontage() -> void:
 		light.omni_range = float(light_settings.get("range_m", 7.5))
 		light.shadow_enabled = false
 		fixture.add_child(light)
+	# F17#6 r3 judge: at night the doorway read as a blank emissive plane (the
+	# home arch membrane seen straight through it) and no light reached the
+	# ground at the door. A low warm pool on the threshold and one in the
+	# vestibule light the step and the arch reveal so the doorway has depth.
+	for row: Dictionary in settings.get("door_pools", []):
+		var pool := OmniLight3D.new()
+		pool.name = str(row.get("name", "HallDoorPool"))
+		pool.position = _position(row.at)
+		pool.light_color = Color(str(row.get("colour", light_settings.get("colour", "#ffd09b"))))
+		pool.light_energy = float(row.get("energy", 1.0))
+		pool.omni_range = float(row.get("range_m", 4.0))
+		pool.omni_attenuation = float(row.get("attenuation", 1.0))
+		pool.shadow_enabled = false
+		frontage.add_child(pool)

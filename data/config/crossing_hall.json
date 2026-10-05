@@ -309,6 +309,11 @@
         "yaw_deg": 180
       }
     ],
+    "_why_door_pools": "F17#6 r3 judge: at night the front door read as a flat emissive rectangle (the home arch membrane seen straight through the entrance at z=-15) and no light fell on the ground at the door. A low warm pool on the threshold step outside and one in the vestibule (between the entrance and the home arch at z=-12.8) light the step and the arch reveal so the doorway reads as a lit way in. Lights only: no mesh, collider, route or arch change. TUNABLE.",
+    "door_pools": [
+      {"name": "HallThresholdPool", "at": [0, 1.1, -16.6], "energy": 1.6, "range_m": 4.5},
+      {"name": "HallVestibulePool", "at": [0, 2.7, -14.0], "energy": 1.2, "range_m": 4.0}
+    ],
     "light": {
       "colour": "#ffd09b",
       "energy": 1.7,
