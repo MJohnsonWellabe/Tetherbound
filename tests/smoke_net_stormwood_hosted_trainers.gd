@@ -119,7 +119,7 @@ func _run() -> void:
 	if str(party_seeded.get("verdict", "")) != "PASS":
 		quit(await finish())
 		return
-	var deployed := await step(1, "deploy_creature", {"species": "terrapup"})
+	var deployed := await step(1, "deploy_creature", {"species": "terrapup", "owned": true})
 	check(str(deployed.get("verdict", "")) == "PASS", "client deployed its own creature before challenging")
 	if str(deployed.get("verdict", "")) != "PASS":
 		quit(await finish())

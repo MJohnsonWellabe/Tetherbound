@@ -240,7 +240,7 @@ func _presentation() -> void:
 	# the other's to draw on. The trainer bodies are already standing from the
 	# handshake.
 	for i in 2:
-		var out: Dictionary = await step(i, "deploy_creature", {})
+		var out: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d has a creature out (%s)" % [i, str(out.get("detail", ""))])
 	await step(0, "wait", {"frames": SETTLE_FRAMES})

@@ -54,7 +54,7 @@ func _run() -> void:
 		check(str(seen.get("verdict", "")) == "PASS",
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 	for i in 2:
-		var out: Dictionary = await step(i, "deploy_creature", {})
+		var out: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
 

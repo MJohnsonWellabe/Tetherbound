@@ -348,7 +348,7 @@ func _run() -> void:
 	# --- end of the handshake block -------------------------------------------
 
 	for i in 2:
-		var out: Dictionary = await step(i, "deploy_creature", {})
+		var out: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
 
@@ -1040,7 +1040,7 @@ func _run_chapter_handoff() -> void:
 				{"species": species, "level": 18})
 			check(str(granted.get("verdict", "")) == "PASS",
 				"peer %d received a level-18 %s" % [peer, species])
-		await step(peer, "deploy_creature", {})
+		await step(peer, "deploy_creature", {"owned": true})
 	var hold: Dictionary = await _hall(0)
 	var markers: Dictionary = hold.get("markers", {}) as Dictionary
 	var arena: Array = _hall_marker(markers, "warden_arena")
@@ -1297,7 +1297,7 @@ func _run_client_chapter_handoff() -> void:
 				{"species": species, "level": 18})
 			check(str(granted.get("verdict", "")) == "PASS",
 				"peer %d received a level-18 %s" % [peer, species])
-		await step(peer, "deploy_creature", {})
+		await step(peer, "deploy_creature", {"owned": true})
 	var guest_character := ""
 	var guest_session = await probe(1, "session")
 	var guest_id := int((guest_session as Dictionary).get("peer_id", 0)) if guest_session is Dictionary else 0
@@ -1502,7 +1502,7 @@ func _run_hall_approach() -> void:
 		var setup: Dictionary = await step(peer, "tournament_setup", {})
 		check(str(setup.get("verdict", "")) == "PASS",
 			"peer %d prepared five ordinary creatures for the Hall" % peer)
-		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		var deployed: Dictionary = await step(peer, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its lead" % peer)
 
 	var markers: Dictionary = host_hold.get("markers", {}) as Dictionary
@@ -1648,7 +1648,7 @@ func _run_tournament() -> void:
 		check(state is Dictionary and bool((state as Dictionary).get("ready", false)) \
 			and ((state as Dictionary).get("selection_ids", []) as Array).size() == 3,
 			"peer %d's production readiness and three selected IDs are visible" % peer)
-		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		var deployed: Dictionary = await step(peer, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its selected lead" % peer)
 	for round: Dictionary in TOURNAMENT_ROUNDS:
 		if not await _run_tournament_round(round):

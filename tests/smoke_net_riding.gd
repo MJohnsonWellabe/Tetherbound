@@ -126,7 +126,7 @@ func _run() -> void:
 
 	# Peer 1 gets a creature of its own too. Not decoration: it is what makes
 	# the "which creature is the mount" question have a wrong answer available.
-	var theirs: Dictionary = await step(1, "deploy_creature", {"species": "terrapup"})
+	var theirs: Dictionary = await step(1, "deploy_creature", {"species": "terrapup", "owned": true})
 	_check(str(theirs.get("verdict", "")) == "PASS",
 		"SETUP: peer 1 has its own creature out (%s)" % str(theirs.get("detail", "")))
 

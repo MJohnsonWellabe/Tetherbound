@@ -97,7 +97,7 @@ func _run() -> void:
 
 	# Each peer puts ITS OWN creature out, through the game's own door.
 	for i in 2:
-		var out: Dictionary = await step(i, "deploy_creature", {"species": "terrapup"})
+		var out: Dictionary = await step(i, "deploy_creature", {"species": "terrapup", "owned": true})
 		check(str(out.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(out.get("detail", ""))])
 

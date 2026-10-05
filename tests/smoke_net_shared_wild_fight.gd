@@ -140,7 +140,7 @@ func _run_guardian() -> void:
 	var joined: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": port})
 	check(str(joined.get("verdict", "")) == "PASS", "guardian witness joined the hosted Meadows world")
 	for peer in 2:
-		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		var deployed: Dictionary = await step(peer, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS", "peer %d deployed its retained creature" % peer)
 		var staged: Dictionary = await step(peer, "warrens_guardian", {"mode": "stage"})
 		check(str(staged.get("verdict", "")) == "PASS", "peer %d resolved the authored Warren Guardian" % peer)
@@ -408,7 +408,7 @@ func _run() -> void:
 
 	# Both players need a creature out before either can fight with one.
 	for i in 2:
-		var deployed: Dictionary = await step(i, "deploy_creature", {})
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS",
 			"peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
 

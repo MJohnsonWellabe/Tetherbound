@@ -105,7 +105,7 @@ func _run_livewire() -> void:
 	# and the inactive/released baseline is not.
 	var party_seeded := await step(1, "party_grant", {"species": "sparkit", "level": 33})
 	check(str(party_seeded.get("verdict", "")) == "PASS", "client owns a chapter-ready creature")
-	var deployed := await step(1, "deploy_creature", {"species": "sparkit"})
+	var deployed := await step(1, "deploy_creature", {"species": "sparkit", "owned": true})
 	check(str(deployed.get("verdict", "")) == "PASS", "client deployed before choosing Livewire")
 	var prepared := await step(1, "stormwood_hosted_start", {
 		"trainer": TRAINER, "prepare_only": true,

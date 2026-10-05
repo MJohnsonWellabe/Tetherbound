@@ -45,7 +45,7 @@ func _run() -> void:
 		quit(await finish())
 		return
 	await _require_step(1, "party_grant", {"species": "terrapup", "level": 99})
-	await _require_step(1, "deploy_creature", {"species": "terrapup"})
+	await _require_step(1, "deploy_creature", {"species": "terrapup", "owned": true})
 	var prepared := await step(1, "stormwood_hosted_start", {"trainer": TRAINER, "prepare_only": true})
 	check(str(prepared.get("verdict", "")) == "PASS", "remote fighter staged beside authored trainer")
 	if str(prepared.get("verdict", "")) != "PASS":

@@ -105,7 +105,7 @@ func _run() -> void:
 
 	# 3. The Warden, shared.
 	for peer in 2:
-		await step(peer, "deploy_creature", {})
+		await step(peer, "deploy_creature", {"owned": true})
 	var hold: Variant = await probe(0, "stronghold")
 	var markers: Dictionary = (hold as Dictionary).get("markers", {}) as Dictionary if hold is Dictionary else {}
 	var arena: Array = markers.get("warden_arena", []) as Array
