@@ -154,6 +154,15 @@ func blocked(player: RefCounted) -> bool:
 	return not pending.is_empty() and session != null and session.call("_game") != null and player == session.call("_game").get("local") \
 		and pending.scope == _scope()
 
+## The pending groom has changed nothing on the local character yet: it is
+## waiting for the host's preparation (prepare/resume). Its fence still holds
+## care actions, but an ordinary character save (a guest's leave) writes the
+## same record it would without it; the host re-derives the preparation on
+## rejoin (groom_resume), so nothing is replayed twice.
+func local_untouched(player: RefCounted) -> bool:
+	return blocked(player) and not installing and pending.get("phase") in ["prepare", "resume"] \
+		and not pending.has("prepared")
+
 func snapshot_allowed(player: RefCounted, payload: Dictionary) -> bool:
 	return blocked(player) and installing and pending.get("prepared") is Dictionary \
 		and E._equivalent(RECORD.portable_projection(payload), pending.prepared.after) \
