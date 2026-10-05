@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-10-04T22:18:00.685824+00:00",
- "main_sha": "b4e4897d5 (PR #525 head; consolidated F17-F21, F25/F35 landing)",
- "batch4_sha": "none in flight; all PRs merged",
+ "generated_at": "2026-10-04T22:40:56.606476+00:00",
+ "main_sha": "946bb39e5 (PR #530 head)",
+ "batch4_sha": "648643576 (PR #531, CI running)",
  "rows": [
   {
    "id": "F01",
@@ -2443,10 +2443,10 @@
     },
     {
      "text": "The hero landmark (the village road and Crossing Hall) reads at distance and up close.",
-     "status": "partial",
-     "evidence": "ralph/reports/HUB/f17/destination-day-night-r2/strict-codeblind.txt@d3980ed42",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F38-4/VERDICT.md",
      "gap": "Recapture distance and close-up Hall/road frames on High and Medium, day and night, and run a fresh code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. That judge covered only the distance view from the farm door. crossing_hall.gd, village.gd and props.gd changed afterwards. No close-up judge.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 4
     },
     {
