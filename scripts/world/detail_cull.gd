@@ -83,13 +83,15 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 		return
 	if _skipped(geometry, cfg):
 		return
-	# A MultiMesh is measured from its own instance transforms (each instance's
-	# scale and rotation, not only the node's); see `measure_instances`.
+	# A MultiMesh is measured from its own instance transforms; see
+	# `measure_instances`. Its `base_*` values are the mesh-and-origins bound
+	# this cull shipped with: every decision below is taken on them, and the
+	# instance-aware values can only lengthen the range they produce.
 	var measure := _multimesh_measure(geometry as MultiMeshInstance3D) \
 		if geometry is MultiMeshInstance3D else {}
-	if geometry is MultiMeshInstance3D and float(measure.get("half_diagonal", INF)) == INF:
+	if geometry is MultiMeshInstance3D and float(measure.get("base_half_diagonal", INF)) == INF:
 		return
-	var size := float(measure.size) if geometry is MultiMeshInstance3D else _world_size(geometry)
+	var size := float(measure.base_size) if geometry is MultiMeshInstance3D else _world_size(geometry)
 	if size <= 0.0:
 		return
 	# A small glowing thing (a lamp, a lantern, a pickup glint) reads as a
@@ -104,8 +106,8 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 	var fov := deg_to_rad(float(cfg.get("reference_fov_deg", 70.0)))
 	var lines := float(cfg.get("reference_lines", 1080.0))
 	var pixels := maxf(0.5, float(cfg.get("pixels", 2.5)))
-	var reach := size * lines / (2.0 * tan(fov * 0.5)) / pixels
-	reach = maxf(reach, float(cfg.get("min_range_m", 150.0)))
+	var per_metre := lines / (2.0 * tan(fov * 0.5)) / pixels
+	var reach := maxf(size * per_metre, float(cfg.get("min_range_m", 150.0)))
 	if reach >= float(cfg.get("ignore_beyond_m", 9000.0)):
 		return
 	# Godot tests a node's visibility range once, against the centre of the
@@ -116,10 +118,16 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 	# shoreline batch), or one whose spread is unknown (empty or single at
 	# build time and filled later, as pickup glows are), stays unranged.
 	if geometry is MultiMeshInstance3D:
-		var half_diagonal := float(measure.half_diagonal)
+		var half_diagonal := float(measure.base_half_diagonal)
 		if half_diagonal > reach:
 			return
 		reach += half_diagonal
+		if reach >= float(cfg.get("ignore_beyond_m", 9000.0)):
+			return
+		# Instances placed larger than their mesh (scaled, or a long axis that
+		# their own transform keeps) reach further: never shorter than above.
+		var instance_reach := maxf(float(measure.size) * per_metre, float(cfg.get("min_range_m", 150.0)))
+		reach = maxf(reach, instance_reach + float(measure.half_diagonal))
 		if reach >= float(cfg.get("ignore_beyond_m", 9000.0)):
 			return
 	geometry.visibility_range_end = reach
@@ -149,31 +157,43 @@ static func _multimesh_measure(geometry: MultiMeshInstance3D) -> Dictionary:
 	return measure_instances(transforms, mm.mesh.get_aabb(), _scale_of(geometry))
 
 
-## The world size of one instance and the half-diagonal of the whole batch,
-## in metres, from the instance transforms themselves (the server-side AABB is
-## not reliable here: headless and dummy renderers report the mesh's own box).
-## Each instance's box is its mesh box under ITS OWN basis (scale and
-## rotation), then the node's scale: `size` is the largest such extent, and
-## the half-diagonal spans every instance box. The half-diagonal is INF when
-## the spread is unknown: fewer than two instances when measured (a batch
-## filled later, such as pickup glows, would otherwise be ranged by one quad
-## and later span the realm), or several instances all reading one origin (a
-## dummy renderer keeps no instance buffer). Unknown spread is never ranged.
+## Sizes of a MultiMesh in world metres, from the instance transforms
+## themselves (the server-side AABB is not reliable here: headless and dummy
+## renderers report the mesh's own box).
+## - `base_size` / `base_half_diagonal`: the mesh box under the node's scale,
+##   and the half-diagonal of the instance origins' box grown by one mesh box
+##   (the bound this cull shipped and was reviewed with).
+## - `size` / `half_diagonal`: never below those. `size` also takes every
+##   instance's mesh box under its own scale, both unrotated and as placed (a
+##   long thin mesh keeps its length when yawed), and `half_diagonal` the
+##   union of the instance boxes as placed.
+## The half-diagonals are INF when the spread is unknown: fewer than two
+## instances when measured (a batch filled later, such as pickup glows, would
+## otherwise be ranged by one quad and later span the realm), or several
+## instances all reading one origin (a dummy renderer keeps no instance
+## buffer). Unknown spread is never ranged.
 static func measure_instances(transforms: Array[Transform3D], mesh_box: AABB, node_scale: Vector3) -> Dictionary:
+	var base_extent := mesh_box.size * node_scale
+	var base_size := maxf(base_extent.x, maxf(base_extent.y, base_extent.z))
 	if transforms.size() < 2:
-		return {"size": 0.0, "half_diagonal": INF}
+		return {"base_size": base_size, "base_half_diagonal": INF, "size": base_size, "half_diagonal": INF}
 	var origins := AABB(transforms[0].origin, Vector3.ZERO)
 	var union := AABB()
-	var size := 0.0
+	var size := base_size
 	for index in transforms.size():
-		var placed := Transform3D(transforms[index].basis, transforms[index].origin) * mesh_box
+		var basis := transforms[index].basis
+		var placed := Transform3D(basis, transforms[index].origin) * mesh_box
 		var extent := placed.size * node_scale
-		size = maxf(size, maxf(extent.x, maxf(extent.y, extent.z)))
+		var unrotated := basis.get_scale().abs() * mesh_box.size * node_scale
+		size = maxf(size, maxf(maxf(extent.x, maxf(extent.y, extent.z)),
+			maxf(unrotated.x, maxf(unrotated.y, unrotated.z))))
 		union = placed if index == 0 else union.merge(placed)
 		origins = origins.expand(transforms[index].origin)
 	if origins.size.is_zero_approx():
-		return {"size": size, "half_diagonal": INF}
-	return {"size": size, "half_diagonal": (union.size * node_scale).length() * 0.5}
+		return {"base_size": base_size, "base_half_diagonal": INF, "size": size, "half_diagonal": INF}
+	var base_half := ((origins.size + mesh_box.size) * node_scale).length() * 0.5
+	return {"base_size": base_size, "base_half_diagonal": base_half, "size": size,
+		"half_diagonal": maxf(base_half, (union.size * node_scale).length() * 0.5)}
 
 
 static func _scale_of(node: Node3D) -> Vector3:

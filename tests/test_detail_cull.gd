@@ -99,6 +99,22 @@ func test_each_instance_is_sized_by_its_own_transform() -> void:
 		"a stretched, rotated instance keeps its long axis")
 
 
+func test_instance_aware_sizes_never_fall_below_the_reviewed_bound() -> void:
+	# Independent review of 603f6abe (BLOCK): a yawed 10 m rod's axis-aligned
+	# box is only ~7 m wide, and instances scaled below 1 shrink the union.
+	# Either would have culled something the shipped bound kept drawing.
+	var rod := AABB(Vector3(-5.0, -0.05, -0.05), Vector3(10.0, 0.1, 0.1))
+	var yawed := _at([Vector3.ZERO, Vector3(20.0, 0.0, 0.0)], Basis(Vector3.UP, PI * 0.25))
+	var rods: Dictionary = DETAIL_CULL.measure_instances(yawed, rod, Vector3.ONE)
+	assert_true(float(rods.size) >= 9.99, "a yawed rod keeps its 10 m length")
+	assert_true(float(rods.half_diagonal) >= float(rods.base_half_diagonal))
+	var cube := AABB(Vector3(-1.0, -1.0, -1.0), Vector3(2.0, 2.0, 2.0))
+	var small := _at([Vector3.ZERO, Vector3(20.0, 0.0, 0.0)], Basis.IDENTITY.scaled(Vector3(0.5, 0.5, 0.5)))
+	var shrunk: Dictionary = DETAIL_CULL.measure_instances(small, cube, Vector3.ONE)
+	assert_true(float(shrunk.size) >= float(shrunk.base_size), "scaled-down instances never shorten the range")
+	assert_true(float(shrunk.half_diagonal) >= float(shrunk.base_half_diagonal))
+
+
 func test_spread_is_unknown_for_empty_single_or_unreadable_batches() -> void:
 	var box := AABB(Vector3(-1.0, -1.0, -1.0), Vector3(2.0, 2.0, 2.0))
 	var none: Array[Transform3D] = []
