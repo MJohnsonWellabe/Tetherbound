@@ -156,3 +156,23 @@ func test_guest_beat_comes_from_its_own_opening_history() -> void:
 	assert_eq(opening.peer_beat({"opening:beat:wake": true, "opening:beat:house": true, "opening:beat:choose": true,
 		"opening:beat:name": true, "opening:beat:return_starter": true}), "return_starter")
 	assert_eq(opening.peer_beat({"opening:beat:return_starter": true, "opening:beat:walk_out": true}), "walk_out")
+
+
+## Review finding 2: a mid-session load does not rebuild the director. The
+## held batch (orbs, beats) belongs to the character who heard Grandpa and
+## must never land on whoever is loaded now.
+func test_a_changed_character_drops_the_whole_held_batch() -> void:
+	_session.blocked = false
+	_game.grant_result = false
+	_dialogue.effects = ["home_key:grant", "give:orb_basic:50"]
+	_drain()
+	assert_true(_director.owns_input())
+	assert_false(_director._f18_pending_home_key.is_empty(), "the gift is bound to its character")
+	_game.local.character_id = "character-loaded-later"
+	_drain()
+	assert_false(_director.owns_input(), "the player is released")
+	assert_eq(_bag.count("orb_basic"), 0, "no orbs for the newly loaded character")
+	assert_true(_director._f18_pending_effects.is_empty(), "nothing of the batch remains")
+	assert_eq(_session.armed, [], "no reconcile is armed for the new character")
+	_drain()
+	assert_eq(_bag.count("orb_basic"), 0)

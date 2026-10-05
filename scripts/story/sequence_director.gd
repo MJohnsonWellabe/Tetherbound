@@ -631,17 +631,25 @@ var _f18_home_key_attempts := 0
 ## session epoch, another character/world) must not lock input forever. The
 ## key is dropped from the batch and the host's legacy reconcile
 ## (opening_home_key.host_legacy_grant) is armed: on the host here, for a guest
-## when the host records its walk_out beat. It journals the same grant once the
-## character is past the first catch, and the delivery path settles it.
+## by the host when that guest's gift request reached it. It journals the same
+## grant once the character is past the first catch, and the delivery path
+## settles it. A changed character or world drops the whole batch instead.
 const F18_HOME_KEY_GIVE_UP_MS := 20000
 var _f18_home_key_started_at := -1 # -1: no gift in flight
 
 func _f18_home_key_abandon_due(game: Node) -> bool:
 	if _f18_home_key_started_at != -1 and Time.get_ticks_msec() - _f18_home_key_started_at > F18_HOME_KEY_GIVE_UP_MS: return true
 	if _f18_pending_home_key.is_empty() or game == null or game.get("local") == null or game.get("world") == null: return false
-	return _f18_pending_home_key.get("character_id") != game.get("local").character_id \
-		or _f18_pending_home_key.get("world_instance_id") != game.get("world").reward_delivery_namespace \
+	return _f18_gift_owner_changed(game) \
 		or _f18_pending_home_key.get("session_epoch") != game.get("session").call("_altar_current_epoch")
+
+## Another character or world is loaded (a mid-session load does not rebuild
+## this director). The held batch belongs to the character who heard Grandpa;
+## none of it may land on whoever is loaded now.
+func _f18_gift_owner_changed(game: Node) -> bool:
+	return not _f18_pending_home_key.is_empty() and game != null and game.get("local") != null and game.get("world") != null \
+		and (_f18_pending_home_key.get("character_id") != game.get("local").character_id \
+		or _f18_pending_home_key.get("world_instance_id") != game.get("world").reward_delivery_namespace)
 
 func _drain_effects() -> void:
 	# A spoken line may couple a physical gift to the fact that it was handed
@@ -655,6 +663,12 @@ func _drain_effects() -> void:
 	# journal is durable. Closing the panel cannot consume its only source.
 	var opening_game := _effect_game()
 	var finite_gift_enabled: bool = opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
+	if effects.has("home_key:grant") and finite_gift_enabled and _f18_gift_owner_changed(opening_game):
+		push_warning("Grandpa's gift belonged to another character; dropping the held batch")
+		_f18_pending_home_key.clear()
+		_f18_home_key_attempts = 0
+		_f18_home_key_started_at = -1
+		return
 	if effects.has("home_key:grant") and finite_gift_enabled and _f18_home_key_abandon_due(opening_game):
 		push_warning("Grandpa's Home Key could not settle; releasing the player (the host reconcile redelivers it)")
 		effects.erase("home_key:grant")

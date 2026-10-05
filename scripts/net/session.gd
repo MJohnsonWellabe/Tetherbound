@@ -626,8 +626,9 @@ func foundation_record_personal_flags(delta: Dictionary) -> void:
 		for peer: int in op.get("peers", []):
 			var character := _authority_character(peer)
 			if not character.is_empty(): _character_authority.call("record_personal_flag", character, str(op.get("id", "")), op.get("value", true) == true)
-			# A guest passing the first catch without its key (an abandoned
-			# opening gift) is reconciled now, not only at its next admission.
+			# A host-authored walk_out flag op arms the reconcile too. Opening
+			# beats are otherwise guest-local; a guest's verified gift request
+			# (note_opening_gift_requested) is the host's usual evidence.
 			if str(op.get("id", "")) == OPENING_HOME_KEY.PAST_FIRST_CATCH_FLAG and op.get("value", true) == true: arm_legacy_home_key_check(peer)
 
 ## The actual host ending calls this only after its original claim saves.
@@ -6060,6 +6061,19 @@ const LEGACY_HOME_KEY_WINDOW_MS := 60000
 
 func arm_legacy_home_key_check(peer: int) -> void:
 	if is_host() and portal_runtime_ready(): _legacy_home_key_due[peer] = Time.get_ticks_msec()
+
+## Characters whose verified opening-gift request reached this host this
+## session (host memory only; a rejoin re-seeds the guest's persisted beats).
+var _opening_gift_requested: Dictionary = {}
+
+func note_opening_gift_requested(peer: int) -> void:
+	var character := _authority_character(peer)
+	if not is_host() or character.is_empty(): return
+	_opening_gift_requested[character] = true
+	arm_legacy_home_key_check(peer)
+
+func opening_gift_requested(peer: int) -> bool:
+	return _opening_gift_requested.get(_authority_character(peer)) == true
 
 func _tick_legacy_home_keys(delta: float) -> void:
 	_legacy_home_key_left -= delta

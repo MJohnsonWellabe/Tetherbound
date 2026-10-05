@@ -238,7 +238,10 @@ func test_legacy_character_past_first_catch_gets_one_deterministic_grant() -> vo
 
 func test_legacy_grant_skips_keyed_owed_given_and_unfinished_openings() -> void:
 	_session.flags = {}
-	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "not past Grandpa's first catch")
+	var early: Dictionary = OPENING.host_legacy_grant(_session, 7)
+	assert_eq(early.get("code"), "not_past_first_catch", "not past Grandpa's first catch: no grant, the arm waits")
+	assert_true(early.get("durable") == false)
+	assert_eq(_game.world.reward_deliveries.size(), 0)
 	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true, "home_key_given": true}
 	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "already given")
 	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
@@ -254,3 +257,28 @@ func test_legacy_grant_skips_keyed_owed_given_and_unfinished_openings() -> void:
 	assert_false(OPENING.legacy_grant_due({"character_id": CHARACTER, "inventory": _session.admitted_inventory,
 		"portal_escrow": _session.escrow}, _session.flags, CHARACTER), "an owed key follows its character")
 	assert_eq(_game.world.reward_deliveries.size(), 0)
+
+
+class GiftSeenSession extends SessionFixture:
+	var gift_seen := true
+	func opening_gift_requested(_peer: int) -> bool: return gift_seen
+
+## Review finding 1: a guest's opening beats stay on the guest, so the host
+## never sees its walk_out mid-session. A verified gift request that reached
+## this host is the host's own evidence; the reconcile grants on it.
+func test_a_gift_request_seen_by_the_host_is_past_first_catch_evidence() -> void:
+	_game.remove_child(_session)
+	var seen := GiftSeenSession.new()
+	seen.game = _game
+	seen.flags = {}
+	_game.add_child(seen)
+	_transport.reparent(seen)
+	var granted: Dictionary = OPENING.host_legacy_grant(seen, 7)
+	assert_true(granted.get("durable") == true, "no walk_out on the host, gift seen: " + str(granted))
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	seen.gift_seen = false
+	seen.flags = {"home_key_given": true}
+	assert_true(OPENING.host_legacy_grant(seen, 7).is_empty(), "a given key is final")
+	_transport.reparent(_session)
+	_game.add_child(_session)
+	seen.queue_free()

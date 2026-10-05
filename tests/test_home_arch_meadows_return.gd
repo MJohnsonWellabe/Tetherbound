@@ -39,10 +39,19 @@ func test_home_arch_returns_to_the_last_touched_meadows_waystone() -> void:
 	assert_eq(permit.get("entry_id"), "meadows_ranger_camp", "the last touched stone, not the first")
 
 func test_home_arch_without_a_touched_meadows_stone_lands_at_the_entry() -> void:
-	var permit := _enter(_context({"tidewake": "tidewake_dock"}, {}))
+	var permit := _enter(_context({"tidewake": "tidewake_first_shore"}, {}))
 	assert_eq(permit.get("entry_id"), "meadows_entry")
 
-func test_a_last_stone_that_was_never_activated_is_refused() -> void:
-	var result: Dictionary = _policy.evaluate({"kind": "portal_enter", "arch_id": "home"},
-		_context({"meadows": "meadows_ranger_camp"}, {"meadows": []}), _config, _stones, 0)
-	assert_false(result.get("ok") == true, "a forged return point is refused")
+func test_a_stale_meadows_stone_lands_at_the_entry_never_strands_the_player() -> void:
+	# Never activated, or not a Meadows stone: the home arch is the only way
+	# home, so it lands at the entry and never takes the unactivated stone.
+	for last: String in ["meadows_ranger_camp", "tidewake_first_shore", "no_such_stone"]:
+		var permit := _enter(_context({"meadows": last}, {"meadows": []}))
+		assert_eq(permit.get("entry_id"), "meadows_entry", last)
+
+func test_a_live_biome_arch_still_refuses_an_unactivated_saved_stone() -> void:
+	var context := _context({"tidewake": "tidewake_first_shore"}, {"tidewake": []})
+	context.character_unlocks = ["tidewake"]
+	context.arch_positions = {"tidewake": Vector3.ZERO}
+	var result: Dictionary = _policy.evaluate({"kind": "portal_enter", "arch_id": "tidewake"}, context, _config, _stones, 0)
+	assert_false(result.get("ok") == true, "a forged biome return point is still refused")

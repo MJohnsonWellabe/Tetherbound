@@ -140,6 +140,13 @@ static func peer_beat(flags: Dictionary) -> String:
 static func host_grant(session: Node, peer: int, request: Dictionary) -> Dictionary:
 	var bound := _binding(session, peer, request)
 	if bound.is_empty(): return {"durable": false, "code": "not_admitted"}
+	if _opening_source(session, peer) == null \
+		or starter_uid(bound.personal, session.call("_foundation_flags", peer)).is_empty():
+		return {"durable": false, "code": "opening_context_changed"}
+	# A verified gift request is the host's own evidence that this character
+	# reached Grandpa's first-catch gift; a guest's opening beats stay local.
+	# If this request cannot settle, the armed reconcile redelivers the key.
+	if session.has_method("note_opening_gift_requested"): session.call("note_opening_gift_requested", peer)
 	var game: Node = bound.game
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or not bool(saver.call("finish_fallback")) or saver.call("fallback_busy") == true:
@@ -185,8 +192,13 @@ static func host_legacy_grant(session: Node, peer: int) -> Dictionary:
 	var character: String = session.call("_authority_character", peer)
 	if character.is_empty(): return {"durable": false, "code": "not_ready"}
 	# Cheap gates first; the admitted record re-projects the whole character.
-	var flags: Dictionary = session.call("_foundation_flags", peer)
-	if flags.get(PAST_FIRST_CATCH_FLAG) != true or flags.get("home_key_given") == true: return {}
+	var flags: Dictionary = session.call("_foundation_flags", peer).duplicate()
+	if flags.get("home_key_given") == true: return {}
+	if session.has_method("opening_gift_requested") and session.call("opening_gift_requested", peer) == true:
+		flags[PAST_FIRST_CATCH_FLAG] = true
+	# Not yet past the first catch: keep the arm (its window bounds it), the
+	# beat may still be on its way (the host's own batch writes it after).
+	if flags.get(PAST_FIRST_CATCH_FLAG) != true: return {"durable": false, "code": "not_past_first_catch"}
 	if peer == session.call("local_peer_id") and game.get("inventory").count("home_key") != 0: return {}
 	var personal: Dictionary = session.call("admitted_character_state", peer)
 	if personal.is_empty(): return {"durable": false, "code": "not_ready"}
