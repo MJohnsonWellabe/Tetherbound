@@ -48,31 +48,23 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.
 
-**Owner-blocked:** F26#5 ROG Ally test (Forward+ becomes the default only after it passes), plus the other `blocked` rows on the board.
-
-**Repo size:** owner proposal pending (move report images to a release/CI artifacts).
+**Owner-blocked:** F26#5 Ally test (parked) and the F47/F49 owner play pass, plus the other `blocked` rows on the board.
 
 **Board:** [private board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site); flags/fixtures do not close acceptance.
 
-### Open owner decisions
+### Owner decisions (all answered 2026-10-05; Codex restarted by the owner)
 
-Recommended defaults: keep Compatibility until the Ally gate; retain the 30/night cap and Stormursa name; keep Steam packaging off without an AppID; keep the tap-then-tap controller map and §8.1 defaults. Recommend Stormheart as final relay, and existing PRODUCT defaults; these decisions remain open. Human play/device proof uses the passing integrated build.
-
-1. **ROG Ally test (F26#5):** run one Forward+ test build on the Ally (Medium preset, handheld, the scripted route) when `tb/lookdev` posts the checklist here. Forward+ becomes the default only after this passes.
-2. **Meshy credits:** the overnight cap is 30 generations per night (RD-26) unless the owner sets another number.
-3. **Storm bear name:** the working name is *Stormursa* (RD-28).
-4. **Internet co-op proof:** real Steam AppID and partner access, four accounts, at least 2 on separate home networks. `steam_api64.dll` redistribution is approved; packaging (`ship_steam_runtime`) stays off until an AppID exists.
-5. **Stormwood audio: decided (owner, 2026-10-05).** Author the nine `assets/audio/stormwood/*.wav` from sound sources already installed in the repository (AUDIO §10); no purchase, download or text-to-audio service; acceptance is spectral and loop checks, no owner listen. Built on `tb/audio` by `tools/audio/gen_stormwood.py` (provenance `assets/audio/stormwood/MANIFEST.json`), checked by `tools/audio/check_stormwood.py`; evidence `ralph/reports/AUDIO/stormwood-nine/`.
-6. **Owner play pass (F47/F49):** a human play pass at the end of Wave 3.
-
-7. **Story framing of the final relay:** Tidewake was written as the supply network's final relay. With Stormwood last, the recommended reading is: Stormwood's Stormheart is the final relay; Tidewake's regional link is one of four; the dock exchange stays Tidewake's chapter close. WORLD keeps the current wording conservative until the owner confirms.
-8. **PRODUCT proposals to confirm:** the cut order within owner-decided systems, the "Build the best five" sub-line, a demo that includes the village, the Hall and the first homestead loop, and keeping US$19.99 at 15–25 h.
-
-9. **Design defaults taken in the doc pass** (conservative, the owner may override): listed in CODEX_START_HERE §8.1.
-
-10. *Settled 2026-10-05:* controller map confirmed (§0 owner rulings 2026-10-05).
-
-11. *Settled 2026-10-05:* home arch returns to the last Meadows waystone (§0).
+1. **ROG Ally test (F26#5):** stays parked until the owner playtests the built game. Compatibility stays the default; Forward+ becomes the default only after that test passes.
+2. **Meshy:** keep the cap of 30 generations per night (RD-26).
+3. **Storm bear:** the name *Stormursa* is locked (RD-28).
+4. **Internet co-op:** finish and prove the existing Steam invite path (MULTIPLAYER §1) with Valve's development AppID 480, at no cost. The US$100 product AppID is decided only at ship time, and `ship_steam_runtime` packaging stays off until then. No Epic or other relay work. The two-network proof still needs real accounts, at least two on separate home networks.
+5. **Stormwood audio:** author the nine missing `assets/audio/stormwood/*.wav` from installed sources (AUDIO §10). Acceptance rests on spectral and loop checks; no owner listen is required. Built on `tb/audio` by `tools/audio/gen_stormwood.py` (provenance `assets/audio/stormwood/MANIFEST.json`), checked by `tools/audio/check_stormwood.py` (94/94); evidence `ralph/reports/AUDIO/stormwood-nine/`.
+6. **Owner play pass (F47/F49):** one pass, at F49, on the complete four-chapter build.
+7. **Final relay:** Stormwood's Stormheart is the final relay. Tidewake's regional link is one of four, and the dock exchange stays Tidewake's chapter close (WORLD follows).
+8. **PRODUCT:** the "Build the best five" sub-line, the demo scope (Meadows, village road, Hall, first homestead loop) and the §6 cut order are confirmed. Price stays open (personal/friends for now). This authorizes no launch or spending.
+9. **Design defaults:** every CODEX_START_HERE §8.1 default is owner-confirmed.
+10. **Controller map** and 11. **home arch:** settled; see §0 owner rulings 2026-10-05.
+12. **Repo size:** approved. Existing `ralph/reports` images move to a GitHub release archive with links preserved, and new evidence images go to CI artifacts. Text evidence stays, and history is not rewritten.
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 
