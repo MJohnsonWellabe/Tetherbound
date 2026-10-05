@@ -7,8 +7,22 @@ const ROOT := "res://data/schema/"
 const DOMAINS: Array[String] = ["essences", "tether_candy", "material_tiers", "stations", "attachments", "gear_tiers", "traits", "masters", "feasts", "evolution_lines", "portals", "keys", "waystones", "level_caps"]
 const KEYWORDS: Array[String] = ["$schema", "$id", "description", "type", "properties", "required", "additionalProperties", "items", "minItems", "maxItems", "uniqueItems", "oneOf", "enum", "const", "minimum", "maximum", "minLength"]
 
+## Parsed once per file and handed out as a copy, re-read when the file's
+## time or size changes. A co-op host replays every guest passive-input batch
+## through validators that call this per creature; re-parsing species.json and
+## the configs each time held the host's frames for ~30 s after the world
+## facts landed (PERF, 2026-10-05).
+static var _json_cache: Dictionary = {}
+
+
 static func json(path: String) -> Variant:
-	return JSON.parse_string(FileAccess.get_file_as_string(path))
+	var stamp := "%d:%d" % [FileAccess.get_modified_time(path), FileAccess.get_size(path)]
+	var entry: Variant = _json_cache.get(path)
+	if not entry is Array or (entry as Array)[0] != stamp:
+		entry = [stamp, JSON.parse_string(FileAccess.get_file_as_string(path))]
+		_json_cache[path] = entry
+	var parsed: Variant = (entry as Array)[1]
+	return parsed.duplicate(true) if parsed is Dictionary or parsed is Array else parsed
 
 static func validate(value: Variant, schema: Dictionary, path: String = "$") -> Array[String]:
 	var errors: Array[String] = []

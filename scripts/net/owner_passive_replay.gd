@@ -210,7 +210,28 @@ static func _cursor_valid(cursor: Dictionary) -> bool:
 		and _position(cursor.position) and (cursor.realm == "" or cursor.realm in REALMS) \
 		and cursor.prefix_hash is String and cursor.prefix_hash.length() == 64 and cursor.prefix_hash.is_valid_hex_number(false)
 
+## Verdicts of `_record_valid` by exact content (var_to_str keeps every type and
+## key order, so two records share a verdict only when they are identical).
+## Each applied input re-checks the stream's unchanging base and the state the
+## previous input already produced: three full schema validations per input
+## held a co-op host's frames for about a second each while a guest's passive
+## inputs streamed in (PERF, 2026-10-05). Bounded; cleared when full.
+static var _record_verdicts: Dictionary = {}
+const RECORD_VERDICTS_MAX := 256
+
+
 static func _record_valid(record: Dictionary) -> bool:
+	var key := var_to_str(record).sha256_text()
+	if _record_verdicts.has(key):
+		return bool(_record_verdicts[key])
+	var verdict := _record_valid_uncached(record)
+	if _record_verdicts.size() >= RECORD_VERDICTS_MAX:
+		_record_verdicts.clear()
+	_record_verdicts[key] = verdict
+	return verdict
+
+
+static func _record_valid_uncached(record: Dictionary) -> bool:
 	if not RECORD.errors(record, str(record.get("character_id", ""))).is_empty(): return false
 	for card: Dictionary in record.party:
 		for field: String in ["nourishment", "happiness", "rested_seconds_left", "distance_m_together"]:
