@@ -123,6 +123,8 @@ func _build_motes(colour: Color, opacity: float) -> void:
 	_mote_count = int(allocation.get("impact", 0)) + int(allocation.get("trail", 0))
 	if _mote_count <= 0: return
 	_motes = MultiMeshInstance3D.new()
+	# Moved every frame: detail_cull.gd must not range it by its spawn spread.
+	_motes.set_meta(&"detail_cull_skip", true)
 	var mesh := MultiMesh.new()
 	mesh.transform_format = MultiMesh.TRANSFORM_3D
 	mesh.mesh = GEOMETRY.shape(str(_row.get("mote_shape", "gale_feather")),

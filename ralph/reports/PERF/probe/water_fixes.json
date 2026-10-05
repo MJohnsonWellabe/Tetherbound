@@ -1,0 +1,1681 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"attribution_stand_0": [
+		{
+			"draws": 1064.0,
+			"members": 1,
+			"objects": 1064.0,
+			"primitives": 922410.0,
+			"subtree": "WaterCamps"
+		},
+		{
+			"draws": 500.0,
+			"members": 1,
+			"objects": 500.0,
+			"primitives": 711210.0,
+			"subtree": "(sun shadow)"
+		},
+		{
+			"draws": 380.0,
+			"members": 1,
+			"objects": 380.0,
+			"primitives": 104086.0,
+			"subtree": "WaterLocalChains"
+		},
+		{
+			"draws": 216.0,
+			"members": 1,
+			"objects": 216.0,
+			"primitives": 17229.0,
+			"subtree": "RenewableResources"
+		},
+		{
+			"draws": 135.0,
+			"members": 1,
+			"objects": 135.0,
+			"primitives": 7722.0,
+			"subtree": "WaterRestShoalMarkers"
+		},
+		{
+			"draws": 119.0,
+			"members": 1,
+			"objects": 119.0,
+			"primitives": 17847.0,
+			"subtree": "WaterVegetation"
+		},
+		{
+			"draws": 69.0,
+			"members": 1,
+			"objects": 69.0,
+			"primitives": 1858618.0,
+			"subtree": "WaterGroundCover"
+		},
+		{
+			"draws": 16.0,
+			"members": 1,
+			"objects": 16.0,
+			"primitives": 22018.0,
+			"subtree": "WaterGateTideRaces"
+		},
+		{
+			"draws": 6.0,
+			"members": 6,
+			"objects": 6.0,
+			"primitives": 9640.0,
+			"subtree": "water_first_shore_wild"
+		},
+		{
+			"draws": 192.0,
+			"objects": 192.0,
+			"primitives": 82132.0,
+			"subtree": "WaterCamps/water_camp_reedhaven_creature_bed"
+		},
+		{
+			"draws": 149.0,
+			"objects": 149.0,
+			"primitives": 99608.0,
+			"subtree": "WaterCamps/water_camp_first_shore_creature_bed"
+		},
+		{
+			"draws": 96.0,
+			"objects": 96.0,
+			"primitives": 41066.0,
+			"subtree": "WaterCamps/water_camp_brine_steps_creature_bed"
+		},
+		{
+			"draws": 96.0,
+			"objects": 96.0,
+			"primitives": 41064.0,
+			"subtree": "WaterCamps/water_camp_shellwatch_creature_bed"
+		},
+		{
+			"draws": 96.0,
+			"objects": 96.0,
+			"primitives": 41066.0,
+			"subtree": "WaterCamps/water_camp_tidal_cradle_creature_bed"
+		},
+		{
+			"draws": 96.0,
+			"objects": 96.0,
+			"primitives": 41066.0,
+			"subtree": "WaterCamps/water_camp_salt_crown_creature_bed"
+		},
+		{
+			"draws": 96.0,
+			"objects": 96.0,
+			"primitives": 41066.0,
+			"subtree": "WaterCamps/water_camp_sluice_isle_creature_bed"
+		},
+		{
+			"draws": 96.0,
+			"objects": 96.0,
+			"primitives": 41070.0,
+			"subtree": "WaterCamps/water_camp_veilfall_creature_bed"
+		}
+	],
+	"biome": "water",
+	"boot_ms": 28978,
+	"camera": {
+		"far": 6500.0,
+		"far_override": 6500.0,
+		"fov": 70.0,
+		"near": 0.0500000007450581
+	},
+	"captured_utc": "2026-10-05T05:38:38",
+	"census": {
+		"by_class": [
+			[
+				"MeshInstance3D",
+				2947
+			],
+			[
+				"Node3D",
+				2367
+			],
+			[
+				"MultiMeshInstance3D",
+				726
+			],
+			[
+				"CollisionShape3D",
+				369
+			],
+			[
+				"StaticBody3D",
+				358
+			],
+			[
+				"OmniLight3D",
+				161
+			],
+			[
+				"Label",
+				120
+			],
+			[
+				"GPUParticles3D",
+				87
+			],
+			[
+				"AnimationPlayer",
+				63
+			],
+			[
+				"Skeleton3D",
+				63
+			],
+			[
+				"PanelContainer",
+				53
+			],
+			[
+				"HBoxContainer",
+				46
+			],
+			[
+				"ProgressBar",
+				31
+			],
+			[
+				"Panel",
+				27
+			],
+			[
+				"VBoxContainer",
+				25
+			],
+			[
+				"Control",
+				24
+			],
+			[
+				"RichTextLabel",
+				21
+			],
+			[
+				"ColorRect",
+				21
+			],
+			[
+				"Node",
+				20
+			],
+			[
+				"TextureRect",
+				15
+			],
+			[
+				"BoneAttachment3D",
+				15
+			],
+			[
+				"MarginContainer",
+				13
+			],
+			[
+				"CharacterBody3D",
+				7
+			],
+			[
+				"Label3D",
+				4
+			],
+			[
+				"CanvasLayer",
+				3
+			],
+			[
+				"MultiplayerSpawner",
+				3
+			],
+			[
+				"Camera3D",
+				2
+			],
+			[
+				"WorldEnvironment",
+				1
+			],
+			[
+				"DirectionalLight3D",
+				1
+			],
+			[
+				"SpringArm3D",
+				1
+			]
+		],
+		"by_subtree": [
+			[
+				"WaterVeilfall",
+				1230
+			],
+			[
+				"WaterCamps",
+				1169
+			],
+			[
+				"WaterDockDressing",
+				1032
+			],
+			[
+				"RenewableResources",
+				841
+			],
+			[
+				"WaterLocalChains",
+				621
+			],
+			[
+				"WaterVegetation",
+				590
+			],
+			[
+				"WaterDocks",
+				242
+			],
+			[
+				"WaterRestShoalMarkers",
+				217
+			],
+			[
+				"PlaygroundHUD",
+				213
+			],
+			[
+				"CombatHUD",
+				177
+			],
+			[
+				"WaterNPCs",
+				161
+			],
+			[
+				"WaterGateTideRaces",
+				149
+			],
+			[
+				"WaterGroundCover",
+				135
+			],
+			[
+				"WaterReturnRamps",
+				92
+			],
+			[
+				"WaterDockResidents",
+				85
+			],
+			[
+				"WaterPickups",
+				74
+			],
+			[
+				"WaterLocalLureDressing",
+				48
+			],
+			[
+				"FirstShoreWelcomeBeacon",
+				37
+			],
+			[
+				"GullRestSignalSpire",
+				33
+			],
+			[
+				"FirstShoreGateSite",
+				25
+			],
+			[
+				"MasterT3",
+				24
+			],
+			[
+				"FirstShoreHorizonStones",
+				19
+			],
+			[
+				"Player",
+				16
+			],
+			[
+				"WaterAlpha",
+				15
+			],
+			[
+				"water_trainer_morra",
+				13
+			],
+			[
+				"water_trainer_calder",
+				13
+			],
+			[
+				"WaterSluiceTwinPumps",
+				13
+			],
+			[
+				"MasterSignpost",
+				12
+			],
+			[
+				"water_first_shore_wild_002_0",
+				12
+			],
+			[
+				"water_first_shore_wild_021_0",
+				12
+			],
+			[
+				"water_first_shore_wild_009_0",
+				12
+			],
+			[
+				"water_first_shore_wild_017_0",
+				12
+			],
+			[
+				"water_trainer_lysa",
+				11
+			],
+			[
+				"water_trainer_solm",
+				11
+			],
+			[
+				"water_trainer_irva",
+				11
+			],
+			[
+				"water_trainer_oswin",
+				11
+			],
+			[
+				"water_trainer_sera",
+				11
+			],
+			[
+				"water_trainer_bex",
+				11
+			],
+			[
+				"water_trainer_fennel",
+				11
+			],
+			[
+				"StormwoodReturnRealmGate",
+				10
+			]
+		],
+		"class_owners": {
+			"AnimationPlayer": [
+				[
+					"WaterDockResidents/lost_traveler_lod0",
+					3
+				],
+				[
+					"WaterDockResidents/inn_helper_lod0",
+					3
+				],
+				[
+					"WaterDockResidents/farmer_lod0",
+					3
+				],
+				[
+					"WaterNPCs/wandering_trainer_lod0",
+					3
+				],
+				[
+					"WaterDockResidents/craftsperson_lod0",
+					3
+				],
+				[
+					"WaterNPCs/trader_lod0",
+					2
+				],
+				[
+					"WaterNPCs/field_researcher_lod0",
+					2
+				],
+				[
+					"WaterNPCs/former_tether_member_lod",
+					2
+				],
+				[
+					"WaterNPCs/courier_lod0",
+					2
+				],
+				[
+					"WaterNPCs/innkeeper_lod0",
+					2
+				],
+				[
+					"WaterDockResidents/alpha_tracker_lod0",
+					2
+				],
+				[
+					"WaterVeilfall/creature_abyssal_guardia",
+					1
+				]
+			],
+			"CharacterBody3D": [
+				[
+					"water_first_shore_wild_002_0",
+					1
+				],
+				[
+					"water_first_shore_wild_017_0",
+					1
+				],
+				[
+					"water_first_shore_wild_009_0",
+					1
+				],
+				[
+					"water_first_shore_wild_021_0",
+					1
+				],
+				[
+					"WaterVeilfall/VeilfallInterior",
+					1
+				],
+				[
+					"WaterAlpha/WaterAlpha",
+					1
+				],
+				[
+					"Player",
+					1
+				]
+			],
+			"CollisionShape3D": [
+				[
+					"WaterNPCs/Body",
+					17
+				],
+				[
+					"WaterVeilfall/PhysicalCragSupport",
+					6
+				],
+				[
+					"WaterLocalChains/LampPost2",
+					5
+				],
+				[
+					"WaterLocalChains/LampPost1",
+					5
+				],
+				[
+					"WaterReturnRamps/BarricadeBody",
+					3
+				],
+				[
+					"WaterLocalChains/LampPost5",
+					3
+				],
+				[
+					"WaterVeilfall/CameraOccluders",
+					3
+				],
+				[
+					"WaterSluiceTwinPumps/PumpFootprint",
+					2
+				],
+				[
+					"WaterVeilfall/@StaticBody3D@1645",
+					1
+				],
+				[
+					"WaterVeilfall/intake_grille",
+					1
+				],
+				[
+					"WaterVeilfall/return_grille",
+					1
+				],
+				[
+					"WaterVeilfall/@StaticBody3D@1678",
+					1
+				]
+			],
+			"GPUParticles3D": [
+				[
+					"WaterRestShoalMarkers/RestShoalTorch_salt_crow",
+					11
+				],
+				[
+					"WaterRestShoalMarkers/RestShoalTorch_sluice_is",
+					9
+				],
+				[
+					"WaterGateTideRaces/TideRace_sluice_isle_to_",
+					9
+				],
+				[
+					"WaterLocalChains/CampfireGlow",
+					9
+				],
+				[
+					"WaterCamps/CampfireGlow",
+					8
+				],
+				[
+					"WaterGateTideRaces/TideRace_salt_crown_to_d",
+					7
+				],
+				[
+					"WaterGateTideRaces/TideRace_salt_crown_to_s",
+					4
+				],
+				[
+					"WaterGateTideRaces/TideRace_tidal_cradle_to",
+					4
+				],
+				[
+					"WaterRestShoalMarkers/RestShoalTorch_tidal_cra",
+					4
+				],
+				[
+					"GullRestSignalSpire/SignalFlame",
+					1
+				],
+				[
+					"FirstShoreWelcomeBeacon/WelcomeSignalFlame",
+					1
+				],
+				[
+					"FirstShoreWelcomeBeacon/WelcomeMarkerTorchSouth",
+					1
+				]
+			],
+			"Node3D": [
+				[
+					"RenewableResources/RenewableResources",
+					168
+				],
+				[
+					"WaterVeilfall/VeilfallInterior",
+					148
+				],
+				[
+					"WaterDockDressing/Upright",
+					110
+				],
+				[
+					"WaterRestShoalMarkers/WaterRestShoalMarkers",
+					54
+				],
+				[
+					"WaterCamps/WaterCamps",
+					48
+				],
+				[
+					"RenewableResources/water_reedhaven_harvest_",
+					46
+				],
+				[
+					"WaterReturnRamps/reedhaven_maintenance_ra",
+					43
+				],
+				[
+					"RenewableResources/water_sluice_isle_harves",
+					40
+				],
+				[
+					"RenewableResources/water_first_shore_harves",
+					40
+				],
+				[
+					"WaterDockDressing/salt_crown_to_drowned_ga",
+					30
+				],
+				[
+					"RenewableResources/water_shellwatch_harvest",
+					30
+				],
+				[
+					"RenewableResources/water_salt_crown_harvest",
+					30
+				]
+			],
+			"OmniLight3D": [
+				[
+					"WaterVeilfall/VeilfallInterior",
+					32
+				],
+				[
+					"WaterRestShoalMarkers/WaterRestShoalMarkers",
+					27
+				],
+				[
+					"WaterLocalChains/CampfireGlow",
+					9
+				],
+				[
+					"WaterCamps/CampfireGlow",
+					8
+				],
+				[
+					"WaterLocalChains/LampPost1",
+					5
+				],
+				[
+					"WaterLocalChains/LampPost2",
+					5
+				],
+				[
+					"WaterDockDressing/first_shore_to_reedhaven",
+					4
+				],
+				[
+					"WaterDockDressing/reedhaven_to_brine_steps",
+					4
+				],
+				[
+					"WaterDockDressing/brine_steps_to_shellwatc",
+					4
+				],
+				[
+					"WaterDockDressing/shellwatch_to_tidal_crad",
+					4
+				],
+				[
+					"WaterDockDressing/tidal_cradle_to_salt_cro",
+					4
+				],
+				[
+					"WaterDockDressing/salt_crown_to_sluice_isl",
+					4
+				]
+			]
+		},
+		"lights": {
+			"directional": 1,
+			"omni": 161,
+			"shadowed": 1,
+			"shadowed_omni_spot": 0,
+			"spot": 1
+		},
+		"mesh_instances_by_subtree": [
+			[
+				"WaterCamps",
+				880
+			],
+			[
+				"WaterVeilfall",
+				531
+			],
+			[
+				"WaterLocalChains",
+				448
+			],
+			[
+				"WaterDockDressing",
+				356
+			],
+			[
+				"RenewableResources",
+				168
+			],
+			[
+				"WaterDocks",
+				114
+			],
+			[
+				"WaterGateTideRaces",
+				111
+			],
+			[
+				"WaterRestShoalMarkers",
+				108
+			],
+			[
+				"WaterReturnRamps",
+				43
+			],
+			[
+				"WaterNPCs",
+				19
+			],
+			[
+				"WaterLocalLureDressing",
+				18
+			],
+			[
+				"FirstShoreWelcomeBeacon",
+				16
+			],
+			[
+				"WaterPickups",
+				15
+			],
+			[
+				"WaterDockResidents",
+				14
+			],
+			[
+				"GullRestSignalSpire",
+				12
+			],
+			[
+				"FirstShoreGateSite",
+				12
+			],
+			[
+				"FirstShoreHorizonStones",
+				9
+			],
+			[
+				"WaterAlpha",
+				5
+			],
+			[
+				"ObjectiveBeacon",
+				4
+			],
+			[
+				"MasterT3",
+				4
+			],
+			[
+				"water_first_shore_wild_002_0",
+				4
+			],
+			[
+				"water_first_shore_wild_017_0",
+				4
+			],
+			[
+				"water_first_shore_wild_009_0",
+				4
+			],
+			[
+				"water_first_shore_wild_021_0",
+				4
+			],
+			[
+				"StormwoodReturnRealmGate",
+				3
+			]
+		],
+		"meshes": {
+			"count": 2947,
+			"shadow_casting": 2266,
+			"shadow_casting_no_range": 2254,
+			"surfaces": 3238,
+			"visible": 2413,
+			"with_visibility_range": 127
+		},
+		"multimesh": {
+			"by_owner": {
+				"PickupGlowField": {
+					"count": 2,
+					"instances": 32
+				},
+				"WaterGroundCover": {
+					"count": 135,
+					"instances": 36640
+				},
+				"WaterVegetation": {
+					"count": 589,
+					"instances": 4315
+				}
+			},
+			"count": 726,
+			"instances": 40987,
+			"shadow_casting": 589,
+			"visible_instances": 40987,
+			"with_visibility_range": 589
+		},
+		"particles": {
+			"cpu": 0,
+			"gpu": 87
+		},
+		"physics": {
+			"animatable_bodies": 0,
+			"areas": 0,
+			"character_bodies": 7,
+			"collision_polygons": 0,
+			"collision_shapes": 369,
+			"rigid_bodies": 0,
+			"static_bodies": 358
+		},
+		"processing": {
+			"animation_players": 63,
+			"animation_trees": 0,
+			"physics_process": 20,
+			"process": 351,
+			"skeletons": 63
+		},
+		"total_nodes": 7598
+	},
+	"clock": {
+		"elapsed_seconds": 200.263766666667,
+		"hour": 8.01055066666667,
+		"requested": "day",
+		"time_of_day": "day"
+	},
+	"disclosure": "Structural counters only. Software-rasterised frame time is never device performance; process/physics ms are CPU costs on this container's CPU.",
+	"display_server": "X11",
+	"failures": [],
+	"label": "fixes",
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		320,
+		180
+	],
+	"scene": "res://scenes/world/water_archipelago.tscn",
+	"schema": "perf_probe/1",
+	"source_commit": "c5e139d6b72b89d15b7f236bf142da1795bcf1f1",
+	"stands": [
+		{
+			"avg": {
+				"draw_calls": 3030.0,
+				"navigation_ms": 0.00000383333333333333,
+				"node_count": 7798.0,
+				"objects": 3303.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 10.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.0148948333333333,
+				"primitives": 3776085.0,
+				"process_ms": 1.28562116666667,
+				"video_mem_mb": 576.244229316711
+			},
+			"camera_far": 6500.0,
+			"camera_position": [
+				13.4241781234741,
+				6.29396820068359,
+				145.117095947266
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 63,
+						"mm_instances": 14490,
+						"multimesh": 49,
+						"ranged": 0,
+						"shadow_casting": 56
+					},
+					"100-320": {
+						"meshes": 133,
+						"mm_instances": 76,
+						"multimesh": 15,
+						"ranged": 19,
+						"shadow_casting": 136
+					},
+					"1000-3000": {
+						"meshes": 965,
+						"mm_instances": 30,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 670
+					},
+					"3000+": {
+						"meshes": 305,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 267
+					},
+					"320-1000": {
+						"meshes": 532,
+						"mm_instances": 119,
+						"multimesh": 46,
+						"ranged": 57,
+						"shadow_casting": 500
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WaterCamps",
+						666
+					],
+					[
+						"WaterLocalChains",
+						334
+					],
+					[
+						"WaterDockDressing",
+						291
+					],
+					[
+						"WaterRestShoalMarkers",
+						135
+					],
+					[
+						"RenewableResources",
+						117
+					],
+					[
+						"WaterDocks",
+						105
+					],
+					[
+						"WaterVegetation",
+						46
+					],
+					[
+						"WaterReturnRamps",
+						43
+					],
+					[
+						"WaterLocalLureDressing",
+						18
+					],
+					[
+						"WaterNPCs",
+						14
+					],
+					[
+						"GullRestSignalSpire",
+						13
+					],
+					[
+						"WaterDockResidents",
+						12
+					],
+					[
+						"WaterGateTideRaces",
+						11
+					],
+					[
+						"WaterVeilfall",
+						5
+					],
+					[
+						"MasterT3",
+						4
+					],
+					[
+						"WaterAlpha",
+						3
+					],
+					[
+						"water_trainer_morra",
+						3
+					],
+					[
+						"water_trainer_calder",
+						3
+					],
+					[
+						"water_trainer_solm",
+						2
+					],
+					[
+						"MasterSignpost",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 114,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				-0.280000001192093,
+				0.959999978542328
+			],
+			"peak": {
+				"draw_calls": 3030.0,
+				"navigation_ms": 0.000004,
+				"node_count": 7798.0,
+				"objects": 3303.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 10.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.02378,
+				"primitives": 3776085.0,
+				"process_ms": 1.309373,
+				"video_mem_mb": 576.244229316711
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				12.0,
+				3.45006728172302,
+				150.0
+			],
+			"stand": "stand_0_far6500"
+		},
+		{
+			"avg": {
+				"draw_calls": 1278.0,
+				"navigation_ms": 0.000004,
+				"node_count": 7798.0,
+				"objects": 1551.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 10.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.0125631666666667,
+				"primitives": 2975430.0,
+				"process_ms": 1.033957,
+				"video_mem_mb": 576.244229316711
+			},
+			"camera_far": 520.0,
+			"camera_position": [
+				13.4241781234741,
+				6.29396820068359,
+				145.117095947266
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 63,
+						"mm_instances": 14490,
+						"multimesh": 49,
+						"ranged": 0,
+						"shadow_casting": 56
+					},
+					"100-320": {
+						"meshes": 133,
+						"mm_instances": 76,
+						"multimesh": 15,
+						"ranged": 19,
+						"shadow_casting": 136
+					},
+					"1000-3000": {
+						"meshes": 2,
+						"mm_instances": 30,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"320-1000": {
+						"meshes": 155,
+						"mm_instances": 75,
+						"multimesh": 30,
+						"ranged": 37,
+						"shadow_casting": 168
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WaterDockDressing",
+						63
+					],
+					[
+						"WaterReturnRamps",
+						43
+					],
+					[
+						"WaterVegetation",
+						30
+					],
+					[
+						"WaterDocks",
+						17
+					],
+					[
+						"RenewableResources",
+						13
+					],
+					[
+						"WaterGateTideRaces",
+						7
+					],
+					[
+						"WaterRestShoalMarkers",
+						5
+					],
+					[
+						"WaterLocalChains",
+						4
+					],
+					[
+						"PickupGlowField",
+						2
+					],
+					[
+						"WaterDockResidents",
+						2
+					],
+					[
+						"WaterVeilfall",
+						1
+					],
+					[
+						"WaterNPCs",
+						1
+					],
+					[
+						"WaterSurface",
+						1
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 24,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				-0.280000001192093,
+				0.959999978542328
+			],
+			"peak": {
+				"draw_calls": 1278.0,
+				"navigation_ms": 0.000004,
+				"node_count": 7798.0,
+				"objects": 1551.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 10.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.02022,
+				"primitives": 2975430.0,
+				"process_ms": 1.150771,
+				"video_mem_mb": 576.244229316711
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				12.0,
+				3.45006728172302,
+				150.0
+			],
+			"stand": "stand_0_far520"
+		},
+		{
+			"avg": {
+				"draw_calls": 453.0,
+				"navigation_ms": 0.00000466666666666667,
+				"node_count": 7814.0,
+				"objects": 722.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 10.0,
+				"physics_collision_pairs": 13.0,
+				"physics_islands": 9.0,
+				"physics_step_ms": 0.0153716666666667,
+				"primitives": 2310405.0,
+				"process_ms": 0.765200833333333,
+				"video_mem_mb": 584.219847679138
+			},
+			"camera_far": 6500.0,
+			"camera_position": [
+				0.203603744506836,
+				3.46968936920166,
+				175.692840576172
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 20,
+						"mm_instances": 14492,
+						"multimesh": 50,
+						"ranged": 1,
+						"shadow_casting": 19
+					},
+					"100-320": {
+						"meshes": 15,
+						"mm_instances": 205,
+						"multimesh": 31,
+						"ranged": 34,
+						"shadow_casting": 41
+					},
+					"1000-3000": {
+						"meshes": 2,
+						"mm_instances": 28,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"320-1000": {
+						"meshes": 3,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 3,
+						"shadow_casting": 0
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WaterGateTideRaces",
+						3
+					],
+					[
+						"PickupGlowField",
+						2
+					],
+					[
+						"WaterVeilfall",
+						1
+					],
+					[
+						"WaterSurface",
+						1
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 7,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				0.942990362644196,
+				-0.332820117473602
+			],
+			"peak": {
+				"draw_calls": 453.0,
+				"navigation_ms": 0.000007,
+				"node_count": 7814.0,
+				"objects": 722.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 10.0,
+				"physics_collision_pairs": 13.0,
+				"physics_islands": 9.0,
+				"physics_step_ms": 0.025224,
+				"primitives": 2310405.0,
+				"process_ms": 0.918862,
+				"video_mem_mb": 584.219847679138
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				5.0,
+				0.635161697864532,
+				174.0
+			],
+			"stand": "stand_1_far6500"
+		},
+		{
+			"avg": {
+				"draw_calls": 435.0,
+				"navigation_ms": 0.00001,
+				"node_count": 7814.0,
+				"objects": 704.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 10.0,
+				"physics_collision_pairs": 12.0,
+				"physics_islands": 9.0,
+				"physics_step_ms": 0.0162975,
+				"primitives": 2260005.0,
+				"process_ms": 0.853102,
+				"video_mem_mb": 584.219847679138
+			},
+			"camera_far": 520.0,
+			"camera_position": [
+				0.203603744506836,
+				3.46968936920166,
+				175.692840576172
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 20,
+						"mm_instances": 14492,
+						"multimesh": 50,
+						"ranged": 1,
+						"shadow_casting": 19
+					},
+					"100-320": {
+						"meshes": 15,
+						"mm_instances": 205,
+						"multimesh": 31,
+						"ranged": 34,
+						"shadow_casting": 41
+					},
+					"1000-3000": {
+						"meshes": 2,
+						"mm_instances": 28,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"320-1000": {
+						"meshes": 3,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 3,
+						"shadow_casting": 0
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WaterGateTideRaces",
+						3
+					],
+					[
+						"PickupGlowField",
+						2
+					],
+					[
+						"WaterVeilfall",
+						1
+					],
+					[
+						"WaterSurface",
+						1
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 7,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				0.942990362644196,
+				-0.332820117473602
+			],
+			"peak": {
+				"draw_calls": 435.0,
+				"navigation_ms": 0.000039,
+				"node_count": 7814.0,
+				"objects": 704.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 10.0,
+				"physics_collision_pairs": 12.0,
+				"physics_islands": 9.0,
+				"physics_step_ms": 0.018193,
+				"primitives": 2260005.0,
+				"process_ms": 1.003386,
+				"video_mem_mb": 584.219847679138
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				5.0,
+				0.635161697864532,
+				174.0
+			],
+			"stand": "stand_1_far520"
+		},
+		{
+			"avg": {
+				"draw_calls": 1096.0,
+				"navigation_ms": 0.00000683333333333333,
+				"node_count": 7819.0,
+				"objects": 1365.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 11.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.0152605,
+				"primitives": 2881764.0,
+				"process_ms": 0.996314166666667,
+				"video_mem_mb": 584.219969749451
+			},
+			"camera_far": 6500.0,
+			"camera_position": [
+				26.7963962554932,
+				3.96655988693237,
+				166.307174682617
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 60,
+						"mm_instances": 16318,
+						"multimesh": 53,
+						"ranged": 0,
+						"shadow_casting": 53
+					},
+					"100-320": {
+						"meshes": 96,
+						"mm_instances": 191,
+						"multimesh": 10,
+						"ranged": 13,
+						"shadow_casting": 65
+					},
+					"1000-3000": {
+						"meshes": 2,
+						"mm_instances": 30,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"320-1000": {
+						"meshes": 88,
+						"mm_instances": 63,
+						"multimesh": 24,
+						"ranged": 26,
+						"shadow_casting": 45
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WaterLocalChains",
+						77
+					],
+					[
+						"WaterVegetation",
+						24
+					],
+					[
+						"RenewableResources",
+						8
+					],
+					[
+						"PickupGlowField",
+						2
+					],
+					[
+						"WaterGateTideRaces",
+						2
+					],
+					[
+						"water_trainer_fen",
+						1
+					],
+					[
+						"WaterVeilfall",
+						1
+					],
+					[
+						"WaterSurface",
+						1
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 15,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				-0.942990362644196,
+				0.332820117473602
+			],
+			"peak": {
+				"draw_calls": 1096.0,
+				"navigation_ms": 0.000021,
+				"node_count": 7819.0,
+				"objects": 1365.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 11.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.022515,
+				"primitives": 2881764.0,
+				"process_ms": 1.179804,
+				"video_mem_mb": 584.219969749451
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				22.0,
+				1.13203358650208,
+				168.0
+			],
+			"stand": "stand_2_far6500"
+		},
+		{
+			"avg": {
+				"draw_calls": 1077.0,
+				"navigation_ms": 0.00000883333333333333,
+				"node_count": 7819.0,
+				"objects": 1346.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 11.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.0175855,
+				"primitives": 2830564.0,
+				"process_ms": 0.940107666666667,
+				"video_mem_mb": 584.219969749451
+			},
+			"camera_far": 520.0,
+			"camera_position": [
+				26.7963962554932,
+				3.96655988693237,
+				166.307174682617
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 60,
+						"mm_instances": 16318,
+						"multimesh": 53,
+						"ranged": 0,
+						"shadow_casting": 53
+					},
+					"100-320": {
+						"meshes": 96,
+						"mm_instances": 191,
+						"multimesh": 10,
+						"ranged": 13,
+						"shadow_casting": 65
+					},
+					"1000-3000": {
+						"meshes": 2,
+						"mm_instances": 30,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"320-1000": {
+						"meshes": 86,
+						"mm_instances": 63,
+						"multimesh": 24,
+						"ranged": 24,
+						"shadow_casting": 45
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WaterLocalChains",
+						77
+					],
+					[
+						"WaterVegetation",
+						24
+					],
+					[
+						"RenewableResources",
+						8
+					],
+					[
+						"PickupGlowField",
+						2
+					],
+					[
+						"water_trainer_fen",
+						1
+					],
+					[
+						"WaterVeilfall",
+						1
+					],
+					[
+						"WaterSurface",
+						1
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 15,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				-0.942990362644196,
+				0.332820117473602
+			],
+			"peak": {
+				"draw_calls": 1077.0,
+				"navigation_ms": 0.000021,
+				"node_count": 7819.0,
+				"objects": 1346.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 8.0,
+				"physics_collision_pairs": 11.0,
+				"physics_islands": 7.0,
+				"physics_step_ms": 0.023794,
+				"primitives": 2830564.0,
+				"process_ms": 1.001057,
+				"video_mem_mb": 584.219969749451
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				22.0,
+				1.13203358650208,
+				168.0
+			],
+			"stand": "stand_2_far520"
+		}
+	],
+	"terrain": {
+		"cast_shadows": 1,
+		"class": "Terrain3D",
+		"collision_mode": 3,
+		"collision_radius": 64,
+		"collision_shape_size": 16,
+		"instancer_assets": [
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 0,
+				"instance_count": 0,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "New Mesh"
+			}
+		],
+		"instancer_mesh_assets": 1,
+		"mesh_lods": 7,
+		"mesh_size": 48,
+		"present": true,
+		"region_count": 31,
+		"region_size": 512,
+		"render_layers": 2147483649,
+		"vertex_spacing": 1.0
+	}
+}

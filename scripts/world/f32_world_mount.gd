@@ -49,7 +49,12 @@ func mount(world: Node3D, trainer: CharacterBody3D, service: Node) -> Dictionary
 			continue
 		var adopted: Node3D
 		if not legacy_walked:
-			legacy_nodes = world.find_children("*", "Node3D", true, false)
+			# Only nodes that can adopt a renewable source are candidates. The
+			# world holds ~180k nodes; scanning all of them again for every
+			# missing site held the mount for ~5 s per call (PERF, 2026-10-05).
+			for candidate: Node in world.find_children("*", "Node3D", true, false):
+				if candidate.has_method("adopt_renewable_source"):
+					legacy_nodes.append(candidate)
 			legacy_walked = true
 		for existing: Node in legacy_nodes:
 			if not existing.has_method("adopt_renewable_source") or existing.is_queued_for_deletion() \

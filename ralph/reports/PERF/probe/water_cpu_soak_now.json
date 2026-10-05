@@ -1,0 +1,323 @@
+{
+	"animation_census": {
+		"active": 65,
+		"in_character_body": 9,
+		"in_dormant_character_body": 1,
+		"mixers": 65,
+		"playing": 64
+	},
+	"biome": "water",
+	"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
+	"display_server": "headless",
+	"frames_per_row": 240,
+	"processor_count": 4,
+	"rows": [],
+	"schema": "perf_cpu_probe/1",
+	"soak": [
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 9.28266666666671,
+			"ms_per_frame": 23.3281493001555,
+			"nodes": 7798.0,
+			"objects": 18354.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 793.662696838379,
+			"t_s": 30
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 10.4833333333334,
+			"ms_per_frame": 22.7272727272727,
+			"nodes": 7798.0,
+			"objects": 18355.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 793.667011260986,
+			"t_s": 60
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 11.6818606533333,
+			"ms_per_frame": 24.9791840133222,
+			"nodes": 7798.0,
+			"objects": 18355.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 793.673488616943,
+			"t_s": 90
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 12.87960424,
+			"ms_per_frame": 42.1940928270042,
+			"nodes": 7798.0,
+			"objects": 18356.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 793.674648284912,
+			"t_s": 120
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 14.0761112088889,
+			"ms_per_frame": 46.7289719626168,
+			"nodes": 7798.0,
+			"objects": 18356.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 793.676177978516,
+			"t_s": 150
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 15.2640523333334,
+			"ms_per_frame": 47.39336492891,
+			"nodes": 7798.0,
+			"objects": 18362.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.077033996582,
+			"t_s": 180
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 16.442,
+			"ms_per_frame": 61.3496932515337,
+			"nodes": 7798.0,
+			"objects": 18363.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.080726623535,
+			"t_s": 210
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 17.6435044266667,
+			"ms_per_frame": 49.2610837438424,
+			"nodes": 7798.0,
+			"objects": 18363.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.082012176514,
+			"t_s": 240
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 18.8405566666667,
+			"ms_per_frame": 37.9746835443038,
+			"nodes": 7798.0,
+			"objects": 18364.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.088340759277,
+			"t_s": 270
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 20.04091456,
+			"ms_per_frame": 28.5714285714286,
+			"nodes": 7798.0,
+			"objects": 18364.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.087501525879,
+			"t_s": 300
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 21.2372423866665,
+			"ms_per_frame": 27.3972602739726,
+			"nodes": 7798.0,
+			"objects": 18364.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.091472625732,
+			"t_s": 330
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 22.4386090933329,
+			"ms_per_frame": 25.9965337954939,
+			"nodes": 7798.0,
+			"objects": 18365.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.095115661621,
+			"t_s": 360
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 23.6395491333328,
+			"ms_per_frame": 24.8138957816377,
+			"nodes": 7798.0,
+			"objects": 18365.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.094131469727,
+			"t_s": 390
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 0.840925399999242,
+			"ms_per_frame": 26.7857142857143,
+			"nodes": 7798.0,
+			"objects": 18366.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.09789276123,
+			"t_s": 420
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 2.04170554666576,
+			"ms_per_frame": 27.2232304900181,
+			"nodes": 7798.0,
+			"objects": 18366.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.099395751953,
+			"t_s": 450
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 3.24100421777657,
+			"ms_per_frame": 25.974025974026,
+			"nodes": 7798.0,
+			"objects": 18366.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.100898742676,
+			"t_s": 480
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 4.44239013333188,
+			"ms_per_frame": 29.2397660818713,
+			"nodes": 7798.0,
+			"objects": 18367.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.104522705078,
+			"t_s": 510
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 5.6432312666651,
+			"ms_per_frame": 24.9169435215947,
+			"nodes": 7798.0,
+			"objects": 18367.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.106025695801,
+			"t_s": 540
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 6.84326439999824,
+			"ms_per_frame": 25.6191289496157,
+			"nodes": 7798.0,
+			"objects": 18368.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.109645843506,
+			"t_s": 570
+		},
+		{
+			"groups": {
+				"creature_voice": 8,
+				"interaction_provider": 0,
+				"remote_trainer": 0
+			},
+			"hour": 8.04291552888682,
+			"ms_per_frame": 25.1677852348993,
+			"nodes": 7798.0,
+			"objects": 18368.0,
+			"orphans": 0.0,
+			"resources": 1356.0,
+			"static_mem_mb": 797.113845825195,
+			"t_s": 600
+		}
+	],
+	"stand": [
+		12.0,
+		3.45006728172302,
+		150.0
+	]
+}

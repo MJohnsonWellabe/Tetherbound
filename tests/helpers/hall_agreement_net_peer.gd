@@ -378,6 +378,12 @@ func _home_bed_rest(args: Dictionary) -> Dictionary:
 	var party: RefCounted = game.get("party")
 	var added := false
 	if int(party.call("size")) == 0:
+		# A just-admitted guest's saved decisions settle before its party takes
+		# a one-shot write (party.gd); wait for that like a player would.
+		for _frame in int(args.get("owner_wait_frames", 1200)):
+			if not bool(party.call("owner_mutation_blocked")):
+				break
+			await physics_frame
 		added = bool(party.call("add", game.call("make_creature", str(args.get("species", "terrapup")))))
 	var creature: RefCounted = party.call("at", 0)
 	if creature == null:
