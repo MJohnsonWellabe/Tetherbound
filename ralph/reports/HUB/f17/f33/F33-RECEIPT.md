@@ -4,7 +4,7 @@
 |---|---|---|---|
 | 0 | Harness and Charm in four tiers, +1..+3 | PASS (unit) | `test_creature_gear` 7/297: tiers, slots and +0..+3 chains; real `stage_core` equip/upgrade; refusals; prepare applies gear once |
 | 1 | Gear shows as a trim/glow accent | PASS (code-blind judge, r4) | `f33-accent-r4/judge.md`: by day and night, front and side, a bare creature is distinct from the four tiers (gold/green/blue/violet straps); reads as harness trim; face clear; no red. Path: r1 slab (PARTIAL) -> narrow trim with tier-scaled glow -> bands moved off the face -> side recapture. Bound to the local deployed body (`companion_presence`); `gear.json` `visual_enabled` now true. Not shown: other players' creatures (no record held), the charm as a separate visible piece. |
-| 2 | Boss sims per tier pass C2 | Open (measured) | `boss-sims.md`: in all four pairs the matching tier beats the previous one (masher party cost lower, worst hit lower, clears faster). C2 for all three starters is not met at any pair: Aldis 2/3 with Rootiron (1/3 bare), Nerissa 0/3, Veyra 0/3 Skyglass (1/3 Tidesteel), Marrow 2/3. The failures are the fights' reader/masher separation (F22 / water lane). Harness max HP is not applied (ask open) |
+| 2 | Boss sims per tier pass C2 | BLOCKED on F22 (coordinator ruling) | `boss-sims.md`: in all four pairs the matching tier beats the previous one (masher party cost lower, worst hit lower, clears faster). Still failing C2: Aldis Terrapup (ratio), Nerissa all starters, Veyra two or three starters, Marrow Terrapup. All of these are the fights' reader/masher separation, which is F22's named-fight tuning. Re-run the four sims once F22 lands those changes (commands in `boss-sims.md`). |
 | 3 | Trainer gear mitigates real hazards, each tested | PASS | See "Hazards" below |
 | 4 | Pouch tiers extend Tether Commands; gear persists, personal in co-op | BLOCKED on F24 | `tether_commands.json` `runtime_enabled` is F24's flag (coordinator ruling). Gear persistence is on the character record; two-peer gear smoke pending |
 
@@ -17,7 +17,12 @@
 - **Harness defence (45cc5c3b):**
   - Guests: the host card reads the admitted record.
   - Solo and host-own creature: reads the owner's own record.
-- **Harness max HP:** not yet applied, because the portable HP must stay intrinsic.
+- **Harness max HP (926cfa59, e367f0b9; coordinator ruling):** a fight-scoped raise.
+  - In a fight the creature shows hp × s / max × s (s = 1 + Harness max HP) and loses rolled damage / s. That is the HP fraction a raised maximum gives, and the fraction it leaves the fight with.
+  - Stored, saved and durable HP stay in base units.
+  - The host reads s from the admitted record, sends it with each participant hit, and stages durable vitals as damage / s; a guest adopts the host's s.
+  - The combat HUD level line and the companion panel show the raised HP.
+  - Tests: `test_harness_max_hp` (solo strike, session hit, start/end fraction, host authority, saved row; mutation-checked); `test_creature_gear` 8/302; two-peer `smoke_net_harness_max_hp` local run 24/24 (`harness-hp-2peer/checks.txt`).
 
 ## Hazards (coordinator scope c; independent review `../review-f33-hazards.md` APPROVE-WITH-NITS, nits fixed)
 
