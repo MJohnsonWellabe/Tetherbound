@@ -3,7 +3,7 @@
   "feature_flags": {
     "runtime_enabled": true,
     "network_enabled": true,
-    "visual_enabled": false
+    "visual_enabled": false, "hazards_enabled": false
   },
   "scope": "character",
   "canonical_path": "redesign_character.creatures[uid].gear",

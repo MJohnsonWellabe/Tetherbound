@@ -171,6 +171,8 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 	var speed := float(human.speed_m_s)
 	_horizontal = _horizontal.move_toward(direction * speed, float(human.acceleration_m_s2) * delta)
 	var flow: Vector3 = Vector3.ZERO if combat_paused else _world.current_at(_player.global_position)
+	var equipment := _hazard_equipment()
+	if equipment != null: flow = equipment.current_push(flow) # F33#3: trainer gear eases the current.
 	_player.velocity = _horizontal + flow
 	_player.velocity.y = (sea + float(human.surface_body_offset_m) - _player.global_position.y) * float(human.vertical_follow_rate)
 	var before := _player.global_position
@@ -194,10 +196,19 @@ func physics_step(delta: float, input_blocked: bool, combat_paused: bool) -> boo
 	if float(change.stamina_spent) > 0.0:
 		vitals.spend_traversal(float(change.stamina_spent))
 	var alive: bool = not vitals.is_dead()
-	vitals.health = maxf(0.0, vitals.health - float(change.health_lost))
+	var drowning := float(change.health_lost)
+	if equipment != null: drowning = equipment.mitigate_hazard_damage(drowning, "drowning")
+	vitals.health = maxf(0.0, vitals.health - drowning)
 	if alive and vitals.is_dead():
 		_player.emit_signal("died")
 	return true
+
+
+## F33#3: the trainer's worn equipment, only while hazard mitigation is live.
+func _hazard_equipment() -> RefCounted:
+	if not preload("res://scripts/player/player_equipment.gd").hazards_live(): return null
+	var game := get_node_or_null("/root/Game")
+	return game.get("player_equipment") if game != null else null
 
 
 func _is_riding() -> bool:

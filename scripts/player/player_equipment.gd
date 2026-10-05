@@ -283,5 +283,11 @@ static func _gear_config() -> Dictionary:
 	_gear_rules = raw if raw is Dictionary else {}
 	return _gear_rules
 
+## F33#3: the trainer-gear hazard consumers (swim drowning and current, pond
+## submersion, Cloudreach cold, Stormwood Dynamo static, hazard terrain) are
+## gated together until each has its production-caller test.
+static func hazards_live() -> bool:
+	return _gear_enabled() and bool(_gear_config().get("feature_flags", {}).get("hazards_enabled", false))
+
 static func _gear_enabled() -> bool:
 	return bool(_gear_config().get("feature_flags", {}).get("runtime_enabled", false))
