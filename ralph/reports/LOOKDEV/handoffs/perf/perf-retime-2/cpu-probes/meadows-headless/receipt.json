@@ -1,0 +1,30 @@
+{
+  "source_commit": "cd85fa459451665caf6be12fd98ac1c116145235",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\render-perf-6632f2fd",
+    "--script",
+    "tools/perf_cpu_probe.gd",
+    "--",
+    "--biome=meadows",
+    "--walk",
+    "--output=res://.artifacts/perf-b/meadows_walk_headless.json"
+  ],
+  "case": "meadows_walk_headless",
+  "exit_code": 1,
+  "stop_reason": "2100_second_native_limit",
+  "elapsed_seconds": 2104.468,
+  "TB_BACKGROUND_WORK_TRACE": "1",
+  "errors": [],
+  "log_sha256": "4c820721d12da173822731a7994cbed7234d9f34ec5ba9f5b1484a29596a7671",
+  "json_present": false,
+  "json_sha256": null,
+  "scope": "Existing source CPU attribution walk; native headless Dummy renderer, not desktop GPU FPS or shipping qualification. Existing probe measurements and disclosure retained verbatim; optional background trace adds overhead.",
+  "complete": false,
+  "accepted_source_or_release_evidence": false,
+  "detail_cull_review_block": true,
+  "qualification": "PARTIAL DIAGNOSTIC ONLY: supervisor2100s limit before Game/repeated-baseline rows and JSON; not a source-command runtime ERROR",
+  "lightweight_stdout_publication_during_run": true
+}
