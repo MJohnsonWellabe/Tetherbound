@@ -144,12 +144,7 @@ func _build_pedestal(entry: Dictionary) -> void:
 	var live := (ORDER.config().get("live", []) as Array).has(ORDER.canonical_id(str(entry.biome)))
 	var offer := "Hang your %s relic" % ORDER.display_name(str(entry.biome)) if live else "Sealed shrine: no road reaches its relic yet"
 	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
-	prompt.connect("activated", func() -> void:
-		var game := get_node_or_null(^"/root/Game")
-		var session: Node = game.get("session") if game != null else null
-		if session != null:
-			var verdict: Dictionary = session.call("request_relic_hang", str(entry.biome))
-			if verdict.get("ok") != true: game.call("push_world_message", str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))))
+	prompt.connect("activated", func() -> void: hang_relic(str(entry.biome)))
 	slot.add_child(prompt)
 
 
@@ -496,3 +491,92 @@ func _build_frontage() -> void:
 		pool.omni_attenuation = float(row.get("attenuation", 1.0))
 		pool.shadow_enabled = false
 		frontage.add_child(pool)
+
+
+## Shrine relic hang through Session.request_relic_hang (host authority).
+## F18 found an ordinary guest press did nothing: a guest's
+## homestead_personal_view() is only a cache, so the request carried a stale
+## or -1 character revision that the host refused as
+## source_or_revision_changed, and that refusal came back on
+## homestead_action_completed with nobody listening. A guest now refreshes the
+## view first and waits for it (craft_panel.gd's pattern), and the host's
+## saved decision is surfaced when it arrives.
+const RELIC_VIEW_TIMEOUT_S := 3.0
+const RELIC_REPLY_TIMEOUT_S := 10.0
+var _relic_pending := ""
+var _relic_game: Node
+
+
+func hang_relic(biome: String, game: Node = null) -> void:
+	if game == null:
+		game = get_node_or_null(^"/root/Game")
+	var session: Node = game.get("session") if game != null else null
+	if session == null or not _relic_pending.is_empty():
+		return
+	if session.has_method("portal_runtime_ready") and session.call("portal_runtime_ready") != true:
+		game.call("push_world_message", "The shrines are still asleep; they wake with the Hall's arches.")
+		return
+	_relic_pending = biome
+	_relic_game = game
+	if not bool(session.call("is_host")):
+		if not await _relic_view_refreshed(session):
+			_relic_pending = ""
+			game.call("push_world_message", "The shrine is waiting for the host. Try again.")
+			return
+		if not session.is_connected("homestead_action_completed", _relic_reply):
+			session.connect("homestead_action_completed", _relic_reply)
+	var verdict: Dictionary = session.call("request_relic_hang", biome)
+	if verdict.get("code") == "awaiting_saved_decision":
+		# Guest: the host's saved decision arrives on homestead_action_completed.
+		# A reply that never comes must not lock the shrine for later presses.
+		var tree := Engine.get_main_loop() as SceneTree
+		if tree == null:
+			return
+		await tree.create_timer(RELIC_REPLY_TIMEOUT_S).timeout
+		if _relic_pending == biome:
+			_relic_pending = ""
+			if session.is_connected("homestead_action_completed", _relic_reply):
+				session.disconnect("homestead_action_completed", _relic_reply)
+		return
+	_relic_pending = ""
+	if verdict.get("ok") != true:
+		game.call("push_world_message", _relic_refusal_text(verdict))
+
+
+func _relic_view_refreshed(session: Node) -> bool:
+	var state := {"done": false}
+	var mark := func() -> void: state.done = true
+	# Connect before asking, so a reply in the same frame is not missed.
+	session.connect("homestead_personal_view_completed", mark, CONNECT_ONE_SHOT)
+	session.call("homestead_personal_view")
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		if session.is_connected("homestead_personal_view_completed", mark):
+			session.disconnect("homestead_personal_view_completed", mark)
+		return state.done
+	var timer := tree.create_timer(RELIC_VIEW_TIMEOUT_S)
+	while not state.done and timer.time_left > 0.0:
+		await tree.process_frame
+	if session.is_connected("homestead_personal_view_completed", mark):
+		session.disconnect("homestead_personal_view_completed", mark)
+	return state.done
+
+
+func _relic_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
+	if op != "relic_hang" or str(intent.get("biome", "")) != _relic_pending:
+		return
+	_relic_pending = ""
+	var game := _relic_game if is_instance_valid(_relic_game) else get_node_or_null(^"/root/Game")
+	var session: Node = game.get("session") if game != null else null
+	if session != null and session.is_connected("homestead_action_completed", _relic_reply):
+		session.disconnect("homestead_action_completed", _relic_reply)
+	if result.get("ok") != true and game != null:
+		game.call("push_world_message", _relic_refusal_text(result))
+
+
+static func _relic_refusal_text(verdict: Dictionary) -> String:
+	match str(verdict.get("code", "")):
+		"personal_relic_required": return "You have no relic for this shrine yet."
+		"actual_shrine_pedestal_required", "source_or_revision_changed": return "Stand at the shrine and try again."
+	return str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))
+
