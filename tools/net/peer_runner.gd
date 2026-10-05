@@ -6164,7 +6164,24 @@ func _original_starter_ownership(args: Dictionary) -> Dictionary:
 		for receipt: Variant in (local.get("redesign_character") as Dictionary).get("transaction_receipts", []):
 			if str(receipt).begins_with("starter_choice:"):
 				own_starter_receipts.append(str(receipt))
+	# Fingerprints computed on each side from its own exact values: comparing
+	# them never routes a record through the harness's JSON (which rounds
+	# floats), and they use the same exact-bits canonical form authority uses.
+	var fp := preload("res://scripts/net/research_passive_preparation.gd")
+	var essence_rules := preload("res://scripts/creatures/essence.gd")
+	var own_projection: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(local.call("save_data")) if local != null else {}
+	var own_core: Dictionary = essence_rules._without_passive(own_projection) if not own_projection.is_empty() else {}
+	var admitted_core: Dictionary = essence_rules._without_passive(admitted) if not admitted.is_empty() else {}
+	var fingerprints := func(core: Dictionary) -> Dictionary:
+		if core.is_empty():
+			return {}
+		return {"whole": fp.fingerprint(core),
+			"party": fp.fingerprint({"party": core.get("party", [])}),
+			"creatures": fp.fingerprint({"redesign_character": core.get("redesign_character", {})}),
+			"inventory": fp.fingerprint({"inventory": core.get("inventory", [])})}
 	return {
+		"own_fingerprints": fingerprints.call(own_core),
+		"admitted_fingerprints": fingerprints.call(admitted_core),
 		"own_starter_receipts": own_starter_receipts,
 		"portable_projection": preload("res://scripts/net/character_record_rules.gd").portable_projection(local.call("save_data")) if local != null else {},
 		"admitted_starter_receipts": admitted_starter_receipts,

@@ -392,16 +392,21 @@ func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_r
 			% [when, str(host.get("admitted_party_uids", [])), str(guest.get("party_uids", []))])
 	_check(bool(host.get("admitted_starter_flag", false)) and bool(guest.get("starter_granted", false)),
 		"host and guest both record opening:starter_granted for the guest %s" % when)
-	_check(bool(host.get("admitted_starter_fields_match", false)),
-		"the guest's party and creature record equal the host's admitted copy %s (differing: %s)"
+	# Compared as fingerprints each peer computes from its own exact record, so
+	# the harness's JSON transport (which rounds floats) cannot fake a mismatch.
+	var mine: Dictionary = guest.get("own_fingerprints", {}) as Dictionary
+	var theirs: Dictionary = host.get("admitted_fingerprints", {}) as Dictionary
+	_check(not mine.is_empty() and mine.get("party") == theirs.get("party") \
+			and mine.get("creatures") == theirs.get("creatures"),
+		"the guest's party and creature record equal the host's admitted copy %s (diff hint: %s)"
 			% [when, str(host.get("admitted_differing_paths", []))])
+	var whole: bool = not mine.is_empty() and mine.get("whole") == theirs.get("whole")
 	if full_record:
-		_check(bool(host.get("admitted_baseline_matches", false)),
-			"the guest's whole record equals the host's admitted copy %s: no owner_action_baseline_conflict (differing: %s)"
-				% [when, str(host.get("admitted_differing_paths", []))])
+		_check(whole, "the guest's whole record equals the host's admitted copy %s: no owner_action_baseline_conflict (diff hint: %s)"
+			% [when, str(host.get("admitted_differing_paths", []))])
 	else:
-		print("opening admitted baseline %s: whole-record match=%s differing=%s" % [when,
-			str(host.get("admitted_baseline_matches", false)), str(host.get("admitted_differing_paths", []))])
+		print("opening admitted baseline %s: whole-record match=%s inventory match=%s diff hint=%s" % [when,
+			str(whole), str(mine.get("inventory") == theirs.get("inventory")), str(host.get("admitted_differing_paths", []))])
 
 
 func _opening(peer: int) -> Dictionary:
