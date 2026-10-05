@@ -804,29 +804,6 @@ func foundation_alpha_resolution(director: Node, encounter_id: String, outcome: 
 	var producer := get_node_or_null(^"FoundationComposition/Alphas")
 	return producer.call("resolution", director, encounter_id, outcome, capture) if producer != null else {"ok": false, "durable": false}
 
-## F30#0: an ordinary (non-site) canonical wild catch retains the same
-## capture_offer FoundationEvent an alpha does, journaled through the host
-## ledger writer. The offer id binds (namespace, claim, uid), so a retry is
-## the same row: exactly one install, with initialize_caught and the host's
-## trait packet, owner-saved and recoverable through reconnect.
-func foundation_wild_capture_offer(director: Node, encounter_id: String, capture: Dictionary) -> Dictionary:
-	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
-		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false, "durable": false}
-	var runtime: Node = director.call("_shared_host_fight", encounter_id)
-	var body: Node3D = runtime.call("body") if runtime != null else null
-	if body == null or body.has_meta("foundation_alpha_site") or not body.has_meta("foundation_wild_packet") \
-		or runtime.get_meta("catch_decision", {}).get("caught") != true \
-		or director.get("_encounter_host").call("phase", encounter_id) != "catching": return {"ok": false, "durable": false}
-	var world: RefCounted = _game().world
-	if not preload("res://scripts/net/foundation_capture_rules.gd").offer_valid(capture) \
-		or capture.creature != preload("res://scripts/save/water_capture_codec.gd").encode(body.get("instance")) \
-		or capture.capture_traits != body.get_meta("foundation_wild_packet", {}) \
-		or capture.participants[0] != _authority_character(int(runtime.get("catch_claimant"))) \
-		or capture.world_namespace != world.reward_delivery_namespace or capture.session_id != _altar_current_epoch():
-		return {"ok": false, "durable": false}
-	return get_node(^"LedgerRpc").call("journal_foundation_event", capture.source_key,
-		[{"character_id": capture.participants[0], "action": "capture_offer", "intent": {}, "context": capture}])
-
 func foundation_alpha_first_spawn(director: Node, site_id: String) -> Dictionary:
 	var producer := get_node_or_null(^"FoundationComposition/Alphas")
 	return producer.call("first_spawn", director, site_id) if producer != null else {}
@@ -5973,17 +5950,7 @@ func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted)
 	if members.size() != expected.size() or members.size() > 5 or originals.size() != row.before.party.size(): return false
 	for index: int in members.size():
 		var member: Variant = members[index]
-		if not member is RefCounted: return false
-		# Compare the same portable projection the row was staged from: it
-		# carries no in-fight energy meter (character_record_rules), and passive
-		# care keeps accruing between the host's stage and this install (the
-		# owner apply keeps it: ESSENCE.merge_owner_passive). Identity, stats
-		# and loadout stay exact.
-		var live_card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character)
-		var expected_card: Dictionary = expected[index].duplicate(true)
-		live_card.erase("energy")
-		expected_card.erase("energy") # A newcomer's staged card is the raw capture card.
-		if not ESSENCE.owner_matches_after({"party": [live_card]}, {"party": [expected_card]}): return false
+		if not member is RefCounted or preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character) != expected[index]: return false
 		var old_index := -1
 		for old: int in row.before.party.size():
 			if row.before.party[old].uid == expected[index].uid: old_index = old
@@ -5992,9 +5959,8 @@ func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted)
 	return true
 
 func _foundation_capture_context(peer: int, key: String) -> Dictionary:
-	# A retained valid offer is its own authorization (only a host producer
-	# journals one): alpha sites and, since F30#0, every canonical wild catch.
-	if not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
+	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+		or not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
 	var world: RefCounted = _game().world
 	var character := _authority_character(peer)
 	var actor: Dictionary = get_node(^"LedgerRpc").call("_water_actor_context", peer, {})

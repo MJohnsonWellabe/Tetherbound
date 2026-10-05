@@ -1,0 +1,207 @@
+From 09203a6f92dc32a0590c68e2c336ba52826679dc Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 5 Oct 2026 15:22:20 +0000
+Subject: [PATCH 1/2] wip(F30#0): host rolls ordinary wild traits; canonical
+ catches retain them (verification running)
+
+Not for landing yet: catch smokes with the flag on are still running.
+
+- encounter_director.foundation_stamp_wild_traits: the host rolls
+  Traits.roll_spawn once at registration from (world namespace, realm +
+  body name + process epoch, generation), with the alpha and night/weather
+  profiles. Guests never roll. The cluster rng is untouched (test_shiny).
+  A refill bumps the generation.
+- _host_catch_finished: an ordinary canonical body's packet becomes the
+  catch's capture_traits, and session.foundation_wild_capture_offer
+  journals the same capture_offer FoundationEvent an alpha uses
+  (exactly-once install, initialize_caught, reconnect).
+- foundation_capture and _foundation_capture_context no longer require
+  alpha_respawns.runtime_enabled: a retained valid offer is its own
+  authorization.
+- The legacy local catch strips a transient stamp (it keeps legacy
+  trait_primary adoption); it retires with the legacy path.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01FeyS6dDcmbbPiVs7C8wXsC
+---
+ scripts/combat/encounter_director.gd | 69 ++++++++++++++++++++++++++++
+ scripts/net/foundation_capture.gd    |  1 -
+ scripts/net/session.gd               | 28 ++++++++++-
+ 3 files changed, 95 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/combat/encounter_director.gd b/scripts/combat/encounter_director.gd
+index 22e3257d..e6fd93cf 100644
+--- a/scripts/combat/encounter_director.gd
++++ b/scripts/combat/encounter_director.gd
+@@ -1309,6 +1309,8 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
+ 					wild.queue_free()
+ 					continue
+ 				if not member_packet.is_empty(): wild.visible = true
++			foundation_stamp_wild_traits(wild, str(spawn.get("time", "")) == "night",
++				spawn.get("weather", []) is Array and not (spawn.get("weather", []) as Array).is_empty())
+ 			wild.call("configure", wild_cfg)
+ 			wild.set("home", wild.global_position)
+ 			# An aggressive creature asks; this node decides. Keeping the decision
+@@ -1360,6 +1362,41 @@ func foundation_alpha_cycle(site_id: String) -> Dictionary:
+ 	if not _is_host() or rules.config().get("runtime_enabled") != true or game == null or rules.site(site_id).is_empty(): return {}
+ 	return game.world.redesign_world.get("alpha_cycles", {}).get("sites", {}).get(site_id, {}).duplicate(true)
+ 
++## F30#0: the HOST rolls an ordinary wild's traits once at registration from
++## (world namespace, this body's spawn key, generation), with the better
++## alpha and night/weather profiles. Guests never roll: their wilds are local
++## simulations and a catch receives the host's packet. The roll seeds its own
++## RNG, so the cluster rng's draw order (test_shiny) is untouched. Each
++## refill bumps the generation; the process epoch keeps a reload from
++## reproducing the same individual. Registered alpha sites keep their own
++## retained packet (foundation_register_alpha).
++func foundation_stamp_wild_traits(wild: Node3D, gated_night: bool = false, gated_weather: bool = false) -> bool:
++	if wild == null or wild.has_meta("foundation_alpha_site") or _session == null or _is_guest() \
++		or not preload("res://scripts/creatures/traits.gd").runtime_enabled() \
++		or MATH.config().get("actor_vitals", {}).get("runtime_enabled") != true: return false
++	var game := get_node_or_null(^"/root/Game")
++	var instance: RefCounted = wild.get("instance")
++	if game == null or game.get("world") == null or instance == null: return false
++	var namespace_id := str(game.world.reward_delivery_namespace)
++	var epoch := str(_session.call("_altar_current_epoch"))
++	if namespace_id.is_empty() or epoch.is_empty(): return false
++	var spawn_id := "%s_%s_%s" % [_encounter_realm(), str(wild.name), epoch]
++	if spawn_id.length() > 128 or spawn_id.contains(":"): spawn_id = "wild_" + spawn_id.sha256_text()
++	var generation := int(wild.get_meta("foundation_wild_generation", 0)) + 1
++	var packet := preload("res://scripts/creatures/trait_spawn_hooks.gd").prepare_host_spawn({"world_namespace": namespace_id,
++		"spawn_id": spawn_id, "spawn_generation": generation, "alpha": bool(wild.get_meta("alpha", false)),
++		"night": gated_night or _is_night(), "weather": gated_weather or _current_weather() != "clear"})
++	if packet.is_empty(): return false
++	wild.set_meta("foundation_wild_packet", packet.duplicate(true))
++	wild.set_meta("foundation_wild_generation", generation)
++	wild.set_meta("foundation_wild_world", weakref(game.world))
++	wild.set_meta("foundation_wild_epoch", epoch)
++	wild.set_meta("foundation_wild_gates", [gated_night, gated_weather])
++	instance.set("traits_initialized", true)
++	instance.set("rolled_traits", packet.rolled_traits.duplicate())
++	instance.set("taught_traits", {})
++	return true
++
+ func foundation_register_alpha(wild: Node3D, site_id: String, packet: Dictionary = {}) -> bool:
+ 	var site := preload("res://scripts/repeatables/alpha_respawns.gd").site(site_id)
+ 	if wild == null or site.is_empty() or _session == null: return false
+@@ -3418,6 +3455,21 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
+ 				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
+ 			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+ 				capture_traits[field] = prepared[field]
++		elif alpha_body.has_meta("foundation_wild_packet") and _owns_canonical_wild(encounter_id):
++			# F30#0: an ordinary wild's host roll reaches the durable record
++			# through the same retained capture offer as an alpha.
++			var game := get_node("/root/Game")
++			var world_ref: WeakRef = alpha_body.get_meta("foundation_wild_world", null)
++			var retained: Dictionary = alpha_body.get_meta("foundation_wild_packet", {})
++			var identity := {"world_namespace": game.world.reward_delivery_namespace,
++				"spawn_id": str(retained.get("captured_from", {}).get("spawn_id", "")),
++				"spawn_generation": alpha_body.get_meta("foundation_wild_generation", 0)}
++			var prepared := preload("res://scripts/creatures/trait_spawn_hooks.gd").prepare_catch(identity, retained, creature_card)
++			if world_ref == null or world_ref.get_ref() != game.world or alpha_body.get_meta("foundation_wild_epoch", "") != _session.call("_altar_current_epoch") \
++				or prepared.is_empty() or not WATER_CAPTURE_CODEC.valid_capture_traits(retained):
++				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
++			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
++				capture_traits[field] = prepared[field]
+ 		var capture_offer: Dictionary = {}
+ 		if not capture_traits.is_empty():
+ 			var game := get_node("/root/Game")
+@@ -3430,6 +3482,10 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
+ 		if alpha_resolution.get("durable") != true:
+ 			return {"ok": false, "pending": true, "code": "alpha_resolution_write_pending", "encounter_id": encounter_id, "claim_id": claim_id,
+ 				"reason": str(alpha_resolution.get("code", "alpha_resolution_refused"))}
++		if not capture_offer.is_empty() and not alpha_body.has_meta("foundation_alpha_site"):
++			var journaled: Dictionary = _session.call("foundation_wild_capture_offer", self, encounter_id, capture_offer)
++			if journaled.get("durable") != true:
++				return {"ok": false, "pending": true, "code": "capture_offer_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
+ 		if runtime.get_meta("foundation_catch_night_claim", "") != claim_id:
+ 			runtime.remove_meta("foundation_catch_night")
+ 		if not runtime.has_meta("foundation_catch_night") and preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true:
+@@ -4341,6 +4397,10 @@ func _refill_caught_spawn(wild: Node3D) -> void:
+ 	fresh.shiny = is_shiny
+ 	wild.set("instance", fresh)
+ 	wild.call("set_shiny", is_shiny)
++	# F30#0: the refilled individual is a new generation with its own roll.
++	if wild.has_meta("foundation_wild_packet"):
++		var gates: Array = wild.get_meta("foundation_wild_gates", [false, false])
++		if not foundation_stamp_wild_traits(wild, bool(gates[0]), bool(gates[1])): wild.remove_meta("foundation_wild_packet")
+ 
+ 
+ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> void:
+@@ -6832,6 +6892,15 @@ func _resolve_catch(kept: RefCounted) -> void:
+ 		var captures := _session.get_node_or_null(^"FoundationComposition/Captures") if _session != null else null
+ 		if captures != null: captures.call("present_from_catch", kept)
+ 		return
++	# F30#0: the legacy local catch (actor_vitals off, or a canonical-admission
++	# fallback) cannot carry the host's roll into a durable record, so it
++	# keeps the legacy trait_primary adoption instead of a transient F30 roll.
++	# Stamping never changed stats, so nothing else needs recomputing. This
++	# branch retires with the legacy non-canonical path.
++	if bool(kept.get("traits_initialized")):
++		kept.set("traits_initialized", false)
++		kept.set("rolled_traits", [])
++		kept.set("taught_traits", {})
+ 
+ 	# Prompt 67's history: stamp the day it joined you, once, at the moment it
+ 	# does. Set here rather than at spawn because a wild creature the player
+diff --git a/scripts/net/foundation_capture.gd b/scripts/net/foundation_capture.gd
+index a7452930..40b65f54 100644
+--- a/scripts/net/foundation_capture.gd
++++ b/scripts/net/foundation_capture.gd
+@@ -71,7 +71,6 @@ func _process(delta: float) -> void:
+ 	_left -= delta
+ 	if _left > 0.0: return
+ 	_left = 0.5
+-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
+ 	var game: Node = session().call("_game")
+ 	if game == null or game.local == null or game.world == null: return
+ 	for id: String in _requests.keys(): reconcile_release(id)
+diff --git a/scripts/net/session.gd b/scripts/net/session.gd
+index 93a38eef..65abeeb9 100644
+--- a/scripts/net/session.gd
++++ b/scripts/net/session.gd
+@@ -778,6 +778,29 @@ func foundation_alpha_resolution(director: Node, encounter_id: String, outcome:
+ 	var producer := get_node_or_null(^"FoundationComposition/Alphas")
+ 	return producer.call("resolution", director, encounter_id, outcome, capture) if producer != null else {"ok": false, "durable": false}
+ 
++## F30#0: an ordinary (non-site) canonical wild catch retains the same
++## capture_offer FoundationEvent an alpha does, journaled through the host
++## ledger writer. The offer id binds (namespace, claim, uid), so a retry is
++## the same row: exactly one install, with initialize_caught and the host's
++## trait packet, owner-saved and recoverable through reconnect.
++func foundation_wild_capture_offer(director: Node, encounter_id: String, capture: Dictionary) -> Dictionary:
++	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
++		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false, "durable": false}
++	var runtime: Node = director.call("_shared_host_fight", encounter_id)
++	var body: Node3D = runtime.call("body") if runtime != null else null
++	if body == null or body.has_meta("foundation_alpha_site") or not body.has_meta("foundation_wild_packet") \
++		or runtime.get_meta("catch_decision", {}).get("caught") != true \
++		or director.get("_encounter_host").call("phase", encounter_id) != "catching": return {"ok": false, "durable": false}
++	var world: RefCounted = _game().world
++	if not preload("res://scripts/net/foundation_capture_rules.gd").offer_valid(capture) \
++		or capture.creature != preload("res://scripts/save/water_capture_codec.gd").encode(body.get("instance")) \
++		or capture.capture_traits != body.get_meta("foundation_wild_packet", {}) \
++		or capture.participants[0] != _authority_character(int(runtime.get("catch_claimant"))) \
++		or capture.world_namespace != world.reward_delivery_namespace or capture.session_id != _altar_current_epoch():
++		return {"ok": false, "durable": false}
++	return get_node(^"LedgerRpc").call("journal_foundation_event", capture.source_key,
++		[{"character_id": capture.participants[0], "action": "capture_offer", "intent": {}, "context": capture}])
++
+ func foundation_alpha_first_spawn(director: Node, site_id: String) -> Dictionary:
+ 	var producer := get_node_or_null(^"FoundationComposition/Alphas")
+ 	return producer.call("first_spawn", director, site_id) if producer != null else {}
+@@ -5899,8 +5922,9 @@ func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted)
+ 	return true
+ 
+ func _foundation_capture_context(peer: int, key: String) -> Dictionary:
+-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+-		or not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
++	# A retained valid offer is its own authorization (only a host producer
++	# journals one): alpha sites and, since F30#0, every canonical wild catch.
++	if not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
+ 	var world: RefCounted = _game().world
+ 	var character := _authority_character(peer)
+ 	var actor: Dictionary = get_node(^"LedgerRpc").call("_water_actor_context", peer, {})
+-- 
+2.43.0
+

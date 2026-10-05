@@ -131,11 +131,7 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 			if next_index + 1 != row.after.party.size(): return _deny("owner_capture_shape_changed")
 			var card: Dictionary = row.after.party[next_index]
 			if card.uid != row.host_context.creature.uid: return _deny("owner_capture_uid_changed")
-			# The staged card is the energy-free owner projection; the saved-card
-			# codec needs the field, and a fresh catch starts with an empty meter.
-			var saved_card: Dictionary = card.duplicate(true)
-			if not saved_card.has("energy"): saved_card["energy"] = 0.0
-			var newcomer := preload("res://scripts/save/water_capture_codec.gd").decode_owned(saved_card, row.after.redesign_character)
+			var newcomer := preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, row.after.redesign_character)
 			if newcomer == null: return _deny("owner_capture_decode_failed")
 			capture_members.append(newcomer)
 			next_index += 1

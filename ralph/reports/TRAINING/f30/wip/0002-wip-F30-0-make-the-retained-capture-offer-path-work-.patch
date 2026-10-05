@@ -1,0 +1,195 @@
+From 4f33aac8b5a493b16fa6be1996df2d8507a51a9a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 5 Oct 2026 17:24:34 +0000
+Subject: [PATCH 2/2] wip(F30#0): make the retained capture-offer path work for
+ ordinary catches (verification running)
+
+Found while driving ordinary canonical catches through the capture_offer
+path (alpha-only until now, never shipped on):
+- the capture roster guard compared raw encoded cards with the owner
+  projection, which since 187a3f24 carries no in-fight energy meter; it
+  now compares that projection (energy dropped on both sides) and
+  tolerates passive care accrued since the stage (merge_owner_passive);
+- the staged newcomer card is the energy-free owner projection, and the
+  owner install re-adds an empty meter only to decode it;
+- a catch with a free slot is kept directly: no release-ceremony screen
+  (which left GameMenu owning input); the ceremony stays for a full belt.
+Fixtures (exception (a)): smoke_party_count_after_catches binds its live
+world to TEST_SLOT (catches now journal world rows) and waits, bounded,
+for the async install; smoke_catching sets current_scene as the shipping
+boot does and waits for the install. Assertions unchanged.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01FeyS6dDcmbbPiVs7C8wXsC
+---
+ scripts/net/character_action_owner.gd    |  6 +++++-
+ scripts/net/foundation_capture.gd        | 15 +++++++++++++--
+ scripts/net/foundation_capture_rules.gd  |  7 ++++++-
+ scripts/net/session.gd                   | 12 +++++++++++-
+ tests/smoke_catching.gd                  | 14 +++++++++++---
+ tests/smoke_party_count_after_catches.gd | 13 ++++++++++++-
+ 6 files changed, 58 insertions(+), 9 deletions(-)
+
+diff --git a/scripts/net/character_action_owner.gd b/scripts/net/character_action_owner.gd
+index fc8c41b7..3c6a3c24 100644
+--- a/scripts/net/character_action_owner.gd
++++ b/scripts/net/character_action_owner.gd
+@@ -131,7 +131,11 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) ->
+ 			if next_index + 1 != row.after.party.size(): return _deny("owner_capture_shape_changed")
+ 			var card: Dictionary = row.after.party[next_index]
+ 			if card.uid != row.host_context.creature.uid: return _deny("owner_capture_uid_changed")
+-			var newcomer := preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, row.after.redesign_character)
++			# The staged card is the energy-free owner projection; the saved-card
++			# codec needs the field, and a fresh catch starts with an empty meter.
++			var saved_card: Dictionary = card.duplicate(true)
++			if not saved_card.has("energy"): saved_card["energy"] = 0.0
++			var newcomer := preload("res://scripts/save/water_capture_codec.gd").decode_owned(saved_card, row.after.redesign_character)
+ 			if newcomer == null: return _deny("owner_capture_decode_failed")
+ 			capture_members.append(newcomer)
+ 			next_index += 1
+diff --git a/scripts/net/foundation_capture.gd b/scripts/net/foundation_capture.gd
+index 40b65f54..d9abd22d 100644
+--- a/scripts/net/foundation_capture.gd
++++ b/scripts/net/foundation_capture.gd
+@@ -36,8 +36,17 @@ func _offer(id: String = "", include_decided: bool = false) -> Dictionary:
+ func present_from_catch(creature: RefCounted) -> bool:
+ 	var offer := _offer()
+ 	if offer.is_empty() or creature == null or creature.get("uid") != offer.creature.uid: return false
++	if not _needs_ceremony(): # A free slot keeps it directly (_process sends keep).
++		_active = offer.offer_id
++		return true
+ 	return _present(offer, creature)
+ 
++## Only a full belt asks which creature to release. With room, the retained
++## offer is kept directly, with no ceremony screen, like an ordinary catch.
++func _needs_ceremony() -> bool:
++	var game: Node = session().call("_game")
++	return game != null and game.local != null and game.local.party.is_full()
++
+ func owns_pending_capture(creature: RefCounted) -> bool:
+ 	if creature == null or _active.is_empty() \
+ 		or creature.get_meta("foundation_capture_offer", "") != _active: return false
+@@ -79,9 +88,11 @@ func _process(delta: float) -> void:
+ 		_active = ""
+ 	var offer := _offer(_active)
+ 	if offer.is_empty(): return
+-	if not _present(offer): return
++	if _needs_ceremony():
++		if not _present(offer): return
++		_active = offer.offer_id
++		return
+ 	_active = offer.offer_id
+-	if game.local.party.is_full(): return
+ 	var view: Dictionary = session().call("homestead_personal_view")
+ 	if view.is_empty() or not view.get("registry_revision") is int: return
+ 	_send({"offer_id": _active, "keep": true, "released_uid": ""}, int(view.registry_revision), "")
+diff --git a/scripts/net/foundation_capture_rules.gd b/scripts/net/foundation_capture_rules.gd
+index 3051e0c5..a9fa9417 100644
+--- a/scripts/net/foundation_capture_rules.gd
++++ b/scripts/net/foundation_capture_rules.gd
+@@ -45,7 +45,12 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary)
+ 			payout = released.payout.duplicate(true)
+ 		elif not intent.released_uid.is_empty(): return ESSENCE._refuse("capture_has_free_slot")
+ 		if next.party.size() >= 5: return ESSENCE._refuse("five_owned_slots")
+-		next.party.append(offer.creature.duplicate(true))
++		# Owner authority projections carry no in-fight energy meter
++		# (character_record_rules.portable_projection, ESSENCE.training_projection),
++		# so the staged roster card leaves it out like every other owned card.
++		var newcomer: Dictionary = offer.creature.duplicate(true)
++		newcomer.erase("energy")
++		next.party.append(newcomer)
+ 		next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
+ 		if not next.redesign_character.creatures.has(uid): return ESSENCE._refuse("capture_loadout_missing")
+ 		next.redesign_character = preload("res://scripts/creatures/breakthrough.gd").initialize_caught(next.redesign_character, offer.creature)
+diff --git a/scripts/net/session.gd b/scripts/net/session.gd
+index 65abeeb9..fb9a62b4 100644
+--- a/scripts/net/session.gd
++++ b/scripts/net/session.gd
+@@ -5913,7 +5913,17 @@ func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted)
+ 	if members.size() != expected.size() or members.size() > 5 or originals.size() != row.before.party.size(): return false
+ 	for index: int in members.size():
+ 		var member: Variant = members[index]
+-		if not member is RefCounted or preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character) != expected[index]: return false
++		if not member is RefCounted: return false
++		# Compare the same portable projection the row was staged from: it
++		# carries no in-fight energy meter (character_record_rules), and passive
++		# care keeps accruing between the host's stage and this install (the
++		# owner apply keeps it: ESSENCE.merge_owner_passive). Identity, stats
++		# and loadout stay exact.
++		var live_card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character)
++		var expected_card: Dictionary = expected[index].duplicate(true)
++		live_card.erase("energy")
++		expected_card.erase("energy") # A newcomer's staged card is the raw capture card.
++		if not ESSENCE.owner_matches_after({"party": [live_card]}, {"party": [expected_card]}): return false
+ 		var old_index := -1
+ 		for old: int in row.before.party.size():
+ 			if row.before.party[old].uid == expected[index].uid: old_index = old
+diff --git a/tests/smoke_catching.gd b/tests/smoke_catching.gd
+index 3fe53f22..b60bf33e 100644
+--- a/tests/smoke_catching.gd
++++ b/tests/smoke_catching.gd
+@@ -43,6 +43,7 @@ func _init() -> void:
+ func _run() -> void:
+ 	_world = (load(SCENE) as PackedScene).instantiate()
+ 	root.add_child(_world)
++	current_scene = _world # As the shipping boot does; the canonical catch's owner context reads it.
+ 	for i in SETTLE_FRAMES:
+ 		await physics_frame
+ 
+@@ -450,11 +451,18 @@ func _a_weakened_creature_can_be_caught() -> void:
+ 	if str(_manager.call("outcome")) != "caught":
+ 		_fail("caught a creature but the fight ended as '%s'" % str(_manager.call("outcome")))
+ 	# R4.10: an ordinary catch lands in the REAL party — the M3 `caught()` list
+-	# this used to check was a dead end nothing ever read. The sandbox ally
+-	# comes from adopt_starter() and is not in the party, so the party was
+-	# empty before this catch and holds exactly the caught creature now.
++	# this used to check was a dead end nothing ever read. The fixture owns the
++	# adopted starter (actor_vitals), so the caught creature is the newest.
+ 	var game := root.get_node_or_null(^"/root/Game")
+ 	var party: RefCounted = game.get("party") if game != null else null
++	# A canonical catch joins the belt through the host's retained offer and
++	# its owner-saved install, a few frames after the fight ends: wait for that
++	# arrival (bounded). The assertions below are unchanged.
++	for i in 600:
++		if party == null: break
++		var newest_now: RefCounted = party.call("at", int(party.call("size")) - 1) if int(party.call("size")) > 0 else null
++		if newest_now != null and str(newest_now.get("species_id")) != "terrapup": break
++		await physics_frame
+ 	if party == null or int(party.call("size")) == 0:
+ 		_fail("the caught creature never reached Game.party; catching is a dead end again")
+ 	else:
+diff --git a/tests/smoke_party_count_after_catches.gd b/tests/smoke_party_count_after_catches.gd
+index 3b5efdba..4f5dac83 100644
+--- a/tests/smoke_party_count_after_catches.gd
++++ b/tests/smoke_party_count_after_catches.gd
+@@ -62,6 +62,12 @@ func _run() -> void:
+ 		return
+ 	_leave_the_farmhouse()
+ 	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
++	# A run's live world is named after the slot it saves to (game_state
++	# reset_for_new_game: "slot-<autosave>"). A canonical catch journals its
++	# capture offer in the live world, and save_game refuses to rebind those
++	# rows to another slot's world, so bind it to TEST_SLOT (as
++	# smoke_veridian_offer_choice does).
++	_game.get("world").set("world_id", "slot-%d" % TEST_SLOT)
+ 
+ 	# Three DIFFERENT already-live wild bodies rather than the same one three
+ 	# times over: each real catch costs one throw-fight regardless, and
+@@ -84,8 +90,13 @@ func _run() -> void:
+ 			_fail("catch %d: no live wild creature to catch" % (i + 1))
+ 			break
+ 		await _catch_real_creature(target)
+-		for f in 20:
++		# A canonical catch joins the belt through the host's retained offer and
++		# its owner-saved install, a few frames after the catch resolves. Wait
++		# for that arrival (bounded); the count assertion below is unchanged.
++		for f in 600:
+ 			await physics_frame
++			if f >= 20 and int(_game.get("party").call("size")) >= base + i + 1:
++				break
+ 		var party: RefCounted = _game.get("party")
+ 		if int(party.call("size")) != base + i + 1:
+ 			_fail("after catch %d, Game.party.size() is %d, expected %d" % [i + 1, int(party.call("size")), base + i + 1])
+-- 
+2.43.0
+

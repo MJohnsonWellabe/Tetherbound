@@ -36,16 +36,7 @@ func _offer(id: String = "", include_decided: bool = false) -> Dictionary:
 func present_from_catch(creature: RefCounted) -> bool:
 	var offer := _offer()
 	if offer.is_empty() or creature == null or creature.get("uid") != offer.creature.uid: return false
-	if not _needs_ceremony(): # A free slot keeps it directly (_process sends keep).
-		_active = offer.offer_id
-		return true
 	return _present(offer, creature)
-
-## Only a full belt asks which creature to release. With room, the retained
-## offer is kept directly, with no ceremony screen, like an ordinary catch.
-func _needs_ceremony() -> bool:
-	var game: Node = session().call("_game")
-	return game != null and game.local != null and game.local.party.is_full()
 
 func owns_pending_capture(creature: RefCounted) -> bool:
 	if creature == null or _active.is_empty() \
@@ -80,6 +71,7 @@ func _process(delta: float) -> void:
 	_left -= delta
 	if _left > 0.0: return
 	_left = 0.5
+	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game: Node = session().call("_game")
 	if game == null or game.local == null or game.world == null: return
 	for id: String in _requests.keys(): reconcile_release(id)
@@ -88,11 +80,9 @@ func _process(delta: float) -> void:
 		_active = ""
 	var offer := _offer(_active)
 	if offer.is_empty(): return
-	if _needs_ceremony():
-		if not _present(offer): return
-		_active = offer.offer_id
-		return
+	if not _present(offer): return
 	_active = offer.offer_id
+	if game.local.party.is_full(): return
 	var view: Dictionary = session().call("homestead_personal_view")
 	if view.is_empty() or not view.get("registry_revision") is int: return
 	_send({"offer_id": _active, "keep": true, "released_uid": ""}, int(view.registry_revision), "")

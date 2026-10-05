@@ -62,12 +62,6 @@ func _run() -> void:
 		return
 	_leave_the_farmhouse()
 	_game.set("save_system", SAVE_GAME.new(TEST_DIR))
-	# A run's live world is named after the slot it saves to (game_state
-	# reset_for_new_game: "slot-<autosave>"). A canonical catch journals its
-	# capture offer in the live world, and save_game refuses to rebind those
-	# rows to another slot's world, so bind it to TEST_SLOT (as
-	# smoke_veridian_offer_choice does).
-	_game.get("world").set("world_id", "slot-%d" % TEST_SLOT)
 
 	# Three DIFFERENT already-live wild bodies rather than the same one three
 	# times over: each real catch costs one throw-fight regardless, and
@@ -90,13 +84,8 @@ func _run() -> void:
 			_fail("catch %d: no live wild creature to catch" % (i + 1))
 			break
 		await _catch_real_creature(target)
-		# A canonical catch joins the belt through the host's retained offer and
-		# its owner-saved install, a few frames after the catch resolves. Wait
-		# for that arrival (bounded); the count assertion below is unchanged.
-		for f in 600:
+		for f in 20:
 			await physics_frame
-			if f >= 20 and int(_game.get("party").call("size")) >= base + i + 1:
-				break
 		var party: RefCounted = _game.get("party")
 		if int(party.call("size")) != base + i + 1:
 			_fail("after catch %d, Game.party.size() is %d, expected %d" % [i + 1, int(party.call("size")), base + i + 1])
