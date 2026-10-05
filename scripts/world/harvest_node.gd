@@ -21,6 +21,7 @@ extends Node3D
 ## group (`autoload/game_state.gd::load_game()`), so a save never brings a
 ## gathered node back.
 
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
@@ -708,10 +709,24 @@ func _ready() -> void:
 		_refresh_renewable_presentation()
 
 
-func _process(_delta: float) -> void:
-	if not _renewable_site_id.is_empty():
-		_read_renewable_stock(get_node_or_null(^"/root/Game"))
-		_refresh_renewable_presentation()
+## Seconds until the next stock poll. A gather commits through the ledger
+## delta listener immediately; this poll only catches day rollover and host
+## snapshots, so it does not need to run every frame (PERF, 2026-10-05: every
+## renewable node polling its source service each frame cost Tidewake ~26 ms).
+var _stock_poll_left := -1.0
+
+
+func _process(delta: float) -> void:
+	if _renewable_site_id.is_empty():
+		return
+	_stock_poll_left -= delta
+	if _stock_poll_left > 0.0:
+		return
+	var interval := float(PERF_CONFIG.config().get("renewable_stock_poll_s", 1.0))
+	# Spread first polls so a realm's nodes never all land on one frame.
+	_stock_poll_left = interval if _stock_poll_left > -1.0 else randf() * interval
+	_read_renewable_stock(get_node_or_null(^"/root/Game"))
+	_refresh_renewable_presentation()
 
 
 func _read_renewable_stock(game: Node) -> void:
