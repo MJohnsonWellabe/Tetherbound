@@ -150,6 +150,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		await step(1, "wait", {"frames": 30})
 		if await _host_hp() < hp_was - 0.001: landed += 1
 	out["energy_hits"] = landed
+	var breaks_before := int(((await _pin(true)).get("data", {}) as Dictionary).get("host_breaks", 0))
 	var guest_before := int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	var hp_before := -1.0
 	if tell_first:
@@ -166,7 +167,9 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
 			"slot": "charged", "action": action, "start_only": true})
 		await step(1, "wait", {"frames": EARLY_START_FRAMES})
-		pin = (await _pin(false)).get("data", {})
+		var pinned := await _pin(false)
+		pin = pinned.get("data", {})
+		if pin.is_empty(): out["pin"] = "%s: %s" % [str(pinned.get("verdict", "")), str(pinned.get("detail", ""))]
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
@@ -175,12 +178,12 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	var state: Dictionary = {}
 	for _poll in STAGGER_POLLS:
 		state = (await _pin(true)).get("data", {})
-		if bool(state.get("broke", false)) or float(state.get("poise", 0.0)) < float(out.poise_before) - 0.001:
+		if int(state.get("host_breaks", 0)) > breaks_before or float(state.get("poise", 0.0)) < float(out.poise_before) - 0.001:
 			break
 		await step(0, "wait", {"frames": 4})
-	# `_stagger_critical_ready` stays set after the 0.6 s stagger ends, until
-	# the next hit consumes it; the pin clears it, so it marks THIS break.
-	out.host_staggered = bool(state.get("broke", false))
+	# Counted from the host's own strike verdicts (`host_strike_finished`), so
+	# a 0.6 s stagger that ended before this read still counts.
+	out.host_staggered = int(state.get("host_breaks", 0)) > breaks_before
 	out.poise_after = float(state.get("poise", 0.0))
 	out.landed = float(state.get("hp", -1.0)) < hp_before - 0.001
 	# The guest's announcement arrives with the host's strike payload.
