@@ -3,7 +3,7 @@
 | # | Criterion | Status | Evidence |
 |---|---|---|---|
 | 0 | Harness and Charm in four tiers, +1..+3 | PASS (unit) | `test_creature_gear` 7/297: tiers, slots and +0..+3 chains; real `stage_core` equip/upgrade; refusals; prepare applies gear once |
-| 1 | Gear shows as a trim/glow accent | In progress | Bound to the local deployed body (`companion_presence`; flag-off). r1 code-blind judge PARTIAL (slab look). r2: narrow trim, glow rising with tier. `visual_enabled` stays false until a PASS |
+| 1 | Gear shows as a trim/glow accent | PASS (code-blind judge, r4) | `f33-accent-r4/judge.md`: by day and night, front and side, a bare creature is distinct from the four tiers (gold/green/blue/violet straps); reads as harness trim; face clear; no red. Path: r1 slab (PARTIAL) -> narrow trim with tier-scaled glow -> bands moved off the face -> side recapture. Bound to the local deployed body (`companion_presence`); `gear.json` `visual_enabled` now true. Not shown: other players' creatures (no record held), the charm as a separate visible piece. |
 | 2 | Boss sims per tier pass C2 | Open | Next after the landmark follow-up (coordinator order) |
 | 3 | Trainer gear mitigates real hazards, each tested | PASS except hazard terrain (BLOCKED-with-ask) | See "Hazards" below |
 | 4 | Pouch tiers extend Tether Commands; gear persists, personal in co-op | BLOCKED on F24 | `tether_commands.json` `runtime_enabled` is F24's flag (coordinator ruling). Gear persistence is on the character record; two-peer gear smoke pending |

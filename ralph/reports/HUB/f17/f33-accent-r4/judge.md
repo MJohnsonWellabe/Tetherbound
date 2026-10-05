@@ -55,3 +55,32 @@ Secondary issues: tier depends on hue alone and gold is at the bottom. Making hi
 ## 4. Verdict
 
 **PARTIAL**
+
+## Re-judgement of the side frames
+
+I judged this only from the two recaptured PNGs (side_day.png and side_night.png). I read no code, tests or docs.
+
+**side_day (08:00):** A single creature, seen fully side-on and facing left, with the camera at the other end of the row. It wears two **violet/purple** bands. One runs around the upper chest and shoulders and over the top of the stone back plates. The other runs lower around the belly and wraps the full length of the body to the hindquarters. The bands follow the body's outline, rising over the plates and dipping at the waist, so in profile they read as harness straps, not as a texture seam or a floating ring. The trainer stands in front of the lower forelegs only, so the bands, flank and head are unobstructed. The eye, muzzle, white face and ear are fully clear. This matches the top-tier (purple) creature from the front shots.
+
+**side_night (23:00):** The same creature and the same framing. The bands turn pale lilac/pink and are the brightest saturated element on the darkened body, so they stand out more at night than by day. The face is clear and nothing blocks the bands.
+
+| Sub-check (side) | Result |
+|---|---|
+| Geared creature's accent reads as gear trim from the side, day | PASS |
+| Same, night | PASS |
+| Unobstructed | PASS (the trainer covers only the lower forelegs) |
+| Face/identity clear | PASS |
+| No red/oxblood | PASS (violet by day, lilac by night) |
+
+The recapture closes the side-view gap from my first pass.
+
+### Updated overall verdict (front results from the first pass plus these side frames)
+
+At the normal camera, a geared creature can be told from an ungeared one by day and at night, from the front and from the side. The four tiers have clearly different colours. The accent reads as harness trim, leaves the face clear and uses no red.
+
+Remaining non-blocking notes:
+- Tier is shown by colour only, and gold sits at the lowest tier, which players may read as the top.
+- No separate charm is visible in any frame.
+- The side view shows only one tier, so the side check proves gear-vs-ungeared visibility but not side-on tier comparison.
+
+**Verdict: PASS**
