@@ -1,0 +1,79 @@
+{
+  "case": "flag-bd-medium-meadows",
+  "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+  "complete": true,
+  "exit_code": 0,
+  "frames": 365,
+  "average_fps": 19.02762378290326,
+  "one_percent_low_fps": 15.045173132329822,
+  "minimum_fps": 14.354822502619756,
+  "slow_one_percent_frames": 4,
+  "wall_sum_ms": 19182.637,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "renderer": "forward_plus",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "camera": {
+    "far": 2000.0,
+    "fov": 70.0,
+    "near": 0.0500000007450581,
+    "path": "CameraRig/Camera3D"
+  },
+  "waypoints_reached": 3,
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "native_errors": [],
+  "native_warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: 'res://scenes/masters/master_t1.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'.",
+    "WARNING: 'res://scenes/masters/master_t2.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+  ],
+  "environment_start": {
+    "hour": 8.06972911111111,
+    "position": [
+      9.5,
+      0.900942862033844,
+      14.0
+    ],
+    "time_of_day": "day",
+    "weather": "clear"
+  },
+  "environment_end": {
+    "hour": 8.84215836848489,
+    "position": [
+      105.82544708252,
+      0.910842657089233,
+      14.0
+    ],
+    "time_of_day": "day",
+    "weather": "clear"
+  },
+  "meets_current_medium_target": false,
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.pck",
+      "size": 1123171248,
+      "sha256": "6ce9561b67769d652897bc054bca09ecd4d1a19a96f9dda1600c348437b36169"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "inventory_path": "flag-bd-medium-meadows/inventory.json"
+}

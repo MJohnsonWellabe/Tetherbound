@@ -1,0 +1,68 @@
+{
+  "case": "flag-bd-medium-water",
+  "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+  "complete": true,
+  "exit_code": 0,
+  "frames": 276,
+  "average_fps": 33.9727848451838,
+  "one_percent_low_fps": 11.144296349128517,
+  "minimum_fps": 10.267362109326871,
+  "slow_one_percent_frames": 3,
+  "wall_sum_ms": 8124.15,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "renderer": "forward_plus",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "camera": {
+    "far": 6500.0,
+    "fov": 70.0,
+    "near": 0.0500000007450581,
+    "path": "CameraRig/Camera3D"
+  },
+  "waypoints_reached": 2,
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "native_errors": [],
+  "native_warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: 'res://scenes/masters/master_t3.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+  ],
+  "environment_start": {
+    "hour": 8.05532973714286,
+    "position": [
+      12.0,
+      3.4628279209137,
+      150.0
+    ],
+    "time_of_day": "day"
+  },
+  "environment_end": {
+    "hour": 8.3854211762963,
+    "position": [
+      20.9085006713867,
+      1.11255931854248,
+      168.351821899414
+    ],
+    "time_of_day": "day"
+  },
+  "meets_current_medium_target": false,
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.pck",
+      "size": 1123171248,
+      "sha256": "6ce9561b67769d652897bc054bca09ecd4d1a19a96f9dda1600c348437b36169"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "inventory_path": "flag-bd-medium-water/inventory.json"
+}

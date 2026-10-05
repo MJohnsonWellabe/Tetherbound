@@ -1,0 +1,317 @@
+{
+  "baseline_source": "29237b38efd3c011b88a5588e92e319b05b90c98",
+  "candidate_game_source": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+  "route_order": [
+    "cpu-292-medium-water",
+    "flag-bd-medium-water",
+    "cpu-292-medium-meadows",
+    "flag-bd-medium-meadows"
+  ],
+  "rows": [
+    {
+      "case": "cpu-292-medium-water",
+      "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+      "complete": true,
+      "exit_code": 0,
+      "frames": 292,
+      "average_fps": 35.94921311850806,
+      "one_percent_low_fps": 15.11692944929026,
+      "minimum_fps": 14.258622902200106,
+      "slow_one_percent_frames": 3,
+      "wall_sum_ms": 8122.57,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "camera": {
+        "far": 6500.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "waypoints_reached": 2,
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "native_errors": [],
+      "native_warnings": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated.",
+        "WARNING: 'res://scenes/masters/master_t3.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+      ],
+      "environment_start": {
+        "hour": 8.05025749333333,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 8.37987003047621,
+        "position": [
+          20.9085006713867,
+          1.11255931854248,
+          168.351821899414
+        ],
+        "time_of_day": "day"
+      },
+      "meets_current_medium_target": false,
+      "payload": [
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.exe",
+          "size": 109052928,
+          "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.pck",
+          "size": 1123170992,
+          "sha256": "06f7c06b220d064d130c5fe9234e20996bacf4ac66bfc1b1abc49bc59840d368"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\libterrain.windows.release.x86_64.dll",
+          "size": 3549184,
+          "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+        }
+      ],
+      "inventory_path": "cpu-292-medium-water/inventory.json"
+    },
+    {
+      "case": "flag-bd-medium-water",
+      "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+      "complete": true,
+      "exit_code": 0,
+      "frames": 276,
+      "average_fps": 33.9727848451838,
+      "one_percent_low_fps": 11.144296349128517,
+      "minimum_fps": 10.267362109326871,
+      "slow_one_percent_frames": 3,
+      "wall_sum_ms": 8124.15,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "camera": {
+        "far": 6500.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "waypoints_reached": 2,
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "native_errors": [],
+      "native_warnings": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated.",
+        "WARNING: 'res://scenes/masters/master_t3.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+      ],
+      "environment_start": {
+        "hour": 8.05532973714286,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 8.3854211762963,
+        "position": [
+          20.9085006713867,
+          1.11255931854248,
+          168.351821899414
+        ],
+        "time_of_day": "day"
+      },
+      "meets_current_medium_target": false,
+      "payload": [
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.exe",
+          "size": 109052928,
+          "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.pck",
+          "size": 1123171248,
+          "sha256": "6ce9561b67769d652897bc054bca09ecd4d1a19a96f9dda1600c348437b36169"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\libterrain.windows.release.x86_64.dll",
+          "size": 3549184,
+          "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+        }
+      ],
+      "inventory_path": "flag-bd-medium-water/inventory.json"
+    },
+    {
+      "case": "cpu-292-medium-meadows",
+      "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+      "complete": true,
+      "exit_code": 0,
+      "frames": 341,
+      "average_fps": 17.770059700626085,
+      "one_percent_low_fps": 14.104670761722744,
+      "minimum_fps": 13.871741874627197,
+      "slow_one_percent_frames": 4,
+      "wall_sum_ms": 19189.581,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "camera": {
+        "far": 2000.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "waypoints_reached": 3,
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "native_errors": [],
+      "native_warnings": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated.",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: 'res://scenes/masters/master_t1.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'.",
+        "WARNING: 'res://scenes/masters/master_t2.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+      ],
+      "environment_start": {
+        "hour": 8.06974064000001,
+        "position": [
+          9.5,
+          0.900942862033844,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "environment_end": {
+        "hour": 8.84180952380956,
+        "position": [
+          105.82544708252,
+          0.910842657089233,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "meets_current_medium_target": false,
+      "payload": [
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.exe",
+          "size": 109052928,
+          "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.pck",
+          "size": 1123170992,
+          "sha256": "06f7c06b220d064d130c5fe9234e20996bacf4ac66bfc1b1abc49bc59840d368"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\libterrain.windows.release.x86_64.dll",
+          "size": 3549184,
+          "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+        }
+      ],
+      "inventory_path": "cpu-292-medium-meadows/inventory.json"
+    },
+    {
+      "case": "flag-bd-medium-meadows",
+      "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+      "complete": true,
+      "exit_code": 0,
+      "frames": 365,
+      "average_fps": 19.02762378290326,
+      "one_percent_low_fps": 15.045173132329822,
+      "minimum_fps": 14.354822502619756,
+      "slow_one_percent_frames": 4,
+      "wall_sum_ms": 19182.637,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "renderer": "forward_plus",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "camera": {
+        "far": 2000.0,
+        "fov": 70.0,
+        "near": 0.0500000007450581,
+        "path": "CameraRig/Camera3D"
+      },
+      "waypoints_reached": 3,
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "native_errors": [],
+      "native_warnings": [
+        "WARNING: instance_reset_physics_interpolation() is deprecated.",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+        "WARNING: 'res://scenes/masters/master_t1.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'.",
+        "WARNING: 'res://scenes/masters/master_t2.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+      ],
+      "environment_start": {
+        "hour": 8.06972911111111,
+        "position": [
+          9.5,
+          0.900942862033844,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "environment_end": {
+        "hour": 8.84215836848489,
+        "position": [
+          105.82544708252,
+          0.910842657089233,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "meets_current_medium_target": false,
+      "payload": [
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.exe",
+          "size": 109052928,
+          "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.pck",
+          "size": 1123171248,
+          "sha256": "6ce9561b67769d652897bc054bca09ecd4d1a19a96f9dda1600c348437b36169"
+        },
+        {
+          "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\libterrain.windows.release.x86_64.dll",
+          "size": 3549184,
+          "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+        }
+      ],
+      "inventory_path": "flag-bd-medium-meadows/inventory.json"
+    }
+  ],
+  "calculation": "average=1000*n/sum(wall_ms); 1%low=1000/mean(slowest ceil(n*.01) wall intervals); minimum=1000/max(wall_ms)",
+  "scope": "Matching original Windows release mode2 packages; Medium Forward+ fullscreen1080 GTX1060; existing production routes with disclosed fixture/start teleport, no debug/EngineProfiler/gpu-profile/background trace. No visibility/physics/geometry/material/gameplay-flag reduction.",
+  "limitations": [
+    "Sequential single A/B per biome; normal live clock/weather/ecology and changed frame-count/warmup duration remain variance.",
+    "Tidewake292/276 frames with8.122570/8.124150seconds wall samples; Meadows341/365 frames with19.189581/19.182637seconds. Both Tidewake runs exceed120 minimum-frame floor.",
+    "1%low derives from3/3/4/4 slow frames respectively; no campaign/fight/four-peer/handheld proof.",
+    "Cached process/physics monitors are not true per-frame CPU/GPU attribution.",
+    "Runtime FPS caps, VSync/time settings not explicitly witnessed; no uncapped claim.",
+    "Immutable original mode2 packages reused. Preset chooser at e2 has byte-identical graphics_prefs.gd/art.json/project.godot to both package sources; chooser provenance is separate from measured package provenance.",
+    "Regression onset and full performance acceptance unproven."
+  ]
+}
