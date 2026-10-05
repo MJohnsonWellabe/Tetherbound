@@ -163,7 +163,7 @@ var _idle_left: float = 0.0
 var _alert_msec: Dictionary = {}
 ## Instance ids of bodies whose `wants_to_engage` this has already connected
 ## to. Membership stays constant-time as the wild roster grows; subscriptions
-## are still discovered each frame, including a new body's first alert.
+## are still discovered each frame, preserving the existing scan ordering.
 var _voiced: Dictionary = {}
 
 
@@ -188,13 +188,18 @@ func _tick_creature_voices(delta: float) -> void:
 ## continuously as the player moves through the corridor -- there is no single
 ## moment when "every creature" exists to connect to.
 func _connect_new_creatures(config: Dictionary) -> void:
-	for node in get_tree().get_nodes_in_group(&"creature_voice"):
+	var creatures := get_tree().get_nodes_in_group(&"creature_voice")
+	for node in creatures:
 		var id := node.get_instance_id()
 		if _voiced.has(id):
 			continue
 		_voiced[id] = true
 		if node.has_signal("wants_to_engage"):
 			node.connect("wants_to_engage", _on_creature_alert.bind(node))
+	# Every current group member is now cached. Equal sizes prove each cached
+	# id belongs to one of these live bodies, so the validity sweep is redundant.
+	if _voiced.size() == creatures.size():
+		return
 	# Keep live bodies even when they leave the group, as before: re-entry must
 	# not subscribe twice. Freed instance ids cannot accumulate across the run.
 	for id: int in _voiced.keys():
