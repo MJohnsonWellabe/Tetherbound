@@ -192,6 +192,41 @@ static func _groom(current: Dictionary, revision: int, intent: Dictionary,
 	return {"ok": true, "state": next, "outputs": shed.outputs}
 
 
+## F27's frozen actual host wild-victory stage calls this before its existing
+## receipt is journalled. Every participant keeps their own payout; all shed
+## items compose with XP/essence in ONE candidate and ONE save/ACK settlement.
+static func compose_wild_shed(victory_stage: Dictionary, host_outcome: Dictionary,
+		retained_host_rolls: Dictionary) -> Dictionary:
+	if _read("res://data/config/f32_runtime.json").get("runtime_enabled") != true:
+		return _deny("disabled")
+	if victory_stage.get("ok") != true or victory_stage.get("duplicate") == true \
+			or not victory_stage.get("state") is Dictionary: return _deny("actual_victory_stage_required")
+	var next: Dictionary = victory_stage.state.duplicate(true)
+	var receipts: Dictionary = {}
+	for receipt: Variant in next.get("redesign_character", {}).get("transaction_receipts", []):
+		receipts[str(receipt)] = true
+	var shed := SHED.wild_win_candidate(host_outcome, str(next.get("character_id", "")),
+		receipts, retained_host_rolls, SHED.read())
+	if shed.get("ok") != true: return shed
+	var db := ITEM_DB.new()
+	var inventory := INVENTORY.new(db)
+	for index: int in next.inventory.size(): inventory.set_slot(index, next.inventory[index])
+	for item: String in shed.outputs:
+		if not db.has(item): return _deny("unregistered_output")
+		if inventory.add(item, int(shed.outputs[item])) != 0: return _deny("inventory_full")
+	next.inventory = []
+	for index: int in inventory.slot_count():
+		var stack := inventory.stack_at(index)
+		next.inventory.append(null if stack.is_empty() else stack)
+	var limit := int(_read("res://data/config/f32_runtime.json").get("maximum_transaction_receipts", 0))
+	if next.redesign_character.transaction_receipts.size() >= limit: return _deny("receipt_budget")
+	next.redesign_character.transaction_receipts.append(shed.receipt_id)
+	var result := victory_stage.duplicate(true)
+	result.state = next
+	result["shed_outputs"] = shed.outputs.duplicate(true)
+	return result
+
+
 static func _read(path: String) -> Dictionary:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	return parsed if parsed is Dictionary else {}

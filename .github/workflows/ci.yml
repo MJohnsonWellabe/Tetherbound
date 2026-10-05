@@ -767,42 +767,6 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
-      # F27 (batch 532): Altar spend and catch-overflow release payout, solo/host
-      # real paths. smoke_f27_wild_defeat_essence joins after the actor_vitals flip.
-      - name: Verify f27_altar_spend
-        if: ${{ !cancelled() }}
-        env: { SMOKE: f27_altar_spend, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify release
-        if: ${{ !cancelled() }}
-        env: { SMOKE: release, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
       - name: Run the harvest regression checks
         run: |
           godot --headless --path . --script tests/run_tests.gd \

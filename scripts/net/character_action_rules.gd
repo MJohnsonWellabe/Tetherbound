@@ -12,7 +12,7 @@ const BOUNTIES := preload("res://scripts/world/bounty_board.gd")
 const REMATCH := preload("res://scripts/repeatables/rematch_rules.gd")
 const RESEARCH := preload("res://scripts/creatures/research_log.gd")
 const RECORD_FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
-const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "essence_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
+const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
 
 
 static func stage(current: Dictionary, revision: int, action: String,
@@ -34,17 +34,6 @@ static func stage(current: Dictionary, revision: int, action: String,
 		proposal = BOUNTIES.stage(current, revision, action, intent, context)
 	elif action == "rematch_win":
 		proposal = REMATCH.stage(current, revision, intent, context)
-	elif action == "essence_release":
-		# F27#1: the catch-overflow ceremony releases one of the five owned for
-		# its type's essence. The newcomer joins only after this settles, so
-		# the five-owned cap and its ceremony are unchanged.
-		if context.get("release_ceremony") != true or context.get("in_combat") != false:
-			return deny("actual_release_ceremony_required")
-		if intent.size() != 2 or not ESSENCE._component(intent.get("creature_uid")) \
-				or not ESSENCE._component(intent.get("release_id")): return deny("invalid_release_intent")
-		if not current.party is Array or current.party.size() != preload("res://autoload/party.gd").MAX_CREATURES:
-			return deny("release_requires_full_party")
-		proposal = ESSENCE.stage_release(current, current.character_id, intent.creature_uid, revision, ESSENCE.config())
 	elif action in ["trait_teach", "trait_release"]:
 		if context.get("station_id") != "altar" or context.get("homestead") != true or context.get("in_combat") != false:
 			return deny("actual_altar_required")
