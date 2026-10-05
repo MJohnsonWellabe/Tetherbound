@@ -245,13 +245,13 @@
       ],
       "synthesis": "tools/audio/synth.py (project-owned)",
       "steps": [
-        "brown noise band-passed 30-220 Hz, 6 ms attack / 0.7 s decay -> boom",
-        "synth sub sine sweep 102 -> 32 Hz, 0.9 s decay",
+        "brown noise band-passed 30-220 Hz, 20 ms attack (the crack carries the onset) / 0.7 s decay -> boom",
+        "synth sub sine sweep 102 -> 32 Hz, 20 ms attack, 0.9 s decay",
         "build_place_thud_1.wav 0.45x speed, low-passed 600 Hz -> ground hit",
         "impact_super_2.wav 0.5x speed, low-passed 900 Hz",
         "DC removed; 0.25 s linear tail fade; peak-normalised to -1.5 dBFS"
       ],
-      "sha256": "c97497c776bf04cd51fc22c5501862a84616835674cc0a3beabb18ddc3063343"
+      "sha256": "92b9723ca822f02e6f906e3a7bdda815f54b2f87f5e5c026c536ba92a88c240c"
     },
     {
       "asset": "res://assets/audio/stormwood/strike_decay.wav",

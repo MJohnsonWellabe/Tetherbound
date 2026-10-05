@@ -43,8 +43,8 @@ strike layers at the sfx rate 44100 Hz, mono because positional.
   2796 / 3473 / 4356 / 4026 Hz; Building has copper-tick onsets (3.3/s vs 0 in
   Calm) and a 90-210 Hz electrical share 13x Calm; Release has < half Break's
   80-220 Hz share; crack 1 ms-envelope attack 0.41 ms, centroid ~11.7 kHz;
-  body/decay >= 0.9 energy below 250 Hz; whole chain reaches 0.68 of its peak
-  within 5 ms of onset with 0.91 of its tail below 250 Hz; warning rises
+  body/decay >= 0.9 energy below 250 Hz; in the whole chain's first 5 ms the crack
+  leads body+decay by 12.6 dB, with 0.91 of the tail below 250 Hz; warning rises
   11.7 dB and lasts the telegraph; every asset >= 2 dB mean third-octave
   shape gap from the other eight and from every installed bed/music loop.
 - `test_stormwood_audio_assets.txt`: headless Godot 4.7, all nine contract paths
@@ -52,13 +52,15 @@ strike layers at the sfx rate 44100 Hz, mono because positional.
   length = telegraph. 2 tests, 48 assertions, 0 failed.
 - `smoke_stormwood_surge_audio.txt`, `cue_timeline.md`, `MISSING_ASSETS.md`:
   production Stormwood world, real Surge clock and host lightning. 20 passed,
-  0 failed; 93 of 93 fired cues found their asset and started a player;
+  0 failed; 89 of 89 fired cues found their asset and started a player;
   MISSING ASSETS (0). Headless uses the dummy audio driver: this proves load
   and playback start, not what was heard.
 
 Independent review (round 1) asked for the phase energy axis in LUFS: Calm
 and Building were 0.3 LU apart by perceived loudness. Fixed in the second
-commit (checker measures LUFS; Building retuned, Calm's rain darkened).
+commit (checker measures LUFS; Building retuned, Calm's rain darkened). Round 2 approved; its non-blocking note that the
+chain metric barely needed the crack is fixed in the third commit (crack-lead
+metric; body/sub attack 20 ms so the crack carries the onset).
 
 Not proven here: in-game mix against music/other buses, Ally speakers, blinded
 listener identification (AUDIO §12 #3). The rod-area pressure layer, arches and

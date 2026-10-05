@@ -274,16 +274,21 @@ def main() -> int:
     chain = np.zeros(max(len(l) for l in layers))
     for l in layers:
         chain[: len(l)] += l
-    # The body keeps swelling after the crack, so a 10->90% rise would time
-    # the boom, not the strike. The transient test: within 5 ms of onset the
-    # chain's 1 ms envelope already reaches half its overall peak.
+    # The body keeps swelling after the crack, so the chain's overall peak is
+    # the boom and a 10->90% rise would time that, not the strike. Instead:
+    # in the first 5 ms after onset the full chain must be >= 6 dB louder than
+    # the same window with the crack removed (the crack carries the onset).
     w = int(0.001 * FX_SR)
     env = np.sqrt(np.convolve(chain * chain, np.ones(w) / w, "same"))
     onset = int(np.argmax(env >= 0.1 * env.max()))
-    early = float(env[onset:onset + int(0.005 * FX_SR)].max() / env.max())
+    win = slice(onset, onset + int(0.005 * FX_SR))
+    no_crack = np.zeros_like(chain)
+    for l in layers[1:]:
+        no_crack[: len(l)] += l
+    lead = db(rms(chain[win])) - db(rms(no_crack[win]))
     tail_low = band_fraction(chain[int(0.5 * FX_SR):], FX_SR, 20, 250)
-    check("strike chain", "transient then low rumble tail", early >= 0.5 and tail_low >= 0.6,
-          f"first 5 ms reach {early:.2f} of peak, tail<250 Hz {tail_low:.2f}", ">= 0.50 of peak, tail >= 0.60")
+    check("strike chain", "transient then low rumble tail", lead >= 6.0 and tail_low >= 0.6,
+          f"crack lead in first 5 ms {lead:.1f} dB, tail<250 Hz {tail_low:.2f}", "lead >= 6 dB, tail >= 0.60")
     x, sr = audio["strike_warning"]
     thirds = np.array_split(x, 3)
     rise = db(rms(thirds[2])) - db(rms(thirds[0]))

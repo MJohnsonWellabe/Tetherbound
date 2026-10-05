@@ -46,7 +46,7 @@
 | strike_crack | one-shot: no loop chunk | PASS | None | None |
 | strike_body | format 16-bit mono at project rate | PASS | 44100 Hz/1 ch/16-bit | 44100 Hz/1 ch/16-bit |
 | strike_body | no clipping (peak, full-scale samples) | PASS | -1.50 dBFS, 0 samples | <= -0.5 dBFS, 0 |
-| strike_body | DC offset | PASS | 0.00009 | <= 0.002 |
+| strike_body | DC offset | PASS | 0.00010 | <= 0.002 |
 | strike_body | one-shot: no loop chunk | PASS | None | None |
 | strike_decay | format 16-bit mono at project rate | PASS | 44100 Hz/1 ch/16-bit | 44100 Hz/1 ch/16-bit |
 | strike_decay | no clipping (peak, full-scale samples) | PASS | -4.00 dBFS, 0 samples | <= -0.5 dBFS, 0 |
@@ -77,7 +77,7 @@
 | strike_body | low rumble (energy below 250 Hz) | PASS | 0.96 | >= 0.60 |
 | strike_decay | low rumble (energy below 250 Hz) | PASS | 0.90 | >= 0.60 |
 | strike_decay | tail persists 1-4 s | PASS | -2.1 dB vs first second | >= -12 dB |
-| strike chain | transient then low rumble tail | PASS | first 5 ms reach 0.68 of peak, tail<250 Hz 0.91 | >= 0.50 of peak, tail >= 0.60 |
+| strike chain | transient then low rumble tail | PASS | crack lead in first 5 ms 12.6 dB, tail<250 Hz 0.91 | lead >= 6 dB, tail >= 0.60 |
 | strike_warning | rises toward impact (last vs first third) | PASS | 11.7 dB | >= 6 dB |
 | strike_warning | length matches telegraph | PASS | 1.200 s | 1.2 s +/- 0.02 |
 | surge_calm_bed | distinct from the other eight | PASS | nearest release_forest_sky_bed 5.23 dB | >= 2.0 dB mean 1/3-oct shape gap |
@@ -92,5 +92,5 @@
 | release_forest_sky_bed | distinct from installed beds/music | PASS | nearest river_water 3.86 dB | >= 2.0 dB |
 | strike_warning | distinct from the other eight | PASS | nearest surge_building_bed 7.62 dB | >= 2.0 dB mean 1/3-oct shape gap |
 | strike_crack | distinct from the other eight | PASS | nearest surge_break_bed 7.36 dB | >= 2.0 dB mean 1/3-oct shape gap |
-| strike_body | distinct from the other eight | PASS | nearest strike_decay 5.39 dB | >= 2.0 dB mean 1/3-oct shape gap |
-| strike_decay | distinct from the other eight | PASS | nearest strike_body 5.39 dB | >= 2.0 dB mean 1/3-oct shape gap |
+| strike_body | distinct from the other eight | PASS | nearest strike_decay 5.49 dB | >= 2.0 dB mean 1/3-oct shape gap |
+| strike_decay | distinct from the other eight | PASS | nearest strike_body 5.49 dB | >= 2.0 dB mean 1/3-oct shape gap |

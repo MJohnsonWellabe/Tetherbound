@@ -326,7 +326,7 @@
       "asset": "strike_body",
       "check": "DC offset",
       "pass": true,
-      "value": "0.00009",
+      "value": "0.00010",
       "threshold": "<= 0.002"
     },
     {
@@ -543,8 +543,8 @@
       "asset": "strike chain",
       "check": "transient then low rumble tail",
       "pass": true,
-      "value": "first 5 ms reach 0.68 of peak, tail<250 Hz 0.91",
-      "threshold": ">= 0.50 of peak, tail >= 0.60"
+      "value": "crack lead in first 5 ms 12.6 dB, tail<250 Hz 0.91",
+      "threshold": "lead >= 6 dB, tail >= 0.60"
     },
     {
       "asset": "strike_warning",
@@ -648,14 +648,14 @@
       "asset": "strike_body",
       "check": "distinct from the other eight",
       "pass": true,
-      "value": "nearest strike_decay 5.39 dB",
+      "value": "nearest strike_decay 5.49 dB",
       "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
     },
     {
       "asset": "strike_decay",
       "check": "distinct from the other eight",
       "pass": true,
-      "value": "nearest strike_body 5.39 dB",
+      "value": "nearest strike_body 5.49 dB",
       "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
     }
   ],

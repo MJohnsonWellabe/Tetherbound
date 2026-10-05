@@ -381,10 +381,10 @@ def strike_body(gen: np.random.Generator) -> np.ndarray:
     a, sr = "strike_body", SR_FX
     n = int(1.8 * sr)
     t = np.arange(n) / sr
-    boom = synth.band(synth.brown(n, gen), 30.0, 220.0, sr) * synth.percussive(n, 0.7, sr, attack_s=0.006, curve=0.9)
-    _log(a, "brown noise band-passed 30-220 Hz, 6 ms attack / 0.7 s decay -> boom")
-    sub = synth.sine(70.0 * np.exp(-t / 0.6) + 32.0, sr, n) * synth.percussive(n, 0.9, sr, attack_s=0.004)
-    _log(a, "synth sub sine sweep 102 -> 32 Hz, 0.9 s decay")
+    boom = synth.band(synth.brown(n, gen), 30.0, 220.0, sr) * synth.percussive(n, 0.7, sr, attack_s=0.02, curve=0.9)
+    _log(a, "brown noise band-passed 30-220 Hz, 20 ms attack (the crack carries the onset) / 0.7 s decay -> boom")
+    sub = synth.sine(70.0 * np.exp(-t / 0.6) + 32.0, sr, n) * synth.percussive(n, 0.9, sr, attack_s=0.02)
+    _log(a, "synth sub sine sweep 102 -> 32 Hz, 20 ms attack, 0.9 s decay")
     thud, tsr = load_installed("assets/audio/sfx/build_place_thud_1.wav", a)
     thud = synth.lowpass_fft(resample(thud, tsr, sr, 0.45), 600.0, sr)
     _log(a, "build_place_thud_1.wav 0.45x speed, low-passed 600 Hz -> ground hit")
