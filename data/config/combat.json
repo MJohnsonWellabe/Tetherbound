@@ -824,7 +824,7 @@
         "preferred_range": 5.5,
         "safe_escape": "outside",
         "marker_radius_m": 2,
-        "marker_tracks_fraction": 0.5,
+        "marker_tracks_fraction": 0.3,
         "reposition_distance": 7
       },
       "diver_retreat": {
@@ -882,7 +882,7 @@
         "preferred_range": 6,
         "safe_escape": "outside",
         "marker_radius_m": 2.5,
-        "marker_tracks_fraction": 0.5,
+        "marker_tracks_fraction": 0.3,
         "field_duration_s": 3,
         "field_hits_per_cast": 1
       },
@@ -1015,8 +1015,7 @@
         "reposition_speed": 7,
         "preferred_range": 5.5,
         "safe_escape": "outside",
-        "marker_radius_m": 1.75
-      },
+        "marker_radius_m": 1.75, "marker_tracks_fraction": 0.3},
       "aquaryn_wake": {
         "role": "CURRENT",
         "slot": "charged",

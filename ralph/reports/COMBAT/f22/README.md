@@ -19,3 +19,15 @@ Proposed next steps (none built here):
 - COMBAT §4 target per-role poise pools and the 0.8 s post-stagger resistance. Coordinate with F21.
 - Raise ordinary-wild pattern power toward the declared 15–30% masher cost (PROGRESSION/F19).
 - A ruling on the F22#1 metric.
+
+## Locked-shape escapability (game change, 6ba5e132+)
+
+Starter body radii are terrapup 1.46, ripplet 1.37 and galewisp 1.23 m. The hit test widens every shape by the target's body radius.
+
+A tracking marker/field locks onto where the creature stands. With tracking for half the tell, a 1.1 s leap marker or zone leaves 0.55 s after lock to cover the marker radius plus the body radius:
+- diver_leap 2.0 + 1.37 = 3.37 m
+- current_zone 2.5 + 1.37 = 3.87 m
+
+At 5.6 m/s that cannot be walked, and the burst is the only exit.
+
+Fix in geometry: `marker_tracks_fraction` 0.5 → 0.3 on every marker/field row (diver_leap, current_zone, vess_flank). The marker now locks with ~0.77 s left, so a walk covers ~4.3 m. Radii, shapes and tell lengths are unchanged, and no creature is resized. Cones, lanes and rings already leave a walkable exit, since heading lock does not pin the target at the centre.
