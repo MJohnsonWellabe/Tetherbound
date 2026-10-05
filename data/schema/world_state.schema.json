@@ -320,12 +320,11 @@
         "type": "object",
         "properties": {
           "next_seq": { "type": "integer", "minimum": 1 },
-          "acked": { "type": "integer", "minimum": 0 },
-          "replayed": { "type": "integer", "minimum": 0 },
           "hits": { "type": "integer", "minimum": 0 },
-          "open": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }
+          "open": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+          "replayed": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "maxItems": 64, "uniqueItems": true }
         },
-        "required": ["next_seq", "acked", "replayed", "hits", "open"],
+        "required": ["next_seq", "hits", "open", "replayed"],
         "additionalProperties": false
       }
     }

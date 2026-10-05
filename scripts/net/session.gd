@@ -396,12 +396,6 @@ func foundation_rematch_start(trainer_id: String, tier: String, creature_uid: St
 		{"trainer_id": trainer_id, "tier": tier, "creature_uid": creature_uid, "action_id": action_id}, -1)
 
 func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
-	# Ruling (b): flush this guest's open gather batch first, so freshly
-	# gathered items are on their way before a station action reads them.
-	if peer != local_peer_id():
-		var gather_writer := get_node_or_null(^"LedgerRpc")
-		var gatherer := _authority_character(peer)
-		if gather_writer != null and not gatherer.is_empty(): gather_writer.call("flush_gather_batch", gatherer)
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)

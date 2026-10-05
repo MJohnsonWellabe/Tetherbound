@@ -404,8 +404,9 @@ func _apply_gather_op(op: Dictionary) -> bool:
 	var character := str(op.get("character_id", ""))
 	if character.is_empty(): return false
 	var row := GATHER_BATCHES.batch(redesign_world, character)
+	if row.is_empty(): return false
 	var next: Dictionary = {}
-	var prune: Array[String] = []
+	var erase: Array = []
 	match str(op.op):
 		"gather_accrue":
 			next = GATHER_BATCHES.accrued(row, str(op.get("item", "")), int(op.get("count", 0)))
@@ -419,17 +420,35 @@ func _apply_gather_op(op: Dictionary) -> bool:
 				or str(delivery.get("delivery_id", "")) != id: return false
 			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
 			next = GATHER_BATCHES.flushed(row)
-		"gather_mark":
-			next = GATHER_BATCHES.marked(row, str(op.get("mark", "")), int(op.get("seq", -1)))
-			if not next.is_empty():
-				prune = GATHER_BATCHES.prunable(reward_deliveries, character, next)
+		"gather_replayed":
+			var seq := int(op.get("seq", -1))
+			if GATHER_BATCHES.row_id(reward_deliveries, character, seq).is_empty(): return false
+			var marked := GATHER_BATCHES.replayed_marked(row, seq)
+			if marked.is_empty(): return false
+			var result: Array = GATHER_BATCHES.pruned(reward_deliveries, character, marked)
+			next = result[0]
+			erase = result[1]
 	if next.is_empty(): return false
-	for id: String in prune: reward_deliveries.erase(id)
-	var all: Dictionary = (redesign_world.get(GATHER_BATCHES.FIELD, {}) as Dictionary).duplicate(true)
-	all[character] = next
-	redesign_world[GATHER_BATCHES.FIELD] = all
+	for id: String in erase: reward_deliveries.erase(id)
+	_store_gather_batch(character, next)
 	revision += 1
 	return true
+
+
+func _store_gather_batch(character: String, row: Dictionary) -> void:
+	var all: Dictionary = (redesign_world.get(GATHER_BATCHES.FIELD, {}) as Dictionary).duplicate(true)
+	all[character] = row
+	redesign_world[GATHER_BATCHES.FIELD] = all
+
+
+## An accepted batch row that the host's replay already credited is pruned
+## now (gather_batches.gd: per-row accepted AND replayed).
+func _prune_accepted_gather_row(character: String) -> void:
+	var row := GATHER_BATCHES.batch(redesign_world, character)
+	if row.is_empty() or (row.replayed as Array).is_empty(): return
+	var result: Array = GATHER_BATCHES.pruned(reward_deliveries, character, row)
+	for id: String in result[1]: reward_deliveries.erase(id)
+	_store_gather_batch(character, result[0])
 
 
 ## A saved number, or the default. Deliberately strict about the TYPE rather
@@ -553,9 +572,11 @@ func _apply_op(op: Dictionary) -> bool:
 					or str((accepted as Dictionary).get("character_id", "")) != accept_character:
 				return false
 			(accepted as Dictionary)["status"] = "accepted"
+			if GATHER_BATCHES.seq_of(str((accepted as Dictionary).get("source", ""))) >= 1:
+				_prune_accepted_gather_row(accept_character)
 			revision += 1
 			return true
-		"gather_accrue", "gather_flush", "gather_mark":
+		"gather_accrue", "gather_flush", "gather_replayed":
 			return _apply_gather_op(op)
 		"reward_delivery_journal":
 			var delivery: Variant = op.get("delivery", {})

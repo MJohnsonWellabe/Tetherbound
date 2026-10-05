@@ -118,8 +118,18 @@ func test_a_find_the_host_never_stood_up_never_reaches_the_authority() -> void:
 	assert_true(world.reward_deliveries.is_empty())
 
 
-func test_key_and_tm_finds_take_their_item_from_the_flag() -> void:
+func test_a_forged_key_or_tm_flag_never_mints_into_the_authority() -> void:
+	# Review B3: the flag text must not name the item. An unregistered
+	# "pickup:<anything>" stays the legacy local-only grant.
+	var forged: Dictionary = ledger.call("commit", _claim("pickup:rare_candy", "rare_candy", 1, GUEST_CHARACTER), GUEST)
+	assert_eq(str(_ops(forged, GUEST)[0].get("op")), "item_grant", "an unregistered key flag reaches no authority")
+	var forged_tm: Dictionary = ledger.call("commit", _claim("tm:tm_anything", "tm_anything", 1, GUEST_CHARACTER), GUEST)
+	assert_eq(str(_ops(forged_tm, GUEST)[0].get("op")), "item_grant")
+	assert_true(world.reward_deliveries.is_empty())
+
+
+func test_a_key_the_host_stood_up_pays_its_own_item_and_is_then_evicted() -> void:
+	PICKUP_SPECS.register("pickup:pond_key", "pond_key", 1)
 	var key: Dictionary = ledger.call("commit", _claim("pickup:pond_key", "rare_candy", 9, GUEST_CHARACTER), GUEST)
 	assert_eq(_ops(key, GUEST)[0].delivery.stacks, [{"id": "pond_key", "n": 1}])
-	var tm: Dictionary = ledger.call("commit", _claim("tm:tm_gust", "rare_candy", 9, GUEST_CHARACTER), GUEST)
-	assert_eq(_ops(tm, GUEST)[0].delivery.stacks, [{"id": "tm_gust", "n": 1}])
+	assert_true(PICKUP_SPECS.lookup("pickup:pond_key").is_empty(), "a claimed one-time find leaves the registry")

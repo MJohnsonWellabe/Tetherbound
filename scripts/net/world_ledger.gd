@@ -294,8 +294,8 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 			return _claim_pickup(intent, peer_id, realm)
 		"gather_flush":
 			return _gather_flush(intent, peer_id, realm)
-		"gather_mark":
-			return _gather_mark(intent, peer_id, realm)
+		"gather_replayed":
+			return _gather_replayed(intent, peer_id, realm)
 		"harvest":
 			return _harvest(intent, peer_id, realm)
 		"deplete_vegetation":
@@ -514,7 +514,9 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 				# A felled pile is a frequent gather: it accrues into the guest's
 				# open batch instead of journaling one delivery per pile.
 				var pile := PICKUP_SPECS.lookup(flag)
-				return _guest_gather(ops, "claim_pickup", peer_id, realm, character_id, str(pile.item), int(pile.count))
+				var gathered := _guest_gather(ops, "claim_pickup", peer_id, realm, character_id, str(pile.item), int(pile.count))
+				if bool(gathered.get("ok", false)): PICKUP_SPECS.consume(flag)
+				return gathered
 			# The host's own world says what this find holds; the request's item
 			# and count are never trusted on this path (review: a forged claim
 			# would otherwise mint into the host's record).
@@ -528,6 +530,9 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 				"delivery_id": delivery.delivery_id, "delivery": delivery})
 			ops.append({"op": "reward_delivery", "scope": "player", "realm": realm,
 				"peers": [peer_id], "delivery": delivery})
+			var paid := _commit(ops, "claim_pickup", peer_id, realm)
+			if bool(paid.get("ok", false)): PICKUP_SPECS.consume(flag)
+			return paid
 		else:
 			ops.append(_item_grant(peer_id, item, count))
 	return _commit(ops, "claim_pickup", peer_id, realm)
@@ -591,8 +596,15 @@ func _harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var node_spec := PICKUP_SPECS.lookup(flag)
 	if not item.is_empty() and amount > 0 and guest_batches(peer_id, character_id) and not node_spec.is_empty():
 		# A guest's harvest of a node the host's world stood up: the host's item
-		# and one of its legal yields, accrued into the guest's open batch.
-		return _guest_gather(ops, "harvest", peer_id, realm, character_id, str(node_spec.item), PICKUP_SPECS.legal_amount(node_spec, amount))
+		# and its legal yield, accrued into the guest's open batch. A tool-gated
+		# resource needs that tool in the guest's admitted inventory (review S5).
+		var tool := str(node_spec.get("tool", ""))
+		if not tool.is_empty() and not (intent.get("_actor_item_ids", []) as Array).has(tool):
+			return _refuse("harvest", peer_id, "tool_required", "You need the right tool to gather this.")
+		var harvested := _guest_gather(ops, "harvest", peer_id, realm, character_id, str(node_spec.item),
+			int(node_spec.alt) if not tool.is_empty() else int(node_spec.count))
+		if bool(harvested.get("ok", false)): PICKUP_SPECS.consume(flag)
+		return harvested
 	if not item.is_empty() and amount > 0:
 		ops.append(_item_grant(peer_id, item, amount))
 	return _commit(ops, "harvest", peer_id, realm)
@@ -614,7 +626,8 @@ func _guest_gather(ops: Array, kind: String, peer_id: int, realm: String, charac
 		return gated
 	if str(world.get("reward_delivery_namespace")).is_empty() or str(world.get("world_id")).is_empty():
 		return _refuse(kind, peer_id, "world_not_ready", "Save this world before gathering.")
-	if GATHER_BATCHES.accrued(GATHER_BATCHES.batch(world.redesign_world, character_id), item, count).is_empty():
+	var open_batch := GATHER_BATCHES.batch(world.redesign_world, character_id)
+	if open_batch.is_empty() or GATHER_BATCHES.accrued(open_batch, item, count).is_empty():
 		return _refuse(kind, peer_id, "batch_full", "Your gathering is still arriving; try again in a moment.")
 	ops.append({"op": "gather_accrue", "scope": "world", "realm": realm,
 		"character_id": character_id, "item": item, "count": count})
@@ -643,18 +656,19 @@ func _gather_flush(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	return _commit(flush_ops, "gather_flush", peer_id, realm)
 
 
-## Host only: advance a character's acked or replayed batch mark (pruning rows
-## at or below both).
-func _gather_mark(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+## Host only: the owner-passive replay credited batch `seq` to the character
+## authority; the row is pruned once it is also accepted (gather_batches.gd).
+func _gather_replayed(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	if peer_id != HOST_PEER:
-		return _refuse("gather_mark", peer_id, "host_only", "Only the host can record that.")
+		return _refuse("gather_replayed", peer_id, "host_only", "Only the host can record that.")
 	var character := str(intent.get("character_id", ""))
-	var mark := str(intent.get("mark", ""))
-	var seq_mark := int(intent.get("seq", -1))
-	if GATHER_BATCHES.marked(GATHER_BATCHES.batch(world.redesign_world, character), mark, seq_mark).is_empty():
-		return _refuse("gather_mark", peer_id, "invalid_mark", "That batch mark is invalid.")
-	return _commit([{"op": "gather_mark", "scope": "world", "realm": realm,
-		"character_id": character, "mark": mark, "seq": seq_mark}], "gather_mark", peer_id, realm)
+	var seq_replayed := int(intent.get("seq", -1))
+	var row := GATHER_BATCHES.batch(world.redesign_world, character)
+	if row.is_empty() or GATHER_BATCHES.row_id(world.reward_deliveries, character, seq_replayed).is_empty() \
+			or GATHER_BATCHES.replayed_marked(row, seq_replayed).is_empty():
+		return _refuse("gather_replayed", peer_id, "invalid_mark", "That batch mark is invalid.")
+	return _commit([{"op": "gather_replayed", "scope": "world", "realm": realm,
+		"character_id": character, "seq": seq_replayed}], "gather_replayed", peer_id, realm)
 
 
 func _stormwood_harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
@@ -1348,14 +1362,11 @@ func accept_reward_delivery(delivery_id: String, character_id: String, peer_id: 
 	if str((raw as Dictionary).get("status", "")) != "pending":
 		return _refuse("reward_delivery_accept", peer_id, "invalid_receipt",
 			"That reward acknowledgement is not pending.")
-	var accept_ops: Array = [{"op": "reward_delivery_accept", "scope": "world",
-		"delivery_id": delivery_id, "character_id": character_id}]
-	var batch_seq := GATHER_BATCHES.seq_of(str((raw as Dictionary).get("source", "")))
-	if batch_seq >= 1:
-		# The guest saved this batch: close redelivery (gather_batches.gd marks).
-		accept_ops.append({"op": "gather_mark", "scope": "world", "realm": "",
-			"character_id": character_id, "mark": "acked", "seq": batch_seq})
-	return _commit(accept_ops, "reward_delivery_accept", peer_id, str((raw as Dictionary).get("realm", "")))
+	# A batched gather row that the host's replay already credited is pruned by
+	# the accept op itself (world_state._prune_accepted_gather_row).
+	return _commit([{"op": "reward_delivery_accept", "scope": "world",
+		"delivery_id": delivery_id, "character_id": character_id}],
+		"reward_delivery_accept", peer_id, str((raw as Dictionary).get("realm", "")))
 
 
 func _has_legacy_reward_receipt(source: String) -> bool:

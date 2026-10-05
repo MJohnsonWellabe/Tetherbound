@@ -28,7 +28,7 @@ func before_each() -> void:
 	world.reward_delivery_namespace = "0123456789abcdef0123456789abcdef"
 	ledger = WORLD_LEDGER.new(world)
 	PICKUP_SPECS.clear()
-	PICKUP_SPECS.register("harvest_node:oak@1", "wood", 3, 5)
+	PICKUP_SPECS.register("harvest_node:oak@1", "wood", 3)
 	for i in 12:
 		PICKUP_SPECS.register("felled:meadows:pile%d" % i, "wood", 2)
 
@@ -51,8 +51,13 @@ func _flush(target: int = GUEST) -> Dictionary:
 	return ledger.call("commit", {"kind": "gather_flush", "realm": "meadows", "character_id": CHARACTER, "target_peer": target}, HOST)
 
 
-func _mark(mark: String, seq: int) -> Dictionary:
-	return ledger.call("commit", {"kind": "gather_mark", "realm": "meadows", "character_id": CHARACTER, "mark": mark, "seq": seq}, HOST)
+func _replayed(seq: int) -> Dictionary:
+	return ledger.call("commit", {"kind": "gather_replayed", "realm": "meadows", "character_id": CHARACTER, "seq": seq}, HOST)
+
+
+func _accept(seq: int) -> Dictionary:
+	var id := GATHER.row_id(world.reward_deliveries, CHARACTER, seq)
+	return ledger.call("accept_reward_delivery", id, CHARACTER, GUEST)
 
 
 func _batch() -> Dictionary:
@@ -82,12 +87,9 @@ func test_the_host_and_solo_keep_the_immediate_grant() -> void:
 	assert_eq(_batch().hits, 0)
 
 
-func test_a_forged_harvest_amount_becomes_a_host_legal_yield() -> void:
+func test_a_forged_harvest_amount_becomes_the_host_yield() -> void:
 	_harvest("harvest_node:oak@1", 99)
-	assert_eq(_batch().open, {"wood": 3}, "anything but a registered yield pays the base yield")
-	before_each()
-	_harvest("harvest_node:oak@1", 5)
-	assert_eq(_batch().open, {"wood": 5}, "the right-tool yield is legal")
+	assert_eq(_batch().open, {"wood": 3}, "an ungated node pays its base yield, never the request's amount")
 
 
 func test_felled_piles_accrue_instead_of_one_delivery_per_pile() -> void:
@@ -112,18 +114,87 @@ func test_one_flush_journals_one_delivery_for_the_whole_batch() -> void:
 	assert_false(_flush().get("ok"), "an empty batch flushes nothing")
 
 
-func test_rows_prune_only_below_both_the_ack_and_the_replay() -> void:
+func test_a_row_prunes_only_once_it_is_both_accepted_and_replayed() -> void:
 	_pile(0)
 	_flush()
-	var id := str(world.reward_deliveries.keys()[0])
-	world.reward_deliveries[id].status = "accepted"
-	assert_true(_mark("acked", 1).get("ok"))
+	var id := GATHER.row_id(world.reward_deliveries, CHARACTER, 1)
+	assert_true(_accept(1).get("ok"))
 	assert_true(world.reward_deliveries.has(id), "the replay still needs the row after the ACK")
-	assert_true(_mark("replayed", 1).get("ok"))
-	assert_false(world.reward_deliveries.has(id), "acked and replayed: pruned")
-	assert_false(_mark("acked", 5).get("ok"), "a mark cannot pass an unflushed seq")
-	assert_true(_mark("acked", 1).get("ok"), "re-marking is idempotent")
-	assert_eq(int(_batch().acked), 1)
+	assert_true(_replayed(1).get("ok"))
+	assert_false(world.reward_deliveries.has(id), "accepted and replayed: pruned")
+	assert_true(_batch().replayed.is_empty(), "nothing left to wait for")
+	_pile(1)
+	_flush()
+	var id2 := GATHER.row_id(world.reward_deliveries, CHARACTER, 2)
+	assert_true(_replayed(2).get("ok"), "the replay can land before the ACK")
+	assert_true(world.reward_deliveries.has(id2))
+	assert_true(_accept(2).get("ok"))
+	assert_false(world.reward_deliveries.has(id2), "and the ACK then prunes it")
+	assert_false(_replayed(9).get("ok"), "an unflushed seq cannot be marked")
+
+
+func test_an_unsettled_earlier_batch_is_never_swept_by_a_later_one() -> void:
+	# Review B1: batch 1 waits in a full bag (not settled, so never replayed)
+	# while batch 2 is accepted and replayed.
+	_pile(0)
+	_flush()
+	_pile(1)
+	_flush()
+	var first := GATHER.row_id(world.reward_deliveries, CHARACTER, 1)
+	assert_true(_accept(1).get("ok"), "the guest ACKs batch 1 although it is still grant_due")
+	assert_true(_accept(2).get("ok"))
+	assert_true(_replayed(2).get("ok"))
+	assert_true(world.reward_deliveries.has(first), "batch 1 survives until its own replay")
+	assert_true(_replayed(1).get("ok"), "so the later replay still finds its row")
+	assert_false(world.reward_deliveries.has(first))
+
+
+func test_the_guest_prunes_escrow_only_for_this_worlds_gone_rows() -> void:
+	# Review B2.
+	var ns := str(world.reward_delivery_namespace)
+	var escrow := {
+		"gone_here": {"status": "settled", "character_id": CHARACTER, "source": "gather_batch:1", "world_namespace": ns},
+		"pending_here": {"status": "settled", "character_id": CHARACTER, "source": "gather_batch:2", "world_namespace": ns},
+		"other_world": {"status": "settled", "character_id": CHARACTER, "source": "gather_batch:1", "world_namespace": "ffffffffffffffffffffffffffffffff"},
+		"due_here": {"status": "grant_due", "character_id": CHARACTER, "source": "gather_batch:3", "world_namespace": ns},
+		"not_a_batch": {"status": "settled", "character_id": CHARACTER, "source": "trainer:warden:coin", "world_namespace": ns}}
+	var host_rows := {"pending_here": {"status": "pending"}}
+	assert_eq(GATHER.guest_prunable(escrow, host_rows, ns, CHARACTER), ["gone_here"],
+		"only a settled batch row from this world whose host row is gone")
+
+
+func test_a_corrupt_batch_row_refuses_gathers_instead_of_resetting() -> void:
+	world.redesign_world[GATHER.FIELD] = {CHARACTER: {"next_seq": 0, "hits": 0, "open": {}, "replayed": []}}
+	var verdict := _pile(0)
+	assert_false(verdict.get("ok"), "a corrupt carrier never restarts at seq 1 (delivery id reuse)")
+
+
+func test_a_batch_cannot_grow_past_one_delivery() -> void:
+	# Review S4: when the flush keeps failing, gathers are refused (not taken
+	# and left unpaid) once the batch is far past its flush size.
+	var refused := false
+	for i in 12:
+		if not _pile(i).get("ok"): refused = true
+	for i in 40:
+		PICKUP_SPECS.register("harvest_node:extra%d" % i, "wood", 3)
+		if not _harvest("harvest_node:extra%d" % i, 3).get("ok"): refused = true
+	assert_true(refused, "the open batch stops accepting before it becomes unflushable")
+	assert_true(int(_batch().hits) <= GATHER.max_hits() * 4)
+	assert_false(GATHER.flush_delivery(_batch(), world.world_id, world.reward_delivery_namespace, CHARACTER).is_empty(),
+		"and it still flushes as one delivery")
+
+
+func test_a_tool_gated_harvest_needs_the_tool_in_the_admitted_record() -> void:
+	# Review S5.
+	PICKUP_SPECS.register("harvest_node:rock@1", "stone", 1, 3, "pickaxe")
+	var bare: Dictionary = ledger.call("commit", {"kind": "harvest", "realm": "meadows", "flag": "harvest_node:rock@1",
+		"item": "stone", "amount": 3, "_actor_character_id": CHARACTER, "_actor_item_ids": ["wood"]}, GUEST)
+	assert_false(bare.get("ok"), "no pickaxe in the admitted record: refused")
+	assert_eq(str(bare.get("code")), "tool_required")
+	var tooled: Dictionary = ledger.call("commit", {"kind": "harvest", "realm": "meadows", "flag": "harvest_node:rock@1",
+		"item": "stone", "amount": 99, "_actor_character_id": CHARACTER, "_actor_item_ids": ["pickaxe"]}, GUEST)
+	assert_true(tooled.get("ok"))
+	assert_eq(_batch().open, {"stone": 3}, "the right-tool yield, never the request's amount")
 
 
 func test_a_reconnect_mid_batch_delivers_exactly_once() -> void:

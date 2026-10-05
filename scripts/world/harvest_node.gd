@@ -151,9 +151,9 @@ func setup(spec: Dictionary) -> void:
 		# base yield and the right-tool yield are the only legal amounts.
 		var game: Node = get_node_or_null(^"/root/Game") if is_inside_tree() else null
 		var items: RefCounted = game.get("items") if game != null else null
-		var tool_yield := int(items.call("harvest_yield", _item_id, _amount, true, false)) \
-			if items != null and not str(items.call("gathered_with", _item_id)).is_empty() else 0
-		PICKUP_SPECS.register(flag_id(_node_id), _item_id, _amount, tool_yield)
+		var tool := str(items.call("gathered_with", _item_id)) if items != null else ""
+		var tool_yield := int(items.call("harvest_yield", _item_id, _amount, true, false)) if not tool.is_empty() else 0
+		PICKUP_SPECS.register(flag_id(_node_id), _item_id, _amount, tool_yield, tool)
 	add_to_group("progression_restore")
 
 	_build_visual()

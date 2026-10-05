@@ -443,6 +443,11 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 				service = node
 				break
 		if service != null: intent["_ripplet_actor"] = service.actor_context(peer_id, str(intent.get("creature_uid", "")))
+	if kind == "harvest" and peer_id != _local_peer_id():
+		# Ruling (b) / review S5: a guest's tool-gated harvest is checked against
+		# the tools in its ADMITTED record, never the request.
+		intent = intent.duplicate(true)
+		intent["_actor_item_ids"] = _admitted_item_ids(peer_id)
 	# Every kind can write world flags, so every intent carries the admitted
 	# identity; a claimed `_actor_character_id` is always overwritten.
 	intent = with_host_actor(intent, _registered_character(peer_id))
@@ -524,13 +529,25 @@ func _gather_after_commit(delta: Dictionary) -> void:
 		var character := str(raw.get("character_id", ""))
 		if not _gather_open_since.has(character): _gather_open_since[character] = Time.get_ticks_msec()
 		var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
-		if int(row.hits) >= GATHER_BATCHES.max_hits(): flush_gather_batch(character)
+		if not row.is_empty() and int(row.hits) >= GATHER_BATCHES.max_hits(): flush_gather_batch(character)
 
+
+var _gather_scan_ms := 0
 
 func _gather_poll() -> void:
-	if _gather_open_since.is_empty(): return
 	var game := _game()
 	if game == null or not bool(game.call("is_host")): return
+	# A saved open batch (host reload or restart) has no in-memory timer yet:
+	# pick it up so it flushes without waiting for the guest's next gather.
+	if Time.get_ticks_msec() - _gather_scan_ms >= 2000:
+		_gather_scan_ms = Time.get_ticks_msec()
+		var all: Variant = game.get("world").redesign_world.get(GATHER_BATCHES.FIELD, {})
+		if all is Dictionary:
+			for character: String in all:
+				var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
+				if not row.is_empty() and not (row.open as Dictionary).is_empty() and not _gather_open_since.has(character):
+					_gather_open_since[character] = Time.get_ticks_msec()
+	if _gather_open_since.is_empty(): return
 	var due := GATHER_BATCHES.flush_seconds() * 1000.0
 	for character: String in _gather_open_since.keys():
 		if float(Time.get_ticks_msec() - int(_gather_open_since[character])) >= due:
@@ -544,9 +561,9 @@ func flush_gather_batch(character: String) -> bool:
 	var game := _game()
 	if game == null or not bool(game.call("is_host")) or ledger == null: return false
 	var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
-	if (row.open as Dictionary).is_empty():
+	if row.is_empty() or (row.open as Dictionary).is_empty():
 		_gather_open_since.erase(character)
-		return true
+		return row.is_empty() == false
 	var verdict := _commit_here({"kind": "gather_flush", "realm": "meadows", "character_id": character,
 		"target_peer": _peer_for_character(character)}, _local_peer_id())
 	if bool(verdict.get("ok", false)):
@@ -563,8 +580,20 @@ func mark_gather_replayed(character: String, delivery: Dictionary) -> void:
 	var seq_replayed := GATHER_BATCHES.seq_of(str(delivery.get("source", "")))
 	var game := _game()
 	if seq_replayed < 1 or game == null or not bool(game.call("is_host")) or ledger == null: return
-	_commit_here({"kind": "gather_mark", "realm": "meadows", "character_id": character,
-		"mark": "replayed", "seq": seq_replayed}, _local_peer_id())
+	_commit_here({"kind": "gather_replayed", "realm": "meadows", "character_id": character,
+		"seq": seq_replayed}, _local_peer_id())
+
+
+func _admitted_item_ids(peer_id: int) -> Array:
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	var authority: Variant = session.get("_character_authority") if session != null else null
+	var character := _registered_character(peer_id)
+	var state: Dictionary = authority.call("state", character) if authority != null and not character.is_empty() else {}
+	var ids: Array = []
+	for slot: Variant in state.get("inventory", []):
+		if slot is Dictionary and not ids.has(str(slot.get("id", ""))): ids.append(str(slot.get("id", "")))
+	return ids
 
 
 func _peer_for_character(character: String) -> int:
@@ -579,28 +608,29 @@ func _peer_for_character(character: String) -> int:
 
 
 ## Guest: an "incoming" note at the hit (presentation only; the satchel fills
-## when the batch's delivery lands), and settled batch escrow rows below both
-## world marks are pruned so the character file stays bounded.
+## when the batch's delivery lands). A settled batch escrow row is pruned only
+## when it belongs to THIS world and the host's row for it is gone (pruned
+## there once accepted and credited), so a pending or foreign-world row is
+## never dropped and paid again (review B2).
 func _gather_guest_view(delta: Dictionary) -> void:
 	var game := _game()
 	if game == null or bool(game.call("is_host")) or game.get("local") == null: return
 	var character := str(game.get("local").character_id)
+	var prune := false
 	for raw: Variant in delta.get("ops", []):
-		if not raw is Dictionary or str(raw.get("character_id", "")) != character: continue
-		if str(raw.get("op", "")) == "gather_accrue":
+		if not raw is Dictionary: continue
+		var op := str(raw.get("op", ""))
+		if op == "gather_accrue" and str(raw.get("character_id", "")) == character:
 			var items: Variant = game.get("items")
 			var label := str(items.call("item_name", str(raw.item))) if items != null else str(raw.item)
 			game.call("push_world_message", "+%d %s on its way" % [int(raw.count), label])
-		elif str(raw.get("op", "")) == "gather_mark":
-			var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
-			var floor_seq := mini(int(row.acked), int(row.replayed))
-			var escrow: Dictionary = game.get("local").satchel_escrow
-			for id: Variant in escrow.keys():
-				var entry: Variant = escrow[id]
-				if entry is Dictionary and str(entry.get("status", "")) == "settled" \
-						and str(entry.get("character_id", "")) == character:
-					var entry_seq := GATHER_BATCHES.seq_of(str(entry.get("source", "")))
-					if entry_seq >= 1 and entry_seq <= floor_seq: escrow.erase(id)
+		elif op in ["gather_replayed", "reward_delivery_accept"] and str(raw.get("character_id", "")) == character:
+			prune = true
+	if not prune: return
+	var world: RefCounted = game.get("world")
+	var escrow: Dictionary = game.get("local").satchel_escrow
+	for id: String in GATHER_BATCHES.guest_prunable(escrow, world.reward_deliveries, str(world.reward_delivery_namespace), character):
+		escrow.erase(id)
 
 
 func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
