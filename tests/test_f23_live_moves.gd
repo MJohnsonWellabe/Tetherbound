@@ -36,6 +36,7 @@ func _frozen(slot: String, action: int, tiers: Array = []) -> Dictionary:
 		str(owned["move_" + slot]), 0.5, 0.5, 1.0, 0.0, frozen.move)
 
 func _new_start(slot: String, action: int, now_ms: int, tiers: Array = []) -> Dictionary:
+	# With combat.json actor_vitals on, every encounter is tracked: the fixture binds the actor as the director does
 	return host.authorize_move_start({"encounter_id": id, "action": action, "slot": slot},
 		1, _new_owned(), _binding(), _frozen(slot, action, tiers), WIND, now_ms)
 
@@ -46,7 +47,7 @@ func test_snare_uses_frozen_rank_and_one_landed_original_without_energy_gain() -
 	assert_eq(start.delta.move.mastery_rank, 3)
 	assert_eq(host.move_resource_snapshot(id, 1, "creature_a").wind, 76.0)
 	assert_true(_arrive(1, 1300).ok)
-	var resources: Dictionary = host.credit_move_hit(id, 1, 1, 2.0, "opponent", 200.0)
+	var resources: Dictionary = _resolve(1, 2.0, "opponent", 200.0)
 	assert_eq(resources.energy, 0.0)
 	assert_eq(resources.ultimate_meter, 4.0)
 	var original: Dictionary = host.move_mastery_outcome(id, 1, 1)
@@ -66,7 +67,7 @@ func test_ultimate_requires_real_landed_meter_spends_once_and_freezes_growth() -
 	for action: int in range(1, 18):
 		assert_true(_start(action, action * 2000).ok)
 		assert_true(_arrive(action, action * 2000 + 300).ok)
-		host.credit_move_hit(id, 1, action, 1.0)
+		_resolve(action, 1.0)
 	assert_eq(host.move_resource_snapshot(id, 1, "creature_a").ultimate_meter, 100.0)
 	var fire := _new_start("ultimate", 18, 36000, [1, 2])
 	assert_true(fire.ok, str(fire))
@@ -76,7 +77,7 @@ func test_ultimate_requires_real_landed_meter_spends_once_and_freezes_growth() -
 	assert_true(float(fire.delta.move.recovery) >= float(fire.delta.move.ultimate.presentation_seconds))
 	assert_false(_new_start("ultimate", 18, 36001, [1, 2]).ok)
 	assert_true(_arrive(18, 36600).ok)
-	assert_eq(host.credit_move_hit(id, 1, 18, 20.0, "opponent", 200.0).ultimate_meter, 0.0)
+	assert_eq(_resolve(18, 20.0, "opponent", 200.0).ultimate_meter, 0.0)
 	assert_eq(host.pending_move_mastery().size(), 1)
 	ULTIMATES._config = saved_visual_config
 
