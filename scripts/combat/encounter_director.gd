@@ -5699,7 +5699,9 @@ func _reground_if_fallen(wild: Node3D) -> void:
 	wild.call("place_on_ground", Vector3(at.x, 0.0, at.z))
 
 
-## The nearest wild creature the player could choose to fight right now.
+## The wild creature the player could choose to fight right now: the nearest in
+## range, or during the opening's practice beats the nearest practice creature
+## in range (`choose_engage_target()`, F01#4).
 func _engageable() -> Node3D:
 	if _ally == null or _manager == null or _ally.fainted:
 		return null
@@ -5721,7 +5723,7 @@ func _engageable() -> Node3D:
 ## F01#4. The opening's practice fight belongs to its practice creature.
 ##
 ## Without this the engage offer is simply the nearest live wild in range, and
-## an ordinary `meadows_open` Mudsnout wandering nearer the Practice Meadow road
+## an ambient Mudsnout (band1 spawns.json's cluster beside the clearing) standing nearer the Practice Meadow road
 ## end than the practice Bramblebun took the tutorial fight from it
 ## (`ralph/reports/INTEGRATION/reproof/f01-current/row4-5/VERDICT.md`, terrapup
 ## run 1: "Engage Mudsnout" at 2.56 m). `sequence_director.gd` names the
