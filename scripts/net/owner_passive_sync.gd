@@ -84,7 +84,7 @@ func arm_owner(before: Dictionary, discoveries: Dictionary) -> Dictionary:
 	local = {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "character": before.character_id,
 		"base_hash": HASH.fingerprint(before), "sequence": 0, "prefix_hash": cursor.prefix_hash,
 		"inputs": [], "acked": 0, "error": "", "last_settlement": "", "rebase": {}, "admission_pending": true,
-		"hello_pending": true, "hello_armed_ms": Time.get_ticks_msec(),
+		"hello_pending": true,
 		"discovered": discoveries.duplicate(true)}
 	pending.clear()
 	var game := _game()
@@ -160,7 +160,10 @@ const HELLO_WAIT_TELL_MS := 20000
 func delivery_ready() -> bool:
 	if not recording_active(): return false
 	if local.get("hello_pending", false) != true: return true
-	if not local.get("hello_wait_told", false) and Time.get_ticks_msec() - int(local.get("hello_armed_ms", 0)) > HELLO_WAIT_TELL_MS:
+	# The clock starts at the first payout held after the snapshot (the dial
+	# and world build are not waiting on admission; review L-1).
+	if not local.has("hello_wait_from_ms"): local.hello_wait_from_ms = Time.get_ticks_msec()
+	if not local.get("hello_wait_told", false) and Time.get_ticks_msec() - int(local.hello_wait_from_ms) > HELLO_WAIT_TELL_MS:
 		local.hello_wait_told = true
 		var game := _game()
 		if game != null and game.has_method("push_world_message"): game.call("push_world_message", "Rewards wait until the host has taken your character in.")
@@ -1337,7 +1340,9 @@ func _owner_undo(undo: Dictionary) -> void:
 
 func _save_owner_now() -> bool:
 	var saver: RefCounted = _game().get("save_system")
-	if saver == null or saver.call("fallback_busy") == true: return false
+	if saver == null: return false
+	if saver.has_method("finish_fallback"): saver.call("finish_fallback") # as the freeze path does
+	if saver.call("fallback_busy") == true: return false
 	saving = true
 	var saved: bool = saver.call("save_character_prepared", _game(), str(local.character)) == true
 	saving = false
@@ -1446,7 +1451,9 @@ func _adopt_held_record(baseline: Dictionary) -> String:
 		party.set("_best", back_uids.find(best_uid) if not best_uid.is_empty() else -1)
 		party.set("revision", int(party.get("revision")) + 1)
 		return refused
-	game.call("push_world_message", "This world keeps your character as it was here; changes made elsewhere are not used in it.")
+	if not local.get("adopt_told", false): # once, even if a failed save retries it (review L-2)
+		local.adopt_told = true
+		game.call("push_world_message", "This world keeps your character as it was here; changes made elsewhere are not used in it.")
 	print("[owner-passive] adopted this world's held record (%d creature(s))" % ordered.size())
 	return "ok"
 
@@ -1561,7 +1568,8 @@ func owner_settled(row: Dictionary) -> void:
 
 func _queue_rebase(declaration: Dictionary, previous: Dictionary, binding: Dictionary) -> void:
 	local.hello_pending = previous.get("hello_pending", false) == true # a rebase is not a join
-	local.hello_armed_ms = int(previous.get("hello_armed_ms", Time.get_ticks_msec()))
+	for key: String in ["hello_wait_from_ms", "hello_wait_told", "adopt_told"]:
+		if previous.has(key): local[key] = previous[key]
 	local.rebase = {"op": "rebase", "baseline_hash": declaration.baseline_hash,
 		"old_stream": previous.id, "old_sequence": previous.sequence, "old_prefix_hash": previous.prefix_hash,
 		"old_inputs": previous.inputs.duplicate(true), "discoveries_hash": HASH.fingerprint({"discovered": _discoveries()})}

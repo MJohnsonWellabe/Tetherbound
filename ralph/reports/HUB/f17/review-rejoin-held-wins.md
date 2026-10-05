@@ -30,4 +30,60 @@
 - Energy carries over.
 - The hook mirrors Stormwood's setup exactly.
 
-**Re-review:** pending.
+## Re-review of 8cc98068: BLOCK. Fixed in 21389fbc
+
+| # | Severity | Finding | Fix |
+|---|---|---|---|
+| H1 | High | The per-hello folded list was wiped by `recover_durable_vitals`' record rewrite before the readmit read it. A second rejoin also folded nothing new. Either way, a pending payout the guest never applied was paid twice, and the stream ended | The rows to settle ride every readmit, and any such row forces one. Guest deliveries wait for admission, so the readmit always comes first |
+| M1 | Medium | On an exact rejoin the folded rows never reached the guest | The same forced readmit |
+| L1 | Low | Folded gather batches were never marked replayed | Marked after a good hello |
+| L3, L4 | Low | A freed body blocked adoption, and bodies were put away before the record applied | Validity is checked first. Bodies are put away only after the record applies |
+| L5 | Low | Low clearance excluded whole bodies | Only the exact support shapes are excluded |
+
+## Third review of 21389fbc: BLOCK. Fixed in ffdbcb7d
+
+After two failed fixes the approach changed. Instead of deriving the rows from the world row's status, every folded row is now recorded on the host's record until the guest confirms it saved them settled.
+
+| # | Severity | Finding | Fix |
+|---|---|---|---|
+| H-1 | High | An accepted payout held as `grant_due` escrow (a full bag) was folded but never handed to the guest, so it was paid twice | `unconfirmed_folds` holds every folded row, accepted or pending. It is carried by `_replace_record`, rides every readmit, and is cleared by the guest's `readmitted`. Tests: `test_an_accepted_row_held_grant_due_is_handed_to_the_owner_to_settle`, `test_a_grant_due_escrow_row_the_held_record_holds_is_settled` |
+| M-1 | Medium | The settlement and adoption were acknowledged before being saved | The guest saves before `readmitted`. A failed save puts it back exactly and the host resends. Test: `test_the_readmit_is_confirmed_only_after_its_settlement_is_saved` |
+| M-2 | Medium | Rebases also held deliveries, so they could stall silently | Deliveries wait only for this join's first admission (`hello_pending`). A join that never lands tells the player once |
+| L-1, L-2, L-4 | Low | Terrain region seams, the pre-check before putting companions away, and a stale `status_ms` | All fixed |
+
+## Fourth review of ffdbcb7d: APPROVE-WITH-NITS
+
+- **Payout orderings:** no double or lost payout in any ordering. The reviewer traced redelivery and the `grant_due` loop before and after the readmit, a reconnect after the save, a second rejoin, a host restart and the vitals-deferred path.
+- **Other areas checked correct:** the `readmitted_hash` short-circuit, undo, `hello_pending` clearing on every path, the save call, and the terrain exemption.
+- **Nits:**
+  - the "rewards wait" timer started at dial, not after the snapshot;
+  - a failing save repeated the adoption message.
+  
+  Both are fixed in the landing commit, which also flushes fallback before saving.
+
+## Checks on the landing head
+
+**Unit tests:**
+
+| Suite | Tests | Assertions |
+|---|---|---|
+| `test_rejoin_admission` | 8 | 51 |
+| `test_owner_passive_adopt` (new) | 7 | 41 |
+| `test_owner_passive_sync` | 35 | 568 |
+| `test_owner_passive_replay` | 11 | 381 |
+| `test_forward_camp` | 9 | 186 |
+
+**F34 placement smoke:**
+
+| Realm | Checks | Failures |
+|---|---|---|
+| Meadows | 21 | 0 |
+| Tidewake | 23 | 0 |
+| Cloudreach | 21 | 0 |
+| Stormwood | 21 | 0 |
+
+**Two-peer smokes:** all report ALL CHECKS PASSED.
+- `owner_passive_rejoin`, re-run after the nits;
+- `forward_camp`;
+- `rejoin_craft_control`;
+- `gather_departure`.

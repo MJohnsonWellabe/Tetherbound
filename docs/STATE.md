@@ -172,7 +172,13 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 - **Visual verdicts.** Software-GL proves composition/scale/colour, not fine lighting/performance. After two rounds without progress, change asset/approach, not tint (ART_DIRECTION §9).
 - **Accepted art:** camp set, pickups, South Bridge gate and lost rigs retain ART_DIRECTION §7 dispositions unless gameplay evidence reopens them.
 - **Owner reports.** Fresh owner repros reopen ledger-fixed items; first check the played build.
-- **Forward camps (F34, lane A).** Tidewake has no BuildPlacer (`water_world.gd`), so no camp, tent or campfire can be placed there yet (ownership asked of the coordinator). A co-op guest places a camp only in the host's loaded realm; elsewhere the host refuses with a reason. The second-camp pack-up offer applies when a kit is in hand. Evidence: `ralph/reports/HUB/f17/f34/`.
+- **Forward camps (F34, lane A).** Tidewake now has the BuildPlacer (coordinator-approved hook), so forward camps place there. Sea and shallows refuse. World load is unchanged: 8.6 s with the hook against 8.8–9.5 s without. A co-op guest places a camp only in the host's loaded realm; elsewhere the host refuses with a reason. The second-camp pack-up offer applies when a kit is in hand. Ground within the allowed rise no longer blocks a camp's clearance; every other low collider still does. Evidence: `ralph/reports/HUB/f17/f34/`.
+- **Co-op rejoin (lane A, per the owner ruling above).** A returning guest adopts the host's held record. Offline changes stay out of that world, and the player is told so. The host first folds its own journaled payouts into the record, never twice, and the guest saves them as settled before confirming. Known boundaries:
+  - **Payout that doesn't fit:** a payout that does not fit the held satchel waits for a later rejoin.
+  - **Personal flags:** the guest keeps flags it earned offline locally, while the matching rewards are rolled back.
+  - **Delayed rewards:** rewards wait for the host's first admission of the join.
+  
+  Evidence: `ralph/reports/HUB/f17/rejoin-admission/`, `review-rejoin-held-wins.md`.
 
 ## 5. Dependencies and still-open design questions
 
