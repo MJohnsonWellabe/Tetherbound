@@ -1,14 +1,14 @@
 Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 
-coordinator: launched peer 0 (host) pid=21663 control_port=38365 home=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op15/home-0 log=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op15/peer-0.log
-coordinator: launched peer 1 (client) pid=21664 control_port=34893 home=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op15/home-1 log=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op15/peer-1.log
-coordinator: peer 0 hello: {"enet_port":28141.0,"godot_version":"4.7-stable (official)","main_sha":"d7950e5c2900","peer":0.0,"pid":21663.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op15/home-0/godot/app_userdata/Tetherbound"}
-coordinator: peer 1 hello: {"enet_port":28142.0,"godot_version":"4.7-stable (official)","main_sha":"d7950e5c2900","peer":1.0,"pid":21664.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op15/home-1/godot/app_userdata/Tetherbound"}
+coordinator: launched peer 0 (host) pid=32282 control_port=38167 home=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op17/home-0 log=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op17/peer-0.log
+coordinator: launched peer 1 (client) pid=32283 control_port=37737 home=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op17/home-1 log=/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op17/peer-1.log
+coordinator: peer 1 hello: {"enet_port":28182.0,"godot_version":"4.7-stable (official)","main_sha":"2d69daf56931","peer":1.0,"pid":32283.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op17/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":28181.0,"godot_version":"4.7-stable (official)","main_sha":"2d69daf56931","peer":0.0,"pid":32282.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/-home-user/60aface6-4940-540b-ad0f-2699deb40f4a/scratchpad/op17/home-0/godot/app_userdata/Tetherbound"}
 coordinator: all 2 peer(s) said hello
 PASS: coordinator tracked exactly two peers
-PASS: the harness assigned the host a positive isolated UDP port (28141)
-PASS: the chosen host identity entered through the production title and hosted (title fresh identity 'Rowan'/kael entered 'MeadowsPlayground' and hosted udp/28141 after 2 frames)
-PASS: the distinct fresh identity joined through the production title path (title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28141 as peer 1515957967 after 424 frames)
+PASS: the harness assigned the host a positive isolated UDP port (28181)
+PASS: the chosen host identity entered through the production title and hosted (title fresh identity 'Rowan'/kael entered 'MeadowsPlayground' and hosted udp/28181 after 1 frames)
+PASS: the distinct fresh identity joined through the production title path (title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28181 as peer 31435957 after 351 frames)
 PASS: peer 0's production registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
 PASS: peer 1's production registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
 PASS: peer 0 has the production Meadows opening director
@@ -18,11 +18,11 @@ PASS: peer 0 got up from the bed with physical 'interact' (pressed 'interact' x1
 PASS: peer 0 reached stairs top by ordinary movement (arrived within 0.80 m of (1.2, 11.9))
 opening peer 0 stairs top position=[0.75997787714005, 4.35094165802002, 12.2892007827759] target=[1.20000004768372, 4.34999990463257, 11.8999996185303]
 PASS: peer 0 reached stairs bottom by ordinary movement (arrived within 0.80 m of (6.0, 11.9))
-opening peer 0 stairs bottom position=[5.72125911712646, 1.0207325220108, 11.9127368927002] target=[6.0, 1.01999998092651, 11.8999996185303]
+opening peer 0 stairs bottom position=[5.30284070968628, 1.52465224266052, 11.9381227493286] target=[6.0, 1.01999998092651, 11.8999996185303]
 PASS: peer 0 reached Grandpa prompt by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
-opening peer 0 Grandpa prompt position=[0.31672570109367, 1.02094316482544, 14.9443845748901] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+opening peer 0 Grandpa prompt position=[0.31208726763725, 1.0209424495697, 14.9317331314087] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
 PASS: peer 0 opened Grandpa's briefing with physical 'interact' (pressed 'interact' x1)
-PASS: peer 0 closed Grandpa's real briefing (SETUP: closed the opening dialogue in 5 presses; locomotion now false)
+PASS: peer 0 closed Grandpa's real briefing (SETUP: closed the opening dialogue in 6 presses; locomotion now false)
 PASS: peer 0's starter picker opened after the briefing
 PASS: peer 0 moved the starter choice with physical 'ui_right' (pressed 'ui_right' x1)
 PASS: peer 0 chose the starter orb with physical 'menu_confirm' (pressed 'menu_confirm' x1)
@@ -32,9 +32,9 @@ PASS: peer 0 reached the real naming Done cell ({ "cell": "\n", "column": 4.0, "
 PASS: peer 0 finished naming the starter with physical 'menu_confirm' (pressed 'menu_confirm' x1)
 PASS: peer 0's starter was admitted and the opening handed input back (beat return_starter, pending false)
 PASS: peer 0 reached return to Grandpa by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
-opening peer 0 return to Grandpa position=[0.31672570109367, 1.02094316482544, 14.9443845748901] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+opening peer 0 return to Grandpa position=[0.31208726763725, 1.0209424495697, 14.9317331314087] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
 PASS: peer 0 opened Grandpa's catch-supply reply with physical 'interact' (pressed 'interact' x1)
-PASS: peer 0 closed Grandpa's catch-supply reply (SETUP: closed the opening dialogue in 20 presses; locomotion now true)
+PASS: peer 0 closed Grandpa's catch-supply reply (SETUP: closed the opening dialogue in 8 presses; locomotion now true)
 PASS: peer 0 received exactly one named starter (party size 1 (wanted 1))
 PASS: peer 0 received the opening Basic Orb grant (orb_basic count 50)
 PASS: peer 1 has the production Meadows opening director
@@ -42,11 +42,11 @@ PASS: peer 1 reached bed prompt by ordinary movement (arrived within 1.50 m of (
 opening peer 1 bed prompt position=[-1.40000009536743, 4.65094184875488, 14.2999992370605] target=[-1.40000009536743, 5.05000019073486, 12.8999996185303]
 PASS: peer 1 got up from the bed with physical 'interact' (pressed 'interact' x1)
 PASS: peer 1 reached stairs top by ordinary movement (arrived within 0.80 m of (1.2, 11.9))
-opening peer 1 stairs top position=[0.79594331979752, 4.35094165802002, 12.2521076202393] target=[1.20000004768372, 4.34999990463257, 11.8999996185303]
+opening peer 1 stairs top position=[0.7599778175354, 4.35094308853149, 12.2892007827759] target=[1.20000004768372, 4.34999990463257, 11.8999996185303]
 PASS: peer 1 reached stairs bottom by ordinary movement (arrived within 0.80 m of (6.0, 11.9))
-opening peer 1 stairs bottom position=[5.38603448867798, 1.41332101821899, 11.9333410263062] target=[6.0, 1.01999998092651, 11.8999996185303]
+opening peer 1 stairs bottom position=[5.46926307678223, 1.29224073886871, 11.9285554885864] target=[6.0, 1.01999998092651, 11.8999996185303]
 PASS: peer 1 reached Grandpa prompt by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
-opening peer 1 Grandpa prompt position=[0.31593841314316, 1.02094161510468, 14.9421939849854] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+opening peer 1 Grandpa prompt position=[0.36265739798546, 1.02093613147736, 14.9126892089844] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
 PASS: peer 1 opened Grandpa's briefing with physical 'interact' (pressed 'interact' x1)
 PASS: peer 1 closed Grandpa's real briefing (SETUP: closed the opening dialogue in 6 presses; locomotion now false)
 PASS: peer 1's starter picker opened after the briefing
@@ -59,18 +59,18 @@ PASS: the two peers typed different names ('A', 'B')
 PASS: peer 1 finished naming the starter with physical 'menu_confirm' (pressed 'menu_confirm' x1)
 PASS: peer 1's starter was admitted and the opening handed input back (beat return_starter, pending false)
 PASS: peer 1 reached return to Grandpa by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
-opening peer 1 return to Grandpa position=[0.31593841314316, 1.02094161510468, 14.9421939849854] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+opening peer 1 return to Grandpa position=[0.31208929419518, 1.02094173431396, 14.9317388534546] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
 PASS: peer 1 opened Grandpa's catch-supply reply with physical 'interact' (pressed 'interact' x1)
-PASS: peer 1 closed Grandpa's catch-supply reply (SETUP: closed the opening dialogue in 6 presses; locomotion now true)
+PASS: peer 1 closed Grandpa's catch-supply reply (SETUP: closed the opening dialogue in 8 presses; locomotion now true)
 PASS: peer 1 received exactly one named starter (party size 1 (wanted 1))
 PASS: peer 1 received the opening Basic Orb grant (orb_basic count 50)
 PASS: the fresh client applied the host snapshot rather than merely opening a socket
-PASS: the session assigned two distinct real peer ids (host 1, client 1515957967)
+PASS: the session assigned two distinct real peer ids (host 1, client 31435957)
 PASS: the test chose distinct names and distinct appearance ids
 PASS: host registry contains exactly two identity rows
-PASS: host registry carries both chosen names/appearances exactly ({ "1": { "name": "Rowan", "appearance": "kael" }, "1515957967": { "name": "Juniper", "appearance": "sera" } })
+PASS: host registry carries both chosen names/appearances exactly ({ "1": { "name": "Rowan", "appearance": "kael" }, "31435957": { "name": "Juniper", "appearance": "sera" } })
 PASS: client registry contains exactly two identity rows
-PASS: client registry carries both chosen names/appearances exactly ({ "1": { "name": "Rowan", "appearance": "kael" }, "1515957967": { "name": "Juniper", "appearance": "sera" } })
+PASS: client registry carries both chosen names/appearances exactly ({ "1": { "name": "Rowan", "appearance": "kael" }, "31435957": { "name": "Juniper", "appearance": "sera" } })
 PASS: host PlayerState retained chosen name 'Rowan'
 PASS: host PlayerState retained chosen appearance 'kael'
 PASS: host has a minted portable character id
@@ -82,7 +82,7 @@ PASS: fresh client has a minted portable character id
 PASS: fresh client has a real Player body under its current production scene
 PASS: fresh client's live Player/Model built real art for chosen appearance 'sera'
 PASS: the fresh client ended in the Meadows realm
-PASS: the fresh client's real Player transform is inside Grandpa's Village ([0.31593841314316, 1.02094161510468, 14.9421939849854])
+PASS: the fresh client's real Player transform is inside Grandpa's Village ([0.31208929419518, 1.02094173431396, 14.9317388534546])
 PASS: viewer 0 has exactly two production trainer bodies in its scene (got 2)
 PASS: viewer 0 body 1 exists
 PASS: viewer 0 body 1 belongs to the viewer's current production scene
@@ -90,13 +90,13 @@ PASS: viewer 0 body 1 carries chosen display name 'Rowan'
 PASS: viewer 0 body 1 and its live Model carry built art for chosen appearance 'kael'
 PASS: viewer 0 body 1's actual Nameplate shows chosen name 'Rowan'
 PASS: viewer 0 body 1 uses compact fixed-size nameplate settings (font 30, outline 6)
-PASS: viewer 0 body 1515957967 exists
-PASS: viewer 0 body 1515957967 belongs to the viewer's current production scene
-PASS: viewer 0 body 1515957967 carries chosen display name 'Juniper'
-PASS: viewer 0 body 1515957967 and its live Model carry built art for chosen appearance 'sera'
-PASS: viewer 0 body 1515957967's actual Nameplate shows chosen name 'Juniper'
-PASS: viewer 0 body 1515957967 uses compact fixed-size nameplate settings (font 30, outline 6)
-PASS: viewer 0 body 1515957967 is the other player and both its body and chosen-name badge are visible
+PASS: viewer 0 body 31435957 exists
+PASS: viewer 0 body 31435957 belongs to the viewer's current production scene
+PASS: viewer 0 body 31435957 carries chosen display name 'Juniper'
+PASS: viewer 0 body 31435957 and its live Model carry built art for chosen appearance 'sera'
+PASS: viewer 0 body 31435957's actual Nameplate shows chosen name 'Juniper'
+PASS: viewer 0 body 31435957 uses compact fixed-size nameplate settings (font 30, outline 6)
+PASS: viewer 0 body 31435957 is the other player and both its body and chosen-name badge are visible
 PASS: viewer 1 has exactly two production trainer bodies in its scene (got 2)
 PASS: viewer 1 body 1 exists
 PASS: viewer 1 body 1 belongs to the viewer's current production scene
@@ -105,25 +105,25 @@ PASS: viewer 1 body 1 and its live Model carry built art for chosen appearance '
 PASS: viewer 1 body 1's actual Nameplate shows chosen name 'Rowan'
 PASS: viewer 1 body 1 uses compact fixed-size nameplate settings (font 30, outline 6)
 PASS: viewer 1 body 1 is the other player and both its body and chosen-name badge are visible
-PASS: viewer 1 body 1515957967 exists
-PASS: viewer 1 body 1515957967 belongs to the viewer's current production scene
-PASS: viewer 1 body 1515957967 carries chosen display name 'Juniper'
-PASS: viewer 1 body 1515957967 and its live Model carry built art for chosen appearance 'sera'
-PASS: viewer 1 body 1515957967's actual Nameplate shows chosen name 'Juniper'
-PASS: viewer 1 body 1515957967 uses compact fixed-size nameplate settings (font 30, outline 6)
+PASS: viewer 1 body 31435957 exists
+PASS: viewer 1 body 31435957 belongs to the viewer's current production scene
+PASS: viewer 1 body 31435957 carries chosen display name 'Juniper'
+PASS: viewer 1 body 31435957 and its live Model carry built art for chosen appearance 'sera'
+PASS: viewer 1 body 31435957's actual Nameplate shows chosen name 'Juniper'
+PASS: viewer 1 body 31435957 uses compact fixed-size nameplate settings (font 30, outline 6)
 PASS: viewer 0 opened the production full map with its physical map shortcut (the menu is open 1 frames after press 1 of 'map' (context 'menu_map', tree paused=false))
 PASS: viewer 0's active visible menu surface is the production full-map tab
 PASS: viewer 0's full map is bound to its live Meadows MapState
-PASS: viewer 0's full map renders exactly one remote player row (got [{ "display_name": "Juniper", "peer_id": 1515957967.0, "position": [0.3159464597702, 1.0209413766861, 14.9421920776367] }])
-PASS: viewer 0's map includes only the other peer 1515957967, never own hidden proxy 1
+PASS: viewer 0's full map renders exactly one remote player row (got [{ "display_name": "Juniper", "peer_id": 31435957.0, "position": [0.31209763884544, 1.02094149589539, 14.9317359924316] }])
+PASS: viewer 0's map includes only the other peer 31435957, never own hidden proxy 1
 PASS: viewer 0's map labels the other player with chosen name 'Juniper'
-PASS: viewer 0's map marker agrees with peer 1515957967's live position within 1.5 m (0.00 m)
+PASS: viewer 0's map marker agrees with peer 31435957's live position within 1.5 m (0.00 m)
 PASS: viewer 0 closed the production full map cleanly (the menu is shut 1 frames after press 1 of 'menu_cancel' (context 'world', tree paused=false))
 PASS: viewer 1 opened the production full map with its physical map shortcut (the menu is open 1 frames after press 1 of 'map' (context 'menu_map', tree paused=false))
 PASS: viewer 1's active visible menu surface is the production full-map tab
 PASS: viewer 1's full map is bound to its live Meadows MapState
-PASS: viewer 1's full map renders exactly one remote player row (got [{ "display_name": "Rowan", "peer_id": 1.0, "position": [0.31673413515091, 1.02094292640686, 14.9443817138672] }])
-PASS: viewer 1's map includes only the other peer 1, never own hidden proxy 1515957967
+PASS: viewer 1's full map renders exactly one remote player row (got [{ "display_name": "Rowan", "peer_id": 1.0, "position": [0.31209591031075, 1.02094221115112, 14.9317302703857] }])
+PASS: viewer 1's map includes only the other peer 1, never own hidden proxy 31435957
 PASS: viewer 1's map labels the other player with chosen name 'Rowan'
 PASS: viewer 1's map marker agrees with peer 1's live position within 1.5 m (0.00 m)
 PASS: viewer 1 closed the production full map cleanly (the menu is shut 1 frames after press 1 of 'menu_cancel' (context 'world', tree paused=false))
@@ -131,11 +131,11 @@ PASS: peer 0 holds the starter it picked in the real picker, ripplet (["ripplet@
 PASS: peer 0's starter is its ripplet named 'A' after the opening (["ripplet@3"] ["A"])
 PASS: peer 1 holds the starter it picked in the real picker, ripplet (["ripplet@3"])
 PASS: peer 1's starter is its ripplet named 'B' after the opening (["ripplet@3"] ["B"])
-PASS: the host's admitted copy holds the guest's own starter receipt after the opening (["starter_choice:character-66f213fd211e8fcd9fb938762f79c4f0:creature-2a79735991404f0ae97e7e1f578f6616"])
-PASS: the host's admitted party is the guest's starter after the opening (["creature-2a79735991404f0ae97e7e1f578f6616"] vs ["creature-2a79735991404f0ae97e7e1f578f6616"])
+PASS: the host's admitted copy holds the guest's own starter receipt after the opening (["starter_choice:character-3567aa0b0ed064c3a7d110ffbaebd878:creature-5430e016f14c97b9c2538aa135a51b46"])
+PASS: the host's admitted party is the guest's starter after the opening (["creature-5430e016f14c97b9c2538aa135a51b46"] vs ["creature-5430e016f14c97b9c2538aa135a51b46"])
 PASS: host and guest both record opening:starter_granted for the guest after the opening
 PASS: the guest's party and creature record equal the host's admitted copy after the opening (diff hint: ["party/0/hp: guest 123.2 host 123.2", "party/0/max_hp: guest 123.2 host 123.2"])
-opening gift evidence after the opening: guest rows ["dialogue_give:grandpa_first_catch:orb_basic=settled", "dialogue_give:grandpa_first_catch:potion_small=settled", "dialogue_give:grandpa_first_catch:berries=settled", "dialogue_give:grandpa_first_catch:revive=settled"]; host rows ["dialogue_give:grandpa_first_catch:orb_basic=accepted", "dialogue_give:grandpa_first_catch:potion_small=accepted", "dialogue_give:grandpa_first_catch:berries=accepted", "dialogue_give:grandpa_first_catch:revive=accepted"]; host stream { "error": "", "has_state": true, "present": true, "refused": false, "sequence": 77.0 }
+opening gift evidence after the opening: guest rows ["dialogue_give:grandpa_first_catch:orb_basic=settled", "dialogue_give:grandpa_first_catch:potion_small=settled", "dialogue_give:grandpa_first_catch:berries=settled", "dialogue_give:grandpa_first_catch:revive=settled"]; host rows ["dialogue_give:grandpa_first_catch:orb_basic=accepted", "dialogue_give:grandpa_first_catch:potion_small=accepted", "dialogue_give:grandpa_first_catch:berries=accepted", "dialogue_give:grandpa_first_catch:revive=accepted"]; host stream { "error": "", "has_state": true, "present": true, "refused": false, "sequence": 101.0 }
 PASS: the guest's whole record equals the host's replayed view of it after the opening: no owner_action_baseline_conflict (inventory true; diff hint vs admitted: ["party/0/hp: guest 123.2 host 123.2", "party/0/max_hp: guest 123.2 host 123.2"])
 PASS: the completed opening left the fresh client exactly one starter (["ripplet@3"])
 PASS: peer 0's production starter grant recorded its character receipt
@@ -150,24 +150,24 @@ PASS: peer 1 still holds its ripplet after load (["ripplet@3"])
 PASS: peer 1 retained its starter receipt after load
 PASS: peer 1 retained its opening catch supplies after load
 PASS: peer 1's starter is its ripplet named 'B' after load (["ripplet@3"] ["B"])
-PASS: the guest's starter has a UID before the drop (["creature-2a79735991404f0ae97e7e1f578f6616"])
+PASS: the guest's starter has a UID before the drop (["creature-5430e016f14c97b9c2538aa135a51b46"])
 PASS: the guest's orb count before the drop is read (50)
-PASS: the guest's character is written (character 'character-66f213fd211e8fcd9fb938762f79c4f0' is on disk (wrote_world=false, waited 0 frames for the save fence))
-PASS: the guest's link dies (transport closed without a Session.leave() (ENet disconnect sent to 1 peer(s), acknowledged by 1 after 15 frames))
+PASS: the guest's character is written (character 'character-3567aa0b0ed064c3a7d110ffbaebd878' is on disk (wrote_world=false, waited 0 frames for the save fence))
+PASS: the guest's link dies (transport closed without a Session.leave() (ENet disconnect sent to 1 peer(s), acknowledged by 1 after 17 frames))
 PASS: the host sees the guest gone (registry reports 1 peer(s) after 0 frames (0.0 s))
-PASS: the guest's live character is blanked (in-memory character blanked (party 1 -> 0), id 'character-66f213fd211e8fcd9fb938762f79c4f0' kept, file untouched)
-PASS: the same character rejoins through the title's returning route (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28141 as peer 1244176951 after 148 frames)
+PASS: the guest's live character is blanked (in-memory character blanked (party 1 -> 0), id 'character-3567aa0b0ed064c3a7d110ffbaebd878' kept, file untouched)
+PASS: the same character rejoins through the title's returning route (title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28181 as peer 495754797 after 176 frames)
 PASS: peer 0 sees both players again (registry reports 2 peer(s) after 0 frames (0.0 s))
 PASS: peer 1 sees both players again (registry reports 2 peer(s) after 0 frames (0.0 s))
-PASS: the rejoined guest holds the SAME starter creature, not a new one (UID ["creature-2a79735991404f0ae97e7e1f578f6616"] -> ["creature-2a79735991404f0ae97e7e1f578f6616"])
-PASS: peer 0's registry after the rejoin holds exactly the host and the returning character (["character-66f213fd211e8fcd9fb938762f79c4f0", "character-b9faa2f530f7ba6ebc26018d1cb4597f"])
-PASS: peer 1's registry after the rejoin holds exactly the host and the returning character (["character-66f213fd211e8fcd9fb938762f79c4f0", "character-b9faa2f530f7ba6ebc26018d1cb4597f"])
+PASS: the rejoined guest holds the SAME starter creature, not a new one (UID ["creature-5430e016f14c97b9c2538aa135a51b46"] -> ["creature-5430e016f14c97b9c2538aa135a51b46"])
+PASS: peer 0's registry after the rejoin holds exactly the host and the returning character (["character-3567aa0b0ed064c3a7d110ffbaebd878", "character-4f2c5626d3f7e78535d1e700396d818d"])
+PASS: peer 1's registry after the rejoin holds exactly the host and the returning character (["character-3567aa0b0ed064c3a7d110ffbaebd878", "character-4f2c5626d3f7e78535d1e700396d818d"])
 PASS: peer 1's starter is its ripplet named 'B' after rejoining (["ripplet@3"] ["B"])
-PASS: the host's admitted copy holds the guest's own starter receipt after the rejoin (["starter_choice:character-66f213fd211e8fcd9fb938762f79c4f0:creature-2a79735991404f0ae97e7e1f578f6616"])
-PASS: the host's admitted party is the guest's starter after the rejoin (["creature-2a79735991404f0ae97e7e1f578f6616"] vs ["creature-2a79735991404f0ae97e7e1f578f6616"])
+PASS: the host's admitted copy holds the guest's own starter receipt after the rejoin (["starter_choice:character-3567aa0b0ed064c3a7d110ffbaebd878:creature-5430e016f14c97b9c2538aa135a51b46"])
+PASS: the host's admitted party is the guest's starter after the rejoin (["creature-5430e016f14c97b9c2538aa135a51b46"] vs ["creature-5430e016f14c97b9c2538aa135a51b46"])
 PASS: host and guest both record opening:starter_granted for the guest after the rejoin
 PASS: the guest's party and creature record equal the host's admitted copy after the rejoin (diff hint: ["party/0/hp: guest 123.2 host 123.2", "party/0/max_hp: guest 123.2 host 123.2"])
-opening gift evidence after the rejoin: guest rows ["dialogue_give:grandpa_first_catch:revive=settled", "dialogue_give:grandpa_first_catch:orb_basic=settled", "dialogue_give:grandpa_first_catch:berries=settled", "dialogue_give:grandpa_first_catch:potion_small=settled"]; host rows ["dialogue_give:grandpa_first_catch:revive=accepted", "dialogue_give:grandpa_first_catch:orb_basic=accepted", "dialogue_give:grandpa_first_catch:berries=accepted", "dialogue_give:grandpa_first_catch:potion_small=accepted"]; host stream { "error": "", "has_state": true, "present": true, "refused": false, "sequence": 6.0 }
+opening gift evidence after the rejoin: guest rows ["dialogue_give:grandpa_first_catch:potion_small=settled", "dialogue_give:grandpa_first_catch:orb_basic=settled", "dialogue_give:grandpa_first_catch:berries=settled", "dialogue_give:grandpa_first_catch:revive=settled"]; host rows ["dialogue_give:grandpa_first_catch:potion_small=accepted", "dialogue_give:grandpa_first_catch:orb_basic=accepted", "dialogue_give:grandpa_first_catch:berries=accepted", "dialogue_give:grandpa_first_catch:revive=accepted"]; host stream { "error": "", "has_state": true, "present": true, "refused": false, "sequence": 10.0 }
 PASS: the guest's whole record equals the host's replayed view of it after the rejoin: no owner_action_baseline_conflict (inventory true; diff hint vs admitted: ["party/0/hp: guest 123.2 host 123.2", "party/0/max_hp: guest 123.2 host 123.2"])
 PASS: the rejoined guest kept its starter receipt
 PASS: the rejoined guest holds exactly the 50 orbs it had before the drop (orb_basic count 50)

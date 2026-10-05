@@ -24,9 +24,11 @@ Diagnosis on main ce961e1a: at the failed press, the guest had `beat=choose`, `s
   - the record has no earlier `starter_choice:<character>:` receipt;
   - the card decodes and round-trips exactly;
   - the species is one of the opening's starters;
-  - the creature is at the configured starter level, unwounded, not fainted.
+  - the creature is at the configured starter level, unwounded, not fainted;
+  - the card equals the starter the host rebuilds from its own species data and starter level, apart from uid and nickname. No base stat, IV, boost, xp, bond, shiny flag or shared history can ride in on a card that round-trips.
 
   The after-state holds the energy-free portable card, the derived loadout mirror and the receipt.
+- **Stable retries.** Every retry re-sends the card from the first request. A late refusal cannot release a starter the host has already journalled: `cancel_original_starter_request` returns false once a `starter_choice` row exists.
 - **Owner install** (`scripts/net/character_action_owner.gd`). The installer appends the guest's own pending live instance, the object its follower pilots, never a decoded copy. It goes through the guarded `party.install_owner_capture_roster(...)` and then sets `opening:starter_granted`. A failed install rolls back through `install_owner_capture_roster([], true)`.
 - **Roster guard** (`scripts/net/session.gd` `_capture_roster_allowed`). This is one of the two session.gd guard changes. It now accepts `starter_choice` as well as `wild_capture`, and requires an empty before-party for a starter. It composes with F27's capture-guard fix: the energy-free `owner_matches_after` hunk is identical to F27's. A rollback call is refused outside a rollback. The second guard change is in `_retain_owner_training_retry`, which records `capture_originals` for both actions.
 - **Bounded wait and refusal recovery** (`scripts/story/sequence_director.gd`).
@@ -44,12 +46,39 @@ The classification lives in `scripts/net/world_ledger.gd` (`DIALOGUE_GIVE_GATES`
 | Conversation | Class | Host-side gate | Gives |
 |---|---|---|---|
 | grandpa_first_catch | consumable | authored item and count; once per character | orb_basic, potion_small, berries, revive |
+| village_nessa_overlook_gift | consumable | authored item and count; once per character (the conversation sets `nessa_overlook_gift_taken`) | berries |
 | village_mira_shop_intro | progression | the per-character receipt (the conversation sets its own `unless` flag) | axe, pickaxe, coin, fiber |
 | village_tam_tools | progression | the per-character receipt (sets `tam_tools_given`) | knife, torch, hammer |
 | relay_captive_freed | progression | `requires_any: relay_captain_defeated` (a host world flag) | mill_bridge_gear |
 | village_quarry_foreman_hammer | refused for guests | no NPC ladder offers it, so the host cannot verify a guest reached it | — |
 
-A conversation that gives anything and appears in neither table is refused for guests. `tests/test_dialogue_give_delivery.gd` fails until it is classified.
+The scan covers `data/dialogue` recursively, including `bands/`, which the runner also plays. A conversation that gives anything and appears in neither table is refused for guests. `tests/test_dialogue_give_delivery.gd` fails until it is classified.
+
+## Independent review
+
+The first review returned CHANGES REQUESTED with two blocking findings, both fixed in 2d69daf5:
+
+1. **Inflated starter cards passed the freshness check.** A card could round-trip and still carry inflated stats or history. Fixed by the exact canonical comparison above. Covered by `test_an_inflated_card_that_round_trips_is_refused`, which needs at least 8 tampered fields to reach the host's check.
+2. **The gift scan was not recursive.** It missed `data/dialogue/bands/`, so a guest's claim for Nessa's band1 gift was refused while its flag was still set locally. Fixed by the recursive scan and the classification above; the classification test now asserts the band gift is scanned.
+
+Two non-blocking findings were also fixed:
+
+- Retries now re-send one stored card, and a late refusal no longer releases a journalled starter. Covered by `test_a_journalled_starter_is_never_released_by_a_late_refusal`.
+- A stale comment and stale test names were updated.
+
+A second, fresh review of 2d69daf5 returned **APPROVE**. Its non-blocking findings were handled as follows:
+
+- **Fixed:** the host caps the starter nickname at the naming grid's `MAX_LENGTH` and refuses control characters (`invalid_starter_nickname`).
+- **Fixed:** the retry comment no longer claims the install tolerates drift.
+- **Fixed:** the inflation test now requires the freshness rule itself to refuse at least 6 of the fields.
+- **Open:** a starter row that stays pending, for example after a failed install or save, keeps the opening waiting with the 10 s notice and no exit short of leaving the session.
+
+Residual risk carried from the first review (non-blocking):
+
+- **Mira's and Tam's progression gifts** have no host-side prerequisite beyond the per-character receipt. A modified guest could claim the starting tools early. Each still pays only once per character.
+- **Non-terminal host replies keep the wait open indefinitely.** These are busy or awaiting answers. The wait shows a notice every 10 s.
+
+The live race in the opening smoke was a harness bug, not a product bug. It reproduced only when two smokes shared the CPU (op14, op16). The dialogue dismiss loop sent raw press edges, and a slow process frame flushed the last press after the box had closed, which reopened Grandpa's walk-out hint. Local diagnostics caught the arbiter firing on that fresh press at physics frame 2648. The loop now uses the shared F11#3 tap.
 
 ## Out of scope, recorded
 
@@ -59,10 +88,10 @@ A conversation that gives anything and appears in neither table is refused for g
 
 ## Proof
 
-Net smoke on d7950e5c, run with the env vars as `row6/VERDICT.md` records:
+Net smoke on 2d69daf5 (the review fixes), run alone with the env vars as `row6/VERDICT.md` records. The earlier pre-review run on d7950e5c, op15, also passed 156 of 156.
 
 ```
-TB_NET_RUN_ID=f01op15 TB_NET_OUT_DIR=<dir> TB_NET_PEERS=2 godot --headless --path . \
+TB_NET_RUN_ID=f01op17 TB_NET_OUT_DIR=<dir> TB_NET_PEERS=2 godot --headless --path . \
   --script tests/smoke_net_meadows_identity_fresh_join.gd -- --opening-together
 ```
 

@@ -3210,8 +3210,8 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 ## character_action_owner.gd, which appends exactly this pending instance, saves,
 ## ACKs and re-arms the passive stream; the opening finishes once the row reads
 ## accepted. Re-asking is idempotent: every retry re-sends the card the first
-## request carried, so the host answers an identical request from its existing
-## row even if the live instance has since moved on.
+## request carried, so the host's answer is repeatable. The install itself still
+## requires the live instance to equal the staged card (character_action_owner).
 var _original_starter_pending: RefCounted = null
 var _original_starter_pending_card: Dictionary = {}
 

@@ -145,6 +145,7 @@ func test_an_inflated_card_that_round_trips_is_refused() -> void:
 		"shiny": true, "xp": 40, "distance_m_together": 5000.0, "battles_fought": 30,
 		"happiness": 100.0, "nourishment": 100.0, "trait_primary": "sturdy"}
 	var exercised := 0
+	var not_fresh := 0
 	for field: String in tampering:
 		var raw := _card()
 		raw[field] = tampering[field]
@@ -156,16 +157,25 @@ func test_an_inflated_card_that_round_trips_is_refused() -> void:
 			continue # the codec normalised the field back to the fresh value
 		exercised += 1
 		var staged := _stage(before, card)
+		if staged.get("code") == "starter_not_fresh":
+			not_fresh += 1
 		assert_true(staged.get("ok") != true,
 			"a starter carrying %s=%s is not the opening's fresh starter (%s)" % [field, str(card.get(field)), str(staged.get("code", ""))])
+	assert_true(not_fresh >= 6, "the freshness rule itself refused most of them (%d)" % not_fresh)
 	assert_true(exercised >= 8, "the tampered fields really reached the host's check (%d of %d)" % [exercised, tampering.size()])
 
 
-func test_the_nickname_and_uid_are_the_only_free_fields() -> void:
+func test_a_chosen_nickname_is_accepted_within_the_naming_rules() -> void:
 	var before := _admitted(_player())
 	var card := _card()
 	card.nickname = "Pebble"
 	assert_true(_stage(before, card).get("ok") == true, "the player's chosen nickname is theirs to choose")
+	var long := _card()
+	long.nickname = "A".repeat(int(preload("res://scripts/ui/name_entry.gd").MAX_LENGTH) + 1)
+	assert_eq(_stage(before, long).get("code"), "invalid_starter_nickname", "longer than the naming grid allows")
+	var control := _card()
+	control.nickname = "Bud\nX"
+	assert_eq(_stage(before, control).get("code"), "invalid_starter_nickname", "no control characters")
 
 
 func test_host_context_is_required() -> void:

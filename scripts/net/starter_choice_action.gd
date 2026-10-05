@@ -71,6 +71,11 @@ static func stage(current: Dictionary, intent_value: Dictionary, context: Dictio
 	var creature: RefCounted = codec().call("decode", card)
 	if creature == null or str(creature.get("uid")) != uid:
 		return ESSENCE._refuse("invalid_starter_card")
+	# The one free text a guest supplies: no longer than the naming grid allows
+	# (name_entry.gd MAX_LENGTH) and printable, since every peer renders it.
+	var nickname := str(creature.get("nickname"))
+	if nickname.length() > int(load("res://scripts/ui/name_entry.gd").MAX_LENGTH) or not _printable(nickname):
+		return ESSENCE._refuse("invalid_starter_nickname")
 	if not (context.starter_species as Array).has(str(creature.get("species_id"))):
 		return ESSENCE._refuse("not_a_starter_species")
 	if int(creature.get("level")) != int(context.starter_level) or bool(creature.get("fainted")) \
@@ -91,7 +96,7 @@ static func stage(current: Dictionary, intent_value: Dictionary, context: Dictio
 		return ESSENCE._refuse("not_a_starter_species")
 	fresh.call("set_level", int(context.starter_level), load("res://scripts/creatures/progression.gd").config())
 	fresh.set("uid", uid)
-	fresh.set("nickname", str(creature.get("nickname")))
+	fresh.set("nickname", nickname)
 	if not ESSENCE._equivalent(rules.portable_card(codec().call("encode", fresh)), rules.portable_card(card)):
 		return ESSENCE._refuse("starter_not_fresh")
 	var next := current.duplicate(true)
@@ -105,3 +110,10 @@ static func stage(current: Dictionary, intent_value: Dictionary, context: Dictio
 	var token := receipt(character, uid)
 	next.redesign_character.transaction_receipts.append(token)
 	return {"ok": true, "state": next, "receipt": token}
+
+
+static func _printable(text: String) -> bool:
+	for i in text.length():
+		if text.unicode_at(i) < 32 or text.unicode_at(i) == 127:
+			return false
+	return true
