@@ -140,6 +140,9 @@ func _choose(id: String) -> void:
 func _on_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
 	if op != "relic_power" or str(intent.get("heart_id", "")) != _pending_heart:
 		return
+	if not reply_final(result):
+		_message.text = "Asking the host to save your choice..."
+		return # A guest's first reply is the host's checkpoint; the saved decision follows.
 	var session: Node = game.get("session")
 	if session != null and session.is_connected("homestead_action_completed", _on_reply):
 		session.disconnect("homestead_action_completed", _on_reply)
@@ -158,6 +161,15 @@ func _apply(hearts: RefCounted, id: String) -> void:
 	else:
 		_message.text = "That relic is not hung yet."
 	_refresh()
+
+
+## Replies that only say the host is still deciding: the saved decision (a
+## guest's after its owner-passive checkpoint) follows. Any other reply ends
+## the request.
+const IN_PROGRESS := ["awaiting_saved_decision", "owner_passive_checkpoint_pending", "owner_passive_original_pending"]
+
+static func reply_final(result: Dictionary) -> bool:
+	return not result.is_empty() and (result.get("ok") == true or str(result.get("code", "")) not in IN_PROGRESS)
 
 
 static func _refusal(verdict: Dictionary) -> String:

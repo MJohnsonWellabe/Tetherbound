@@ -640,6 +640,8 @@ func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
 ## F31#2 co-op: a guest's relic power choice goes to the host, which saves or
 ## refuses it. While F18's redesign_portal_runtime_enabled is off (shipping),
 ## the host has no shrine context and must refuse; nothing changes locally.
+const POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
+
 func _relic_power_attempt(args: Dictionary) -> Dictionary:
 	var game := root.get_node("Game")
 	var session := _session()
@@ -647,8 +649,11 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
 		if op == "relic_power": reply.result = result)
 	var sent: Dictionary = session.call("request_relic_power", str(args.get("heart_id", "meadows")))
-	for i in 600:
-		if not (reply.result as Dictionary).is_empty() or sent.get("code") != "awaiting_saved_decision":
+	# A guest's first reply is the host's owner-passive checkpoint; the relic
+	# panel waits for the saved decision (relic_power_panel.reply_final), so
+	# does this check.
+	for i in 900:
+		if POWER_PANEL.reply_final(reply.result) or (reply.result.is_empty() and POWER_PANEL.reply_final(sent)):
 			break
 		await physics_frame
 	var verdict: Dictionary = reply.result if not (reply.result as Dictionary).is_empty() else sent

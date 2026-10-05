@@ -69,3 +69,16 @@ func test_the_host_action_saves_one_choice_and_refuses_an_unhung_one() -> void:
 		"actual_shrine_pedestal_required", "never mid-fight")
 	assert_eq(ACTIONS.relic_power(chosen.state, {"heart_id": "meadows", "edit_id": EDIT}, context).get("code"),
 		"reconcile_original_decision", "one edit applies once")
+
+
+func test_a_guest_choice_waits_past_the_host_checkpoint_for_its_saved_decision() -> void:
+	# Review of 0b5708c9: a guest's first reply is the host's owner-passive
+	# checkpoint (unresolved). The panel and the hall's relic hang treated it
+	# as final, showed its code and never heard the saved decision.
+	assert_false(PANEL.reply_final({"ok": false, "resolved": false, "code": "owner_passive_checkpoint_pending"}))
+	assert_false(PANEL.reply_final({"ok": false, "durable": true, "resolved": false, "code": "awaiting_saved_decision"}))
+	assert_false(PANEL.reply_final({}))
+	assert_true(PANEL.reply_final({"ok": true, "durable": true, "settled": true}), "the saved decision ends the wait")
+	assert_true(PANEL.reply_final({"ok": false, "resolved": true, "terminal_refusal": true, "code": "relic_not_hung"}), "a resolved refusal ends it")
+	assert_true(PANEL.reply_final({"ok": false, "resolved": false, "code": "owner_passive_recording_unavailable"}),
+		"a refusal no decision follows still ends it (the player can try again)")
