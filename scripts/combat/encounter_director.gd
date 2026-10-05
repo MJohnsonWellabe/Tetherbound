@@ -518,7 +518,7 @@ func start_master_duel(site: Node3D, character_id: String, uid: String, definiti
 	_master_duel = {"character_id": character_id, "creature_uid": uid, "master_id": definition.id,
 		"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_game").get("world").world_id}
-	var spec := {"id": definition.id, "name": definition.name, "master": true,
+	var spec := {"id": definition.id, "name": definition.name, "master": true, "role": str(definition.get("profile", "")),
 		"team": [{"species": definition.species_id, "level": definition.cap_level, "combat": definition.combat.duplicate(true)}]}
 	if not begin_trainer_battle(spec, site.get_node(^"Master")):
 		_master_duel.clear()
@@ -610,6 +610,7 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 	runtime.connect("telegraph", _on_shared_host_telegraph.bind(id))
 	runtime.connect("swung", _on_shared_host_strike.bind(id))
 	if body.has_signal("route_cue_started"): body.connect("route_cue_started", _on_shared_host_route.bind(id))
+	body.set_meta(&"f22_master_role", str(definition.get("profile", "")))
 	_configure_f22_patterns(body, true)
 	runtime.call("start_shared", body, selected, site.global_position, float(definition.arena_radius_m), self, id, 1, "trainer")
 	_refresh_shared_record_presentation(rec)
@@ -4733,11 +4734,12 @@ func _named_trainer_grounds() -> Array[Vector2]:
 ## Warden's fights frame the two fighters and nothing else.
 func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
 	var here := Vector2(pos.x, pos.z)
-	for zone: Dictionary in _wild_keep_clear_zones():
-		if here.distance_to(zone.at) < float(zone.radius):
+	if _meadows_ground():
+		for zone: Dictionary in _wild_keep_clear_zones():
+			if here.distance_to(zone.at) < float(zone.radius):
+				return false
+		if not _clear_of_village_fence(here):
 			return false
-	if not _clear_of_village_fence(here):
-		return false
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
@@ -4762,6 +4764,18 @@ var _keep_clear_read := false
 ## boundary outline (village_boundary.json), on either side of it.
 var _fence_segments: Array[PackedVector2Array] = []
 var _fence_read := false
+
+
+## The keep-clear zones and the village fence are Meadows coordinates
+## (independent review m6): another realm's director must not test its own
+## wilds against them. Cached; a director's world realm never changes.
+var _meadows_ground_cached := -1
+
+
+func _meadows_ground() -> bool:
+	if _meadows_ground_cached < 0:
+		_meadows_ground_cached = 1 if _encounter_realm() == "meadows" else 0
+	return _meadows_ground_cached == 1
 
 
 func _clear_of_village_fence(here: Vector2) -> bool:
@@ -4800,7 +4814,8 @@ func _wild_keep_clear_zones() -> Array[Dictionary]:
 ## placement attempt landed inside one.
 func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
 	var out := pos
-	for zone: Dictionary in _wild_keep_clear_zones():
+	var meadows := _meadows_ground()
+	for zone: Dictionary in (_wild_keep_clear_zones() if meadows else [] as Array[Dictionary]):
 		var here := Vector2(out.x, out.z)
 		var centre: Vector2 = zone.at
 		if here.distance_to(centre) >= float(zone.radius):
@@ -4811,7 +4826,7 @@ func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
 		var moved := centre + away.normalized() * (float(zone.radius) + 1.0)
 		out = Vector3(moved.x, out.y, moved.y)
 	var fence_clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
-	if fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
+	if meadows and fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
 		for segment: PackedVector2Array in _fence_segments:
 			var here := Vector2(out.x, out.z)
 			var nearest := Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])
@@ -8293,8 +8308,18 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 				after_bridge = not band in ["band1_lower_meadows", "band2_stone_and_root"]
 				break
 	var role := COMBAT_AI.species_role(str(creature.get("species_id")), patterns)
+	# Masters (host duel through the trainer battle, or a guest duel tagged on
+	# its body) fight in their authored masters.json profile role.
+	var is_master := opponent_owned and (bool(_trainer_spec.get("master", false)) or wild.has_meta(&"f22_master_role"))
+	var master_role := str(wild.get_meta(&"f22_master_role", _trainer_spec.get("role", ""))) if is_master else ""
+	if not master_role.is_empty():
+		role = master_role
+	# COMBAT §7 floor trainer: an ordinary trainer's body, not a named fight,
+	# a Master or an officer/captain rank (F22 trainer_power_scale scope).
+	var floor_trainer := opponent_owned and pattern_id.is_empty() and not is_master \
+		and not str(_trainer_spec.get("rank", "")) in ["captain", "officer", "lieutenant", "elite", "mentor", "ace"]
 	var context := {"species_id": str(creature.get("species_id")), "role": role,
-		"trainer_owned": opponent_owned, "chapter": chapter, "band": band,
+		"trainer_owned": opponent_owned, "floor_trainer": floor_trainer, "chapter": chapter, "band": band,
 		"after_south_bridge": after_bridge, "pattern_id": pattern_id,
 		"sendout_index": maxi(0, _trainer_battle_sent - 1) if opponent_owned and not _trainer_spec.is_empty() else 0,
 		"move_quick": str(creature.get("move_quick")),
@@ -8417,8 +8442,11 @@ func _has_canonical_wild_runtime() -> bool:
 	return false
 
 
+## True only once the host retained this fight's frozen victory source; a
+## refused capture leaves the legacy award in place so a win always pays.
 func canonical_wild_encounter(encounter_id: String) -> bool:
-	return _owns_canonical_wild(encounter_id)
+	var runtime := _shared_host_fight(encounter_id)
+	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
 
 
 func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) -> void:

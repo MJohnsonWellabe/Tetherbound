@@ -1,0 +1,330 @@
+diff --git a/scripts/combat/encounter_director.gd b/scripts/combat/encounter_director.gd
+index 6ced36e5..3d47a822 100644
+--- a/scripts/combat/encounter_director.gd
++++ b/scripts/combat/encounter_director.gd
+@@ -2476,12 +2476,13 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
+ 		# An accepted strike or throw carries numbers only its own author needs
+ 		# (the damage it did, the wobble it earned). Everybody else gets the
+ 		# record. An accepted `trainer_victory` tells its sender to stop retrying.
+-		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
++		_send_realm_rpc(sender, "_rpc_encounter_verdict", [_with_host_xp_owner(str(verdict.get("encounter_id", intent.get("encounter_id", ""))), verdict)])
+ 
+ 
+ ## Host -> the one peer whose intent it answers.
+ @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
++	_note_host_xp_owner(verdict)
+ 	if str(verdict.get("kind", "")) == "engage" and not _pending_tournament_join_id.is_empty():
+ 		if str(verdict.get("encounter_id", "")) != _pending_tournament_join_id:
+ 			return
+@@ -2504,6 +2505,7 @@ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
+ ## that changes a client's copy of them.
+ @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
+ func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
++	_note_host_xp_owner(rec)
+ 	if str(rec.get("kind", "")) != "wild" and not _record_is_local_guest_master(rec) and not _record_is_remote_rematch(rec):
+ 		var encounter_id := str(rec.get("encounter_id", ""))
+ 		if _manager != null and bool(_manager.call("is_fighting")) \
+@@ -2729,12 +2731,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
+ 	var canonical_id := str(intent.get("encounter_id", ""))
+ 	var rematch := _remote_rematch(canonical_id)
+ 	if rematch != null: return rematch.call("join", peer_id)
+-	if peer_id != _local_peer_id() and _owns_canonical_wild(canonical_id):
+-		# The initial importer is local-owner only. Admitting a contributor then
+-		# refusing their full-state reward would lose an earned victory.
+-		return {"ok": false, "kind": "engage", "peer": peer_id, "pending": false,
+-			"code": "canonical_training_solo_scope", "delta": {},
+-			"reason": "This encounter is waiting for shared training reconciliation."}
++	# F27: a guest contributor to a canonical wild fight is paid by its own
++	# retained `wild_defeat` share (session._journal_guest_wild_defeats).
+ 	var encounter_id := str(intent.get("encounter_id", ""))
+ 	if encounter_id.is_empty():
+ 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
+@@ -3178,7 +3176,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
+ 	if deliver:
+ 		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
+ 		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
+-		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
++		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [_with_host_xp_owner(encounter_id, verdict)])
+ 	if publication.get("tracked") == true and not _encounter_host.call("acknowledge_move_action_publication",
+ 			encounter_id, peer_id, str(publication.action_id), verdict): return verdict
+ 	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
+@@ -3792,7 +3790,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
+ 		# The author still receives the authoritative record, but renders from
+ 		# its richer verdict. Marking that copy quiet prevents the record and
+ 		# verdict from flinching/announcing the same strike twice.
+-		_send_realm_rpc(peer_id, "_rpc_encounter_record", [rec, peer_id == author_peer_id])
++		_send_realm_rpc(peer_id, "_rpc_encounter_record", [_with_host_xp_owner(encounter_id, rec), peer_id == author_peer_id])
+ 
+ 
+ ## §5 step 3's history, taken on the host's own clock from the host's own body.
+@@ -8339,10 +8337,30 @@ func _has_canonical_wild_runtime() -> bool:
+ ## True only once the host retained this fight's frozen victory source; a
+ ## refused capture leaves the legacy award in place so a win always pays.
+ func canonical_wild_encounter(encounter_id: String) -> bool:
++	if not _is_host(): return _host_owned_xp.has(encounter_id) # The host said it pays this guest's share.
+ 	var runtime := _shared_host_fight(encounter_id)
+ 	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
+ 
+ 
++## F27: a guest learns from the host's own copies that its wild win is paid
++## by the host's retained `wild_defeat` share, so its combat manager skips the
++## legacy local award. Only a captured canonical source is ever stamped.
++var _host_owned_xp: Dictionary = {}
++
++
++func _with_host_xp_owner(encounter_id: String, payload: Dictionary) -> Dictionary:
++	if not canonical_wild_encounter(encounter_id): return payload
++	var stamped := payload.duplicate()
++	stamped["host_owns_xp"] = encounter_id
++	return stamped
++
++
++func _note_host_xp_owner(payload: Dictionary) -> void:
++	# Only the host sends these (authority RPCs); the stamp names its encounter.
++	if not _is_host() and payload.get("host_owns_xp") is String and not str(payload.host_owns_xp).is_empty():
++		_host_owned_xp[payload.host_owns_xp] = true
++
++
+ func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) -> void:
+ 	var runtime := _shared_host_fight(encounter_id)
+ 	if runtime == null or runtime.has_meta(&"wild_victory_source") \
+diff --git a/scripts/creatures/essence.gd b/scripts/creatures/essence.gd
+index 43e03230..266fa827 100644
+--- a/scripts/creatures/essence.gd
++++ b/scripts/creatures/essence.gd
+@@ -542,11 +542,8 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
+ 	var types := _species_types(host_event.enemy_record)
+ 	if types.is_empty() or eligible.is_empty():
+ 		return _refuse("invalid_defeat_participants")
+-	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
+-		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
+-		types, host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
+ 	var prefix := "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)]
+-	var receipt := prefix + signature
++	var receipt := defeat_receipt(character_id, host_event)
+ 	var duplicate := false
+ 	for old: String in admitted.redesign_character.transaction_receipts:
+ 		if not old.begins_with(prefix): continue
+@@ -592,6 +589,18 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
+ 		"payout": payout, "xp_awards": xp.awards.duplicate(true), "shed_outputs": shed_outputs.duplicate(true)}
+ 
+ 
++## The one personal receipt a validated host wild defeat event earns this
++## character (stage_defeat). Retained guest duties use it to recognise an
++## already-applied event without restaging.
++static func defeat_receipt(character_id: String, host_event: Dictionary) -> String:
++	var eligible: Array = (host_event.get("eligible_uids", []) as Array).duplicate()
++	eligible.sort()
++	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
++		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
++		_species_types(host_event.enemy_record), host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
++	return "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)] + signature
++
++
+ ## F32#4 win shed for one participant of one host wild defeat. The roll is
+ ## derived from host identity only, so retries and row recompute reproduce
+ ## it; the defeat receipt above makes the whole candidate once-only.
+diff --git a/scripts/net/character_action_rules.gd b/scripts/net/character_action_rules.gd
+index 51d03c07..817707f5 100644
+--- a/scripts/net/character_action_rules.gd
++++ b/scripts/net/character_action_rules.gd
+@@ -12,7 +12,7 @@ const BOUNTIES := preload("res://scripts/world/bounty_board.gd")
+ const REMATCH := preload("res://scripts/repeatables/rematch_rules.gd")
+ const RESEARCH := preload("res://scripts/creatures/research_log.gd")
+ const RECORD_FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
+-const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "essence_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
++const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "essence_release", "wild_defeat", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
+ 
+ 
+ static func stage(current: Dictionary, revision: int, action: String,
+@@ -45,6 +45,16 @@ static func stage(current: Dictionary, revision: int, action: String,
+ 		if not current.party is Array or current.party.size() != preload("res://autoload/party.gd").MAX_CREATURES:
+ 			return deny("release_requires_full_party")
+ 		proposal = ESSENCE.stage_release(current, current.character_id, intent.creature_uid, revision, ESSENCE.config())
++	elif action == "wild_defeat":
++		# F27: a guest's share of a host wild victory. The event was frozen
++		# from the host's actual accepted killing hit (session
++		# _journal_guest_wild_defeats); XP, essence and shed restage here.
++		if context.get("validated_host_outcome") != "win" or context.get("in_combat") != false \
++				or not ESSENCE._equivalent(context.get("defeat_event"), intent):
++			return deny("actual_host_wild_defeat_required")
++		proposal = ESSENCE.stage_core_defeat(current, current.character_id, intent, revision, ESSENCE.config(),
++			preload("res://scripts/creatures/progression.gd").config(), preload("res://scripts/creatures/teaching.gd").available_moves,
++			preload("res://scripts/creatures/teaching.gd").character_loadout_mirror)
+ 	elif action in ["trait_teach", "trait_release"]:
+ 		if context.get("station_id") != "altar" or context.get("homestead") != true or context.get("in_combat") != false:
+ 			return deny("actual_altar_required")
+diff --git a/scripts/net/foundation_event.gd b/scripts/net/foundation_event.gd
+index e34b3b28..7f5e36e6 100644
+--- a/scripts/net/foundation_event.gd
++++ b/scripts/net/foundation_event.gd
+@@ -25,7 +25,7 @@ static func valid(raw: Variant, namespace_id: String, world_id: String) -> bool:
+ 		or not raw.duties is Array or raw.duties.is_empty(): return false
+ 	for duty: Variant in raw.duties:
+ 		if not duty is Dictionary or duty.size() != 4 or not duty.get("character_id") is String or duty.character_id.is_empty() \
+-			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer", "combat_mastery", "combat_round_reward"] \
++			or duty.get("action") not in ["research_event", "master_win", "boss_relic", "rematch_win", "bounty_event", "capture_offer", "combat_mastery", "combat_round_reward", "wild_defeat"] \
+ 			or not duty.get("intent") is Dictionary or not duty.get("context") is Dictionary: return false
+ 		if not _duty_valid(duty, raw): return false
+ 	return true
+@@ -46,6 +46,14 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
+ 		return context.get("world_namespace") == row.world_namespace and context.get("session_id") == row.session_id \
+ 			and row.source_id == context.source_key \
+ 			and preload("res://scripts/net/combat_round_reward.gd").source_valid(intent, context, duty.character_id)
++	if duty.action == "wild_defeat":
++		# One retained guest share of one host wild victory (F27).
++		return context.get("world_namespace") == row.world_namespace and context.get("session_id") == row.session_id \
++			and context.get("validated_host_outcome") == "win" and intent.get("kind") == "wild_defeat" \
++			and intent.get("world_namespace") == row.world_namespace and ESSENCE._opaque_id(intent.get("event_id")) \
++			and row.source_id == "wild_xp:" + str(intent.event_id) and context.source_key == row.source_id \
++			and ESSENCE._equivalent(context.get("defeat_event"), intent) \
++			and _strings(context.get("participants")) and context.participants.size() <= 4 and context.participants.has(duty.character_id)
+ 	if duty.action in ["research_event", "rematch_win", "bounty_event", "combat_mastery"]:
+ 		if context.get("world_namespace") != row.world_namespace or context.get("session_id") != row.session_id: return false
+ 	if duty.action != "master_win":
+diff --git a/scripts/net/owner_passive_preparation.gd b/scripts/net/owner_passive_preparation.gd
+index 37b3d173..ae0dbeb1 100644
+--- a/scripts/net/owner_passive_preparation.gd
++++ b/scripts/net/owner_passive_preparation.gd
+@@ -206,7 +206,7 @@ static func valid(raw: Variant, retained: Variant) -> bool:
+ 	if not RECORD.errors(raw.before, raw.character_id).is_empty() \
+ 		or not RECORD.errors(raw.after, raw.character_id).is_empty() \
+ 		or not EVENT.valid(retained, raw.world_namespace, raw.world_id) \
+-		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery", "combat_round_reward"] \
++		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat"] \
+ 		or raw.duty.get("character_id") != raw.character_id or fingerprint(raw.duty) != raw.duty_hash:
+ 		return false
+ 	var matches := 0
+diff --git a/scripts/net/session.gd b/scripts/net/session.gd
+index 8dce6e18..c6c9c4ff 100644
+--- a/scripts/net/session.gd
++++ b/scripts/net/session.gd
+@@ -241,7 +241,7 @@ func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dict
+ 
+ func _owner_passive_commit_retained(peer: int, binding: Dictionary) -> Dictionary:
+ 	if not is_host() or binding.get("character") != _authority_character(peer) \
+-		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
++		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat"]:
+ 		return FOUNDATION_ACTIONS.deny("owner_passive_original_duty_required")
+ 	var world: RefCounted = _game().get("world")
+ 	if binding.action == "boss_relic":
+@@ -952,7 +952,7 @@ func _retry_foundation_events() -> void:
+ 		else:
+ 			context.in_combat = false
+ 			context.foundation_runtime_authorized = true
+-			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
++			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat"]:
+ 				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
+ 				if ready.get("ok") != true:
+ 					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
+@@ -1001,6 +1001,7 @@ func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") ->
+ 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
+ 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
+ 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
++	if duty.action == "wild_defeat": return ESSENCE.defeat_receipt(duty.character_id, duty.intent)
+ 	if duty.action == "boss_relic": return FOUNDATION_ACTIONS.boss_receipt(world_namespace, duty.intent.trainer_id, duty.character_id)
+ 	if duty.action == "research_event":
+ 		var event: Dictionary = duty.context
+@@ -5169,11 +5170,13 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
+ 	if source.is_empty() or not frozen.get("record", {}).get("participants") is Dictionary \
+ 		or not frozen.get("deployments") is Array: return refused
+ 	var participants: Dictionary = frozen.record.participants
+-	# Current full-state care/bond/condition reconciliation remains a remote
+-	# activation blocker. Do not pay only the host and silently discard peers.
+-	if participants.size() != 1 or not participants.has(local_peer_id()):
+-		refused.code = "remote_training_baseline_not_ready"
+-		return refused
++	# Every guest participant's share is retained FIRST, as its own durable
++	# owner duty (the owner-passive gate, owner save and ACK), so the host's
++	# own row below never pays the host and silently drops a peer.
++	var guests := _journal_guest_wild_defeats(frozen)
++	if guests.get("durable") != true: return guests
++	if not participants.has(local_peer_id()):
++		return {"ok": true, "durable": true, "resolved": true, "code": "guest_shares_retained"}
+ 	var peer := local_peer_id()
+ 	var character := _authority_character(peer)
+ 	var participant: Variant = participants[peer]
+@@ -5218,6 +5221,45 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
+ 	return {"ok": true, "durable": true, "resolved": false, "receipt": committed.receipt,
+ 		"delivery_id": committed.delivery_id, "code": "awaiting_saved_decision"}
+ 
++## F27: each guest participant of a host wild victory gets one retained
++## `wild_defeat` duty, its event staged once here from the SAME frozen capture
++## (actual killing hit, deployments, mode) against that guest's admitted
++## record. Retries find the retained event and never restage it.
++func _journal_guest_wild_defeats(frozen: Dictionary) -> Dictionary:
++	var world: RefCounted = _game().get("world")
++	var participants: Dictionary = frozen.record.participants
++	var characters: Array[String] = []
++	var peers: Array = participants.keys()
++	peers.sort()
++	for peer: Variant in peers:
++		characters.append(str((participants[peer] as Dictionary).get("character_id", "")))
++	var source := "wild_xp:" + str(frozen.get("source_id", ""))
++	var existing := preload("res://scripts/net/foundation_event.gd").identity(
++		{"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(), "source_id": source})
++	if world.reward_deliveries.has(existing): return {"ok": true, "durable": true}
++	var duties: Array = []
++	for peer: Variant in peers:
++		if peer == local_peer_id(): continue
++		var character := str((participants[peer] as Dictionary).get("character_id", ""))
++		var admitted: Dictionary = _character_authority.call("state", character) if not character.is_empty() else {}
++		if admitted.is_empty():
++			print("[session] wild_defeat share for peer %s skipped: no admitted record" % str(peer))
++			continue
++		var staged := ESSENCE.stage_captured_host_victory(admitted, character,
++			int(_character_authority.call("revision", character)), int(peer), frozen,
++			ESSENCE.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
++		if staged.get("ok") != true or staged.get("duplicate") == true:
++			print("[session] wild_defeat share for %s skipped: %s" % [character, str(staged.get("code", "duplicate"))])
++			continue
++		duties.append({"character_id": character, "action": "wild_defeat", "intent": staged.intent.duplicate(true),
++			"context": {"source_key": source, "validated_host_outcome": "win", "defeat_event": staged.intent.duplicate(true),
++				"participants": characters.duplicate(), "world_namespace": world.reward_delivery_namespace,
++				"session_id": _altar_current_epoch()}})
++	if duties.is_empty(): return {"ok": true, "durable": true}
++	var journal: Dictionary = get_node(^"LedgerRpc").call("journal_foundation_event", source, duties)
++	if journal.get("durable") != true: return {"ok": false, "durable": false, "resolved": false, "code": "guest_wild_shares_pending"}
++	return journal
++
+ ## Appended to the existing Session; all state remains its existing admission
+ ## registry, WorldState.reward_deliveries and the owner's transaction receipts.
+ const PORTAL_POLICY := preload("res://scripts/net/portal_action_policy.gd")
+diff --git a/tools/net/f27_essence_steps.gd b/tools/net/f27_essence_steps.gd
+index 4c00ec51..a869291a 100644
+--- a/tools/net/f27_essence_steps.gd
++++ b/tools/net/f27_essence_steps.gd
+@@ -28,6 +28,7 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
+ 		"f27_title_rejoin": return await _title_rejoin(runner, args)
+ 		"f27_passive_state": return _passive_state(runner, str(args.get("character_id", "")))
+ 		"f27_ceremony_release": return await _ceremony_release(runner, args)
++		"f27_passive_projection": return _passive_projection(runner, str(args.get("character_id", "")))
+ 	return {"verdict": "ERROR", "detail": "unknown F27 action '%s'" % action}
+ 
+ 
+@@ -119,6 +120,7 @@ static func _summary(record: Dictionary) -> Dictionary:
+ 	var receipts: Array = personal.get("transaction_receipts", [])
+ 	return {"party": party, "items": _counts(record.get("inventory", [])),
+ 		"spend_receipts": receipts.filter(func(r: Variant) -> bool: return str(r).begins_with("essence_spend:")),
++		"defeat_receipts": receipts.filter(func(r: Variant) -> bool: return str(r).begins_with("defeat:")),
+ 		"release_receipts": personal.get("release_receipts", []).duplicate(),
+ 		"receipt_count": receipts.size()}
+ 
+@@ -392,3 +394,16 @@ static func _ceremony_release(runner: SceneTree, args: Dictionary) -> Dictionary
+ 	if menu.call("is_open") == true: menu.call("close") # Leave the Team screen as a player would.
+ 	for f in 12: await runner.process_frame
+ 	return _ok("ceremony release ended at stage %s" % data.stage, data)
++
++
++## Diagnostic: the guest's own owner-passive projection, or the host's
++## replayed cursor state for that character (what an exact freeze compares).
++static func _passive_projection(runner: SceneTree, character_id: String) -> Dictionary:
++	var game := _game(runner)
++	var session: Node = game.get("session") if game != null else null
++	var service: Variant = session.get("_owner_passive") if session != null else null
++	if service == null: return _fail("no owner passive service")
++	if session.call("is_host") == true:
++		var stream: Dictionary = (service.get("hosts") as Dictionary).get(character_id, {})
++		return _ok("host cursor", {"state": (stream.get("cursor", {}) as Dictionary).get("state", {}), "error": stream.get("error")})
++	return _ok("owner projection", {"state": service.call("_projection")})

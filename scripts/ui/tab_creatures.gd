@@ -32,6 +32,7 @@ const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINING_READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const ORDINARY_RELEASE := preload("res://scripts/net/essence_release_service.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
@@ -1972,6 +1973,7 @@ func _maybe_begin_release() -> void:
 			say("%s joins the belt." % str(pending.call("label")))
 		return
 
+	_bind_ordinary_release(pending)
 	_release_stage = "choose"
 	_release_for = pending
 	_release_target = -1
@@ -2563,7 +2565,9 @@ func _begin_farewell(index: int) -> void:
 			_farewell_body.text += " Release is unavailable. Your team and items stay unchanged."
 		else:
 			var payout := _release_payout_text(_release_quote.get("payout", []))
-			_farewell_body.text += " " + ("No essence is paid for a newcomer you never kept." if index >= PARTY.MAX_CREATURES else "Release payout: " + payout + ".")
+			if index >= PARTY.MAX_CREATURES: _farewell_body.text += " No essence is paid for a newcomer you never kept."
+			elif payout.is_empty(): _farewell_body.text += " No essence is paid: " + str(_release_quote.get("unpaid_reason", "")) + "."
+			else: _farewell_body.text += " Release payout: " + payout + "."
 	_farewell_keep.grab_focus()
 
 
@@ -2677,6 +2681,16 @@ func _typed_release_required(pending: RefCounted) -> bool:
 		return _release_service.call("owns_pending_capture", pending) == true
 	return true
 
+## F27#1: an ordinary (untyped) catch overflow on the solo/host owner pays its
+## released creature's type essence through the typed essence_release action.
+func _bind_ordinary_release(pending: RefCounted) -> void:
+	if is_instance_valid(_release_service) and _release_service.has_method("owns_pending_capture") \
+			and _release_service.call("owns_pending_capture", pending) == true: return
+	var service: Node = ORDINARY_RELEASE.attach(state())
+	if service != null and service.call("owns_pending_capture", pending) == true:
+		configure_release_service(service)
+
+
 func configure_release_service(service: Node) -> bool:
 	if (_release_stage != "" and _release_request_id.is_empty()) or not is_instance_valid(service): return false
 	for method: String in ["quote_release", "submit_release", "reconcile_release"]:
@@ -2708,7 +2722,9 @@ func _quote_release_choice() -> Dictionary:
 			or not raw.get("payout") is Array: return {}
 	if released_uid.is_empty():
 		if not raw.payout.is_empty(): return {}
-	elif _release_payout_text(raw.payout).is_empty(): return {}
+	elif _release_payout_text(raw.payout).is_empty():
+		# A guest's creature the host cannot pay for still goes free, unpaid.
+		if not raw.payout.is_empty() or not raw.get("unpaid_reason") is String or str(raw.unpaid_reason).is_empty(): return {}
 	return raw.duplicate(true)
 
 
@@ -2776,6 +2792,7 @@ func _on_release_completed(release_id: String, result: Dictionary) -> void:
 			say("Your saved choice is still arriving. Reconnect if it does not finish.")
 			return
 	var context := _release_context
+	if result.has("unpaid_reason"): context.payout_text = "" # Released, but no essence was paid.
 	_release_request_id = ""
 	_release_context = {}
 	_release_quote = {}

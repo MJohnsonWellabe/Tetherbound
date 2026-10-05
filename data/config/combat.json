@@ -1437,25 +1437,25 @@
             "sequence": [
               "wall_check",
               "wall_quake"
-            ]
+            ], "role": "WALL"
           },
           {
             "sequence": [
               "diver_retreat",
               "diver_leap"
-            ]
+            ], "role": "DIVER"
           },
           {
             "sequence": [
               "current_volley",
               "current_zone"
-            ]
+            ], "role": "CURRENT"
           },
           {
             "sequence": [
               "charger_rush",
               "charger_double_rush"
-            ]
+            ], "role": "CHARGER"
           },
           {
             "sequence": [
@@ -1874,6 +1874,8 @@
     },
     "_comment_wild_power_scale": "COMBAT §7 ordinary wilds: beginner masher win >=90% at 15-30% lead HP cost. Multiplies the selected pattern's power for ordinary (not trainer-owned, not named) wilds per chapter. All 1.0: measured masher median LEAD cost is already 15-31% in every band except Cloudreach high_roost (43%); ralph/reports/COMBAT/f22/proof/f22_wild_power.md. Meadows must stay 1.0 until F17's home bed lands and F02#6 is re-run. TUNABLE.",
     "wild_power_scale": {"meadows": 1.0, "water": 1.0, "cloudreach": 1.0, "stormwood": 1.0},
+    "_comment_trainer_power_scale": "F22#1 (COMBAT §7 floor trainer): multiplies the selected pattern power of ORDINARY trainer-owned bodies (no named pattern) per chapter, so a masher that ignores tells loses its lead materially more often than a reader. Meadows held at 1.0 (F02#6 / home bed). Evidence: ralph/reports/COMBAT/f22/proof/f22_1_trainers.md. TUNABLE.",
+    "trainer_power_scale": {"meadows": 1.0, "water": 1.3, "cloudreach": 1.0, "stormwood": 1.0},
     "heavy_tell_floor_s": 1.1,
     "chapter_floors": {
       "meadows": {

@@ -2802,7 +2802,7 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 	if _wild != null and _wild.has_method("sync_poise") and payload.has("poise"):
 		_wild.call("sync_poise", float(payload["poise"]),
 			bool(payload.get("staggered", false)), bool(payload.get("critical_ready", true)),
-			float(payload.get("stagger_left", -1.0)))
+			float(payload.get("stagger_left", -1.0)), float(payload.get("poise_max", -1.0)))
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
 		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)), impact)
@@ -3047,7 +3047,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		_wild.call("sync_poise", float(opponent["poise"]),
 			bool(opponent.get("staggered", false)),
 			bool(opponent.get("critical_ready", true)),
-			float(opponent.get("stagger_left", -1.0)))
+			float(opponent.get("stagger_left", -1.0)), float(opponent.get("poise_max", -1.0)))
 		if not quiet and not was_staggered and bool(opponent.get("staggered", false)):
 			_announce_stagger(true)
 		state_changed.emit()
@@ -3535,15 +3535,24 @@ func _award_victory() -> void:
 	var condition_cfg: Dictionary = CONDITION.config()
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
+	# F27: a canonical host wild victory pays its reduced XP and essence in the
+	# host training transaction, staged from this party. That staged party also
+	# carries the win's battle credit, victory mood and level-up condition
+	# (progression.staged_training_condition), so the legacy loop below must
+	# not touch the members at all, or each would be counted twice.
+	var host_owns_xp: bool = _encounter_link != null and not _encounter_id.is_empty() \
+		and _encounter_link.has_method("canonical_wild_encounter") \
+		and _encounter_link.call("canonical_wild_encounter", _encounter_id) == true
 
 	last_xp_award.clear()
 	for i in _party.size():
 		var member: RefCounted = _party[i]
-		if member == null or member.fainted:
+		if member == null or member.fainted or host_owns_xp:
 			continue
-		var amount: int = award if i == _active_index else share
-		var levels_gained: int = member.gain_xp(amount, cfg)
-		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+		var amount: int = 0 if host_owns_xp else (award if i == _active_index else share)
+		var levels_gained: int = member.gain_xp(amount, cfg) if amount > 0 else 0
+		if not host_owns_xp:
+			last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
 		# Prompt 67's history, recorded where the facts already are. This loop
 		# already skips a fainted member ("it did not fight"), so the same rule
 		# decides what counts as a battle fought -- one definition, one place.
