@@ -31,8 +31,6 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return _craft_count(args)
 	if action == "craft_fund":
 		return _craft_fund(args)
-	if action == "craft_fund_guest_authority":
-		return _craft_fund_guest_authority(args)
 	if action == "relic_power_attempt":
 		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
@@ -413,53 +411,20 @@ func _home_bed_status() -> Dictionary:
 const CRAFT_STANCE := Vector3(-6.0, 1.4, 22.0)
 const CRAFT_DELIVERY := preload("res://scripts/net/homestead_building_delivery.gd")
 const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
-const BAG_RULES := preload("res://scripts/world/death_satchel_rules.gd")
 
 func _inventory_count(id: String) -> int:
 	return int(root.get_node("Game").get("inventory").call("count", id))
 
-## Fixture stock on the guest's own character, in two halves that must agree:
-## the guest's local mirror (this action, on the guest) and the host's
-## authoritative record (craft_fund_guest_authority, on the host). The host
-## trusts only its admitted record, and a rejoin never overwrites a record it
-## already seeded this session, so a local add alone is refused as
-## ingredients_missing (correctly) and a leave/rejoin cannot fund it either.
+## Fixture stock on the guest's own portable character. The host trusts only
+## the record it admitted, and never reseeds one within a session, so the
+## smoke saves this through a production leave, then a real host save and
+## reload, then a returning rejoin, before crafting (a local add alone is
+## refused as ingredients_missing, correctly).
 func _craft_fund(args: Dictionary) -> Dictionary:
 	var inventory: RefCounted = root.get_node("Game").get("inventory")
 	for row: Variant in args.get("items", []):
 		inventory.call("add", str(row[0]), int(row[1]))
 	return _craft_count({"ids": args.get("ids", [])})
-
-## Host half of the disclosed fixture: grants the same stock to the guest's
-## admitted record through the authority's own owner-delivery API (the path
-## host reward deliveries use), checked against the record's current state.
-func _craft_fund_guest_authority(args: Dictionary) -> Dictionary:
-	var sess := _session()
-	var authority: RefCounted = sess.get("_character_authority") if sess != null else null
-	if authority == null:
-		return {"verdict": "FAIL", "detail": "no host character authority"}
-	var local := int(sess.call("local_peer_id"))
-	var funded: Array = []
-	for row: Dictionary in sess.get("_registry").call("rows"):
-		var peer := int(row.get("peer_id", 0))
-		if peer == local:
-			continue
-		var character := str(sess.call("_authority_character", peer))
-		var before: Dictionary = authority.call("state", character)
-		if before.is_empty() or not before.get("inventory") is Array:
-			return {"verdict": "FAIL", "detail": "guest %d has no admitted record" % peer}
-		var bag: RefCounted = BAG_RULES.inventory_from(before.inventory)
-		for item: Variant in args.get("items", []):
-			if int(bag.call("add", str(item[0]), int(item[1]))) != 0:
-				return {"verdict": "FAIL", "detail": "guest %d satchel is full" % peer}
-		var after := before.duplicate(true)
-		after.inventory = BAG_RULES.slots(bag)
-		if authority.call("apply_owner_reward_delivery", character, before, after) != true:
-			return {"verdict": "FAIL", "detail": "owner delivery refused for %s" % character}
-		funded.append(character)
-	if funded.is_empty():
-		return {"verdict": "FAIL", "detail": "no guest record to fund"}
-	return {"verdict": "PASS", "detail": "host funded the admitted guest record", "data": {"characters": funded}}
 
 func _craft_count(args: Dictionary) -> Dictionary:
 	var out := {}
