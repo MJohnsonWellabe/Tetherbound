@@ -375,6 +375,33 @@ func test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation()
 	body.free()
 
 
+## F27 flip: a trainer battle's round boundary empties the record and the
+## host re-seats its participants with no UID (encounter_director
+## `_resume_trainer_encounter`). The retained participant must keep its bound
+## active creature, or every later strike fails the actor-binding check.
+func test_round_reseat_without_uid_keeps_the_bound_active_creature() -> void:
+	var owned: Dictionary = _portable(_player()).party[0]
+	var host := ENCOUNTER.new()
+	var rec := host.open(1, "meadows", "trainer", {"hp": 100.0, "hp_max": 100.0}, owned.uid, "owner_a")
+	var id := str(rec.encounter_id)
+	var body := Node.new()
+	var bound := host.bind_actor_body(id, 1, "owner_a", owned, body.get_instance_id())
+	assert_true(bound.ok, "bind " + str(bound))
+	host.leave(id, 1)
+	host.set_phase(id, "active") # As _resume_trainer_encounter does at a round boundary.
+	var reseat := host.join(id, 1, "", "owner_a")
+	assert_true(reseat.ok, "re-seat " + str(reseat))
+	var participant: Dictionary = rec.participants[1]
+	assert_eq(participant.get("creature_uid"), owned.uid, "a UID-less re-seat keeps the retained active creature")
+	assert_eq(participant.get("actor_bound_uid"), owned.uid)
+	host.leave(id, 1)
+	host.set_phase(id, "active")
+	var relabel := host.join(id, 1, "relabelled_uid", "owner_a")
+	assert_true(relabel.ok, "relabel " + str(relabel))
+	assert_eq(rec.participants[1].get("creature_uid"), "relabelled_uid", "a supplied UID still relabels")
+	body.free()
+
+
 func test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private() -> void:
 	var owned: Dictionary = _portable(_player()).party[0]
 	var host := ENCOUNTER.new()

@@ -162,9 +162,13 @@ func _ensure_ally() -> void:
 	# The opening's own ownership step (sequence_director._own_the_late_arrival):
 	# the adopted body is a companion only once it is in this character's party.
 	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	# Each case boots a fresh world whose opening owns its own starter; the
+	# Game party outlives the previous case's world, so it holds this world's.
 	var party: RefCounted = root.get_node(^"Game").get("party")
-	if party != null and int(party.call("size")) == 0 and director.call("ally_instance") != null:
-		party.call("add", director.call("ally_instance"))
+	var ally: RefCounted = director.call("ally_instance")
+	if party != null and ally != null and not (party.call("members") as Array).has(ally):
+		while int(party.call("size")) > 0: party.call("remove_at", 0)
+		party.call("add", ally)
 
 
 ## The opening's staging wakes the player in Grandpa's bed. Each isolated
