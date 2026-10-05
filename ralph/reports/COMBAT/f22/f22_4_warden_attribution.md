@@ -51,3 +51,21 @@ The smoke's C3 gate was brought into line with the spec in its own commit:
   with its attribution (`MEADOWS_C2C3_HITS`), but it no longer gates.
 - **Real failure.** Any neutral worst-variance hit ≥0.50 is a real failure
   and gets tuned.
+
+## Re-run under the aligned gate
+
+Run: `smoke_meadows_named_c2c3 --case=warden`, 2 seeds.
+
+| Starter | Pilot | Neutral worst-variance (gated) | Worst in any matchup (reported) | Verdict |
+|---|---|---|---|---|
+| terrapup | masher | 0.409 (tuskroot `earth_fist` → pipwing) | 0.499 (same blow, ×1.25) | PASS |
+| terrapup | reader | 0.165 (burrowback `rock_throw`) | 0.164 | PASS |
+| ripplet | masher | 0.409 (tuskroot `earth_fist` → pipwing) | 0.492 (×1.25) | PASS |
+| ripplet | reader | 0.190 (burrowback `rock_throw`) | 0.149 | PASS |
+| galewisp | masher | 0.409 (tuskroot `earth_fist` → pipwing) | 0.452 (×1.25) | PASS |
+| galewisp | reader | 0.250 (brooktail `aqua_shot`) | 0.173 | PASS |
+
+The neutral worst-variance value for the tuskroot blow is 0.409. Multiplied
+by the 1.25 type multiplier, that gives 0.511. This matches the worst
+super-effective hit the 12-seed attribution run measured (0.510), so the
+re-derivation agrees with the live roll.
