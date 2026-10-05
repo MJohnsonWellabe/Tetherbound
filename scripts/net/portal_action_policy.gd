@@ -163,8 +163,8 @@ func evaluate(payload: Dictionary, context: Dictionary, config: Dictionary,
 	return _permit(kind, _mint(character), context, "water" if biome == "tidewake" else biome, entry)
 
 
-## STATE owner decision #11: while false the home arch is home-only and always
-## lands at the Meadows entry; true returns to the last Meadows waystone.
+## STATE owner decision #11 (settled 2026-10-05): true (shipped) returns the
+## home arch to the last Meadows waystone; false lands at the Meadows entry.
 static func meadows_waystone_return(config: Variant) -> bool:
 	if not config is Dictionary: return false
 	var home: Variant = config.get("home_arch", {})

@@ -126,9 +126,9 @@ func _run() -> void:
 	# Cross-world safe spawning is production-owned; HomeKey finds the actual
 	# Hall from that position, rather than staging another actor teleport.
 	if not await _f18_pass(1, "f18_home_key", {}, 12000): return
-	# STATE decision #11 (owner-pending): the shipped home arch is home-only;
-	# portals.json home_arch.returns_to_last_meadows_waystone=true restores the
-	# recommendation, and this step then proves the personal-stone return.
+	# STATE decision #11 (settled 2026-10-05): the shipped home arch returns to
+	# the last Meadows waystone (portals.json home_arch); this step proves the
+	# personal-stone return, or the entry landing if the switch is off.
 	var meadows_return := preload("res://scripts/net/portal_action_policy.gd").meadows_waystone_return(
 		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json")))
 	var home_args := {"arch": "home", "mode": "enter", "realm": "meadows"}
