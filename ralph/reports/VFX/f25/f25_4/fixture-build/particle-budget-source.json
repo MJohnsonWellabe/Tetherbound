@@ -1,0 +1,273 @@
+{
+  "archetypes": [
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "stone_throw"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "fireball"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "flame_cone"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "ember_burst"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "sky_lightning"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "chain_lightning"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "water_jet"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "bubble_volley"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "tidal_wave"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "wind_blade"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "tornado"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "ice_shard_volley"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "frost_breath"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "shadow_bolt"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "psychic_pulse"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "root_stone_spikes"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "quake_ring"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "slash_trail"
+    },
+    {
+      "decorative_total_request": 42,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 18,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 24,
+      "archetype": "charge_dash"
+    },
+    {
+      "decorative_total_request": 22,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 10,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 12,
+      "archetype": "heal_pulse"
+    },
+    {
+      "decorative_total_request": 22,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 10,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 12,
+      "archetype": "buff_aura"
+    },
+    {
+      "decorative_total_request": 22,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 10,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 12,
+      "archetype": "debuff_hex"
+    },
+    {
+      "decorative_total_request": 22,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 10,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 12,
+      "archetype": "guard_flash"
+    },
+    {
+      "decorative_total_request": 22,
+      "ordinary_per_effect_cap": 48,
+      "scene_light_cap": 4,
+      "encounter_cap": 384,
+      "decorative_trail_request": 10,
+      "mesh_body_cap_separate_from_particles": 12,
+      "ultimate_per_effect_cap": 160,
+      "decorative_impact_request": 12,
+      "archetype": "catch_tether_beam"
+    }
+  ],
+  "source": "e2fa5e4e6bb0060e5f98f9129f2f2e949f8a37f3",
+  "shipped_library_enabled": false,
+  "archetype_count": 24,
+  "vfx_config_sha256": "B0CBC47ED87A9FE42D20B979B4F23B5A183F38FB1D03CB2BE9A4E5B89446EF42",
+  "scope": "source declarations only; mesh bodies are separate; dynamic allocation and native FPS remain unproven"
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "sha256": "6955E78349B0231A0D4A95728D5DCC0F4E0C62DA52AEC4714A394546FB0A6F82",
+    "name": "stdout-stderr.log",
+    "bytes": 316946
+  },
+  {
+    "sha256": "F0794B7ECE7B0108462A21AEC1C6DE36D9748AD6087CB39B0E66C0EF40C93D39",
+    "name": "receipt.json",
+    "bytes": 697
+  }
+]
