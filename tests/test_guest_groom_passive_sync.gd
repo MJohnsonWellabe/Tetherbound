@@ -274,13 +274,34 @@ func test_leave_mid_groom_resume_still_saves_and_rejoin_replays_nothing() -> voi
 	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a requested but unprepared groom never refuses a save")
 	var prepared := _prepared(RECORD.portable_projection(game.local.save_data()))
 	sync.pending = {"scope": sync._scope(), "intent": prepared.intent.duplicate(true), "source_key": prepared.source_key, "phase": "save", "prepared": prepared}
-	assert_false(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a host-prepared baseline stays atomic inside save_owner_baseline")
-	# Rejoin: the host holds no preparation for this character; resume clears.
+	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a prepared baseline not yet installed has changed nothing")
+	sync.pending.installed = true
+	assert_false(game.save_system.save_character_prepared(game, DATA.CHARACTER), "once installing starts, only the prepared baseline itself may be saved")
+	sync.pending.phase = "cancel"
+	sync.pending.erase("installed")
+	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a groom cancelled before any install never refuses a save")
+	# Rejoin to a host that kept its reservation: the guest's saved file carries
+	# more passive progress than the host's baseline. The re-offered preparation
+	# installs its absolute values once; nothing is added on top.
+	sync.pending = {}
+	var before := RECORD.portable_projection(game.local.save_data())
+	var retained := _prepared(before)
+	CONDITION.tick(game.local.party.at(0), CONDITION.config(), 2.0) # Progress saved after the host's baseline.
+	sync.call("begin_resume")
+	sync.call("receive", {"op": "groom_resume"}, {"code": "groom_baseline_prepared", "prepared": retained})
+	var installed := RECORD.portable_projection(game.local.save_data())
+	assert_eq(sync.pending.get("phase"), "commit", "the retained preparation installed once and now awaits the host ACK")
+	assert_true(E._equivalent(installed, retained.after),
+		"the install is exactly the host baseline, never progress added on top: " + str(_passive_difference(installed, retained.after)))
+	var saved: Dictionary = game.save_system.character_store.read(DATA.CHARACTER)
+	assert_true(E._equivalent(RECORD.portable_projection(saved), retained.after), "the one install is the saved baseline")
+	assert_false(game.save_system.save_character_prepared(game, DATA.CHARACTER), "after install only the baseline may be on disk until the ACK")
+	# Rejoin to a host with no preparation: resume clears with nothing to replay.
 	sync.pending = {}
 	sync.call("begin_resume")
 	sync.call("receive", {"op": "groom_resume"}, {"code": "groom_no_preparation"})
 	assert_true(sync.pending.is_empty(), "the rejoin resume settles with nothing to replay")
-	assert_true(game.world.reward_deliveries.is_empty(), "no Groom row was journaled by the leave or the rejoin")
+	assert_true(game.world.reward_deliveries.is_empty(), "no Groom row was journaled by the leave or the rejoins")
 	assert_false(session.owns_input())
 	session.free()
 	game.free()
