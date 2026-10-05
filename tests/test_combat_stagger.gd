@@ -240,3 +240,28 @@ func test_guest_stand_in_reads_the_hosts_pool() -> void:
 	assert_almost_eq(float(proxy.call("poise_max")), float(MATH.config().poise.role_pools[species_role]), 0.001,
 		"a new engagement forgets the mirrored pool")
 	proxy.free()
+
+
+## COMBAT §4 (owner ruling 2026-10-05): only a charge whose windup started after
+## the tell became visible (less forced_break_grace_s) forces a break.
+func test_forced_break_needs_a_charge_started_after_the_tell() -> void:
+	var grace := float(MATH.config().get("poise", {}).get("forced_break_grace_s", 0.1))
+	assert_almost_eq(grace, 0.1, 0.0001, "owner-ruled 0.1 s grace")
+	var manager := MANAGER.new()
+	var wild := WILD.new()
+	manager.set("_wild", wild)
+	wild.set("engaged", true)
+	wild.set("_intent", AI.Intent.TELEGRAPH)
+	wild.set("_route_cue_left", 0.0)
+	wild.set("_lunge_tell_total", 1.1)
+	var windup := 0.47
+	wild.set("_beat_left", 1.1 - 0.6)
+	assert_true(bool(manager.call("charge_read_the_tell", windup)), "started 0.13 s after the tell: a read")
+	wild.set("_beat_left", 1.1 - (windup - grace * 0.5))
+	assert_true(bool(manager.call("charge_read_the_tell", windup)), "started inside the grace before the tell")
+	wild.set("_beat_left", 1.1 - (windup - grace - 0.05))
+	assert_false(bool(manager.call("charge_read_the_tell", windup)), "already in flight before the tell: no forced break")
+	wild.set("_intent", AI.Intent.CLOSE)
+	assert_false(bool(manager.call("charge_read_the_tell", windup)), "no tell showing, nothing to read")
+	wild.free()
+	manager.free()
