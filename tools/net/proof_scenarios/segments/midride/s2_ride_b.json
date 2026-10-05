@@ -1,0 +1,484 @@
+{
+ "name": "F06: two-peer MID-RIDE rejoin keeps the rider sane, the party whole and Cloudreach's closed counterweight gate shut -- segment 2 (B: mid-ride drop at the closed gate)",
+ "claim": "Part B from checkpoint midride/after_a; orig #91's own capture writes midride/after_b. Segment of tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json (CI segments: tests/helpers/ci_segments.gd).",
+ "_comment_segment": {
+  "original": "tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json",
+  "peer_map": {
+   "0": 0,
+   "1": 1
+  }
+ },
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": "all",
+   "action": "legacy_physical_crossings_fixture",
+   "args": {
+    "regression": "cloudreach_midride_rejoin"
+   },
+   "label": "disclosed retired realm-key crossing fixture; shipping flag remains off",
+   "_comment": "SEGMENT: orig #1 again -- every fresh process takes the disclosed fixture"
+  },
+  {
+   "peer": 0,
+   "action": "seg_verify",
+   "args": {
+    "boundary": "midride/after_a",
+    "role": "host"
+   },
+   "label": "handoff: host checkpoint midride/after_a",
+   "_comment": "SEGMENT: committed checkpoint is fresh and meets the start contract"
+  },
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tests/fixtures/segments/midride/after_a/host"
+   },
+   "expect_data": {
+    "realm": "cloudreach"
+   },
+   "label": "host loads midride/after_a",
+   "_comment": "SEGMENT: host resumes from the checkpoint through Game.load_game and a boot of its realm"
+  },
+  {
+   "peer": 0,
+   "action": "seg_contract",
+   "args": {
+    "boundary": "midride/after_a",
+    "role": "host"
+   },
+   "label": "handoff: live host meets midride/after_a",
+   "_comment": "SEGMENT: live host state meets the start contract"
+  },
+  {
+   "peer": 1,
+   "action": "seg_seed_home",
+   "args": {
+    "boundary": "midride/after_a",
+    "role": "guest"
+   },
+   "label": "handoff: guest checkpoint midride/after_a seeded",
+   "_comment": "SEGMENT: guest's own disk holds the checkpoint; the next production join reads it"
+  },
+  {
+   "peer": 0,
+   "action": "host",
+   "_comment": "SEGMENT: host opens its session (orig #15's step, for this segment's fresh host)"
+  },
+  {
+   "peer": 0,
+   "action": "assert",
+   "args": {
+    "check": "flag_set",
+    "flag": "cloudreach_upper_route_unlocked"
+   },
+   "expect": "FAIL",
+   "label": "host world: gate CLOSED before the join",
+   "_comment": "SEGMENT: orig #16's check, for this segment's fresh host"
+  },
+  {
+   "peer": 1,
+   "action": "production_join",
+   "args": {
+    "returning_route": false,
+    "budget_frames": 20000
+   },
+   "budget_frames": 20000,
+   "label": "guest continues its own save through the title's production join",
+   "_comment": "SEGMENT: guest resumes the character A left on disk, through the title's production join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   },
+   "_comment": "SEGMENT: both peers registered"
+  },
+  {
+   "peer": 1,
+   "probe": "player_identity",
+   "expect_data": {
+    "realm": "cloudreach",
+    "party_size": 5,
+    "character_id": "$character1"
+   },
+   "label": "JOIN: guest in Cloudreach, five owned",
+   "_comment": "SEGMENT: same identity check as orig #20"
+  },
+  {
+   "peer": 1,
+   "action": "teleport",
+   "args": {
+    "at": [
+     -786.0,
+     613.0,
+     3444.0
+    ],
+    "settle": 120
+   },
+   "label": "B setup: guest on the counterweight pass, ~120 m below the closed gate, legal (windscar_ravine) side",
+   "_comment": "orig #60"
+  },
+  {
+   "peer": 1,
+   "action": "wait",
+   "args": {
+    "frames": 60
+   },
+   "_comment": "orig #61"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "label": "B: pose on the pass",
+   "_comment": "orig #62"
+  },
+  {
+   "peer": 1,
+   "probe": "on_floor",
+   "label": "B: on the pass floor",
+   "_comment": "orig #63"
+  },
+  {
+   "peer": 1,
+   "action": "deploy_creature",
+   "args": {
+    "settle": 60
+   },
+   "label": "B: Meadowhart out (the follower reappears beside a teleported trainer)",
+   "_comment": "orig #64"
+  },
+  {
+   "peer": 1,
+   "action": "ride_mount",
+   "args": {
+    "settle": 30
+   },
+   "label": "B: guest mounts on the pass",
+   "_comment": "orig #65"
+  },
+  {
+   "peer": 1,
+   "action": "move_to",
+   "args": {
+    "x": -818.0,
+    "z": 3478.0,
+    "close_enough": 3.0,
+    "budget_frames": 1200
+   },
+   "label": "B: rides up the pass to its bend",
+   "continue_on_fail": true,
+   "_comment": "orig #66"
+  },
+  {
+   "peer": 1,
+   "action": "move_to",
+   "args": {
+    "x": -790.0,
+    "z": 3540.0,
+    "close_enough": 3.0,
+    "budget_frames": 1200
+   },
+   "label": "B: rides toward the closed gate (17 m short)",
+   "continue_on_fail": true,
+   "_comment": "orig #67"
+  },
+  {
+   "peer": 1,
+   "action": "move_to",
+   "args": {
+    "x": -770.0,
+    "z": 3580.0,
+    "close_enough": 3.0,
+    "budget_frames": 600
+   },
+   "label": "B: rides INTO the closed gate: cannot reach the far side",
+   "expect": "FAIL",
+   "continue_on_fail": true,
+   "_comment": "orig #68"
+  },
+  {
+   "peer": 1,
+   "probe": "riding",
+   "label": "B: still mounted against the gate",
+   "expect_data": {
+    "local": {
+     "mounted": true
+    }
+   },
+   "_comment": "orig #69"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "label": "B: ride pose at the gate before the drop",
+   "_comment": "orig #70"
+  },
+  {
+   "peer": 1,
+   "action": "assert",
+   "args": {
+    "check": "near",
+    "at": [
+     -770.0,
+     3580.0
+    ],
+    "within": 15.0
+   },
+   "label": "B: the ride did not pass the closed gate",
+   "expect": "FAIL",
+   "continue_on_fail": true,
+   "_comment": "orig #71"
+  },
+  {
+   "peer": 1,
+   "probe": "tournament",
+   "label": "B: party ids before the drop",
+   "_comment": "orig #72"
+  },
+  {
+   "peer": 1,
+   "action": "drop_link",
+   "label": "B: guest's link drops MID-RIDE at the closed gate",
+   "_comment": "orig #73"
+  },
+  {
+   "peer": 0,
+   "action": "expect_peers",
+   "args": {
+    "count": 1
+   },
+   "budget_frames": 1800,
+   "_comment": "orig #74"
+  },
+  {
+   "peer": 1,
+   "probe": "input_context",
+   "label": "B: dropped guest is at the title",
+   "_comment": "orig #75"
+  },
+  {
+   "peer": 1,
+   "action": "production_join",
+   "args": {
+    "returning_route": true,
+    "budget_frames": 20000,
+    "character": {
+     "character_id": "$character1"
+    }
+   },
+   "label": "B: guest rejoins from the title (returning route; its own world has the gate OPEN)",
+   "budget_frames": 20000,
+   "_comment": "orig #76"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   },
+   "_comment": "orig #77"
+  },
+  {
+   "peer": 1,
+   "action": "wait",
+   "args": {
+    "frames": 120
+   },
+   "_comment": "orig #78"
+  },
+  {
+   "peer": 1,
+   "probe": "player_identity",
+   "label": "B: identity after rejoin",
+   "expect_data": {
+    "realm": "cloudreach",
+    "party_size": 5,
+    "character_id": "$character1"
+   },
+   "_comment": "orig #79"
+  },
+  {
+   "peer": 1,
+   "probe": "tournament",
+   "label": "B: party ids after rejoin",
+   "_comment": "orig #80"
+  },
+  {
+   "peer": 1,
+   "probe": "riding",
+   "label": "B: NOT mounted after rejoin",
+   "expect_data": {
+    "local": {
+     "mounted": false
+    }
+   },
+   "_comment": "orig #81"
+  },
+  {
+   "peer": 1,
+   "probe": "flying",
+   "label": "B: on its own feet on a floor",
+   "expect_data": {
+    "local": {
+     "carried": false,
+     "flying": false,
+     "on_floor": true
+    }
+   },
+   "_comment": "orig #82"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "label": "B: position after rejoin",
+   "_comment": "orig #83"
+  },
+  {
+   "peer": 1,
+   "action": "assert",
+   "args": {
+    "check": "near",
+    "at": [
+     -770.0,
+     3580.0
+    ],
+    "within": 15.0
+   },
+   "label": "B: NOT past the closed gate on the pass",
+   "expect": "FAIL",
+   "continue_on_fail": true,
+   "_comment": "orig #84"
+  },
+  {
+   "peer": 1,
+   "action": "assert",
+   "args": {
+    "check": "near",
+    "at": [
+     -400.0,
+     3890.0
+    ],
+    "within": 40.0
+   },
+   "label": "B: NOT inside sealed Upper Cloudreach",
+   "expect": "FAIL",
+   "continue_on_fail": true,
+   "_comment": "orig #85"
+  },
+  {
+   "peer": 1,
+   "action": "assert",
+   "args": {
+    "check": "near",
+    "at": [
+     0.0,
+     -260.0
+    ],
+    "within": 5.0
+   },
+   "label": "B: authored-arrival placement (recorded, not asserted) -- placement provenance depends on whether the guest has its own slot-0 on disk (MULTIPLAYER Return-home placement) and flips once same-host exact-pose rejoin lands; the F06 gate claim is #46/#83/#84 (not sealed, not past the gate)",
+   "expect": "any",
+   "_comment": "orig #86"
+  },
+  {
+   "peer": 1,
+   "action": "assert",
+   "args": {
+    "check": "flag_set",
+    "flag": "cloudreach_upper_route_unlocked"
+   },
+   "label": "B: guest reads the host's closed gate (its own world's open flag did not leak)",
+   "expect": "FAIL",
+   "_comment": "orig #87"
+  },
+  {
+   "peer": 0,
+   "action": "assert",
+   "args": {
+    "check": "flag_set",
+    "flag": "cloudreach_upper_route_unlocked"
+   },
+   "label": "B: host world flags unchanged",
+   "expect": "FAIL",
+   "_comment": "orig #88"
+  },
+  {
+   "peer": 1,
+   "probe": "deployed_creatures",
+   "label": "B: guest's deployed bodies after rejoin",
+   "_comment": "orig #89"
+  },
+  {
+   "peer": 0,
+   "probe": "deployed_creatures",
+   "label": "B: host's deployed bodies after rejoin",
+   "_comment": "orig #90"
+  },
+  {
+   "peer": "all",
+   "action": "capture_saves",
+   "args": {
+    "label": "after_midride_rejoins"
+   },
+   "_comment": "orig #91"
+  },
+  {
+   "peer": 0,
+   "action": "check_saved",
+   "args": {
+    "label": "after_midride_rejoins",
+    "dir": "worlds",
+    "path_contains": "slot-0/",
+    "contains": [
+     "realm_key_cloudreach"
+    ],
+    "lacks": [
+     "cloudreach_upper_route_unlocked"
+    ]
+   },
+   "label": "host's saved world: gate still closed",
+   "_comment": "orig #92"
+  },
+  {
+   "peer": 1,
+   "action": "check_saved",
+   "args": {
+    "label": "after_midride_rejoins",
+    "dir": "characters",
+    "contains": [
+     "meadowhart",
+     "\"cloudreach\""
+    ]
+   },
+   "label": "guest's saved character: Cloudreach, Meadowhart owned",
+   "_comment": "orig #93"
+  },
+  {
+   "peer": 0,
+   "action": "seg_checkpoint",
+   "args": {
+    "boundary": "midride/after_b",
+    "role": "host",
+    "label": "after_midride_rejoins"
+   },
+   "label": "checkpoint midride/after_b:host",
+   "_comment": "SEGMENT: segment end meets the next segment's start contract and reproduces the committed checkpoint"
+  },
+  {
+   "peer": 1,
+   "action": "seg_checkpoint",
+   "args": {
+    "boundary": "midride/after_b",
+    "role": "guest",
+    "label": "after_midride_rejoins"
+   },
+   "label": "checkpoint midride/after_b:guest",
+   "_comment": "SEGMENT: segment end meets the next segment's start contract and reproduces the committed checkpoint"
+  }
+ ]
+}

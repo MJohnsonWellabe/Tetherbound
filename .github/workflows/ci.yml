@@ -1424,7 +1424,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [world, stormwood, tidewake]
+        # CI-SEGMENTS (owner 2026-10-04): stormwood-press holds the two longest
+        # Stormwood steps (Nysa press ~233 s, water gate path ~53 s) so the
+        # stormwood leg (~17 min job) becomes two ~7 min legs; same steps.
+        group: [world, stormwood, stormwood-press, tidewake]
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
@@ -1710,7 +1713,7 @@ jobs:
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
       - name: Verify ordinary Stormwood to Water gate path
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        if: ${{ matrix.group == 'stormwood-press' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
       - name: Verify Stormwood Surge audio observer
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
@@ -1719,7 +1722,7 @@ jobs:
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
       - name: Verify Stormwood Nysa press
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        if: ${{ matrix.group == 'stormwood-press' && (!cancelled()) }}
         # Let the smoke's existing 900 s watchdog judge its unchanged route.
         # CI37070627396 won two intervening wild fights (138 + 122 s), then
         # hit the former 420 s outer cap during the trainer challenge. The
@@ -1832,7 +1835,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [meadows, tidewake]
+        # CI-SEGMENTS (owner 2026-10-04): the Tidewake loops' three --case
+        # groups are independent processes; one leg each (~5-6 min of smoke)
+        # instead of ~17 min in one job. Meadows: relay alone, stronghold+art.
+        group: [meadows, meadows-stronghold, tidewake-loops-a, tidewake-loops-b, tidewake-shortcuts]
     # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
     # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
     # total, so the worst case is ~32 min plus runner variance; 45 min keeps
@@ -1880,7 +1886,7 @@ jobs:
           done
           exit 1
       - name: Verify stronghold
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
+        if: ${{ matrix.group == 'meadows-stronghold' && (!cancelled()) }}
         env: { SMOKE: stronghold, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1897,7 +1903,7 @@ jobs:
           done
           exit 1
       - name: Verify art
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
+        if: ${{ matrix.group == 'meadows-stronghold' && (!cancelled()) }}
         env: { SMOKE: art, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -1924,13 +1930,13 @@ jobs:
       # so its timeout is 430 s).
       # Each timeout is 1.5x its group's measured wall.
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
+        if: ${{ matrix.group == 'tidewake-loops-a' && (!cancelled()) }}
         run: timeout 460s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reed_root_circuit,brine_terrace_circuit
       - name: Verify Tidewake land loops walked (salt shrine, sluice patrol)
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
+        if: ${{ matrix.group == 'tidewake-loops-b' && (!cancelled()) }}
         run: timeout 540s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=salt_shrine_circuit,sluice_patrol_circuit
       - name: Verify Tidewake return shortcuts closed then open and shorter
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
+        if: ${{ matrix.group == 'tidewake-shortcuts' && (!cancelled()) }}
         run: timeout 430s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut
 
   verify-owner-regressions-shard:
@@ -2131,6 +2137,13 @@ jobs:
     # 40 min keeps the same retry headroom this job already had without
     # a fresh full-suite measurement to attribute an exact number to this
     # step alone.
+    # CI-SEGMENTS (owner 2026-10-04): the ten independent smokes above ran
+    # back to back (~14 min job, run 37246987633). Three legs of ~4 min of
+    # smoke each; every step is unchanged and runs in exactly one leg.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [opening, build, field]
     timeout-minutes: 40
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -2157,6 +2170,7 @@ jobs:
             !/archive/
       - uses: ./.github/actions/setup-godot
       - name: Verify post-miss wander aim lifecycle
+        if: ${{ matrix.group == 'opening' && (!cancelled()) }}
         run: |
           set -o pipefail
           godot --headless --path . --script tools/probe_gate_a_aim_wander.gd 2>&1 | tee /tmp/aim-wander.log
@@ -2164,6 +2178,7 @@ jobs:
             exit 1
           fi
       - name: Verify stick navigator slope and obstacle clearance
+        if: ${{ matrix.group == 'opening' && (!cancelled()) }}
         run: |
           set -o pipefail
           godot --headless --path . --script tests/smoke_stick_navigator_low_geometry.gd 2>&1 | tee /tmp/stick-navigator.log
@@ -2171,7 +2186,7 @@ jobs:
             exit 1
           fi
       - name: Verify gate_a_opening_segment
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'opening' && (!cancelled()) }}
         env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2188,7 +2203,7 @@ jobs:
           done
           exit 1
       - name: Verify gate_a_build_house
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'build' && (!cancelled()) }}
         env: { SMOKE: gate_a_build_house, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2205,7 +2220,7 @@ jobs:
           done
           exit 1
       - name: Verify build_two_creature_beds
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'build' && (!cancelled()) }}
         env: { SMOKE: build_two_creature_beds, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2222,7 +2237,7 @@ jobs:
           done
           exit 1
       - name: Verify gate_a_rest_torch
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'build' && (!cancelled()) }}
         env: { SMOKE: gate_a_rest_torch, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2246,7 +2261,7 @@ jobs:
       # there was still no way to use one. So this boots the world, walks
       # the player to each camp and presses the button.
       - name: Verify authored_camps
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'build' && (!cancelled()) }}
         env: { SMOKE: authored_camps, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2274,7 +2289,7 @@ jobs:
       # was never in any CI job, so it never ran after the day it proved the
       # fix -- this wires it in rather than writing a second test.
       - name: Verify trainer_no_usable_ally
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'field' && (!cancelled()) }}
         env: { SMOKE: trainer_no_usable_ally, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2300,7 +2315,7 @@ jobs:
       # where the player is standing. A gated creature that is visible but
       # never engageable is scenery with a schedule.
       - name: Verify night_ecology
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'field' && (!cancelled()) }}
         env: { SMOKE: night_ecology, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2317,7 +2332,7 @@ jobs:
           done
           exit 1
       - name: Verify post_modal_control
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'field' && (!cancelled()) }}
         env: { SMOKE: post_modal_control, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2354,6 +2369,21 @@ jobs:
     # 40 min keeps the same retry headroom this job already had without
     # a fresh full-suite measurement to attribute an exact number to this
     # step alone.
+    # CI-SEGMENTS (owner 2026-10-04): the bracket and the finale are separate
+    # processes (396 s + 238 s, run 37246987633) and now run on their own legs.
+    # The bracket itself is a continuous chain cut at its natural save point:
+    # bracket-to-semi plays the closed/train/sign-up branches, the lost and
+    # retried quarter-final, the quarter- and semi-final, then saves through
+    # Game.save_game and checks that save against checkpoint
+    # bracket/after_semi (contract + committed digest; stale -> the regen
+    # command). bracket-final loads that committed checkpoint through
+    # Game.load_game, asserts the same contract, and plays the final and the
+    # champion beats. verify-segment-handoffs (chain: bracket) proves the
+    # handoff; the no-flag smoke still runs the whole bracket in one process.
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [bracket-to-semi, bracket-final, finale]
     timeout-minutes: 40
     needs: changes
     if: needs.changes.outputs.full == 'true'
@@ -2379,23 +2409,15 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
-      - name: Verify tournament_bracket
-        if: ${{ !cancelled() }}
-        env: { SMOKE: tournament_bracket, RETRIES: 1 }
+      - name: Verify tournament_bracket segment ${{ matrix.group }}
+        if: ${{ startsWith(matrix.group, 'bracket-') && (!cancelled()) }}
         run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
+          set -euo pipefail
+          segment="${{ matrix.group }}"
+          home="${RUNNER_TEMP}/bracket-home"; out="${RUNNER_TEMP}/bracket-out"
+          mkdir -p "$home" "$out"
+          XDG_DATA_HOME="$home" TB_SEGMENT_OUT="$out" \
+            godot --headless --path . --script tests/smoke_tournament_bracket.gd -- --segment="${segment#bracket-}"
       # GATE-E. The chapter's FINALE, walked continuously in one boot with a
       # full five: in from the entrance, the three gauntlet fights, the
       # recovery point, the elite, the shutter, the reveal, the Warden, the
@@ -2406,7 +2428,7 @@ jobs:
       # were covered by nothing, and driving them end to end found three real
       # defects on main.
       - name: Verify gate_e_finale
-        if: ${{ !cancelled() }}
+        if: ${{ matrix.group == 'finale' && (!cancelled()) }}
         env: { SMOKE: gate_e_finale, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -3170,7 +3192,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [space, capacity, recovery]
+        # CI-SEGMENTS (owner 2026-10-04): one case per runner (each case boots,
+        # answers, saves and reloads by itself; ~225 s each after a ~105 s
+        # boot). Same six cases as the former space/capacity/recovery groups.
+        group: [space-accept, space-refuse, capacity-refuse-at-prompt,
+          capacity-accept-then-let-newcomer-go, capacity-accept-release-one, save-while-choice-open]
     timeout-minutes: 50
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
@@ -3229,7 +3255,7 @@ jobs:
           path: /tmp/veridian-offer/*.log.gz
           if-no-files-found: warn
       - name: Verify rift gate opens once
-        if: ${{ !cancelled() && matrix.group == 'space' }}
+        if: ${{ !cancelled() && matrix.group == 'space-refuse' }}
         run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
   verify-cloudreach-persistence:
@@ -3262,13 +3288,31 @@ jobs:
     # guest drops its link while riding (including a ride into the host's
     # closed counterweight gate) and rejoins -- rider dismounted on a floor,
     # the same five creature UIDs, the gate still shut, plus an open-gate
-    # control. Measured: <= 31 min on the 4-core evidence container, 18.3 min
-    # for the whole job on a GitHub runner (PR #281 run, 2026-09-26);
-    # container run
-    # (run net-f06mr-20260926T121945Z, each realm crossing ~306 s). The lane
-    # runner raises only the heartbeat-silence tolerance for the crossing.
+    # control.
+    #
+    # CI-SEGMENTS (owner 2026-10-04): the scenario
+    # tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json ran as one
+    # 17 min step (run 37246987633: two cold world boots, two realm crossings
+    # and three Cloudreach joins back to back). It now runs as five segment
+    # jobs in parallel, split by tools/ci/segments/split_midride.py:
+    #   s0_setup_host / s0_setup_guest  each peer's own world into Cloudreach,
+    #                                    saved (checkpoint midride/setup);
+    #   s1_ride_a   A: mid-ride drop on the arrival road (writes midride/after_a);
+    #   s2_ride_b   B: mid-ride drop at the closed gate (writes midride/after_b);
+    #   s3_control  CONTROL: the opened gate.
+    # Each segment after the first starts from the committed checkpoint the
+    # one before it wrote through the production save code
+    # (tests/fixtures/segments/midride/), and every producer re-checks that
+    # it still reproduces that checkpoint (stale -> "re-generate checkpoint
+    # ... with tools/ci/segments/regen.sh ..."). The handoffs and the step
+    # coverage are proven in verify-segment-handoffs below; every original
+    # step runs exactly once (tools/ci/segments/check_coverage.py).
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        segment: [s0_setup_host, s0_setup_guest, s1_ride_a, s2_ride_b, s3_control]
+    timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
@@ -3284,26 +3328,71 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
-      - name: Verify F06 mid-ride two-peer rejoin proof
-        timeout-minutes: 35
+      - name: Verify F06 mid-ride rejoin segment ${{ matrix.segment }}
+        timeout-minutes: 22
         run: |
           set -uo pipefail
+          scenario="$PWD/tools/net/proof_scenarios/segments/midride/${{ matrix.segment }}.json"
+          peers="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["peers"])' "$scenario")"
           out="${RUNNER_TEMP}/f06-midride"
           mkdir -p "$out/net"
-          TB_PROOF_SCENARIO="$PWD/tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json" \
-          TB_PROOF_OUT="$out" TB_NET_RUN_ID="net-f06mr-ci-${GITHUB_RUN_ID}" \
-          TB_NET_OUT_DIR="$out/net" TB_NET_PEERS=2 \
+          TB_PROOF_SCENARIO="$scenario" \
+          TB_PROOF_OUT="$out" TB_NET_RUN_ID="net-f06mr-${{ matrix.segment }}-ci-${GITHUB_RUN_ID}" \
+          TB_NET_OUT_DIR="$out/net" TB_NET_PEERS="$peers" \
             godot --headless --path . --script tests/smoke_cloudreach_rejoin_closed_gate_proof.gd
           rc=$?
-          echo "::group::PROOF.md"; cat "$out/PROOF.md" 2>/dev/null | head -40; echo "::endgroup::"
+          echo "::group::PROOF.md"; cat "$out/PROOF.md" 2>/dev/null | head -60; echo "::endgroup::"
           exit $rc
-      - name: Upload F06 mid-ride proof
+      - name: Upload F06 mid-ride segment proof
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: f06-midride-proof
+          name: f06-midride-proof-${{ matrix.segment }}
           path: ${{ runner.temp }}/f06-midride
           retention-days: 7
+
+  # CI-SEGMENTS (owner 2026-10-04): one HANDOFF job per segmented chain. Per
+  # boundary (tests/helpers/ci_segments.gd): the committed checkpoint is at
+  # the current save VERSION, loads through the production SaveGame.load_slot,
+  # meets the next segment's start contract (the same dictionary the producer
+  # segment's end asserts), still matches its manifest digest and was made by
+  # the producer as it is now; deliberately stale copies must fail. Then the
+  # chain's step coverage: every original step runs exactly once, unchanged.
+  verify-segment-handoffs:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chain: [midride, bracket]
+    timeout-minutes: 15
+    needs: changes
+    if: needs.changes.outputs.full == 'true'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - name: Verify ${{ matrix.chain }} segment coverage
+        if: ${{ matrix.chain == 'midride' }}
+        run: |
+          set -euo pipefail
+          python3 tools/ci/segments/check_coverage.py tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json \
+            tools/net/proof_scenarios/segments/midride/s0_setup_host.json \
+            tools/net/proof_scenarios/segments/midride/s0_setup_guest.json \
+            tools/net/proof_scenarios/segments/midride/s1_ride_a.json \
+            tools/net/proof_scenarios/segments/midride/s2_ride_b.json \
+            tools/net/proof_scenarios/segments/midride/s3_control.json
+      - uses: ./.github/actions/setup-godot
+      - name: Verify ${{ matrix.chain }} checkpoint handoffs
+        env: { TB_SEGMENT_CHAIN: "${{ matrix.chain }}" }
+        run: godot --headless --path . --script tests/run_tests.gd -- --only=ci_segment_handoffs
 
   ci-gate:
     runs-on: ubuntu-latest
@@ -3312,6 +3401,7 @@ jobs:
       - changes
       - verify-veridian-offer
       - verify-cloudreach-midride-rejoin
+      - verify-segment-handoffs
       - verify-cloudreach-persistence
       - verify-bake-freshness
       - verify-unit-tests

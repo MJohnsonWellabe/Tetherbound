@@ -44,7 +44,8 @@ const SLOT := 3
 const CHOICE_FRAME_BUDGET := 900
 const NO_REOFFER_FRAMES := 240
 
-## CI runs independent two-case groups on separate runners. An ordinary
+## CI runs independent cases on separate runners (a group name, or one case
+## name, in TB_VERIDIAN_CASE_GROUP). An ordinary
 ## invocation still executes the complete six-case witness in its old order.
 const CI_CASE_GROUPS := {
 	"space": ["space-accept", "space-refuse"],
@@ -75,6 +76,10 @@ func _run() -> void:
 			selected.append_array(cases)
 	elif CI_CASE_GROUPS.has(group):
 		selected = CI_CASE_GROUPS[group]
+	elif CI_CASE_GROUPS.values().any(func(cases: Array) -> bool: return cases.has(group)):
+		# CI segments: one case per runner (each case boots, answers, saves and
+		# reloads on its own; ci.yml's matrix lists all six).
+		selected = [group]
 	else:
 		print("veridian-offer-choice FAIL: unknown CI case group '%s'" % group)
 		quit(2)

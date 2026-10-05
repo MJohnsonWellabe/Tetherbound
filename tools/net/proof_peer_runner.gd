@@ -16,6 +16,8 @@ const STORMWOOD_STEPS := preload("res://tools/net/proof_steps_stormwood.gd")
 const TIDEWAKE_POCKET_STEPS := preload("res://tools/net/proof_steps_tidewake_pockets.gd")
 const F37_STEPS := preload("res://tools/net/proof_steps_f37.gd")
 const F48_STEPS := preload("res://tools/net/proof_steps_f48.gd")
+## CI segment checkpoints (tests/helpers/ci_segments.gd).
+const SEGMENT_STEPS := preload("res://tools/net/proof_steps_segments.gd")
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -29,6 +31,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await F48_STEPS.step(self, action, msg.get("args", {}))
 	if action.begins_with("f37_"):
 		return await F37_STEPS.step(self, action, msg.get("args", {}))
+	if SEGMENT_STEPS.handles(action):
+		return SEGMENT_STEPS.run(self, action, msg.get("args", {}))
 	var stormwood := STORMWOOD_STEPS.handles(action)
 	var pockets := TIDEWAKE_POCKET_STEPS.handles(action)
 	if not stormwood and not pockets and not PROOF_STEPS.handles(action):
