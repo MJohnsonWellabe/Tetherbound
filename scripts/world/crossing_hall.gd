@@ -7,6 +7,7 @@ const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const OPEN_MEMBRANE_EMISSION := .25
+const RELIC_POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
@@ -545,6 +546,11 @@ func hang_relic(biome: String, game: Node = null) -> void:
 	if session.has_method("portal_runtime_ready") and session.call("portal_runtime_ready") != true:
 		game.call("push_world_message", "The shrines are still asleep; they wake with the Hall's arches.")
 		return
+	# UX §shrine: with no relic to hang here, a pedestal opens the relic power
+	# screen once any relic is hung (F31#2's one chosen power).
+	if not _personal_list(game, "relics_held").has(biome) and not _personal_list(game, "relics_hung").is_empty():
+		open_relic_power(game)
+		return
 	_relic_pending = biome
 	_relic_game = game
 	if not bool(session.call("is_host")):
@@ -570,6 +576,8 @@ func hang_relic(biome: String, game: Node = null) -> void:
 	_relic_pending = ""
 	if verdict.get("ok") != true:
 		game.call("push_world_message", _relic_refusal_text(verdict))
+	else:
+		open_relic_power(game, "Relic hung. Choose the power you carry.")
 
 
 func _relic_view_refreshed(session: Node) -> bool:
@@ -601,6 +609,27 @@ func _relic_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
 		session.disconnect("homestead_action_completed", _relic_reply)
 	if result.get("ok") != true and game != null:
 		game.call("push_world_message", _relic_refusal_text(result))
+	elif game != null:
+		open_relic_power(game, "Relic hung. Choose the power you carry.")
+
+
+static func _personal_list(game: Node, field: String) -> Array:
+	var local: Variant = game.get("local") if game != null else null
+	var personal: Variant = (local as Object).get("redesign_character") if local is Object else null
+	return (personal as Dictionary).get(field, []) if personal is Dictionary else []
+
+
+var _power_panel: CanvasLayer
+
+
+func open_relic_power(game: Node, message: String = "") -> void:
+	if not is_inside_tree():
+		return
+	if _power_panel == null or not is_instance_valid(_power_panel):
+		_power_panel = RELIC_POWER_PANEL.new()
+		_power_panel.name = "RelicPowerPanel"
+		add_child(_power_panel)
+	_power_panel.call("open", message)
 
 
 static func _relic_refusal_text(verdict: Dictionary) -> String:

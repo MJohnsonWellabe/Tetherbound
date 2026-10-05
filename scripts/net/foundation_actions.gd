@@ -7,7 +7,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -54,6 +54,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
 		"relic_hang", "boss_relic": proposal = _relic(current, action, intent, context)
+		"relic_power": proposal = relic_power(current, intent, context)
 		"portal_arrival", "regional_ack", "dock_conclusion": proposal = _acknowledgement(current, action, intent, context)
 	if proposal.get("ok") != true: return proposal
 	if not schema_check.call(proposal.state, current.character_id).is_empty(): return deny("invalid_station_candidate")
@@ -206,6 +207,28 @@ static func _relic(current: Dictionary, action: String, intent: Dictionary, cont
 		next.inventory = bag_rules.slots(bag)
 		if not next.redesign_character.relics_held.has(intent.biome) and not next.redesign_character.relics_hung.has(intent.biome):
 			next.redesign_character.relics_held.append(intent.biome)
+	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
+
+## F31#2 / RD-20: the one active relic power, chosen in the Shrine Room. Any
+## relic this character has PROVED hung (relic_hang receipt) may be chosen,
+## "" clears; one write replaces the old choice. Repeatable, so each edit is
+## its own receipt (the loadout pattern).
+static func relic_power(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if intent.size() != 2 or not intent.get("heart_id") is String or not STATION.transaction_id(intent.get("edit_id")):
+		return deny("invalid_relic_power_intent")
+	if context.get("shrine_power") != true or context.get("in_combat") != false: return deny("actual_shrine_pedestal_required")
+	var heart: String = intent.heart_id
+	var character: String = current.character_id
+	if not heart.is_empty():
+		var biome := preload("res://scripts/data/biome_order.gd").canonical_id(heart)
+		if not current.redesign_character.get("relics_hung", []).has(biome) \
+				or not current.redesign_character.transaction_receipts.has("relic_hang:%s:%s" % [biome, character]):
+			return deny("relic_not_hung")
+	var next := current.duplicate(true)
+	next.realm_hearts = {"active_id": heart}
+	var receipt := "craft:%s:relic_power_%s" % [character, intent.edit_id]
 	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}

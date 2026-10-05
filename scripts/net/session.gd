@@ -501,6 +501,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
+	if envelope.op == "relic_power": context = _foundation_relic_power_context(peer)
 	if envelope.op == "regional_ack":
 		var ending := preload("res://scripts/story/regional_homecoming.gd")
 		var expected: Dictionary = ending.context(_game()) if peer == local_peer_id() else {}
@@ -700,6 +701,30 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 	var result := FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, character, context.expected_revision, "portal_arrival", intent, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
+## F31#2: the relic power screen opens at ANY Shrine Room pedestal outside
+## combat (UX §shrine). Same actual-position proof as a hang, any pedestal.
+func _foundation_relic_power_context(peer: int) -> Dictionary:
+	if not portal_runtime_ready() or _altar_peer_in_combat(peer): return {}
+	var writer := get_node_or_null(^"LedgerRpc")
+	if writer == null: return {}
+	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
+	if actor.get("realm") != "meadows" or not actor.get("position") is Vector3: return {}
+	var meadows := _portal_world_node("meadows")
+	if meadows == null: return {}
+	var radius := float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m)
+	for pedestal: Node in get_tree().get_nodes_in_group("crossing_hall_pedestals"):
+		if meadows.is_ancestor_of(pedestal) and actor.position.distance_to((pedestal as Node3D).global_position) <= radius:
+			return {"character_id": _authority_character(peer), "expected_revision": int(_character_authority.call("revision", _authority_character(peer))),
+				"in_range": true, "in_combat": false, "shrine_power": true, "realm": "meadows", "source_key": "shrine_power"}
+	return {}
+
+
+func request_relic_power(heart_id: String) -> Dictionary:
+	var view := homestead_personal_view()
+	var edit_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	return _foundation_send("relic_power", "shrine_power", {"heart_id": heart_id, "edit_id": edit_id}, int(view.get("registry_revision", -1)))
+
 
 func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
 	if not portal_runtime_ready() or _altar_peer_in_combat(peer): return {}
