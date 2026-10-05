@@ -3152,8 +3152,16 @@ func use_home_key() -> bool:
 
 ## Appended to Game. Only the mounted opening director may call these local
 ## producer doors. They are not RPCs and do not accept an imported roster.
+##
+## F01#6a: the starter is a CHARACTER fact, not a world fact. A guest commits its
+## own starter into its own party and receipts and writes only its own character
+## file (`save_character_prepared` is character-only), exactly as a client's
+## autosave does, once the host's snapshot has made that character file a valid
+## save candidate. Gating this on `is_host()` held every guest's adoption
+## pending forever, which kept the opening modal and Grandpa unreachable
+## (`ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md` §1).
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
-	if session == null or not is_host() or save_system == null or source == null or instance == null: return false
+	if not original_starter_writer_ready() or source == null or instance == null: return false
 	if not bool(session.call("portal_runtime_ready")) and session.call("config").get("redesign_ending_runtime_enabled", false) != true: return false
 	var scene := get_tree().current_scene
 	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
@@ -3187,6 +3195,15 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 		local.flags.call("load_data", before_flags)
 		return false
 	return true
+
+
+## Whether THIS process may write its own character's starter receipt: the host,
+## or an admitted client whose character file the host's snapshot has made a
+## valid save candidate (`session.gd::client_character_save_ready()`, the same
+## gate a client's own character save uses). A pending joiner may not.
+func original_starter_writer_ready() -> bool:
+	if session == null or save_system == null: return false
+	return is_host() or session.call("client_character_save_ready") == true
 
 
 func original_starter_uid() -> String:
