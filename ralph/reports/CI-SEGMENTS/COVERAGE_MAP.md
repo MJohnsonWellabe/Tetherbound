@@ -183,36 +183,34 @@ job; it runs in `verify-unbroken-chains` (section 4). The handoff in between
 - the contract also requires the three registered entrants, so the save path
   for the final's entry is exercised for real, not assumed.
 
-## 3. Jobs split onto parallel legs (independent steps, same commands)
+## 3. Leg splits measured, then folded back (account runner cap)
 
-These were never continuous chains: each step is its own Godot process. Each
-step keeps its command; only its matrix `if:` changed, so it runs on exactly
-one leg.
+A first pass split independent-step jobs onto more matrix legs. These were
+the gate-evidence shard (3 legs), the finale (3), the relay (5), Stormwood
+(+1) and Veridian (one per case, 6). The full run 37256861064 then showed the
+account runs at most ~20 jobs at once, and the multiplayer shards (16-26 min,
+queued late) set the wall time. Leg splits under that critical path saved no
+wall time and cost ~2 min of setup each (60 jobs: 550 runner-min, 122 of them
+setup, against 445 and 76 before).
+
+So these jobs are back to their original form, apart from the new
+affected-only `if:` gate, and every step runs exactly as before:
+
+- `verify-gate-evidence-shard`;
+- `verify-regions-relay` (meadows, tidewake);
+- `verify-regions-shard` (world, stormwood, tidewake);
+- `verify-veridian-offer` (space, capacity, recovery).
+
+Each is checked with a YAML diff against fbcd0c44: the only key that differs
+is `if`.
+
+What remains changed:
 
 | Old job (leg) | Step | New leg |
 |---|---|---|
-| verify-gate-evidence-shard | post-miss wander aim lifecycle; stick navigator slope/obstacle; gate_a_opening_segment | `opening` |
-| verify-gate-evidence-shard | gate_a_build_house; build_two_creature_beds; gate_a_rest_torch; authored_camps | `build` |
-| verify-gate-evidence-shard | trainer_no_usable_ally; night_ecology; post_modal_control | `field` |
 | verify-gate-evidence-finale | tournament_bracket | `bracket-to-semi` + `bracket-final` (section 2) |
-| verify-gate-evidence-finale | gate_e_finale | `finale` |
-| verify-regions-relay (meadows) | relay | `meadows` |
-| verify-regions-relay (meadows) | stronghold; art | `meadows-stronghold` |
-| verify-regions-relay (tidewake) | land loops reed root + brine terrace | `tidewake-loops-a` |
-| verify-regions-relay (tidewake) | land loops salt shrine + sluice patrol | `tidewake-loops-b` |
-| verify-regions-relay (tidewake) | return shortcuts (ramp, shellwatch, deep watch) | `tidewake-shortcuts` |
-| verify-regions-shard (stormwood) | ordinary Stormwood to Water gate path; Nysa press | `stormwood-press` |
-| verify-regions-shard (stormwood) | every other stormwood step | `stormwood` (unchanged) |
-| verify-veridian-offer (space) | space-accept; space-refuse; rift gate opens once | `space-accept`; `space-refuse` (+ rift gate) |
-| verify-veridian-offer (capacity) | capacity-refuse-at-prompt; capacity-accept-then-let-newcomer-go | one leg each |
-| verify-veridian-offer (recovery) | capacity-accept-release-one; save-while-choice-open | one leg each |
-
-Veridian: `TB_VERIDIAN_CASE_GROUP` now also accepts one case name. With no
-value the smoke still runs all six cases in their old order. The "party never
-held six" check is per process and runs in every leg. The gate-evidence
-shard's first two steps used to run only if everything before them passed;
-now they carry `!cancelled()` like the rest, so they run in more cases, never
-fewer.
+| verify-gate-evidence-finale | gate_e_finale | `bracket-final` (same runner, after the final segment) |
+| verify-cloudreach-midride-rejoin | the one scenario step | `s0_setup_and_control` (s0_setup_host and s0_setup_guest side by side, then s3_control), `s1_ride_a`, `s2_ride_b` |
 
 ## 4. What segmenting gives up, and where it is still covered
 
