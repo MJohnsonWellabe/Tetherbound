@@ -563,12 +563,16 @@ func _apply_local_hazard(event: Dictionary) -> void:
 	var vitals: RefCounted = player.get("vitals") if is_instance_valid(player) else null
 	if vitals != null:
 		var duration := float(event.get("static_seconds", 8.0))
-		# F33#3: the trainer's static-resistant gear shortens the static, as
-		# ordinary Stormwood lightning already does (storm_mitigation).
+		# F33#3: the trainer's insulated gear shortens the static exactly as
+		# ordinary Stormwood lightning does (storm_mitigation: a full set is
+		# immune), with the same stormwood_surge.json immunity piece count.
 		if preload("res://scripts/player/player_equipment.gd").hazards_live():
 			var game := get_node_or_null("/root/Game")
 			var equipment: Variant = game.get("player_equipment") if game != null else null
-			if equipment != null: duration *= float(equipment.call("static_duration_scale"))
+			if equipment != null:
+				var surge: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_surge.json"))
+				var pieces := int(surge.get("strike", {}).get("insulation_pieces_for_immunity", 4)) if surge is Dictionary else 4
+				duration *= float(equipment.call("storm_mitigation", pieces).static_scale)
 		if duration > 0.0:
 			vitals.call("_apply_buff", {"id": "stormwood_static",
 				"stat": "stamina_regen_scale", "amount": 0.5, "duration_s": duration})

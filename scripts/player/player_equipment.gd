@@ -263,6 +263,8 @@ func local_cold_regen_scale(realm: String, position: Vector3) -> float:
 				and position.y >= float(low[1]) and position.y <= float(high[1]) \
 				and position.z >= float(low[2]) and position.z <= float(high[2]):
 			penalty = maxf(penalty, float(zone.get("stamina_regen_penalty", 0.0)))
+	if penalty <= 0.0:
+		return 1.0 # Outside every zone: no worn-gear lookup on this per-frame path.
 	return cold_regen_scale(penalty)
 
 func static_duration_scale() -> float:
