@@ -42,6 +42,7 @@ const PREFABS := preload("res://scripts/world/building_prefabs.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
+const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const VILLAGE_CONFIG := "res://data/config/village.json"
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
@@ -230,14 +231,53 @@ func _build_home_creature_bed() -> void:
 	_dress_home_creature_bed(bed, spec)
 
 
-## Code-blind judge (home-creature-bed r1): the bare nest beside a farmhouse
-## read as a log-edged garden plot, and its rim vanished at night. The shared
-## creature_bed.gd look is untouched (camp beds keep their judged form); only
-## this home copy gets the installed yard props that say "a creature lives
-## here" -- a water bucket and an apple crate at its side -- and a wall
-## lantern on a short post so the rim survives at night. Visual only: no
-## collider, so the bed's footprint, prompt and the yard paths are unchanged.
+## Code-blind judges (home-creature-bed r1, r2): the bare nest beside a
+## farmhouse read as a grass-pierced, log-edged garden plot, and its rim
+## vanished at night. The shared creature_bed.gd look is untouched (camp beds
+## keep their judged form); only this home copy keeps grass out of its pad
+## (grass_field.gd's own clear group), gets a pale bedding cushion that catches
+## light, the installed yard props that say "a creature lives here" (a water
+## bucket and an apple crate outside the rim) and a low lantern post at the rim
+## edge. Visual only: no collider, so the bed's footprint, prompt and the yard
+## paths are unchanged.
 func _dress_home_creature_bed(bed: Node3D, spec: Dictionary) -> void:
+	var grass_clear := float(spec.get("grass_clear_radius_m", 0.0))
+	if grass_clear > 0.0:
+		bed.set_meta(GRASS_FIELD.CLEAR_RADIUS_META, grass_clear)
+		bed.add_to_group(GRASS_FIELD.CLEAR_GROUP)
+	var pad: Dictionary = spec.get("cushion", {})
+	if float(pad.get("radius_m", 0.0)) > 0.0:
+		var cushion := MeshInstance3D.new()
+		cushion.name = "HomeBedCushion"
+		var dome := SphereMesh.new()
+		dome.radius = float(pad.radius_m)
+		dome.height = float(pad.get("height_m", 0.3)) * 2.0
+		dome.is_hemisphere = true
+		cushion.mesh = dome
+		var cloth := StandardMaterial3D.new()
+		cloth.albedo_color = Color(str(pad.get("colour", "#e6d6ad")))
+		cloth.roughness = 0.95
+		# Fine streaked speckle so the bedding reads as loose straw, not a
+		# smooth dome. Procedural; no new texture asset.
+		var noise := FastNoiseLite.new()
+		noise.frequency = 0.09
+		noise.fractal_octaves = 3
+		var straw := NoiseTexture2D.new()
+		straw.width = 256
+		straw.height = 256
+		straw.seamless = true
+		straw.noise = noise
+		var ramp := Gradient.new()
+		ramp.set_color(0, Color(0.72, 0.62, 0.42))
+		ramp.set_color(1, Color(1.08, 1.0, 0.82))
+		straw.color_ramp = ramp
+		cloth.albedo_texture = straw
+		cloth.uv1_scale = Vector3(6.0, 2.0, 1.0)
+		cushion.material_override = cloth
+		var at: Array = pad.get("at", [0.0, 0.0, 0.0])
+		cushion.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		cushion.scale = Vector3(1.0, 1.0, float(pad.get("depth_scale", 1.0)))
+		bed.add_child(cushion)
 	for item: Variant in spec.get("dressing", []):
 		if not item is Dictionary or (item.get("at", []) as Array).size() < 2:
 			continue

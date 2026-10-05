@@ -47,9 +47,10 @@ func _run() -> void:
 	var prompt := bed.get_node_or_null("Interactable")
 	_check(prompt != null, "home bed carries the ordinary 'Rest a Creature' prompt")
 	_check(not bool(game.get("progression").call("has", "creature_bed_built")), "the free bed does not credit the player's own Build a Creature Bed rung")
-	# Nothing solid but the bed itself and the ground inside its footprint.
+	# Nothing solid but the bed itself and the ground inside its VISIBLE rim
+	# (~4.9 x 4.2 m; the 2.4 x 2.05 m pad alone hid the r1/r2 crowding).
 	var shape := BoxShape3D.new()
-	shape.size = Vector3(2.4, 1.2, 2.05)
+	shape.size = Vector3(5.0, 1.2, 4.3)
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = shape
 	query.transform = Transform3D(bed.global_basis, bed.global_position + Vector3(0, 0.9, 0))
@@ -58,7 +59,8 @@ func _run() -> void:
 		var node := hit.collider as Node
 		if node != null and not bed.is_ancestor_of(node) and node != bed and not str(node.name).begins_with("Terrain"):
 			foreign.append(str(node.get_path()))
-	_check(foreign.is_empty(), "home bed footprint is clear of other colliders %s" % str(foreign))
+	_check(foreign.is_empty(), "home bed rim footprint is clear of other colliders %s" % str(foreign))
+	_check(bed.is_in_group(preload("res://scripts/world/grass_field.gd").CLEAR_GROUP), "home bed keeps grass out of its pad")
 	# Heal through the bed's own occupancy and Game's own recovery tick.
 	var creature: RefCounted = party.call("at", 0)
 	var max_hp := float(creature.get("max_hp"))

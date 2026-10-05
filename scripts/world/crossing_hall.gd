@@ -139,7 +139,11 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.add_child(arrival)
 	_pedestals[str(entry.biome)] = slot
 	var prompt := preload("res://scripts/world/interactable.gd").new()
-	prompt.configure("Hang your %s relic" % ORDER.display_name(str(entry.biome)), float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
+	# Reserved biomes display as "Sealed"; "Hang your Sealed relic" named a
+	# state as if it were an item (F17#6 r3 judge). They say why they are empty.
+	var live := (ORDER.config().get("live", []) as Array).has(ORDER.canonical_id(str(entry.biome)))
+	var offer := "Hang your %s relic" % ORDER.display_name(str(entry.biome)) if live else "Sealed shrine: no road reaches its relic yet"
+	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
 	prompt.connect("activated", func() -> void:
 		var game := get_node_or_null(^"/root/Game")
 		var session: Node = game.get("session") if game != null else null
