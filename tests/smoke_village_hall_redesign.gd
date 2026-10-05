@@ -5,6 +5,7 @@ extends "res://tests/capture_village_walk.gd"
 ## One disclosed initial post-opening fixture placement; no mid-route teleport,
 ## speed adjustment, collision removal, scene pruning or progression earning.
 const VILLAGE_CONFIG := "res://data/config/village.json"
+const SHELL_BUILD_WAIT_FRAMES := 9000 # 150 s at 60 Hz; the world-build allowance the net smokes use.
 const TERRAIN_CACHE := preload("res://scripts/world/terrain_bake.gd")
 const SCATTER_CACHE := preload("res://scripts/world/scatter_bake.gd")
 
@@ -39,6 +40,15 @@ func _run() -> void:
 	current_scene = _world
 	for _frame in SETTLE_FRAMES:
 		await physics_frame
+	# Forward+ (Medium/High) builds the world shell in time slices after boot
+	# (~72 s on the render-service GPU, f17-1), so the fixed settle can end
+	# before the house and Hall exist. Wait for the world's own completion
+	# signal too, frame-bounded; every check below is unchanged.
+	if _world.has_method("shell_build_complete"):
+		for _frame in SHELL_BUILD_WAIT_FRAMES:
+			if bool(_world.call("shell_build_complete")):
+				break
+			await physics_frame
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	_manager = _world.get_node_or_null(^"CombatManager")
