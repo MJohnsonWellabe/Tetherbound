@@ -28,7 +28,7 @@ var _entry_maxima: Dictionary = {}
 func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 		owned: bool, seed_value: int, policy: String) -> Dictionary:
 	_tally = {"won": false, "seconds": 0.0, "faints": 0,
-		"max_hit_frac": 0.0, "lead_lost_frac": 0.0, "party_lost_frac": 0.0,
+		"max_hit_frac": 0.0, "neutral_worst_frac": 0.0, "lead_lost_frac": 0.0, "party_lost_frac": 0.0,
 		"stalled": false, "hits": 0, "incoming_hits": 0, "misses": 0,
 		"player_windup_cancellations": 0, "charged_interrupts": 0,
 		"stagger_events": 0, "exhausted_frames": 0, "events": [],
@@ -148,6 +148,25 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 	return _tally.duplicate(true)
 
 
+## The blow the opponent just landed, re-rolled at the top of the variance
+## band with a neutral type multiplier, as a fraction of `creature`'s entry HP.
+func _neutral_worst_frac(creature: RefCounted) -> float:
+	if not is_instance_valid(_wild):
+		return 0.0
+	var foe: RefCounted = _wild.get("instance")
+	if foe == null:
+		return 0.0
+	var cfg: Dictionary = _wild.combat_config()
+	var moves: RefCounted = load("res://scripts/creatures/move_db.gd").new()
+	var move_id := str(cfg.get("move_id", foe.get("move_quick")))
+	var prog: Dictionary = PROGRESSION.config()
+	var is_best := bool(_manager.call("_is_best", creature))
+	var ability: Dictionary = SPECIES.best_creature_ability(str(creature.get("species_id"))) if is_best else {}
+	var worst := MATH.rolled_damage(float(cfg.get("power", 8.0)), float(foe.call("effective_attack", prog)),
+		float(creature.call("effective_defence", prog, is_best, ability)), 1.0, float(moves.call("power", move_id)), 1.0)
+	return worst / maxf(1.0, float(_entry_maxima[creature.get_instance_id()]))
+
+
 func _on_hit(on_enemy: bool, damage: float) -> void:
 	if on_enemy:
 		_tally.hits += 1
@@ -171,6 +190,18 @@ func _on_hit(on_enemy: bool, damage: float) -> void:
 				"type_mult": load("res://scripts/combat/type_chart.gd").multiplier_dual(str(moves.call("type_of", move_id)),
 					str(creature.get("creature_type")), str(creature.get("secondary_type")))}
 		_tally.max_hit_frac = maxf(float(_tally.max_hit_frac), frac)
+		# COMBAT.md:144: the ceiling is judged on a NEUTRAL matchup at the
+		# worst allowed variance. Re-derive this same blow from the inputs
+		# the manager rolled it from, with the top roll and type x1.0, against
+		# this creature at its entry stats. Stagger-crit and relic multipliers
+		# are combat-state, not type/TM, modifiers and are not added here.
+		var neutral := _neutral_worst_frac(creature)
+		if neutral > float(_tally.neutral_worst_frac):
+			var nfoe: RefCounted = _wild.get("instance") if is_instance_valid(_wild) else null
+			_tally["neutral_worst_frac"] = neutral
+			_tally["neutral_worst_by"] = {"foe": str(nfoe.get("species_id")) if nfoe != null else "",
+				"target": str(creature.get("species_id")),
+				"move": str((_wild.combat_config() as Dictionary).get("move_id", nfoe.get("move_quick") if nfoe != null else ""))}
 	_tally.events.append({"frame": _frames, "on_enemy": on_enemy, "damage": damage,
 		"event": "hit", "ally_position": _ally.global_position, "enemy_position": _wild.global_position,
 		"gap": _ally.global_position.distance_to(_wild.global_position),

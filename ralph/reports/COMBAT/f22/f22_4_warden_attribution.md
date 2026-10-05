@@ -29,7 +29,25 @@ data change was made. The overshoot is 0.2–2% above the bar, and it comes
 from the fixture leaving a weak-to-earth retained creature in the line of a
 charging blow.
 
-Owner/coordinator choice:
+## Coordinator ruling (2026-10-05)
 
-- Trim tuskroot anyway (a ~3% power cut clears it).
-- Rule that the C3 single-hit bar applies to neutral matchups only.
+COMBAT.md:144 sets the bar: "No single hit removes ≥50% of an uninjured,
+full-health, entry-level **neutral-matchup** creature. Test the worst allowed
+variance and legal type/TM modifiers, not the mean."
+
+A super-effective `earth_fist` into Pipwing (×1.25) is outside that bar.
+Type advantage is meant to hurt, and that is the switching value F24 now owns.
+Tuskroot is therefore not trimmed.
+
+The smoke's C3 gate was brought into line with the spec in its own commit:
+
+- **Gated value.** Each landed blow is re-derived from the inputs the
+  manager rolled it from: the foe's `power`, its effective attack, the
+  struck creature's entry effective defence and the move power. It is
+  re-rolled at the top of the ±10% variance band with type ×1.0, as a
+  fraction of that creature's entry HP (`combat_depth_pilot.gd`,
+  `neutral_worst_frac`).
+- **Reported value.** The worst observed hit in any matchup is still printed
+  with its attribution (`MEADOWS_C2C3_HITS`), but it no longer gates.
+- **Real failure.** Any neutral worst-variance hit ≥0.50 is a real failure
+  and gets tuned.
