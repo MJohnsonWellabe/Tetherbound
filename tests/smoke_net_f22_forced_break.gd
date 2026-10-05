@@ -38,11 +38,14 @@ const COOLDOWN_FRAMES := 150
 ## A charged move costs a full Energy meter, earned only by LANDED quick hits.
 const ENERGY_HITS := 6
 const QUICK_SWINGS := 12
+## Host polls for readiness / a start's verdict (each a coordinator round trip).
+const READY_POLLS := 40
 
 ## Explicit, monotonic action ids: each start and its strike share one, so the
 ## host matches the strike to its own committed start.
 var _action := 9000
 var _encounter_id := ""
+var _guest_peer_id := 0
 
 
 func _initialize() -> void:
@@ -103,11 +106,15 @@ func _run() -> void:
 	check(str(joined_fight.get("verdict", "")) == "PASS",
 		"peer 1 joined the shared wild fight (%s)" % str(joined_fight.get("detail", "")))
 	await step(1, "f22_enemy_staggers", {})
+	var guest_session: Variant = await probe(1, "session")
+	_guest_peer_id = int((guest_session as Dictionary).get("peer_id", 0)) if guest_session is Dictionary else 0
 
 	# (b) runs first, on the freshly staged wild: (a)'s break makes the wild
 	# reposition before it can be pinned again.
 	# (b) Charge committed well before the tell: drains, never breaks.
 	var blind := await _charge_case(false)
+	check(str(blind.get("start_verdict", "")) == "accepted",
+		"(b) the host accepted the early charge's committed start (%s; ready %s)" % [str(blind.get("start_verdict", "")), str(blind.get("ready", {}))])
 	check(bool(blind.landed), "(b) the early-committed charge landed on the host (%s)" % str(blind))
 	check(not bool(blind.host_staggered),
 		"(b) a charge committed %d+ frames before the tell does not force a break (%s)" % [EARLY_START_FRAMES, str(blind)])
@@ -161,6 +168,11 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	var hits_before := int(tally.get("host_hits", 0))
 	var guest_before := int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	var hp_before := -1.0
+	# A client starts a move only when the host would take it: the last quick
+	# hit's host deadline has passed and no actor_vitals save is open (#542,
+	# run 37333407301: the early start went out inside that window on a fast
+	# runner and never resolved). Waited on as state, not retried.
+	out["ready"] = await _await_host_ready()
 	if tell_first:
 		pin = (await _pin(false)).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
@@ -172,9 +184,11 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	else:
 		_action += 1
 		var action := _action
+		var refusals_before := ((await _encounter(1)).get("refusals", []) as Array).size()
 		var begun: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
 			"slot": "charged", "action": action, "start_only": true})
 		out["start"] = "%s %s" % [str(begun.get("detail", "")), str(begun.get("data", {}))]
+		out["start_verdict"] = await _await_start_verdict(action, refusals_before)
 		await step(1, "wait", {"frames": EARLY_START_FRAMES})
 		var pinned := await _pin(false)
 		pin = pinned.get("data", {})
@@ -213,6 +227,47 @@ func _charge_case(tell_first: bool) -> Dictionary:
 
 
 ## The host's live opponent HP, read from its real shared wild body.
+## Polls the host until the guest's last action deadline has passed and no
+## actor_vitals save is open; returns what it last saw.
+func _await_host_ready() -> Dictionary:
+	var seen := {}
+	for _poll in READY_POLLS:
+		var authority := await _host_authority(_guest_peer_id)
+		var vitals := bool(((await _pin(true)).get("data", {}) as Dictionary).get("vitals_pending", false))
+		seen = {"deadline_left_ms": int(authority.get("deadline_ms", 0)) - int(authority.get("host_now_ms", 0)),
+			"vitals_pending": vitals}
+		if int(seen.deadline_left_ms) <= 0 and not vitals:
+			seen["ready"] = true
+			return seen
+		await step(0, "wait", {"frames": 6})
+	seen["ready"] = false
+	return seen
+
+
+## "accepted" once the host's authority holds `action`, else the code of the
+## first move_start refusal the guest received after `since` history entries.
+func _await_start_verdict(action: int, since: int) -> String:
+	for _poll in READY_POLLS:
+		if int((await _host_authority(_guest_peer_id)).get("last_action", 0)) == action:
+			return "accepted"
+		var history: Array = (await _encounter(1)).get("refusals", []) as Array
+		for row: Variant in history.slice(mini(since, history.size())):
+			if row is Dictionary and str(row.get("kind", "")) == "move_start":
+				return "refused:" + str(row.get("code", ""))
+		await step(1, "wait", {"frames": 4})
+	return "unanswered"
+
+
+func _host_authority(peer_id: int) -> Dictionary:
+	var state := await _encounter(0)
+	for raw: Variant in (state.get("strike_authority", []) as Array):
+		if raw is Dictionary and int((raw as Dictionary).get("peer_id", 0)) == peer_id:
+			var row := (raw as Dictionary).duplicate(true)
+			row["host_now_ms"] = int(state.get("host_now_ms", 0))
+			return row
+	return {"last_action": 0, "deadline_ms": 0, "host_now_ms": int(state.get("host_now_ms", 0))}
+
+
 func _pin(read_only: bool) -> Dictionary:
 	var args := {"encounter_id": _encounter_id}
 	if read_only: args["read_only"] = true

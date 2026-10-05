@@ -5020,6 +5020,10 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
 			"host_breaks": _f22_host_breaks, "host_hits": _f22_host_hits,
+			# Host readiness for a guest's next committed start: an open
+			# actor_vitals save refuses it (`pending_vitals`).
+			"vitals_pending": bool(director.call("ordinary_actor_vitals_pending", encounter_id))
+				if director.has_method("ordinary_actor_vitals_pending") else false,
 			"poise": float(body.get("_poise")),
 			"hp": float(runtime.get("_enemy").get("hp")) if runtime.get("_enemy") != null else -1.0, "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
 
