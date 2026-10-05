@@ -196,7 +196,7 @@ static func pattern_ids(patterns: Dictionary, role: String, context: Dictionary)
 
 ## Returns an unspaced, immutable-at-entry strike profile. Node caller applies
 ## body clearance ONCE after this overlay. Cursor advances on attempt (also
-## on interruption), never on frame, hit or RNG. No damage/stat scaling here.
+## on interruption), never on frame, hit or RNG. No stat scaling here beyond the declared per-chapter power scales.
 static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dictionary,
 		cursor: int) -> Dictionary:
 	var role := context_role(patterns, context)
@@ -223,10 +223,14 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 	out["recovery"] = maxf(float(floor_row.get("recovery", 0.6)), float(out.get("recovery", 0.6)))
 	# COMBAT §7 ordinary wild / floor-trainer pressure, per chapter. Named
 	# pattern fights keep their own authored numbers.
+	# Officers, Masters and bosses keep their authored numbers (COMBAT §12.1):
+	# the trainer scale reaches only bodies the director marks floor_trainer.
 	if str(context.get("pattern_id", "")).is_empty():
-		var key := "trainer_power_scale" if bool(context.get("trainer_owned", false)) else "wild_power_scale"
-		var scale := float((patterns.get(key, {}) as Dictionary).get(chapter, 1.0))
-		out["power"] = float(out.get("power", 8.0)) * scale
+		var key := ""
+		if not bool(context.get("trainer_owned", false)): key = "wild_power_scale"
+		elif bool(context.get("floor_trainer", false)): key = "trainer_power_scale"
+		if not key.is_empty():
+			out["power"] = float(out.get("power", 8.0)) * float((patterns.get(key, {}) as Dictionary).get(chapter, 1.0))
 	var slot := str(out.get("slot", "quick"))
 	out["move_id"] = str(out.get("move_override", context.get("move_" + slot, "")))
 	if out.move_id.is_empty():

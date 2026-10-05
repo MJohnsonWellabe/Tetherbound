@@ -1433,25 +1433,25 @@
             "sequence": [
               "wall_check",
               "wall_quake"
-            ]
+            ], "role": "WALL"
           },
           {
             "sequence": [
               "diver_retreat",
               "diver_leap"
-            ]
+            ], "role": "DIVER"
           },
           {
             "sequence": [
               "current_volley",
               "current_zone"
-            ]
+            ], "role": "CURRENT"
           },
           {
             "sequence": [
               "charger_rush",
               "charger_double_rush"
-            ]
+            ], "role": "CHARGER"
           },
           {
             "sequence": [

@@ -114,6 +114,8 @@ var _pattern_leap_model_y := 0.0
 var _poise: float = 0.0
 var _poise_quiet_left: float = 0.0
 var _poise_resist_left: float = 0.0
+## Host-authored pool size mirrored onto a guest stand-in (sync_poise).
+var _synced_poise_max: float = -1.0
 var _staggered: bool = false
 var _stagger_critical_ready: bool = false
 
@@ -1458,6 +1460,8 @@ func _poise_max() -> float:
 ## wins, then the role pool (`poise.role_pools`), then the shared default.
 ## The manager reads this same value so HUD and break threshold agree.
 func poise_max() -> float:
+	if _synced_poise_max > 0.0:
+		return _synced_poise_max
 	if _combat_cfg.has("poise_max"):
 		return maxf(1.0, float(_combat_cfg.poise_max))
 	var pools: Dictionary = _poise_config().get("role_pools", {})
@@ -1471,6 +1475,7 @@ func poise_max() -> float:
 
 
 func _reset_poise() -> void:
+	_synced_poise_max = -1.0
 	_poise = _poise_max()
 	_poise_quiet_left = 0.0
 	_poise_resist_left = 0.0
@@ -1544,7 +1549,11 @@ func is_staggered() -> bool:
 ## an absolute value is idempotent on the host and prevents a client replay
 ## from draining poise twice.
 func sync_poise(value: float, staggered_now: bool, critical_ready: bool = true,
-		stagger_left: float = -1.0) -> void:
+		stagger_left: float = -1.0, host_poise_max: float = -1.0) -> void:
+	# A guest's stand-in has no authored profile or pattern context: the
+	# host's own pool size is the one its bar must be read against.
+	if host_poise_max > 0.0:
+		_synced_poise_max = host_poise_max
 	_poise = clampf(value, 0.0, _poise_max())
 	_staggered = staggered_now
 	_stagger_critical_ready = staggered_now and critical_ready
