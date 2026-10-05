@@ -25,5 +25,23 @@
   "balance_after": 13515,
   "observed_credit_debit": 30,
   "nightly_reserved_count": 1,
-  "generation_complete": false
+  "generation_complete": true,
+  "service_status": "SUCCEEDED",
+  "raw_files": [
+    {
+      "path": "meshy-candidate-a/model.glb",
+      "sha256": "97ba748431877d9bf648f8976cd871e7ae92544eb2b2d2a855120e534f421bdc",
+      "size_bytes": 13564980
+    },
+    {
+      "path": "meshy-candidate-a/thumbnail.png",
+      "sha256": "a3ccf65b31017a5224e1fa337584082b56a49c986e3247bd58b051eb3643f4ba",
+      "size_bytes": 234507
+    },
+    {
+      "path": "meshy-candidate-a/service-provenance.json",
+      "sha256": "8afac8130cdc209e206c628f1f2abb19901ac030834210b50e15652621edb876",
+      "size_bytes": 275
+    }
+  ]
 }

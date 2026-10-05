@@ -11,7 +11,8 @@
       "endpoint": "/openapi/v1/multi-image-to-3d",
       "submitted_utc": "2026-10-05T02:19:28.474760+00:00",
       "task_id": "01a109db-e623-70a8-b13a-60dfc2ad2846",
-      "status": "submitted_pending_inspection"
+      "status": "service_succeeded_raw_downloaded_pending_asset_acceptance",
+      "raw_model_sha256": "97ba748431877d9bf648f8976cd871e7ae92544eb2b2d2a855120e534f421bdc"
     }
   ],
   "actual_meshy_submissions": 1,

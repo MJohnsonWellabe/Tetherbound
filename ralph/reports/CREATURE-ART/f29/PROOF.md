@@ -6,13 +6,14 @@ Lane: `tb/creature-art`. Runtime baseline:
 
 | Criterion | Label | Evidence / remaining proof |
 |---|---|---|
-| F29#3 storm bear | OFF | [Reference-only independent PASS](reference-review.md). One attended Meshy task submitted; actual mesh, measured scale, rig, poses and in-engine code-blind before/after PASS remain OPEN. `staticub_stormursa` remains `enabled:false`. |
+| F29#3 storm bear | OFF | [Reference-only independent PASS](reference-review.md). One attended Meshy task succeeded; raw candidate downloaded. Mesh inspection, measured scale, rig, poses and in-engine code-blind before/after PASS remain OPEN. `staticub_stormursa` remains `enabled:false`. |
 
 Drafted/inspected reference:
 `assets/creatures/tetherbound/stormursa/reference/stormursa-v1.png`, SHA-256
 `de2ef0cbe55b546dacb950b8e1e793d60c82d35149192b0324e89b901892fc49`.
 Its prompt/provenance records are beside it and in ART_DIRECTION §7.3. The
-reference directory is excluded from Godot import; the model remains uncreated.
+reference directory is excluded from Godot import. The raw candidate below is
+also excluded; no prepared runtime model has been accepted.
 
 ## Executed CPU preflight, before the first submission
 
@@ -79,6 +80,18 @@ Every later POST, including
 refine/retexture/retry, consumes the same 30/night cap; uncertain submissions
 retain their reservation. Record real task IDs and before/after balance before
 further spending. Fetches/status reads do not create generation tasks.
+
+The task subsequently SUCCEEDED. Existing `meshy.py fetch` downloaded the
+GLB, FBX, OBJ, thumbnail and service provenance. Preserved primary GLB:
+`source/meshy-candidate-a/model.glb`, SHA-256
+`97ba748431877d9bf648f8976cd871e7ae92544eb2b2d2a855120e534f421bdc`.
+The raw candidate directory has `.gdignore`; no import, rig, measured scale,
+animation or full-bar PASS follows from download. Author inspected the service
+thumbnail: recognizable adult bear mass, rounded ears/blue eyes/muzzle and
+four visible paws; actual geometry and lightning-material fidelity need
+inspection. Source terms and conditional plan attribution are recorded in
+`source/meshy-candidate-a/LICENSE.md`; the credit count alone is not account-plan
+proof. No extra POST, purchase or runtime flag change.
 
 Checked primary [Multi-Image API](https://docs.meshy.ai/en/api/multi-image-to-3d)
 and [pricing](https://docs.meshy.ai/en/api/pricing) on 2026-10-04: one inspected

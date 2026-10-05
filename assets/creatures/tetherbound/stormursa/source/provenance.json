@@ -2,7 +2,7 @@
   "subject": "stormursa",
   "working_name": "Stormursa",
   "authorization": "CODEX_START_HERE RD-28; ART_DIRECTION 7.2; ACCEPTANCE F29#3",
-  "status": "meshy_generation_submitted_candidate_pending",
+  "status": "meshy_raw_candidate_downloaded_unrigged_flag_off",
   "generation_provider": "Meshy",
   "meshy_task_id": "01a109db-e623-70a8-b13a-60dfc2ad2846",
   "reference_inspected": true,
@@ -17,12 +17,13 @@
   "reference_prompt": "res://assets/creatures/tetherbound/stormursa/reference/prompt.txt",
   "reference_only_review": "ralph/reports/CREATURE-ART/f29/reference-review.md",
   "submission_preflight": "ralph/reports/CREATURE-ART/f29/guard-preflight.json",
-  "model": null,
+  "model": "res://assets/creatures/tetherbound/stormursa/source/meshy-candidate-a/model.glb",
   "judge_medium": null,
   "judge_high": null,
   "before_after": null,
   "preparation_scripts": [],
-  "license": "Use existing Meshy license only; output rights and redistribution must be recorded after actual generation. No new purchase.",
+  "license": "source/meshy-candidate-a/LICENSE.md records Meshy source terms and conditional plan attribution; balance alone does not prove account plan.",
   "default_enabled": false,
-  "generation_manifest": "res://assets/creatures/tetherbound/stormursa/source/meshy-generation-1.json"
+  "generation_manifest": "res://assets/creatures/tetherbound/stormursa/source/meshy-generation-1.json",
+  "model_sha256": "97ba748431877d9bf648f8976cd871e7ae92544eb2b2d2a855120e534f421bdc"
 }
