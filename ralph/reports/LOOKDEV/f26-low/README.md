@@ -36,10 +36,10 @@ or claimed.** F26#4 and F26#5 stay with Codex and the owner.
 | Commit | Fix | Proof |
 |---|---|---|
 | 1c71f089, 94929005, d825d181 (integration), d80a07b5 | Each realm camera keeps its authored far plane as the draw-distance floor. The preset had cut it to 320 m on Low, the shipping default. | `tests/test_realm_camera_far_floor.gd` 3/21/0; blinded A/B in `ab-far-floor/`: after better 18, before better 0, same 14 |
-| ced438ee | Free-standing Hall pedestal and Master labels billboard instead of reading mirrored | Hall 2/13 and Master 5/43 tests; `verify/` |
-| 3704c5ca | Veilfall spray puffs fade when the camera is inside them | `verify/` |
-| b1d76e75, 5390b5b6 | Burrow, Old Bram and Doss lure smoke matched to the accepted Tidewake plume | `verify/` |
-| fca48154 | Catalogue stands clear of the trunk (Ridgeline), sandstone (Veilfall crown) and on-spot pickups (three Stormwood landmarks) | probe arm length 5.82 m; teleport catalogue tests 10/1094 and 2/28; `verify/` |
+| ced438ee | Free-standing Hall pedestal and Master labels billboard instead of reading mirrored | Hall 2/13 and Master 5/43 tests; blinded `verify/`: all three mirrored labels on the before side |
+| 3704c5ca, reverted by 85c4574f | Veilfall spray near-fade | Ineffective: veilfall__15 was still washed white, so it is reverted and veilfall__15 stays open |
+| b1d76e75, 5390b5b6 | Burrow, Old Bram and Doss lure smoke matched to the accepted Tidewake plume | blinded `verify/`: all four dark poles on the before side |
+| fca48154 | Catalogue stands clear of the trunk (Ridgeline), sandstone (Veilfall crown) and on-spot pickups (three Stormwood landmarks) | probe arm length 5.82 m; teleport catalogue tests 10/1094 and 2/28; blinded `verify/`: all five stand defects on the before side |
 
 Not defects, or reported to other lanes: Stormwood is always purple (owner WO-F10-08); the night torch
 is owner-mandated; the water current lanes have the P2-066 candidate; the night-sea grade and Low shadow
