@@ -1,0 +1,86 @@
+{
+  "raw_root": "D:\\tetherbound\\.artifacts\\f26-perf-guard12-gpu-profile\\guard12-gpuprofile-medium-meadows",
+  "archive": {
+    "path": "native-diagnostic.zip",
+    "bytes": 32953778,
+    "sha256": "c1335478c9b9f4871a3376284f6fdec41cfc62e36219067f7422a21f07e5e635",
+    "entries": 13
+  },
+  "files": [
+    {
+      "path": "engine.log",
+      "bytes": 282450,
+      "sha256": "62a2737f4816360bfe999883102bfca89afd0199843837603cc67edc4dac750c"
+    },
+    {
+      "path": "native.log",
+      "bytes": 286040,
+      "sha256": "8951f24e934b31b2aa5188efa6c65d71baec7df3263f83a9be0dda456cd8a53e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "bytes": 656,
+      "sha256": "bedb601644248165525a1a8d4bd22f680c440c609b1dfd02dca02003a8293eda"
+    },
+    {
+      "path": "preset.log",
+      "bytes": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2887,
+      "sha256": "7a110ad9116695de5a33d3e5938b942c00969fc123d831e32977eff5af8da2d9"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/graphics_override.cfg",
+      "bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/graphics_override.cfg.previous",
+      "bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 109,
+      "sha256": "7f94e8f11cb0f02d605b9fc4669776a1af0ef310c3289b6046f39c2aec49ae7f"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/vulkan/pipelines.forward_plus.nvidia_geforce_gtx_1060_3gb.cache",
+      "bytes": 28336696,
+      "sha256": "43752e05f4825a7bcc23a5fef91631e0ace760228fa62d20798b6f32bda41e47"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 2931,
+      "sha256": "68759f490082db9c75eb7a81e0ecbac008b9037205f550da1f58a69c3d055ac6"
+    },
+    {
+      "path": "route/end.png",
+      "bytes": 2809798,
+      "sha256": "48917a7c49e4cc7f10af58ed41f8251296fce53c9af1af591c915efdca275998"
+    },
+    {
+      "path": "route/route.json",
+      "bytes": 93662,
+      "sha256": "7af43d0946940738055aeca84bbca701ab71514d155af72664592946f9e1ad8c"
+    },
+    {
+      "path": "route/start.png",
+      "bytes": 2807950,
+      "sha256": "46b0a84a2bed5008b4d98a8682dcaa877a661e3e53d66a6f63d47c12bebf1732"
+    }
+  ],
+  "excluded_cache_files": [
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 50450
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48
+    }
+  ]
+}
