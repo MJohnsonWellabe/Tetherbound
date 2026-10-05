@@ -1,6 +1,6 @@
 extends "res://tests/helpers/net_harness.gd"
 
-# peers: 2 -- MANUAL until combat.json actor_vitals.runtime_enabled ships on (run with it flipped); run: tools/net/run_net_smoke.sh f27_guest_wild_win
+# peers: 2
 
 ## F27: a guest's wild win is paid by the host. Two real ENet peers; the host
 ## engages a wild creature through the production press, the guest joins the

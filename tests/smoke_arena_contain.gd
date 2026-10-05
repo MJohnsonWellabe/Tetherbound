@@ -106,9 +106,14 @@ func _run() -> void:
 ## smoke_trainer_battle.gd and smoke_boss.gd all take for the same reason.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
-	if director == null or director.call("ally_instance") != null:
-		return
-	await director.call("adopt_starter", "terrapup")
+	if director == null: return
+	if director.call("ally_instance") == null: await director.call("adopt_starter", "terrapup")
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted body is a companion only once it is in this character's party.
+	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var party: RefCounted = root.get_node(^"Game").get("party")
+	if party != null and int(party.call("size")) == 0 and director.call("ally_instance") != null:
+		party.call("add", director.call("ally_instance"))
 
 
 func _collect_nodes() -> bool:
