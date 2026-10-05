@@ -23,3 +23,13 @@
 - Regression net smokes: `gather_departure` and `homestead_station_craft`, both ALL CHECKS PASSED.
 
 **Still open:** a re-review of these fixes.
+
+## Re-review of 24e3b108: APPROVE-WITH-NITS (both nits fixed in the next commit)
+
+| Severity | Finding | Fix |
+|---|---|---|
+| Medium | A backup holding a FULL receipt window passed `declaration_behind` (a missing newest receipt counted as "compacted") | Windows drop their oldest receipts first. A missing held receipt now counts as compacted only when the window is full AND no older held receipt of that kind survives in the declaration. Unit-tested with a full-window backup |
+| Low | The H1 restore did not cover the per-character vitals and training maps | `snapshot_record` / `restore_record` also carry `_vitals_pending`, `_vitals_seen`, `_vitals_stages`, `_training_pending` and `_training_stages` for that character. Unit-tested |
+| Note | A personal flag cleared offline reads as behind | Documented: this keeps the held record, which is the behaviour from before readmission existed |
+
+`test_rejoin_admission`: 6 tests, 37 assertions.

@@ -334,7 +334,9 @@ func owes_unsettled(character: String) -> bool:
 ## offline change), never OLDER (a restored backup would re-earn what this
 ## world already paid). One-way fields: every held transaction receipt is in
 ## the declaration unless its kind's window shows the declaration compacted
-## it, and every host-recorded personal flag is in the declared flags.
+## it, and every host-recorded personal flag is in the declared flags. (A flag
+## gameplay clears offline also reads as behind; that keeps the held record,
+## exactly the behaviour before readmission existed.)
 func declaration_behind(character: String, declared: Dictionary, declared_flags: Array) -> String:
 	for flag: Variant in personal_flags(character):
 		if personal_flags(character)[flag] == true and not declared_flags.has(flag): return "personal_flag " + str(flag)
@@ -344,26 +346,57 @@ func declaration_behind(character: String, declared: Dictionary, declared_flags:
 	for receipt: Variant in mine: present[str(receipt)] = true
 	var windows := preload("res://scripts/creatures/receipt_windows.gd")
 	var f32_window := int(preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("f32_receipt_window", 0))
-	for receipt: Variant in held_receipts:
-		if present.has(str(receipt)): continue
-		var compacted := false
-		if str(receipt).begins_with("craft:%s:f32:" % character):
-			compacted = f32_window >= 2 and mine.filter(func(r: Variant) -> bool: return str(r).begins_with("craft:%s:f32:" % character)).size() >= f32_window - 1
-		for kind: String in ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]:
-			if compacted or windows.window(kind) <= 0 or not windows.is_kind(str(receipt), kind, character): continue
-			compacted = mine.filter(func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)).size() >= windows.window(kind)
-		if not compacted: return "receipt " + str(receipt).left(48)
+	# Windows drop their OLDEST receipts first (receipt_windows.compact,
+	# compact_f32_receipts): a missing held receipt was compacted only if the
+	# declaration's window is full AND no older held receipt of that kind
+	# survives in it (review: a backup with a full window is otherwise behind).
+	var kinds := ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]
+	var f32_prefix := "craft:%s:f32:" % character
+	for index: int in held_receipts.size():
+		var receipt := str(held_receipts[index])
+		if present.has(receipt): continue
+		var same_kind := Callable()
+		var window := 0
+		if receipt.begins_with(f32_prefix):
+			same_kind = func(r: Variant) -> bool: return str(r).begins_with(f32_prefix)
+			window = f32_window - 1 if f32_window >= 2 else 0
+		else:
+			for kind: String in kinds:
+				if windows.window(kind) > 0 and windows.is_kind(receipt, kind, character):
+					same_kind = func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)
+					window = windows.window(kind)
+					break
+		var compacted: bool = window > 0 and mine.filter(same_kind).size() >= window
+		if compacted:
+			for older: int in index:
+				if same_kind.call(held_receipts[older]) and present.has(str(held_receipts[older])):
+					compacted = false
+					break
+		if not compacted: return "receipt " + receipt.left(48)
 	return ""
 
 
 ## Review H1: the hello can still refuse after rejoin_admission; the caller
 ## restores the exact held record (and its companions) if it does.
+## The record and every per-character map the hello's recover_* steps write.
+const _SNAPSHOT_MAPS := ["_vitals_pending", "_vitals_seen", "_vitals_stages", "_training_pending", "_training_stages"]
+
 func snapshot_record(character: String) -> Dictionary:
-	return (_records.get(character, {}) as Dictionary).duplicate(true)
+	if not _records.has(character): return {}
+	var maps := {}
+	for name: String in _SNAPSHOT_MAPS:
+		var map: Dictionary = get(name)
+		if map.has(character): maps[name] = map[character].duplicate(true) if map[character] is Dictionary or map[character] is Array else map[character]
+	return {"record": (_records[character] as Dictionary).duplicate(true), "maps": maps}
 
 
 func restore_record(character: String, snapshot: Dictionary) -> void:
-	if not snapshot.is_empty(): _records[character] = snapshot.duplicate(true)
+	if snapshot.is_empty(): return
+	_records[character] = (snapshot.record as Dictionary).duplicate(true)
+	for name: String in _SNAPSHOT_MAPS:
+		var map: Dictionary = get(name)
+		if (snapshot.maps as Dictionary).has(name): map[character] = snapshot.maps[name]
+		else: map.erase(character)
 
 
 func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, declared_flags: Array = []) -> Dictionary:

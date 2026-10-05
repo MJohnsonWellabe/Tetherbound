@@ -165,6 +165,18 @@ func test_a_windowed_kind_the_declaration_compacted_is_not_behind() -> void:
 	assert_eq(authority.call("declaration_behind", character, declared, []), "", "a full newer window compacted the old receipt")
 	declared.redesign_character.transaction_receipts.pop_back()
 	assert_true(str(authority.call("declaration_behind", character, declared, [])).begins_with("receipt"), "below the window it is behind")
+	# Review: a backup with a FULL window still lacks the NEWEST held receipt
+	# while an older one survives -- that is behind, not compacted.
+	var long_held: Dictionary = authority.call("state", character)
+	long_held.redesign_character.transaction_receipts = ["groom:a"]
+	for i in window: long_held.redesign_character.transaction_receipts.append("groom:h-%d" % i)
+	long_held.redesign_character.transaction_receipts.append("groom:newest")
+	authority.call("_replace_record", character, 2, long_held)
+	var backup := record.duplicate(true)
+	backup.redesign_character.transaction_receipts = ["groom:a"]
+	for i in window: backup.redesign_character.transaction_receipts.append("groom:h-%d" % i)
+	assert_true(str(authority.call("declaration_behind", character, backup, [])).begins_with("receipt"),
+		"a full-window backup missing the newest receipt is behind")
 
 
 func test_home_key_rows_and_duplicate_payouts_are_never_credited_again() -> void:
@@ -182,6 +194,8 @@ func test_home_key_rows_and_duplicate_payouts_are_never_credited_again() -> void
 		_with(after, "berries", 3), row.delivery_id), "the same payout id is refused a second time")
 	var snapshot: Dictionary = authority.call("snapshot_record", character)
 	authority.call("_replace_record", character, 9, record)
+	authority.get("_vitals_pending")[character] = {"uid": "x"}
 	authority.call("restore_record", character, snapshot)
+	assert_false((authority.get("_vitals_pending") as Dictionary).has(character), "the vitals map is restored with it")
 	assert_eq(int(authority.call("revision", character)), 0, "a refused hello restores the exact held record")
 	assert_true(preload("res://scripts/creatures/essence.gd")._equivalent(authority.call("state", character), after), "with its state")
