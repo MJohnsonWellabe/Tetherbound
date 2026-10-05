@@ -21,7 +21,7 @@
 | 2 | Medium | Flat potion heals in a fight heal more than a true raise would, and the message disagrees with the bar | New `combat_manager.scaled_heal(creature, shown_amount)`: stored HP gains amount / s and the call returns shown HP. Used by the hotbar potion (`playground_hud`) and backpack targeting (`tab_backpack`). Unit-tested: 50 shown = 50 / s stored |
 | 3 | Low | Some test assertions were true by construction | (a) The smoke now takes the rolled damage from the guest's production `hit_landed` and asserts stored loss = rolled / host s (5.87 = 7.42 / 1.264). (b) The guest drops its local Harness right after joining, so the bar reads 134.40 before the host's hit and 169.88 after it; only the host's s explains that. (c) The durable staging amount goes through `_ordinary_hit_amount`, which is unit-tested (100 / s). (d) A unit test asserts a rolled 100 drops the shown bar by exactly 100 |
 | 4 | Low | `_adopt_host_hp_scale` did not check the struck creature | The participant payload now carries `creature_uid`; a different id is not adopted (unit-tested) |
-| 5 | Low | The combat HUD level line might crowd the panel | Captured in engine (`f33/harness-hud/`, Stormglass +3, s = 1.702): "Lv 3 · HP 229/229" and "HP 36/229" fit on one line, nothing overlaps |
+| 5 | Low | The combat HUD level line might crowd the panel | Captured in engine (`f33/harness-hud.md`; frames kept as CI artifacts per ruling 12; Stormglass +3, s = 1.702): "Lv 3 · HP 229/229" and "HP 36/229" fit on one line, nothing overlaps |
 | 6 | Nit | `_max_hp_scale` read the config on every hit | The value is cached in a static, and the bonus is clamped to [0, 1] |
 | 7 | Nit | A doc comment in `playground_hud` sat above the wrong function | Moved back to `_combat_is_running` |
 
