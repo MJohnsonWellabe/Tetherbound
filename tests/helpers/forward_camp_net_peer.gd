@@ -114,12 +114,14 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 	game.set("pending_build", "forward_camp")
 	for _frame in 30:
 		await physics_frame
-	placer.set("_yaw_deg", 0.0)
-	(placer.get("_ghost") as Node3D).global_position = spot
 	var before: Array = (_records(game).records as Array).filter(func(r: Dictionary) -> bool:
 		return r.character_id == str(game.get("local").get("character_id"))).map(func(r: Dictionary) -> String: return r.uid)
 	var messages: Array = []
 	for press in presses:
+		# Aimed at the spot for every press: the placer re-aims its ghost from
+		# the camera each frame, and a player holds the aim between presses.
+		placer.set("_yaw_deg", 0.0)
+		(placer.get("_ghost") as Node3D).global_position = spot
 		game.set("_pending_world_message", "")
 		placer.call("_place", game, "forward_camp")
 		messages.append(str(game.get("_pending_world_message")))

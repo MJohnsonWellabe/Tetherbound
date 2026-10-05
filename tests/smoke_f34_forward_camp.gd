@@ -93,9 +93,11 @@ func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_messa
 		await physics_frame
 		player.global_position = at + Vector3(0.0, 0.5, 3.0)
 	_park_wilds(at)
-	placer.set("_yaw_deg", 0.0)
-	(placer.get("_ghost") as Node3D).global_position = at
 	for press in presses:
+		# Aimed at the spot for every press (the placer re-aims the ghost from
+		# the camera each frame; a player holds the aim between presses).
+		placer.set("_yaw_deg", 0.0)
+		(placer.get("_ghost") as Node3D).global_position = at
 		game.set("_pending_world_message", "")
 		placer.call("_place", game, "forward_camp")
 		if read_message and press == 0: _last_message = str(game.get("_pending_world_message"))
@@ -302,7 +304,9 @@ func _run() -> void:
 		var after := _camps(game)
 		var moved: bool = after.size() == 1 and str(after[0].get("uid")) != first_uid \
 			and Vector3(float(after[0].position[0]), float(after[0].position[1]), float(after[0].position[2])).distance_to(second) < 0.01
-		_check(moved, "the second press packed the first camp up and pitched the new one here (%d camp(s))" % after.size())
+		_check(moved, "the second press packed the first camp up and pitched the new one here (%d camp(s) %s, first %s, here %s; last message \"%s\")" % [
+			after.size(), JSON.stringify(after.map(func(r: Dictionary) -> Array: return [str(r.uid).left(8), r.position])), first_uid.left(8),
+			str(second), str(game.get("_pending_world_message"))])
 		_check(int(inventory.call("count", KIT)) == kits_before - 1, "the old camp's kit was refunded and the new one spent (%d)" % int(inventory.call("count", KIT)))
 		_check(_camp_nodes().size() == 1, "one ForwardCamp stands in the world (%d)" % _camp_nodes().size())
 
