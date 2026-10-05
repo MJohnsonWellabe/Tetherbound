@@ -1,0 +1,42 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 227888,
+      "sha256": "8de08d2e0756688675a1f92be3407ccac23363f370fce1afe1851382091068b3"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 225311,
+      "sha256": "6ad2903c1826174a41a29f4550d1ebb47d739067ab970c3bbaf9e818c436f87e"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1662,
+      "sha256": "d128e388456cac877d54adde8f2b1d0d1b35adc379ed90a375694d11c20a6c55"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 375,
+      "sha256": "5ca8baacc01355e09a93adba6d72b078cd33ef2ba603868e4884d6062bc4757e"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
