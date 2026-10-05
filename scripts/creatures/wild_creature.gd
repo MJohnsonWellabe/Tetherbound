@@ -113,6 +113,7 @@ var _pattern_leap_duration := 0.45
 var _pattern_leap_model_y := 0.0
 var _poise: float = 0.0
 var _poise_quiet_left: float = 0.0
+var _poise_resist_left: float = 0.0
 var _staggered: bool = false
 var _stagger_critical_ready: bool = false
 
@@ -766,6 +767,7 @@ func _tick_combat(delta: float) -> void:
 			# The punish window ended. A new stagger must earn another break;
 			# leaving zero poise here let every quick chain-lock the opponent.
 			_poise = _poise_max()
+			_poise_resist_left = float(_poise_config().get("break_resist_seconds", 0.0))
 			_stagger_critical_ready = false
 			_enter(AI.Intent.REPOSITION)
 		else:
@@ -1449,12 +1451,29 @@ func _poise_config() -> Dictionary:
 
 
 func _poise_max() -> float:
-	return maxf(1.0, float(_combat_cfg.get("poise_max", _poise_config().get("max", 40.0))))
+	return poise_max()
+
+
+## COMBAT §4 break pool for this body: an encounter's authored `poise_max`
+## wins, then the role pool (`poise.role_pools`), then the shared default.
+## The manager reads this same value so HUD and break threshold agree.
+func poise_max() -> float:
+	if _combat_cfg.has("poise_max"):
+		return maxf(1.0, float(_combat_cfg.poise_max))
+	var pools: Dictionary = _poise_config().get("role_pools", {})
+	if not pools.is_empty() and instance != null:
+		var role := AI.context_role(_patterns, _pattern_context) if not _pattern_context.is_empty() else ""
+		if role.is_empty():
+			role = AI.species_role(str(instance.get("species_id")), MATH.config().get("patterns", {}))
+		if pools.has(role):
+			return maxf(1.0, float(pools[role]))
+	return maxf(1.0, float(_poise_config().get("max", 40.0)))
 
 
 func _reset_poise() -> void:
 	_poise = _poise_max()
 	_poise_quiet_left = 0.0
+	_poise_resist_left = 0.0
 	_staggered = false
 	_stagger_critical_ready = false
 
@@ -1462,6 +1481,7 @@ func _reset_poise() -> void:
 func _tick_poise(delta: float) -> void:
 	if _staggered:
 		return
+	_poise_resist_left = maxf(0.0, _poise_resist_left - delta)
 	_poise_quiet_left = maxf(0.0, _poise_quiet_left - delta)
 	if _poise_quiet_left <= 0.0:
 		_poise = minf(_poise_max(), _poise + float(_poise_config().get("regen_per_second", 20.0)) * delta)
@@ -1477,6 +1497,11 @@ func apply_poise_damage(amount: float, force_stagger: bool = false) -> bool:
 	# was measured first and left the break one hit into the tell proper, so a
 	# masher still cancelled every dive (C2 ratio inf / 3.49).
 	if _route_cue_left > 0.0:
+		return false
+	# COMBAT §4: for a short beat after a stagger ends the body cannot be
+	# broken again (forced or not) and its refilled pool is not drained; hits
+	# still deal HP damage. Stops chained zero-poise staggers.
+	if _poise_resist_left > 0.0:
 		return false
 	if not force_stagger:
 		_poise = maxf(0.0, _poise - maxf(0.0, amount))

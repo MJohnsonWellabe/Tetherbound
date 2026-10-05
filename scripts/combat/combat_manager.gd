@@ -2454,6 +2454,8 @@ func _player_poise_max() -> float:
 
 
 func _enemy_poise_max() -> float:
+	if _wild != null and _wild.has_method("poise_max"):
+		return float(_wild.call("poise_max"))
 	if _wild != null and _wild.has_method("combat_config"):
 		return maxf(1.0, float((_wild.call("combat_config") as Dictionary).get(
 			"poise_max", _poise_config().get("max", 40.0))))
