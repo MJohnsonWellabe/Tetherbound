@@ -30,4 +30,18 @@ There are 6 route stills (3 stands, day and night, 1920x1080, Low). The pairs we
 - silhouettes, lighting and shadows match;
 - the only content difference was which wild species spawned in the middle distance, at the same places and scale (random spawn selection between runs).
 
-The Stormwood verdict is added below once it is captured.
+## Stormwood (far floor 9 km)
+
+The first Stormwood measurement showed that large creature bodies were skipped as "emissive", because their materials glow a little. The exemption now applies only to emissive objects up to `emissive_skip_max_size_m` (1.5 m), such as lamps, lanterns and glints.
+
+| Stand | Before at 9 km | Before at 520 m | After at 9 km |
+|---|---:|---:|---:|
+| stand_0 | 3,985 draws / 6.23M prims | 992 / 3.07M | 1,211 / 3.63M |
+| stand_1 | — | — | 1,125 / 3.35M |
+| stand_2 | — | — | 766 / 3.05M |
+
+Before the change, the attribution at stand_0 put 1,566 draws and 2.5M primitives on the 802 wild creatures. After the change: `../probe/stormwood_cull.json`.
+
+Visual check: 6 route stills (3 stands, day and night), relabelled at random (`judge6_key.json`). The code-blind judge rated all 6 pairs **EQUIVALENT**. Every difference was rain, path-glow phase or creature/NPC idle pose; the pylon chain, trees, cottages, rocks and horizon were identical.
+
+The judge also noted, for both builds equally and not caused by this change, that the Stormwood "night" frames are as bright as the day frames. That realm's look is driven by its Surge state rather than the day clock; this is routed to the visual lanes.

@@ -26,9 +26,39 @@ Branch `tb/perf`. Target: the GTX 1060 at Medium, 1080p, averages ≥60 FPS with
 | `c641da40` | `world_audio.gd` polls creature-voice connections from a set every 0.5 s. It used to run an O(n²) `Array.has` scan every frame over ~1,160 wild bodies. | Headless Meadows wall time ~56–70 → ~26 ms/frame. 77 tests green. |
 | `6632f2fd` | Static per-material merge of settlement kit modules (`static_mesh_batch.gd`), with the LOD chain regenerated. | Meadows stand draws 8641→5396, 4461→2525, 2428→963; primitives ±1%. Judge: EQUIVALENT 8/8. 81 tests green. |
 | `018918a5` | Distance fade for shadowed local lights. Exterior lights drop only their shadow past 18 m; room lights are untouched to 72 m, then fade light-first. | Hall nave stand 8971→6646 draws. Judge: EQUIVALENT 8/8 (two leaking variants were rejected). 92 tests green. |
+| `c5e139d6` | Night-gated wild creatures in inactive clusters stay asleep (`encounter_director.gd::_sync_spawn_gates`). | Headless Meadows soak: night frames 47–67 ms → 37–39 ms. smoke_night_ecology and smoke_wild_streaming pass. |
+| `8ee50b55` | Screen-size detail cull (`detail_cull.gd`): unranged small meshes stop drawing below 2.5 px at 1080p. | Tidewake stand_0 at 6.5 km: 3030→1374 draws (520 m reference: 1278). Judge: EQUIVALENT 6/6. 101 tests green. |
 
 **Device re-time (Codex perf-retime-1, Meadows, at `6632f2fd`):** average FPS 5.81 → 7.36, true process mean 138 → 110 ms, draws 2170 → 1917, GPU 28.0 → 27.1 ms. Still far from the target.
 
 ## Top costs per realm (current read)
 
-_In progress. Updated as the soak, walk and other-realm probes land._
+The Cost, Evidence, Fix and Visual risk columns follow the brief's format. "Open" means not yet fixed.
+
+### Meadows (device: CPU-bound, ~110 ms process vs 27 ms GPU after the fixes)
+
+| # | Cost | Evidence | Fix (status) | Visual risk |
+|---|---|---|---|---|
+| 1 | Main-thread CPU every frame. Was an O(n²) audio scan; now ~26 ms idle and ~34 ms walking (p99 112 ms, max ~180 ms) headless, and night doubled it. | Headless bisect and soak (`probe/meadows_cpu_*.json`); Codex process 152→110 ms. | Audio and night-gate fixes landed. The remaining desktop-only process time (~110 ms mean, 850 ms spikes) is **open**; perf-retime-2 part B asks Codex for headless and Forward+ walks on their CPU to split script cost from render-path cost. | None (CPU) |
+| 2 | Draw calls from settlement kit modules and cube shadows of room lights. | Attribution: Village 6,417 of 8,641 draws; GrandpaHouse 2,446 at the Hall stand. | Batching and light fade landed: 8641→5396, Hall 8971→6646. The Crossing Hall (crossing_hall.gd, owned by the F17 lane) is still per-module and **open**: to fold it, call `static_mesh_batch.merge()` on its static shell. | Low (judged) |
+| 3 | GPU: 27 ms, of which the opaque pass is 13.2 ms and depth 7.0 ms (Codex). GrassField is 1.9M primitives and Terrain 1.0–1.3M; the sun shadow is 2.9–3.4k draws. | Attribution `probe/meadows_*`. | **Open.** Options: a grass ring density per preset, a sun shadow cascade count or max distance per preset, and a Terrain3D LOD bias. | Medium. These are visible and need a judge. |
+
+### Tidewake (device: CPU-bound, ~122 ms process; GPU 22 ms after the fixes)
+
+| # | Cost | Evidence | Fix (status) | Visual risk |
+|---|---|---|---|---|
+| 1 | Far-floor draws from small unranged dressing at 6.5 km: WaterCamps 1,064, LocalChains 380, RenewableResources 216. | `probe/water_fixes.json` attribution. | Detail cull landed: 3030→1374. | Low (judged) |
+| 2 | Physics step 11–14 ms on the device (Meadows ~5 ms), with only 7.6k nodes. | Codex physics max-step; container probe physics ~15 ms per step. | **Open.** Next step: bisect the physics with `perf_cpu_probe --walk --biome=water`. | None |
+| 3 | Process ~115–140 ms on the desktop. | Codex. | **Open**, same split as Meadows #1. | None |
+
+### Stormwood (device baseline avg 17 FPS, 1% low 9.7)
+
+| # | Cost | Evidence | Fix (status) | Visual risk |
+|---|---|---|---|---|
+| 1 | The 9 km far floor draws 802 wild creatures (1,566 draws, 2.5M primitives) and small dressing: 3,985 draws at 9 km vs 992 at 520 m. | `probe/stormwood_cull.json`, A/B in the probe logs. | Detail cull landed: 3985→1924. The emissive exemption is narrowed to small objects so large glowing creatures cull too (re-measure pending). | Low (judge pending) |
+| 2 | Ground cover at 2.0M primitives. | Attribution. | **Open.** Per-preset ring density. | Medium |
+| 3 | Night cost from gated wild creatures, as in Meadows. | Soak. | Landed (`c5e139d6`). | None |
+
+### Cloudreach (device avg 74 FPS, 1% low 43; meets the proxy target on average)
+
+Not profiled yet in this lane. The BEFORE shell build timed out on the device (perf-ab-1).

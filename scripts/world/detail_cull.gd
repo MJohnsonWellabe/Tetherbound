@@ -19,7 +19,8 @@ extends RefCounted
 ##
 ## Left alone:
 ## - anything with an authored range;
-## - emissive surfaces (a lit lamp reads as a point of light at any distance);
+## - small emissive objects up to `emissive_skip_max_size_m` (a lit lamp reads
+##   as a point of light at any distance);
 ## - Terrain3D's own scatter;
 ## - the local player's own subtree;
 ## - nodes with meta `detail_cull_skip`.
@@ -62,7 +63,12 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 	var size := _world_size(geometry)
 	if size <= 0.0:
 		return
-	if bool(cfg.get("skip_emissive", true)) and _emissive(geometry):
+	# A small glowing thing (a lamp, a lantern, a pickup glint) reads as a
+	# point of light at any distance, so it keeps drawing. A large body whose
+	# material merely glows a little (creature eyes, aspect accents) is sized
+	# like any other object.
+	if bool(cfg.get("skip_emissive", true)) and size <= float(cfg.get("emissive_skip_max_size_m", 1.5)) \
+			and _emissive(geometry):
 		return
 	# Pixel height of an object of size h at distance d, for vertical FOV f and
 	# a 1080-line frame: h / d * 1080 / (2 tan(f / 2)). Solved for d.
