@@ -99,3 +99,19 @@ func test_an_empty_beat_list_disables_the_priority() -> void:
 	var encounter := {"species": "bramblebun", "practice_engage_priority_beats": []}
 	assert_eq(SEQUENCE.practice_engage_species_for(BEATS.ENCOUNTER, encounter), "")
 	assert_eq(SEQUENCE.practice_engage_species_for(BEATS.ENCOUNTER, {"species": "bramblebun"}), "")
+
+
+## The pure rule only helps if production feeds it. Source checks in the
+## style of test_tutorial_orb_floor.gd pin the two wiring lines.
+func test_production_wires_the_priority_into_the_engage_offer_and_the_frame_loop() -> void:
+	var encounter := FileAccess.get_file_as_string("res://scripts/combat/encounter_director.gd")
+	assert_true(encounter.contains("return choose_engage_target(candidates, _engage_range, _practice_engage_species)"),
+		"_engageable() routes every engage offer through the practice-aware rule")
+	assert_true(encounter.contains("\"species\": str(wild.get(\"species_id\"))"),
+		"_engageable() hands the rule each body's species")
+	var sequence := FileAccess.get_file_as_string("res://scripts/story/sequence_director.gd")
+	var process_at := sequence.find("func _process(delta: float) -> void:")
+	var sync_at := sequence.find("_sync_practice_engage_priority()", process_at)
+	var early_return_at := sequence.find("if not _pending_starter_adoption.is_empty()", process_at)
+	assert_true(process_at >= 0 and sync_at > process_at and sync_at < early_return_at,
+		"_process syncs the priority every frame, before the pending-commit early return")
