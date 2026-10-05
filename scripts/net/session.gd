@@ -2896,6 +2896,14 @@ func _rpc_hello(summary: Dictionary) -> void:
 			"That character is already connected to this world.")
 		return
 	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
+	if seeded.get("ok") == true and seeded.get("already_seeded") != true:
+		_character_authority.call("seed_absorbed_deliveries", character_id, _game().get("world").reward_deliveries)
+	elif seeded.get("ok") == true:
+		# A returning owner: rebuild from host-proven payouts, else re-admit its
+		# current portable record when nothing here is owed (character_authority).
+		var rejoin: Dictionary = _character_authority.call("rejoin_admission", character_id, portable, _game().get("world").reward_deliveries)
+		if rejoin.get("code") != "held":
+			print("[session] rejoin of %s: %s" % [character_id.left(18), str(rejoin.get("code", ""))])
 	if seeded.get("ok") == true and _character_authority.call("seed_personal_flags", character_id, summary.get("personal_flags", {"flags": []})) != true: seeded = {"ok": false}
 	if seeded.get("ok") == true and _character_authority.call("seed_discovered_landmarks", character_id, summary.get("discovered_landmarks", {})) != true: seeded = {"ok": false}
 	if bool(seeded.get("ok", false)):

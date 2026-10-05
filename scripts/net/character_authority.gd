@@ -83,9 +83,12 @@ func _replace_record(character: String, next_revision: int, next_state: Dictiona
 	var carried: bool = _records.get(character, {}).has("personal_flags")
 	var flags := personal_flags(character)
 	var discovered: Variant = _records.get(character, {}).get("discovered_landmarks")
+	var absorbed: Variant = _records.get(character, {}).get("absorbed_deliveries")
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
 	if discovered is Dictionary: _records[character].discovered_landmarks = discovered.duplicate(true)
+	# Which host-journaled payouts this record already holds (rejoin_admission).
+	if absorbed is Dictionary: _records[character].absorbed_deliveries = absorbed.duplicate(true)
 
 ## Admission-only companion on the SAME record. A rejoin never refreshes it.
 ## Session validates every ID against the authored realm map catalogue first.
@@ -269,14 +272,94 @@ func _research_reserved(character: String) -> bool:
 
 ## An owner-applied reward payout, replayed exactly by the owner-passive
 ## stream. Only satchel slots move; no revision CAS changes.
-func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary) -> bool:
+func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary, delivery_id: String = "") -> bool:
 	if not _records.has(character) or not ESSENCE._equivalent(_records[character].state, before) \
 		or not after.get("inventory") is Array: return false
 	var next: Dictionary = _records[character].state.duplicate(true)
 	next.inventory = after.inventory.duplicate(true)
 	if not ESSENCE._equivalent(next, after): return false
 	_records[character].state = next
+	if not delivery_id.is_empty(): _absorbed(character)[delivery_id] = true
 	return true
+
+
+## --- Rejoin admission (coordinator, 2026-10-05; F01/F18 reports) -------------
+## A returning owner's held record can lag its portable truth two ways:
+## (1) it applied host-journaled payouts and left before the host replayed
+##     their owner-passive inputs (the stream and its tail end with the
+##     transport), so the held satchel misses accepted deliveries;
+## (2) it changed its portable character offline (a solo catch).
+## `rejoin_admission` first rebuilds (1) from the host's OWN accepted world
+## rows -- host-validated, amounts never read from the declaration -- and only
+## when that does not explain the declaration re-admits the declaration under
+## the first-join rules, and only while this character owes nothing unsettled
+## here (pending durable rows are reconciled after it by recover_durable_*).
+
+## Payout rows an owner applies itself (reward_delivery_applied replay):
+## plain authored grants and gather batches, which carry their stacks.
+static func owner_applied_row(row: Variant, character: String) -> bool:
+	return row is Dictionary and row.get("character_id") == character and row.get("delivery_id") is String \
+		and row.get("stacks") is Array and RULES.valid_slots(row.stacks) \
+		and not str(row.delivery_id).contains(":")
+
+
+func _absorbed(character: String) -> Dictionary:
+	if not _records[character].has("absorbed_deliveries"): _records[character].absorbed_deliveries = {}
+	return _records[character].absorbed_deliveries
+
+
+## First admission: every payout this world already accepted for the character
+## is in the satchel it declared (accepted only after the owner saved it).
+func seed_absorbed_deliveries(character: String, deliveries: Dictionary) -> void:
+	if not _records.has(character): return
+	var absorbed := {}
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		if owner_applied_row(row, character) and row.get("status") == "accepted": absorbed[str(id)] = true
+	_records[character].absorbed_deliveries = absorbed
+
+
+## True while a host-side transaction for this character is still open.
+func owes_unsettled(character: String) -> bool:
+	return _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
+		or _vitals_stages.has(character) or _training_locked(character) or _research_preparations.has(character)
+
+
+func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary) -> Dictionary:
+	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
+	var held: Dictionary = state(character)
+	var core := preload("res://scripts/net/owner_passive_replay.gd")
+	if ESSENCE._equivalent(core._core(held), core._core(declared)): return {"ok": true, "code": "held"}
+	# (1) Host-proven payouts the held satchel has not absorbed, in journal order.
+	var absorbed := _absorbed(character)
+	var candidate := held.duplicate(true)
+	var bag := RULES.inventory_from(candidate.get("inventory", []))
+	var applied: Array[String] = []
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		if not owner_applied_row(row, character) or row.get("status") != "accepted" or absorbed.has(str(id)): continue
+		var fits := true
+		for stack: Variant in row.stacks:
+			fits = fits and stack is Dictionary and RULES.give_stack(bag, stack)
+		if not fits: break
+		applied.append(str(id))
+	candidate.inventory = RULES.slots(bag)
+	if not applied.is_empty() and ESSENCE._equivalent(core._core(candidate), core._core(declared)):
+		_records[character].state = candidate
+		for id: String in applied: absorbed[id] = true
+		return {"ok": true, "code": "replayed_deliveries", "applied": applied}
+	print("[authority] rejoin of %s differs beyond host-proven payouts (%d applied): %s" % [character.left(18), applied.size(),
+		", ".join(preload("res://scripts/net/owner_passive_sync.gd")._differing_paths("", core._core(candidate), core._core(declared), 0, []).slice(0, 8))])
+	# (2) A real portable change: the declaration already passed the first-join
+	# rules (session hello); adopt it only when nothing here is owed to it.
+	if owes_unsettled(character): return {"ok": false, "code": "host_duties_unsettled"}
+	_replace_record(character, revision(character) + 1, declared.duplicate(true))
+	_records[character].state["vitals_escrow"] = declared.get("vitals_escrow", {}).duplicate(true)
+	# The admission flags travel with that record: the session's next
+	# seed_personal_flags seeds them from this same validated summary.
+	_records[character].erase("personal_flags")
+	seed_absorbed_deliveries(character, deliveries)
+	return {"ok": true, "code": "readmitted_portable"}
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}

@@ -281,6 +281,31 @@ func test_recording_reset_and_authenticated_ordered_ack() -> void:
 	assert_eq(service.local.inputs.size(), 1)
 	assert_eq(service.local.inputs[0].sequence, 2)
 
+func test_owner_sends_each_input_once_and_the_window_again_only_when_acks_stall() -> void:
+	# F01#6b: a whole unacknowledged window every flush cost the host ~126 ms per
+	# packet. Stop-and-wait: one contiguous window, nothing until it is acked.
+	service.record_input(_input(0.1))
+	service.record_input(_input(0.2))
+	session.messages.clear()
+	service._flush()
+	assert_eq(session.messages.size(), 1)
+	assert_eq((session.messages[0].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [1, 2])
+	service.record_input(_input(0.3))
+	service._flush()
+	assert_eq(session.messages.size(), 1, "nothing more while that window is in flight")
+	service.receive_owner(_envelope({"op": "inputs_ack", "sequence": 2}))
+	service._flush()
+	assert_eq((session.messages[1].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [3],
+		"after the ACK only what follows it, contiguous with the host's cursor")
+	service._flush()
+	assert_eq(session.messages.size(), 2)
+	service.local.ack_progress_ms = Time.get_ticks_msec() - int(service.RESEND_STALL_S * 1000.0) - 1
+	service._flush()
+	assert_eq((session.messages[2].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [3],
+		"a stall resends the unacknowledged window from its first input (the host may have waited)")
+	service._flush()
+	assert_eq(session.messages.size(), 3, "and only once per stall")
+
 func test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote() -> void:
 	service.record_input(_input())
 	var stream := _host_stream()

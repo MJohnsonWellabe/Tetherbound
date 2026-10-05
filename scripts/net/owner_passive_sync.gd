@@ -17,6 +17,9 @@ const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_ha
 const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
+## Owner: without new acknowledgements for this long, resend the window.
+const RESEND_STALL_S := 1.5
+const CHECKPOINT_RESEND_S := 1.0
 const MAX_PEERS := 4
 const MAX_SPEED := 40.0
 ## The recorder starts before the existing connection+snapshot handshake.
@@ -443,6 +446,10 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
 		or packet.inputs.is_empty() or packet.inputs.size() > MAX_BATCH: return
 	var context := _context(peer, stream)
+	# F01#6b: condition ticks of this batch apply to ONE private copy of the
+	# cursor (REPLAY.apply_condition_owned); the record is re-validated once
+	# after the batch. Other inputs keep the copying, fully checked path.
+	var working: Dictionary = {}
 	for input: Variant in packet.inputs:
 		if not input is Dictionary or not input.get("sequence") is int:
 			stream.error = "owner_passive_invalid_input"; return
@@ -496,13 +503,18 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			var row: Variant = _game().get("world").reward_deliveries.get(input.get("delivery_id"))
 			applied = REPLAY.apply_delivery(stream.cursor, input, row)
 			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
-				stream.character, stream.cursor.base, applied.cursor.base) != true:
+				stream.character, stream.cursor.base, applied.cursor.base, str(input.get("delivery_id", ""))) != true:
 				stream.error = "owner_passive_delivery_authority_changed"; return
 			if applied.get("ok") == true and row is Dictionary:
 				# Ruling (b): a batched gather is now credited; its row may be
 				# pruned once the guest's ACK has also landed.
 				var gather_writer: Node = owner().get_node_or_null(^"LedgerRpc")
 				if gather_writer != null: gather_writer.call("mark_gather_replayed", stream.character, row)
+		elif input.get("op") == "condition":
+			if not is_same(working, stream.cursor):
+				working = stream.cursor.duplicate(true)
+			var reason := REPLAY.apply_condition_owned(working, input, input_context)
+			applied = {"ok": true, "code": "ok", "cursor": working} if reason.is_empty() else {"ok": false, "code": reason}
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
@@ -513,6 +525,8 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
+	if is_same(working, stream.cursor) and not REPLAY._record_valid(stream.cursor.state):
+		stream.error = "owner_passive_invalid_result"; return
 	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
 	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
 		_recovery_freeze(peer, stream)
@@ -1057,6 +1071,7 @@ func receive_owner(packet: Dictionary) -> void:
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
 			local.admission_pending = false
+			if packet.sequence > int(local.acked): local.ack_progress_ms = Time.get_ticks_msec()
 			local.acked = packet.sequence
 			while not local.inputs.is_empty() and int(local.inputs[0].sequence) <= int(local.acked): local.inputs.pop_front()
 		"freeze":
@@ -1100,6 +1115,10 @@ func receive_owner(packet: Dictionary) -> void:
 				or prepared.world_id != scope.world_id or prepared.final_sequence != pending.sequence \
 				or prepared.input_prefix_hash != pending.prefix_hash or HASH.fingerprint(prepared.after) != pending.hash: return
 			if pending.has("prepared") and not E._equivalent(pending.prepared, prepared): return
+			# F01#6b: the host answers every resent "frozen" with this same
+			# preparation; a duplicate must not move a saving/saved owner back
+			# to "save" (each such regress was another character save round).
+			if pending.has("prepared") and pending.phase != "frozen": return
 			pending.prepared = prepared.duplicate(true)
 			pending.retained = retained.duplicate(true)
 			pending.phase = "save"
@@ -1141,6 +1160,7 @@ func _retry_owner() -> void:
 	if pending.is_empty() or pending.scope != _scope() or not str(local.error).is_empty(): return
 	_flush()
 	if pending.phase == "frozen":
+		if not _resend_due("frozen"): return
 		_send_host({"op": "frozen", "id": pending.id, "sequence": pending.sequence,
 			"prefix_hash": pending.prefix_hash, "hash": pending.hash})
 	elif pending.phase == "save":
@@ -1158,8 +1178,19 @@ func _retry_owner() -> void:
 		if not PREP.exact(_projection(), pending.prepared.after):
 			local.error = "owner_passive_owner_changed_after_save"; return
 		pending.phase = "saved"
-	if pending.phase == "saved":
+	if pending.phase == "saved" and _resend_due("saved"):
 		_send_host({"op": "saved", "id": pending.id, "hash": pending.prepared.hash, "saved": true})
+
+
+## F01#6b: a checkpoint message goes once when its phase starts, then at most
+## once per CHECKPOINT_RESEND_S while the host has not answered (reliable
+## transport; the resend only covers a host that dropped the stream).
+func _resend_due(phase: String) -> bool:
+	var now := Time.get_ticks_msec()
+	if pending.get("sent_phase") == phase and now - int(pending.get("sent_ms", 0)) < int(CHECKPOINT_RESEND_S * 1000.0): return false
+	pending.sent_phase = phase
+	pending.sent_ms = now
+	return true
 
 ## Owner: the host re-admitted this stream on its recovered authority (see
 ## `admitted`). Adopt the host's passive values, which are the only fields that
@@ -1203,6 +1234,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 	local.prefix_hash = cursor.prefix_hash
 	local.inputs = []
 	local.acked = 0
+	local.inflight_through = 0
 	local.vitals_seen = {}
 	local.readmitted_hash = packet.baseline_hash
 	# A cursor restarted on a new base restarts the travel/discovery clocks,
@@ -1227,7 +1259,19 @@ func _flush() -> void:
 	if local.inputs.is_empty():
 		if pending.is_empty() and local.admission_pending: _send_host({"op": "resume"})
 		return
-	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
+	# F01#6b: stop-and-wait. A window goes from the first unacknowledged input
+	# (always contiguous with the host's cursor: the host refuses a gap), then
+	# nothing more until it is acknowledged, or until acknowledgements stall
+	# (the host returns early on a "waits" input and needs that prefix again).
+	# Re-sending the whole window every flush cost the host ~126 ms per packet.
+	var now := Time.get_ticks_msec()
+	if not local.has("ack_progress_ms"): local.ack_progress_ms = now
+	var in_flight: bool = int(local.get("inflight_through", 0)) > int(local.acked)
+	if in_flight and now - int(local.ack_progress_ms) < int(RESEND_STALL_S * 1000.0): return
+	local.ack_progress_ms = now
+	var batch: Array = local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)
+	local.inflight_through = int(batch[-1].sequence)
+	_send_host({"op": "inputs", "inputs": batch})
 
 ## Diagnostic only, once per character and reason: a host checkpoint that
 ## silently waits leaves the fight's round reward held with no other trace.

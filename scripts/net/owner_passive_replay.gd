@@ -123,6 +123,29 @@ static func apply(cursor: Dictionary, packet: Dictionary, context: Dictionary) -
 	next.prefix_hash = HASH.fingerprint({"previous": cursor.prefix_hash, "packet": packet})
 	return {"ok": true, "code": "ok", "cursor": next}
 
+## F01#6b batch form of `apply` for the per-frame care tick: mutates the
+## caller's private working cursor in place (one copy per received batch, not
+## per input). Every check `_condition` makes precedes its first write, so a
+## refusal leaves `working` untouched; the caller validated `working` when it
+## copied it and re-validates the record once after the batch. Care touches
+## only PASSIVE_FIELDS and clocks, so the core cannot change here.
+static func apply_condition_owned(working: Dictionary, packet: Dictionary, context: Dictionary) -> String:
+	if packet.get("op") != "condition": return "invalid_packet"
+	if not _number(context.get("max_elapsed")) or float(context.max_elapsed) < 0.0 \
+		or not _number(context.get("max_speed")) or float(context.max_speed) < 0.0 \
+		or context.get("realm") not in REALMS or not context.get("landmarks") is Dictionary:
+		return "invalid_context"
+	if not _fields(packet, CONDITION_FIELDS) or not _integer(packet.get("version")) or packet.version != 1 \
+		or not _integer(packet.get("sequence")): return "invalid_packet"
+	if packet.sequence != int(working.sequence) + 1: return "sequence_mismatch"
+	if float(working.elapsed) > float(context.max_elapsed): return "elapsed_bound"
+	var reason := _condition(working, packet, context)
+	if not reason.is_empty(): return reason
+	working.sequence = int(packet.sequence)
+	working.prefix_hash = HASH.fingerprint({"previous": working.prefix_hash, "packet": packet})
+	return ""
+
+
 static func _condition(next: Dictionary, packet: Dictionary, context: Dictionary) -> String:
 	if not _number(packet.delta) or float(packet.delta) < 0.0 or float(packet.delta) > 10.0:
 		return "invalid_delta"
