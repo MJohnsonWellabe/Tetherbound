@@ -319,7 +319,9 @@ func _rpc_altar_traits_reply(envelope: Dictionary, result: Dictionary) -> void:
 		_altar_traits_service().call("receive_result", envelope, result)
 
 func _owner_passive_send_host(packet: Dictionary) -> void:
-	if not is_host() and is_active(): rpc_id(HOST_PEER_ID, "_rpc_owner_passive_input", packet)
+	# The flush re-sends its unacknowledged inputs; skip a disconnecting link.
+	if not is_host() and is_active() and preload("res://scripts/net/foundation_travel_lifecycle.gd").host_link_open(multiplayer.multiplayer_peer):
+		rpc_id(HOST_PEER_ID, "_rpc_owner_passive_input", packet)
 
 func _owner_passive_send_peer(peer: int, packet: Dictionary) -> void:
 	if is_host() and _registry.call("has", peer) == true: rpc_id(peer, "_rpc_owner_passive_reply", packet)

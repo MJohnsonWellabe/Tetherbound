@@ -86,6 +86,10 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 		print("F20 APPROACH unstick=%d->%d on_floor=%s winner=%s at=%s prompt=%s" % [recoveries_before,
 			int(_player.get("_unstick_count")), str(_player.is_on_floor()),
 			str(winning.get_path()) if winning is Node else "none", str(_player.global_position), str(prompt.global_position)])
+		var ending: Variant = game.call("regional_ending_context") if game.has_method("regional_ending_context") else {}
+		var lifecycle: Node = game.get("session").get_node_or_null(^"FoundationComposition/TravelLifecycle") if game.get("session") != null else null
+		print("F20 APPROACH ending=%s sample=%s offer=%s" % [str(ending), str(lifecycle.call("local_sample")) if lifecycle != null else "none",
+			str(arbiter.call("winner"))])
 		return _fail("F20 Grandpa approach requires grounded exact provider without recovery")
 	var offer: Dictionary = arbiter.call("winner")
 	return offer.get("actionable") == true or _fail("F20 actual Grandpa approach refused its action")
