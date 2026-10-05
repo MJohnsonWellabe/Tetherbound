@@ -7,9 +7,11 @@ extends SceneTree
 ## spatial warning at the strike's ground position telegraph_seconds before
 ## impact, strikes are spaced 4-8 s, no warning fires outside Break, the
 ## release bed opens once, and the cue log is empty after realm teardown.
-## It does NOT prove that anything was heard: no Stormwood asset exists, the
-## observer plays a cue only when its asset exists, and every row here records
-## played=false. The MISSING ASSETS list below is the asset gap.
+## It does NOT prove what anything sounds like. The nine assets were authored
+## from installed sources (owner, 2026-10-05; tools/audio/gen_stormwood.py) and
+## are judged offline by tools/audio/check_stormwood.py; here every fired cue
+## must find its asset and hand it to the audio pool. A MISSING ASSETS list
+## below is an asset gap.
 ##
 ## Disclosed fixtures and time controls:
 ## - The trainer is stood on open, unsheltered Conductor Run / Deepwood ground
@@ -274,6 +276,9 @@ func _check(cues: Array, draws: Array, telegraph: float, interval_min: float, in
 		"Break strike spacing is within %.0f-%.0f s (measured %.3f..%.3f)" % [interval_min, interval_max, gmin, gmax])
 	var played_wrong := cues.filter(func(r: Dictionary) -> bool: return bool(r.played) and not bool(r.asset_present))
 	_expect(played_wrong.is_empty(), "no cue claims playback without its asset")
+	var unplayed := cues.filter(func(r: Dictionary) -> bool: return not bool(r.asset_present) or not bool(r.played))
+	_expect(not cues.is_empty() and unplayed.is_empty(),
+		"every fired cue found its asset and started a player (%d of %d did not)" % [unplayed.size(), cues.size()])
 	var caption_ok := cues.all(func(r: Dictionary) -> bool: return not str(r.caption).contains("{"))
 	_expect(caption_ok, "every caption is resolved (direction wedge filled)")
 
@@ -292,7 +297,7 @@ func _write(cues: Array, draws: Array, telegraph: float) -> void:
 		if not ResourceLoader.exists(str(cue.asset_path)):
 			missing.append(cue)
 	var md := "# Stormwood Surge audio witness: cue timeline\n\n"
-	md += "Headless, production Stormwood world, real Surge clock and host lightning. `surge_clock_s` is the replicated Surge clock; `t_msec` is `Time.get_ticks_msec()`. `played` is false for every row: no asset exists, so nothing was heard. This proves wiring and timing only.\n\n"
+	md += "Headless, production Stormwood world, real Surge clock and host lightning. `surge_clock_s` is the replicated Surge clock; `t_msec` is `Time.get_ticks_msec()`. `played` means the cue's asset loaded and a pool player started it; what it sounds like is judged offline by tools/audio/check_stormwood.py.\n\n"
 	md += "| # | surge clock s | t_msec | phase | cue | strike | position | asset present | played | caption |\n|---|---:|---:|---|---|---:|---|---|---|---|\n"
 	var n := 0
 	for row: Dictionary in cues:
@@ -306,14 +311,14 @@ func _write(cues: Array, draws: Array, telegraph: float) -> void:
 	var out := FileAccess.open(OUT_DIR.path_join("cue_timeline.md"), FileAccess.WRITE)
 	out.store_string(md)
 	out.close()
-	var mm := "# Stormwood Surge audio: missing assets\n\nEvery cue in `data/config/stormwood_audio.json` whose intended asset does not exist. None was generated, synthesized or copied in. The observer plays each cue automatically once its file lands at this path.\n\n"
+	var mm := "# Stormwood Surge audio: missing assets\n\nEvery cue in `data/config/stormwood_audio.json` whose asset does not exist at its contract path.\n\n"
 	mm += "| asset path | cue | bus | positional | fired in witness | AUDIO §4.3 row |\n|---|---|---|---|---:|---|\n"
 	print("")
 	print("=================== MISSING ASSETS (%d) ===================" % missing.size())
 	for cue: Dictionary in missing:
 		print("  MISSING %s  <- cue %s (%s)" % [cue.asset_path, cue.id, cue.spec_row])
 		mm += "| `%s` | `%s` | %s | %s | %d | %s |\n" % [cue.asset_path, cue.id, cue.bus, cue.positional, int(fired.get(str(cue.id), 0)), cue.spec_row]
-	print("  No Stormwood Surge/lightning cue was heard: every row played=false.")
+	print("  %d of %d fired cues started a player." % [cues.filter(func(r: Dictionary) -> bool: return bool(r.played)).size(), cues.size()])
 	print("============================================================")
 	var mf := FileAccess.open(OUT_DIR.path_join("MISSING_ASSETS.md"), FileAccess.WRITE)
 	mf.store_string(mm)
@@ -339,6 +344,6 @@ func _finish() -> void:
 		for file: String in DirAccess.get_files_at(absolute):
 			DirAccess.remove_absolute(absolute.path_join(file))
 		DirAccess.remove_absolute(absolute)
-	print("STORMWOOD SURGE AUDIO WITNESS %s: %d passed, %d failed (wiring and timing only; no audio played)" % [
+	print("STORMWOOD SURGE AUDIO WITNESS %s: %d passed, %d failed (wiring, timing and asset playback; no listening judgement)" % [
 		"OK" if _failures.is_empty() else "FAILED", _passes, _failures.size()])
 	quit(0 if _failures.is_empty() else 1)
