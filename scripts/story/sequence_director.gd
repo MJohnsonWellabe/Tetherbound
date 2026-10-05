@@ -579,6 +579,7 @@ func _process(delta: float) -> void:
 	_maybe_start_battle()
 	_hold_the_tutorial_orb_floor()
 	_hold_the_tutorial_team_floor()
+	_sync_practice_engage_priority()
 
 
 ## Mira and the registrar already own their interactions, rewards and one-time
@@ -2127,6 +2128,29 @@ func _hold_the_tutorial_team_floor() -> void:
 ## `_hold_the_tutorial_team_floor()` already relies on alone: it ends
 ## permanently at the first catch, so nothing here leaks into a later fight
 ## regardless of species.
+## F01#4. While the opening's own beats want the practice fight, the engage
+## offer prefers the practice species over a nearer ambient wild (see
+## `encounter_director.gd::choose_engage_target()`). Pushed only on change,
+## and cleared on every other beat so the priority never follows the player
+## past the first catch. `has_method` because bare test scenes carry a
+## stand-in director.
+func _sync_practice_engage_priority() -> void:
+	if _encounter == null or not _encounter.has_method("set_practice_engage_priority"):
+		return
+	var wanted := practice_engage_species_for(_beat, BEATS.encounter())
+	if str(_encounter.call("practice_engage_priority")) != wanted:
+		_encounter.call("set_practice_engage_priority", wanted)
+
+
+## The species the engage offer should prefer at `beat`, or "" for none.
+## Pure: `encounter` is the opening.json `encounter` block.
+static func practice_engage_species_for(beat: String, encounter: Dictionary) -> String:
+	var beats: Variant = encounter.get("practice_engage_priority_beats", [])
+	if not beats is Array or not (beats as Array).has(beat):
+		return ""
+	return str(encounter.get("species", ""))
+
+
 func _is_tutorial_catch() -> bool:
 	if _beat != BEATS.ENCOUNTER or _manager == null:
 		return false
