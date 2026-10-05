@@ -66,6 +66,11 @@ static func pack_context(placer: Node, game: Node, camp: Node3D, actor: Node3D,
 			if row.resting and row.get("rest_bed_index") == actual.camp_index: return {}
 	actual.all_parties_awake=true
 	actual.host_ground_valid=true # Packing validates the existing source, no new terrain claim.
+	# HOMESTEAD §8: placing a second camp in a biome packs up the first from
+	# wherever the owner stands in that loaded realm (stage_build still checks
+	# ownership and that no party rests there); reach gates use, not packing.
+	actual.in_range=true
+	actual.within_reach=true
 	return actual
 
 ## Reconcile before resolving the source again: an accepted pack removes it.

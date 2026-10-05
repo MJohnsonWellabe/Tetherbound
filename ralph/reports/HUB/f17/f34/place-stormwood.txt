@@ -1,13 +1,16 @@
 PASS: the real world has a Player and a BuildPlacer (res://scenes/world/stormwood.tscn)
 PASS: valid camp ground found in stormwood at (-288.0, 32.47423, 180.0)
 PASS: one forward-camp record placed (1)
-PASS: it carries the placer's character id and realm (character-5435770667907867e375e5455e084399, stormwood)
+PASS: it carries the placer's character id and realm (character-385c36bbbd6d8d81778165352ee6995d, stormwood)
 PASS: exactly one kit spent (2 -> 1)
 PASS: one ForwardCamp planted in the world (1)
-PASS: a second valid spot exists in stormwood
-PASS: a second camp in stormwood is refused and keeps its kit
 rest settled after 2 press(es)
 PASS: resting at the camp bed recovered the team to full and woke it (1 member(s))
 PASS: the rest passed the night (day 1 -> 2)
+PASS: a second camp in stormwood is refused at first and keeps its kit
+PASS: the player is offered to pack up the first camp ("You already have a camp in The Stormwood. Press Place again to pack it up (kit refunded) and pitch here.")
+PASS: the second press packed the first camp up and pitched the new one here (1 camp(s))
+PASS: the old camp's kit was refunded and the new one spent (1)
+PASS: one ForwardCamp stands in the world (1)
 PASS: the world saves through the autosave path
-F34 FORWARD CAMP (stormwood): 11 checks, 0 failures
+F34 FORWARD CAMP (stormwood): 14 checks, 0 failures

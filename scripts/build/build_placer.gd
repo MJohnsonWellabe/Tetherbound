@@ -451,6 +451,13 @@ var _was_snapped := false
 ## so switching pieces in the Build menu does not carry a rotation the player
 ## chose for a different piece onto the next one.
 var _yaw_deg := 0.0
+## F34 (HOMESTEAD §8): placing a second camp in a biome offers to pack up the
+## first. `_camp_repack` holds the armed offer (first press); `_camp_after_pack`
+## holds the new camp's intent while the old one's pack transaction settles.
+var _camp_repack := {}
+var _camp_after_pack := {}
+const CAMP_REPACK_WINDOW_MS := 6000
+const CAMP_REPACK_TIMEOUT_MS := 15000
 ## OP21-07: true once the player has pressed any rotate action for the
 ## currently-armed piece. Gates whether `_show_ghost` lets a structural
 ## anchor's suggested `yaw_deg` overwrite `_yaw_deg` — see that call site.
@@ -583,6 +590,7 @@ func _physics_process(_delta: float) -> void:
 	# Capability can arrive after scene restoration. Retry mounting the same
 	# committed nodes; the frozen Training attach() is idempotent.
 	_mount_current_altars(game)
+	_advance_camp_repack(game)
 	var armed := str(game.get("pending_build"))
 	# Arming — including swapping straight from one piece to another without
 	# disarming in between — bars the place action until it is released. See
@@ -1428,6 +1436,10 @@ func _place(game: Node, armed: String) -> void:
 		var at: Vector3 = preview.position
 		var intent := {"action":"place","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
 			"realm":WORLD_RECORDS.active(game),"position":[at.x,at.y,at.z],"yaw_deg":_yaw_deg}
+		var existing := own_camp_uid(game, WORLD_RECORDS.active(game))
+		if not existing.is_empty():
+			_offer_camp_repack(game, producer, existing, intent)
+			return
 		# Producer retains original ID and admission revision through lost ACK.
 		producer.call("forward_camp_submit_build",intent,self)
 		return
@@ -1613,6 +1625,14 @@ func _plant_from_delta(game: Node, op: Dictionary, index: int) -> void:
 func _uproot_from_delta(game: Node, op: Dictionary) -> void:
 	var index := int(op.get("index", -1))
 	if index < 0:
+		# F34: a packed forward camp is a tombstone (record kept, `removed`),
+		# addressed by uid; its node goes and nothing renumbers.
+		if not str(op.get("uid", "")).is_empty():
+			for node in get_tree().get_nodes_in_group(PLACED_GROUP):
+				if get_parent().is_ancestor_of(node) and str(node.get_meta(BUILDING_UID_META, "")) == str(op.uid) \
+						and str(node.get_meta(BUILDING_ID_META, "")) == CAMP_RULES.ID:
+					if node == _dismantle_target: _clear_dismantle_target()
+					node.queue_free()
 		return
 	var realm := str(op.get("realm", "meadows"))
 	var target: Node3D = null
@@ -1794,6 +1814,54 @@ func _building_uid_at(index: int) -> String:
 		return ""
 	var record: Variant = (buildings as Array)[index]
 	return str((record as Dictionary).get("uid", "")) if record is Dictionary else ""
+
+
+## F34: this character's standing camp in `realm`'s biome, or "".
+func own_camp_uid(game: Node, realm: String) -> String:
+	var local: Variant = game.get("local") if game != null else null
+	if local == null: return ""
+	var character := str(local.get("character_id"))
+	var biome := preload("res://scripts/data/biome_order.gd").canonical_id(realm)
+	for row: Variant in game.get("placed_buildings") as Array:
+		if row is Dictionary and row.get("id") == CAMP_RULES.ID and row.get("removed") != true \
+				and str(row.get("character_id", "")) == character \
+				and preload("res://scripts/data/biome_order.gd").canonical_id(str(row.get("realm", ""))) == biome:
+			return str(row.get("uid", ""))
+	return ""
+
+
+## First press: say what a second press does. Second press inside the window:
+## pack the old camp up (its kit refunded by the host), then place this one.
+func _offer_camp_repack(game: Node, producer: Node, existing: String, intent: Dictionary) -> void:
+	var now := Time.get_ticks_msec()
+	if _camp_repack.get("uid") != existing or now > int(_camp_repack.get("until_ms", 0)):
+		_camp_repack = {"uid": existing, "until_ms": now + CAMP_REPACK_WINDOW_MS}
+		game.call("push_world_message", "You already have a camp in %s. Press Place again to pack it up (kit refunded) and pitch here." \
+			% preload("res://scripts/data/biome_order.gd").display_name(str(intent.realm)))
+		return
+	_camp_repack = {}
+	var pack := {"action":"pack","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),"uid":existing}
+	var result: Variant = producer.call("forward_camp_submit_build", pack, self)
+	if result is Dictionary and result.get("terminal_refusal") == true:
+		game.call("push_world_message", str(result.get("reason", CAMP_RULES.deny("camp_unavailable").reason)))
+		return
+	_camp_after_pack = {"old_uid": existing, "intent": intent, "until_ms": now + CAMP_REPACK_TIMEOUT_MS}
+
+
+## Once the old camp's record is gone, the new one goes to the host as an
+## ordinary placement; a pack that never lands is reported and dropped.
+func _advance_camp_repack(game: Node) -> void:
+	if _camp_after_pack.is_empty(): return
+	var producer: Node = game.get("session") as Node
+	if Time.get_ticks_msec() > int(_camp_after_pack.until_ms):
+		_camp_after_pack = {}
+		game.call("push_world_message", "The old camp could not be packed up; nothing was placed.")
+		return
+	if own_camp_uid(game, str(_camp_after_pack.intent.realm)) == _camp_after_pack.old_uid: return
+	if producer == null or producer.call("forward_camp_placement_available") != true: return
+	var intent: Dictionary = _camp_after_pack.intent
+	_camp_after_pack = {}
+	producer.call("forward_camp_submit_build", intent, self)
 
 
 ## Controller-first removal transaction. The caller supplies an explicitly

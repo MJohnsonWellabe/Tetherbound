@@ -66,7 +66,10 @@ func _find_spot(game: Node, placer: Node, player: Node3D, realm: String, away_fr
 	return Vector3.INF
 
 
-func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3) -> void:
+var _last_message := ""
+
+
+func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_message := false) -> void:
 	player.global_position = at + Vector3(0.0, 0.5, 3.0)
 	player.velocity = Vector3.ZERO
 	game.set("pending_build", "forward_camp")
@@ -75,7 +78,9 @@ func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3) -> void:
 		player.global_position = at + Vector3(0.0, 0.5, 3.0)
 	placer.set("_yaw_deg", 0.0)
 	(placer.get("_ghost") as Node3D).global_position = at
+	game.set("_pending_world_message", "")
 	placer.call("_place", game, "forward_camp")
+	if read_message: _last_message = str(game.get("_pending_world_message"))
 	for _frame in 30:
 		await physics_frame
 	game.set("pending_build", "")
@@ -124,13 +129,6 @@ func _run() -> void:
 	var nodes := _camp_nodes()
 	_check(nodes.size() == 1, "one ForwardCamp planted in the world (%d)" % nodes.size())
 
-	# One per character per biome: a second placement is refused, kit kept.
-	_check(second != Vector3.INF, "a second valid spot exists in %s" % realm)
-	if second != Vector3.INF:
-		await _place_at(game, placer, player, second)
-		_check(_camps(game).size() == 1 and int(inventory.call("count", KIT)) == kits_before - 1,
-			"a second camp in %s is refused and keeps its kit" % realm)
-
 	# Rest at the camp bed: the saved team rest recovers the party.
 	if nodes.size() == 1:
 		var camp: Node3D = nodes[0]
@@ -163,6 +161,28 @@ func _run() -> void:
 		_check(healed, "resting at the camp bed recovered the team to full and woke it (%d member(s))" % members.size())
 		var day_after := int(game.get("world").get("day")) if game.get("world") != null else -1
 		_check(day_after > day_before, "the rest passed the night (day %d -> %d)" % [day_before, day_after])
+
+	# One per character per biome (HOMESTEAD §8): the first press on a second
+	# spot refuses and offers to pack the first up; the second press packs it
+	# (kit refunded) and pitches here. Kits end where they were before.
+	if second != Vector3.INF:
+		var first_uid := str(_camps(game)[0].get("uid", "")) if _camps(game).size() == 1 else ""
+		await _place_at(game, placer, player, second, true)
+		_check(_camps(game).size() == 1 and int(inventory.call("count", KIT)) == kits_before - 1,
+			"a second camp in %s is refused at first and keeps its kit" % realm)
+		_check(_last_message.contains("Press Place again to pack it up"),
+			"the player is offered to pack up the first camp (\"%s\")" % _last_message)
+		await _place_at(game, placer, player, second)
+		for _frame in 240:
+			await physics_frame
+			var now := _camps(game)
+			if now.size() == 1 and str(now[0].get("uid")) != first_uid: break
+		var after := _camps(game)
+		var moved: bool = after.size() == 1 and str(after[0].get("uid")) != first_uid \
+			and Vector3(float(after[0].position[0]), float(after[0].position[1]), float(after[0].position[2])).distance_to(second) < 0.01
+		_check(moved, "the second press packed the first camp up and pitched the new one here (%d camp(s))" % after.size())
+		_check(int(inventory.call("count", KIT)) == kits_before - 1, "the old camp's kit was refunded and the new one spent (%d)" % int(inventory.call("count", KIT)))
+		_check(_camp_nodes().size() == 1, "one ForwardCamp stands in the world (%d)" % _camp_nodes().size())
 
 	# Save and reload the world record: the camp persists.
 	_check(bool(game.call("autosave_here")), "the world saves through the autosave path")
