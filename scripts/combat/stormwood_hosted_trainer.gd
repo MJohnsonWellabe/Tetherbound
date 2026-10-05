@@ -135,7 +135,8 @@ func burst(peer: int, intent: Dictionary) -> Dictionary:
 	var body: Node3D = hub.body_for(peer)
 	if not is_instance_valid(body):
 		return refused
-	var burst_cfg: Dictionary = MATH.config().get("burst", {}) as Dictionary
+	var burst_cfg: Dictionary = preload("res://scripts/combat/combat_manager.gd").burst_profile(
+		str(hub.card_for(peer).get("species_id", "")))
 	var wind_cfg: Dictionary = MATH.config().get("wind", {}) as Dictionary
 	var now := Time.get_ticks_msec()
 	var action := int(intent.get("action", 0))

@@ -248,3 +248,21 @@ func test_burst_and_strike_share_one_monotonic_action_lock() -> void:
 	var burst_during_attack := _authorize(second, 11, 5199)
 	assert_false(bool(burst_during_attack.ok))
 	assert_eq(str(burst_during_attack.code), "cooldown")
+
+
+## F22#1 per-starter tuning: one profile function feeds solo, host and the
+## Stormwood hosted fight, and only a species with an authored override moves
+## a different distance.
+func test_burst_profile_applies_only_the_authored_species_override() -> void:
+	var cfg: Dictionary = preload("res://scripts/combat/combat_math.gd").config()
+	var burst: Dictionary = cfg.get("burst", {})
+	var had: bool = burst.has("species_distance")
+	var saved: Variant = burst.get("species_distance")
+	var base := float(burst.get("distance", 3.0))
+	var manager := preload("res://scripts/combat/combat_manager.gd")
+	burst["species_distance"] = {"terrapup": base + 1.5}
+	assert_almost_eq(float(manager.burst_profile("terrapup").distance), base + 1.5, 0.0001, "override applies")
+	assert_almost_eq(float(manager.burst_profile("ripplet").distance), base, 0.0001, "other species keep the shared distance")
+	assert_almost_eq(float(burst.distance), base, 0.0001, "the shared config is not mutated")
+	if had: burst["species_distance"] = saved
+	else: burst.erase("species_distance")
