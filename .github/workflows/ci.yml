@@ -501,12 +501,17 @@ jobs:
     steps:
       # The plan needs only the suites file and the runner: decide before the
       # ~2 min checkout whether this runner has anything to run.
+      # The plan reads the suites, the durations and (for which units can host a
+      # session) the test/tool scripts; the run step must see the same files.
       - uses: actions/checkout@v4
         with:
           filter: blob:none
+          sparse-checkout-cone-mode: false
           sparse-checkout: |
-            .github/ci/
-            tools/ci/
+            /.github/ci/
+            /tools/ci/
+            /tests/**/*.gd
+            /tools/**/*.gd
       - name: Plan this runner's suites
         id: plan
         run: |

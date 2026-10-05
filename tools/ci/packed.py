@@ -252,13 +252,32 @@ def scripts_of(body, env):
     return sorted(out)
 
 
+# Followed transitively from a step's scripts: test/tool code only (a helper
+# such as tests/helpers/gate_a_opening_drive.gd drives the title screen).
+# Game code is not followed -- it all reaches the session somewhere; what
+# matters is whether the TEST drives a path that hosts.
+FOLLOW_RE = re.compile(r"res://((?:tests|tools)/[\w./-]+\.(?:gd|tscn))")
+_HOSTS = {}
+
+
 def can_host(scripts):
-    for rel in scripts:
-        path = os.path.join(ROOT, rel)
-        if os.path.exists(path):
-            with open(path, encoding="utf-8", errors="ignore") as f:
-                if HOSTING_RE.search(f.read()):
-                    return True
+    seen, todo = set(), list(scripts)
+    while todo:
+        rel = todo.pop()
+        if rel in seen:
+            continue
+        seen.add(rel)
+        if rel not in _HOSTS:
+            path = os.path.join(ROOT, rel)
+            text = ""
+            if os.path.exists(path):
+                with open(path, encoding="utf-8", errors="ignore") as f:
+                    text = f.read()
+            _HOSTS[rel] = (bool(HOSTING_RE.search(text)), FOLLOW_RE.findall(text))
+        hosts, refs = _HOSTS[rel]
+        if hosts:
+            return True
+        todo.extend(refs)
     return False
 
 
@@ -340,12 +359,15 @@ def plan(units, durations, runners=RUNNERS, lanes=LANES):
     bins = [[] for _ in range(count)]
     loads = [0.0] * count
     active = used * lanes
-    # Every unit that can host a session goes to ONE lane (HOSTING_RE), so no
-    # two of them ever run side by side; the rest fill around it.
-    hosting = sorted((u for u in units if u.get("hosts")), key=lambda u: u["id"])
-    if hosting:
-        bins[0].extend(hosting)
-        loads[0] = sum(unit_seconds(u, durations) for u in hosting)
+    # A unit that can host a session (HOSTING_RE) binds a fixed udp port and the
+    # LAN beacon, so two must never share a RUNNER: they go only into lane a
+    # of each runner (separate runners are separate machines), longest first;
+    # the rest fill every lane around them.
+    first_lanes = [i for i in range(active) if i % lanes == 0]
+    for unit in sorted((u for u in units if u.get("hosts")), key=lambda u: (-unit_seconds(u, durations), u["id"])):
+        i = min(first_lanes, key=lambda i: (loads[i], i))
+        bins[i].append(unit)
+        loads[i] += unit_seconds(unit, durations)
     for unit in sorted((u for u in units if not u.get("hosts")), key=lambda u: (-unit_seconds(u, durations), u["id"])):
         i = min(range(active), key=lambda i: (loads[i], i))
         bins[i].append(unit)

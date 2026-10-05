@@ -55,8 +55,9 @@ run_lane() {
   cleanup_active_group() {
     local pgid="${active:-}"
     [ -n "$pgid" ] || return 0
-    # The runner, coordinator and OS.create_process peers all inherit the
-    # smoke's own process group: sweep it on success, failure and cancel.
+    # Sweep the smoke's process group (timeout, run_net_smoke.sh and the
+    # coordinator) on success, failure and cancel. Peers are swept by
+    # run_net_smoke.sh itself, by their TB_NET_RUN_ID argv token.
     kill -TERM -- "-${pgid}" 2>/dev/null || true
     for _ in $(seq 1 20); do
       kill -0 -- "-${pgid}" 2>/dev/null || break
@@ -82,9 +83,6 @@ run_lane() {
       active=$!
       if wait "$active"; then rc=0; else rc=$?; fi
       cleanup_active_group
-      # Peers may sit in their own sessions (OS.create_process); each one's
-      # argv names its log under this lane's out dir, so sweep by that too.
-      pkill -KILL -f -- "$out/lane-${lane}/" 2>/dev/null || true
       [ "$rc" -eq 0 ] && break
     done
     printf '%s\t%s\t%s\t%s\n' "$lane" "$name" "$rc" "$n" >> "$results"

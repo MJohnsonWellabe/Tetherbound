@@ -1,6 +1,6 @@
 # CI-SEGMENTS phase C: isolation audit of the packed steps
 
-One row per packed step: 105 steps in 101 units (head cfe997e9).
+One row per packed step: 105 steps in 101 units (head after the re-review fixes).
 `.github/ci/suites.yml` holds the suites; `tools/ci/packed.py` runs them.
 
 Generated from the suites file by expanding every suite under a full
@@ -24,7 +24,7 @@ scripts the step invokes, and scans each one for:
 | Repo tree, `res://` writes | none | No change needed. |
 | `GITHUB_ENV`, `GITHUB_PATH` | none written | Per step, applied within the unit (as in a job). A malformed file fails its step. |
 | ENet ports | none | No packed step uses the net harness. Net smokes stay in the net shards, which have per-lane ENet ranges. |
-| udp/27015 and the LAN beacon | 3 units: `title_load_game`, `title_new_game`, `gate_b_continuous` | All in one lane, so they never run side by side. A bind-failure line in any step's log also fails that step. |
+| udp/27015 and the LAN beacon | 9 units: every step whose test/tool code, followed transitively through `res://tests|tools/...` loads, reaches `Session.host`, the title screen or the beacon. That is `title_load_game` and `title_new_game`, `gate_b_continuous`, gate-evidence shard #1/#2 and finale (through `gate_a_opening_drive.gd`), combat #3 and cloudreach-persistence. | Planned only into lane a of a runner, so no runner ever runs two of them at once (separate runners are separate machines). A bind-failure line in any step's log also fails that step. |
 | Producer → consumer order | 3 chained units (7 steps: harvest 3, gate-evidence 2, segment-handoffs 2): a step without `!cancelled()` depended on every step before it | The unit keeps the whole prefix in one lane, in order. After a failure, dependent steps are skipped and `!cancelled()` steps still run, as on GitHub. |
 | Step and suite time limits | all | Each unit is bounded by its suite's own `timeout-minutes`. |
 

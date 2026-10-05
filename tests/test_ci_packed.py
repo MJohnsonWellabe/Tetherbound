@@ -141,12 +141,19 @@ class ReviewFindings(unittest.TestCase):
             {"name": "checks", "run": "true"}]))
         self.assertEqual([x[1].split(" ")[0] for x in v], ["FAIL", "PASS", "SKIPPED"])
 
-    def test_3_hosting_units_share_one_lane(self):
-        units = P.units_of(P.load_suites(), SEL)
-        bins, _ = P.plan(units, P.load_durations())
-        lanes = {i for i, g in enumerate(bins) for u in g if u["hosts"]}
-        self.assertEqual(len(lanes), 1)
-        self.assertGreaterEqual(sum(u["hosts"] for u in units), 3)
+    def test_3_no_runner_runs_two_hosting_units_at_once(self):
+        suites = P.load_suites()
+        for jobs in ("|ALL|", "|verify-gate-evidence-shard|verify-owner-regressions-shard|",
+                     "|verify-gate-b-core|verify-cloudreach-persistence|verify-combat-shard|"):
+            units = P.units_of(suites, P.selection_ctx(dict(EVERYTHING, CI_JOBS=jobs)))
+            bins, _ = P.plan(units, P.load_durations())
+            for r in range(P.RUNNERS):
+                hosting_lanes = [i for i in (2 * r, 2 * r + 1) if any(u["hosts"] for u in bins[i])]
+                self.assertLessEqual(len(hosting_lanes), 1, (jobs, r))
+        # Found through helpers too (gate_a_opening_drive.gd drives the title screen).
+        ids = {u["id"] for u in P.units_of(suites, SEL) if u["hosts"]}
+        self.assertIn("verify-gate-evidence-shard #2", ids)
+        self.assertIn("verify-owner-regressions-shard (controls) #1", ids)
 
     def test_3_a_bind_failure_fails_the_step(self):
         _, _, v = self.run_lane(suites_of(j=[
