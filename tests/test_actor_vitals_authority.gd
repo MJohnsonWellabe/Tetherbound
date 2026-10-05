@@ -419,11 +419,11 @@ class ReseatSession extends Node:
 func test_trainer_round_reseat_restores_a_departed_guests_retained_row() -> void:
 	var owned: Dictionary = _portable(_player()).party[0]
 	var session := ReseatSession.new()
-	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
+	var director: Node = preload("res://tests/test_director_join_snapshot.gd").DirectorProbe.new()
 	director.set("_session", session)
 	director.call("_ensure_encounter_arbiters")
 	var host: RefCounted = director.get("_encounter_host")
-	var rec: Dictionary = host.open(1, "meadows", "trainer", {"hp": 100.0, "hp_max": 100.0}, "host_uid", "owner_host")
+	var rec: Dictionary = host.open(1, "meadows", "trainer", {"hp": 100.0, "hp_max": 100.0}, "host_uid", "fixture")
 	var id := str(rec.encounter_id)
 	assert_true(host.join(id, 7, owned.uid, "owner_guest").ok)
 	var body := Node.new()
@@ -436,6 +436,59 @@ func test_trainer_round_reseat_restores_a_departed_guests_retained_row() -> void
 	assert_eq(guest.get("character_id"), "owner_guest", "the guest is re-seated under its admitted character")
 	assert_eq(guest.get("creature_uid"), owned.uid, "its retained active creature comes back")
 	assert_eq(guest.get("actor_bound_uid"), owned.uid, "and so does its bound actor row")
+	body.free()
+	director.free()
+	session.free()
+
+
+func test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out() -> void:
+	var owned: Dictionary = _portable(_player()).party[0]
+	var session := ReseatSession.new()
+	var director: Node = preload("res://tests/test_director_join_snapshot.gd").DirectorProbe.new()
+	director.set("_session", session)
+	director.call("_ensure_encounter_arbiters")
+	var host: RefCounted = director.get("_encounter_host")
+	var rec: Dictionary = host.open(1, "meadows", "trainer",
+		{"hp": 100.0, "hp_max": 100.0, "owner_npc": "tournament_quarter_mira"}, "host_uid", "fixture")
+	var id: String = rec.encounter_id
+	assert_true(host.join(id, 7, owned.uid, "owner_guest").ok)
+	var body := Node.new()
+	assert_true(host.bind_actor_body(id, 7, "owner_guest", owned, body.get_instance_id()).ok)
+	var proposal: Dictionary = host.stage_actor_vitals(id, 7, owned.uid, 1, 0, "last_round_hit", "damage", 7.0, 16)
+	assert_true(proposal.ok)
+	var original: Dictionary = {"encounter_id": id, "peer_id": 7, "proposal": proposal,
+		"host_record": rec.duplicate(true), "committed": false, "presented": false}
+	director.set("_ordinary_actor_vitals_proposals", {proposal.action_id: original})
+	director.set("_encounter", rec)
+	director.set("_trainer_battle_participants", {1: true, 7: true})
+	var next := SPECIES.spawn("bramblebun")
+	director.set("_trainer_queue", [next] as Array[RefCounted])
+	var before: Dictionary = rec.duplicate(true)
+	assert_false(director.call("_resume_trainer_encounter", id), "an unpublished original cannot cross the round boundary")
+	assert_eq(rec, before, "waiting preserves the exact opponent and participant source")
+	director.call("_on_trainer_round_ended", "won")
+	assert_eq(director.get("_trainer_send_delay"), 0.0, "the next creature is not scheduled while a hit is pending")
+	assert_eq(director.get("_trainer_queue"), [next], "the next opponent stays queued")
+	assert_eq(director.get("_ordinary_combat_round_exit"), {"encounter_id": id, "outcome": "won"})
+	assert_true(host.commit_actor_vitals(proposal).ok)
+	original["committed"] = true
+	original["presented"] = true
+	host.leave(id, 7)
+	host.set_phase(id, "done")
+	before = rec.duplicate(true)
+	assert_false(director.call("_resume_trainer_encounter", id), "a departed actor still waits for its exact durable ACK")
+	assert_eq(rec, before, "a pending ACK cannot reactivate or re-seat the record")
+	director.call("_tick_trainer_battle", 2.0)
+	assert_eq(director.get("_trainer_queue"), [next])
+	assert_eq(director.get("_trainer_send_delay"), 0.0)
+	assert_true(host.acknowledge_actor_vitals(id, "owner_guest", owned.uid, 1, proposal.settlement_receipt))
+	assert_true(director.call("_resume_trainer_encounter", id), "settled original permits the same encounter to resume")
+	assert_eq(rec.participants[7].actor_vitals[owned.uid].hp, float(owned.hp) - 7.0)
+	assert_true(host.pending_actor_vitals(id).is_empty())
+	director.call("_tick_trainer_battle", 0.0)
+	assert_true((director.get("_ordinary_combat_round_exit") as Dictionary).is_empty())
+	assert_true(float(director.get("_trainer_send_delay")) > 0.0, "the existing send-out beat resumes after settlement")
+	assert_eq(director.get("_trainer_queue"), [next])
 	body.free()
 	director.free()
 	session.free()

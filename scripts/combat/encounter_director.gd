@@ -3614,6 +3614,16 @@ func ordinary_actor_vitals_pending(id: String) -> bool:
 	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
 
 
+## A round cannot retire its original opponent while its exact health receipt
+## is waiting. Keep this fence even if reward readiness was lost, including
+## departed actors awaiting their owner's save acknowledgement.
+func _trainer_round_vitals_pending(id: String) -> bool:
+	if id.is_empty() or _encounter_host == null: return false
+	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
+		if original.encounter_id == id and original.get("presented") != true: return true
+	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
+
+
 func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
 	for id: String in _ordinary_combat_reward_owners:
 		if not ordinary_actor_vitals_pending(id): continue
@@ -4142,8 +4152,8 @@ func _capture_ordinary_combat_round(id: String, enemy: RefCounted) -> void:
 func _resolve_ordinary_combat_round(id: String) -> bool:
 	var retained: Dictionary = _ordinary_combat_rounds.get(id, {})
 	if retained.is_empty() or not uses_durable_trainer_rewards(id) or not _is_host(): return false
-	if retained.get("resolved") == true: return true
 	if ordinary_actor_vitals_pending(id): return false
+	if retained.get("resolved") == true: return true
 	if not retained.has("settled_record"):
 		retained["settled_record"] = preload("res://scripts/combat/accepted_action_host.gd")._original(_encounter_host.call("record", id))
 	if not _session.has_method("foundation_combat_round_resolution"): return false
@@ -5842,6 +5852,8 @@ static func guardian_admission_encounter_id(local_body_name: String, local_speci
 ## `opponent_owned` true — that flag is the whole of what a trainer's creature
 ## does differently once the fight is running.
 func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
+	# A refused re-seat must not fall through and mint a fresh encounter.
+	if opponent_owned and _trainer_round_vitals_pending(str(_encounter.get("encounter_id", ""))): return
 	_configure_f22_patterns(wild, opponent_owned)
 	if not opponent_owned and _is_host():
 		var existing_id := _shared_host_id_for_body(wild)
@@ -7358,6 +7370,9 @@ func _send_out_spot() -> Vector3:
 ## falling off things — is not involved.
 func _on_trainer_round_ended(outcome: String) -> void:
 	var ordinary_id: String = str(_encounter.get("encounter_id", ""))
+	if _trainer_round_vitals_pending(ordinary_id):
+		_ordinary_combat_round_exit = {"encounter_id": ordinary_id, "outcome": outcome}
+		return
 	if outcome == "won" and uses_durable_trainer_rewards(ordinary_id) \
 		and not _resolve_ordinary_combat_round(ordinary_id):
 		_ordinary_combat_round_exit = {"encounter_id": ordinary_id, "outcome": outcome}
@@ -7396,7 +7411,7 @@ func _on_trainer_round_ended(outcome: String) -> void:
 func _tick_trainer_battle(delta: float) -> void:
 	if not _ordinary_combat_round_exit.is_empty():
 		var id: String = str(_ordinary_combat_round_exit.encounter_id)
-		if _resolve_ordinary_combat_round(id):
+		if not _trainer_round_vitals_pending(id):
 			_on_trainer_round_ended(str(_ordinary_combat_round_exit.outcome))
 		return
 	if _boss_pending_win:
@@ -7406,6 +7421,7 @@ func _tick_trainer_battle(delta: float) -> void:
 		_finish_trainer_battle(true)
 		return
 	if _trainer_send_delay > 0.0:
+		if _trainer_round_vitals_pending(str(_encounter.get("encounter_id", ""))): return
 		_trainer_send_delay -= delta
 		if _trainer_send_delay > 0.0:
 			return
@@ -8203,6 +8219,7 @@ func _note_trainer_participants(encounter_id: String) -> void:
 func _resume_trainer_encounter(encounter_id: String) -> bool:
 	if _encounter_host == null or encounter_id.is_empty():
 		return false
+	if _trainer_round_vitals_pending(encounter_id): return false
 	if (_encounter_host.call("record", encounter_id) as Dictionary).is_empty():
 		return false
 	if str(_encounter_host.call("phase", encounter_id)) != "active":
