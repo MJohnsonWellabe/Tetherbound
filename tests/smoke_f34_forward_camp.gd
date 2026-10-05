@@ -184,6 +184,37 @@ func _run() -> void:
 			return n.get_script() == preload("res://scripts/ui/companion_details_panel.gd") and not n.is_queued_for_deletion())
 		_check(far.is_empty(), "away from the camp no loadout panel opens")
 
+	# Travel-tier craft at the camp cookpot (F34#1) through the real panel:
+	# a Small Potion settles; a Harness is refused naming the Forge.
+	if nodes.size() == 1 and is_instance_valid(nodes[0]):
+		var camp: Node3D = nodes[0]
+		player.global_position = camp.global_transform * Vector3(2.0, 0.0, -1.1) + Vector3(0.0, 0.5, 1.0)
+		for _frame in 10:
+			await physics_frame
+		inventory.call("add", "berries", 8)
+		inventory.call("add", "fiber", 2)
+		var potions := int(inventory.call("count", "potion_small"))
+		camp.call("_activate", "cookpot")
+		for _frame in 20:
+			await physics_frame
+		var panel: Node = camp.get("_panel")
+		_check(panel != null and bool(panel.call("is_open")), "the camp cookpot opens its craft panel")
+		if panel != null and bool(panel.call("is_open")):
+			panel.call("_station_action", "station_craft", {"recipe_id": "potion_small"})
+			for _frame in 600:
+				if (panel.get("_station_intent") as Dictionary).is_empty() \
+						and int(inventory.call("count", "potion_small")) > potions: break
+				await physics_frame
+			_check(int(inventory.call("count", "potion_small")) == potions + 1,
+				"a Small Potion crafts at the camp cookpot (%d -> %d)" % [potions, int(inventory.call("count", "potion_small"))])
+			var route: Dictionary = preload("res://scripts/build/forward_camp_rules.gd").recipe("craft_rootiron_harness",
+				game.get("items").call("recipe", "craft_rootiron_harness"), "workbench")
+			_check(route.get("ok") != true and str(route.get("reason", "")) == "Needs the homestead — use the Forge.",
+				"a Harness is refused at the camp, naming the Forge: \"%s\"" % str(route.get("reason", "")))
+			panel.call("close")
+			for _frame in 5:
+				await physics_frame
+
 	# One per character per biome (HOMESTEAD §8): the first press on a second
 	# spot refuses and offers to pack the first up; the second press packs it
 	# (kit refunded) and pitches here. Kits end where they were before.
