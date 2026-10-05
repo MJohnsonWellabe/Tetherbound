@@ -147,13 +147,20 @@ func test_guest_resends_on_a_fresh_view_while_the_caller_still_waits() -> void:
 	session.reply({"registry_revision": 6})
 	assert_eq(session.sent.size(), 2)
 	assert_eq(session.sent[1].revision, 6, "the resend uses the fresh view")
-	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
 	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() - 60000
+	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
+	game._regional_ack_viewed_at.clear()
+	game.regional_ending_ack_result(tid)
+	session.reply({"registry_revision": 7})
+	assert_eq(session.sent.size(), 2, "past the window the slower late cadence applies")
+	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_LATE_RESEND_MS - 1
+	game._regional_ack_viewed_at.clear()
 	game.regional_ending_ack_result(tid)
 	session.reply({"registry_revision": 7})
 	assert_eq(session.sent.size(), 3, "past the scene's window an owed ack still resends")
 	game.owed = false
-	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
+	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_LATE_RESEND_MS - 1
+	game._regional_ack_viewed_at.clear()
 	game.regional_ending_ack_result(tid)
 	session.reply({"registry_revision": 8})
 	assert_eq(session.sent.size(), 3, "an ack no longer owed stops")
@@ -217,4 +224,61 @@ func test_an_expired_guest_ack_still_settles_exactly_once() -> void:
 		session.reply({"registry_revision": 4})
 	assert_eq(session.sent.size(), 1, "nothing is sent after it settles")
 	assert_eq(session.commits, 1, "settled exactly once")
+	game.free()
+
+
+## Review: the real "still owed" decision, with only the ending's journey
+## context stubbed.
+class JourneyProbe extends "res://autoload/game_state.gd":
+	var journey: Dictionary = {}
+	var sendable := false
+	func _regional_ack_journey() -> Dictionary: return journey.duplicate(true)
+	func _regional_ack_sendable(_transaction_id: String) -> bool: return sendable
+
+func _journey_game() -> JourneyProbe:
+	var game := JourneyProbe.new()
+	game.reset_for_new_game()
+	game.local.character_id = "character-ack"
+	var session := SessionProbe.new()
+	game.add_child(session)
+	game.session = session
+	var intent := _intent()
+	game.journey = {"homecoming_seen": false}
+	for field: String in preload("res://scripts/story/regional_homecoming.gd").CONTEXT_FIELDS:
+		game.journey[field] = intent.get(field)
+	game._regional_ack_intents[intent.transaction_id] = intent
+	return game
+
+func test_still_owed_follows_the_same_ending_and_the_unsaved_stage() -> void:
+	var game := _journey_game()
+	var tid: String = _intent().transaction_id
+	assert_true(game._regional_ack_still_owed(tid), "same ending, stage unsaved")
+	for field: String in ["character_id", "world_instance_id", "session_epoch", "party_signature"]:
+		var before: Variant = game.journey[field]
+		game.journey[field] = "changed"
+		assert_false(game._regional_ack_still_owed(tid), field + " changed: a new presentation")
+		game.journey[field] = before
+	game.journey.homecoming_seen = true
+	assert_false(game._regional_ack_still_owed(tid), "the stage is already saved")
+	game.journey = {}
+	assert_false(game._regional_ack_still_owed(tid), "no ending context")
+	game.free()
+
+func test_an_owed_ack_away_from_grandpa_sends_no_view_requests() -> void:
+	var game := _journey_game()
+	var session: SessionProbe = game.session
+	var tid: String = _intent().transaction_id
+	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() - 120000
+	var before := session.view_requests
+	for _i in 20:
+		game._regional_ack_tick_left = 0.0
+		game._tick_orphaned_regional_acks(0.0)
+	assert_eq(session.view_requests, before, "unsendable past the window: no requests at all")
+	game.sendable = true
+	for _i in 20:
+		game._regional_ack_tick_left = 0.0
+		game._tick_orphaned_regional_acks(0.0)
+		game._regional_ack_waiting.clear() # No reply arrives.
+	assert_eq(session.view_requests, before + 1, "back at Grandpa: one request per late resend interval")
+	assert_false(game._regional_ack_intents.is_empty(), "still owed")
 	game.free()

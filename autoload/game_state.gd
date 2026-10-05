@@ -3349,11 +3349,15 @@ func _regional_ack_still_owed(transaction_id: String) -> bool:
 	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
 	if intent.is_empty(): return false
 	var ending := preload("res://scripts/story/regional_homecoming.gd")
-	var journey := ending.journey_context(self)
+	var journey := _regional_ack_journey()
 	if journey.is_empty() or journey.get(str(intent.get("stage", ""))) == true: return false
 	for field: String in ending.CONTEXT_FIELDS:
 		if journey.get(field) != intent.get(field): return false
 	return true
+
+
+func _regional_ack_journey() -> Dictionary:
+	return preload("res://scripts/story/regional_homecoming.gd").journey_context(self)
 
 
 ## The host accepts an ack only at Grandpa and out of danger; wait for that.
@@ -3368,17 +3372,29 @@ func _forget_regional_ack(transaction_id: String) -> void:
 	_regional_ack_waiting.erase(transaction_id)
 	_regional_ack_queued_at.erase(transaction_id)
 	_regional_ack_sent_at.erase(transaction_id)
+	_regional_ack_viewed_at.erase(transaction_id)
 
 
 ## A guest's send carries the revision from one personal-view reply, and that
 ## reply has no request id: a stale one yields a revision-conflict refusal
 ## that nothing reports back. While the host has not journalled the row, ask
 ## for a fresh view and send again.
+## Past the scene's window an owed ack settles on a slower cadence.
+const REGIONAL_ACK_LATE_RESEND_MS := 5000
+var _regional_ack_viewed_at: Dictionary = {}
+
 func _resend_regional_ack(transaction_id: String) -> void:
 	if session == null or bool(session.call("is_host")) or _regional_ack_waiting.has(transaction_id): return
 	if not _regional_ack_queued_at.has(transaction_id): return
 	var now := Time.get_ticks_msec()
-	if now - int(_regional_ack_sent_at.get(transaction_id, int(_regional_ack_queued_at[transaction_id]))) < REGIONAL_ACK_RESEND_MS: return
+	var queued := int(_regional_ack_queued_at[transaction_id])
+	var late: bool = now - queued > preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
+	if late and not _regional_ack_sendable(transaction_id): return # Away from Grandpa: no requests.
+	# Paced by the last view request as well as the last send: an unsendable
+	# reply sends nothing, and must not let the next request through at once.
+	var last := maxi(int(_regional_ack_sent_at.get(transaction_id, queued)), int(_regional_ack_viewed_at.get(transaction_id, 0)))
+	if now - last < (REGIONAL_ACK_LATE_RESEND_MS if late else REGIONAL_ACK_RESEND_MS): return
+	_regional_ack_viewed_at[transaction_id] = now
 	_regional_ack_waiting[transaction_id] = now
 	session.call("homestead_personal_view")
 
@@ -3404,8 +3420,14 @@ func _tick_orphaned_regional_acks(delta: float) -> void:
 
 
 ## A host refusal is otherwise silent on a guest; name it in the log.
+var _regional_ack_logged: Dictionary = {}
+
 func _on_regional_ack_reply(action: String, original: Dictionary, result: Dictionary) -> void:
 	if action != "regional_ack" or result.get("ok") == true: return
+	# Once per stage and code: a persistent refusal re-sends without re-logging.
+	var key := "%s:%s" % [str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))]
+	if _regional_ack_logged.has(key): return
+	_regional_ack_logged[key] = true
 	print("[regional_ack] host %s %s: %s" % ["deferred" if result.get("resolved") == false else "refused", str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))])
 
 
