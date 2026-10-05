@@ -1,0 +1,305 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 46827200,
+      "sha256": "2484a07d76a9a385a9be247bc9e22d304f834eab62a780127e4477c1454a5c7a"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 43805334,
+      "sha256": "b0c60f4fb12eca870bceb257be5fc6e63e6b37bf60d6a92ca2b4d10f1e94329d"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 35067,
+      "sha256": "47684dc302f04f12350ca33b0ad13f32709cf048f8cf8d86e8cb3614145bd55f"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 5221,
+      "sha256": "19a02fae74d2ed79f9cd1dfc108d4b129eaaee0341a30482ef49dfbff3b17542"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 396,
+      "sha256": "f435ac7ece53be5b490500fe7bcd16c4c023d3e9e54261a5125e249adb8c805b"
+    },
+    {
+      "path": "frames/manifest.txt",
+      "archive": "raw-evidence-01.zip",
+      "size": 17428,
+      "sha256": "e9f35100de565067f8e0500b465d62dadf9edfc1a09643b53cdd2fd26b82d75b"
+    },
+    {
+      "path": "frames/01_gate_lower_cliffs_approach_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1894080,
+      "sha256": "f330d360d6f09df2ab57f26e5bf31fd3e39da56041b72b581ca41e13e4d5550a"
+    },
+    {
+      "path": "frames/02_gate_lower_cliffs_route_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2077988,
+      "sha256": "54f03b6b5ef048a6b3204c6727aefecf16d96c9a346500e6a02d3e9f4e379b95"
+    },
+    {
+      "path": "frames/03_gate_lower_cliffs_reverse_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1956560,
+      "sha256": "786701deb7f082f271101ed29d0a1406a3dde17a39901f537c39d5b4823278db"
+    },
+    {
+      "path": "frames/04_gate_lower_cliffs_detail-crag_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1849262,
+      "sha256": "ef8ef90368da7175ad3d6243750380677a2bee3646e65cf20ca26c59f4020c7b"
+    },
+    {
+      "path": "frames/05_gate_lower_cliffs_settlement-galefoot_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2186840,
+      "sha256": "9860173ed1c1d5ba02948dec3dbb740db8dd9488b5b434c547a39ca455aa98a4"
+    },
+    {
+      "path": "frames/06_broken_causeways_approach_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2283718,
+      "sha256": "eba50dc23f6e44c23bd6157365dc7720264559ee66f1ed476a433a187e2f446f"
+    },
+    {
+      "path": "frames/07_broken_causeways_route_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2043656,
+      "sha256": "8c1f64d7df04e0ac66e3a648ac533d7048899955d74d8b669dcbb895f7b762b3"
+    },
+    {
+      "path": "frames/08_broken_causeways_reverse_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1774700,
+      "sha256": "16598c2bab23a887893debdf9f771e97b2d88f945455a4509ff53a76f0cdb72f"
+    },
+    {
+      "path": "frames/09_broken_causeways_detail-ropebridge_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1608282,
+      "sha256": "e35537a680457b7bf29ef521578b03a25c7ea508c7186a090ddc5634c32fa491"
+    },
+    {
+      "path": "frames/10_broken_causeways_lure-bells_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1558895,
+      "sha256": "9eb621c803cabf25a854575bf5eed29f66d2abe4f98206e5bde6e0d2b2e70aa2"
+    },
+    {
+      "path": "frames/11_windscar_ravine_approach_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1765525,
+      "sha256": "724d03dd72b1074b333c42bedcf82d33b0999881def3636e9c2a86380b37a73c"
+    },
+    {
+      "path": "frames/12_windscar_ravine_route_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1743536,
+      "sha256": "78c74fa275a0f20c60c152248ae94dec62e8feb6c9cf74b1d11db26755689b27"
+    },
+    {
+      "path": "frames/13_windscar_ravine_reverse_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1895956,
+      "sha256": "dd788e0159b2b395fb9c25f4407e97063e2e0cb79e5bae8dbabc64af1fcce813"
+    },
+    {
+      "path": "frames/14_windscar_ravine_detail-beacon_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1976417,
+      "sha256": "fdb2e80ae2675a40415c5153a3543f7bf9b2822bc8db3aa1ea9735d54ed63826"
+    },
+    {
+      "path": "frames/15_high_roost_sky_shrine_approach_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1982457,
+      "sha256": "5d07d8dd13515033055a645da37bdf554f1ce89bc59f037bed8788e84c011913"
+    },
+    {
+      "path": "frames/16_high_roost_sky_shrine_route_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1830327,
+      "sha256": "c9fbf96d71506a11249e83ad8b8e86518ceeaa150b4592ea02b7faa85922c024"
+    },
+    {
+      "path": "frames/17_high_roost_sky_shrine_reverse_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2215563,
+      "sha256": "916e2ea3c5d453a2710848d6e6ecb84cdc5c111aa7912ef02b3f44ea8dfd8598"
+    },
+    {
+      "path": "frames/18_high_roost_sky_shrine_detail-shrine_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1515443,
+      "sha256": "4cd179a3fc3288ba182121435e88e6f56d0bbe3e8e3e9a288749e7c215715fdf"
+    },
+    {
+      "path": "frames/19_high_roost_sky_shrine_perch-landing_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2074793,
+      "sha256": "7c7b7dbd974cd35b680904940f6c31918dab40c4d95165b9cd07841b088634b2"
+    },
+    {
+      "path": "frames/20_high_roost_sky_shrine_perch-vista_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1903925,
+      "sha256": "75c953270b5c6652ef274700122d268afd1626ec029122526fe4418416fdd2dc"
+    },
+    {
+      "path": "frames/21_upper_cloudreach_approach_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2528101,
+      "sha256": "3c2d5ad6b2315e4bfcd05c3748bf352a89d6ca94fa0192549f3fa98e25218736"
+    },
+    {
+      "path": "frames/22_upper_cloudreach_route_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2134199,
+      "sha256": "a3fec142b6f82af64133c36d49b8472d3063c14636cae24999fbba36addff9a0"
+    },
+    {
+      "path": "frames/23_upper_cloudreach_reverse_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2110609,
+      "sha256": "2ffc75e7649bd024c0e902098a3f2a79e19faa15c4d65636b87c0dba9b6a713a"
+    },
+    {
+      "path": "frames/24_upper_cloudreach_detail-observatory_night.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1853490,
+      "sha256": "b7cd652d2f8baab77c4faa3be61223faef8be5762529b969ec78d67d8a31f989"
+    },
+    {
+      "path": "frames/25_upper_cloudreach_settlement-cliffhold_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1955651,
+      "sha256": "69111275484f305d970eea6af5e9450c962ecb5c8560c5f8ef2f189cf5cfb27e"
+    },
+    {
+      "path": "frames/26_summit_final_stronghold_approach_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2072251,
+      "sha256": "46ba64b48a1b27d8d01fa0bdab907ad992e605691787a815ce14a1625cb9347c"
+    },
+    {
+      "path": "frames/27_summit_final_stronghold_route_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2374695,
+      "sha256": "a8e60ad09e8e1e77ea7a339a9bb27e52a368ca6d5ba2c0a15e263b898afcc429"
+    },
+    {
+      "path": "frames/28_summit_final_stronghold_reverse_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1594397,
+      "sha256": "e820f53290de460e5ce0ce3dbacf70ea7b7dff7bbe81460c1281dc2d185e7a7c"
+    },
+    {
+      "path": "frames/29_summit_final_stronghold_detail-aviary_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2452734,
+      "sha256": "77f0dee729ce297ed3aa93291c91a0e70eb9483b243d8d1055333c360d42f11e"
+    },
+    {
+      "path": "frames/30_gate_lower_cliffs_approach_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1893948,
+      "sha256": "0e31988d845941b5115ea25b26d4791e686153f0ac43fb1c974a1544e833a861"
+    },
+    {
+      "path": "frames/31_broken_causeways_route_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2043320,
+      "sha256": "ddd86489db3ea3f59cf7aa20868fb0c2fd30add331003ab88ec43f7345813d15"
+    },
+    {
+      "path": "frames/32_upper_cloudreach_approach_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2529311,
+      "sha256": "55e29e51e57b51821c16a56a9bbb1fb70808a079beb7dfc25dfa6003676aa061"
+    },
+    {
+      "path": "frames/33_summit_final_stronghold_finale400_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2567739,
+      "sha256": "04033381a1852c5f1c00dabcc84acebe6b49772b42d20e5fd3470ae4805d8fdc"
+    },
+    {
+      "path": "frames/34_summit_final_stronghold_finale100_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2650934,
+      "sha256": "e8913a8dcca65e246a94ecb3da35da99af83bfe0b2b0eb4dc45c8c99c7577070"
+    },
+    {
+      "path": "frames/35_summit_final_stronghold_postfinale_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2647274,
+      "sha256": "f1708a0705c026cfec318506187b835f6a919b669e72ee7f949a9eef1aab419c"
+    },
+    {
+      "path": "frames/36_gate_lower_cliffs_postfinale-galefoot_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2203921,
+      "sha256": "7fa0c9735700fb7cd09e018af80628de9d74f8d602c3f673b9d12f806f0b437f"
+    },
+    {
+      "path": "frames/37_gate_lower_cliffs_settlement-galefoot-approach_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 2050466,
+      "sha256": "e8503ccd189d5fd72d7b81fc31ee2ddc612afce2bc261ff2a14be440bf51fd0c"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 6314335,
+      "sha256": "5fe50ee3bb88d0a622a90dc255d51455a70a8c97ec31656c804ff6c79970106a"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_day_night.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1552118,
+      "sha256": "d8cf73e827d54db6b1763b4f576f527b04d006cee87b38c94ab654596a6199ad"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_finale.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1475029,
+      "sha256": "1adb54b17e02b66a30234c5872ed5044234d6839cdc581d67f44c0d50587a61c"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_hero.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 1398690,
+      "sha256": "90f3228760a225ccf1eaf0b8de1525b450e8e71abcbc0e7a589217d16f38235c"
+    },
+    {
+      "path": "frames/_sheet_frame_matrix_regions.png",
+      "archive": "raw-evidence-02.zip",
+      "size": 4025407,
+      "sha256": "b4cf405d897ec8e01529a15166e85eb577b4b4d2b2b2ed15a8477436a6a01e88"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
