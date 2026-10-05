@@ -181,7 +181,7 @@ func _run() -> void:
 							errors.append("missing actual species in " + str(entry.id))
 							continue
 						var pilot := PILOT.new()
-						pilot.context = {"chapter": entry.chapter, "band": entry.id,
+						pilot.context = {"chapter": entry.chapter, "band": entry.id, "floor_trainer": _trainers,
 							"after_south_bridge": bool(entry.get("after_south_bridge", true))}
 						var result: Dictionary = await pilot.fight(self, party, foes, _trainers,
 							hash("f22/%s/%s/%d" % [entry.id, starter, seed_index]), policy)

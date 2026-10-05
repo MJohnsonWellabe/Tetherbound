@@ -2802,7 +2802,7 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 	if _wild != null and _wild.has_method("sync_poise") and payload.has("poise"):
 		_wild.call("sync_poise", float(payload["poise"]),
 			bool(payload.get("staggered", false)), bool(payload.get("critical_ready", true)),
-			float(payload.get("stagger_left", -1.0)))
+			float(payload.get("stagger_left", -1.0)), float(payload.get("poise_max", -1.0)))
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
 		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)), impact)
@@ -3047,7 +3047,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		_wild.call("sync_poise", float(opponent["poise"]),
 			bool(opponent.get("staggered", false)),
 			bool(opponent.get("critical_ready", true)),
-			float(opponent.get("stagger_left", -1.0)))
+			float(opponent.get("stagger_left", -1.0)), float(opponent.get("poise_max", -1.0)))
 		if not quiet and not was_staggered and bool(opponent.get("staggered", false)):
 			_announce_stagger(true)
 		state_changed.emit()

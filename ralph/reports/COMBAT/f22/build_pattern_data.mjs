@@ -134,6 +134,8 @@ for (const [file,chapter] of [['data/config/cloudreach_encounters.json','cloudre
     }),{controller:'existing_relay',relay_id:row.id});
   }
 }
+// BOSSES §4.5 gives every Warden member a role; the poise pool follows it.
+['WALL','DIVER','CURRENT','CHARGER'].forEach((role,i)=>{named.named_warden_aldis.sendouts[i].role=role;});
 for(const id of ['warden_aldis','water_trainer_nerissa','captain_veyra_storm_anchor','captain_marrow_dynamo_core']) {
   const rows=named['named_'+id].sendouts;
   rows[rows.length-1].role='ACE';

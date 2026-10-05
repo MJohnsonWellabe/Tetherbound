@@ -518,7 +518,7 @@ func start_master_duel(site: Node3D, character_id: String, uid: String, definiti
 	_master_duel = {"character_id": character_id, "creature_uid": uid, "master_id": definition.id,
 		"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_game").get("world").world_id}
-	var spec := {"id": definition.id, "name": definition.name, "master": true,
+	var spec := {"id": definition.id, "name": definition.name, "master": true, "role": str(definition.get("profile", "")),
 		"team": [{"species": definition.species_id, "level": definition.cap_level, "combat": definition.combat.duplicate(true)}]}
 	if not begin_trainer_battle(spec, site.get_node(^"Master")):
 		_master_duel.clear()
@@ -610,6 +610,7 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 	runtime.connect("telegraph", _on_shared_host_telegraph.bind(id))
 	runtime.connect("swung", _on_shared_host_strike.bind(id))
 	if body.has_signal("route_cue_started"): body.connect("route_cue_started", _on_shared_host_route.bind(id))
+	body.set_meta(&"f22_master_role", str(definition.get("profile", "")))
 	_configure_f22_patterns(body, true)
 	runtime.call("start_shared", body, selected, site.global_position, float(definition.arena_radius_m), self, id, 1, "trainer")
 	_refresh_shared_record_presentation(rec)
@@ -8307,8 +8308,18 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 				after_bridge = not band in ["band1_lower_meadows", "band2_stone_and_root"]
 				break
 	var role := COMBAT_AI.species_role(str(creature.get("species_id")), patterns)
+	# Masters (host duel through the trainer battle, or a guest duel tagged on
+	# its body) fight in their authored masters.json profile role.
+	var is_master := opponent_owned and (bool(_trainer_spec.get("master", false)) or wild.has_meta(&"f22_master_role"))
+	var master_role := str(wild.get_meta(&"f22_master_role", _trainer_spec.get("role", ""))) if is_master else ""
+	if not master_role.is_empty():
+		role = master_role
+	# COMBAT §7 floor trainer: an ordinary trainer's body, not a named fight,
+	# a Master or an officer/captain rank (F22 trainer_power_scale scope).
+	var floor_trainer := opponent_owned and pattern_id.is_empty() and not is_master \
+		and not str(_trainer_spec.get("rank", "")) in ["captain", "officer", "lieutenant", "elite", "mentor", "ace"]
 	var context := {"species_id": str(creature.get("species_id")), "role": role,
-		"trainer_owned": opponent_owned, "chapter": chapter, "band": band,
+		"trainer_owned": opponent_owned, "floor_trainer": floor_trainer, "chapter": chapter, "band": band,
 		"after_south_bridge": after_bridge, "pattern_id": pattern_id,
 		"sendout_index": maxi(0, _trainer_battle_sent - 1) if opponent_owned and not _trainer_spec.is_empty() else 0,
 		"move_quick": str(creature.get("move_quick")),
