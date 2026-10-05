@@ -1,0 +1,84 @@
+{
+  "preset": "Medium",
+  "renderer": "forward_plus",
+  "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+  "branch": "tb/visual-cloudreach",
+  "request_id": "cloudreach-1",
+  "case": "night",
+  "native": {
+    "command": [
+      "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+      "--path",
+      "D:\\tetherbound\\render-cloudreach-d7c8618e",
+      "--rendering-method",
+      "forward_plus",
+      "--audio-driver",
+      "Dummy",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--active=terrapup",
+      "--night",
+      "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/night/frames"
+    ],
+    "exit_code": 1,
+    "timed_out": false,
+    "elapsed_seconds": 215.5,
+    "log": "native.log",
+    "log_sha256": "0ab0131e42b0cd864058938d75e301fee2dd349ff40366cecaffee67a7a9a8ae",
+    "errors": [
+      "ERROR: frame matrix: EncounterDirector never appeared; refusing partial-scene evidence"
+    ],
+    "gpu_header": [
+      "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+    ],
+    "skip_seat_fail_lines": []
+  },
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-d7c8618e",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--active=terrapup",
+    "--night",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/night/frames"
+  ],
+  "expected_completion_line": "# frame matrix: 37 frames written, 0 rows skipped",
+  "expected_line_present": false,
+  "png_count_including_sheets": 0,
+  "files": [
+    {
+      "path": "choose-preset.log",
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e",
+      "size_bytes": 112
+    },
+    {
+      "path": "choose-preset.receipt.json",
+      "sha256": "b614daa78f494896dad56d8ff37af8f9ea4b98f9768e655191d366fed0808142",
+      "size_bytes": 567
+    },
+    {
+      "path": "native.log",
+      "sha256": "0ab0131e42b0cd864058938d75e301fee2dd349ff40366cecaffee67a7a9a8ae",
+      "size_bytes": 5065
+    },
+    {
+      "path": "native.receipt.json",
+      "sha256": "1efb8c382309f76b2eee1188f5211c550a451e9eb79ac9d73ec38d391dfc5d37",
+      "size_bytes": 966
+    }
+  ],
+  "complete": false,
+  "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+  "native_manifest_preserved": false
+}

@@ -1,0 +1,20 @@
+{
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-d7c8618e",
+    "--script",
+    "D:\\tetherbound\\.artifacts\\render_service_choose_preset.gd",
+    "--",
+    "--preset=Low"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 8.483999999938533,
+  "log": "choose-preset.log",
+  "log_sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e",
+  "errors": [],
+  "gpu_header": [],
+  "skip_seat_fail_lines": []
+}

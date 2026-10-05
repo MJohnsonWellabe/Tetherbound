@@ -1,0 +1,31 @@
+{
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-d7c8618e",
+    "--fixed-fps",
+    "60",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_high_perch_live.gd",
+    "--",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/high-perch/frames"
+  ],
+  "exit_code": 1,
+  "timed_out": false,
+  "elapsed_seconds": 219.21900000004098,
+  "log": "native.log",
+  "log_sha256": "d11d09bdaae64e7208204002113614be6d712567de450f0711bd604cc0e1c375",
+  "errors": [
+    "ERROR: HIGH PERCH LIVE: EncounterDirector never appeared"
+  ],
+  "gpu_header": [
+    "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "skip_seat_fail_lines": []
+}

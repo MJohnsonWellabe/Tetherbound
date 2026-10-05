@@ -1,0 +1,31 @@
+{
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-d7c8618e",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--active=terrapup",
+    "--night",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/night/frames"
+  ],
+  "exit_code": 0,
+  "timed_out": false,
+  "elapsed_seconds": 312.6720000000205,
+  "log": "native.log",
+  "log_sha256": "a3a5021d5e1f063303020257c29319ea49c10993278a0090cf077c974c25dddb",
+  "errors": [
+    "ERROR: unscoped chapter flag: fly_tutorial_completed"
+  ],
+  "gpu_header": [
+    "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "skip_seat_fail_lines": []
+}

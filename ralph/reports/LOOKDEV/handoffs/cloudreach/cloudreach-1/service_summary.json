@@ -1,0 +1,1057 @@
+{
+  "request_id": "cloudreach-1",
+  "request_comment_id": 5986303272,
+  "branch": "tb/visual-cloudreach",
+  "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+  "source_root": "D:\\tetherbound\\render-cloudreach-d7c8618e",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "source_branch_modified": false,
+  "judgement": "Requesting lane owns code-blind judgement; render service performs structural validation only.",
+  "passes": [
+    {
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+      "branch": "tb/visual-cloudreach",
+      "request_id": "cloudreach-1",
+      "case": "high-perch",
+      "native": {
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+          "--path",
+          "D:\\tetherbound\\render-cloudreach-d7c8618e",
+          "--fixed-fps",
+          "60",
+          "--rendering-method",
+          "forward_plus",
+          "--audio-driver",
+          "Dummy",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "tools/capture_cloudreach_high_perch_live.gd",
+          "--",
+          "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/high-perch/frames"
+        ],
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 219.21900000004098,
+        "log": "native.log",
+        "log_sha256": "d11d09bdaae64e7208204002113614be6d712567de450f0711bd604cc0e1c375",
+        "errors": [
+          "ERROR: HIGH PERCH LIVE: EncounterDirector never appeared"
+        ],
+        "gpu_header": [
+          "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+        ],
+        "skip_seat_fail_lines": []
+      },
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-cloudreach-d7c8618e",
+        "--fixed-fps",
+        "60",
+        "--rendering-method",
+        "forward_plus",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_cloudreach_high_perch_live.gd",
+        "--",
+        "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/high-perch/frames"
+      ],
+      "expected_completion_line": "HIGH PERCH LIVE OK: 12/12",
+      "expected_line_present": false,
+      "png_count_including_sheets": 0,
+      "files": [
+        {
+          "path": "choose-preset.log",
+          "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e",
+          "size_bytes": 112
+        },
+        {
+          "path": "choose-preset.receipt.json",
+          "sha256": "b8a810ccef7b99d7bf838187d002c370be2013988304066584b8993c3bb47e92",
+          "size_bytes": 567
+        },
+        {
+          "path": "frames/manifest.json",
+          "sha256": "91289b9ed7b8ebff389b92e49a22520801ddb7404d08055c53f7f626d94f8af8",
+          "size_bytes": 2225
+        },
+        {
+          "path": "frames/manifest.native.json",
+          "sha256": "09ea8451d071ad36afa24b53fb10a022cc7005ed28ed8bdd51b31d0355ca10e1",
+          "size_bytes": 950
+        },
+        {
+          "path": "native.log",
+          "sha256": "d11d09bdaae64e7208204002113614be6d712567de450f0711bd604cc0e1c375",
+          "size_bytes": 5164
+        },
+        {
+          "path": "native.receipt.json",
+          "sha256": "303173e00f5bb65bab627af1a79283a4f3d3e341ea970ecb5592e55a74db28f5",
+          "size_bytes": 946
+        }
+      ],
+      "complete": false,
+      "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+      "native_manifest_preserved": true
+    },
+    {
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+      "branch": "tb/visual-cloudreach",
+      "request_id": "cloudreach-1",
+      "case": "day",
+      "native": {
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+          "--path",
+          "D:\\tetherbound\\render-cloudreach-d7c8618e",
+          "--rendering-method",
+          "forward_plus",
+          "--audio-driver",
+          "Dummy",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--active=terrapup",
+          "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/day/frames"
+        ],
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 214.96900000004098,
+        "log": "native.log",
+        "log_sha256": "e02c6b61de2332d47c8b440eb82901170e73014cf01c49c672f169aa58320764",
+        "errors": [
+          "ERROR: frame matrix: EncounterDirector never appeared; refusing partial-scene evidence"
+        ],
+        "gpu_header": [
+          "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+        ],
+        "skip_seat_fail_lines": []
+      },
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-cloudreach-d7c8618e",
+        "--rendering-method",
+        "forward_plus",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--active=terrapup",
+        "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/day/frames"
+      ],
+      "expected_completion_line": "# frame matrix: 37 frames written, 0 rows skipped",
+      "expected_line_present": false,
+      "png_count_including_sheets": 0,
+      "files": [
+        {
+          "path": "choose-preset.log",
+          "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e",
+          "size_bytes": 112
+        },
+        {
+          "path": "choose-preset.receipt.json",
+          "sha256": "5f0836b4e609b05078ac9ddaa3ca4fa5c9d8e7b4111a1b8400c48d0c15804d19",
+          "size_bytes": 553
+        },
+        {
+          "path": "native.log",
+          "sha256": "e02c6b61de2332d47c8b440eb82901170e73014cf01c49c672f169aa58320764",
+          "size_bytes": 5062
+        },
+        {
+          "path": "native.receipt.json",
+          "sha256": "981db509dc5740539097f83b21fb60afbcf641a70704fe51c928b419cac9adae",
+          "size_bytes": 961
+        }
+      ],
+      "complete": false,
+      "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+      "native_manifest_preserved": false
+    },
+    {
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+      "branch": "tb/visual-cloudreach",
+      "request_id": "cloudreach-1",
+      "case": "night",
+      "native": {
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+          "--path",
+          "D:\\tetherbound\\render-cloudreach-d7c8618e",
+          "--rendering-method",
+          "forward_plus",
+          "--audio-driver",
+          "Dummy",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--active=terrapup",
+          "--night",
+          "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/night/frames"
+        ],
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_seconds": 215.5,
+        "log": "native.log",
+        "log_sha256": "0ab0131e42b0cd864058938d75e301fee2dd349ff40366cecaffee67a7a9a8ae",
+        "errors": [
+          "ERROR: frame matrix: EncounterDirector never appeared; refusing partial-scene evidence"
+        ],
+        "gpu_header": [
+          "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+        ],
+        "skip_seat_fail_lines": []
+      },
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-cloudreach-d7c8618e",
+        "--rendering-method",
+        "forward_plus",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--active=terrapup",
+        "--night",
+        "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/medium/night/frames"
+      ],
+      "expected_completion_line": "# frame matrix: 37 frames written, 0 rows skipped",
+      "expected_line_present": false,
+      "png_count_including_sheets": 0,
+      "files": [
+        {
+          "path": "choose-preset.log",
+          "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e",
+          "size_bytes": 112
+        },
+        {
+          "path": "choose-preset.receipt.json",
+          "sha256": "b614daa78f494896dad56d8ff37af8f9ea4b98f9768e655191d366fed0808142",
+          "size_bytes": 567
+        },
+        {
+          "path": "native.log",
+          "sha256": "0ab0131e42b0cd864058938d75e301fee2dd349ff40366cecaffee67a7a9a8ae",
+          "size_bytes": 5065
+        },
+        {
+          "path": "native.receipt.json",
+          "sha256": "1efb8c382309f76b2eee1188f5211c550a451e9eb79ac9d73ec38d391dfc5d37",
+          "size_bytes": 966
+        }
+      ],
+      "complete": false,
+      "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+      "native_manifest_preserved": false
+    },
+    {
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+      "branch": "tb/visual-cloudreach",
+      "request_id": "cloudreach-1",
+      "case": "high-perch",
+      "native": {
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+          "--path",
+          "D:\\tetherbound\\render-cloudreach-d7c8618e",
+          "--fixed-fps",
+          "60",
+          "--rendering-driver",
+          "opengl3",
+          "--audio-driver",
+          "Dummy",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "tools/capture_cloudreach_high_perch_live.gd",
+          "--",
+          "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames"
+        ],
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 248.3279999999795,
+        "log": "native.log",
+        "log_sha256": "64f4562cebec6b9c6cdd38c5ba33425476cd8e19147fca0072d0c341241ef458",
+        "errors": [
+          "ERROR: unscoped chapter flag: fly_tutorial_completed"
+        ],
+        "gpu_header": [
+          "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+        ],
+        "skip_seat_fail_lines": []
+      },
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-cloudreach-d7c8618e",
+        "--fixed-fps",
+        "60",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_cloudreach_high_perch_live.gd",
+        "--",
+        "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames"
+      ],
+      "expected_completion_line": "HIGH PERCH LIVE OK: 12/12",
+      "expected_line_present": true,
+      "png_count_including_sheets": 13,
+      "files": [
+        {
+          "path": "choose-preset.log",
+          "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e",
+          "size_bytes": 109
+        },
+        {
+          "path": "choose-preset.receipt.json",
+          "sha256": "72009a330b791ee8f7b60a7167c70485e840c3380dde778d84ab51e161ca7624",
+          "size_bytes": 564
+        },
+        {
+          "path": "frames/_sheet.png",
+          "sha256": "6338f95ee80b21a76007246d6e3c5abb888735c7b7fa9efe413ca061a4d26236",
+          "size_bytes": 3859882
+        },
+        {
+          "path": "frames/high-perches-arrival-far-day.png",
+          "sha256": "09a7a792e81eab2c5907b31ffeb76223c660938df2d29ca0addb6bcab5120c88",
+          "size_bytes": 2516715
+        },
+        {
+          "path": "frames/high-perches-arrival-far-night.png",
+          "sha256": "cef563c28a033c4c216706ef0ce5832fd0516422bc7cda98f0d8b0d3e6b04678",
+          "size_bytes": 1959320
+        },
+        {
+          "path": "frames/high-perches-arrival-landed-day.png",
+          "sha256": "c18f612c4642a9852eba0664b3e818ba1933640d80ba8387d3408ae465afa26d",
+          "size_bytes": 2171385
+        },
+        {
+          "path": "frames/high-perches-arrival-landed-night.png",
+          "sha256": "6e88daa29a8768ff1393308bf6b1cfae076d8a70866b507d7db102347c1a762f",
+          "size_bytes": 2040220
+        },
+        {
+          "path": "frames/high-perches-arrival-lip-day.png",
+          "sha256": "c27384cbc50b782c932a8cfa3f92c7b382a32b4899565749dd4d1f6a59bf5574",
+          "size_bytes": 3015309
+        },
+        {
+          "path": "frames/high-perches-arrival-lip-night.png",
+          "sha256": "214b589531b94e1e1c2c232406fbcc2edf400b73d323a02251e6174d1b01b0e4",
+          "size_bytes": 2497823
+        },
+        {
+          "path": "frames/high-perches-crown-court-day.png",
+          "sha256": "c7fe4acd00005a3d8a01a584f446b9657d50896678999aa2233f4f2a2bbb4a8b",
+          "size_bytes": 2978917
+        },
+        {
+          "path": "frames/high-perches-crown-court-night.png",
+          "sha256": "a94088460cd326ddb3cc41f9d9f36c185c19dbfa876bd954e32e27e97cb83ab9",
+          "size_bytes": 2613079
+        },
+        {
+          "path": "frames/high-perches-crown-rim-out-day.png",
+          "sha256": "179e16836ecb47c38fb25bd9cdcd3d6949cd93b1b387684c8a79b211bbaf96ad",
+          "size_bytes": 2318864
+        },
+        {
+          "path": "frames/high-perches-crown-rim-out-night.png",
+          "sha256": "5c3d80b3a89b29a65d8da98f82b1f0d4cb815da33e4179acfe0a7a92c36f60cf",
+          "size_bytes": 1972586
+        },
+        {
+          "path": "frames/high-perches-departure-lookback-day.png",
+          "sha256": "96eda6a0e1130a0291b1f61160324abce8c2ad9ba7d6222c890a243d78454bdc",
+          "size_bytes": 2127880
+        },
+        {
+          "path": "frames/high-perches-departure-lookback-night.png",
+          "sha256": "e5009471df0152dcb2daf0855f645c90cc1d778cdaa87db64cb6a241c3303469",
+          "size_bytes": 2465614
+        },
+        {
+          "path": "frames/manifest.json",
+          "sha256": "76564b88f549233502a38cd4d9dcc8a8891081749ed5ae406568ad8ce3e19ae7",
+          "size_bytes": 12619
+        },
+        {
+          "path": "frames/manifest.native.json",
+          "sha256": "cc3fa7f330dc51ca04e5da9283bcad65d2e691f1a3ec3eeea3e6070cef26f14c",
+          "size_bytes": 9996
+        },
+        {
+          "path": "native.log",
+          "sha256": "64f4562cebec6b9c6cdd38c5ba33425476cd8e19147fca0072d0c341241ef458",
+          "size_bytes": 8459
+        },
+        {
+          "path": "native.receipt.json",
+          "sha256": "f2b4dc2b192027c528f1d6790e6b505ae543b7f18009d59a67480264ad9b792d",
+          "size_bytes": 951
+        }
+      ],
+      "complete": false,
+      "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+      "native_manifest_preserved": true
+    },
+    {
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+      "branch": "tb/visual-cloudreach",
+      "request_id": "cloudreach-1",
+      "case": "day",
+      "native": {
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+          "--path",
+          "D:\\tetherbound\\render-cloudreach-d7c8618e",
+          "--rendering-driver",
+          "opengl3",
+          "--audio-driver",
+          "Dummy",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--active=terrapup",
+          "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/day/frames"
+        ],
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 315.76500000001397,
+        "log": "native.log",
+        "log_sha256": "c618f79dc0a57a40f9aff94a765d0c50095494738c2976b31dfec5fd8aa9ccfc",
+        "errors": [
+          "ERROR: unscoped chapter flag: fly_tutorial_completed"
+        ],
+        "gpu_header": [
+          "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+        ],
+        "skip_seat_fail_lines": []
+      },
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-cloudreach-d7c8618e",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--active=terrapup",
+        "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/day/frames"
+      ],
+      "expected_completion_line": "# frame matrix: 37 frames written, 0 rows skipped",
+      "expected_line_present": true,
+      "png_count_including_sheets": 42,
+      "files": [
+        {
+          "path": "choose-preset.log",
+          "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e",
+          "size_bytes": 109
+        },
+        {
+          "path": "choose-preset.receipt.json",
+          "sha256": "095aeef69e4ebcb891eabb315c41c2828641780df69a8174f278bd6c5f623699",
+          "size_bytes": 564
+        },
+        {
+          "path": "frames/01_gate_lower_cliffs_approach_day.png",
+          "sha256": "557b1879b768775452470026612dda8688ea64839e799bb8b66363429c24b3bd",
+          "size_bytes": 2971390
+        },
+        {
+          "path": "frames/02_gate_lower_cliffs_route_day.png",
+          "sha256": "4c578f06ae1543c6f29b419f5364bd36141a76b920054f54eec1ea6b57741f19",
+          "size_bytes": 3178157
+        },
+        {
+          "path": "frames/03_gate_lower_cliffs_reverse_day.png",
+          "sha256": "70bc5b74fc7757ac5bcb37608e60bb95cc20768e75ac834612c783d86b54f79c",
+          "size_bytes": 2901956
+        },
+        {
+          "path": "frames/04_gate_lower_cliffs_detail-crag_day.png",
+          "sha256": "1d7e7987ab6289de02dba07d4450316b6d90f269ee8990476c256b248e221d88",
+          "size_bytes": 2968935
+        },
+        {
+          "path": "frames/05_gate_lower_cliffs_settlement-galefoot_day.png",
+          "sha256": "e21ba46ffc18688a51ffc8a098641486d9cf3976a7b341a95a74bfb0e0265ac0",
+          "size_bytes": 2742556
+        },
+        {
+          "path": "frames/06_broken_causeways_approach_day.png",
+          "sha256": "b666fd216faff13cd633d4c5011def4c08e11cce7ab926167fa887207ff08882",
+          "size_bytes": 3488884
+        },
+        {
+          "path": "frames/07_broken_causeways_route_day.png",
+          "sha256": "5b9a306322b6a4ed3ba998d1d1d2ef1051531192e8dcfb0e162e963f1da5f879",
+          "size_bytes": 3190854
+        },
+        {
+          "path": "frames/08_broken_causeways_reverse_day.png",
+          "sha256": "5f5285c985bb1aa9257d77b07b789eeea1402c8b568f3987758b6ca1d39d22ef",
+          "size_bytes": 2671580
+        },
+        {
+          "path": "frames/09_broken_causeways_detail-ropebridge_day.png",
+          "sha256": "9b6acc675c8606f182a1b10d96c123c3f1dd6baec68ed9a2e57fc4eb13a8112f",
+          "size_bytes": 2480472
+        },
+        {
+          "path": "frames/10_broken_causeways_lure-bells_day.png",
+          "sha256": "265212c1733bccf8c1dabf24d7e3b10a75cd7b6270f984a97e5eb74c8942c868",
+          "size_bytes": 2214677
+        },
+        {
+          "path": "frames/11_windscar_ravine_approach_day.png",
+          "sha256": "20c5cb000c47ff2ce629ace41a86a67d94ecda4c9add255d3909a6b30658326c",
+          "size_bytes": 2843204
+        },
+        {
+          "path": "frames/12_windscar_ravine_route_day.png",
+          "sha256": "e5b145fe5c7bc740a2aa17bb70d44e90ef0d6731adfbe597b8cf4bd7faaa9e7b",
+          "size_bytes": 2626594
+        },
+        {
+          "path": "frames/13_windscar_ravine_reverse_day.png",
+          "sha256": "18ee94708ed25574d5414f527f183ec28b5b46aabe7f3a9430d984d9a48907bd",
+          "size_bytes": 2713925
+        },
+        {
+          "path": "frames/14_windscar_ravine_detail-beacon_day.png",
+          "sha256": "e2d03ac216e801de124d308e4d05c9263dc48b6ed786ea3db37da89d85096412",
+          "size_bytes": 2551188
+        },
+        {
+          "path": "frames/15_high_roost_sky_shrine_approach_day.png",
+          "sha256": "3ab56eb61f2c5b6cfb0d66afd06b0616a98ef8b9bd82e1004c812cccf3a04ea6",
+          "size_bytes": 2337120
+        },
+        {
+          "path": "frames/16_high_roost_sky_shrine_route_day.png",
+          "sha256": "baf4087b1cf44b286f2bb777e29c64aaa75913dd11f8fade0e2828a615931fba",
+          "size_bytes": 2422873
+        },
+        {
+          "path": "frames/17_high_roost_sky_shrine_reverse_day.png",
+          "sha256": "d4c8d4f7fb16d57862f6c73b7d8b4c76998f060b9cc49c01778ca858acc38d16",
+          "size_bytes": 2491755
+        },
+        {
+          "path": "frames/18_high_roost_sky_shrine_detail-shrine_day.png",
+          "sha256": "fdbc8f06d60e10a4ba0f141a0cd5944f243a6c124fd53d36e4abb02b0303341e",
+          "size_bytes": 2582304
+        },
+        {
+          "path": "frames/19_high_roost_sky_shrine_perch-landing_day.png",
+          "sha256": "8ba872b58c503d162a0403fb1f375de8c4d108187f6bb2a5c79ae58b1d335f47",
+          "size_bytes": 2691891
+        },
+        {
+          "path": "frames/20_high_roost_sky_shrine_perch-vista_day.png",
+          "sha256": "9891910f231a6404b311a55541232a05008a35ed326850eb1dc1e705b3ea1cd8",
+          "size_bytes": 2484593
+        },
+        {
+          "path": "frames/21_upper_cloudreach_approach_day.png",
+          "sha256": "355efdc6865cdd67781bf61eb2fb77c26dcef4e5b505355be8e6f1f86fe18d3f",
+          "size_bytes": 3493692
+        },
+        {
+          "path": "frames/22_upper_cloudreach_route_day.png",
+          "sha256": "e041ea21248a2a815e48be966b6c1dc5d1f99fee265169fc662ebab0446e4294",
+          "size_bytes": 3039321
+        },
+        {
+          "path": "frames/23_upper_cloudreach_reverse_day.png",
+          "sha256": "ceb69c2eddb12d034d9cbaad168dfbb9cb1a7756aa961cf2b9a35753b4445c25",
+          "size_bytes": 3040983
+        },
+        {
+          "path": "frames/24_upper_cloudreach_detail-observatory_day.png",
+          "sha256": "725dc001dc39ba12818afcba9323d67c08ae6d214931f71c599abb2cb7a50eb7",
+          "size_bytes": 2633337
+        },
+        {
+          "path": "frames/25_upper_cloudreach_settlement-cliffhold_day.png",
+          "sha256": "00bb13235953fca42ed641568c9826c641d9c1c6454cfa2bec71bb6bafab9443",
+          "size_bytes": 2693664
+        },
+        {
+          "path": "frames/26_summit_final_stronghold_approach_day.png",
+          "sha256": "efc10a6fcd0a52b38f267eec2cfb40ec93a9b35c7833ddcca58d94f7305bf57a",
+          "size_bytes": 3197454
+        },
+        {
+          "path": "frames/27_summit_final_stronghold_route_day.png",
+          "sha256": "0ece0069e58abbd7948406dc52244d1cf100f68d3c8d1c9d7c445296d99c6b46",
+          "size_bytes": 3615099
+        },
+        {
+          "path": "frames/28_summit_final_stronghold_reverse_day.png",
+          "sha256": "3346736d7cb671413247581574f1478dd5dbef9b0a23fdab960efdbc1d5371ad",
+          "size_bytes": 2411791
+        },
+        {
+          "path": "frames/29_summit_final_stronghold_detail-aviary_day.png",
+          "sha256": "3f002fb6b90929a61c64dea26d487336dc7d8138e1d43511e85f1e105474c635",
+          "size_bytes": 2525322
+        },
+        {
+          "path": "frames/30_gate_lower_cliffs_approach_night.png",
+          "sha256": "80069cddd6f7d3a33a3a471ea5160cd562a704b1f31cc948a336846d1fbd4859",
+          "size_bytes": 2525790
+        },
+        {
+          "path": "frames/31_broken_causeways_route_night.png",
+          "sha256": "dd164002c95aff8d3ea429fb2f8ea196ddaa4addfed0c01845246840104597ae",
+          "size_bytes": 2744762
+        },
+        {
+          "path": "frames/32_upper_cloudreach_approach_night.png",
+          "sha256": "f9d803ca05d33ad087b00cee546a922157f5301122aa42c9ece94ff1fedb3a94",
+          "size_bytes": 3084365
+        },
+        {
+          "path": "frames/33_summit_final_stronghold_finale400_day.png",
+          "sha256": "c96fe9662d063eb5da59a49f0efaa258ebabcfa8448a7e62df371d8396873556",
+          "size_bytes": 3685824
+        },
+        {
+          "path": "frames/34_summit_final_stronghold_finale100_day.png",
+          "sha256": "e16f68bafc7b8cd4ad1ade7039f598df97d0e706934b9192c9b6f97d5c12e196",
+          "size_bytes": 3547628
+        },
+        {
+          "path": "frames/35_summit_final_stronghold_postfinale_day.png",
+          "sha256": "6dea7136b119209601fcbef496247ab5ef977e935fdc0939a993b42fadd1686d",
+          "size_bytes": 3547380
+        },
+        {
+          "path": "frames/36_gate_lower_cliffs_postfinale-galefoot_day.png",
+          "sha256": "af7d72577d0e4399f486c28b21a3f715afe9f0375435a200c6553676d18b4a6b",
+          "size_bytes": 2765537
+        },
+        {
+          "path": "frames/37_gate_lower_cliffs_settlement-galefoot-approach_day.png",
+          "sha256": "b7427b33d6ce4872c4e59a3bddee8c679f2e5c85542816cc5938389842e7070a",
+          "size_bytes": 3054633
+        },
+        {
+          "path": "frames/_sheet_frame_matrix.png",
+          "sha256": "7471260b8c2a33b25c9ed2d65f73b981a31cc21c5b156ed6ab50837cb4996af3",
+          "size_bytes": 8194499
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_day_night.png",
+          "sha256": "d1ea0609836594afcc4ff65ea474cf3c580440c2d94d10ba68605b3368083149",
+          "size_bytes": 2335405
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_finale.png",
+          "sha256": "429b2c65966a612de6a39f24bba19a597112b66109169634451761cbaf6a5155",
+          "size_bytes": 1700622
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_hero.png",
+          "sha256": "57226725249ac4b048af15e61bdde28b221ec9b161b03498d79cbc9993c33f2e",
+          "size_bytes": 1773103
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_regions.png",
+          "sha256": "9744f10b5e975cb300954586b08eba6ed60e560abc2d01a60ca0349cefc89475",
+          "size_bytes": 5412292
+        },
+        {
+          "path": "frames/manifest.native.txt",
+          "sha256": "d6c995b48ff58ad898ea03a5a45d921bfa89b36f862a82b3d3b9241eeed5d8b3",
+          "size_bytes": 17360
+        },
+        {
+          "path": "frames/manifest.txt",
+          "sha256": "f7b205ad7d1c91fd7904a6242bfc93e212c35e0db7f44d0498bf5d6b0067d854",
+          "size_bytes": 18404
+        },
+        {
+          "path": "native.log",
+          "sha256": "c618f79dc0a57a40f9aff94a765d0c50095494738c2976b31dfec5fd8aa9ccfc",
+          "size_bytes": 30258
+        },
+        {
+          "path": "native.receipt.json",
+          "sha256": "20b29a7917f5351d314444474cc86d19fe2ebf02d8bc7b8e930d7c58bc6d9dcb",
+          "size_bytes": 937
+        }
+      ],
+      "complete": false,
+      "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+      "native_manifest_preserved": true
+    },
+    {
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+      "branch": "tb/visual-cloudreach",
+      "request_id": "cloudreach-1",
+      "case": "night",
+      "native": {
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+          "--path",
+          "D:\\tetherbound\\render-cloudreach-d7c8618e",
+          "--rendering-driver",
+          "opengl3",
+          "--audio-driver",
+          "Dummy",
+          "--resolution",
+          "1920x1080",
+          "--script",
+          "tools/capture_cloudreach_frame_matrix.gd",
+          "--",
+          "--active=terrapup",
+          "--night",
+          "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/night/frames"
+        ],
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_seconds": 312.6720000000205,
+        "log": "native.log",
+        "log_sha256": "a3a5021d5e1f063303020257c29319ea49c10993278a0090cf077c974c25dddb",
+        "errors": [
+          "ERROR: unscoped chapter flag: fly_tutorial_completed"
+        ],
+        "gpu_header": [
+          "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+        ],
+        "skip_seat_fail_lines": []
+      },
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-cloudreach-d7c8618e",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_cloudreach_frame_matrix.gd",
+        "--",
+        "--active=terrapup",
+        "--night",
+        "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/night/frames"
+      ],
+      "expected_completion_line": "# frame matrix: 37 frames written, 0 rows skipped",
+      "expected_line_present": true,
+      "png_count_including_sheets": 42,
+      "files": [
+        {
+          "path": "choose-preset.log",
+          "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e",
+          "size_bytes": 109
+        },
+        {
+          "path": "choose-preset.receipt.json",
+          "sha256": "fdacb32e2fce3e8d81c44bef0633cd15dbce72d00708bc33ad396a51e77c89cb",
+          "size_bytes": 564
+        },
+        {
+          "path": "frames/01_gate_lower_cliffs_approach_night.png",
+          "sha256": "dbd0ecdff21b203e683866d1cc6d58d6ec1d61605513d1b6b193b23310064992",
+          "size_bytes": 2523402
+        },
+        {
+          "path": "frames/02_gate_lower_cliffs_route_night.png",
+          "sha256": "da21b3147667e2af3fbbe97baee1e9a3a3bb4c7c6371204942a58a5a8d45f501",
+          "size_bytes": 2872271
+        },
+        {
+          "path": "frames/03_gate_lower_cliffs_reverse_night.png",
+          "sha256": "28924c54068b11e420856e964f0d1ff42b76909d7884b972ef18bc0952ec0f31",
+          "size_bytes": 2580241
+        },
+        {
+          "path": "frames/04_gate_lower_cliffs_detail-crag_night.png",
+          "sha256": "7f786ca1818dbf4747fd444dc9fa0b5640128e7d3ab7806240fb257f9dad476c",
+          "size_bytes": 2421212
+        },
+        {
+          "path": "frames/05_gate_lower_cliffs_settlement-galefoot_night.png",
+          "sha256": "e8091f432f8611a7a9cfd3c268d0c8307908df13a0fe66187d39a3f001aecb21",
+          "size_bytes": 2760553
+        },
+        {
+          "path": "frames/06_broken_causeways_approach_night.png",
+          "sha256": "de9b66059dee614b62867efc905f570411ee61a5034e3716d65ab8081a843a6a",
+          "size_bytes": 2969798
+        },
+        {
+          "path": "frames/07_broken_causeways_route_night.png",
+          "sha256": "4c3466766b926a0c3bdf07046d65a907ccefdad1418258171647ba1955a86be8",
+          "size_bytes": 2742591
+        },
+        {
+          "path": "frames/08_broken_causeways_reverse_night.png",
+          "sha256": "eb3b8f50d8f27ea78edc3b779b3efc99be2db22c630de0b8593d7164dde30311",
+          "size_bytes": 2275402
+        },
+        {
+          "path": "frames/09_broken_causeways_detail-ropebridge_night.png",
+          "sha256": "8fcd52fbf84a87a7c1f851fdbba28a592f9a12bb80f0455a9a4b4bfa55677339",
+          "size_bytes": 1963168
+        },
+        {
+          "path": "frames/10_broken_causeways_lure-bells_night.png",
+          "sha256": "e2ff8a2bd92d28ee4115fdbf17ca17bc7a413cba1103580960f6144f327c6100",
+          "size_bytes": 2013842
+        },
+        {
+          "path": "frames/11_windscar_ravine_approach_night.png",
+          "sha256": "b5b8cf12b35b0c327a0406b98bdcd235e4e504dd5977e56e4268a1789c759e81",
+          "size_bytes": 2391451
+        },
+        {
+          "path": "frames/12_windscar_ravine_route_night.png",
+          "sha256": "a1b9cff2bc384b653590b3ca27fe73ff786bdb188c361ccee907ee1f34687605",
+          "size_bytes": 2264901
+        },
+        {
+          "path": "frames/13_windscar_ravine_reverse_night.png",
+          "sha256": "13e56b497cfc453d948fbed605d0c60f968bf9bc54f1a6626909ac069eac007b",
+          "size_bytes": 2412304
+        },
+        {
+          "path": "frames/14_windscar_ravine_detail-beacon_night.png",
+          "sha256": "5b3d73eeea4bdbb824dc8e60b56fbe72d08b83f428152ba95c7e029712eec1e7",
+          "size_bytes": 2353548
+        },
+        {
+          "path": "frames/15_high_roost_sky_shrine_approach_night.png",
+          "sha256": "f88e80f9c426e0a89517d27307b0769451ba43a469a67da51b067611ca9a762d",
+          "size_bytes": 2266102
+        },
+        {
+          "path": "frames/16_high_roost_sky_shrine_route_night.png",
+          "sha256": "3bd52378cf7bf8a5318c9e8157be167edac75a952fa2b87361314e7f60f8280d",
+          "size_bytes": 2294554
+        },
+        {
+          "path": "frames/17_high_roost_sky_shrine_reverse_night.png",
+          "sha256": "f242504b9c5b5718a9bd0c2cd9abaa88d02e65953c75f12d0d2c9c0b234c7e88",
+          "size_bytes": 2600280
+        },
+        {
+          "path": "frames/18_high_roost_sky_shrine_detail-shrine_night.png",
+          "sha256": "fd67294b50a668b6f7602e7843369b5c3d982e8253d72cff0b3efb10105af25d",
+          "size_bytes": 1745517
+        },
+        {
+          "path": "frames/19_high_roost_sky_shrine_perch-landing_night.png",
+          "sha256": "9c2751c259bcf407ef1b1336385dd42ecb1c5faaf50d095b8c4a5195eed0ac21",
+          "size_bytes": 2573593
+        },
+        {
+          "path": "frames/20_high_roost_sky_shrine_perch-vista_night.png",
+          "sha256": "6b62bb60e271672e59c0ee4f9be908d522da5b66784aac17eb94c86dd4014fd3",
+          "size_bytes": 2284741
+        },
+        {
+          "path": "frames/21_upper_cloudreach_approach_night.png",
+          "sha256": "2a923bbdb64a19ecaccf980f0b2e58a9562a62ccc2d0e8f304ab2de7b819a646",
+          "size_bytes": 3078452
+        },
+        {
+          "path": "frames/22_upper_cloudreach_route_night.png",
+          "sha256": "282570c7e0644bff74e92d330c0bed3650ffe1f24bd22c6af493d305a452d395",
+          "size_bytes": 2777647
+        },
+        {
+          "path": "frames/23_upper_cloudreach_reverse_night.png",
+          "sha256": "b8c1cf79655225e013b0e62523ee20c9a829fbcf6cdeb57f7e780bfa5e0019d7",
+          "size_bytes": 2720774
+        },
+        {
+          "path": "frames/24_upper_cloudreach_detail-observatory_night.png",
+          "sha256": "0c96ed10da675ccaa20a470e5663f4365a997473c901443307ad6014d17e158f",
+          "size_bytes": 2173039
+        },
+        {
+          "path": "frames/25_upper_cloudreach_settlement-cliffhold_night.png",
+          "sha256": "b3e28edb4fa1bfb9dfeff542128503bda55ed2a86384567523b95ac372eaff71",
+          "size_bytes": 2475025
+        },
+        {
+          "path": "frames/26_summit_final_stronghold_approach_night.png",
+          "sha256": "b72bb092c7f817ed2a7df84861ef120787e17e473e976f617f36072c44e22224",
+          "size_bytes": 2810691
+        },
+        {
+          "path": "frames/27_summit_final_stronghold_route_night.png",
+          "sha256": "ec4ddb18639da9053b58738e3cb5168a048e02c76a82418331e7c30da8148bb8",
+          "size_bytes": 2911083
+        },
+        {
+          "path": "frames/28_summit_final_stronghold_reverse_night.png",
+          "sha256": "269f4cc7e6316c27d76827bf29dcb3f62d17d080eeaf0c6b049a37d037a9c1db",
+          "size_bytes": 2041686
+        },
+        {
+          "path": "frames/29_summit_final_stronghold_detail-aviary_night.png",
+          "sha256": "38607495f495419f70703fc48c691041f4d57964175e9e4671ddc5b403f3f45b",
+          "size_bytes": 2813382
+        },
+        {
+          "path": "frames/30_gate_lower_cliffs_approach_night.png",
+          "sha256": "f358819295d1b3ce9ba6e1934fe8f96fe0bcdff3fbac42d1136e9f05996616ad",
+          "size_bytes": 2524961
+        },
+        {
+          "path": "frames/31_broken_causeways_route_night.png",
+          "sha256": "6ff6b1d8be401d809440a593bf6996cc66cb9ff8683dab81ddaec7612aae9b22",
+          "size_bytes": 2740804
+        },
+        {
+          "path": "frames/32_upper_cloudreach_approach_night.png",
+          "sha256": "82fcd3e4e80355a2b3f6cc6cf3451f70de86265375daab6237b80b22e572c8f8",
+          "size_bytes": 3083777
+        },
+        {
+          "path": "frames/33_summit_final_stronghold_finale400_night.png",
+          "sha256": "fedf6435c410441fe0dc6123f46c02b043ab4e436fb11078b60dc826da7a890d",
+          "size_bytes": 3221996
+        },
+        {
+          "path": "frames/34_summit_final_stronghold_finale100_night.png",
+          "sha256": "b3854bdba6935a32f3ab773ac51f815e9c78279877a189807926c9fc3c6b1700",
+          "size_bytes": 3371191
+        },
+        {
+          "path": "frames/35_summit_final_stronghold_postfinale_night.png",
+          "sha256": "f1d3ba043426dded806ea6265c94457030086dc953397e8e461ddbb4ffb15ebd",
+          "size_bytes": 3377462
+        },
+        {
+          "path": "frames/36_gate_lower_cliffs_postfinale-galefoot_night.png",
+          "sha256": "f0e2ceaa236fa2fa142a3f848776794a66d0d0c690a96e71572fdeea9d6d6466",
+          "size_bytes": 2786278
+        },
+        {
+          "path": "frames/37_gate_lower_cliffs_settlement-galefoot-approach_night.png",
+          "sha256": "885ed664a7b99eb2091c872fe4ca4bdb95e8a639fb5940e23b0fe4087aa6d228",
+          "size_bytes": 2632162
+        },
+        {
+          "path": "frames/_sheet_frame_matrix.png",
+          "sha256": "971100f7bbdb9780d40132a9f055c003768990dbbfbb408440ae626c69a36137",
+          "size_bytes": 7362584
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_day_night.png",
+          "sha256": "87356dfd3ae5cbd504a5a2e3e27eb7f18750c5f09f48cd1fb007dc9b0c09869a",
+          "size_bytes": 1786598
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_finale.png",
+          "sha256": "48c2e4534d144b5ef61ad286ab786ebce3fb39a3255a46b0cee25020ecc2c0cb",
+          "size_bytes": 1544853
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_hero.png",
+          "sha256": "72894ac879c48e963f05ce2cd71a332a8ace9d178e9ac0f5e977dd6d50d08ecb",
+          "size_bytes": 1643725
+        },
+        {
+          "path": "frames/_sheet_frame_matrix_regions.png",
+          "sha256": "dd6158cc35d4ebd529b9774386b4c58bfe416928aaefd2115e6e3deb2af73092",
+          "size_bytes": 4756170
+        },
+        {
+          "path": "frames/manifest.native.txt",
+          "sha256": "5f6053146dff4ed227a5480b4125bd4b088ec6a4bea7e80c61560f43c9e1cca9",
+          "size_bytes": 17428
+        },
+        {
+          "path": "frames/manifest.txt",
+          "sha256": "ffe7267e32c37bfd1b5386b16fd5af05d29ac4613147b9588d918ff414607f2d",
+          "size_bytes": 18487
+        },
+        {
+          "path": "native.log",
+          "sha256": "a3a5021d5e1f063303020257c29319ea49c10993278a0090cf077c974c25dddb",
+          "size_bytes": 30478
+        },
+        {
+          "path": "native.receipt.json",
+          "sha256": "48db289d742024d4a985fb19b5ec8e0cd3f7b9714464890b2bfe50321ce9fac8",
+          "size_bytes": 954
+        }
+      ],
+      "complete": false,
+      "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+      "native_manifest_preserved": true
+    }
+  ],
+  "import": {
+    "command": [
+      "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+      "--headless",
+      "--editor",
+      "--path",
+      "D:\\tetherbound\\render-cloudreach-d7c8618e",
+      "--import"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "elapsed_seconds": 417.0779999999795,
+    "log": "serialized-import.log",
+    "log_sha256": "d1ded486b2822cbe9f70b0702292f19873a6f369a37bb57c6292cdd0673f7604",
+    "errors": [],
+    "gpu_header": [],
+    "skip_seat_fail_lines": []
+  },
+  "complete": false,
+  "source_head_after": "d7c8618eef377e1b448635e8fe31a68f0b203c11"
+}

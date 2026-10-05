@@ -1,0 +1,159 @@
+{
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+  "branch": "tb/visual-cloudreach",
+  "request_id": "cloudreach-1",
+  "case": "high-perch",
+  "native": {
+    "command": [
+      "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+      "--path",
+      "D:\\tetherbound\\render-cloudreach-d7c8618e",
+      "--fixed-fps",
+      "60",
+      "--rendering-driver",
+      "opengl3",
+      "--audio-driver",
+      "Dummy",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_cloudreach_high_perch_live.gd",
+      "--",
+      "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "elapsed_seconds": 248.3279999999795,
+    "log": "native.log",
+    "log_sha256": "64f4562cebec6b9c6cdd38c5ba33425476cd8e19147fca0072d0c341241ef458",
+    "errors": [
+      "ERROR: unscoped chapter flag: fly_tutorial_completed"
+    ],
+    "gpu_header": [
+      "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+    ],
+    "skip_seat_fail_lines": []
+  },
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-d7c8618e",
+    "--fixed-fps",
+    "60",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_high_perch_live.gd",
+    "--",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames"
+  ],
+  "expected_completion_line": "HIGH PERCH LIVE OK: 12/12",
+  "expected_line_present": true,
+  "png_count_including_sheets": 13,
+  "files": [
+    {
+      "path": "choose-preset.log",
+      "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e",
+      "size_bytes": 109
+    },
+    {
+      "path": "choose-preset.receipt.json",
+      "sha256": "72009a330b791ee8f7b60a7167c70485e840c3380dde778d84ab51e161ca7624",
+      "size_bytes": 564
+    },
+    {
+      "path": "frames/_sheet.png",
+      "sha256": "6338f95ee80b21a76007246d6e3c5abb888735c7b7fa9efe413ca061a4d26236",
+      "size_bytes": 3859882
+    },
+    {
+      "path": "frames/high-perches-arrival-far-day.png",
+      "sha256": "09a7a792e81eab2c5907b31ffeb76223c660938df2d29ca0addb6bcab5120c88",
+      "size_bytes": 2516715
+    },
+    {
+      "path": "frames/high-perches-arrival-far-night.png",
+      "sha256": "cef563c28a033c4c216706ef0ce5832fd0516422bc7cda98f0d8b0d3e6b04678",
+      "size_bytes": 1959320
+    },
+    {
+      "path": "frames/high-perches-arrival-landed-day.png",
+      "sha256": "c18f612c4642a9852eba0664b3e818ba1933640d80ba8387d3408ae465afa26d",
+      "size_bytes": 2171385
+    },
+    {
+      "path": "frames/high-perches-arrival-landed-night.png",
+      "sha256": "6e88daa29a8768ff1393308bf6b1cfae076d8a70866b507d7db102347c1a762f",
+      "size_bytes": 2040220
+    },
+    {
+      "path": "frames/high-perches-arrival-lip-day.png",
+      "sha256": "c27384cbc50b782c932a8cfa3f92c7b382a32b4899565749dd4d1f6a59bf5574",
+      "size_bytes": 3015309
+    },
+    {
+      "path": "frames/high-perches-arrival-lip-night.png",
+      "sha256": "214b589531b94e1e1c2c232406fbcc2edf400b73d323a02251e6174d1b01b0e4",
+      "size_bytes": 2497823
+    },
+    {
+      "path": "frames/high-perches-crown-court-day.png",
+      "sha256": "c7fe4acd00005a3d8a01a584f446b9657d50896678999aa2233f4f2a2bbb4a8b",
+      "size_bytes": 2978917
+    },
+    {
+      "path": "frames/high-perches-crown-court-night.png",
+      "sha256": "a94088460cd326ddb3cc41f9d9f36c185c19dbfa876bd954e32e27e97cb83ab9",
+      "size_bytes": 2613079
+    },
+    {
+      "path": "frames/high-perches-crown-rim-out-day.png",
+      "sha256": "179e16836ecb47c38fb25bd9cdcd3d6949cd93b1b387684c8a79b211bbaf96ad",
+      "size_bytes": 2318864
+    },
+    {
+      "path": "frames/high-perches-crown-rim-out-night.png",
+      "sha256": "5c3d80b3a89b29a65d8da98f82b1f0d4cb815da33e4179acfe0a7a92c36f60cf",
+      "size_bytes": 1972586
+    },
+    {
+      "path": "frames/high-perches-departure-lookback-day.png",
+      "sha256": "96eda6a0e1130a0291b1f61160324abce8c2ad9ba7d6222c890a243d78454bdc",
+      "size_bytes": 2127880
+    },
+    {
+      "path": "frames/high-perches-departure-lookback-night.png",
+      "sha256": "e5009471df0152dcb2daf0855f645c90cc1d778cdaa87db64cb6a241c3303469",
+      "size_bytes": 2465614
+    },
+    {
+      "path": "frames/manifest.json",
+      "sha256": "76564b88f549233502a38cd4d9dcc8a8891081749ed5ae406568ad8ce3e19ae7",
+      "size_bytes": 12619
+    },
+    {
+      "path": "frames/manifest.native.json",
+      "sha256": "cc3fa7f330dc51ca04e5da9283bcad65d2e691f1a3ec3eeea3e6070cef26f14c",
+      "size_bytes": 9996
+    },
+    {
+      "path": "native.log",
+      "sha256": "64f4562cebec6b9c6cdd38c5ba33425476cd8e19147fca0072d0c341241ef458",
+      "size_bytes": 8459
+    },
+    {
+      "path": "native.receipt.json",
+      "sha256": "f2b4dc2b192027c528f1d6790e6b505ae543b7f18009d59a67480264ad9b792d",
+      "size_bytes": 951
+    }
+  ],
+  "complete": false,
+  "scope": "Exact requesting-lane visual command with isolated production device preferences; no timing, visual judgement, scene edits or player acceptance.",
+  "native_manifest_preserved": true
+}

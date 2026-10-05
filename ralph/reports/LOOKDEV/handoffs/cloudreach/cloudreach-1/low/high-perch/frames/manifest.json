@@ -1,0 +1,371 @@
+{
+  "camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
+  "complete": true,
+  "departure_repeated_ground_presses": 0,
+  "failures": [],
+  "finished_utc": "2026-10-05T02:34:57",
+  "fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); party terrapup/bramblebun/mudsnout/brooktail (no flier: Maela's loaner carries every flight); trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame.",
+  "named_location": "The High Perches",
+  "records": [
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        903.57,
+        1032.5,
+        2642.94
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 48.8252830505371,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-arrival-far-day.png",
+      "flying": true,
+      "frame_id": "high-perches-arrival-far-day",
+      "height_over_crown_m": 8.81689453125,
+      "hour": 10.0,
+      "player_position": [
+        903.05,
+        1028.82,
+        2651.27
+      ],
+      "player_processing": true,
+      "rig_hit_length": 7.5,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 7.5,
+      "rig_yaw_deg": 176.424109975982
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        901.82,
+        1029.0,
+        2670.88
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 20.8288803100586,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-arrival-lip-day.png",
+      "flying": true,
+      "frame_id": "high-perches-arrival-lip-day",
+      "height_over_crown_m": 5.3177490234375,
+      "hour": 10.0,
+      "player_position": [
+        901.3,
+        1025.32,
+        2679.21
+      ],
+      "player_processing": true,
+      "rig_hit_length": 7.5,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 7.5,
+      "rig_yaw_deg": 176.42412061168
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        899.65,
+        1022.96,
+        2705.66
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 10.7586679458618,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-arrival-landed-day.png",
+      "flying": false,
+      "frame_id": "high-perches-arrival-landed-day",
+      "height_over_crown_m": 0.130859375,
+      "hour": 10.0,
+      "player_position": [
+        899.33,
+        1020.13,
+        2710.74
+      ],
+      "player_processing": true,
+      "rig_hit_length": 5.19999980926514,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 5.19999980926514,
+      "rig_yaw_deg": 176.42691920435
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        907.99,
+        1024.64,
+        2687.96
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 17.2231369018555,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-crown-rim-out-day.png",
+      "flying": false,
+      "frame_id": "high-perches-crown-rim-out-day",
+      "height_over_crown_m": 0.130859375,
+      "hour": 10.0,
+      "player_position": [
+        912.4,
+        1020.13,
+        2688.05
+      ],
+      "player_processing": true,
+      "rig_hit_length": 5.19999980926514,
+      "rig_pitch_deg": -32.0,
+      "rig_processing": true,
+      "rig_spring_length": 5.19999980926514,
+      "rig_yaw_deg": -91.147265661872
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        916.06,
+        1022.96,
+        2684.52
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 17.2231369018555,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-crown-court-day.png",
+      "flying": false,
+      "frame_id": "high-perches-crown-court-day",
+      "height_over_crown_m": 0.130859375,
+      "hour": 10.0,
+      "player_position": [
+        912.4,
+        1020.13,
+        2688.05
+      ],
+      "player_processing": true,
+      "rig_hit_length": 5.19999980926514,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 5.19999980926514,
+      "rig_yaw_deg": 133.955585841206
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        902.68,
+        1022.21,
+        2742.37
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 36.1315727233887,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-departure-lookback-day.png",
+      "flying": true,
+      "frame_id": "high-perches-departure-lookback-day",
+      "height_over_crown_m": -1.47314453125,
+      "hour": 10.0,
+      "player_position": [
+        902.28,
+        1018.53,
+        2736.06
+      ],
+      "player_processing": true,
+      "rig_hit_length": 7.5,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 7.5,
+      "rig_yaw_deg": 3.61774251861221
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        903.57,
+        1032.54,
+        2642.94
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 48.8252830505371,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-arrival-far-night.png",
+      "flying": true,
+      "frame_id": "high-perches-arrival-far-night",
+      "height_over_crown_m": 8.8511962890625,
+      "hour": 23.0,
+      "player_position": [
+        903.05,
+        1028.85,
+        2651.27
+      ],
+      "player_processing": true,
+      "rig_hit_length": 7.5,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 7.5,
+      "rig_yaw_deg": 176.424109975982
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        901.82,
+        1029.04,
+        2670.88
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 20.8288803100586,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-arrival-lip-night.png",
+      "flying": true,
+      "frame_id": "high-perches-arrival-lip-night",
+      "height_over_crown_m": 5.35205078125,
+      "hour": 23.0,
+      "player_position": [
+        901.3,
+        1025.35,
+        2679.21
+      ],
+      "player_processing": true,
+      "rig_hit_length": 7.5,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 7.5,
+      "rig_yaw_deg": 176.42412061168
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        899.65,
+        1022.96,
+        2705.67
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 10.7652730941772,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-arrival-landed-night.png",
+      "flying": false,
+      "frame_id": "high-perches-arrival-landed-night",
+      "height_over_crown_m": 0.130859375,
+      "hour": 23.0,
+      "player_position": [
+        899.33,
+        1020.13,
+        2710.74
+      ],
+      "player_processing": true,
+      "rig_hit_length": 5.19999980926514,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 5.19999980926514,
+      "rig_yaw_deg": 176.42690937109
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        907.99,
+        1024.64,
+        2687.96
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 17.2204341888428,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-crown-rim-out-night.png",
+      "flying": false,
+      "frame_id": "high-perches-crown-rim-out-night",
+      "height_over_crown_m": 0.130859375,
+      "hour": 23.0,
+      "player_position": [
+        912.4,
+        1020.13,
+        2688.05
+      ],
+      "player_processing": true,
+      "rig_hit_length": 5.19999980926514,
+      "rig_pitch_deg": -32.0,
+      "rig_processing": true,
+      "rig_spring_length": 5.19999980926514,
+      "rig_yaw_deg": -91.1458165608697
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        916.06,
+        1022.96,
+        2684.52
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 17.2204341888428,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-crown-court-night.png",
+      "flying": false,
+      "frame_id": "high-perches-crown-court-night",
+      "height_over_crown_m": 0.130859375,
+      "hour": 23.0,
+      "player_position": [
+        912.4,
+        1020.13,
+        2688.05
+      ],
+      "player_processing": true,
+      "rig_hit_length": 5.19999980926514,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 5.19999980926514,
+      "rig_yaw_deg": 133.952980211535
+    },
+    {
+      "camera": "production_rig_live",
+      "camera_fov": 70.0,
+      "camera_position": [
+        902.68,
+        1022.21,
+        2742.35
+      ],
+      "carrier_is_mentor_loaner": true,
+      "crown_flat_distance_m": 36.1171226501465,
+      "file": "D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames/high-perches-departure-lookback-night.png",
+      "flying": true,
+      "frame_id": "high-perches-departure-lookback-night",
+      "height_over_crown_m": -1.47314453125,
+      "hour": 23.0,
+      "player_position": [
+        902.28,
+        1018.53,
+        2736.04
+      ],
+      "player_processing": true,
+      "rig_hit_length": 7.5,
+      "rig_pitch_deg": -12.0,
+      "rig_processing": true,
+      "rig_spring_length": 7.5,
+      "rig_yaw_deg": 3.62350319340055
+    }
+  ],
+  "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+  "schema_version": 1,
+  "tool": "tools/capture_cloudreach_high_perch_live.gd",
+  "render_service": {
+    "source_commit": "d7c8618eef377e1b448635e8fe31a68f0b203c11",
+    "branch": "tb/visual-cloudreach",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "command": [
+      "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+      "--path",
+      "D:\\tetherbound\\render-cloudreach-d7c8618e",
+      "--fixed-fps",
+      "60",
+      "--rendering-driver",
+      "opengl3",
+      "--audio-driver",
+      "Dummy",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_cloudreach_high_perch_live.gd",
+      "--",
+      "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-1/low/high-perch/frames"
+    ],
+    "request_id": "cloudreach-1",
+    "case": "high-perch",
+    "complete": false,
+    "gpu_header": [
+      "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+    ],
+    "runtime_errors": [
+      "ERROR: unscoped chapter flag: fly_tutorial_completed"
+    ],
+    "scope": "Provenance annotation only; original native manifest preserved alongside. Requesting lane owns frame judgement. Native complete field does not override runtime ERROR qualification."
+  }
+}

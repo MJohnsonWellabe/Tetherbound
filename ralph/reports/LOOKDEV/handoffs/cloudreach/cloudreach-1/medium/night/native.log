@@ -1,0 +1,59 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+[shell_build] CloudreachCliffs begin:forward_upload total=0ms slice=0ms
+[shell_build] CloudreachCliffs materials:begin total=53ms slice=53ms
+[shell_build] CloudreachCliffs complete:materials total=147ms slice=147ms
+[shell_build] CloudreachCliffs regions:begin total=52899ms slice=8ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:mesa:begin total=53058ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:strata:begin total=53441ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:satellites:begin total=53536ms slice=0ms
+[shell_build] CloudreachCliffs regions:gate_lower_cliffs:vegetation:begin total=53613ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:mesa:begin total=53774ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:strata:begin total=54088ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:satellites:begin total=54136ms slice=0ms
+[shell_build] CloudreachCliffs regions:broken_causeways:vegetation:begin total=54179ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:mesa:begin total=54225ms slice=1ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:strata:begin total=54356ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:satellites:begin total=54392ms slice=0ms
+[shell_build] CloudreachCliffs regions:windscar_ravine:vegetation:begin total=54430ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:mesa:begin total=54610ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:strata:begin total=54795ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:satellites:begin total=54918ms slice=0ms
+[shell_build] CloudreachCliffs regions:high_roost_sky_shrine:vegetation:begin total=54963ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:mesa:begin total=54999ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:strata:begin total=55131ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:satellites:begin total=55163ms slice=0ms
+[shell_build] CloudreachCliffs regions:upper_cloudreach:vegetation:begin total=55202ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:mesa:begin total=55238ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:strata:begin total=55619ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:satellites:begin total=55655ms slice=0ms
+[shell_build] CloudreachCliffs regions:summit_final_stronghold:vegetation:begin total=55701ms slice=0ms
+[shell_build] CloudreachCliffs complete:regions total=55730ms slice=29ms
+[shell_build] CloudreachCliffs complete:ledges total=55827ms slice=45ms
+[shell_build] CloudreachCliffs routes:begin total=55870ms slice=0ms
+[shell_build] CloudreachCliffs routes:arrival_gate_road:begin total=55914ms slice=0ms
+[shell_build] CloudreachCliffs routes:lower_cliff_road:begin total=57298ms slice=3ms
+[shell_build] CloudreachCliffs routes:lower_overlook_loop:begin total=58690ms slice=3ms
+[shell_build] CloudreachCliffs routes:broken_causeway_main:begin total=62579ms slice=4ms
+[shell_build] CloudreachCliffs routes:causeway_west_loop:begin total=65659ms slice=4ms
+[shell_build] CloudreachCliffs routes:windscar_floor_loop:begin total=70935ms slice=4ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_pass:begin total=74171ms slice=4ms
+[shell_build] CloudreachCliffs routes:upper_plateau_circuit:begin total=77902ms slice=6ms
+[shell_build] CloudreachCliffs routes:upper_summit_road:begin total=84228ms slice=7ms
+[shell_build] CloudreachCliffs routes:summit_overlook_loop:begin total=88357ms slice=4ms
+[shell_build] CloudreachCliffs routes:windscar_counterweight_return:begin total=94313ms slice=8ms
+[shell_build] CloudreachCliffs routes:observatory_summit_link:begin total=95760ms slice=2ms
+[shell_build] CloudreachCliffs routes:observatory_latch_descent:begin total=95967ms slice=1ms
+[shell_build] CloudreachCliffs complete:routes total=96173ms slice=0ms
+[shell_build] CloudreachCliffs complete:gates total=96286ms slice=2ms
+[shell_build] CloudreachCliffs complete:bridges total=96741ms slice=348ms
+[shell_build] CloudreachCliffs complete:landmarks total=100133ms slice=3ms
+[shell_build] CloudreachCliffs complete:return_gate total=100365ms slice=113ms
+[shell_build] CloudreachCliffs complete:route_details total=100518ms slice=9ms
+[shell_build] CloudreachCliffs complete:resource_patches total=101114ms slice=6ms
+[shell_build] CloudreachCliffs complete:environment total=101434ms slice=185ms
+ERROR: frame matrix: EncounterDirector never appeared; refusing partial-scene evidence
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _boot (res://tools/capture_cloudreach_frame_matrix.gd:415)
