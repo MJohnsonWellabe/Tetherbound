@@ -5609,6 +5609,10 @@ func _commit_portal_unlock(peer: int, envelope: Dictionary, result: Dictionary) 
 
 
 func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
+	var game_now := _game()
+	if peer != local_peer_id() and row.get("status") == "accepted" and game_now != null \
+		and PORTAL_RECEIPT.equivalent(game_now.get("world").reward_deliveries.get(row.get("receipt")), row):
+		_character_authority.call("promote_settled_portal_marker", _authority_character(peer), row)
 	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})
 	if waiter.is_empty() or waiter.peer != peer or not _portal_envelope_valid(peer, waiter.envelope): return
 	var game := _game()
