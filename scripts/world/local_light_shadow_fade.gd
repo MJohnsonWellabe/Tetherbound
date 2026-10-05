@@ -41,9 +41,14 @@ static func watch(world: Node) -> void:
 static func _on_node_added(node: Node) -> void:
 	if node is OmniLight3D or node is SpotLight3D:
 		# Builders often set shadow_enabled after add_child; look next frame.
-		(func() -> void:
-			if is_instance_valid(node):
-				apply(node as Light3D, _config())).call_deferred()
+		# Deferred by id: the node may be freed before then.
+		_apply_deferred.call_deferred(node.get_instance_id())
+
+
+static func _apply_deferred(id: int) -> void:
+	var light := instance_from_id(id) as Light3D
+	if light != null:
+		apply(light, _config())
 
 
 static func apply(light: Light3D, cfg: Dictionary) -> void:

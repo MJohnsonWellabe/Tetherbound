@@ -45,10 +45,15 @@ static func watch(world: Node) -> void:
 
 static func _on_node_added(node: Node) -> void:
 	if node is MeshInstance3D or node is MultiMeshInstance3D:
-		# Builders place, scale and assign meshes after add_child; measure next frame.
-		(func() -> void:
-			if is_instance_valid(node) and node.is_inside_tree():
-				apply(node as GeometryInstance3D, _config())).call_deferred()
+		# Builders place, scale and assign meshes after add_child; measure next
+		# frame. Deferred by id: the node may be freed before then.
+		_apply_deferred.call_deferred(node.get_instance_id())
+
+
+static func _apply_deferred(id: int) -> void:
+	var node := instance_from_id(id) as GeometryInstance3D
+	if node != null and node.is_inside_tree():
+		apply(node, _config())
 
 
 static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
