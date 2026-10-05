@@ -537,6 +537,11 @@ func _reset_state(party_size: int) -> void:
 	# creature mirrors belong to that roster too; retaining the preceding
 	# scenario's IDs would correctly make its next save fail as unowned.
 	_game.get("local").set("redesign_character", preload("res://scripts/data/redesign_state.gd").defaults("character"))
+	# Disclosed: a character this far into the story was handed its Home Key
+	# by Grandpa (portal runtime on). Without the fact, a reload infers the
+	# opening from the party and the host's legacy reconcile journals the key
+	# against this roster, which the next scenario then replaces wholesale.
+	_game.get("local").flags.call("set_flag", "home_key_given")
 	if party_size == 0:
 		return
 	var recipe: Array = ["terrapup", "mudsnout", "bramblebun", "brooktail", "tuskroot"]
