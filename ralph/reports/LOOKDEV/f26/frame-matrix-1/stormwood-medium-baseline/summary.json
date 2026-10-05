@@ -27,5 +27,5 @@
     "Retained native deprecation and wild-cluster placement warnings.",
     "Derived capture sets HUD visible; actual final manifest records hud=true for all320 frames. Earlier stale-HUD note was incorrect."
   ],
-  "verdict": "Native completion and independent original-byte/full-axis coverage PASS; code-blind visual review pending. No full-bar/FPS acceptance."
+  "verdict": "Native completion and independent original-byte/full-axis coverage PASS; bounded code-blind BarA FAIL/BarB FAIL (56/320 frames,9references). FullF26#3 remainsOPEN."
 }
