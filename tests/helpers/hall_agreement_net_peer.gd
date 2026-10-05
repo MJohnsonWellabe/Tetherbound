@@ -513,12 +513,16 @@ func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
 	var craft_id := Crypto.new().generate_random_bytes(16).hex_encode()
 	var sent: Dictionary = session.call("homestead_submit_action", "station_craft",
 		{"recipe_id": "potion_small", "craft_id": craft_id}, kitchen, int(view.get("registry_revision", -1)))
+	# The host's immediate reply is only "awaiting"; the guest's station panel
+	# waits for the terminal saved settlement, so does this check.
 	for i in 900:
-		if not (reply.result as Dictionary).is_empty() and _inventory_count("potion_small") > int(before.potion_small):
+		if reply.result.get("settled") == true and _inventory_count("potion_small") > int(before.potion_small):
+			break
+		if reply.result.get("terminal_refusal") == true:
 			break
 		await physics_frame
 	var after := {"potion_small": _inventory_count("potion_small"), "berries": _inventory_count("berries"), "fiber": _inventory_count("fiber")}
-	var ok: bool = reply.result.get("ok") == true and int(after.potion_small) == int(before.potion_small) + 1 \
+	var ok: bool = reply.result.get("ok") == true and reply.result.get("settled") == true and int(after.potion_small) == int(before.potion_small) + 1 \
 		and int(after.berries) == int(before.berries) - 4 and int(after.fiber) == int(before.fiber) - 1
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest crafted at the host's Kitchen and kept the output", "data": {
 		"sent": sent, "reply": reply.result, "before": before, "after": after, "view_revision": int(view.get("registry_revision", -1))}}

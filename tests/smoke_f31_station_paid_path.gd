@@ -54,6 +54,7 @@ func _run() -> void:
 		var attachment := await _check_paid_attachment_place(forge)
 		if attachment != null:
 			await _check_dismantle_order_and_refund(forge, attachment)
+	await _check_host_station_craft_settles_the_panel()
 	_check_saved_world_binding()
 	_report()
 
@@ -192,6 +193,54 @@ func _check_dismantle_order_and_refund(forge: Node3D, attachment: Node3D) -> voi
 			if int(after[need.id]) != int(before[need.id]) + int(need.n):
 				_fail("dismantling %s refunded %d %s, not the paid %d" % [pair[2], int(after[need.id]) - int(before[need.id]), need.id, int(need.n)])
 		print("%s dismantled; exact paid price refunded through a proven row" % pair[2])
+
+
+## Coordinator / lane B finding: a host's own station craft (solo too) was
+## answered "awaiting_saved_decision" and, once its row was accepted, nothing
+## announced it, so the station panel never cleared and its Craft buttons
+## stayed disabled. Real Kitchen + Spice rack, the real panel's own recipe
+## handler (_station_action, what the row press calls), real Small Potion.
+func _check_host_station_craft_settles_the_panel() -> void:
+	var kitchen := await _check_paid_station_place("kitchen")
+	if kitchen == null:
+		return
+	_game.set("pending_build", "kitchen_meadows")
+	_fund(DELIVERY.cost("kitchen_meadows"))
+	var rack_uid := "b%d" % int(_game.get("world").next_building_uid)
+	for i in 30: await physics_frame
+	await _press("build_place")
+	if (await _await_accepted(rack_uid, "place_building")).get("status") != "accepted":
+		_fail("the Spice rack did not settle for the craft check")
+		return
+	await _press("build_cancel")
+	for i in 10: await physics_frame
+	_game.get("inventory").call("add", "berries", 4)
+	_game.get("inventory").call("add", "fiber", 1)
+	var potions := int(_game.get("inventory").call("count", "potion_small"))
+	kitchen.call("_open")
+	for i in 20: await physics_frame
+	var panel: Node = kitchen.get("_panel")
+	if panel == null or not bool(panel.call("is_open")):
+		_fail("the Kitchen's station panel did not open")
+		return
+	panel.call("_station_action", "station_craft", {"recipe_id": "potion_small"})
+	for i in 300:
+		if (panel.get("_station_intent") as Dictionary).is_empty(): break
+		await physics_frame
+	if not (panel.get("_station_intent") as Dictionary).is_empty():
+		_fail("the host's station craft never settled the panel (status '%s')" % str(panel.get("_status").text))
+	elif int(_game.get("inventory").call("count", "potion_small")) != potions + 1:
+		_fail("the settled craft did not grant exactly one Small Potion")
+	else:
+		var enabled := false
+		for button: Button in panel.get("_station_buttons"):
+			if not button.disabled: enabled = true
+		if not enabled:
+			_fail("the station buttons stayed disabled after the craft settled")
+		else:
+			print("host Kitchen craft settled: panel cleared ('%s'), one Small Potion, buttons re-enabled" % str(panel.get("_status").text))
+	panel.call("close")
+	for i in 10: await physics_frame
 
 
 func _check_saved_world_binding() -> void:

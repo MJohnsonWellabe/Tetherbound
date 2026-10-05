@@ -4500,7 +4500,14 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 	OPENING_HOME_KEY.accepted(self, peer, row)
 	if row.get("action") == "waystone_touch": _waystone_delivery_accepted(peer, row)
 	if peer == local_peer_id():
-		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		var settled := _settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		# A host's own homestead action (solo too) is answered "awaiting" by
+		# _foundation_send and settles here; nothing else announced it, so a
+		# station panel stayed on "awaiting_saved_decision" with its buttons off.
+		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
+		var action := str(row.get("action", ""))
+		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom":
+			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
 
@@ -4514,7 +4521,15 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 		_finalize_snapshot_receive()
 	var row := _owner_training_row()
 	if row.get("delivery_id") == id and row.get("journal_revision") == revision and row.get("receipt") == receipt:
-		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		var settled := _settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		# The guest's _rpc_foundation_reply carried only the host's immediate
+		# "awaiting" marker; this saved settlement is the terminal answer its
+		# station panel waits for (groom keeps its own completion path).
+		var action := str(row.get("action", ""))
+		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom":
+			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true),
+				{"ok": true, "resolved": true, "durable": true, "saved": true, "settled": true,
+					"owner_saved": true, "owner_acknowledged": true, "receipt": row.receipt})
 
 
 ## The input-owner graph asks `_owner_training_row()` many times a frame
