@@ -1442,6 +1442,14 @@ func set_catch_aim_active(value: bool) -> void:
 	_catch_aim_active = value
 
 
+## Seconds the current tell proper has been visible (route cue excluded), or
+## -1 when no tell is showing. COMBAT §4's forced-break read test uses it.
+func tell_visible_s() -> float:
+	if not is_winding_up():
+		return -1.0
+	return maxf(0.0, _lunge_tell_total - _beat_left)
+
+
 func is_winding_up() -> bool:
 	# A route cue (F10#2) comes BEFORE the wind-up: only the tell proper counts
 	# for interrupts and the HUD's warning. Unset, `_route_cue_left` is 0.
