@@ -17,7 +17,6 @@ func _run() -> void:
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call"], "station craft peer logs have no script errors")
 	world_build_allowance_floor_s["production_host"] = 150.0
 	world_build_allowance_floor_s["production_join"] = 150.0
-	world_build_allowance_floor_s["hall_reload_host"] = 150.0
 	if not await launch(2, "title"):
 		quit(await finish())
 		return
@@ -31,17 +30,20 @@ func _run() -> void:
 		await _craft_finish()
 		return
 	check(int(placed.effective_tier) == 1, "the host's Kitchen stands at tier 1 with its Spice rack")
-	# The guest's own ingredients, admitted by the host from the guest's
-	# portable save: fund, production leave, real host save + reload (a host
-	# never reseeds a record within one session), returning rejoin. The
-	# world-owned Kitchen must survive the reload.
-	var funded := await _craft_data(1, "craft_fund", {"items": [["berries", 4], ["fiber", 1]], "ids": COUNTED})
-	var crafter_id := str(funded.get("character_id", ""))
-	if not await _craft_step(1, "hall_leave_guest", {}): return
-	if not await _craft_step(0, "expect_peers", {"count": 1}): return
-	if not await _craft_step(0, "hall_reload_host", {"port": port}, 9000): return
-	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
-		"returning_route": true, "character": {"character_id": crafter_id}}, 9000): return
+	# The guest's own ingredients, gathered the ordinary co-op way: finds the
+	# smoke stands (disclosed setup) and the guest claims through the host's
+	# ledger, so they land on the record the host trusts. (A local add, a
+	# rejoin or a host reload cannot fund it: the host keeps the guest's
+	# record in its world save.)
+	for find: Array in [["f31_craft_berries", "berries", 4], ["f31_craft_fiber", "fiber", 1]]:
+		if not await _craft_step(1, "pickup_stand", {"id": find[0], "item": find[1], "realm": "meadows", "count": find[2]}): return
+		if not await _craft_step(1, "pickup_take", {}): return
+		await step(1, "wait", {"frames": 90})
+	var funded := await _craft_data(1, "craft_count", {"ids": COUNTED})
+	if funded.is_empty() or int(funded.counts.berries) < 4 or int(funded.counts.fiber) < 1:
+		check(false, "the guest gathered its ingredients through the host's ledger %s" % str(funded))
+		await _craft_finish()
+		return
 	var host_before := await _craft_data(0, "craft_count", {"ids": COUNTED})
 	var crafted := await _craft_data(1, "craft_at_host_kitchen", {"kitchen_uid": placed.kitchen_uid}, 3000)
 	var host_after := await _craft_data(0, "craft_count", {"ids": COUNTED})

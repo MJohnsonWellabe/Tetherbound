@@ -29,8 +29,6 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _craft_at_host_kitchen(args)
 	if action == "craft_count":
 		return _craft_count(args)
-	if action == "craft_fund":
-		return _craft_fund(args)
 	if action == "relic_power_attempt":
 		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
@@ -404,27 +402,18 @@ func _home_bed_status() -> Dictionary:
 
 ## F31#5 homestead craft actions (tests/smoke_net_homestead_station_craft.gd).
 ## Disclosed fixtures: the host stands at the paid-path smoke's open
-## homestead stance, station and recipe costs are added to the actor's own
-## inventory, and the guest stands beside the host's Kitchen. Placement,
-## crafting and saving use the ordinary paths (build placer press,
-## Session.homestead_submit_action, production leave).
+## homestead stance, the host's station costs are added to its own
+## inventory, the guest's ingredients are finds the smoke stands (claimed
+## through the host's ledger), and the guest stands beside the host's Kitchen.
+## Placement, gathering, crafting and saving use the ordinary paths (build
+## placer press, ledger claim, Session.homestead_submit_action, production
+## leave).
 const CRAFT_STANCE := Vector3(-6.0, 1.4, 22.0)
 const CRAFT_DELIVERY := preload("res://scripts/net/homestead_building_delivery.gd")
 const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
 
 func _inventory_count(id: String) -> int:
 	return int(root.get_node("Game").get("inventory").call("count", id))
-
-## Fixture stock on the guest's own portable character. The host trusts only
-## the record it admitted, and never reseeds one within a session, so the
-## smoke saves this through a production leave, then a real host save and
-## reload, then a returning rejoin, before crafting (a local add alone is
-## refused as ingredients_missing, correctly).
-func _craft_fund(args: Dictionary) -> Dictionary:
-	var inventory: RefCounted = root.get_node("Game").get("inventory")
-	for row: Variant in args.get("items", []):
-		inventory.call("add", str(row[0]), int(row[1]))
-	return _craft_count({"ids": args.get("ids", [])})
 
 func _craft_count(args: Dictionary) -> Dictionary:
 	var out := {}
