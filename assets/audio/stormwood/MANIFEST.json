@@ -1,0 +1,280 @@
+{
+  "generator": "tools/audio/gen_stormwood.py",
+  "authority": "Owner decision 2026-10-05: author the nine Stormwood WAVs from sound sources already installed in the repository (AUDIO \u00a710); no purchase, download or text-to-audio service.",
+  "licence": "Original project work. Every installed source is itself original synthesis by tools/audio/ (archive/docs/specs-2026-09-19/ASSET_LEDGER.md, Meadows soundscape row); no third-party licence attaches.",
+  "regenerate": "python3 tools/audio/gen_stormwood.py  (deterministic; byte-identical with no source change)",
+  "assets": [
+    {
+      "asset": "res://assets/audio/stormwood/surge_calm_bed.wav",
+      "format": {
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "bits": 16,
+        "loop": "smpl forward, whole clip"
+      },
+      "seed": 7101,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/ironwood_canopy.wav",
+          "sha256": "f54d937844b0154006e264d0e430555420b50d626f20b333cba43b95b15d7519"
+        },
+        {
+          "path": "assets/audio/ambience/night_insects.wav",
+          "sha256": "d8275cb77e75890a97c0b20c6e583dc6b7b0ea050f0711ddf22661b61358efe8"
+        },
+        {
+          "path": "assets/audio/ambience/river_water.wav",
+          "sha256": "f8086a2bf965e8534dea2ed6ffa619098d51eea0df03b5006025a065b41ad84e"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "river_water.wav at 1.35x speed, band-passed 600-5000 Hz -> soft steady rain wash",
+        "ironwood_canopy.wav at 0.85x speed, offset 3 s -> low wet canopy",
+        "night_insects.wav at 0.7x speed, low-passed 2.5 kHz -> low moss/forest life",
+        "70 synth drips (resonant pings 1.4-3.2 kHz), wrap-scattered",
+        "two distant thunder rolls (brown noise 30-140 Hz, 6 s) at 4.5 s and 16.8 s -> long spacing",
+        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -28.5 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
+      ],
+      "sha256": "f3786b4c52cb516c47f72ed3bb0e91bee2c8af9613f4c227cc4d67745e5f56e0"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/surge_building_bed.wav",
+      "format": {
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "bits": 16,
+        "loop": "smpl forward, whole clip"
+      },
+      "seed": 7102,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/ironwood_canopy.wav",
+          "sha256": "f54d937844b0154006e264d0e430555420b50d626f20b333cba43b95b15d7519"
+        },
+        {
+          "path": "assets/audio/ambience/tether_drone.wav",
+          "sha256": "c86d8c4bc53c82a6ae96dc8ba13f93c989e16553d5843964e6671e7a70c3d647"
+        },
+        {
+          "path": "assets/audio/ambience/wind_high.wav",
+          "sha256": "32d7f6800976d434af8c124107fa9e851ef6654e1a89fdde1db0d079745b0b25"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "ironwood_canopy.wav 1.15x HP 400 Hz + wind_high.wav 1.1x (offset 5 s) HP 500 Hz, gust-modulated -> increasing canopy motion",
+        "tether_drone.wav 1.6x band-passed 120-3000 Hz + 100/200 Hz synth hum, 4 s rising swells -> rising electrical bed",
+        "160 synth copper-vine ticks (2.6-4.2 kHz inharmonic resonators), wrap-scattered",
+        "electrical crackle (~9 impulses/s scaled by swell, HP 1.5 kHz); no birds/insects, no strike",
+        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -27.0 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
+      ],
+      "sha256": "9085b88fa2aa1aead4fc26d022a824052b8c9529b2b2c040827a964d1b6eb746"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/surge_break_bed.wav",
+      "format": {
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "bits": 16,
+        "loop": "smpl forward, whole clip"
+      },
+      "seed": 7103,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/river_water.wav",
+          "sha256": "f8086a2bf965e8534dea2ed6ffa619098d51eea0df03b5006025a065b41ad84e"
+        },
+        {
+          "path": "assets/audio/ambience/tether_drone.wav",
+          "sha256": "c86d8c4bc53c82a6ae96dc8ba13f93c989e16553d5843964e6671e7a70c3d647"
+        },
+        {
+          "path": "assets/audio/ambience/wind_high.wav",
+          "sha256": "32d7f6800976d434af8c124107fa9e851ef6654e1a89fdde1db0d079745b0b25"
+        },
+        {
+          "path": "assets/audio/ambience/wind_low.wav",
+          "sha256": "eef88b194742bc4bd53c4f912fce17f4cdf241ad965780889ef7fdbdced3bbe5"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "river_water.wav 1.8x (offset 7 s) band-passed 1.2-9 kHz + synth pink 2-9.5 kHz -> heavy rain",
+        "wind_low.wav 1.3x + wind_high.wav 0.9x (offset 11 s), 3.3 s gusts -> driven wind",
+        "tether_drone.wav 2.0x band-passed 150-4000 Hz + crackle ~30/s -> electrical pressure",
+        "four rolling thunder beds (brown 30-220 Hz, 5 s) + continuous brown 30-90 Hz under-rumble; the strike chain carries every actual strike",
+        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -24.0 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
+      ],
+      "sha256": "c429c1bff8200eb94acf9617ec99538df10af6128b28b2bb522c340f15810595"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/surge_fading_decay.wav",
+      "format": {
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "bits": 16,
+        "loop": "smpl forward, whole clip"
+      },
+      "seed": 7104,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/tether_drone.wav",
+          "sha256": "c86d8c4bc53c82a6ae96dc8ba13f93c989e16553d5843964e6671e7a70c3d647"
+        },
+        {
+          "path": "assets/audio/ambience/wind_high.wav",
+          "sha256": "32d7f6800976d434af8c124107fa9e851ef6654e1a89fdde1db0d079745b0b25"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "wind_high.wav 1.9x (offset 2 s) high-passed 3 kHz, 5.7 s breathing -> steam hiss",
+        "26 synth stormglass pings (inharmonic 1/2.76/5.40 partials, 1.8-3.6 kHz), wrap-scattered",
+        "two long low thunder rolls (brown 30-110 Hz, 9 s) -> rolling thunder decay",
+        "tether_drone.wav 0.75x low-passed 600 Hz -> charged-node afterglow",
+        "40 synth drips",
+        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -31.0 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
+      ],
+      "sha256": "4011dbc63ad3a17f2d075d4042a3f5af20dea83782bb101b2df2ffc8c78bcc02"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/release_forest_sky_bed.wav",
+      "format": {
+        "sample_rate_hz": 22050,
+        "channels": 1,
+        "bits": 16,
+        "loop": "smpl forward, whole clip"
+      },
+      "seed": 7105,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/ironwood_canopy.wav",
+          "sha256": "f54d937844b0154006e264d0e430555420b50d626f20b333cba43b95b15d7519"
+        },
+        {
+          "path": "assets/audio/ambience/meadow_birds.wav",
+          "sha256": "3be5e9e4b11665a4c52d3e2c9f1898170d648d6081c9b07f155016b24d0a745e"
+        },
+        {
+          "path": "assets/audio/ambience/wind_high.wav",
+          "sha256": "32d7f6800976d434af8c124107fa9e851ef6654e1a89fdde1db0d079745b0b25"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "meadow_birds.wav 0.92x (offset 6 s) -> returning forest birds, a shade lower than Meadows",
+        "ironwood_canopy.wav 1.0x (offset 9 s) -> settled canopy",
+        "wind_high.wav 0.8x low-passed 2.5 kHz -> open sky air",
+        "30 synth drips -> the last of the rain; no drone, crackle or thunder",
+        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -28.5 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
+      ],
+      "sha256": "15b199b357cb004016d8ed9989e18530db63795bc6cbfb5de46ce4c3a3ab9899"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/strike_warning.wav",
+      "format": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "bits": 16,
+        "loop": "none"
+      },
+      "seed": 7201,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/tether_drone.wav",
+          "sha256": "c86d8c4bc53c82a6ae96dc8ba13f93c989e16553d5843964e6671e7a70c3d647"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "synth whine glide 350 -> 1800 Hz over 1.2 s, power-curve rise",
+        "tether_drone.wav first 1.6 s, varispeed 1.5x -> 4.0x, high-passed 200 Hz -> charging buzz",
+        "crackle ~120 impulses/s scaled by rise^2 -> densifying sparks",
+        "white noise 3-12 kHz, cubic swell -> final sizzle at ground point",
+        "DC removed; 0.004 s linear tail fade; peak-normalised to -4.0 dBFS"
+      ],
+      "sha256": "51651702ed0c5428cd53810092326b4b7e407cbb9f726c0cc38b6739d937c2b7"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/strike_crack.wav",
+      "format": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "bits": 16,
+        "loop": "none"
+      },
+      "seed": 7202,
+      "installed_sources": [
+        {
+          "path": "assets/audio/sfx/impact_super_1.wav",
+          "sha256": "c653da3f0f0deefaf09850fff3ce8453e8c2dd47c41f2c802e5d4008ca752475"
+        },
+        {
+          "path": "assets/audio/sfx/mine_stone_2.wav",
+          "sha256": "1be96b2ee73e89558bd7437553141a326aa1ffe3d76036fff37c7453cdc19890"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "white noise 0.3 ms attack / 70 ms decay + re-strikes at 18/41/77 ms, high-passed 700 Hz",
+        "impact_super_1.wav 1.6x speed, high-passed 400 Hz -> hard body to the crack",
+        "mine_stone_2.wav 1.3x speed -> splintering edge",
+        "DC removed; 0.03 s linear tail fade; peak-normalised to -1.0 dBFS"
+      ],
+      "sha256": "b2385ddd193f89e16c50bffa39cb851b8f9ac3518ecd5cb0ad523e107e8a66f8"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/strike_body.wav",
+      "format": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "bits": 16,
+        "loop": "none"
+      },
+      "seed": 7203,
+      "installed_sources": [
+        {
+          "path": "assets/audio/sfx/build_place_thud_1.wav",
+          "sha256": "121e32a84889fcc665cb6668bd4b78bc893611cb4bc13cbd59f04cd43e2c6817"
+        },
+        {
+          "path": "assets/audio/sfx/impact_super_2.wav",
+          "sha256": "6daecac9f7e4f0082d1294cce7e633b2964f76bb14f98ffd06ac7a586d87e32d"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "brown noise band-passed 30-220 Hz, 20 ms attack (the crack carries the onset) / 0.7 s decay -> boom",
+        "synth sub sine sweep 102 -> 32 Hz, 20 ms attack, 0.9 s decay",
+        "build_place_thud_1.wav 0.45x speed, low-passed 600 Hz -> ground hit",
+        "impact_super_2.wav 0.5x speed, low-passed 900 Hz",
+        "DC removed; 0.25 s linear tail fade; peak-normalised to -1.5 dBFS"
+      ],
+      "sha256": "92b9723ca822f02e6f906e3a7bdda815f54b2f87f5e5c026c536ba92a88c240c"
+    },
+    {
+      "asset": "res://assets/audio/stormwood/strike_decay.wav",
+      "format": {
+        "sample_rate_hz": 44100,
+        "channels": 1,
+        "bits": 16,
+        "loop": "none"
+      },
+      "seed": 7204,
+      "installed_sources": [
+        {
+          "path": "assets/audio/ambience/wind_low.wav",
+          "sha256": "eef88b194742bc4bd53c4f912fce17f4cdf241ad965780889ef7fdbdced3bbe5"
+        }
+      ],
+      "synthesis": "tools/audio/synth.py (project-owned)",
+      "steps": [
+        "rolling thunder: brown noise 30-160 Hz, 3-5 overlapping swells, 5 s",
+        "wind_low.wav first 3 s at 0.6x speed, band-passed 30-300 Hz, 2 s decay -> air push after the roll",
+        "DC removed; 0.8 s linear tail fade; peak-normalised to -4.0 dBFS"
+      ],
+      "sha256": "8ef382c650cc93fd67bf2b5f86218db4e13592cec215945ce0812c3c22dec5f5"
+    }
+  ]
+}

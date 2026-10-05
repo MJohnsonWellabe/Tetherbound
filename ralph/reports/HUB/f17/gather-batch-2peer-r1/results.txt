@@ -1,0 +1,37 @@
+PASS: a refused choice leaves the guest without a power
+PASS: acked and replayed batch rows were pruned from the host world (0 left)
+PASS: peer 0 craft_authority_count: host authority counts read {"character_id":"character-6b871e7a75ece1d1e2948a1e4bb322c2","counts":{"berries":0.0,"fiber":0.0,"potion_small":1.0}}
+PASS: peer 0 craft_authority_count: host authority counts read {"character_id":"character-6b871e7a75ece1d1e2948a1e4bb322c2","counts":{"berries":4.0,"fiber":1.0,"potion_small":0.0}}
+PASS: peer 0 craft_count: counts read {"character_id":"character-e5bc427385e1af180a35f1514091c3b2","counts":{"berries":0.0,"fiber":0.0,"potion_small":0.0}}
+PASS: peer 0 craft_place_kitchen: host planted a Kitchen and its Spice rack through the paid journal {"effective_tier":1.0,"kitchen_uid":"b1","rack_uid":"b2"}
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 gather_node_stand: stood harvest node 'f31_berry_a'
+PASS: peer 0 gather_node_stand: stood harvest node 'f31_berry_b'
+PASS: peer 0 gather_rows: gather rows read {"batch":{"acked":2.0,"hits":0.0,"next_seq":3.0,"open":{},"replayed":2.0},"rows":0.0}
+PASS: peer 0 pickup_stand: stood 'f31_craft_fiber' (fiber)
+PASS: peer 0 production_host: title fresh identity 'CraftHost'/trainer entered 'MeadowsPlayground' and hosted udp/29201 after 1 frames; real mounted world released and admitted host stable30 frames
+PASS: peer 1 craft_at_host_kitchen: guest crafted at the host's Kitchen and kept the output {"after":{"berries":0.0,"fiber":0.0,"potion_small":1.0},"before":{"berries":4.0,"fiber":1.0,"potion_small":0.0},"reply":{"durable":true,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-6b871e7a75ece1d1e2948a1e4bb322c2:8bfb6c1c6209283e205b6e1432d53c4a","resolved":true,"saved":true,"settled":true},"sent":{"code":"awaiting_saved_decision","ok":false,"resolved":false},"view_revision":0.0}
+PASS: peer 1 craft_count: counts read {"character_id":"character-6b871e7a75ece1d1e2948a1e4bb322c2","counts":{"berries":0.0,"fiber":0.0,"potion_small":1.0}}
+PASS: peer 1 craft_count: counts read {"character_id":"character-6b871e7a75ece1d1e2948a1e4bb322c2","counts":{"berries":4.0,"fiber":1.0,"potion_small":0.0}}
+PASS: peer 1 gather_node_stand: stood harvest node 'f31_berry_a'
+PASS: peer 1 gather_node_stand: stood harvest node 'f31_berry_b'
+PASS: peer 1 gather_node_take: gathered 'f31_berry_a'
+PASS: peer 1 gather_node_take: gathered 'f31_berry_b'
+PASS: peer 1 hall_leave_guest: production client leave saved its own portable character; production reader confirmed disk payload
+PASS: peer 1 pickup_stand: stood 'f31_craft_fiber' (fiber)
+PASS: peer 1 pickup_take: pressed 'f31_craft_fiber'
+PASS: peer 1 production_join: title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:29201 as peer 1479799238 after 86 frames
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:29201 as peer 1765310530 after 88 frames
+PASS: peer 1 relic_power_attempt: guest relic power request answered by the host {"local_active":"","result":{"code":"source_or_revision_changed","durable":false,"ok":false,"reason":"source_or_revision_changed","resolved":true,"terminal_refusal":true},"runtime_ready":false}
+PASS: same saved guest character rejoined
+PASS: station craft peer logs have no script errors
+PASS: the crafted potion persisted with the guest's portable character
+PASS: the guest keeps the potion it crafted
+PASS: the guest's harvests flushed as a batch { "acked": 2.0, "hits": 0.0, "next_seq": 3.0, "open": {  }, "replayed": 2.0 }
+PASS: the guest's satchel holds exactly its finds { "berries": 4.0, "fiber": 1.0, "potion_small": 0.0 }
+PASS: the host's Kitchen stands at tier 1 with its Spice rack
+PASS: the host's authority record gained exactly the guest's finds { "berries": 4.0, "fiber": 1.0, "potion_small": 0.0 }
+PASS: the host's authority record matches the guest after the reconnect { "berries": 0.0, "fiber": 0.0, "potion_small": 1.0 }
+PASS: the host's own stock is untouched by the guest's craft { "berries": 0.0, "fiber": 0.0, "potion_small": 0.0 }
+PASS: the reconnect re-granted no find { "berries": 0.0, "fiber": 0.0, "potion_small": 1.0 }
+PASS: with the portal runtime off the host refuses the guest's relic power choice

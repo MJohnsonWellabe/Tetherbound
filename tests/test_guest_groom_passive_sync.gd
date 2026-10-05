@@ -251,6 +251,62 @@ func test_owner_bool_save_precedes_ack_retries_keep_uid_and_restart_uses_disk_ba
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
 
+## Data-loss regression (F18 full CI, smoke_net_host_join_leave): a client
+## that joins opens groom_resume, and leaving before the host answers had its
+## character save refused ("groom passive pending"), so no file was written.
+## A groom that has installed nothing locally (prepare/resume) never refuses a
+## character save; a prepared install stays atomic; and the rejoin's resume
+## re-derives from the host, so nothing is replayed twice.
+func test_leave_mid_groom_resume_still_saves_and_rejoin_replays_nothing() -> void:
+	var directory := "user://test_guest_groom_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := _game(directory)
+	var session: Node = game.session
+	var sync: RefCounted = session.call("_groom_service")
+	var member: RefCounted = game.local.party.at(0)
+	CONDITION.tick(member, CONDITION.config(), 1.0) # Genuine progress the leave must keep.
+	sync.call("begin_resume")
+	assert_true(session.owns_input(), "the resume fence still holds care actions")
+	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a leave mid-resume must write the character file")
+	var disk: Dictionary = game.save_system.character_store.read(DATA.CHARACTER)
+	assert_true(E._equivalent(RECORD.portable_projection(disk), RECORD.portable_projection(game.local.save_data())),
+		"the file is exactly the live character, not a groom projection")
+	sync.pending.phase = "prepare"
+	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a requested but unprepared groom never refuses a save")
+	var prepared := _prepared(RECORD.portable_projection(game.local.save_data()))
+	sync.pending = {"scope": sync._scope(), "intent": prepared.intent.duplicate(true), "source_key": prepared.source_key, "phase": "save", "prepared": prepared}
+	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a prepared baseline not yet installed has changed nothing")
+	sync.pending.installed = true
+	assert_false(game.save_system.save_character_prepared(game, DATA.CHARACTER), "once installing starts, only the prepared baseline itself may be saved")
+	sync.pending.phase = "cancel"
+	sync.pending.erase("installed")
+	assert_true(game.save_system.save_character_prepared(game, DATA.CHARACTER), "a groom cancelled before any install never refuses a save")
+	# Rejoin to a host that kept its reservation: the guest's saved file carries
+	# more passive progress than the host's baseline. The re-offered preparation
+	# installs its absolute values once; nothing is added on top.
+	sync.pending = {}
+	var before := RECORD.portable_projection(game.local.save_data())
+	var retained := _prepared(before)
+	CONDITION.tick(game.local.party.at(0), CONDITION.config(), 2.0) # Progress saved after the host's baseline.
+	sync.call("begin_resume")
+	sync.call("receive", {"op": "groom_resume"}, {"code": "groom_baseline_prepared", "prepared": retained})
+	var installed := RECORD.portable_projection(game.local.save_data())
+	assert_eq(sync.pending.get("phase"), "commit", "the retained preparation installed once and now awaits the host ACK")
+	assert_true(E._equivalent(installed, retained.after),
+		"the install is exactly the host baseline, never progress added on top: " + str(_passive_difference(installed, retained.after)))
+	var saved: Dictionary = game.save_system.character_store.read(DATA.CHARACTER)
+	assert_true(E._equivalent(RECORD.portable_projection(saved), retained.after), "the one install is the saved baseline")
+	assert_false(game.save_system.save_character_prepared(game, DATA.CHARACTER), "after install only the baseline may be on disk until the ACK")
+	# Rejoin to a host with no preparation: resume clears with nothing to replay.
+	sync.pending = {}
+	sync.call("begin_resume")
+	sync.call("receive", {"op": "groom_resume"}, {"code": "groom_no_preparation"})
+	assert_true(sync.pending.is_empty(), "the rejoin resume settles with nothing to replay")
+	assert_true(game.world.reward_deliveries.is_empty(), "no Groom row was journaled by the leave or the rejoins")
+	assert_false(session.owns_input())
+	session.free()
+	game.free()
+	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+
 var _root: Node
 var _apis: Array[SceneMultiplayer] = []
 var _peers: Array[ENetMultiplayerPeer] = []
@@ -382,3 +438,38 @@ func test_native_delayed_preparation_and_bool_retry_enter_existing_groom_journal
 	assert_true(int(result.get("assertions", 0)) >= 18, combined)
 	assert_false(combined.contains("ERROR:") or combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
 	assert_eq(code, 0, combined)
+
+
+func test_rejoin_readmit_adopts_the_hosts_landmarks_on_real_maps_and_keeps_fog() -> void:
+	# Review G1 finding 4: the real adopt over the real four realm maps. The
+	# adopted set must hash back exactly to what the host sent (so the readmit
+	# completes), and nothing but the discovered landmarks may change.
+	var game := _game(OS.get_user_data_dir().path_join("g1-adopt"))
+	var sync := SYNC.new(game.session)
+	var player: RefCounted = game.local
+	var meadows: RefCounted = player.call("map_for", "meadows")
+	var ids: Array = (meadows.get("_landmark_defs") as Dictionary).keys()
+	assert_true(ids.size() >= 2, "the real Meadows map defines landmarks")
+	if ids.size() < 2:
+		game.session.free()
+		game.free()
+		return
+	meadows.call("discover_landmark", str(ids[0]))
+	meadows.call("discover_landmark", str(ids[1]))
+	meadows.call("mark_visited", Vector3.ZERO)
+	var before_fog: Dictionary = meadows.call("save_data")
+	var held := sync.admission_landmarks()
+	held.meadows = [str(ids[1])] # The host never replayed ids[0].
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	assert_true(sync.adopt_landmarks(held))
+	assert_eq(hash.fingerprint({"discovered": sync.admission_landmarks()}), hash.fingerprint({"discovered": held}),
+		"the adopted maps hash back to the host's held set")
+	var after_fog: Dictionary = meadows.call("save_data")
+	for key: String in before_fog:
+		if key != "landmarks":
+			assert_eq(JSON.stringify(after_fog.get(key)), JSON.stringify(before_fog.get(key)), "%s is untouched" % key)
+	assert_false(bool(meadows.call("is_landmark_discovered", str(ids[0]))), "the unreplayed landmark can be discovered again")
+	held.meadows = ["not-a-real-landmark"]
+	assert_false(sync.adopt_landmarks(held), "an unknown landmark is refused")
+	game.session.free()
+	game.free()

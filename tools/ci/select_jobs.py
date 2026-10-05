@@ -92,7 +92,9 @@ NET_JOBS = {"discover-net-smokes", "verify-multiplayer-shard", "verify-veridian-
 # Character texture binding / material cache and the terrain mipmap probe.
 PRESENTATION_JOBS = {"verify-regions-shard"}
 ALWAYS_JOBS = {"changes", "ci-gate", "verify-bake-freshness", "verify-unit-tests", "export",
-               "verify-segment-handoffs"}
+               "verify-segment-handoffs",
+               # Queue-order jobs (ci.yml QUEUE ORDER): ungated, they only sequence tiers.
+               "queue-after-longest", "queue-after-long"}
 
 # Where the reference scan looks (text only).
 SCAN_ROOTS = ("scripts/", "scenes/", "autoload/", "data/", "tests/", "tools/", "shaders/", "assets/")

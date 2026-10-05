@@ -309,17 +309,26 @@ func record_personal_flag(character: String, flag: String, value: bool) -> void:
 
 
 ## Actual combat consumers use this detached view of the SAME admitted row.
-## RealmHeartState currently activates from merged world flags; those cannot
-## prove this traveler's personal relic hang. Keep the portable legacy choice
-## and typed hung array in state(), but expose no power until a protected
-## personal grant/hang producer exists. Empty selection yields baseline 1.0.
-## No per-request stats, cloned ownership registry or inferred receipt here.
+## F31#2: the protected personal producer now exists -- the host's relic_hang
+## transaction writes `relics_hung` together with its receipt -- so the
+## selected power is exposed exactly when THIS character's hang is proved by
+## that receipt. A selection whose relic is unproved (stale, forged or legacy
+## world-socket choice) reads as none: baseline 1.0.
 func actor_stat_state(character_id: String) -> Dictionary:
 	var personal := state(character_id)
 	if personal.is_empty():
 		return {}
-	personal.realm_hearts = {"active_id": ""}
-	personal.redesign_character.relics_hung = []
+	# A portable array alone is a claim; only a hang with the host-written
+	# relic_hang receipt (foundation_actions._relic) is proved.
+	var receipts: Array = personal.redesign_character.get("transaction_receipts", [])
+	var proved: Array = []
+	for biome: Variant in personal.redesign_character.get("relics_hung", []):
+		if receipts.has("relic_hang:%s:%s" % [str(biome), character_id]):
+			proved.append(str(biome))
+	personal.redesign_character.relics_hung = proved
+	var active := str((personal.get("realm_hearts", {}) as Dictionary).get("active_id", ""))
+	if active.is_empty() or not preload("res://autoload/realm_heart_state.gd").hung_allows(active, proved):
+		personal.realm_hearts = {"active_id": ""}
 	return personal
 
 
