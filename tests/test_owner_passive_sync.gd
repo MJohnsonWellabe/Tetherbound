@@ -1300,3 +1300,24 @@ func test_an_unreplayed_reward_delivery_holds_the_home_key_request() -> void:
 	assert_true(service.reward_replay_pending(), "an applied find not yet replayed holds it")
 	service.local.inputs = service.local.inputs.filter(func(input: Dictionary) -> bool: return input.op != "reward_delivery_applied")
 	assert_false(service.reward_replay_pending(), "once replayed (acked inputs leave the buffer) the request goes")
+
+
+func test_a_settled_owner_row_advances_the_cached_view_revision() -> void:
+	# F31#2 (render.yml 37388993811): right after its Home Key trip home a
+	# guest's cached personal view still quoted the revision before the trip's
+	# owner rows, so the relic power it chose was refused as stale.
+	var session: Node = load("res://scripts/net/session.gd").new()
+	session.set("_mode", "client")
+	session.set("_foundation_personal_cache", {"character_id": "guest-a", "registry_revision": 3})
+	session.call("_advance_personal_view_revision", {"character_id": "guest-a", "character_revision": 5})
+	assert_eq(session.get("_foundation_personal_cache").registry_revision, 5, "a settled row is the record at its new revision")
+	session.call("_advance_personal_view_revision", {"character_id": "guest-a", "character_revision": 4.0})
+	assert_eq(session.get("_foundation_personal_cache").registry_revision, 5, "an older row never moves it back")
+	session.call("_advance_personal_view_revision", {"character_id": "guest-b", "character_revision": 9})
+	assert_eq(session.get("_foundation_personal_cache").registry_revision, 5, "another character's row is ignored")
+	session.call("_advance_personal_view_revision", {"character_id": "guest-a"})
+	assert_eq(session.get("_foundation_personal_cache").registry_revision, 5, "a row without a revision is ignored")
+	session.set("_mode", "host")
+	session.call("_advance_personal_view_revision", {"character_id": "guest-a", "character_revision": 8})
+	assert_eq(session.get("_foundation_personal_cache").registry_revision, 5, "the host reads its own authority, not a cache")
+	session.free()

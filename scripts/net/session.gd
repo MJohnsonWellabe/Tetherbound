@@ -687,6 +687,16 @@ func _foundation_personal_view(peer: int) -> Dictionary:
 	full.registry_revision = int(_character_authority.call("revision", character))
 	return full
 
+## A settled owner row is this character's record at its new host revision.
+## The cached view must not quote an older one: the next request (a relic
+## power chosen right after a Home Key trip home) would be refused as stale.
+func _advance_personal_view_revision(row: Dictionary) -> void:
+	var revision: Variant = row.get("character_revision")
+	if is_host() or (not revision is int and not revision is float) \
+		or _foundation_personal_cache.get("character_id") != row.get("character_id"): return
+	if int(_foundation_personal_cache.get("registry_revision", -1)) < int(revision):
+		_foundation_personal_cache.registry_revision = int(revision)
+
 func homestead_personal_view() -> Dictionary:
 	if is_host(): return _foundation_personal_view(local_peer_id())
 	_foundation_send("personal_view", "homestead_view", {}, -1)
@@ -4842,6 +4852,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
+	_advance_personal_view_revision(row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
 		_owner_passive_altar_original.clear()
 	if not _altar_spend_request.is_empty() and _altar_spend_request.get("intent", {}).get("spend_id") == row.action_id:
