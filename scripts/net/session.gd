@@ -500,6 +500,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
 	elif envelope.op == "groom": context = _foundation_groom_context(peer, envelope.station_key)
 	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent)
+	elif envelope.op == "starter_choice": context = _foundation_starter_context(peer)
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
@@ -579,6 +580,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if _character_authority.call("finish_creature_training", stage, saved) != true: return FOUNDATION_ACTIONS.deny("stage_changed")
 	if not saved: return _foundation_journal_refusal(envelope.op, journal)
 	writer.call("publish_creature_training", peer, character, accepted.receipt)
+	if envelope.op == "starter_choice": _character_authority.call("record_personal_flag", character, STARTER_CHOICE.FLAG, true)
 	return _foundation_decision(peer, world.reward_deliveries.get(journal.delivery_id, {}))
 
 func _foundation_journal_refusal(action: String, journal: Dictionary) -> Dictionary:
@@ -5979,6 +5981,34 @@ func _foundation_capture_context(peer: int, key: String) -> Dictionary:
 			return context
 	return {}
 
+
+## F01#6a. A guest's original starter enters this host's admitted record only
+## through the staged `starter_choice` action (scripts/net/starter_choice_action.gd),
+## never from the guest's own write. The host context comes from the host's own
+## config and registry; `game_state.gd::_original_starter_admitted()` asks.
+const STARTER_CHOICE := preload("res://scripts/net/starter_choice_action.gd")
+
+func _foundation_starter_context(peer: int) -> Dictionary:
+	if not is_host() or peer == local_peer_id() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
+	if config().get("redesign_ending_runtime_enabled") != true and not portal_runtime_ready(): return {}
+	var character := _authority_character(peer)
+	if character.is_empty(): return {}
+	var species: Variant = preload("res://scripts/story/opening_beats.gd").config().get("starters", {}).get("species", [])
+	if not species is Array or species.is_empty(): return {}
+	return STARTER_CHOICE.host_context(character, int(_character_authority.call("revision", character)),
+		species, int(PROGRESSION.config().get("level", {}).get("starter_level", 3)))
+
+## Guest only. Re-asked by the opening director until the row reads accepted;
+## the host answers an identical request from its existing row. The revision is
+## the host registry's, read from the personal view this also refreshes.
+func request_original_starter(card: Dictionary) -> Dictionary:
+	if is_host() or not is_active() or card.is_empty(): return FOUNDATION_ACTIONS.deny("authority_missing")
+	var character := _local_character_id()
+	var view := _foundation_personal_cache
+	_foundation_send("personal_view", "homestead_view", {}, -1)
+	if view.get("character_id") != character or not ESSENCE._integer(view.get("registry_revision"), 0, 2147483646):
+		return {"ok": false, "resolved": false, "code": "awaiting_personal_view"}
+	return _foundation_send("starter_choice", STARTER_CHOICE.source_key(character), STARTER_CHOICE.intent(card), int(view.registry_revision))
 
 const OPENING_HOME_KEY := preload("res://scripts/net/opening_home_key.gd")
 

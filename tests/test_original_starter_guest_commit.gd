@@ -1,6 +1,6 @@
 extends "res://tests/test_case.gd"
 
-## F01#6a (ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md §1).
+## F01#6a (ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md on tb/reproof-f01 f5e2b5cb §1).
 ## In a two-peer opening the guest's starter never committed:
 ## `game_state.gd::commit_original_starter()` refused every non-host, so the
 ## director held `_pending_starter_adoption` forever, its opening stayed modal
@@ -120,3 +120,54 @@ func test_the_guest_write_is_its_own_character_file_and_never_a_world() -> void:
 		"the starter commit's prepared write succeeds on an admitted guest")
 	assert_true(saver.characters().has(GUEST), "the guest's own character file was written")
 	assert_false(saver.has_slot(game.autosave_slot()), "a guest's starter commit never writes a world slot")
+
+
+## --- F01#6a staged half: the guest's local commit is not the end ------------
+
+class RequestingClient extends Node:
+	var requests: Array = []
+	func is_host() -> bool:
+		return false
+	func client_character_save_ready() -> bool:
+		return true
+	func request_original_starter(card: Dictionary) -> Dictionary:
+		requests.append(card.duplicate(true))
+		return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
+
+
+func _fresh_starter() -> RefCounted:
+	var creature: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	creature.set_level(int(preload("res://scripts/creatures/progression.gd").config().get("level", {}).get("starter_level", 3)),
+		preload("res://scripts/creatures/progression.gd").config())
+	return creature
+
+
+func test_a_guest_is_not_finished_until_the_host_admits_the_same_receipt() -> void:
+	var client := RequestingClient.new()
+	game.session = client
+	game.local.character_id = GUEST
+	game.world.reward_delivery_namespace = "starter-world"
+	var starter := _fresh_starter()
+	var receipt := "starter_choice:%s:%s" % [GUEST, str(starter.get("uid"))]
+	assert_false(game._original_starter_admitted(starter, receipt),
+		"a guest's local commit alone leaves the opening pending")
+	assert_eq(client.requests.size(), 1, "the guest asks the host to stage the same starter")
+	assert_eq(client.requests[0], preload("res://scripts/save/water_capture_codec.gd").encode(starter),
+		"the request carries exactly the live starter's card")
+	var delivery_id := preload("res://scripts/creatures/essence.gd").training_delivery_id("starter-world", GUEST)
+	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": receipt, "status": "pending"}
+	assert_false(game._original_starter_admitted(starter, receipt), "a pending host row is not yet admission")
+	assert_eq(client.requests.size(), 2, "re-asking is how a lost reply recovers; the host answers from its row")
+	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": receipt, "status": "accepted"}
+	assert_true(game._original_starter_admitted(starter, receipt),
+		"the host's accepted row means its admitted copy holds the same receipt")
+	assert_eq(client.requests.size(), 2, "an admitted starter is never re-requested")
+	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": "starter_choice:%s:other" % GUEST, "status": "accepted"}
+	assert_false(game._original_starter_admitted(starter, receipt), "a different starter's receipt is not this one's admission")
+
+
+func test_the_host_is_its_own_admitted_record() -> void:
+	game.session = HostSession.new()
+	var starter := _fresh_starter()
+	assert_true(game._original_starter_admitted(starter, "starter_choice:host:%s" % str(starter.get("uid"))),
+		"the host path is unchanged: no request, no wait")

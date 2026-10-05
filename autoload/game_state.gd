@@ -3159,7 +3159,7 @@ func use_home_key() -> bool:
 ## autosave does, once the host's snapshot has made that character file a valid
 ## save candidate. Gating this on `is_host()` held every guest's adoption
 ## pending forever, which kept the opening modal and Grandpa unreachable
-## (`ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md` §1).
+## (`ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md on tb/reproof-f01 f5e2b5cb` §1).
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
 	if not original_starter_writer_ready() or source == null or instance == null: return false
 	if not bool(session.call("portal_runtime_ready")) and session.call("config").get("redesign_ending_runtime_enabled", false) != true: return false
