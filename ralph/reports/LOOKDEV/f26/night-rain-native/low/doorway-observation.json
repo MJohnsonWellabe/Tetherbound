@@ -1,0 +1,203 @@
+{
+  "method": "Original native pixels only, no resize/edit. Fixed ROIs selected after viewing own original normal-lit frames. sRGB weighted luma, not physical luminance. House-light-off images are diagnosis only/excluded from quality acceptance. Rendering/weather/time/local light contributions not otherwise isolated.",
+  "rows": [
+    {
+      "image": "0000-actual-farmhouse-doorway-day-clear-low.png",
+      "rois": {
+        "sky_clear_patch": {
+          "roi_xyxy": [
+            900,
+            80,
+            1100,
+            150
+          ],
+          "mean_srgb_rgb_0_255": [
+            86.97221428571429,
+            126.88828571428571,
+            151.34157142857143
+          ],
+          "weighted_srgb_luma_0_255": 120.16765615714286
+        },
+        "left_house_plaster": {
+          "roi_xyxy": [
+            270,
+            370,
+            400,
+            410
+          ],
+          "mean_srgb_rgb_0_255": [
+            106.0926923076923,
+            118.47192307692308,
+            88.06076923076922
+          ],
+          "weighted_srgb_luma_0_255": 113.6444133076923
+        }
+      }
+    },
+    {
+      "image": "0001-actual-farmhouse-doorway-night-clear-low.png",
+      "rois": {
+        "sky_clear_patch": {
+          "roi_xyxy": [
+            900,
+            80,
+            1100,
+            150
+          ],
+          "mean_srgb_rgb_0_255": [
+            20.8295,
+            43.978071428571425,
+            85.59278571428571
+          ],
+          "weighted_srgb_luma_0_255": 42.06126751428572
+        },
+        "left_house_plaster": {
+          "roi_xyxy": [
+            270,
+            370,
+            400,
+            410
+          ],
+          "mean_srgb_rgb_0_255": [
+            38.82903846153846,
+            50.682884615384616,
+            74.12634615384616
+          ],
+          "weighted_srgb_luma_0_255": 49.855374846153836
+        }
+      }
+    },
+    {
+      "image": "0002-actual-farmhouse-doorway-diagnostic-house-lights-off-night-clear-low.png",
+      "rois": {
+        "sky_clear_patch": {
+          "roi_xyxy": [
+            900,
+            80,
+            1100,
+            150
+          ],
+          "mean_srgb_rgb_0_255": [
+            20.818428571428573,
+            43.972,
+            85.58971428571428
+          ],
+          "weighted_srgb_luma_0_255": 42.054349685714286
+        },
+        "left_house_plaster": {
+          "roi_xyxy": [
+            270,
+            370,
+            400,
+            410
+          ],
+          "mean_srgb_rgb_0_255": [
+            38.82942307692308,
+            50.682307692307695,
+            74.1275
+          ],
+          "weighted_srgb_luma_0_255": 49.85512730769231
+        }
+      }
+    },
+    {
+      "image": "0003-actual-farmhouse-doorway-day-rain-low.png",
+      "rois": {
+        "sky_clear_patch": {
+          "roi_xyxy": [
+            900,
+            80,
+            1100,
+            150
+          ],
+          "mean_srgb_rgb_0_255": [
+            85.68892857142858,
+            105.39657142857143,
+            118.16114285714286
+          ],
+          "weighted_srgb_luma_0_255": 102.12832861428572
+        },
+        "left_house_plaster": {
+          "roi_xyxy": [
+            270,
+            370,
+            400,
+            410
+          ],
+          "mean_srgb_rgb_0_255": [
+            77.10788461538462,
+            86.33192307692308,
+            70.77615384615385
+          ],
+          "weighted_srgb_luma_0_255": 83.24776596153845
+        }
+      }
+    },
+    {
+      "image": "0004-actual-farmhouse-doorway-night-rain-low.png",
+      "rois": {
+        "sky_clear_patch": {
+          "roi_xyxy": [
+            900,
+            80,
+            1100,
+            150
+          ],
+          "mean_srgb_rgb_0_255": [
+            21.015357142857145,
+            44.15635714285714,
+            85.763
+          ],
+          "weighted_srgb_luma_0_255": 42.24058015714285
+        },
+        "left_house_plaster": {
+          "roi_xyxy": [
+            270,
+            370,
+            400,
+            410
+          ],
+          "mean_srgb_rgb_0_255": [
+            89.425,
+            98.0126923076923,
+            85.60307692307693
+          ],
+          "weighted_srgb_luma_0_255": 95.29097469230769
+        }
+      }
+    },
+    {
+      "image": "0005-actual-farmhouse-doorway-diagnostic-house-lights-off-night-rain-low.png",
+      "rois": {
+        "sky_clear_patch": {
+          "roi_xyxy": [
+            900,
+            80,
+            1100,
+            150
+          ],
+          "mean_srgb_rgb_0_255": [
+            21.125214285714286,
+            44.24292857142857,
+            85.84578571428571
+          ],
+          "weighted_srgb_luma_0_255": 42.3318288
+        },
+        "left_house_plaster": {
+          "roi_xyxy": [
+            270,
+            370,
+            400,
+            410
+          ],
+          "mean_srgb_rgb_0_255": [
+            89.47442307692307,
+            98.07384615384615,
+            85.67615384615385
+          ],
+          "weighted_srgb_luma_0_255": 95.35049542307692
+        }
+      }
+    }
+  ]
+}
