@@ -1050,6 +1050,8 @@ func character_fifth_stirred(character_id: String) -> bool:
 ## Only the host's own accepted journal row, after its debit, at the same
 ## revision (receipt metadata, like the vitals marker). Busy: retried by the
 ## portal reconcile poll.
+var _portal_marker_conflicts_logged: Dictionary = {}
+
 func promote_settled_portal_marker(character: String, row: Dictionary) -> bool:
 	const DELIVERY = preload("res://scripts/net/portal_delivery.gd")
 	if not DELIVERY.valid(row, character, _world_instance) or row.status != "accepted": return false
@@ -1058,9 +1060,14 @@ func promote_settled_portal_marker(character: String, row: Dictionary) -> bool:
 	var marker := row.duplicate(true)
 	marker.status = "settled"
 	var previous: Variant = candidate.portal_escrow.get(row.receipt)
-	if previous != null: return equivalent(previous, marker)
+	if previous != null:
+		if equivalent(previous, marker): return true
+		if not _portal_marker_conflicts_logged.has(row.receipt):
+			_portal_marker_conflicts_logged[row.receipt] = true
+			push_warning("portal marker conflicts with the admitted record's row " + str(row.receipt))
+		return false
 	if _portal_mutation_pending(character) or _training_locked(character) or _portal_stages.has(character) \
-		or _loadout_pending.has(character) or _vitals_stages.has(character): return false
+		or _loadout_pending.has(character) or _vitals_pending.has(character) or _vitals_stages.has(character): return false
 	candidate.portal_escrow[row.receipt] = marker
 	if not errors(candidate, character).is_empty(): return false
 	_replace_record(character, revision(character), candidate)
