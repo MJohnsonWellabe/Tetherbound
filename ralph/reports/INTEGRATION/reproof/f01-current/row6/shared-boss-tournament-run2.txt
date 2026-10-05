@@ -1,0 +1,30 @@
+PASS: tournament host opened a world
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+FAIL: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (the join did not put this peer in a fight)
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: peer 1 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: both peers completed 'tournament_quarter_mira' (battle won in 1297 frames / 8 swings against 2 of their creatures)
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+PASS: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-2246fcc8d1d8c22584df3e407449a447", "character-a0c0e0c8287009089444bab0ba59627c"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+PASS: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-2246fcc8d1d8c22584df3e407449a447", "character-a0c0e0c8287009089444bab0ba59627c"])
+PASS: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-2246fcc8d1d8c22584df3e407449a447", "character-a0c0e0c8287009089444bab0ba59627c"])
+PASS: opened authored tournament round 'tournament_semi_tam'
+PASS: 'tournament_semi_tam' minted one shared encounter record
+PASS: peer 1 joined 'tournament_semi_tam' rather than opening another fight (joined 1:2 beside 'pipwing' at (-1.4, 6.7))
+FAIL: peer 0 reduced 'tournament_semi_tam' shared opponent HP -- attempt 6: host hp 115.440 -> 115.440 at (-1.92, 1.85, 9.02); stand_in=(host) place=creature stands at (-0.52, 0.90, 9.02) strike=PASS submitted quick strike (local verdict ok=true pending=false code=); host receipt: ok=true code= origin=[-0.51921331882477, 2.82511472702026, 9.02347660064697] reach=-1.00 arc=-1.0deg [opponent d=4.47 connects=false, creature d=6.92 connects=false, trainer d=2.96 connects=false]
+PASS: peer 1 reduced 'tournament_semi_tam' shared opponent HP
+FAIL: both peers completed 'tournament_semi_tam' (ERROR: smoke budget exceeded)
+FAIL: ERROR: smoke budget exceeded
