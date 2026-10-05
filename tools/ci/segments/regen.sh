@@ -21,7 +21,8 @@ cd "$repo"
 info="$("$godot" --headless --path . --script tools/ci/segments/boundary_info.gd -- --boundary="$boundary" 2>/dev/null | sed -n 's/^BOUNDARY_INFO //p')"
 [ -n "$info" ] || { echo "regen: unknown boundary '$boundary'" >&2; exit 2; }
 work="$(mktemp -d "${TMPDIR:-/tmp}/ci-segment-regen-XXXXXX")"
-trap 'rm -rf "$work"' EXIT
+# Kept on failure (the producer's run.log, PROOF.md and peer logs), removed on success.
+trap 'rc=$?; if [ "$rc" -eq 0 ]; then rm -rf "$work"; else echo "regen: logs kept in $work" >&2; fi' EXIT
 # One run per distinct producer (both roles of a two-peer segment come from one run).
 mapfile -t producers < <(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print("\n".join(sorted({r["producer"]+"\t"+r["runner"]+"\t"+" ".join(r["runner_args"]) for r in d["roles"].values()})))' "$info")
 i=0

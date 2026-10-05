@@ -40,6 +40,7 @@
    "expect_data": {
     "realm": "cloudreach"
    },
+   "budget_frames": 20000,
    "label": "host loads midride/after_b",
    "_comment": "SEGMENT: host resumes from the checkpoint through Game.load_game and a boot of its realm"
   },

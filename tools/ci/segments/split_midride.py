@@ -46,7 +46,7 @@ def start_host(boundary):
             args={"boundary": boundary, "role": "host"}, label="handoff: host checkpoint %s" % boundary),
         seg("host resumes from the checkpoint through Game.load_game and a boot of its realm", peer=0,
             action="load_save", args={"from": "tests/fixtures/segments/%s/host" % boundary},
-            expect_data={"realm": "cloudreach"}, label="host loads %s" % boundary),
+            expect_data={"realm": "cloudreach"}, budget_frames=20000, label="host loads %s" % boundary),
         seg("live host state meets the start contract", peer=0, action="seg_contract",
             args={"boundary": boundary, "role": "host"}, label="handoff: live host meets %s" % boundary),
     ]

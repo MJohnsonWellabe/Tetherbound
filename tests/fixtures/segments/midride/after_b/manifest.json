@@ -1,13 +1,13 @@
 {
- "boundary": "midride/after_a",
- "generated_by": "tools/ci/segments/regen.sh midride/after_a",
+ "boundary": "midride/after_b",
+ "generated_by": "tools/ci/segments/regen.sh midride/after_b",
  "produced_at_commit": "3c30f5b8fbeaa8d1284f020671481752801e5017+dirty",
  "roles": {
   "guest": {
    "character_id": "character-23540bc9d51de3c2cb633af621c23caa",
    "digest": "b2aa76cc0791495e49061d89777195528599644a9f582901bda8b9528c88bac9",
-   "producer": "tools/net/proof_scenarios/segments/midride/s1_ride_a.json",
-   "producer_fingerprint": "40ba27f69265bc333f48a7d823e6c629a6c0a9242d74a71675df395ac8b07e34",
+   "producer": "tools/net/proof_scenarios/segments/midride/s2_ride_b.json",
+   "producer_fingerprint": "ee48a60f15d824817f0206b94aae36c606f416727c6fa0cb1490828649c4f544",
    "producer_peer": 1,
    "summary": {
     "flags": [
@@ -124,8 +124,8 @@
   "host": {
    "character_id": "character-794fb504a7e8df3c24ad2b7286bade8c",
    "digest": "edaff325803b1ce562ec61212e8bdc5037c69bb75ce647ed04177899b39285d6",
-   "producer": "tools/net/proof_scenarios/segments/midride/s1_ride_a.json",
-   "producer_fingerprint": "4e69425213cb5cad4f780f82aaeb68321ecc72b9615e060aab976fe2efc1f79d",
+   "producer": "tools/net/proof_scenarios/segments/midride/s2_ride_b.json",
+   "producer_fingerprint": "6fc75e69cd25c7c090a45edde6285606070447cb2c66122c33c4ed4249c45800",
    "producer_peer": 0,
    "summary": {
     "flags": [
