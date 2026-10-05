@@ -1,0 +1,84 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 18622009,
+      "sha256": "9d0ebf27c1202355978f3a34886601e8a587da7f24dd536ecccf8e4a66b4d6cd"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 10488,
+      "sha256": "de1a83325c90d90be4bd4c1eb5999e98975fec9b3629e34aa0a3ea5084c1dbf2"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1054,
+      "sha256": "fd0326fca829f801068b35c6bbd70b2b8247b385ce8f9e165fed3b77f6b0d817"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 109,
+      "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 372,
+      "sha256": "e26dce98633e8ed26c587ab598731bf3108d40af4c3bce14d551dc8c39b51176"
+    },
+    {
+      "path": "frames/0000-actual-farmhouse-doorway-day-clear-low.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3424012,
+      "sha256": "96b5f6e38bc28d7dff37e1dca1fb836687538536d99cfac562c2a6583c7bea25"
+    },
+    {
+      "path": "frames/0001-actual-farmhouse-doorway-night-clear-low.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2913632,
+      "sha256": "6773914a69b400bb1d6eaffdb7491dacefebb9f4a840c2bd7497a2d41e65f347"
+    },
+    {
+      "path": "frames/0002-actual-farmhouse-doorway-diagnostic-house-lights-off-night-clear-low.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2915754,
+      "sha256": "ac45b299d5159241308d321c49aeffe81af07c4b2bf259816e220c0942a6aaed"
+    },
+    {
+      "path": "frames/0003-actual-farmhouse-doorway-day-rain-low.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3197506,
+      "sha256": "3a4864c7d0a380872536eec0b2b36090b9b347f7a8826aa4d19bf0c9ba5a14ad"
+    },
+    {
+      "path": "frames/0004-actual-farmhouse-doorway-night-rain-low.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3067350,
+      "sha256": "e8ecf993ba339f7aba2b38aaa59e23e2fd7af71593489bc6f7985d4a0b91380b"
+    },
+    {
+      "path": "frames/0005-actual-farmhouse-doorway-diagnostic-house-lights-off-night-rain-low.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3073344,
+      "sha256": "f0d99b50b75f2c7d49ca0bbc4dd64c097645684f62adbe369c182ab5ba240a29"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 16618,
+      "sha256": "1fe43c10c410829ccd1143db1f0056704c65263e1dcba1fff0f79a7e12002fee"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 131,
+      "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
+    }
+  ]
+}

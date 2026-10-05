@@ -1,0 +1,110 @@
+{
+  "source_commit": "4c2f8c5210dbb5f43ec0d34a87f793be09f3eb2c",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "gl_compatibility",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_f17_visual.gd",
+    "--",
+    "--preset=Low",
+    "--source-commit=4c2f8c5210dbb5f43ec0d34a87f793be09f3eb2c",
+    "--farm-diagnostic-only",
+    "--output=D:/tetherbound/.artifacts/f26-night-rain/low/frames"
+  ],
+  "native_exit_code": 0,
+  "native_elapsed_seconds": 261.844,
+  "runtime_errors": [],
+  "manifest_failure": "",
+  "requested_diagnostic_matrix_complete": true,
+  "tool_complete": false,
+  "diagnostic_only": true,
+  "normal_lit_farmhouse_doorway_views": 4,
+  "travel_normal_lit_views": 0,
+  "light_off_diagnostic_views_excluded_from_quality": 2,
+  "actual_keys": [
+    [
+      "Low",
+      "day",
+      "clear"
+    ],
+    [
+      "Low",
+      "day",
+      "rain"
+    ],
+    [
+      "Low",
+      "night",
+      "clear"
+    ],
+    [
+      "Low",
+      "night",
+      "rain"
+    ]
+  ],
+  "expected_keys": [
+    [
+      "Low",
+      "day",
+      "clear"
+    ],
+    [
+      "Low",
+      "day",
+      "rain"
+    ],
+    [
+      "Low",
+      "night",
+      "clear"
+    ],
+    [
+      "Low",
+      "night",
+      "rain"
+    ]
+  ],
+  "png_dimensions": {
+    "0000-actual-farmhouse-doorway-day-clear-low.png": [
+      1920,
+      1080
+    ],
+    "0001-actual-farmhouse-doorway-night-clear-low.png": [
+      1920,
+      1080
+    ],
+    "0002-actual-farmhouse-doorway-diagnostic-house-lights-off-night-clear-low.png": [
+      1920,
+      1080
+    ],
+    "0003-actual-farmhouse-doorway-day-rain-low.png": [
+      1920,
+      1080
+    ],
+    "0004-actual-farmhouse-doorway-night-rain-low.png": [
+      1920,
+      1080
+    ],
+    "0005-actual-farmhouse-doorway-diagnostic-house-lights-off-night-rain-low.png": [
+      1920,
+      1080
+    ]
+  },
+  "missing_images": [],
+  "presets": [
+    "Low"
+  ],
+  "scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim",
+  "qualification": "Partial existing farm-door light diagnostic; no Hall circuit, motion, full-bar, earned campaign, co-op, handheld or FPS acceptance. Normal-lit paired images may support bounded sky/weather diagnosis; light-off frames are excluded."
+}
