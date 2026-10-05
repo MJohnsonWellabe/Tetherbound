@@ -1,0 +1,121 @@
+{
+  "status": "INCOMPLETE",
+  "export": {
+    "source_commit": "5b07c2fbb637841d7cc066fd0d3d636f0671e544",
+    "scope": "CPU-only Windows release export and exported-script refusal proof. No native visuals, performance, floor witness or Ally result.",
+    "steps": [
+      {
+        "name": "export-release",
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--path",
+          "D:\\tetherbound\\redesign-lookdev",
+          "--export-release",
+          "Windows Desktop",
+          "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\package\\Tetherbound.exe"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "timed_out": false,
+        "errors": [
+          "ERROR: 169 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+          "ERROR: 12 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+          "ERROR: 236 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.",
+          "ERROR: 64 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+          "ERROR: 1065 resources still in use at exit (run with --verbose for details).",
+          "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+          "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+        ],
+        "elapsed_seconds": 516.780999999959,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\export-release.log",
+        "log_sha256": "5bca9595c77c2193bcf88a1a9c5a7f3e1a28f5e5f528ef45e462c2f008fb0068",
+        "pass": false
+      }
+    ],
+    "export_templates": [
+      {
+        "installed": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_debug_x86_64.exe",
+        "sha256": "6b580a72cca9c31922ff4f7f1519a42debdd856e6852eec39ae46ce0e709231d"
+      },
+      {
+        "installed": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_release_x86_64.exe",
+        "sha256": "c42eb5d17f683eb8bcd52c19a9f36ebf811b1788623878d5276a7d9ffc09f95c"
+      }
+    ]
+  },
+  "packaged_preflight": {
+    "source_commit": "5b07c2fbb637841d7cc066fd0d3d636f0671e544",
+    "prior_export_receipt": "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\receipt.json",
+    "export_errors_unresolved": [
+      "ERROR: 169 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+      "ERROR: 12 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+      "ERROR: 236 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.",
+      "ERROR: 64 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+      "ERROR: 1065 resources still in use at exit (run with --verbose for details).",
+      "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+      "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+    ],
+    "steps": [
+      {
+        "name": "exported-route-refusal",
+        "command": [
+          "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\package\\Tetherbound.exe",
+          "--headless",
+          "--log-file",
+          "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\exported-route-refusal.engine.log",
+          "--script",
+          "res://tools/capture_lookdev_route.gd",
+          "--",
+          "--biome=meadows",
+          "--preset=Medium",
+          "--source-commit=5b07c2fbb637841d7cc066fd0d3d636f0671e544",
+          "--output=D:/tetherbound/.artifacts/f26-ally-5b07c2fbb-20261004T173419Z/followup-20261004T174842Z/refused-route"
+        ],
+        "exit_code": 1,
+        "expected_exit_code": 2,
+        "errors": [],
+        "pass": false,
+        "elapsed_seconds": 300.2029999999795,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\exported-route-refusal.stdout-stderr.log",
+        "log_sha256": "4207a48391c235799b0c32057a822c71dafe1dee8dfe6ede927f687384a765f2",
+        "engine_log": "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\exported-route-refusal.engine.log",
+        "engine_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "package-integrity",
+        "command": [
+          "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\package\\f26_ally.ps1",
+          "-PackageRoot",
+          "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\package",
+          "-VerifyOnly"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "errors": [],
+        "pass": true,
+        "elapsed_seconds": 7.891000000061467,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\package-integrity.stdout-stderr.log",
+        "log_sha256": "19b79fe1381d329e3dc3c5e215adf55e9def983eccf733855a7b763271f30b8e"
+      }
+    ],
+    "scope": "CPU artifact structure, real exported script load/refusal and package hashes. Export shutdown errors retained; native visuals/floor/routes and owner device still open.",
+    "package": "D:\\tetherbound\\.artifacts\\f26-ally-5b07c2fbb-20261004T173419Z\\followup-20261004T174842Z\\package",
+    "packaged_script_load_pass": false,
+    "package_integrity_pass": true,
+    "clean_export_proven": false,
+    "native_exported_routes": "MISSING",
+    "owner_ally_result": "BLOCKED_OWNER",
+    "package_manifest_sha256": "742682e7c302b3a4b9b5eeeda46a13807ef2e5df74e36db806bcf186730716b5"
+  },
+  "script_load_classification": "Owned 300-second deadline terminated the process before expected render refusal; not passing proof",
+  "owner_bundle": "Not delivered: launcher in this raw attempt precedes reviewed final CLI correction",
+  "renderer_default": "gl_compatibility",
+  "native_routes": "MISSING",
+  "owner_ally": "BLOCKED_OWNER"
+}

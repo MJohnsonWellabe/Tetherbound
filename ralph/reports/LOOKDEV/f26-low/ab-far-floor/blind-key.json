@@ -1,0 +1,130 @@
+{
+ "pair_00": {
+  "frame": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+  "after_is": "X"
+ },
+ "pair_01": {
+  "frame": "cloudreach__broken_causeways__04__broken_skyroad_arch__day",
+  "after_is": "Y"
+ },
+ "pair_02": {
+  "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+  "after_is": "X"
+ },
+ "pair_03": {
+  "frame": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+  "after_is": "X"
+ },
+ "pair_04": {
+  "frame": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+  "after_is": "X"
+ },
+ "pair_05": {
+  "frame": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+  "after_is": "X"
+ },
+ "pair_06": {
+  "frame": "meadows__band1_lower_meadows__01__grandpas_village__day",
+  "after_is": "Y"
+ },
+ "pair_07": {
+  "frame": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+  "after_is": "Y"
+ },
+ "pair_08": {
+  "frame": "meadows__band5_stronghold_approach__09__stronghold_approach__day",
+  "after_is": "X"
+ },
+ "pair_09": {
+  "frame": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+  "after_is": "Y"
+ },
+ "pair_10": {
+  "frame": "water__deep_watch__23__deep_watch_lookout__day",
+  "after_is": "Y"
+ },
+ "pair_11": {
+  "frame": "water__deep_watch__24__deep_watch_beach__day",
+  "after_is": "X"
+ },
+ "pair_12": {
+  "frame": "water__drowned_garden__21__drowned_garden_terraces__day",
+  "after_is": "X"
+ },
+ "pair_13": {
+  "frame": "water__drowned_garden__22__drowned_garden_beach__day",
+  "after_is": "X"
+ },
+ "pair_14": {
+  "frame": "water__tidal_cradle__09__aquaryn_tidal_basin__day",
+  "after_is": "Y"
+ },
+ "pair_15": {
+  "frame": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day",
+  "after_is": "Y"
+ },
+ "pair_16": {
+  "frame": "water__veilfall__15__the_veilfall_cascade__day",
+  "after_is": "Y"
+ },
+ "pair_17": {
+  "frame": "water__veilfall__16__veilfall_mountain_crown__day",
+  "after_is": "X"
+ },
+ "pair_18": {
+  "frame": "meadows__route_00__day",
+  "after_is": "Y"
+ },
+ "pair_19": {
+  "frame": "meadows__route_00__night",
+  "after_is": "Y"
+ },
+ "pair_20": {
+  "frame": "meadows__route_01__day",
+  "after_is": "Y"
+ },
+ "pair_21": {
+  "frame": "meadows__route_01__night",
+  "after_is": "X"
+ },
+ "pair_22": {
+  "frame": "meadows__route_02__day",
+  "after_is": "Y"
+ },
+ "pair_23": {
+  "frame": "meadows__route_02__night",
+  "after_is": "X"
+ },
+ "pair_24": {
+  "frame": "meadows__route_03__day",
+  "after_is": "Y"
+ },
+ "pair_25": {
+  "frame": "meadows__route_03__night",
+  "after_is": "Y"
+ },
+ "pair_26": {
+  "frame": "water__route_00__day",
+  "after_is": "Y"
+ },
+ "pair_27": {
+  "frame": "water__route_00__night",
+  "after_is": "X"
+ },
+ "pair_28": {
+  "frame": "water__route_01__day",
+  "after_is": "X"
+ },
+ "pair_29": {
+  "frame": "water__route_01__night",
+  "after_is": "X"
+ },
+ "pair_30": {
+  "frame": "water__route_02__day",
+  "after_is": "X"
+ },
+ "pair_31": {
+  "frame": "water__route_02__night",
+  "after_is": "X"
+ }
+}

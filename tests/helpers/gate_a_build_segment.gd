@@ -680,6 +680,10 @@ func _hammer_in_hand() -> bool:
 			return false
 	await _tap_action(HOTBAR_ACTIONS[slot])
 	await _settle(8)
+	for _i in 30:
+		if str(_game.get("equipped_tool")) == "hammer":
+			break
+		await _tree.process_frame
 	if str(_game.get("equipped_tool")) != "hammer":
 		_fail("the quick-bar press did not put the hammer in hand; build mode cannot be opened")
 		return false
@@ -1070,6 +1074,7 @@ func _tap_action(action: StringName) -> void:
 		press.button_index = (binding as InputEventJoypadButton).button_index
 		press.pressed = true
 		Input.parse_input_event(press)
+		await _edge_reaches_process()
 		await _settle(2)
 		var release := press.duplicate() as InputEventJoypadButton
 		release.pressed = false
@@ -1079,11 +1084,22 @@ func _tap_action(action: StringName) -> void:
 		press.axis = (binding as InputEventJoypadMotion).axis
 		press.axis_value = (binding as InputEventJoypadMotion).axis_value
 		Input.parse_input_event(press)
+		await _edge_reaches_process()
 		await _settle(2)
 		var release := press.duplicate() as InputEventJoypadMotion
 		release.axis_value = 0.0
 		Input.parse_input_event(release)
+	await _edge_reaches_process()
 	await _settle(3)
+
+
+## Same finding as gate_b_tail_segment.gd::_edge_reaches_process: a parsed edge
+## is flushed next main-loop iteration and the HUD polls the quick bar in its
+## idle frame, after every physics step of that iteration. Two idle frames per
+## edge make sure the HUD has seen it before the caller looks at the result.
+func _edge_reaches_process() -> void:
+	for _i in 2:
+		await _tree.process_frame
 
 
 func _visible_build_cells(menu: Node) -> Array[Button]:

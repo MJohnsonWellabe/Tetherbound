@@ -1,0 +1,121 @@
+{
+  "source_head": "4556f7a906dbc166aa9e629c4cf517eba10bf2c9",
+  "scope": "CPU-only receipt transaction and final-exit failure propagation fixtures; uncommitted source hashes below. No real frames, native census, GPU or acceptance.",
+  "source_sha256": {
+    "tools/capture_manifest_writer.gd": "f7fbf392061448a091dce0953ccbd3f281ad2626b56eaf7a507afab1b0e9adb1",
+    "tools/capture_renderer_material_census.gd": "13172edb52e07467e9a4c2287d397cf9dcf42083d83a8aa02faf8fb076236ce8",
+    "tests/test_capture_manifest_writer.gd": "5196b2404e97469aaacf109f383ae15fb3fb1dbd577cbdb7cdd3d92fc78e705a"
+  },
+  "probe": "D:\\tetherbound\\.artifacts\\census_finish_probe.gd",
+  "probe_sha256": "2c6987cc1c9cb639c0c5f4d1f5dc0f243ca31be63cf5f5659eec78e7771e3307",
+  "steps": [
+    {
+      "name": "file-tests",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_capture_manifest_writer.gd"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 10.406000000075437,
+      "errors": [],
+      "expected_error_prefixes": [],
+      "log": "D:\\tetherbound\\.artifacts\\f26-census-receipts-20261004T184122Z\\file-tests.log",
+      "log_sha256": "3ad0fd94d07b46f5cf4296a922fe9ba24056930c6ecd1566f8809b0469ea1356",
+      "pass": true
+    },
+    {
+      "name": "final-success",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--script",
+        "D:\\tetherbound\\.artifacts\\census_finish_probe.gd",
+        "--",
+        "--output=D:/tetherbound/.artifacts/f26-census-receipts-20261004T184122Z/success"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 10.061999999918044,
+      "errors": [],
+      "expected_error_prefixes": [],
+      "log": "D:\\tetherbound\\.artifacts\\f26-census-receipts-20261004T184122Z\\final-success.log",
+      "log_sha256": "1a8eb6e2e8d650c018b0a9e7f34eb878060aec504b80df10d35cd7e0345fdab8",
+      "pass": true,
+      "published_manifest": {
+        "capture_finished_utc": "2026-10-04T18:41:42",
+        "captured_frame_count": 1,
+        "complete": true,
+        "failures": [],
+        "frames": [
+          {
+            "frame_id": "cpu-test"
+          }
+        ],
+        "material_census": [],
+        "native_error_evidence": "Caller must retain actual process stdout/stderr and exit receipt. This inspector cannot infer shader compilation success or prior silent fallback from bound-resource presence.",
+        "planned_frame_count": 1,
+        "receipt_recovery": {
+          "pending": "manifest.json.pending",
+          "previous": "manifest.json.previous",
+          "scope": "Previous generation may retain partial capture evidence after interruption; it does not prove census completion. Pending bytes are unpublished and must not be used as acceptance evidence."
+        },
+        "scope": "CPU final-receipt exit propagation fixture; no mounted world or GPU"
+      },
+      "manifest_sha256": "f32320b807d73f8e4d9eb937a161fa97406956488bb91afd5d4a95ae51bf9814"
+    },
+    {
+      "name": "final-publication-failure",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--script",
+        "D:\\tetherbound\\.artifacts\\census_finish_probe.gd",
+        "--",
+        "--output=D:/tetherbound/.artifacts/f26-census-receipts-20261004T184122Z/failure",
+        "--expect-publication-failure"
+      ],
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "timed_out": false,
+      "elapsed_seconds": 10.172000000020489,
+      "errors": [
+        "ERROR: Material census receipt publication failed: Can't open file. Preserve current/previous/pending files.",
+        "ERROR: catalogue survey: Material census receipt publication failed: Can't open file. Preserve current/previous/pending files."
+      ],
+      "expected_error_prefixes": [
+        "ERROR: Material census receipt publication failed:",
+        "ERROR: catalogue survey: Material census receipt publication failed:"
+      ],
+      "log": "D:\\tetherbound\\.artifacts\\f26-census-receipts-20261004T184122Z\\final-publication-failure.log",
+      "log_sha256": "c970a81cca955adfce8116bb1445f44cbae88adf5cf061f5fca008a3d7b78cb3",
+      "pass": true,
+      "published_manifest": {
+        "complete": false,
+        "failures": [],
+        "frames": [],
+        "material_census": [],
+        "native_error_evidence": "Caller must retain actual process stdout/stderr and exit receipt. This inspector cannot infer shader compilation success or prior silent fallback from bound-resource presence.",
+        "receipt_recovery": {
+          "pending": "manifest.json.pending",
+          "previous": "manifest.json.previous",
+          "scope": "Previous generation may retain partial capture evidence after interruption; it does not prove census completion. Pending bytes are unpublished and must not be used as acceptance evidence."
+        },
+        "scope": "CPU final-receipt exit propagation fixture; no mounted world or GPU"
+      },
+      "manifest_sha256": "11c28608170e2dc271d28a73e76230b33fa88010a677aa0c8a8fcbc22f075ca7"
+    }
+  ]
+}
