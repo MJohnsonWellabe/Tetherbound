@@ -35,6 +35,9 @@ const PLACE_SETTLE := 20
 ## comfortably more than the 0.1 s grace even before coordinator round trips.
 const EARLY_START_FRAMES := 30
 const COOLDOWN_FRAMES := 150
+## A charged move costs a full Energy meter, earned only by LANDED quick hits.
+const ENERGY_HITS := 4
+const QUICK_SWINGS := 12
 
 
 func _initialize() -> void:
@@ -127,12 +130,23 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	var stand := centre + Vector3(0.0, 0.0, STAND_OFF_M)
 	await step(1, "place_creature", {"at": [stand.x, stand.y, stand.z],
 		"face": [centre.x, centre.y, centre.z], "settle": PLACE_SETTLE})
+	# Build the guest's Energy with real landed quick hits on the pinned body.
+	await step(0, "f22_pin_tell", {})
+	var landed := 0
+	for _swing in QUICK_SWINGS:
+		if landed >= ENERGY_HITS: break
+		var hp_was := await _host_hp()
+		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "quick", "settle": 15})
+		await step(1, "wait", {"frames": 30})
+		if await _host_hp() < hp_was - 0.001: landed += 1
+	out["energy_hits"] = landed
 	var guest_before := int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
-	var hp_before := float((await _encounter(0)).get("opponent_hp", -1.0))
+	var hp_before := -1.0
 	if tell_first:
 		pin = (await step(0, "f22_pin_tell", {})).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
+		hp_before = float(pin.get("hp", -1.0))
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged", "settle": 15})
 	else:
 		var started: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
@@ -142,6 +156,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		pin = (await step(0, "f22_pin_tell", {})).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
+		hp_before = float(pin.get("hp", -1.0))
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
 			"action": action, "move_start": false, "windup_wait": true, "settle": 15})
 	var state: Dictionary = {}
@@ -152,7 +167,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		await step(0, "wait", {"frames": 4})
 	out.host_staggered = bool(state.get("staggered", false))
 	out.poise_after = float(state.get("poise", 0.0))
-	out.landed = float((await _encounter(0)).get("opponent_hp", -1.0)) < hp_before - 0.001
+	out.landed = float(state.get("hp", -1.0)) < hp_before - 0.001
 	# The guest's announcement arrives with the host's strike payload.
 	var guest_after := guest_before
 	for _poll in STAGGER_POLLS:
@@ -165,6 +180,12 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		guest_after = int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	out.guest_staggers = guest_after - guest_before
 	return out
+
+
+## The host's live opponent HP, read from its real shared wild body.
+func _host_hp() -> float:
+	var state: Dictionary = (await step(0, "f22_pin_tell", {"read_only": true})).get("data", {})
+	return float(state.get("hp", -1.0))
 
 
 func _encounter(peer: int) -> Dictionary:
