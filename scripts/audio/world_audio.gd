@@ -161,8 +161,10 @@ var _idle_left: float = 0.0
 ## Creature node -> the tick it last made an alert sound, so a creature that
 ## re-notices the player every frame does not machine-gun.
 var _alert_msec: Dictionary = {}
-## Bodies whose `wants_to_engage` this has already connected to.
-var _voiced: Array = []
+## Instance ids of bodies whose `wants_to_engage` this has already connected
+## to. Membership stays constant-time as the wild roster grows; subscriptions
+## are still discovered each frame, including a new body's first alert.
+var _voiced: Dictionary = {}
 
 
 func _tick_creature_voices(delta: float) -> void:
@@ -187,13 +189,17 @@ func _tick_creature_voices(delta: float) -> void:
 ## moment when "every creature" exists to connect to.
 func _connect_new_creatures(config: Dictionary) -> void:
 	for node in get_tree().get_nodes_in_group(&"creature_voice"):
-		if _voiced.has(node):
+		var id := node.get_instance_id()
+		if _voiced.has(id):
 			continue
-		_voiced.append(node)
+		_voiced[id] = true
 		if node.has_signal("wants_to_engage"):
 			node.connect("wants_to_engage", _on_creature_alert.bind(node))
-	# Freed creatures would otherwise accumulate here for the whole run.
-	_voiced = _voiced.filter(func(n: Variant) -> bool: return is_instance_valid(n))
+	# Keep live bodies even when they leave the group, as before: re-entry must
+	# not subscribe twice. Freed instance ids cannot accumulate across the run.
+	for id: int in _voiced.keys():
+		if not is_instance_id_valid(id):
+			_voiced.erase(id)
 
 
 func _on_creature_alert(who: Node) -> void:
