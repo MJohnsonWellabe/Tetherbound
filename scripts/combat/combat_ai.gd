@@ -221,6 +221,11 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 		tell_floor = maxf(tell_floor, float(patterns.get("heavy_tell_floor_s", 1.1)))
 	out["telegraph"] = maxf(tell_floor, float(out.get("telegraph", tell_floor)))
 	out["recovery"] = maxf(float(floor_row.get("recovery", 0.6)), float(out.get("recovery", 0.6)))
+	# COMBAT §7 ordinary-wild cost target, per chapter. Trainer-owned and
+	# named bodies keep their own authored numbers.
+	if not bool(context.get("trainer_owned", false)) and str(context.get("pattern_id", "")).is_empty():
+		var wild_scale := float((patterns.get("wild_power_scale", {}) as Dictionary).get(chapter, 1.0))
+		out["power"] = float(out.get("power", 8.0)) * wild_scale
 	var slot := str(out.get("slot", "quick"))
 	out["move_id"] = str(out.get("move_override", context.get("move_" + slot, "")))
 	if out.move_id.is_empty():
