@@ -211,8 +211,20 @@ func _process(delta: float) -> void:
 		if journal.get("durable") == true: original.journal_started = true
 		if journal.get("ok") != true or journal.get("saved") != true: continue
 		_remote.erase(peer)
+		_confirm_travel_reset(session, peer, str(original.permit.realm))
 		session.call("_portal_reply", peer, original.envelope, {"ok": true, "saved": true, "durable": true,
 			"arrival_applied": true, "arrived": true, "permit_id": original.permit.request_id, "reason": ""})
+
+## The guest's Game drops its travel baseline while the arrival holds its
+## owner record. This host-accepted placement is the proof that explains that
+## one reset to the guest's owner-passive replay (as a fly landing does);
+## without it the guest's next discovery is a travel_baseline_mismatch and
+## every later owner-gated guest action is refused.
+static func _confirm_travel_reset(session: Node, peer: int, realm: String) -> void:
+	var lifecycle: Node = session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	var actor: Node3D = lifecycle.call("remote_body", peer) as Node3D if lifecycle != null else null
+	if actor == null or not actor.global_position.is_finite() or not session.has_method("owner_passive_travel_reset_confirmed"): return
+	session.call("owner_passive_travel_reset_confirmed", peer, realm, actor.global_position)
 
 func _same_owner() -> bool:
 	if _pending.is_empty(): return false
