@@ -8417,8 +8417,11 @@ func _has_canonical_wild_runtime() -> bool:
 	return false
 
 
+## True only once the host retained this fight's frozen victory source; a
+## refused capture leaves the legacy award in place so a win always pays.
 func canonical_wild_encounter(encounter_id: String) -> bool:
-	return _owns_canonical_wild(encounter_id)
+	var runtime := _shared_host_fight(encounter_id)
+	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
 
 
 func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) -> void:
