@@ -60,5 +60,5 @@
     "Low"
   ],
   "scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim",
-  "qualification": "Partial existing farm-door light diagnostic; no Hall circuit, motion, full-bar, earned campaign, co-op, handheld or FPS acceptance. Normal-lit paired images may support bounded sky/weather diagnosis; light-off frames are excluded."
+  "qualification": "Native visual verification UNVERIFIED: pose failure before firstimage,0PNG/0views. No pair exists for diagnosis; no ambient fix worked or farmhouse/sky/facade acceptance claim. Source review PASS separately; native integration hold remains."
 }
