@@ -1,0 +1,55 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "preset": "High",
+  "biome": "meadows",
+  "native_exit_code": 0,
+  "native_elapsed_seconds": 194.0,
+  "command": [
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--log-file",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-high-meadows\\engine.log",
+    "--audio-driver",
+    "Dummy",
+    "--",
+    "--f26-route",
+    "--biome=meadows",
+    "--preset=High",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/shipping-high-meadows/route"
+  ],
+  "manifest_complete": true,
+  "failures": [],
+  "runtime_errors": [],
+  "png_dimensions": {
+    "end.png": [
+      1920,
+      1080
+    ],
+    "start.png": [
+      1920,
+      1080
+    ]
+  },
+  "metrics": {
+    "frames": 228,
+    "average_fps": 11.887667795995107,
+    "one_percent_low_fps": 10.02482815773733,
+    "minimum_fps": 9.92171764775918,
+    "slowest_one_percent_frames": 3,
+    "cached_monitors_ms": {
+      "process_ms": 104.43775000000001,
+      "physics_ms": 4.961793859649123
+    }
+  },
+  "camera_far_m": 2000.0,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "actual_shipping": true,
+  "average_fps_floor20_pass": false,
+  "measurement_limitations": "Wall intervals plus cached Performance TIME_PROCESS/TIME_PHYSICS_PROCESS only. Embedded route lacks newer frame_limit/uncapping receipt. Runtime FPS/VSync/time settings not explicitly verified; no per-frame true CPU/GPU/draw attribution. New cases use fullscreen; prior four core cases lacked fullscreen flag. No performance recovery or regression onset established.",
+  "scope": "Actual shipping release EXE/PCK same accepted-main334 payload as prior4core routes. Existing packaged route, no debug/EngineProfiler/gpu-profile. New cases fullscreen1920x1080; desktop GTX1060, not Ally/earned campaign."
+}
