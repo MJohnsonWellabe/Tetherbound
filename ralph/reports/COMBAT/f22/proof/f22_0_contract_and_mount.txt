@@ -1,0 +1,2 @@
+F22_PATTERN_CONTRACT {"errors":[],"pass":true,"scope":"pure actual-source contract only; runtime and C2/C3 remain separate"}
+F22_LIVE_PATTERN_MOUNT {"checks":47,"errors":[],"pass":true,"scope":"initialized production node mount; player/co-op and C2/C3 remain separate"}

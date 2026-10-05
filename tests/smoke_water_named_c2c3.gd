@@ -34,6 +34,8 @@ extends SceneTree
 ## Never tunes anything. Prints one WATER_C2C3 row per case/starter/policy and
 ## writes the full evidence (every run) to --json.
 
+const PATTERN_PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+var NAMED_PATTERNS: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("patterns", {}).get("named", {})
 const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -203,7 +205,11 @@ func _run() -> void:
 						pilot.phases = entry.phases
 						pilot.preferred_fraction = entry.preferred_fraction
 					else:
-						pilot = PILOT.new()
+						# F22#4: named fights run their authored pattern rows.
+						pilot = PATTERN_PILOT.new()
+						var named_id := "named_" + str(entry.id)
+						pilot.context = {"chapter": "water", "band": "water_named", "after_south_bridge": true,
+							"pattern_id": named_id if NAMED_PATTERNS.has(named_id) else ""}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
 						hash("%s/%s/%d" % [entry.id, starter, seed_index]), policy)
 					var tells: Array = []

@@ -1,0 +1,82 @@
+# F22#4 named-fight C2/C3 runs (12 seeds/starter, flat fixture)
+## Meadows baseline (pre-change passive reader), smoke_meadows_named_c2c3.gd
+MEADOWS_C2C3_VERDICT warrens_guardian terrapup FAIL -- reader/masher lead cost 1.000/0.642 > 0.55; reader win 0.08 < 0.90
+MEADOWS_C2C3_VERDICT warrens_guardian ripplet FAIL -- reader/masher lead cost 0.702/0.311 > 0.55
+MEADOWS_C2C3_VERDICT warrens_guardian galewisp FAIL -- reader/masher lead cost 1.000/0.871 > 0.55; reader win 0.00 < 0.90
+MEADOWS_C2C3_VERDICT relay_captain terrapup FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.671 > 0.55
+MEADOWS_C2C3_VERDICT relay_captain ripplet FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.813 > 0.55
+MEADOWS_C2C3_VERDICT relay_captain galewisp FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.809 > 0.55
+MEADOWS_C2C3_VERDICT captain_riverwatch terrapup FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.633 > 0.55
+MEADOWS_C2C3_VERDICT captain_riverwatch ripplet FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.625 > 0.55
+MEADOWS_C2C3_VERDICT captain_riverwatch galewisp FAIL -- reader win 0.08 < 0.75; reader/masher party cost 1.000/0.621 > 0.55
+MEADOWS_C2C3_VERDICT captain_field terrapup FAIL -- reader/masher party cost 0.916/0.789 > 0.55
+MEADOWS_C2C3_VERDICT captain_field ripplet FAIL -- reader/masher party cost 0.937/0.829 > 0.55
+MEADOWS_C2C3_VERDICT captain_field galewisp FAIL -- reader win 0.58 < 0.75; reader/masher party cost 0.963/0.826 > 0.55
+MEADOWS_C2C3_VERDICT captain_ridge terrapup FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.432 > 0.55
+MEADOWS_C2C3_VERDICT captain_ridge ripplet FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.619 > 0.55
+MEADOWS_C2C3_VERDICT captain_ridge galewisp FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.752 > 0.55
+MEADOWS_C2C3_VERDICT stronghold_elite terrapup FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.612 > 0.55
+MEADOWS_C2C3_VERDICT stronghold_elite ripplet FAIL -- reader win 0.17 < 0.75; reader/masher party cost 1.000/0.510 > 0.55
+MEADOWS_C2C3_VERDICT stronghold_elite galewisp FAIL -- reader win 0.00 < 0.75; reader/masher party cost 1.000/0.621 > 0.55
+MEADOWS_C2C3_VERDICT warden_aldis terrapup FAIL -- reader/masher party cost 0.780/0.633 > 0.55; C3 single hit 0.509 >= 0.50
+MEADOWS_C2C3_VERDICT warden_aldis ripplet FAIL -- reader/masher party cost 0.625/0.467 > 0.55
+MEADOWS_C2C3_VERDICT warden_aldis galewisp FAIL -- reader win 0.50 < 0.75; reader/masher party cost 0.985/0.783 > 0.55; C3 single hit 0.505 >= 0.50
+## Meadows with the F22 reader (relay_captain, warden)
+MEADOWS_C2C3 relay_captain terrapup MASHER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.286 tell=[0.90,1.40] diver_tell=-1.00 med_s=105.9 stalled=0
+MEADOWS_C2C3 relay_captain terrapup READER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.186 tell=[0.90,1.40] diver_tell=-1.00 med_s=283.5 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain terrapup PASS
+MEADOWS_C2C3 relay_captain ripplet MASHER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.399 tell=[0.90,1.40] diver_tell=-1.00 med_s=103.7 stalled=0
+MEADOWS_C2C3 relay_captain ripplet READER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.300 tell=[0.90,1.40] diver_tell=-1.00 med_s=279.6 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain ripplet PASS
+MEADOWS_C2C3 relay_captain galewisp MASHER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.373 tell=[0.90,1.40] diver_tell=-1.00 med_s=106.0 stalled=0
+MEADOWS_C2C3 relay_captain galewisp READER L12 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.348 tell=[0.90,1.40] diver_tell=-1.00 med_s=305.8 stalled=0
+MEADOWS_C2C3_VERDICT relay_captain galewisp PASS
+MEADOWS_C2C3 warden_aldis terrapup MASHER L18 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.450 tell=[0.90,1.40] diver_tell=-1.00 med_s=114.8 stalled=0
+MEADOWS_C2C3 warden_aldis terrapup READER L18 runs=12 win=0.83 med_lead=1.000 lead_faint=1.00 wipe=0.17 max_hit=0.327 tell=[0.90,1.40] diver_tell=-1.00 med_s=366.9 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis terrapup FAIL -- reader/masher party cost 0.551/0.633 > 0.55
+MEADOWS_C2C3 warden_aldis ripplet MASHER L18 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.324 tell=[0.90,1.40] diver_tell=-1.00 med_s=110.5 stalled=0
+MEADOWS_C2C3 warden_aldis ripplet READER L18 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.211 tell=[0.90,1.40] diver_tell=-1.00 med_s=374.8 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis ripplet FAIL -- reader/masher party cost 0.386/0.467 > 0.55
+MEADOWS_C2C3 warden_aldis galewisp MASHER L18 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.503 tell=[0.90,1.40] diver_tell=-1.00 med_s=118.4 stalled=0
+MEADOWS_C2C3 warden_aldis galewisp READER L18 runs=12 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.256 tell=[0.90,1.40] diver_tell=-1.00 med_s=375.9 stalled=0
+MEADOWS_C2C3_VERDICT warden_aldis galewisp FAIL -- C3 single hit 0.503 >= 0.50
+MEADOWS_C2C3 done: 6 rows, 3 failing rows, 144 runs, 0 errors
+## Water Venn/Nerissa on the F22 pattern pilot, smoke_water_named_c2c3.gd
+WATER_C2C3 water_trainer_venn terrapup MASHER runs=12 win=1.00 med_lead=1.000 med_party=0.633 med_s=130.8 max_s=135.3 lead_faint=1.00 wipe=0.00 max_hit=0.156 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_venn terrapup READER runs=12 win=1.00 med_lead=1.000 med_party=0.711 med_s=297.4 max_s=310.6 lead_faint=1.00 wipe=0.00 max_hit=0.154 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_venn terrapup reader/masher median lead cost = 1.000 / 1.000 (ratio 1.00)
+WATER_C2C3 water_trainer_venn ripplet MASHER runs=12 win=1.00 med_lead=1.000 med_party=0.420 med_s=102.4 max_s=121.3 lead_faint=1.00 wipe=0.00 max_hit=0.152 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_venn ripplet READER runs=12 win=1.00 med_lead=1.000 med_party=0.682 med_s=243.6 max_s=272.4 lead_faint=1.00 wipe=0.00 max_hit=0.154 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_venn ripplet reader/masher median lead cost = 1.000 / 1.000 (ratio 1.00)
+WATER_C2C3 water_trainer_venn galewisp MASHER runs=12 win=1.00 med_lead=1.000 med_party=0.414 med_s=95.1 max_s=102.0 lead_faint=1.00 wipe=0.00 max_hit=0.151 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_venn galewisp READER runs=12 win=1.00 med_lead=1.000 med_party=0.709 med_s=233.9 max_s=263.2 lead_faint=1.00 wipe=0.00 max_hit=0.164 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_venn galewisp reader/masher median lead cost = 1.000 / 1.000 (ratio 1.00)
+WATER_C2C3 water_trainer_nerissa terrapup MASHER runs=12 win=1.00 med_lead=1.000 med_party=0.690 med_s=153.2 max_s=162.5 lead_faint=1.00 wipe=0.00 max_hit=0.157 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_nerissa terrapup READER runs=12 win=1.00 med_lead=1.000 med_party=0.760 med_s=414.9 max_s=460.0 lead_faint=1.00 wipe=0.00 max_hit=0.163 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_nerissa terrapup reader/masher median lead cost = 1.000 / 1.000 (ratio 1.00)
+WATER_C2C3 water_trainer_nerissa ripplet MASHER runs=12 win=1.00 med_lead=1.000 med_party=0.602 med_s=149.6 max_s=153.9 lead_faint=1.00 wipe=0.00 max_hit=0.148 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_nerissa ripplet READER runs=12 win=1.00 med_lead=1.000 med_party=0.724 med_s=366.0 max_s=388.7 lead_faint=1.00 wipe=0.00 max_hit=0.146 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_nerissa ripplet reader/masher median lead cost = 1.000 / 1.000 (ratio 1.00)
+WATER_C2C3 water_trainer_nerissa galewisp MASHER runs=12 win=1.00 med_lead=1.000 med_party=0.375 med_s=131.5 max_s=137.4 lead_faint=1.00 wipe=0.00 max_hit=0.148 tell=[0.90,1.20] stalled=0
+WATER_C2C3 water_trainer_nerissa galewisp READER runs=12 win=1.00 med_lead=1.000 med_party=0.662 med_s=341.4 max_s=369.0 lead_faint=1.00 wipe=0.00 max_hit=0.146 tell=[0.90,1.20] stalled=0
+WATER_C2C3_PAIR water_trainer_nerissa galewisp reader/masher median lead cost = 1.000 / 1.000 (ratio 1.00)
+WATER_C2C3 done: 6 rows, 144 runs, 0 errors
+## Stormwood named wilds (smoke still on base pilot; patterns not mounted there)
+STORMWOOD_C2C3_VERDICT hollows_alpha terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.042 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT hollows_alpha ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.074 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT hollows_alpha galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.079 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT capacitor_alpha terrapup PASS ratio=0.54 reader_win=1.00 max_hit=0.028 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT capacitor_alpha ripplet FAIL ratio=0.73 reader_win=1.00 max_hit=0.050 min_tell=0.80 reader/masher lead cost 0.73 > 0.55
+STORMWOOD_C2C3_VERDICT capacitor_alpha galewisp PASS ratio=0.38 reader_win=1.00 max_hit=0.053 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT crown_guardian terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.040 min_tell=0.85 
+STORMWOOD_C2C3_VERDICT crown_guardian ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.071 min_tell=0.85 
+STORMWOOD_C2C3_VERDICT crown_guardian galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.077 min_tell=0.85 
+STORMWOOD_C2C3_VERDICT old_rodfolk_hall_guardian terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.047 min_tell=1.10 
+STORMWOOD_C2C3_VERDICT old_rodfolk_hall_guardian ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.083 min_tell=1.10 
+STORMWOOD_C2C3_VERDICT old_rodfolk_hall_guardian galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.089 min_tell=1.10 
+STORMWOOD_C2C3_VERDICT blackwater_elder terrapup PASS ratio=0.00 reader_win=1.00 max_hit=0.021 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT blackwater_elder ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.037 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT blackwater_elder galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.040 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT glass_field_alpha terrapup PASS ratio=0.06 reader_win=1.00 max_hit=0.037 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT glass_field_alpha ripplet PASS ratio=0.00 reader_win=1.00 max_hit=0.066 min_tell=0.80 
+STORMWOOD_C2C3_VERDICT glass_field_alpha galewisp PASS ratio=0.00 reader_win=1.00 max_hit=0.071 min_tell=0.80 
