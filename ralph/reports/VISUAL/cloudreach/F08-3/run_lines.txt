@@ -1,0 +1,14 @@
+ERROR: unscoped chapter flag: fly_tutorial_completed
+HIGH PERCH LIVE high-perches-arrival-far-day at (903.0452, 1028.817, 2651.27) (48.8 m from crown)
+HIGH PERCH LIVE high-perches-arrival-lip-day at (901.2991, 1025.318, 2679.212) (20.8 m from crown)
+HIGH PERCH LIVE high-perches-arrival-landed-day at (899.334, 1020.131, 2710.738) (10.8 m from crown)
+HIGH PERCH LIVE high-perches-crown-rim-out-day at (912.3986, 1020.131, 2688.045) (17.2 m from crown)
+HIGH PERCH LIVE high-perches-crown-court-day at (912.3986, 1020.131, 2688.045) (17.2 m from crown)
+HIGH PERCH LIVE high-perches-departure-lookback-day at (902.2799, 1018.527, 2736.06) (36.1 m from crown)
+HIGH PERCH LIVE high-perches-arrival-far-night at (903.0452, 1028.851, 2651.27) (48.8 m from crown)
+HIGH PERCH LIVE high-perches-arrival-lip-night at (901.2991, 1025.352, 2679.212) (20.8 m from crown)
+HIGH PERCH LIVE high-perches-arrival-landed-night at (899.3336, 1020.131, 2710.745) (10.8 m from crown)
+HIGH PERCH LIVE high-perches-crown-rim-out-night at (912.3972, 1020.131, 2688.048) (17.2 m from crown)
+HIGH PERCH LIVE high-perches-crown-court-night at (912.3972, 1020.131, 2688.048) (17.2 m from crown)
+HIGH PERCH LIVE high-perches-departure-lookback-night at (902.2826, 1018.527, 2736.045) (36.1 m from crown)
+HIGH PERCH LIVE OK: 12/12 frames, 0 failures

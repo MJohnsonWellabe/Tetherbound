@@ -740,6 +740,9 @@ var _trainer_cleanup_delay: float = 0.0
 ## How many of their creatures have been sent out, ever. Names the bodies; see
 ## `_send_out_next_creature()` for why it is not derived from a list that empties.
 var _trainer_sent: int = 0
+## Send-outs in the CURRENT trainer battle only; `_trainer_sent` above never
+## resets (it names bodies). F22 named patterns index send-outs from this.
+var _trainer_battle_sent: int = 0
 
 ## T3-COMBAT. Where the trainer was standing when this battle was accepted, and
 ## where every round of it re-forms from.
@@ -4729,25 +4732,100 @@ func _named_trainer_grounds() -> Array[Vector2]:
 ## destination on a named trainer's fight ground, so the captain's and the
 ## Warden's fights frame the two fighters and nothing else.
 func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
+	var here := Vector2(pos.x, pos.z)
+	for zone: Dictionary in _wild_keep_clear_zones():
+		if here.distance_to(zone.at) < float(zone.radius):
+			return false
+	if not _clear_of_village_fence(here):
+		return false
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
 		return true
-	var here := Vector2(pos.x, pos.z)
 	for stand: Vector2 in _named_trainer_grounds():
 		if here.distance_to(stand) < clear:
 			return false
 	return true
 
+
+## F17/F02 (combat.json `arena.wild_keep_clear`): authored places the player
+## must work in -- the Practice Meadow camp site the objectives send the player
+## to build at -- where wild bodies neither spawn nor settle a wander target,
+## through the same checks as a named trainer's ground.
+var _keep_clear: Array[Dictionary] = []
+var _keep_clear_read := false
+
+
+## A wild fought against the village fence pinned the tutorial fight (F02#3 r4:
+## 2 hits dealt, 39 taken at the south fence corner). Wild bodies neither spawn
+## nor settle a wander target within `arena.wild_fence_clear_m` of the village
+## boundary outline (village_boundary.json), on either side of it.
+var _fence_segments: Array[PackedVector2Array] = []
+var _fence_read := false
+
+
+func _clear_of_village_fence(here: Vector2) -> bool:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
+	if clear <= 0.0:
+		return true
+	if not _fence_read:
+		_fence_read = true
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village_boundary.json"))
+		var points: Array = ((raw as Dictionary).get("outline", {}) as Dictionary).get("points", []) if raw is Dictionary else []
+		for index in points.size():
+			var a: Array = points[index]
+			var b: Array = points[(index + 1) % points.size()]
+			_fence_segments.append(PackedVector2Array([Vector2(float(a[0]), float(a[1])), Vector2(float(b[0]), float(b[1]))]))
+	for segment: PackedVector2Array in _fence_segments:
+		if here.distance_to(Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])) < clear:
+			return false
+	return true
+
+
+func _wild_keep_clear_zones() -> Array[Dictionary]:
+	if _keep_clear_read:
+		return _keep_clear
+	_keep_clear_read = true
+	for raw: Variant in ((MATH.config().get("arena", {}) as Dictionary).get("wild_keep_clear", []) as Array):
+		if not raw is Dictionary:
+			continue
+		var at: Array = (raw as Dictionary).get("at", []) as Array
+		var radius := float((raw as Dictionary).get("radius_m", 0.0))
+		if at.size() >= 2 and radius > 0.0:
+			_keep_clear.append({"at": Vector2(float(at[0]), float(at[1])), "radius": radius})
+	return _keep_clear
+
 ## `pos` moved radially to just outside any named trainer's ground it stands
 ## on (unchanged when it is already clear). The last resort after every
 ## placement attempt landed inside one.
 func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
+	var out := pos
+	for zone: Dictionary in _wild_keep_clear_zones():
+		var here := Vector2(out.x, out.z)
+		var centre: Vector2 = zone.at
+		if here.distance_to(centre) >= float(zone.radius):
+			continue
+		var away := here - centre
+		if away.length() < 0.01:
+			away = Vector2(1.0, 0.0)
+		var moved := centre + away.normalized() * (float(zone.radius) + 1.0)
+		out = Vector3(moved.x, out.y, moved.y)
+	var fence_clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
+	if fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
+		for segment: PackedVector2Array in _fence_segments:
+			var here := Vector2(out.x, out.z)
+			var nearest := Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])
+			var away := here - nearest
+			if away.length() >= fence_clear:
+				continue
+			if away.length() < 0.01:
+				away = (segment[1] - segment[0]).orthogonal()
+			var moved := nearest + away.normalized() * (fence_clear + 0.5)
+			out = Vector3(moved.x, out.y, moved.y)
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
-		return pos
-	var out := pos
+		return out
 	for stand: Vector2 in _named_trainer_grounds():
 		var here := Vector2(out.x, out.z)
 		if here.distance_to(stand) >= clear:
@@ -6908,6 +6986,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		return false
 
 	_trainer_spec = spec
+	_trainer_battle_sent = 0
 	_tournament_members.clear()
 	_tournament_entry_condition.clear()
 	if tournament_round:
@@ -6996,6 +7075,7 @@ func _send_out_next_creature() -> bool:
 	# line, remote-tree screenshot or smoke test can match against, which is
 	# exactly how this was found.
 	_trainer_sent += 1
+	_trainer_battle_sent += 1
 	body.name = "TrainerCreature_%s_%d" % [str(_trainer_spec.get("id", "trainer")), _trainer_sent]
 	body.set_script(WILD_SCRIPT)
 	get_parent().add_child(body)
@@ -7347,6 +7427,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
 	_trainer_spec = {}
+	_trainer_battle_sent = 0
 	# F04#3: kept for the victory lines' camera, which opens a frame later.
 	var victory_speaker := _trainer_node
 	_trainer_node = null
@@ -8215,7 +8296,7 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 	var context := {"species_id": str(creature.get("species_id")), "role": role,
 		"trainer_owned": opponent_owned, "chapter": chapter, "band": band,
 		"after_south_bridge": after_bridge, "pattern_id": pattern_id,
-		"sendout_index": maxi(0, _trainer_sent - 1) if opponent_owned else 0,
+		"sendout_index": maxi(0, _trainer_battle_sent - 1) if opponent_owned and not _trainer_spec.is_empty() else 0,
 		"move_quick": str(creature.get("move_quick")),
 		"move_charged": str(creature.get("move_charged"))}
 	wild.call("configure_patterns", patterns.duplicate(true), context, _f22_visible_observation.bind(wild))

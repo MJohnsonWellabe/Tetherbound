@@ -1,0 +1,43 @@
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5668, 0.910754, 14.17091) Halllocal=(-0.170907, 0.060754, -0.433189) maximum_offroad=0.000
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":1,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":2,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":3,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":4,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":5,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":6,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":7,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":8,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":9,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":10,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":11,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":12,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":13,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":14,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":15,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":16,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":17,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":18,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":19,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":20,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":21,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":22,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":23,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":24,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":25,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":26,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":27,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":28,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":29,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":30,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":31,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":32,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":33,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":34,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":35,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":36,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":5,"total":37,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":38,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":39,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":40,"where":"production observation callback deadline"}
+OPENING_PRODUCTION_OBSERVATION ... "refusal":"actual production walk lost grounded floor"
+F17 actual Hall walk FAIL: circle controller travel failed at RelicSlot_cloudreach: actual production walk lost grounded floor

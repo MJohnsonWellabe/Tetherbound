@@ -66,6 +66,10 @@ func mount(world: Node3D, player: Node3D) -> bool:
 		var radius := float(_definition.arena_radius_m)
 		world.call("register_runtime_surface", {"kind": "ellipse", "centre": Vector2(global_position.x, global_position.z),
 			"half": Vector2(radius, radius), "height": global_position.y + 0.2})
+	# Presentation only: a realm may re-skin the generic pad and signpost in
+	# its own families (Cloudreach seats a fly-only pad on a rooted rock islet).
+	# Collision and every interaction above are unchanged.
+	if world.has_method("dress_master_site"): world.call("dress_master_site", self, _definition)
 	_mounted = true
 	return true
 

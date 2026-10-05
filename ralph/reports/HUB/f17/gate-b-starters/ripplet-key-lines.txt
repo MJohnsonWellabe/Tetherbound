@@ -1,0 +1,44 @@
+GATE B +149.20s — opening | title interactive
+GATE B +149.20s — opening | answered the returning-player fresh-game confirmation
+GATE B +149.20s — opening | answered the character-choice step
+GATE B +149.20s — opening | confirmed the configured trainer-name prefill
+GATE B +149.20s — opening | new game world entered
+GATE B +149.20s — opening | wake/Get Up complete
+GATE B +149.20s — opening | Grandpa briefing and pack complete
+GATE B +149.20s — opening | starter picker order ["terrapup", "ripplet", "galewisp"]; 1 ui_right press(es) to 'ripplet'
+GATE B +149.20s — opening | starter selected and named (ripplet, uid creature-76879165b97fb9428add93af9cb6b4fd)
+GATE B +149.20s — opening | Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE B +149.20s — opening | usable house/front doorway exited
+GATE B +149.20s — opening | tutorial Bramblebun combat entered
+GATE B +149.20s — opening | Bramblebun naturally weakened to 24/93 HP
+GATE B +149.20s — opening | satchel drained to 1 orb(s) so the empty case is on the real path
+GATE B +149.20s — opening | running dry restocked the tutorial satchel to 5 orb(s)
+GATE B +149.20s — opening | physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE B +149.20s — opening | catch complete; exploration resumed with two-creature party
+GATE B +149.20s — starter ripplet reached the party as 'Bud' (uid creature-76879165b97fb9428add93af9cb6b4fd)
+GATE B +149.20s — opening played; player stands where the game left them, at (40.0, -1.0, -50.0)
+GATE B +246.78s — visited the village and came away with tools
+GATE B +246.90s — team of 5 at level 5 qualifies for the tournament
+GATE B +407.89s — walked back to the Village Square for the build
+GATE B +407.89s — gathered the home materials: wood 31 / stone 8 / fiber 37
+GATE B +514.13s — save/reload at three-bed readiness, before the tournament kept starter { "species": "ripplet", "nickname": "Bud", "level": 5, "xp": 5 }; party ["creature-76879165b97fb9428add93af9cb6b4fd/ripplet/Bud L5 xp5", "creature-3f004713695998456fb0852f125b79bd/bramblebun/ L5 xp5", "creatur
+GATE B +933.90s — tail | interact is spoken for by { "label": "Pick berries", "distance": 0.76319551467896, "priority": 0, "actionable": true }; stepping clear
+GATE B +933.90s — tail | placed the tent, campfire and bedroll; a Creature Bed is still needed; wood 19 / stone 0 / fiber 27 left
+GATE B +933.90s — tail | interact is spoken for by { "label": "Rest a Creature", "distance": 2.40587162971497, "priority": 0, "actionable": true }; stepping clear
+GATE B +933.90s — tail | placed 3 creature beds through the build menu, one per entrant; wood 1 / stone 0 / fiber 3 left
+GATE B +933.90s — tail | night 1, bed 1: Bud (Rested · Fed · Happy)
+GATE B +933.90s — tail | night 1, bed 2: Bramblebun (Rested · Fed · Happy)
+GATE B +933.90s — tail | night 1, bed 3: Trailpup (Rested · Fed · Happy)
+GATE B +933.90s — tail | 1 night(s) in 3 beds put the whole team in condition
+GATE B +933.90s — tail | the team is rested, fed and happy; tournament_condition_ready is set
+GATE B +933.90s — tail | signed into the draw through the marshal's own ladder
+GATE B +933.90s — tail | called out Bud for the bracket
+GATE B +933.90s — tail | Quarter-final: won in 491 frames; the board now reads 'Tournament board: Semi-final, you vs Tam'
+GATE B +933.90s — tail | Semi-final: won in 1045 frames; the board now reads 'Tournament board: Final, you vs Oskar'
+GATE B +933.90s — tail | Final: won in 1555 frames; the board now reads 'Tournament board: champion of the Lower Meadows'
+GATE B +933.90s — tail | won the bracket; the saddle pattern is known
+GATE B +933.90s — tail | objective handed off: 'Reach South Bridge -- Team Tether holds the crossing.'
+GATE B +933.90s — tail played: home, three beds, the nights, feeding, the draw and the bracket
+GATE B +935.45s — save/reload after the third tournament round kept starter { "species": "ripplet", "nickname": "Bud", "level": 8, "xp": 297 }; party ["creature-76879165b97fb9428add93af9cb6b4fd/ripplet/Bud L8 xp297", "creature-3f004713695998456fb0852f125b79bd/bramblebun/ L7 xp54", "creature-c71f87
+GATE B +935.46s — all 12 Gate B objectives walked in order, ending on 'Reach South Bridge -- Team Tether holds the crossing.'
+exit=0

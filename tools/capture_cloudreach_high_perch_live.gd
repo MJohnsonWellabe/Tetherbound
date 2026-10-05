@@ -55,7 +55,10 @@ const OVER_EDGE_PITCH_DEG := -32.0
 const ARRIVAL_START := Vector3(905.0, 1034.0, 2620.0)
 const NORTH_OUT := Vector3(900.0, 1020.0, 2800.0)
 const HOURS := {"day": 10.0, "night": 23.0}
-const BOOT_MAX_FRAMES := 900
+## Wall-clock boot budget, not a frame count: on Forward+ Medium a GTX 1060
+## draws the booting world at ~0.24 s/frame, so 900 frames (217 s) ran out
+## before EncounterDirector appeared (Codex cloudreach-2).
+const BOOT_MAX_SECONDS := 600.0
 const STEP_LIMIT := 60 * 30
 const RENDERED_FRAMES := 4
 
@@ -72,6 +75,8 @@ var _frames: Array = []
 var _records: Array = []
 var _failures: Array[String] = []
 var _time_name := "day"
+## Grounded first presses repeated before a departure launch (evidence).
+var _departure_jump_presses := 0
 
 
 func _init() -> void:
@@ -121,17 +126,22 @@ func _boot() -> bool:
 	_look = _world.get_node_or_null(^"WorldLook")
 	if _player == null or _rig == null or _camera == null:
 		return _fail("production Player/CameraRig/Camera3D missing")
-	_set_render(false)
 	var booted := false
-	for i in BOOT_MAX_FRAMES:
+	var boot_start := Time.get_ticks_msec()
+	var boot_i := -1
+	while Time.get_ticks_msec() - boot_start < int(BOOT_MAX_SECONDS * 1000.0):
+		boot_i += 1
 		await process_frame
 		_director = _world.get_node_or_null(^"EncounterDirector")
 		var runtime := _world.get_node_or_null(^"CloudreachRuntime")
-		if _director != null and (runtime == null or bool(runtime.get("_mounted"))) and i >= 20:
+		if _director != null and (runtime == null or bool(runtime.get("_mounted"))) and boot_i >= 20:
 			booted = true
 			break
 	if not booted:
 		return _fail("EncounterDirector never appeared")
+	# Render only after boot: under Forward+ the world's shell build awaits drawn
+	# frames, so a loop switched off before this point never reaches EncounterDirector.
+	_set_render(false)
 	for i in 10:
 		await physics_frame
 	_fly = _player.get("fly_controller")
@@ -227,10 +237,23 @@ func _departure() -> void:
 		await physics_frame
 		if _player.global_position.z - CROWN.z > 10.0:
 			break
-	await _tap("jump")
-	for i in 14:
-		_steer(NORTH_OUT)
-		await physics_frame
+	# A player whose first press did not leave the ground presses again. The
+	# night run stepped onto the low roost rack on the jump frame, so the press
+	# was a grounded no-op and the "second" Jump came from the floor (F08#3
+	# re-proof). Up to three presses, each confirmed airborne, before the
+	# in-air Jump that deploys Fly.
+	var airborne := false
+	for attempt in 3:
+		await _tap("jump")
+		for i in 14:
+			_steer(NORTH_OUT)
+			await physics_frame
+			if not _player.is_on_floor():
+				airborne = true
+		if airborne and not _player.is_on_floor():
+			break
+		airborne = false
+		_departure_jump_presses += 1
 	await _tap("jump")
 	var launched := false
 	for i in 30:
@@ -241,7 +264,8 @@ func _departure() -> void:
 			break
 	if not launched:
 		Input.action_release("move_forward")
-		_fail("%s departure: second Jump did not launch (%s)" % [_time_name, str(_fly.call("launch_blockers"))])
+		_fail("%s departure: second Jump did not launch (%s) at %s, overhead: %s" % [_time_name,
+			str(_fly.call("launch_blockers")), _player.global_position, _overhead_colliders()])
 		return
 	for i in 60:
 		_steer(NORTH_OUT)
@@ -258,11 +282,41 @@ func _departure() -> void:
 	if bool(_fly.call("is_flying")):
 		await _capture("departure-lookback", CROWN)
 	else:
-		_fail("%s departure: the glide ended before 35 m" % _time_name)
+		_fail("%s departure: the glide ended before 35 m, at %s (%.1f m out) on %s" % [_time_name,
+			_player.global_position, _flat(_player.global_position, CROWN), _floor_collider()])
 	_release_all()
 
 
 ## --- helpers ------------------------------------------------------------------------
+
+## The collider straight under the trainer (evidence for an early touchdown).
+func _floor_collider() -> String:
+	var query := PhysicsRayQueryParameters3D.create(_player.global_position + Vector3.UP * 0.5,
+		_player.global_position + Vector3.DOWN * 3.0, _player.collision_mask, [_player.get_rid()])
+	var hit := _player.get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return "nothing within 3 m"
+	var collider := hit.get("collider") as Node
+	return "%s at y %.2f" % [str(collider.get_path()) if collider != null else "?", float((hit.position as Vector3).y)]
+
+
+## What the launch's room-overhead query (fly_controller.gd `launch_blockers`)
+## meets at the trainer, by node path: evidence for a refused launch.
+func _overhead_colliders() -> Array:
+	var shape := CapsuleShape3D.new()
+	shape.radius = float(_fly.get("config").get("collision_radius_m", 0.7))
+	shape.height = float(_fly.get("config").get("collision_height_m", 4.5))
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = _player.global_transform.translated(Vector3.UP * shape.height * 0.5)
+	query.collision_mask = _player.collision_mask
+	query.exclude = [_player.get_rid()]
+	var names: Array = []
+	for hit: Dictionary in _player.get_world_3d().direct_space_state.intersect_shape(query, 8):
+		var collider := hit.get("collider") as Node
+		names.append(str(collider.get_path()) if collider != null else "?")
+	return names
+
 
 ## The right stick: point the rig's yaw at `target`. Pitch stays the rig's own.
 func _steer(target: Vector3) -> void:
@@ -353,7 +407,7 @@ func _finish() -> void:
 		"scene": "res://scenes/world/cloudreach_cliffs.tscn", "named_location": "The High Perches",
 		"camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
 		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); party terrapup/bramblebun/mudsnout/brooktail (no flier: Maela's loaner carries every flight); trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame.",
-		"records": _records, "failures": _failures, "complete": _failures.is_empty() and _records.size() == expected,
+		"records": _records, "failures": _failures, "departure_repeated_ground_presses": _departure_jump_presses, "complete": _failures.is_empty() and _records.size() == expected,
 		"finished_utc": Time.get_datetime_string_from_system(true)}
 	var file := FileAccess.open(OUT + "/manifest.json", FileAccess.WRITE)
 	if file != null:

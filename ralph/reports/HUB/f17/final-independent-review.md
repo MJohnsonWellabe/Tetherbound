@@ -1,0 +1,51 @@
+# F17 lane: final independent review (tb/f17 against origin/main)
+
+Scope: `git diff origin/main...HEAD` after a fresh fetch. It covers 33 files: encounter_director/combat.json, grandpa_house/village.json/stations.json, crossing_hall, the opening navigator, smoke_gate_b_continuous, smoke_village_services_redesign, the new home-bed smoke, a capture script and evidence.
+
+Out of scope: the crossing_hall interior lights and night ambient (f63bac26), and the gate_a/gate_b/earned helpers including `_edge_reaches_process` and `_tool_in_hand_becomes`. All of these are already on origin/main and are not part of this diff. I read them briefly: they are bounded frame waits, and I found no loosened tolerance.
+
+Checks I ran:
+- `run_tests.gd --only=test_opening_geometry_navigator_deferral.gd`: 3 tests, 9 assertions, 0 failed.
+- `tests/smoke_home_creature_bed.gd`: 12/12 PASS, exit 0.
+- An offline Python replay of the keep-clear and fence geometry against every Meadows band spawn table and all 401 Stormwood wild clusters.
+
+## Major
+
+### M1. A deferral inside the post-physics observation skips one frame's movement and slide-contact validation. The next frame does not retry it.
+Where: `tests/helpers/opening_geometry_navigator.gd:1816-1879`, together with `_stop_geometry` at :234-240.
+
+`_production_observe` gives itself `FRAME_QUERY_US - _pre_observe_us` (:1805). The first native query it makes is the zero-motion recovery in `_production_live_check(true)` → `_observed_live_clear()` → `_motion()`. If that query passes the deadline, `_motion` calls `_defer_deadline` (:555), which sets `_deferred` and returns `hit=null`. From there:
+- `_production_live_check(true)` returns false, so `_stop_geometry("invalid actual production landing/registration")` runs. Because `_deferred` is set, it only releases (:235-240).
+- Because of the `elif`, the grounded-floor check, the slide-collision count cap, the per-contact cap ("actual production contact observation cap", :1834) and the invalid-shape checks never run.
+- `if not _halted()` (:1852) skips the slide/step/drop movement-bound check ("so a respawn/pose jump cannot earn travel").
+- The next pre tick sets `_production_before = _body.global_position` again (:889). The deferred frame's displacement and slide contacts are therefore never compared against the bounds.
+
+The pre-pose queries are retried next frame. This observation is not: it is a one-shot reading of what the real controller did during a frame in which the stick was pushed. The ruling said to yield and retry the query and keep contact-saturation as a hard refusal. Here a per-frame saturation and bounds observation is silently dropped instead.
+
+Concrete failure: on the loaded runner that motivated the ruling, a slow pre callback (for example 9 ms of the 10 ms cap) leaves the observation about 1 ms. Its first `_motion` almost always defers, so frames in which the stick drove the body regularly go unvalidated. A pose jump in one of those frames would not refuse the walk: a recovery teleport not counted by `unstick_count`, a slide through more than CONTACTS contacts, or a step larger than `_step_height`. Arrival still needs one later validated frame (`_checked_start`), but that frame only proves the new pose is clear, not that the body got there legally. Before this change, every one of these cases was a hard refusal.
+
+Fix (small): the movement-bound, floor and slide checks only read cached controller state and make no native queries. Run them even after a deferral, and make their `_stop_geometry` refuse even while `_deferred` is set. One way is a `_stop_geometry_hard(reason)` that ignores `_deferred`, used for the post-movement checks. Another is to treat a deferral that happens before movement validation in `_production_observe` as a refusal of that frame. Either way, add one unit or fixture test showing a refusal still fires when a deferral happened earlier in the same callback.
+
+## Minor
+
+- **m1. In `_motion`, the deadline check runs before contact saturation** (`opening_geometry_navigator.gd:555-560`). If both are true on one result, saturation becomes a deferral. The pre-pose query is usually retried next frame with the stick released, so the guard usually fires then, but the ruling asked for saturation to stay hard. Swap the order: identity, then saturation, then deadline.
+- **m2. The consecutive bound resets on any on-time frame** (`DeadlineDeferral.new_frame`). A host that is late on alternate frames never reaches `MAX_DEFERRAL_FRAMES`. It is still bounded, because deferred frames spend the caller's walk budget and `MAX_REQUESTS`, and every deferral is logged, so this fits the letter of the ruling. Consider also capping `total` relative to the steps walked, so a mostly-deferred proof cannot pass.
+- **m3. The deferral test only covers the ledger** (`tests/test_opening_geometry_navigator_deferral.gd`). Nothing exercises the navigator itself to show that a deferral leaves no stale state or suppressed refusal. That gap is why M1 was not caught.
+- **m4. The push-outs are sequential and not re-checked** (`encounter_director.gd:4798-4835`). The order is keep-clear, then fence, then trainer ground, each applied once. A fence push can land a body back inside the keep-clear disc. In my replay of the fallback path, 527 of 60,000 sampled points from the practice and mudsnout discs ended up inside the (30,-40) r10 zone. A polygon corner can also leave a point within 7 m of the neighbouring segment. This only matters on the last-resort fallback, after every seeded candidate failed. Its only reachable case is mudsnout 1070, whose whole r3 disc lies inside the keep-clear zone, so every one of its members takes this fallback. Iterate up to N times, or validate the final spot and warn.
+- **m5. The wander fallback can still settle inside a zone** (`wild_creature.gd:433-441`). After 8 rejected candidates, `_pick_destination` returns the last one anyway, so "never settle a wander target inside" is best-effort. That is the same behaviour as the existing road and trainer vetoes, so it is not a regression. The new comments overstate the guarantee.
+- **m6. Meadows-only geometry runs in every realm.** The fence polygon and the (30,-40) zone are Meadows world coordinates, but `Stormwood`'s `_spawn_creatures` calls `super`, so they are checked for Stormwood wilds too (and cloudreach/water through the inherited spot and wander checks). My replay found no Stormwood cluster within reach, so nothing is stranded today. The pre-existing named-trainer check has the same latent leak. Gate both on the Meadows realm, or put the zones in the per-realm spawn config.
+- **m7. Coverage and cost of the fence/keep-clear change.** Affected clusters: practice bramblebun (order 0) loses about 59% of its disc, leaving an annulus of 10-15 m minus the fence band. That still covers the catch tests' (41,-48) area, which is 13 m from the fence. Duskhush 1050 at (60,46) loses about 68%, because its centre is 2.3 m from the fence. Mudsnout 1070 loses 100%, so every member is pushed about 5 m outside its r3 disc. No other Meadows or Stormwood cluster is touched. Determinism holds, since everything derives from config and seeded RNG. Peer agreement also holds, since every peer computes the same spots. Cost per call is about 26 segment distances plus a few dictionary lookups, which is negligible. The segments are cached lazily: `_out_of_named_trainer_grounds` relies on `_clear_of_village_fence` filling `_fence_segments` first, and it does.
+- **m8. Hard-coded values in `grandpa_house.gd`.** :212 uses `-10` instead of `REST_POINT.AUTHORED_BED_INDEX_CEILING`. :305 loads `Lantern_Wall.gltf` without the `ResourceLoader.exists` guard the other dressing props use. The `stations.json` exclusion `home_creature_bed` (min 3.2,1.6, max 9.6,6.4) does match the bed at (6,4), yaw 0: the rim spans about 3.55-8.45 by 1.9-6.1, and the bucket, crate and lantern all fall inside. But the exclusion is a hand copy, and nothing (smoke or unit test) asserts that it still covers the bed if `at` or `yaw_deg` changes.
+- **m9. Smoke strength (`tests/smoke_home_creature_bed.gd`).** It is good: real boot, real `creature_bed` script, reserved index, prompt present, no tournament credit, rim footprint collider-free, grass group, heal through `Game._tick_creature_bed_recovery`, and wake. It ignores colliders under the bed node (`bed.is_ancestor_of`), so it would not catch dressing that gained a collider. Today none of the three glTFs carries collision (`_subresources={}`; no `-col` nodes). It also does not check the homestead exclusion (m8). The index -40 is unique among authored indices (-11..-16, -21..-25, -31..-37, -41..-48).
+- **m10. `smoke_village_services_redesign.gd:251-256`.** The new wait for up to 20 frames until the body is on the floor before the distance/floor gate does not change the 0.75 m tolerance, and the stick is released, so this is not a loosening.
+- **m11. `smoke_gate_b_continuous.gd`.** It now saves and loads the live world's `autosave_slot` instead of the fixed `RELOAD_SLOT`. That is correct after the v28 transaction-slot binding. The round-trip proof is unchanged.
+
+## Checked and found fine
+
+- **crossing_hall prompt** (:142-146). Live biomes still offer "Hang your X relic". Reserved biomes say "Sealed shrine: no road reaches its relic yet". Activation still goes through host `request_relic_hang`, which refuses with its own reason. No test pins the old text.
+- **Home bed.** It reuses `creature_bed.gd` with `build_real(false)` and `set_build_index(-40)`. Its occupancy and healing follow the ordinary Game/party path, so multiplayer and save behaviour are inherited from the authored camp beds. Its dressing is visual only: no colliders, and the cushion, light and lantern are children of the bed.
+- **No hard-rule issues.** No disabled or quarantined tests. The new tunables are in config with comments. No shields or held input.
+
+## Verdict: CHANGES REQUIRED
+
+One major finding (M1): the frame-bounded deferral turns the per-frame post-movement validation (slide/step/drop bounds and the slide contact-saturation cap) into a silent skip on slow frames. That goes beyond the coordinator ruling. The fix is small and local to the test helper. Everything else is approvable, with the minors as follow-ups.

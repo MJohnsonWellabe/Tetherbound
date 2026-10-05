@@ -73,6 +73,14 @@ func build(world: Node3D) -> void:
 			light.omni_attenuation = float(site.get("attenuation", 1.0))
 			light.shadow_enabled = false
 			_lamps.append({"light":light,"material":glow,"energy":float(fixture.get("energy", site.energy))})
+		# Light-free warm windows (F40#4): emissive meshes the landmark built,
+		# faded with the same night weight as the lamps.
+		if site.has("night_glow_nodes"):
+			for node: Node in target.find_children(str(site.night_glow_nodes), "MeshInstance3D", true, false):
+				var material := (node as MeshInstance3D).material_override as StandardMaterial3D
+				if material != null:
+					_lamps.append({"light": null, "material": material,
+						"glow": float(site.get("night_glow_energy", 3.0))})
 	_process(0.0)
 
 func _configure_signal(target: Node3D, spec: Dictionary) -> void:
@@ -99,6 +107,9 @@ func _process(_delta: float) -> void:
 	if is_equal_approx(weight, _last_weight): return
 	_last_weight = weight
 	for lamp: Dictionary in _lamps:
+		if lamp.light == null:
+			(lamp.material as StandardMaterial3D).emission_energy_multiplier = float(lamp.glow) * weight
+			continue
 		(lamp.light as OmniLight3D).light_energy = float(lamp.energy) * weight
 		(lamp.material as StandardMaterial3D).emission_energy_multiplier = 2.0 * weight
 	for signal_spec: Dictionary in _signals:

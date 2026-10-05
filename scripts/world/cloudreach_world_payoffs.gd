@@ -21,6 +21,9 @@ var people: Dictionary = {}
 var markers: Dictionary = {}
 var anchors: Dictionary = {}
 var board: Node3D
+## Post-finale Galefoot (F08#4 frame 36): festival bunting and banner masts,
+## shown only once `cloudreach_winds_restored` holds.
+var festival: Node3D
 var signal_audio: AudioStreamPlayer3D
 var signal_count := 0
 var _revision := -1
@@ -100,6 +103,7 @@ func configure(owner_world: Node3D, chapter_node: Node, arena: Node) -> void:
 	_build_signal()
 	_build_markers()
 	_build_board()
+	_build_festival()
 	_build_anchor_states()
 	var fly: Node = player.get("fly_controller")
 	if fly != null and fly.has_signal("landed") and not fly.is_connected("landed", _on_aerie_landing):
@@ -163,6 +167,8 @@ func sync_progression() -> void:
 			if prompt.has_method("set_enabled"):
 				prompt.call("set_enabled", marker.visible)
 	board.visible = bool(_state.circuit)
+	if festival != null:
+		festival.visible = bool(_state.restored)
 	board.get_node("MasterySeal").visible = bool(_state.mastery)
 	for entry: Dictionary in anchors.values():
 		(entry.bottled as Node3D).visible = not bool(_state.restored)
@@ -314,6 +320,62 @@ func _on_aerie_landing(at: Vector3, _species_id: String = "") -> void:
 		if game != null and game.has_method("push_world_message"):
 			game.call("push_world_message", "A safe aerie landing: stamina restored.")
 		return
+
+
+## The re-proof judge could not tell post-finale Galefoot (frame 36) from the
+## pre-finale one (frame 05): the restored winds changed nothing a returning
+## player sees there. A visual-only festival in the camp's own blue/gold: pennant
+## bunting along the existing lantern line, and a second run between two banner
+## masts across the plaza. Config: cloudreach_visual.json `postfinale_festival`.
+func _build_festival() -> void:
+	var cfg: Dictionary = (world.get("_visual_config") as Dictionary).get("postfinale_festival", {})
+	if cfg.is_empty():
+		return
+	festival = Node3D.new()
+	festival.name = "GalefootRestorationFestival"
+	add_child(festival)
+	festival.visible = false
+	var colours: Array[Color] = []
+	for raw: Variant in cfg.get("pennant_colours", ["#315f9a", "#d6ad52"]):
+		colours.append(Color(str(raw)))
+	var materials: Dictionary = world.get("_materials")
+	var timber: Material = materials.get("weathered_timber", materials.get("wood"))
+	var mast_tops: Array[Vector3] = []
+	for raw: Variant in cfg.get("masts", []):
+		var foot := _ground(DATA.vec(raw))
+		if foot == Vector3.INF:
+			continue
+		var height := float(cfg.get("mast_height_m", 7.0))
+		world.call("_cylinder", festival, "FestivalMast", foot + Vector3.UP * height * 0.5, 0.13, height, timber)
+		var banner := _cloth(festival, "FestivalBanner", foot + Vector3(0.0, height - 1.6, 0.18),
+			Vector2(1.1, 2.6), colours[mast_tops.size() % colours.size()])
+		banner.rotation.y = deg_to_rad(float(cfg.get("banner_yaw_deg", 0.0)))
+		mast_tops.append(foot + Vector3.UP * (height - 0.2))
+	var lines: Array = []
+	for raw: Variant in cfg.get("bunting_lines", []):
+		var line := raw as Array
+		lines.append([DATA.vec(line[0]), DATA.vec(line[1])])
+	if mast_tops.size() >= 2:
+		lines.append([mast_tops[0], mast_tops[1]])
+	var per_metre := float(cfg.get("pennants_per_metre", 0.8))
+	var sag := float(cfg.get("sag_m", 1.15))
+	for line_index in lines.size():
+		var a: Vector3 = lines[line_index][0]
+		var b: Vector3 = lines[line_index][1]
+		var count := maxi(3, int(a.distance_to(b) * per_metre))
+		var previous := a
+		for i in count + 1:
+			var t := float(i) / float(count)
+			var point := a.lerp(b, t) - Vector3.UP * sin(t * PI) * sag
+			if i > 0:
+				world.call("_cylinder_between", festival, "FestivalCord", previous, point, 0.025, timber)
+			previous = point
+			if i == 0 or i == count:
+				continue
+			var pennant := _cloth(festival, "FestivalPennant", point - Vector3.UP * 0.32,
+				Vector2(0.42, 0.62), colours[(i + line_index) % colours.size()])
+			pennant.rotation.y = atan2(b.x - a.x, b.z - a.z) - PI * 0.5
+			(pennant.material_override as ShaderMaterial).set_shader_parameter("notch_depth", 0.45)
 
 
 func _build_board() -> void:
