@@ -78,6 +78,13 @@ buses/default_bus_layout="res://default_bus_layout.tres"
 ; tunable; anything lower produces camera drift on a worn pad.
 pointing/emulate_touch_from_mouse=false
 
+[physics]
+
+; PERF (F26#5): Jolt measured 8.4 -> 2.4 ms per physics step at the Tidewake
+; stand (terrain collision 4.1 -> 0.7 ms); the physics, traversal, combat and
+; two-peer net smokes behave identically. Separate trial commit.
+3d/physics_engine="Jolt Physics"
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

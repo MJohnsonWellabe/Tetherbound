@@ -1,0 +1,56 @@
+{
+	"animation_census": {
+		"active": 65,
+		"in_character_body": 9,
+		"in_dormant_character_body": 1,
+		"mixers": 65,
+		"playing": 64
+	},
+	"biome": "water",
+	"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
+	"display_server": "headless",
+	"frames_per_row": 240,
+	"processor_count": 4,
+	"rows": [
+		{
+			"label": "baseline",
+			"physics_step_ms_avg": 13.3294833333333,
+			"physics_steps_per_frame": 1.12916666666667,
+			"process_ms_avg": 16.7173041666667,
+			"process_ms_peak": 19.453,
+			"wall_ms_per_frame": 18.7571
+		},
+		{
+			"label": "dormant_creature_animation_paused",
+			"physics_step_ms_avg": 13.9363625,
+			"physics_steps_per_frame": 1.07083333333333,
+			"players_paused": 1,
+			"process_ms_avg": 17.2976333333334,
+			"process_ms_peak": 22.172,
+			"wall_ms_per_frame": 17.8470708333333
+		},
+		{
+			"label": "all_animation_paused",
+			"physics_step_ms_avg": 15.3644583333333,
+			"physics_steps_per_frame": 2.1625,
+			"players_paused": 65,
+			"process_ms_avg": 17.1794125,
+			"process_ms_peak": 21.35,
+			"wall_ms_per_frame": 36.34945
+		},
+		{
+			"label": "baseline_again",
+			"physics_step_ms_avg": 17.3656541666666,
+			"physics_steps_per_frame": 2.88333333333333,
+			"process_ms_avg": 17.6998374999999,
+			"process_ms_peak": 24.667,
+			"wall_ms_per_frame": 48.3477958333333
+		}
+	],
+	"schema": "perf_cpu_probe/1",
+	"stand": [
+		12.0,
+		3.45006728172302,
+		150.0
+	]
+}
