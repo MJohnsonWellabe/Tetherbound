@@ -1,0 +1,75 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+[shell_build] MeadowsPlayground begin:forward_upload total=0ms slice=0ms
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+       [2] _run (res://tests/smoke_village_hall_redesign.gd:38)
+[shell_build] MeadowsPlayground complete:terrain_node total=420ms slice=420ms
+[shell_build] MeadowsPlayground complete:terrain_data total=61363ms slice=7590ms
+[shell_build] MeadowsPlayground complete:terrain_collision total=61713ms slice=252ms
+[shell_build] MeadowsPlayground complete:ground_materials total=62070ms slice=271ms
+[playground] spawned at 0.0, 2.9, 0.0
+[shell_build] MeadowsPlayground complete:player_placed total=62381ms slice=33ms
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=3043 reorder[16 layers]=3571
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,0 total=71739ms slice=15ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,0 total=71805ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,-1 total=71870ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,-1 total=71927ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,10 total=72076ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,1 total=72139ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,1 total=72204ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,2 total=72269ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,2 total=72326ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,3 total=72388ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,4 total=72453ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,7 total=72512ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,5 total=72602ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,4 total=72681ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,9 total=72766ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,11 total=72851ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,6 total=72935ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,1 total=73007ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,8 total=73086ms slice=0ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,8 total=73166ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,7 total=73251ms slice=0ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,3 total=73311ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,12 total=73402ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,13 total=73484ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,2 total=73550ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,8 total=73612ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,11 total=73669ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,7 total=73725ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,14 total=73786ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,13 total=73843ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,12 total=73902ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,3 total=73961ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,8 total=74028ms slice=2ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-1,14 total=74087ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,7 total=74142ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,6 total=74203ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,13 total=74259ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,10 total=74319ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,0 total=74377ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,5 total=74435ms slice=0ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,9 total=74494ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,4 total=74555ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,6 total=74618ms slice=0ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,10 total=74678ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:0,5 total=74736ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,11 total=74793ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,12 total=74852ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,3 total=74909ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,9 total=74969ms slice=0ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,-1 total=75029ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,14 total=75086ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,1 total=75163ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,2 total=75249ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,13 total=75318ms slice=1ms
+[shell_build] MeadowsPlayground complete:scatter_upload:1:-2,14 total=75377ms slice=1ms
+F17 actual Hall walk FAIL: missing real player/camera/house/Hall/Terrain
+[shell_build] MeadowsPlayground complete:scatter_upload:1:1,0 total=75470ms slice=1ms

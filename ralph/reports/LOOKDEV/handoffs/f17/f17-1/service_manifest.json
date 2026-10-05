@@ -1,0 +1,405 @@
+{
+  "request_id": "f17-1",
+  "request_comments": [
+    5986773482,
+    5986785271
+  ],
+  "branch": "tb/f17",
+  "source_commit": "356afa084e121a34bda5828a9455f3e52b49c1c2",
+  "engine_version": "4.7.stable.official.5b4e0cb0f",
+  "engine_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "source_tracked_files_modified": false,
+  "import_generated_untracked_uid_metadata": true,
+  "judgement": "Requesting lane owns code-blind visual judgement. Still matrix only: tool disables3D while walking. No timing, live motion, earned campaign, device or full-bar claim.",
+  "complete": false,
+  "passes": [
+    {
+      "preset": "Low",
+      "source_commit": "356afa084e121a34bda5828a9455f3e52b49c1c2",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-f17-356afa08",
+        "--rendering-method",
+        "gl_compatibility",
+        "--rendering-driver",
+        "opengl3",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tests/capture_f17_visual_matrix.gd",
+        "--",
+        "--capture-dir=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/f17/f17-1/low"
+      ],
+      "gpu_header": [
+        "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 414.891,
+      "errors": [],
+      "failure_lines": [
+        "F17 matrix PASS: 43 frames saved to D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/f17/f17-1/low"
+      ],
+      "expected_frames": 43,
+      "frame_manifest_present": true,
+      "qualification": "FAIL",
+      "actual_frames": 43,
+      "saved_frames": 43,
+      "unique_images": 43,
+      "png_count": 43,
+      "actual_window": [
+        1920,
+        1061
+      ],
+      "png_dimensions": [
+        {
+          "width": 1920,
+          "height": 1061,
+          "count": 43
+        }
+      ],
+      "frames_complete": true,
+      "resolution_complete": false,
+      "reason": "Requested1920x1080; actual1920x1061. Native completion is retained but does not override resolution failure."
+    },
+    {
+      "preset": "Medium",
+      "source_commit": "356afa084e121a34bda5828a9455f3e52b49c1c2",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+        "--path",
+        "D:\\tetherbound\\render-f17-356afa08",
+        "--rendering-method",
+        "forward_plus",
+        "--audio-driver",
+        "Dummy",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tests/capture_f17_visual_matrix.gd",
+        "--",
+        "--capture-dir=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/f17/f17-1/medium"
+      ],
+      "gpu_header": [
+        "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+      ],
+      "exit_code": 1,
+      "elapsed_seconds": 96.11,
+      "errors": [],
+      "failure_lines": [
+        "F17 actual Hall walk FAIL: missing real player/camera/house/Hall/Terrain"
+      ],
+      "expected_frames": 43,
+      "frame_manifest_present": false,
+      "qualification": "FAIL",
+      "actual_frames": 0,
+      "frames_complete": false,
+      "resolution_complete": false,
+      "reason": "Exit1: missing real player/camera/house/Hall/Terrain;0frames."
+    }
+  ],
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    {
+      "path": "delivery-review.md",
+      "bytes": 1757,
+      "sha256": "01e47e46f2e16f7fd58ec2eef7f04e84b8e7f9a04f8b0f9bf6f54a37d9446498"
+    },
+    {
+      "path": "import.log",
+      "bytes": 289630,
+      "sha256": "1a1e5f15a97a4fdc3f8d55492115b3efe73abda8fb2decb9341f00d7b707a1ff"
+    },
+    {
+      "path": "import.receipt.json",
+      "bytes": 333,
+      "sha256": "70fb880b6e407f219d64e7a50d503d20b03a14663ad8b128c6322831d09f524f"
+    },
+    {
+      "path": "low/choose-preset.log",
+      "bytes": 109,
+      "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e"
+    },
+    {
+      "path": "low/choose-preset.receipt.json",
+      "bytes": 653,
+      "sha256": "8789f9fc1d190e132461cac5f2ba276af5ced950cbf66c4e5f5b8607a1e2e29f"
+    },
+    {
+      "path": "low/farm-door_day_clear.png",
+      "bytes": 3374530,
+      "sha256": "4296884d50f090f4646c55e995353fe254fd9abb049c22c55ba4b3a4741b77b8"
+    },
+    {
+      "path": "low/farm-door_day_rain.png",
+      "bytes": 3139364,
+      "sha256": "5132c103aa6c5c9ec2461ed6d7d1dc3494ebaa01e766039bf260299e20fdd8ce"
+    },
+    {
+      "path": "low/farm-door_golden_clear.png",
+      "bytes": 3074638,
+      "sha256": "2414ea19c08667473359caf2cc9e60fd44f2f1369c4c070035499e1205821af7"
+    },
+    {
+      "path": "low/farm-door_night_clear.png",
+      "bytes": 2850891,
+      "sha256": "c840cf59cb63401826e048fe9926caf76991657e76bc90a76f900efcaa4d4a1d"
+    },
+    {
+      "path": "low/farm-door_night_rain.png",
+      "bytes": 3029836,
+      "sha256": "a57bbeca33b654ad842401b43bc40197825ce4565ae079aa5136e462ff8adc63"
+    },
+    {
+      "path": "low/frames.json",
+      "bytes": 20123,
+      "sha256": "2621f36f3d7ec76289b59db32e2633fc9e53ee4651a9a55f9e7ae41a7c78ff40"
+    },
+    {
+      "path": "low/frames.native.json",
+      "bytes": 15268,
+      "sha256": "e8608a4d5d01fbeba248368648b15c42e803b3d31fe39304848b4abb6020e737"
+    },
+    {
+      "path": "low/graphics_override.cfg",
+      "bytes": 131,
+      "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
+    },
+    {
+      "path": "low/hall-approach_day_clear.png",
+      "bytes": 3533287,
+      "sha256": "6f28339ef74e4f9200bdd6f1ffc945368292e37ac05d93e72b779f84b8d17d82"
+    },
+    {
+      "path": "low/hall-approach_day_rain.png",
+      "bytes": 3277618,
+      "sha256": "aa947c0aed40756086f9cea889908d6e75c4c3352064e413a453aa5f02db814b"
+    },
+    {
+      "path": "low/hall-approach_golden_clear.png",
+      "bytes": 3288724,
+      "sha256": "2df3cb9ac8f4408f3a09db081e086845c52936f2c77bfa221789e89e30488598"
+    },
+    {
+      "path": "low/hall-approach_night_clear.png",
+      "bytes": 2848301,
+      "sha256": "7ce388ab6570f57339cfbe9fec05994d36d3b220a37bc7de499d4460a01c71ee"
+    },
+    {
+      "path": "low/hall-approach_night_rain.png",
+      "bytes": 3087037,
+      "sha256": "696c68e3d96c94f5ab6222a380cd5c4f91d7644bf64e2224976ef4b2d4fbb462"
+    },
+    {
+      "path": "low/hall-approach-reverse_day_clear.png",
+      "bytes": 3389030,
+      "sha256": "9a449586228c597d0ae8f72da36becb606e564658f98fae4e10156b3f9b527b7"
+    },
+    {
+      "path": "low/hall-approach-reverse_golden_clear.png",
+      "bytes": 2864851,
+      "sha256": "1cf4d775bb93a9aae80aee1fe3a23c085ce1c1888129f638af0b5e5b540115ab"
+    },
+    {
+      "path": "low/hall-approach-reverse_night_clear.png",
+      "bytes": 2804485,
+      "sha256": "411193a200c4738dca214e30f0963d1457fd955b10ff0a8cd3be4f439ae88219"
+    },
+    {
+      "path": "low/native.log",
+      "bytes": 13422,
+      "sha256": "8fd27c50057416809fa68f696632e01c234dae1feb626369cda9a9950d1eecc6"
+    },
+    {
+      "path": "low/native.receipt.json",
+      "bytes": 1086,
+      "sha256": "9ca238f446d7b038a19cbbbe70ceeb4ac9b4e32bd9c48ae6d9059828ab7f5851"
+    },
+    {
+      "path": "low/nave-arches-left_day_clear.png",
+      "bytes": 3183762,
+      "sha256": "19376a17e0c4ba3dd7513af53451caee4426c0b4a43840c16b10aad5e6a14480"
+    },
+    {
+      "path": "low/nave-arches-left_golden_clear.png",
+      "bytes": 3028824,
+      "sha256": "af6420882b3c26194d6a15e6c18adba35bf3e4ad9b162baeeb5b715e1e922159"
+    },
+    {
+      "path": "low/nave-arches-left_night_clear.png",
+      "bytes": 3028061,
+      "sha256": "321080e2a6f0696a54f0984be2e692c09c0edc58a748529a92786be63e7452f4"
+    },
+    {
+      "path": "low/nave-arches-right_day_clear.png",
+      "bytes": 3302118,
+      "sha256": "1547e342d0dcce0bc10b7674cde590ed509a7dda561a0e6b6470039553f39f2b"
+    },
+    {
+      "path": "low/nave-arches-right_golden_clear.png",
+      "bytes": 3199862,
+      "sha256": "f6c76bab7af904809365e4e642d5e9f4e5fe09f7bc440069be5b879dd540df0b"
+    },
+    {
+      "path": "low/nave-arches-right_night_clear.png",
+      "bytes": 3505850,
+      "sha256": "ff1b3f2539f340ea138dfd436fa4451a1fc3d576685f1a2568c87a9e7fd5e21c"
+    },
+    {
+      "path": "low/nave-forward_day_clear.png",
+      "bytes": 3289443,
+      "sha256": "6369992a4f1e4f078af433111fb8f4d59cb369b7eba88837de69c32a86b92f29"
+    },
+    {
+      "path": "low/nave-forward_day_rain.png",
+      "bytes": 3317709,
+      "sha256": "e2a4a7e9adce2708ffbf60098e71f10841407b5eb18c5171fe43e857024d1f4a"
+    },
+    {
+      "path": "low/nave-forward_golden_clear.png",
+      "bytes": 3168653,
+      "sha256": "26f63fac3213b21125c5b9a52309711368a262764e967902fa37e906a55f1afa"
+    },
+    {
+      "path": "low/nave-forward_night_clear.png",
+      "bytes": 3154890,
+      "sha256": "394b21a691199f5a91ed2d5e117318587a1e6406746ac2a648664e313e742049"
+    },
+    {
+      "path": "low/nave-forward_night_rain.png",
+      "bytes": 3297506,
+      "sha256": "044b8ba2196ebc833eeaf52f2f5b9f3d87061d526f6d7f9ce81c498a0aa90b86"
+    },
+    {
+      "path": "low/nave-reverse_day_clear.png",
+      "bytes": 3242369,
+      "sha256": "f1f0db0a280f633228458430f2b1e2e246b5a0d627d14094c7062c0542b5d671"
+    },
+    {
+      "path": "low/nave-reverse_day_rain.png",
+      "bytes": 3460502,
+      "sha256": "e9340a8cb54a0dd4b6f6be642935a5637f55ba441d7145851fbbb5851642ab5d"
+    },
+    {
+      "path": "low/nave-reverse_golden_clear.png",
+      "bytes": 3120564,
+      "sha256": "06a4fe521db2d7a633d3d0bfa55385dcabd03e8696de70c4d58ef258a10f4729"
+    },
+    {
+      "path": "low/nave-reverse_night_clear.png",
+      "bytes": 3188796,
+      "sha256": "869cd126ca754b6cb686e98206160aec86af434882a3ddffd162c8cb2990cb92"
+    },
+    {
+      "path": "low/nave-reverse_night_rain.png",
+      "bytes": 3258927,
+      "sha256": "6e00801ff53eea6de6acb861f1a37a1f249a4955525335f2f1daf8e837699616"
+    },
+    {
+      "path": "low/shrine-pedestals_day_clear.png",
+      "bytes": 3357320,
+      "sha256": "750bf24a1ff8359d220a9da17e60d374e268712db9153f1f0e4308a79c412df5"
+    },
+    {
+      "path": "low/shrine-pedestals_day_rain.png",
+      "bytes": 3410458,
+      "sha256": "f757fe8a383183e156e929016598816e58bd6ab66bf27b579ef016c81d1cc7c5"
+    },
+    {
+      "path": "low/shrine-pedestals_golden_clear.png",
+      "bytes": 3234840,
+      "sha256": "5d28dbe76383501c58b90fd4a43d12dbea4fc9ddf1f73afd5c9cf5f9d2118f0a"
+    },
+    {
+      "path": "low/shrine-pedestals_night_clear.png",
+      "bytes": 3312184,
+      "sha256": "419260445e0cc77113014db76671affbfe622a128524e2a04888913eef5350f6"
+    },
+    {
+      "path": "low/shrine-pedestals_night_rain.png",
+      "bytes": 3369994,
+      "sha256": "847fe1a17012a6ccb299d8eac4953d077badf0a64459edd33fc4b3969192baf9"
+    },
+    {
+      "path": "low/shrine-pedestals-reverse_day_clear.png",
+      "bytes": 3368800,
+      "sha256": "fcbe970f443ffa8afa07da76ba76f55affa99f2c82d01f025530d34d18d4e9fa"
+    },
+    {
+      "path": "low/shrine-pedestals-reverse_golden_clear.png",
+      "bytes": 3233835,
+      "sha256": "10147037986267de900de319f1c427e7b3ea1c8a9451a4d60061fb9195b369e7"
+    },
+    {
+      "path": "low/shrine-pedestals-reverse_night_clear.png",
+      "bytes": 3406371,
+      "sha256": "3f9689ec4c358d40de07f564c7efa8e0b802739e7ce4afa805dd1452942c0655"
+    },
+    {
+      "path": "low/street-mid-left_day_clear.png",
+      "bytes": 3405892,
+      "sha256": "e6ee18cb57539446302c51550688c5f8a0688f02ae2414330b2c335b49e7c1ae"
+    },
+    {
+      "path": "low/street-mid-left_golden_clear.png",
+      "bytes": 3141300,
+      "sha256": "63e86cb3b44ec6de394da90510504f3f140976e9d9870fcdb821f13c70e32d49"
+    },
+    {
+      "path": "low/street-mid-left_night_clear.png",
+      "bytes": 2909052,
+      "sha256": "9287f4621ff26c822c26bebc9eaa0e3d52d1bb5ec5ff93d2631b5bd429462071"
+    },
+    {
+      "path": "low/street-mid-right_day_clear.png",
+      "bytes": 3229582,
+      "sha256": "749bf311999ad6e92d04ab733625aef956cd94669b91abc2137058986e1a1411"
+    },
+    {
+      "path": "low/street-mid-right_golden_clear.png",
+      "bytes": 2849469,
+      "sha256": "12f5f46f8365ca61540a3ec09c2cda5fc3339739c3898b8e5742f422a8aa7b28"
+    },
+    {
+      "path": "low/street-mid-right_night_clear.png",
+      "bytes": 2469186,
+      "sha256": "4373d173ae1fb872f7d0bb73fe63c1558f360ddfbcb77e8b4b15f380aab0353b"
+    },
+    {
+      "path": "medium/choose-preset.log",
+      "bytes": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "medium/choose-preset.receipt.json",
+      "bytes": 658,
+      "sha256": "8044cf4dee28e1f9e6d6971759641f9b98029c5f9ec6d6bb4a99128cd5b16514"
+    },
+    {
+      "path": "medium/graphics_override.cfg",
+      "bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    },
+    {
+      "path": "medium/native.log",
+      "bytes": 6324,
+      "sha256": "d8c9d196207f37d1c39fe7f182a1e295fed0d4f72502a0c5c15b32caec51634e"
+    },
+    {
+      "path": "medium/native.receipt.json",
+      "bytes": 985,
+      "sha256": "f01a289c0e1df5b8152e91b9dfe31db8fa53b921134f10dcab76930ede68bf6b"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1263,
+      "sha256": "87fd3d7f1f1ec96efe69a7c45abd56a5b392cff6f49343d39dd25740d57a27de"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--editor",
+    "--path",
+    "D:\\tetherbound\\render-f17-356afa08",
+    "--import"
+  ],
+  "source_commit": "356afa084e121a34bda5828a9455f3e52b49c1c2",
+  "exit_code": 0,
+  "elapsed_seconds": 367.125,
+  "errors": []
+}

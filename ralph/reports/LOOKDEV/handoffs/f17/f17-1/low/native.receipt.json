@@ -1,0 +1,34 @@
+{
+  "request_id": "f17-1",
+  "source_commit": "356afa084e121a34bda5828a9455f3e52b49c1c2",
+  "preset": "Low",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-f17-356afa08",
+    "--rendering-method",
+    "gl_compatibility",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tests/capture_f17_visual_matrix.gd",
+    "--",
+    "--capture-dir=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/f17/f17-1/low"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 414.891,
+  "log": "native.log",
+  "log_sha256": "8fd27c50057416809fa68f696632e01c234dae1feb626369cda9a9950d1eecc6",
+  "errors": [],
+  "gpu_header": [
+    "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "completion_lines": [
+    "F17 matrix PASS: 43 frames saved to D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/f17/f17-1/low"
+  ]
+}
