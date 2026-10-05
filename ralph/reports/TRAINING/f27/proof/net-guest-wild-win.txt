@@ -1,16 +1,16 @@
 Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 
-coordinator: launched peer 0 (host) pid=1983 control_port=38267 home=/tmp/claude-0/net-f27-win/home-0 log=/tmp/claude-0/net-f27-win/peer-0.log
-coordinator: launched peer 1 (client) pid=1984 control_port=33399 home=/tmp/claude-0/net-f27-win/home-1 log=/tmp/claude-0/net-f27-win/peer-1.log
-coordinator: peer 0 hello: {"enet_port":28481.0,"godot_version":"4.7-stable (official)","main_sha":"dd902e19e3f5","peer":0.0,"pid":1983.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-win/home-0/godot/app_userdata/Tetherbound"}
-coordinator: peer 1 hello: {"enet_port":28482.0,"godot_version":"4.7-stable (official)","main_sha":"dd902e19e3f5","peer":1.0,"pid":1984.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-win/home-1/godot/app_userdata/Tetherbound"}
+coordinator: launched peer 0 (host) pid=3112 control_port=41421 home=/tmp/claude-0/net-f27-win/home-0 log=/tmp/claude-0/net-f27-win/peer-0.log
+coordinator: launched peer 1 (client) pid=3113 control_port=41487 home=/tmp/claude-0/net-f27-win/home-1 log=/tmp/claude-0/net-f27-win/peer-1.log
+coordinator: peer 1 hello: {"enet_port":33842.0,"godot_version":"4.7-stable (official)","main_sha":"b25551facbab","peer":1.0,"pid":3113.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-win/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":33841.0,"godot_version":"4.7-stable (official)","main_sha":"b25551facbab","peer":0.0,"pid":3112.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-win/home-0/godot/app_userdata/Tetherbound"}
 coordinator: all 2 peer(s) said hello
 PASS: peer 0 boot: booted world (240 settle frames)
 PASS: peer 1 boot: booted world (240 settle frames)
 PASS: peer 0 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
 PASS: peer 1 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
-PASS: peer 0 host: hosting udp/28481 as peer 1
-PASS: peer 1 join: joined 127.0.0.1:28481 as peer 1265511670 after 34 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 host: hosting udp/33841 as peer 1
+PASS: peer 1 join: joined 127.0.0.1:33841 as peer 2115504791 after 33 frames; snapshot applied; 2 peer(s) in registry
 PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
 PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
 PASS: peer 0 deploy_creature: deployed AllyCreature
@@ -18,29 +18,29 @@ PASS: peer 1 deploy_creature: deployed AllyCreature
 PASS: peer 0 engage_wild: engaged bramblebun as encounter 1:1 (bound after 0 frame(s))
 PASS: host minted a shared wild record
 PASS: the guest was told the fight exists and can be joined
-PASS: guest joined the host's wild record (joined 1:1 beside 'bramblebun' at (-5.7, 66.2))
+PASS: guest joined the host's wild record (joined 1:1 beside 'bramblebun' at (-3.2, 67.5))
 PASS: the guest's strikes brought the shared opponent down
 PASS: peer 1 leave: client left cleanly after 0 frames
-PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.5 s)
-PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28481 as peer 331046535 after 206 frames
-PASS: the guest holds exactly one new defeat receipt (["defeat:character-dda07171c7b2fd4864e93cd6b61449eb:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:ebff7f1d3e0ce996802175fffa1166043dc4f1d73bbcf98e453965f3d2161a2d"])
-PASS: the host's row for the guest is its accepted wild_defeat share ({ "action": "wild_defeat_share", "action_id": "dcfb91bb8a4f304cc0d7872fda567831d1d764eeb542d927d4fcd46d039c5890", "receipt": "defeat:character-dda07171c7b2fd4864e93cd6b61449eb:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:ebff7f1d3e0ce996802175fffa1166043dc4f1d73bbcf98e453965f3d2161a2d", "status": "accepted" })
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.7 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:33841 as peer 448608492 after 217 frames
+PASS: the guest holds exactly one new defeat receipt (["defeat:character-151cc9ea0525ef48700ef90652cff906:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:4b0d8f080d3732708490bf8251fd71e0bea8b29e43294304d6c4d65f5e04e125"])
+PASS: the host's row for the guest is its accepted wild_defeat share ({ "action": "wild_defeat_share", "action_id": "0b6b21014b0d57a2482144ef1d7c69511628dbebb9a80b56ce623d595bd59b0d", "receipt": "defeat:character-151cc9ea0525ef48700ef90652cff906:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:4b0d8f080d3732708490bf8251fd71e0bea8b29e43294304d6c4d65f5e04e125", "status": "accepted" })
 PASS: the guest received its type essence (+1)
 PASS: the guest's creature gained XP from the host share
-PASS: host admitted party equals the guest's: no legacy local award on top ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-6c06c7fb38d837963256a8d310b4c80d", "xp": 32.0 }] vs [{ "level": 9.0, "species_id": "terrapup", "uid": "creature-6c06c7fb38d837963256a8d310b4c80d", "xp": 32.0 }])
+PASS: host admitted party equals the guest's: no legacy local award on top ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-728ba1dea16a2b527e40c699ce0c29f4", "xp": 32.0 }] vs [{ "level": 9.0, "species_id": "terrapup", "uid": "creature-728ba1dea16a2b527e40c699ce0c29f4", "xp": 32.0 }])
 PASS: host admitted items equals the guest's: no legacy local award on top ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } vs { "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
-PASS: host admitted defeat_receipts equals the guest's: no legacy local award on top (["defeat:character-dda07171c7b2fd4864e93cd6b61449eb:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:ebff7f1d3e0ce996802175fffa1166043dc4f1d73bbcf98e453965f3d2161a2d"] vs ["defeat:character-dda07171c7b2fd4864e93cd6b61449eb:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:ebff7f1d3e0ce996802175fffa1166043dc4f1d73bbcf98e453965f3d2161a2d"])
-PASS: the host participant holds exactly one new defeat receipt (["defeat:character-a44bdd89aacc798902b70072a5eb0779:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:63e8cc5f1de4c38c6cf6c11fb4c6e9b82f7ff289542cacca013c19c3bea2d469"])
+PASS: host admitted defeat_receipts equals the guest's: no legacy local award on top (["defeat:character-151cc9ea0525ef48700ef90652cff906:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:4b0d8f080d3732708490bf8251fd71e0bea8b29e43294304d6c4d65f5e04e125"] vs ["defeat:character-151cc9ea0525ef48700ef90652cff906:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:4b0d8f080d3732708490bf8251fd71e0bea8b29e43294304d6c4d65f5e04e125"])
+PASS: the host participant holds exactly one new defeat receipt (["defeat:character-daa6af6cca6274130a871e22e998548e:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:d0ce79adda053a3db068a0aa99262174d8564ee04ed7494e4681771e4c325782"])
 PASS: the host participant received its type essence (+1)
 PASS: peer 1 leave: client left cleanly after 0 frames
-PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.7 s)
-PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28481 as peer 2146236122 after 209 frames
-PASS: after reconnect party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-6c06c7fb38d837963256a8d310b4c80d", "xp": 32.0 }])
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.4 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:33841 as peer 2129532093 after 223 frames
+PASS: after reconnect party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-728ba1dea16a2b527e40c699ce0c29f4", "xp": 32.0 }])
 PASS: after reconnect items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
-PASS: after reconnect defeat_receipts unchanged (["defeat:character-dda07171c7b2fd4864e93cd6b61449eb:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:ebff7f1d3e0ce996802175fffa1166043dc4f1d73bbcf98e453965f3d2161a2d"])
+PASS: after reconnect defeat_receipts unchanged (["defeat:character-151cc9ea0525ef48700ef90652cff906:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:4b0d8f080d3732708490bf8251fd71e0bea8b29e43294304d6c4d65f5e04e125"])
 PASS: peer 1 save_reload_here: client character reload preserved party=true selection=true hosted_world=true
-PASS: after reload party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-6c06c7fb38d837963256a8d310b4c80d", "xp": 32.0 }])
+PASS: after reload party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-728ba1dea16a2b527e40c699ce0c29f4", "xp": 32.0 }])
 PASS: after reload items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
-PASS: after reload defeat_receipts unchanged (["defeat:character-dda07171c7b2fd4864e93cd6b61449eb:cbfe3ec123f5bca0098b1c4c44d6877cf5216f149e98544ce2a3cc212caf7077:ebff7f1d3e0ce996802175fffa1166043dc4f1d73bbcf98e453965f3d2161a2d"])
+PASS: after reload defeat_receipts unchanged (["defeat:character-151cc9ea0525ef48700ef90652cff906:fd7c6dac2f9fe17d532aa9e0fcd8c0142121037f5d6deb5c2265fc3349ffc280:4b0d8f080d3732708490bf8251fd71e0bea8b29e43294304d6c4d65f5e04e125"])
 ALL CHECKS PASSED
 exit 0

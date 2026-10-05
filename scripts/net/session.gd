@@ -969,6 +969,14 @@ func _retry_foundation_events() -> void:
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+		if duty.action == "wild_defeat_share" and result.get("ok") != true and result.get("durable") != true \
+			and _wild_share_permanent(str(result.get("code", ""))):
+			# Bounded release: a share that can never stage stops holding this
+			# guest's requests and duties (logged once; never paid twice).
+			var refused_key: String = str(raw.delivery_id) + "|" + str(duty.character_id)
+			if not _wild_share_refused.has(refused_key):
+				_wild_share_refused[refused_key] = str(result.code)
+				push_warning("[session] wild_defeat_share for %s refused for good: %s" % [duty.character_id, str(result.code)])
 		if duty.action == "research_event" and result.get("code") == "research_no_progress":
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
@@ -5252,7 +5260,9 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
 func _guest_wild_share_outstanding(character: String, world: RefCounted) -> bool:
 	var receipts: Array = (_character_authority.call("state", character) as Dictionary).get("redesign_character", {}).get("transaction_receipts", [])
 	for raw: Variant in world.reward_deliveries.values():
-		if not raw is Dictionary or raw.get("kind") != "foundation_event" or not str(raw.get("source_id", "")).begins_with("wild_xp:"): continue
+		if not raw is Dictionary or raw.get("kind") != "foundation_event" or not str(raw.get("source_id", "")).begins_with("wild_xp:") \
+			or not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
+		if _wild_share_refused.has(str(raw.delivery_id) + "|" + character): continue
 		for duty: Variant in raw.get("duties", []):
 			if duty is Dictionary and duty.get("action") == "wild_defeat_share" and duty.get("character_id") == character \
 				and not receipts.has(ESSENCE.defeat_receipt(character, duty.intent)): return true
@@ -5271,6 +5281,15 @@ func _guest_wild_share_outstanding(character: String, world: RefCounted) -> bool
 					"session_id": _altar_current_epoch(), "source_id": "wild_xp:" + str(original.get("source_id", ""))})
 				if not world.reward_deliveries.has(share): return true
 	return false
+
+## Retained shares the host found can never stage (event+character -> code).
+var _wild_share_refused: Dictionary = {}
+
+static func _wild_share_permanent(code: String) -> bool:
+	return code in ["receipt_budget", "receipt_conflict", "owned_enemy_refused", "actual_host_wild_defeat_required",
+		"not_actual_wild_defeat", "invalid_defeat_event", "invalid_defeat_identity", "invalid_defeat_participants",
+		"invalid_defeat_active_uid", "invalid_defeat_XP_or_cap", "invalid_defeat_payout", "invalid_defeat",
+		"defeat_schema_or_candidate_unavailable", "inventory_full"]
 
 ## F27: each guest participant of a host wild victory gets one retained
 ## `wild_defeat_share` duty, its event staged once here from the SAME frozen capture
