@@ -1,0 +1,48 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 13442,
+      "sha256": "38a51647bf2f9bd7b19bc3ab50bf9f9d9eb9754c6b7d0aeb54baa6de97aedf8a"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 10490,
+      "sha256": "c503b992fa4eaac047fade50eb8e903cbc2a29bb24b39730677fb4bc6bb98de0"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1088,
+      "sha256": "6be25662397ba658ee91561e34d24ccdde4e60974aa536b6f1df3c5878677179"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 109,
+      "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 389,
+      "sha256": "22f878487c3e3df382d92d91f3cc7ad3cf56270acd19788963523dc9bd0a67ae"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 822,
+      "sha256": "6930deb5b28045378d850a2dcf2568f3a4e4f8e08aa5de7d1e9e3f95203e04b0"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 131,
+      "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
+    }
+  ]
+}

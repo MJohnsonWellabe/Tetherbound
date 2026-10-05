@@ -1,0 +1,64 @@
+{
+  "source_commit": "386340f697e57be5ed975aabee34e0520a3d75c1",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "gl_compatibility",
+    "--rendering-driver",
+    "opengl3",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_f17_visual.gd",
+    "--",
+    "--preset=Low",
+    "--source-commit=386340f697e57be5ed975aabee34e0520a3d75c1",
+    "--farm-diagnostic-only",
+    "--output=D:/tetherbound/.artifacts/f26-night-rain/low-ambient-followup/frames"
+  ],
+  "native_exit_code": 1,
+  "native_elapsed_seconds": 209.469,
+  "runtime_errors": [],
+  "manifest_failure": "ordinary body/camera pose changed between paired time/weather/preset views",
+  "requested_diagnostic_matrix_complete": false,
+  "tool_complete": false,
+  "diagnostic_only": true,
+  "normal_lit_farmhouse_doorway_views": 0,
+  "travel_normal_lit_views": 0,
+  "light_off_diagnostic_views_excluded_from_quality": 0,
+  "actual_keys": [],
+  "expected_keys": [
+    [
+      "Low",
+      "day",
+      "clear"
+    ],
+    [
+      "Low",
+      "day",
+      "rain"
+    ],
+    [
+      "Low",
+      "night",
+      "clear"
+    ],
+    [
+      "Low",
+      "night",
+      "rain"
+    ]
+  ],
+  "png_dimensions": {},
+  "missing_images": [],
+  "presets": [
+    "Low"
+  ],
+  "scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim",
+  "qualification": "Partial existing farm-door light diagnostic; no Hall circuit, motion, full-bar, earned campaign, co-op, handheld or FPS acceptance. Normal-lit paired images may support bounded sky/weather diagnosis; light-off frames are excluded."
+}
