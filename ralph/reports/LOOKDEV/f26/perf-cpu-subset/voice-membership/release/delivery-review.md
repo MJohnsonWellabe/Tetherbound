@@ -1,0 +1,11 @@
+Independent release-package audit: PASS for packaging and original-byte preservation only.
+
+Verified all three native-export-records.zip entries against original raw files, inventory sizes and independently recomputed SHA256 hashes; verified exact entry membership and ZIP CRCs. Archive: 114,958 bytes, SHA256 `eb57787326fcfb0e11230fad93a25d7cbd9a887717db4507f7f734043bd30068`. Embedded original receipt matches inventory.json. Original ZIP bytes remain authoritative where external metadata may undergo Git normalization.
+
+Independently rehashed and size-checked all three locally retained payloads. EXE: 109,052,928 bytes, SHA256 `a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c`. PCK: 1,123,171,296 bytes, SHA256 `be4a8bbc8ae6eed859a4ac3174736ed7952d6b3c8b66a23a322e53fdc338cbb5`. Terrain3D release DLL: 3,549,184 bytes, SHA256 `40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86`. EXE and DLL hashes match both prior292 and priorbd packages; the new PCK has its own distinct identity. Large payloads remain locally at their receipt paths, outside the export-record archive.
+
+Archived original export_presets.cfg is byte-identical to the current checkout, retains script_export_mode=2 and has SHA256 `c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219`, identical to prior292 and priorbd original configurations. Game source is `27ec0b9be80ef718e9f96a7eeafb9a0fa0d6b1f4`; launch checkout is `a09ed0614523d52d67647c48157e72e09cfc5de9`. Independently inspected their complete Git diff: only flag-parse-cache matched-medium evidence paths differ, preserving game-source identity.
+
+Original receipt records the explicit Windows Desktop --export-release command against D:/tetherbound/codex-perf-cpu, exit 0, no supervisor stop reason and 412.906 seconds. Full original export log contains no ERROR or SCRIPT ERROR and preserves the Orphan StringName: Node diagnostic. No raw receipt, configuration or log was rewritten.
+
+Audit performed CPU file/Git inspection only and wrote only this review, with no engine execution, source change or Git mutation. Successful export and verified payload identity establish packaging only; no FPS recovery, bottleneck attribution, GPU evidence, handheld performance, visual quality or game acceptance follows. Native timing evidence remains separate.
