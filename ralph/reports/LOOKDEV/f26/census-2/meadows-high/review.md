@@ -1,0 +1,11 @@
+# Independent bounded census-delivery review
+
+PASS for delivery integrity, census completeness and bounded runtime completion. Independently verified all three ZIP hashes/sizes (41,000,173 bytes total), all 16 archived entries' hashes/lengths and original raw identity, and the separate High preference-file hash. Command, chooser receipt and manifest agree with declared source `1d54458d5814b7b27eed8c24015faa1a53e4baeb`, High/Forward+, Meadows/day and fullscreen 1920×1080. Captured `art.json` SHA256 matches the pinned source blob. Source attribution is recorded by receipt/argument; immutable loaded-tool hashes are not provided.
+
+Canonical manifest parses with complete=true, 10/10 frames, ten corresponding material snapshots and no failures. All frame IDs are unique and referenced files exist; all ten PNG signatures/headers match the summary at 1920×1080. `.previous` also parses and retains ten frames/snapshots, complete=false and no final count/time fields. No `.pending` remains. These staged-publication recovery generations do not establish an atomic/power-loss guarantee.
+
+Recomputed every snapshot's binding count, classification counts and resource count: all match the summary. The five unique unbound entries also match: hidden player Body/Nose CapsuleMesh surfaces, hidden `BurrowWarrens/BankSurfaceCollisionCarrier` ArrayMesh surface, and two visible BoxMesh surfaces at the recorded signpost/anonymous-node paths. All owner-script fields are empty. Zero resources report container traversal truncation; intentional defaults and material correctness still require source/visual review.
+
+Native exit 0, no observed `ERROR:` lines and the logged 10/10 survey OK agree with completeness. Warnings remain preserved: deprecated physics-interpolation API, Torch_Metal glow without a Fire surface, and seven leaked Texture RIDs at shutdown. Recorded native duration is 509.234 seconds; supervisor duration 517.797 seconds includes preset selection.
+
+Full visual/material, shader/fallback, unmounted-content and earned-path acceptance remain OPEN; no FPS or handheld claim follows. No images were viewed or judged, and no source edits, engine/tests/new tools or Git mutation occurred. Bounded CPU audit finished.
