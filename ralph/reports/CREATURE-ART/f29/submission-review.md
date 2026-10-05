@@ -18,3 +18,17 @@ not service completion or candidate acceptance.
 Minor documentation finding: mark preflight zero-task/unmeasured-balance
 statements explicitly as historical. Author marked that evidence section as
 before the first submission and retained the original receipts.
+
+## Download follow-up
+
+Independent PASS for download/provenance consistency only. Raw and preserved
+GLBs both match `97ba748431877d9bf648f8976cd871e7ae92544eb2b2d2a855120e534f421bdc`.
+Thumbnail/service-provenance hashes match the receipt; downloaded FBX/OBJ
+exist. Service metadata, generation receipt and sole ledger agree on task ID
+and one submission. `.gdignore` excludes the preserved candidate. Runtime
+default/evolution remain disabled; rig, animation, scale and full-art flags
+remain false. `generation_complete:true` records service completion only.
+LICENSE.md keeps plan ownership conditional and does not infer it from credit
+balance. Account-plan rights are unverified. Historical preflight wording is
+clearly labelled. Reviewer ran no API, engine, Blender or tests and created no
+files. No full-art PASS granted.
