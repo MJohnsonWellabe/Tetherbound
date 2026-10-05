@@ -976,7 +976,7 @@ same criteria, numbered from zero (`F27#3`).
 4. **Meshy credits:** the cap is 30 generations per night unless the owner raises it.
 5. Naming the storm bear (working name *Stormursa*).
 
-### 8.1 Defaults taken in the documentation pass (conservative; the owner may override)
+### 8.1 Defaults taken in the documentation pass (owner-confirmed 2026-10-05)
 
 These fill gaps the interview did not settle. Lanes build them as written unless STATE records an owner change.
 
