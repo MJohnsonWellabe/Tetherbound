@@ -197,3 +197,26 @@ func _track(value: Variant) -> Variant:
 	var shipped: Variant = vitals.get("runtime_enabled")
 	vitals["runtime_enabled"] = value
 	return shipped
+
+
+## F27 flip: an encounter whose owner binds no actor (Stormwood's hosted
+## trainers) is excluded from actor tracking, so its strikes take the untracked
+## path the flag-off build uses instead of being refused as stale_actor.
+func test_excluded_encounter_keeps_the_untracked_strike_path() -> void:
+	var rec: Dictionary = host.open(1, "stormwood", "trainer", {"species_id": "bramblebun",
+		"hp": 200.0, "hp_max": 200.0, "position": [2.0, 0.0, 0.0], "owner_npc": "hosted"}, "creature_a", "owner_a")
+	var hosted := str(rec.encounter_id)
+	var loose := {"character_id": "owner_a", "creature_uid": "creature_a", "deployment_generation": 1,
+		"body_instance_id": 51, "actor_generation": 0}
+	var strike := func(action: int, now: int) -> Dictionary:
+		var start: Dictionary = host.move_commit(hosted, 1, action)
+		return host.validate_strike({"encounter_id": hosted, "action": action, "slot": "quick",
+			"move_id": start.move_id, "move": start.move, "facing": Vector3.RIGHT}, 1,
+			{"now_ms": now, "origin": Vector3.ZERO, "bodies": [], "move_actor_binding": start.binding})
+	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 1, "slot": "quick"},
+		1, _owned(), loose, _move(), WIND, 1000).ok)
+	assert_eq(strike.call(1, 1300).get("code"), "stale_actor", "a tracked record refuses an unbound actor")
+	host.exclude_from_actor_tracking(hosted)
+	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 2, "slot": "quick"},
+		1, _owned(), loose, _move(), WIND, 5000).ok)
+	assert_true(strike.call(2, 5300).ok, "the excluded hosted record accepts the untracked strike")

@@ -87,6 +87,10 @@ func _next_round() -> bool:
 	record = authority.open(participants[0], "stormwood", "trainer", {
 		"species_id": creature.get("species_id"), "level": creature.get("level"),
 		"hp": creature.get("hp"), "hp_max": creature.get("max_hp"), "owner_npc": spec.id})
+	# This hosted fight binds no actor vitals yet: keep its strikes on the
+	# untracked authority path (the flag-off behaviour) when actor_vitals is on.
+	if authority.has_method("exclude_from_actor_tracking"):
+		authority.exclude_from_actor_tracking(str(record.encounter_id))
 	for peer: int in participants.slice(1):
 		authority.join(str(record.encounter_id), peer)
 	_actions.clear()
