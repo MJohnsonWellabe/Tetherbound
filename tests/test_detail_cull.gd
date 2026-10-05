@@ -1,0 +1,105 @@
+extends "res://tests/test_case.gd"
+
+## PERF (F26#5): scripts/world/detail_cull.gd gives small unranged geometry a
+## screen-size visibility range. Godot tests a node's range against the centre
+## of its whole box, so a wide MultiMesh batch must never be ranged by one
+## instance's size (review BLOCK, 4182f3ac: perimeter hedges vanished whole).
+
+const DETAIL_CULL := preload("res://scripts/world/detail_cull.gd")
+const CFG := {"enabled": true, "pixels": 2.5, "reference_lines": 1080.0, "reference_fov_deg": 70.0,
+	"min_range_m": 150.0, "fade_fraction": 0.1, "ignore_beyond_m": 9000.0, "skip_emissive": true,
+	"emissive_skip_max_size_m": 1.5, "skip_subtrees": ["Stronghold"]}
+
+
+func _box_mesh(size: Vector3, material: Material = null) -> BoxMesh:
+	var mesh := BoxMesh.new()
+	mesh.size = size
+	if material != null:
+		mesh.material = material
+	return mesh
+
+
+func _multimesh(instance_mesh: Mesh, positions: Array[Vector3]) -> MultiMeshInstance3D:
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = instance_mesh
+	mm.instance_count = positions.size()
+	for index in positions.size():
+		mm.set_instance_transform(index, Transform3D(Basis.IDENTITY, positions[index]))
+	var node := MultiMeshInstance3D.new()
+	node.multimesh = mm
+	return node
+
+
+func test_a_wide_multimesh_is_never_ranged_by_one_instance() -> void:
+	# A 2 m hedge repeated along an 8 km edge: one instance would earn ~600 m.
+	var positions: Array[Vector3] = []
+	for index in 41:
+		positions.append(Vector3(0.0, 0.0, float(index) * 200.0))
+	var hedge := _multimesh(_box_mesh(Vector3(2.0, 2.0, 2.0)), positions)
+	var root := Node3D.new()
+	root.add_child(hedge)
+	DETAIL_CULL.apply(hedge, CFG)
+	assert_eq(hedge.visibility_range_end, 0.0, "an 8 km batch keeps drawing near the camera")
+	root.free()
+
+
+func test_a_single_instance_multimesh_is_ranged_by_its_size() -> void:
+	# One instance has a known spread of zero on any renderer. (Several
+	# instances need readable transforms; on the headless Dummy renderer they
+	# all read as the origin, so the spread is unknown and stays unranged,
+	# which the wide-batch test above also covers.)
+	var positions: Array[Vector3] = [Vector3(3.0, 0.0, 3.0)]
+	var single := _multimesh(_box_mesh(Vector3(1.0, 1.0, 1.0)), positions)
+	var root := Node3D.new()
+	root.add_child(single)
+	DETAIL_CULL.apply(single, CFG)
+	assert_true(single.visibility_range_end >= 150.0, "a lone small instance still culls when sub-pixel")
+	root.free()
+
+
+func test_a_small_mesh_is_ranged_and_a_large_one_is_not() -> void:
+	var root := Node3D.new()
+	var prop := MeshInstance3D.new()
+	prop.mesh = _box_mesh(Vector3(2.0, 2.0, 2.0))
+	root.add_child(prop)
+	var cliff := MeshInstance3D.new()
+	cliff.mesh = _box_mesh(Vector3(60.0, 80.0, 60.0))
+	root.add_child(cliff)
+	DETAIL_CULL.apply(prop, CFG)
+	DETAIL_CULL.apply(cliff, CFG)
+	# 2 m at 2.5 px on 1080 lines at 70 deg: about 617 m.
+	assert_between(prop.visibility_range_end, 550.0, 700.0, "a 2 m prop culls past ~600 m")
+	assert_eq(cliff.visibility_range_end, 0.0, "a landmark-scale silhouette keeps its reach")
+	root.free()
+
+
+func test_the_stronghold_spine_and_small_lamps_are_left_alone() -> void:
+	var root := Node3D.new()
+	var stronghold := Node3D.new()
+	stronghold.name = "Stronghold"
+	root.add_child(stronghold)
+	var merlon := MeshInstance3D.new()
+	merlon.mesh = _box_mesh(Vector3(1.0, 1.0, 1.0))
+	stronghold.add_child(merlon)
+	var glow := StandardMaterial3D.new()
+	glow.emission_enabled = true
+	var lamp := MeshInstance3D.new()
+	lamp.mesh = _box_mesh(Vector3(0.4, 0.4, 0.4), glow)
+	root.add_child(lamp)
+	DETAIL_CULL.apply(merlon, CFG)
+	DETAIL_CULL.apply(lamp, CFG)
+	assert_eq(merlon.visibility_range_end, 0.0, "the landmark spine never pops")
+	assert_eq(lamp.visibility_range_end, 0.0, "a lit lamp reads as a point of light at any distance")
+	root.free()
+
+
+func test_an_authored_range_is_respected() -> void:
+	var root := Node3D.new()
+	var authored := MeshInstance3D.new()
+	authored.mesh = _box_mesh(Vector3(1.0, 1.0, 1.0))
+	authored.visibility_range_end = 42.0
+	root.add_child(authored)
+	DETAIL_CULL.apply(authored, CFG)
+	assert_eq(authored.visibility_range_end, 42.0)
+	root.free()

@@ -25,8 +25,8 @@ extends RefCounted
 ##   - has meta `static_batch_skip` (a plain module some script moves by
 ##     reference, such as a door leaf);
 ## or when the mesh itself is skinned, has blend shapes, a material overlay,
-## transparency, a visibility-range begin, a mirrored transform or a
-## non-triangle surface.
+## instance transparency, an alpha-blended material, a visibility-range
+## begin, a mirrored transform or a non-triangle surface.
 ##
 ## Unbatched meshes are drawn exactly as before. Each merged surface gets a
 ## fresh automatic LOD chain (`_with_lods`) and keeps the copied visibility
@@ -56,7 +56,8 @@ static func merge(root: Node3D) -> Dictionary:
 		# surface that was left out.
 		var whole := true
 		for surface in mesh.get_surface_count():
-			if mi.get_active_material(surface) == null or not _surface_ok(mesh, surface):
+			var material := mi.get_active_material(surface)
+			if material == null or not _surface_ok(mesh, surface) or _blended(material):
 				whole = false
 				break
 		if not whole:
@@ -151,6 +152,20 @@ static func _mesh_ok(mi: MeshInstance3D) -> bool:
 	if mesh is ArrayMesh and (mesh as ArrayMesh).get_blend_shape_count() > 0:
 		return false
 	return true
+
+
+## Alpha-blended surfaces sort per object; merged, their draw order inside
+## the batch would change. Alpha scissor and hash are depth-tested and safe.
+static func _blended(material: Material) -> bool:
+	if material is BaseMaterial3D:
+		var mode := (material as BaseMaterial3D).transparency
+		return mode == BaseMaterial3D.TRANSPARENCY_ALPHA \
+			or mode == BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
+	if material is ShaderMaterial:
+		var shader := (material as ShaderMaterial).shader
+		return shader != null and shader.code.contains("ALPHA") \
+			and not shader.code.contains("ALPHA_SCISSOR_THRESHOLD")
+	return false
 
 
 static func _surface_ok(mesh: Mesh, surface: int) -> bool:
