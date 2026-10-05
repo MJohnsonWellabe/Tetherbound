@@ -31,6 +31,11 @@ var _named: PackedStringArray = []
 ## `--move-patch=<move>.<key>=<value>[,...]`: test-only A/B of a move-data
 ## trial on the same head (combat_depth_pilot.move_patch), never moves.json.
 var _move_patch: Dictionary = {}
+## `--starters=a,b`: sweep only these starters. `--config-patch=a.b.c=<n>[,...]`:
+## test-only A/B of a combat.json number, written into the cached config in
+## memory (never the file). Both are recorded in the receipt.
+var _starters: Array = STARTERS.duplicate()
+var _config_patch: Dictionary = {}
 
 
 func _init() -> void:
@@ -39,6 +44,11 @@ func _init() -> void:
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
 		elif arg == "--trainers": _trainers = true
+		elif arg.begins_with("--starters="):
+			_starters = Array(arg.trim_prefix("--starters=").split(",", false))
+		elif arg.begins_with("--config-patch="):
+			for item: String in arg.trim_prefix("--config-patch=").split(",", false):
+				_config_patch[item.get_slice("=", 0)] = float(item.get_slice("=", 1))
 		elif arg.begins_with("--move-patch="):
 			for item: String in arg.trim_prefix("--move-patch=").split(",", false):
 				var lhs := item.get_slice("=", 0)
@@ -157,6 +167,13 @@ func _party(level: int, starter: String) -> Array[RefCounted]:
 
 func _run() -> void:
 	var errors: Array[String] = []
+	for path: String in _config_patch:
+		var node: Dictionary = MATH.config()
+		var keys := path.split(".")
+		for i in keys.size() - 1:
+			if not node.has(keys[i]) or not node[keys[i]] is Dictionary: node[keys[i]] = {}
+			node = node[keys[i]]
+		node[keys[keys.size() - 1]] = _config_patch[path]
 	var patterns: Dictionary = MATH.config().get("patterns", {})
 	var proof: Dictionary = patterns.get("proof", {})
 	if _seeds < maxi(12, int(proof.get("seeds_per_band", 12))):
@@ -174,7 +191,7 @@ func _run() -> void:
 			if _trainers and (rosters.get(entry.id, []) as Array).is_empty():
 				gaps.append(str(entry.id))
 				continue
-			for starter: String in STARTERS:
+			for starter: String in _starters:
 				var scores := {"MASHER": [], "READER": [], "SWITCH_READER": []}
 				for seed_index: int in _seeds:
 					var sid := str(entry.species[seed_index % entry.species.size()])
@@ -271,7 +288,7 @@ func _run() -> void:
 		and float(switched_total.median_cost) <= float(fixed_total.median_cost) * float(proof.get("switch_reader_hp_ratio_max", 0.9))
 	passed = passed and switch_value
 	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
-	var receipt := {"move_patch": _move_patch, "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
+	var receipt := {"move_patch": _move_patch, "config_patch": _config_patch, "starters": _starters, "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"mode": "trainers" if _trainers else "wilds", "data_gaps": gaps,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",

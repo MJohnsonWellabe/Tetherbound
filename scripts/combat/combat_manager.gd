@@ -3873,7 +3873,20 @@ func request_burst(direction: Vector3) -> bool:
 
 
 func _burst_config() -> Dictionary:
-	return MATH.config().get("burst", {}) as Dictionary
+	var creature := active_creature()
+	return burst_profile(str(creature.get("species_id")) if creature != null else "")
+
+
+## The burst a creature of `species_id` performs: combat.json `burst`, with a
+## per-species `species_distance` override when one is authored (F22#1
+## per-starter tuning). Solo, host and Stormwood hosted fights all read this
+## one function, so every peer moves the same distance.
+static func burst_profile(species_id: String) -> Dictionary:
+	var spec: Dictionary = (MATH.config().get("burst", {}) as Dictionary).duplicate()
+	var per: Dictionary = spec.get("species_distance", {}) as Dictionary
+	if per.has(species_id):
+		spec["distance"] = float(per[species_id])
+	return spec
 
 
 func _begin_burst(direction: Vector3, spec: Dictionary, action_id: int) -> bool:

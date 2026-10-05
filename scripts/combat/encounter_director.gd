@@ -3253,7 +3253,7 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 			"code": "not_participant", "reason": "You have nothing out to move with.",
 			"pending": false, "delta": {}}
 	var card: Dictionary = _creature_card_for(peer_id)
-	var burst: Dictionary = MATH.config().get("burst", {}) as Dictionary
+	var burst: Dictionary = COMBAT_MANAGER.burst_profile(str(card.get("species_id", "")))
 	var wind: Dictionary = MATH.config().get("wind", {}) as Dictionary
 	var wind_profile := COMBAT_MANAGER.host_wind_profile(card)
 	if supports_host_move_start() and MATH.config().get("move_commit", {}).get("runtime_enabled") == true:
