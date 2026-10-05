@@ -230,8 +230,19 @@ if _plan_path.exists():
     now_pos = (now - p_start).total_seconds() / 3600.0 / p_hours
     W = {"met": 1.0, "blocked": 1.0, "partial": 0.5, "in_progress": 0.25}
 
+    def _items(f):
+        # Pseudo-features: the 13 chapter exit cards and the release-wide
+        # requirements, which F49's integrated run must also close.
+        if f == "CARDS":
+            return crit.get("chapter_cards", [])
+        if f == "XCUT":
+            return crit.get("cross_cutting", [])
+        if f == "XPERF":
+            return [x for x in crit.get("cross_cutting", []) if str(x.get("id", "")).startswith("Ally device")]
+        return rows.get(f, {}).get("criteria", [])
+
     def feat_pct(feats):
-        cs = [x for f in feats for x in rows.get(f, {}).get("criteria", [])]
+        cs = [x for f in feats for x in _items(f)]
         if not cs:
             return 0.0, 0, 0
         done = sum(1 for x in cs if norm(x.get("status")) in ("met", "blocked"))

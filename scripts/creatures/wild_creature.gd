@@ -37,6 +37,9 @@ signal lunge_started(heading: Vector3, distance: float)
 ## F10#2: a `route_cue_seconds` phase began (the tell proper follows, with
 ## `telegraph_started`). A host relays it so a guest's proxy draws the route.
 signal route_cue_started(seconds: float)
+## F22#0: an observed player commitment caused a dodge or a punish tell.
+## Presentation/proof only; it decides nothing.
+signal pattern_reacted(kind: String)
 
 ## Live state. The combat manager reads this off the node by name; it is the one
 ## piece of a creature that has to survive being knocked out.
@@ -670,11 +673,13 @@ func _observe_pattern_reaction(delta: float) -> bool:
 		_pattern_dodge_left = float(cfg.get(key, 6.0))
 		_side_sign = float(observation.get("side_sign", 1.0))
 		_enter(AI.Intent.DODGE)
+		pattern_reacted.emit("dodge")
 		return true
 	if reaction == "punish":
 		_pattern_punish = AI.punish_profile(_patterns, _combat_cfg, _current_pattern_context())
 		if not _pattern_punish.is_empty():
 			_enter(AI.Intent.TELEGRAPH)
+			pattern_reacted.emit("punish")
 			return true
 	return false
 
