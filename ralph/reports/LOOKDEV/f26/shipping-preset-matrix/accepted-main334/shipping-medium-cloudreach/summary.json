@@ -1,0 +1,55 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "preset": "Medium",
+  "biome": "cloudreach",
+  "native_exit_code": 0,
+  "native_elapsed_seconds": 518.391,
+  "command": [
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--log-file",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-medium-cloudreach\\engine.log",
+    "--audio-driver",
+    "Dummy",
+    "--",
+    "--f26-route",
+    "--biome=cloudreach",
+    "--preset=Medium",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/shipping-medium-cloudreach/route"
+  ],
+  "manifest_complete": true,
+  "failures": [],
+  "runtime_errors": [],
+  "png_dimensions": {
+    "end.png": [
+      1920,
+      1080
+    ],
+    "start.png": [
+      1920,
+      1080
+    ]
+  },
+  "metrics": {
+    "frames": 10446,
+    "average_fps": 59.66670405307935,
+    "one_percent_low_fps": 23.68847088889972,
+    "minimum_fps": 13.27192854393672,
+    "slowest_one_percent_frames": 105,
+    "cached_monitors_ms": {
+      "process_ms": 30.565150296764312,
+      "physics_ms": 11.326257227646947
+    }
+  },
+  "camera_far_m": 3500.0,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "actual_shipping": true,
+  "average_fps_floor20_pass": true,
+  "measurement_limitations": "Wall intervals plus cached Performance TIME_PROCESS/TIME_PHYSICS_PROCESS only. Embedded route lacks newer frame_limit/uncapping receipt. Runtime FPS/VSync/time settings not explicitly verified; no per-frame true CPU/GPU/draw attribution. New cases use fullscreen; prior four core cases lacked fullscreen flag. No performance recovery or regression onset established.",
+  "scope": "Actual shipping release EXE/PCK same accepted-main334 payload as prior4core routes. Existing packaged route, no debug/EngineProfiler/gpu-profile. New cases fullscreen1920x1080; desktop GTX1060, not Ally/earned campaign."
+}
