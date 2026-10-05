@@ -3041,9 +3041,6 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		str(intent.get("move_id", "")),
 		_body_radius(striker), _body_radius(wild),
 		host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(striker, wild))
-	if not started.is_empty():
-		# COMBAT §4 forced break: the host's own committed start tick.
-		move["started_at_ms"] = int(started.get("started_at_ms", -1))
 	var now_ms := Time.get_ticks_msec()
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var cost := float(move.get("wind_cost", wind_cfg.get(slot + "_cost", 0.0)))
@@ -3068,6 +3065,10 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
 	var delta: Dictionary = verdict["delta"]
+	if not started.is_empty():
+		# COMBAT §4 forced break: the host's own committed start tick, added
+		# only after validation (which compares the move to the frozen start).
+		move["started_at_ms"] = int(started.get("started_at_ms", -1))
 	var wind_delta: Dictionary = _encounter_host.call("commit_wind", encounter_id,
 		peer_id, int(intent.get("action", 0)), wind_profile, cost, now_ms,
 		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))
