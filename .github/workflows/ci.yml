@@ -178,6 +178,14 @@ jobs:
       # The FULL tier (see `on:`): scheduled runs, manual dispatches and PRs
       # labelled `full-ci`. Everything else runs the fast tier.
       full: ${{ steps.tier.outputs.full }}
+      # AFFECTED-ONLY SELECTION (owner-approved 2026-10-04): the full-tier
+      # verify jobs a change can reach as `|a|b|`
+      # (`contains(needs.changes.outputs.jobs, '|<job>|')`). Rules and
+      # their reasons: tools/ci/select_jobs.py (tested by
+      # tests/test_ci_select_jobs.py). Conservative: anything the rules cannot
+      # bound selects every job; schedule, dispatch, an empty diff or a missing
+      # base select every job; every suite still runs on the 8-hourly tier.
+      jobs: ${{ steps.filter.outputs.jobs }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -203,12 +211,26 @@ jobs:
             /tools/release_latest_tag.mjs
             /tests/test_ci_smoke_runner.py
             /tools/ci/run_godot_smoke.py
+            /tests/test_ci_select_jobs.py
+            /tools/ci/select_jobs.py
+            # The text the selection's reference scan reads (no assets/bakes).
+            /scripts/
+            /scenes/
+            /autoload/
+            /data/config/
+            /tests/*.gd
+            /tests/*.py
+            /tests/helpers/
+            /tools/
 
       - name: Verify rolling release reference helper
         run: node --test tests/test_release_latest_tag.mjs
 
       - name: Verify aborted script process cleanup
         run: python3 tests/test_ci_smoke_runner.py
+
+      - name: Verify affected-only job selection rules
+        run: python3 tests/test_ci_select_jobs.py
 
       - name: Decide whether anything but documentation changed
         id: filter
@@ -226,6 +248,7 @@ jobs:
             echo "Explicit full verification requested."
             echo "code=true" >> "$GITHUB_OUTPUT"
             echo "net=true" >> "$GITHUB_OUTPUT"
+            python3 tools/ci/select_jobs.py --all --event "$GITHUB_EVENT_NAME" | grep '^jobs=' >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -282,12 +305,22 @@ jobs:
             echo "No usable base commit; building."
             echo "code=true" >> "$GITHUB_OUTPUT"
             echo "net=true" >> "$GITHUB_OUTPUT"
+            python3 tools/ci/select_jobs.py --all --event "$GITHUB_EVENT_NAME" | grep '^jobs=' >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           changed="$(git diff --name-only "$base" HEAD)"
           echo "Changed against ${base}:"
           echo "${changed:-  (nothing)}"
+
+          # Affected-only selection (see `outputs.jobs`). A selector crash
+          # selects everything rather than nothing.
+          if ! selected="$(printf '%s\n' "$changed" | python3 tools/ci/select_jobs.py --event "$GITHUB_EVENT_NAME")"; then
+            echo "::warning::job selection failed; running every job"
+            selected="$(python3 tools/ci/select_jobs.py --all --event "$GITHUB_EVENT_NAME")"
+          fi
+          echo "$selected"
+          printf '%s\n' "$selected" | grep '^jobs=' >> "$GITHUB_OUTPUT"
 
           # Fail safe: an empty diff builds rather than silently shipping.
           #
@@ -639,7 +672,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-veg-corridor|')
 
     steps:
       - uses: actions/checkout@v4
@@ -693,7 +726,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-scatter-rules|')
 
     steps:
       - uses: actions/checkout@v4
@@ -743,7 +776,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-harvest|')
 
     steps:
       - uses: actions/checkout@v4
@@ -790,7 +823,7 @@ jobs:
     # fits comfortably in that margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-core-verb-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -936,7 +969,7 @@ jobs:
     # fits comfortably in that margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-catching|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1012,7 +1045,7 @@ jobs:
     # (21 min). 30 min leaves margin for checkout/setup plus retries.
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-gate-a-ui-build-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1257,7 +1290,7 @@ jobs:
     # plus a day where several of the five need a second attempt.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-combat-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1432,7 +1465,7 @@ jobs:
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-regions-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1845,7 +1878,7 @@ jobs:
     # margin.
     timeout-minutes: 45
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-regions-relay|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -1952,7 +1985,7 @@ jobs:
     # run time is short relative to the margin already held here.
     timeout-minutes: 28
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-owner-regressions-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2146,7 +2179,7 @@ jobs:
         group: [opening, build, field]
     timeout-minutes: 40
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-gate-evidence-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2386,7 +2419,7 @@ jobs:
         group: [bracket-to-semi, bracket-final, finale]
     timeout-minutes: 40
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-gate-evidence-finale|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2468,7 +2501,7 @@ jobs:
     # inviting the full chain back in by accident.
     timeout-minutes: 20
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-gate-b-core|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2534,7 +2567,7 @@ jobs:
     # tier and on manual dispatch, never on a `full-ci` pull request. They
     # cannot block a merge (continue-on-error), so on a PR they only held two
     # runners for ~9 minutes each.
-    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && contains(needs.changes.outputs.jobs, '|verify-continuous-core-known-red|')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2600,7 +2633,7 @@ jobs:
     # tier and on manual dispatch, never on a `full-ci` pull request. They
     # cannot block a merge (continue-on-error), so on a PR they only held two
     # runners for ~9 minutes each.
-    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && contains(needs.changes.outputs.jobs, '|verify-gate-b-full-known-red|')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2651,7 +2684,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: changes
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && contains(needs.changes.outputs.jobs, '|discover-net-smokes|')
     outputs:
       files: ${{ steps.discover.outputs.files }}
     steps:
@@ -2831,7 +2864,7 @@ jobs:
     needs:
       - changes
       - discover-net-smokes
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3064,7 +3097,7 @@ jobs:
       - verify-owner-regressions-shard
       - verify-gate-evidence-shard
       - verify-gate-b-core
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-solo-regression|')
     steps:
       - name: Confirm the solo regression fence held
         run: |
@@ -3199,7 +3232,7 @@ jobs:
           capacity-accept-then-let-newcomer-go, capacity-accept-release-one, save-while-choice-open]
     timeout-minutes: 50
     needs: changes
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && contains(needs.changes.outputs.jobs, '|verify-veridian-offer|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3266,7 +3299,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && contains(needs.changes.outputs.jobs, '|verify-cloudreach-persistence|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3311,10 +3344,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        segment: [s0_setup_host, s0_setup_guest, s1_ride_a, s2_ride_b, s3_control]
+        # s0_setup runs the two single-peer setup producers (s0_setup_host,
+        # s0_setup_guest) as two processes side by side on one runner -- neither
+        # hosts, so they share no port -- to spend one runner, not two, under
+        # the account's ~17 concurrent-job cap.
+        segment: [s0_setup, s1_ride_a, s2_ride_b, s3_control]
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|')
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3332,17 +3369,30 @@ jobs:
         timeout-minutes: 22
         run: |
           set -uo pipefail
-          scenario="$PWD/tools/net/proof_scenarios/segments/midride/${{ matrix.segment }}.json"
-          peers="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["peers"])' "$scenario")"
-          out="${RUNNER_TEMP}/f06-midride"
-          mkdir -p "$out/net"
-          TB_PROOF_SCENARIO="$scenario" \
-          TB_PROOF_OUT="$out" TB_NET_RUN_ID="net-f06mr-${{ matrix.segment }}-ci-${GITHUB_RUN_ID}" \
-          TB_NET_OUT_DIR="$out/net" TB_NET_PEERS="$peers" \
-            godot --headless --path . --script tests/smoke_cloudreach_rejoin_closed_gate_proof.gd
-          rc=$?
-          echo "::group::PROOF.md"; cat "$out/PROOF.md" 2>/dev/null | head -60; echo "::endgroup::"
-          exit $rc
+          run_segment() {
+            local name="$1" scenario peers out
+            scenario="$PWD/tools/net/proof_scenarios/segments/midride/${name}.json"
+            peers="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["peers"])' "$scenario")"
+            out="${RUNNER_TEMP}/f06-midride/${name}"
+            mkdir -p "$out/net"
+            TB_PROOF_SCENARIO="$scenario" \
+            TB_PROOF_OUT="$out" TB_NET_RUN_ID="net-f06mr-${name}-ci-${GITHUB_RUN_ID}" \
+            TB_NET_OUT_DIR="$out/net" TB_NET_PEERS="$peers" \
+              godot --headless --path . --script tests/smoke_cloudreach_rejoin_closed_gate_proof.gd \
+              > "$out/run.log" 2>&1
+            local rc=$?
+            echo "::group::${name} (exit ${rc})"; grep -E '^(PASS|FAIL|ERROR)|CHECKS' "$out/run.log"; echo "::endgroup::"
+            return $rc
+          }
+          if [ "${{ matrix.segment }}" = s0_setup ]; then
+            run_segment s0_setup_host & host=$!
+            run_segment s0_setup_guest & guest=$!
+            rc=0
+            wait "$host" || rc=1
+            wait "$guest" || rc=1
+            exit $rc
+          fi
+          run_segment "${{ matrix.segment }}"
       - name: Upload F06 mid-ride segment proof
         if: always()
         uses: actions/upload-artifact@v4
@@ -3367,7 +3417,7 @@ jobs:
         chain: [midride, bracket]
     timeout-minutes: 45
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && contains(needs.changes.outputs.jobs, '|verify-unbroken-chains|')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
