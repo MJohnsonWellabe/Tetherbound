@@ -1,0 +1,137 @@
+{
+  "status": "CANCELLED BY COORDINATOR SCOPE AMENDMENT6005143821; NO NEW NATIVE JOB STARTED",
+  "recorded_utc": "2026-10-05T23:09:11.977658+00:00",
+  "source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c",
+  "owner_reservation": {
+    "active": true,
+    "requested_by": "owner-chat",
+    "owner": "Matt",
+    "since_utc": "2026-10-05T22:58:59.8196483Z",
+    "reason": "Owner playing Valheim; expects computer free around 9 p.m. Chicago. After the resume time, clear only if Valheim is absent and no newer owner reservation supersedes it.",
+    "resume_not_before_utc": "2026-10-06T02:00:00Z"
+  },
+  "required_preconditions": [
+    "Owner reservation released at/after allowed resume time only if Valheim is absent and no newer owner pause supersedes it.",
+    "Each engine stage acquires global RENDER_LOCK exclusively and checks owner activity throughout; no foreign PID is stopped.",
+    "Release export must complete and actual adjacent EXE/PCK/addon bytes must be recorded before any release-native stage.",
+    "Timed profile/fight must await completion of unrelated heavy CPU jobs and avoid hash/archive/Git work during timing.",
+    "All failed/incomplete logs are preserved. Exit0 alone does not pass FPS or visual acceptance."
+  ],
+  "scope": [
+    "Profile: four rank5 presentation nodes per archetype in synthetic arena; no creature/HP gameplay proof.",
+    "Low: all24 rank5 fallback frames, actual1920x1080; requires blind visual review.",
+    "Fight: three real ENet companions plus ordinary wild, sixty-second native host window after ten-second warmup; current loadouts are provisional heavy candidates.",
+    "A fourth named F25 effect and measured worst-case move selection are not yet established.",
+    "Custom fixture source and UIDs removed; the prepared old commands do not describe an authorized current queue."
+  ],
+  "stages": [
+    {
+      "stage": "release",
+      "status": "CANCELLED; preserved only, do not run",
+      "spec_path": "D:\\tetherbound\\.artifacts\\c2-2417fe0887-release-spec.cancelled.json",
+      "spec": {
+        "command": [
+          "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+          "--headless",
+          "--verbose",
+          "--path",
+          "D:/tetherbound/codex-c2",
+          "--export-release",
+          "Windows Desktop",
+          "D:/tetherbound/.artifacts/c2-2417fe0887-release/package/Tetherbound.exe"
+        ],
+        "name": "release-2417fe0887",
+        "environment": {
+          "XDG_DATA_HOME": "D:/tetherbound/.artifacts/c2-eef1e8f413-release/device-home",
+          "APPDATA": "D:/tetherbound/.artifacts/c2-eef1e8f413-release/device-home",
+          "XDG_CONFIG_HOME": "D:/tetherbound/.artifacts/c2-eef1e8f413-release/device-home"
+        },
+        "timeout_seconds": 1500,
+        "output": "D:/tetherbound/.artifacts/c2-2417fe0887-release",
+        "cwd": "D:/tetherbound/codex-c2",
+        "source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c"
+      }
+    },
+    {
+      "stage": "synthetic-profile",
+      "status": "CANCELLED; preserved only, do not run",
+      "spec_path": "D:\\tetherbound\\.artifacts\\c2-profile-spec.cancelled.json",
+      "spec": {
+        "cwd": "D:/tetherbound/.artifacts/c2-2417fe0887-release/package",
+        "name": "profile",
+        "timeout_seconds": 1200,
+        "command": [
+          "D:/tetherbound/.artifacts/c2-2417fe0887-release/package/Tetherbound.exe",
+          "--rendering-method",
+          "forward_plus",
+          "--resolution",
+          "1920x1080",
+          "--fullscreen",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "res://tests/smoke_move_effects_library.gd",
+          "--",
+          "--batch=profile",
+          "--out=D:/tetherbound/.artifacts/c2-profile-2417fe0887/frames",
+          "--stage=arena",
+          "--medium"
+        ],
+        "output": "D:/tetherbound/.artifacts/c2-profile-2417fe0887/supervisor",
+        "source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c"
+      }
+    },
+    {
+      "stage": "low-fallback",
+      "status": "CANCELLED; preserved only, do not run",
+      "spec_path": "D:\\tetherbound\\.artifacts\\c2-low-fallback-spec.cancelled.json",
+      "spec": {
+        "cwd": "D:/tetherbound/.artifacts/c2-2417fe0887-release/package",
+        "name": "low-fallback",
+        "timeout_seconds": 1200,
+        "command": [
+          "D:/tetherbound/.artifacts/c2-2417fe0887-release/package/Tetherbound.exe",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fullscreen",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "res://tests/smoke_move_effects_library.gd",
+          "--",
+          "--batch=mastery",
+          "--out=D:/tetherbound/.artifacts/c2-low-fallback-2417fe0887/frames",
+          "--stage=arena",
+          "--ranks=5"
+        ],
+        "output": "D:/tetherbound/.artifacts/c2-low-fallback-2417fe0887/supervisor",
+        "source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c"
+      }
+    },
+    {
+      "stage": "real-four-creature-fight",
+      "status": "CANCELLED; preserved only, do not run",
+      "spec_path": "D:\\tetherbound\\.artifacts\\c2-fight-spec.cancelled.json",
+      "spec": {
+        "cwd": "D:/tetherbound/.artifacts/c2-2417fe0887-release/package",
+        "output": "D:/tetherbound/.artifacts/c2-fight-2417fe0887/supervisor",
+        "name": "four-creature-fight-2417fe0887",
+        "source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c",
+        "command": [
+          "D:/tetherbound/.artifacts/c2-2417fe0887-release/package/Tetherbound.exe",
+          "--headless",
+          "--audio-driver",
+          "Dummy",
+          "--script",
+          "res://tests/capture_f25_four_creature_fight.gd",
+          "--",
+          "--peer-exe=D:/tetherbound/.artifacts/c2-2417fe0887-release/package/Tetherbound.exe",
+          "--out=D:/tetherbound/.artifacts/c2-fight-2417fe0887/net"
+        ],
+        "timeout_seconds": 1500
+      }
+    }
+  ]
+}

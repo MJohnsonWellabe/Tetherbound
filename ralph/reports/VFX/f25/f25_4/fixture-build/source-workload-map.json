@@ -1,0 +1,1810 @@
+{
+  "status": "SOURCE MAP ONLY; NATIVE RUNS PENDING",
+  "source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c",
+  "method": "Existing smoke chooses the first move with the greatest rank5 body count in data order. Counts/scales below are a static translation of resolve; runtime results must confirm them.",
+  "limits": [
+    "Maximum body count is a workload-selection rule, not measured cost or a worst-case proof.",
+    "Default species users describe authored loadouts; they do not certify teaching compatibility.",
+    "Profile exercises four presentation nodes in a synthetic arena, not a four-creature fight.",
+    "Source parameters do not replace the actual native result, positive combat receipts or a code-blind judge.",
+    "Several maximum-count selections are ultimate_* move IDs. The smoke forces mastery_owner=f25 and draws their individual ordinary-budget library nodes; it does not exercise production composite ultimate actions.",
+    "frost_breath, guard_flash and catch_tether_beam have no move ID mapped in this source moves file; the existing smoke uses their bare configured synthetic rows."
+  ],
+  "source_files": [
+    {
+      "path": "data/config/vfx.json",
+      "sha256": "b0cbc47ed87a9fe42d20b979b4f23b5a183f38fb1d03cb2be9a4e5b89446ef42"
+    },
+    {
+      "path": "data/moves/moves.json",
+      "sha256": "d307b481e20705867ea0c35272ab4347d707a56fc85c0fedb018d98e73ad5898"
+    },
+    {
+      "path": "data/creatures/species.json",
+      "sha256": "b5721fc2ca8191a3da8f80199b50b9ae39231f8a7cf4ac18a43e584349c6d147"
+    },
+    {
+      "path": "scripts/vfx/move_effect_library.gd",
+      "sha256": "0ec42ec60531253855004d22e6dae33bec085900f88789a340358aa480e578aa"
+    },
+    {
+      "path": "tests/smoke_move_effects_library.gd",
+      "sha256": "7e33a91068d29f398cdbaa0dfbc49e5e7c3fc9c7a6f4434f09a6db81cac091a6"
+    }
+  ],
+  "archetype_count": 24,
+  "rows": [
+    {
+      "archetype": "stone_throw",
+      "existing_profile_selected_move": "ultimate_terrapup",
+      "existing_profile_rank5_count": 8,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "pebble_toss",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 7,
+            "size": 0.34400000000000003,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "terrapup"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "rock_throw",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.204,
+            "trail": 2.1,
+            "impact_scale": 1.9500000000000002
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_terrapup",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "terrapup"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_ground_current",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "bramblebun"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_ground_wall",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "mudsnout",
+            "burrowback"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_ground_charger",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "trailpup",
+            "stormtrail"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_ground_diver",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "meadowhart",
+            "nightburrow"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_tuskroot",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "tuskroot"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_veridian",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "veridian"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_ashtusk",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "ashtusk"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "fireball",
+      "existing_profile_selected_move": "ultimate_fire_wall",
+      "existing_profile_rank5_count": 4,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "fireball",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.774,
+            "trail": 2.52,
+            "impact_scale": 1.9500000000000002
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_fire_wall",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "cindercub"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "flame_cone",
+      "existing_profile_selected_move": "cinder_burst",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "cinder_burst",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "ember_burst",
+      "existing_profile_selected_move": "ember_bite",
+      "existing_profile_rank5_count": 12,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "ember_bite",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 12,
+            "size": 0.1548,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "ashtusk",
+            "cindercub"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "sky_lightning",
+      "existing_profile_selected_move": "ultimate_electric_charger",
+      "existing_profile_rank5_count": 4,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "thunder_break",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.4128,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "stormfall",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.4128,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_electric_charger",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "sparkit",
+            "stormraven"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_electric_current",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "voltwig",
+            "stormbrush",
+            "tanglevolt"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_electric_diver",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "mosshock",
+            "glimmermoth"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_electric_wall",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "staticub",
+            "voltarach",
+            "thundertunnel"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_fulgocobra",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "fulgocobra"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_stormursa",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "chain_lightning",
+      "existing_profile_selected_move": "arc_lash",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "arc_lash",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.34400000000000003,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "sparkit",
+            "voltwig",
+            "mosshock",
+            "staticub",
+            "voltarach",
+            "fulgocobra",
+            "stormraven",
+            "stormbrush",
+            "tanglevolt",
+            "thundertunnel",
+            "glimmermoth"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "voltaic_whip",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.34400000000000003,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "water_jet",
+      "existing_profile_selected_move": "aqua_shot",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "aqua_shot",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3096,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "riptide_lance",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3096,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "bubble_volley",
+      "existing_profile_selected_move": "tail_splash",
+      "existing_profile_rank5_count": 8,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "tail_splash",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 0.516,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "brooktail",
+            "reedwing"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "tidal_wave",
+      "existing_profile_selected_move": "ultimate_ripplet",
+      "existing_profile_rank5_count": 4,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "undertow",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.548,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "ripplet",
+            "riptusk",
+            "cragclaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "tidal_burst",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.548,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "leviathan_surge",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.548,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_ripplet",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "ripplet"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_water_current",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "paddlenewt",
+            "reedwing",
+            "riftfrill",
+            "sirenseal",
+            "tidecoil"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_water_wall",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "mosshell",
+            "riptusk",
+            "cragclaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_water_charger",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "brooktail",
+            "aquaryn",
+            "torrentoad",
+            "riverdrake",
+            "mangrove_monitor"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_cannonback",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "cannonback"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_water_diver",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "mirejaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_abyssal_guardian",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "abyssal_guardian"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "wind_blade",
+      "existing_profile_selected_move": "ultimate_galewisp",
+      "existing_profile_rank5_count": 4,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "sky_rend",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.204,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "galewisp",
+            "reedwing",
+            "craghorn",
+            "cloudfang",
+            "solmane"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "wind_blade",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.204,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "heavenfall",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.204,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "shove",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 3,
+            "size": 0.9460000000000001,
+            "trail": 1.5750000000000002,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_galewisp",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "galewisp"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_air_charger",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "galecrest",
+            "pipwing",
+            "skyrill",
+            "aeriex"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_air_diver",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "duskhush",
+            "cloudfang"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_air_current",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "pebbik",
+            "ribbonray",
+            "breezetail",
+            "tempestwing"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_air_wall",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "craghorn",
+            "cliffspike"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_stormcapra",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "stormcapra"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_solmane",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "solmane"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "tornado",
+      "existing_profile_selected_move": "gust_burst",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "gust_burst",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.204,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "pipwing",
+            "pebbik",
+            "ribbonray",
+            "tempestwing"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "cyclone",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.204,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "ice_shard_volley",
+      "existing_profile_selected_move": "ultimate_ice_current",
+      "existing_profile_rank5_count": 8,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "ultimate_ice_current",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "frostclaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "frost_breath",
+      "existing_profile_selected_move": null,
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "shadow_bolt",
+      "existing_profile_selected_move": "ultimate_dark_diver",
+      "existing_profile_rank5_count": 4,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "gloom_surge",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.7223999999999999,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "nightburrow",
+            "shadelet"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ultimate_dark_diver",
+          "slot": "ultimate",
+          "rank5_source_parameters": {
+            "count": 4,
+            "size": 2.7520000000000002,
+            "trail": 2.1,
+            "impact_scale": 3.0
+          },
+          "default_species_users": [
+            "shadelet"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "psychic_pulse",
+      "existing_profile_selected_move": "mind_ripple",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "mind_ripple",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.86,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "rift_pulse",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.86,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "riftfrill"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "root_stone_spikes",
+      "existing_profile_selected_move": "bramble_trap",
+      "existing_profile_rank5_count": 10,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "burrow_strike",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 0.6192,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "burrowback",
+            "nightburrow"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "verdant_burst",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 0.6192,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "meadowhart"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "stone_spike",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 8,
+            "size": 0.6192,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "snare",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 7,
+            "size": 0.602,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "bramble_trap",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 10,
+            "size": 0.5504,
+            "trail": 1.47,
+            "impact_scale": 1.6500000000000001
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "quake_ring",
+      "existing_profile_selected_move": "rootquake",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "rootquake",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.032,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "mudsnout",
+            "tuskroot",
+            "ashtusk",
+            "cindercub"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "earthshatter",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.032,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "quake_ring",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 5.16,
+            "trail": 1.47,
+            "impact_scale": 1.0499999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "slash_trail",
+      "existing_profile_selected_move": "bramble_whip",
+      "existing_profile_rank5_count": 6,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "bramble_whip",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "bramblebun"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "root_nibble",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "mudsnout",
+            "tuskroot"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "pack_bite",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "trailpup"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "hoofbeat",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "meadowhart",
+            "veridian"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "antler_slam",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "veridian"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "ripple_jab",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "ripplet",
+            "mirejaw",
+            "aquaryn",
+            "riverdrake",
+            "mangrove_monitor",
+            "tidecoil"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "splash_snap",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "paddlenewt",
+            "riftfrill",
+            "cannonback",
+            "riptusk",
+            "torrentoad",
+            "sirenseal",
+            "abyssal_guardian"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "shell_bash",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "mosshell",
+            "cragclaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "gale_peck",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "galewisp",
+            "craghorn",
+            "stormcapra",
+            "aeriex",
+            "breezetail"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "quick_flit",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "duskhush",
+            "pipwing",
+            "cloudfang",
+            "cliffspike",
+            "tempestwing",
+            "solmane"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "earth_fist",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "shadow_nip",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "shadelet"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "spark_bite",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "stormtrail",
+            "sparkit",
+            "voltwig",
+            "mosshock",
+            "staticub",
+            "voltarach",
+            "fulgocobra",
+            "stormraven",
+            "stormbrush",
+            "tanglevolt",
+            "thundertunnel",
+            "glimmermoth"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "frost_claw",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "frostclaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "glacier_break",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "frostclaw"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "static_snap",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 6,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "charge_dash",
+      "existing_profile_selected_move": "stone_rush",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 24,
+        "trail": 18
+      },
+      "mapped_moves": [
+        {
+          "move_id": "stone_rush",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "terrapup"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "warren_charge",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "bramblebun"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "trailblaze_pounce",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "trailpup",
+            "stormtrail"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "tremor_roll",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "burrowback",
+            "mosshell",
+            "cannonback",
+            "mirejaw",
+            "aquaryn",
+            "torrentoad",
+            "sirenseal",
+            "mangrove_monitor",
+            "tidecoil",
+            "abyssal_guardian"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "riptide_rush",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "paddlenewt",
+            "brooktail",
+            "riverdrake"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "talon_dive",
+          "slot": "quick",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [
+            "galecrest",
+            "pebbik",
+            "skyrill",
+            "ribbonray"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "storm_strike",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "galecrest",
+            "stormcapra",
+            "aeriex",
+            "breezetail",
+            "cliffspike"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "night_swoop",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [
+            "duskhush",
+            "skyrill"
+          ],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "aerial_flash",
+          "slot": "charged",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.3956,
+            "trail": 2.1,
+            "impact_scale": 1.7999999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "dash_strike",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 0.48160000000000003,
+            "trail": 2.8350000000000004,
+            "impact_scale": 1.5
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "heal_pulse",
+      "existing_profile_selected_move": "heal_pulse",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 12,
+        "trail": 10
+      },
+      "mapped_moves": [
+        {
+          "move_id": "heal_pulse",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 2.064,
+            "trail": 1.6800000000000002,
+            "impact_scale": 1.0499999999999998
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "buff_aura",
+      "existing_profile_selected_move": "veil",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 12,
+        "trail": 10
+      },
+      "mapped_moves": [
+        {
+          "move_id": "veil",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.118,
+            "trail": 2.625,
+            "impact_scale": 0.8999999999999999
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "hearten",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.462,
+            "trail": 2.205,
+            "impact_scale": 1.2000000000000002
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "debuff_hex",
+      "existing_profile_selected_move": "slow_field",
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 12,
+        "trail": 10
+      },
+      "mapped_moves": [
+        {
+          "move_id": "slow_field",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 4.3,
+            "trail": 2.1,
+            "impact_scale": 0.8250000000000001
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        },
+        {
+          "move_id": "sap",
+          "slot": "utility",
+          "rank5_source_parameters": {
+            "count": 1,
+            "size": 1.118,
+            "trail": 2.1,
+            "impact_scale": 1.125
+          },
+          "default_species_users": [],
+          "body_variant": null,
+          "presentation_variant": null
+        }
+      ],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "guard_flash",
+      "existing_profile_selected_move": null,
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 12,
+        "trail": 10
+      },
+      "mapped_moves": [],
+      "source_only_no_frame_cost_ranking": true
+    },
+    {
+      "archetype": "catch_tether_beam",
+      "existing_profile_selected_move": null,
+      "existing_profile_rank5_count": 1,
+      "existing_profile_simultaneous_nodes": 4,
+      "configured_particle_budget": {
+        "impact": 12,
+        "trail": 10
+      },
+      "mapped_moves": [],
+      "source_only_no_frame_cost_ranking": true
+    }
+  ],
+  "independent_review": {
+    "reviewer": "/root/stormursa_reference_review",
+    "verdict": "PASS FOR SOURCE MAP ONLY",
+    "engine_run": false,
+    "finding": "All24 rows and five source hashes, rank5 parameters, budgets, slots, variants, default species users and first maximum-count data-order selection agree with source. Seven ultimate-ID selections are individual ordinary F25 nodes; three unmapped archetypes use bare configured rows. No gameplay, whole-ultimate, four-creature, worst-case or FPS acceptance."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "status": "ABANDONED, UNRUN, NOT FOR LANDING",
+  "reason": "Coordinator amended C2 at issuecomment-6005143821: stop custom equipment, use existing captures only.",
+  "parent_source_commit": "2417fe0887444962bee25f23d26d8e1f8b63398c",
+  "parent_branch_head": "4695dc280f",
+  "candidate_compiled": false,
+  "candidate_native_run": false,
+  "candidate_source_review": "PASS for identity and callback-level local vitality only; compilation/runtime/performance OPEN",
+  "candidate_inventory": [
+    {
+      "path": "tests/capture_f25_four_creature_fight.gd",
+      "bytes": 23267,
+      "sha256": "7c6bae95a885f0ecb2401d23c9d3f6e3c97a6d3616ac0d12d7f3d41d045ded8a"
+    },
+    {
+      "path": "tests/helpers/f25_four_creature_peer.gd",
+      "bytes": 22019,
+      "sha256": "9595fcfb442ac48c7d845eb2a37791dd5477ccf162d441a334c7268189eaf848"
+    },
+    {
+      "path": "tests/capture_f25_four_creature_fight.gd.uid",
+      "bytes": 19,
+      "sha256": "ade540b19e5e8ffa05c054b4dc7d3257e53277f4c3409632bb59734fe1dc2ad9"
+    },
+    {
+      "path": "tests/helpers/f25_four_creature_peer.gd.uid",
+      "bytes": 20,
+      "sha256": "040997f66503e11ff717839803d1487d4a124e67a460ccb3ec99ecc9de820ae5"
+    }
+  ],
+  "patch_sha256": "91fa86cce7012e911fedd74d246332c3446b596583245d9686f00833a4cc6c48",
+  "limits": [
+    "The archive preserves unlanded local source, not accepted test equipment.",
+    "Remote deployment-card HP alone is insufficient; the unrun follow-up observes each owner actual instance in covering callback windows.",
+    "No fourth named heaviest effect, native FPS or Low fallback proof exists."
+  ],
+  "patch_archive_entry": "unrun-identity-vitality.patch",
+  "archive_sha256": "887174acabdf5f14b4578dfe93a89f46aad93babdeede96c437eb6e8328f52ab"
+}
