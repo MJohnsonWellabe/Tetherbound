@@ -123,7 +123,6 @@ func _boot() -> bool:
 	_look = _world.get_node_or_null(^"WorldLook")
 	if _player == null or _rig == null or _camera == null:
 		return _fail("production Player/CameraRig/Camera3D missing")
-	_set_render(false)
 	var booted := false
 	for i in BOOT_MAX_FRAMES:
 		await process_frame
@@ -134,6 +133,9 @@ func _boot() -> bool:
 			break
 	if not booted:
 		return _fail("EncounterDirector never appeared")
+	# Render only after boot: under Forward+ the world's shell build awaits drawn
+	# frames, so a loop switched off before this point never reaches EncounterDirector.
+	_set_render(false)
 	for i in 10:
 		await physics_frame
 	_fly = _player.get("fly_controller")

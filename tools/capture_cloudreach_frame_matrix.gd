@@ -398,7 +398,6 @@ func _boot() -> bool:
 	if _player == null or _rig == null or _camera == null:
 		push_error("frame matrix: production Player/CameraRig/Camera3D missing")
 		return false
-	_set_render(false)
 	# Boot by polling for the runtime's EncounterDirector (and its mount flag),
 	# not a fixed frame count.
 	var booted := false
@@ -414,6 +413,9 @@ func _boot() -> bool:
 	if not booted:
 		push_error("frame matrix: EncounterDirector never appeared; refusing partial-scene evidence")
 		return false
+	# Render only after boot: under Forward+ the world's shell build awaits drawn
+	# frames, so a loop switched off before this point never reaches EncounterDirector.
+	_set_render(false)
 	for i in 10:
 		await physics_frame
 	_camera.make_current()
