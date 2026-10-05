@@ -2901,9 +2901,11 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Ten-way scheduling: nine ordinary LPT bins, then split_realms alone.
+    # Eleven-way scheduling: ten ordinary LPT bins, then split_realms alone.
     # (Nine-way overflowed the 1200-second budget once F17-F20 added its
-    # unmeasured smokes: eight bins at 1186-1228 s.)
+    # unmeasured smokes: eight bins at 1186-1228 s. Ten-way overflowed once
+    # the F18 portal flip added f18_fixture_teaching, f20_ending and
+    # f20_home_diagnostic to the gate: four bins at 1209-1218 s.)
     # Completed case timestamps from run 37120921415 replace stale weights;
     # failed elapsed times are only scheduling lower bounds, never successful
     # runtime measurements. The original 1200-second smoke budget and
@@ -2912,7 +2914,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     timeout-minutes: 30
     needs:
       - changes
@@ -2936,7 +2938,7 @@ jobs:
         env:
           ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
           SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 10
+          SHARD_COUNT: 11
           # Smoke wall time only. This leaves ten minutes of the unchanged
           # 30-minute job for checkout, Godot setup, upload and runner drift.
           MEASURED_SHARD_BUDGET_SECONDS: 1200

@@ -74,6 +74,7 @@ func _use_home_key() -> bool:
 				or _fail("F49 actual Home Key return changed the party or lost/duplicated its key")
 		if frame == 120 and menu.call("is_open"):
 			return _fail("F49 missing producer: Satchel Use did not route the earned Home Key to its production owner")
+		if frame % 300 == 299: _print_home_key_wait(frame)
 	return _fail("F49 actual Home Key return never reached the ready home arch")
 
 func enter(arch_id: String, realm: String) -> bool:
@@ -120,6 +121,14 @@ func hang_relic(biome: String) -> bool:
 		if (character.get("relics_hung", []) as Array).has(biome):
 			return _uids() == before or _fail("F49 relic hanging changed the actual party")
 	return _fail("F49 relic hanging produced no actual portable relics_hung state")
+
+## Diagnostic only: which readiness condition a long Home Key wait is on.
+func _print_home_key_wait(frame: int) -> void:
+	var owner := INPUT_OWNER.current(tree)
+	print("F49 HOME WAIT frame=%d result=%s realm=%s pending_entry='%s' scene_ready=%s owner=%s" % [frame,
+		str(_home_result.get("ok", "none")), str(game.current_realm), str(game.pending_realm_entry),
+		str(tree.current_scene != null and bool(game.call("_realm_scene_ready", tree.current_scene, "meadows"))),
+		str(owner.get_path()) if owner != null else "none"])
 
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \
