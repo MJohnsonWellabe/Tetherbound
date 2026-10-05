@@ -4894,6 +4894,17 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 	return _throw_orb()
 
 
+## This peer's live combat arena: centre and radius, or {} with none open.
+func _arena_row(manager: Node) -> Dictionary:
+	if manager == null or not manager.has_method("arena"):
+		return {}
+	var ring: Variant = manager.call("arena")
+	if ring == null or not is_instance_valid(ring):
+		return {}
+	var at: Vector3 = (ring as Node3D).global_position
+	return {"centre": [at.x, at.y, at.z], "radius": float((ring as Node3D).get("radius"))}
+
+
 ## Test-fixture only (F22 forced break): pin the host's real shared wild body in
 ## a long tell proper that becomes visible NOW on the host's clock, with a pool
 ## too deep to break by drain, so only a forced break can stagger it.
@@ -6983,6 +6994,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"struck_counts": brec.get("struck_counts", {}),
 				},
 				"local_peer_id": bdirector.call("_local_peer_id"),
+				# The live fight ring (`combat_arena.hold_inside` returns any
+				# fighter past `radius`), so staging can stay inside it.
+				"arena": _arena_row(bmanager),
 				"my_creature_hp": combat_sample["my_creature_hp"],
 				"strike_geometry": boss_strike_geometry(bdirector, bmanager, brec) \
 					if bargs.get("strike_geometry", false) == true else [],
