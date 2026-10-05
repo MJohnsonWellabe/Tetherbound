@@ -1,0 +1,18 @@
+{
+  "case": "accepted-main",
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "source_root": "D:\\tetherbound\\render-perf-6632f2fd",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--editor",
+    "--path",
+    "D:\\tetherbound\\render-perf-6632f2fd",
+    "--import"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 25.015,
+  "errors": [],
+  "log_sha256": "24166a8d999a0e6bc1772c6ecba3b60282259f9ee216d6ae114b84d3a4ca4a64"
+}
