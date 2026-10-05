@@ -44,6 +44,7 @@ var _settle := 90
 var _far_override := -1.0
 var _fars: Array[float] = []
 var _attribute := false
+var _attribute_stand := 0
 var _route: Dictionary = {}
 var _report: Dictionary = {}
 
@@ -79,6 +80,9 @@ func _run() -> void:
 			_far_override = _fars[0]
 		elif arg == "--attribute":
 			_attribute = true
+		elif arg.begins_with("--attribute-stand="):
+			_attribute = true
+			_attribute_stand = int(arg.trim_prefix("--attribute-stand="))
 	var config: Variant = JSON.parse_string(FileAccess.get_file_as_string(ROUTES_PATH))
 	if not SCENES.has(_biome_id) or not config is Dictionary \
 			or not (config as Dictionary).get("routes", {}).has(_biome_id) or _out_path == "":
@@ -134,8 +138,8 @@ func _run() -> void:
 			for far: float in _fars:
 				_set_far(far)
 				rows.append(await _measure_stand("stand_%d_far%d" % [index, int(far)], here, there))
-		if _attribute and index == 0:
-			_report["attribution_stand_0"] = await _attribute_subtrees()
+		if _attribute and index == _attribute_stand:
+			_report["attribution_stand_%d" % index] = await _attribute_subtrees()
 		_save_rows(rows)
 	_report["stands"] = rows
 	_report["failures"] = _failures
@@ -275,6 +279,26 @@ func _attribute_subtrees() -> Array:
 				"primitives": delta.y, "objects": delta.z})
 			print("PERF ATTR %s (%d) draws=%.0f prims=%.0f" % [family, members.size(), delta.x, delta.y])
 	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.draws) > float(b.draws))
+	# One level down inside the costliest single-node subtree.
+	for row: Dictionary in rows:
+		if int(row.get("members", 0)) != 1:
+			continue
+		var top := _world.get_node_or_null(NodePath(str(row.subtree))) as Node3D
+		if top == null:
+			continue
+		var inner: Array = []
+		for child: Node in top.get_children():
+			var node3d := child as Node3D
+			if node3d == null or not node3d.visible:
+				continue
+			var delta := await _toggle_delta(func(on: bool) -> void: node3d.visible = on)
+			if delta.x >= 20.0:
+				inner.append({"subtree": "%s/%s" % [top.name, child.name], "draws": delta.x,
+					"primitives": delta.y, "objects": delta.z})
+				print("PERF ATTR   %s/%s draws=%.0f prims=%.0f" % [top.name, child.name, delta.x, delta.y])
+		inner.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.draws) > float(b.draws))
+		rows.append_array(inner)
+		break
 	return rows
 
 
@@ -447,6 +471,7 @@ func _frustum_census() -> Dictionary:
 	for label in labels:
 		bands[label] = {"meshes": 0, "shadow_casting": 0, "ranged": 0, "multimesh": 0, "mm_instances": 0}
 	var far_owners := {}
+	var lit := {"omni_spot_in_view": 0, "shadowed_in_view": 0, "shadowed": []}
 	var stack: Array = []
 	for child: Node in _world.get_children():
 		stack.append([child, str(child.name)])
@@ -456,6 +481,17 @@ func _frustum_census() -> Dictionary:
 		var top: String = item[1]
 		for child: Node in node.get_children():
 			stack.append([child, top])
+		if (node is OmniLight3D or node is SpotLight3D) and (node as Light3D).is_visible_in_tree():
+			var light := node as Light3D
+			var reach := float(light.get("omni_range") if light is OmniLight3D else light.get("spot_range"))
+			var sphere := AABB(light.global_position - Vector3.ONE * reach, Vector3.ONE * reach * 2.0)
+			if _aabb_in_frustum(sphere, planes) and eye.distance_to(light.global_position) - reach < _camera.far:
+				lit.omni_spot_in_view += 1
+				if light.shadow_enabled:
+					lit.shadowed_in_view += 1
+					(lit.shadowed as Array).append("%s r=%.0f d=%.0f" % [str(_world.get_path_to(light)),
+						reach, eye.distance_to(light.global_position)])
+			continue
 		if not node is GeometryInstance3D or node is Label3D:
 			continue
 		var gi := node as GeometryInstance3D
@@ -487,7 +523,7 @@ func _frustum_census() -> Dictionary:
 			band.ranged += 1
 		if distance >= DISTANCE_BANDS[1]:
 			far_owners[top] = int(far_owners.get(top, 0)) + 1
-	return {"bands": bands, "beyond_320m_by_subtree": _top(far_owners, 20)}
+	return {"bands": bands, "beyond_320m_by_subtree": _top(far_owners, 20), "lights": lit}
 
 
 static func _aabb_in_frustum(box: AABB, planes: Array[Plane]) -> bool:
