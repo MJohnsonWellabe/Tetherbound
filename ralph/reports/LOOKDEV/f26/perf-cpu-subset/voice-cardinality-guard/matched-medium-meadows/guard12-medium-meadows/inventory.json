@@ -1,0 +1,126 @@
+{
+  "raw_root": "D:\\tetherbound\\.artifacts\\f26-perf-comparison-27-12\\guard12-medium-meadows",
+  "archive": {
+    "path": "native-route.zip",
+    "bytes": 32921051,
+    "sha256": "668c55d7cbbdefc487b8681c16081df39190fa34ec077329077d53a5bf889ae8",
+    "entries": 13
+  },
+  "files": [
+    {
+      "path": "engine.log",
+      "bytes": 219296,
+      "sha256": "fdd338384f8593f8ef03cb2f6756d547074885fcb536988b67b59b0cd6216c1e"
+    },
+    {
+      "path": "native.log",
+      "bytes": 221282,
+      "sha256": "e687c57f567c89a3d48f7464a19a8fa01ee79247236bfa07b9645e356acb4774"
+    },
+    {
+      "path": "preset-receipt.json",
+      "bytes": 642,
+      "sha256": "5009735e9795c5e6251fbb06e4c3f09699f84b1eda9927e669c7376abacaf823"
+    },
+    {
+      "path": "preset.log",
+      "bytes": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2888,
+      "sha256": "ac5f2530c1ab51c3d0d355b74e7e47b3c9a6d124e3fa68a7e867d291ca1c9793"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/graphics_override.cfg",
+      "bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/graphics_override.cfg.previous",
+      "bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 109,
+      "sha256": "7f94e8f11cb0f02d605b9fc4669776a1af0ef310c3289b6046f39c2aec49ae7f"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/vulkan/pipelines.forward_plus.nvidia_geforce_gtx_1060_3gb.cache",
+      "bytes": 28336696,
+      "sha256": "43752e05f4825a7bcc23a5fef91631e0ace760228fa62d20798b6f32bda41e47"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 2677,
+      "sha256": "e4854ea7ba54c8674aed6be131fd67cd9b745aedddd3ecd4ce0dbaeddc02ea77"
+    },
+    {
+      "path": "route/end.png",
+      "bytes": 2809243,
+      "sha256": "51636a18ea9dc2c20948232e60c4cd72d969819f1a0898b684851efd2ec4da51"
+    },
+    {
+      "path": "route/route.json",
+      "bytes": 96026,
+      "sha256": "f9045a1929e4e7a2a0fb71eddd57944d7c7fa915c2137330fcaaf2f33cbde1c6"
+    },
+    {
+      "path": "route/start.png",
+      "bytes": 2808149,
+      "sha256": "88c3c34377404adfaf7cf4b706e6803d1896ba427254ce23491bc91026196c98"
+    }
+  ],
+  "excluded_cache_files": [
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 50450
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/BlitShaderRD/60730ff5d181828d793048b679aedf660ec932db990c939f300e8875dc43b3cf/8305c75c1294a9f00656f0f14344bb8bedcfe4e7.vulkan.cache",
+      "bytes": 6484
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/CopyShaderRD/06416dbb331f92a2c651ac0fcedf5ba066aafc28e591c899ee8a8f8d9167a537/8305c75c1294a9f00656f0f14344bb8bedcfe4e7.vulkan.cache",
+      "bytes": 13948
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/GiShaderRD/d0db97061545374c4aad77fca934cb9bd70afea09ec5692aab7313678fd68fca/8305c75c1294a9f00656f0f14344bb8bedcfe4e7.vulkan.cache",
+      "bytes": 30500
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SkyShaderRD/5090ce1739a75f47b8eba781fdd25da47220dbf3e500e5864faf5b69a441ea65/0fa1946a11e1cca806ebfe4b3b4ac7f723d8b701.vulkan.cache",
+      "bytes": 15384
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SkyShaderRD/5090ce1739a75f47b8eba781fdd25da47220dbf3e500e5864faf5b69a441ea65/9247dd7bf98483a15ebb05f8c580a398614a07d8.vulkan.cache",
+      "bytes": 20160
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SkyShaderRD/5090ce1739a75f47b8eba781fdd25da47220dbf3e500e5864faf5b69a441ea65/eb67757529a7120ca978bb6c8b2d1d16683d196e.vulkan.cache",
+      "bytes": 28188
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SkyShaderRD/5090ce1739a75f47b8eba781fdd25da47220dbf3e500e5864faf5b69a441ea65/ff1961ca0c4c55a79eb12f819a7b6345801bbbaf.vulkan.cache",
+      "bytes": 15696
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SortShaderRD/a48873e523f14e04dd6158a6a01c5a4e4feb0c7d6714a8c6246ab619a144fa67/8305c75c1294a9f00656f0f14344bb8bedcfe4e7.vulkan.cache",
+      "bytes": 3020
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SsaoShaderRD/dbe49ee25c27dfab06f4ceafdc245136a29423ac963551cb1ae3ac2d8a958d4b/8305c75c1294a9f00656f0f14344bb8bedcfe4e7.vulkan.cache",
+      "bytes": 14364
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/shader_cache/SsilShaderRD/f18f9d51995393e98ec76d65866e22e4264679600294eff5d76fb86a4d578a4d/8305c75c1294a9f00656f0f14344bb8bedcfe4e7.vulkan.cache",
+      "bytes": 14184
+    }
+  ]
+}
