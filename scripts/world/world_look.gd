@@ -526,7 +526,7 @@ func apply_time(name: String) -> void:
 	var sun_cfg := _merged("sun", over)
 	var sky_cfg := _merged("sky", over)
 	var env_cfg := _merged("environment", over)
-	_layer_weather(sun_cfg, sky_cfg, env_cfg)
+	_layer_weather(sun_cfg, sky_cfg, env_cfg, _weather_night_weight(name, name, 0.0))
 
 	_apply_sun(sun_cfg)
 	_apply_environment(env_cfg, sky_cfg)
@@ -564,7 +564,8 @@ func set_weather(delta: Dictionary) -> void:
 ## since the previous weather's multiplier is already baked into the node.
 ## Computing from the fresh per-call `_merged()` result is idempotent: the
 ## same weather delta on the same time of day always lands on the same value.
-func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionary) -> void:
+func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionary,
+		night_weight: float = 0.0) -> void:
 	if _weather.is_empty():
 		return
 	var sun_over: Dictionary = _weather.get("sun", {})
@@ -583,7 +584,14 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 	var sky_over: Dictionary = _weather.get("sky", {})
 	for key: String in ["top_colour", "horizon_colour", "ground_horizon_colour"]:
 		if sky_over.has(key):
-			sky_cfg[key] = sky_over[key]
+			# Rain's daylight palette must not replace the authored dark sky.
+			# Weight zero keeps the exact daytime override; the existing night
+			# keyframe blend returns smoothly to the time-derived sky colors.
+			if bool(_weather.get("rain", false)) and night_weight > 0.0:
+				sky_cfg[key] = _as_colour(sky_over[key]).lerp(
+					_as_colour(sky_cfg.get(key)), clampf(night_weight, 0.0, 1.0))
+			else:
+				sky_cfg[key] = sky_over[key]
 
 	var env_over: Dictionary = _weather.get("environment", {})
 	if env_over.has("ambient_energy_mult"):
@@ -594,6 +602,17 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 		env_cfg["fog_density"] = float(env_cfg.get("fog_density", 0.0016)) + float(env_over["fog_density_add"])
 	if env_over.has("fog_colour"):
 		env_cfg["fog_colour"] = env_over["fog_colour"]
+
+
+## Use the same named/night_end inheritance and from/to/t clock blend as
+## the time palette, including named captures before their clock is moved.
+func _weather_night_weight(from_name: String, to_name: String, t: float) -> float:
+	var times: Dictionary = _config.get("times", {})
+	var from_entry: Dictionary = times.get(from_name, {})
+	var to_entry: Dictionary = times.get(to_name, {})
+	var from_night := from_name == "night" or str(from_entry.get("same_as", "")) == "night"
+	var to_night := to_name == "night" or str(to_entry.get("same_as", "")) == "night"
+	return lerpf(1.0 if from_night else 0.0, 1.0 if to_night else 0.0, clampf(t, 0.0, 1.0))
 
 
 func time_of_day() -> String:
@@ -779,7 +798,8 @@ func _apply_blended(hour: float) -> void:
 	var sun_cfg: Dictionary = blended.sun
 	var sky_cfg: Dictionary = blended.sky
 	var env_cfg: Dictionary = blended.environment
-	_layer_weather(sun_cfg, sky_cfg, env_cfg)
+	_layer_weather(sun_cfg, sky_cfg, env_cfg,
+		_weather_night_weight(str(blended.from), str(blended.to), float(blended.t)))
 
 	_apply_sun(sun_cfg)
 	_apply_environment(env_cfg, sky_cfg)
