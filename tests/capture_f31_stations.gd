@@ -15,7 +15,7 @@ const SCENE := "res://scenes/world/meadows_playground.tscn"
 const PIECE := preload("res://scripts/build/station_piece.gd")
 const ROW := ["workbench", "forge", "kitchen", "altar", "den", "farm"]
 const ORIGIN := Vector3(-1.75, 0.0, -12.0) # Probed clear, flat 32x14 strip centred at (12, -12).
-const SPACING := 5.5
+const SPACING := 4.0 # Den (4.4 m) still clears its neighbours; the row fits one front frame.
 
 
 func _initialize() -> void:
@@ -54,7 +54,7 @@ func _run() -> void:
 	var look := world.get_node("WorldLook")
 	look.call("set_clock_frozen", true)
 	var mid := ORIGIN + Vector3(SPACING * (ROW.size() - 1) * 0.5, 0, 0)
-	var stands := {"row": [mid + Vector3(0, 1.2, -11.0), mid], "forge_kitchen": [ORIGIN + Vector3(8.25, 1.2, 5.5), ORIGIN + Vector3(8.25, 0, 0)], "altar": [ORIGIN + Vector3(19.0, 1.2, 4.5), ORIGIN + Vector3(19.0, 0, 0)], "den": [ORIGIN + Vector3(19.0, 1.2, 5.5), ORIGIN + Vector3(19.0, 0, 0)], "farm": [ORIGIN + Vector3(25.0, 1.2, 3.0), ORIGIN + Vector3(25.0, 0, 0)]}
+	var stands := {"row": [mid + Vector3(3.0, 1.2, 10.5), mid + Vector3(3.0, 0, 0)], "forge_kitchen": [ORIGIN + Vector3(6.0, 1.2, 5.5), ORIGIN + Vector3(6.0, 0, 0)], "altar": [ORIGIN + Vector3(14.0, 1.2, 4.5), ORIGIN + Vector3(14.0, 0, 0)], "den": [ORIGIN + Vector3(13.5, 1.2, 6.0), ORIGIN + Vector3(13.5, 0, 0)], "farm": [ORIGIN + Vector3(18.0, 1.2, 3.0), ORIGIN + Vector3(18.0, 0, 0)]}
 	for stand: String in stands:
 		var at: Vector3 = stands[stand][0]
 		var aim: Vector3 = stands[stand][1]
