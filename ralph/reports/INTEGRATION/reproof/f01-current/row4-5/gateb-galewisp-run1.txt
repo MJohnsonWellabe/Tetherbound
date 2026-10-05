@@ -1,0 +1,76 @@
+GATE A OPENING +2.37s — title interactive
+GATE A OPENING +2.51s — answered the returning-player fresh-game confirmation
+GATE A OPENING +2.64s — answered the character-choice step
+GATE A OPENING +9.04s — confirmed the configured trainer-name prefill
+GATE A OPENING +9.04s — new game world entered
+GATE A OPENING +84.65s — wake/Get Up complete
+GATE A OPENING +88.95s — Grandpa briefing and pack complete
+GATE A OPENING +89.28s — starter picker order ["terrapup", "ripplet", "galewisp"]; 2 ui_right press(es) to 'galewisp'
+GATE A OPENING +96.57s — starter selected and named (galewisp, uid creature-760b6b1e8226c8bd705cf729744fdb2e)
+GATE A OPENING +98.27s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +99.96s — usable house/front doorway exited
+WILD_APPROACH_SELECTION {"acceptance":false,"anchor":[30.0,0.900842666625977,-40.0],"name":"Wild_bramblebun_0_2","player":[7.97819900512695,0.900842666625977,14.0446557998657],"species":"bramblebun","target":[18.1575946807861,1.09661042690277,-36.4894752502441]}
+wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.900843, 14.0), (20.0, 0.900843, -12.0), (20.0, 0.900843, -18.0), (20.0, 0.900843, -26.0), (14.6, 0.900843, -31.0), (21.0, 0.900843, -37.5), (30.0, 0.900843, -40.0)]
+wild approach: ready at 5.79m with '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Bramblebun'
+GATE A OPENING +111.88s — tutorial Bramblebun combat entered
+GATE A OPENING +145.40s — Bramblebun naturally weakened to 29/105 HP
+GATE A OPENING +145.40s — satchel drained to 1 orb(s) so the empty case is on the real path
+GATE A OPENING +150.85s — running dry restocked the tutorial satchel to 5 orb(s)
+GATE A OPENING +156.06s — physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE A OPENING +157.64s — catch complete; exploration resumed with two-creature party
+GATE B +157.64s — opening | title interactive
+GATE B +157.64s — opening | answered the returning-player fresh-game confirmation
+GATE B +157.64s — opening | answered the character-choice step
+GATE B +157.64s — opening | confirmed the configured trainer-name prefill
+GATE B +157.64s — opening | new game world entered
+GATE B +157.64s — opening | wake/Get Up complete
+GATE B +157.64s — opening | Grandpa briefing and pack complete
+GATE B +157.64s — opening | starter picker order ["terrapup", "ripplet", "galewisp"]; 2 ui_right press(es) to 'galewisp'
+GATE B +157.64s — opening | starter selected and named (galewisp, uid creature-760b6b1e8226c8bd705cf729744fdb2e)
+GATE B +157.64s — opening | Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE B +157.64s — opening | usable house/front doorway exited
+GATE B +157.64s — opening | tutorial Bramblebun combat entered
+GATE B +157.64s — opening | Bramblebun naturally weakened to 29/105 HP
+GATE B +157.64s — opening | satchel drained to 1 orb(s) so the empty case is on the real path
+GATE B +157.64s — opening | running dry restocked the tutorial satchel to 5 orb(s)
+GATE B +157.64s — opening | physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))
+GATE B +157.64s — opening | catch complete; exploration resumed with two-creature party
+GATE B +157.64s — starter galewisp reached the party as 'Bud' (uid creature-760b6b1e8226c8bd705cf729744fdb2e)
+GATE B +157.64s — opening played; player stands where the game left them, at (26.0, 0.0, -32.0)
+GATE A NPC/GATHER +12.08s — Mira cycle 1 exited and movement resumed
+GATE A NPC/GATHER +13.71s — Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue
+GATE A NPC/GATHER +17.34s — Tam cycle 1 exited and movement resumed
+GATE A NPC/GATHER +17.34s — Tam handed over knife, torch and build hammer through dialogue
+GATE A NPC/GATHER +21.51s — Satchel assigned four tools by focused controller input
+GATE A NPC/GATHER +34.44s — axe equipped, swung, gathered +4 Wood
+GATE A NPC/GATHER +51.78s — pickaxe equipped, swung, gathered +4 Stone
+GATE A NPC/GATHER +55.37s — knife equipped, swung, gathered +4 Fiber
+GATE A NPC/GATHER +87.07s — Oskar cycle 1 exited and movement resumed
+GATE A NPC/GATHER +95.24s — Bram cycle 1 exited and movement resumed
+GATE A NPC/GATHER +97.65s — Bram cycle 2 exited and movement resumed
+GATE A NPC/GATHER +99.80s — Bram cycle 3 exited and movement resumed
+GATE A NPC/GATHER +101.68s — five NPC/modal exits and three equipped-tool gathers returned world control
+GATE B +259.32s — visited the village and came away with tools
+GATE B +259.52s — team of 5 at level 5 qualifies for the tournament
+GATE B +420.44s — walked back to the Village Square for the build
+GATE B +420.44s — gathered the home materials: wood 31 / stone 8 / fiber 37
+GATE B +523.12s — save/reload at three-bed readiness, before the tournament kept starter { "species": "galewisp", "nickname": "Bud", "level": 5, "xp": 5 }; party ["creature-760b6b1e8226c8bd705cf729744fdb2e/galewisp/Bud L5 xp5", "creature-09e2fa91f2f3f049179973612b9b524d/bramblebun/ L5 xp5", "creature-1543cf232909a8dc009c5bce3838f223/trailpup/ L5 xp5", "creature-a9f69a598302bc6e9a34b4269d2b6bba/riftfrill/ L5 xp0", "creature-d6a42533bbdde9b1c64ed0b73f6dbfcb/galecrest/ L5 xp0"]; 9/9 flags; 3 creature beds; day 2; inventory [axe x1 d32, orb_basic x5, pickaxe x1 d38, potion_small x3, berries x5, revive x10, coin x140, fiber x3, knife x1 d37, torch x1, hammer x1 d40, wood x1]
+GATE B +1076.97s — tail | placed the tent, campfire and bedroll; a Creature Bed is still needed; wood 19 / stone 0 / fiber 27 left
+GATE B +1076.97s — tail | interact is spoken for by { "label": "Rest a Creature", "distance": 2.19106578826904, "priority": 0, "actionable": true }; stepping clear
+GATE B +1076.97s — tail | placed 3 creature beds through the build menu, one per entrant; wood 1 / stone 0 / fiber 3 left
+GATE B +1076.97s — tail | night 1, bed 1: Bud (Rested · Fed · Happy)
+GATE B +1076.97s — tail | night 1, bed 2: Bramblebun (Rested · Fed · Happy)
+GATE B +1076.97s — tail | night 1, bed 3: Trailpup (Rested · Fed · Happy)
+GATE B +1076.97s — tail | 1 night(s) in 3 beds put the whole team in condition
+GATE B +1076.97s — tail | the team is rested, fed and happy; tournament_condition_ready is set
+GATE B +1076.97s — tail | signed into the draw through the marshal's own ladder
+GATE B +1076.97s — tail | called out Bud for the bracket
+GATE B +1076.97s — tail | Quarter-final: won in 1257 frames; the board now reads 'Tournament board: Semi-final, you vs Tam'
+GATE B +1076.97s — tail | Semi-final: won in 1106 frames; the board now reads 'Tournament board: Final, you vs Oskar'
+GATE B +1076.97s — tail | Final: won in 2185 frames; the board now reads 'Tournament board: champion of the Lower Meadows'
+GATE B +1076.97s — tail | won the bracket; the saddle pattern is known
+GATE B +1076.97s — tail | objective handed off: 'Reach South Bridge -- Team Tether holds the crossing.'
+GATE B +1076.97s — tail played: home, three beds, the nights, feeding, the draw and the bracket
+GATE B +1078.41s — save/reload after the third tournament round kept starter { "species": "galewisp", "nickname": "Bud", "level": 8, "xp": 297 }; party ["creature-760b6b1e8226c8bd705cf729744fdb2e/galewisp/Bud L8 xp297", "creature-09e2fa91f2f3f049179973612b9b524d/bramblebun/ L7 xp54", "creature-1543cf232909a8dc009c5bce3838f223/trailpup/ L7 xp54", "creature-a9f69a598302bc6e9a34b4269d2b6bba/riftfrill/ L5 xp0", "creature-d6a42533bbdde9b1c64ed0b73f6dbfcb/galecrest/ L5 xp0"]; 14/14 flags; 3 creature beds; day 2; inventory [axe x1 d32, orb_basic x8, pickaxe x1 d38, potion_small x8, berries x5, revive x10, coin x225, fiber x3, knife x1 d37, torch x1, hammer x1 d40, wood x1]
+GATE B +1078.42s — all 12 Gate B objectives walked in order, ending on 'Reach South Bridge -- Team Tether holds the crossing.'
+gate B continuous: OK — a fresh save walked all 12 objectives to South Bridge

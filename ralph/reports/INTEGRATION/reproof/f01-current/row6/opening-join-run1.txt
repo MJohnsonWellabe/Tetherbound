@@ -1,0 +1,56 @@
+PASS: coordinator tracked exactly two peers
+PASS: the harness assigned the host a positive isolated UDP port (28581)
+PASS: the chosen host identity entered through the production title and hosted (title fresh identity 'Rowan'/kael entered 'MeadowsPlayground' and hosted udp/28581 after 1 frames)
+PASS: the distinct fresh identity joined through the production title path (title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28581 as peer 278055430 after 412 frames)
+PASS: peer 0's production registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's production registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 has the production Meadows opening director
+PASS: peer 0 reached bed prompt by ordinary movement (arrived within 1.50 m of (-1.4, 12.9))
+opening peer 0 bed prompt position=[-1.40000009536743, 4.65094184875488, 14.2999992370605] target=[-1.40000009536743, 5.05000019073486, 12.8999996185303]
+PASS: peer 0 got up from the bed with physical 'interact' (pressed 'interact' x1)
+PASS: peer 0 reached stairs top by ordinary movement (arrived within 0.80 m of (1.2, 11.9))
+opening peer 0 stairs top position=[0.85975289344788, 4.35094165802002, 12.1862964630127] target=[1.20000004768372, 4.34999990463257, 11.8999996185303]
+PASS: peer 0 reached stairs bottom by ordinary movement (arrived within 0.80 m of (6.0, 11.9))
+opening peer 0 stairs bottom position=[5.65303373336792, 1.03862166404724, 11.9180669784546] target=[6.0, 1.01999998092651, 11.8999996185303]
+PASS: peer 0 reached Grandpa prompt by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
+opening peer 0 Grandpa prompt position=[0.31666481494904, 1.02094161510468, 14.944504737854] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+PASS: peer 0 opened Grandpa's briefing with physical 'interact' (pressed 'interact' x1)
+PASS: peer 0 closed Grandpa's real briefing (SETUP: closed the opening dialogue in 4 presses; locomotion now false)
+PASS: peer 0's starter picker opened after the briefing
+PASS: peer 0 moved the starter choice with physical 'ui_right' (pressed 'ui_right' x1)
+PASS: peer 0 chose the starter orb with physical 'menu_confirm' (pressed 'menu_confirm' x1)
+PASS: peer 0's naming grid opened after the starter choice
+PASS: peer 0 typed one creature-name letter with physical 'menu_confirm' (pressed 'menu_confirm' x1)
+PASS: peer 0 reached the real naming Done cell ({ "cell": "\n", "column": 4.0, "row": 7.0, "text": "A" })
+PASS: peer 0 finished naming the starter with physical 'menu_confirm' (pressed 'menu_confirm' x1)
+PASS: peer 0 reached return to Grandpa by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
+opening peer 0 return to Grandpa position=[0.31675517559052, 1.02094161510468, 14.9444723129272] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+PASS: peer 0 opened Grandpa's catch-supply reply with physical 'interact' (pressed 'interact' x1)
+PASS: peer 0 closed Grandpa's catch-supply reply (SETUP: closed the opening dialogue in 5 presses; locomotion now true)
+PASS: peer 0 received exactly one named starter (party size 1 (wanted 1))
+PASS: peer 0 received the opening Basic Orb grant (orb_basic count 50)
+PASS: peer 1 has the production Meadows opening director
+PASS: peer 1 reached bed prompt by ordinary movement (arrived within 1.50 m of (-1.4, 12.9))
+opening peer 1 bed prompt position=[-1.40000009536743, 4.65094184875488, 14.2999992370605] target=[-1.40000009536743, 5.05000019073486, 12.8999996185303]
+PASS: peer 1 got up from the bed with physical 'interact' (pressed 'interact' x1)
+PASS: peer 1 reached stairs top by ordinary movement (arrived within 0.80 m of (1.2, 11.9))
+opening peer 1 stairs top position=[0.84583085775375, 4.35094165802002, 12.2006549835205] target=[1.20000004768372, 4.34999990463257, 11.8999996185303]
+PASS: peer 1 reached stairs bottom by ordinary movement (arrived within 0.80 m of (6.0, 11.9))
+opening peer 1 stairs bottom position=[5.55242681503296, 1.1614043712616, 11.9237804412842] target=[6.0, 1.01999998092651, 11.8999996185303]
+PASS: peer 1 reached Grandpa prompt by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
+opening peer 1 Grandpa prompt position=[0.31592032313347, 1.02094173431396, 14.9421586990356] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+PASS: peer 1 opened Grandpa's briefing with physical 'interact' (pressed 'interact' x1)
+PASS: peer 1 closed Grandpa's real briefing (SETUP: closed the opening dialogue in 4 presses; locomotion now false)
+PASS: peer 1's starter picker opened after the briefing
+PASS: peer 1 moved the starter choice with physical 'ui_right' (pressed 'ui_right' x1)
+PASS: peer 1 chose the starter orb with physical 'menu_confirm' (pressed 'menu_confirm' x1)
+PASS: peer 1's naming grid opened after the starter choice
+PASS: peer 1 typed one creature-name letter with physical 'menu_confirm' (pressed 'menu_confirm' x1)
+PASS: peer 1 reached the real naming Done cell ({ "cell": "\n", "column": 4.0, "row": 7.0, "text": "B" })
+PASS: the two peers typed different names ('A', 'B')
+PASS: peer 1 finished naming the starter with physical 'menu_confirm' (pressed 'menu_confirm' x1)
+PASS: peer 1 reached return to Grandpa by ordinary movement (arrived within 0.90 m of (-0.4, 15.2))
+opening peer 1 return to Grandpa position=[0.31592553853989, 1.02094173431396, 14.942156791687] target=[-0.40000009536743, 2.05200004577637, 15.1999998092651]
+PASS: peer 1 opened Grandpa's catch-supply reply with physical 'interact' (pressed 'interact' x1)
+FAIL: peer 1 returned to Grandpa but the catch-supply dialogue never opened
+FAIL: peer 1 returned to Grandpa but the catch-supply dialogue never opened

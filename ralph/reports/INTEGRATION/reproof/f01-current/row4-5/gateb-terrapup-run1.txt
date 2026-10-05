@@ -1,0 +1,30 @@
+GATE A OPENING +2.60s — title interactive
+GATE A OPENING +2.74s — answered the returning-player fresh-game confirmation
+GATE A OPENING +2.87s — answered the character-choice step
+GATE A OPENING +9.30s — confirmed the configured trainer-name prefill
+GATE A OPENING +9.30s — new game world entered
+GATE A OPENING +85.78s — wake/Get Up complete
+GATE A OPENING +90.03s — Grandpa briefing and pack complete
+GATE A OPENING +90.03s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +95.35s — starter selected and named (terrapup, uid creature-ee37febd0ea0cb0eebdc91fc693aa1af)
+GATE A OPENING +96.99s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +98.64s — usable house/front doorway exited
+WILD_APPROACH_SELECTION {"acceptance":false,"anchor":[30.0,0.900941431522369,-40.0],"name":"Wild_bramblebun_0_2","player":[7.94148063659668,0.900941431522369,14.0491056442261],"species":"bramblebun","target":[18.1575946807861,1.09661042690277,-36.4894752502441]}
+wild approach: legacy controller uses farmhouse/Practice Meadow road [(10.1, 0.9, 14.0), (20.0, 0.900941, 14.0), (20.0, 0.900941, -12.0), (20.0, 0.900941, -18.0), (20.0, 0.900941, -26.0), (14.6, 0.900941, -31.0), (21.0, 0.900941, -37.5), (30.0, 0.900941, -40.0)]
+wild approach: ready at 2.56m with '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Engage Mudsnout'
+GATE A OPENING +112.44s — tutorial Bramblebun combat entered
+ERROR: real piloted attacks did not weaken Bramblebun within the bounded fight
+GATE B +190.59s — opening | title interactive
+GATE B +190.59s — opening | answered the returning-player fresh-game confirmation
+GATE B +190.59s — opening | answered the character-choice step
+GATE B +190.59s — opening | confirmed the configured trainer-name prefill
+GATE B +190.59s — opening | new game world entered
+GATE B +190.59s — opening | wake/Get Up complete
+GATE B +190.59s — opening | Grandpa briefing and pack complete
+GATE B +190.59s — opening | starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE B +190.59s — opening | starter selected and named (terrapup, uid creature-ee37febd0ea0cb0eebdc91fc693aa1af)
+GATE B +190.59s — opening | Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE B +190.59s — opening | usable house/front doorway exited
+GATE B +190.59s — opening | tutorial Bramblebun combat entered
+ERROR: opening: real piloted attacks did not weaken Bramblebun within the bounded fight
+gate B continuous FAIL: opening: real piloted attacks did not weaken Bramblebun within the bounded fight

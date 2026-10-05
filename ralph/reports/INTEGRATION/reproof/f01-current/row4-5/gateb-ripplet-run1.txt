@@ -1,0 +1,19 @@
+GATE A OPENING +2.76s — title interactive
+GATE A OPENING +2.91s — answered the returning-player fresh-game confirmation
+GATE A OPENING +3.04s — answered the character-choice step
+GATE A OPENING +9.95s — confirmed the configured trainer-name prefill
+GATE A OPENING +9.95s — new game world entered
+GATE A OPENING +88.40s — wake/Get Up complete
+GATE A OPENING +92.72s — Grandpa briefing and pack complete
+GATE A OPENING +92.99s — starter picker order ["terrapup", "ripplet", "galewisp"]; 1 ui_right press(es) to 'ripplet'
+ERROR: controller stopped on 'X' instead of 'd'
+GATE B +101.14s — opening | title interactive
+GATE B +101.14s — opening | answered the returning-player fresh-game confirmation
+GATE B +101.14s — opening | answered the character-choice step
+GATE B +101.14s — opening | confirmed the configured trainer-name prefill
+GATE B +101.14s — opening | new game world entered
+GATE B +101.14s — opening | wake/Get Up complete
+GATE B +101.14s — opening | Grandpa briefing and pack complete
+GATE B +101.14s — opening | starter picker order ["terrapup", "ripplet", "galewisp"]; 1 ui_right press(es) to 'ripplet'
+ERROR: opening: controller stopped on 'X' instead of 'd'
+gate B continuous FAIL: opening: controller stopped on 'X' instead of 'd'

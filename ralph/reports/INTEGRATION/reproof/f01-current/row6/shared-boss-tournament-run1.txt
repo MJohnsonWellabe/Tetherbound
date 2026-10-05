@@ -1,0 +1,31 @@
+PASS: tournament host opened a world
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+FAIL: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (the join did not put this peer in a fight)
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: peer 1 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: both peers completed 'tournament_quarter_mira' (battle won in 730 frames / 4 swings against 2 of their creatures)
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+PASS: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-cc1672d9ce92b76bb1b567463ffa7d70", "character-fabee1afe98acd6eb8a03a3272a345ff"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+PASS: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-cc1672d9ce92b76bb1b567463ffa7d70", "character-fabee1afe98acd6eb8a03a3272a345ff"])
+PASS: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-cc1672d9ce92b76bb1b567463ffa7d70", "character-fabee1afe98acd6eb8a03a3272a345ff"])
+PASS: opened authored tournament round 'tournament_semi_tam'
+PASS: 'tournament_semi_tam' minted one shared encounter record
+PASS: peer 1 joined 'tournament_semi_tam' rather than opening another fight (joined 1:2 beside 'pipwing' at (-1.4, 6.7))
+PASS: peer 0 reduced 'tournament_semi_tam' shared opponent HP
+PASS: peer 1 reduced 'tournament_semi_tam' shared opponent HP
+FAIL: both peers completed 'tournament_semi_tam' (no verdict)
+FAIL: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (the join did not put this peer in a fight)
+FAIL: both peers completed 'tournament_semi_tam' (no verdict)
