@@ -193,6 +193,8 @@ func _run() -> void:
 	_ok(await step(1, "op_hold", {"hold": false}), "deliver-then-leave: the new stream sends normally")
 	var delivered := await _await_admitted("deliver-then-leave")
 	check(_admitted(delivered), "deliver-then-leave: the rejoined stream is admitted, not refused")
+	var code := str(((await _state(0)).get("rejoin_codes", {}) as Dictionary).get(_guest_character, ""))
+	check(code == "replayed_deliveries", "deliver-then-leave: the host rebuilt the payout from its own row, not a re-admission (%s)" % code)
 	var held: Dictionary = (((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary)
 	check(int((held.get("items", {}) as Dictionary).get("berries", 0)) == int(((await _state(1)).get("items", {}) as Dictionary).get("berries", -1)),
 		"deliver-then-leave: the host's held record has the find, from its own row (%s)" % JSON.stringify(held))
@@ -208,6 +210,8 @@ func _run() -> void:
 	for i in 2: _ok(await step(i, "expect_peers", {"count": 2}), "offline change: peer %d sees both" % i)
 	var changed := await _await_admitted("offline-change")
 	check(_admitted(changed), "offline change: the rejoined stream is admitted")
+	var changed_code := str(((await _state(0)).get("rejoin_codes", {}) as Dictionary).get(_guest_character, ""))
+	check(changed_code == "readmitted_portable", "offline change: the host re-admitted the current portable record (%s)" % changed_code)
 	held = (((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary)
 	check(held.get("levels") == levels, "offline change: the host re-admitted the current record (levels %s, host %s)" % [str(levels), JSON.stringify(held)])
 	var before_find: Dictionary = (await _state(1)).get("items", {})

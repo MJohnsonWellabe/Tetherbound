@@ -275,6 +275,8 @@ func _research_reserved(character: String) -> bool:
 func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary, delivery_id: String = "") -> bool:
 	if not _records.has(character) or not ESSENCE._equivalent(_records[character].state, before) \
 		or not after.get("inventory") is Array: return false
+	# Review L3: a payout this record already holds is never credited again.
+	if not delivery_id.is_empty() and _absorbed(character).has(delivery_id): return false
 	var next: Dictionary = _records[character].state.duplicate(true)
 	next.inventory = after.inventory.duplicate(true)
 	if not ESSENCE._equivalent(next, after): return false
@@ -298,9 +300,11 @@ func apply_owner_reward_delivery(character: String, before: Dictionary, after: D
 ## Payout rows an owner applies itself (reward_delivery_applied replay):
 ## plain authored grants and gather batches, which carry their stacks.
 static func owner_applied_row(row: Variant, character: String) -> bool:
+	# The Home Key grant is a host inventory CAS (_request_home_key_delivery),
+	# never an owner-applied replay (review M2).
 	return row is Dictionary and row.get("character_id") == character and row.get("delivery_id") is String \
 		and row.get("stacks") is Array and RULES.valid_slots(row.stacks) \
-		and not str(row.delivery_id).contains(":")
+		and not str(row.delivery_id).contains(":") and not str(row.get("source", "")).begins_with("home_key:grant:")
 
 
 func _absorbed(character: String) -> Dictionary:
@@ -322,10 +326,47 @@ func seed_absorbed_deliveries(character: String, deliveries: Dictionary) -> void
 ## True while a host-side transaction for this character is still open.
 func owes_unsettled(character: String) -> bool:
 	return _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
-		or _vitals_stages.has(character) or _training_locked(character) or _research_preparations.has(character)
+		or _vitals_stages.has(character) or _training_locked(character) or _research_preparations.has(character) \
+		or _portal_mutation_pending(character)
 
 
-func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary) -> Dictionary:
+## Review H2: a returning declaration may be NEWER than the held record (an
+## offline change), never OLDER (a restored backup would re-earn what this
+## world already paid). One-way fields: every held transaction receipt is in
+## the declaration unless its kind's window shows the declaration compacted
+## it, and every host-recorded personal flag is in the declared flags.
+func declaration_behind(character: String, declared: Dictionary, declared_flags: Array) -> String:
+	for flag: Variant in personal_flags(character):
+		if personal_flags(character)[flag] == true and not declared_flags.has(flag): return "personal_flag " + str(flag)
+	var held_receipts: Array = state(character).get("redesign_character", {}).get("transaction_receipts", [])
+	var mine: Array = declared.get("redesign_character", {}).get("transaction_receipts", [])
+	var present := {}
+	for receipt: Variant in mine: present[str(receipt)] = true
+	var windows := preload("res://scripts/creatures/receipt_windows.gd")
+	var f32_window := int(preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("f32_receipt_window", 0))
+	for receipt: Variant in held_receipts:
+		if present.has(str(receipt)): continue
+		var compacted := false
+		if str(receipt).begins_with("craft:%s:f32:" % character):
+			compacted = f32_window >= 2 and mine.filter(func(r: Variant) -> bool: return str(r).begins_with("craft:%s:f32:" % character)).size() >= f32_window - 1
+		for kind: String in ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]:
+			if compacted or windows.window(kind) <= 0 or not windows.is_kind(str(receipt), kind, character): continue
+			compacted = mine.filter(func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)).size() >= windows.window(kind)
+		if not compacted: return "receipt " + str(receipt).left(48)
+	return ""
+
+
+## Review H1: the hello can still refuse after rejoin_admission; the caller
+## restores the exact held record (and its companions) if it does.
+func snapshot_record(character: String) -> Dictionary:
+	return (_records.get(character, {}) as Dictionary).duplicate(true)
+
+
+func restore_record(character: String, snapshot: Dictionary) -> void:
+	if not snapshot.is_empty(): _records[character] = snapshot.duplicate(true)
+
+
+func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, declared_flags: Array = []) -> Dictionary:
 	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
 	var held: Dictionary = state(character)
 	var core := preload("res://scripts/net/owner_passive_replay.gd")
@@ -353,6 +394,8 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 	# (2) A real portable change: the declaration already passed the first-join
 	# rules (session hello); adopt it only when nothing here is owed to it.
 	if owes_unsettled(character): return {"ok": false, "code": "host_duties_unsettled"}
+	var behind := declaration_behind(character, declared, declared_flags)
+	if not behind.is_empty(): return {"ok": false, "code": "declaration_behind_held", "detail": behind}
 	_replace_record(character, revision(character) + 1, declared.duplicate(true))
 	_records[character].state["vitals_escrow"] = declared.get("vitals_escrow", {}).duplicate(true)
 	# The admission flags travel with that record: the session's next

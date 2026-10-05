@@ -79,6 +79,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	out["levels"] = []
 	for member: RefCounted in game.get("party").call("members"): out.levels.append(int(member.get("level")))
 	out["authority"] = {}
+	out["rejoin_codes"] = (session.get("last_rejoin_admission") as Dictionary).duplicate() if bool(session.call("is_host")) else {}
 	if bool(session.call("is_host")):
 		var authority: RefCounted = session.get("_character_authority")
 		for character: String in authority.get("_records"):

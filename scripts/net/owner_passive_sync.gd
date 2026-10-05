@@ -445,32 +445,56 @@ static func _endpoint_matches(host_body: Vector3, endpoint: Vector3) -> bool:
 func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
 		or packet.inputs.is_empty() or packet.inputs.size() > MAX_BATCH: return
-	var context := _context(peer, stream)
 	# F01#6b: condition ticks of this batch apply to ONE private copy of the
-	# cursor (REPLAY.apply_condition_owned); the record is re-validated once
-	# after the batch. Other inputs keep the copying, fully checked path.
-	var working: Dictionary = {}
+	# cursor (REPLAY.apply_condition_owned). It becomes the stream's cursor only
+	# after its record is validated (_settle_working): before any other input
+	# and on every exit, so the cursor never holds an unvalidated state.
+	var batch := {"working": {}}
+	var completed := _inputs_host_batch(peer, stream, packet, batch)
+	if not _settle_working(stream, batch) or not completed or not str(stream.error).is_empty(): return
+	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
+	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
+		_recovery_freeze(peer, stream)
+	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
+		_prepare_host(peer, stream)
+
+
+func _settle_working(stream: Dictionary, batch: Dictionary) -> bool:
+	if (batch.working as Dictionary).is_empty(): return true
+	var working: Dictionary = batch.working
+	batch.working = {}
+	if not REPLAY._record_valid(working.state):
+		stream.error = "owner_passive_invalid_result"
+		return false
+	stream.cursor = working
+	return true
+
+
+func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch: Dictionary) -> bool:
+	var context := _context(peer, stream)
 	for input: Variant in packet.inputs:
+		if input is Dictionary and input.get("op") != "condition" and not _settle_working(stream, batch): return false
 		if not input is Dictionary or not input.get("sequence") is int:
-			stream.error = "owner_passive_invalid_input"; return
+			stream.error = "owner_passive_invalid_input"; return false
 		var sequence: int = input.sequence
 		var digest := HASH.fingerprint(input)
-		if sequence <= int(stream.cursor.sequence):
+		var at_sequence: int = int(batch.working.sequence) if not (batch.working as Dictionary).is_empty() else int(stream.cursor.sequence)
+		if sequence <= at_sequence:
 			if stream.seen.get(sequence) != digest: stream.error = "owner_passive_conflicting_duplicate"
-			if not str(stream.error).is_empty(): return
+			if not str(stream.error).is_empty(): return false
 			continue
 		if stream.seen.size() >= MAX_BUFFER:
-			stream.error = "owner_passive_host_buffer_full"; return
+			stream.error = "owner_passive_host_buffer_full"; return false
 		if input.get("op") == "discovery" and (stream.cursor.travel_valid != true or stream.cursor.realm != context.realm):
 			var at: Variant = input.get("to")
 			if not context.get("initial_position") is Vector3:
 				_note_host(stream, "input %d waits: no host body for this owner in %s" % [sequence, str(context.realm)])
-				return # Realm body has not arrived; retry this exact prefix.
+				return false # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
 				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
 				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
 					"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
-				stream.error = "owner_passive_initial_pose_unconfirmed"; return
+				stream.error = "owner_passive_initial_pose_unconfirmed"; return false
 		var input_context := context.duplicate()
 		var reset: bool = _reset_matches(peer, stream, input, context)
 		if reset:
@@ -485,53 +509,46 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 				if not context.get("initial_position") is Vector3 or not _endpoint_matches(context.initial_position, to):
 					_note_host(stream, "input %d waits: discontinuity to %s, host body at %s" % [sequence, str(to),
 						str(context.get("initial_position", "none"))])
-					return
+					return false
 				input_context.discontinuity_authorized = true
 		var applied: Dictionary
 		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
-			if not owner().has_method("_owner_passive_actor_vitals_context"): return
+			if not owner().has_method("_owner_passive_actor_vitals_context"): return false
 			var proof: Dictionary = owner().call("_owner_passive_actor_vitals_context", peer, input)
 			if proof.is_empty():
 				_note_host(stream, "input %d waits: %s has no host vitals proof yet" % [sequence, str(input.op)])
-				return # Exact saved op waits the existing authenticated world ACK.
+				return false # Exact saved op waits the existing authenticated world ACK.
 			if input.op == "actor_vitals_applied" and proof.get("revision_before") != stream.revision:
-				stream.error = "owner_passive_vitals_revision_conflict"; return
+				stream.error = "owner_passive_vitals_revision_conflict"; return false
 			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
-				stream.error = "owner_passive_vitals_saved_before_applied"; return
+				stream.error = "owner_passive_vitals_saved_before_applied"; return false
 			applied = REPLAY.apply_vitals(stream.cursor, input, proof)
 		elif input.get("op") == "reward_delivery_applied":
 			var row: Variant = _game().get("world").reward_deliveries.get(input.get("delivery_id"))
 			applied = REPLAY.apply_delivery(stream.cursor, input, row)
 			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
 				stream.character, stream.cursor.base, applied.cursor.base, str(input.get("delivery_id", ""))) != true:
-				stream.error = "owner_passive_delivery_authority_changed"; return
+				stream.error = "owner_passive_delivery_authority_changed"; return false
 			if applied.get("ok") == true and row is Dictionary:
 				# Ruling (b): a batched gather is now credited; its row may be
 				# pruned once the guest's ACK has also landed.
 				var gather_writer: Node = owner().get_node_or_null(^"LedgerRpc")
 				if gather_writer != null: gather_writer.call("mark_gather_replayed", stream.character, row)
 		elif input.get("op") == "condition":
-			if not is_same(working, stream.cursor):
-				working = stream.cursor.duplicate(true)
-			var reason := REPLAY.apply_condition_owned(working, input, input_context)
-			applied = {"ok": true, "code": "ok", "cursor": working} if reason.is_empty() else {"ok": false, "code": reason}
+			if (batch.working as Dictionary).is_empty(): batch.working = stream.cursor.duplicate(true)
+			var reason := REPLAY.apply_condition_owned(batch.working, input, input_context)
+			applied = {"ok": true, "code": "ok"} if reason.is_empty() else {"ok": false, "code": reason}
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
 			stream.first_input_refusal = {"input": input.duplicate(true), "context": input_context.duplicate(true),
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
-			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
-		stream.cursor = applied.cursor
+			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return false
+		if input.get("op") != "condition": stream.cursor = applied.cursor
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
-	if is_same(working, stream.cursor) and not REPLAY._record_valid(stream.cursor.state):
-		stream.error = "owner_passive_invalid_result"; return
-	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
-	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
-		_recovery_freeze(peer, stream)
-	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
-		_prepare_host(peer, stream)
+	return true
 
 func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	var session := owner()
