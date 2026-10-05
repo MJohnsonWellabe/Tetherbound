@@ -1,0 +1,13 @@
+PASS: the real world has a Player and a BuildPlacer (res://scenes/world/cloudreach_cliffs.tscn)
+PASS: valid camp ground found in cloudreach at (4.0, 105.03, -260.0)
+PASS: one forward-camp record placed (1)
+PASS: it carries the placer's character id and realm (character-e79853257dadc6192d2abe3e0f7c4dc0, cloudreach)
+PASS: exactly one kit spent (2 -> 1)
+PASS: one ForwardCamp planted in the world (1)
+PASS: a second valid spot exists in cloudreach
+PASS: a second camp in cloudreach is refused and keeps its kit
+rest settled after 2 press(es)
+PASS: resting at the camp bed recovered the team to full and woke it (1 member(s))
+PASS: the rest passed the night (day 1 -> 2)
+PASS: the world saves through the autosave path
+F34 FORWARD CAMP (cloudreach): 11 checks, 0 failures
