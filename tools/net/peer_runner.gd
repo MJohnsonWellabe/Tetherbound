@@ -8390,6 +8390,20 @@ func _meadows_opening_state() -> Dictionary:
 	out["owns_input"] = bool(director.call("owns_input")) if director.has_method("owns_input") else false
 	out["starter_commit_pending"] = not (director.get("_pending_starter_adoption") as Dictionary).is_empty() \
 		if director.get("_pending_starter_adoption") is Dictionary else false
+	var opening_session := _session()
+	out["session_owns_input"] = opening_session != null and opening_session.has_method("owns_input") \
+		and bool(opening_session.call("owns_input"))
+	if opening_session != null:
+		var retry: Variant = opening_session.get("_owner_training_retry")
+		out["owner_training_retry"] = {} if not retry is Dictionary else {
+			"empty": (retry as Dictionary).is_empty(), "saved": (retry as Dictionary).get("saved", false)}
+		var training_row: Variant = opening_session.call("_owner_training_row") if opening_session.has_method("_owner_training_row") else {}
+		if training_row is Dictionary:
+			out["owner_training_row"] = {"action": (training_row as Dictionary).get("action", ""),
+				"status": (training_row as Dictionary).get("status", "")}
+	out["input_context"] = str(_probe.call("input_context")) if _probe != null else ""
+	out["arbiter_enabled"] = bool(director.get("_arbiter").call("enabled")) \
+		if director.get("_arbiter") != null and director.get("_arbiter").has_method("enabled") else false
 	out["bed_prompt"] = _opening_position(bed_prompt)
 	out["grandpa_prompt"] = _opening_position(grandpa_prompt)
 	var opening_player: Variant = director.get("_player")
