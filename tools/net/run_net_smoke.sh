@@ -86,7 +86,14 @@ kill_orphans() {
 		kill -9 $matches 2>/dev/null || true
 	fi
 }
-trap kill_orphans EXIT
+tail_pid=""
+on_exit() {
+	# The SUMMARY.md follower below, on every exit path (it once outlived its
+	# run here and held the caller's stdout pipe open forever).
+	[ -n "$tail_pid" ] && kill "$tail_pid" 2>/dev/null
+	kill_orphans
+}
+trap on_exit EXIT
 
 kill_orphans # in the unlikely case a stale run shares this shell pid
 
@@ -98,7 +105,9 @@ kill_orphans # in the unlikely case a stale run shares this shell pid
 		sleep 1
 		waited=$((waited + 1))
 	done
-	[ -f "$run_dir/SUMMARY.md" ] && tail -f "$run_dir/SUMMARY.md" 2>/dev/null
+	# `exec`: the follower's pid IS the tail, so killing it stops the tail.
+	# (A child tail survived `kill "$tail_pid"` and kept stdout open.)
+	[ -f "$run_dir/SUMMARY.md" ] && exec tail -f "$run_dir/SUMMARY.md" 2>/dev/null
 ) &
 tail_pid=$!
 
