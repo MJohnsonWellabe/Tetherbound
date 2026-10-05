@@ -42,7 +42,8 @@ func build(id: String, ghost: bool = false) -> void:
 				_glow(Vector3(0,0.75,1.1),Color("ff8a3d"))
 			"kitchen":
 				# Prep table (the kit shelf stands behind it) and a stone hearth with a hanging pot.
-				_table(1.4,1.4,Vector3(-0.5,0,0))
+				_table(1.0,1.0,Vector3(-0.15,0,0.1))
+				_cylinder(0.2,0.22,Vector3(-0.3,1.15,0.1),Color("8a5a3a"))
 				_cylinder(0.5,0.32,Vector3(0.95,0.16,0.1),Color("6e6760"))
 				_cylinder(0.36,0.06,Vector3(0.95,0.34,0.1),Color("ff7a2a"),2.0)
 				for x: float in [0.5,1.4]: _box(Vector3(0.08,1.6,0.08),Vector3(x,0.8,0.1),Color("5b4632"))
@@ -65,7 +66,11 @@ func build(id: String, ghost: bool = false) -> void:
 					roof.rotation.x = side*deg_to_rad(38.0)
 				_box(Vector3(4.2,1.4,0.1),Vector3(0,0.7,-1.42),Color("8a6a46"))
 				for x: float in [-2.02,2.02]: _box(Vector3(0.1,1.4,1.2),Vector3(x,0.7,-0.8),Color("8a6a46"))
-				for i: int in 3: _cylinder(0.55,0.18,Vector3(-1.3+i*1.3,0.09,0.0),Color("d9bf6a"))
+				# Straw nests: a dark rim with a heaped golden centre, one per resting companion.
+				for i: int in 3:
+					var at := Vector3(-1.3+i*1.3,0.0,-0.2)
+					_cylinder(0.62,0.16,at+Vector3(0,0.08,0),Color("8a6a2a"))
+					_cylinder(0.46,0.12,at+Vector3(0,0.2,0),Color("c99a3a"))
 			"farm":
 				# Dark tilled soil in raised rows with green sprouts.
 				_box(Vector3(1.4,0.14,1.4),Vector3(0,0.07,0),Color("3b2a1d"))
@@ -211,13 +216,14 @@ func _build_attachment(def: Dictionary) -> void:
 ## F31#6: the primitive massing alone read as grey boxes, every station
 ## alike. Each placed station also wears installed Fantasy Props kit pieces
 ## that say what it is at the normal camera (an anvil at the forge, a cauldron
-## and shelf at the kitchen, the kit workbench). Visual only: no collider
+## and shelf at the kitchen, the kit workbench, food and water at the den). Visual only: no collider
 ## (the station's own box keeps footprint and prompt); never on the ghost.
 const DRESSING := {
 	"workbench": [["Workbench", Vector3(0, 0, 0.05), 0.0]],
 	"forge": [["Anvil_Log", Vector3(-0.35, 0, 1.25), 15.0], ["Bucket_Metal", Vector3(0.75, 0, 1.0), 0.0]],
-	"kitchen": [["Cauldron", Vector3(0.95, 0.36, 0.1), 0.0], ["Shelf_Simple", Vector3(-0.5, 0, -0.95), 0.0],
-		["Barrel", Vector3(-1.6, 0, 0.4), 20.0]],
+	"kitchen": [["Cauldron", Vector3(0.95, 0.36, 0.1), 0.0], ["Shelf_Simple", Vector3(-0.15, 0, -0.75), 0.0]],
+	"den": [["Bucket_Wooden_1", Vector3(1.75, 0, 1.25), 0.0], ["Pot_1", Vector3(1.25, 0, 1.35), 0.0],
+		["Barrel_Apples", Vector3(-1.85, 0, 1.2), 15.0]],
 	"altar": [["CandleStick_Stand", Vector3(-0.75, 0, 0.3), 0.0], ["CandleStick_Stand", Vector3(0.75, 0, 0.3), 0.0]],
 	"farm": [["FarmCrate_Apple", Vector3(1.15, 0, 0.5), 15.0]],
 }
