@@ -29,3 +29,16 @@ the orchard house's west wall (collider x 77.8–78.2, z 22.8–29.2). Earlier r
 outside of the wall; this one went in through the door and stalled at the back wall. A physics
 shape probe showed that the column at x ≤ 77.3 is clear. The fix (`_clear_column`) walks the
 nearest column that the actual static colliders leave clear; here x = 76.5. No tolerance changed.
+
+## F17#3 on the merged head (ee3e18c9, main #530 merged)
+
+Three local runs on 261fc489/ee3e18c9 (the retest session's FAIL was on 826d273c3):
+- Run A failed on the day Mira leg. No door press happened: the body went through the open doorway, drifted east inside
+  the shop to (28.6, 3) and stalled (two sidesteps). This has not reproduced since.
+- Run B failed on the night Oskar frontage: 0.48 m from the stand but `is_on_floor()` was false on the arrival frame
+  (body y 1.12, stepping off a kerb). Fix (ee3e18c9): wait up to 20 physics frames for the released body to land before
+  the unchanged 0.75 m and on-floor gate.
+- Run C on ee3e18c9: **PASS** (`services-day-night-r2.txt`); every house frontage and service prompt reached day and
+  night.
+
+Disclosed: the Mira-drift stall in run A is a walker flake that has not been root-caused; a CI repeat is queued.
