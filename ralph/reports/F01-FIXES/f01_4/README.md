@@ -19,3 +19,9 @@
 **Independent review:** APPROVE, no blocking findings. Its non-blocking findings (comment placement, syncing before the pending early return, a wiring test, comment wording) are addressed in the follow-up commit.
 
 Not yet re-run: the full `smoke_gate_b_continuous --gate-b-full-chain` for terrapup, the run that originally met the Mudsnout.
+
+## Real-path proof: gate B terrapup full chain
+
+`godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain --starter=terrapup` on tb/f01-fixes c93aecd9. That is 00c37407 plus co-op-only changes that a solo game never runs (the starter_choice action, which runs only for a non-host, and harness logging). **PASS, exit 0.** All 12 Gate B objectives were walked in order, ending on "Reach South Bridge -- Team Tether holds the crossing."
+
+The practice engage read "Engage Bramblebun" at 5.78 m. The tutorial Bramblebun was naturally weakened and caught by a physical throw (launch 2). The run then went on through the three beds, the nights, the draw, and quarter-final, semi-final and final wins. Both in-chain v28 reloads kept the starter (Bud L5, then Bud L8 xp297). Receipt lines: `gateb-terrapup-run1.txt`.
