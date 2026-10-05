@@ -25,6 +25,7 @@ const COMPLETED_CLOUDREACH_FLAGS := [
 	"cloudreach_chapter_started",
 	"cloudreach_act_i_complete",
 	"cloudreach_act_ii_complete",
+	"cloudreach_upper_route_unlocked", # F06 gate before the summit; every completed chapter opened it
 	"captain_veyra_defeated",
 	"cloudreach_winds_restored",
 	"realm_heart_cloudreach_earned",
@@ -159,7 +160,8 @@ func _run() -> void:
 		var anchor: Dictionary = returned.call("entry_anchor", "cloudreach_return_from_stormwood")
 		var expected: Vector3 = _vec3(anchor.get("position", []))
 		_expect(return_player != null and return_player.global_position.distance_to(expected) < 3.0,
-			"Cloudreach return did not consume cloudreach_return_from_stormwood")
+			"Cloudreach return did not consume cloudreach_return_from_stormwood (player %s, anchor %s)"
+			% [return_player.global_position if return_player != null else "none", expected])
 	_finish()
 
 
@@ -172,8 +174,10 @@ func _wait_for_scene(expected_name: String) -> Node:
 
 
 func _wait_for_settle(game: Node) -> void:
+	# Settled means the entry completed AND the crossing released its loading
+	# overlay; a player cannot touch the next gate before that either.
 	for _frame in SETTLE_WAIT_FRAMES:
-		if str(game.get("pending_realm_entry")) == "":
+		if str(game.get("pending_realm_entry")) == "" and int(game.get("_realm_crossing_owner")) == 0:
 			return
 		await process_frame
 
