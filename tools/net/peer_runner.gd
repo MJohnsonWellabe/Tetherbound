@@ -4931,11 +4931,11 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 		body.set("_lunge_tell_total", float(args.get("seconds", 30.0)))
 		body.set("_beat_left", float(args.get("seconds", 30.0)))
 		body.set("_tell_visible_since_ms", Time.get_ticks_msec())
-		var opponent: Variant = runtime.get("_enemy")
-		if opponent == null: opponent = body.get("instance")
-		if opponent != null:
-			# A low-level ambient wild has too little HP to outlive the Energy
-			# build-up; the fixture gives it a deep pool, as it does poise.
+		# A low-level ambient wild has too little HP to outlive the Energy
+		# build-up; the fixture gives it a deep pool, as it does poise. The
+		# runtime's opponent and the body's instance are both refilled.
+		for opponent: Variant in [runtime.get("_enemy"), body.get("instance")]:
+			if opponent == null: continue
 			opponent.set("max_hp", maxf(float(opponent.get("max_hp")), 100000.0))
 			opponent.set("hp", float(opponent.get("max_hp")))
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
