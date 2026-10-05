@@ -23,6 +23,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _home_bed_rest(args)
 	if action == "home_bed_status":
 		return _home_bed_status()
+	if action == "craft_place_kitchen":
+		return await _craft_place_kitchen()
+	if action == "craft_at_host_kitchen":
+		return await _craft_at_host_kitchen(args)
+	if action == "craft_count":
+		return _craft_count(args)
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -390,3 +396,117 @@ func _home_bed_status() -> Dictionary:
 		"character_id": str(game.get("local").get("character_id")), "resting": bool(creature.get("resting")),
 		"rest_bed_index": int(creature.get("rest_bed_index")), "occupied": bool(bed.call("is_occupied")),
 		"hp": float(creature.get("hp")), "max_hp": float(creature.get("max_hp"))}}
+
+
+## F31#5 homestead craft actions (tests/smoke_net_homestead_station_craft.gd).
+## Disclosed fixtures: the host stands at the paid-path smoke's open
+## homestead stance, station and recipe costs are added to the actor's own
+## inventory, and the guest stands beside the host's Kitchen. Placement,
+## crafting and saving use the ordinary paths (build placer press,
+## Session.homestead_submit_action, production leave).
+const CRAFT_STANCE := Vector3(-6.0, 1.4, 22.0)
+const CRAFT_DELIVERY := preload("res://scripts/net/homestead_building_delivery.gd")
+const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
+
+func _inventory_count(id: String) -> int:
+	return int(root.get_node("Game").get("inventory").call("count", id))
+
+func _craft_count(args: Dictionary) -> Dictionary:
+	var out := {}
+	for id: Variant in args.get("ids", []):
+		out[str(id)] = _inventory_count(str(id))
+	return {"verdict": "PASS", "detail": "counts read", "data": {"counts": out,
+		"character_id": str(root.get_node("Game").get("local").get("character_id"))}}
+
+func _press_place() -> void:
+	Input.action_press("build_place")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_place")
+
+func _placed_uid(game: Node, uid: String) -> bool:
+	for i in 300:
+		if int(game.get("world").call("building_index_of", uid)) >= 0:
+			return true
+		await physics_frame
+	return false
+
+func _place(game: Node, id: String) -> String:
+	for need: Dictionary in CRAFT_DELIVERY.cost(id):
+		game.get("inventory").call("add", need.id, int(need.n))
+	var uid := "b%d" % int(game.get("world").next_building_uid)
+	game.set("pending_build", id)
+	for i in 30:
+		await physics_frame
+	await _press_place()
+	return uid if await _placed_uid(game, uid) else ""
+
+func _craft_place_kitchen() -> Dictionary:
+	if _hall_guard(2).is_empty() or not bool(_session().call("is_host")):
+		return {"verdict": "FAIL", "detail": "the host places the Kitchen in the admitted two-peer session"}
+	var game := root.get_node("Game")
+	var player := current_scene.get_node("Player") as Node3D
+	player.global_position = CRAFT_STANCE
+	for i in 10:
+		await physics_frame
+	var kitchen := await _place(game, "kitchen")
+	if kitchen.is_empty():
+		return {"verdict": "FAIL", "detail": "pressing Place did not plant the Kitchen"}
+	var rack := await _place(game, "kitchen_meadows")
+	Input.action_press("build_cancel")
+	await physics_frame
+	Input.action_release("build_cancel")
+	var tier: Dictionary = CRAFT_STATION_RULES.effective_tier(CRAFT_STATION_RULES.config(), game.get("placed_buildings"), kitchen)
+	var ok: bool = not rack.is_empty() and tier.get("ok") == true and int(tier.get("effective_tier", -1)) == 1
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "host planted a Kitchen and its Spice rack through the paid journal", "data": {
+		"kitchen_uid": kitchen, "rack_uid": rack, "effective_tier": int(tier.get("effective_tier", -1))}}
+
+func _station_node(uid: String) -> Node3D:
+	for node: Node in get_nodes_in_group("placed_building"):
+		if node.get_meta("building_uid", "") == uid and current_scene.is_ancestor_of(node):
+			return node as Node3D
+	return null
+
+func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
+	if _hall_guard(2).is_empty() or bool(_session().call("is_host")):
+		return {"verdict": "FAIL", "detail": "the guest crafts in the admitted two-peer session"}
+	var game := root.get_node("Game")
+	var session := _session()
+	var kitchen: Node3D = null
+	for i in 600:
+		kitchen = _station_node(str(args.get("kitchen_uid", "")))
+		if kitchen != null:
+			break
+		await physics_frame
+	if kitchen == null:
+		return {"verdict": "FAIL", "detail": "the host's Kitchen never replicated to the guest world"}
+	var player := current_scene.get_node("Player") as Node3D
+	player.global_position = kitchen.global_position + Vector3(1.6, 0.6, 1.6)
+	game.get("inventory").call("add", "berries", 4)
+	game.get("inventory").call("add", "fiber", 1)
+	for i in 60:
+		await physics_frame
+	var before := {"potion_small": _inventory_count("potion_small"), "berries": _inventory_count("berries"), "fiber": _inventory_count("fiber")}
+	var refreshed := {"done": false}
+	session.connect("homestead_personal_view_completed", func() -> void: refreshed.done = true, CONNECT_ONE_SHOT)
+	session.call("homestead_personal_view")
+	for i in 600:
+		if refreshed.done:
+			break
+		await physics_frame
+	var view: Dictionary = session.call("homestead_personal_view")
+	var reply := {"result": {}}
+	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+		if op == "station_craft": reply.result = result)
+	var craft_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	var sent: Dictionary = session.call("homestead_submit_action", "station_craft",
+		{"recipe_id": "potion_small", "craft_id": craft_id}, kitchen, int(view.get("registry_revision", -1)))
+	for i in 900:
+		if not (reply.result as Dictionary).is_empty() and _inventory_count("potion_small") > int(before.potion_small):
+			break
+		await physics_frame
+	var after := {"potion_small": _inventory_count("potion_small"), "berries": _inventory_count("berries"), "fiber": _inventory_count("fiber")}
+	var ok: bool = reply.result.get("ok") == true and int(after.potion_small) == int(before.potion_small) + 1 \
+		and int(after.berries) == int(before.berries) - 4 and int(after.fiber) == int(before.fiber) - 1
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest crafted at the host's Kitchen and kept the output", "data": {
+		"sent": sent, "reply": reply.result, "before": before, "after": after, "view_revision": int(view.get("registry_revision", -1))}}
