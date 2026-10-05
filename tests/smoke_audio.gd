@@ -283,9 +283,14 @@ func _start_a_fight() -> bool:
 ## Matches smoke_combat.gd: the opening suspends the sandbox starter, and this
 ## test does not drive the opening, so it asks for a creature directly.
 func _ensure_ally() -> void:
-	if _director == null or _director.call("ally_instance") != null:
-		return
-	await _director.call("adopt_starter", "terrapup")
+	if _director == null: return
+	if _director.call("ally_instance") == null: await _director.call("adopt_starter", "terrapup")
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted body is a companion only once it is in this character's party.
+	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var party: RefCounted = root.get_node(^"Game").get("party")
+	if party != null and int(party.call("size")) == 0 and _director.call("ally_instance") != null:
+		party.call("add", _director.call("ally_instance"))
 
 
 ## The opening wakes the player in Grandpa's bed. This test bypasses it and
