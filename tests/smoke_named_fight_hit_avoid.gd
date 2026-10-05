@@ -13,10 +13,14 @@ extends "res://tools/art_pipeline/capture_named_fight.gd"
 ##   `hit_landed(on_enemy=false)` is the opponent's strike landing.
 ## - DODGE: on the other tells the left stick backs the creature straight
 ##   away from the opponent, out of reach, steering round anything it is
-##   stuck on (movement is the dodge -- combat_manager.gd `_drive_player_creature`,
-##   there is no dodge button), from DODGE_REACTION_S into the tell until
-##   WITNESS_DODGE_TAIL_S after it; an `attack_missed(by_player=false)` is the strike
-##   avoided.
+##   stuck on (combat_manager.gd `_drive_player_creature`), from
+##   DODGE_REACTION_S into the tell until WITNESS_DODGE_TAIL_S after it, and
+##   on a role PATTERN strike taps the combat burst (pad A, `jump`) once on
+##   the way, which is how COMBAT §12.2 answers a WALL's ring or slam; an
+##   `attack_missed(by_player=false)` is the strike avoided. A pattern strike
+##   connects while the target's centre is within range + its own radius
+##   (combat_ai.gd `pattern_contains`), so `reach` in a pattern row is the
+##   pattern's range, not the distance to clear.
 ##
 ## Ordinary quicks track the target live through the tell, so stepping
 ## sideways does not escape them; reach is the only way out.
@@ -40,6 +44,8 @@ const FIGHT_FRAME_LIMIT := 60 * 120
 ## A player reacting to the tell they can see: ~0.2 s, not a frame-perfect input.
 const DODGE_REACTION_S := 0.2
 const WITNESS_DODGE_TAIL_S := 0.25
+## Floor a DODGE strike needs behind the creature before the arena boundary.
+const DODGE_ROOM_M := 4.0
 const POLICIES := ["stand", "dodge"]
 const WITNESS_ATTACK_EVERY_FRAMES := 20
 
@@ -134,7 +140,43 @@ func _witness_one() -> bool:
 					and since >= DODGE_REACTION_S:
 				stick = _stick_away_from_opponent()
 				stick = _steer_around_obstacle(stick)
+				# COMBAT §12.2: a role PATTERN strike (the Warden WALL's quake
+				# ring or slam) is answered by bursting out of it, and the burst
+				# is pad A (`jump`) in a fight (combat_manager.gd
+				# `_read_player_input`, COMBAT-3). One tap per dodged pattern
+				# strike, stick already held away. Ordinary strikes keep the
+				# walk-only dodge, so the reach mutation (in_hit_cone) still
+				# fails the captains' witness.
+				if bool(s.get("pattern", false)) and not bool(s.get("burst_sent", false)) \
+						and stick != Vector2.ZERO:
+					s["burst_sent"] = true
+					_left_stick(stick)
+					await _pad_tap("jump")
+					frames += 4
+		# Between tells, ahead of a DODGE strike, keep room to back into: a
+		# creature already pinned on the arena's edge cannot back out of
+		# anything, and a player who means to step out of the next swing does
+		# not wait for it there (re-proof F04-4: after its first dodge the
+		# Warden's witness sat at arena_off 11.00 for every later strike, ~7 m
+		# from a WALL whose reach is 7.47 m).
+		if not in_tell and POLICIES[_strikes.size() % POLICIES.size()] == "dodge":
+			stick = _stick_toward_arena_centre()
 		_left_stick(stick)
+		# The gap and the opponent's own travel on the last tick BEFORE the
+		# outcome: `gap_at_strike` is read after the blow's knockback has
+		# already moved the struck creature, so it cannot say whether the swing
+		# connected inside its reach (re-proof F04-4).
+		if not _strikes.is_empty() and not (_strikes.back() as Dictionary).has("outcome"):
+			var open_strike: Dictionary = _strikes.back()
+			open_strike["gap_pre"] = _gap()
+			var ally_body := _director.call("ally_body") as Node3D
+			if ally_body != null and _body != null and is_instance_valid(_body) and ally_body.has_method("centre") and _body.has_method("centre"):
+				var c: Vector3 = (ally_body.call("centre") as Vector3) - (_body.call("centre") as Vector3)
+				c.y = 0.0
+				open_strike["centre_gap_pre"] = c.length()
+			if _body != null and is_instance_valid(_body):
+				open_strike["foe_moved"] = (_body as Node3D).global_position.distance_to(
+					open_strike.get("foe_at_tell", (_body as Node3D).global_position))
 		# A player who means to step out of the next swing is watching for
 		# it, not mashing: a quick roots the creature through its wind-up and
 		# recovery (combat_manager.gd `_drive_player_creature`). So attacks
@@ -161,12 +203,14 @@ func _witness_one() -> bool:
 	var dodge_miss := 0
 	var dodged := 0
 	for s in _strikes:
-		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f" % [
+		print("row %s opponent=%s strike=%d move=%s tell=%.2fs policy=%s outcome=%s damage=%.1f gap_tell=%.2f gap_strike=%.2f moved=%.2f reach=%.2f cone=%.0f action=%d arena_off=%.2f gap_pre=%.2f foe_moved=%.2f centre_gap_pre=%.2f reach_at_strike=%.2f pattern=%s shape=%s" % [
 			_tid, str(s.opponent), int(s.n), str(s.move), float(s.seconds), str(s.policy),
 			str(s.get("outcome", "none")), float(s.get("damage", 0.0)),
 			float(s.get("gap_at_tell", -1.0)), float(s.get("gap_at_strike", -1.0)),
 			float(s.get("moved", -1.0)), float(s.reach), float(s.cone), int(s.action),
-			float(s.arena_off)])
+			float(s.arena_off), float(s.get("gap_pre", -1.0)), float(s.get("foe_moved", -1.0)),
+			float(s.get("centre_gap_pre", -1.0)), float(s.get("reach_at_strike", -1.0)),
+			str(s.get("pattern", false)), str(s.get("shape", ""))])
 		if str(s.policy) == "stand" and str(s.get("outcome", "")) == "hit":
 			stand_hit += 1
 		if str(s.policy).begins_with("dodge"):
@@ -210,8 +254,11 @@ func _on_witness_tell(seconds: float) -> void:
 		"frame": Engine.get_physics_frames(),
 		"ally_at_tell": _ally_pos(),
 		"gap_at_tell": _gap(),
+		"foe_at_tell": (_body as Node3D).global_position if _body != null and is_instance_valid(_body) else Vector3.ZERO,
 		"reach": float(cfg.get("range", -1.0)),
 		"cone": float(cfg.get("cone_degrees", -1.0)),
+		"pattern": cfg.has("pattern_attack_id"),
+		"shape": str(cfg.get("telegraph_shape", "")),
 		"action": int(_manager.get("_action")),
 		"arena_off": _arena_offset(),
 	})
@@ -225,6 +272,8 @@ func _settle_outcome(outcome: String, amount: float) -> void:
 		s["outcome"] = outcome
 		s["damage"] = amount
 		s["gap_at_strike"] = _gap()
+		if _body != null and is_instance_valid(_body) and _body.has_method("combat_config"):
+			s["reach_at_strike"] = float((_body.call("combat_config") as Dictionary).get("range", -1.0))
 		s["moved"] = _ally_pos().distance_to(s.get("ally_at_tell", _ally_pos()))
 		break
 	var own: RefCounted = _manager.call("active_creature")
@@ -275,6 +324,27 @@ func _opponent_label() -> String:
 	if enemy == null:
 		return "?"
 	return "%s_L%d" % [str(enemy.get("species_id")), int(enemy.get("level"))]
+
+
+## Camera-space stick toward the arena's centre while the creature has less
+## than DODGE_ROOM_M of floor behind it before the boundary; zero otherwise.
+func _stick_toward_arena_centre() -> Vector2:
+	var arena := _manager.get("_arena") as Node3D
+	if arena == null or not is_instance_valid(arena) or _camera == null:
+		return Vector2.ZERO
+	var radius := float(arena.get("radius")) if arena.get("radius") != null else -1.0
+	if radius <= 0.0 or _arena_offset() < radius - DODGE_ROOM_M:
+		return Vector2.ZERO
+	var inward := arena.global_position - _ally_pos()
+	inward.y = 0.0
+	if inward.length() < 0.01:
+		return Vector2.ZERO
+	inward = inward.normalized()
+	var right := _camera.global_transform.basis.x
+	right.y = 0.0
+	var forward := -_camera.global_transform.basis.z
+	forward.y = 0.0
+	return Vector2(inward.dot(right.normalized()), -inward.dot(forward.normalized())).normalized()
 
 
 func _arena_offset() -> float:

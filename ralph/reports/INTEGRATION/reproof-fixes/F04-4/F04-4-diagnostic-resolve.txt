@@ -1,0 +1,19 @@
+DBGHIT resolve link=false travelled=false move=rock_throw range=7.47 cone=70 centre_dist=6.16 origin=(8.448555, 7.647773, 7647.726) wild_now=(8.448555, 7.647773, 7647.726)
+DBGHIT resolve link=false travelled=false move=tremor_roll range=7.47 cone=80 centre_dist=10.93 origin=(9.963814, 7.647774, 7647.5) wild_now=(9.963814, 7.647774, 7647.5)
+DBGHIT resolve link=false travelled=false move=rock_throw range=7.47 cone=70 centre_dist=7.08 origin=(9.218764, 7.647774, 7653.078) wild_now=(9.218764, 7.647774, 7653.078)
+DBGHIT resolve link=false travelled=false move=tremor_roll range=7.47 cone=80 centre_dist=8.26 origin=(7.849733, 7.647738, 7653.683) wild_now=(7.849733, 7.647738, 7653.683)
+DBGHIT resolve link=false travelled=false move=rock_throw range=7.47 cone=70 centre_dist=7.12 origin=(7.837811, 7.647773, 7655.25) wild_now=(7.837811, 7.647773, 7655.25)
+DBGHIT resolve link=false travelled=false move=tremor_roll range=7.47 cone=80 centre_dist=7.50 origin=(8.942113, 7.647749, 7654.187) wild_now=(8.942113, 7.647749, 7654.187)
+DBGHIT resolve link=false travelled=false move=rock_throw range=7.47 cone=70 centre_dist=7.03 origin=(10.03031, 7.647761, 7653.925) wild_now=(10.03031, 7.647761, 7653.925)
+DBGHIT resolve link=false travelled=false move=tremor_roll range=7.47 cone=80 centre_dist=6.94 origin=(8.89422, 7.647774, 7655.01) wild_now=(8.89422, 7.647774, 7655.01)
+row warden_aldis opponent=burrowback_L21 strike=1 move=rock_throw tell=0.90s policy=stand outcome=hit damage=48.7 gap_tell=5.90 gap_strike=6.16 moved=0.00 reach=7.47 cone=70 action=1 arena_off=3.91 gap_pre=6.16 foe_moved=0.26 centre_gap_pre=6.16 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=2 move=tremor_roll tell=1.20s policy=dodge outcome=miss damage=0.0 gap_tell=6.36 gap_strike=10.93 moved=4.61 reach=7.47 cone=80 action=0 arena_off=4.15 gap_pre=10.88 foe_moved=0.05 centre_gap_pre=10.88 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=3 move=rock_throw tell=0.90s policy=stand outcome=hit damage=44.0 gap_tell=6.95 gap_strike=7.08 moved=0.00 reach=7.47 cone=70 action=2 arena_off=9.87 gap_pre=7.08 foe_moved=0.13 centre_gap_pre=7.08 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=4 move=tremor_roll tell=1.20s policy=dodge outcome=hit damage=39.0 gap_tell=5.02 gap_strike=8.26 moved=3.28 reach=7.47 cone=80 action=0 arena_off=7.84 gap_pre=8.25 foe_moved=0.05 centre_gap_pre=8.25 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=5 move=rock_throw tell=0.90s policy=stand outcome=hit damage=47.1 gap_tell=6.96 gap_strike=7.12 moved=0.00 reach=7.47 cone=70 action=2 arena_off=11.00 gap_pre=7.12 foe_moved=0.15 centre_gap_pre=7.12 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=6 move=tremor_roll tell=1.20s policy=dodge outcome=hit damage=38.0 gap_tell=4.95 gap_strike=7.50 moved=2.63 reach=7.47 cone=80 action=0 arena_off=8.53 gap_pre=7.50 foe_moved=0.05 centre_gap_pre=7.50 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=7 move=rock_throw tell=0.90s policy=stand outcome=hit damage=42.1 gap_tell=6.95 gap_strike=7.03 moved=0.00 reach=7.47 cone=70 action=1 arena_off=11.00 gap_pre=7.03 foe_moved=0.09 centre_gap_pre=7.03 reach_at_strike=7.47
+row warden_aldis opponent=burrowback_L21 strike=8 move=tremor_roll tell=1.20s policy=dodge outcome=hit damage=44.6 gap_tell=4.98 gap_strike=6.94 moved=2.02 reach=7.47 cone=80 action=0 arena_off=9.15 gap_pre=6.94 foe_moved=0.05 centre_gap_pre=6.94 reach_at_strike=7.47
+PASS warden_aldis: player_hits=15 stand_strikes_landed=4 dodges_avoided=1/4 strikes=8
+PASS: named-fight hit/avoidance witness -- every fight logged a landed player hit, a landed strike held still, and a strike avoided by moving
+exit=0

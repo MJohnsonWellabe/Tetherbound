@@ -21,6 +21,7 @@ const THRESHOLD_RADIUS := 0.25
 const CIRCLE_RADIUS := 1.65
 const CIRCLE_FRAMES := 90
 const CONTACT_EPS := 0.00001 # Numerical comparison only, never a smaller shape.
+const LOW_PROP_RISE := 0.05
 
 class NativeTick extends Node:
 	var navigator: WeakRef
@@ -1496,7 +1497,36 @@ func _production_wall_normals(hit: PhysicsTestMotionResult3D) -> Array[Vector3]:
 		if normal.dot(_body.up_direction) < cos(_body.floor_max_angle) \
 				and horizontal.length_squared() > CONTACT_EPS:
 			walls.append(horizontal.normalized())
+		elif _is_prop_collider(hit.get_collider(index)) \
+				and is_low_prop_climb(point.y - _foot(_body.global_transform), _step_height):
+			# A low prop (a woodpile log, a crate) reads as floor on its rounded
+			# top: production steps up onto it and leaves the floor stepping off
+			# the far side. Steer round it like a wall, away from the contact.
+			var away := Vector3(_body.global_position.x - point.x, 0.0, _body.global_position.z - point.z)
+			if away.length_squared() > CONTACT_EPS:
+				walls.append(away.normalized())
 	return walls
+
+
+## A prop contact rising above the walking foot by more than numerical skin:
+## clutter the controller would climb rather than walk on. Only Props colliders
+## reach this (terrain never does; walkable treads are excluded by meta), so
+## the floor-cone allowance terrain needs does not apply: the trainer_camp
+## campfire stone ring is lower than 0.15 m and was climbed, then stepped off
+## (gate B galewisp, CI render 37239859189). No upper bound: the woodpile's box
+## is exactly STEP_HEIGHT tall. `step_height` must still be a real positive step.
+static func is_low_prop_climb(rise: float, step_height: float) -> bool:
+	return is_finite(rise) and is_finite(step_height) and step_height > 0.0 and rise > LOW_PROP_RISE
+
+
+## Only clutter colliders under the world's authored Props root are steered
+## round this way. Terrain and houses live elsewhere; the Props root also holds
+## walkable trail treads (props.gd marks them `walkable_segment`), which are
+## ground to walk onto, not obstacles.
+func _is_prop_collider(collider: Object) -> bool:
+	var props := _world.get_node_or_null(^"Props") if _world != null else null
+	return props != null and collider is Node and props.is_ancestor_of(collider as Node) \
+		and not bool((collider as Node).get_meta(&"walkable_segment", false))
 
 
 func _production_heading(direction: Vector3) -> Vector3:

@@ -1,5 +1,7 @@
 {
   "_comment": "MEADOWS-VISUAL-PASS round 5. Two camera-centred rings of lit mountain geometry for the Meadows horizon (scripts/world/horizon_ranges.gd): far snowy ranges and nearer forested foothills. Radii keep the back of the far ring inside the gameplay camera's 2000m far plane and the front of the foothills beyond 1500m, past where the corridor's own terrain is still distinct through the fog. Bearings are measured like atan(z, x) of a direction in the XZ plane; 128 degrees puts the hero peak over the spawn outlook toward the north-west. TUNABLE.",
+  "_comment_camera_far": "Draw-distance floor (F26): graphics_prefs presets set the camera far to 320-900 m, which removed both rings and the far plain. The gameplay camera keeps at least this far plane, the scene's own authored value.",
+  "camera_vista_far_floor_m": 2000.0,
   "seed": 20260924,
   "base_y": -40.0,
   "layers": [

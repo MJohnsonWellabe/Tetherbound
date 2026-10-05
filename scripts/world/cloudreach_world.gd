@@ -355,6 +355,13 @@ func _ready() -> void:
 	_config = _read_json(CONFIG_PATH)
 	_visual_config = _read_json(VISUAL_CONFIG_PATH)
 	_visual_config = preload("res://scripts/world/cloudreach_visual_candidate.gd").apply(_visual_config, "visual")
+	# The draw-distance presets put the far plane at 320-900 m, which clipped the
+	# cloud deck (230-330 m under every stand), the distant shelves and the
+	# Aviary sightline out of every Low frame -- the "grey void" below the rims.
+	# `graphics_prefs.apply_camera` keeps this floor on the realm's own camera.
+	var vista_cam := get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	if vista_cam != null and not simulation_only:
+		vista_cam.set_meta(&"vista_far_floor_m", float(_visual_config.get("camera", {}).get("vista_far_floor_m", 0.0)))
 	var look := get_node_or_null(^"WorldLook")
 	if look != null and not simulation_only:
 		var local_look: Dictionary = (look.get("_config") as Dictionary).duplicate(true)

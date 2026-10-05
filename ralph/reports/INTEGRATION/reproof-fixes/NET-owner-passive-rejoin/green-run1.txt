@@ -1,0 +1,30 @@
+PASS: SETUP: peer 0 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 0 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
+PASS: SETUP: peer 1 boots its own Meadows world -- booted world (240 settle frames)
+PASS: SETUP: peer 1 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
+PASS: peer 0 hosts -- hosting udp/29461 as peer 1
+PASS: peer 1 joins -- joined 127.0.0.1:29461 as peer 1506413023 after 28 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: the guest has a character id
+OP first-join guest={"acked":14.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"43c7c2a37bfd47c91cd53ebb1646ad0f","sequence":16.0} host_stream={"departed":false,"error":"","id":"43c7c2a37bfd47c91cd53ebb1646ad0f","peer":1506413023.0,"sequence":17.0}
+PASS: first join: the guest's owner-passive stream is admitted by the host
+PASS: rejoin: guest leaves -- client left cleanly after 0 frames
+PASS: rejoin: host sees the guest gone -- registry reports 1 peer(s) after 6 frames (0.1 s)
+PASS: rejoin: guest rejoins -- joined 127.0.0.1:29461 as peer 2074415006 after 38 frames; snapshot applied; 2 peer(s) in registry
+PASS: rejoin: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: rejoin: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+OP after-rejoin guest={"acked":11.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"5b4cfdf738589b87a50f3b54a34a759e","sequence":16.0} host_stream={"departed":false,"error":"","id":"5b4cfdf738589b87a50f3b54a34a759e","peer":2074415006.0,"sequence":11.0}
+PASS: rejoin: the guest armed a new stream
+PASS: rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)
+PASS: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":11.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"5b4cfdf738589b87a50f3b54a34a759e","sequence":17.0} -> {"acked":95.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"5b4cfdf738589b87a50f3b54a34a759e","sequence":100.0})
+PASS: conflict: guest leaves -- client left cleanly after 0 frames
+PASS: conflict: host sees the guest gone -- registry reports 1 peer(s) after 8 frames (0.3 s)
+PASS: conflict: FIXTURE the guest's live character diverges from the host's admitted one -- owned creature 0 level 8 -> 9 on this peer only
+PASS: conflict: guest rejoins -- joined 127.0.0.1:29461 as peer 1348804614 after 26 frames; snapshot applied; 2 peer(s) in registry
+OP conflict guest={"acked":0.0,"admission_pending":true,"admission_refused":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","armed":true,"error":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","id":"61c67f8299bdf3103ed5da7cfc4956d7","sequence":5.0} host_stream={}
+PASS: conflict: the diverged stream is NOT admitted
+PASS: conflict: the refusal reaches the guest with a reason, not silence ({"acked":0.0,"admission_pending":true,"admission_refused":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","armed":true,"error":"owner_passive_admission_conflict: /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level, /party[0]/distance_m_together, /party[0]/nourishment, /party[0]/happiness","id":"61c67f8299bdf3103ed5da7cfc4956d7","sequence":5.0})
+- peer 0 (host) pid=30669 exited=true unexpected_exit=false
+- peer 1 (client) pid=30670 exited=true unexpected_exit=false
+exit=0 start=2026-10-04T22:15:50Z duration_s=300

@@ -68,6 +68,12 @@ func resolve_entry_position(anchor: Dictionary) -> Vector3:
 func _ready() -> void:
 	_build_started_ms = Time.get_ticks_msec()
 	_config = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+	# F26. graphics_prefs.apply_camera sets the preset draw distance every
+	# frame (320-900 m); the gameplay camera keeps its authored far as floor.
+	if not simulation_only:
+		var camera_cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_camera.json"))
+		(get_node("CameraRig/Camera3D") as Camera3D).set_meta(&"vista_far_floor_m",
+			float((camera_cfg as Dictionary).get("vista_far_floor_m", 0.0)) if camera_cfg is Dictionary else 0.0)
 	var player := local_rig() as CharacterBody3D
 	player.process_mode = Node.PROCESS_MODE_DISABLED
 	if simulation_only:

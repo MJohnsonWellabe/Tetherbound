@@ -4,7 +4,7 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 ## 0. Current integration (coordinator: Claude)
 
-**Main:** `fe7a611ab` (PR #525). Landed: #519/#520/#522 (green-main repairs) and #525. #525 consolidated F17–F20 (village/Hall, portals, chapter reorder, endings), F21 combat impact (weighted knockback, damage numbers, rumble) and F25/F35 VFX. CI for #525 was green except the known-red `verify-gate-b-full-known-red` (`continue-on-error`). PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
+**Main:** PR #530 landed (F32, F17); PR #531 in CI (F26 Low far floor, F17#4, F04#4, guest rejoin, v28 proof save). PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
 
 **Critical path:** F18 portal runtime is OFF (`multiplayer.json session.redesign_portal_runtime_enabled=false`). Travel still uses the legacy biome order, and the F20 credits are not reachable in normal play. Net smokes that need it carry `# requires-flag:` headers and are held off the gate until the flag turns on. Smoke `smoke_net_veridian_relic_key` expects one world key, which conflicts with RD-21 per-participant offers; that is routed to F19.
 
@@ -12,19 +12,26 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 
 **Lanes (five concurrent, file-disjoint, in ROADMAP order):** Claude `tb/f17`, `tb/f21`, `tb/f27`, `tb/f32`; Codex `tb/lookdev` (F26, GPU/native), `tb/creature-art` (F29 Stormursa reference; RD-26/RD-28 Meshy limits) and `tb/visual-*`. Next in order: F18 after F17; F22/F23 after F21; F28/F30 after F27; F31 after F17. Batch landings go through `tb/integration` with full CI, two or three times a day. Lane status lives in evidence receipts, not STATE edits on lane branches.
 
-**Re-proof sweep:** `tb/reproof-retest`, `tb/reproof-earned` and `tb/reproof-captures` re-run stale evidence on current code; verdicts are on those branches under `ralph/reports/INTEGRATION/reproof/` (folded in at landing). FAILs so far, with owners:
-- F01#2 village day-walk stall and F17#4 hammer equip: F17 lane.
-- F01#6 guest tournament strikes on a local stand-in: F21 lane.
-- F02#3/#7 opening walker loses grounded floor, and F03#3 activity smokes: the re-proof sessions.
-- F08#3 Cloudreach production camera: Codex visual.
-- F37#3: docs fixed (ACCEPTANCE S4).
+**Re-proof sweep (retired 2026-10-04):** verdicts stay under `ralph/reports/INTEGRATION/reproof/` on `tb/reproof-*`; open items moved to the owning feature lanes.
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
+
+**Feature status (batch landings):**
+- **F32:** #0, #1, #2, #3 PASS; #5 PASS for 2 characters (4-claimant nightly still open). #4: lexicon and Den sheds PASS; win sheds await F27 patch C. Evidence: ralph/reports/HOMESTEAD/f32/.
+- **F17:** #2, #3, #4 (M1 seed-4 chain, CI render 37232841924; margin fragile) #5 and F01#2 PASS. #6 Bars A/B depend on F26 plus Codex hero assets. Evidence: ralph/reports/HUB/f17/.
+- **Re-proof fixes (#529):** F06#4, F07#1, F08#2 and F03#3 PASS. Batch 531: F04#4 hit/avoid witness passes all four named fights (reach mutant fails 0/4); debug travel refuses unwalkable ground (Crown Arch). Guest rejoin: a rejoined guest's owner-passive stream is re-admitted on the host's recovered authority, a conflicting guest state is refused with the differing paths, and its clocks reset (owner_passive_rejoin smoke green twice).
+- **F26 Low:** every realm camera keeps its authored far plane as a draw-distance floor under every preset (was cut to 320 m); blinded A/B 18 after-better, 0 before-better (ralph/reports/LOOKDEV/f26-low/ab-far-floor/). Labels, Veilfall spray and lure smoke fixes await their verification run.
+- **Fixtures:** `host_meadows_stormwood_route_open` proof save rebuilt at v28 from a declarative spec (`tools/net/build_proof_save.sh`); earned F49 checkpoints stay v27 until F49 regenerates them.
 
 **Owner rulings 2026-10-04:**
 - Visual cards judge High/Medium for the target look and confirm Low/Compatibility for no breakage until the Ally test passes.
 - The second UI check is 1280×720.
 - F36#0 may regenerate NPC faces only as identity-preserving refinements of the installed cast.
+- Pre-camp creature healing (PROGRESSION §6, earned-run finding: 8 potions for 10–12 practice fights, zero slack): Grandpa's house gets one free creature bed using the existing camp `creature_bed` component, so home heals creatures. Meadows ordinary-wild tuning toward COMBAT §7's 15–30% lead cost waits on that bed and an F02#6 re-run.
+- F22#1 reading (coordinator, from COMBAT §7): the band sweep runs each band's ordinary trainer fights; pass needs reader win ≥0.9, masher lead-faint rate ≥0.25 above the reader's, and reader median lead HP cost ≤0.55× the masher's. Wilds keep their own §7 floor.
+- Owner 2026-10-04: ROG Ally test deferred to the owner's own playtest once the game is built; Codex builds no Ally package for now. F26#5 stays owner-blocked; Compatibility stays default.
+- Owner 2026-10-04: lanes restructured. Four Claude feature lanes (now F17, F18, F22, F27), each takes one feature to done (every criterion PASS or BLOCKED with an ask, review passed) before the next in ROADMAP order. Re-proof folds into each lane. The re-proof, fix and extra visual sessions retire as their queues finish. Codex keeps GPU/Meshy.
+- Owner 2026-10-04: CI known-red probes run only on the scheduled full tier and manual dispatch; the multiplayer group skips presentation-only changes (ci.yml `net` output). Delivery plan: 13 eight-hour sprints across five lanes, tracked on the board's Delivery plan tab (ralph/reports/COORDINATOR/dashboard/plan.json). Times are reported in Chicago time.
 - The card-closing F49 run uses no shortcuts.
 
 ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.

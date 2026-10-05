@@ -1,0 +1,33 @@
+PROBE start player=(-300.0, 32.27173, 180.0)
+PROBE debug_teleport_to=true player=(459.0, 56.30209, 2700.0) terrain=54.30 built=nan
+PROBE arrive 0 pos=(459.0, 56.26875, 2700.0) vy=-2.00 floor=false below=/root/Stormwood/Terrain@54.15 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE arrive 1 pos=(459.0, 56.22567, 2700.0) vy=-2.59 floor=false below=/root/Stormwood/Terrain@54.15 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE arrive 2 pos=(459.0, 56.17284, 2700.0) vy=-3.17 floor=false below=/root/Stormwood/Terrain@54.15 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE arrive 10 pos=(459.0, 55.39917, 2700.0) vy=-7.85 floor=false below=/root/Stormwood/Terrain@54.15 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE reseat terrain=54.30 resolved=54.30
+PROBE populate 0 pos=(458.8355, 54.73637, 2700.0) vy=-0.43 floor=false below=/root/Stormwood/Terrain@53.50 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE populate 1 pos=(458.8314, 54.72042, 2700.0) vy=-1.02 floor=false below=/root/Stormwood/Terrain@53.48 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE populate 2 pos=(458.825, 54.6953, 2700.0) vy=-1.60 floor=false below=/root/Stormwood/Terrain@53.46 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE populate 10 pos=(458.691, 54.16428, 2700.0) vy=-6.28 floor=false below=/root/Stormwood/Terrain@52.93 normal=(-0.969582, 0.244728, -0.004308) slope_deg=75.8 max_deg=45.0
+PROBE populate 20 pos=(458.3153, 52.67563, 2700.002) vy=-12.13 floor=false below=/root/Stormwood/Terrain@51.44 normal=(-0.969584, 0.244729, 0.00372) slope_deg=75.8 max_deg=45.0
+PROBE populate 30 pos=(457.7082, 50.27036, 2700.003) vy=-17.98 floor=false below=/root/Stormwood/Terrain@48.87 normal=(-0.976272, 0.216514, 0.003811) slope_deg=77.5 max_deg=45.0
+PROBE populate 40 pos=(456.9509, 46.90941, 2700.003) vy=-23.83 floor=false below=/root/Stormwood/Terrain@45.46 normal=(-0.976272, 0.216514, 0.003811) slope_deg=77.5 max_deg=45.0
+PROBE populate 50 pos=(455.9979, 42.6123, 2700.003) vy=-29.68 floor=false below=/root/Stormwood/Terrain@41.16 normal=(-0.980071, 0.198611, 0.003859) slope_deg=78.5 max_deg=45.0
+PROBE populate 60 pos=(454.8998, 37.35975, 2700.005) vy=-35.53 floor=false below=/root/Stormwood/Terrain@35.74 normal=(-0.980071, 0.198611, 0.003859) slope_deg=78.5 max_deg=45.0
+PROBE populate 70 pos=(453.6427, 31.15603, 2700.009) vy=-41.38 floor=false below=/root/Stormwood/Terrain@29.43 normal=(-0.982256, 0.187504, 0.003894) slope_deg=79.2 max_deg=45.0
+PROBE populate 80 pos=(452.2718, 23.98582, 2700.01) vy=-47.23 floor=false below=/root/Stormwood/Terrain@22.25 normal=(-0.982256, 0.187504, 0.003894) slope_deg=79.2 max_deg=45.0
+PROBE populate 90 pos=(450.7511, 15.86269, 2700.016) vy=-53.08 floor=false below=/root/Stormwood/Terrain@14.05 normal=(-0.9834, 0.181406, 0.003917) slope_deg=79.5 max_deg=45.0
+PROBE populate 100 pos=(449.0825, 6.785974, 2700.012) vy=-58.93 floor=false below=/root/Stormwood/Terrain@4.95 normal=(-0.983757, 0.17946, 0.003926) slope_deg=79.7 max_deg=45.0
+PROBE populate 110 pos=(447.2501, -3.23784, 2700.025) vy=-64.78 floor=false below=/root/Stormwood/Terrain@-5.05 normal=(-0.9834, 0.181406, 0.003938) slope_deg=79.5 max_deg=45.0
+PROBE populate 120 pos=(445.2159, -14.19462, 2700.033) vy=-70.63 floor=false below=/root/Stormwood/Terrain@-15.93 normal=(-0.982256, 0.187504, 0.003949) slope_deg=79.2 max_deg=45.0
+PROBE populate 130 pos=(442.911, -26.05717, 2700.043) vy=-76.48 floor=false below=/root/Stormwood/Terrain@-27.68 normal=(-0.98007, 0.198611, 0.003962) slope_deg=78.5 max_deg=45.0
+PROBE populate 140 pos=(-300.0, 32.27173, 180.0) vy=0.00 floor=true below=/root/Stormwood/Terrain@32.27 normal=(-0.025325, 0.999455, -0.021189) slope_deg=1.9 max_deg=45.0
+PROBE populate 150 pos=(-300.0, 32.27173, 180.0) vy=0.00 floor=true below=/root/Stormwood/Terrain@32.27 normal=(-0.025325, 0.999455, -0.021189) slope_deg=1.9 max_deg=45.0
+PROBE populate 160 pos=(-300.0, 32.27173, 180.0) vy=0.00 floor=true below=/root/Stormwood/Terrain@32.27 normal=(-0.025325, 0.999455, -0.021189) slope_deg=1.9 max_deg=45.0
+PROBE populate 170 pos=(-300.0, 32.27173, 180.0) vy=0.00 floor=true below=/root/Stormwood/Terrain@32.27 normal=(-0.025325, 0.999455, -0.021189) slope_deg=1.9 max_deg=45.0
+PROBE populate 180 pos=(-300.0, 32.27173, 180.0) vy=0.00 floor=true below=/root/Stormwood/Terrain@32.27 normal=(-0.025325, 0.999455, -0.021189) slope_deg=1.9 max_deg=45.0
+PROBE populate 190 pos=(-300.0, 32.27173, 180.0) vy=0.00 floor=true below=/root/Stormwood/Terrain@32.27 normal=(-0.025325, 0.999455, -0.021189) slope_deg=1.9 max_deg=45.0
+PROBE ring r=2 heights(E,NE,N,...)=["61.6", "59.6", "54.3", "48.4", "45.8", "48.4", "54.3", "59.6"]
+PROBE ring r=5 heights(E,NE,N,...)=["69.7", "66.1", "54.1", "38.5", "31.3", "38.5", "54.1", "66.1"]
+PROBE ring r=10 heights(E,NE,N,...)=["74.0", "72.8", "53.5", "19.9", "4.5", "19.9", "53.5", "72.8"]
+PROBE ring r=20 heights(E,NE,N,...)=["74.0", "74.0", "50.9", "-19.9", "-45.3", "-19.9", "50.9", "74.0"]

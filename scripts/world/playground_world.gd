@@ -778,6 +778,14 @@ func _ready() -> void:
 	if perf_cfg.has("collision_stream_interval_s"):
 		COLLISION_STREAM_INTERVAL = maxf(0.05, float(perf_cfg["collision_stream_interval_s"]))
 
+	# F26. graphics_prefs.apply_camera sets the preset draw distance every
+	# frame (320-900 m), which removed the horizon ranges and far plain. The
+	# gameplay camera keeps its authored far plane as that floor.
+	if not simulation_only and _camera != null:
+		var horizon: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadows_horizon.json"))
+		if horizon is Dictionary:
+			_camera.set_meta(&"vista_far_floor_m", float((horizon as Dictionary).get("camera_vista_far_floor_m", 0.0)))
+
 	# RG7. Mid-session Load restores persistent flags into an already-built
 	# Meadows scene; this world owns reconciling its authored one-shot props.
 	add_to_group("progression_restore")
