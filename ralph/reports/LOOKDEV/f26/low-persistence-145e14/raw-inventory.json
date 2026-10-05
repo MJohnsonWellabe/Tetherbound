@@ -408,5 +408,5 @@
       "sha256": "a1cff7581a2877ffecc9f428329b4ad0ab7ad3e6d7d8ae332eac6a9bfcc840ce"
     }
   ],
-  "excluded": "Generated profile cache/.godot directories only. All other original files, including graphics_override.cfg.previous and boot_log.txt, preserved."
+  "excluded": "Only directories literally named cache or .godot omitted; shader_cache/Vulkan caches and all other original files, including graphics_override.cfg.previous and boot_log.txt, are preserved."
 }
