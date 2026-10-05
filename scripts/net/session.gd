@@ -45,7 +45,9 @@ func owner_passive_recording_active() -> bool:
 func record_owner_passive_input(packet: Dictionary) -> void:
 	if _owner_passive != null: _owner_passive.call("record_input", packet)
 
-## Only the existing host landing arbiter's accepted placement calls this.
+## Host-only callers: the landing arbiter's accepted fly placement (exact
+## guest-claimed pose) and an accepted grounded portal/Home Key arrival
+## (foundation_portal_arrival, arrival_endpoint).
 func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
 	if is_host() and _owner_passive != null:
 		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor, arrival_endpoint)

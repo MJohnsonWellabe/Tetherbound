@@ -32,7 +32,8 @@ func test_an_accepted_guest_arrival_confirms_the_travel_reset_at_its_body() -> v
 	assert_eq(session.confirmed[0][0], 7)
 	assert_eq(session.confirmed[0][1], "meadows")
 	# The anchor is the host's live body (global_position needs the scene
-	# tree; smoke_net_f18_travel exercises it end to end).
+	# tree, which this runner lacks; the replay bounds the endpoint by the
+	# live body, test_owner_passive_sync).
 	assert_true(session.confirmed[0][2] is Vector3)
 	assert_true(session.confirmed[0][3], "an arrival-sourced proof")
 	lifecycle.body = null

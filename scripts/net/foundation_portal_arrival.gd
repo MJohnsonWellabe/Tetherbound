@@ -208,10 +208,16 @@ func _process(delta: float) -> void:
 			continue
 		if not _remote_binding(peer, original): continue
 		var journal: Dictionary = session.call("foundation_grounded_arrival", self, original.envelope, original.permit)
-		if journal.get("durable") == true: original.journal_started = true
+		if journal.get("durable") == true:
+			original.journal_started = true
+			# The guest is released once the arrival is durable; mint the reset
+			# proof in this same frame, before any of its next inputs can arrive,
+			# not after the (possibly retried) world save.
+			if original.get("reset_minted") != true:
+				original.reset_minted = true
+				_confirm_travel_reset(session, peer, str(original.permit.realm))
 		if journal.get("ok") != true or journal.get("saved") != true: continue
 		_remote.erase(peer)
-		_confirm_travel_reset(session, peer, str(original.permit.realm))
 		session.call("_portal_reply", peer, original.envelope, {"ok": true, "saved": true, "durable": true,
 			"arrival_applied": true, "arrived": true, "permit_id": original.permit.request_id, "reason": ""})
 

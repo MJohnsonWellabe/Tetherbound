@@ -1201,7 +1201,14 @@ func test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_d
 	assert_true(service._reset_matches(2, stream, reset, context), "an arrival proof matches within the body tolerance")
 	var far: Dictionary = reset.duplicate(true)
 	far.to = [service.body_position.x + 5.0, service.body_position.y, service.body_position.z]
-	assert_false(service._reset_matches(2, stream, far, context), "outside the tolerance the owner cannot move the endpoint")
+	assert_false(service._reset_matches(2, stream, far, context), "away from the live host body the owner cannot move the endpoint")
+	# The replica moved on (the guest walked after arriving): the live body,
+	# not the minted anchor, bounds the endpoint.
+	var walked_on := context.duplicate()
+	walked_on.initial_position = Vector3(guest_at[0], guest_at[1], guest_at[2]) + Vector3(3.0, 0, 0)
+	var moved: Dictionary = reset.duplicate(true)
+	moved.to = [guest_at[0] + 3.0, guest_at[1], guest_at[2]]
+	assert_true(service._reset_matches(2, stream, moved, walked_on), "a stale mint-time anchor does not refuse a guest that kept walking")
 	var walking: Dictionary = reset.duplicate(true)
 	walking.travel_valid = true
 	assert_false(service._reset_matches(2, stream, walking, context), "ordinary walking keeps its speed and distance rules")
