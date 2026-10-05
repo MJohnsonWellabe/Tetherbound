@@ -21,6 +21,7 @@ extends Node3D
 ## RG10 (owner directive, superseding R2.3's glint entirely): no marker sits
 ## on this either. The pile/mound IS the affordance.
 
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const HARVEST_LOGIC := preload("res://scripts/world/harvest_logic.gd")
@@ -91,6 +92,8 @@ func setup(spec: Dictionary) -> void:
 	_amount = int(spec.get("amount", 1))
 	_felled_key = str(spec.get("felled_key", ""))
 	_realm_id = str(spec.get("realm", "meadows"))
+	if not _felled_key.is_empty():
+		PICKUP_SPECS.register(flag_id(_realm_id, _felled_key), _item_id, _amount)
 
 	_prompt = INTERACTABLE.new()
 	_prompt.name = "Interactable"

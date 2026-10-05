@@ -117,6 +117,24 @@ func activate(id: String, progression: RefCounted) -> bool:
 	return true
 
 
+## F31#2 / RD-20: in the redesign a power is selectable once its relic is
+## HUNG by this character (portable `redesign_character.relics_hung`, written
+## only by the host's relic_hang transaction), not once a world socket holds
+## it. Still exactly one active; a new choice replaces the old in one write.
+static func hung_allows(id: String, relics_hung: Array) -> bool:
+	return relics_hung.has(BIOME_ORDER.canonical_id(id))
+
+
+func activate_hung(id: String, relics_hung: Array) -> bool:
+	if heart(id).is_empty() or not hung_allows(id, relics_hung):
+		return false
+	if _active_id == id:
+		return true
+	_active_id = id
+	revision += 1
+	return true
+
+
 func clear_active() -> void:
 	if _active_id == "":
 		return
