@@ -8195,6 +8195,11 @@ func _meadows_opening_state() -> Dictionary:
 	var name_prompt: Variant = director.get("_name_prompt")
 	out["sequence_present"] = true
 	out["beat"] = str(director.get("_beat"))
+	# F01#6a diagnostics: a held starter commit or Home Key grant keeps the
+	# opening modal (the arbiter off), which reads as "the press did nothing".
+	out["owns_input"] = bool(director.call("owns_input")) if director.has_method("owns_input") else false
+	out["starter_commit_pending"] = not (director.get("_pending_starter_adoption") as Dictionary).is_empty() \
+		if director.get("_pending_starter_adoption") is Dictionary else false
 	out["bed_prompt"] = _opening_position(bed_prompt)
 	out["grandpa_prompt"] = _opening_position(grandpa_prompt)
 	var opening_player: Variant = director.get("_player")

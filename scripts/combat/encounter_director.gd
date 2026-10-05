@@ -5696,16 +5696,66 @@ func _engageable() -> Node3D:
 	if bool(_manager.call("is_fighting")) or trainer_battle_active():
 		return null
 
-	var best: Node3D = null
-	var best_distance := _engage_range
+	var candidates: Array = []
 	for wild in _wild_creatures:
 		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 			continue
-		var distance := _player.global_position.distance_to(wild.global_position)
+		candidates.append({
+			"body": wild,
+			"distance": _player.global_position.distance_to(wild.global_position),
+			"species": str(wild.get("species_id")),
+		})
+	return choose_engage_target(candidates, _engage_range, _practice_engage_species)
+
+
+## F01#4. The opening's practice fight belongs to its practice creature.
+##
+## Without this the engage offer is simply the nearest live wild in range, and
+## an ordinary `meadows_open` Mudsnout wandering nearer the Practice Meadow road
+## end than the practice Bramblebun took the tutorial fight from it
+## (`ralph/reports/INTEGRATION/reproof/f01-current/row4-5/VERDICT.md`, terrapup
+## run 1: "Engage Mudsnout" at 2.56 m). `sequence_director.gd` names the
+## species while the opening's own beats want that fight
+## (`opening.json` `encounter.practice_engage_priority_beats`) and clears it
+## afterwards, so nothing here outlives the tutorial. Empty means no priority.
+var _practice_engage_species := ""
+
+
+func set_practice_engage_priority(species_id: String) -> void:
+	_practice_engage_species = species_id
+
+
+func practice_engage_priority() -> String:
+	return _practice_engage_species
+
+
+## Which candidate the engage offer names. Pure so the rule is testable without
+## a scene: each candidate is `{body, distance, species}`, already filtered to
+## live, visible bodies. The nearest one within `engage_range` wins, except that
+## while `priority_species` is set any in-range body of that species wins over
+## a nearer body of another species. A priority creature that is out of range,
+## fainted or caught does not block the ordinary nearest choice, so the player
+## is never left with nothing to engage.
+static func choose_engage_target(candidates: Array, engage_range: float,
+		priority_species: String) -> Node3D:
+	var best: Node3D = null
+	var best_distance := engage_range
+	var preferred: Node3D = null
+	var preferred_distance := engage_range
+	for raw: Variant in candidates:
+		var candidate: Dictionary = raw
+		var distance := float(candidate.get("distance", INF))
+		var body: Node3D = candidate.get("body") as Node3D
+		if body == null or distance > engage_range:
+			continue
 		if distance <= best_distance:
-			best = wild
+			best = body
 			best_distance = distance
-	return best
+		if priority_species != "" and str(candidate.get("species", "")) == priority_species \
+				and distance <= preferred_distance:
+			preferred = body
+			preferred_distance = distance
+	return preferred if preferred != null else best
 
 
 func _update_prompt() -> void:
