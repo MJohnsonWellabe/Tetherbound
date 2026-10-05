@@ -41,6 +41,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return _owner_passive_probe(args)
 	if action == "relic_power_attempt":
 		return await _relic_power_attempt(args)
+	if action == "craft_home_key_trip":
+		return await _craft_home_key_trip()
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -642,3 +644,23 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 		"runtime_ready": bool(session.call("portal_runtime_ready")), "result": verdict,
 		"local_active": str(game.get("realm_hearts").call("active_id"))}}
 
+
+
+## F18 travel-reset coverage on the craft path: this guest takes one real Home
+## Key trip home (production Satchel Use, f49_portal_travel) and arrives before
+## its owner-gated craft. Portals off (shipping until F18): skipped, with the
+## reason returned. Disclosed fixture when on: one home_key and its given flag.
+func _craft_home_key_trip() -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	if not bool(session.call("portal_runtime_ready")):
+		return {"verdict": "PASS", "detail": "skipped: the portal runtime is off in this build (redesign_portal_runtime_enabled)",
+			"data": {"skipped": true}}
+	var inventory: RefCounted = game.get("inventory")
+	if int(inventory.call("count", "home_key")) == 0 and int(inventory.call("add", "home_key", 1)) != 0:
+		return {"verdict": "FAIL", "detail": "could not install the disclosed home_key fixture"}
+	game.get("local").get("flags").call("set_flag", "home_key_given", true)
+	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, game)
+	var ok: bool = await travel.home_key()
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest Home Key trip home and arrival" if ok else str(travel.failures),
+		"data": {"skipped": false, "realm": str(game.get("current_realm"))}}
