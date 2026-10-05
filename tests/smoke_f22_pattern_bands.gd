@@ -25,6 +25,9 @@ var _seeds := 12
 var _selection := ""
 var _json := ""
 var _trainers := false
+## --named=<trainer id,...> (F22#4): those named trainers only, each with its
+## authored F22 pattern row, judged on COMBAT §7's top-trainer bar.
+var _named: PackedStringArray = []
 
 
 func _init() -> void:
@@ -33,6 +36,9 @@ func _init() -> void:
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
 		elif arg == "--trainers": _trainers = true
+		elif arg.begins_with("--named="):
+			_named = arg.trim_prefix("--named=").split(",", false)
+			_trainers = true
 	_run.call_deferred()
 
 
@@ -101,9 +107,11 @@ func _trainer_rosters(patterns: Dictionary) -> Dictionary:
 		named[str(patterns.named[id].get("encounter_id", ""))] = true
 	var out := {}
 	var add := func(band: String, id: String, rank: String, team: Array) -> void:
-		if named.has(id) or BOSS_RANKS.has(rank) or team.is_empty(): return
+		if team.is_empty(): return
+		if _named.is_empty() and (named.has(id) or BOSS_RANKS.has(rank)): return
+		if not _named.is_empty() and not _named.has(id): return
 		if not out.has(band): out[band] = []
-		(out[band] as Array).append(team)
+		(out[band] as Array).append({"id": id, "team": team})
 	for dir: String in DirAccess.get_directories_at("res://data/config/bands"):
 		for row: Dictionary in _read("data/config/bands/%s/trainers.json" % dir).get("trainers", []):
 			add.call(dir, str(row.id), str(row.get("rank", "")), row.get("team", []))
@@ -166,8 +174,9 @@ func _run() -> void:
 						var foes: Array = []
 						if _trainers:
 							var teams: Array = rosters[entry.id]
-							var team: Array = teams[seed_index % teams.size()]
-							sid = str(seed_index % teams.size())
+							var pick: Dictionary = teams[seed_index % teams.size()]
+							var team: Array = pick.team
+							sid = str(pick.id)
 							for member: Dictionary in team:
 								var built: RefCounted = TRAINERS.creature_for(member)
 								if built != null: foes.append(built)
@@ -181,8 +190,11 @@ func _run() -> void:
 							errors.append("missing actual species in " + str(entry.id))
 							continue
 						var pilot := PILOT.new()
-						pilot.context = {"chapter": entry.chapter, "band": entry.id, "floor_trainer": _trainers,
+						pilot.context = {"chapter": entry.chapter, "band": entry.id,
+							"floor_trainer": _trainers and _named.is_empty(),
 							"after_south_bridge": bool(entry.get("after_south_bridge", true))}
+						if not _named.is_empty() and (patterns.get("named", {}) as Dictionary).has("named_" + sid):
+							pilot.context["pattern_id"] = "named_" + sid
 						var result: Dictionary = await pilot.fight(self, party, foes, _trainers,
 							hash("f22/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
 						result["lead_fainted"] = bool(party[0].get("fainted"))
@@ -202,6 +214,15 @@ func _run() -> void:
 				# Trainer mode applies the coordinator's three-part F22#1 bar to
 				# the COMBAT §7 reader, which switches on a real mismatch.
 				var judged: Dictionary = switch_reader if _trainers else reader
+				if not _named.is_empty():
+					# COMBAT §7 top trainer: reader win >= .75, masher loses its lead
+					# every run, reader median party cost <= .55x masher's.
+					if float(judged.win_rate) < 0.75: reasons.append("top: reader win below .75")
+					if float(masher.lead_faint_rate) < 1.0: reasons.append("top: masher kept its lead in some run")
+					if float(judged.median_cost) > float(masher.median_cost) * 0.55: reasons.append("top: reader party cost above .55x masher")
+					rows.append({"band": entry.id, "starter": starter, "masher": masher,
+						"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
+					continue
 				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
 				if float(masher.lead_faint_rate) - float(judged.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
