@@ -24,9 +24,12 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var out := ""
+	var only: PackedStringArray = []
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="):
 			out = argument.substr("--capture-dir=".length())
+		elif argument.begins_with("--stands="): # Optional comma list, to finish a cut-off run.
+			only = argument.substr("--stands=".length()).split(",")
 	if DisplayServer.get_name() == "headless" or out.is_empty():
 		print("F31 stations capture FAIL: native renderer and --capture-dir required")
 		quit(2)
@@ -54,8 +57,10 @@ func _run() -> void:
 	var look := world.get_node("WorldLook")
 	look.call("set_clock_frozen", true)
 	var mid := ORIGIN + Vector3(SPACING * (ROW.size() - 1) * 0.5, 0, 0)
-	var stands := {"row": [mid + Vector3(3.0, 1.2, 10.5), mid + Vector3(3.0, 0, 0)], "forge_kitchen": [ORIGIN + Vector3(10.0, 1.2, 5.5), ORIGIN + Vector3(10.0, 0, 0)], "altar": [ORIGIN + Vector3(18.5, 1.2, 4.5), ORIGIN + Vector3(18.5, 0, 0)], "den": [ORIGIN + Vector3(2.8, 1.2, 6.0), ORIGIN + Vector3(2.8, 0, 0)], "farm": [ORIGIN + Vector3(22.0, 1.2, 3.0), ORIGIN + Vector3(22.0, 0, 0)]}
+	var stands := {"row": [mid + Vector3(3.0, 1.2, 10.5), mid + Vector3(3.0, 0, 0)], "forge_kitchen": [ORIGIN + Vector3(10.0, 1.2, 5.5), ORIGIN + Vector3(10.0, 0, 0)], "altar": [ORIGIN + Vector3(18.5, 1.2, 4.5), ORIGIN + Vector3(18.5, 0, 0)], "den": [ORIGIN + Vector3(2.8, 1.2, 6.0), ORIGIN + Vector3(2.8, 0, 0)], "workbench": [ORIGIN + Vector3(4.0, 1.2, 4.5), ORIGIN + Vector3(4.0, 0, 0)], "farm": [ORIGIN + Vector3(22.0, 1.2, 3.0), ORIGIN + Vector3(22.0, 0, 0)]}
 	for stand: String in stands:
+		if not only.is_empty() and not only.has(stand):
+			continue
 		var at: Vector3 = stands[stand][0]
 		var aim: Vector3 = stands[stand][1]
 		player.global_position = Vector3(at.x, float(world.call("ground_height_at", at.x, at.z)) + 0.9, at.z)

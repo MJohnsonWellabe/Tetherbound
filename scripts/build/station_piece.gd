@@ -31,8 +31,21 @@ func build(id: String, ghost: bool = false) -> void:
 	else:
 		match id:
 			"workbench":
-				if ghost: # Placed, the kit Workbench (DRESSING) is the whole visual.
+				if ghost: # Placed, the kit Workbench (DRESSING) is the base.
 					_table(2.0,1.2); _box(Vector3(1.6,0.18,0.16),Vector3(0,1.2,-0.4),Color("8c6b46"))
+				else:
+					# Tool wall behind the bench (kit rack and tools in DRESSING), a
+					# vice, plank offcuts and a half-built crate on the top, so it never
+					# reads as a bare (kitchen) table.
+					for x: float in [-0.95,0.95]: _box(Vector3(0.1,1.9,0.1),Vector3(x,0.95,-0.52),Color("5b4632"))
+					_box(Vector3(2.0,0.9,0.06),Vector3(0,1.45,-0.52),Color("7a5a3a"))
+					_box(Vector3(0.2,0.16,0.24),Vector3(0.78,0.97,0.32),Color("6d6f73"))
+					_box(Vector3(0.06,0.1,0.3),Vector3(0.78,1.1,0.32),Color("8d8f93"))
+					_cylinder(0.025,0.3,Vector3(0.78,0.97,0.55),Color("8d8f93")).rotation.x = deg_to_rad(90.0)
+					for i in 3: _box(Vector3(0.95,0.04,0.16),Vector3(-0.35,0.91+i*0.04,0.18),Color("c79a62")).rotation.y = deg_to_rad(-8.0+i*6.0)
+					_box(Vector3(0.5,0.04,0.4),Vector3(0.15,0.91,-0.15),Color("b88a52"))
+					for side: float in [-1.0,1.0]: _box(Vector3(0.5,0.28,0.04),Vector3(0.15,1.07,-0.15+side*0.18),Color("c79a62"))
+					_box(Vector3(0.04,0.28,0.4),Vector3(-0.08,1.07,-0.15),Color("c79a62"))
 			"forge":
 				# Dark stone furnace and chimney with a lit firebox (reads at night).
 				_box(Vector3(1.8,1.4,1.4),Vector3(0,0.7,0),Color("57534f"))
@@ -57,6 +70,17 @@ func build(id: String, ghost: bool = false) -> void:
 				_box(Vector3(0.56,0.12,0.56),Vector3(0,1.18,0),Color("c3b892"))
 				_cylinder(0.12,0.34,Vector3(0,1.42,0),Color("6fe3d6"),2.2)
 				_glow(Vector3(0,1.5,0),Color("7ff0e2"))
+				# Its own identity: a carved glowing creature-sigil ring on the
+				# pillar, a deep-blue offering cloth with gold trim (never red) and
+				# an offering bowl at its foot (DRESSING).
+				_cylinder(0.13,0.03,Vector3(0,0.78,0.245),Color("6fe3d6"),1.6).rotation.x = deg_to_rad(90.0)
+				_cylinder(0.07,0.035,Vector3(0,0.78,0.25),Color("a9a79e")).rotation.x = deg_to_rad(90.0)
+				_box(Vector3(0.46,0.42,0.02),Vector3(0,1.0,0.29),Color("2f4f86"))
+				_box(Vector3(0.46,0.05,0.025),Vector3(0,0.8,0.29),Color("d8b24a"))
+				_box(Vector3(0.6,0.03,0.6),Vector3(0,1.255,0),Color("2f4f86"))
+				var offering := SphereMesh.new()
+				offering.radius = 0.09; offering.height = 0.18
+				_shape(offering,Vector3(0,0.2,0.78),Color("e8b04a"),1.2)
 			"den":
 				# Creature hutch: low and wide (not a house), thatched roof (never red:
 				# reserved for Team Tether), a recessed arched doorway at creature
@@ -225,12 +249,15 @@ func _build_attachment(def: Dictionary) -> void:
 ## and shelf at the kitchen, the kit workbench, food and water at the den). Visual only: no collider
 ## (the station's own box keeps footprint and prompt); never on the ghost.
 const DRESSING := {
-	"workbench": [["Workbench", Vector3(0, 0, 0.05), 0.0]],
+	"workbench": [["Workbench", Vector3(0, 0, 0.05), 0.0], ["Peg_Rack", Vector3(0, 1.72, -0.48), 0.0],
+		["Axe_Bronze", Vector3(-0.5, 1.3, -0.46), 0.0], ["Pickaxe_Bronze", Vector3(0.5, 1.4, -0.45), 0.0],
+		["Whetstone", Vector3(1.55, 0, 0.35), -20.0], ["Crate_Wooden", Vector3(-1.55, 0, 0.35), 15.0]],
 	"forge": [["Anvil_Log", Vector3(-0.35, 0, 1.25), 15.0], ["Bucket_Metal", Vector3(0.75, 0, 1.0), 0.0]],
 	"kitchen": [["Cauldron", Vector3(0.95, 0.36, 0.1), 0.0], ["Shelf_Simple", Vector3(-0.15, 0, -0.75), 0.0]],
 	"den": [["Bucket_Wooden_1", Vector3(1.0, 0, 1.75), 0.0], ["Pot_1", Vector3(1.45, 0, 1.85), 0.0],
 		["Barrel_Apples", Vector3(-2.3, 0, 1.0), 15.0]],
-	"altar": [["CandleStick_Stand", Vector3(-0.75, 0, 0.3), 0.0], ["CandleStick_Stand", Vector3(0.75, 0, 0.3), 0.0]],
+	"altar": [["CandleStick_Stand", Vector3(-0.75, 0, 0.3), 0.0], ["CandleStick_Stand", Vector3(0.75, 0, 0.3), 0.0],
+		["Pot_1", Vector3(0, 0, 0.78), 0.0]],
 	"farm": [["FarmCrate_Apple", Vector3(1.15, 0, 0.5), 15.0]],
 }
 const PROPS_DIR := "res://assets/props/quaternius_fantasy/"
