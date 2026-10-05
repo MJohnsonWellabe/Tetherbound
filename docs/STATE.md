@@ -65,6 +65,7 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 9. **Design defaults:** every CODEX_START_HERE §8.1 default is owner-confirmed.
 10. **Controller map** and 11. **home arch:** settled; see §0 owner rulings 2026-10-05.
 12. **Repo size:** approved. Existing `ralph/reports` images move to a GitHub release archive with links preserved, and new evidence images go to CI artifacts. Text evidence stays, and history is not rewritten.
+13. **Hazard terrain (F33#3, RD-14):** Stormwood's charged ground deals light contact damage to the trainer only. It never hurts creatures and is never lethal on the ordinary route. Rootiron and Stormglass trainer gear reduce it. Tidewake submersion stays drowning-only (coordinator).
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 
