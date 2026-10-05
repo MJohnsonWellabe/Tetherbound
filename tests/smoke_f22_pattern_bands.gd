@@ -235,12 +235,22 @@ func _run() -> void:
 					continue
 				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
-				if float(masher.lead_faint_rate) - float(judged.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
+				var gap := float(masher.lead_faint_rate) - float(judged.lead_faint_rate)
+				var context: Array[String] = []
+				if _trainers:
+					# Coordinator ruling 2026-10-05: "materially more often" is
+					# measured in the COMBAT §7 floor-trainer form in every chapter
+					# (reader median lead HP cost <= .55x the masher's, reader win
+					# >= .9). The lead-faint gap is still reported, as context.
+					if float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
+						reasons.append("reader median lead cost above .55x masher")
+					if gap < float(proof.get("masher_lead_faint_gap_min", 0.25)):
+						context.append("lead-faint gap %.2f < %.2f (context only)" % [gap, float(proof.get("masher_lead_faint_gap_min", 0.25))])
+				elif gap < float(proof.get("masher_lead_faint_gap_min", 0.25)):
 					reasons.append("masher lead losses insufficiently different")
-				if _trainers and float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
-					reasons.append("reader median lead cost above .55x masher")
 				rows.append({"band": entry.id, "starter": starter, "masher": masher,
-					"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
+					"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons,
+					"lead_faint_gap": gap, "context": context})
 	if rows.is_empty(): errors.append("no valid band cohort completed")
 	if not gaps.is_empty(): print("F22_PATTERN_BANDS data gaps (no ordinary trainer roster): " + ", ".join(gaps))
 	var passed := errors.is_empty()
