@@ -2817,9 +2817,10 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Eighteen shards, longest-processing-time first on MEASURED durations
-    # (tools/ci/net_shards.py: the slowest of three green full runs per
-    # smoke), so the longest shard's job stays under ~13 minutes. The
+    # Eighteen shards: seventeen longest-processing-time first on MEASURED
+    # durations (tools/ci/net_shards.py: the slowest of three green full runs
+    # per smoke), so the longest shard's job stays under ~13 minutes, then
+    # split_realms alone (a hang cannot take other smokes down with it). The
     # original 30-minute job limit stays. Each shard discovers the smokes
     # itself, so this matrix needs only `changes` and queues in the FIRST
     # wave rather than behind discover-net-smokes (it used to wait ~6 min for

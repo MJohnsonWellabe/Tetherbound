@@ -34,7 +34,7 @@ class Cover(unittest.TestCase):
             N.check_cover(files("a"), [files("a"), files("z")])
 
     def test_unmeasured_smokes_are_planned_as_the_slowest(self):
-        shards = N.plan(files("never_measured", "fly"), shard_count=2)
+        shards = N.plan(files("never_measured", "fly"), shard_count=2, isolated=())
         self.assertEqual(sorted(load for _, load in shards), [N.MEASURED_SECONDS["fly"], N.UNMEASURED_SECONDS])
 
 
@@ -54,6 +54,12 @@ class RealRepository(unittest.TestCase):
     def test_every_discovered_smoke_is_measured_and_every_shard_fits_the_budget(self):
         self.assertEqual([p for p in self.files if N.smoke_name(p) not in N.MEASURED_SECONDS], [])
         self.assertLessEqual(max(load for _, load in N.plan(self.files)), N.SHARD_SMOKE_BUDGET_SECONDS)
+
+    def test_isolated_smokes_run_alone(self):
+        shards = N.plan(self.files)
+        for name in N.ISOLATED:
+            group = next(g for g, _ in shards if any(N.smoke_name(p) == name for p in g))
+            self.assertEqual([N.smoke_name(p) for p in group], [name])
 
     def test_ci_matrix_matches_shard_count(self):
         block = CI[CI.index("  verify-multiplayer-shard:\n"):]

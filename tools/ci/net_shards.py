@@ -92,6 +92,11 @@ MEASURED_SECONDS = {
     "water_swim_stone_late_join": 74,
     "water_swimming": 95,
 }
+# Each alone on the LAST shard(s), so a hang cannot take a shard's other
+# smokes down with it at the 30-minute job limit: split_realms once ran 24+
+# minutes and was cancelled with the smokes queued behind it
+# (ralph/reports/FOUR-BIOME-BUILD/ci-shard-balance/REPORT.md).
+ISOLATED = ("split_realms",)
 # An unmeasured smoke is planned as the slowest measured one until measured.
 UNMEASURED_SECONDS = max(MEASURED_SECONDS.values())
 
@@ -170,15 +175,26 @@ def weight(path):
     return MEASURED_SECONDS.get(smoke_name(path), UNMEASURED_SECONDS)
 
 
-def plan(files, shard_count=SHARD_COUNT):
-    """[(files, seconds)] per shard: longest first onto the lightest shard."""
-    bins = [[] for _ in range(shard_count)]
-    loads = [0] * shard_count
-    for path in sorted(files, key=lambda p: (-weight(p), p)):
-        i = min(range(shard_count), key=lambda i: (loads[i], i))
+def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED):
+    """[(files, seconds)] per shard: each ISOLATED smoke alone on the last
+    shards, the rest longest first onto the lightest ordinary shard."""
+    alone = [p for p in files if smoke_name(p) in isolated]
+    if len(alone) != len(isolated):
+        raise PlanError("isolated net smokes not discovered: %s"
+                        % sorted(set(isolated) - {smoke_name(p) for p in alone}))
+    ordinary = shard_count - len(alone)
+    if ordinary < 1:
+        raise PlanError("no ordinary shard left beside %d isolated" % len(alone))
+    bins = [[] for _ in range(ordinary)] + [[p] for p in sorted(alone)]
+    loads = [0] * ordinary + [weight(p) for p in sorted(alone)]
+    for path in sorted((p for p in files if p not in alone), key=lambda p: (-weight(p), p)):
+        i = min(range(ordinary), key=lambda i: (loads[i], i))
         bins[i].append(path)
         loads[i] += weight(path)
     check_cover(files, bins)
+    for group in bins[ordinary:]:
+        if len(group) != 1:
+            raise PlanError("%s must be the only smoke on its shard" % group)
     return list(zip(bins, loads))
 
 
