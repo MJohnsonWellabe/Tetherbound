@@ -1,0 +1,125 @@
+{
+  "method": "Read-only original pixel statistics; sRGB weighted luma, not physical luminance. No image editing/resizing. Same ROI, identical poses within first travel block independently confirmed. Exposure/weather/local-lights effects not isolated.",
+  "rows": [
+    {
+      "image": "0000-travel-day-clear-medium.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        161.8776,
+        152.986575,
+        127.5083625
+      ],
+      "weighted_srgb_luma_0_255": 153.0372799725
+    },
+    {
+      "image": "0002-travel-night-clear-medium.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        152.7370125,
+        134.344675,
+        133.345975
+      ],
+      "weighted_srgb_luma_0_255": 138.18277981249997
+    },
+    {
+      "image": "0004-travel-day-rain-medium.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        137.8057625,
+        122.9191625,
+        94.912425
+      ],
+      "weighted_srgb_luma_0_255": 124.0619672125
+    },
+    {
+      "image": "0006-travel-night-rain-medium.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        172.353775,
+        158.27425,
+        134.14495
+      ],
+      "weighted_srgb_luma_0_255": 159.525421555
+    },
+    {
+      "image": "0001-travel-day-clear-high.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        160.4108125,
+        151.081475,
+        125.30025
+      ],
+      "weighted_srgb_luma_0_255": 151.2034877075
+    },
+    {
+      "image": "0003-travel-night-clear-high.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        152.5092625,
+        133.73675,
+        131.7815875
+      ],
+      "weighted_srgb_luma_0_255": 137.586623425
+    },
+    {
+      "image": "0005-travel-day-rain-high.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        136.7867625,
+        121.5117625,
+        93.31195
+      ],
+      "weighted_srgb_luma_0_255": 122.72320103749999
+    },
+    {
+      "image": "0007-travel-night-rain-high.png",
+      "roi_xyxy": [
+        150,
+        90,
+        650,
+        250
+      ],
+      "mean_srgb_rgb_0_255": [
+        171.5307,
+        157.0271625,
+        132.5203125
+      ],
+      "weighted_srgb_luma_0_255": 158.3412200025
+    }
+  ]
+}
