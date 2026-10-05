@@ -214,6 +214,8 @@ var _strike_transaction: RefCounted
 var _f22_enemy_staggers := 0
 ## F22 forced-break smoke: host strike verdicts that triggered a break.
 var _f22_host_breaks := 0
+## The last live snapshot the pin saw, reported if the fight later vanishes.
+var _f22_last_seen := {}
 var _strike_observed_director: Node
 var _role := ""
 var _peer_index := -1
@@ -4904,15 +4906,19 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
 	var body: Node3D = runtime.call("body") as Node3D if runtime != null and is_instance_valid(runtime) else null
 	if body == null or not is_instance_valid(body):
-		var gone: Dictionary = (director.get("_encounter_host") as RefCounted).call("record", encounter_id) if director.get("_encounter_host") != null else {}
-		return {"verdict": "FAIL", "detail": "no live shared wild body to pin in %s (phase=%s hp=%s outcome=%s keys=%s)" % [encounter_id,
-			str(gone.get("phase", "")), str((gone.get("opponent", {}) as Dictionary).get("hp", "")),
-			str(gone.get("outcome", gone.get("result", ""))), str((director.get("_shared_host_fights") as Dictionary).keys())]}
+		return {"verdict": "FAIL", "detail": "no live shared wild body to pin in %s; last seen %s" % [encounter_id, str(_f22_last_seen)]}
 	if not director.has_meta("f22_break_watch"):
 		director.set_meta("f22_break_watch", true)
 		director.connect("host_strike_finished", func(_intent: Dictionary, _peer: int, verdict: Dictionary) -> void:
 			if bool((verdict.get("delta", {}) as Dictionary).get("stagger_triggered", false)):
 				_f22_host_breaks += 1)
+	var seen_rec: Dictionary = (director.get("_encounter_host") as RefCounted).call("record", encounter_id)
+	var cards := {}
+	for peer: Variant in (seen_rec.get("participants", {}) as Dictionary).keys():
+		cards[str(peer)] = float((director.call("_creature_card_for", int(peer)) as Dictionary).get("hp", -1.0))
+	_f22_last_seen = {"t": Time.get_ticks_msec(), "phase": str(seen_rec.get("phase", "")),
+		"hp": float((seen_rec.get("opponent", {}) as Dictionary).get("hp", -1.0)), "cards": cards,
+		"intent": int(body.get("_intent")), "staggered": bool(body.get("_staggered"))}
 	if not bool(args.get("read_only", false)):
 		body.set("_synced_poise_max", 1000000.0)
 		body.set("_poise", 1000000.0)
