@@ -67,7 +67,5 @@
   "altar_runtime_enabled": true,
   "altar_remote_spend_enabled": true,
   "altar_building_runtime_enabled": true,
-  "wild_victory_runtime_enabled": true,
-  "ordinary_release_payout_enabled": true,
-  "_scope_ordinary_release_payout_enabled": "F27#1 release payout for the ordinary catch-overflow ceremony on the solo/host owner (scripts/net/essence_release_service.gd -> essence_release character action). Guests keep the legacy unpaid release until ordinary catches are host-typed."
+  "wild_victory_runtime_enabled": true
 }

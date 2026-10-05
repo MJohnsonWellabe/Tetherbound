@@ -924,8 +924,6 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_stormwood_hosted_quick(args)
 		"stormwood_hosted_deadline_window":
 			out = await _step_stormwood_hosted_deadline_window(args)
-		_ when action.begins_with("f27_"):
-			out = await preload("res://tools/net/f27_essence_steps.gd").run(self, action, args)
 		_:
 			out = {"verdict": "ERROR", "detail": "unknown action '%s'" % action}
 	out["frames_used"] = _physics_count - before

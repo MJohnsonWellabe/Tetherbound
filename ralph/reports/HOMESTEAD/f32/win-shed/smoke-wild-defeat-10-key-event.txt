@@ -1,5 +1,0 @@
-DISCLOSED FIXTURE: combat.json actor_vitals.runtime_enabled forced true in memory (shipped: false)
-before: essence { "essence_ground": 0, "essence_water": 0, "essence_air": 0, "essence_electric": 0, "essence_fire": 0, "essence_dark": 0, "essence_ice": 0, "essence_psychic": 0 }, receipts 0, ally L3 xp 0
-after: foe bramblebun L2 types ["ground"], essence gained { "essence_ground": 1 }
-ally L3 xp 0 -> L3 xp 21
-F27_WILD_DEFEAT_ESSENCE: PASS real wild fight paid { "essence_ground": 1 } and reduced XP via the host transaction
