@@ -111,7 +111,9 @@ MEASURED_SECONDS = {
 # (ralph/reports/FOUR-BIOME-BUILD/ci-shard-balance/REPORT.md).
 ISOLATED = ("split_realms", "f20_ending")
 # An unmeasured smoke is planned as the slowest measured one until measured.
-UNMEASURED_SECONDS = max(MEASURED_SECONDS.values())
+# Isolated smokes run alone, so their (possibly lower-bound) times are not a
+# guide for an ordinary smoke.
+UNMEASURED_SECONDS = max(v for k, v in MEASURED_SECONDS.items() if k not in ISOLATED)
 
 # The floor is the TRUE count of files declaring the header, regenerated from
 # the files on disk at every landing, never incremented from a lane's guess:

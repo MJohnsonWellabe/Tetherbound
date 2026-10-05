@@ -19,7 +19,7 @@ Shipped config has `session.redesign_portal_runtime_enabled = true` (flip commit
 - Guest ack expiry recovery (9fdf2332): REQUEST CHANGES (view requests at 2 Hz while away). Fixed in 6ee60120.
 - Arrival travel reset (79de8d82, 4683b4d5): APPROVE WITH NITS. Fixed in ea685537 (mint when durable; live-body bound).
 - Freshness, codec, settled portal marker (c2e41d4a, 9032d90e, 6de35900): APPROVE WITH NITS / APPROVE / APPROVE WITH NITS. Nits fixed in a5a0e09c.
-- Disconnect guards, prompt sight, CI shards (05b08aeb, 7cbf31ad, 2927506a, 9756e15e): see the final report.
+- Disconnect guards, prompt sight, CI shards, diagnostics (05b08aeb, 7cbf31ad, 2927506a, 9756e15e, 164f4143, 01ce9949, 5a2ce54e): APPROVE WITH NITS / APPROVE / APPROVE WITH NITS / APPROVE. The unmeasured-smoke default no longer takes an isolated lower bound (fixed with this receipt); the misleading deny codes in the disconnect window stay as-is (fail closed).
 
 ## Other fixes this round
 - `sequence_director.gd`: the Home Key gift batch is held until the owner record releases (orbs were lost); bounded 20 s exit.
