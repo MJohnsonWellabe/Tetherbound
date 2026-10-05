@@ -213,14 +213,33 @@ func test_a_row_lands_whole_or_not_at_all_and_pending_rows_fold_too() -> void:
 	assert_false((result.get("applied", []) as Array).has(two_stacks.delivery_id), "the half-fitting row is not folded: %s" % str(result))
 	assert_eq(int(after_bag.call("count", "potion_small")) + int(after_bag.call("count", "orb_basic")), 0, "and no partial stack of it is held")
 	assert_true((result.get("applied", []) as Array).has(pending.delivery_id), "the pending row folded")
-	# Re-review H1: the rows to settle are computed from durable state, so a
+	# Re-review H1/H-1: every folded row (accepted or pending) rides the
+	# readmits until the owner confirms it saved them settled -- through a
 	# record rewrite (recover_durable_vitals in the real hello) and a second
-	# rejoin still hand them to the owner, until its ACK makes them accepted.
-	var ids := func() -> Array: return (authority.call("folded_pending", character, deliveries) as Array).map(func(r: Dictionary) -> String: return r.delivery_id)
-	assert_eq(ids.call(), [pending.delivery_id], "folded_pending names the pending row the held record holds")
+	# rejoin that folds nothing new.
+	var ids := func() -> Array: return (authority.call("unconfirmed_folds", character) as Array).map(func(r: Dictionary) -> String: return r.delivery_id)
+	assert_eq(ids.call(), [pending.delivery_id], "the folded row awaits the owner's confirmation")
 	authority.call("_replace_record", character, 1, authority.call("state", character))
 	assert_eq(ids.call(), [pending.delivery_id], "after a record rewrite")
 	authority.call("rejoin_admission", character, declared, deliveries)
 	assert_eq(ids.call(), [pending.delivery_id], "and on a second rejoin that folds nothing new")
-	deliveries[pending.delivery_id].status = "accepted"
-	assert_eq(ids.call(), [], "the owner's ACK (accepted) ends it")
+	authority.call("confirm_folds", character, authority.call("unconfirmed_folds", character))
+	assert_eq(ids.call(), [], "the owner's saved readmit confirms it")
+
+
+func test_an_accepted_row_held_grant_due_is_handed_to_the_owner_to_settle() -> void:
+	# Re-review H-1: a full bag ACKs a payout as grant_due escrow (accepted,
+	# never replayed). A held_wins rejoin folds it; it must reach the owner's
+	# readmit so the grant_due row cannot pay it again.
+	var record := _record()
+	var deliveries := {}
+	var authority := _authority(record, deliveries)
+	var character: String = record.character_id
+	var row := _row("pickup:full", "berries", 2, "accepted")
+	deliveries[row.delivery_id] = row
+	var declared := record.duplicate(true)
+	declared.party[0].level = int(declared.party[0].level) + 1 # an offline change; the berries are not in its satchel
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, deliveries)
+	assert_eq(result.get("code"), "held_wins")
+	assert_eq((authority.call("unconfirmed_folds", character) as Array).map(func(r: Dictionary) -> String: return r.delivery_id), [row.delivery_id],
+		"the accepted row is handed to the owner too")

@@ -172,6 +172,7 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
 			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
 			ground["%s:%d" % [str(hit.rid), int(hit.shape)]] = true
+			ground[str(hit.rid)] = true
 	# Clearance from the higher of the sampled base and the placement. Ground
 	# inside the allowed rise is not an obstruction, so a camp fits rolling
 	# ground (Tidewake's domed islands), not only peaks: below the lift only
@@ -191,8 +192,17 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 		query.exclude=_camp_exclusions(placer_body)
 		var low: bool = band[0] < lift
 		for hit: Dictionary in world.get_world_3d().direct_space_state.intersect_shape(query,64 if low else 1):
-			if not low or not ground.has("%s:%d" % [str(hit.rid), int(hit.shape)]): return CAMP_RULES.deny("camp_ground")
+			if not low or not (ground.has("%s:%d" % [str(hit.rid), int(hit.shape)]) or _terrain_shape_of_support(ground, hit)): return CAMP_RULES.deny("camp_ground")
 	return {"ok":true}
+
+
+## A neighbouring terrain region of the supporting body (heightmap or
+## concave ground) is ground too: a camp across a region seam is not refused
+## (review L-1). Batched props (rocks, stumps) are other shape types.
+static func _terrain_shape_of_support(ground: Dictionary, hit: Dictionary) -> bool:
+	if not ground.has(str(hit.rid)) or not hit.get("collider") is PhysicsBody3D: return false
+	var type := PhysicsServer3D.shape_get_type(PhysicsServer3D.body_get_shape(hit.rid, int(hit.shape)))
+	return type == PhysicsServer3D.SHAPE_HEIGHTMAP or type == PhysicsServer3D.SHAPE_CONCAVE_POLYGON
 
 
 func _camp_exclusions(placer_body: Node3D) -> Array[RID]:

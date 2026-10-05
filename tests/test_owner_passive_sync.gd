@@ -1314,6 +1314,7 @@ func test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_i
 	row.status = "pending"
 	game.world.reward_deliveries[row.delivery_id] = row
 	session._character_authority.call("_absorbed", character)[row.delivery_id] = true
+	session._character_authority._records[character].unconfirmed_folds = {row.delivery_id: row.duplicate(true)}
 	session.host = true
 	service.hosts.clear()
 	session.messages.clear()
@@ -1325,11 +1326,18 @@ func test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_i
 	assert_eq(readmits[0].get("adopt"), false, "not an adoption")
 	assert_eq((readmits[0].get("folded", []) as Array).map(func(r: Dictionary) -> String: return r.delivery_id), [row.delivery_id],
 		"carrying the row to settle")
+	# The owner's settlement is saved before "readmitted"; then the host
+	# confirms and the row leaves the record.
+	service.receive_host(2, _envelope({"op": "readmitted", "baseline_hash": readmits[0].baseline_hash}).merged(
+		{"stream_id": service.hosts[character].id}, true))
+	assert_true((session._character_authority.call("unconfirmed_folds", character) as Array).is_empty(), "confirmed by the saved readmit")
 	session.host = false
 	service.arm_owner(before, held)
-	assert_false(service.delivery_ready(), "the owner's deliveries wait while admission is pending")
-	service.local.admission_pending = false
+	assert_false(service.delivery_ready(), "the owner's deliveries wait for this join's admission")
+	service.local.hello_pending = false
 	assert_true(service.delivery_ready(), "and run once admitted")
+	service.local.admission_pending = true
+	assert_true(service.delivery_ready(), "a rebase (admission pending again) does not hold them")
 
 
 func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:

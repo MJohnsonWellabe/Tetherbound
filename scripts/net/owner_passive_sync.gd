@@ -84,6 +84,7 @@ func arm_owner(before: Dictionary, discoveries: Dictionary) -> Dictionary:
 	local = {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "character": before.character_id,
 		"base_hash": HASH.fingerprint(before), "sequence": 0, "prefix_hash": cursor.prefix_hash,
 		"inputs": [], "acked": 0, "error": "", "last_settlement": "", "rebase": {}, "admission_pending": true,
+		"hello_pending": true, "hello_armed_ms": Time.get_ticks_msec(),
 		"discovered": discoveries.duplicate(true)}
 	pending.clear()
 	var game := _game()
@@ -151,10 +152,19 @@ func record_delivery(row: Dictionary) -> bool:
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
 
-## A reward delivery waits until the host has admitted this stream (and any
-## readmit settled the payouts its held record already holds, _settle_folded).
+## A reward delivery waits until the host has first admitted this join's
+## stream (and any readmit settled the payouts its held record already holds,
+## _settle_folded). A rebase never folds payouts, so it does not hold them
+## (re-review M-2); a join whose admission never lands tells the player once.
+const HELLO_WAIT_TELL_MS := 20000
 func delivery_ready() -> bool:
-	return recording_active() and local.get("admission_pending", false) != true
+	if not recording_active(): return false
+	if local.get("hello_pending", false) != true: return true
+	if not local.get("hello_wait_told", false) and Time.get_ticks_msec() - int(local.get("hello_armed_ms", 0)) > HELLO_WAIT_TELL_MS:
+		local.hello_wait_told = true
+		var game := _game()
+		if game != null and game.has_method("push_world_message"): game.call("push_world_message", "Rewards wait until the host has taken your character in.")
+	return false
 
 func _scope() -> Dictionary:
 	var game := _game()
@@ -202,10 +212,10 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	var declared_discoveries: Variant = summary.get("discovered_landmarks", {})
 	var discoveries_match: bool = declared_discoveries is Dictionary \
 		and HASH.fingerprint({"discovered": declared_discoveries}) == HASH.fingerprint({"discovered": discoveries})
-	# Payouts the held record holds while their world row is still pending:
-	# the owner marks them settled on the readmit before it may process their
-	# redelivery (re-review H1), so any such row forces a readmit.
-	var folded: Array = authority.call("folded_pending", character, _game().get("world").reward_deliveries)
+	# Payouts a rejoin folded into the held record that the owner has not yet
+	# confirmed settling: it marks them settled (and saves) on the readmit
+	# before it may process their redelivery, so any such row forces one.
+	var folded: Array = authority.call("unconfirmed_folds", character)
 	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match and folded.is_empty():
 		_add_host(peer, character, str(declaration.id), before, discoveries)
 		return
@@ -390,6 +400,8 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		if stream.is_empty(): return
 	if stream.has("readmit") and stream.peer == peer and stream.id == packet.get("stream_id"):
 		if packet.get("op") == "readmitted" and packet.get("baseline_hash") == stream.readmit.baseline_hash:
+			# The owner saved its settlement of the folded rows: they leave the record.
+			owner().get("_character_authority").call("confirm_folds", str(stream.character), stream.readmit.get("folded", []))
 			stream.erase("readmit")
 			_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
 		else:
@@ -1104,6 +1116,7 @@ func receive_owner(packet: Dictionary) -> void:
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
 			local.admission_pending = false
+			local.hello_pending = false
 			if packet.sequence > int(local.acked): local.ack_progress_ms = Time.get_ticks_msec()
 			local.acked = packet.sequence
 			while not local.inputs.is_empty() and int(local.inputs[0].sequence) <= int(local.acked): local.inputs.pop_front()
@@ -1240,9 +1253,15 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# carry them; anything else must already match this owner's.
 	var held: Variant = packet.get("discovered")
 	var adopt: bool = held is Dictionary and HASH.fingerprint({"discovered": held}) == packet.get("discoveries_hash")
+	# A durable change (adoption, settled payouts) is saved before "readmitted"
+	# (re-review M-1); a failed save puts the owner back and the host resends.
+	var durable: bool = packet.get("adopt") == true or not (packet.get("folded", []) as Array).is_empty()
+	var undo := _owner_undo_point() if durable and game != null else {}
+	var adopted := false
 	if pending.is_empty() and game != null and packet.get("adopt") == true \
 		and not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
 		# Owner ruling (STATE §0): this world's held record wins; adopt it whole.
+		adopted = true
 		var outcome := _adopt_held_record(baseline)
 		if outcome != "ok":
 			_note_ignored("held-record adoption deferred: " + outcome)
@@ -1270,6 +1289,10 @@ func _readmit_owner(packet: Dictionary) -> void:
 		local.error = local.admission_refused
 		push_warning("owner passive readmit did not reproduce the host's baseline")
 		return
+	if (_settle_folded(packet.get("folded", [])) > 0 or adopted) and not _save_owner_now():
+		_owner_undo(undo)
+		_note_ignored("readmit not saved; the host resends it")
+		return
 	var cursor := REPLAY.begin(baseline, _discoveries())
 	if cursor.is_empty(): return
 	local.base_hash = packet.baseline_hash
@@ -1285,8 +1308,40 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# the host's replay as discovery_cadence (re-proof run 2026-10-04T22:09:55Z).
 	game.set("_travel_pos_valid", false)
 	game.set("_discovery_elapsed", 0.0)
-	_settle_folded(packet.get("folded", []))
 	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
+
+
+## The owner's whole state and creature instances, to put back exactly.
+func _owner_undo_point() -> Dictionary:
+	var party: RefCounted = _game().get("party")
+	var player: RefCounted = _game().get("local")
+	if party == null or player == null or not player.has_method("save_data"): return {}
+	var members := {}
+	for member: RefCounted in party.call("members"): members[str(member.get("uid"))] = member
+	var active: Variant = party.call("at", int(party.get("_active"))) if "_active" in party else null
+	var best: Variant = party.call("at", int(party.get("_best"))) if "_best" in party else null
+	return {"data": player.call("save_data"), "members": members,
+		"active": str((active as RefCounted).get("uid")) if active is RefCounted else "",
+		"best": str((best as RefCounted).get("uid")) if best is RefCounted else ""}
+
+
+func _owner_undo(undo: Dictionary) -> void:
+	if undo.is_empty(): return
+	var party: RefCounted = _game().get("party")
+	var ordered := _load_keeping_instances(_game().get("local"), party, undo.data, undo.members)
+	var uids := ordered.map(func(m: RefCounted) -> String: return str(m.get("uid")))
+	party.set("_active", maxi(0, uids.find(undo.active)))
+	party.set("_best", uids.find(undo.best) if not str(undo.best).is_empty() else -1)
+	party.set("revision", int(party.get("revision")) + 1)
+
+
+func _save_owner_now() -> bool:
+	var saver: RefCounted = _game().get("save_system")
+	if saver == null or saver.call("fallback_busy") == true: return false
+	saving = true
+	var saved: bool = saver.call("save_character_prepared", _game(), str(local.character)) == true
+	saving = false
+	return saved
 
 
 ## Owner, on every readmit: the payout rows the host's held record already
@@ -1294,16 +1349,16 @@ func _readmit_owner(packet: Dictionary) -> void:
 ## owner may process their redelivery (delivery waits for admission,
 ## session._owner_passive_delivery_ready), so it acknowledges without paying a
 ## second time (re-review H1). A row this owner already settled is untouched.
-func _settle_folded(folded: Variant) -> void:
-	if not folded is Array or (folded as Array).is_empty(): return
+func _settle_folded(folded: Variant) -> int:
+	if not folded is Array or (folded as Array).is_empty(): return 0
 	var player: RefCounted = _game().get("local")
-	if player == null or not player.get("satchel_escrow") is Dictionary: return
+	if player == null or not player.get("satchel_escrow") is Dictionary: return 0
 	var escrow: Dictionary = player.get("satchel_escrow")
 	var settled_count := 0
 	for row: Variant in folded:
 		if not row is Dictionary or str(row.get("character_id", "")) != str(player.get("character_id")) \
 			or str(row.get("delivery_id", "")) != REWARD.delivery_id(str(row.get("world_namespace", "")), str(row.get("source", "")), str(row.get("character_id", ""))): continue
-		if str((escrow.get(row.delivery_id, {}) as Dictionary).get("status", "")) == "settled" if escrow.get(row.delivery_id) is Dictionary else false: continue
+		if escrow.get(row.delivery_id) is Dictionary and str(escrow[row.delivery_id].get("status", "")) == "settled": continue
 		var settled: Dictionary = (row as Dictionary).duplicate(true)
 		settled.kind = "reward_delivery"
 		settled.status = "settled"
@@ -1311,9 +1366,11 @@ func _settle_folded(folded: Variant) -> void:
 		if not flag.is_empty() and player.get("flags") != null: (player.get("flags") as RefCounted).call("set_flag", flag, true)
 		settled.erase("stacks")
 		settled.erase("completion_flag")
+		settled.erase("status_ms")
 		escrow[row.delivery_id] = settled
 		settled_count += 1
 	if settled_count > 0: print("[owner-passive] %d payout(s) this world already holds marked settled" % settled_count)
+	return settled_count
 
 
 ## Owner, on a readmit marked `adopt`: replace this character's portable
@@ -1344,7 +1401,9 @@ func _adopt_held_record(baseline: Dictionary) -> String:
 	for director: Node in _portal_directors(game):
 		var ally: Variant = director.get("_ally")
 		var body: Variant = director.get("_ally_body")
-		if ally is RefCounted and is_instance_valid(body) and not kept.has(str((ally as RefCounted).get("uid"))): away.append(director)
+		if ally is RefCounted and is_instance_valid(body) and not kept.has(str((ally as RefCounted).get("uid"))):
+			if not _can_dismiss(director): return "a companion this world does not know is in a fight"
+			away.append(director)
 	var restore: Dictionary = player.call("save_data")
 	var data: Dictionary = restore.duplicate(true)
 	var energy := {}
@@ -1390,6 +1449,14 @@ func _adopt_held_record(baseline: Dictionary) -> String:
 	game.call("push_world_message", "This world keeps your character as it was here; changes made elsewhere are not used in it.")
 	print("[owner-passive] adopted this world's held record (%d creature(s))" % ordered.size())
 	return "ok"
+
+
+## The director would put its creature away now (the same refusals as
+## dismiss_active_creature), checked before anything changes (review L-2).
+static func _can_dismiss(director: Node) -> bool:
+	var manager: Variant = director.get("_manager")
+	if manager is Object and (manager as Object).has_method("is_fighting") and manager.call("is_fighting") == true: return false
+	return not (director.has_method("trainer_battle_active") and director.call("trainer_battle_active") == true)
 
 
 ## The encounter directors that may hold this owner's deployed creature.
@@ -1493,6 +1560,8 @@ func owner_settled(row: Dictionary) -> void:
 	_flush()
 
 func _queue_rebase(declaration: Dictionary, previous: Dictionary, binding: Dictionary) -> void:
+	local.hello_pending = previous.get("hello_pending", false) == true # a rebase is not a join
+	local.hello_armed_ms = int(previous.get("hello_armed_ms", Time.get_ticks_msec()))
 	local.rebase = {"op": "rebase", "baseline_hash": declaration.baseline_hash,
 		"old_stream": previous.id, "old_sequence": previous.sequence, "old_prefix_hash": previous.prefix_hash,
 		"old_inputs": previous.inputs.duplicate(true), "discoveries_hash": HASH.fingerprint({"discovered": _discoveries()})}

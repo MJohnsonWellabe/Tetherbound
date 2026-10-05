@@ -84,11 +84,14 @@ func _replace_record(character: String, next_revision: int, next_state: Dictiona
 	var flags := personal_flags(character)
 	var discovered: Variant = _records.get(character, {}).get("discovered_landmarks")
 	var absorbed: Variant = _records.get(character, {}).get("absorbed_deliveries")
+	var unconfirmed: Variant = _records.get(character, {}).get("unconfirmed_folds")
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
 	if discovered is Dictionary: _records[character].discovered_landmarks = discovered.duplicate(true)
 	# Which host-journaled payouts this record already holds (rejoin_admission).
 	if absorbed is Dictionary: _records[character].absorbed_deliveries = absorbed.duplicate(true)
+	# Folded payouts the owner has not yet confirmed settling (unconfirmed_folds).
+	if unconfirmed is Dictionary: _records[character].unconfirmed_folds = unconfirmed.duplicate(true)
 
 ## Admission-only companion on the SAME record. A rejoin never refreshes it.
 ## Session validates every ID against the authored realm map catalogue first.
@@ -356,6 +359,7 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 	var candidate := held.duplicate(true)
 	var bag := RULES.inventory_from(candidate.get("inventory", []))
 	var applied: Array[String] = []
+	var folded := {}
 	for id: Variant in deliveries:
 		var row: Variant = deliveries[id]
 		if not owner_applied_row(row, character) or not row.get("status") in ["accepted", "pending"] or absorbed.has(str(id)): continue
@@ -366,13 +370,19 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 		if not fits: continue
 		bag = trial
 		applied.append(str(id))
+		folded[str(id)] = (row as Dictionary).duplicate(true)
 	candidate.inventory = RULES.slots(bag)
 	# The held record includes every payout this world journaled for it,
 	# whatever else the declaration says, never twice (absorbed). The owner
-	# marks the pending ones settled on its readmit (folded_pending).
+	# marks every one of them settled on its readmit (unconfirmed_folds): an
+	# accepted row may still be grant_due in its escrow (a full bag), a pending
+	# one may be unpaid there (re-review H1/H-1).
 	if not applied.is_empty():
 		_records[character].state = candidate
 		for id: String in applied: absorbed[id] = true
+		var unconfirmed: Dictionary = _records[character].get("unconfirmed_folds", {})
+		unconfirmed.merge(folded, true)
+		_records[character].unconfirmed_folds = unconfirmed
 	if ESSENCE._equivalent(core._core(candidate), core._core(declared)):
 		return {"ok": true, "code": "replayed_deliveries", "applied": applied}
 	# (2) Anything else (an offline change): the held record wins.
@@ -380,21 +390,19 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 	return {"ok": true, "code": "held_wins", "applied": applied, "detail": ", ".join(paths)}
 
 
-## Payout rows the held record already holds (absorbed) while the world row
-## is still pending: their owner must mark them settled before it processes
-## the redelivery, or it would pay them a second time (re-review H1). Computed
-## from durable state, so it survives a record rewrite, a deferred adoption, a
-## second rejoin and a host restart; a row leaves it once the owner's ACK
-## makes it accepted.
-func folded_pending(character: String, deliveries: Dictionary) -> Array:
-	var out: Array = []
-	if not _records.has(character): return out
-	var absorbed := _absorbed(character)
-	for id: Variant in deliveries:
-		var row: Variant = deliveries[id]
-		if owner_applied_row(row, character) and row.get("status") == "pending" and absorbed.has(str(id)):
-			out.append((row as Dictionary).duplicate(true))
-	return out
+## Payout rows a rejoin folded into the held record that the owner has not
+## yet confirmed marking settled (its readmit "readmitted", saved). They ride
+## every readmit until then, through record rewrites (recover_durable_*), a
+## deferred adoption and later rejoins in this session, so a redelivery or a
+## grant_due escrow row never pays them a second time.
+func unconfirmed_folds(character: String) -> Array:
+	return (_records.get(character, {}).get("unconfirmed_folds", {}) as Dictionary).values().duplicate(true)
+
+
+func confirm_folds(character: String, rows: Array) -> void:
+	if not _records.has(character) or not _records[character].has("unconfirmed_folds"): return
+	for row: Variant in rows:
+		if row is Dictionary: (_records[character].unconfirmed_folds as Dictionary).erase(str(row.get("delivery_id", "")))
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}

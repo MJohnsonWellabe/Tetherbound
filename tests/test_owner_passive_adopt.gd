@@ -26,12 +26,32 @@ const NS := "0123456789abcdef0123456789abcdef"
 class GameFixture extends Node:
 	var local: RefCounted
 	var party: RefCounted
+	var world: RefCounted
+	var save_system: RefCounted
+	var _travel_pos_valid := true
+	var _discovery_elapsed := 0.0
 	var messages: Array[String] = []
 	func push_world_message(text: String) -> void: messages.append(text)
 
+class WorldFixture extends RefCounted:
+	var world_id := "world-1"
+	var reward_delivery_namespace := "0123456789abcdef0123456789abcdef"
+
+class Writer extends RefCounted:
+	var accept := false
+	var writes := 0
+	func fallback_busy() -> bool: return false
+	func save_character_prepared(_game: Node, _character: String) -> bool:
+		writes += 1
+		return accept
+
 class SessionFixture extends Node:
 	var game: Node
+	var sent: Array[Dictionary] = []
 	func _game() -> Node: return game
+	func snapshot_ready() -> bool: return true
+	func _altar_current_epoch() -> String: return "epoch"
+	func _owner_passive_send_host(packet: Dictionary) -> void: sent.append(packet.duplicate(true))
 
 class Service extends SYNC:
 	var directors: Array = []
@@ -42,6 +62,7 @@ class Director extends Node:
 	var _ally_body: Node
 	var dismissed := 0
 	var fighting := false
+	func trainer_battle_active() -> bool: return fighting
 	func dismiss_active_creature() -> bool:
 		if fighting: return false
 		dismissed += 1
@@ -67,6 +88,8 @@ func before_each() -> void:
 	game = GameFixture.new()
 	game.local = player
 	game.party = player.party
+	game.world = WorldFixture.new()
+	game.save_system = Writer.new()
 	session = SessionFixture.new()
 	session.game = game
 	service = Service.new(session)
@@ -163,3 +186,49 @@ func test_a_companion_fighting_waits_and_changes_nothing() -> void:
 	director._ally_body.free()
 	director._ally_body = null
 	assert_eq(service.call("_adopt_held_record", held), "ok", "no body: adoption proceeds")
+
+
+func test_a_grant_due_escrow_row_the_held_record_holds_is_settled() -> void:
+	# Re-review H-1: the owner ACKed a payout with a full bag (grant_due); the
+	# host folded it into the held record. Settling it stops the grant_due
+	# loop from paying it again.
+	var row := REWARD.make_record("world-1", NS, "pickup:full", "character-adopt-owner", "berries", 2)
+	var due := row.duplicate(true)
+	due.kind = "reward_delivery"
+	due.status = "grant_due"
+	game.local.satchel_escrow[row.delivery_id] = due
+	assert_eq(service.call("_adopt_held_record", held), "ok")
+	assert_eq(service.call("_settle_folded", [row]), 1, "settled")
+	assert_eq(game.local.satchel_escrow[row.delivery_id].status, "settled")
+	var berries := int(game.local.inventory.call("count", "berries"))
+	REWARD.apply(game.local, row)
+	assert_eq(int(game.local.inventory.call("count", "berries")), berries, "the grant_due loop pays nothing more")
+
+
+func test_the_readmit_is_confirmed_only_after_its_settlement_is_saved() -> void:
+	# Re-review M-1: adoption and settled payouts are saved before
+	# "readmitted"; a failed save puts the owner back exactly and sends nothing
+	# (the host resends the readmit), then a good save confirms.
+	var row := REWARD.make_record("world-1", NS, "pickup:saved", "character-adopt-owner", "berries", 2)
+	row.status = "pending"
+	var bag := SATCHEL.inventory_from(held.inventory)
+	bag.call("add", "berries", 2)
+	held.inventory = SATCHEL.slots(bag)
+	service.call("arm_owner", service.call("_projection"), {})
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	var packet := {"op": "readmit", "baseline": held, "baseline_hash": hash.fingerprint(held),
+		"discoveries_hash": hash.fingerprint({"discovered": {}}), "discovered": {}, "adopt": true, "folded": [row]}
+	var before: Dictionary = game.local.save_data()
+	var first: RefCounted = game.party.at(0)
+	service.call("_readmit_owner", packet)
+	assert_eq(game.save_system.writes, 1, "a save was attempted")
+	assert_true(session.sent.filter(func(p: Dictionary) -> bool: return p.get("op") == "readmitted").is_empty(), "nothing confirmed on a failed save")
+	assert_true(E._equivalent(_core(RECORD.portable_projection(game.local.save_data())), _core(RECORD.portable_projection(before))), "the owner is put back")
+	assert_false(game.local.satchel_escrow.has(row.delivery_id), "with no settled row")
+	assert_eq(game.party.call("members").size(), 3, "and its creatures")
+	assert_true(game.party.at(0) == first, "as the same instances")
+	game.save_system.accept = true
+	service.call("_readmit_owner", packet)
+	assert_eq(session.sent.filter(func(p: Dictionary) -> bool: return p.get("op") == "readmitted").size(), 1, "confirmed after a good save")
+	assert_eq(game.local.satchel_escrow[row.delivery_id].status, "settled", "the payout is settled")
+	assert_true(E._equivalent(_core(service.call("_projection")), _core(held)), "and the held record adopted")
