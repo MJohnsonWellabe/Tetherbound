@@ -719,13 +719,15 @@ func _seed_relic_hung(biome: String) -> Dictionary:
 	return {"verdict": "PASS", "detail": "relic '%s' hung with its receipt for %s" % [biome, character]}
 
 
-## Guest: walk the ordinary path to this biome's Shrine Room pedestal (where a
-## relic power is chosen). Portals off (no runtime shrine context): skipped.
+## Guest: a real Home Key trip home (it arrives in the Crossing Hall, as the
+## F49 campaign does before hanging a relic), then the ordinary walk to this
+## biome's Shrine Room pedestal where a relic power is chosen. Portals off
+## (no runtime shrine context): skipped.
 func _relic_pedestal_stand(biome: String) -> Dictionary:
 	var game := root.get_node("Game")
 	if not bool(_session().call("portal_runtime_ready")):
 		return {"verdict": "PASS", "detail": "portal runtime off: no pedestal walk", "data": {"skipped": true}}
 	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, game)
-	var ok: bool = await travel.walk_to_pedestal(biome)
+	var ok: bool = await travel.home_key() and await travel.walk_to_pedestal(biome)
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest stands at the %s pedestal" % biome if ok else str(travel.failures),
 		"data": {"skipped": false}}

@@ -20,8 +20,9 @@ extends "res://tests/smoke_net_crossing_hall_agreement.gd"
 ## opening:lesson:<id> seen flag are set before its save (seed_opening_complete).
 ## For the F31#2 relic power case it has also hung the Meadows relic
 ## (relics_hung plus the host's relic_hang receipt, seeded before its save:
-## seed_relic_hung), and with portals on it walks the ordinary capsule path
-## to the Meadows Shrine Room pedestal before choosing (relic_pedestal_stand).
+## seed_relic_hung), and with portals on it takes a Home Key trip home and
+## walks the ordinary capsule path to the Meadows Shrine Room pedestal before
+## choosing (relic_pedestal_stand).
 const COUNTED := ["potion_small", "berries", "fiber"]
 
 
