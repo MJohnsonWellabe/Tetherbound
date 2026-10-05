@@ -85,6 +85,8 @@ func _run() -> void:
 	for player: AnimationMixer in stopped:
 		player.active = true
 	await _row("baseline_again")
+	if OS.get_cmdline_user_args().has("--bisect"):
+		await _bisect()
 	_save()
 	print("PERF CPU %s -> %s" % [_biome_id, _out_path])
 	quit(0)
@@ -117,6 +119,73 @@ func _row(label: String, extra: Dictionary = {}) -> void:
 	(_report.rows as Array).append(row)
 	print("PERF CPU %s %s process=%.2fms physics=%.2fms wall=%.2fms/frame" % [
 		_biome_id, label, row.process_ms_avg, row.physics_step_ms_avg, row.wall_ms_per_frame])
+
+
+## Disable processing for one family of world children (or one autoload) at
+## a time; the wall-time drop against the bracketing baseline is that
+## family's main-thread cost. Families group numbered siblings.
+func _bisect() -> void:
+	var families := {}
+	for child: Node in _world.get_children():
+		var family := _family(str(child.name))
+		if not families.has(family):
+			families[family] = []
+		(families[family] as Array).append(child)
+	for child: Node in root.get_children():
+		if child != _world:
+			families["/root/" + str(child.name)] = [child]
+	var rows: Array = []
+	for family: String in families:
+		var members: Array = families[family]
+		var nodes := 0
+		for node: Node in members:
+			nodes += 1 + node.get_child_count(true)
+			if nodes >= 20:
+				break
+		if nodes < 20:
+			continue
+		var before := await _wall(90)
+		var modes: Array = []
+		for node: Node in members:
+			modes.append(node.process_mode)
+			node.process_mode = Node.PROCESS_MODE_DISABLED
+		var without := await _wall(90)
+		for index in members.size():
+			(members[index] as Node).process_mode = modes[index]
+		var after := await _wall(90)
+		var saved := (before + after) * 0.5 - without
+		rows.append({"family": family, "members": members.size(), "wall_ms_saved": saved,
+			"baseline_wall_ms": (before + after) * 0.5})
+		if absf(saved) >= 1.0:
+			print("PERF CPU BISECT %s (%d) saves %.2f ms of %.2f" % [family, members.size(), saved,
+				(before + after) * 0.5])
+	rows.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.wall_ms_saved) > float(b.wall_ms_saved))
+	_report["bisect"] = rows
+
+
+func _wall(frames: int) -> float:
+	for _frame in 5:
+		await process_frame
+	var started := Time.get_ticks_usec()
+	for _frame in frames:
+		await process_frame
+	return float(Time.get_ticks_usec() - started) / 1000.0 / frames
+
+
+static func _family(node_name: String) -> String:
+	var parts := node_name.split("_")
+	if parts.size() > 1 and parts[0] == "Wild":
+		return "Wild"
+	var out: Array[String] = []
+	for part: String in parts:
+		if part.is_valid_int():
+			break
+		out.append(part)
+	var joined := "_".join(out)
+	while joined.length() > 0 and joined.right(1).is_valid_int():
+		joined = joined.left(-1)
+	return joined if joined != "" else node_name
 
 
 func _owner_body(node: Node) -> CharacterBody3D:
