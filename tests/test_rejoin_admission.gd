@@ -6,9 +6,9 @@ extends "res://tests/test_case.gd"
 ##   owner-passive inputs never replayed; the host rebuilds them from its OWN
 ##   world rows (amounts never read from the declaration) and admits;
 ## - an already-absorbed payout is never applied a second time;
-## - an offline portable change (a solo catch) re-admits the current record at
-##   a higher revision when nothing here is owed; with an open host duty the
-##   held record stays and nothing is adopted.
+## - an offline portable change (a solo catch, an older backup) never replaces
+##   the held record (owner ruling STATE §0: the host world's held record wins
+##   inside it); this world's own accepted payouts are still folded into it.
 ## Disclosed fixtures: a fresh character with one spawned creature (as in
 ## test_creature_gear), world rows written straight into a deliveries table.
 
@@ -81,10 +81,12 @@ func test_deliver_then_leave_is_rebuilt_from_host_rows_and_never_twice() -> void
 	assert_eq((authority.call("rejoin_admission", character, declared, deliveries) as Dictionary).get("code"), "held",
 		"the same rows are never applied a second time")
 	# The same amounts again (found offline) are NOT explained by those rows a
-	# second time: that is an offline change, not a host-proven payout.
+	# second time: that is an offline change, and the held record wins.
 	var doubled := _with(_with(declared, "berries", 3), "fiber", 2)
-	assert_eq((authority.call("rejoin_admission", character, doubled, deliveries) as Dictionary).get("code"), "readmitted_portable",
+	assert_eq((authority.call("rejoin_admission", character, doubled, deliveries) as Dictionary).get("code"), "held_wins",
 		"absorbed rows are never counted twice, even after a record rewrite")
+	assert_true(preload("res://scripts/creatures/essence.gd")._equivalent(core._core(authority.call("state", character)), core._core(declared)),
+		"and the held record is unchanged by the offline amounts")
 
 
 func test_a_payout_replayed_live_is_absorbed_and_not_rebuilt_again() -> void:
@@ -105,7 +107,7 @@ func test_a_payout_replayed_live_is_absorbed_and_not_rebuilt_again() -> void:
 	assert_eq(result.get("code"), "held", "an absorbed payout is not rebuilt again: %s" % str(result))
 
 
-func test_offline_catch_readmits_the_current_portable_record_once_nothing_is_owed() -> void:
+func test_an_offline_catch_never_replaces_the_held_record() -> void:
 	var record := _record()
 	var deliveries := {}
 	var authority := _authority(record, deliveries)
@@ -114,69 +116,50 @@ func test_offline_catch_readmits_the_current_portable_record_once_nothing_is_owe
 	var caught: Dictionary = declared.party[0].duplicate(true)
 	caught.uid = "creature-%s" % "a1b2c3d4e5f60718293a4b5c6d7e8f90"
 	declared.party.append(caught)
-	assert_true(AUTHORITY.errors(declared, character).is_empty(), "the offline record passes first-join rules: %s" % str(AUTHORITY.errors(declared, character)))
-	# An open host duty keeps the held record.
-	authority.get("_loadout_pending")[character] = {"uid": "x"}
-	var busy: Dictionary = authority.call("rejoin_admission", character, declared, deliveries)
-	assert_eq(busy.get("code"), "host_duties_unsettled", "nothing is adopted while a host duty is open")
-	assert_eq((authority.call("state", character) as Dictionary).party.size(), 1, "held record unchanged")
-	authority.get("_loadout_pending").erase(character)
-	var readmit: Dictionary = authority.call("rejoin_admission", character, declared, deliveries)
-	assert_eq(readmit.get("code"), "readmitted_portable", "the current portable record is admitted: %s" % str(readmit))
-	assert_eq((authority.call("state", character) as Dictionary).party.size(), 2, "with its offline catch")
-	assert_eq(int(authority.call("revision", character)), 1, "at a higher revision, so a stale request is refused")
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, deliveries)
+	assert_eq(result.get("code"), "held_wins", "the held record wins inside this world: %s" % str(result))
+	assert_true(str(result.get("detail", "")).contains("party"), "the difference is named (%s)" % str(result.get("detail", "")))
+	assert_eq((authority.call("state", character) as Dictionary).party.size(), 1, "the offline catch is not adopted")
+	assert_eq(int(authority.call("revision", character)), 0, "the held revision is unchanged")
 
 
-func test_a_declaration_behind_the_held_record_is_never_readmitted() -> void:
-	# Review H2: a restored backup would re-earn what this world already paid.
+func test_accepted_payouts_fold_into_the_held_record_even_with_an_offline_change() -> void:
+	# Deliver-then-leave AND an offline catch: the host's own accepted payout
+	# still lands in the held record (never twice); the catch does not.
 	var record := _record()
 	var deliveries := {}
 	var authority := _authority(record, deliveries)
 	var character: String = record.character_id
+	var row := _row("pickup:a", "berries", 3, "accepted")
+	deliveries[row.delivery_id] = row
+	var declared := _with(record, "berries", 3)
+	var caught: Dictionary = declared.party[0].duplicate(true)
+	caught.uid = "creature-%s" % "c1b2c3d4e5f60718293a4b5c6d7e8f90"
+	declared.party.append(caught)
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, deliveries)
+	assert_eq(result.get("code"), "held_wins", "the catch keeps the held record: %s" % str(result))
+	assert_eq(result.get("applied", []), [row.delivery_id], "the accepted payout was folded in")
 	var held: Dictionary = authority.call("state", character)
-	held.redesign_character.transaction_receipts.append("craft:%s:%s" % [character, "0123456789abcdef0123456789abcdef"])
-	authority.call("_replace_record", character, 1, held)
-	authority.call("record_personal_flag", character, "home_key_given", true)
-	var backup := record.duplicate(true) # older: lacks the receipt and the flag
-	var caught: Dictionary = backup.party[0].duplicate(true)
-	caught.uid = "creature-%s" % "b1b2c3d4e5f60718293a4b5c6d7e8f90"
-	backup.party.append(caught)
-	var result: Dictionary = authority.call("rejoin_admission", character, backup, deliveries, ["home_key_given"])
-	assert_eq(result.get("code"), "declaration_behind_held", "a missing held receipt refuses: %s" % str(result))
-	var newer := backup.duplicate(true)
-	newer.redesign_character.transaction_receipts = held.redesign_character.transaction_receipts.duplicate()
-	result = authority.call("rejoin_admission", character, newer, deliveries, [])
-	assert_eq(result.get("code"), "declaration_behind_held", "a missing host-recorded personal flag refuses: %s" % str(result))
-	result = authority.call("rejoin_admission", character, newer, deliveries, ["home_key_given"])
-	assert_eq(result.get("code"), "readmitted_portable", "receipts and flags at least the held ones: admitted")
+	assert_eq(held.party.size(), 1, "without the offline catch")
+	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(held.inventory)
+	assert_eq(int(bag.call("count", "berries")), 3, "with the payout")
+	assert_eq((authority.call("rejoin_admission", character, declared, deliveries) as Dictionary).get("applied", []), [],
+		"rejoining again folds nothing a second time")
+	assert_eq(int(preload("res://scripts/world/death_satchel_rules.gd").inventory_from((authority.call("state", character) as Dictionary).inventory).call("count", "berries")), 3,
+		"still exactly one payout")
 
 
-func test_a_windowed_kind_the_declaration_compacted_is_not_behind() -> void:
+func test_an_older_backup_never_replaces_the_held_record() -> void:
 	var record := _record()
 	var authority := _authority(record, {})
 	var character: String = record.character_id
-	var windows := preload("res://scripts/creatures/receipt_windows.gd")
-	var window: int = windows.window("groom")
 	var held: Dictionary = authority.call("state", character)
-	held.redesign_character.transaction_receipts.append("groom:oldest")
+	held.redesign_character.transaction_receipts.append("craft:%s:%s" % [character, "0123456789abcdef0123456789abcdef"])
 	authority.call("_replace_record", character, 1, held)
-	var declared := record.duplicate(true)
-	for i in window: declared.redesign_character.transaction_receipts.append("groom:newer-%d" % i)
-	assert_eq(authority.call("declaration_behind", character, declared, []), "", "a full newer window compacted the old receipt")
-	declared.redesign_character.transaction_receipts.pop_back()
-	assert_true(str(authority.call("declaration_behind", character, declared, [])).begins_with("receipt"), "below the window it is behind")
-	# Review: a backup with a FULL window still lacks the NEWEST held receipt
-	# while an older one survives -- that is behind, not compacted.
-	var long_held: Dictionary = authority.call("state", character)
-	long_held.redesign_character.transaction_receipts = ["groom:a"]
-	for i in window: long_held.redesign_character.transaction_receipts.append("groom:h-%d" % i)
-	long_held.redesign_character.transaction_receipts.append("groom:newest")
-	authority.call("_replace_record", character, 2, long_held)
-	var backup := record.duplicate(true)
-	backup.redesign_character.transaction_receipts = ["groom:a"]
-	for i in window: backup.redesign_character.transaction_receipts.append("groom:h-%d" % i)
-	assert_true(str(authority.call("declaration_behind", character, backup, [])).begins_with("receipt"),
-		"a full-window backup missing the newest receipt is behind")
+	var result: Dictionary = authority.call("rejoin_admission", character, record.duplicate(true), {})
+	assert_eq(result.get("code"), "held_wins", "a backup lacking a held receipt keeps the held record: %s" % str(result))
+	assert_eq((authority.call("state", character) as Dictionary).redesign_character.transaction_receipts.size(),
+		held.redesign_character.transaction_receipts.size(), "the held receipt stays")
 
 
 func test_home_key_rows_and_duplicate_payouts_are_never_credited_again() -> void:

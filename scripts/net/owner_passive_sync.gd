@@ -216,17 +216,24 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		print("[owner-passive] admission of %s waits for its in-flight vitals ACK" % character.left(18))
 		return
 	deferred.erase(character)
-	if not core_matches:
-		var reason := "owner_passive_admission_conflict: %s" % ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))
+	if not declared is Dictionary or HASH.fingerprint(declared) != declaration.get("baseline_hash"):
+		var reason := "owner_passive_admission_conflict: declaration does not match its stream baseline"
 		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
 		push_warning("[owner-passive] refused rejoined stream for %s: %s" % [character.left(18), reason])
 		_send_refusal(peer, character)
 		return
+	# Owner ruling (STATE §0): the held record wins inside this world. Passive
+	# drift readmits those fields only; any other difference (an offline
+	# change) makes the owner adopt the whole held record (`adopt`).
+	var adopt := not E._equivalent(REPLAY._core(before), REPLAY._core(declared))
 	if not _add_host(peer, character, str(declaration.id), before, discoveries): return
 	hosts[character].readmit = {"op": "readmit", "baseline": before.duplicate(true),
 		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries}),
-		"discovered": discoveries.duplicate(true)}
-	print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
+		"discovered": discoveries.duplicate(true), "adopt": adopt}
+	if adopt:
+		print("[owner-passive] %s adopts the host's held record: %s" % [character.left(18), ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))])
+	else:
+		print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
 	_send_owner(peer, hosts[character], hosts[character].readmit)
 
 
@@ -1224,6 +1231,13 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# carry them; anything else must already match this owner's.
 	var held: Variant = packet.get("discovered")
 	var adopt: bool = held is Dictionary and HASH.fingerprint({"discovered": held}) == packet.get("discoveries_hash")
+	if pending.is_empty() and game != null and packet.get("adopt") == true \
+		and not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
+		# Owner ruling (STATE §0): this world's held record wins; adopt it whole.
+		var outcome := _adopt_held_record(baseline)
+		if outcome != "ok":
+			_note_ignored("held-record adoption deferred: " + outcome)
+			return
 	if not pending.is_empty() or game == null \
 		or (not adopt and HASH.fingerprint({"discovered": _discoveries()}) != packet.get("discoveries_hash")) \
 		or not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
@@ -1260,6 +1274,65 @@ func _readmit_owner(packet: Dictionary) -> void:
 	game.set("_travel_pos_valid", false)
 	game.set("_discovery_elapsed", 0.0)
 	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
+
+
+## Owner, on a readmit marked `adopt`: replace this character's portable
+## fields with the host's held record (party, satchel, gear, loadouts,
+## receipts, portal/vitals escrow, heart selection). Creatures the record keeps
+## are updated in place, so a deployed body still drives the same instance; a
+## creature the record lacks (an offline catch) leaves the party, its body put
+## away first. Returns "ok", or why it must wait (the host resends the readmit).
+func _adopt_held_record(baseline: Dictionary) -> String:
+	var game := _game()
+	var player: RefCounted = game.get("local")
+	var party: RefCounted = game.get("party")
+	if player == null or party == null: return "no local character"
+	var kept := {}
+	for card: Variant in baseline.get("party", []):
+		if card is Dictionary: kept[str(card.get("uid", ""))] = true
+	for director: Node in game.get_tree().get_nodes_in_group(&"foundation_portal_directors"):
+		var ally: Variant = director.get("_ally")
+		if ally is RefCounted and not kept.has(str((ally as RefCounted).get("uid"))) \
+			and director.call("dismiss_active_creature") != true: return "a creature the held record lacks is out mid-fight"
+	var data: Dictionary = player.call("save_data")
+	var energy := {}
+	for card: Dictionary in data.get("party", []): energy[str(card.get("uid", ""))] = card.get("energy", 0.0)
+	var cards: Array = []
+	for card: Dictionary in baseline.party:
+		var copy := card.duplicate(true)
+		if energy.has(str(copy.get("uid", ""))): copy.energy = energy[str(copy.uid)]
+		cards.append(copy)
+	data.party = cards
+	data.redesign_character = (baseline.redesign_character as Dictionary).duplicate(true)
+	data.inventory = (baseline.inventory as Array).duplicate(true)
+	data.equipment = (baseline.equipment as Dictionary).duplicate(true)
+	data.realm_hearts = (baseline.realm_hearts as Dictionary).duplicate(true)
+	# The escrow rows the projection carries come from the held record; every
+	# other row (not portable authority) stays the owner's.
+	var mine: Dictionary = RECORD.portable_projection({"character_id": data.get("character_id"), "satchel_escrow": data.get("satchel_escrow", {})})
+	var escrow := {}
+	for key: Variant in data.get("satchel_escrow", {}):
+		if not (mine.portal_escrow as Dictionary).has(key) and not (mine.vitals_escrow as Dictionary).has(key): escrow[key] = data.satchel_escrow[key]
+	for key: Variant in baseline.get("portal_escrow", {}): escrow[key] = baseline.portal_escrow[key]
+	for key: Variant in baseline.get("vitals_escrow", {}): escrow[key] = baseline.vitals_escrow[key]
+	data.satchel_escrow = escrow
+	var before := {}
+	for member: RefCounted in party.call("members"): before[str(member.get("uid"))] = member
+	player.call("load_data", data)
+	var ordered: Array = []
+	for fresh: RefCounted in party.call("members"):
+		var existing: RefCounted = before.get(str(fresh.get("uid")))
+		if existing == null:
+			ordered.append(fresh)
+			continue
+		for property: Dictionary in fresh.get_property_list():
+			if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE: existing.set(property.name, fresh.get(property.name))
+		ordered.append(existing)
+	party.set("_creatures", ordered)
+	party.set("revision", int(party.get("revision")) + 1)
+	if not E._equivalent(REPLAY._core(_projection()), REPLAY._core(baseline)): return "the adopted record does not reproduce the host's"
+	print("[owner-passive] adopted this world's held record (%d creature(s))" % ordered.size())
+	return "ok"
 
 
 func _flush() -> void:

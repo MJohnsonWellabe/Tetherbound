@@ -2902,11 +2902,12 @@ func _rpc_hello(summary: Dictionary) -> void:
 	if seeded.get("ok") == true and seeded.get("already_seeded") != true:
 		_character_authority.call("seed_absorbed_deliveries", character_id, _game().get("world").reward_deliveries)
 	elif seeded.get("ok") == true:
-		# A returning owner: rebuild from host-proven payouts, else re-admit its
-		# current portable record when nothing here is owed and it is not
-		# behind the held one (character_authority.rejoin_admission).
+		# A returning owner: the held record wins inside this world (owner
+		# ruling); it first folds in this world's own accepted payouts
+		# (character_authority.rejoin_admission). The owner adopts it through
+		# the owner-passive readmit.
 		var rejoin: Dictionary = _character_authority.call("rejoin_admission", character_id, portable,
-			_game().get("world").reward_deliveries, (summary.get("personal_flags", {"flags": []}) as Dictionary).get("flags", []))
+			_game().get("world").reward_deliveries)
 		last_rejoin_admission[character_id] = str(rejoin.get("code", ""))
 		if rejoin.get("code") != "held":
 			print("[session] rejoin of %s: %s %s" % [character_id.left(18), str(rejoin.get("code", "")), str(rejoin.get("detail", ""))])

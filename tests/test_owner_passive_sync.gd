@@ -1271,6 +1271,38 @@ func test_rejoin_with_matching_landmarks_still_admits_directly() -> void:
 		"an exact rejoin needs no readmit")
 
 
+func test_rejoin_with_an_offline_change_readmits_with_the_held_record_to_adopt() -> void:
+	# Owner ruling (STATE §0): the host world's held record wins inside it. A
+	# declaration that differs beyond passive drift (an offline catch) is not
+	# refused (that left the guest diverged for the whole session): the owner
+	# is sent the held record whole to adopt.
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	var declared: Dictionary = before.duplicate(true)
+	var caught: Dictionary = declared.party[0].duplicate(true)
+	caught.uid = "creature-%s" % "d1b2c3d4e5f60718293a4b5c6d7e8f90"
+	declared.party.append(caught)
+	session.host = true
+	service.hosts.clear()
+	service.refused.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "00112233445566778899aabbccddeeff", "baseline_hash": hash.fingerprint(declared)}})
+	assert_true(service.hosts.has(character) and not service.refused.has(character), "the rejoined stream is admitted, not refused")
+	var readmits := session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit")
+	assert_eq(readmits.size(), 1, "one readmit")
+	if readmits.size() != 1: return
+	assert_eq(readmits[0].get("adopt"), true, "marked adopt: the owner takes the held record whole")
+	assert_eq((readmits[0].baseline as Dictionary).party.size(), before.party.size(), "the baseline is the held record, without the offline catch")
+	# A declaration that does not match its own stream baseline is still refused.
+	service.hosts.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "ffeeddccbbaa99887766554433221100", "baseline_hash": hash.fingerprint(before)}})
+	assert_true(service.refused.has(character), "a malformed declaration is refused")
+
+
 func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:
 	# G1 follow-up (review-g1-landmarks.md finding 1): a manual landmark
 	# (Meadowhart herd) or a story-revealed one (Cloudreach sync_navigation)

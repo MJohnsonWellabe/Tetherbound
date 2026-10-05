@@ -1,53 +1,53 @@
-ALL CHECKS PASSED
 PASS: SETUP: peer 0 boots its own Meadows world -- booted world (240 settle frames)
 PASS: SETUP: peer 0 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
 PASS: SETUP: peer 1 boots its own Meadows world -- booted world (240 settle frames)
 PASS: SETUP: peer 1 owns a terrapup -- 'terrapup' at level 8 joined the party (1 member(s))
-PASS: deliver-then-leave: FIXTURE the guest's owner-passive send is held -- owner-passive send held
-PASS: deliver-then-leave: guest leaves -- client left cleanly after 0 frames
-PASS: deliver-then-leave: guest rejoins -- joined 127.0.0.1:29221 as peer 93589833 after 26 frames; snapshot applied; 2 peer(s) in registry
-PASS: deliver-then-leave: host sees the guest gone -- registry reports 1 peer(s) after 6 frames (0.1 s)
-PASS: deliver-then-leave: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
-PASS: deliver-then-leave: peer 0 stands the find -- stood 'op_rejoin_find_a' (berries)
-PASS: deliver-then-leave: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
-PASS: deliver-then-leave: peer 1 stands the find -- stood 'op_rejoin_find_a' (berries)
-PASS: deliver-then-leave: the guest takes it -- pressed 'op_rejoin_find_a'
-PASS: deliver-then-leave: the guest's satchel holds the find (host-journaled payout applied and saved)
-PASS: deliver-then-leave: the host rebuilt the payout from its own row, not a re-admission (replayed_deliveries)
-PASS: deliver-then-leave: the host's held record has the find, from its own row ({"items":{"berries":3.0},"levels":[8.0],"revision":0.0})
-PASS: deliver-then-leave: the new stream sends normally -- owner-passive send resumed
-PASS: deliver-then-leave: the rejoined stream is admitted, not refused
-PASS: first join: the guest's owner-passive stream is admitted by the host
-PASS: invalid: FIXTURE the guest's record is invalid (hp above max) -- hp above max on this peer only
-PASS: invalid: guest leaves -- client left cleanly after 0 frames
-PASS: invalid: host sees the guest gone -- registry reports 1 peer(s) after 8 frames (0.2 s)
-PASS: invalid: the rejoin is refused with a reason (Session.join(127.0.0.1, 29221) refused after 31 frames: That portable character could not be admitted. Your files remain unchanged.)
-PASS: offline change: FIXTURE the guest's creature gains a level offline -- owned creature 0 level 8 -> 9 on this peer only
-PASS: offline change: a later find pays the guest and reaches the host's record (satchel not blocked): guest {"berries":5.0} host {"items":{"berries":5.0},"levels":[9.0],"revision":1.0}
-PASS: offline change: guest leaves -- client left cleanly after 0 frames
-PASS: offline change: guest rejoins -- joined 127.0.0.1:29221 as peer 1252168707 after 31 frames; snapshot applied; 2 peer(s) in registry
-PASS: offline change: host sees the guest gone -- registry reports 1 peer(s) after 4 frames (0.1 s)
-PASS: offline change: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
-PASS: offline change: peer 0 stands another find -- stood 'op_rejoin_find_b' (berries)
-PASS: offline change: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
-PASS: offline change: peer 1 stands another find -- stood 'op_rejoin_find_b' (berries)
-PASS: offline change: the guest takes it -- pressed 'op_rejoin_find_b'
-PASS: offline change: the host re-admitted the current portable record (readmitted_portable)
-PASS: offline change: the host re-admitted the current record (levels [9.0], host {"items":{"berries":3.0},"levels":[9.0],"revision":1.0})
-PASS: offline change: the rejoined stream is admitted
-PASS: peer 0 hosts -- hosting udp/29221 as peer 1
+PASS: peer 0 hosts -- hosting udp/33261 as peer 1
+PASS: peer 1 joins -- joined 127.0.0.1:33261 as peer 927442961 after 33 frames; snapshot applied; 2 peer(s) in registry
 PASS: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
-PASS: peer 1 joins -- joined 127.0.0.1:29221 as peer 1167422751 after 37 frames; snapshot applied; 2 peer(s) in registry
 PASS: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: the guest has a character id
+PASS: first join: the guest's owner-passive stream is admitted by the host
 PASS: rejoin: guest leaves -- client left cleanly after 0 frames
-PASS: rejoin: guest rejoins -- joined 127.0.0.1:29221 as peer 1469655524 after 25 frames; snapshot applied; 2 peer(s) in registry
 PASS: rejoin: host sees the guest gone -- registry reports 1 peer(s) after 7 frames (0.1 s)
+PASS: rejoin: guest rejoins -- joined 127.0.0.1:33261 as peer 240709048 after 30 frames; snapshot applied; 2 peer(s) in registry
 PASS: rejoin: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
 PASS: rejoin: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
 PASS: rejoin: the guest armed a new stream
 PASS: rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)
-PASS: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":3.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"7e174d9eab89f8cc6494139cc070071b","sequence":3.0} -> {"acked":94.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"7e174d9eab89f8cc6494139cc070071b","sequence":98.0})
-PASS: the guest has a character id
-[session] rejoin of character-4030fb18: replayed_deliveries 
-[authority] rejoin of character-4030fb18 differs beyond host-proven payouts (0 applied): /party[0]/max_hp, /party[0]/attack, /party[0]/defence, /party[0]/hp, /party[0]/level
-[session] rejoin of character-4030fb18: readmitted_portable 
+PASS: rejoin: the walking guest's passive inputs are acknowledged by the host ({"acked":0.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"3df3632982b3b32ff626e36d42159821","sequence":3.0} -> {"acked":98.0,"admission_pending":false,"admission_refused":"","armed":true,"error":"","id":"3df3632982b3b32ff626e36d42159821","sequence":100.0})
+PASS: deliver-then-leave: FIXTURE the guest's owner-passive send is held -- owner-passive send held
+PASS: deliver-then-leave: peer 0 stands the find -- stood 'op_rejoin_find_a' (berries)
+PASS: deliver-then-leave: peer 1 stands the find -- stood 'op_rejoin_find_a' (berries)
+PASS: deliver-then-leave: the guest takes it -- pressed 'op_rejoin_find_a'
+PASS: deliver-then-leave: the guest's satchel holds the find (host-journaled payout applied and saved)
+PASS: deliver-then-leave: guest leaves -- client left cleanly after 0 frames
+PASS: deliver-then-leave: host sees the guest gone -- registry reports 1 peer(s) after 6 frames (0.1 s)
+PASS: deliver-then-leave: guest rejoins -- joined 127.0.0.1:33261 as peer 1999128752 after 43 frames; snapshot applied; 2 peer(s) in registry
+PASS: deliver-then-leave: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: deliver-then-leave: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: deliver-then-leave: the new stream sends normally -- owner-passive send resumed
+PASS: deliver-then-leave: the rejoined stream is admitted, not refused
+PASS: deliver-then-leave: the host rebuilt the payout from its own row, not a re-admission (replayed_deliveries)
+PASS: deliver-then-leave: the host's held record has the find, from its own row ({"items":{"berries":3.0},"levels":[8.0],"revision":0.0})
+PASS: offline change: guest leaves -- client left cleanly after 0 frames
+PASS: offline change: host sees the guest gone -- registry reports 1 peer(s) after 10 frames (0.2 s)
+PASS: offline change: FIXTURE the guest's creature gains a level offline -- owned creature 0 level 8 -> 9 on this peer only
+PASS: offline change: the guest's file now differs (levels [8.0] -> [9.0])
+PASS: offline change: guest rejoins -- joined 127.0.0.1:33261 as peer 1568269382 after 22 frames; snapshot applied; 2 peer(s) in registry
+PASS: offline change: peer 0 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: offline change: peer 1 sees both -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: offline change: the rejoined stream is admitted
+PASS: offline change: the host's held record wins (held_wins)
+PASS: offline change: the host's record keeps its own levels (held [8.0], host {"items":{"berries":3.0},"levels":[8.0],"revision":0.0})
+PASS: offline change: the guest adopted the host's held record, not refused (guest levels [8.0], refused '')
+PASS: offline change: peer 0 stands another find -- stood 'op_rejoin_find_b' (berries)
+PASS: offline change: peer 1 stands another find -- stood 'op_rejoin_find_b' (berries)
+PASS: offline change: the guest takes it -- pressed 'op_rejoin_find_b'
+PASS: offline change: a later find pays the guest and reaches the host's record (satchel not blocked): guest {"berries":5.0} host {"items":{"berries":5.0},"levels":[8.0],"revision":0.0}
+PASS: invalid: guest leaves -- client left cleanly after 0 frames
+PASS: invalid: host sees the guest gone -- registry reports 1 peer(s) after 8 frames (0.1 s)
+PASS: invalid: FIXTURE the guest's record is invalid (hp above max) -- hp above max on this peer only
+PASS: invalid: the rejoin is refused with a reason (Session.join(127.0.0.1, 33261) refused after 27 frames: That portable character could not be admitted. Your files remain unchanged.)
+ALL CHECKS PASSED
+ALL CHECKS PASSED

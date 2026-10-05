@@ -285,17 +285,15 @@ func apply_owner_reward_delivery(character: String, before: Dictionary, after: D
 	return true
 
 
-## --- Rejoin admission (coordinator, 2026-10-05; F01/F18 reports) -------------
-## A returning owner's held record can lag its portable truth two ways:
-## (1) it applied host-journaled payouts and left before the host replayed
-##     their owner-passive inputs (the stream and its tail end with the
-##     transport), so the held satchel misses accepted deliveries;
-## (2) it changed its portable character offline (a solo catch).
-## `rejoin_admission` first rebuilds (1) from the host's OWN accepted world
-## rows -- host-validated, amounts never read from the declaration -- and only
-## when that does not explain the declaration re-admits the declaration under
-## the first-join rules, and only while this character owes nothing unsettled
-## here (pending durable rows are reconciled after it by recover_durable_*).
+## --- Rejoin admission (coordinator, 2026-10-05; owner ruling STATE §0) ------
+## The host world's held record wins inside it (anti-rollback); the guest's
+## file counts only where the world has no record. A returning owner's held
+## record may still lag host-accepted payouts: the owner applied host-journaled
+## deliveries and left before the host replayed their owner-passive inputs.
+## `rejoin_admission` folds those in from the host's OWN accepted world rows
+## (host-validated, amounts never read from the declaration). Any other
+## difference (an offline change) keeps the held record; the owner adopts it
+## through the owner-passive readmit (owner_passive_sync `adopt`).
 
 ## Payout rows an owner applies itself (reward_delivery_applied replay):
 ## plain authored grants and gather batches, which carry their stacks.
@@ -323,59 +321,6 @@ func seed_absorbed_deliveries(character: String, deliveries: Dictionary) -> void
 	_records[character].absorbed_deliveries = absorbed
 
 
-## True while a host-side transaction for this character is still open.
-func owes_unsettled(character: String) -> bool:
-	return _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
-		or _vitals_stages.has(character) or _training_locked(character) or _research_preparations.has(character) \
-		or _portal_mutation_pending(character)
-
-
-## Review H2: a returning declaration may be NEWER than the held record (an
-## offline change), never OLDER (a restored backup would re-earn what this
-## world already paid). One-way fields: every held transaction receipt is in
-## the declaration unless its kind's window shows the declaration compacted
-## it, and every host-recorded personal flag is in the declared flags. (A flag
-## gameplay clears offline also reads as behind; that keeps the held record,
-## exactly the behaviour before readmission existed.)
-func declaration_behind(character: String, declared: Dictionary, declared_flags: Array) -> String:
-	for flag: Variant in personal_flags(character):
-		if personal_flags(character)[flag] == true and not declared_flags.has(flag): return "personal_flag " + str(flag)
-	var held_receipts: Array = state(character).get("redesign_character", {}).get("transaction_receipts", [])
-	var mine: Array = declared.get("redesign_character", {}).get("transaction_receipts", [])
-	var present := {}
-	for receipt: Variant in mine: present[str(receipt)] = true
-	var windows := preload("res://scripts/creatures/receipt_windows.gd")
-	var f32_window := int(preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("f32_receipt_window", 0))
-	# Windows drop their OLDEST receipts first (receipt_windows.compact,
-	# compact_f32_receipts): a missing held receipt was compacted only if the
-	# declaration's window is full AND no older held receipt of that kind
-	# survives in it (review: a backup with a full window is otherwise behind).
-	var kinds := ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]
-	var f32_prefix := "craft:%s:f32:" % character
-	for index: int in held_receipts.size():
-		var receipt := str(held_receipts[index])
-		if present.has(receipt): continue
-		var same_kind := Callable()
-		var window := 0
-		if receipt.begins_with(f32_prefix):
-			same_kind = func(r: Variant) -> bool: return str(r).begins_with(f32_prefix)
-			window = f32_window - 1 if f32_window >= 2 else 0
-		else:
-			for kind: String in kinds:
-				if windows.window(kind) > 0 and windows.is_kind(receipt, kind, character):
-					same_kind = func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)
-					window = windows.window(kind)
-					break
-		var compacted: bool = window > 0 and mine.filter(same_kind).size() >= window
-		if compacted:
-			for older: int in index:
-				if same_kind.call(held_receipts[older]) and present.has(str(held_receipts[older])):
-					compacted = false
-					break
-		if not compacted: return "receipt " + receipt.left(48)
-	return ""
-
-
 ## Review H1: the hello can still refuse after rejoin_admission; the caller
 ## restores the exact held record (and its companions) if it does.
 ## The record and every per-character map the hello's recover_* steps write.
@@ -399,7 +344,7 @@ func restore_record(character: String, snapshot: Dictionary) -> void:
 		else: map.erase(character)
 
 
-func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, declared_flags: Array = []) -> Dictionary:
+func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary) -> Dictionary:
 	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
 	var held: Dictionary = state(character)
 	var core := preload("res://scripts/net/owner_passive_replay.gd")
@@ -418,24 +363,16 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 		if not fits: break
 		applied.append(str(id))
 	candidate.inventory = RULES.slots(bag)
-	if not applied.is_empty() and ESSENCE._equivalent(core._core(candidate), core._core(declared)):
+	# The held record includes every payout this world accepted, whatever else
+	# the declaration says: they are host-proven, and absorbed never twice.
+	if not applied.is_empty():
 		_records[character].state = candidate
 		for id: String in applied: absorbed[id] = true
+	if ESSENCE._equivalent(core._core(candidate), core._core(declared)):
 		return {"ok": true, "code": "replayed_deliveries", "applied": applied}
-	print("[authority] rejoin of %s differs beyond host-proven payouts (%d applied): %s" % [character.left(18), applied.size(),
-		", ".join(preload("res://scripts/net/owner_passive_sync.gd")._differing_paths("", core._core(candidate), core._core(declared), 0, []).slice(0, 8))])
-	# (2) A real portable change: the declaration already passed the first-join
-	# rules (session hello); adopt it only when nothing here is owed to it.
-	if owes_unsettled(character): return {"ok": false, "code": "host_duties_unsettled"}
-	var behind := declaration_behind(character, declared, declared_flags)
-	if not behind.is_empty(): return {"ok": false, "code": "declaration_behind_held", "detail": behind}
-	_replace_record(character, revision(character) + 1, declared.duplicate(true))
-	_records[character].state["vitals_escrow"] = declared.get("vitals_escrow", {}).duplicate(true)
-	# The admission flags travel with that record: the session's next
-	# seed_personal_flags seeds them from this same validated summary.
-	_records[character].erase("personal_flags")
-	seed_absorbed_deliveries(character, deliveries)
-	return {"ok": true, "code": "readmitted_portable"}
+	# (2) Anything else (an offline change): the held record wins.
+	var paths: Array = preload("res://scripts/net/owner_passive_sync.gd")._differing_paths("", core._core(candidate), core._core(declared), 0, []).slice(0, 8)
+	return {"ok": true, "code": "held_wins", "applied": applied, "detail": ", ".join(paths)}
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}

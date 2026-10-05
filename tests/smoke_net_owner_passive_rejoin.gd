@@ -21,10 +21,11 @@ extends "res://tests/helpers/net_harness.gd"
 ##    its owner-passive send is held (fixture: "left before its inputs reached
 ##    the host"), leaves, and rejoins. The host rebuilds the payout from its own
 ##    accepted row and admits the stream; its held record has the find.
-## 4. Offline change (coordinator 2026-10-05, F18 render 37365638014): the
-##    guest leaves, its creature gains a level offline (fixture), and it
-##    rejoins. The host re-admits its current portable record (first-join
-##    rules, nothing owed), and a later find still pays on both sides.
+## 4. Offline change (coordinator 2026-10-05, F18 render 37365638014; owner
+##    ruling STATE §0: the host world's held record wins inside it): the guest
+##    leaves, its creature gains a level offline (fixture), and it rejoins. The
+##    host keeps its held record; the guest adopts it (levels back to the
+##    host's, no refusal), and a later find pays on both sides.
 ## 5. NEGATIVE CONTROL: an invalid portable record (fixture: hp above max) is
 ##    refused at the rejoin hello with a reason, never adopted.
 
@@ -204,16 +205,26 @@ func _run() -> void:
 		quit(await finish())
 		return
 	_ok(await step(0, "expect_peers", {"count": 1}), "offline change: host sees the guest gone")
+	var held_levels: Array = (await _state(1)).get("levels", [])
 	_ok(await step(1, "op_diverge"), "offline change: FIXTURE the guest's creature gains a level offline")
 	var levels: Array = (await _state(1)).get("levels", [])
+	check(levels != held_levels, "offline change: the guest's file now differs (levels %s -> %s)" % [str(held_levels), str(levels)])
 	_ok(await step(1, "join", {"host": "127.0.0.1", "port": _port}), "offline change: guest rejoins")
 	for i in 2: _ok(await step(i, "expect_peers", {"count": 2}), "offline change: peer %d sees both" % i)
 	var changed := await _await_admitted("offline-change")
 	check(_admitted(changed), "offline change: the rejoined stream is admitted")
 	var changed_code := str(((await _state(0)).get("rejoin_codes", {}) as Dictionary).get(_guest_character, ""))
-	check(changed_code == "readmitted_portable", "offline change: the host re-admitted the current portable record (%s)" % changed_code)
+	check(changed_code == "held_wins", "offline change: the host's held record wins (%s)" % changed_code)
 	held = (((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary)
-	check(held.get("levels") == levels, "offline change: the host re-admitted the current record (levels %s, host %s)" % [str(levels), JSON.stringify(held)])
+	check(held.get("levels") == held_levels, "offline change: the host's record keeps its own levels (held %s, host %s)" % [str(held_levels), JSON.stringify(held)])
+	var adopted: Dictionary = {}
+	for _i in 20:
+		adopted = await _state(1)
+		if adopted.get("levels") == held_levels: break
+		await step(0, "wait", {"frames": 30})
+	check(adopted.get("levels") == held_levels and str((adopted.get("local", {}) as Dictionary).get("admission_refused", "")).is_empty(),
+		"offline change: the guest adopted the host's held record, not refused (guest levels %s, refused '%s')" % [
+		str(adopted.get("levels")), str((adopted.get("local", {}) as Dictionary).get("admission_refused", ""))])
 	var before_find: Dictionary = (await _state(1)).get("items", {})
 	for i in 2:
 		_ok(await step(i, "pickup_stand", {"id": "op_rejoin_find_b", "item": "berries", "realm": "meadows", "count": 2}),
