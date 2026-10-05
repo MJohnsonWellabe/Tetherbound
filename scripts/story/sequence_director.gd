@@ -627,6 +627,20 @@ var _f18_home_key_retry_at := 0
 const F18_HOME_KEY_RETRY_MS := 250
 const F18_HOME_KEY_GUEST_RETRY_MS := [250, 1000, 3000]
 var _f18_home_key_attempts := 0
+## Bounded exit: an owed gift that cannot settle (silent host refusal, a lost
+## session epoch, another character/world) must not lock input forever. The
+## key is dropped from the batch; the host's legacy reconcile
+## (opening_home_key.host_legacy_grant) journals the same grant once the
+## character is past the first catch, and the delivery path settles it.
+const F18_HOME_KEY_GIVE_UP_MS := 20000
+var _f18_home_key_started_at := -1 # -1: no gift in flight
+
+func _f18_home_key_abandon_due(game: Node) -> bool:
+	if _f18_home_key_started_at != -1 and Time.get_ticks_msec() - _f18_home_key_started_at > F18_HOME_KEY_GIVE_UP_MS: return true
+	if _f18_pending_home_key.is_empty() or game == null or game.get("local") == null or game.get("world") == null: return false
+	return _f18_pending_home_key.get("character_id") != game.get("local").character_id \
+		or _f18_pending_home_key.get("world_instance_id") != game.get("world").reward_delivery_namespace \
+		or _f18_pending_home_key.get("session_epoch") != game.get("session").call("_altar_current_epoch")
 
 func _drain_effects() -> void:
 	# A spoken line may couple a physical gift to the fact that it was handed
@@ -640,7 +654,14 @@ func _drain_effects() -> void:
 	# journal is durable. Closing the panel cannot consume its only source.
 	var opening_game := _effect_game()
 	var finite_gift_enabled: bool = opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
+	if effects.has("home_key:grant") and finite_gift_enabled and _f18_home_key_abandon_due(opening_game):
+		push_warning("Grandpa's Home Key could not settle; releasing the player (the host reconcile redelivers it)")
+		effects.erase("home_key:grant")
+		_f18_pending_home_key.clear()
+		_f18_home_key_attempts = 0
+		_f18_home_key_started_at = -1
 	if effects.has("home_key:grant") and finite_gift_enabled:
+		if _f18_home_key_started_at == -1: _f18_home_key_started_at = Time.get_ticks_msec()
 		if Time.get_ticks_msec() < _f18_home_key_retry_at:
 			_f18_pending_effects = effects.duplicate()
 			return
@@ -655,12 +676,20 @@ func _drain_effects() -> void:
 			_f18_pending_effects = effects.duplicate()
 			return
 		# The key's owe/deliver CAS may still hold the owner record; the satchel
-		# refuses every add until it settles, which would drop the orbs.
+		# refuses every add until it settles. Grandpa keeps talking meanwhile.
 		if opening_game.get("session").call("_owner_training_mutation_blocked", opening_game.get("local")) == true:
 			_f18_pending_effects = effects.duplicate()
 			return
 		_f18_pending_home_key.clear()
 		_f18_home_key_attempts = 0
+		_f18_home_key_started_at = -1
+	# Any other held owner record (or a key released by the bounded exit) still
+	# makes the satchel refuse every add; keep the gift until it settles.
+	# Input is not held for this wait.
+	if finite_gift_enabled and _batch_gives(effects) \
+			and opening_game.get("session").call("_owner_training_mutation_blocked", opening_game.get("local")) == true:
+		_f18_pending_effects = effects.duplicate()
+		return
 	if not _gift_batch_fits(effects):
 		_dialogue.call("close")
 		var game := _effect_game()
@@ -699,6 +728,12 @@ func _drain_effects() -> void:
 ## rules so stacked room, empty slots and several gifts competing for one slot
 ## behave exactly as they will in the live satchel. Once this succeeds, flag
 ## authority and the existing effect order below are unchanged.
+func _batch_gives(effects: Array[String]) -> bool:
+	for effect: String in effects:
+		if effect.begins_with("give:"): return true
+	return false
+
+
 func _gift_batch_fits(effects: Array[String]) -> bool:
 	var gifts: Array[Dictionary] = []
 	var game := _effect_game()

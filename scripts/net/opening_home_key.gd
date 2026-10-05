@@ -116,13 +116,25 @@ static func _opening_source(session: Node, peer: int) -> Node:
 	var constants: Dictionary = (found.get_script() as Script).get_script_constant_map()
 	var callout: Variant = constants.get("DOOR_CALLOUT_RADIUS")
 	var callout_beats: Variant = constants.get("DOOR_CALLOUT_BEATS")
-	if not callout_beats is Array or not found.has_method("beat") or not (callout_beats as Array).has(found.call("beat")): return null
+	# The host's director tracks the host's own opening. A guest's beat is its
+	# own persisted opening history (sequence_director _persist_beat_history).
+	var beat: Variant = found.call("beat") if peer == session.call("local_peer_id") and found.has_method("beat") \
+		else peer_beat(session.call("_foundation_flags", peer))
+	if not callout_beats is Array or not (callout_beats as Array).has(beat): return null
 	if house == null or not world_node.is_ancestor_of(house) or house.is_queued_for_deletion() \
 		or not house.has_method("marker") or not (callout is float or callout is int) or float(callout) <= 0.0: return null
 	var door: Variant = house.call("marker", "door")
 	if not door is Vector3 or not (door as Vector3).is_finite() \
 		or actor.global_position.distance_to(door) > float(callout): return null
 	return found
+
+
+## The furthest opening beat recorded in a character's persisted flags.
+static func peer_beat(flags: Dictionary) -> String:
+	var reached := ""
+	for beat: String in preload("res://scripts/story/opening_beats.gd").order():
+		if flags.get("opening:beat:" + beat) == true: reached = beat
+	return reached
 
 
 static func host_grant(session: Node, peer: int, request: Dictionary) -> Dictionary:
