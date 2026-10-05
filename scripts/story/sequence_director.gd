@@ -483,11 +483,20 @@ func restore_progression_from_game(_game: Node) -> void:
 	# load, on a joiner's world snapshot, and on every world delta, and must
 	# read the same on the second call as on the first.
 	STORY_LEDGER.listen(self, _on_ledger_delta)
+	# F01#6a. A guest's starter commit waits for the host to stage it, and the
+	# host's journal and accept arrive as world deltas that land HERE while the
+	# beat still reads `choose`. Re-arming the picker and forgetting the choice
+	# then reopened the starter picker over the finished naming, and it stayed
+	# open (a narrative modal: no prompt, no Grandpa) after the adoption landed.
+	# An adoption still bound to this character, world and session epoch is the
+	# same in-flight choice, not a restore; anything else restores as before.
+	var adoption_in_flight := _starter_adoption_in_flight()
 	_restore_opening_beat()
-	_picker_pending = _beat == BEATS.CHOOSE
-	_choice = -1
-	if not _late_arrival_in_flight:
-		_adopting = false
+	_picker_pending = _beat == BEATS.CHOOSE and not adoption_in_flight
+	if not adoption_in_flight:
+		_choice = -1
+		if not _late_arrival_in_flight:
+			_adopting = false
 	# A load can bring in a world that is further along than this character.
 	# Re-arm rather than re-run: `_catch_up_a_behind_character()` decides, on
 	# the next frame, whether there is anything to catch up to.
@@ -506,7 +515,7 @@ func _force_restore_beat(target: String) -> void:
 		target = BEATS.first()
 	var changed := target != _beat
 	_beat = target
-	_picker_pending = _beat == BEATS.CHOOSE
+	_picker_pending = _beat == BEATS.CHOOSE and not _starter_adoption_in_flight()
 	_persist_beat_history(_beat)
 	if changed:
 		beat_changed.emit(_beat)
@@ -1947,8 +1956,31 @@ func _retry_original_starter_save() -> void:
 	_finish_original_starter_adoption(chosen, true)
 
 
+## Whether `_pending_starter_adoption` is still the live choice for the
+## character, world and session epoch this process is in now (the same fences
+## `_retry_original_starter_save` retries under).
+func _starter_adoption_in_flight() -> bool:
+	var game := _effect_game()
+	if game == null or game.get("session") == null or game.get("local") == null or game.get("world") == null:
+		return false
+	return adoption_bound_to(_pending_starter_adoption, str(game.get("local").character_id),
+		str(game.get("world").reward_delivery_namespace), str(game.get("session").call("_altar_current_epoch")))
+
+
+static func adoption_bound_to(pending: Dictionary, character_id: String, world_instance_id: String,
+		session_epoch: String) -> bool:
+	return not pending.is_empty() and not character_id.is_empty() \
+		and pending.get("character_id") == character_id \
+		and pending.get("world_instance_id") == world_instance_id \
+		and pending.get("session_epoch") == session_epoch
+
+
 func _finish_original_starter_adoption(chosen: String, typed_adoption: bool) -> void:
 	_adopting = false
+	# Whatever re-armed it, the choice is made: no picker may stand over it.
+	_picker_pending = false
+	if bool(_starter_picker.call("is_open")):
+		_starter_picker.call("close")
 	if not typed_adoption: _persist_opening_fact(STARTER_GRANTED_FLAG)
 	# The first time this game says a word the player wrote.
 	_dialogue.call("set_value", NAME_KEY, chosen)

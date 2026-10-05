@@ -171,3 +171,37 @@ func test_the_host_is_its_own_admitted_record() -> void:
 	var starter := _fresh_starter()
 	assert_true(game._original_starter_admitted(starter, "starter_choice:host:%s" % str(starter.get("uid"))),
 		"the host path is unchanged: no request, no wait")
+
+
+## --- F01#6a: the picker must not reopen over an in-flight staged choice ----
+##
+## Live --opening-together (op6): the host's journal and accept for the guest's
+## starter arrived as world deltas while the guest's beat still read `choose`;
+## `restore_progression_from_game()` re-armed the picker and forgot the choice,
+## the picker reopened over the finished naming and stayed open after the
+## adoption landed (input context `narrative_modal`, arbiter off, Grandpa
+## unreachable).
+
+const DIRECTOR := preload("res://scripts/story/sequence_director.gd")
+
+
+func test_an_adoption_is_in_flight_only_for_its_own_character_world_and_epoch() -> void:
+	var pending := {"character_id": GUEST, "world_instance_id": "world-a", "session_epoch": "epoch-1"}
+	assert_true(DIRECTOR.adoption_bound_to(pending, GUEST, "world-a", "epoch-1"))
+	assert_false(DIRECTOR.adoption_bound_to({}, GUEST, "world-a", "epoch-1"), "nothing pending is nothing in flight")
+	assert_false(DIRECTOR.adoption_bound_to(pending, "someone-else", "world-a", "epoch-1"))
+	assert_false(DIRECTOR.adoption_bound_to(pending, GUEST, "world-b", "epoch-1"), "a load into another world restores normally")
+	assert_false(DIRECTOR.adoption_bound_to(pending, GUEST, "world-a", "epoch-2"), "a new session restores normally")
+	assert_false(DIRECTOR.adoption_bound_to(pending, "", "world-a", "epoch-1"))
+
+
+func test_restores_keep_an_in_flight_choice_and_finishing_closes_the_picker() -> void:
+	var source := FileAccess.get_file_as_string("res://scripts/story/sequence_director.gd")
+	assert_true(source.contains("_picker_pending = _beat == BEATS.CHOOSE and not adoption_in_flight"),
+		"a world-delta restore does not re-arm the picker over an in-flight choice")
+	assert_true(source.contains("_picker_pending = _beat == BEATS.CHOOSE and not _starter_adoption_in_flight()"),
+		"a forced beat restore does not either")
+	var finish_at := source.find("func _finish_original_starter_adoption")
+	var close_at := source.find("_starter_picker.call(\"close\")", finish_at)
+	assert_true(finish_at >= 0 and close_at > finish_at and close_at - finish_at < 400,
+		"finishing the adoption closes any picker left standing")
