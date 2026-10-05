@@ -591,8 +591,12 @@ func _craft_at_workbench() -> bool:
 		await process_frame
 		if game.get("inventory").revision != before and panel.get("_station_intent").is_empty(): break
 	if game.get("inventory").revision == before or not panel.get("_station_intent").is_empty():
-		return _fail("actual Workbench Craft did not complete durable paid action (status=%s intent=%s)" % [
-			str(panel.get("_status").text), str(panel.get("_station_intent"))])
+		var owner_session: Node = game.get("session")
+		var row: Dictionary = owner_session.call("_owner_training_row")
+		return _fail("actual Workbench Craft did not complete durable paid action (status=%s intent=%s block=%s row=%s/%s)" % [
+			str(panel.get("_status").text), str(panel.get("_station_intent")),
+			str(owner_session.call("_owner_snapshot_block_reason", game.get("local"))),
+			str(row.get("action", "")), str(row.get("status", ""))])
 	if str(panel.get("_status").text) != "Completed. Saved to your character.":
 		return _fail("actual Workbench Craft did not confirm durable owner acceptance")
 	for id: String in expected:
