@@ -318,14 +318,7 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 	if home.is_empty() or starter.is_empty(): return {}
 	var temporary: RefCounted = preload("res://autoload/party.gd").new()
 	var mirrors: Dictionary = personal.redesign_character.get("creatures", {})
-	for raw_card: Dictionary in personal.get("party", []):
-		# The portable record leaves out each card's in-fight energy meter
-		# (character_record_rules); the card codec still expects the field.
-		# Energy is in no identity or signature field: restore it as empty.
-		var card: Dictionary = raw_card
-		if not card.has("energy"):
-			card = raw_card.duplicate(true)
-			card.energy = 0.0
+	for card: Dictionary in personal.get("party", []):
 		var member: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, personal.redesign_character) \
 			if mirrors.has(card.uid) else preload("res://scripts/save/water_capture_codec.gd").decode(card)
 		ending_fields_refusal = "party_decode"
