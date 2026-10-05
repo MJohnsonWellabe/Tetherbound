@@ -6,6 +6,8 @@ Source checkpoint: `89e1a9f75`, branch `tb/codex-r3`, based on `origin/main` at 
 
 The requested `ralph/reports/F01-FIXES/HANDOFF.md` was absent from fetched `origin/tb/f01-fixes`. The scoped commit history and `origin/tb/reproof-f01:ralph/reports/INTEGRATION/reproof/f01-current/row3/VERDICT.md` supplied the prior evidence.
 
+On a subsequent fetch, `origin/tb/f01-fixes` advanced to `4c508ed7e` and supplied the requested handoff. It reports a prior 12-target pass on `9ad7461ac`, captured with Mesa llvmpipe at 1280x720, and a barely passing blind verdict. Its committed receipts contain the visit/PASS lines but no complete stderr or scatter-repair receipt. Neither that branch nor the newly fetched `origin/main` at `f797d3c0c` changes the pinned bake guard, scope-preparation tool, or scatter manifest. The handoff therefore supplies prior context but does not resolve this checkout's native scatter error or failed blind verdict. R3's product source remains `89e1a9f75`.
+
 ## Focused census
 
 On source `89e1a9f75`, the unchanged existing tests passed on their first run: **6 tests, 239 assertions, 0 failed**, exit 0, no engine or script errors. Full native output is `census.txt`.
