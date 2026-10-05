@@ -1133,8 +1133,8 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Ten jobs, each running two plan bins side by side
-    # (tools/ci/run_net_lanes.sh): twenty bins, nineteen longest-processing-
+    # Eleven jobs, each running two plan bins side by side
+    # (tools/ci/run_net_lanes.sh): twenty-two bins, twenty-one longest-processing-
     # time first on MEASURED durations (tools/ci/net_shards.py: the slowest of
     # three green full runs per smoke) and split_realms alone in its lane, so
     # a hang cannot take other smokes down with it. A two-peer smoke uses half
@@ -1148,7 +1148,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     # A lane is ~10 min of smokes; one hung smoke is cut at 20 min
     # (run_net_lanes.sh NET_SMOKE_TIMEOUT_S), so its verdict still lands.
     timeout-minutes: 40

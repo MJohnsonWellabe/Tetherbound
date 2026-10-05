@@ -29,7 +29,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Plan bins, run LANES at a time per job. SHARD_COUNT jobs must equal the
 # `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-BIN_COUNT = 20
+BIN_COUNT = 22
 LANES = 2
 SHARD_COUNT = BIN_COUNT // LANES
 # Smoke time per bin: a 13-minute job is ~140 s of checkout, Godot setup and
@@ -42,6 +42,12 @@ BIN_SMOKE_BUDGET_SECONDS = 580
 # of a shard ends at the upload step).
 # Refresh it from newer full runs when a shard drifts past the budget.
 MEASURED_SECONDS = {
+    # Provisional (coordinator, 2026-10-05): smokes new in batch #542, planned at a
+    # conservative 330 s until three green full runs give real durations.
+    "f22_forced_break": 330,
+    "f27_guest_wild_win": 330,
+    "gather_departure": 330,
+    "homestead_station_craft": 330,
     "behind_character_joins_ahead_world": 129,
     "boss_rewards_each_participant": 228,
     "catch_race": 158,
