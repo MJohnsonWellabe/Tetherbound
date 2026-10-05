@@ -185,7 +185,11 @@
   "light": {
     "colour": "#ffd7a4",
     "energy": 1.15,
-    "range_m": 8.5
+    "range_m": 8.5,
+    "_why_flame_at": "F17#6 r4 GPU judge: the flames floated as small white bulbs beside unlit cages. The installed Lantern_Wall bracket reaches about 0.85 m out from the wall and its cage hangs at y 0.3-0.55 (mesh vertex probe), so the flame and the light sit in the cage.",
+    "flame_at": [0, 0.42, 0.85],
+    "flame_radius_m": 0.08,
+    "flame_energy": 2.4
   },
   "refresh_seconds": 0.2,
   "pedestal_collider": {
@@ -217,7 +221,10 @@
     {"at": [-6.4, 3.4, 0], "yaw_deg": 90},
     {"at": [6.4, 3.4, 0], "yaw_deg": -90},
     {"at": [-6.4, 3.4, 6], "yaw_deg": 90},
-    {"at": [6.4, 3.4, 6], "yaw_deg": -90}
+    {"at": [6.4, 3.4, 6], "yaw_deg": -90},
+    {"at": [12, 3.0, -6.8], "yaw_deg": 0, "_why": "F17#6 r4: the Shrine Room had no warm light at night"},
+    {"at": [12, 3.0, 6.8], "yaw_deg": 180},
+    {"at": [16.8, 3.0, 0], "yaw_deg": -90}
   ],
   "frontage": {
     "_why": "F17 destination r1 DAY NO/NIGHT NO: complete the installed central gable/clerestory at the existing road-facing end, identify the public threshold and put warm practical fixtures on that real facade. Native module scale; no new floor/collider, entrance, route or camera changes.",
@@ -311,20 +318,20 @@
     ],
     "_why_door_pools": "F17#6 r3 judge: at night the front door read as a flat emissive rectangle (the home arch membrane seen straight through the entrance at z=-15) and no light fell on the ground at the door. A low warm pool on the threshold step outside and one in the vestibule (between the entrance and the home arch at z=-12.8) light the step and the arch reveal so the doorway reads as a lit way in. Lights only: no mesh, collider, route or arch change. TUNABLE.",
     "door_pools": [
-      {"name": "HallThresholdPool", "at": [0, 1.1, -16.6], "energy": 1.6, "range_m": 4.5},
-      {"name": "HallVestibulePool", "at": [0, 2.7, -14.0], "energy": 1.2, "range_m": 4.0}
+      {"name": "HallThresholdPool", "at": [0, 1.4, -17.4], "energy": 2.6, "range_m": 6.5},
+      {"name": "HallVestibulePool", "at": [0, 2.7, -14.0], "energy": 1.6, "range_m": 4.5}
     ],
     "light": {
       "colour": "#ffd09b",
       "energy": 1.7,
       "range_m": 7.5,
-      "glow_energy": 0.5,
+      "glow_energy": 1.5,
       "glow_at": [
         0,
-        0.15,
-        0.12
+        0.42,
+        0.85
       ],
-      "glow_radius_m": 0.065
+      "glow_radius_m": 0.08
     }
   }
 }

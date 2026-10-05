@@ -165,6 +165,7 @@ func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
 	label.modulate = Color("f2e6cb")
 	label.outline_modulate = Color("332c27")
 	label.no_depth_test = false
+	label.double_sided = false # Seen from behind it read mirrored ("sffilC...", F17#6 r4).
 	parent.add_child(label)
 	return label
 
@@ -192,7 +193,7 @@ func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	flame.position = _position(settings.get("flame_at", [0, .15, .12]))
 	lantern.add_child(flame)
 	var light := OmniLight3D.new()
-	light.position = at
+	light.position = lantern.transform * flame.position # In the cage, not at the wall foot.
 	light.light_color = Color(str(settings.get("colour", "#ffd7a4")))
 	light.light_energy = float(settings.get("energy", 1.15))
 	light.omni_range = float(settings.get("range_m", 8.5))
