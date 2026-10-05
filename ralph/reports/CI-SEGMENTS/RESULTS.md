@@ -95,3 +95,83 @@ Not chosen here. 15–20 min needs runner-minutes ≤ ~350, while the head is at
 | 1 | **Boot once, run several net smokes per peer-process pair.** `smoke_net_two_peers_boot` (launch + two world boots only) takes 83 s against a ~120 s average net smoke, so about 2/3 of the net group's 182 runner-min is launch and boot. Keep the two processes and reset state between smokes. | Saves ~80–110 runner-min (~430 total), so ~22–30 min on its own; combined with 2 or 3, ~15–20 | Medium-high: gives up the per-smoke isolated homes (harness contract §2). A missed reset leaks state, which can mask or fake failures. Each smoke needs a proven reset, plus a scheduled run that still uses fresh processes. |
 | 2 | **Two independent smoke groups side by side per runner** (the runners have 4 vCPU and 16 GB; `s0_setup` already does this). Halves the job count and setup, and roughly doubles throughput per runner for the mostly single-threaded smokes. | Effective ~300–350 runner-min, so ~16–20 min if the net shards are paired and rebalanced | Medium: CPU contention stretches frame-budget steps (seen locally: a cold Cloudreach `load_save` overran its 10000-frame default), and memory pressure (seen locally: one OOM with three Godot runs). Needs a pairing table measured per group and memory headroom, and turns real timing slack into flakes if mis-paired. |
 | 3 | **Rebalance on measured durations and start the long jobs first.** Bin-pack the net shards on recorded per-file times to ≤12 min each (now 5.7–26 min against a 1200 s plan). Drop the `discover-net-smokes` dependency so the shards queue with everything else rather than last. Trim setup further (~2 min per job: 60 s checkout, a 1.7 GB `.godot` cache restore). | ~30–35 min (bounded by ~500 runner-min / 20). It cannot reach 15–20 alone. | Low: same tests, same processes. The only risk is a stale duration table (the existing scheduler already warns on unmeasured smokes). |
+
+## 5. Option 3 landed: rebalance and queue order (72471a5d)
+
+- `tools/ci/net_shards.py`: same discovery, floor and roster as the old
+  inline step. LPT on the slowest of three green full runs per smoke
+  (37289058162, 37282220875, 37270789359), `split_realms` alone. It fails on
+  an unassigned, twice-assigned or undiscovered smoke
+  (`tests/test_ci_net_shards.py`, run in `changes`).
+- Shards discover for themselves and need only `changes`. Two no-op jobs
+  (`queue-after-longest`, `queue-after-long`, both in ci-gate's `needs`)
+  queue the 10–14-min jobs and then the short ones after the longest.
+  Jobs queued together are dispatched in no fixed order (seen across runs),
+  so YAML or matrix order could not do this.
+
+Proof run 37300900137 (dispatch, green). Net shard jobs, minutes:
+
+| | Shards | Range |
+|---|---|---|
+| Before (37289058162) | 10 | 6.4–22.8 |
+| After | 18 | 6.0–13.0 (split_realms 6.0) |
+
+Wall time was 61.4 min, contended: CI on main and tb/f18 plus three render
+runs shared the cap, and this run averaged 8.8 concurrent runners. A
+dispatch also runs the schedule-only jobs (+38 runner-min).
+
+Like-for-like PR full-ci, replayed from measured job times (the replay
+under-reads the actual "before" run by ~4 min):
+
+| | Runner-min | Wall |
+|---|---|---|
+| Before | 484 | 40.8 actual |
+| After | 503 | ~36–37 expected |
+
+## 6. Option 2: side by side on one runner
+
+Measured on a 4-vCPU / 15 GB container like the runners:
+
+| Pair | Alone | Two side by side |
+|---|---|---|
+| Solo smoke (`party_count_after_catches`) | 176 s, 26% CPU | 162 / 191 s, 46% CPU |
+| Two-peer net smoke (`two_peers_boot`) | 177 s, 50% CPU | 195 / 195 s, 97% CPU, both PASS |
+
+Fixed cost per job is ~2 min: checkout ~68 s (a blob:none fetch of ~2.1 GB,
+1.9 GB of it `assets/`), `setup-godot` ~41 s. The 31 solo jobs pay 65 min
+of fixed cost for 240 min of work.
+
+| Phase | Runner-min | Expected wall (PR full-ci) |
+|---|---|---|
+| A. Net shards as 10 jobs × 2 lanes (`tools/ci/run_net_lanes.sh`, 20 bins of 306–560 s), 88da2951 | ~429 | ~34–35 |
+| B. Also pair whole solo jobs | ~409 | ~30: the tail is the longest pair, regions stormwood 20 min |
+| C. Pack solo work as units, 2 lanes per runner, ≤11 min per lane | ~280 | ~18–22 |
+
+Phase A, verified locally:
+- Two lanes ran concurrently on their own ENet ranges (27801 / 27821;
+  the run-id hash alone collides 1 time in 400).
+- A missing smoke failed with an `::error::` naming the smoke and lane,
+  while the other three passed (exit 1).
+- SIGTERM left no Godot process.
+
+Phase C design (not built):
+- **Source of truth.** The packed suites move unchanged into a suites file.
+  Each matrix value becomes one suite, keeping its job-level selection
+  condition. The packed runner evaluates those conditions, which use only
+  `needs.changes.outputs.*` and `github.event_name`.
+- **Units.** A step with `!cancelled()` starts a new unit. A step without it
+  stays chained to the step before, so producer → consumer order survives.
+- **Plan.** LPT over measured unit times onto K runners × 2 lanes. Every
+  unit runs exactly once, checked as in net_shards.
+- **Isolation.** Each lane has its own `XDG_DATA_HOME`, so `user://` is not
+  shared. Every fixed `/tmp` path in a solo step is a uniquely named
+  per-step log. No step reads `steps.*` or uses `success()`/`failure()`.
+- **Reporting.** Each step gets its own log group and a named `::error::`.
+  A step after a failed chained step is reported as skipped by name.
+- **Kept as jobs.** Suites that upload named artifacts (`realm-transition-*`,
+  `veridian-offer-*`, `f06-midride-proof-*`, which tooling downloads),
+  `export`, the unit-test shards and the midride setup pair (already two
+  processes).
+- **Costs.** One check per packed runner replaces one check per suite, and
+  failures show up as named annotations. `select_jobs.py` and ci-gate's
+  fence must read the suites file.
