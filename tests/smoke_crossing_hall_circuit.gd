@@ -87,7 +87,12 @@ func _walk_to_target(hall: Node3D, target: Vector3, via_local: Vector3, label: S
 	# Face the leg first, as a player would, so the walker's stall clock
 	# measures blocked movement rather than a reversal turn in place.
 	await _turn_to(_yaw_toward(_path[0], _path[1] if _path[0].distance_to(_path[1]) > .3 else _path[-1]))
+	# End the leg on position, not arc: 2 of 5 runs ended on arc progress with
+	# the body 0.85-1.02 m to the side after open-floor sidesteps. The 0.75 m
+	# gate below is unchanged; this only stops the walk short of it.
+	_arrive_within_m = 0.6
 	await _walk()
+	_arrive_within_m = 0.0
 	_release_all()
 	if not _failed.is_empty():
 		return false

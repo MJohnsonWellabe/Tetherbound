@@ -19,6 +19,14 @@ func show_creature(creature: Variant) -> void:
 	for row: Dictionary in rows:
 		_add_line("%s · %s — %s" % [row.display_name,str(row.rarity).capitalize(),row.description])
 
+## One-line catch readout: the caught creature's active traits by name and
+## tier, or an explicit "No traits" for a lawful zero roll.
+static func summary(creature: Variant) -> String:
+	var names: Array[String] = []
+	for row: Dictionary in TRAITS.rows(creature):
+		names.append("%s (%s)" % [row.display_name, str(row.rarity).capitalize()])
+	return ("Traits: " + ", ".join(names)) if not names.is_empty() else "No traits"
+
 func _add_line(text: String) -> void:
 	var label := Label.new()
 	label.text = text

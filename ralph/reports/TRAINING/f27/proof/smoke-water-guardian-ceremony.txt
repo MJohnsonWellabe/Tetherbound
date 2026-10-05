@@ -1,0 +1,136 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+     at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+     GDScript backtrace (most recent call first):
+         [0] _ready (res://scripts/world/water_world.gd:63)
+         [1] _run (res://tests/smoke_water_guardian_ceremony.gd:37)
+[water vegetation] 4145 instances in 549 model batches; layers={"groundcover":2801,"rocks":515,"shrubs":373,"trees":456} islands={"brine_steps":304,"deep_watch":228,"drowned_garden":405,"first_shore":432,"gull_rest":225,"lantern_cove":311,"reedhaven":477,"salt_crown":413,"shellwatch":435,"sluice_isle":356,"tidal_cradle":552,"veilfall":7}
+[water vegetation] sheltered grove counts={"brine_steps":{"accepted":4,"attempts":256,"requested":6,"shrubs":18,"trees":20},"deep_watch":{"accepted":5,"attempts":105,"requested":5,"shrubs":22,"trees":31},"drowned_garden":{"accepted":7,"attempts":30,"requested":7,"shrubs":31,"trees":45},"first_shore":{"accepted":11,"attempts":73,"requested":11,"shrubs":49,"trees":64},"gull_rest":{"accepted":6,"attempts":86,"requested":6,"shrubs":27,"trees":37},"lantern_cove":{"accepted":5,"attempts":212,"requested":5,"shrubs":23,"trees":35},"reedhaven":{"accepted":8,"attempts":141,"requested":8,"shrubs":35,"trees":41},"salt_crown":{"accepted":8,"attempts":97,"requested":8,"shrubs":33,"trees":41},"shellwatch":{"accepted":9,"attempts":256,"requested":12,"shrubs":42,"trees":43},"sluice_isle":{"accepted":9,"attempts":37,"requested":9,"shrubs":46,"trees":57},"tidal_cradle":{"accepted":8,"attempts":256,"requested":16,"shrubs":40,"trees":42}}
+[grass_field] grass ring: 32748 instances over 9 lattice layers (tuft_count asked for 30000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2024 instances over 1 lattice layers (count 280)
+[grass_field] cover tier strand_flowers 1868 instances over 1 lattice layers (count 100)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 32748 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PASS: Actual Water world builds with freed Guardian fixture
+PASS: Freed Guardian stands outside hidden captive crystal
+PASS: No fixture awards water_guardian_claimed
+PASS: No fixture awards water_guardian_settled
+PASS: No fixture awards water_currents_restored
+PASS: No fixture awards realm_relic_water_earned
+PASS: No fixture awards realm_relic_water_placed
+PASS: Nearby freed Guardian offers actual companionship interaction
+PASS: Chamber offers an explicit Decline the Deep Watcher interaction
+PASS: Decline shows its consequence before any commitment
+PASS: First decline press arms a confirmation
+PASS: Consequence step commits nothing
+PASS: Immediate second press is ignored, still armed, nothing committed
+PASS: Walking out of the prompt radius disarms the decline
+PASS: A decline the host refused commits nothing and does not claim success
+PASS: Inviting disarms a pending decline confirmation
+PASS: Actual offer creates Guardian through durable claim service
+PASS: Guardian claim waits on host before roster choice
+PASS: Solo offer is bound to this character's own per-participant claim id
+PASS: Claim names its world instance, not only the slot locator
+PASS: Host journals this character's once-only offer marker
+PASS: Guardian prompt closes for a character that already holds its offer
+PASS: Pending choice cannot settle world or earn relic early
+PASS: Guardian reservation exists in actual world disk journal
+PASS: Production five-holder roster ceremony opens for Guardian
+PASS: Actual holder choice presents release confirmation
+PASS: Actual farewell completes Guardian handover
+PASS: Guardian takes chosen holder with exactly five owned
+PASS: Other companion identity retained at holder0
+PASS: Other companion identity retained at holder2
+PASS: Other companion identity retained at holder3
+PASS: Other companion identity retained at holder4
+PASS: Actual character file receipts Guardian handover
+PASS: Same saved character file owns the chosen Guardian
+PASS: Host removes Guardian reservation after saved receipt acknowledgment
+PASS: Completed roster choice publishes water_guardian_settled
+PASS: World journal persists water_guardian_settled
+PASS: Completed roster choice publishes water_currents_restored
+PASS: World journal persists water_currents_restored
+PASS: Completed roster choice publishes realm_relic_water_earned
+PASS: World journal persists realm_relic_water_earned
+PASS: Settled Guardian no longer duplicates the owned companion in chamber
+PASS: Water realm leaves relic placement to the Meadows shrine circle
+PASS: Earned Tideglass Compass waits for the Meadows home circle
+PASS: A character that has not answered sees invite and decline
+PASS: Host-confirmed decline shows the done message
+PASS: Confirmed decline journals this character's answer through the host
+PASS: Decline grants no creature
+PASS: Decline answer is in the world journal
+PASS: Answered character no longer sees the ceremony prompts
+PASS: Answered character greeting Edda hears no Guardian offer
+PASS: A character that may still answer is offered by Edda
+PASS: Third character's own Guardian claim is journaled
+PASS: The claim is held locally, not yet presented
+PASS: Held-claim decline shows a pending wording before the host journals it
+PASS: No done message while the host still holds the claim
+PASS: Declining the held claim grants nothing
+PASS: The claim resend retries the refusal until the host journals it
+PASS: Done message follows the host's confirmation
+PASS: Journaled decline still grants nothing
+PASS: guardian-ceremony-room-accept has a free holder and sees the invite
+PASS: With a free holder Game opens the real Creatures tab on the Accept/Decline confirm
+PASS: A free holder does not auto-accept: nothing granted or receipted before the answer
+PASS: Controller focus lands on Accept
+PASS: The confirm holds the shell's input in the farewell panel
+PASS: The confirm names the volunteer's offer as the chamber does
+PASS: Subtitle names the species and level
+PASS: 'This choice is final.' stands on its own line
+PASS: The body says it plainly: joins your party in the free slot
+PASS: The A glyph rides on the focused answer (Accept)
+PASS: 'Decide later' carries the B glyph
+PASS: Waiting never answers the offer
+PASS: Decide later returns to the ordinary Creatures tab with the shell's input free
+PASS: Focus returns to the belt rows
+PASS: Backing out leaves the offer pending: neither granted nor declined
+PASS: A world message tells the player where to answer: Edda or the chamber
+PASS: The tab says the same where-to-answer line, once
+PASS: Staying on the Creatures tab does not re-present the offer
+PASS: The belt rows take the stick again
+PASS: Cycling away and back onto Creatures does not trap the player
+PASS: Player reopens the menu on Creatures
+PASS: Reopening the Creatures tab does not re-present it either; the offer still waits
+PASS: The chamber offers 'Answer the Deep Watcher' for a put-off offer
+PASS: Answering at the chamber asks again on the Creatures tab, focus on Accept
+PASS: Pressing the real Accept button adds the Guardian to the free holder
+PASS: Accept saves the receipt to the character file
+PASS: Host settles this character's own claim after Accept
+PASS: Accept ends the confirm and frees the shell
+PASS: A second press grants nothing more
+PASS: guardian-ceremony-room-decline has a free holder and sees the invite
+PASS: With a free holder Game opens the real Creatures tab on the Accept/Decline confirm
+PASS: Down moves focus from Accept to Decline
+PASS: Focus is fenced to the two answers
+PASS: Decline first asks to confirm, focus on Back
+PASS: The decline step says: Let the Deep Watcher go? This is final.
+PASS: The decline step commits nothing
+PASS: Back returns to the offer with focus on Accept
+PASS: B on the decline step is Back too, never Decide later
+PASS: Down moves from Back to Confirm
+PASS: Pressing the real Decline button grants nothing
+PASS: Decline is the host-journaled refusal
+PASS: The tab says the host-confirmed result, no ellipsis: The Deep Watcher stays free.
+PASS: Decline ends the confirm
+PASS: The tab's decline is said once: no second world message from the chamber
+PASS: guardian-ceremony-room-decline-pending has a free holder and sees the invite
+PASS: With a free holder Game opens the real Creatures tab on the Accept/Decline confirm
+PASS: Decline shows the pending wording until the host journals it
+PASS: Unjournaled decline grants nothing and presents nothing
+PASS: The resend journals the tab's refusal and the done message follows
+PASS: Journaled tab decline still grants nothing
+PASS: guardian-ceremony-room-decline-open has a free holder and sees the invite
+PASS: With a free holder Game opens the real Creatures tab on the Accept/Decline confirm
+PASS: Declining... while the host has not journaled the refusal
+PASS: Once the host journals it the tab replaces Declining... with: The Deep Watcher stays free.
+PASS: Said once: the chamber does not repeat the tab's result
+PASS: guardian-ceremony-edda-answer has a free holder and sees the invite
+PASS: With a free holder Game opens the real Creatures tab on the Accept/Decline confirm
+PASS: Edda offers the conversation to a character holding a put-off offer
+PASS: Edda's offer request re-presents the same put-off offer
+PASS: Accepting after Edda grants it once
+Water Guardian ceremony smoke: 120 checks, 0 failures
+exit 0

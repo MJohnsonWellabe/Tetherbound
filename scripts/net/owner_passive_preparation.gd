@@ -27,6 +27,8 @@ static func make(retained: Dictionary, duty: Dictionary, before: Dictionary, rev
 		"input_prefix_hash": cursor.get("prefix_hash", ""), "final_sequence": cursor.get("sequence", -1)}
 	if duty.get("action") == "combat_round_reward":
 		prepared.after = preload("res://scripts/net/combat_round_reward.gd").settled_before(prepared.after, duty.intent, duty.context)
+	elif duty.get("action") == "wild_defeat_share":
+		prepared.after = preload("res://scripts/net/wild_actor_scope.gd").settled_before(prepared.after, duty.context)
 	prepared.hash = preparation_hash(prepared)
 	return prepared if valid_host(prepared, retained, cursor) else {}
 
@@ -95,7 +97,7 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 	if raw.host_context.get("source_key") != expected_source: return false
 	match raw.source_kind:
 		"foundation_request":
-			return request.op in ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest"] \
+			return request.op in ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest", "essence_release"] \
 				and E._integer(request.revision, 0, 2147483645) and request.revision == raw.revision
 		"altar_spend":
 			return request.op == "altar_spend" \
@@ -238,7 +240,7 @@ static func valid(raw: Variant, retained: Variant) -> bool:
 	if not RECORD.errors(raw.before, raw.character_id).is_empty() \
 		or not RECORD.errors(raw.after, raw.character_id).is_empty() \
 		or not EVENT.valid(retained, raw.world_namespace, raw.world_id) \
-		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery", "combat_round_reward"] \
+		or retained.delivery_id != raw.retained_event or raw.duty.get("action") not in ["research_event", "capture_offer", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"] \
 		or raw.duty.get("character_id") != raw.character_id or fingerprint(raw.duty) != raw.duty_hash:
 		return false
 	var matches := 0
@@ -248,17 +250,21 @@ static func valid(raw: Variant, retained: Variant) -> bool:
 	if raw.duty.action == "combat_round_reward":
 		core_before = preload("res://scripts/net/combat_round_reward.gd").settled_before(raw.before, raw.duty.intent, raw.duty.context)
 		if core_before.is_empty(): return false
+	elif raw.duty.action == "wild_defeat_share":
+		core_before = preload("res://scripts/net/wild_actor_scope.gd").settled_before(raw.before, raw.duty.context)
+		if core_before.is_empty(): return false
 	return matches == 1 and preparation_hash(raw) == raw.hash \
 		and exact(PASSIVE.unchanged_core(core_before), PASSIVE.unchanged_core(raw.after))
 
 static func valid_host(raw: Variant, retained: Variant, cursor: Variant) -> bool:
 	if not valid(raw, retained) or not cursor is Dictionary: return false
 	var expected: Variant = cursor.get("state")
-	if raw.duty.action == "combat_round_reward":
+	if raw.duty.action in ["combat_round_reward", "wild_defeat_share"]:
 		if not expected is Dictionary: return false
 		var replay: Script = load("res://scripts/net/owner_passive_replay.gd")
 		if replay.call("_cursor_valid", cursor) != true: return false
-		expected = preload("res://scripts/net/combat_round_reward.gd").settled_before(expected, raw.duty.intent, raw.duty.context)
+		if raw.duty.action == "wild_defeat_share": expected = preload("res://scripts/net/wild_actor_scope.gd").settled_before(expected, raw.duty.context)
+		else: expected = preload("res://scripts/net/combat_round_reward.gd").settled_before(expected, raw.duty.intent, raw.duty.context)
 	return exact(raw.before, cursor.get("base")) \
 		and exact(raw.after, expected) \
 		and exact(raw.discoveries, cursor.get("discovered")) \

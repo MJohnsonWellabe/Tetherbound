@@ -3,13 +3,15 @@ description: Restore Godot and project imports, then reject import-time parse/re
 runs:
   using: composite
   steps:
+    # The editor binary only (CI-SEGMENTS setup trim, 2026-10-05). Verify jobs
+    # never export, and the old shared `godot-<version>` cache also carried
+    # the export templates: a 1.27 GB restore per job (run 37246987633) for
+    # a ~150 MB binary. The export job keeps its own templates cache.
     - uses: actions/cache@v4
       id: cache-godot
       with:
-        path: |
-          ~/godot-bin
-          ~/.local/share/godot/export_templates
-        key: godot-${{ env.GODOT_VERSION }}
+        path: ~/godot-bin
+        key: godot-editor-${{ env.GODOT_VERSION }}
     - shell: bash
       if: steps.cache-godot.outputs.cache-hit != 'true'
       run: |
@@ -20,11 +22,6 @@ runs:
         unzip -q /tmp/godot.zip -d /tmp
         mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
         chmod +x ~/godot-bin/godot
-        curl -sSL -o /tmp/templates.tpz "${base}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-        unzip -q /tmp/templates.tpz -d /tmp
-        template_dir=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-        mkdir -p "$(dirname "$template_dir")"
-        mv /tmp/templates "$template_dir"
     - shell: bash
       run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
     - uses: actions/cache@v4

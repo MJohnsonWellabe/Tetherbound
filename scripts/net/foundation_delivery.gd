@@ -23,7 +23,7 @@ static func valid(raw: Variant, schema_check: Callable,
 	if raw.delivery_id != ESSENCE.training_delivery_id(raw.world_namespace, raw.character_id) or raw.action_id != raw.receipt.sha256_text(): return false
 	if not raw.intent is Dictionary or not raw.host_context is Dictionary or not raw.before is Dictionary or not raw.after is Dictionary: return false
 	if raw.host_context.get("source_key") != raw.source_key or raw.before.get("character_id") != raw.character_id or raw.after.get("character_id") != raw.character_id: return false
-	if raw.action in ["rematch_win", "combat_mastery", "combat_round_reward"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
+	if raw.action in ["rematch_win", "combat_mastery", "combat_round_reward", "wild_defeat_share"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
 		or raw.host_context.get("session_id") != raw.session_id): return false
 	if raw.action in ["resource", "groom"] and (raw.host_context.get("world_namespace") != raw.world_namespace \
 		or raw.host_context.get("world_id") != raw.world_id): return false
@@ -65,49 +65,12 @@ static func make_record(world: String, world_namespace: String, epoch: String,
 static func owner_plan(current: Dictionary, row: Dictionary, schema_check: Callable) -> Dictionary:
 	if not valid(row, schema_check, str(current.get("character_id", ""))): return ACTIONS.deny("invalid_action_delivery")
 	if row.action == "combat_round_reward": return preload("res://scripts/net/combat_round_reward.gd").owner_plan(current, row)
-	if not baseline_matches(current, row.before, row):
-		if baseline_matches(current, row.after, row):
+	if row.action == "wild_defeat_share": return preload("res://scripts/net/wild_actor_scope.gd").owner_plan(current, row)
+	# Passive care keeps accruing after the stage; it is merged at install.
+	if not ESSENCE.owner_matches_after(current, row.before):
+		if ESSENCE.owner_matches_after(current, row.after):
 			return {"ok": true, "duplicate": true, "requires_owner_save": true, "state": current.duplicate(true), "receipt": row.receipt}
 		return ACTIONS.deny("owner_action_baseline_conflict")
 	if row.status != "pending": return ACTIONS.deny("accepted_history_is_not_a_new_award")
 	return {"ok": true, "duplicate": false, "requires_owner_save": true,
 		"before": current.duplicate(true), "state": row.after.duplicate(true), "receipt": row.receipt}
-
-
-## Party passive care (owner_passive_replay.PASSIVE_FIELDS) keeps accruing
-## between the host's stage and the owner's apply; that drift is not a
-## conflicting transaction (same rule as essence.stage_training_owner, F27).
-## Every other field, inventory and progression included, compares exactly.
-## The applied state is still the row's exact after, so host and owner agree;
-## the cost is that care accrued between stage and apply (seconds in normal
-## play) reverts to the staged values rather than being kept.
-## Only for a transaction that leaves every passive-care field unchanged; one
-## that writes care itself (Groom, feeding, rest) still compares exactly, so
-## drift there stays an explicit owner-baseline refusal (Groom has its own
-## groom_passive_sync carrier).
-const CARE_ACTIONS := ["groom", "den", "camp_rest", "feast_feed", "feast_cook"]
-static func baseline_matches(current: Dictionary, expected: Dictionary, row: Dictionary) -> bool:
-	if ESSENCE._equivalent(current, expected): return true
-	var fields: Array = (load("res://scripts/net/owner_passive_replay.gd") as GDScript).get_script_constant_map().get("PASSIVE_FIELDS", [])
-	if fields.is_empty() or row.get("action") in CARE_ACTIONS \
-		or not row.get("before") is Dictionary or not row.get("after") is Dictionary: return false
-	if not ESSENCE._equivalent(_only_passive(row.before, fields), _only_passive(row.after, fields)): return false
-	return ESSENCE._equivalent(_without_passive(current, fields), _without_passive(expected, fields))
-
-static func _only_passive(record: Dictionary, fields: Array) -> Array:
-	var out: Array = []
-	if record.get("party") is Array:
-		for card: Variant in record.party:
-			var kept := {}
-			if card is Dictionary:
-				for field: String in fields: kept[field] = card.get(field)
-			out.append(kept)
-	return out
-
-static func _without_passive(record: Dictionary, fields: Array) -> Dictionary:
-	var stripped := record.duplicate(true)
-	if stripped.get("party") is Array:
-		for card: Variant in stripped.party:
-			if card is Dictionary:
-				for field: String in fields: card.erase(field)
-	return stripped

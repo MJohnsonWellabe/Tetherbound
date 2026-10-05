@@ -27,8 +27,8 @@
   },
   "towers": {
     "_why": "Original board-backed belvederes extend the four existing drum piers above the walking routes. Open masonry arches, slate hip roofs and finials add the missing architectural silhouette; routes, gates and gameplay collision retain their dimensions.",
-    "enabled": false,
-    "_disposition": "Unaccepted C2 belvedere candidate retained disabled for consolidation; see ralph/reports/VISUAL/cloudreach-c2-candidate/towers-v2.",
+    "enabled": true,
+    "_disposition": "Enabled by the VISUAL cloudreach lane for F40#4: the re-proof judge asked for a massed drum with turrets, and towers-v2's blind review found the roofed towers give the skyline its destination identity. Judged with the far-plane fix in ralph/reports/VISUAL/cloudreach/F40-4; set false to restore the bare drum.",
     "shaft_height_m": 15.0,
     "shaft_width_m": 2.2,
     "shaft_depth_m": 3.0,

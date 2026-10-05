@@ -248,8 +248,14 @@ func _service_leg(points: Array, label: String) -> bool:
 	_release_all()
 	if not _failed.is_empty():
 		return false
+	# Arrival can land mid-step off a doorstep or kerb; let the released body
+	# land (bounded) before the unchanged distance and floor gate reads it.
+	for _frame in 20:
+		if _player.is_on_floor():
+			break
+		await physics_frame
 	if _xz().distance_to(_path[-1]) > .75 or not _player.is_on_floor():
-		return _services_fail("actual collision/floor approach failed: " + label)
+		return _services_fail("actual collision/floor approach failed: %s (distance %.2f, floor %s, body %s)" % [label, _xz().distance_to(_path[-1]), _player.is_on_floor(), _player.global_position])
 	return true
 
 

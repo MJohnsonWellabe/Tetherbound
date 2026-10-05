@@ -9,6 +9,7 @@ var context: Dictionary = {}
 var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
+const INTERRUPT_MARGIN_S := 0.15
 var _moves: RefCounted = MOVE_DB.new()
 var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
@@ -56,6 +57,13 @@ func _act(policy: String) -> void:
 ## escape, reacts to a tell only after it has been visible for the declared
 ## observation delay, leaves the DISPLAYED strike geometry (walking when time
 ## allows, bursting when it does not) and spends its charged on recoveries.
+## COMBAT §4's declared interrupt (coordinator ruling 2026-10-05): when the
+## read tell still has longer to run than the charged windup plus
+## INTERRUPT_MARGIN_S and the opponent is inside charged reach, it throws the
+## charged INTO the tell instead of stepping out, as a reading player does.
+## The margin is 0.15 s: about nine 60 Hz frames, covering the strike-reaim
+## turn, one hitstop (charged 70 ms) and input-to-commit latency, so a charge
+## that starts is one that lands before the opponent's strike.
 ## It reads the displayed committed shape and the recovery/stagger state, and
 ## times tells as a player who knows each pattern's authored length would
 ## (exact, via the body's beat clock; the base C2 pilot does the same). It
@@ -77,6 +85,16 @@ func _read(_policy: String) -> void:
 	var observed := float(MATH.config().get("patterns", {}).get("reactions", {}).get("observation_s", 0.25))
 	var seen := float(_frames - _tell_seen_frame) / Engine.physics_ticks_per_second if telling else 0.0
 	_note_fields(telling)
+	if telling and seen >= observed and _manager.charged_ready() \
+			and not bool(_wild.call("protected_heavy_committed") if _wild.has_method("protected_heavy_committed") else false) \
+			and distance < _manager.combat_move_reach("charged") - 0.15 \
+			and _manager.wind_value() >= _manager.wind_cost("charged"):
+		var charged_profile: Dictionary = _manager.call("_move_profile", "player_charged", str(_manager.active_creature().move_charged))
+		var windup := float(charged_profile.get("windup", 0.55)) * float(MATH.config().get("player_pace", {}).get("windup_scale", 1.0))
+		if float(_wild.get("_beat_left")) > windup + INTERRUPT_MARGIN_S:
+			_press("combat_charged")
+			_tally["read_interrupts"] = int(_tally.get("read_interrupts", 0)) + 1
+			return
 	if telling and seen >= observed:
 		var escape := _escape_from_tell()
 		if not escape.is_empty():

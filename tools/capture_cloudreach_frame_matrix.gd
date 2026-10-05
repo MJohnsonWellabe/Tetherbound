@@ -94,7 +94,10 @@ var OUT := DEFAULT_OUT
 
 const DAY_HOUR := 10.0
 const NIGHT_HOUR := 23.0
-const BOOT_MAX_FRAMES := 900
+## Wall-clock boot budget, not a frame count: on Forward+ Medium a GTX 1060
+## draws the booting world at ~0.24 s/frame, so 900 frames (217 s) ran out
+## before EncounterDirector appeared (Codex cloudreach-2).
+const BOOT_MAX_SECONDS := 600.0
 const FLOOR_WAIT_MAX := 600
 const SETTLE_PHYSICS := 12
 const POSE_FRAMES := 14
@@ -398,22 +401,27 @@ func _boot() -> bool:
 	if _player == null or _rig == null or _camera == null:
 		push_error("frame matrix: production Player/CameraRig/Camera3D missing")
 		return false
-	_set_render(false)
 	# Boot by polling for the runtime's EncounterDirector (and its mount flag),
 	# not a fixed frame count.
 	var booted := false
-	for i in BOOT_MAX_FRAMES:
+	var boot_start := Time.get_ticks_msec()
+	var boot_i := -1
+	while Time.get_ticks_msec() - boot_start < int(BOOT_MAX_SECONDS * 1000.0):
+		boot_i += 1
 		await process_frame
 		_director = _world.get_node_or_null(^"EncounterDirector")
 		var runtime := _world.get_node_or_null(^"CloudreachRuntime")
 		var mounted := runtime == null or bool(runtime.get("_mounted"))
-		if _director != null and mounted and i >= 20:
+		if _director != null and mounted and boot_i >= 20:
 			booted = true
-			print("frame matrix: world booted after %d frames" % i)
+			print("frame matrix: world booted after %d frames" % boot_i)
 			break
 	if not booted:
 		push_error("frame matrix: EncounterDirector never appeared; refusing partial-scene evidence")
 		return false
+	# Render only after boot: under Forward+ the world's shell build awaits drawn
+	# frames, so a loop switched off before this point never reaches EncounterDirector.
+	_set_render(false)
 	for i in 10:
 		await physics_frame
 	_camera.make_current()

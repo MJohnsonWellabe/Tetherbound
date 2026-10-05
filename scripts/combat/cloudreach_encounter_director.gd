@@ -31,6 +31,10 @@ const RECALL_MIN_NORMAL_Y := 0.7
 ## The companion put on the trainer's own footprint (the last rung) ignores the
 ## trainer's capsule until they are this far apart, then collides as before.
 const RECALL_SHARED_CLEAR_M := 0.6
+## Corridor half-width beyond the companion's visual flank, and how far behind
+## the lens a body still covers it (`_in_lens_corridor`).
+const LENS_CORRIDOR_MARGIN_M := 0.6
+const LENS_CORRIDOR_BEHIND_M := 1.5
 
 
 var _recall_shared_footprint: WeakRef
@@ -746,6 +750,8 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 			if is_nan(floor_y):
 				continue
 			var spot := Vector3(candidate.x, floor_y, candidate.z)
+			if _in_lens_corridor(origin, spot, body, radius):
+				continue
 			if _recall_path_on_level(trainer, origin, spot, level, body) \
 					and _recall_body_fits(trainer, spot, body):
 				return spot
@@ -758,6 +764,35 @@ func _recall_spot(trainer: PhysicsBody3D, body: Node3D, requested: Vector3, leve
 		(body as PhysicsBody3D).add_collision_exception_with(trainer)
 		_recall_shared_footprint = weakref(body)
 	return Vector3(origin.x, level, origin.z)
+
+
+## C2/F08#4 (frames 09, 10, 25, 29): when the requested flank fails its floor
+## check on a narrow bridge or terrace, the ring walks round to the spots behind
+## the trainer -- straight down the exploration camera's line, where a 3 m
+## companion fills the frame or stands on the lens. A spot whose footprint lies
+## in the corridor from just behind the camera to the trainer is skipped; when
+## every ring spot is skipped the follower closes on the trainer as it does on
+## any unverified station (or a snap takes the shared footprint).
+func _in_lens_corridor(origin: Vector3, spot: Vector3, body: Node3D, radius: float) -> bool:
+	if not is_inside_tree():
+		return false
+	var camera := get_viewport().get_camera_3d()
+	if camera == null:
+		return false
+	var lens := Vector2(camera.global_position.x, camera.global_position.z)
+	var to_trainer := Vector2(origin.x, origin.z) - lens
+	var reach := to_trainer.length()
+	if reach < 0.5:
+		return false
+	var axis := to_trainer / reach
+	var rel := Vector2(spot.x, spot.z) - lens
+	var along := rel.dot(axis)
+	var extent := radius
+	if body.has_method("visual_flank_extent"):
+		extent = maxf(extent, float(body.call("visual_flank_extent")))
+	if along < -(extent + LENS_CORRIDOR_BEHIND_M) or along > reach:
+		return false
+	return absf(rel.cross(axis)) < extent + LENS_CORRIDOR_MARGIN_M
 
 
 ## The last rung's exception ends once the trainer has walked clear of the

@@ -6,6 +6,8 @@ const ORDER := preload("res://scripts/data/biome_order.gd")
 const CONFIG_PATH := "res://data/config/crossing_hall.json"
 const ARCH_MODEL := "res://assets/buildings/quaternius_medieval/Wall_Arch.gltf"
 const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
+const OPEN_MEMBRANE_EMISSION := .25
+const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
@@ -34,6 +36,7 @@ func build(config: Dictionary) -> bool:
 	_build_frontage()
 	_close_shell()
 	_build_interior_ambient()
+	_declare_interior_volumes()
 	var catalog := CATALOG_PRESENTATION.new()
 	catalog.name = "MeadowsCatalogPresentation"
 	add_child(catalog)
@@ -140,13 +143,12 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.add_child(arrival)
 	_pedestals[str(entry.biome)] = slot
 	var prompt := preload("res://scripts/world/interactable.gd").new()
-	prompt.configure("Hang your %s relic" % ORDER.display_name(str(entry.biome)), float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
-	prompt.connect("activated", func() -> void:
-		var game := get_node_or_null(^"/root/Game")
-		var session: Node = game.get("session") if game != null else null
-		if session != null:
-			var verdict: Dictionary = session.call("request_relic_hang", str(entry.biome))
-			if verdict.get("ok") != true: game.call("push_world_message", str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))))
+	# Reserved biomes display as "Sealed"; "Hang your Sealed relic" named a
+	# state as if it were an item (F17#6 r3 judge). They say why they are empty.
+	var live := (ORDER.config().get("live", []) as Array).has(ORDER.canonical_id(str(entry.biome)))
+	var offer := "Hang your %s relic" % ORDER.display_name(str(entry.biome)) if live else "Sealed shrine: no road reaches its relic yet"
+	prompt.configure(offer, float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m), true)
+	prompt.connect("activated", func() -> void: hang_relic(str(entry.biome)))
 	slot.add_child(prompt)
 
 
@@ -167,6 +169,7 @@ func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
 	label.modulate = Color("f2e6cb")
 	label.outline_modulate = Color("332c27")
 	label.no_depth_test = false
+	label.double_sided = false # Seen from behind it read mirrored ("sffilC...", F17#6 r4).
 	parent.add_child(label)
 	return label
 
@@ -194,7 +197,7 @@ func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	flame.position = _position(settings.get("flame_at", [0, .15, .12]))
 	lantern.add_child(flame)
 	var light := OmniLight3D.new()
-	light.position = at
+	light.position = lantern.transform * flame.position # In the cage, not at the wall foot.
 	light.light_color = Color(str(settings.get("colour", "#ffd7a4")))
 	light.light_energy = float(settings.get("energy", 1.15))
 	light.omni_range = float(settings.get("range_m", 8.5))
@@ -283,6 +286,7 @@ func _process(delta: float) -> void:
 	_elapsed = 0
 	refresh_from_game()
 	_refresh_interior_ambient()
+	_refresh_home_membrane()
 
 
 ## The night sky ambient (art.json, energy ~2.3 to keep the outdoors readable)
@@ -352,6 +356,29 @@ func _refresh_interior_ambient() -> void:
 		material.ao_enabled = dark
 
 
+## Coordinator ruling (F17#6 r4): at night the home arch's open membrane, seen
+## straight through the entrance, read as a flat cream card in the doorway.
+## While WorldLook is dark its emission is scaled by
+## `home_membrane_night_emission_scale`. Presentation only: arch state,
+## emission_enabled and portal logic are unchanged.
+func _refresh_home_membrane() -> void:
+	var arch: Node3D = _arches.get("home")
+	if arch == null or str(arch.get_meta("arch_state", "")) != "open":
+		return
+	var surface := arch.get_node_or_null("PortalSurface") as MeshInstance3D
+	var material := surface.material_override as StandardMaterial3D if surface != null else null
+	if material == null:
+		return
+	var tree := get_tree()
+	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
+	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
+	var scale := float(_config.get("home_membrane_night_emission_scale", 1.0)) if dark else 1.0
+	material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION * scale
+	var night_tint := Color(str(_config.get("home_membrane_night_tint", "#ffffff")))
+	material.albedo_color = Color(str((_config.get("arch_materials", {}) as Dictionary).get("open", "#303947"))) * (night_tint if dark else Color.WHITE)
+	material.emission = material.albedo_color
+
+
 func refresh_from_game() -> void:
 	var game := get_node_or_null("/root/Game")
 	var session: Node = game.get("session") if game != null else null
@@ -398,8 +425,9 @@ func apply_display(display: Dictionary) -> void:
 		material.albedo_color = Color(str(colors.get(state, "#303947")))
 		material.emission_enabled = state == "open" or state == "stirred"
 		material.emission = material.albedo_color
-		material.emission_energy_multiplier = .25 if state == "open" else .1
+		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
+	_refresh_home_membrane()
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
 		pedestal.set_meta("relic_displayed", bool(shrine.get(id, false)))
@@ -479,3 +507,123 @@ func _build_frontage() -> void:
 		light.omni_range = float(light_settings.get("range_m", 7.5))
 		light.shadow_enabled = false
 		fixture.add_child(light)
+	# F17#6 r3 judge: at night the doorway read as a blank emissive plane (the
+	# home arch membrane seen straight through it) and no light reached the
+	# ground at the door. A low warm pool on the threshold and one in the
+	# vestibule light the step and the arch reveal so the doorway has depth.
+	for row: Dictionary in settings.get("door_pools", []):
+		var pool := OmniLight3D.new()
+		pool.name = str(row.get("name", "HallDoorPool"))
+		pool.position = _position(row.at)
+		pool.light_color = Color(str(row.get("colour", light_settings.get("colour", "#ffd09b"))))
+		pool.light_energy = float(row.get("energy", 1.0))
+		pool.omni_range = float(row.get("range_m", 4.0))
+		pool.omni_attenuation = float(row.get("attenuation", 1.0))
+		pool.shadow_enabled = false
+		frontage.add_child(pool)
+
+
+## Shrine relic hang through Session.request_relic_hang (host authority).
+## F18 found an ordinary guest press did nothing: a guest's
+## homestead_personal_view() is only a cache, so the request carried a stale
+## or -1 character revision that the host refused as
+## source_or_revision_changed, and that refusal came back on
+## homestead_action_completed with nobody listening. A guest now refreshes the
+## view first and waits for it (craft_panel.gd's pattern), and the host's
+## saved decision is surfaced when it arrives.
+const RELIC_VIEW_TIMEOUT_S := 3.0
+const RELIC_REPLY_TIMEOUT_S := 10.0
+var _relic_pending := ""
+var _relic_game: Node
+
+
+func hang_relic(biome: String, game: Node = null) -> void:
+	if game == null:
+		game = get_node_or_null(^"/root/Game")
+	var session: Node = game.get("session") if game != null else null
+	if session == null or not _relic_pending.is_empty():
+		return
+	if session.has_method("portal_runtime_ready") and session.call("portal_runtime_ready") != true:
+		game.call("push_world_message", "The shrines are still asleep; they wake with the Hall's arches.")
+		return
+	_relic_pending = biome
+	_relic_game = game
+	if not bool(session.call("is_host")):
+		if not await _relic_view_refreshed(session):
+			_relic_pending = ""
+			game.call("push_world_message", "The shrine is waiting for the host. Try again.")
+			return
+		if not session.is_connected("homestead_action_completed", _relic_reply):
+			session.connect("homestead_action_completed", _relic_reply)
+	var verdict: Dictionary = session.call("request_relic_hang", biome)
+	if verdict.get("code") == "awaiting_saved_decision":
+		# Guest: the host's saved decision arrives on homestead_action_completed.
+		# A reply that never comes must not lock the shrine for later presses.
+		var tree := Engine.get_main_loop() as SceneTree
+		if tree == null:
+			return
+		await tree.create_timer(RELIC_REPLY_TIMEOUT_S).timeout
+		if _relic_pending == biome:
+			_relic_pending = ""
+			if session.is_connected("homestead_action_completed", _relic_reply):
+				session.disconnect("homestead_action_completed", _relic_reply)
+		return
+	_relic_pending = ""
+	if verdict.get("ok") != true:
+		game.call("push_world_message", _relic_refusal_text(verdict))
+
+
+func _relic_view_refreshed(session: Node) -> bool:
+	var state := {"done": false}
+	var mark := func() -> void: state.done = true
+	# Connect before asking, so a reply in the same frame is not missed.
+	session.connect("homestead_personal_view_completed", mark, CONNECT_ONE_SHOT)
+	session.call("homestead_personal_view")
+	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		if session.is_connected("homestead_personal_view_completed", mark):
+			session.disconnect("homestead_personal_view_completed", mark)
+		return state.done
+	var timer := tree.create_timer(RELIC_VIEW_TIMEOUT_S)
+	while not state.done and timer.time_left > 0.0:
+		await tree.process_frame
+	if session.is_connected("homestead_personal_view_completed", mark):
+		session.disconnect("homestead_personal_view_completed", mark)
+	return state.done
+
+
+func _relic_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
+	if op != "relic_hang" or str(intent.get("biome", "")) != _relic_pending:
+		return
+	_relic_pending = ""
+	var game := _relic_game if is_instance_valid(_relic_game) else get_node_or_null(^"/root/Game")
+	var session: Node = game.get("session") if game != null else null
+	if session != null and session.is_connected("homestead_action_completed", _relic_reply):
+		session.disconnect("homestead_action_completed", _relic_reply)
+	if result.get("ok") != true and game != null:
+		game.call("push_world_message", _relic_refusal_text(result))
+
+
+static func _relic_refusal_text(verdict: Dictionary) -> String:
+	match str(verdict.get("code", "")):
+		"personal_relic_required": return "You have no relic for this shrine yet."
+		"actual_shrine_pedestal_required", "source_or_revision_changed": return "Stand at the shrine and try again."
+	return str(verdict.get("reason", verdict.get("code", "The relic is waiting for its saved transaction.")))
+
+
+## F17#6 r4 judge: the cyan objective beam showed inside the Hall, in the
+## creature's face and through the nave roof (the shell has no roof
+## collider to test against). The Hall declares its interior boxes (local
+## space, crossing_hall.json `interior_volumes`); objective_beacon.gd stands
+## the beam down while the camera is inside any declared interior.
+func _declare_interior_volumes() -> void:
+	var boxes: Array[AABB] = []
+	for row: Variant in _config.get("interior_volumes", []):
+		if row is Dictionary and (row.get("min", []) as Array).size() == 3 and (row.get("max", []) as Array).size() == 3:
+			var low := _position(row.min)
+			boxes.append(AABB(low, _position(row.max) - low))
+	if boxes.is_empty():
+		return
+	set_meta(OBJECTIVE_BEACON.INTERIOR_BOXES_META, boxes)
+	add_to_group(OBJECTIVE_BEACON.INTERIOR_GROUP)
+

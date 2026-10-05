@@ -29,9 +29,11 @@ const PARTY := preload("res://autoload/party.gd")
 const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
+const TRAIT_RULES := preload("res://scripts/creatures/traits.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINING_READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const ORDINARY_RELEASE := preload("res://scripts/net/essence_release_service.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
@@ -1398,21 +1400,17 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_appraisal_stars = int(creature.call("overall_appraisal_stars", cfg))
 	_appraisal_pips.queue_redraw()
 
-	var primary := str(creature.get("trait_primary"))
-	var secondary: String = str(creature.call("revealed_trait_secondary", cfg))
-	if primary == "":
-		_detail_traits.text = ""
-		_detail_trait_desc.text = ""
-	elif secondary == "":
-		_detail_traits.text = "Trait: %s" % str(_traits.call("display_name", primary))
-		_detail_trait_desc.text = str(_traits.call("description", primary))
-	else:
-		_detail_traits.text = "Traits: %s, %s" % [
-			str(_traits.call("display_name", primary)), str(_traits.call("display_name", secondary))
-		]
-		_detail_trait_desc.text = "%s  //  %s" % [
-			str(_traits.call("description", primary)), str(_traits.call("description", secondary))
-		]
+	# F30#1: the creature's ACTIVE traits (rolled, taught and a bond-revealed
+	# secondary) from the one F30 pool, never the legacy 8-trait table, so this
+	# line and the training readout below cannot name different traits.
+	var trait_rows := TRAIT_RULES.rows(creature)
+	var trait_names: Array[String] = []
+	var trait_descriptions: Array[String] = []
+	for row: Dictionary in trait_rows:
+		trait_names.append("%s (%s)" % [str(row.get("display_name", row.id)), str(row.get("rarity", "")).capitalize()])
+		trait_descriptions.append(str(row.get("description", "")))
+	_detail_traits.text = ("Trait: " if trait_rows.size() == 1 else "Traits: ") + ", ".join(trait_names) if not trait_rows.is_empty() else ""
+	_detail_trait_desc.text = "  //  ".join(trait_descriptions) if not trait_rows.is_empty() else ""
 	# An untraited creature collapses both lines instead of leaving two empty
 	# FONT_READ rows between HP and EXP.
 	_detail_traits.visible = not _detail_traits.text.is_empty()
@@ -1972,6 +1970,7 @@ func _maybe_begin_release() -> void:
 			say("%s joins the belt." % str(pending.call("label")))
 		return
 
+	_bind_ordinary_release(pending)
 	_release_stage = "choose"
 	_release_for = pending
 	_release_target = -1
@@ -2563,7 +2562,9 @@ func _begin_farewell(index: int) -> void:
 			_farewell_body.text += " Release is unavailable. Your team and items stay unchanged."
 		else:
 			var payout := _release_payout_text(_release_quote.get("payout", []))
-			_farewell_body.text += " " + ("No essence is paid for a newcomer you never kept." if index >= PARTY.MAX_CREATURES else "Release payout: " + payout + ".")
+			if index >= PARTY.MAX_CREATURES: _farewell_body.text += " No essence is paid for a newcomer you never kept."
+			elif payout.is_empty(): _farewell_body.text += " No essence is paid: " + str(_release_quote.get("unpaid_reason", "")) + "."
+			else: _farewell_body.text += " Release payout: " + payout + "."
 	_farewell_keep.grab_focus()
 
 
@@ -2677,6 +2678,16 @@ func _typed_release_required(pending: RefCounted) -> bool:
 		return _release_service.call("owns_pending_capture", pending) == true
 	return true
 
+## F27#1: an ordinary (untyped) catch overflow on the solo/host owner pays its
+## released creature's type essence through the typed essence_release action.
+func _bind_ordinary_release(pending: RefCounted) -> void:
+	if is_instance_valid(_release_service) and _release_service.has_method("owns_pending_capture") \
+			and _release_service.call("owns_pending_capture", pending) == true: return
+	var service: Node = ORDINARY_RELEASE.attach(state())
+	if service != null and service.call("owns_pending_capture", pending) == true:
+		configure_release_service(service)
+
+
 func configure_release_service(service: Node) -> bool:
 	if (_release_stage != "" and _release_request_id.is_empty()) or not is_instance_valid(service): return false
 	for method: String in ["quote_release", "submit_release", "reconcile_release"]:
@@ -2708,7 +2719,9 @@ func _quote_release_choice() -> Dictionary:
 			or not raw.get("payout") is Array: return {}
 	if released_uid.is_empty():
 		if not raw.payout.is_empty(): return {}
-	elif _release_payout_text(raw.payout).is_empty(): return {}
+	elif _release_payout_text(raw.payout).is_empty():
+		# A guest's creature the host cannot pay for still goes free, unpaid.
+		if not raw.payout.is_empty() or not raw.get("unpaid_reason") is String or str(raw.unpaid_reason).is_empty(): return {}
 	return raw.duplicate(true)
 
 
@@ -2776,6 +2789,7 @@ func _on_release_completed(release_id: String, result: Dictionary) -> void:
 			say("Your saved choice is still arriving. Reconnect if it does not finish.")
 			return
 	var context := _release_context
+	if result.has("unpaid_reason"): context.payout_text = "" # Released, but no essence was paid.
 	_release_request_id = ""
 	_release_context = {}
 	_release_quote = {}

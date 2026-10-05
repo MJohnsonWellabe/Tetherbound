@@ -18,6 +18,10 @@ terracotta round tiles, uneven stone) and no oxblood.
    name band. Placed at local x = 9.2/14.8, z = −4.5/−1.5/1.5/4.5. Empty and relic-displayed variants.
 3. **Civic stone frontage set (optional, if the kit cannot deliver stone mass).** Stone gable and buttress pieces at
    MegaKit module scale (2 m wide × 3.12 m per storey) so the Hall reads as stone against the timber houses.
+4. **Creature nest (optional, shared by camp and home beds).** A round woven or straw nest about 4.5 m across, with a raised
+   rim at knee-to-hip height against the 1.8 m trainer and a dished straw centre, replacing the square camp-bed pad and the
+   single-log bolster that `creature_bed.gd` composes today. Code-blind r3 on the home bed: it reads as "a sandpit or stage
+   before a nest" (`../home-creature-bed/r3/codeblind-review.md`). The bed footprint and the prompt stay unchanged.
 
 Provenance, task IDs, scale check and the before/after code-blind judgement are Codex's under RD-26. Integration stays
 flag-off on failure. Current geometry for comparison: `../visual-bar-r3/frames/nave-*`, `shrine-*`, `hall-approach_*`.

@@ -1,0 +1,277 @@
+{
+ "name": "F06: two-peer MID-RIDE rejoin keeps the rider sane, the party whole and Cloudreach's closed counterweight gate shut -- segment 3 (CONTROL: open gate)",
+ "claim": "CONTROL from checkpoint midride/after_b. Segment of tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json (CI segments: tests/helpers/ci_segments.gd).",
+ "_comment_segment": {
+  "original": "tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json",
+  "peer_map": {
+   "0": 0,
+   "1": 1
+  }
+ },
+ "peers": 2,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": "all",
+   "action": "legacy_physical_crossings_fixture",
+   "args": {
+    "regression": "cloudreach_midride_rejoin"
+   },
+   "label": "disclosed retired realm-key crossing fixture; shipping flag remains off",
+   "_comment": "SEGMENT: orig #1 again -- every fresh process takes the disclosed fixture"
+  },
+  {
+   "peer": 0,
+   "action": "seg_verify",
+   "args": {
+    "boundary": "midride/after_b",
+    "role": "host"
+   },
+   "label": "handoff: host checkpoint midride/after_b",
+   "_comment": "SEGMENT: committed checkpoint is fresh and meets the start contract"
+  },
+  {
+   "peer": 0,
+   "action": "load_save",
+   "args": {
+    "from": "tests/fixtures/segments/midride/after_b/host"
+   },
+   "expect_data": {
+    "realm": "cloudreach"
+   },
+   "budget_frames": 20000,
+   "label": "host loads midride/after_b",
+   "_comment": "SEGMENT: host resumes from the checkpoint through Game.load_game and a boot of its realm"
+  },
+  {
+   "peer": 0,
+   "action": "seg_contract",
+   "args": {
+    "boundary": "midride/after_b",
+    "role": "host"
+   },
+   "label": "handoff: live host meets midride/after_b",
+   "_comment": "SEGMENT: live host state meets the start contract"
+  },
+  {
+   "peer": 1,
+   "action": "seg_seed_home",
+   "args": {
+    "boundary": "midride/after_b",
+    "role": "guest"
+   },
+   "label": "handoff: guest checkpoint midride/after_b seeded",
+   "_comment": "SEGMENT: guest's own disk holds the checkpoint; the next production join reads it"
+  },
+  {
+   "peer": 0,
+   "action": "host",
+   "_comment": "SEGMENT: host opens its session (orig #15's step, for this segment's fresh host)"
+  },
+  {
+   "peer": 0,
+   "action": "assert",
+   "args": {
+    "check": "flag_set",
+    "flag": "cloudreach_upper_route_unlocked"
+   },
+   "expect": "FAIL",
+   "label": "host world: gate CLOSED before the join",
+   "_comment": "SEGMENT: orig #16's check, for this segment's fresh host"
+  },
+  {
+   "peer": 1,
+   "action": "production_join",
+   "args": {
+    "returning_route": false,
+    "budget_frames": 20000
+   },
+   "budget_frames": 20000,
+   "label": "guest continues its own save through the title's production join",
+   "_comment": "SEGMENT: guest resumes the character B left on disk, through the title's production join"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   },
+   "_comment": "SEGMENT: both peers registered"
+  },
+  {
+   "peer": 1,
+   "probe": "player_identity",
+   "expect_data": {
+    "realm": "cloudreach",
+    "party_size": 5,
+    "character_id": "$character1"
+   },
+   "label": "JOIN: guest in Cloudreach, five owned",
+   "_comment": "SEGMENT: same identity check as orig #20"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "cloudreach_upper_route_unlocked",
+    "scope": "world"
+   },
+   "label": "CONTROL setup: the host opens the gate",
+   "_comment": "orig #94"
+  },
+  {
+   "peer": 1,
+   "action": "wait_flag",
+   "args": {
+    "flag": "cloudreach_upper_route_unlocked"
+   },
+   "_comment": "orig #95"
+  },
+  {
+   "peer": 1,
+   "action": "teleport",
+   "args": {
+    "at": [
+     -400.0,
+     783.0,
+     3890.0
+    ],
+    "settle": 120
+   },
+   "label": "CONTROL setup: guest past the now-open gate",
+   "_comment": "orig #96"
+  },
+  {
+   "peer": 1,
+   "action": "wait",
+   "args": {
+    "frames": 60
+   },
+   "_comment": "orig #97"
+  },
+  {
+   "peer": 1,
+   "action": "deploy_creature",
+   "args": {
+    "settle": 60
+   },
+   "_comment": "orig #98"
+  },
+  {
+   "peer": 1,
+   "action": "ride_mount",
+   "args": {
+    "settle": 30
+   },
+   "label": "CONTROL: guest mounts past the open gate",
+   "_comment": "orig #99"
+  },
+  {
+   "peer": 1,
+   "action": "stick",
+   "args": {
+    "stick": "left",
+    "x": 0.0,
+    "y": 1.0,
+    "frames": 45
+   },
+   "label": "CONTROL: rides a few metres",
+   "_comment": "orig #100"
+  },
+  {
+   "peer": 1,
+   "probe": "riding",
+   "label": "CONTROL: mounted before leaving",
+   "expect_data": {
+    "local": {
+     "mounted": true
+    }
+   },
+   "_comment": "orig #101"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "_comment": "orig #102"
+  },
+  {
+   "peer": 1,
+   "action": "leave",
+   "args": {
+    "reason": "midride_control"
+   },
+   "label": "CONTROL: guest leaves mid-ride (clean leave, world scene kept)",
+   "_comment": "orig #103"
+  },
+  {
+   "peer": 0,
+   "action": "expect_peers",
+   "args": {
+    "count": 1
+   },
+   "budget_frames": 900,
+   "_comment": "orig #104"
+  },
+  {
+   "peer": 1,
+   "action": "join",
+   "args": {},
+   "label": "CONTROL: guest rejoins the open world",
+   "_comment": "orig #105"
+  },
+  {
+   "peer": "all",
+   "action": "expect_peers",
+   "args": {
+    "count": 2
+   },
+   "_comment": "orig #106"
+  },
+  {
+   "peer": 1,
+   "action": "wait",
+   "args": {
+    "frames": 60
+   },
+   "_comment": "orig #107"
+  },
+  {
+   "peer": 1,
+   "probe": "player_identity",
+   "label": "CONTROL: five owned",
+   "expect_data": {
+    "realm": "cloudreach",
+    "party_size": 5,
+    "character_id": "$character1"
+   },
+   "_comment": "orig #108"
+  },
+  {
+   "peer": 1,
+   "probe": "riding",
+   "label": "CONTROL: rider state after a clean mid-ride leave/join (recorded)",
+   "_comment": "orig #109"
+  },
+  {
+   "peer": 1,
+   "probe": "position",
+   "label": "CONTROL: position",
+   "_comment": "orig #110"
+  },
+  {
+   "peer": 1,
+   "action": "assert",
+   "args": {
+    "check": "near",
+    "at": [
+     -400.0,
+     3890.0
+    ],
+    "within": 40.0
+   },
+   "label": "CONTROL: with the gate open the rejoined guest DOES stand past it (the 'not sealed' check can fail)",
+   "_comment": "orig #111"
+  }
+ ]
+}
