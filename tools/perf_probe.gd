@@ -138,6 +138,8 @@ func _run() -> void:
 			for far: float in _fars:
 				_set_far(far)
 				rows.append(await _measure_stand("stand_%d_far%d" % [index, int(far)], here, there))
+			# Attribute (and continue) at the realm's own floor, the first value.
+			_set_far(_fars[0])
 		if _attribute and index == _attribute_stand:
 			_report["attribution_stand_%d" % index] = await _attribute_subtrees()
 		_save_rows(rows)
@@ -271,6 +273,11 @@ func _attribute_subtrees() -> Array:
 		print("PERF ATTR (sun shadow) draws=%.0f prims=%.0f" % [delta.x, delta.y])
 	for family: String in families:
 		var members: Array = families[family]
+		var nodes := 0
+		for node: Node in members:
+			nodes += 1 + node.get_child_count(true)
+		if nodes < 20:
+			continue
 		var delta := await _toggle_delta(func(on: bool) -> void:
 			for node: Node3D in members:
 				node.visible = on)
