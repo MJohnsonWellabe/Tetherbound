@@ -3172,7 +3172,9 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 	var prefix := "starter_choice:%s:" % local.character_id
 	var receipt: String = prefix + uid
 	for prior: String in local.redesign_character.transaction_receipts:
-		if prior.begins_with(prefix): return prior == receipt and local.flags.call("has", "opening:starter_granted") == true
+		if prior.begins_with(prefix):
+			return prior == receipt and local.flags.call("has", "opening:starter_granted") == true \
+				and _original_starter_admitted(instance, receipt)
 	if party.size() != 0 or session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not bool(save_system.call("finish_fallback")) or save_system.call("fallback_busy") == true: return false
 	# Flush callbacks cannot turn this into another character's adoption.
@@ -3194,7 +3196,31 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 		local.redesign_character = before_personal
 		local.flags.call("load_data", before_flags)
 		return false
-	return true
+	return _original_starter_admitted(instance, receipt)
+
+
+## F01#6a. A guest's starter is not finished when its own file holds it: the
+## host's admitted copy of that character must hold the same receipt at the same
+## revision, or the next host-staged action for this guest would meet
+## `owner_action_baseline_conflict`. So after the local commit the guest asks the
+## host to stage `starter_choice` (`scripts/net/starter_choice_action.gd`), which
+## validates the card against the host's own admitted record and config. The
+## journalled row then reaches this owner already equal to its after-state, takes
+## `owner_plan`'s existing duplicate path (save + ACK, no mutation), and the host
+## accepts it. Until the row reads accepted the opening director keeps the
+## adoption pending, so nothing else can be staged in between. Re-asking is
+## idempotent: the host answers an identical request from its existing row.
+## The host is its own admitted record and needs none of this.
+func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
+	if is_host(): return true
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if row is Dictionary and row.get("action") == "starter_choice" and row.get("receipt") == receipt \
+			and row.get("status") == "accepted":
+		return true
+	var card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+	if card.is_empty() or not session.has_method("request_original_starter"): return false
+	session.call("request_original_starter", card)
+	return false
 
 
 ## Whether THIS process may write its own character's starter receipt: the host,
