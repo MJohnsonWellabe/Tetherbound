@@ -3247,6 +3247,48 @@ func cancel_original_starter_request() -> bool:
 	return true
 
 
+## F01#6a. The guest's explicit retry once the opening's bound has passed
+## (opening.json `starters.admission_retry_after_seconds`). Never writes the
+## party itself: it re-sends the first request when nothing is journalled yet,
+## re-runs this owner's install of a pending `starter_choice` row, or -- when the
+## pending live instance no longer equals the card the host staged, which the
+## installer refuses forever -- adopts the host's own staged card as the pending
+## instance so that same install can succeed. Returns {action[, instance]}.
+func retry_original_starter() -> Dictionary:
+	if is_host() or _original_starter_pending == null or session == null: return {"action": "none"}
+	var row := _pending_starter_row()
+	if row.is_empty():
+		if not session.has_method("request_original_starter") or _original_starter_pending_card.is_empty(): return {"action": "none"}
+		session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
+		return {"action": "resent"}
+	var staged: Variant = row.get("after", {}).get("party", []) if row.get("after") is Dictionary else []
+	if not staged is Array or (staged as Array).size() != 1 or not (staged as Array)[0] is Dictionary: return {"action": "none"}
+	var card: Dictionary = (staged as Array)[0]
+	var codec := preload("res://scripts/save/water_capture_codec.gd")
+	var rules := preload("res://scripts/net/character_record_rules.gd")
+	if not preload("res://scripts/creatures/essence.gd")._equivalent(rules.portable_card(codec.encode(_original_starter_pending)), card):
+		# The staged card is the portable one (in-fight energy stripped); the
+		# codec needs the field, and a fresh starter's energy is zero.
+		var full: Dictionary = card.duplicate(true)
+		if not full.has("energy"): full["energy"] = 0.0
+		var adopted: RefCounted = codec.decode(full)
+		if adopted == null or str(adopted.get("uid")) != str(card.get("uid", "")): return {"action": "none"}
+		_original_starter_pending = adopted
+		_original_starter_pending_card = codec.encode(adopted)
+		return {"action": "readopt", "instance": adopted}
+	var ledger: Node = session.get_node_or_null(^"LedgerRpc") if session is Node else null
+	if ledger != null and ledger.has_method("_process_creature_training"): ledger.call("_process_creature_training", row)
+	return {"action": "reinstall"}
+
+
+## This character's journalled, not yet accepted original-starter row, or {}.
+func _pending_starter_row() -> Dictionary:
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if not row is Dictionary or row.get("action") != "starter_choice" or row.get("status") != "pending" \
+			or not str(row.get("receipt", "")).begins_with("starter_choice:%s:" % local.character_id): return {}
+	return row
+
+
 func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
 	if is_host(): return true
 	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))

@@ -41,6 +41,11 @@ class EncounterDouble extends Node:
 		return true
 	func ally_instance() -> RefCounted:
 		return ally
+	var spawned: RefCounted = null
+	func _spawn_ally_body(creature: RefCounted) -> bool:
+		spawned = creature
+		ally = creature
+		return true
 
 
 class PickerDouble extends Node:
@@ -183,4 +188,98 @@ func test_a_terminal_host_refusal_releases_the_choice() -> void:
 	assert_true(bool(director.get("_picker_pending")), "the picker is offered again for a fresh choice")
 	encounter.free()
 	picker.free()
+	director.free()
+
+
+## --- F01#6a: a starter row that stays pending never strands the opening ---
+##
+## Coordinator condition 3: after `starters.admission_retry_after_seconds` the
+## automatic retries stop and the player gets a clear retry; a definite host
+## refusal resets to the picker (test_a_terminal_host_refusal_releases_the_choice).
+
+class RetryGame extends Node:
+	var outcome: Dictionary = {"action": "resent"}
+	var retries := 0
+	var messages: Array = []
+	func retry_original_starter() -> Dictionary:
+		retries += 1
+		return outcome
+	func push_world_message(text: String) -> void:
+		messages.append(text)
+
+
+class GameSeamDirector extends "res://scripts/story/sequence_director.gd":
+	var test_game: Node = null
+	func _effect_game() -> Node:
+		return test_game
+
+
+func _stalled_director(encounter: EncounterDouble, creature: RefCounted) -> Node:
+	var director: Node = GameSeamDirector.new()
+	director.set("_encounter", encounter)
+	director.set("_beat", OPENING.CHOOSE)
+	director.set("_adopting", true)
+	var bound_ms := int(1000.0 * float(OPENING.config().get("starters", {}).get("admission_retry_after_seconds", 45.0)))
+	director.set("_pending_starter_adoption", {"instance": creature, "nickname": "Bud", "character_id": CHARACTER,
+		"world_instance_id": "w", "session_epoch": "e", "retry_at": 0,
+		"started_ms": Time.get_ticks_msec() - bound_ms - 1000, "notice_at": 0})
+	return director
+
+
+func test_the_wait_is_bounded_and_then_offers_a_clear_retry() -> void:
+	var bound := float(OPENING.config().get("starters", {}).get("admission_retry_after_seconds", 0.0))
+	assert_true(bound > 0.0, "the bound is a configured tunable (opening.json)")
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	var director := _stalled_director(encounter, creature)
+	assert_false(bool(director.call("starter_adoption_stalled")))
+	director.call("_retry_original_starter_save")
+	assert_true(bool(director.call("starter_adoption_stalled")), "past the bound the automatic retries stop")
+	assert_false((director.get("_pending_starter_adoption") as Dictionary).is_empty(),
+		"the choice is kept: nothing was refused, so nothing is released")
+	assert_eq(encounter.dismissed, 0, "the follower stays while the player decides to retry")
+	encounter.free()
+	director.free()
+
+
+func test_the_retry_rearms_the_wait_and_asks_again() -> void:
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	director.set("test_game", game)
+	director.call("_retry_original_starter_save")
+	assert_true(bool(director.call("starter_adoption_stalled")))
+	assert_true(game.messages.size() == 1 and str(game.messages[0]).contains("Interact"),
+		"the player is told plainly that Interact asks again (%s)" % str(game.messages))
+	await director.call("retry_starter_adoption")
+	assert_false(bool(director.call("starter_adoption_stalled")), "the retry re-arms the bounded wait")
+	assert_eq(game.retries, 1, "the game is asked to resend, reinstall or re-adopt")
+	assert_true(game.messages.size() == 2, "the player is told it is asking again")
+	var pending: Dictionary = director.get("_pending_starter_adoption")
+	assert_true(Time.get_ticks_msec() - int(pending.started_ms) < 2000, "a fresh bound starts now")
+	game.free()
+	encounter.free()
+	director.free()
+
+
+func test_a_readopted_card_replaces_the_follower() -> void:
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	var staged := _starter()
+	game.outcome = {"action": "readopt", "instance": staged}
+	director.set("test_game", game)
+	director.call("_retry_original_starter_save")
+	await director.call("retry_starter_adoption")
+	assert_true((director.get("_pending_starter_adoption") as Dictionary).instance == staged,
+		"the pending choice is now the host's staged card")
+	assert_eq(encounter.dismissed, 1, "the stale follower is dismissed")
+	assert_true(encounter.spawned == staged, "the follower is rebuilt from the instance the installer will append")
+	game.free()
+	encounter.free()
 	director.free()

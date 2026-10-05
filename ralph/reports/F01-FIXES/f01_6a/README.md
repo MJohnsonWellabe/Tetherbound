@@ -71,12 +71,22 @@ A second, fresh review of 2d69daf5 returned **APPROVE**. Its non-blocking findin
 - **Fixed:** the host caps the starter nickname at the naming grid's `MAX_LENGTH` and refuses control characters (`invalid_starter_nickname`).
 - **Fixed:** the retry comment no longer claims the install tolerates drift.
 - **Fixed:** the inflation test now requires the freshness rule itself to refuse at least 6 of the fields.
-- **Open:** a starter row that stays pending, for example after a failed install or save, keeps the opening waiting with the 10 s notice and no exit short of leaving the session.
+- **Fixed (coordinator condition 3):** a starter row that stays pending no longer strands the opening. After `starters.admission_retry_after_seconds` (45 s, `data/config/opening.json`), the automatic retries stop and the guest is told plainly that Interact asks again. The retry (`game_state.gd retry_original_starter`) does one of three things:
+  - re-sends the first card when nothing is journalled;
+  - re-runs this owner's install of a pending row;
+  - when the follower no longer equals the host's staged card, which the installer would refuse forever, adopts the host's card as the pending instance and rebuilds the follower from it.
+
+  A definite host refusal still resets cleanly to the picker. The tests are:
+  - `test_the_wait_is_bounded_and_then_offers_a_clear_retry`
+  - `test_the_retry_rearms_the_wait_and_asks_again`
+  - `test_a_readopted_card_replaces_the_follower`
+  - the three `test_a_retry_*` cases
+  - `test_a_terminal_host_refusal_releases_the_choice`
 
 Residual risk carried from the first review (non-blocking):
 
-- **Mira's and Tam's progression gifts** have no host-side prerequisite beyond the per-character receipt. A modified guest could claim the starting tools early. Each still pays only once per character.
-- **Non-terminal host replies keep the wait open indefinitely.** These are busy or awaiting answers. The wait shows a notice every 10 s.
+- **Mira's and Tam's progression gifts** have no host-side prerequisite beyond the per-character receipt. A modified guest could claim the starting tools early. Each still pays only once per character. The coordinator accepted this as residual: the gifts are offered from the first visit.
+- **Non-terminal host replies** (busy, awaiting) are now bounded by the same retry above.
 
 The live race in the opening smoke was a harness bug, not a product bug. It reproduced only when two smokes shared the CPU (op14, op16). The dialogue dismiss loop sent raw press edges, and a slow process frame flushed the last press after the box had closed, which reopened Grandpa's walk-out hint. Local diagnostics caught the arbiter firing on that fresh press at physics frame 2648. The loop now uses the shared F11#3 tap.
 

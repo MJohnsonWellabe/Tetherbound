@@ -1982,7 +1982,16 @@ func _adopt(index: int, chosen: String) -> void:
 var _pending_starter_adoption: Dictionary = {}
 
 func _retry_original_starter_save() -> void:
-	if _pending_starter_adoption.is_empty() or Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
+	if _pending_starter_adoption.is_empty() or _pending_starter_adoption.get("stalled") == true: return
+	# Bounded: past `starters.admission_retry_after_seconds` the automatic
+	# retries stop and the player gets a clear, explicit retry instead.
+	if Time.get_ticks_msec() - int(_pending_starter_adoption.get("started_ms", Time.get_ticks_msec())) >= _starter_wait_bound_ms():
+		_pending_starter_adoption.stalled = true
+		var stalled_game := _effect_game()
+		if stalled_game != null and stalled_game.has_method("push_world_message"):
+			stalled_game.call("push_world_message", "The host has not confirmed your companion yet. Press Interact to ask again.")
+		return
+	if Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
 	var game := _effect_game()
 	if game == null or game.get("session") == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return
 	if game.get("local").character_id != _pending_starter_adoption.character_id or game.get("world").reward_delivery_namespace != _pending_starter_adoption.world_instance_id or game.get("session").call("_altar_current_epoch") != _pending_starter_adoption.session_epoch: return
@@ -2003,6 +2012,47 @@ func _retry_original_starter_save() -> void:
 ## told it is still being asked (opening.json `starters.admission_notice_seconds`).
 func _starter_wait_notice_ms() -> int:
 	return int(1000.0 * maxf(1.0, float(BEATS.config().get("starters", {}).get("admission_notice_seconds", 10.0))))
+
+
+## The bound on a guest's wait for the host's row
+## (opening.json `starters.admission_retry_after_seconds`).
+func _starter_wait_bound_ms() -> int:
+	return int(1000.0 * maxf(5.0, float(BEATS.config().get("starters", {}).get("admission_retry_after_seconds", 45.0))))
+
+
+func starter_adoption_stalled() -> bool:
+	return not _pending_starter_adoption.is_empty() and _pending_starter_adoption.get("stalled") == true
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if starter_adoption_stalled() and event.is_action_pressed("interact"):
+		get_viewport().set_input_as_handled()
+		retry_starter_adoption()
+
+
+## The player's explicit retry after the bound: re-arm the bounded wait and ask
+## the game to resend, reinstall or re-adopt the host's staged card
+## (game_state.gd `retry_original_starter`). A re-adopted instance replaces the
+## follower body so the follower stays the object the installer appends.
+func retry_starter_adoption() -> void:
+	if not starter_adoption_stalled():
+		return
+	var now := Time.get_ticks_msec()
+	_pending_starter_adoption.stalled = false
+	_pending_starter_adoption.started_ms = now
+	_pending_starter_adoption.retry_at = now + 3000
+	_pending_starter_adoption.notice_at = now + _starter_wait_notice_ms()
+	var game := _effect_game()
+	if game == null or not game.has_method("retry_original_starter"):
+		return
+	var outcome: Dictionary = game.call("retry_original_starter")
+	if outcome.get("action") == "readopt" and outcome.get("instance") is RefCounted:
+		_pending_starter_adoption.instance = outcome.instance
+		if _encounter != null and _encounter.has_method("dismiss_active_creature"):
+			_encounter.call("dismiss_active_creature")
+			await _encounter.call("_spawn_ally_body", outcome.instance)
+	if game.has_method("push_world_message"):
+		game.call("push_world_message", "Asking the host again to save your companion...")
 
 
 func _listen_for_starter_refusal(session: Variant) -> void:

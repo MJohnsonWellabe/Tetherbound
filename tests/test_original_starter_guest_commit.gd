@@ -243,3 +243,56 @@ func test_restores_keep_an_in_flight_choice_and_finishing_closes_the_picker() ->
 	var close_at := source.find("_starter_picker.call(\"close\")", finish_at)
 	assert_true(finish_at >= 0 and close_at > finish_at and close_at - finish_at < 400,
 		"finishing the adoption closes any picker left standing")
+
+
+
+## --- F01#6a: the explicit retry after the opening's bound -----------------
+
+func _journal_pending_row(card: Dictionary, uid: String) -> void:
+	var delivery_id := preload("res://scripts/creatures/essence.gd").training_delivery_id("starter-world", GUEST)
+	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "status": "pending",
+		"receipt": "starter_choice:%s:%s" % [GUEST, uid],
+		"after": {"party": [preload("res://scripts/net/character_record_rules.gd").portable_card(card)]}}
+
+
+func test_a_retry_with_nothing_journalled_resends_the_first_card() -> void:
+	var client := RequestingClient.new()
+	game.session = client
+	game.local.character_id = GUEST
+	game.world.reward_delivery_namespace = "starter-world"
+	var starter := _fresh_starter()
+	game._request_original_starter(starter, "Bud")
+	assert_eq(game.retry_original_starter().get("action"), "resent")
+	assert_eq(client.requests.size(), 2)
+	assert_eq(client.requests[1], client.requests[0], "the retry is the same request the host may already hold")
+
+
+func test_a_retry_with_a_matching_pending_row_reinstalls_it() -> void:
+	game.session = RequestingClient.new()
+	game.local.character_id = GUEST
+	game.world.reward_delivery_namespace = "starter-world"
+	var starter := _fresh_starter()
+	game._request_original_starter(starter, "Bud")
+	_journal_pending_row(preload("res://scripts/save/water_capture_codec.gd").encode(starter), str(starter.get("uid")))
+	assert_eq(game.retry_original_starter().get("action"), "reinstall",
+		"the host's row is re-run through this owner's install, never re-requested")
+	assert_true(game.pending_original_starter_instance() == starter, "the follower's own instance is kept")
+	assert_eq(game.party.size(), 0, "the retry itself never writes the party")
+
+
+func test_a_retry_adopts_the_host_card_when_the_follower_no_longer_matches() -> void:
+	game.session = RequestingClient.new()
+	game.local.character_id = GUEST
+	game.world.reward_delivery_namespace = "starter-world"
+	var starter := _fresh_starter()
+	game._request_original_starter(starter, "Bud")
+	var staged_card := preload("res://scripts/save/water_capture_codec.gd").encode(starter)
+	_journal_pending_row(staged_card, str(starter.get("uid")))
+	starter.set("happiness", float(starter.get("happiness")) - 5.0) # the live follower drifted
+	var outcome: Dictionary = game.retry_original_starter()
+	assert_eq(outcome.get("action"), "readopt", "the installer would refuse the drifted instance forever")
+	var adopted: RefCounted = outcome.get("instance")
+	assert_true(adopted != null and adopted != starter and str(adopted.get("uid")) == str(starter.get("uid")))
+	assert_true(game.pending_original_starter_instance() == adopted, "the installer now appends the host's staged card")
+	assert_eq(game.retry_original_starter().get("action"), "reinstall", "and the next retry installs it")
+	assert_eq(game.party.size(), 0)
