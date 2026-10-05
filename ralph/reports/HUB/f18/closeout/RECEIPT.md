@@ -1,6 +1,6 @@
 # F18 closeout receipt: portal runtime on (tb/f18)
 
-Shipped config has `session.redesign_portal_runtime_enabled = true` (flip commit b2dfc11e). Every proof below ran with it on. Saves stay v28. Head: 2927506a (main e2fa5e4e merged).
+Shipped config has `session.redesign_portal_runtime_enabled = true` (flip commit b2dfc11e). Every proof below ran with it on. Saves stay v28. Head: d492a7d0 (main f797d3c0 / #543 merged).
 
 ## Criteria
 
@@ -19,17 +19,22 @@ Shipped config has `session.redesign_portal_runtime_enabled = true` (flip commit
 - Guest ack expiry recovery (9fdf2332): REQUEST CHANGES (view requests at 2 Hz while away). Fixed in 6ee60120.
 - Arrival travel reset (79de8d82, 4683b4d5): APPROVE WITH NITS. Fixed in ea685537 (mint when durable; live-body bound).
 - Freshness, codec, settled portal marker (c2e41d4a, 9032d90e, 6de35900): APPROVE WITH NITS / APPROVE / APPROVE WITH NITS. Nits fixed in a5a0e09c.
+- Guest Home Key reconcile through the owner-passive freeze (5aeb29e7): APPROVE WITH NITS. Test gap fixed in 58474f22; combat is not re-checked at commit (matches waystone) and the per-gift request map is not pruned (bounded); both left as-is.
 - Disconnect guards, prompt sight, CI shards, diagnostics (05b08aeb, 7cbf31ad, 2927506a, 9756e15e, 164f4143, 01ce9949, 5a2ce54e): APPROVE WITH NITS / APPROVE / APPROVE WITH NITS / APPROVE. The unmeasured-smoke default no longer takes an isolated lower bound (fixed with this receipt); the misleading deny codes in the disconnect window stay as-is (fail closed).
 
 ## Other fixes this round
+- `opening_home_key.gd`: a returning guest's legacy Home Key reconcile waits for its unsettled finds (ccaae25c, 449c4e62) and stages through the owner-passive `action_gate("home_key")` freeze like waystone touches (5aeb29e7, 58474f22; `test_opening_home_key`, `test_owner_passive_preparation`, `test_owner_passive_sync`). Before this, a guest past the opening who gathered after joining stranded its owner-passive stream (render 37383201956: `owner_passive_delivery_authority_changed`).
+- `smoke_net_homestead_station_craft.gd`: the disclosed guest is a returning saved character that owns its starter and has played the opening (ac40245a; peer world launch).
 - `sequence_director.gd`: the Home Key gift batch is held until the owner record releases (orbs were lost); bounded 20 s exit.
 - `game_state.gd`: guest homecoming ack waits for a fresh personal view, re-sends on a slow cadence, logs refusals once.
 - `tools/ci/net_shards.py` + `.github/workflows/ci.yml`: measured durations for the three smokes the flip adds to the gate (from 37320223520); f20_ending runs alone; 21 shards.
 - `smoke_veridian_offer_choice.gd`: the disclosed capacity fixture holds `home_key_given` (a reload inferred the opening and the reconcile journalled against a roster the next case replaces).
-- Hot files touched: `session.gd`, `ledger_rpc.gd`, `ci.yml`. Shared: `water_capture_codec.gd`, `owner_passive_sync.gd`, `character_authority.gd`, `interactable.gd`.
+- Diagnostic-only prints removed before landing (d492a7d0).
+- Hot files touched: `session.gd`, `ledger_rpc.gd`, `ci.yml`. Shared: `water_capture_codec.gd`, `owner_passive_sync.gd`, `owner_passive_preparation.gd`, `character_authority.gd`, `interactable.gd`.
 
 ## CI
 - Multiplayer-wide (3 peers) 37320227493 @ea685537: green.
 - Full CI 37357846004 @9756e15e: all jobs green except shard 20 (`smoke_net_f20_ending`, fixed after that head in 2927506a: render 37361153872 green) and shard 6 (`smoke_net_homestead_station_craft`: Lane A's smoke gives its guest no party before the Home Key trip; routed).
+- `smoke_net_homestead_station_craft` render 37385363437 @5aeb29e7: finds credited on both peers, Home Key trip, craft at the host Kitchen, rejoin persistence and authority all PASS. Remaining FAIL: the F31#2 flag-on relic-power case (guest not at a Meadows pedestal and no hung Meadows relic in the fixture; the host's refusal is correct). Decision requested from the coordinator.
 - Unit batch on the main merge fbdcd1aa: 6237 tests; the 2 local failures were un-imported WAVs (pass after import).
 - Known-red jobs (`gate-b-full-known-red`, `continuous-core-known-red`) fail by design and are excluded.
