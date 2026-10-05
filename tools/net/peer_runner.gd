@@ -4922,7 +4922,8 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 		body.set("_lunge_tell_total", float(args.get("seconds", 30.0)))
 		body.set("_beat_left", float(args.get("seconds", 30.0)))
 		body.set("_tell_visible_since_ms", Time.get_ticks_msec())
-		var opponent: Variant = body.get("instance")
+		var opponent: Variant = runtime.get("_enemy")
+		if opponent == null: opponent = body.get("instance")
 		if opponent != null:
 			opponent.set("hp", float(opponent.get("max_hp")))
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
@@ -4930,7 +4931,7 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
 			"host_breaks": _f22_host_breaks,
 			"poise": float(body.get("_poise")),
-			"hp": float(body.get("instance").get("hp")) if body.get("instance") != null else -1.0, "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
+			"hp": float(runtime.get("_enemy").get("hp")) if runtime.get("_enemy") != null else -1.0, "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
 
 
 ## Counts the enemy staggers this peer's own CombatManager announces (a guest's
