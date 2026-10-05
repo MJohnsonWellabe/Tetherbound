@@ -37,7 +37,11 @@ const EARLY_START_FRAMES := 30
 const COOLDOWN_FRAMES := 150
 ## A charged move costs a full Energy meter, earned only by LANDED quick hits.
 const ENERGY_HITS := 4
-const QUICK_SWINGS := 12
+const QUICK_SWINGS := 8
+
+## Explicit, monotonic action ids: each start and its strike share one, so the
+## host matches the strike to its own committed start.
+var _action := 9000
 
 
 func _initialize() -> void:
@@ -49,6 +53,7 @@ func _init_budgets() -> void:
 	# Two full world builds can exceed the ordinary startup bound on a loaded
 	# machine. Gameplay bounds stay.
 	_budgets["hello_budget_s"] = 600.0
+	_budgets["smoke_step_budget_s_2peer"] = 1500.0
 
 
 func _run() -> void:
@@ -136,7 +141,9 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	for _swing in QUICK_SWINGS:
 		if landed >= ENERGY_HITS: break
 		var hp_was := await _host_hp()
-		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "quick", "settle": 15})
+		_action += 1
+		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "quick",
+			"action": _action, "settle": 15})
 		await step(1, "wait", {"frames": 30})
 		if await _host_hp() < hp_was - 0.001: landed += 1
 	out["energy_hits"] = landed
@@ -147,11 +154,14 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
-		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged", "settle": 15})
+		_action += 1
+		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
+			"action": _action, "settle": 15})
 	else:
-		var started: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
-			"slot": "charged", "start_only": true})
-		var action := int((started.get("data", {}) as Dictionary).get("submitted_action", 0))
+		_action += 1
+		var action := _action
+		await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
+			"slot": "charged", "action": action, "start_only": true})
 		await step(1, "wait", {"frames": EARLY_START_FRAMES})
 		pin = (await step(0, "f22_pin_tell", {})).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
