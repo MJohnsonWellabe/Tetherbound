@@ -1,0 +1,60 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 3363196,
+      "sha256": "e6efdad84cd79ee91762af87d6f29f0c1bd11e3059a15acd6d66b5955e02ee08"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 2826,
+      "sha256": "abf506c1e37d83a00308d66635a1d1ef7e53395f61b802ad8fdd7fe25c0380c1"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1088,
+      "sha256": "3b5d97a93525667923c378fe14aa1d0b3cb1d006266cab7c8c78c7b05bceb98e"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 394,
+      "sha256": "9bbfac6204483b9b6569fed39e9f4179f931c5376ab9acb555420bd757a18779"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 4296175,
+      "sha256": "1e1b3f298213ed9dcfef373830a571b0592252a1576e35330df19a3b137e5e2a"
+    },
+    {
+      "path": "frames/manifest.json.previous",
+      "archive": "raw-evidence-01.zip",
+      "size": 4296073,
+      "sha256": "815d70cd6801c13e84c61de06d445287f532e16b0de98e733b2eda2ab0f13ef5"
+    },
+    {
+      "path": "frames/water__tidal_cradle__10__tidal_cradle_saddle_camp__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 3117145,
+      "sha256": "38df343d335e3a710277a6cc1e4244bfcd525124ce8c5c3d85a53f69eee21050"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "source_commit": "b69148d5956025713d55dd1aa55223c619a3d649",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=water",
+    "--preset=Medium",
+    "--source-commit=b69148d5956025713d55dd1aa55223c619a3d649",
+    "--subset=Tidal Cradle Saddle Camp",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/water-medium-saddle-camp/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 108.719,
+  "native_elapsed_seconds": 94.625,
+  "native_started_utc": "2026-10-05T14:43:05.827116+00:00",
+  "preset": "Medium",
+  "profile": "D:\\tetherbound\\.artifacts\\f26-census-2\\water-medium-saddle-camp\\profile",
+  "scope": "Owned F26 production material census visual capture; no FPS/image-quality claim."
+}

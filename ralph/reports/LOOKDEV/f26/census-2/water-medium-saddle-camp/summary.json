@@ -1,0 +1,94 @@
+{
+  "source_commit": "b69148d5956025713d55dd1aa55223c619a3d649",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=water",
+    "--preset=Medium",
+    "--source-commit=b69148d5956025713d55dd1aa55223c619a3d649",
+    "--subset=Tidal Cradle Saddle Camp",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/water-medium-saddle-camp/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "native_elapsed_seconds": 94.625,
+  "supervisor_elapsed_seconds": 108.719,
+  "runtime_errors": [],
+  "native_complete": true,
+  "frame_count": 1,
+  "planned_frame_count": 1,
+  "native_failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "b69148d5956025713d55dd1aa55223c619a3d649"
+  },
+  "png_dimensions": {
+    "water__tidal_cradle__10__tidal_cradle_saddle_camp__day.png": [
+      1920,
+      1080
+    ]
+  },
+  "material_snapshots": [
+    {
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day",
+      "binding_count": 4356,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3354,
+        "untextured_material_may_be_authored_requires_source_review": 909
+      },
+      "resource_count": 2828
+    }
+  ],
+  "unbound_bindings_requiring_source_review": [
+    {
+      "node": "Player/Model/Body",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "Player/Model/Nose",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterSignpost/@MeshInstance3D@2142",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "BoxMesh",
+      "mesh_path": "",
+      "visible_in_tree": true
+    }
+  ],
+  "truncated_resource_graphs": 0,
+  "qualification": "Capture completeness and binding inventory only; full visual/material acceptance OPEN. Mounted/visible flags are not pixel or fallback proof. No FPS, travel, campaign or handheld claim."
+}
