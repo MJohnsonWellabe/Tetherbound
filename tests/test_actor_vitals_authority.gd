@@ -402,6 +402,45 @@ func test_round_reseat_without_uid_keeps_the_bound_active_creature() -> void:
 	body.free()
 
 
+class ReseatSession extends Node:
+	var owners := {1: "owner_host", 7: "owner_guest"}
+	func is_active() -> bool: return true
+	func is_host() -> bool: return true
+	func local_peer_id() -> int: return 1
+	func peers() -> Array: return [{"peer_id": 1}, {"peer_id": 7}]
+	func _authority_character(peer: int) -> String: return str(owners.get(peer, ""))
+
+
+## F27 flip review B1: a GUEST that disengaged at a trainer round boundary is
+## re-seated by encounter_director._resume_trainer_encounter under its own
+## host-admitted character, so its retained row (bound creature, actor
+## vitals) comes back instead of a blank participant whose round-two moves
+## are all refused.
+func test_trainer_round_reseat_restores_a_departed_guests_retained_row() -> void:
+	var owned: Dictionary = _portable(_player()).party[0]
+	var session := ReseatSession.new()
+	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
+	director.set("_session", session)
+	director.call("_ensure_encounter_arbiters")
+	var host: RefCounted = director.get("_encounter_host")
+	var rec: Dictionary = host.open(1, "meadows", "trainer", {"hp": 100.0, "hp_max": 100.0}, "host_uid", "owner_host")
+	var id := str(rec.encounter_id)
+	assert_true(host.join(id, 7, owned.uid, "owner_guest").ok)
+	var body := Node.new()
+	assert_true(host.bind_actor_body(id, 7, "owner_guest", owned, body.get_instance_id()).ok)
+	host.leave(id, 7) # the guest's manager disengages at the round boundary
+	assert_false(rec.participants.has(7))
+	director.set("_trainer_battle_participants", {1: true, 7: true})
+	assert_true(director.call("_resume_trainer_encounter", id))
+	var guest: Dictionary = rec.participants.get(7, {})
+	assert_eq(guest.get("character_id"), "owner_guest", "the guest is re-seated under its admitted character")
+	assert_eq(guest.get("creature_uid"), owned.uid, "its retained active creature comes back")
+	assert_eq(guest.get("actor_bound_uid"), owned.uid, "and so does its bound actor row")
+	body.free()
+	director.free()
+	session.free()
+
+
 func test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private() -> void:
 	var owned: Dictionary = _portable(_player()).party[0]
 	var host := ENCOUNTER.new()

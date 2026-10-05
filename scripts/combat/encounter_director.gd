@@ -8209,7 +8209,13 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 		var peer_id := int(peer)
 		if peer_id == _local_peer_id() or not live.has(peer_id) or not _realm_rpc_allowed(peer_id):
 			continue
-		_encounter_host.call("join", encounter_id, peer_id, "", "")
+		# The guest's host-admitted character, as _host_engage passes it: a
+		# guest that left at the round boundary is restored from its retained
+		# row (actor vitals, move resources, bound creature) instead of
+		# rejoining as a blank participant whose every round-two move is refused.
+		var guest_character := str(_session.call("_authority_character", peer_id)) \
+			if _session != null and _session.has_method("_authority_character") else ""
+		_encounter_host.call("join", encounter_id, peer_id, "", guest_character)
 	return true
 
 
