@@ -2962,6 +2962,12 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	if not is_instance_valid(wild): return deny
+	# A tracked trainer/boss actor binds lazily on first publication, which
+	# advances its actor generation. Bind it here, before the start freezes its
+	# binding, so the start and its arrival name the same actor generation;
+	# otherwise every participant's first attack of the fight is refused as
+	# move_start_required. A no-op when tracking is off or already bound.
+	_f22_publication_binding(id, peer, body)
 	# The live deployment and admitted loadout are both checked. No per-press
 	# move name, timing, resource claim or rank is accepted from a guest.
 	var binding := _strike_actor_binding(id, peer, body)
