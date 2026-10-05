@@ -31,6 +31,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return _craft_count(args)
 	if action == "craft_authority_count":
 		return _craft_authority_count(args)
+	if action == "gather_node_stand":
+		return await _gather_node_stand(args)
+	if action == "gather_node_take":
+		return await _gather_node_take(args)
+	if action == "gather_rows":
+		return _gather_rows(args)
 	if action == "relic_power_attempt":
 		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
@@ -437,6 +443,44 @@ func _craft_authority_count(args: Dictionary) -> Dictionary:
 				n += int(slot.get("n", 0))
 		counts[str(id)] = n
 	return {"verdict": "PASS", "detail": "host authority counts read", "data": {"counts": counts, "character_id": character}}
+
+## Ruling (b) setup: a harvest node, stood on BOTH peers as both run the same
+## world (the host registers its legal yields from its own copy).
+var _gather_nodes: Dictionary = {}
+
+func _gather_node_stand(args: Dictionary) -> Dictionary:
+	var id := str(args.get("id", ""))
+	var node: Node3D = load("res://scripts/world/harvest_node.gd").new()
+	node.name = "SmokeHarvest_" + id
+	current_scene.add_child(node)
+	node.call("setup", {"item": str(args.get("item", "berries")), "amount": int(args.get("amount", 2)),
+		"order": id, "realm": "meadows", "label": "Gather"})
+	_gather_nodes[id] = node
+	await physics_frame
+	return {"verdict": "PASS", "detail": "stood harvest node '%s'" % id}
+
+## Guest: gather it through the node's own path (claim -> host ledger).
+func _gather_node_take(args: Dictionary) -> Dictionary:
+	var node: Node = _gather_nodes.get(str(args.get("id", "")))
+	if node == null or not is_instance_valid(node):
+		return {"verdict": "FAIL", "detail": "no stood node %s" % str(args.get("id", ""))}
+	node.call("gather")
+	for i in 20: await physics_frame
+	return {"verdict": "PASS", "detail": "gathered '%s'" % str(args.get("id", ""))}
+
+## Host: the character's batch carrier and how many batch rows its world
+## still holds (read-only).
+func _gather_rows(args: Dictionary) -> Dictionary:
+	var world: RefCounted = root.get_node("Game").get("world")
+	var character := str(args.get("character_id", ""))
+	var gather: GDScript = load("res://scripts/net/gather_batches.gd")
+	var rows := 0
+	for raw: Variant in world.reward_deliveries.values():
+		if raw is Dictionary and str(raw.get("character_id", "")) == character \
+				and int(gather.call("seq_of", str(raw.get("source", "")))) >= 1:
+			rows += 1
+	return {"verdict": "PASS", "detail": "gather rows read", "data": {"rows": rows,
+		"batch": gather.call("batch", world.redesign_world, character)}}
 
 func _craft_count(args: Dictionary) -> Dictionary:
 	var out := {}

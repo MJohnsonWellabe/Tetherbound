@@ -27,11 +27,19 @@ func _run() -> void:
 	if not await _craft_step(0, "production_host", {"port": port, "appearance_id": "trainer", "display_name": "CraftHost"}, 9000): return
 	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
 		"returning_route": false, "character": {"appearance_id": "lyra", "display_name": "CraftGuest"}}, 9000): return
-	# The guest's own ingredients, gathered the ordinary co-op way: world finds
-	# the smoke stands (disclosed setup), claimed through the host's ledger. A
-	# guest's find pays through a journaled reward delivery, so the host's own
-	# character record (what station crafts read) must gain exactly the find.
-	for find: Array in [["f31_craft_berries", "berries", 4], ["f31_craft_fiber", "fiber", 1]]:
+	# The guest's own ingredients, gathered the ordinary co-op way through the
+	# host's ledger (disclosed setup: the smoke stands the nodes and finds on
+	# both peers). Harvests pay through one batched delivery, the fiber find
+	# through its own delivery, so the host's own character record (what
+	# station crafts read) must gain exactly what the guest gathered.
+	# Berries from two harvest nodes: a guest's harvests accrue into one batch
+	# and arrive as one delivery after the flush (ruling (b)).
+	for node_id: String in ["f31_berry_a", "f31_berry_b"]:
+		if not await _craft_step(0, "gather_node_stand", {"id": node_id, "item": "berries", "amount": 2}): return
+		if not await _craft_step(1, "gather_node_stand", {"id": node_id, "item": "berries", "amount": 2}): return
+		if not await _craft_step(1, "gather_node_take", {"id": node_id}): return
+	await step(1, "wait", {"frames": 240})
+	for find: Array in [["f31_craft_fiber", "fiber", 1]]:
 		# Both peers stand the same find, as both run the same world scene: the
 		# host takes the item and count from its own copy, never the request.
 		if not await _craft_step(0, "pickup_stand", {"id": find[0], "item": find[1], "realm": "meadows", "count": find[2]}): return
@@ -73,6 +81,11 @@ func _run() -> void:
 		var held_back := await _craft_data(0, "craft_authority_count", {"character_id": guest_id, "ids": COUNTED})
 		if not held_back.is_empty():
 			check(held_back.counts == back.counts, "the host's authority record matches the guest after the reconnect %s" % str(held_back.counts))
+		var batched := await _craft_data(0, "gather_rows", {"character_id": guest_id})
+		if not batched.is_empty():
+			check(int(batched.batch.next_seq) >= 2 and (batched.batch.open as Dictionary).is_empty(),
+				"the guest's harvests flushed as a batch %s" % str(batched.batch))
+			check(int(batched.rows) == 0, "acked and replayed batch rows were pruned from the host world (%d left)" % int(batched.rows))
 	# F31#2 co-op rule: the guest's relic power choice is the host's to save.
 	# Shipping keeps F18's portal runtime off, so the host refuses and nothing
 	# changes, before and after the reconnect. The accepted path joins this
