@@ -447,6 +447,11 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
 				stream.character, stream.cursor.base, applied.cursor.base) != true:
 				stream.error = "owner_passive_delivery_authority_changed"; return
+			if applied.get("ok") == true and row is Dictionary:
+				# Ruling (b): a batched gather is now credited; its row may be
+				# pruned once the guest's ACK has also landed.
+				var gather_writer: Node = owner().get_node_or_null(^"LedgerRpc")
+				if gather_writer != null: gather_writer.call("mark_gather_replayed", stream.character, row)
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:

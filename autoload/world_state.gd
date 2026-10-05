@@ -26,6 +26,7 @@ extends RefCounted
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+const GATHER_BATCHES := preload("res://scripts/net/gather_batches.gd")
 ## F31 version-2 Homestead records on the existing Altar building journal.
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
@@ -396,6 +397,41 @@ func load_data(data: Dictionary) -> void:
 	revision += 1
 
 
+## Coordinator ruling (b): a guest's batched gathers (scripts/net/gather_batches.gd).
+## Every op is fully checked here, so a peer applying the host's delta and a
+## reload reach the same carrier; a refused op changes nothing.
+func _apply_gather_op(op: Dictionary) -> bool:
+	var character := str(op.get("character_id", ""))
+	if character.is_empty(): return false
+	var row := GATHER_BATCHES.batch(redesign_world, character)
+	var next: Dictionary = {}
+	var prune: Array[String] = []
+	match str(op.op):
+		"gather_accrue":
+			next = GATHER_BATCHES.accrued(row, str(op.get("item", "")), int(op.get("count", 0)))
+		"gather_flush":
+			var delivery: Variant = op.get("delivery")
+			var id := str(op.get("delivery_id", ""))
+			if int(op.get("seq", -1)) != int(row.next_seq) or not delivery is Dictionary \
+				or reward_deliveries.has(id) or reward_delivery_namespace.is_empty() \
+				or not preload("res://scripts/creatures/essence.gd")._equivalent(delivery,
+					GATHER_BATCHES.flush_delivery(row, world_id, reward_delivery_namespace, character)) \
+				or str(delivery.get("delivery_id", "")) != id: return false
+			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
+			next = GATHER_BATCHES.flushed(row)
+		"gather_mark":
+			next = GATHER_BATCHES.marked(row, str(op.get("mark", "")), int(op.get("seq", -1)))
+			if not next.is_empty():
+				prune = GATHER_BATCHES.prunable(reward_deliveries, character, next)
+	if next.is_empty(): return false
+	for id: String in prune: reward_deliveries.erase(id)
+	var all: Dictionary = (redesign_world.get(GATHER_BATCHES.FIELD, {}) as Dictionary).duplicate(true)
+	all[character] = next
+	redesign_world[GATHER_BATCHES.FIELD] = all
+	revision += 1
+	return true
+
+
 ## A saved number, or the default. Deliberately strict about the TYPE rather
 ## than calling `int()` on whatever arrived: `int([])` is not a conversion, it
 ## is a "Nonexistent 'int' constructor" error that aborts the whole load
@@ -519,6 +555,8 @@ func _apply_op(op: Dictionary) -> bool:
 			(accepted as Dictionary)["status"] = "accepted"
 			revision += 1
 			return true
+		"gather_accrue", "gather_flush", "gather_mark":
+			return _apply_gather_op(op)
 		"reward_delivery_journal":
 			var delivery: Variant = op.get("delivery", {})
 			var id := str(op.get("delivery_id", ""))

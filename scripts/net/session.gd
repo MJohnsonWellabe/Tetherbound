@@ -396,6 +396,12 @@ func foundation_rematch_start(trainer_id: String, tier: String, creature_uid: St
 		{"trainer_id": trainer_id, "tier": tier, "creature_uid": creature_uid, "action_id": action_id}, -1)
 
 func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
+	# Ruling (b): flush this guest's open gather batch first, so freshly
+	# gathered items are on their way before a station action reads them.
+	if peer != local_peer_id():
+		var gather_writer := get_node_or_null(^"LedgerRpc")
+		var gatherer := _authority_character(peer)
+		if gather_writer != null and not gatherer.is_empty(): gather_writer.call("flush_gather_batch", gatherer)
 	if not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]) \
 		or not envelope.intent is Dictionary or not ESSENCE._integer(envelope.revision, -1, 2147483646): return FOUNDATION_ACTIONS.deny("invalid_station_envelope")
 	if envelope.op == "personal_view": return _foundation_personal_view(peer)
@@ -3378,6 +3384,10 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	if not is_host():
 		return
 	var lost_character := str((_registry.call("row", peer_id) as Dictionary).get("character_id", ""))
+	# Ruling (b): a departing guest's open gather batch is journaled now; its
+	# rejoin's reward reconciliation applies it.
+	var gather_writer := get_node_or_null(^"LedgerRpc")
+	if gather_writer != null and not lost_character.is_empty(): gather_writer.call("flush_gather_batch", lost_character)
 	if _groom_passive != null: _groom_passive.call("departed", lost_character)
 	# The departed transport's owner-passive stream ends with it, so the
 	# character's next stream is admitted instead of shadowed (re-proof).

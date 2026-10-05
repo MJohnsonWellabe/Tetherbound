@@ -30,6 +30,7 @@ const RULES := preload("res://scripts/world/scatter_rules.gd")
 ## D103 / Stage B lane 3.B. See `_on_gathered()`: this node is spent through the
 ## world ledger now, not by writing its own flag and its own satchel line.
 const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 const F32_ACTIONS := preload("res://scripts/world/f32_source_actions.gd")
 
 ## MAT-BLOCKOUT round 2. A blind critic, told nothing about the round-1
@@ -145,6 +146,14 @@ func setup(spec: Dictionary) -> void:
 	_renewable_site_id = str(spec.get("renewable_site_id", ""))
 	var stock: Variant = spec.get("renewable_stock", {})
 	_renewable_stock = stock.duplicate(true) if stock is Dictionary else {}
+	if _renewable_site_id.is_empty():
+		# Host-side truth for a guest's batched harvest (gather_batches.gd): the
+		# base yield and the right-tool yield are the only legal amounts.
+		var game: Node = get_node_or_null(^"/root/Game") if is_inside_tree() else null
+		var items: RefCounted = game.get("items") if game != null else null
+		var tool_yield := int(items.call("harvest_yield", _item_id, _amount, true, false)) \
+			if items != null and not str(items.call("gathered_with", _item_id)).is_empty() else 0
+		PICKUP_SPECS.register(flag_id(_node_id), _item_id, _amount, tool_yield)
 	add_to_group("progression_restore")
 
 	_build_visual()

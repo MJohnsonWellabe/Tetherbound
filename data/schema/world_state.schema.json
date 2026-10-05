@@ -313,6 +313,21 @@
     },
     "fifth_arch_stirred": {
       "type": "boolean"
+    },
+    "gather_batches": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "next_seq": { "type": "integer", "minimum": 1 },
+          "acked": { "type": "integer", "minimum": 0 },
+          "replayed": { "type": "integer", "minimum": 0 },
+          "hits": { "type": "integer", "minimum": 0 },
+          "open": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } }
+        },
+        "required": ["next_seq", "acked", "replayed", "hits", "open"],
+        "additionalProperties": false
+      }
     }
   },
   "required": [

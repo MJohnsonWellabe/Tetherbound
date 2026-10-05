@@ -155,6 +155,8 @@ const OWNED_FLAG_PREFIX_MARK := "legendary_resolution:"
 const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
 const DROPPED_FLAG_PREFIX := "dropped:" # dropped_item.gd FLAG_PREFIX
 const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
+const GATHER_BATCHES := preload("res://scripts/net/gather_batches.gd")
+const FELLED_FLAG_PREFIX := "felled:" # felled_resource.gd flag_id
 ## `reward_grant` sources only host code may journal. These trainers' delivery
 ## rows are the Guardian's and the Warden climax's participant journals, and
 ## since client trainer wins are host-journaled (`trainer_victory`) the host is
@@ -290,6 +292,10 @@ func _commit_intent(intent: Dictionary, peer_id: int) -> Dictionary:
 			return _commit(result.ops, kind, peer_id, realm)
 		"claim_pickup":
 			return _claim_pickup(intent, peer_id, realm)
+		"gather_flush":
+			return _gather_flush(intent, peer_id, realm)
+		"gather_mark":
+			return _gather_mark(intent, peer_id, realm)
 		"harvest":
 			return _harvest(intent, peer_id, realm)
 		"deplete_vegetation":
@@ -504,6 +510,11 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 			var gated := _flag_gate(ops, "claim_pickup", peer_id)
 			if not gated.is_empty():
 				return gated
+			if flag.begins_with(FELLED_FLAG_PREFIX) and GATHER_BATCHES.enabled():
+				# A felled pile is a frequent gather: it accrues into the guest's
+				# open batch instead of journaling one delivery per pile.
+				var pile := PICKUP_SPECS.lookup(flag)
+				return _guest_gather(ops, "claim_pickup", peer_id, realm, character_id, str(pile.item), int(pile.count))
 			# The host's own world says what this find holds; the request's item
 			# and count are never trusted on this path (review: a forged claim
 			# would otherwise mint into the host's record).
@@ -576,9 +587,74 @@ func _harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var ops: Array = [_world_flag(realm, flag)]
 	var item := str(intent.get("item", ""))
 	var amount := maxi(0, int(intent.get("amount", 0)))
+	var character_id := str(intent.get("_actor_character_id", ""))
+	var node_spec := PICKUP_SPECS.lookup(flag)
+	if not item.is_empty() and amount > 0 and guest_batches(peer_id, character_id) and not node_spec.is_empty():
+		# A guest's harvest of a node the host's world stood up: the host's item
+		# and one of its legal yields, accrued into the guest's open batch.
+		return _guest_gather(ops, "harvest", peer_id, realm, character_id, str(node_spec.item), PICKUP_SPECS.legal_amount(node_spec, amount))
 	if not item.is_empty() and amount > 0:
 		ops.append(_item_grant(peer_id, item, amount))
 	return _commit(ops, "harvest", peer_id, realm)
+
+
+## Coordinator ruling (b): whether a gather by this peer accrues into a batch.
+## Only a guest with an admitted character; the host and solo keep the
+## immediate grant.
+static func guest_batches(peer_id: int, character_id: String) -> bool:
+	return peer_id != HOST_PEER and not character_id.is_empty() and GATHER_BATCHES.enabled()
+
+
+## A guest's frequent gather: the world flag(s) plus one gather_accrue into its
+## open batch (gather_batches.gd). The host flushes the batch as one reward
+## delivery (gather_flush); nothing reaches a satchel here.
+func _guest_gather(ops: Array, kind: String, peer_id: int, realm: String, character_id: String, item: String, count: int) -> Dictionary:
+	var gated := _flag_gate(ops, kind, peer_id)
+	if not gated.is_empty():
+		return gated
+	if str(world.get("reward_delivery_namespace")).is_empty() or str(world.get("world_id")).is_empty():
+		return _refuse(kind, peer_id, "world_not_ready", "Save this world before gathering.")
+	if GATHER_BATCHES.accrued(GATHER_BATCHES.batch(world.redesign_world, character_id), item, count).is_empty():
+		return _refuse(kind, peer_id, "batch_full", "Your gathering is still arriving; try again in a moment.")
+	ops.append({"op": "gather_accrue", "scope": "world", "realm": realm,
+		"character_id": character_id, "item": item, "count": count})
+	return _commit(ops, kind, peer_id, realm)
+
+
+## Host only: journal a character's open batch as one reward delivery to
+## `target_peer` (the character's connected peer).
+func _gather_flush(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	if peer_id != HOST_PEER:
+		return _refuse("gather_flush", peer_id, "host_only", "Only the host can record that.")
+	var character := str(intent.get("character_id", ""))
+	var target := int(intent.get("target_peer", 0))
+	var row := GATHER_BATCHES.batch(world.redesign_world, character)
+	var delivery := GATHER_BATCHES.flush_delivery(row, str(world.get("world_id")),
+		str(world.get("reward_delivery_namespace")), character)
+	if character.is_empty() or delivery.is_empty():
+		return _refuse("gather_flush", peer_id, "nothing_open", "There is nothing to deliver.")
+	# A departed guest has no peer to address: the pending row waits in the
+	# world and its rejoin's reward reconciliation applies it.
+	# (An empty `peers` list means everyone, so a departed guest gets no player op.)
+	var flush_ops: Array = [{"op": "gather_flush", "scope": "world", "realm": realm, "character_id": character,
+		"seq": int(row.next_seq), "delivery_id": delivery.delivery_id, "delivery": delivery}]
+	if target > 0:
+		flush_ops.append({"op": "reward_delivery", "scope": "player", "realm": realm, "peers": [target], "delivery": delivery})
+	return _commit(flush_ops, "gather_flush", peer_id, realm)
+
+
+## Host only: advance a character's acked or replayed batch mark (pruning rows
+## at or below both).
+func _gather_mark(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
+	if peer_id != HOST_PEER:
+		return _refuse("gather_mark", peer_id, "host_only", "Only the host can record that.")
+	var character := str(intent.get("character_id", ""))
+	var mark := str(intent.get("mark", ""))
+	var seq_mark := int(intent.get("seq", -1))
+	if GATHER_BATCHES.marked(GATHER_BATCHES.batch(world.redesign_world, character), mark, seq_mark).is_empty():
+		return _refuse("gather_mark", peer_id, "invalid_mark", "That batch mark is invalid.")
+	return _commit([{"op": "gather_mark", "scope": "world", "realm": realm,
+		"character_id": character, "mark": mark, "seq": seq_mark}], "gather_mark", peer_id, realm)
 
 
 func _stormwood_harvest(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
@@ -596,6 +672,9 @@ func _stormwood_harvest(intent: Dictionary, peer_id: int, realm: String) -> Dict
 		return _refuse(kind, peer_id, "already_taken", "Someone else already gathered that.")
 	var site: Dictionary = _stormwood_harvest_rules.sites[id]
 	# Identity, yield and availability come from host data, never the request.
+	var character_id := str(intent.get("_actor_character_id", ""))
+	if guest_batches(peer_id, character_id):
+		return _guest_gather([_world_flag(realm, flag)], kind, peer_id, realm, character_id, str(site.item), int(site.amount))
 	return _commit([_world_flag(realm, flag), _item_grant(peer_id, str(site.item), int(site.amount))], kind, peer_id, realm)
 
 
@@ -1269,9 +1348,14 @@ func accept_reward_delivery(delivery_id: String, character_id: String, peer_id: 
 	if str((raw as Dictionary).get("status", "")) != "pending":
 		return _refuse("reward_delivery_accept", peer_id, "invalid_receipt",
 			"That reward acknowledgement is not pending.")
-	return _commit([{"op": "reward_delivery_accept", "scope": "world",
-		"delivery_id": delivery_id, "character_id": character_id}],
-		"reward_delivery_accept", peer_id, str((raw as Dictionary).get("realm", "")))
+	var accept_ops: Array = [{"op": "reward_delivery_accept", "scope": "world",
+		"delivery_id": delivery_id, "character_id": character_id}]
+	var batch_seq := GATHER_BATCHES.seq_of(str((raw as Dictionary).get("source", "")))
+	if batch_seq >= 1:
+		# The guest saved this batch: close redelivery (gather_batches.gd marks).
+		accept_ops.append({"op": "gather_mark", "scope": "world", "realm": "",
+			"character_id": character_id, "mark": "acked", "seq": batch_seq})
+	return _commit(accept_ops, "reward_delivery_accept", peer_id, str((raw as Dictionary).get("realm", "")))
 
 
 func _has_legacy_reward_receipt(source: String) -> bool:
