@@ -105,9 +105,12 @@ DEFAULT_EXT = (".gd", ".tscn", ".tres", ".json", ".py", ".sh", ".cfg", ".gdshade
 SCAN_FILES = ("project.godot",)
 # Sentinels, one per scan root, that must be in the corpus or the selection
 # runs everything (a partial checkout must never mean a partial walk).
-REQUIRED_SCAN = ("project.godot", "autoload/game_state.gd", "data/creatures/species.json",
-                 "data/config/combat.json", "scenes/ui/playground_hud.tscn", "tests/helpers/net_harness.gd",
-                 "tools/net/peer_runner.gd", "tests/fixtures/foundation_flag_mirror.gd")
+REQUIRED_SCAN = ("project.godot", "autoload/game_state.gd", "scripts/world/playground_world.gd",
+                 "scenes/ui/playground_hud.tscn", "shaders/cover_tier.gdshader",
+                 "data/creatures/species.json", "data/config/combat.json",
+                 "assets/props/built/torch_prop.tscn", "tests/smoke_relay.gd",
+                 "tests/card_t1_tidewake_retained_five.sh", "tests/helpers/net_harness.gd",
+                 "tests/fixtures/foundation_flag_mirror.gd", "tools/net/peer_runner.gd")
 REQUIRED_SCAN_CHECK = True
 
 WORD = re.compile(r"[A-Za-z0-9_]+")
@@ -254,6 +257,10 @@ def loads_by_path(corpus, ref, node):
     node = re.sub(r"\.(uid|import)$", "", node)
     if node in text:
         return True
+    # A folder constant joined with the file name (`DIR := "res://tools/"`,
+    # then `DIR + "x.gd"`): the stem matched, so the directory in code counts.
+    if ("res://%s/" % os.path.dirname(node)) in text:
+        return True
     cls = corpus.class_of.get(node)
     return bool(cls) and re.search(r"\b%s\b" % re.escape(cls), text) is not None
 
@@ -300,6 +307,11 @@ def classify(path, jobs, corpus):
         return set(), "documentation"
     if CORE_RE.search(path):
         return "all", "core/shared path"
+    if path.endswith(".gd") and (path not in corpus.files or path in corpus.class_of):
+        # A deleted/renamed script's users may name it only by a class_name
+        # the HEAD index no longer has; a script declaring one is reachable
+        # from anywhere without its path.
+        return "all", "deleted/renamed script or global class_name"
     if MEDIA_RE.search(path):
         family = realm_of(path)
         extra, why = reach(path, jobs, corpus, family)

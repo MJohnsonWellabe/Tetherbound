@@ -229,6 +229,7 @@ jobs:
             /assets/**/*.tres
             /tests/*.gd
             /tests/*.py
+            /tests/*.sh
             /tests/helpers/
             /tests/fixtures/**/*.gd
             /tools/

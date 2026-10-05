@@ -174,6 +174,19 @@ class Walk(unittest.TestCase):
         jobs, every, why = pick("tools/capture_x.gd.uid", corpus=corpus)
         self.assertTrue(every, why)
 
+    def test_a_folder_constant_join_counts_as_a_load(self):
+        corpus = {
+            "tools/capture_x.gd": "extends SceneTree\n",
+            "scripts/world/visual.gd": 'const DIR := "res://tools/"\nvar s = load(DIR + "capture_x.gd")\n',
+        }
+        jobs, every, why = pick("tools/capture_x.gd", corpus=corpus)
+        self.assertTrue(every, why)
+
+    def test_deleted_scripts_and_class_name_scripts_select_everything(self):
+        corpus = {"scripts/world/cloudreach_bell.gd": "class_name CloudreachBell\nextends Node\n"}
+        self.assertTrue(pick("scripts/world/cloudreach_gone.gd", corpus=corpus)[1])
+        self.assertTrue(pick("scripts/world/cloudreach_bell.gd", corpus=corpus)[1])
+
     def test_an_incomplete_corpus_selects_everything(self):
         jobs, every, why = S.select(["tests/smoke_relay.gd"], "pull_request", CI, {"tests/smoke_relay.gd": ""})
         self.assertTrue(every, why)
