@@ -1,0 +1,566 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "adapter": "NVIDIA GeForce GTX1060 3GB",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "actual_shipping": true,
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.pck",
+      "size": 1135760212,
+      "sha256": "ea6ddca0ac0dce521ddd31709592d33d7572c47c4489c5775fdda7d4fe2b4165"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "owner_target_source": "docs/STATE.md line33, owner2026-10-04 7:50PM CT",
+  "owner_medium_target": {
+    "average_fps_minimum": 60,
+    "one_percent_low_fps_minimum": 40
+  },
+  "owner_medium_target_met": false,
+  "independent_reviews": "PASS bounded integrity/math for all12; original4 prior delivery reviews, new8 fresh delivery reviews. Performance FAIL.",
+  "limitations": [
+    "No earlier comparable actual-release baseline: regression onset unestablished.",
+    "No isolated optimization or preset causality; sequential live weather/time/Surge and build/entry variance.",
+    "All12 unchanged release EXE/PCK/DLL; new8 fullscreen while original4 commands lacked fullscreen flag.",
+    "Runtime FPS cap/VSync/physics/time settings not explicitly verified by older embedded route. Cannot assert uncapped.",
+    "Only wall intervals and cached CPU monitors in shipping; no true CPU/GPU/draw attribution.",
+    "Production route fixtures with teleport/authored opening flags; not earned campaign/full fight/co-op/Ally/full visual bar.",
+    "Historical average20 fields are diagnostic comparisons, not owner60/40 Medium acceptance or strictminimum20."
+  ],
+  "rows": [
+    {
+      "case": "shipping-low-meadows",
+      "biome": "meadows",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "frames": 213,
+      "wall_sample_seconds": 19.139436,
+      "average_fps": 11.128854580667893,
+      "one_percent_low_fps": 7.291340075392457,
+      "minimum_fps": 6.159342182254935,
+      "slowest_one_percent_frames": 3,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 2000.0,
+      "fullscreen_flag": false,
+      "environment_start": {
+        "hour": 8.11530542412699,
+        "position": [
+          9.5,
+          0.900942862033844,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "environment_end": {
+        "hour": 8.88571761523811,
+        "position": [
+          105.825386047363,
+          0.910842657089233,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "raw_route_sha256": "cd096055199fac3b660b29b0c7bcaa6a769ab9b2c9fa443129e05001f872c5b1",
+      "evidence_path": "ralph/reports/LOOKDEV/handoffs/perf/perf-retime-2/accepted-main/shipping-low-meadows",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-medium-meadows",
+      "biome": "meadows",
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "frames": 235,
+      "wall_sample_seconds": 19.158004000000002,
+      "average_fps": 12.266413557487512,
+      "one_percent_low_fps": 10.379294000422092,
+      "minimum_fps": 9.928514694201748,
+      "slowest_one_percent_frames": 3,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": false,
+      "camera_far_m": 2000.0,
+      "fullscreen_flag": false,
+      "environment_start": {
+        "hour": 8.10506666666667,
+        "position": [
+          9.5,
+          0.900942862033844,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "environment_end": {
+        "hour": 8.87583809523815,
+        "position": [
+          105.82544708252,
+          0.910842657089233,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "raw_route_sha256": "943029da0602fac9b83b29ca9b4c993d80b4badfa7cba437c5522ccc52c6cd89",
+      "evidence_path": "ralph/reports/LOOKDEV/handoffs/perf/perf-retime-2/accepted-main/shipping-medium-meadows",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-high-meadows",
+      "biome": "meadows",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "frames": 228,
+      "wall_sample_seconds": 19.17954,
+      "average_fps": 11.887667795995107,
+      "one_percent_low_fps": 10.024828157737328,
+      "minimum_fps": 9.92171764775918,
+      "slowest_one_percent_frames": 3,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 2000.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.10976320000001,
+        "position": [
+          9.5,
+          0.900942862033844,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "environment_end": {
+        "hour": 8.88122056000002,
+        "position": [
+          105.82544708252,
+          0.910842657089233,
+          14.0
+        ],
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "raw_route_sha256": "f9e960318cdccd0805c5a7721647aba5c6a3af7f0ff60b560c177730d485ac16",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-high-meadows",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-low-water",
+      "biome": "water",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "frames": 120,
+      "wall_sample_seconds": 14.311886000000001,
+      "average_fps": 8.384639173341654,
+      "one_percent_low_fps": 5.257720305052931,
+      "minimum_fps": 4.797405563071491,
+      "slowest_one_percent_frames": 2,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 6500.0,
+      "fullscreen_flag": false,
+      "environment_start": {
+        "hour": 8.15362686666667,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 8.69206397333333,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "f106509775990b0e7024b5fdc4cb37ffdba71ce90ab57e975a6cef00323619ad",
+      "evidence_path": "ralph/reports/LOOKDEV/handoffs/perf/perf-retime-2/accepted-main/shipping-low-water",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-medium-water",
+      "biome": "water",
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "frames": 120,
+      "wall_sample_seconds": 12.480923,
+      "average_fps": 9.61467353015478,
+      "one_percent_low_fps": 6.223917894075141,
+      "minimum_fps": 6.191567085629373,
+      "slowest_one_percent_frames": 2,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": false,
+      "camera_far_m": 6500.0,
+      "fullscreen_flag": false,
+      "environment_start": {
+        "hour": 8.13290559174603,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 8.61963279174603,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "a6a704c7116fd1dd5a93fd64b1662971ef4287e01e508d62909acdd6a2528807",
+      "evidence_path": "ralph/reports/LOOKDEV/handoffs/perf/perf-retime-2/accepted-main/shipping-medium-water",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-high-water",
+      "biome": "water",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "frames": 120,
+      "wall_sample_seconds": 11.285188,
+      "average_fps": 10.633407259143578,
+      "one_percent_low_fps": 6.394618289247768,
+      "minimum_fps": 6.3517873929723825,
+      "slowest_one_percent_frames": 2,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 6500.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.14515321333333,
+        "position": [
+          12.0,
+          3.4628279209137,
+          150.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 8.59329173333332,
+        "position": [
+          21.1797637939453,
+          1.11810886859894,
+          168.265579223633
+        ],
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "f678b998f6f18673f75155be151c567a187811166210eda7f2f8ab18826efc5b",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-high-water",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-low-stormwood",
+      "biome": "stormwood",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "frames": 2100,
+      "wall_sample_seconds": 152.240835,
+      "average_fps": 13.793933802320515,
+      "one_percent_low_fps": 7.107666938788773,
+      "minimum_fps": 2.7308227969087087,
+      "slowest_one_percent_frames": 21,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 9000.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.39158333333333,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 9.78958333333333,
+          "phase": "calm",
+          "remaining": 314.210416666667
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.4650140533333,
+        "position": [
+          -649.268249511719,
+          20.88232421875,
+          829.067077636719
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 161.625351333332,
+          "phase": "calm",
+          "remaining": 162.374648666668
+        },
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "e54fc452ede6d49a9a578f3ae38165ca7c7b625a10354c724d4a9d382cc5ed42",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-low-stormwood",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-medium-stormwood",
+      "biome": "stormwood",
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "frames": 2662,
+      "wall_sample_seconds": 151.73032800000001,
+      "average_fps": 17.544284225102313,
+      "one_percent_low_fps": 11.967666025879414,
+      "minimum_fps": 5.88553805588907,
+      "slowest_one_percent_frames": 27,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": false,
+      "camera_far_m": 9000.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.31413113333336,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 7.85327833333332,
+          "phase": "calm",
+          "remaining": 316.146721666667
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.3878743866668,
+        "position": [
+          -649.272705078125,
+          20.8820457458496,
+          829.072875976563
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 159.696859666668,
+          "phase": "calm",
+          "remaining": 164.303140333332
+        },
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "2d75ea00a7473d1af0a9bf82d47d4e82d0f2e23b8e2395156ae4a05df5021796",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-medium-stormwood",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-high-stormwood",
+      "biome": "stormwood",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "frames": 2670,
+      "wall_sample_seconds": 151.714665,
+      "average_fps": 17.598826059432024,
+      "one_percent_low_fps": 12.082358727020583,
+      "minimum_fps": 5.593404257699321,
+      "slowest_one_percent_frames": 27,
+      "historical_average20_pass": false,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 9000.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.32436140000003,
+        "position": [
+          -300.0,
+          32.2725982666016,
+          180.0
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 8.10903499999998,
+          "phase": "calm",
+          "remaining": 315.890965
+        },
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 14.3969166666667,
+        "position": [
+          -649.272705078125,
+          20.8820457458496,
+          829.072875976563
+        ],
+        "surge": {
+          "cycle": 0,
+          "cycle_seconds": 594.0,
+          "duration": 324.0,
+          "elapsed": 159.922916666669,
+          "phase": "calm",
+          "remaining": 164.077083333331
+        },
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "c4a1f5253194930b27c047ee0a5fd4785ed8eb9c1c39a506c65d7293be090504",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-high-stormwood",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-low-cloudreach",
+      "biome": "cloudreach",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "frames": 5835,
+      "wall_sample_seconds": 175.275001,
+      "average_fps": 33.2905432418169,
+      "one_percent_low_fps": 20.89698353813558,
+      "minimum_fps": 3.3454438400342577,
+      "slowest_one_percent_frames": 59,
+      "historical_average20_pass": true,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 3500.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.03992047411256,
+        "position": [
+          0.0,
+          105.030944824219,
+          -260.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 15.0485260036356,
+        "position": [
+          -280.074523925781,
+          180.030944824219,
+          488.877838134766
+        ],
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "dce7f189b5fc70fa855cbdfb23dfc8b7e91682d9de5d65ba676d3f547efc5ec1",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-low-cloudreach",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-medium-cloudreach",
+      "biome": "cloudreach",
+      "preset": "Medium",
+      "renderer": "forward_plus",
+      "frames": 10446,
+      "wall_sample_seconds": 175.072516,
+      "average_fps": 59.66670405307935,
+      "one_percent_low_fps": 23.68847088889972,
+      "minimum_fps": 13.27192854393672,
+      "slowest_one_percent_frames": 105,
+      "historical_average20_pass": true,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": false,
+      "camera_far_m": 3500.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.02801608000001,
+        "position": [
+          0.0,
+          105.030944824219,
+          -260.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 15.0365911333305,
+        "position": [
+          -280.074737548828,
+          180.03092956543,
+          488.874694824219
+        ],
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "ad56cb39bc0dcdf1d665f4472fff2e8d74fa41d7b221489ad872de3b4b71bde6",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-medium-cloudreach",
+      "native_exit_code": 0,
+      "route_complete": true
+    },
+    {
+      "case": "shipping-high-cloudreach",
+      "biome": "cloudreach",
+      "preset": "High",
+      "renderer": "forward_plus",
+      "frames": 10379,
+      "wall_sample_seconds": 175.069469,
+      "average_fps": 59.28503730139262,
+      "one_percent_low_fps": 26.095136343323674,
+      "minimum_fps": 12.417886724037304,
+      "slowest_one_percent_frames": 104,
+      "historical_average20_pass": true,
+      "strict_minimum20_pass": false,
+      "owner_medium_60_average_40_low_pass": null,
+      "camera_far_m": 3500.0,
+      "fullscreen_flag": true,
+      "environment_start": {
+        "hour": 8.02758476000001,
+        "position": [
+          0.0,
+          105.030944824219,
+          -260.0
+        ],
+        "time_of_day": "day"
+      },
+      "environment_end": {
+        "hour": 15.0360264933312,
+        "position": [
+          -280.074493408203,
+          180.03092956543,
+          488.878204345703
+        ],
+        "time_of_day": "day"
+      },
+      "raw_route_sha256": "224fb0abceee9ae5a4617e0e3df1b7c413b7a2877864993c1efa6e9f629c245f",
+      "evidence_path": "ralph/reports/LOOKDEV/f26/shipping-preset-matrix/accepted-main334/shipping-high-cloudreach",
+      "native_exit_code": 0,
+      "route_complete": true
+    }
+  ]
+}
