@@ -67,26 +67,45 @@ func test_a_single_instance_multimesh_is_never_ranged() -> void:
 	root.free()
 
 
+func _at(points: Array[Vector3], basis: Basis = Basis.IDENTITY) -> Array[Transform3D]:
+	var out: Array[Transform3D] = []
+	for point: Vector3 in points:
+		out.append(Transform3D(basis, point))
+	return out
+
+
 func test_spread_is_the_half_diagonal_of_every_instance_and_its_mesh() -> void:
 	# The headless renderer keeps no instance buffer, so the maths is tested on
 	# the transforms directly. A 600 m square patch of 2 m props: the box is
 	# 602 x 2 x 602, half-diagonal ~425.7 m. Its nearest instance would vanish
 	# ~190 m out if the range were not pushed out by this much.
-	var origins := PackedVector3Array([Vector3.ZERO, Vector3(600.0, 0.0, 0.0),
-		Vector3(0.0, 0.0, 600.0), Vector3(600.0, 0.0, 600.0)])
-	var half := DETAIL_CULL.spread_half_diagonal(origins, Vector3(2.0, 2.0, 2.0), Vector3.ONE)
-	assert_between(half, 425.0, 426.5, "half-diagonal of a 600 m patch")
-	var doubled := DETAIL_CULL.spread_half_diagonal(origins, Vector3(2.0, 2.0, 2.0), Vector3(2.0, 2.0, 2.0))
-	assert_between(doubled, 850.0, 853.0, "node scale scales the spread")
+	var box := AABB(Vector3(-1.0, -1.0, -1.0), Vector3(2.0, 2.0, 2.0))
+	var patch := _at([Vector3.ZERO, Vector3(600.0, 0.0, 0.0), Vector3(0.0, 0.0, 600.0), Vector3(600.0, 0.0, 600.0)])
+	var plain: Dictionary = DETAIL_CULL.measure_instances(patch, box, Vector3.ONE)
+	assert_between(float(plain.half_diagonal), 425.0, 426.5, "half-diagonal of a 600 m patch")
+	assert_between(float(plain.size), 1.99, 2.01, "one 2 m prop")
+	var doubled: Dictionary = DETAIL_CULL.measure_instances(patch, box, Vector3(2.0, 2.0, 2.0))
+	assert_between(float(doubled.half_diagonal), 850.0, 853.0, "node scale scales the spread")
+
+
+func test_each_instance_is_sized_by_its_own_transform() -> void:
+	# Codex review of 33e131af: a batch of 2 m meshes placed at 4x scale is an
+	# 8 m object; sized by the mesh alone it would range at a quarter distance.
+	var box := AABB(Vector3(-1.0, -1.0, -1.0), Vector3(2.0, 2.0, 2.0))
+	var big := _at([Vector3.ZERO, Vector3(50.0, 0.0, 0.0)], Basis.IDENTITY.scaled(Vector3(4.0, 4.0, 4.0)))
+	assert_between(float(DETAIL_CULL.measure_instances(big, box, Vector3.ONE).size), 7.99, 8.01)
+	var tall := _at([Vector3.ZERO, Vector3(50.0, 0.0, 0.0)], Basis(Vector3.RIGHT, PI * 0.5).scaled(Vector3(1.0, 1.0, 6.0)))
+	assert_true(float(DETAIL_CULL.measure_instances(tall, box, Vector3.ONE).size) >= 11.9,
+		"a stretched, rotated instance keeps its long axis")
 
 
 func test_spread_is_unknown_for_empty_single_or_unreadable_batches() -> void:
-	var mesh_size := Vector3(2.0, 2.0, 2.0)
-	assert_eq(DETAIL_CULL.spread_half_diagonal(PackedVector3Array(), mesh_size, Vector3.ONE), INF)
-	assert_eq(DETAIL_CULL.spread_half_diagonal(PackedVector3Array([Vector3(5.0, 0.0, 5.0)]), mesh_size, Vector3.ONE), INF)
+	var box := AABB(Vector3(-1.0, -1.0, -1.0), Vector3(2.0, 2.0, 2.0))
+	var none: Array[Transform3D] = []
+	assert_eq(float(DETAIL_CULL.measure_instances(none, box, Vector3.ONE).half_diagonal), INF)
+	assert_eq(float(DETAIL_CULL.measure_instances(_at([Vector3(5.0, 0.0, 5.0)]), box, Vector3.ONE).half_diagonal), INF)
 	# Several instances reading one origin: a dummy renderer's empty buffer.
-	assert_eq(DETAIL_CULL.spread_half_diagonal(PackedVector3Array([Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]),
-		mesh_size, Vector3.ONE), INF)
+	assert_eq(float(DETAIL_CULL.measure_instances(_at([Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]), box, Vector3.ONE).half_diagonal), INF)
 
 
 func test_a_small_mesh_is_ranged_and_a_large_one_is_not() -> void:

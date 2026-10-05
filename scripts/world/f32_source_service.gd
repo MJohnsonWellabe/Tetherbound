@@ -39,7 +39,9 @@ static var _enabled_cache := {}
 ## renewable node reads stock, so the parse ran per node per poll (PERF).
 static func _enabled() -> bool:
 	var path := "res://data/config/f32_runtime.json"
-	var stamp := FileAccess.get_modified_time(path)
+	# Time and size: a same-second true <-> false edit changes the size, so it
+	# is never served stale (Codex review of 33e131af).
+	var stamp := "%d:%d" % [FileAccess.get_modified_time(path), FileAccess.get_size(path)]
 	if not _enabled_cache.has("value") or _enabled_cache.get("stamp") != stamp:
 		var cfg: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		_enabled_cache = {"stamp": stamp, "value": cfg is Dictionary and cfg.get("runtime_enabled") == true}

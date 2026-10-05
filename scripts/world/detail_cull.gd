@@ -83,7 +83,13 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 		return
 	if _skipped(geometry, cfg):
 		return
-	var size := _world_size(geometry)
+	# A MultiMesh is measured from its own instance transforms (each instance's
+	# scale and rotation, not only the node's); see `measure_instances`.
+	var measure := _multimesh_measure(geometry as MultiMeshInstance3D) \
+		if geometry is MultiMeshInstance3D else {}
+	if geometry is MultiMeshInstance3D and float(measure.get("half_diagonal", INF)) == INF:
+		return
+	var size := float(measure.size) if geometry is MultiMeshInstance3D else _world_size(geometry)
 	if size <= 0.0:
 		return
 	# A small glowing thing (a lamp, a lantern, a pickup glint) reads as a
@@ -110,7 +116,7 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 	# shoreline batch), or one whose spread is unknown (empty or single at
 	# build time and filled later, as pickup glows are), stays unranged.
 	if geometry is MultiMeshInstance3D:
-		var half_diagonal := _combined_half_diagonal(geometry as MultiMeshInstance3D)
+		var half_diagonal := float(measure.half_diagonal)
 		if half_diagonal > reach:
 			return
 		reach += half_diagonal
@@ -122,52 +128,52 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 
 
 static func _world_size(geometry: GeometryInstance3D) -> float:
-	var box := geometry.get_aabb()
-	if geometry is MultiMeshInstance3D:
-		# A MultiMesh's AABB spans every instance; the object that shrinks to a
-		# pixel is one instance, so measure its mesh instead.
-		var mm := (geometry as MultiMeshInstance3D).multimesh
-		if mm == null or mm.mesh == null:
-			return 0.0
-		box = mm.mesh.get_aabb()
-	var extent := box.size * _scale_of(geometry)
+	var extent := geometry.get_aabb().size * _scale_of(geometry)
 	return maxf(extent.x, maxf(extent.y, extent.z))
 
 
-## Half-diagonal of a MultiMesh's instance spread in world metres, measured
-## from the instance transforms themselves: the server-side AABB is not
-## reliable here (headless and dummy renderers report the mesh's own box).
-static func _combined_half_diagonal(geometry: MultiMeshInstance3D) -> float:
+static func _multimesh_measure(geometry: MultiMeshInstance3D) -> Dictionary:
 	var mm := geometry.multimesh
 	if mm == null or mm.mesh == null:
-		return INF
+		return {"size": 0.0, "half_diagonal": INF}
 	var count := mm.instance_count if mm.visible_instance_count < 0 else mini(mm.visible_instance_count, mm.instance_count)
-	var origins := PackedVector3Array()
-	origins.resize(count)
+	var transforms: Array[Transform3D] = []
+	transforms.resize(count)
 	for index in count:
 		if mm.transform_format == MultiMesh.TRANSFORM_3D:
-			origins[index] = mm.get_instance_transform(index).origin
+			transforms[index] = mm.get_instance_transform(index)
 		else:
-			var flat := mm.get_instance_transform_2d(index).origin
-			origins[index] = Vector3(flat.x, 0.0, flat.y)
-	return spread_half_diagonal(origins, mm.mesh.get_aabb().size, _scale_of(geometry))
+			var flat := mm.get_instance_transform_2d(index)
+			transforms[index] = Transform3D(Basis(Vector3(flat.x.x, 0.0, flat.x.y), Vector3.UP,
+				Vector3(flat.y.x, 0.0, flat.y.y)), Vector3(flat.origin.x, 0.0, flat.origin.y))
+	return measure_instances(transforms, mm.mesh.get_aabb(), _scale_of(geometry))
 
 
-## Half-diagonal of the box holding every instance origin plus one instance's
-## mesh, in world metres. INF when the spread is unknown: fewer than two
-## instances at build time (a batch filled later, such as pickup glows, would
-## otherwise be ranged by one quad and later span the realm), or several
-## instances all reading one origin (a dummy renderer keeps no instance
-## buffer). Unknown spread is never ranged.
-static func spread_half_diagonal(origins: PackedVector3Array, mesh_size: Vector3, scale: Vector3) -> float:
-	if origins.size() < 2:
-		return INF
-	var box := AABB(origins[0], Vector3.ZERO)
-	for index in range(1, origins.size()):
-		box = box.expand(origins[index])
-	if box.size.is_zero_approx():
-		return INF
-	return ((box.size + mesh_size) * scale).length() * 0.5
+## The world size of one instance and the half-diagonal of the whole batch,
+## in metres, from the instance transforms themselves (the server-side AABB is
+## not reliable here: headless and dummy renderers report the mesh's own box).
+## Each instance's box is its mesh box under ITS OWN basis (scale and
+## rotation), then the node's scale: `size` is the largest such extent, and
+## the half-diagonal spans every instance box. The half-diagonal is INF when
+## the spread is unknown: fewer than two instances when measured (a batch
+## filled later, such as pickup glows, would otherwise be ranged by one quad
+## and later span the realm), or several instances all reading one origin (a
+## dummy renderer keeps no instance buffer). Unknown spread is never ranged.
+static func measure_instances(transforms: Array[Transform3D], mesh_box: AABB, node_scale: Vector3) -> Dictionary:
+	if transforms.size() < 2:
+		return {"size": 0.0, "half_diagonal": INF}
+	var origins := AABB(transforms[0].origin, Vector3.ZERO)
+	var union := AABB()
+	var size := 0.0
+	for index in transforms.size():
+		var placed := Transform3D(transforms[index].basis, transforms[index].origin) * mesh_box
+		var extent := placed.size * node_scale
+		size = maxf(size, maxf(extent.x, maxf(extent.y, extent.z)))
+		union = placed if index == 0 else union.merge(placed)
+		origins = origins.expand(transforms[index].origin)
+	if origins.size.is_zero_approx():
+		return {"size": size, "half_diagonal": INF}
+	return {"size": size, "half_diagonal": (union.size * node_scale).length() * 0.5}
 
 
 static func _scale_of(node: Node3D) -> Vector3:
