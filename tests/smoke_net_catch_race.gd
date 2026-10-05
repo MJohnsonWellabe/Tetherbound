@@ -455,7 +455,14 @@ func _run() -> void:
 		"guest received exactly one creature only after the confirmed caught finish")
 	want(int(host_after_positive.get("owned", -1)) == int(after[0].get("owned", -2)),
 		"host did not receive the guest's confirmed capture")
-	var delivered_cards: Array = guest_after_positive.get("owned_cards", []) as Array
+	# Only the card(s) this grant added: the guest also owns its deployed
+	# starter, which was on the belt before the catch.
+	var before_uids: Array = []
+	for card: Variant in guest_before_positive.get("owned_cards", []) as Array:
+		if card is Dictionary: before_uids.append(str((card as Dictionary).get("uid", "")))
+	var delivered_cards: Array = []
+	for card: Variant in guest_after_positive.get("owned_cards", []) as Array:
+		if card is Dictionary and not before_uids.has(str((card as Dictionary).get("uid", ""))): delivered_cards.append(card)
 	want(delivered_cards.size() == 1 and _same_capture_identity(canonical_card, delivered_cards[0] as Dictionary)
 		and int((delivered_cards[0] as Dictionary).get("caught_on_day", 0)) >= 1,
 		"guest received the host-confirmed canonical identity and stats; only caught_on_day is stamped at grant")
