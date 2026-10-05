@@ -2,9 +2,9 @@
   "subject": "stormursa",
   "working_name": "Stormursa",
   "authorization": "CODEX_START_HERE RD-28; ART_DIRECTION 7.2; ACCEPTANCE F29#3",
-  "status": "inspected_reference_preflight_ready_no_mesh_generated",
+  "status": "meshy_generation_submitted_candidate_pending",
   "generation_provider": "Meshy",
-  "meshy_task_id": "",
+  "meshy_task_id": "01a109db-e623-70a8-b13a-60dfc2ad2846",
   "reference_inspected": true,
   "rig_pass": false,
   "animation_pass": false,
@@ -23,5 +23,6 @@
   "before_after": null,
   "preparation_scripts": [],
   "license": "Use existing Meshy license only; output rights and redistribution must be recorded after actual generation. No new purchase.",
-  "default_enabled": false
+  "default_enabled": false,
+  "generation_manifest": "res://assets/creatures/tetherbound/stormursa/source/meshy-generation-1.json"
 }

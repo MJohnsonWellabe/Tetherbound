@@ -1,0 +1,29 @@
+{
+  "species": "stormursa",
+  "tier": "refine",
+  "prompt": "mature heavy quadruped storm bear, STORMURSA, Staticub grown up. FOUR SEPARATE GROUNDED LEGS ONLY, natural bear anatomy, broad high shoulders, deep chest, heavy paws and sturdy haunches. Preserve ROUND BROWN EARS, EXPRESSIVE BLUE EYES, short tan muzzle and dark nose. Large layered brown fur clumps with subtle copper tips and restrained violet glass-like flecks at the shoulders. Thin WHITE-VIOLET LIGHTNING woven into the fur texture across shoulders and back, never detached bolts. Friendly readable adult face, short bear tail, no armor, accessories, pedestal or extra limbs. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic fur, strand hair, humanoid anatomy, clothing, armor, weapons, accessories, generic real-world animal, hyperreal claws, excessive moss, noisy surface detail, wet plastic shading, text, watermark, multiple creatures, base, pedestal, bushy tail, upturned tail, paddle tail, beaver tail, long legs, tall slender body, fox proportions",
+  "views": {
+    "source": "assets\\creatures\\tetherbound\\stormursa\\reference\\stormursa-v1.png"
+  },
+  "polycount": 30000,
+  "generation_options": {
+    "ai_model": "meshy-7.1",
+    "enable_pbr": true,
+    "image_enhancement": false,
+    "should_texture": true
+  },
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "01a109db-e623-70a8-b13a-60dfc2ad2846"
+    }
+  ],
+  "night": "2026-10-04",
+  "reference_sha256": "de2ef0cbe55b546dacb950b8e1e793d60c82d35149192b0324e89b901892fc49",
+  "balance_before": 13545,
+  "balance_after": 13515,
+  "observed_credit_debit": 30,
+  "nightly_reserved_count": 1,
+  "generation_complete": false
+}

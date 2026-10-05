@@ -6,7 +6,7 @@ Lane: `tb/creature-art`. Runtime baseline:
 
 | Criterion | Label | Evidence / remaining proof |
 |---|---|---|
-| F29#3 storm bear | OFF | [Reference-only independent PASS](reference-review.md). Meshy task, actual mesh, measured scale, rig, poses and in-engine code-blind before/after PASS are MISSING. `staticub_stormursa` remains `enabled:false`. |
+| F29#3 storm bear | OFF | [Reference-only independent PASS](reference-review.md). One attended Meshy task submitted; actual mesh, measured scale, rig, poses and in-engine code-blind before/after PASS remain OPEN. `staticub_stormursa` remains `enabled:false`. |
 
 Drafted/inspected reference:
 `assets/creatures/tetherbound/stormursa/reference/stormursa-v1.png`, SHA-256
@@ -14,7 +14,11 @@ Drafted/inspected reference:
 Its prompt/provenance records are beside it and in ART_DIRECTION §7.3. The
 reference directory is excluded from Godot import; the model remains uncreated.
 
-## Executed CPU preflight
+## Executed CPU preflight, before the first submission
+
+These preflight receipts are historical. The zero-task ledger and unmeasured
+balance delta below describe that earlier state; the attended submission and
+observed debit are recorded in the following section.
 
 - Owner-supplied credential stored outside Git in the Windows user environment.
   License/balance check succeeded with 13,545 existing credits. No purchase and
@@ -65,7 +69,13 @@ reference directory is excluded from Godot import; the model remains uncreated.
 Use the sole `f36_meshy_guard.py` ledger with the actual Chicago night date,
 subject `stormursa`, the exact inspected PNG and SHA above. Client arguments:
 `generate stormursa --image assets/creatures/tetherbound/stormursa/reference/stormursa-v1.png --candidates 1 --tier refine --polycount 30000 --budget 30 --ai-model meshy-7.1 --enable-pbr --preserve-reference`.
-This is a prepared command, **not an executed task**. Every later POST, including
+Executed once on the Chicago night of 2026-10-04: task
+`01a109db-e623-70a8-b13a-60dfc2ad2846`, reserved through the shared guard as
+**1/30**. The inspected reference hash matched. Observed existing-credit balance:
+13,545 before, 13,515 after, a 30-credit debit; no purchase. Task was IN_PROGRESS
+45% at the first status read. Exact generated request manifest and receipt:
+`source/meshy-generation-1.json`. Submission is not a mesh/rig/scale/art PASS.
+Every later POST, including
 refine/retexture/retry, consumes the same 30/night cap; uncertain submissions
 retain their reservation. Record real task IDs and before/after balance before
 further spending. Fetches/status reads do not create generation tasks.

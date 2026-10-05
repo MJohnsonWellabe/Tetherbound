@@ -1,7 +1,19 @@
 {
   "cap_per_night": 30,
   "timezone": "America/Chicago",
-  "tasks": [],
-  "actual_meshy_submissions": 0,
-  "note": "Owner supplied the Meshy credential on 2026-10-04; license/balance check succeeded using the Windows user environment, outside Git. No actual generation submitted. Imagegen reference drafting is separate. Mock task IDs remain temporary test fixtures. Use f36_meshy_guard.py for every attended generation/refine/retexture/retry; uncertain submissions retain cap slots. One shared ledger, 30 tasks/night."
+  "tasks": [
+    {
+      "reservation_id": "2dcd4ff2-4fdd-46c9-b2c8-773d81712b9f",
+      "night": "2026-10-04",
+      "subject": "stormursa",
+      "reference": "assets/creatures/tetherbound/stormursa/reference/stormursa-v1.png",
+      "reference_sha256": "de2ef0cbe55b546dacb950b8e1e793d60c82d35149192b0324e89b901892fc49",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "submitted_utc": "2026-10-05T02:19:28.474760+00:00",
+      "task_id": "01a109db-e623-70a8-b13a-60dfc2ad2846",
+      "status": "submitted_pending_inspection"
+    }
+  ],
+  "actual_meshy_submissions": 1,
+  "note": "One attended Stormursa task submitted through f36_meshy_guard.py on Chicago night 2026-10-04, 1/30; actual geometry/rig/scale/art acceptance remains open. Credential stays in Windows user environment outside Git. Every POST including retry/refine/retexture uses this sole ledger; uncertain slots count. No purchase."
 }
