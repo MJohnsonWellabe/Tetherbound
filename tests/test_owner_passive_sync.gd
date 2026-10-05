@@ -51,9 +51,6 @@ class GameFixture extends Node:
 class Discoveries extends RefCounted:
 	var value := {}
 	func admission_landmarks() -> Dictionary: return value.duplicate(true)
-	func adopt_landmarks(discovered: Dictionary) -> bool:
-		value = discovered.duplicate(true)
-		return true
 
 class Session extends Node:
 	var game: Node
@@ -1221,7 +1218,8 @@ func test_rejoin_with_unreplayed_landmarks_readmits_on_the_hosts_held_set_and_pr
 	service.arm_owner(before, owner_seen)
 	assert_ne(service.local.prefix_hash, host_prefix, "before the readmit the two seeds differ (the G1 failure)")
 	service._readmit_owner(readmit)
-	assert_eq(session.maps.value, held, "the owner adopts the host's held landmarks")
+	assert_eq(service._discoveries(), held, "the owner adopts the host's held landmarks as its replay identity")
+	assert_eq(session.maps.value, owner_seen, "while its map keeps every landmark it saw")
 	assert_eq(service.local.prefix_hash, host_prefix, "and both input prefixes now start equal")
 	assert_eq(session.messages.back().get("op"), "readmitted")
 
@@ -1238,3 +1236,21 @@ func test_rejoin_with_matching_landmarks_still_admits_directly() -> void:
 	assert_true(service.hosts.has(character))
 	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(),
 		"an exact rejoin needs no readmit")
+
+
+func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:
+	# G1 follow-up (review-g1-landmarks.md finding 1): a manual landmark
+	# (Meadowhart herd) or a story-revealed one (Cloudreach sync_navigation)
+	# lands on the owner's map with no discovery input, so the host's replayed
+	# set never gains it. The owner's discovery identity (the seed of every
+	# rebase and readmit) must stay the replayed set; the map keeps the landmark.
+	var start := {"meadows": ["walked-landmark"]}
+	session.maps.value = start.duplicate(true)
+	service.arm_owner(before, start)
+	session.maps.value = {"meadows": ["walked-landmark", "story-revealed-landmark"]}
+	assert_eq(service._discoveries(), start, "a landmark with no input stays out of the replay identity")
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0.0, 0.0, 0.0], "to": [1.0, 0.0, 0.0],
+		"travel_valid": true, "new_landmarks": ["walked-second"]})
+	assert_eq(service._discoveries(), {"meadows": ["walked-landmark", "walked-second"]},
+		"a landmark the owner sent in a discovery input joins it, exactly as the host replays it")
+	assert_eq(session.maps.value.meadows.size(), 2, "the owner's map is never rewritten by the identity")
