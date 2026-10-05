@@ -4898,10 +4898,11 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 	var manager := _combat_manager()
 	if director == null or manager == null or not bool(director.call("is_encounter_host")):
 		return {"verdict": "ERROR", "detail": "tell pin requires the encounter host"}
-	var runtime: Variant = director.call("_shared_host_fight", str(manager.call("encounter_id")))
+	var encounter_id := str(args.get("encounter_id", manager.call("encounter_id")))
+	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
 	var body: Node3D = runtime.call("body") as Node3D if runtime != null and is_instance_valid(runtime) else null
 	if body == null or not is_instance_valid(body):
-		return {"verdict": "FAIL", "detail": "no live shared wild body to pin"}
+		return {"verdict": "FAIL", "detail": "no live shared wild body to pin in %s" % encounter_id}
 	if not bool(args.get("read_only", false)):
 		body.set("_synced_poise_max", 1000000.0)
 		body.set("_poise", 1000000.0)
@@ -4920,6 +4921,7 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
 		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
+			"broke": bool(body.get("_stagger_critical_ready")),
 			"poise": float(body.get("_poise")),
 			"hp": float(body.get("instance").get("hp")) if body.get("instance") != null else -1.0, "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
 

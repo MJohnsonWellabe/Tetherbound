@@ -42,6 +42,7 @@ const QUICK_SWINGS := 8
 ## Explicit, monotonic action ids: each start and its strike share one, so the
 ## host matches the strike to its own committed start.
 var _action := 9000
+var _encounter_id := ""
 
 
 func _initialize() -> void:
@@ -85,6 +86,7 @@ func _run() -> void:
 		return
 	var host_view: Dictionary = await _encounter(0)
 	var encounter_id := str(host_view.get("id", ""))
+	_encounter_id = encounter_id
 	var guest_view: Dictionary = await _encounter(1)
 	for _wait in ANNOUNCE_POLLS:
 		if (guest_view.get("joinable", []) as Array).has(encounter_id):
@@ -126,7 +128,7 @@ func _run() -> void:
 ## move_start; otherwise the start is committed, the grace allowed to pass, and
 ## only then is the tell pinned and the committed strike delivered.
 func _charge_case(tell_first: bool) -> Dictionary:
-	var pin: Dictionary = (await step(0, "f22_pin_tell", {"read_only": true})).get("data", {})
+	var pin: Dictionary = (await _pin(true)).get("data", {})
 	var centre := _vec(pin.get("centre", []))
 	var out := {"landed": false, "host_staggered": false, "guest_staggers": -1,
 		"poise_before": 0.0, "poise_after": 0.0, "since_ms": -1}
@@ -136,11 +138,12 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	await step(1, "place_creature", {"at": [stand.x, stand.y, stand.z],
 		"face": [centre.x, centre.y, centre.z], "settle": PLACE_SETTLE})
 	# Build the guest's Energy with real landed quick hits on the pinned body.
-	await step(0, "f22_pin_tell", {})
+	await _pin(false)
 	var landed := 0
 	for _swing in QUICK_SWINGS:
 		if landed >= ENERGY_HITS: break
-		var hp_was := await _host_hp()
+		# Re-pin (and refill HP) before every swing: the fight must outlive them.
+		var hp_was := float(((await _pin(false)).get("data", {}) as Dictionary).get("hp", -1.0))
 		_action += 1
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "quick",
 			"action": _action, "settle": 15})
@@ -150,7 +153,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	var guest_before := int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	var hp_before := -1.0
 	if tell_first:
-		pin = (await step(0, "f22_pin_tell", {})).get("data", {})
+		pin = (await _pin(false)).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
@@ -163,7 +166,7 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
 			"slot": "charged", "action": action, "start_only": true})
 		await step(1, "wait", {"frames": EARLY_START_FRAMES})
-		pin = (await step(0, "f22_pin_tell", {})).get("data", {})
+		pin = (await _pin(false)).get("data", {})
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
@@ -171,11 +174,13 @@ func _charge_case(tell_first: bool) -> Dictionary:
 			"action": action, "move_start": false, "windup_wait": true, "settle": 15})
 	var state: Dictionary = {}
 	for _poll in STAGGER_POLLS:
-		state = (await step(0, "f22_pin_tell", {"read_only": true})).get("data", {})
-		if bool(state.get("staggered", false)) or float(state.get("poise", 0.0)) < float(out.poise_before) - 0.001:
+		state = (await _pin(true)).get("data", {})
+		if bool(state.get("broke", false)) or float(state.get("poise", 0.0)) < float(out.poise_before) - 0.001:
 			break
 		await step(0, "wait", {"frames": 4})
-	out.host_staggered = bool(state.get("staggered", false))
+	# `_stagger_critical_ready` stays set after the 0.6 s stagger ends, until
+	# the next hit consumes it; the pin clears it, so it marks THIS break.
+	out.host_staggered = bool(state.get("broke", false))
 	out.poise_after = float(state.get("poise", 0.0))
 	out.landed = float(state.get("hp", -1.0)) < hp_before - 0.001
 	# The guest's announcement arrives with the host's strike payload.
@@ -193,8 +198,14 @@ func _charge_case(tell_first: bool) -> Dictionary:
 
 
 ## The host's live opponent HP, read from its real shared wild body.
+func _pin(read_only: bool) -> Dictionary:
+	var args := {"encounter_id": _encounter_id}
+	if read_only: args["read_only"] = true
+	return await step(0, "f22_pin_tell", args)
+
+
 func _host_hp() -> float:
-	var state: Dictionary = (await step(0, "f22_pin_tell", {"read_only": true})).get("data", {})
+	var state: Dictionary = (await _pin(true)).get("data", {})
 	return float(state.get("hp", -1.0))
 
 
