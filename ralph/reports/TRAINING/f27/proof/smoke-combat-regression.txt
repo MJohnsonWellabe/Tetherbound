@@ -3,12 +3,12 @@ Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 WARNING: instance_reset_physics_interpolation() is deprecated.
      at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
      GDScript backtrace (most recent call first):
-         [0] _build_terrain (res://scripts/world/playground_world.gd:1172)
-         [1] _ready (res://scripts/world/playground_world.gd:798)
+         [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+         [1] _ready (res://scripts/world/playground_world.gd:806)
 [playground] spawned at 0.0, 2.9, 0.0
-[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1777 reorder[16 layers]=4893
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1210 reorder[16 layers]=3177
 [vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
-[vegetation] boot phases (ms): placements=7066 mark_harvestable=326 group_by_model=921 register_mesh_assets=68 build_batches_total=10836 (of which harvest_points[56283 nodes]=7288, initial_collision_stream[51210 solid]=339) update_mmis=1428
+[vegetation] boot phases (ms): placements=4654 mark_harvestable=165 group_by_model=605 register_mesh_assets=38 build_batches_total=6893 (of which harvest_points[56283 nodes]=4157, initial_collision_stream[51210 solid]=226) update_mmis=1154
 [grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
 [grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
 [grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
@@ -29,57 +29,57 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 [props] placed 434 props in 54 clusters (6 usable rest points)
 [village_npcs] placed 18 of 20
 [relay_site] placed 3 of 3
@@ -145,13 +145,13 @@ camera 14.3m from the creature, line of sight clear
 creature moved 4.3m on the stick
 pushed to 11.0m from the arena centre (radius 11.0m)
 a swing from out of range missed, as it should
-quick attack: enemy 106.2 -> 93.8 hp
-enemy dealt damage: ally 64.8 -> 54.0 hp
+quick attack: enemy 106.2 -> 93.4 hp
+enemy dealt damage: ally 63.8 -> 54.2 hp
 type chart reached the fight: 8 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
 enemy fainted after 233 action frames; outcome 'won'
 tally: 5 hits on the enemy, 7 on the ally, 2 misses
-5 blows landed for 107.1 damage (the chart says 112.5; a chart-less fight would say 90.0)
-post-fight HP held at 54.0, no auto-heal
+5 blows landed for 109.3 damage (the chart says 112.5; a chart-less fight would say 90.0)
+post-fight HP held at 54.2, no auto-heal
 
 combat: OK — a fight can be entered, piloted, won and left.
 exit 0

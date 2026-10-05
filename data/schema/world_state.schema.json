@@ -313,6 +313,29 @@
     },
     "fifth_arch_stirred": {
       "type": "boolean"
+    },
+    "retained_settlement": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "minLength": 3 },
+        "maxItems": 16,
+        "uniqueItems": true
+      }
+    },
+    "gather_batches": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "next_seq": { "type": "integer", "minimum": 1 },
+          "hits": { "type": "integer", "minimum": 0 },
+          "open": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 1 } },
+          "replayed": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "maxItems": 64, "uniqueItems": true }
+        },
+        "required": ["next_seq", "hits", "open", "replayed"],
+        "additionalProperties": false
+      }
     }
   },
   "required": [

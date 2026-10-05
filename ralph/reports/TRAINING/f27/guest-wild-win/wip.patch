@@ -1,5 +1,5 @@
 diff --git a/scripts/combat/encounter_director.gd b/scripts/combat/encounter_director.gd
-index 6ced36e5..3d47a822 100644
+index 6ced36e5..76dd8d96 100644
 --- a/scripts/combat/encounter_director.gd
 +++ b/scripts/combat/encounter_director.gd
 @@ -2476,12 +2476,13 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
@@ -58,11 +58,11 @@ index 6ced36e5..3d47a822 100644
  
  
  ## §5 step 3's history, taken on the host's own clock from the host's own body.
-@@ -8339,10 +8337,30 @@ func _has_canonical_wild_runtime() -> bool:
+@@ -8339,10 +8337,36 @@ func _has_canonical_wild_runtime() -> bool:
  ## True only once the host retained this fight's frozen victory source; a
  ## refused capture leaves the legacy award in place so a win always pays.
  func canonical_wild_encounter(encounter_id: String) -> bool:
-+	if not _is_host(): return _host_owned_xp.has(encounter_id) # The host said it pays this guest's share.
++	if _is_guest(): return _host_owned_xp.has(encounter_id) # The host said it pays this guest's share.
  	var runtime := _shared_host_fight(encounter_id)
  	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
  
@@ -71,6 +71,12 @@ index 6ced36e5..3d47a822 100644
 +## by the host's retained `wild_defeat` share, so its combat manager skips the
 +## legacy local award. Only a captured canonical source is ever stamped.
 +var _host_owned_xp: Dictionary = {}
++
++
++## A connected guest; solo play has no active session and stays host-side.
++func _is_guest() -> bool:
++	return is_inside_tree() and _session != null and _session.has_method("is_active") \
++		and bool(_session.call("is_active")) and not bool(_session.call("is_host"))
 +
 +
 +func _with_host_xp_owner(encounter_id: String, payload: Dictionary) -> Dictionary:
@@ -82,7 +88,7 @@ index 6ced36e5..3d47a822 100644
 +
 +func _note_host_xp_owner(payload: Dictionary) -> void:
 +	# Only the host sends these (authority RPCs); the stamp names its encounter.
-+	if not _is_host() and payload.get("host_owns_xp") is String and not str(payload.host_owns_xp).is_empty():
++	if _is_guest() and payload.get("host_owns_xp") is String and not str(payload.host_owns_xp).is_empty():
 +		_host_owned_xp[payload.host_owns_xp] = true
 +
 +
@@ -197,7 +203,7 @@ index 37b3d173..ae0dbeb1 100644
  		return false
  	var matches := 0
 diff --git a/scripts/net/session.gd b/scripts/net/session.gd
-index 8dce6e18..c6c9c4ff 100644
+index 598d37ce..ac1b9ebb 100644
 --- a/scripts/net/session.gd
 +++ b/scripts/net/session.gd
 @@ -241,7 +241,7 @@ func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dict
@@ -209,7 +215,7 @@ index 8dce6e18..c6c9c4ff 100644
  		return FOUNDATION_ACTIONS.deny("owner_passive_original_duty_required")
  	var world: RefCounted = _game().get("world")
  	if binding.action == "boss_relic":
-@@ -952,7 +952,7 @@ func _retry_foundation_events() -> void:
+@@ -953,7 +953,7 @@ func _retry_foundation_events() -> void:
  		else:
  			context.in_combat = false
  			context.foundation_runtime_authorized = true
@@ -218,7 +224,7 @@ index 8dce6e18..c6c9c4ff 100644
  				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
  				if ready.get("ok") != true:
  					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
-@@ -1001,6 +1001,7 @@ func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") ->
+@@ -1002,6 +1002,7 @@ func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") ->
  	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
  	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
  	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
@@ -226,7 +232,7 @@ index 8dce6e18..c6c9c4ff 100644
  	if duty.action == "boss_relic": return FOUNDATION_ACTIONS.boss_receipt(world_namespace, duty.intent.trainer_id, duty.character_id)
  	if duty.action == "research_event":
  		var event: Dictionary = duty.context
-@@ -5169,11 +5170,13 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
+@@ -5173,11 +5174,13 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
  	if source.is_empty() or not frozen.get("record", {}).get("participants") is Dictionary \
  		or not frozen.get("deployments") is Array: return refused
  	var participants: Dictionary = frozen.record.participants
@@ -245,7 +251,7 @@ index 8dce6e18..c6c9c4ff 100644
  	var peer := local_peer_id()
  	var character := _authority_character(peer)
  	var participant: Variant = participants[peer]
-@@ -5218,6 +5221,45 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
+@@ -5222,6 +5225,45 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
  	return {"ok": true, "durable": true, "resolved": false, "receipt": committed.receipt,
  		"delivery_id": committed.delivery_id, "code": "awaiting_saved_decision"}
  

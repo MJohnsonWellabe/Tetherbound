@@ -30,6 +30,7 @@ extends CanvasLayer
 const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
 const INPUT_GLYPH := preload("res://scripts/ui/input_glyph.gd")
 const CREATURE_PORTRAIT := preload("res://scripts/ui/creature_portrait.gd")
+const TRAIT_READOUT := preload("res://scripts/ui/creature_trait_readout.gd")
 ## F10#6 device profile (code-blind 7-inch judge r6: the move buttons' pad
 ## badges read at about 4 px on the 7-inch sheet). The badge art is padded
 ## inside its box, so 34 drew "RT"/"LB" lettering near the glyph ladder's
@@ -1657,6 +1658,8 @@ func _on_catch_resolved(success: bool, shakes: int) -> void:
 	if success:
 		var foe: RefCounted = _manager.call("enemy")
 		_outcome.text = "Caught %s!" % (str(foe.display_name) if foe != null else "it")
+		# F30#1: the catch readout names the newcomer's rolled traits.
+		if foe != null: _outcome.text += "\n" + TRAIT_READOUT.summary(foe)
 		_outcome.add_theme_color_override("font_color", UITokens.TEAL)
 		# T3-INSTALL, K1: `resolve.success_banner` had no reader -- 2.4 was a
 		# duplicate hardcoded literal, not a fallback. Reading it here means a

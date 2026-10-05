@@ -109,7 +109,7 @@ func _f18_fixture(game: Node, args: Dictionary) -> Dictionary:
 		if game.get("save_system").call("save_character", game, str(local.get("character_id"))) != true:
 			return _f18_verdict(false, "disclosed pre-admission portable fixture save refused")
 	else:
-		var saved: Dictionary = _step_save_character_here({})
+		var saved: Dictionary = await _step_save_character_here({})
 		if saved.get("verdict") != "PASS": return saved
 	_f18_fixture_done = true
 	var state: Dictionary = _f18_state(game, {})

@@ -63,10 +63,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## shipping host arbiter consume it. The simultaneous race is pinned to break
 ## out; a second guest throw in that same released encounter is pinned to catch.
 ##
-## **Handover:** the belts are also EMPTY in this fixture — `deploy_creature`
-## brings a body out without the party gaining a row. Both peers start at
-## `party_size` 0; the successful guest catch must raise it to 1. This does not
-## exercise a full belt or its release ceremony.
+## **Handover:** each peer owns exactly its deployed starter (`deploy_creature`
+## with `owned: true`, as the opening owns it; actor_vitals refuses an unowned
+## fighter). The successful guest catch must raise that peer's count by one.
+## This does not exercise a full belt or its release ceremony.
 ##
 ## ## Setup is granted explicitly and says so
 ##
@@ -154,7 +154,9 @@ func _run() -> void:
 	# Granted explicitly. See the header on why this block is loud about being
 	# setup rather than the thing under test.
 	for i in 2:
-		var deployed: Dictionary = await step(i, "deploy_creature", {})
+		# Owned, as the opening owns its starter: with combat.json actor_vitals
+		# on, a wild fight refuses an unowned fighter. Counts stay relative.
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		want(str(deployed.get("verdict", "")) == "PASS",
 			"setup: peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
 
@@ -453,7 +455,14 @@ func _run() -> void:
 		"guest received exactly one creature only after the confirmed caught finish")
 	want(int(host_after_positive.get("owned", -1)) == int(after[0].get("owned", -2)),
 		"host did not receive the guest's confirmed capture")
-	var delivered_cards: Array = guest_after_positive.get("owned_cards", []) as Array
+	# Only the card(s) this grant added: the guest also owns its deployed
+	# starter, which was on the belt before the catch.
+	var before_uids: Array = []
+	for card: Variant in guest_before_positive.get("owned_cards", []) as Array:
+		if card is Dictionary: before_uids.append(str((card as Dictionary).get("uid", "")))
+	var delivered_cards: Array = []
+	for card: Variant in guest_after_positive.get("owned_cards", []) as Array:
+		if card is Dictionary and not before_uids.has(str((card as Dictionary).get("uid", ""))): delivered_cards.append(card)
 	want(delivered_cards.size() == 1 and _same_capture_identity(canonical_card, delivered_cards[0] as Dictionary)
 		and int((delivered_cards[0] as Dictionary).get("caught_on_day", 0)) >= 1,
 		"guest received the host-confirmed canonical identity and stats; only caught_on_day is stamped at grant")

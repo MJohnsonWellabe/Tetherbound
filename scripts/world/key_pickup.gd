@@ -19,6 +19,7 @@ const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const POST_CONFIG_PATH := "res://data/config/key_post.json"
 
 const FLAG_PREFIX := "pickup:"
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 ## Compatibility for saves written before physical pickups recorded their own
 ## flags: consuming this key wrote the gate's durable flag instead.
 const ROAD_GATE_OPEN_FLAG := "road_gate_open"
@@ -60,6 +61,9 @@ func setup(item_id: String, label: String, shape: String = "key",
 	_shape = shape
 	_realm_id = realm_id
 	_mount = mount if mount == "post" and bool(post_config().get("enabled", false)) else "ground"
+	# Host-side truth for a guest's claim (pickup_spec_registry.gd): only a key
+	# this world actually stood up can pay into the host's character record.
+	PICKUP_SPECS.register(flag_id(_item_id), _item_id, 1)
 	add_to_group("progression_restore")
 	# The shaft lies along local +X with no yaw ever applied at the call
 	# site (`playground_world.gd` sets `position` only) — so on the road

@@ -73,6 +73,12 @@ func _run() -> void:
 		return
 	if director.call("ally_instance") == null:
 		await director.call("adopt_starter", "terrapup")
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted body is a companion only once it is in this character's party.
+	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var owned_party: RefCounted = root.get_node(^"Game").get("party")
+	if owned_party != null and int(owned_party.call("size")) == 0 and director.call("ally_instance") != null:
+		owned_party.call("add", director.call("ally_instance"))
 	for i in 30:
 		await physics_frame
 

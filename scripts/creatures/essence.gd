@@ -6,6 +6,7 @@ extends RefCounted
 ## same-record CAS must recompute a proposal from its own record, commit the
 ## inventory/party/receipt together, then settle the portable owner's save.
 ## No balance bag, second receipt ledger, scene mutation or optimistic debit.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -256,7 +257,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	if not permitted or not RULES.db().has(payment_item): return _refuse("wrong_payment_type")
 	var cost := int(cfg.tether_candy_cost) if candy else level_cost(expected_level, cfg, progression_cfg)
 	if cost < 1: return _refuse("invalid_cost")
-	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+	if RECEIPT_WINDOWS.compact(admitted.redesign_character.transaction_receipts, "essence_spend", character_id).size() >= int(cfg.maximum_transaction_receipts):
 		return _refuse("receipt_budget")
 	var inventory := RULES.inventory_from(admitted.inventory)
 	if not inventory.remove(payment_item, cost): return _refuse("insufficient_items")
@@ -268,6 +269,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	next.party[index] = next_row
 	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := prefix + "%s:%d:%s:%d:%d" % [uid, expected_level, payment_item, cost, character_revision]
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "essence_spend", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
@@ -542,11 +544,8 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	var types := _species_types(host_event.enemy_record)
 	if types.is_empty() or eligible.is_empty():
 		return _refuse("invalid_defeat_participants")
-	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
-		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
-		types, host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
 	var prefix := "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)]
-	var receipt := prefix + signature
+	var receipt := defeat_receipt(character_id, host_event)
 	var duplicate := false
 	for old: String in admitted.redesign_character.transaction_receipts:
 		if not old.begins_with(prefix): continue
@@ -558,7 +557,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	if _owned_index(admitted, host_event.active_uid) < 0: return _refuse("invalid_defeat_active_uid")
 	for uid: String in eligible:
 		if _owned_index(admitted, uid) < 0: return _refuse("invalid_defeat_participants")
-	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+	if RECEIPT_WINDOWS.compact(admitted.redesign_character.transaction_receipts, "wild_defeat", character_id).size() >= int(cfg.maximum_transaction_receipts):
 		return _refuse("receipt_budget")
 	var caps: Dictionary = {}
 	for uid: String in eligible:
@@ -583,6 +582,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	var next := admitted.duplicate(true)
 	next.party = xp.party.duplicate(true)
 	next.inventory = RULES.slots(inventory).duplicate(true)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "wild_defeat", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
 	# The foundation owner must admit the explicit defeat namespace; never
 	# disguise defeat XP as an Altar spend or bypass REDESIGN validation.
@@ -590,6 +590,18 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	return {"ok": true, "duplicate": false, "before": admitted.duplicate(true), "state": next,
 		"expected_character_revision": character_revision, "receipt": receipt,
 		"payout": payout, "xp_awards": xp.awards.duplicate(true), "shed_outputs": shed_outputs.duplicate(true)}
+
+
+## The one personal receipt a validated host wild defeat event earns this
+## character (stage_defeat). Retained guest duties use it to recognise an
+## already-applied event without restaging.
+static func defeat_receipt(character_id: String, host_event: Dictionary) -> String:
+	var eligible: Array = (host_event.get("eligible_uids", []) as Array).duplicate()
+	eligible.sort()
+	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
+		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
+		_species_types(host_event.enemy_record), host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
+	return "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)] + signature
 
 
 ## F32#4 win shed for one participant of one host wild defeat. The roll is
@@ -709,7 +721,10 @@ static func next_training_delivery(world_id: String, world_namespace: String, se
 			or not accepted.get("intent") is Dictionary: return {}
 	var journal_revision := 1
 	if previous != null:
-		if not training_row_valid(previous, character, world_namespace) or previous.world_id != world_id \
+		# The latest row may be any version (a v2/v3 action, e.g. this host's
+		# own research duty); it only orders this one. Validate it as its own kind.
+		if not load("res://autoload/world_state.gd").call("training_row_valid", previous, world_namespace, world_id) \
+				or previous.get("character_id") != character \
 				or previous.status != "accepted" or int(previous.character_revision) >= int(accepted.character_revision): return {}
 		journal_revision = int(previous.journal_revision) + 1
 	var row := {"version": 1, "kind": TRAINING_KIND, "delivery_id": training_delivery_id(world_namespace, character),
@@ -764,6 +779,39 @@ const PASSIVE_CARE_FIELDS := ["nourishment", "happiness", "rested_seconds_left",
 static func owner_matches_after(projection: Variant, after: Variant) -> bool:
 	return projection is Dictionary and after is Dictionary \
 		and _equivalent(_without_passive(projection), _without_passive(after))
+
+
+## The row's decided `after`, carrying the passive care this owner accrued
+## since the host staged `before` (walking bond, nourishment, rest): the
+## row's own passive changes (a victory's mood) and the owner's later drift
+## both stand. Numeric fields add the owner's delta (never below 0, mood
+## within its maximum); `rested` takes the owner's newer value.
+static func merge_owner_passive(after: Dictionary, before: Dictionary, current: Dictionary) -> Dictionary:
+	var merged := after.duplicate(true)
+	if not merged.get("party") is Array: return merged
+	var prior := {}
+	for card: Variant in before.get("party", []):
+		if card is Dictionary: prior[card.get("uid")] = card
+	var live := {}
+	for card: Variant in current.get("party", []):
+		if card is Dictionary: live[card.get("uid")] = card
+	var mood_max: Variant = preload("res://scripts/creatures/creature_condition.gd").config().get("happiness", {}).get("max")
+	for card: Variant in merged.party:
+		if not card is Dictionary: continue
+		var was: Variant = prior.get(card.get("uid"))
+		var now: Variant = live.get(card.get("uid"))
+		if not was is Dictionary or not now is Dictionary: continue
+		for field: String in PASSIVE_CARE_FIELDS:
+			if not now.has(field) or not was.has(field) or not card.has(field) or _equivalent(now[field], was[field]): continue
+			if field == "rested" or not (now[field] is int or now[field] is float) or not (was[field] is int or was[field] is float) \
+					or not (card[field] is int or card[field] is float):
+				# A row that itself decided this field (a camp bed's rest) keeps it.
+				if _equivalent(card[field], was[field]): card[field] = now[field]
+				continue
+			var value := maxf(0.0, float(card[field]) + float(now[field]) - float(was[field]))
+			if field == "happiness" and (mood_max is int or mood_max is float): value = minf(value, float(mood_max))
+			card[field] = int(round(value)) if card[field] is int and now[field] is int and was[field] is int else value
+	return merged
 
 
 ## Training projection with each party card's passive-care fields removed.

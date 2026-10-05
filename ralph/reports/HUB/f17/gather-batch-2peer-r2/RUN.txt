@@ -1,0 +1,1 @@
+render.yml run 37296093843 @ 99886a5ec87ef170ef2d7abba42e56bc2fff907a (headless, conclusion success): two-peer guest gather (batched harvests + fiber find) -> craft at host Kitchen -> reconnect, after the review B1-B3 fixes.

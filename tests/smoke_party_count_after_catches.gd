@@ -67,6 +67,13 @@ func _run() -> void:
 	# times over: each real catch costs one throw-fight regardless, and
 	# waiting out the respawn timer twice between them (spawns.json,
 	# ~45s each) added nothing this regression needs to prove.
+	# The opening owns the starter before any wild fight; with combat.json
+	# actor_vitals on, a wild fight refuses an unowned fighter. Three catches
+	# are counted on top of that owned team.
+	var owned_party: RefCounted = _game.get("party")
+	if int(owned_party.call("size")) == 0 and _director.call("ally_instance") != null:
+		owned_party.call("add", _director.call("ally_instance"))
+	var base := int(owned_party.call("size"))
 	var targets := (_director.call("wild_creatures") as Array).duplicate()
 	if targets.size() < 3:
 		_fail("fewer than 3 live wild creatures exist to catch (%d)" % targets.size())
@@ -80,10 +87,10 @@ func _run() -> void:
 		for f in 20:
 			await physics_frame
 		var party: RefCounted = _game.get("party")
-		if int(party.call("size")) != i + 1:
-			_fail("after catch %d, Game.party.size() is %d, expected %d" % [i + 1, int(party.call("size")), i + 1])
+		if int(party.call("size")) != base + i + 1:
+			_fail("after catch %d, Game.party.size() is %d, expected %d" % [i + 1, int(party.call("size")), base + i + 1])
 
-	_check_hud_reads(3, "after three real catches")
+	_check_hud_reads(base + 3, "after three real catches")
 
 	if not bool(_game.call("save_game", TEST_SLOT)):
 		_fail("could not save after three real catches")
@@ -102,11 +109,11 @@ func _run() -> void:
 		#
 		# Waiting for the redraw with a ceiling keeps the assertion exactly as
 		# strong: a HUD that never catches up still fails, just not by a race.
-		await _await_hud_reads(3, 240)
+		await _await_hud_reads(base + 3, 240)
 		var party: RefCounted = _game.get("party")
-		if int(party.call("size")) != 3:
-			_fail("party size after reload is %d, expected 3" % int(party.call("size")))
-		_check_hud_reads(3, "after save/reload")
+		if int(party.call("size")) != base + 3:
+			_fail("party size after reload is %d, expected %d" % [int(party.call("size")), base + 3])
+		_check_hud_reads(base + 3, "after save/reload")
 
 	_wipe_test_dir()
 	_report()
@@ -293,6 +300,13 @@ func _catch_real_creature(target: Node3D) -> void:
 			_seed_orbs()
 		var foe: RefCounted = _manager.call("enemy")
 		foe.hp = foe.max_hp * 0.08
+		# With combat.json actor_vitals on, the host decides the catch from its
+		# own authoritative opponent record, never the local instance: apply the
+		# same weakening there (the record of the fight this peer is in).
+		var host: Variant = _director.get("_encounter_host")
+		var fight_id := str((_director.get("_encounter") as Dictionary).get("encounter_id", ""))
+		if host != null and not fight_id.is_empty() and not (host.call("record", fight_id) as Dictionary).is_empty():
+			host.call("set_opponent_hp", fight_id, foe.max_hp * 0.08, foe.max_hp)
 		var creature: RefCounted = _manager.call("active_creature")
 		if creature != null:
 			creature.hp = creature.max_hp

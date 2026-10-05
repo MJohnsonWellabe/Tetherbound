@@ -126,6 +126,12 @@ func _fixture_opening_rewards_and_short_travel() -> void:
 	# combat, damage, aiming, projectile and resolution behavior untouched.
 	if _director.call("ally_instance") == null:
 		await _director.call("adopt_starter", "terrapup")
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted body is a companion only once it is in this character's party.
+	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var owned_party: RefCounted = _game.get("party")
+	if owned_party != null and int(owned_party.call("size")) == 0 and _director.call("ally_instance") != null:
+		owned_party.call("add", _director.call("ally_instance"))
 	var inventory: RefCounted = _game.get("inventory")
 	var short := 15 - int(inventory.call("count", "orb_basic"))
 	if short > 0:

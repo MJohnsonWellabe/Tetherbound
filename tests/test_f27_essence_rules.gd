@@ -389,3 +389,45 @@ func test_ceremony_release_requires_the_ceremony_and_a_full_belt() -> void:
 	assert_eq(rules.stage(five, 4, "essence_release", intent, no_ceremony, RECORD.errors).get("code"), "actual_release_ceremony_required")
 	var bad := {"release_id": "x", "creature_uid": five.party[1].uid, "payout": 99}
 	assert_eq(rules.stage(five, 4, "essence_release", bad, _release_context(five), RECORD.errors).get("code"), "invalid_release_intent")
+
+
+## Owner passive drift since a stage merges onto the row's decided values.
+func test_owner_passive_merge_keeps_the_rows_change_and_the_owners_drift() -> void:
+	var before := {"party": [{"uid": "a", "happiness": 50.0, "distance_m_together": 10.0, "landmarks_visited_together": 1,
+		"nourishment": 60.0, "rested": false, "rested_seconds_left": 0.0, "level": 5}]}
+	var after := before.duplicate(true)
+	after.party[0].happiness = 55.0 # The row's victory mood.
+	after.party[0].level = 6
+	var current := before.duplicate(true)
+	current.party[0].distance_m_together = 25.0
+	current.party[0].landmarks_visited_together = 2
+	current.party[0].nourishment = 57.5
+	current.party[0].happiness = 51.0
+	current.party[0].rested = true
+	var merged := E.merge_owner_passive(after, before, current)
+	assert_eq(merged.party[0].level, 6, "the decided change stands")
+	assert_eq(float(merged.party[0].happiness), 56.0, "row mood plus the owner's own mood drift")
+	assert_eq(float(merged.party[0].distance_m_together), 25.0)
+	assert_eq(int(merged.party[0].landmarks_visited_together), 2)
+	assert_eq(float(merged.party[0].nourishment), 57.5)
+	assert_true(merged.party[0].rested == true)
+	var high := current.duplicate(true)
+	high.party[0].happiness = 1000.0
+	var cap: float = float(preload("res://scripts/creatures/creature_condition.gd").config().happiness.max)
+	assert_true(float(E.merge_owner_passive(after, before, high).party[0].happiness) <= cap, "mood stays within its maximum")
+	assert_eq(E.merge_owner_passive(after, before, before), after, "no drift: exactly the row")
+
+
+## A row that itself decided `rested` (a camp bed) keeps it over the owner's
+## older value; the owner's newer drift only fills fields the row left alone.
+func test_owner_passive_merge_keeps_a_rows_own_rest() -> void:
+	var before := {"party": [{"uid": "a", "rested": true, "rested_seconds_left": 10.0}]}
+	var after := {"party": [{"uid": "a", "rested": true, "rested_seconds_left": 600.0}]}
+	var row_rest := {"party": [{"uid": "a", "rested": false, "rested_seconds_left": 0.0}]}
+	var bed_before := {"party": [{"uid": "a", "rested": false, "rested_seconds_left": 0.0}]}
+	var bed_after := {"party": [{"uid": "a", "rested": true, "rested_seconds_left": 600.0}]}
+	var expired := {"party": [{"uid": "a", "rested": false, "rested_seconds_left": 0.0}]}
+	var merged := E.merge_owner_passive(bed_after, bed_before, expired)
+	assert_true(merged.party[0].rested == true and float(merged.party[0].rested_seconds_left) == 600.0, "the bed's rest stands " + str(merged))
+	var drifted := E.merge_owner_passive(after, before, row_rest)
+	assert_true(drifted.party[0].rested == false, "a field the row left alone takes the owner's newer value (rest expired)")

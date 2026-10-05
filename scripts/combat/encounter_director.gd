@@ -3,6 +3,7 @@ extends Node
 ## SceneTree maintains this live index on enter/exit. Portal views need only
 ## actual directors, rather than every terrain/harvest node in the world.
 const PORTAL_DIRECTOR_GROUP := &"foundation_portal_directors"
+const WILD_ACTOR_SCOPE := preload("res://scripts/net/wild_actor_scope.gd")
 
 ## Synchronous observation only: emitted around the complete authoritative
 ## strike handler. Copies keep diagnostic subscribers away from live intents.
@@ -2480,12 +2481,13 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record. An accepted `trainer_victory` tells its sender to stop retrying.
-		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
+		_send_realm_rpc(sender, "_rpc_encounter_verdict", [_with_host_xp_owner(str(verdict.get("encounter_id", intent.get("encounter_id", ""))), verdict)])
 
 
 ## Host -> the one peer whose intent it answers.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_verdict(verdict: Dictionary) -> void:
+	_note_host_xp_owner(verdict)
 	if str(verdict.get("kind", "")) == "engage" and not _pending_tournament_join_id.is_empty():
 		if str(verdict.get("encounter_id", "")) != _pending_tournament_join_id:
 			return
@@ -2508,6 +2510,7 @@ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
 ## that changes a client's copy of them.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
+	_note_host_xp_owner(rec)
 	if str(rec.get("kind", "")) != "wild" and not _record_is_local_guest_master(rec) and not _record_is_remote_rematch(rec):
 		var encounter_id := str(rec.get("encounter_id", ""))
 		if _manager != null and bool(_manager.call("is_fighting")) \
@@ -2733,12 +2736,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var canonical_id := str(intent.get("encounter_id", ""))
 	var rematch := _remote_rematch(canonical_id)
 	if rematch != null: return rematch.call("join", peer_id)
-	if peer_id != _local_peer_id() and _owns_canonical_wild(canonical_id):
-		# The initial importer is local-owner only. Admitting a contributor then
-		# refusing their full-state reward would lose an earned victory.
-		return {"ok": false, "kind": "engage", "peer": peer_id, "pending": false,
-			"code": "canonical_training_solo_scope", "delta": {},
-			"reason": "This encounter is waiting for shared training reconciliation."}
+	# F27: a guest contributor to a canonical wild fight is paid by its own
+	# retained `wild_defeat_share` (session._journal_guest_wild_defeats).
 	var encounter_id := str(intent.get("encounter_id", ""))
 	if encounter_id.is_empty():
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
@@ -2963,6 +2962,12 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	if not is_instance_valid(wild): return deny
+	# A tracked trainer/boss actor binds lazily on first publication, which
+	# advances its actor generation. Bind it here, before the start freezes its
+	# binding, so the start and its arrival name the same actor generation;
+	# otherwise every participant's first attack of the fight is refused as
+	# move_start_required. A no-op when tracking is off or already bound.
+	_f22_publication_binding(id, peer, body)
 	# The live deployment and admitted loadout are both checked. No per-press
 	# move name, timing, resource claim or rank is accepted from a guest.
 	var binding := _strike_actor_binding(id, peer, body)
@@ -3186,7 +3191,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if deliver:
 		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
 		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
-		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
+		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [_with_host_xp_owner(encounter_id, verdict)])
 	if publication.get("tracked") == true and not _encounter_host.call("acknowledge_move_action_publication",
 			encounter_id, peer_id, str(publication.action_id), verdict): return verdict
 	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
@@ -3586,7 +3591,8 @@ func _rpc_encounter_enemy_launch(encounter_id: String, launch: Dictionary) -> vo
 
 
 func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> void:
-	if uses_durable_trainer_rewards(encounter_id):
+	if uses_durable_trainer_rewards(encounter_id) \
+			or (peer_id != _local_peer_id() and uses_wild_actor_vitals(encounter_id)):
 		_stage_ordinary_enemy_hit(encounter_id, peer_id, payload)
 		return
 	if _encounter_host != null and float(payload.get("damage", 0.0)) > 0.0:
@@ -3800,7 +3806,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		# The author still receives the authoritative record, but renders from
 		# its richer verdict. Marking that copy quiet prevents the record and
 		# verdict from flinching/announcing the same strike twice.
-		_send_realm_rpc(peer_id, "_rpc_encounter_record", [rec, peer_id == author_peer_id])
+		_send_realm_rpc(peer_id, "_rpc_encounter_record", [_with_host_xp_owner(encounter_id, rec), peer_id == author_peer_id])
 
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
@@ -4079,6 +4085,14 @@ func uses_durable_rematch_rewards(id: String) -> bool:
 
 ## Only the actual host producer's scoped ownership excludes the local award.
 ## Guest copies arrive on the existing authenticated encounter record RPC.
+## F27: host-owned guest vitals in a canonical wild fight. Never a trainer
+## scope, so no round reward is ever installed for it.
+func uses_wild_actor_vitals(id: String) -> bool:
+	if id.is_empty() or not _is_host() or _encounter_host == null or not _owns_canonical_wild(id): return false
+	var record: Dictionary = _encounter_host.call("record", id)
+	return WILD_ACTOR_SCOPE.owns(record.get("wild_actor_owner"), record, id)
+
+
 func uses_durable_trainer_rewards(id: String) -> bool:
 	if id.is_empty() or _session == null: return false
 	var record: Dictionary = _encounter_host.call("record", id) if _is_host() and _encounter_host != null else _encounter
@@ -5977,6 +5991,11 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 				return
 			runtime.set_meta(&"canonical_wild_context", canonical.context.duplicate(true))
 			_manager.set_meta(&"canonical_wild_encounter", _shared_active_id)
+			# F27: a joining guest's creature vitals are host-owned in this fight
+			# (wild_actor_scope.gd), so the guest's win share settles on them.
+			var live: Dictionary = _encounter_host.call("record", _shared_active_id)
+			live["wild_actor_owner"] = WILD_ACTOR_SCOPE.make(str(canonical.context.world_namespace),
+				str(canonical.context.session_id), _encounter_realm(), _shared_active_id)
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
 	_freeze_bounty_instances(str(rec["encounter_id"]), _local_peer_id())
@@ -8194,7 +8213,13 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 		var peer_id := int(peer)
 		if peer_id == _local_peer_id() or not live.has(peer_id) or not _realm_rpc_allowed(peer_id):
 			continue
-		_encounter_host.call("join", encounter_id, peer_id, "", "")
+		# The guest's host-admitted character, as _host_engage passes it: a
+		# guest that left at the round boundary is restored from its retained
+		# row (actor vitals, move resources, bound creature) instead of
+		# rejoining as a blank participant whose every round-two move is refused.
+		var guest_character := str(_session.call("_authority_character", peer_id)) \
+			if _session != null and _session.has_method("_authority_character") else ""
+		_encounter_host.call("join", encounter_id, peer_id, "", guest_character)
 	return true
 
 
@@ -8449,8 +8474,37 @@ func _has_canonical_wild_runtime() -> bool:
 ## True only once the host retained this fight's frozen victory source; a
 ## refused capture leaves the legacy award in place so a win always pays.
 func canonical_wild_encounter(encounter_id: String) -> bool:
+	# The host said it pays this guest's share: true even if this session has
+	# since dropped, so a legacy award is never paid on top of the share.
+	if _host_owned_xp.has(encounter_id): return true
+	if _is_guest(): return false
 	var runtime := _shared_host_fight(encounter_id)
 	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
+
+
+## F27: a guest learns from the host's own copies that its wild win is paid
+## by the host's retained `wild_defeat_share`, so its combat manager skips the
+## legacy local award. Only a captured canonical source is ever stamped.
+var _host_owned_xp: Dictionary = {}
+
+
+## A connected guest; solo play has no active session and stays host-side.
+func _is_guest() -> bool:
+	return is_inside_tree() and _session != null and _session.has_method("is_active") \
+		and bool(_session.call("is_active")) and not bool(_session.call("is_host"))
+
+
+func _with_host_xp_owner(encounter_id: String, payload: Dictionary) -> Dictionary:
+	if not canonical_wild_encounter(encounter_id): return payload
+	var stamped := payload.duplicate()
+	stamped["host_owns_xp"] = encounter_id
+	return stamped
+
+
+func _note_host_xp_owner(payload: Dictionary) -> void:
+	# Only the host sends these (authority RPCs); the stamp names its encounter.
+	if _is_guest() and payload.get("host_owns_xp") is String and not str(payload.host_owns_xp).is_empty():
+		_host_owned_xp[payload.host_owns_xp] = true
 
 
 func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) -> void:
