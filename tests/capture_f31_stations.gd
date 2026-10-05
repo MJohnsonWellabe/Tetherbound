@@ -14,7 +14,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const PIECE := preload("res://scripts/build/station_piece.gd")
 const ROW := ["workbench", "forge", "kitchen", "altar", "den", "farm"]
-const ORIGIN := Vector3(-24.0, 0.0, 27.0) # Clear yard west of the berry beds, inside the plot.
+const ORIGIN := Vector3(-30.0, 0.0, 21.0) # Clear yard west of the berry beds and farm fence.
 const SPACING := 5.5
 
 
@@ -54,7 +54,7 @@ func _run() -> void:
 	var look := world.get_node("WorldLook")
 	look.call("set_clock_frozen", true)
 	var mid := ORIGIN + Vector3(SPACING * (ROW.size() - 1) * 0.5, 0, 0)
-	var stands := {"row": [mid + Vector3(0, 1.2, 9.0), mid], "forge_kitchen": [ORIGIN + Vector3(8.25, 1.2, 6.5), ORIGIN + Vector3(8.25, 0, 0)]}
+	var stands := {"row": [mid + Vector3(0, 1.2, 8.0), mid], "forge_kitchen": [ORIGIN + Vector3(8.25, 1.2, 5.5), ORIGIN + Vector3(8.25, 0, 0)], "den_farm": [ORIGIN + Vector3(24.75, 1.2, 6.0), ORIGIN + Vector3(24.75, 0, 0)]}
 	for stand: String in stands:
 		var at: Vector3 = stands[stand][0]
 		var aim: Vector3 = stands[stand][1]
