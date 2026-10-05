@@ -182,7 +182,7 @@ func _run() -> void:
 		"the host's Meadows shell finished building before anything asks it to simulate")
 
 	# 4. The client fights, in the realm only the host's shell is simulating.
-	var deployed: Dictionary = await step(1, "deploy_creature", {})
+	var deployed: Dictionary = await step(1, "deploy_creature", {"owned": true})
 	check(str(deployed.get("verdict", "")) == "PASS",
 		"the client put a creature out in the Meadows (%s)" % str(deployed.get("detail", "")))
 	# `require_encounter_record: false`, and that is a STATED LIMITATION rather

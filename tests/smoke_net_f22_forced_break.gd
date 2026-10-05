@@ -76,7 +76,7 @@ func _run() -> void:
 		var seen: Dictionary = await step(i, "expect_peers", {"count": 2})
 		check(str(seen.get("verdict", "")) == "PASS", "peer %d sees both players" % i)
 	for i in 2:
-		var deployed: Dictionary = await step(i, "deploy_creature", {})
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS",
 			"peer %d deployed its creature (%s)" % [i, str(deployed.get("detail", ""))])
 	var engaged: Dictionary = await step(0, "engage_wild", {})

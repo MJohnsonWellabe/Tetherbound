@@ -55,7 +55,7 @@ func _run() -> bool:
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return await _end()
 	for peer in 2:
-		if not await _pass(peer, "deploy_creature", {}): return await _end()
+		if not await _pass(peer, "deploy_creature", {"owned": true}): return await _end()
 	var guest_before := await _guest()
 	var host_before := await _host_self()
 	if not await _pass(0, "engage_wild", {}): return await _end()

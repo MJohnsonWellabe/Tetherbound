@@ -147,7 +147,7 @@ func _run() -> void:
 		var start: Dictionary = await _choice(peer)
 		check(int(start.get("party_size", -1)) == 4 and int(start.get("veridian_count", -1)) == 0,
 			"peer %d starts with four creatures and no Veridian (%s)" % [peer, str(start)])
-		await step(peer, "deploy_creature", {})
+		await step(peer, "deploy_creature", {"owned": true})
 
 	# 3. The Warden, shared (smoke_net_shared_boss.gd::_run_chapter_handoff).
 	var hold: Variant = await probe(0, "stronghold")

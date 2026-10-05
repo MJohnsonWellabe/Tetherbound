@@ -182,7 +182,7 @@ func _run_relay_crossing() -> void:
 	for peer in 2:
 		var seeded: Dictionary = await step(peer, "party_grant", {"species": "bramblebun", "level": 16})
 		check(str(seeded.get("verdict", "")) == "PASS", "relay peer %d received its disclosed fight fixture" % peer)
-		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		var deployed: Dictionary = await step(peer, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS", "relay peer %d deployed its owned ally" % peer)
 
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": CAPTAIN, "settle": 45})
@@ -346,7 +346,7 @@ func _run_earned_crossings() -> void:
 		for species: String in ["trailpup", "burrowback", "meadowhart", "terrapup"]:
 			var retained: Dictionary = await step(peer, "party_grant", {"species": species, "level": 12})
 			check(str(retained.get("verdict", "")) == "PASS", "peer %d retained-team fixture added %s" % [peer, species])
-		var deployed: Dictionary = await step(peer, "deploy_creature", {})
+		var deployed: Dictionary = await step(peer, "deploy_creature", {"owned": true})
 		check(str(deployed.get("verdict", "")) == "PASS",
 			"earned mode peer %d deployed through EncounterDirector (%s)" % [peer, str(deployed.get("detail", ""))])
 

@@ -129,7 +129,7 @@ func _run() -> void:
 	# which reads like the encounter path failing when it is really this line
 	# missing.
 	for i in 2:
-		var deployed: Dictionary = await step(i, "deploy_creature", {}, 6000)
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true}, 6000)
 		check(str(deployed.get("verdict", "")) == "PASS",
 			"SETUP: peer %d has a creature out to fight with (%s)" % [i, str(deployed.get("detail", ""))])
 
