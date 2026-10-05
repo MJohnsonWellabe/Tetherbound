@@ -29,6 +29,17 @@ The reviewer found nothing blocking.
   It works against guests and is not new.
 - The reviewer found no tests weakened and no scope creep.
 
+## Known pre-existing items (coordinator, 2026-10-05: record, do not change in F22)
+
+- **F2.** `hold_ultimate_reaction` freezes the wild's tell clock but not a
+  charge, so in co-op a genuine read can be refused while a partner's
+  ultimate holds the opponent.
+- **F3.** Solo forced breaks gate on `not is_quick` (utility and ultimate
+  hits can force a break). The host gates on `slot == "charged"`.
+- **F4.** Online, a genuine read lands about 3L+τ later than solo and can
+  arrive after the tell has ended, which works against guests near the end
+  of a tell.
+
 ## Guest path: two-peer proof
 
 Run: `tools/net/run_net_smoke.sh f22_forced_break`
