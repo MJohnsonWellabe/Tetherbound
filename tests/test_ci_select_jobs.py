@@ -41,7 +41,12 @@ CORPUS = {
 
 
 def pick(*paths, event="pull_request", corpus=CORPUS):
-    return S.select(list(paths), event, CI, corpus)
+    # The made-up corpus has none of the real scan sentinels.
+    S.REQUIRED_SCAN_CHECK = False
+    try:
+        return S.select(list(paths), event, CI, corpus)
+    finally:
+        S.REQUIRED_SCAN_CHECK = True
 
 
 class SelectJobs(unittest.TestCase):
@@ -149,6 +154,31 @@ def real():
     return REAL
 
 
+class Walk(unittest.TestCase):
+    """Second re-review findings on the walk itself."""
+
+    def test_a_comment_only_referrer_is_still_followed_when_it_really_loads_a_later_node(self):
+        corpus = {
+            "tests/smoke_alpha.gd": "extends SceneTree\n",
+            "tools/beta_tool.gd": 'const A := preload("res://tests/smoke_alpha.gd")\n',
+            "scripts/ui/hud.gd": '# see smoke_alpha\nconst B := load("res://tools/beta_tool.gd")\n',
+        }
+        jobs, every, why = pick("tests/smoke_alpha.gd", corpus=corpus)
+        self.assertTrue(every, why)
+
+    def test_a_uid_sidecar_counts_as_its_file(self):
+        corpus = {
+            "tools/capture_x.gd": "extends SceneTree\n",
+            "scripts/world/visual.gd": 'if a in ["res://tools/capture_x.gd"]: pass\n',
+        }
+        jobs, every, why = pick("tools/capture_x.gd.uid", corpus=corpus)
+        self.assertTrue(every, why)
+
+    def test_an_incomplete_corpus_selects_everything(self):
+        jobs, every, why = S.select(["tests/smoke_relay.gd"], "pull_request", CI, {"tests/smoke_relay.gd": ""})
+        self.assertTrue(every, why)
+
+
 class RealRepository(unittest.TestCase):
     """Regression cases from the independent selection review (each was a
     silent miss before the transitive walk): every one must select every job,
@@ -206,6 +236,16 @@ class RealRepository(unittest.TestCase):
     def test_a_smoke_only_named_in_prose_selects_its_jobs(self):
         jobs, every, why = self.sel("tests/smoke_relay.gd")
         self.assertTrue(every or "verify-regions-relay" in jobs, why)
+
+    def test_uid_sidecars_of_tools_game_code_loads(self):
+        # scripts/world/cloudreach_visual_candidate.gd and data/config/lookdev_routes.json.
+        for path in ["tools/capture_cloudreach_f40_matrix.gd.uid", "tools/capture_cloudreach_f40_fight.gd.uid",
+                     "tools/art_pipeline/capture_tidewake_matrix.gd.uid"]:
+            if os.path.exists(os.path.join(ROOT, path[:-4])):
+                self.assertEverything(path)
+
+    def test_portraits_and_audio_reach_their_users(self):
+        self.assertEverything("assets/ui/portraits/sorrel.png")
 
     def test_media_follow_their_users(self):
         self.assertSelects("assets/ui/input_prompts/keyboard_r.png", "verify-gate-a-ui-build-shard")

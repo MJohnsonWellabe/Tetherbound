@@ -103,6 +103,12 @@ SCAN_EXT = {
 }
 DEFAULT_EXT = (".gd", ".tscn", ".tres", ".json", ".py", ".sh", ".cfg", ".gdshader", ".gdshaderinc")
 SCAN_FILES = ("project.godot",)
+# Sentinels, one per scan root, that must be in the corpus or the selection
+# runs everything (a partial checkout must never mean a partial walk).
+REQUIRED_SCAN = ("project.godot", "autoload/game_state.gd", "data/creatures/species.json",
+                 "data/config/combat.json", "scenes/ui/playground_hud.tscn", "tests/helpers/net_harness.gd",
+                 "tools/net/peer_runner.gd", "tests/fixtures/foundation_flag_mirror.gd")
+REQUIRED_SCAN_CHECK = True
 
 WORD = re.compile(r"[A-Za-z0-9_]+")
 CLASS_NAME = re.compile(r"^class_name\s+([A-Za-z_][A-Za-z0-9_]*)", re.M)
@@ -244,6 +250,8 @@ def loads_by_path(corpus, ref, node):
     """Does `ref`'s code (comments and prose keys removed) name `node` by
     repository path or by class_name?"""
     text = code_text(corpus, ref)
+    # A changed sidecar (`x.gd.uid`, `x.png.import`) stands for its file.
+    node = re.sub(r"\.(uid|import)$", "", node)
     if node in text:
         return True
     cls = corpus.class_of.get(node)
@@ -259,17 +267,18 @@ def reach(path, jobs, corpus, family):
         for ref in sorted(corpus.referrers(node)):
             if ref in seen:
                 continue
-            seen.add(ref)
-            if len(seen) > MAX_REACH:
-                return "all", "reach of %s exceeds %d files" % (path, MAX_REACH)
             if DOC_RE.search(ref):
                 continue
             if is_test_or_tool(node) and (is_game(ref) or CORE_RE.search(ref)) \
                     and not loads_by_path(corpus, ref, node):
                 # Game or core text that only mentions a test/tool (a comment,
                 # a `_why` string) cannot load it: Godot needs its res:// path
-                # or its class_name.
+                # or its class_name. NOT marked seen: the same file may
+                # really load another node of this walk.
                 continue
+            seen.add(ref)
+            if len(seen) > MAX_REACH:
+                return "all", "reach of %s exceeds %d files" % (path, MAX_REACH)
             if CORE_RE.search(ref):
                 return "all", "%s reaches core %s (via %s)" % (path, ref, node)
             if is_game(ref):
@@ -327,6 +336,12 @@ def select(changed, event, ci_text, corpus, force_all=False):
         return every, True, ["%d code paths > %d: everything" % (len(code), MAX_PATHS)]
     if not isinstance(corpus, Corpus):
         corpus = Corpus(corpus)
+    missing = [f for f in REQUIRED_SCAN if f not in corpus.files]
+    if REQUIRED_SCAN_CHECK and missing:
+        # The checkout did not hold what the reference walk needs (ci.yml's
+        # `changes` sparse checkout must list every SCAN_ROOTS text): a walk
+        # over a partial corpus could under-select, so run everything.
+        return every, True, ["scan corpus incomplete (missing %s): everything" % missing]
     chosen, why = set(ALWAYS_JOBS & every), []
     for path in changed:
         result, reason = classify(path, jobs, corpus)

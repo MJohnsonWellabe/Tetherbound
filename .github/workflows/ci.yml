@@ -213,14 +213,24 @@ jobs:
             /tools/ci/run_godot_smoke.py
             /tests/test_ci_select_jobs.py
             /tools/ci/select_jobs.py
-            # The text the selection's reference scan reads (no assets/bakes).
+            # The text the selection's reference scan reads (tools/ci/select_jobs.py
+            # SCAN_ROOTS; no media or binary bakes). Must stay in step with it:
+            # select_jobs.py selects everything if a REQUIRED_SCAN sentinel is
+            # missing, and tests/test_ci_select_jobs.py runs against this tree.
+            /project.godot
             /scripts/
             /scenes/
             /autoload/
-            /data/config/
+            /shaders/
+            /data/**/*.json
+            /data/**/*.tres
+            /data/**/*.cfg
+            /assets/**/*.tscn
+            /assets/**/*.tres
             /tests/*.gd
             /tests/*.py
             /tests/helpers/
+            /tests/fixtures/**/*.gd
             /tools/
 
       - name: Verify rolling release reference helper

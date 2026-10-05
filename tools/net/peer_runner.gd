@@ -2335,9 +2335,9 @@ func _step_drop_link(args: Dictionary) -> Dictionary:
 	# cable pull -- the host then only notices after ENet's peer timeout
 	# (MULTIPLAYER: 135-180 s), far past the 30 s a drop step allows (the
 	# unsegmented f06 mid-ride scenario missed it in 1 of 2 clean runs).
-	# So queue a graceful disconnect to every connected ENet peer and flush
-	# it onto the wire first; `close()` then tears the host down as before.
-	var flushed := _flush_enet_disconnect(peer)
+	# So send a graceful disconnect and wait (bounded) for the other side to
+	# acknowledge it before `close()` tears the host down as before.
+	var flushed := await _confirmed_enet_disconnect(peer, int(args.get("disconnect_ack_frames", 300)))
 	peer.close()
 	var sess := _session()
 	var frames := maxi(0, int(args.get("settle_frames", 30)))
@@ -2354,26 +2354,37 @@ func _step_drop_link(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL",
 			"detail": "transport closed but this peer's Session still reports active after %d frames"
 				% frames}
-	return {"verdict": "PASS", "detail": "transport closed without a Session.leave()%s"
-		% ("" if flushed < 0 else " (ENet disconnect flushed to %d peer(s))" % flushed)}
+	return {"verdict": "PASS", "detail": "transport closed without a Session.leave()%s" % flushed}
 
 
-## Queue `peer_disconnect` to every connected ENet peer of this process's host
-## (a client: the server) and flush it, so the other side sees a clean close at
-## once. Returns how many were sent, or -1 for a non-ENet peer (unchanged path).
-func _flush_enet_disconnect(peer: MultiplayerPeer) -> int:
+## A CONFIRMED clean ENet close: queue `peer_disconnect` (graceful: it goes out
+## after this peer's outstanding reliable traffic, e.g. a ride's state stream)
+## to every connected ENet peer of this process's host (a client: the server),
+## flush, and keep the link polled (the multiplayer API services it each frame)
+## until ENet reports each of them DISCONNECTED -- i.e. the other side
+## acknowledged it -- or `ack_frames` pass. `peer.close()` alone could destroy
+## the host before a backed-up disconnect ever left, and the drop became a
+## cable pull. Returns a detail suffix ("" for a non-ENet peer).
+func _confirmed_enet_disconnect(peer: MultiplayerPeer, ack_frames: int) -> String:
 	if not (peer is ENetMultiplayerPeer):
-		return -1
+		return ""
 	var host: ENetConnection = (peer as ENetMultiplayerPeer).host
 	if host == null:
-		return -1
-	var sent := 0
+		return ""
+	var sent: Array[ENetPacketPeer] = []
 	for packet_peer: ENetPacketPeer in host.get_peers():
 		if packet_peer.get_state() == ENetPacketPeer.STATE_CONNECTED:
 			packet_peer.peer_disconnect(0)
-			sent += 1
+			sent.append(packet_peer)
 	host.flush()
-	return sent
+	var frames := 0
+	while frames < ack_frames and sent.any(func(pp: ENetPacketPeer) -> bool:
+			return is_instance_valid(pp) and pp.get_state() != ENetPacketPeer.STATE_DISCONNECTED):
+		await physics_frame
+		frames += 1
+	var acked := sent.filter(func(pp: ENetPacketPeer) -> bool:
+		return not is_instance_valid(pp) or pp.get_state() == ENetPacketPeer.STATE_DISCONNECTED).size()
+	return " (ENet disconnect sent to %d peer(s), acknowledged by %d after %d frames)" % [sent.size(), acked, frames]
 
 
 func _step_expect_peers(args: Dictionary) -> Dictionary:
