@@ -174,7 +174,10 @@ func _run() -> void:
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
-						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
+						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]),
+						# COMBAT §7's reader switches on a real mismatch (coordinator ruling
+						# 2026-10-05: the acceptance pilot); rows stay labelled READER.
+						"SWITCH_READER" if policy == "READER" else policy)
 					var tells: Array = []
 					var diver_tells: Array = []
 					for event: Dictionary in result.get("events", []):
