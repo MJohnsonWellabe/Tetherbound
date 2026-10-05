@@ -49,33 +49,7 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 	var recoveries_before := int(_player.get("_unstick_count"))
 	var nav := NAV.new(tree, _player, _rig, _stick)
 	var distance := _player.global_position.distance_to(prompt.global_position)
-	var budget := maxi(1200, int(distance * 65.0))
-	# Grandpa stands inside the farmhouse. A straight line from the Hall meets
-	# its wall beside the door, so walk the authored doorway first: a point
-	# outside on the inside->door line, then the prompt. The same total frame
-	# budget is shared in proportion to each leg; checks below are unchanged.
-	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
-	var legs: Array[Vector3] = [prompt.global_position]
-	if house != null and house.has_method("marker"):
-		var door: Variant = house.call("marker", "door")
-		var inside: Variant = house.call("marker", "inside")
-		if door is Vector3 and inside is Vector3 and (door as Vector3).distance_to(inside) > 0.1:
-			var out_dir: Vector3 = ((door as Vector3) - (inside as Vector3)).normalized()
-			legs.push_front((door as Vector3) + out_dir * 2.0)
-	var total := 0.0
-	var at := _player.global_position
-	for leg: Vector3 in legs:
-		total += at.distance_to(leg)
-		at = leg
-	at = _player.global_position
-	var reached := true
-	for index in legs.size():
-		var leg: Vector3 = legs[index]
-		var share := int(float(budget) * at.distance_to(leg) / maxf(total, 0.001))
-		var close := 2.5 if index == legs.size() - 1 else 1.0
-		reached = await nav.walk_to(leg, maxi(1, share), close)
-		at = leg
-		if not reached: break
+	var reached: bool = await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5)
 	_stick(0, 0)
 	if not reached: return _fail("F20 ordinary capsule walk failed to Grandpa")
 	for frame in 8: await tree.physics_frame
