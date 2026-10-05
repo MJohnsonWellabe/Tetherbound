@@ -66,8 +66,9 @@ static func owner_plan(current: Dictionary, row: Dictionary, schema_check: Calla
 	if not valid(row, schema_check, str(current.get("character_id", ""))): return ACTIONS.deny("invalid_action_delivery")
 	if row.action == "combat_round_reward": return preload("res://scripts/net/combat_round_reward.gd").owner_plan(current, row)
 	if row.action == "wild_defeat_share": return preload("res://scripts/net/wild_actor_scope.gd").owner_plan(current, row)
-	if not ESSENCE._equivalent(current, row.before):
-		if ESSENCE._equivalent(current, row.after):
+	# Passive care keeps accruing after the stage; it is merged at install.
+	if not ESSENCE.owner_matches_after(current, row.before):
+		if ESSENCE.owner_matches_after(current, row.after):
 			return {"ok": true, "duplicate": true, "requires_owner_save": true, "state": current.duplicate(true), "receipt": row.receipt}
 		return ACTIONS.deny("owner_action_baseline_conflict")
 	if row.status != "pending": return ACTIONS.deny("accepted_history_is_not_a_new_award")

@@ -92,10 +92,10 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 
 ## The owner already holds the settled vitals (their own saved rows).
 static func owner_plan(current: Dictionary, row: Dictionary) -> Dictionary:
-	if E._equivalent(current, row.after):
+	if E.owner_matches_after(current, row.after):
 		return {"ok": true, "duplicate": true, "requires_owner_save": true, "state": current.duplicate(true), "receipt": row.receipt}
 	var settled := settled_before(row.before, row.host_context)
-	if settled.is_empty() or not E._equivalent(current, settled):
+	if settled.is_empty() or not E.owner_matches_after(current, settled):
 		return {"ok": false, "code": "owner_action_baseline_conflict", "durable": false, "resolved": false}
 	if row.status != "pending": return {"ok": false, "code": "accepted_history_is_not_a_new_award", "durable": false, "resolved": false}
 	return {"ok": true, "duplicate": false, "requires_owner_save": true,

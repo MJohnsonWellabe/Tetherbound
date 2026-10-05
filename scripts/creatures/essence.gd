@@ -778,6 +778,38 @@ static func owner_matches_after(projection: Variant, after: Variant) -> bool:
 		and _equivalent(_without_passive(projection), _without_passive(after))
 
 
+## The row's decided `after`, carrying the passive care this owner accrued
+## since the host staged `before` (walking bond, nourishment, rest): the
+## row's own passive changes (a victory's mood) and the owner's later drift
+## both stand. Numeric fields add the owner's delta (never below 0, mood
+## within its maximum); `rested` takes the owner's newer value.
+static func merge_owner_passive(after: Dictionary, before: Dictionary, current: Dictionary) -> Dictionary:
+	var merged := after.duplicate(true)
+	if not merged.get("party") is Array: return merged
+	var prior := {}
+	for card: Variant in before.get("party", []):
+		if card is Dictionary: prior[card.get("uid")] = card
+	var live := {}
+	for card: Variant in current.get("party", []):
+		if card is Dictionary: live[card.get("uid")] = card
+	var mood_max: Variant = preload("res://scripts/creatures/creature_condition.gd").config().get("happiness", {}).get("max")
+	for card: Variant in merged.party:
+		if not card is Dictionary: continue
+		var was: Variant = prior.get(card.get("uid"))
+		var now: Variant = live.get(card.get("uid"))
+		if not was is Dictionary or not now is Dictionary: continue
+		for field: String in PASSIVE_CARE_FIELDS:
+			if not now.has(field) or not was.has(field) or not card.has(field) or _equivalent(now[field], was[field]): continue
+			if field == "rested" or not (now[field] is int or now[field] is float) or not (was[field] is int or was[field] is float) \
+					or not (card[field] is int or card[field] is float):
+				card[field] = now[field]
+				continue
+			var value := maxf(0.0, float(card[field]) + float(now[field]) - float(was[field]))
+			if field == "happiness" and (mood_max is int or mood_max is float): value = minf(value, float(mood_max))
+			card[field] = int(round(value)) if card[field] is int and now[field] is int and was[field] is int else value
+	return merged
+
+
 ## Training projection with each party card's passive-care fields removed.
 static func _without_passive(projection: Dictionary) -> Dictionary:
 	var stripped := projection.duplicate(true)
