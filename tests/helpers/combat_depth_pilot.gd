@@ -221,7 +221,12 @@ func _on_hit(on_enemy: bool, damage: float) -> void:
 		"event": "hit", "ally_position": _ally.global_position, "enemy_position": _wild.global_position,
 		"gap": _ally.global_position.distance_to(_wild.global_position),
 		"wind": _manager.wind_value(), "enemy_staggered": _wild.is_staggered(),
-		"player_action": int(_manager.get("_action"))})
+		"player_action": int(_manager.get("_action")),
+		# Which authored pattern attack landed, and the opponent's intent, so a
+		# starter's incoming damage can be attributed (F22#1 Terrapup).
+		"enemy_attack": str((_wild.combat_config() as Dictionary).get("pattern_attack_id", "")),
+		"enemy_shape": str((_wild.combat_config() as Dictionary).get("telegraph_shape", "")),
+		"enemy_intent": int(_wild.intent()) if _wild.has_method("intent") else -1})
 
 
 func _on_state_changed() -> void:
