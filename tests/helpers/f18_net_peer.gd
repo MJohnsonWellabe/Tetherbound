@@ -51,6 +51,15 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"f18_traversal_refusal": result = await _f18_traversal_refusal(game, str(args.get("kind", "")))
 		"f18_stage": result = await _f18_stage(game, args)
 		"f18_inspect": result = _f18_verdict(true, "read-only production/disk witness", _f18_state(game, args))
+		"f18_settled":
+			# Read-only wait: the last owner transaction finishes its ordinary
+			# settlement (owner-passive fence and training row released).
+			var deadline := Time.get_ticks_msec() + 20000
+			while _session().call("_owner_training_mutation_blocked", game.get("local")) == true and Time.get_ticks_msec() < deadline:
+				await physics_frame
+			var blocked: bool = _session().call("_owner_training_mutation_blocked", game.get("local")) == true
+			result = _f18_verdict(not blocked, "owner transactions settled before the session ends",
+				{"reason": str(_session().call("_owner_snapshot_block_reason", game.get("local"))) if blocked else ""})
 		"f18_touch":
 			_f18_started = true
 			result = await _f18_touch(game, args)
@@ -382,11 +391,19 @@ func _f18_home_key(game: Node) -> Dictionary:
 	var ok: bool = reply.get("ok") == true and reply.get("durable") == true and reply.get("saved") == true \
 		and reply.get("character_id") == after.character_id and after.realm == "meadows" \
 		and after.home_key_count == 1 and before.home_key_count == 1 and target.is_finite() \
-		and _f18_vector(after.position).distance_to(target) < 1.0 \
+		and _f18_at_arrival_slot(_f18_vector(after.position), target) \
 		and _f18_disk_pose_at(after, "meadows", _f18_vector(after.position))
 	after.observed_reply = reply
 	after.before_position = before.position
 	return _f18_verdict(ok, "production Satchel Use requires saved authoritative HomeKey return at actual Hall", after)
+
+## The anchor itself, or (co-op, occupied anchor) one of its authored slots.
+## Same 1 m arrival tolerance as before; a slot is never an arbitrary point.
+func _f18_at_arrival_slot(at: Vector3, anchor: Vector3) -> bool:
+	if not at.is_finite() or not anchor.is_finite(): return false
+	for slot: Vector3 in preload("res://scripts/net/foundation_portal_arrival.gd").arrival_slots(anchor):
+		if at.distance_to(slot) < 1.0: return true
+	return false
 
 func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 	var id := str(args.get("arch", ""))
@@ -427,6 +444,13 @@ func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 				var stone := _f18_find_stone(str(args.stone))
 				var target := F18_STONE.resolve_position(current_scene, stone.get("_row"), true) if stone != null else Vector3(INF, INF, INF)
 				ok = ok and target.is_finite() and _f18_vector(state.position).distance_to(target) < 1.0
+			if args.get("hall") == true:
+				# Home-only home arch (STATE decision #11): the Hall's own home
+				# arrival, at the anchor or one of its authored co-op slots.
+				var at_hall := false
+				for hall: Node in get_nodes_in_group("crossing_halls"):
+					if _f18_at_arrival_slot(_f18_vector(state.position), hall.call("home_arrival")): at_hall = true
+				ok = ok and at_hall
 		state.observed_reply = reply
 		return _f18_verdict(ok, "actual prompt " + mode + " requires bound durable reply and exact portable outcome", state)
 	return _f18_verdict(false, "actual arch produced no authoritative outcome within bounded deadline", _f18_state(game, {}))

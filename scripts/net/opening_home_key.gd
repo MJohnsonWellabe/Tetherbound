@@ -106,7 +106,22 @@ static func _opening_source(session: Node, peer: int) -> Node:
 		or grandpa.is_queued_for_deletion() or prompt.is_queued_for_deletion(): return null
 	var radius: Variant = prompt.get("radius")
 	if not (radius is float or radius is int) or not is_finite(float(radius)) or float(radius) <= 0.0 \
-		or not actor.global_position.is_finite() or actor.global_position.distance_to(prompt.global_position) > float(radius): return null
+		or not actor.global_position.is_finite(): return null
+	if actor.global_position.distance_to(prompt.global_position) <= float(radius): return found
+	# The same conversation is also opened by the authored door callout: on the
+	# return_starter beat, walking at the farmhouse door calls the player back
+	# to Grandpa from beyond his talk radius (sequence_director
+	# _refresh_door_gate). Accept exactly that authored geometry too.
+	var house: Node3D = found.get("_house")
+	var constants: Dictionary = (found.get_script() as Script).get_script_constant_map()
+	var callout: Variant = constants.get("DOOR_CALLOUT_RADIUS")
+	var callout_beats: Variant = constants.get("DOOR_CALLOUT_BEATS")
+	if not callout_beats is Array or not found.has_method("beat") or not (callout_beats as Array).has(found.call("beat")): return null
+	if house == null or not world_node.is_ancestor_of(house) or house.is_queued_for_deletion() \
+		or not house.has_method("marker") or not (callout is float or callout is int) or float(callout) <= 0.0: return null
+	var door: Variant = house.call("marker", "door")
+	if not door is Vector3 or not (door as Vector3).is_finite() \
+		or actor.global_position.distance_to(door) > float(callout): return null
 	return found
 
 

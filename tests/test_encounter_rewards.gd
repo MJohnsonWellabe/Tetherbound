@@ -1,8 +1,8 @@
 extends "res://tests/test_case.gd"
 
-## Parts of this file assert the LEGACY PATH (world-scoped realm keys); see
-## the LEGACY PATH note in
-## test_a_world_scoped_reward_flag_travels_with_the_world_fact_not_the_payout.
+## Chapter portal keys follow RD-20/RD-21: each boss-fight participant gets
+## their own key ITEM (test_a_chapter_portal_key_is_an_item_each_participant_receives),
+## never a world-scoped realm-key flag.
 ##
 ## Stage B Wave 4 lane 4.D. ONE WORLD FACT, TWO PAYCHEQUES.
 ##
@@ -26,6 +26,7 @@ extends "res://tests/test_case.gd"
 
 const REWARDS := preload("res://scripts/net/encounter_rewards.gd")
 const ENCOUNTER_HOST := preload("res://scripts/net/encounter_host.gd")
+const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 
 const REALM := "meadows"
 
@@ -37,7 +38,9 @@ const PEER_THIRD := 884_120_557
 
 
 ## A trainer who pays every kind of thing a trainer can pay: coins, two items,
-## a world-scoped reward flag, and a flat XP bonus.
+## a world-scoped reward flag, and a flat XP bonus. The world flag is an
+## ordinary world fact, not a realm key: RD-20/RD-21 deliver chapter keys as
+## per-participant items through `chapter_grants()` instead.
 func _paying_trainer() -> Dictionary:
 	return {
 		"id": "captain_test",
@@ -46,7 +49,7 @@ func _paying_trainer() -> Dictionary:
 		"reward": {
 			"coins": 150,
 			"items": [{"id": "revive", "count": 2}, {"id": "potion_small", "count": 4}],
-			"flags": ["realm_key_cloudreach"],
+			"flags": ["south_bridge_open"],
 			"xp_bonus": 400,
 		},
 	}
@@ -79,26 +82,47 @@ func test_the_defeat_flag_is_one_world_intent_however_many_people_won_it() -> vo
 
 
 func test_a_world_scoped_reward_flag_travels_with_the_world_fact_not_the_payout() -> void:
-	# LEGACY PATH: asserts the shipped portal-off behaviour (a world-scoped
-	# realm-key flag paid once for the world, not per participant). Superseded by
-	# RD-20/RD-21 (each fight participant now receives their own portal key item,
-	# F19#2/F48#2) once F18 turns redesign_portal_runtime_enabled on; retire this
-	# test or rewrite it to the redesign rule at that point. The general world-fact versus payout split it
-	# checks is not legacy.
-	# `realm_key_cloudreach` is world-scoped in data/progression/flag_scopes.json.
+	# `south_bridge_open` is world-scoped in data/progression/flag_scopes.json.
 	# Granting it per participant would write the same world fact once per
 	# player, which is the duplication §7's first sentence forbids.
 	var spec := _paying_trainer()
+	assert_eq(PROGRESSION_STATE.scope_of("south_bridge_open"), "world",
+		"the fixture flag really is world-scoped")
 	var facts: Array = REWARDS.world_facts(spec, REALM)
 	var ids: Array = []
 	for raw: Variant in facts:
 		ids.append(str((raw as Dictionary).get("id", "")))
-	assert_true(ids.has("realm_key_cloudreach"),
+	assert_true(ids.has("south_bridge_open"),
 		"the world-scoped reward flag is one of the world's facts")
 	var grants: Array = REWARDS.grants(spec, REALM, [PEER_HOST, PEER_GUEST])
 	assert_true(_grant_named(grants,
-		REWARDS.source_for("captain_test", "flag:realm_key_cloudreach")).is_empty(),
+		REWARDS.source_for("captain_test", "flag:south_bridge_open")).is_empty(),
 		"and it is NOT also handed out per participant")
+
+
+func test_a_chapter_portal_key_is_an_item_each_participant_receives() -> void:
+	# RD-20/RD-21 (F19#2): the boss drops the next portal key as a real item and
+	# every fight participant gets their own. This replaces the retired
+	# world-scoped `realm_key_*` flag a trainer's reward used to carry.
+	var grants: Array = REWARDS.chapter_grants("warden_aldis", REALM,
+		[PEER_HOST, PEER_GUEST, PEER_HOST])
+	var key := _grant_named(grants,
+		REWARDS.source_for("warden_aldis", "item:tidewake_portal_key"))
+	assert_false(key.is_empty(), "the Warden's hand-off includes the Tidewake portal key")
+	assert_eq(str(key.get("kind", "")), "reward_grant", "a personal grant, not a world intent")
+	assert_eq(str(key.get("item", "")), "tidewake_portal_key", "the key is an inventory item")
+	assert_eq(int(key.get("count", 0)), 1, "one key each, used once on its arch")
+	assert_eq(key.get("peers", []), [PEER_HOST, PEER_GUEST],
+		"addressed to every participant, the duplicate peer paid once")
+	assert_false(key.has("flag"), "no realm-key flag rides along with the item")
+	var relic := _grant_named(grants, REWARDS.source_for("warden_aldis", "relic:meadows"))
+	assert_eq(str(relic.get("relic_biome", "")), "meadows", "each participant's own relic too")
+	assert_eq(relic.get("peers", []), [PEER_HOST, PEER_GUEST])
+	for raw: Variant in grants:
+		assert_false(str((raw as Dictionary).get("flag", "")).begins_with("realm_key_"),
+			"no chapter hand-off component is a realm-key flag")
+	assert_eq((REWARDS.chapter_grants("warden_aldis", REALM, []) as Array).size(), 0,
+		"no participants, no keys")
 
 
 func test_a_player_scoped_reward_flag_is_paid_to_each_participant_instead() -> void:

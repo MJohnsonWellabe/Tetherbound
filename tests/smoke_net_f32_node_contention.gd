@@ -61,13 +61,18 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		(session.get("_config") as Dictionary)["redesign_portal_runtime_enabled"] = true
 		return {"verdict": "PASS", "detail": "DIAGNOSTIC: host in-memory redesign_portal_runtime_enabled=true (portal_runtime_ready=%s)" % str(session.call("portal_runtime_ready"))}
 	if action == "f32_portal_refused":
-		# Accepting guest travel samples must not open portals: with the shipped
-		# flag off, the Home Key and every portal action still refuse.
+		# Accepting guest travel samples must not open portals by itself. With
+		# the portal runtime off, the Home Key and every portal action refuse.
+		# With it on (F18, shipped), a bare Home Key finish that no host raise
+		# issued still refuses: a sample alone never moves anyone.
 		var session: Node = root.get_node(^"Game").get("session")
 		var ready: bool = session.call("portal_runtime_ready") == true
+		var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/multiplayer.json"))
+		var shipped_on: bool = shipped is Dictionary and shipped.get("session", {}).get("redesign_portal_runtime_enabled") == true
 		var key := str(session.call("home_key_refusal"))
 		var action_reply: Dictionary = session.call("request_portal_action", {"kind": "home_key_finish"})
-		var ok: bool = not ready and key == "The Home Key is not ready yet." and action_reply.get("ok") != true
+		var ok: bool = ready == shipped_on and action_reply.get("ok") != true \
+			and (ready or key == "The Home Key is not ready yet.")
 		return {"verdict": "PASS" if ok else "FAIL",
 			"detail": "portal_runtime_ready=%s home_key='%s' portal_action=%s" % [str(ready), key, str(action_reply)]}
 	if action == "f32_press":

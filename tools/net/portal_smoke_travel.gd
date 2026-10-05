@@ -6,7 +6,7 @@ const DISCLOSURE := "initial_hall_position_and_open_route_no_earned_credit"
 const ROUTES := {"session_host_first_realm": "cloudreach", "water_alpha": "tidewake",
 	"stormwood_livewire": "stormwood", "stormwood_finalized_death": "stormwood", "stormwood_hosted_trainers": "stormwood",
 	"cloudreach_riding": "cloudreach", "stormwood_realms": "stormwood", "water_return": "stormwood",
-	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "cloudreach"}
+	"stormwood_glass_for_bryn": "stormwood", "veridian_same_five": "tidewake", "f15_dock": "tidewake"}
 const RETURNS := ["cloudreach_riding", "stormwood_realms", "water_return"]
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const HOME_KEY := preload("res://scripts/world/home_key.gd")
@@ -217,7 +217,30 @@ func _walk_arch(tree: SceneTree, game: Node, arch_id: String, started: int, budg
 	var remaining: int = budget - (Engine.get_physics_frames() - started)
 	if approach == null or player == null or rig == null or remaining <= 0:
 		return {"ok": false, "reason": "Actual return Hall/player/camera or remaining original budget unavailable"}
+	# The host accepts the request only inside the arch's interaction radius.
+	# The authored Approach stands 2.8 m out, so the walk's stop tolerance is
+	# the radius slack left at that marker (capped at the navigator default);
+	# a 0.8 m stop could otherwise end outside the radius the host enforces.
+	var config: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
+	var radius: float = float(config.arch.interaction_radius_m)
+	var arch_node: Node3D = approach.get_parent() as Node3D
+	var slack: float = radius - approach.global_position.distance_to(arch_node.global_position)
+	if slack <= 0.0: return {"ok": false, "reason": "Authored Hall Approach lies outside the arch interaction radius"}
 	var navigator: RefCounted = NAVIGATOR.new(tree, player, rig, Callable(tree, "_drive_left"))
-	var arrived: bool = await navigator.call("walk_to", approach.global_position, remaining, 0.8)
+	var arrived: bool = await navigator.call("walk_to", approach.global_position, remaining, minf(0.8, slack * 0.75))
 	tree.call("_drive_left", 0.0, 0.0)
-	return {"ok": arrived, "reason": "" if arrived else "Actual walk to authored Hall arch failed within remaining original budget"}
+	if not arrived: return {"ok": false, "reason": "Actual walk to authored Hall arch failed within remaining original budget"}
+	# Stand still on supported ground for two host observation refresh periods
+	# (portals.json arch.refresh_seconds), inside the same original budget, so
+	# the host-observed trainer is the player standing at the arch -- as a
+	# player who walks up and presses would be. No position is written.
+	var still_frames: int = int(ceil(2.0 * float(config.arch.refresh_seconds) * Engine.physics_ticks_per_second))
+	var still := 0
+	while still < still_frames and Engine.get_physics_frames() - started < budget:
+		await tree.physics_frame
+		if not is_instance_valid(player) or tree.current_scene != scene: return {"ok": false, "reason": "Hall scene changed while settling at the arch"}
+		var planar := Vector2(player.velocity.x, player.velocity.z).length()
+		still = still + 1 if player.is_on_floor() and planar < 0.05 else 0
+	var distance: float = player.global_position.distance_to(arch_node.global_position)
+	return {"ok": still >= still_frames and distance <= radius,
+		"reason": "" if still >= still_frames and distance <= radius else "Player did not settle inside the arch radius within the original budget (%.2f m)" % distance}

@@ -16,7 +16,12 @@ func _initialize() -> void:
 func _run() -> void:
 	await process_frame
 	heartbeat_silence_tolerance_s = 150.0
-	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"], "F18 gameplay peer logs have no errors/warnings")
+	# The one exemption is Godot 4.7's compat notice raised inside the Terrain3D
+	# GDExtension when the Meadows terrain enters the tree; no project script
+	# calls it. Any other warning or error still fails.
+	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"],
+		"F18 gameplay peer logs have no errors/warnings",
+		["WARNING: instance_reset_physics_interpolation() is deprecated."])
 	# Title/control hello stays lightweight. Build the same actual fixture
 	# worlds sequentially before setup/admission; no simultaneous world writers.
 	if not await launch(3, "title", [], {1: ["--joiner"]}):
@@ -121,10 +126,22 @@ func _run() -> void:
 	# Cross-world safe spawning is production-owned; HomeKey finds the actual
 	# Hall from that position, rather than staging another actor teleport.
 	if not await _f18_pass(1, "f18_home_key", {}, 12000): return
-	if not await _f18_pass(1, "f18_arch", {"arch": "home", "mode": "enter", "realm": "meadows", "stone": F18_STONE_ID}, 12000): return
+	# STATE decision #11 (owner-pending): the shipped home arch is home-only;
+	# portals.json home_arch.returns_to_last_meadows_waystone=true restores the
+	# recommendation, and this step then proves the personal-stone return.
+	var meadows_return := preload("res://scripts/net/portal_action_policy.gd").meadows_waystone_return(
+		JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json")))
+	var home_args := {"arch": "home", "mode": "enter", "realm": "meadows"}
+	if meadows_return: home_args.stone = F18_STONE_ID
+	else: home_args.hall = true
+	if not await _f18_pass(1, "f18_arch", home_args, 12000): return
 	var return_host := await _f18_observe(2, guest_id)
-	check(_f18_accepted(return_host, guest_id, "portal_arrival", "", F18_STONE_ID),
-		"actual home arch returns rejoined guest to its prior personal stone, with accepted disk arrival")
+	if meadows_return:
+		check(_f18_accepted(return_host, guest_id, "portal_arrival", "", F18_STONE_ID),
+			"actual home arch returns rejoined guest to its prior personal stone, with accepted disk arrival")
+	else:
+		check(_f18_accepted(return_host, guest_id, "portal_arrival", "", "meadows_entry"),
+			"home-only home arch lands the rejoined guest at the Hall entry, with accepted disk arrival")
 	check(_f18_position_same(host_b, return_host) and return_host.get("home_key_count") == 1,
 		"second host stays put with its own HomeKey during guest personal-stone return")
 	if not await _f18_pass(1, "f18_home_key", {}, 12000): return
@@ -137,6 +154,10 @@ func _run() -> void:
 		"portable travel never unlocks second host world live or on disk")
 	check(_f18_position_same(host_b, travelled_b) and travelled_b.get("home_key_count") == 1,
 		"guest Tidewake crossing leaves second host in Meadows at original position with its own key")
+	# A player who quits mid-settlement is fenced (the save is refused, the
+	# arrival is already durable). End the witness only after it settles.
+	var settled: Dictionary = await _f18_action(1, "f18_settled", {}, 3000)
+	if settled.is_empty(): return
 	print("F18_NET_FIXTURES: starter/free-play flags; one HomeKey per peer + guest Tidewake key; one pre-evidence grounded staging teleport. No earned opening/normal-loop/visual acceptance claimed.")
 	var file := FileAccess.open(_run_dir.path_join("F18_WITNESSES.json"), FileAccess.WRITE)
 	if file != null: file.store_string(JSON.stringify(_f18_witnesses, "\t"))
@@ -214,6 +235,9 @@ func _f18_restart_guest() -> bool:
 	# truncation hiding the original run from finish()'s error scan.
 	var first_log := str(old.log_path)
 	var first_contents := FileAccess.get_file_as_string(first_log) if FileAccess.file_exists(first_log) else ""
+	# Same single exemption as the run-wide check: the Terrain3D GDExtension's
+	# Godot 4.7 compat notice. Any other warning still fails.
+	first_contents = first_contents.replace("WARNING: instance_reset_physics_interpolation() is deprecated.\n", "")
 	for pattern: String in ["SCRIPT ERROR", "Parse Error", "Invalid call", "ERROR:", "WARNING:"]:
 		check(not first_contents.contains(pattern), "pre-restart guest log has no " + pattern)
 	var log_path := _run_dir.path_join("peer-1-rejoined.log")

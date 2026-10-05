@@ -65,8 +65,9 @@ static func owner_plan(current: Dictionary, row: Dictionary, schema_check: Calla
 		var result: Dictionary = codec.call("owner_plan", current, row, schema_check)
 		return result
 	if not valid(row, schema_check, str(current.get("character_id", ""))): return ACTIONS.deny("invalid_action_delivery")
-	if not ESSENCE._equivalent(current, row.before):
-		if ESSENCE._equivalent(current, row.after):
+	var core: Script = load("res://scripts/net/foundation_delivery.gd")
+	if core.call("baseline_matches", current, row.before, row) != true:
+		if core.call("baseline_matches", current, row.after, row) == true:
 			return {"ok": true, "duplicate": true, "requires_owner_save": true, "state": current.duplicate(true), "receipt": row.receipt}
 		return ACTIONS.deny("owner_action_baseline_conflict")
 	if row.status != "pending": return ACTIONS.deny("accepted_history_is_not_a_new_award")
