@@ -404,6 +404,8 @@ func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_r
 	# replay of this guest (admitted record + replayed care, travel and
 	# reward_delivery_applied inputs). Equal to the guest's own record means
 	# the guest's next host-staged action meets no owner_action_baseline_conflict.
+	print("opening gift evidence %s: guest rows %s; host rows %s; host stream %s" % [when,
+		str(guest.get("own_gift_rows", [])), str(host.get("host_gift_rows", [])), str(host.get("host_stream", {}))])
 	var replayed: Dictionary = host.get("replayed_fingerprints", {}) as Dictionary
 	var whole: bool = not mine.is_empty() and mine.get("whole") == replayed.get("whole")
 	if full_record:

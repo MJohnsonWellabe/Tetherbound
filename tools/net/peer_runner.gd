@@ -6191,7 +6191,37 @@ func _original_starter_ownership(args: Dictionary) -> Dictionary:
 		var cursor: Variant = (stream as Dictionary).get("cursor", {}) if stream is Dictionary else {}
 		if cursor is Dictionary and (cursor as Dictionary).get("state") is Dictionary:
 			replayed_core = essence_rules._without_passive((cursor as Dictionary).state)
+	# F01#6a part 2 evidence: which dialogue gifts arrived as deliveries, and
+	# whether the host's replay stream for this guest is live.
+	var own_gift_rows: Array[String] = []
+	if local != null:
+		for raw: Variant in (local.get("satchel_escrow") as Dictionary).values():
+			if raw is Dictionary and str((raw as Dictionary).get("source", "")).begins_with("dialogue_give:"):
+				own_gift_rows.append("%s=%s" % [str(raw.source), str(raw.get("status", ""))])
+	var host_gift_rows: Array[String] = []
+	var stream_info := {}
+	if not admitted.is_empty() and session != null:
+		var gift_world: Variant = root.get_node_or_null(^"Game").get("world") if root.get_node_or_null(^"Game") != null else null
+		if gift_world != null:
+			for raw: Variant in (gift_world.get("reward_deliveries") as Dictionary).values():
+				if raw is Dictionary and str((raw as Dictionary).get("source", "")).begins_with("dialogue_give:") \
+						and str(raw.get("character_id", "")) == str(admitted.get("character_id", "")):
+					host_gift_rows.append("%s=%s" % [str(raw.source), str(raw.get("status", ""))])
+		var passive_service: Variant = session.get("_owner_passive")
+		var host_streams: Variant = passive_service.get("hosts") if passive_service is Object else null
+		var guest_stream: Variant = (host_streams as Dictionary).get(str(admitted.get("character_id", "")), null) if host_streams is Dictionary else null
+		stream_info = {"present": guest_stream is Dictionary}
+		if guest_stream is Dictionary:
+			var gcursor: Variant = (guest_stream as Dictionary).get("cursor", {})
+			stream_info["error"] = str((guest_stream as Dictionary).get("error", ""))
+			stream_info["sequence"] = int((gcursor as Dictionary).get("sequence", -1)) if gcursor is Dictionary else -1
+			stream_info["has_state"] = gcursor is Dictionary and (gcursor as Dictionary).get("state") is Dictionary
+		var refused_map: Variant = passive_service.get("refused") if passive_service is Object else null
+		stream_info["refused"] = (refused_map as Dictionary).has(str(admitted.get("character_id", ""))) if refused_map is Dictionary else false
 	return {
+		"own_gift_rows": own_gift_rows,
+		"host_gift_rows": host_gift_rows,
+		"host_stream": stream_info,
 		"own_fingerprints": fingerprints.call(own_core),
 		"admitted_fingerprints": fingerprints.call(admitted_core),
 		"replayed_fingerprints": fingerprints.call(replayed_core),
