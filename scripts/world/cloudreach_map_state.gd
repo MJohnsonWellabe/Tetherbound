@@ -212,6 +212,7 @@ func sync_navigation(progression: RefCounted, at: Vector3) -> void:
 func reveal_all() -> void:
 	_visited.fill(1)
 	_visited_count = _visited.size()
+	_visited_epoch += 1
 	for id: String in _landmark_defs:
 		discover_landmark(id)
 	_mark_fog_dirty_all()
@@ -233,6 +234,7 @@ func load_data(data: Dictionary) -> void:
 	_alpha_pins.clear()
 	_visited.fill(0)
 	_visited_count = 0
+	_visited_epoch += 1
 	_current_region_id = ""
 	_pending_region_announcement = ""
 	if str(data.get("realm_id", "")) == "cloudreach":
