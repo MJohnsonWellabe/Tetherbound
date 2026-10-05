@@ -1,0 +1,18 @@
+{
+  "source_commit": "cd85fa459451665caf6be12fd98ac1c116145235",
+  "observed_at_utc": "2026-10-05T11:06:21.109973+00:00",
+  "case": "meadows_walk_headless",
+  "complete": false,
+  "exit_code": null,
+  "phase": "CPU attribution command running; provisional stdout prefix only",
+  "TB_BACKGROUND_WORK_TRACE": "1",
+  "printed_walk_rows": [
+    "PERF CPU WALK baseline mean=111.70 p99=750.86 max=860.42 ms",
+    "PERF CPU WALK without GrassField mean=108.41 p99=765.18 max=821.82 ms",
+    "PERF CPU WALK without Vegetation mean=104.47 p99=759.29 max=904.09 ms",
+    "PERF CPU WALK without Terrain mean=110.66 p99=762.39 max=802.19 ms",
+    "PERF CPU WALK without EncounterDirector mean=111.90 p99=759.28 max=895.28 ms"
+  ],
+  "errors_observed": [],
+  "scope": "Exact stdout prefix snapshot while native command remains active, no final JSON or acceptance claim. Lightweight evidence publication only; no archive or CPU audit alongside timing."
+}
