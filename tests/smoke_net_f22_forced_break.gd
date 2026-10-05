@@ -164,8 +164,9 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	else:
 		_action += 1
 		var action := _action
-		await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
+		var begun: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z],
 			"slot": "charged", "action": action, "start_only": true})
+		out["start"] = "%s %s" % [str(begun.get("detail", "")), str(begun.get("data", {}))]
 		await step(1, "wait", {"frames": EARLY_START_FRAMES})
 		var pinned := await _pin(false)
 		pin = pinned.get("data", {})
@@ -173,8 +174,9 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		out.since_ms = int(pin.get("since_ms", -1))
 		out.poise_before = float(pin.get("poise", 0.0))
 		hp_before = float(pin.get("hp", -1.0))
-		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
+		var struck: Dictionary = await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "charged",
 			"action": action, "move_start": false, "windup_wait": true, "settle": 15})
+		out["strike"] = "%s %s" % [str(struck.get("detail", "")), str(struck.get("data", {}))]
 	var state: Dictionary = {}
 	for _poll in STAGGER_POLLS:
 		state = (await _pin(true)).get("data", {})
