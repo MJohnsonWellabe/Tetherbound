@@ -228,13 +228,34 @@ func host_context(peer: int) -> Dictionary:
 		"waystones_activated": personal.redesign_character.waystones_activated.duplicate(true),
 		"waystone_positions": positions, "arch_positions": arches}
 
+## Diagnostic only: the first host_context check that returns empty.
+func host_context_refusal(peer: int) -> String:
+	var owner: Node = session()
+	var observation: Dictionary = _observations.get(peer, {})
+	if observation.is_empty(): return "no_observation"
+	var sample: Dictionary = observation.sample
+	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
+	var age := Time.get_ticks_msec() - int(observation.seen_at)
+	if age > int(timeout * 1000.0): return "stale_sample_%dms" % age
+	if sample.character_id != owner.call("_authority_character", peer) or sample.session_epoch != owner.call("_altar_current_epoch"): return "identity"
+	var actor := remote_body(peer)
+	if actor == null: return "no_remote_body"
+	var world_node: Node3D = owner.call("_portal_world_node", str(sample.realm))
+	if world_node == null: return "no_world_node_" + str(sample.realm)
+	if not world_node.is_ancestor_of(actor): return "body_outside_world"
+	if actor.get("net_realm") != sample.realm: return "body_realm_%s_sample_%s" % [str(actor.get("net_realm")), str(sample.realm)]
+	if not actor.is_physics_processing(): return "body_not_processing"
+	if actor.get("aquatic") == null: return "no_aquatic"
+	if owner.get("_character_authority").call("state", sample.character_id).is_empty(): return "no_personal_state"
+	return "duplicate_hall_or_stone"
+
 ## Diagnostic only: which gate the last host_ending_context refusal hit.
 var ending_refusal := ""
 
 func host_ending_context(peer: int) -> Dictionary:
 	var owner: Node = session()
 	var safety := host_context(peer)
-	ending_refusal = "no_safe_sample" if safety.is_empty() else "realm_" + str(safety.realm)
+	ending_refusal = "no_safe_sample:" + host_context_refusal(peer) if safety.is_empty() else "realm_" + str(safety.realm)
 	if safety.is_empty() or safety.realm != "meadows": return {}
 	for hazard: String in ["combat", "swimming", "flying", "downed"]:
 		ending_refusal = hazard
