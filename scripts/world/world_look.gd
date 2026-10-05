@@ -597,7 +597,13 @@ func _layer_weather(sun_cfg: Dictionary, sky_cfg: Dictionary, env_cfg: Dictionar
 	if env_over.has("ambient_energy_mult"):
 		env_cfg["ambient_energy"] = float(env_cfg.get("ambient_energy", 1.0)) * float(env_over["ambient_energy_mult"])
 	if env_over.has("ambient_colour"):
-		env_cfg["ambient_colour"] = env_over["ambient_colour"]
+		# Keep rain's daytime fill from replacing the authored night palette,
+		# using the same continuous clock weight as the sky colors above.
+		if bool(_weather.get("rain", false)) and night_weight > 0.0:
+			env_cfg["ambient_colour"] = _as_colour(env_over["ambient_colour"]).lerp(
+					_as_colour(env_cfg.get("ambient_colour")), clampf(night_weight, 0.0, 1.0))
+		else:
+			env_cfg["ambient_colour"] = env_over["ambient_colour"]
 	if env_over.has("fog_density_add"):
 		env_cfg["fog_density"] = float(env_cfg.get("fog_density", 0.0016)) + float(env_over["fog_density_add"])
 	if env_over.has("fog_colour"):
