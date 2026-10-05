@@ -168,6 +168,19 @@ func admission_landmarks() -> Dictionary:
 		if map != null: result[realm] = map.call("save_data").get("landmarks", []).duplicate()
 	return result
 
+## Owner, on a rejoin readmit (owner_passive_sync `_readmit_owner`): the
+## host's held landmark set wins inside its world, so the owner's maps take it
+## exactly; a landmark the owner discovered but the host never replayed is
+## simply discovered again by walking. Refuses an unknown realm or landmark.
+func adopt_landmarks(discovered: Dictionary) -> bool:
+	if not admission_valid(discovered): return false
+	var player: RefCounted = owner().call("_game").get("local")
+	for realm: String in REALMS:
+		var map: RefCounted = player.call("map_for", realm)
+		if map == null: continue
+		map.call("set_discovered_landmarks", (discovered.get(realm, []) as Array).duplicate())
+	return true
+
 func admission_valid(raw: Variant, complete: bool = false) -> bool:
 	if not discovery_shape(raw): return false
 	if complete and raw.size() != REALMS.size(): return false

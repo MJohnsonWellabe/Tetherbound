@@ -26,6 +26,8 @@ extends RefCounted
 const FARM_LOGIC := preload("res://scripts/world/farm_logic.gd")
 const PROGRESSION_STATE := preload("res://autoload/progression_state.gd")
 const REDESIGN_STATE := preload("res://scripts/data/redesign_state.gd")
+const GATHER_BATCHES := preload("res://scripts/net/gather_batches.gd")
+const RETAINED_SETTLEMENT := preload("res://scripts/net/retained_settlement.gd")
 ## F31 version-2 Homestead records on the existing Altar building journal.
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
 var redesign_world: Dictionary = REDESIGN_STATE.defaults("world")
@@ -396,6 +398,80 @@ func load_data(data: Dictionary) -> void:
 	revision += 1
 
 
+## Coordinator ruling (b): a guest's batched gathers (scripts/net/gather_batches.gd).
+## Every op is fully checked here, so a peer applying the host's delta and a
+## reload reach the same carrier; a refused op changes nothing.
+func _apply_gather_op(op: Dictionary) -> bool:
+	var character := str(op.get("character_id", ""))
+	if character.is_empty(): return false
+	var row := GATHER_BATCHES.batch(redesign_world, character)
+	if row.is_empty(): return false
+	var next: Dictionary = {}
+	var erase: Array = []
+	match str(op.op):
+		"gather_accrue":
+			next = GATHER_BATCHES.accrued(row, str(op.get("item", "")), int(op.get("count", 0)))
+		"gather_flush":
+			var delivery: Variant = op.get("delivery")
+			var id := str(op.get("delivery_id", ""))
+			if int(op.get("seq", -1)) != int(row.next_seq) or not delivery is Dictionary \
+				or reward_deliveries.has(id) or reward_delivery_namespace.is_empty() \
+				or not preload("res://scripts/creatures/essence.gd")._equivalent(delivery,
+					GATHER_BATCHES.flush_delivery(row, world_id, reward_delivery_namespace, character)) \
+				or str(delivery.get("delivery_id", "")) != id: return false
+			reward_deliveries[id] = (delivery as Dictionary).duplicate(true)
+			next = GATHER_BATCHES.flushed(row)
+		"gather_replayed":
+			var seq := int(op.get("seq", -1))
+			if GATHER_BATCHES.row_id(reward_deliveries, character, seq).is_empty(): return false
+			var marked := GATHER_BATCHES.replayed_marked(row, seq)
+			if marked.is_empty(): return false
+			var result: Array = GATHER_BATCHES.pruned(reward_deliveries, character, marked)
+			next = result[0]
+			erase = result[1]
+	if next.is_empty(): return false
+	for id: String in erase: reward_deliveries.erase(id)
+	_store_gather_batch(character, next)
+	revision += 1
+	return true
+
+
+func _store_gather_batch(character: String, row: Dictionary) -> void:
+	var all: Dictionary = (redesign_world.get(GATHER_BATCHES.FIELD, {}) as Dictionary).duplicate(true)
+	all[character] = row
+	redesign_world[GATHER_BATCHES.FIELD] = all
+
+
+## An accepted batch row that the host's replay already credited is pruned
+## now (gather_batches.gd: per-row accepted AND replayed).
+func _prune_accepted_gather_row(character: String) -> void:
+	var row := GATHER_BATCHES.batch(redesign_world, character)
+	if row.is_empty() or (row.replayed as Array).is_empty(): return
+	var result: Array = GATHER_BATCHES.pruned(reward_deliveries, character, row)
+	for id: String in result[1]: reward_deliveries.erase(id)
+	_store_gather_batch(character, result[0])
+
+
+## Ruling R2: an accepted training decision settles its retained duty
+## durably (retained_settlement.gd); the event row retires once every duty on
+## it is settled. Deterministic: every peer applies the same accept op.
+func _settle_retained_duty(row: Dictionary) -> void:
+	var context: Variant = row.get("host_context")
+	var event_id := str((context as Dictionary).get("retained_event", "")) if context is Dictionary else ""
+	if event_id.is_empty(): return
+	var event: Variant = reward_deliveries.get(event_id)
+	if not preload("res://scripts/net/foundation_event.gd").valid(event, reward_delivery_namespace, world_id): return
+	var result: Array = RETAINED_SETTLEMENT.after_accept(redesign_world, event, row)
+	if result.is_empty(): return
+	var all: Dictionary = (redesign_world.get(RETAINED_SETTLEMENT.FIELD, {}) as Dictionary).duplicate(true)
+	if bool(result[1]):
+		reward_deliveries.erase(event_id)
+		all.erase(event_id)
+	else:
+		all[event_id] = result[0]
+	redesign_world[RETAINED_SETTLEMENT.FIELD] = all
+
+
 ## A saved number, or the default. Deliberately strict about the TYPE rather
 ## than calling `int()` on whatever arrived: `int([])` is not a conversion, it
 ## is a "Nonexistent 'int' constructor" error that aborts the whole load
@@ -496,6 +572,7 @@ func _apply_op(op: Dictionary) -> bool:
 				reward_deliveries[op.delivery_id] = op.delivery.duplicate(true)
 			else:
 				reward_deliveries[op.delivery_id].status = "accepted"
+				_settle_retained_duty(reward_deliveries[op.delivery_id])
 			revision += 1
 			return true
 		"actor_vitals_journal", "actor_vitals_accept":
@@ -517,8 +594,12 @@ func _apply_op(op: Dictionary) -> bool:
 					or str((accepted as Dictionary).get("character_id", "")) != accept_character:
 				return false
 			(accepted as Dictionary)["status"] = "accepted"
+			if GATHER_BATCHES.seq_of(str((accepted as Dictionary).get("source", ""))) >= 1:
+				_prune_accepted_gather_row(accept_character)
 			revision += 1
 			return true
+		"gather_accrue", "gather_flush", "gather_replayed":
+			return _apply_gather_op(op)
 		"reward_delivery_journal":
 			var delivery: Variant = op.get("delivery", {})
 			var id := str(op.get("delivery_id", ""))

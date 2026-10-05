@@ -23,6 +23,24 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _home_bed_rest(args)
 	if action == "home_bed_status":
 		return _home_bed_status()
+	if action == "craft_place_kitchen":
+		return await _craft_place_kitchen()
+	if action == "craft_at_host_kitchen":
+		return await _craft_at_host_kitchen(args)
+	if action == "craft_count":
+		return _craft_count(args)
+	if action == "craft_authority_count":
+		return _craft_authority_count(args)
+	if action == "gather_node_stand":
+		return await _gather_node_stand(args)
+	if action == "gather_node_take":
+		return await _gather_node_take(args)
+	if action == "gather_rows":
+		return _gather_rows(args)
+	if action == "owner_passive_probe":
+		return _owner_passive_probe(args)
+	if action == "relic_power_attempt":
+		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -390,3 +408,237 @@ func _home_bed_status() -> Dictionary:
 		"character_id": str(game.get("local").get("character_id")), "resting": bool(creature.get("resting")),
 		"rest_bed_index": int(creature.get("rest_bed_index")), "occupied": bool(bed.call("is_occupied")),
 		"hp": float(creature.get("hp")), "max_hp": float(creature.get("max_hp"))}}
+
+
+## F31#5 homestead craft actions (tests/smoke_net_homestead_station_craft.gd).
+## Disclosed fixtures: the host stands at the paid-path smoke's open
+## homestead stance, the host's station costs are added to its own
+## inventory, the guest's ingredients are world finds the smoke stands
+## (peer_runner pickup_stand) and the guest claims through the host's ledger,
+## and the guest stands beside the host's Kitchen. Placement, gathering,
+## crafting and saving use the ordinary paths (build placer press, ledger
+## claim and reward delivery, Session.homestead_submit_action, production
+## leave).
+const CRAFT_STANCE := Vector3(-6.0, 1.4, 22.0)
+const CRAFT_DELIVERY := preload("res://scripts/net/homestead_building_delivery.gd")
+const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
+
+func _inventory_count(id: String) -> int:
+	return int(root.get_node("Game").get("inventory").call("count", id))
+
+## Host: the guest's item counts on the host's own CharacterAuthority record,
+## the record every station craft reads (read-only).
+func _craft_authority_count(args: Dictionary) -> Dictionary:
+	var sess := _session()
+	if sess == null or not bool(sess.call("is_host")):
+		return {"verdict": "FAIL", "detail": "authority counts are read on the host"}
+	var authority: RefCounted = sess.get("_character_authority")
+	var character := str(args.get("character_id", ""))
+	var state: Dictionary = authority.call("state", character) if authority != null else {}
+	if state.is_empty() or not state.get("inventory") is Array:
+		return {"verdict": "FAIL", "detail": "no host authority record for %s" % character}
+	var counts := {}
+	for id: Variant in args.get("ids", []):
+		var n := 0
+		for slot: Variant in state.inventory:
+			if slot is Dictionary and str(slot.get("id", "")) == str(id):
+				n += int(slot.get("n", 0))
+		counts[str(id)] = n
+	return {"verdict": "PASS", "detail": "host authority counts read", "data": {"counts": counts, "character_id": character}}
+
+## Ruling (b) setup: a harvest node, stood on BOTH peers as both run the same
+## world (the host registers its legal yields from its own copy).
+var _gather_nodes: Dictionary = {}
+
+func _gather_node_stand(args: Dictionary) -> Dictionary:
+	var id := str(args.get("id", ""))
+	var node: Node3D = load("res://scripts/world/harvest_node.gd").new()
+	node.name = "SmokeHarvest_" + id
+	current_scene.add_child(node)
+	node.call("setup", {"item": str(args.get("item", "berries")), "amount": int(args.get("amount", 2)),
+		"order": id, "realm": "meadows", "label": "Gather"})
+	_gather_nodes[id] = node
+	await physics_frame
+	return {"verdict": "PASS", "detail": "stood harvest node '%s'" % id}
+
+## Guest: gather it through the node's own path (claim -> host ledger).
+func _gather_node_take(args: Dictionary) -> Dictionary:
+	var node: Node = _gather_nodes.get(str(args.get("id", "")))
+	if node == null or not is_instance_valid(node):
+		return {"verdict": "FAIL", "detail": "no stood node %s" % str(args.get("id", ""))}
+	node.call("gather")
+	for i in 20: await physics_frame
+	return {"verdict": "PASS", "detail": "gathered '%s'" % str(args.get("id", ""))}
+
+## Host: the character's batch carrier and how many batch rows its world
+## still holds (read-only).
+func _gather_rows(args: Dictionary) -> Dictionary:
+	var world: RefCounted = root.get_node("Game").get("world")
+	var character := str(args.get("character_id", ""))
+	var gather: GDScript = load("res://scripts/net/gather_batches.gd")
+	var rows := 0
+	for raw: Variant in world.reward_deliveries.values():
+		if raw is Dictionary and str(raw.get("character_id", "")) == character \
+				and int(gather.call("seq_of", str(raw.get("source", "")))) >= 1:
+			rows += 1
+	return {"verdict": "PASS", "detail": "gather rows read", "data": {"rows": rows,
+		"batch": gather.call("batch", world.redesign_world, character)}}
+
+## Diagnostic (read-only): this peer's owner-passive state, to explain a
+## stalled checkpoint. Owner: local stream error/pending/inputs; host: the
+## stream for `character_id` and its checkpoint keys.
+func _owner_passive_probe(args: Dictionary) -> Dictionary:
+	var sess := _session()
+	var service: RefCounted = sess.call("_owner_passive_service") if sess != null else null
+	if service == null:
+		return {"verdict": "PASS", "detail": "no owner-passive service", "data": {}}
+	var local: Dictionary = service.get("local")
+	var pending: Dictionary = service.get("pending")
+	var hosts: Dictionary = service.get("hosts")
+	var stream: Dictionary = hosts.get(str(args.get("character_id", "")), {})
+	var data := {"owner": {"armed": not local.is_empty(), "error": str(local.get("error", "")),
+			"admission_pending": local.get("admission_pending"), "inputs": (local.get("inputs", []) as Array).size(),
+			"sequence": local.get("sequence"), "acked": local.get("acked"),
+			"pending_phase": str(pending.get("phase", "")), "pending_kind": str(pending.get("source_kind", ""))},
+		"host": {"has_stream": not stream.is_empty(), "error": str(stream.get("error", "")),
+			"checkpoint": (stream.get("checkpoint", {}) as Dictionary).keys(),
+			"cursor_sequence": (stream.get("cursor", {}) as Dictionary).get("sequence"),
+			"refused": (service.get("refused") as Dictionary).keys()}}
+	# The states the two sides fingerprint, so a projection conflict names its field.
+	if not local.is_empty():
+		data.owner["projection"] = service.call("_projection")
+		data.owner["stream_id"] = str(local.get("id", ""))
+		data.owner["prefix_hash"] = str(local.get("prefix_hash", "")).left(12)
+		data.owner["base_hash"] = str(local.get("base_hash", "")).left(12)
+	if not stream.is_empty():
+		var checkpoint: Dictionary = stream.get("checkpoint", {})
+		data.host["cursor_state"] = (stream.get("cursor", {}) as Dictionary).get("state", {})
+		data.host["stream_id"] = str(stream.get("id", ""))
+		data.host["base_hash"] = str(preload("res://scripts/net/research_passive_preparation.gd").fingerprint((stream.get("cursor", {}) as Dictionary).get("base", {}))).left(12)
+		data.host["frozen_prefix"] = str((checkpoint.get("frozen", {}) as Dictionary).get("prefix_hash", "")).left(12)
+		data.host["prefix_match"] = str((checkpoint.get("frozen", {}) as Dictionary).get("prefix_hash", "")) \
+			== str((stream.get("cursor", {}) as Dictionary).get("prefix_hash", "-"))
+	return {"verdict": "PASS", "detail": "owner-passive state", "data": data}
+
+func _craft_count(args: Dictionary) -> Dictionary:
+	var out := {}
+	for id: Variant in args.get("ids", []):
+		out[str(id)] = _inventory_count(str(id))
+	return {"verdict": "PASS", "detail": "counts read", "data": {"counts": out,
+		"character_id": str(root.get_node("Game").get("local").get("character_id"))}}
+
+func _press_place() -> void:
+	Input.action_press("build_place")
+	await physics_frame
+	await physics_frame
+	Input.action_release("build_place")
+
+func _placed_uid(game: Node, uid: String) -> bool:
+	for i in 300:
+		if int(game.get("world").call("building_index_of", uid)) >= 0:
+			return true
+		await physics_frame
+	return false
+
+func _place(game: Node, id: String) -> String:
+	for need: Dictionary in CRAFT_DELIVERY.cost(id):
+		game.get("inventory").call("add", need.id, int(need.n))
+	var uid := "b%d" % int(game.get("world").next_building_uid)
+	game.set("pending_build", id)
+	for i in 30:
+		await physics_frame
+	await _press_place()
+	return uid if await _placed_uid(game, uid) else ""
+
+func _craft_place_kitchen() -> Dictionary:
+	if _hall_guard(2).is_empty() or not bool(_session().call("is_host")):
+		return {"verdict": "FAIL", "detail": "the host places the Kitchen in the admitted two-peer session"}
+	var game := root.get_node("Game")
+	var player := current_scene.get_node("Player") as Node3D
+	player.global_position = CRAFT_STANCE
+	for i in 10:
+		await physics_frame
+	var kitchen := await _place(game, "kitchen")
+	if kitchen.is_empty():
+		return {"verdict": "FAIL", "detail": "pressing Place did not plant the Kitchen"}
+	var rack := await _place(game, "kitchen_meadows")
+	Input.action_press("build_cancel")
+	await physics_frame
+	Input.action_release("build_cancel")
+	var tier: Dictionary = CRAFT_STATION_RULES.effective_tier(CRAFT_STATION_RULES.config(), game.get("placed_buildings"), kitchen)
+	var ok: bool = not rack.is_empty() and tier.get("ok") == true and int(tier.get("effective_tier", -1)) == 1
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "host planted a Kitchen and its Spice rack through the paid journal", "data": {
+		"kitchen_uid": kitchen, "rack_uid": rack, "effective_tier": int(tier.get("effective_tier", -1))}}
+
+func _station_node(uid: String) -> Node3D:
+	for node: Node in get_nodes_in_group("placed_building"):
+		if node.get_meta("building_uid", "") == uid and current_scene.is_ancestor_of(node):
+			return node as Node3D
+	return null
+
+func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
+	if _hall_guard(2).is_empty() or bool(_session().call("is_host")):
+		return {"verdict": "FAIL", "detail": "the guest crafts in the admitted two-peer session"}
+	var game := root.get_node("Game")
+	var session := _session()
+	var kitchen: Node3D = null
+	for i in 600:
+		kitchen = _station_node(str(args.get("kitchen_uid", "")))
+		if kitchen != null:
+			break
+		await physics_frame
+	if kitchen == null:
+		return {"verdict": "FAIL", "detail": "the host's Kitchen never replicated to the guest world"}
+	var player := current_scene.get_node("Player") as Node3D
+	player.global_position = kitchen.global_position + Vector3(1.6, 0.6, 1.6)
+	for i in 60:
+		await physics_frame
+	var before := {"potion_small": _inventory_count("potion_small"), "berries": _inventory_count("berries"), "fiber": _inventory_count("fiber")}
+	var refreshed := {"done": false}
+	session.connect("homestead_personal_view_completed", func() -> void: refreshed.done = true, CONNECT_ONE_SHOT)
+	session.call("homestead_personal_view")
+	for i in 600:
+		if refreshed.done:
+			break
+		await physics_frame
+	var view: Dictionary = session.call("homestead_personal_view")
+	var reply := {"result": {}}
+	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+		if op == "station_craft": reply.result = result)
+	var craft_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	var sent: Dictionary = session.call("homestead_submit_action", "station_craft",
+		{"recipe_id": "potion_small", "craft_id": craft_id}, kitchen, int(view.get("registry_revision", -1)))
+	# The host's immediate reply is only "awaiting"; the guest's station panel
+	# waits for the terminal saved settlement, so does this check.
+	for i in 900:
+		if reply.result.get("settled") == true and _inventory_count("potion_small") > int(before.potion_small):
+			break
+		if reply.result.get("terminal_refusal") == true:
+			break
+		await physics_frame
+	var after := {"potion_small": _inventory_count("potion_small"), "berries": _inventory_count("berries"), "fiber": _inventory_count("fiber")}
+	var ok: bool = reply.result.get("ok") == true and reply.result.get("settled") == true and int(after.potion_small) == int(before.potion_small) + 1 \
+		and int(after.berries) == int(before.berries) - 4 and int(after.fiber) == int(before.fiber) - 1
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest crafted at the host's Kitchen and kept the output", "data": {
+		"sent": sent, "reply": reply.result, "before": before, "after": after, "view_revision": int(view.get("registry_revision", -1))}}
+
+
+## F31#2 co-op: a guest's relic power choice goes to the host, which saves or
+## refuses it. While F18's redesign_portal_runtime_enabled is off (shipping),
+## the host has no shrine context and must refuse; nothing changes locally.
+func _relic_power_attempt(args: Dictionary) -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	var reply := {"result": {}}
+	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+		if op == "relic_power": reply.result = result)
+	var sent: Dictionary = session.call("request_relic_power", str(args.get("heart_id", "meadows")))
+	for i in 600:
+		if not (reply.result as Dictionary).is_empty() or sent.get("code") != "awaiting_saved_decision":
+			break
+		await physics_frame
+	var verdict: Dictionary = reply.result if not (reply.result as Dictionary).is_empty() else sent
+	return {"verdict": "PASS", "detail": "guest relic power request answered by the host", "data": {
+		"runtime_ready": bool(session.call("portal_runtime_ready")), "result": verdict,
+		"local_active": str(game.get("realm_hearts").call("active_id"))}}
+

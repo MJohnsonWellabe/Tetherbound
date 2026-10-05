@@ -6,6 +6,8 @@
   "stock_scope": "world",
   "outputs_scope": "character",
   "maximum_transaction_receipts": 4096,
+  "f32_receipt_window": 256,
+  "_f32_receipt_window": "Only the newest N of a character's F32 gather receipts are kept, so gathering never hits maximum_transaction_receipts; each F32 op's own revision/ticket guard makes an evicted receipt unreplayable.",
   "interaction_radius_m": 2.4,
   "manual_taps_only": true,
   "offline_production": false,

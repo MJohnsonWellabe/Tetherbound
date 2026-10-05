@@ -2,6 +2,7 @@ extends RefCounted
 
 ## Detached ordinary-craft stage for Foundation's EXISTING admitted character
 ## journal. It is not transport or a save. Feast recipes always use F28.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const RULES := preload("res://scripts/build/station_rules.gd")
 const BAG := preload("res://scripts/world/death_satchel_rules.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
@@ -58,6 +59,7 @@ static func stage_craft(current: Dictionary, revision: int, intent: Dictionary,
 	elif int(bag.call("add",output.id,int(output.n))) != 0: return RULES.deny("satchel_full")
 	var next := current.duplicate(true)
 	next.inventory = BAG.slots(bag)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not STATE.validate("character",next.redesign_character,STATE.uids(next.get("party"))).is_empty(): return RULES.deny("receipt_budget")
 	return {"ok":true,"state":next,"before":current.duplicate(true),"receipt":receipt,"character_id":current.character_id,
