@@ -1,0 +1,780 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Started Project initialization (5 steps)[39m[0m
+[   0% ] [90m[1mfirst_scan_filesystem[22m | Scanning file structure...[39m[0m
+[  16% ] [90m[1mfirst_scan_filesystem[22m | Loading global class names...[39m[0m
+[  33% ] [90m[1mfirst_scan_filesystem[22m | Verifying GDExtensions...[39m[0m
+[  50% ] [90m[1mfirst_scan_filesystem[22m | Creating autoload scripts...[39m[0m
+[  66% ] [90m[1mfirst_scan_filesystem[22m | Initializing plugins...[39m[0m
+[  83% ] [90m[1mfirst_scan_filesystem[22m | Starting file scan...[39m[0m
+[92m[ DONE ][39m [1mfirst_scan_filesystem[22m
+[0m
+WARNING: Missing .uid file for path "res://tests/capture_f17_hall_interior.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/capture_f17_visual_matrix.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/smoke_graphics_low_persist.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/smoke_net_crossing_hall_agreement.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/smoke_net_owner_passive_rejoin.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/smoke_net_owner_passive_rejoin_peer.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_capture_manifest_writer.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_f32_essence_census.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_f32_held_tool.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_f32_material_census.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_f32_no_butchery_lexicon.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_f32_refusal_text.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_proof_save_fixtures.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tests/test_realm_camera_far_floor.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tools/capture_f21_native_hit.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tools/capture_lookdev_route_stills.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tools/capture_manifest_writer.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+WARNING: Missing .uid file for path "res://tools/check_exported_stormwood_scatter.gd". The file was re-created from cache.
+   at: _process_file_system (editor/file_system/editor_file_system.cpp:1391)
+[   0% ] [90m[1mupdate_scripts_classes[22m | Started Registering global classes... (96 steps)[39m[0m
+[   0% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   1% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   2% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   3% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   4% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   5% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   6% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   7% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   8% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[   9% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  10% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  11% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  12% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  13% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  14% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  15% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  16% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  17% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  18% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  19% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  20% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  21% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  22% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  23% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  24% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  25% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  26% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  27% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  28% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  29% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  30% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  31% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  32% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  34% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  35% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  36% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  37% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  38% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  39% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  40% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  41% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  42% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  43% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  44% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  45% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  46% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  47% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  48% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  49% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  50% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  51% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  52% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  53% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  54% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  55% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  56% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  57% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  58% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  59% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  60% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  61% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  62% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  63% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  64% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  65% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  67% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  68% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  69% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  70% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  71% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  72% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  73% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  74% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  75% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  76% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  77% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  78% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  79% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  80% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  81% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  82% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  83% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  84% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  85% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  86% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  87% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  88% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  89% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  90% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  91% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  92% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  93% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  94% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  95% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  96% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[  97% ] [90m[1mupdate_scripts_classes[22m | [39m[0m
+[92m[ DONE ][39m [1mupdate_scripts_classes[22m
+[0m
+[   0% ] [90m[1m_update_scan_actions[22m | Started Scanning actions... (198 steps)[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bramblebun_extracted_base_color.png[39m[0m
+[   0% ] [90m[1m_update_scan_actions[22m | bramblebun_extracted_emissive.png[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | cragclaw_extracted_base_color.png[39m[0m
+[   1% ] [90m[1m_update_scan_actions[22m | mangrove_monitor_extracted_base_color.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | mirejaw_extracted_base_color.png[39m[0m
+[   2% ] [90m[1m_update_scan_actions[22m | mudsnout_extracted_base_color.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | mudsnout_extracted_emissive.png[39m[0m
+[   3% ] [90m[1m_update_scan_actions[22m | riptusk_extracted_base_color.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | sirenseal_extracted_base_color.png[39m[0m
+[   4% ] [90m[1m_update_scan_actions[22m | trailpup_extracted_base_color.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | trailpup_extracted_emissive.png[39m[0m
+[   5% ] [90m[1m_update_scan_actions[22m | veridian_extracted_base_color.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | veridian_extracted_emissive.png[39m[0m
+[   6% ] [90m[1m_update_scan_actions[22m | attack_tonic_badge.glb[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | bottle_base.glb[39m[0m
+[   7% ] [90m[1m_update_scan_actions[22m | bottle_base_Image_0.jpg[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | elixir_guard_badge.glb[39m[0m
+[   8% ] [90m[1m_update_scan_actions[22m | elixir_might_badge.glb[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | elixir_vigour_badge.glb[39m[0m
+[   9% ] [90m[1m_update_scan_actions[22m | stoneguard_brew_badge.glb[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | swift_tonic_badge.glb[39m[0m
+[  10% ] [90m[1m_update_scan_actions[22m | keyboard_q.png[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | bubble_volley_impact.wav[39m[0m
+[  11% ] [90m[1m_update_scan_actions[22m | bubble_volley_impact_mastery.wav[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | bubble_volley_launch.wav[39m[0m
+[  12% ] [90m[1m_update_scan_actions[22m | bubble_volley_launch_mastery.wav[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | bubble_volley_launch_travel.wav[39m[0m
+[  13% ] [90m[1m_update_scan_actions[22m | bubble_volley_launch_travel_mastery.wav[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | bubble_volley_travel.wav[39m[0m
+[  14% ] [90m[1m_update_scan_actions[22m | buff_aura_impact.wav[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | buff_aura_impact_mastery.wav[39m[0m
+[  15% ] [90m[1m_update_scan_actions[22m | buff_aura_launch.wav[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | buff_aura_launch_mastery.wav[39m[0m
+[  16% ] [90m[1m_update_scan_actions[22m | buff_aura_launch_travel.wav[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | buff_aura_launch_travel_mastery.wav[39m[0m
+[  17% ] [90m[1m_update_scan_actions[22m | buff_aura_travel.wav[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_impact.wav[39m[0m
+[  18% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_impact_mastery.wav[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_launch.wav[39m[0m
+[  19% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_launch_mastery.wav[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_launch_travel.wav[39m[0m
+[  20% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_launch_travel_mastery.wav[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | catch_tether_beam_travel.wav[39m[0m
+[  21% ] [90m[1m_update_scan_actions[22m | chain_lightning_impact.wav[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | chain_lightning_impact_mastery.wav[39m[0m
+[  22% ] [90m[1m_update_scan_actions[22m | chain_lightning_launch.wav[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | chain_lightning_launch_mastery.wav[39m[0m
+[  23% ] [90m[1m_update_scan_actions[22m | chain_lightning_launch_travel.wav[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | chain_lightning_launch_travel_mastery.wav[39m[0m
+[  24% ] [90m[1m_update_scan_actions[22m | chain_lightning_travel.wav[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | charge_dash_impact.wav[39m[0m
+[  25% ] [90m[1m_update_scan_actions[22m | charge_dash_impact_mastery.wav[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | charge_dash_launch.wav[39m[0m
+[  26% ] [90m[1m_update_scan_actions[22m | charge_dash_launch_mastery.wav[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | charge_dash_launch_travel.wav[39m[0m
+[  27% ] [90m[1m_update_scan_actions[22m | charge_dash_launch_travel_mastery.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | charge_dash_travel.wav[39m[0m
+[  28% ] [90m[1m_update_scan_actions[22m | debuff_hex_impact.wav[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | debuff_hex_impact_mastery.wav[39m[0m
+[  29% ] [90m[1m_update_scan_actions[22m | debuff_hex_launch.wav[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | debuff_hex_launch_mastery.wav[39m[0m
+[  30% ] [90m[1m_update_scan_actions[22m | debuff_hex_launch_travel.wav[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | debuff_hex_launch_travel_mastery.wav[39m[0m
+[  31% ] [90m[1m_update_scan_actions[22m | debuff_hex_travel.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | ember_burst_impact.wav[39m[0m
+[  32% ] [90m[1m_update_scan_actions[22m | ember_burst_impact_mastery.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | ember_burst_launch.wav[39m[0m
+[  33% ] [90m[1m_update_scan_actions[22m | ember_burst_launch_mastery.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | ember_burst_launch_travel.wav[39m[0m
+[  34% ] [90m[1m_update_scan_actions[22m | ember_burst_launch_travel_mastery.wav[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | ember_burst_travel.wav[39m[0m
+[  35% ] [90m[1m_update_scan_actions[22m | fireball_impact.wav[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | fireball_impact_mastery.wav[39m[0m
+[  36% ] [90m[1m_update_scan_actions[22m | fireball_launch.wav[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | fireball_launch_mastery.wav[39m[0m
+[  37% ] [90m[1m_update_scan_actions[22m | fireball_launch_travel.wav[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | fireball_launch_travel_mastery.wav[39m[0m
+[  38% ] [90m[1m_update_scan_actions[22m | fireball_travel.wav[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | flame_cone_impact.wav[39m[0m
+[  39% ] [90m[1m_update_scan_actions[22m | flame_cone_impact_mastery.wav[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | flame_cone_launch.wav[39m[0m
+[  40% ] [90m[1m_update_scan_actions[22m | flame_cone_launch_mastery.wav[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | flame_cone_launch_travel.wav[39m[0m
+[  41% ] [90m[1m_update_scan_actions[22m | flame_cone_launch_travel_mastery.wav[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | flame_cone_travel.wav[39m[0m
+[  42% ] [90m[1m_update_scan_actions[22m | frost_breath_impact.wav[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | frost_breath_impact_mastery.wav[39m[0m
+[  43% ] [90m[1m_update_scan_actions[22m | frost_breath_launch.wav[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | frost_breath_launch_mastery.wav[39m[0m
+[  44% ] [90m[1m_update_scan_actions[22m | frost_breath_launch_travel.wav[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | frost_breath_launch_travel_mastery.wav[39m[0m
+[  45% ] [90m[1m_update_scan_actions[22m | frost_breath_travel.wav[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | guard_flash_impact.wav[39m[0m
+[  46% ] [90m[1m_update_scan_actions[22m | guard_flash_impact_mastery.wav[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | guard_flash_launch.wav[39m[0m
+[  47% ] [90m[1m_update_scan_actions[22m | guard_flash_launch_mastery.wav[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | guard_flash_launch_travel.wav[39m[0m
+[  48% ] [90m[1m_update_scan_actions[22m | guard_flash_launch_travel_mastery.wav[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | guard_flash_travel.wav[39m[0m
+[  49% ] [90m[1m_update_scan_actions[22m | heal_pulse_impact.wav[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | heal_pulse_impact_mastery.wav[39m[0m
+[  50% ] [90m[1m_update_scan_actions[22m | heal_pulse_launch.wav[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | heal_pulse_launch_mastery.wav[39m[0m
+[  51% ] [90m[1m_update_scan_actions[22m | heal_pulse_launch_travel.wav[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | heal_pulse_launch_travel_mastery.wav[39m[0m
+[  52% ] [90m[1m_update_scan_actions[22m | heal_pulse_travel.wav[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_impact.wav[39m[0m
+[  53% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_impact_mastery.wav[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_launch.wav[39m[0m
+[  54% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_launch_mastery.wav[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_launch_travel.wav[39m[0m
+[  55% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_launch_travel_mastery.wav[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | ice_shard_volley_travel.wav[39m[0m
+[  56% ] [90m[1m_update_scan_actions[22m | psychic_pulse_impact.wav[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | psychic_pulse_impact_mastery.wav[39m[0m
+[  57% ] [90m[1m_update_scan_actions[22m | psychic_pulse_launch.wav[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | psychic_pulse_launch_mastery.wav[39m[0m
+[  58% ] [90m[1m_update_scan_actions[22m | psychic_pulse_launch_travel.wav[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | psychic_pulse_launch_travel_mastery.wav[39m[0m
+[  59% ] [90m[1m_update_scan_actions[22m | psychic_pulse_travel.wav[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | quake_ring_impact.wav[39m[0m
+[  60% ] [90m[1m_update_scan_actions[22m | quake_ring_impact_mastery.wav[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | quake_ring_launch.wav[39m[0m
+[  61% ] [90m[1m_update_scan_actions[22m | quake_ring_launch_mastery.wav[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | quake_ring_launch_travel.wav[39m[0m
+[  62% ] [90m[1m_update_scan_actions[22m | quake_ring_launch_travel_mastery.wav[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | quake_ring_travel.wav[39m[0m
+[  63% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_impact.wav[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_impact_mastery.wav[39m[0m
+[  64% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_launch.wav[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_launch_mastery.wav[39m[0m
+[  65% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_launch_travel.wav[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_launch_travel_mastery.wav[39m[0m
+[  66% ] [90m[1m_update_scan_actions[22m | root_stone_spikes_travel.wav[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | shadow_bolt_impact.wav[39m[0m
+[  67% ] [90m[1m_update_scan_actions[22m | shadow_bolt_impact_mastery.wav[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | shadow_bolt_launch.wav[39m[0m
+[  68% ] [90m[1m_update_scan_actions[22m | shadow_bolt_launch_mastery.wav[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | shadow_bolt_launch_travel.wav[39m[0m
+[  69% ] [90m[1m_update_scan_actions[22m | shadow_bolt_launch_travel_mastery.wav[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | shadow_bolt_travel.wav[39m[0m
+[  70% ] [90m[1m_update_scan_actions[22m | sky_lightning_impact.wav[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | sky_lightning_impact_mastery.wav[39m[0m
+[  71% ] [90m[1m_update_scan_actions[22m | sky_lightning_launch.wav[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | sky_lightning_launch_mastery.wav[39m[0m
+[  72% ] [90m[1m_update_scan_actions[22m | sky_lightning_launch_travel.wav[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | sky_lightning_launch_travel_mastery.wav[39m[0m
+[  73% ] [90m[1m_update_scan_actions[22m | sky_lightning_travel.wav[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | slash_trail_impact.wav[39m[0m
+[  74% ] [90m[1m_update_scan_actions[22m | slash_trail_impact_mastery.wav[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | slash_trail_launch.wav[39m[0m
+[  75% ] [90m[1m_update_scan_actions[22m | slash_trail_launch_mastery.wav[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | slash_trail_launch_travel.wav[39m[0m
+[  76% ] [90m[1m_update_scan_actions[22m | slash_trail_launch_travel_mastery.wav[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | slash_trail_travel.wav[39m[0m
+[  77% ] [90m[1m_update_scan_actions[22m | stone_boulder_impact.wav[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | stone_boulder_impact_mastery.wav[39m[0m
+[  78% ] [90m[1m_update_scan_actions[22m | stone_boulder_launch.wav[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | stone_boulder_launch_mastery.wav[39m[0m
+[  79% ] [90m[1m_update_scan_actions[22m | stone_boulder_launch_travel.wav[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | stone_boulder_launch_travel_mastery.wav[39m[0m
+[  80% ] [90m[1m_update_scan_actions[22m | stone_boulder_travel.wav[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | stone_throw_impact.wav[39m[0m
+[  81% ] [90m[1m_update_scan_actions[22m | stone_throw_impact_mastery.wav[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | stone_throw_launch.wav[39m[0m
+[  82% ] [90m[1m_update_scan_actions[22m | stone_throw_launch_mastery.wav[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | stone_throw_launch_travel.wav[39m[0m
+[  83% ] [90m[1m_update_scan_actions[22m | stone_throw_launch_travel_mastery.wav[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | stone_throw_travel.wav[39m[0m
+[  84% ] [90m[1m_update_scan_actions[22m | tidal_wave_impact.wav[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | tidal_wave_impact_mastery.wav[39m[0m
+[  85% ] [90m[1m_update_scan_actions[22m | tidal_wave_launch.wav[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | tidal_wave_launch_mastery.wav[39m[0m
+[  86% ] [90m[1m_update_scan_actions[22m | tidal_wave_launch_travel.wav[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | tidal_wave_launch_travel_mastery.wav[39m[0m
+[  87% ] [90m[1m_update_scan_actions[22m | tidal_wave_travel.wav[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | tornado_impact.wav[39m[0m
+[  88% ] [90m[1m_update_scan_actions[22m | tornado_impact_mastery.wav[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | tornado_launch.wav[39m[0m
+[  89% ] [90m[1m_update_scan_actions[22m | tornado_launch_mastery.wav[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | tornado_launch_travel.wav[39m[0m
+[  90% ] [90m[1m_update_scan_actions[22m | tornado_launch_travel_mastery.wav[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | tornado_travel.wav[39m[0m
+[  91% ] [90m[1m_update_scan_actions[22m | water_jet_impact.wav[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | water_jet_impact_mastery.wav[39m[0m
+[  92% ] [90m[1m_update_scan_actions[22m | water_jet_launch.wav[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | water_jet_launch_mastery.wav[39m[0m
+[  93% ] [90m[1m_update_scan_actions[22m | water_jet_launch_travel.wav[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | water_jet_launch_travel_mastery.wav[39m[0m
+[  94% ] [90m[1m_update_scan_actions[22m | water_jet_travel.wav[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | wind_blade_impact.wav[39m[0m
+[  95% ] [90m[1m_update_scan_actions[22m | wind_blade_impact_mastery.wav[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | wind_blade_launch.wav[39m[0m
+[  96% ] [90m[1m_update_scan_actions[22m | wind_blade_launch_mastery.wav[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | wind_blade_launch_travel.wav[39m[0m
+[  97% ] [90m[1m_update_scan_actions[22m | wind_blade_launch_travel_mastery.wav[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | wind_blade_travel.wav[39m[0m
+[  98% ] [90m[1m_update_scan_actions[22m | flame_tongue_v2.png[39m[0m
+[92m[ DONE ][39m [1m_update_scan_actions[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (186 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   1% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   2% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   3% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   4% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   5% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   6% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   7% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   8% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   9% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  10% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  11% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  12% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  13% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  14% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  15% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  16% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  17% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  18% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  19% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  20% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  21% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  22% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  23% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  24% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  25% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  26% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  27% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  28% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  29% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  30% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  31% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  32% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  33% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  34% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  35% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  36% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  37% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  38% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  39% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  40% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  41% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  42% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  43% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  44% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  45% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  46% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  47% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  48% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  49% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  50% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  51% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  52% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  53% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  54% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  55% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  56% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  57% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  58% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  59% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  60% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  61% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  62% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  63% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  64% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  65% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  66% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  67% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  68% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  69% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  70% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  71% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  72% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  73% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  74% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  75% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  76% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  77% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  78% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  79% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  80% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  81% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  82% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  83% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  84% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  85% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  86% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  87% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  88% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  89% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  90% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  91% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  92% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  93% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  94% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  95% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  96% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  97% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[  98% ] [90m[1mreimport[22m | Preparing files to reimport...[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing pre-reimport operations...[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Started Preparing scenes for reload (1 steps)[39m[0m
+[   0% ] [90m[1mpreload_reimporting_scene[22m | Analyzing scene [empty][39m[0m
+[  50% ] [90m[1mpreload_reimporting_scene[22m | Preparation done.[39m[0m
+[92m[ DONE ][39m [1mpreload_reimporting_scene[22m
+[0m
+[   0% ] [90m[1mreimport[22m | flame_tongue_v2.png[39m[0m
+[   0% ] [90m[1mreimport[22m | bottle_base_Image_0.jpg[39m[0m
+[   1% ] [90m[1mreimport[22m | bottle_base_Image_0.jpg[39m[0m
+[   1% ] [90m[1mreimport[22m | keyboard_q.png[39m[0m
+[   2% ] [90m[1mreimport[22m | root_stone_spikes_launch_mastery.wav[39m[0m
+[   2% ] [90m[1mreimport[22m | root_stone_spikes_launch_travel.wav[39m[0m
+[   3% ] [90m[1mreimport[22m | root_stone_spikes_launch_travel_mastery.wav[39m[0m
+[   3% ] [90m[1mreimport[22m | root_stone_spikes_travel.wav[39m[0m
+[   4% ] [90m[1mreimport[22m | shadow_bolt_impact.wav[39m[0m
+[   4% ] [90m[1mreimport[22m | shadow_bolt_impact_mastery.wav[39m[0m
+[   5% ] [90m[1mreimport[22m | shadow_bolt_launch.wav[39m[0m
+[   5% ] [90m[1mreimport[22m | shadow_bolt_launch_mastery.wav[39m[0m
+[   6% ] [90m[1mreimport[22m | shadow_bolt_launch_travel.wav[39m[0m
+[   6% ] [90m[1mreimport[22m | shadow_bolt_launch_travel_mastery.wav[39m[0m
+[   7% ] [90m[1mreimport[22m | shadow_bolt_travel.wav[39m[0m
+[   8% ] [90m[1mreimport[22m | sky_lightning_impact.wav[39m[0m
+[   8% ] [90m[1mreimport[22m | sky_lightning_impact_mastery.wav[39m[0m
+[   9% ] [90m[1mreimport[22m | sky_lightning_launch.wav[39m[0m
+[   9% ] [90m[1mreimport[22m | sky_lightning_launch_mastery.wav[39m[0m
+[  10% ] [90m[1mreimport[22m | sky_lightning_launch_travel.wav[39m[0m
+[  10% ] [90m[1mreimport[22m | sky_lightning_launch_travel_mastery.wav[39m[0m
+[  11% ] [90m[1mreimport[22m | sky_lightning_travel.wav[39m[0m
+[  11% ] [90m[1mreimport[22m | slash_trail_impact.wav[39m[0m
+[  12% ] [90m[1mreimport[22m | slash_trail_impact_mastery.wav[39m[0m
+[  12% ] [90m[1mreimport[22m | slash_trail_launch.wav[39m[0m
+[  13% ] [90m[1mreimport[22m | slash_trail_launch_mastery.wav[39m[0m
+[  13% ] [90m[1mreimport[22m | ice_shard_volley_impact_mastery.wav[39m[0m
+[  14% ] [90m[1mreimport[22m | ice_shard_volley_launch.wav[39m[0m
+[  14% ] [90m[1mreimport[22m | ice_shard_volley_launch_mastery.wav[39m[0m
+[  15% ] [90m[1mreimport[22m | ice_shard_volley_launch_travel.wav[39m[0m
+[  16% ] [90m[1mreimport[22m | ice_shard_volley_launch_travel_mastery.wav[39m[0m
+[  16% ] [90m[1mreimport[22m | ice_shard_volley_travel.wav[39m[0m
+[  17% ] [90m[1mreimport[22m | psychic_pulse_impact.wav[39m[0m
+[  17% ] [90m[1mreimport[22m | psychic_pulse_impact_mastery.wav[39m[0m
+[  18% ] [90m[1mreimport[22m | psychic_pulse_launch.wav[39m[0m
+[  18% ] [90m[1mreimport[22m | psychic_pulse_launch_mastery.wav[39m[0m
+[  19% ] [90m[1mreimport[22m | psychic_pulse_launch_travel.wav[39m[0m
+[  19% ] [90m[1mreimport[22m | psychic_pulse_launch_travel_mastery.wav[39m[0m
+[  20% ] [90m[1mreimport[22m | psychic_pulse_travel.wav[39m[0m
+[  20% ] [90m[1mreimport[22m | quake_ring_impact.wav[39m[0m
+[  21% ] [90m[1mreimport[22m | quake_ring_impact_mastery.wav[39m[0m
+[  21% ] [90m[1mreimport[22m | quake_ring_launch.wav[39m[0m
+[  22% ] [90m[1mreimport[22m | quake_ring_launch_mastery.wav[39m[0m
+[  22% ] [90m[1mreimport[22m | quake_ring_launch_travel.wav[39m[0m
+[  23% ] [90m[1mreimport[22m | quake_ring_launch_travel_mastery.wav[39m[0m
+[  24% ] [90m[1mreimport[22m | quake_ring_travel.wav[39m[0m
+[  24% ] [90m[1mreimport[22m | root_stone_spikes_impact.wav[39m[0m
+[  25% ] [90m[1mreimport[22m | root_stone_spikes_impact_mastery.wav[39m[0m
+[  25% ] [90m[1mreimport[22m | root_stone_spikes_launch.wav[39m[0m
+[  26% ] [90m[1mreimport[22m | tidal_wave_travel.wav[39m[0m
+[  26% ] [90m[1mreimport[22m | tornado_impact.wav[39m[0m
+[  27% ] [90m[1mreimport[22m | tornado_impact_mastery.wav[39m[0m
+[  27% ] [90m[1mreimport[22m | tornado_launch.wav[39m[0m
+[  28% ] [90m[1mreimport[22m | tornado_launch_mastery.wav[39m[0m
+[  28% ] [90m[1mreimport[22m | tornado_launch_travel.wav[39m[0m
+[  29% ] [90m[1mreimport[22m | tornado_launch_travel_mastery.wav[39m[0m
+[  29% ] [90m[1mreimport[22m | tornado_travel.wav[39m[0m
+[  30% ] [90m[1mreimport[22m | water_jet_impact.wav[39m[0m
+[  31% ] [90m[1mreimport[22m | water_jet_impact_mastery.wav[39m[0m
+[  31% ] [90m[1mreimport[22m | water_jet_launch.wav[39m[0m
+[  32% ] [90m[1mreimport[22m | water_jet_launch_mastery.wav[39m[0m
+[  32% ] [90m[1mreimport[22m | water_jet_launch_travel.wav[39m[0m
+[  33% ] [90m[1mreimport[22m | water_jet_launch_travel_mastery.wav[39m[0m
+[  33% ] [90m[1mreimport[22m | water_jet_travel.wav[39m[0m
+[  34% ] [90m[1mreimport[22m | wind_blade_impact.wav[39m[0m
+[  34% ] [90m[1mreimport[22m | wind_blade_impact_mastery.wav[39m[0m
+[  35% ] [90m[1mreimport[22m | wind_blade_launch.wav[39m[0m
+[  35% ] [90m[1mreimport[22m | wind_blade_launch_mastery.wav[39m[0m
+[  36% ] [90m[1mreimport[22m | wind_blade_launch_travel.wav[39m[0m
+[  36% ] [90m[1mreimport[22m | wind_blade_launch_travel_mastery.wav[39m[0m
+[  37% ] [90m[1mreimport[22m | wind_blade_travel.wav[39m[0m
+[  37% ] [90m[1mreimport[22m | slash_trail_launch_travel.wav[39m[0m
+[  38% ] [90m[1mreimport[22m | slash_trail_launch_travel_mastery.wav[39m[0m
+[  39% ] [90m[1mreimport[22m | slash_trail_travel.wav[39m[0m
+[  39% ] [90m[1mreimport[22m | stone_boulder_impact.wav[39m[0m
+[  40% ] [90m[1mreimport[22m | stone_boulder_impact_mastery.wav[39m[0m
+[  40% ] [90m[1mreimport[22m | stone_boulder_launch.wav[39m[0m
+[  41% ] [90m[1mreimport[22m | stone_boulder_launch_mastery.wav[39m[0m
+[  41% ] [90m[1mreimport[22m | stone_boulder_launch_travel.wav[39m[0m
+[  42% ] [90m[1mreimport[22m | stone_boulder_launch_travel_mastery.wav[39m[0m
+[  42% ] [90m[1mreimport[22m | stone_boulder_travel.wav[39m[0m
+[  43% ] [90m[1mreimport[22m | stone_throw_impact.wav[39m[0m
+[  43% ] [90m[1mreimport[22m | stone_throw_impact_mastery.wav[39m[0m
+[  44% ] [90m[1mreimport[22m | stone_throw_launch.wav[39m[0m
+[  44% ] [90m[1mreimport[22m | stone_throw_launch_mastery.wav[39m[0m
+[  45% ] [90m[1mreimport[22m | stone_throw_launch_travel.wav[39m[0m
+[  45% ] [90m[1mreimport[22m | stone_throw_launch_travel_mastery.wav[39m[0m
+[  46% ] [90m[1mreimport[22m | stone_throw_travel.wav[39m[0m
+[  47% ] [90m[1mreimport[22m | tidal_wave_impact.wav[39m[0m
+[  47% ] [90m[1mreimport[22m | tidal_wave_impact_mastery.wav[39m[0m
+[  48% ] [90m[1mreimport[22m | tidal_wave_launch.wav[39m[0m
+[  48% ] [90m[1mreimport[22m | tidal_wave_launch_mastery.wav[39m[0m
+[  49% ] [90m[1mreimport[22m | tidal_wave_launch_travel.wav[39m[0m
+[  49% ] [90m[1mreimport[22m | tidal_wave_launch_travel_mastery.wav[39m[0m
+[  50% ] [90m[1mreimport[22m | chain_lightning_impact.wav[39m[0m
+[  50% ] [90m[1mreimport[22m | chain_lightning_impact_mastery.wav[39m[0m
+[  51% ] [90m[1mreimport[22m | chain_lightning_launch.wav[39m[0m
+[  51% ] [90m[1mreimport[22m | chain_lightning_launch_mastery.wav[39m[0m
+[  52% ] [90m[1mreimport[22m | chain_lightning_launch_travel.wav[39m[0m
+[  52% ] [90m[1mreimport[22m | chain_lightning_launch_travel_mastery.wav[39m[0m
+[  53% ] [90m[1mreimport[22m | chain_lightning_travel.wav[39m[0m
+[  54% ] [90m[1mreimport[22m | charge_dash_impact.wav[39m[0m
+[  54% ] [90m[1mreimport[22m | charge_dash_impact_mastery.wav[39m[0m
+[  55% ] [90m[1mreimport[22m | charge_dash_launch.wav[39m[0m
+[  55% ] [90m[1mreimport[22m | charge_dash_launch_mastery.wav[39m[0m
+[  56% ] [90m[1mreimport[22m | charge_dash_launch_travel.wav[39m[0m
+[  56% ] [90m[1mreimport[22m | charge_dash_launch_travel_mastery.wav[39m[0m
+[  57% ] [90m[1mreimport[22m | charge_dash_travel.wav[39m[0m
+[  57% ] [90m[1mreimport[22m | debuff_hex_impact.wav[39m[0m
+[  58% ] [90m[1mreimport[22m | debuff_hex_impact_mastery.wav[39m[0m
+[  58% ] [90m[1mreimport[22m | debuff_hex_launch.wav[39m[0m
+[  59% ] [90m[1mreimport[22m | debuff_hex_launch_mastery.wav[39m[0m
+[  59% ] [90m[1mreimport[22m | debuff_hex_launch_travel.wav[39m[0m
+[  60% ] [90m[1mreimport[22m | debuff_hex_launch_travel_mastery.wav[39m[0m
+[  60% ] [90m[1mreimport[22m | debuff_hex_travel.wav[39m[0m
+[  61% ] [90m[1mreimport[22m | bubble_volley_impact.wav[39m[0m
+[  62% ] [90m[1mreimport[22m | bubble_volley_impact_mastery.wav[39m[0m
+[  62% ] [90m[1mreimport[22m | bubble_volley_launch.wav[39m[0m
+[  63% ] [90m[1mreimport[22m | bubble_volley_launch_mastery.wav[39m[0m
+[  63% ] [90m[1mreimport[22m | bubble_volley_launch_travel.wav[39m[0m
+[  64% ] [90m[1mreimport[22m | bubble_volley_launch_travel_mastery.wav[39m[0m
+[  64% ] [90m[1mreimport[22m | bubble_volley_travel.wav[39m[0m
+[  65% ] [90m[1mreimport[22m | buff_aura_impact.wav[39m[0m
+[  65% ] [90m[1mreimport[22m | buff_aura_impact_mastery.wav[39m[0m
+[  66% ] [90m[1mreimport[22m | buff_aura_launch.wav[39m[0m
+[  66% ] [90m[1mreimport[22m | buff_aura_launch_mastery.wav[39m[0m
+[  67% ] [90m[1mreimport[22m | buff_aura_launch_travel.wav[39m[0m
+[  67% ] [90m[1mreimport[22m | buff_aura_launch_travel_mastery.wav[39m[0m
+[  68% ] [90m[1mreimport[22m | buff_aura_travel.wav[39m[0m
+[  68% ] [90m[1mreimport[22m | catch_tether_beam_impact.wav[39m[0m
+[  69% ] [90m[1mreimport[22m | catch_tether_beam_impact_mastery.wav[39m[0m
+[  70% ] [90m[1mreimport[22m | catch_tether_beam_launch.wav[39m[0m
+[  70% ] [90m[1mreimport[22m | catch_tether_beam_launch_mastery.wav[39m[0m
+[  71% ] [90m[1mreimport[22m | catch_tether_beam_launch_travel.wav[39m[0m
+[  71% ] [90m[1mreimport[22m | catch_tether_beam_launch_travel_mastery.wav[39m[0m
+[  72% ] [90m[1mreimport[22m | catch_tether_beam_travel.wav[39m[0m
+[  72% ] [90m[1mreimport[22m | frost_breath_impact_mastery.wav[39m[0m
+[  73% ] [90m[1mreimport[22m | frost_breath_launch.wav[39m[0m
+[  73% ] [90m[1mreimport[22m | frost_breath_launch_mastery.wav[39m[0m
+[  74% ] [90m[1mreimport[22m | frost_breath_launch_travel.wav[39m[0m
+[  74% ] [90m[1mreimport[22m | frost_breath_launch_travel_mastery.wav[39m[0m
+[  75% ] [90m[1mreimport[22m | frost_breath_travel.wav[39m[0m
+[  75% ] [90m[1mreimport[22m | guard_flash_impact.wav[39m[0m
+[  76% ] [90m[1mreimport[22m | guard_flash_impact_mastery.wav[39m[0m
+[  77% ] [90m[1mreimport[22m | guard_flash_launch.wav[39m[0m
+[  77% ] [90m[1mreimport[22m | guard_flash_launch_mastery.wav[39m[0m
+[  78% ] [90m[1mreimport[22m | guard_flash_launch_travel.wav[39m[0m
+[  78% ] [90m[1mreimport[22m | guard_flash_launch_travel_mastery.wav[39m[0m
+[  79% ] [90m[1mreimport[22m | guard_flash_travel.wav[39m[0m
+[  79% ] [90m[1mreimport[22m | heal_pulse_impact.wav[39m[0m
+[  80% ] [90m[1mreimport[22m | heal_pulse_impact_mastery.wav[39m[0m
+[  80% ] [90m[1mreimport[22m | heal_pulse_launch.wav[39m[0m
+[  81% ] [90m[1mreimport[22m | heal_pulse_launch_mastery.wav[39m[0m
+[  81% ] [90m[1mreimport[22m | heal_pulse_launch_travel.wav[39m[0m
+[  82% ] [90m[1mreimport[22m | heal_pulse_launch_travel_mastery.wav[39m[0m
+[  82% ] [90m[1mreimport[22m | heal_pulse_travel.wav[39m[0m
+[  83% ] [90m[1mreimport[22m | ice_shard_volley_impact.wav[39m[0m
+[  83% ] [90m[1mreimport[22m | ember_burst_impact.wav[39m[0m
+[  84% ] [90m[1mreimport[22m | ember_burst_impact_mastery.wav[39m[0m
+[  85% ] [90m[1mreimport[22m | ember_burst_launch.wav[39m[0m
+[  85% ] [90m[1mreimport[22m | ember_burst_launch_mastery.wav[39m[0m
+[  86% ] [90m[1mreimport[22m | ember_burst_launch_travel.wav[39m[0m
+[  86% ] [90m[1mreimport[22m | ember_burst_launch_travel_mastery.wav[39m[0m
+[  87% ] [90m[1mreimport[22m | ember_burst_travel.wav[39m[0m
+[  87% ] [90m[1mreimport[22m | fireball_impact.wav[39m[0m
+[  88% ] [90m[1mreimport[22m | fireball_impact_mastery.wav[39m[0m
+[  88% ] [90m[1mreimport[22m | fireball_launch.wav[39m[0m
+[  89% ] [90m[1mreimport[22m | fireball_launch_mastery.wav[39m[0m
+[  89% ] [90m[1mreimport[22m | frost_breath_impact.wav[39m[0m
+[  90% ] [90m[1mreimport[22m | flame_cone_travel.wav[39m[0m
+[  90% ] [90m[1mreimport[22m | flame_cone_launch_travel_mastery.wav[39m[0m
+[  91% ] [90m[1mreimport[22m | flame_cone_launch_travel.wav[39m[0m
+[  91% ] [90m[1mreimport[22m | flame_cone_launch_mastery.wav[39m[0m
+[  92% ] [90m[1mreimport[22m | flame_cone_launch.wav[39m[0m
+[  93% ] [90m[1mreimport[22m | flame_cone_impact_mastery.wav[39m[0m
+[  93% ] [90m[1mreimport[22m | flame_cone_impact.wav[39m[0m
+[  94% ] [90m[1mreimport[22m | fireball_travel.wav[39m[0m
+[  94% ] [90m[1mreimport[22m | fireball_launch_travel_mastery.wav[39m[0m
+[  95% ] [90m[1mreimport[22m | fireball_launch_travel.wav[39m[0m
+[  95% ] [90m[1mreimport[22m | swift_tonic_badge.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  96% ] [90m[1mreimport[22m | stoneguard_brew_badge.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  96% ] [90m[1mreimport[22m | elixir_vigour_badge.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | elixir_might_badge.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  97% ] [90m[1mreimport[22m | elixir_guard_badge.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | bottle_base.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  98% ] [90m[1mreimport[22m | attack_tonic_badge.glb[39m[0m
+[   0% ] [90m[1mimport[22m | Started Import Scene (104 steps)[39m[0m
+[   0% ] [90m[1mimport[22m | Importing Scene...[39m[0m
+[   1% ] [90m[1mimport[22m | Running Custom Script...[39m[0m
+[  99% ] [90m[1mimport[22m | Saving...[39m[0m
+[92m[ DONE ][39m [1mimport[22m
+[0m
+[  99% ] [90m[1mreimport[22m | Finalizing Asset Import...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mreimport[22m | Started (Re)Importing Assets (186 steps)[39m[0m
+[   0% ] [90m[1mreimport[22m | Executing post-reimport operations...[39m[0m
+[92m[ DONE ][39m [1mreimport[22m
+[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Started Loading editor (5 steps)[39m[0m
+[   0% ] [90m[1mloading_editor_layout[22m | Loading editor layout...[39m[0m
+[  16% ] [90m[1mloading_editor_layout[22m | Loading docks...[39m[0m
+[92m[ DONE ][39m [1mloading_editor_layout[22m
+[0m

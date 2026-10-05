@@ -1,0 +1,18 @@
+{
+  "case": "night-fix",
+  "source_commit": "c33dd9d4382805252543e303df5bd249d272e922",
+  "source_root": "D:\\tetherbound\\redesign-lookdev",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--editor",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--import"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 125.031,
+  "errors": [],
+  "log_sha256": "e18201a1022a57fb3167f723a231404f89366160b29c8df4a1b3c27b77b1ef75"
+}
