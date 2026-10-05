@@ -1,0 +1,21 @@
+{
+  "source_commit": "6632f2fd5af9b1de173ee919560a46ac9dd65cdb",
+  "command": [
+    "D:\\tetherbound\\.artifacts\\perf-diag-retime-6632f2fd5\\Tetherbound.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\.artifacts\\perf-diag-retime-6632f2fd5",
+    "--main-pack",
+    "D:\\tetherbound\\.artifacts\\perf-diag-retime-6632f2fd5\\Tetherbound.pck",
+    "--script",
+    "D:/tetherbound/redesign-lookdev/tools/check_exported_stormwood_scatter.gd",
+    "--",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/perf/perf-retime-1/pack-freshness.json"
+  ],
+  "exit_code": 0,
+  "errors": [],
+  "elapsed_seconds": 9.172,
+  "log_sha256": "d37febc99aa335329ac1265aec9b215be4a720f83169ae713f25070fd492f1a3",
+  "shipping_export_qualification": "FAIL:sevenpreservedshutdownERRORs",
+  "diagnostic_freshness_only": true
+}

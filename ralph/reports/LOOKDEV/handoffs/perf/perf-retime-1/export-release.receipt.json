@@ -1,0 +1,33 @@
+{
+  "source_commit": "6632f2fd5af9b1de173ee919560a46ac9dd65cdb",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--verbose",
+    "--path",
+    "D:\\tetherbound\\render-perf-6632f2fd",
+    "--export-release",
+    "Windows Desktop",
+    "D:\\tetherbound\\.artifacts\\perf-retime-1\\package\\Tetherbound.exe"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 415.266,
+  "log_sha256": "abd46f06b3d0c0212e8520c0a665c818b08b37e72c29ea7bf6141d71dcc51f14",
+  "errors": [
+    "ERROR: 169 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+    "ERROR: 12 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+    "ERROR: 236 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.",
+    "ERROR: 64 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+    "ERROR: 1066 resources still in use at exit.",
+    "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+    "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+  ],
+  "export_representation_adjustment": {
+    "original_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+    "used_sha256": "8acd44c72a8fd44919301bb68e79f879e77c7d8d2fabb55bad79b05609eb8416",
+    "change": "Onlyscript_export_mode2\u21920, sameplaintextproductionfingerprintrepresentationasperf-ab-1; originalrestored."
+  },
+  "package": "D:\\tetherbound\\.artifacts\\perf-retime-1\\package",
+  "scope": "Diagnostic comparison preparation only; no gameplay/material/camera/default patches; shipping qualification requiresnoerrors."
+}

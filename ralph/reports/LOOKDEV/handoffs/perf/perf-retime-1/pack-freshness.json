@@ -1,0 +1,49 @@
+{
+	"fingerprint": 7093781362005384,
+	"fresh": true,
+	"manifest_fingerprint": 7093781362005384.0,
+	"manifest_regions": 108,
+	"missing_regions": [],
+	"sources": [
+		{
+			"exists": true,
+			"path": "res://data/config/stormwood_vegetation.json",
+			"text_length": 7426
+		},
+		{
+			"exists": true,
+			"path": "res://data/config/stormwood_settlements.json",
+			"text_length": 1675
+		},
+		{
+			"exists": true,
+			"path": "res://data/config/terrain_stormwood.json",
+			"text_length": 3332
+		},
+		{
+			"exists": true,
+			"path": "res://data/config/stormwood_world.json",
+			"text_length": 9374
+		},
+		{
+			"exists": true,
+			"path": "res://scripts/world/stormwood_heightfield.gd",
+			"text_length": 4570
+		},
+		{
+			"exists": true,
+			"path": "res://scripts/world/stormwood_scatter.gd",
+			"text_length": 17520
+		},
+		{
+			"exists": true,
+			"path": "res://data/config/stormwood_pockets.json",
+			"text_length": 11603
+		},
+		{
+			"exists": true,
+			"path": "res://scripts/world/stormwood_pocket_frame.gd",
+			"text_length": 925
+		}
+	]
+}

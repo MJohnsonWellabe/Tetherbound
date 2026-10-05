@@ -1,0 +1,33 @@
+{
+  "source_commit": "6632f2fd5af9b1de173ee919560a46ac9dd65cdb",
+  "release_package": "D:\\tetherbound\\.artifacts\\perf-retime-1\\package",
+  "engine_host": "Identical Godot4.7 official editor-capable binary using --main-pack against freshreleasePCK; no sourcefilesystemfallback",
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "expected_camera_far_m": {
+    "meadows": 2000,
+    "water": 6500,
+    "cloudreach": 3500,
+    "stormwood": 9000
+  },
+  "engine_host_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+  "shipping_export_pass": false,
+  "diagnostic_pack_freshness_pass": true,
+  "scope": "Sameperf-ab-1diagnosticscope; sevenexportshutdownERRORs preserved. NotshippingEXE/AllyFPS. Identicalexistingexternalmonitoroverlay.",
+  "files": [
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.debug.x86_64.dll",
+      "sha256": "bf72686a7e1d8d8370ba9ba5eaa70c59375ee2cb5638d63b8942f1ad7d448cda",
+      "size_bytes": 4220416
+    },
+    {
+      "path": "Tetherbound.exe",
+      "sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+      "size_bytes": 178485256
+    },
+    {
+      "path": "Tetherbound.pck",
+      "sha256": "745656bf3cd047feeeaf8972018140f48ceae0ca391257caa6a4e7bd2888017b",
+      "size_bytes": 1135364248
+    }
+  ]
+}
