@@ -3803,6 +3803,10 @@ func _teardown(linger_transport: bool = false) -> void:
 	_portal_policy.call("bind_world", "")
 	_portal_requests.clear()
 	_portal_request_at.clear()
+	# Peer ids are reused and the next session may serve another world; a
+	# rejoin re-seeds the guest's persisted beats and re-arms at admission.
+	_opening_gift_requested.clear()
+	_legacy_home_key_due.clear()
 	_portal_waiters.clear()
 	var had_transport := _peer != null
 	if realm_transition != null:

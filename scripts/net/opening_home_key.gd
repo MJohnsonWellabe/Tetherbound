@@ -145,7 +145,9 @@ static func host_grant(session: Node, peer: int, request: Dictionary) -> Diction
 		return {"durable": false, "code": "opening_context_changed"}
 	# A verified gift request is the host's own evidence that this character
 	# reached Grandpa's first-catch gift; a guest's opening beats stay local.
-	# If this request cannot settle, the armed reconcile redelivers the key.
+	# It is recorded only after the checks above pass, and stands even if a
+	# later re-check (writer flush, geometry) fails this request: the armed
+	# reconcile then redelivers the key under its own gates.
 	if session.has_method("note_opening_gift_requested"): session.call("note_opening_gift_requested", peer)
 	var game: Node = bound.game
 	var saver: RefCounted = game.get("save_system")

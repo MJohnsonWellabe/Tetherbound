@@ -176,3 +176,16 @@ func test_a_changed_character_drops_the_whole_held_batch() -> void:
 	assert_eq(_session.armed, [], "no reconcile is armed for the new character")
 	_drain()
 	assert_eq(_bag.count("orb_basic"), 0)
+
+
+func test_a_changed_world_drops_the_whole_held_batch() -> void:
+	_session.blocked = false
+	_game.grant_result = false
+	_dialogue.effects = ["home_key:grant", "give:orb_basic:50"]
+	_drain()
+	assert_true(_director.owns_input())
+	_game.world.reward_delivery_namespace = "another-world"
+	_drain()
+	assert_false(_director.owns_input())
+	assert_eq(_bag.count("orb_basic"), 0, "no orbs in another world")
+	assert_true(_director._f18_pending_effects.is_empty())

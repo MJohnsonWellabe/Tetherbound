@@ -282,3 +282,24 @@ func test_a_gift_request_seen_by_the_host_is_past_first_catch_evidence() -> void
 	_transport.reparent(_session)
 	_game.add_child(_session)
 	seen.queue_free()
+
+
+class NoteSession extends SessionFixture:
+	var noted: Array = []
+	func note_opening_gift_requested(peer: int) -> void: noted.append(peer)
+	func _portal_world_node(_realm: String) -> Node3D: return null # No authored Grandpa here.
+
+## Review nit 2: a rejected gift request records no evidence. Only a request
+## that passes binding, Grandpa geometry and the starter check is noted.
+func test_a_rejected_gift_request_records_no_evidence() -> void:
+	var probe := NoteSession.new()
+	probe.game = _game
+	var request := OPENING.envelope(CHARACTER, NAMESPACE, probe.epoch)
+	var away: Dictionary = OPENING.host_grant(probe, 7, request)
+	assert_eq(away.get("code"), "opening_context_changed", "away from Grandpa")
+	assert_eq(probe.noted, [], "no evidence without Grandpa's geometry")
+	var stranger: Dictionary = OPENING.host_grant(probe, 9, request)
+	assert_eq(stranger.get("code"), "not_admitted")
+	assert_eq(probe.noted, [], "no evidence for an unadmitted or foreign request")
+	assert_eq(_game.world.reward_deliveries.size(), 0)
+	probe.free()

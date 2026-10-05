@@ -668,6 +668,7 @@ func _drain_effects() -> void:
 		_f18_pending_home_key.clear()
 		_f18_home_key_attempts = 0
 		_f18_home_key_started_at = -1
+		_f18_home_key_retry_at = 0
 		return
 	if effects.has("home_key:grant") and finite_gift_enabled and _f18_home_key_abandon_due(opening_game):
 		push_warning("Grandpa's Home Key could not settle; releasing the player (the host reconcile redelivers it)")
