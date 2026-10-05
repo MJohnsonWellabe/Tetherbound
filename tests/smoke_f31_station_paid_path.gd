@@ -21,6 +21,8 @@ const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 ## ghost lands on the (-6, 20) cell.
 const STANCE := Vector3(-6.0, 1.4, 22.0)
 const SETTLE_FRAMES := 240
+const REMAINING_STATIONS := ["workbench", "altar", "den", "farm"]
+const GHOST_TO_STANCE := Vector3(0.0, 0.5, 2.0) # Facing -Z, the ghost lands 2 m ahead.
 
 var _failures: Array[String] = []
 var _game: Node
@@ -55,6 +57,7 @@ func _run() -> void:
 		if attachment != null:
 			await _check_dismantle_order_and_refund(forge, attachment)
 	await _check_host_station_craft_settles_the_panel()
+	await _check_remaining_stations_place()
 	_check_saved_world_binding()
 	_report()
 
@@ -121,16 +124,20 @@ func _check_paid_station_place(id: String) -> Node3D:
 	var row := await _await_accepted(uid, "place_building")
 	var node := _node_for(uid)
 	if node == null or row.is_empty():
-		_fail("pressing Place on a legal %s ghost journaled/planted nothing (row %s)" % [id, str(row)])
+		_fail("pressing Place on a legal %s ghost journaled/planted nothing (row %s, ghost ok %s reason '%s' at %s)" % [id, str(row),
+			str(_placer.get("_ghost_ok")), str(_placer.get("_ghost_reason")), str(_player.global_position)])
 		return null
-	if row.status != "accepted" or int(row.version) != 2:
-		_fail("%s placement row did not settle as an accepted version-2 row: %s" % [id, str(row)])
+	# The Altar keeps its own (version-1) altar journal; the other stations
+	# use the version-2 homestead row.
+	var version := 1 if id == "altar" else 2
+	if row.status != "accepted" or int(row.version) != version:
+		_fail("%s placement row did not settle as an accepted version-%d row: %s" % [id, version, str(row)])
 	var after := _counts(cost)
 	for need: Dictionary in cost:
 		if int(after[need.id]) != int(before[need.id]) - int(need.n):
 			_fail("%s placement spent %d %s, not the settled %d" % [id, int(before[need.id]) - int(after[need.id]), need.id, int(need.n)])
 	var index := int(_game.get("world").call("building_index_of", uid))
-	if index < 0 or not DELIVERY.record_valid(_game.get("placed_buildings")[index]):
+	if index < 0 or (id != "altar" and not DELIVERY.record_valid(_game.get("placed_buildings")[index])):
 		_fail("%s has no canonical version-2 world record" % id)
 	if not str(node.name).begins_with("Piece_" + id):
 		_fail("the planted %s is named %s" % [id, node.name])
@@ -241,6 +248,40 @@ func _check_host_station_craft_settles_the_panel() -> void:
 			print("host Kitchen craft settled: panel cleared ('%s'), one Small Potion, buttons re-enabled" % str(panel.get("_status").text))
 	panel.call("close")
 	for i in 10: await physics_frame
+
+
+## F31#0: the other base stations go through the same paid press, each from
+## its own stance along the open yard (the Kitchen above keeps its cell).
+## Chests are the existing Storage piece (smoke_menu_focus places one).
+func _check_remaining_stations_place() -> void:
+	for id: String in REMAINING_STATIONS:
+		var cell := _legal_cell(id)
+		if not cell.is_finite():
+			_fail("no legal homestead cell found for the %s near the yard" % id)
+			continue
+		_player.global_position = cell + GHOST_TO_STANCE
+		for i in 10: await physics_frame
+		if await _check_paid_station_place(id) != null:
+			await _press("build_cancel")
+			for i in 6: await physics_frame
+
+
+## The first open, level homestead cell (by the placer's own legality) along
+## the yard; the ghost then lands there from the trainer's ordinary stance.
+func _legal_cell(id: String) -> Vector3:
+	var cfg := STATION_RULES.config()
+	for dz in [0, -4, 4, -8, 8]:
+		for dx in range(0, 40, 4):
+			for sign: int in [-1, 1]:
+				var x: float = STANCE.x + sign * dx
+				var z: float = STANCE.z - GHOST_TO_STANCE.z + dz
+				var at := Vector3(x, float(_world.call("ground_height_at", x, z)), z)
+				var legal: bool = _placer.call("_altar_pose_valid", _game, "meadows", at, 0.0).ok if id == "altar" else \
+					(STATION_RULES.placement(cfg, _game.get("placed_buildings"), id, "meadows", at, 0.0, {}, "").get("ok") == true \
+						and _placer.call("_station_pose_valid", _game, id, "meadows", at, 0.0).get("ok") == true)
+				if legal:
+					return at
+	return Vector3.INF
 
 
 func _check_saved_world_binding() -> void:

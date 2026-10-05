@@ -14,7 +14,7 @@ extends SceneTree
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const PIECE := preload("res://scripts/build/station_piece.gd")
 const ROW := ["workbench", "forge", "kitchen", "altar", "den", "farm"]
-const ORIGIN := Vector3(-30.0, 0.0, 21.0) # Clear yard west of the berry beds and farm fence.
+const ORIGIN := Vector3(-1.75, 0.0, -12.0) # Probed clear, flat 32x14 strip centred at (12, -12).
 const SPACING := 5.5
 
 
