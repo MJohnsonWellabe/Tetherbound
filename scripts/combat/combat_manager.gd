@@ -2897,7 +2897,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	var killed: bool = killed_override
 	if damage_override < 0.0:
 		damage = MATH.rolled_damage(
-			float(_pending_move.get("power", 9.0)),
+			float(_pending_move.get("power", 9.0)) * _gear_power_scale(creature),
 			creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
 			_moves.power(move_id), type_mult
 		)
@@ -4083,13 +4083,25 @@ func active_move_cooldown_multiplier() -> float:
 ## F33: the active creature's equipped Harness, read from its owner's own
 ## record (this process's character). Absent or invalid gear scales by one.
 func _gear_defence_scale(creature: RefCounted) -> float:
+	return float(_gear_modifiers(creature).get("defence", 1.0))
+
+
+## F33: the solo strike's Charm move power. A session's host already froze the
+## Charm into the accepted action (encounter_director), so this applies only
+## where solo rolls its own damage (no encounter link, no host verdict).
+func _gear_power_scale(creature: RefCounted) -> float:
+	if _uses_host_move_start(): return 1.0
+	return float(_gear_modifiers(creature).get("move_power", 1.0))
+
+
+func _gear_modifiers(creature: RefCounted) -> Dictionary:
 	var gear := preload("res://scripts/creatures/creature_gear.gd")
 	var cfg: Dictionary = gear.config()
 	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
 	var local: Variant = game.get("local") if game != null else null
-	if creature == null or local == null or not gear._runtime_enabled(cfg): return 1.0
+	if creature == null or local == null or not gear._runtime_enabled(cfg): return {}
 	var record := {"redesign_character": local.get("redesign_character")}
-	return float(gear.modifiers(gear.gear_for(record, str(creature.get("uid"))), cfg).defence)
+	return gear.modifiers(gear.gear_for(record, str(creature.get("uid"))), cfg)
 
 
 func _uses_host_move_start() -> bool:

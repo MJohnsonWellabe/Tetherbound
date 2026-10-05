@@ -84,6 +84,10 @@ var _selection := ""
 var _starter_only := ""
 var _party_level_override := 0
 var _json := ""
+## F33#2: equip every party member with this tier's Harness and Charm (and
+## upgrade) in the real Game.local record before each fight; "" = no gear.
+var _gear_tier := ""
+var _gear_upgrade := 0
 
 
 func _init() -> void:
@@ -93,6 +97,8 @@ func _init() -> void:
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--party-level="): _party_level_override = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg.begins_with("--gear-tier="): _gear_tier = arg.trim_prefix("--gear-tier=")
+		elif arg.begins_with("--gear-upgrade="): _gear_upgrade = clampi(int(arg.trim_prefix("--gear-upgrade=")), 0, 3)
 	_run.call_deferred()
 
 
@@ -170,6 +176,7 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
+					_equip_gear(party)
 					var pilot := PILOT.new()
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
@@ -318,3 +325,19 @@ static func _max(values: Array) -> float:
 	var best := 0.0
 	for v in values: best = maxf(best, float(v))
 	return best
+
+
+
+## F33#2 (disclosed fixture): the party's gear written straight into the real
+## owner record, where the production combat hooks read it.
+func _equip_gear(party: Array[RefCounted]) -> void:
+	if _gear_tier.is_empty(): return # Bare: the record is left exactly as it is.
+	var local: RefCounted = root.get_node("Game").get("local")
+	var creatures: Dictionary = local.get("redesign_character").get("creatures", {})
+	for creature: RefCounted in party:
+		var gear := {"harness": "", "charm": ""}
+		if not _gear_tier.is_empty():
+			var suffix := "" if _gear_upgrade == 0 else "_plus_%d" % _gear_upgrade
+			gear = {"harness": _gear_tier + "_harness" + suffix, "charm": _gear_tier + "_charm" + suffix}
+		creatures[str(creature.get("uid"))] = {"gear": gear}
+	local.get("redesign_character")["creatures"] = creatures
