@@ -1022,6 +1022,9 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	# name are unchanged; only the work is spread across frames.
 	var slice_budget_usec := int(float(PERF_SPAWN_CONFIG.config().get("wild_spawn_slice_ms", 12.0)) * 1000.0)
 	var slice_started := Time.get_ticks_usec()
+	var slice_world := get_parent()
+	var slice_tree := get_tree()
+	var slice_generation := _population_generation
 
 	for index in entries.size():
 		var spawn: Dictionary = entries[index] as Dictionary
@@ -1103,8 +1106,12 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 
 		for n in count:
 			if slice_budget_usec > 0 and Time.get_ticks_usec() - slice_started > slice_budget_usec:
-				await get_tree().process_frame
-				if not is_inside_tree() or is_queued_for_deletion():
+				await slice_tree.process_frame
+				# The same lifetime check as every population frame wait: a
+				# detached, re-added or rolled-back director stops here rather
+				# than spawning into its next lifetime.
+				if not _population_lifetime_matches(slice_world, slice_tree, slice_generation):
+					if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
 					return
 				slice_started = Time.get_ticks_usec()
 			# The named individual is always the cluster's first member

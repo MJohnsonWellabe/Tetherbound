@@ -25,8 +25,9 @@ extends RefCounted
 ##   - has meta `static_batch_skip` (a plain module some script moves by
 ##     reference, such as a door leaf);
 ## or when the mesh itself is skinned, has blend shapes, a material overlay,
-## instance transparency, an alpha-blended material, a visibility-range
-## begin, a mirrored transform or a non-triangle surface.
+## instance transparency, a material that depends on per-object space or
+## sorting (`_blended`), a visibility-range begin, a mirrored transform, a
+## non-triangle surface, or anything drawn beneath it in the tree.
 ##
 ## Unbatched meshes are drawn exactly as before. Each merged surface gets a
 ## fresh automatic LOD chain (`_with_lods`) and keeps the copied visibility
@@ -135,11 +136,22 @@ static func _eligible(root: Node3D) -> Array[MeshInstance3D]:
 			continue
 		if node is Node3D and not (node as Node3D).visible:
 			continue
-		if node is MeshInstance3D and _mesh_ok(node as MeshInstance3D):
+		# Hiding a merged mesh hides its whole subtree, so a mesh with anything
+		# drawn beneath it (a light, a scripted or skipped node, another mesh)
+		# keeps drawing itself. Its descendants are still considered alone.
+		if node is MeshInstance3D and _mesh_ok(node as MeshInstance3D) and not _draws_beneath(node):
 			out.append(node as MeshInstance3D)
 		for child: Node in node.get_children():
 			stack.append(child)
 	return out
+
+
+static func _draws_beneath(node: Node) -> bool:
+	for child: Node in node.get_children():
+		if child is VisualInstance3D or child.get_script() != null or child.has_meta(SKIP_META) \
+				or _draws_beneath(child):
+			return true
+	return false
 
 
 static func _mesh_ok(mi: MeshInstance3D) -> bool:
@@ -154,18 +166,39 @@ static func _mesh_ok(mi: MeshInstance3D) -> bool:
 	return true
 
 
-## Alpha-blended surfaces sort per object; merged, their draw order inside
-## the batch would change. Alpha scissor and hash are depth-tested and safe.
+## A material that cannot survive a merge:
+## - alpha-blended surfaces sort per object; merged, their draw order inside
+##   the batch would change (alpha scissor and hash are depth-tested and safe);
+## - anything that reads a vertex in the mesh's own space or the node's
+##   transform (a custom `vertex()` such as banner cloth, MODEL_MATRIX,
+##   NODE_POSITION, billboards, object-space triplanar) would see the
+##   building's space instead once merged;
+## - a next pass inherits the same limits, so it must qualify too.
 static func _blended(material: Material) -> bool:
+	if material == null:
+		return false
 	if material is BaseMaterial3D:
-		var mode := (material as BaseMaterial3D).transparency
-		return mode == BaseMaterial3D.TRANSPARENCY_ALPHA \
-			or mode == BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
-	if material is ShaderMaterial:
+		var base := material as BaseMaterial3D
+		var mode := base.transparency
+		if mode == BaseMaterial3D.TRANSPARENCY_ALPHA or mode == BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS:
+			return true
+		if base.billboard_mode != BaseMaterial3D.BILLBOARD_DISABLED:
+			return true
+		if (base.uv1_triplanar and not base.uv1_world_triplanar) or (base.uv2_triplanar and not base.uv2_world_triplanar):
+			return true
+	elif material is ShaderMaterial:
 		var shader := (material as ShaderMaterial).shader
-		return shader != null and shader.code.contains("ALPHA") \
-			and not shader.code.contains("ALPHA_SCISSOR_THRESHOLD")
-	return false
+		if shader == null:
+			return false
+		var code := shader.code
+		if code.contains("ALPHA") and not code.contains("ALPHA_SCISSOR_THRESHOLD"):
+			return true
+		if code.contains("void vertex(") or code.contains("void vertex (") or code.contains("MODEL_MATRIX") \
+				or code.contains("NODE_POSITION"):
+			return true
+	else:
+		return true
+	return _blended(material.next_pass)
 
 
 static func _surface_ok(mesh: Mesh, surface: int) -> bool:

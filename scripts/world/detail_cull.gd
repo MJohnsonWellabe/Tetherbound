@@ -23,7 +23,9 @@ extends RefCounted
 ##   as a point of light at any distance);
 ## - Terrain3D's own scatter, and subtrees named in `skip_subtrees` (the
 ##   Stronghold landmark spine);
-## - a MultiMesh whose combined bounds are wider than its own reach;
+## - a MultiMesh whose combined bounds are wider than its own reach, or whose
+##   spread is unknown when it is measured (empty or single-instance batches
+##   filled at runtime);
 ## - the local player's own subtree;
 ## - nodes with meta `detail_cull_skip`.
 
@@ -79,7 +81,7 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 		return
 	if geometry.visibility_range_end > 0.0 or geometry.visibility_range_begin > 0.0:
 		return
-	if _skipped(geometry):
+	if _skipped(geometry, cfg):
 		return
 	var size := _world_size(geometry)
 	if size <= 0.0:
@@ -101,11 +103,19 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 	if reach >= float(cfg.get("ignore_beyond_m", 9000.0)):
 		return
 	# Godot tests a node's visibility range once, against the centre of the
-	# node's whole box. A MultiMesh spread wider than its own reach (a perimeter
-	# hedge run, a shoreline batch) would vanish whole, the instance beside the
-	# camera included, once that centre is past the reach. Leave it unranged.
-	if geometry is MultiMeshInstance3D and _combined_size(geometry) > reach:
-		return
+	# node's whole box, so a MultiMesh's nearest instance can sit one
+	# half-diagonal closer to the camera than that centre. Its range is pushed
+	# out by that half-diagonal, so no instance stops drawing before its own
+	# reach. A batch wider than its own reach (a perimeter hedge run, a
+	# shoreline batch), or one whose spread is unknown (empty or single at
+	# build time and filled later, as pickup glows are), stays unranged.
+	if geometry is MultiMeshInstance3D:
+		var half_diagonal := _combined_half_diagonal(geometry as MultiMeshInstance3D)
+		if half_diagonal > reach:
+			return
+		reach += half_diagonal
+		if reach >= float(cfg.get("ignore_beyond_m", 9000.0)):
+			return
 	geometry.visibility_range_end = reach
 	geometry.visibility_range_end_margin = reach * float(cfg.get("fade_fraction", 0.1))
 	geometry.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
@@ -124,30 +134,40 @@ static func _world_size(geometry: GeometryInstance3D) -> float:
 	return maxf(extent.x, maxf(extent.y, extent.z))
 
 
-## Spread of a MultiMesh's instances in world metres, measured from the
-## instance transforms themselves: the server-side AABB is not reliable here
-## (headless and dummy renderers report the mesh's own box).
-static func _combined_size(geometry: GeometryInstance3D) -> float:
-	var mm := (geometry as MultiMeshInstance3D).multimesh
-	if mm == null or mm.instance_count == 0 or mm.mesh == null:
-		return 0.0
-	var count := mm.instance_count if mm.visible_instance_count < 0 else mm.visible_instance_count
-	var box := AABB(mm.get_instance_transform(0).origin, Vector3.ZERO) \
-		if mm.transform_format == MultiMesh.TRANSFORM_3D else AABB()
-	for index in range(1, count):
+## Half-diagonal of a MultiMesh's instance spread in world metres, measured
+## from the instance transforms themselves: the server-side AABB is not
+## reliable here (headless and dummy renderers report the mesh's own box).
+static func _combined_half_diagonal(geometry: MultiMeshInstance3D) -> float:
+	var mm := geometry.multimesh
+	if mm == null or mm.mesh == null:
+		return INF
+	var count := mm.instance_count if mm.visible_instance_count < 0 else mini(mm.visible_instance_count, mm.instance_count)
+	var origins := PackedVector3Array()
+	origins.resize(count)
+	for index in count:
 		if mm.transform_format == MultiMesh.TRANSFORM_3D:
-			box = box.expand(mm.get_instance_transform(index).origin)
+			origins[index] = mm.get_instance_transform(index).origin
 		else:
 			var flat := mm.get_instance_transform_2d(index).origin
-			box = box.expand(Vector3(flat.x, 0.0, flat.y))
-	if count > 1 and box.size.is_zero_approx():
-		# Several instances reading one origin means the transforms are not
-		# readable (a dummy renderer keeps no instance buffer). Unknown spread
-		# must never be ranged.
+			origins[index] = Vector3(flat.x, 0.0, flat.y)
+	return spread_half_diagonal(origins, mm.mesh.get_aabb().size, _scale_of(geometry))
+
+
+## Half-diagonal of the box holding every instance origin plus one instance's
+## mesh, in world metres. INF when the spread is unknown: fewer than two
+## instances at build time (a batch filled later, such as pickup glows, would
+## otherwise be ranged by one quad and later span the realm), or several
+## instances all reading one origin (a dummy renderer keeps no instance
+## buffer). Unknown spread is never ranged.
+static func spread_half_diagonal(origins: PackedVector3Array, mesh_size: Vector3, scale: Vector3) -> float:
+	if origins.size() < 2:
 		return INF
-	var scale := _scale_of(geometry)
-	var extent := (box.size + mm.mesh.get_aabb().size) * scale
-	return maxf(extent.x, maxf(extent.y, extent.z))
+	var box := AABB(origins[0], Vector3.ZERO)
+	for index in range(1, origins.size()):
+		box = box.expand(origins[index])
+	if box.size.is_zero_approx():
+		return INF
+	return ((box.size + mesh_size) * scale).length() * 0.5
 
 
 static func _scale_of(node: Node3D) -> Vector3:
@@ -156,10 +176,10 @@ static func _scale_of(node: Node3D) -> Vector3:
 	return Vector3(absf(scale.x), absf(scale.y), absf(scale.z))
 
 
-static func _skipped(node: Node) -> bool:
+static func _skipped(node: Node, cfg: Dictionary) -> bool:
 	# Landmark spines named in config (the Stronghold) are never ranged, the
 	# same rule performance.json's structure_visibility_range states.
-	var names: Variant = _config().get("skip_subtrees", [])
+	var names: Variant = cfg.get("skip_subtrees", [])
 	var at := node
 	while at != null:
 		if at.has_meta(SKIP_META) or at.get_class() == "Terrain3D" or str(at.name) == "Player":

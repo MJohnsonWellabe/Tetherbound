@@ -44,18 +44,49 @@ func test_a_wide_multimesh_is_never_ranged_by_one_instance() -> void:
 	root.free()
 
 
-func test_a_single_instance_multimesh_is_ranged_by_its_size() -> void:
-	# One instance has a known spread of zero on any renderer. (Several
-	# instances need readable transforms; on the headless Dummy renderer they
-	# all read as the origin, so the spread is unknown and stays unranged,
-	# which the wide-batch test above also covers.)
+func test_a_multimesh_empty_when_measured_is_never_ranged() -> void:
+	# Review B1 (cc22c6c5): pickup_glow.gd builds its Motes and Auras empty and
+	# fills them later with every glowing pickup in the realm. Ranged by one
+	# 2 m quad (~617 m), a key far from the centre of all pickups lost its glow.
+	var empty := _multimesh(_box_mesh(Vector3(2.0, 2.0, 2.0)), [])
+	var root := Node3D.new()
+	root.add_child(empty)
+	DETAIL_CULL.apply(empty, CFG)
+	assert_eq(empty.visibility_range_end, 0.0, "a batch filled later has no known spread")
+	root.free()
+
+
+func test_a_single_instance_multimesh_is_never_ranged() -> void:
+	# One instance at build time can grow later the same way.
 	var positions: Array[Vector3] = [Vector3(3.0, 0.0, 3.0)]
 	var single := _multimesh(_box_mesh(Vector3(1.0, 1.0, 1.0)), positions)
 	var root := Node3D.new()
 	root.add_child(single)
 	DETAIL_CULL.apply(single, CFG)
-	assert_true(single.visibility_range_end >= 150.0, "a lone small instance still culls when sub-pixel")
+	assert_eq(single.visibility_range_end, 0.0, "a lone instance may be a batch that grows")
 	root.free()
+
+
+func test_spread_is_the_half_diagonal_of_every_instance_and_its_mesh() -> void:
+	# The headless renderer keeps no instance buffer, so the maths is tested on
+	# the transforms directly. A 600 m square patch of 2 m props: the box is
+	# 602 x 2 x 602, half-diagonal ~425.7 m. Its nearest instance would vanish
+	# ~190 m out if the range were not pushed out by this much.
+	var origins := PackedVector3Array([Vector3.ZERO, Vector3(600.0, 0.0, 0.0),
+		Vector3(0.0, 0.0, 600.0), Vector3(600.0, 0.0, 600.0)])
+	var half := DETAIL_CULL.spread_half_diagonal(origins, Vector3(2.0, 2.0, 2.0), Vector3.ONE)
+	assert_between(half, 425.0, 426.5, "half-diagonal of a 600 m patch")
+	var doubled := DETAIL_CULL.spread_half_diagonal(origins, Vector3(2.0, 2.0, 2.0), Vector3(2.0, 2.0, 2.0))
+	assert_between(doubled, 850.0, 853.0, "node scale scales the spread")
+
+
+func test_spread_is_unknown_for_empty_single_or_unreadable_batches() -> void:
+	var mesh_size := Vector3(2.0, 2.0, 2.0)
+	assert_eq(DETAIL_CULL.spread_half_diagonal(PackedVector3Array(), mesh_size, Vector3.ONE), INF)
+	assert_eq(DETAIL_CULL.spread_half_diagonal(PackedVector3Array([Vector3(5.0, 0.0, 5.0)]), mesh_size, Vector3.ONE), INF)
+	# Several instances reading one origin: a dummy renderer's empty buffer.
+	assert_eq(DETAIL_CULL.spread_half_diagonal(PackedVector3Array([Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]),
+		mesh_size, Vector3.ONE), INF)
 
 
 func test_a_small_mesh_is_ranged_and_a_large_one_is_not() -> void:
