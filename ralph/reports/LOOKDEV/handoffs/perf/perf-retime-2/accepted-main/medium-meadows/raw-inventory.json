@@ -33,5 +33,13 @@
       "size_bytes": 2794052,
       "sha256": "bb98925f836525bee06a611851ce6077861c31f130b6df341625895f47131968"
     }
+  ],
+  "additional_files_outside_zip": [
+    {
+      "path": "graphics_override.cfg",
+      "size_bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e",
+      "scope": "Native isolated profile snapshot retained separately; original six-file ZIP unchanged."
+    }
   ]
 }
