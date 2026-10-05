@@ -549,72 +549,77 @@ void vertex() {
 	// Water's painted shore already excludes slopes above its rock threshold.
 	forbidden = forbidden && !dune_shore;
 
-	// Coverage: two octaves of noise decide whether this blade exists at all,
-	// so the field reads as drifts with open ground between them rather than a
-	// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
-	float drift = value_noise(world_xz * clump_scale);
-	if (dune_tussock) {
-		// Smaller pockets break up the broad colony's boundary without
-		// changing world-stable placement or terrain/landmark clearances.
-		drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
-	}
-	float colony_noise = drift;
-	if (clump_patch_full > clump_patch_start) {
-		drift = smoothstep(clump_patch_start, clump_patch_full, drift);
-	}
-	drift = mix(1.0, drift, clump_contrast);
-	// The bush tier's drift, evaluated with the bush tier's own numbers. Same
-	// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
-	// uses, so this is the identical field and not an approximation of it.
+	// Skip coverage noise only after an existing rejection already guarantees
+	// the entire tuft collapses to its original point. Masks, fade thresholds,
+	// drain varying and every surviving expression remain unchanged.
 	float clearing = 0.0;
-	if (clearing_strength > 0.001) {
-		float bush_drift = mix(1.0, value_noise(world_xz * clearing_scale), clearing_contrast);
-		clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
-	}
-	float keep = drift * density_gain * (1.0 - clearing);
-	if (dune_shape_active) {
-		vec2 warp = vec2(
-			value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
-			value_noise(world_xz * dune_gap_warp_scale - dune_gap_offset.yx)) - vec2(0.5);
-		float gap = value_noise((world_xz + warp * dune_gap_warp_m) * dune_gap_scale + dune_gap_offset);
-		float gap_keep = 1.0 - smoothstep(dune_gap_start, dune_gap_full, gap);
-		float pioneer = 0.0;
-		if (clump_patch_start > dune_pioneer_start) {
-			pioneer = dune_pioneer_probability
-				* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
-		}
-		// A common coastal transition crosses the painted shore/grass boundary.
-		// Its ceiling now limits only pioneers; colony area grows inland.
-		float coast_ceiling = mix(dune_shore_probability, 1.0,
-			smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
-		// Low coastal colonies occupy smaller areas with intact dense centres.
-		// Invalid/linear patch thresholds retain the original density expression.
-		float coastal_keep = min(max(drift * density_gain, pioneer), coast_ceiling);
-		bool valid_coastal_patch = clump_patch_full > clump_patch_start
-			&& dune_shore_dry_full_y > dune_shore_dry_start_y;
-		if (valid_coastal_patch) {
-			float coastal_shift = max(dune_coastal_colony_shift, 0.0) * (1.0 - smoothstep(
-				dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
-			float coastal_colony = smoothstep(clump_patch_start + coastal_shift,
-				clump_patch_full + coastal_shift, colony_noise);
-			coastal_colony = mix(1.0, coastal_colony, clump_contrast);
-			coastal_keep = max(coastal_colony * density_gain, min(pioneer, coast_ceiling));
-		}
-		// Pioneers remain sparse and no vegetation fills the blowout's zero core.
-		keep = coastal_keep
-			* gap_keep * (1.0 - clearing);
-		if (dune_shore || valid_coastal_patch) {
-			// Match density across shore/grass paint at the same low dry height.
-			keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
-		}
-	}
 	v_drain = drain_at(world_xz);
 	bool culled = off_map || hole || forbidden || ground_h < min_ground_height || v_fade <= 0.001
 			|| item_presence <= 0.002
-			|| on_built_ground(world_xz)
-			|| (dune_shape_active && keep <= 0.0)
-			|| hash12(world_xz * 7.31) > keep
-			|| hash12(world_xz * 3.97) < v_drain * drain_thin;
+			|| on_built_ground(world_xz);
+	if (!culled) {
+		// Coverage: two octaves of noise decide whether this blade exists at all,
+		// so the field reads as drifts with open ground between them rather than a
+		// uniform lawn. `hash12` on the blade's own position is the per-blade roll.
+		float drift = value_noise(world_xz * clump_scale);
+		if (dune_tussock) {
+			// Smaller pockets break up the broad colony's boundary without
+			// changing world-stable placement or terrain/landmark clearances.
+			drift = mix(drift, value_noise(world_xz * clump_scale * 3.8 + vec2(19.3, 7.1)), 0.30);
+		}
+		float colony_noise = drift;
+		if (clump_patch_full > clump_patch_start) {
+			drift = smoothstep(clump_patch_start, clump_patch_full, drift);
+		}
+		drift = mix(1.0, drift, clump_contrast);
+		// The bush tier's drift, evaluated with the bush tier's own numbers. Same
+		// `value_noise` and the same `mix(1.0, ...)` shape `cover_tier.gdshader`
+		// uses, so this is the identical field and not an approximation of it.
+		if (clearing_strength > 0.001) {
+			float bush_drift = mix(1.0, value_noise(world_xz * clearing_scale), clearing_contrast);
+			clearing = smoothstep(clearing_floor, 1.0, bush_drift) * clearing_strength;
+		}
+		float keep = drift * density_gain * (1.0 - clearing);
+		if (dune_shape_active) {
+			vec2 warp = vec2(
+				value_noise(world_xz * dune_gap_warp_scale + dune_gap_offset),
+				value_noise(world_xz * dune_gap_warp_scale - dune_gap_offset.yx)) - vec2(0.5);
+			float gap = value_noise((world_xz + warp * dune_gap_warp_m) * dune_gap_scale + dune_gap_offset);
+			float gap_keep = 1.0 - smoothstep(dune_gap_start, dune_gap_full, gap);
+			float pioneer = 0.0;
+			if (clump_patch_start > dune_pioneer_start) {
+				pioneer = dune_pioneer_probability
+					* smoothstep(dune_pioneer_start, clump_patch_start, colony_noise);
+			}
+			// A common coastal transition crosses the painted shore/grass boundary.
+			// Its ceiling now limits only pioneers; colony area grows inland.
+			float coast_ceiling = mix(dune_shore_probability, 1.0,
+				smoothstep(dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+			// Low coastal colonies occupy smaller areas with intact dense centres.
+			// Invalid/linear patch thresholds retain the original density expression.
+			float coastal_keep = min(max(drift * density_gain, pioneer), coast_ceiling);
+			bool valid_coastal_patch = clump_patch_full > clump_patch_start
+				&& dune_shore_dry_full_y > dune_shore_dry_start_y;
+			if (valid_coastal_patch) {
+				float coastal_shift = max(dune_coastal_colony_shift, 0.0) * (1.0 - smoothstep(
+					dune_shore_dry_full_y, dune_stabilized_height_y, ground_h));
+				float coastal_colony = smoothstep(clump_patch_start + coastal_shift,
+					clump_patch_full + coastal_shift, colony_noise);
+				coastal_colony = mix(1.0, coastal_colony, clump_contrast);
+				coastal_keep = max(coastal_colony * density_gain, min(pioneer, coast_ceiling));
+			}
+			// Pioneers remain sparse and no vegetation fills the blowout's zero core.
+			keep = coastal_keep
+				* gap_keep * (1.0 - clearing);
+			if (dune_shore || valid_coastal_patch) {
+				// Match density across shore/grass paint at the same low dry height.
+				keep *= smoothstep(dune_shore_dry_start_y, dune_shore_dry_full_y, ground_h);
+			}
+		}
+		culled = (dune_shape_active && keep <= 0.0)
+				|| hash12(world_xz * 7.31) > keep
+				|| hash12(world_xz * 3.97) < v_drain * drain_thin;
+	}
 
 	v_shade = 1.0 + (hash12(world_xz * 2.17) - 0.5) * 2.0 * shade_jitter;
 	v_leaf_straw = dune_tussock ? mix(0.38, 1.0, hash12(blade_seed * 9.43)) : 1.0;
