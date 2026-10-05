@@ -175,3 +175,39 @@ Phase C design (not built):
 - **Costs.** One check per packed runner replaces one check per suite, and
   failures show up as named annotations. `select_jobs.py` and ci-gate's
   fence must read the suites file.
+
+## 7. Phase C built: packed solo suites (cfe997e9, on phase A 88da2951)
+
+What moved:
+- Fourteen solo verify jobs, plus the Stormwood and Tidewake groups of
+  `verify-regions-shard`, moved verbatim to `.github/ci/suites.yml`. A
+  structural check found every moved job identical to its ci.yml original,
+  and the regions split kept all 56 steps.
+- `verify-packed` runs them as 8 runners × 2 lanes through
+  `tools/ci/packed.py`.
+
+How it decides:
+- **Selection:** each suite's own `if:` is evaluated.
+- **Units:** every `!cancelled()` step is its own unit; a dependent step stays
+  with its prefix.
+- **Plan:** longest first over the measured step times
+  (`tools/ci/packed_durations.json`, from run 37300900137). The plan fails
+  unless every unit and every step lands in exactly one lane.
+- **Runners:** only as many as the selection needs; a regions-only change uses
+  2, not 8.
+
+Isolation, per-step audit and drills: see `PACKED_AUDIT.md`.
+
+Independent review: FAIL (4 issues) on e2877a50, all ten findings fixed in
+cfe997e9 with a regression test each (`tests/test_ci_packed.py`, 22 tests).
+
+Local proof on cfe997e9: all 105 steps PASS with exactly one verdict each,
+and no Godot process left.
+
+Expected for PR full-ci (A + C), replayed from measured times; still to be
+proven by the combined dispatch:
+
+| | Runner-min | Wall (simulated) |
+|---|---|---|
+| Before | ~503 | ~36–37 min |
+| After (A + C) | ~326 | ~23 min, or ~25–27 with the replay's 4-min correction; a perfect longest-first order gives 21.4 / 25.4 |
