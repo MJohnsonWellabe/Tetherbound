@@ -58,7 +58,7 @@ func build(owner_world: Node3D, runtime_realm: String) -> void:
 		stone.set("biome", str(row.biome))
 		stone.set("realm_id", runtime_realm)
 		stone.set("display_name", str(row.display_name))
-		stone.set("_presentation_enabled", not bool(owner_world.get("simulation_only")))
+		stone.set("_presentation_enabled", owner_world.get("simulation_only") != true)
 		stone.position = to_local(at)
 		add_child(stone)
 
