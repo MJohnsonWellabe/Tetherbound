@@ -43,6 +43,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _relic_power_attempt(args)
 	if action == "craft_home_key_trip":
 		return await _craft_home_key_trip()
+	if action == "await_owner_unblocked":
+		return await _await_owner_unblocked(int(args.get("frames", 1200)))
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -650,6 +652,18 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 ## Key trip home (production Satchel Use, f49_portal_travel) and arrives before
 ## its owner-gated craft. Portals off (shipping until F18): skipped, with the
 ## reason returned. Disclosed fixture when on: one home_key and its given flag.
+## Waits for this owner's party to accept a write again (a just-admitted
+## guest's saved decisions settle first; party.gd asks one-shot grants to wait).
+func _await_owner_unblocked(frames: int) -> Dictionary:
+	var party: RefCounted = root.get_node("Game").get("party")
+	for frame in frames:
+		if not bool(party.call("owner_mutation_blocked")):
+			return {"verdict": "PASS", "detail": "owner writes open after %d frames" % frame}
+		await physics_frame
+	var session := _session()
+	return {"verdict": "FAIL", "detail": "owner writes still blocked: %s" % str(session.call("_owner_snapshot_block_reason", root.get_node("Game").get("local")))}
+
+
 func _craft_home_key_trip() -> Dictionary:
 	var game := root.get_node("Game")
 	var session := _session()

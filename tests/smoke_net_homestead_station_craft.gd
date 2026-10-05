@@ -33,6 +33,7 @@ func _run() -> void:
 		"returning_route": false, "character": {"appearance_id": "lyra", "display_name": "CraftGuest"}}, 9000): return
 	# Disclosed fixture (see header): one owned creature, admitted by the host
 	# through an ordinary save, leave and returning rejoin.
+	if not await _craft_step(1, "await_owner_unblocked", {}, 1500): return
 	if not await _craft_step(1, "party_grant", {"species": "terrapup"}): return
 	var fresh_id := str((await _craft_data(1, "craft_count", {"ids": COUNTED})).get("character_id", ""))
 	if not await _craft_step(1, "hall_leave_guest", {}): return
