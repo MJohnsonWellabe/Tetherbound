@@ -1,0 +1,30 @@
+{
+  "reviewer": "/root/stormwood_matrix_judge",
+  "isolation": "Code-blind native pixels and approved reference basis; no implementation/history/logs/summary/performance narrative.",
+  "bar_a": "FAIL",
+  "bar_b": "FAIL",
+  "inspected_frame_count": 14,
+  "total_native_frames": 320,
+  "unreviewed_frame_count": 306,
+  "inspected_frames": [
+    "giant_left_day_storm_building.jpg",
+    "giant_right_day_storm_break.jpg",
+    "giant_left_night_released_building.jpg",
+    "giant_right_night_released_break.jpg",
+    "forest_forward_day_storm_calm.jpg",
+    "forest_forward_day_released_calm.jpg",
+    "stormheart_forward_day_storm_calm.jpg",
+    "stormheart_forward_day_released_fading.jpg",
+    "stormheart_right_day_storm_break.jpg",
+    "glass_forward_day_released_calm.jpg",
+    "rod_line_reverse_night_released_fading.jpg",
+    "rod_line_right_day_storm_break.jpg",
+    "rod_line_forward_day_storm_calm.jpg",
+    "rod_line_forward_day_released_calm.jpg"
+  ],
+  "approved_reference_count": 9,
+  "reference_review": "Unchanged9references inspected during priorMediumreview; not reopened.",
+  "before_after_or_preset_preference": null,
+  "full_criterion": "OPEN; no30s motion/realfight/closecreature/hero/interior/exhaustivereview.",
+  "clock_canon": "Day/night clock invariance expected, not a defect."
+}
