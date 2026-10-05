@@ -200,7 +200,31 @@ func test_a_terminal_host_refusal_releases_the_choice() -> void:
 ## automatic retries stop and the player gets a clear retry; a definite host
 ## refusal resets to the picker (test_a_terminal_host_refusal_releases_the_choice).
 
+class FenceSession extends Node:
+	func _altar_current_epoch() -> String:
+		return "e"
+
+
+class FenceLocal extends RefCounted:
+	var character_id := CHARACTER
+
+
+class FenceWorld extends RefCounted:
+	var reward_delivery_namespace := "w"
+
+
 class RetryGame extends Node:
+	var session := FenceSession.new()
+	var local := FenceLocal.new()
+	var world := FenceWorld.new()
+	var committed := true
+	var commits := 0
+	func commit_original_starter(_source: Node, _instance: RefCounted, _nickname: String) -> bool:
+		commits += 1
+		return committed
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_PREDELETE and is_instance_valid(session):
+			session.free()
 	var outcome: Dictionary = {"action": "resent"}
 	var retries := 0
 	var messages: Array = []
@@ -335,6 +359,7 @@ func test_a_late_acceptance_finishes_a_stalled_wait() -> void:
 	assert_eq(str(director.get("finished")), "Bud", "the host's late accept finishes the adoption without a press")
 	assert_true((director.get("_pending_starter_adoption") as Dictionary).is_empty())
 	assert_eq(game.retries, 0, "nothing was re-sent")
+	assert_eq(game.commits, 1, "it finished through the ordinary commit check")
 	game.free()
 	encounter.free()
 	director.free()
@@ -354,6 +379,26 @@ func test_a_readopt_waits_while_the_follower_is_fighting() -> void:
 	assert_true(encounter.spawned == null, "no second body is spawned while the first cannot be put away")
 	assert_true(game.adopted == null, "the pending instance is unchanged")
 	assert_true(bool(director.call("starter_adoption_stalled")), "the player can retry once the fight is over")
+	game.free()
+	encounter.free()
+	director.free()
+
+
+func test_a_stalled_accept_without_the_local_install_keeps_waiting() -> void:
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	director.set("test_game", game)
+	director.call("_retry_original_starter_save")
+	game.admitted = true
+	game.committed = false # the mirror row reads accepted, but this owner has not saved it
+	director.call("_retry_original_starter_save")
+	assert_eq(str(director.get("finished")), "", "an accepted mirror row alone never finishes an empty party")
+	assert_true(bool(director.call("starter_adoption_stalled")))
+	director.call("_retry_original_starter_save")
+	assert_eq(game.commits, 1, "the check is rate-limited, never a request every frame")
 	game.free()
 	encounter.free()
 	director.free()

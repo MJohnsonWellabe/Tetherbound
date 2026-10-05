@@ -1986,13 +1986,18 @@ func _retry_original_starter_save() -> void:
 	var bound_game := _effect_game()
 	var guest: bool = bound_game != null and bound_game.has_method("is_host") and not bool(bound_game.call("is_host"))
 	if _pending_starter_adoption.get("stalled") == true:
-		# Stalled stops the re-sends, never the listening: a row the host
-		# accepts meanwhile still finishes the adoption.
-		if bound_game != null and bound_game.has_method("original_starter_admitted_now") \
-				and bool(bound_game.call("original_starter_admitted_now")):
-			var admitted_name: String = _pending_starter_adoption.nickname
-			_pending_starter_adoption.clear()
-			_finish_original_starter_adoption(admitted_name, true)
+		# Stalled stops the re-sends, never the listening: once the host's row
+		# reads accepted, the ordinary commit check (same fences, local receipt
+		# and flag; it sends nothing once the receipt exists) finishes it.
+		if Time.get_ticks_msec() < int(_pending_starter_adoption.get("retry_at", 0)) or bound_game == null \
+				or not bound_game.has_method("original_starter_admitted_now") \
+				or not bool(bound_game.call("original_starter_admitted_now")): return
+		_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
+		if not _starter_adoption_fences_hold(bound_game) \
+				or bound_game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true: return
+		var admitted_name: String = _pending_starter_adoption.nickname
+		_pending_starter_adoption.clear()
+		_finish_original_starter_adoption(admitted_name, true)
 		return
 	# Bounded (guests only; the host commits its own starter locally and keeps
 	# retrying its own save): past `starters.admission_retry_after_seconds`
@@ -2004,8 +2009,7 @@ func _retry_original_starter_save() -> void:
 		return
 	if Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
 	var game := _effect_game()
-	if game == null or game.get("session") == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return
-	if game.get("local").character_id != _pending_starter_adoption.character_id or game.get("world").reward_delivery_namespace != _pending_starter_adoption.world_instance_id or game.get("session").call("_altar_current_epoch") != _pending_starter_adoption.session_epoch: return
+	if not _starter_adoption_fences_hold(game): return
 	_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
 	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true:
 		# Bounded, never silent: every interval the player is told the host is
@@ -2023,6 +2027,16 @@ func _retry_original_starter_save() -> void:
 ## told it is still being asked (opening.json `starters.admission_notice_seconds`).
 func _starter_wait_notice_ms() -> int:
 	return int(1000.0 * maxf(1.0, float(BEATS.config().get("starters", {}).get("admission_notice_seconds", 10.0))))
+
+
+## The pending adoption still belongs to this character, world, session epoch
+## and follower body.
+func _starter_adoption_fences_hold(game: Node) -> bool:
+	if game == null or game.get("session") == null or game.get("local") == null or game.get("world") == null \
+			or _encounter == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return false
+	return game.get("local").character_id == _pending_starter_adoption.character_id \
+		and game.get("world").reward_delivery_namespace == _pending_starter_adoption.world_instance_id \
+		and game.get("session").call("_altar_current_epoch") == _pending_starter_adoption.session_epoch
 
 
 ## The bound on a guest's wait for the host's row
@@ -2071,6 +2085,8 @@ func retry_starter_adoption() -> void:
 			await get_tree().process_frame # the dismissed body frees before its replacement takes the name
 		if not bool(await _encounter.call("_spawn_ally_body", outcome.instance)) \
 				or not bool(game.call("adopt_original_starter_instance", outcome.instance)):
+			# The swapped body and the game disagree; staying stalled lets the
+			# next Interact dismiss and re-adopt again from the current row.
 			_pending_starter_adoption.stalled = true
 			return
 		_pending_starter_adoption.instance = outcome.instance
