@@ -1,6 +1,7 @@
 extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
+# requires-flag: multiplayer.json session.redesign_portal_runtime_enabled
 ## Two real ENet processes with production worlds, UI, journal and disk.
 ## Each starts from a disclosed post-finale fixture; no earned combat claim.
 
