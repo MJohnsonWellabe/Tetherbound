@@ -38,3 +38,27 @@ Not landed. Guest wild wins stay unpaid by the canonical path. `wip.patch` holds
 ## Consequence for the `actor_vitals.runtime_enabled` flip
 
 Not flipped. With the flag on, `encounter_director._host_engage` refuses every guest join to a host's canonical wild fight (`canonical_training_solo_scope`). Shipping it would break co-op wild fights. The guest path above has to land first.
+
+## Root cause of the HP drift (follow-up investigation)
+
+In a canonical wild fight the host resolves each enemy hit on a guest's creature (`encounter_director.host_resolve_enemy_hit`). It then only *delivers* it (`host_deliver_enemy_hit`, non-trainer branch). The guest applies the damage locally, and the host's admitted record never changes.
+
+Trainer and boss fights do it differently. They route the same hits through the durable actor-vitals pipeline:
+- `_stage_ordinary_enemy_hit`;
+- `encounter_host.stage_actor_vitals`;
+- `session.ordinary_actor_vitals_commit`.
+
+That pipeline is what feeds `combat_round_reward.settled_before`.
+
+The pipeline is trainer-scoped:
+- `foundation_ordinary_combat_scopes` requires a `trainer_id` equal to `opponent.owner_npc`;
+- `uses_durable_trainer_rewards` also enables trainer round rewards, which would double the wild XP.
+
+A settled_before-style settlement for wild shares therefore needs the host to hold authoritative guest actor vitals in wild fights first. The plan is a wild-scoped actor-vitals pipeline:
+1. a scope keyed by the encounter, not a trainer;
+2. no round rewards;
+3. guest hits staged and committed like trainer hits.
+
+The `wild_defeat` share then freezes the settled vitals and settles them in `owner_passive_sync._prepare_host` and `owner_passive_preparation.valid`/`valid_host`. That is a design-level change across `encounter_director`, `session` and `encounter_host`, not a list change.
+
+`wip.patch` now includes the `_is_guest()` fix, so solo stays host-side.
