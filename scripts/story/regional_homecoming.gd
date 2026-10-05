@@ -176,6 +176,18 @@ static func party_signature(party: Object) -> String:
 	return JSON.stringify(rows).sha256_text()
 
 
+## party_signature without passive care (landmarks walked together), which a
+## host copy of a guest's party receives only at owner-passive gates.
+static func party_identity_signature(party: Object) -> String:
+	if not valid_party(party):
+		return ""
+	var rows: Array = []
+	for member: Object in _members(party):
+		rows.append([member.get("uid"), _name(member), member.get("battles_fought"),
+			member.get("rest_nights_together"), member.get("feeds_together")])
+	return JSON.stringify(rows).sha256_text()
+
+
 static func eligible(game: Object) -> bool:
 	return not context(game).is_empty()
 

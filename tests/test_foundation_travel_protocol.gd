@@ -181,3 +181,30 @@ func test_guest_ending_fields_require_original_personal_answer_home_receipt_and_
 	assert_true(LIFECYCLE.ending_fields(personal, ambiguous, sample).is_empty())
 	var only_shared := {"stormwood:stormheart_freed": true}
 	assert_true(LIFECYCLE.ending_fields(personal, only_shared, sample).is_empty())
+
+func test_guest_ending_fields_tolerate_passive_landmark_drift_but_not_another_party() -> void:
+	# The guest's live party keeps accruing landmarks walked together; the host's
+	# copy lags until an owner-passive gate. Identity (uid, name, battles, rests,
+	# feeds) still has to match; the guest's own full signature is kept.
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	var personal := {"character_id": "guest_a", "party": [], "redesign_character": {"creatures": {},
+		"transaction_receipts": ["starter_choice:guest_a:starter_uid",
+			ending.return_prefix("world_a", "stormwood:legendary_answer:original_claim:refused") + "actual_home_key_permit:guest_a"]}}
+	var flags := {"stormwood:legendary_ceremony_settled": true,
+		"stormwood:regional_outcome:original_claim:refused": true, "stormwood:legendary_answer:original_claim:refused": true}
+	var drifted := _sample()
+	drifted.party_signature = "guest_live_party_with_one_more_landmark".sha256_text()
+	drifted.party_identity = "[]".sha256_text()
+	assert_true(LIFECYCLE.valid_sample(drifted))
+	var expected := LIFECYCLE.ending_fields(personal, flags, drifted)
+	assert_false(expected.is_empty(), "passive care drift is not another party")
+	assert_eq(expected.get("party_signature"), drifted.party_signature, "the guest's own signature is what its intent carries")
+	var other := drifted.duplicate(true)
+	other.party_identity = "another_party".sha256_text()
+	assert_true(LIFECYCLE.ending_fields(personal, flags, other).is_empty(), "a different party is still refused")
+	var legacy := _sample()
+	legacy.party_signature = "guest_live_party_with_one_more_landmark".sha256_text()
+	assert_true(LIFECYCLE.ending_fields(personal, flags, legacy).is_empty(), "without party_identity the exact comparison stands")
+	var malformed := drifted.duplicate(true)
+	malformed.party_identity = "short"
+	assert_false(LIFECYCLE.valid_sample(malformed))

@@ -7,7 +7,7 @@ var _serial: int = 0
 var _left: float = 0.0
 var _observations: Dictionary = {}
 const SAMPLE_FIELDS := ["character_id", "world_instance_id", "session_epoch", "realm", "damage_revision", "dialogue", "cutscene", "swimming", "flying", "downed", "station_ack_only", "ending_owner", "party_revision", "party_signature", "sequence"]
-const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active"]
+const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active", "party_identity"]
 
 func _ready() -> void:
 	session().connect("peer_left", func(peer: int) -> void: _observations.erase(peer))
@@ -92,7 +92,8 @@ func local_sample() -> Dictionary:
 		"equipped_tool": str(game.get("equipped_tool")),
 		"passive_clock_active": local_passive_clock_active(game, owner),
 		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
-		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
+		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party),
+		"party_identity": preload("res://scripts/story/regional_homecoming.gd").party_identity_signature(party)}
 
 ## D102 multiplayer modals do not pause Game. Use actual processing and the
 ## existing transaction fence, never dialogue/cutscene/input ownership flags.
@@ -119,6 +120,8 @@ static func valid_sample(sample: Dictionary) -> bool:
 		if field not in SAMPLE_FIELDS and field not in OPTIONAL_SAMPLE_FIELDS: return false
 	if sample.has("equipped_tool") and (not sample.equipped_tool is String or sample.equipped_tool.length() > 96): return false
 	if sample.has("passive_clock_active") and not sample.passive_clock_active is bool: return false
+	if sample.has("party_identity") and (not sample.party_identity is String or sample.party_identity.length() != 64 \
+		or not sample.party_identity.is_valid_hex_number(false)): return false
 	for field: String in ["character_id", "world_instance_id", "session_epoch", "realm"]:
 		if not sample.get(field) is String or sample[field].is_empty() or sample[field].length() > 192: return false
 	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner", "station_ack_only"]:
@@ -273,9 +276,18 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 		var member: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, personal.redesign_character) \
 			if mirrors.has(card.uid) else preload("res://scripts/save/water_capture_codec.gd").decode(card)
 		if member == null or not temporary.call("add", member): return {}
-	var signature: String = preload("res://scripts/story/regional_homecoming.gd").party_signature(temporary)
+	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
+	var signature: String = homecoming.party_signature(temporary)
+	var identity: String = homecoming.party_identity_signature(temporary)
 	while temporary.call("size") > 0: temporary.call("remove_at", 0)
-	if signature.is_empty() or signature != sample.get("party_signature"): return {}
+	# The guest's live party keeps accruing passive care (landmarks walked
+	# together) that this host copy only receives at owner-passive gates. The
+	# same five with the same non-passive history is the same party: verify that
+	# here and keep the guest's own full signature, which its intent carries.
+	if sample.has("party_identity"):
+		if identity.is_empty() or identity != sample.party_identity: return {}
+		signature = sample.party_signature
+	elif signature.is_empty() or signature != sample.get("party_signature"): return {}
 	return {"world_instance_id": sample.world_instance_id, "session_epoch": sample.session_epoch,
 		"character_id": sample.character_id, "outcome_id": outcome, "home_return_receipt": home,
 		"party_revision": sample.party_revision, "party_signature": signature}
