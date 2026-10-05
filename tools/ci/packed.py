@@ -145,7 +145,12 @@ def evaluate(text, ctx):
         while peek() in (("op", "=="), ("op", "!=")):
             op = take()[1]
             w = primary()
-            eq = str(v).lower() == str(w).lower()
+            # GitHub: strings compare ignoring case; different types are not
+            # equal here (GitHub would coerce to numbers; no suite does that).
+            if isinstance(v, str) and isinstance(w, str):
+                eq = v.lower() == w.lower()
+            else:
+                eq = type(v) is type(w) and v == w
             v = eq if op == "==" else not eq
         return v
 
@@ -154,7 +159,7 @@ def evaluate(text, ctx):
         while peek() == ("op", "&&"):
             take()
             w = compare()
-            v = truthy(v) and truthy(w)
+            v = w if truthy(v) else v      # GitHub returns the operand
         return v
 
     def either():
@@ -162,7 +167,7 @@ def evaluate(text, ctx):
         while peek() == ("op", "||"):
             take()
             w = both()
-            v = truthy(v) or truthy(w)
+            v = v if truthy(v) else w
         return v
 
     v = either()
@@ -176,8 +181,18 @@ def truthy(v):
 
 
 def substitute(text, ctx):
-    """Expand `${{ expr }}` inside a run body, env value or step name."""
-    return re.sub(r"\$\{\{(.*?)\}\}", lambda m: str(evaluate(m.group(1), ctx)), str(text))
+    """Expand `${{ name }}` (or a quoted literal) inside a run body, env value or
+    step name. Anything more is refused: its rendering of a value could differ
+    from GitHub's."""
+    def one(m):
+        expr = m.group(1).strip()
+        if not re.fullmatch(r"[A-Za-z_][\w.-]*|'(?:[^']|'')*'", expr):
+            raise PackError("only a name or a literal may be substituted, not %r" % expr)
+        v = evaluate(expr, ctx)
+        if not isinstance(v, str):
+            raise PackError("%r is not a string" % expr)
+        return v
+    return re.sub(r"\$\{\{(.*?)\}\}", one, str(text))
 
 
 def independent(step):
@@ -221,11 +236,42 @@ def instances(suites, sel):
     return out
 
 
+SUITE_KEYS = {"runs-on", "timeout-minutes", "needs", "if", "strategy", "steps", "name"}
+# A unit whose scripts can host a session (Session.host binds the configured
+# udp port, the title screen also serves the LAN beacon) must not run beside
+# another such unit: all of them share one lane. A collision that slips past
+# this list still fails its step (BIND_FAILURE below), it is never silent.
+HOSTING_RE = re.compile(r"Session\.host|\.call\(\s*\"host\"|title_screen|TitleScreen|lan_beacon|LanBeacon")
+BIND_FAILURE = re.compile(r"could not bind udp/|lan_beacon\.listen: bind\(")
+
+
+def scripts_of(body, env):
+    out = set(re.findall(r"((?:tests|tools)/[\w./-]+\.(?:gd|sh|py))", body))
+    if env.get("SMOKE"):
+        out.add("tests/smoke_%s.gd" % env["SMOKE"])
+    return sorted(out)
+
+
+def can_host(scripts):
+    for rel in scripts:
+        path = os.path.join(ROOT, rel)
+        if os.path.exists(path):
+            with open(path, encoding="utf-8", errors="ignore") as f:
+                if HOSTING_RE.search(f.read()):
+                    return True
+    return False
+
+
 def units_of(suites, sel):
     """[{id, instance, job, steps:[{name, run, env, timeout}]}] for the selected
     instances, plus every (instance, step) that the matrix keeps."""
     units = []
+    for job, spec in suites.items():
+        extra = set(spec) - SUITE_KEYS
+        if extra:
+            raise PackError("%s: suite keys %s are not supported by packing" % (job, sorted(extra)))
     for name, job, ctx, selected in instances(suites, sel):
+        job_timeout = float(suites[job].get("timeout-minutes", DEFAULT_STEP_TIMEOUT_MINUTES))
         mine = []
         for index, step in enumerate(suites[job]["steps"]):
             if "uses" in step:
@@ -248,8 +294,10 @@ def units_of(suites, sel):
                 "name": substitute(step.get("name") or body.splitlines()[0][:60], ctx),
                 "run": body,
                 "env": {k: substitute(v, ctx) for k, v in (step.get("env") or {}).items()},
-                "timeout": float(step.get("timeout-minutes", DEFAULT_STEP_TIMEOUT_MINUTES)),
+                "timeout": float(step.get("timeout-minutes", job_timeout)),
+                "independent": independent(step),
             }
+            entry["hosts"] = can_host(scripts_of(entry["run"], entry["env"]))
             if independent(step) or not mine:
                 mine.append([entry])
             else:
@@ -258,7 +306,9 @@ def units_of(suites, sel):
         if not selected:
             continue
         for k, steps in enumerate(mine):
-            units.append({"id": "%s #%d" % (name, k + 1), "instance": name, "job": job, "steps": steps})
+            units.append({"id": "%s #%d" % (name, k + 1), "instance": name, "job": job, "steps": steps,
+                          # The job's own ceiling, now per unit.
+                          "timeout": job_timeout, "hosts": any(st["hosts"] for st in steps)})
     return units
 
 
@@ -290,7 +340,13 @@ def plan(units, durations, runners=RUNNERS, lanes=LANES):
     bins = [[] for _ in range(count)]
     loads = [0.0] * count
     active = used * lanes
-    for unit in sorted(units, key=lambda u: (-unit_seconds(u, durations), u["id"])):
+    # Every unit that can host a session goes to ONE lane (HOSTING_RE), so no
+    # two of them ever run side by side; the rest fill around it.
+    hosting = sorted((u for u in units if u.get("hosts")), key=lambda u: u["id"])
+    if hosting:
+        bins[0].extend(hosting)
+        loads[0] = sum(unit_seconds(u, durations) for u in hosting)
+    for unit in sorted((u for u in units if not u.get("hosts")), key=lambda u: (-unit_seconds(u, durations), u["id"])):
         i = min(range(active), key=lambda i: (loads[i], i))
         bins[i].append(unit)
         loads[i] += unit_seconds(unit, durations)
@@ -332,97 +388,164 @@ def check_every_step_is_reachable(suites):
 
 # --- running ---------------------------------------------------------------
 
+PRINT_LOCK = threading.Lock()
+
+
 class Lane:
-    def __init__(self, name, units, out, base_env):
-        self.name, self.units, self.out, self.base_env = name, units, out, base_env
+    def __init__(self, name, units, out, base_env, live=True):
+        self.name, self.units, self.out, self.base_env, self.live = name, units, out, base_env, live
         self.results = []          # (unit, step, verdict, seconds, log)
         self.proc = None
         self.stopped = False
+        self.lock = threading.Lock()
 
     def stop(self):
-        self.stopped = True
-        p = self.proc
+        with self.lock:
+            self.stopped = True
+            p = self.proc
         if p and p.poll() is None:
-            try:
-                os.killpg(p.pid, signal.SIGTERM)
-                for _ in range(20):
-                    if p.poll() is not None:
-                        break
-                    time.sleep(0.1)
-                os.killpg(p.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
+            kill_group(p)
+
+    def record(self, unit, step, verdict, seconds, log):
+        self.results.append((unit, step, verdict, seconds, log))
+        if self.live:
+            show(unit, step, verdict, seconds, log, self.name)
 
     def run(self):
         for k, unit in enumerate(self.units):
-            root = os.path.join(self.out, "lane-%s" % self.name, "unit-%02d" % k)
-            dirs = {d: os.path.join(root, d) for d in ("data", "config", "cache", "tmp", "runner-temp")}
-            for d in dirs.values():
-                os.makedirs(d, exist_ok=True)
-            unit_env = {}
-            failed = None
-            for step in unit["steps"]:
-                log = os.path.join(root, "step-%02d.log" % step["index"])
+            try:
+                self.run_unit(k, unit)
+            except Exception as e:  # never lose a step to a crash: name every one
+                done = {(u["id"], st["index"]) for u, st, _, _, _ in self.results}
+                for step in unit["steps"]:
+                    if (unit["id"], step["index"]) not in done:
+                        self.record(unit, step, "ERROR (runner: %s: %s)" % (type(e).__name__, e), 0.0, "")
+
+    def run_unit(self, k, unit):
+        root = os.path.join(self.out, "lane-%s" % self.name, "unit-%02d" % k)
+        dirs = {d: os.path.join(root, d) for d in ("data", "config", "cache", "tmp", "runner-temp")}
+        for d in dirs.values():
+            os.makedirs(d, exist_ok=True)
+        unit_env, unit_path = {}, []
+        deadline = time.time() + unit["timeout"] * 60
+        failed = None
+        for step in unit["steps"]:
+            log = os.path.join(root, "step-%02d.log" % step["index"])
+            if self.stopped:
+                self.record(unit, step, "CANCELLED", 0.0, log)
+                continue
+            # GitHub: a step without !cancelled()/always() runs only if every
+            # step before it in its job succeeded; one with it runs anyway.
+            if failed is not None and not step["independent"]:
+                self.record(unit, step, "SKIPPED (after %s failed)" % failed, 0.0, log)
+                continue
+            left = deadline - time.time()
+            if left <= 0:
+                self.record(unit, step, "FAIL (the suite's %g min timeout ran out first)" % unit["timeout"], 0.0, log)
+                failed = failed or repr(step["name"])
+                continue
+            verdict, seconds = self.run_step(root, dirs, unit, step, log, unit_env, unit_path,
+                                             min(step["timeout"] * 60, left))
+            self.record(unit, step, verdict, seconds, log)
+            if verdict != "PASS":
+                failed = failed or repr(step["name"])
+
+    def run_step(self, root, dirs, unit, step, log, unit_env, unit_path, limit):
+        files = {key: os.path.join(root, "%s-%02d" % (key, step["index"])) for key in ("github-env", "github-path",
+                                                                                       "github-output")}
+        for f in files.values():
+            open(f, "w").close()
+        env = dict(self.base_env)
+        env.update(unit_env)
+        env.update(step["env"])
+        if unit_path:
+            env["PATH"] = os.pathsep.join(reversed(unit_path)) + os.pathsep + env.get("PATH", "")
+        env.update({
+            "XDG_DATA_HOME": dirs["data"], "XDG_CONFIG_HOME": dirs["config"], "XDG_CACHE_HOME": dirs["cache"],
+            "TMPDIR": dirs["tmp"], "RUNNER_TEMP": dirs["runner-temp"], "GITHUB_ENV": files["github-env"],
+            "GITHUB_PATH": files["github-path"], "GITHUB_OUTPUT": files["github-output"],
+            "PACKED_SUITE": unit["instance"], "PACKED_LANE": self.name,
+        })
+        script = os.path.join(root, "step-%02d.sh" % step["index"])
+        with open(script, "w", encoding="utf-8") as f:
+            f.write(step["run"])
+        started = time.time()
+        with open(log, "w", encoding="utf-8") as f:
+            f.write("=== %s :: %s (lane %s)\n" % (unit["instance"], step["name"], self.name))
+            f.flush()
+            with self.lock:
                 if self.stopped:
-                    self.results.append((unit, step, "CANCELLED", 0.0, log))
-                    continue
-                if failed is not None:
-                    self.results.append((unit, step, "SKIPPED (after %s failed)" % failed, 0.0, log))
-                    continue
-                gh_env = os.path.join(root, "github-env-%02d" % step["index"])
-                open(gh_env, "w").close()
-                env = dict(self.base_env)
-                env.update(unit_env)
-                env.update(step["env"])
-                env.update({
-                    "XDG_DATA_HOME": dirs["data"], "XDG_CONFIG_HOME": dirs["config"], "XDG_CACHE_HOME": dirs["cache"],
-                    "TMPDIR": dirs["tmp"], "RUNNER_TEMP": dirs["runner-temp"], "GITHUB_ENV": gh_env,
-                    "GITHUB_OUTPUT": os.path.join(root, "github-output-%02d" % step["index"]),
-                    "PACKED_SUITE": unit["instance"], "PACKED_LANE": self.name,
-                })
-                script = os.path.join(root, "step-%02d.sh" % step["index"])
-                with open(script, "w", encoding="utf-8") as f:
-                    f.write(step["run"])
-                started = time.time()
-                with open(log, "w", encoding="utf-8") as f:
-                    f.write("=== %s :: %s (lane %s)\n" % (unit["instance"], step["name"], self.name))
-                    f.flush()
-                    self.proc = subprocess.Popen(["bash", "--noprofile", "--norc", "-eo", "pipefail", script],
-                                                 cwd=ROOT, env=env, stdout=f, stderr=subprocess.STDOUT,
-                                                 stdin=subprocess.DEVNULL, start_new_session=True)
-                    try:
-                        rc = self.proc.wait(timeout=step["timeout"] * 60)
-                        verdict = "PASS" if rc == 0 else "FAIL (exit %d)" % rc
-                    except subprocess.TimeoutExpired:
-                        verdict = "FAIL (timed out after %g min)" % step["timeout"]
-                    finally:
-                        # Sweep the step's own process group, whatever it left.
-                        try:
-                            os.killpg(self.proc.pid, signal.SIGKILL)
-                        except ProcessLookupError:
-                            pass
-                        self.proc.wait()
-                if self.stopped and verdict != "PASS":
-                    verdict = "CANCELLED"
-                self.results.append((unit, step, verdict, time.time() - started, log))
-                unit_env.update(read_env_file(gh_env))
-                if verdict != "PASS":
-                    failed = repr(step["name"])
+                    return "CANCELLED", 0.0
+                # `bash -e {0}`: GitHub's shell for a run: step without `shell:`.
+                self.proc = subprocess.Popen(["bash", "--noprofile", "--norc", "-e", script], cwd=ROOT, env=env,
+                                             stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL,
+                                             start_new_session=True)
+            try:
+                rc = self.proc.wait(timeout=limit)
+                verdict = "PASS" if rc == 0 else "FAIL (exit %d)" % rc
+            except subprocess.TimeoutExpired:
+                verdict = "FAIL (timed out after %d s)" % limit
+            finally:
+                kill_group(self.proc)   # whatever the step left behind
+                self.proc.wait()
+        if self.stopped and verdict != "PASS":
+            return "CANCELLED", time.time() - started
+        with open(log, encoding="utf-8", errors="replace") as f:
+            text = f.read()
+        if verdict == "PASS" and BIND_FAILURE.search(text):
+            verdict = "FAIL (a udp port or the LAN beacon was already in use: two hosting units ran side by side)"
+        try:
+            unit_env.update(read_env_file(files["github-env"]))
+            with open(files["github-path"], encoding="utf-8") as f:
+                unit_path.extend(line for line in f.read().splitlines() if line.strip())
+        except (PackError, UnicodeDecodeError) as e:
+            if verdict == "PASS":
+                verdict = "FAIL (%s)" % e
+        return verdict, time.time() - started
+
+
+def kill_group(proc):
+    try:
+        os.killpg(proc.pid, signal.SIGTERM)
+        for _ in range(20):
+            if proc.poll() is not None:
+                break
+            time.sleep(0.1)
+        os.killpg(proc.pid, signal.SIGKILL)
+    except (ProcessLookupError, PermissionError):
+        pass
+
+
+def show(unit, step, verdict, seconds, log, lane):
+    with PRINT_LOCK:
+        print("::group::%s :: %s -- lane %s: %s (%d s)" % (unit["instance"], step["name"], lane, verdict, seconds))
+        if log and os.path.exists(log):
+            with open(log, encoding="utf-8", errors="replace") as f:
+                sys.stdout.write(f.read())
+        print("::endgroup::", flush=True)
 
 
 def read_env_file(path):
-    out, lines, i = {}, open(path, encoding="utf-8").read().split("\n"), 0
+    """A GITHUB_ENV file, as GitHub reads it; a malformed one is an error."""
+    with open(path, encoding="utf-8") as f:
+        lines = f.read().split("\n")
+    out, i = {}, 0
     while i < len(lines):
         line = lines[i]
         m = re.match(r"^([A-Za-z_]\w*)<<(\S+)$", line)
         if m:
-            end = lines.index(m.group(2), i + 1)
+            try:
+                end = lines.index(m.group(2), i + 1)
+            except ValueError:
+                raise PackError("GITHUB_ENV: no closing %r for %s" % (m.group(2), m.group(1)))
             out[m.group(1)] = "\n".join(lines[i + 1:end])
             i = end + 1
             continue
         if "=" in line:
             k, v = line.split("=", 1)
             out[k] = v
+        elif line.strip():
+            raise PackError("GITHUB_ENV: malformed line %r" % line)
         i += 1
     return out
 
@@ -488,28 +611,37 @@ def cmd_run(runner, out_dir):
         for t in threads:
             t.join(timeout=0.5)
     print("both lanes done in %d s" % (time.time() - started))
-    return report(lanes)
+    return report(lanes, planned=[(u, st) for lane in lanes for u in lane.units for st in u["steps"]])
 
 
-def report(lanes):
+def report(lanes, planned=None):
+    """Errors and the suite table; with `planned`, also fails unless every
+    planned step reported exactly one verdict (a lost step is never a PASS)."""
     status = 0
     suites = {}
+    reported = []
     for lane in lanes:
         for unit, step, verdict, seconds, log in lane.results:
-            print("::group::%s :: %s -- lane %s: %s (%d s)" % (unit["instance"], step["name"], lane.name, verdict, seconds))
-            if os.path.exists(log):
-                with open(log, encoding="utf-8", errors="replace") as f:
-                    sys.stdout.write(f.read())
-            print("::endgroup::")
+            reported.append((unit["instance"], step["index"]))
             suites.setdefault(unit["instance"], []).append((step["name"], verdict, lane.name))
             if verdict != "PASS":
                 status = 1
                 print("::error::%s :: %s -- %s (lane %s)" % (unit["instance"], step["name"], verdict, lane.name))
+    if planned is not None:
+        want = sorted((u["instance"], st["index"]) for u, st in planned)
+        missing = [(u["instance"], st["name"]) for u, st in planned if (u["instance"], st["index"]) not in reported]
+        twice = sorted({r for r in reported if reported.count(r) > 1})
+        if missing or twice or sorted(reported) != want:
+            status = 1
+            for inst, name in missing:
+                print("::error::%s :: %s -- NO RESULT (planned on this runner, never reported)" % (inst, name))
+            if twice:
+                print("::error::steps reported more than once: %s" % twice)
     lines = ["| Suite | Verdict | Steps |", "|---|---|---|"]
     for name, steps in suites.items():
-        bad = [s for s in steps if s[1] != "PASS"]
+        bad = [st for st in steps if st[1] != "PASS"]
         lines.append("| %s | %s | %d (%s) |" % (name, "PASS" if not bad else "FAIL", len(steps),
-                                               ", ".join("%s: %s" % (s[0], s[1]) for s in bad) or "all pass"))
+                                               ", ".join("%s: %s" % (st[0], st[1]) for st in bad) or "all pass"))
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
         with open(summary, "a", encoding="utf-8") as f:

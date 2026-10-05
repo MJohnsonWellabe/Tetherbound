@@ -91,7 +91,7 @@ class Lane(unittest.TestCase):
         units = P.units_of(s, SEL)
         self.assertEqual(len(units), 3)
         with tempfile.TemporaryDirectory() as out:
-            lane = P.Lane("a", units, out, dict(os.environ))
+            lane = P.Lane("a", units, out, dict(os.environ), live=False)
             lane.run()
             verdicts = [(st["name"], v) for u, st, v, _, _ in lane.results]
             self.assertEqual(verdicts, [("fails on purpose", "FAIL (exit 3)"),
@@ -102,6 +102,72 @@ class Lane(unittest.TestCase):
             b = open(os.path.join(out, "lane-a", "xdg-2")).read()
             self.assertNotEqual(a, b)
             self.assertEqual(P.report([lane]), 1)
+
+
+class ReviewFindings(unittest.TestCase):
+    """Regression cases for the independent review of phase C."""
+
+    def run_lane(self, suites, **kw):
+        units = P.units_of(suites, SEL)
+        out = tempfile.mkdtemp()
+        lane = P.Lane("a", units, out, dict(os.environ), live=False)
+        lane.run()
+        return units, lane, [(st["name"], v) for _, st, v, _, _ in lane.results]
+
+    def test_1_a_malformed_github_env_fails_its_step_and_the_lane_goes_on(self):
+        _, lane, v = self.run_lane(suites_of(
+            j=[{"name": "bad env", "run": 'echo "FOO<<EOF" >> "$GITHUB_ENV"'},
+               {"name": "next", "if": "${{ !cancelled() }}", "run": "true"}],
+            k=[{"name": "other suite", "run": "true"}]))
+        self.assertTrue(v[0][1].startswith("FAIL (GITHUB_ENV: no closing"), v)
+        self.assertEqual(v[1:], [("next", "PASS"), ("other suite", "PASS")])
+
+    def test_1_a_lost_step_fails_the_job_by_name(self):
+        units, lane, _ = self.run_lane(suites_of(j=[{"name": "ran", "run": "true"}]))
+        ghost = dict(units[0], id="j #9", steps=[dict(units[0]["steps"][0], index=7, name="never ran")])
+        self.assertEqual(P.report([lane], planned=[(units[0], units[0]["steps"][0]), (ghost, ghost["steps"][0])]), 1)
+
+    def test_1_a_crash_inside_a_lane_names_every_remaining_step(self):
+        units = P.units_of(suites_of(j=[{"name": "a", "run": "true"}, {"name": "b", "run": "true"}]), SEL)
+        lane = P.Lane("a", units, "/proc/no-such-dir", dict(os.environ), live=False)
+        lane.run()
+        self.assertEqual([v.split(" ")[0] for _, _, v, _, _ in lane.results], ["ERROR", "ERROR"])
+
+    def test_2_an_always_run_step_still_runs_after_a_failure_in_its_unit(self):
+        # verify-harvest's shape: two !cancelled() steps, then one without `if:`.
+        _, _, v = self.run_lane(suites_of(j=[
+            {"name": "spend", "if": "${{ !cancelled() }}", "run": "exit 1"},
+            {"name": "release", "if": "${{ !cancelled() }}", "run": "true"},
+            {"name": "checks", "run": "true"}]))
+        self.assertEqual([x[1].split(" ")[0] for x in v], ["FAIL", "PASS", "SKIPPED"])
+
+    def test_3_hosting_units_share_one_lane(self):
+        units = P.units_of(P.load_suites(), SEL)
+        bins, _ = P.plan(units, P.load_durations())
+        lanes = {i for i, g in enumerate(bins) for u in g if u["hosts"]}
+        self.assertEqual(len(lanes), 1)
+        self.assertGreaterEqual(sum(u["hosts"] for u in units), 3)
+
+    def test_3_a_bind_failure_fails_the_step(self):
+        _, _, v = self.run_lane(suites_of(j=[
+            {"name": "host", "run": 'echo "WARNING: Session.host: could not bind udp/27015 (err 1); staying offline-solo"'}]))
+        self.assertTrue(v[0][1].startswith("FAIL (a udp port"), v)
+
+    def test_4_the_suite_timeout_bounds_the_unit(self):
+        s = {"j": {"timeout-minutes": 0.02, "steps": [{"name": "slow", "run": "sleep 5"}]}}
+        _, _, v = self.run_lane(s)
+        self.assertTrue(v[0][1].startswith("FAIL (timed out"), v)
+
+    def test_6_substitution_and_operands(self):
+        with self.assertRaises(P.PackError):
+            P.substitute("${{ matrix.group == 'a' }}", {"matrix.group": "a"})
+        self.assertEqual(P.substitute("x ${{ matrix.group }}", {"matrix.group": "a"}), "x a")
+        self.assertEqual(P.evaluate("'a' && 'b' || 'c'", {}), "b")
+        self.assertFalse(P.evaluate("'true' == true", {}))
+
+    def test_7_unknown_suite_keys_are_refused(self):
+        with self.assertRaisesRegex(P.PackError, "suite keys"):
+            P.units_of({"j": {"env": {"A": "1"}, "steps": [{"name": "x", "run": "true"}]}}, SEL)
 
 
 class RealSuites(unittest.TestCase):

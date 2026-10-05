@@ -248,7 +248,7 @@ jobs:
 
       - name: Verify the packed suites (plan, exact one-time cover, lane verdicts)
         run: |
-          python3 -c 'import yaml' 2>/dev/null || python3 -m pip install --user --quiet pyyaml
+          python3 -c 'import yaml' 2>/dev/null || python3 -m pip install --user --quiet --break-system-packages pyyaml
           python3 tests/test_ci_packed.py
 
       - name: Decide whether anything but documentation changed
@@ -487,7 +487,9 @@ jobs:
       fail-fast: false
       matrix:
         runner: [1, 2, 3, 4, 5, 6, 7, 8]
-    timeout-minutes: 40
+    # A lane is ~11-14 min; a hung step is cut at its suite's own timeout
+    # (20-40 min), and verdicts print as each step ends.
+    timeout-minutes: 60
     needs: changes
     if: needs.changes.outputs.full == 'true'
     env:
@@ -501,13 +503,14 @@ jobs:
       # ~2 min checkout whether this runner has anything to run.
       - uses: actions/checkout@v4
         with:
+          filter: blob:none
           sparse-checkout: |
             .github/ci/
             tools/ci/
       - name: Plan this runner's suites
         id: plan
         run: |
-          python3 -c 'import yaml' 2>/dev/null || python3 -m pip install --user --quiet pyyaml
+          python3 -c 'import yaml' 2>/dev/null || python3 -m pip install --user --quiet --break-system-packages pyyaml
           python3 tools/ci/packed.py plan --runner ${{ matrix.runner }}
       - uses: actions/checkout@v4
         if: steps.plan.outputs.units != '0'
@@ -1141,7 +1144,9 @@ jobs:
       fail-fast: false
       matrix:
         shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-    timeout-minutes: 30
+    # A lane is ~10 min of smokes; one hung smoke is cut at 20 min
+    # (run_net_lanes.sh NET_SMOKE_TIMEOUT_S), so its verdict still lands.
+    timeout-minutes: 40
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
     steps:
