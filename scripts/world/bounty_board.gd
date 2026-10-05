@@ -184,7 +184,7 @@ static func stage(current: Dictionary, revision: int, action: String, intent: Di
 		selected.complete = true
 		next.redesign_character.bounty_receipts.append(receipt)
 	if personal.transaction_receipts.has(receipt): return _deny("reconcile_original_decision")
-	if personal.transaction_receipts.size() >= int(cfg.maximum_receipts) \
+	if RECEIPT_WINDOWS.compact(personal.transaction_receipts, "bounty_decision", str(current.character_id)).size() >= int(cfg.maximum_receipts) \
 		or personal.bounty_receipts.size() >= int(cfg.maximum_receipts): return _deny("receipt_budget")
 	next.redesign_character["bounties"] = board
 	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "bounty_decision", str(current.character_id))

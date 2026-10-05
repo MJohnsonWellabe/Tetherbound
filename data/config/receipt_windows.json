@@ -1,8 +1,7 @@
 {
-  "_comment": "Coordinator ruling on the shared transaction_receipts cap (4096). Over a 15-25 h clear the per-fight, per-craft, per-day and per-spend kinds below exceed it in normal play, after which every foundation action refuses receipt_budget. Each kind keeps only its newest N receipts (care keeps only the current host day). Once-ever kinds (research, master recipe, starter, relic, portal, ending, release, trait teach, feast feed, home key, waystone) are never compacted. Safety per kind is documented in scripts/creatures/receipt_windows.gd; F32 gathers use f32_runtime.json f32_receipt_window.",
+  "_comment": "Coordinator ruling on the shared transaction_receipts cap (4096). Over a 15-25 h clear the per-fight, per-craft, per-day and per-spend kinds below exceed it in normal play, after which every foundation action refuses receipt_budget. Each kind keeps only its newest N receipts. Not windowed: trainer rounds and combat mastery (retained world duties count as settled only while their receipt exists, review R1/R2) and care (its receipt carries no world namespace, review R4). Once-ever kinds (research, master recipe, starter, relic, portal, ending, release, trait teach, feast feed, home key, waystone) are never compacted. Safety per kind is documented in scripts/creatures/receipt_windows.gd; F32 gathers use f32_runtime.json f32_receipt_window.",
   "essence_spend": 256,
   "wild_defeat": 1024,
-  "trainer_round": 1024,
   "shed_win": 1024,
   "groom": 128,
   "station_craft": 256,

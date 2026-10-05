@@ -6,8 +6,8 @@ extends "res://tests/test_case.gd"
 ## bounded; once-ever kinds are never compacted.
 ##
 ## Disclosed fixtures: the real-stage case builds a wild-defeat host event from
-## spawned creatures and a character record already holding 4095 prior
-## receipts (one short of the old refusal). ESSENCE.stage_defeat is not mocked.
+## spawned creatures and a character record already holding 4096 prior
+## receipts (exactly the old refusal point). ESSENCE.stage_defeat is not mocked.
 
 const RW := preload("res://scripts/creatures/receipt_windows.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
@@ -26,7 +26,6 @@ func _sample(kind: String, i: int) -> String:
 	match kind:
 		"essence_spend": return "essence_spend:%s:%s:uid:1:wood:1:%d" % [CHARACTER, _hex(i), i]
 		"wild_defeat": return "defeat:%s:%s:%s" % [CHARACTER, _hex(i), _hex(i + 1)]
-		"trainer_round": return "defeat:trainer_round_%s:%s" % [_hex(i), CHARACTER]
 		"shed_win": return "craft:%s:shed_win:%s" % [CHARACTER, _hex(i)]
 		"groom": return "groom:uid%d:%s" % [i % 5, _hex(i)]
 		"station_craft": return "craft:%s:%s" % [CHARACTER, _hex(i)]
@@ -39,7 +38,7 @@ const ONCE_EVER := ["research:sprig:seen:%s", "master_recipe:aldis:%s", "starter
 
 
 func test_every_high_frequency_kind_stays_bounded_and_drops_its_oldest() -> void:
-	for kind: String in ["essence_spend", "wild_defeat", "trainer_round", "shed_win", "groom", "station_craft", "bounty_decision"]:
+	for kind: String in ["essence_spend", "wild_defeat", "shed_win", "groom", "station_craft", "bounty_decision"]:
 		var size := RW.window(kind)
 		assert_true(size >= 2, "%s has a configured window" % kind)
 		var receipts: Array = []
@@ -63,21 +62,27 @@ func test_station_craft_matches_only_the_32_hex_craft_receipt() -> void:
 		assert_false(RW.is_kind(other, "station_craft", CHARACTER), "%s is not a station craft" % other)
 
 
-func test_care_keeps_only_the_current_host_day() -> void:
-	var receipts: Array = ["care:%s:3:uid1:2" % CHARACTER, "care:%s:4:uid1:2" % CHARACTER,
-		"care:%s:5:uid2:2" % CHARACTER, "care:other:3:uid1:2", "research:x:y:%s" % CHARACTER]
-	var kept := RW.compact_care(receipts, CHARACTER, 5)
-	assert_eq(kept, ["care:%s:5:uid2:2" % CHARACTER, "care:other:3:uid1:2", "research:x:y:%s" % CHARACTER])
+func test_trainer_rounds_and_care_are_never_windowed() -> void:
+	# Review R1/R4: retained trainer-round duties count as settled only while
+	# their receipt exists, and care receipts carry no world namespace.
+	assert_eq(RW.window("trainer_round"), 0)
+	assert_eq(RW.window("care"), 0)
+	var receipts: Array = ["defeat:trainer_round_%s:%s" % [_hex(1), CHARACTER], "care:%s:3:uid1:2" % CHARACTER]
+	for kind: String in ["essence_spend", "wild_defeat", "shed_win", "groom", "station_craft", "bounty_decision"]:
+		assert_false(RW.is_kind(receipts[0], kind, CHARACTER), "%s never matches a trainer round" % kind)
+		assert_false(RW.is_kind(receipts[1], kind, CHARACTER), "%s never matches care" % kind)
 
 
-func test_a_wild_defeat_past_4096_receipts_is_paid_not_refused() -> void:
+func test_a_wild_defeat_at_and_past_4096_receipts_is_paid_not_refused() -> void:
 	var player := preload("res://autoload/player_state.gd").new()
 	player.configure(ITEM_DB.new())
 	player.character_id = CHARACTER
 	var mine: RefCounted = SPECIES.spawn("terrapup")
 	player.party.add(mine)
 	var record := RECORD.portable_projection(player.save_data())
-	for i in 4095:
+	# Review R3: exactly at the old cap, so the budget check must count the
+	# compacted receipts, not the raw ones.
+	for i in 4096:
 		record.redesign_character.transaction_receipts.append(_sample("wild_defeat", i))
 	var wild := preload("res://autoload/player_state.gd").new()
 	wild.configure(ITEM_DB.new())

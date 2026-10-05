@@ -24,3 +24,18 @@ Proof: tests/test_receipt_windows.gd (every kind bounded, once-ever untouched, s
 pattern exact, care by day, and a real ESSENCE.stage_defeat past 4096 receipts: without the
 window the defeat after the cap is refused `receipt_budget`, with it all pay and defeats stay
 at 1024); tests/test_f32_receipt_window.gd for F32.
+
+## Re-review corrections (review-gather-batching-r2.md)
+
+- **R1 (blocking, fixed):** trainer rounds are retained world duties that count as settled only while
+  their receipt exists, so windowing them re-staged old rounds (stalling later duties, or paying again
+  at the cap). `trainer_round` is no longer windowed.
+- **R3 (fixed):** the budget checks in the windowed writers now count the compacted receipts, so a
+  character exactly at 4096 is paid (test starts at 4096).
+- **R4 (fixed):** care is no longer compacted: its receipt carries no world namespace, so pruning by
+  day could let a return to another world's earlier day pay again.
+- **R2 (open, needs a design decision):** the cap is still reachable. `craft:combat_mastery_*` (one per
+  landed hit until a move reaches 300 uses, ~6000 per five-creature lineup) and trainer rounds cannot
+  be windowed for the same reason as R1, and care (~750) stays. Bounding them needs retained duties to
+  carry a durable per-character settled marker in the world row (or be retired once every recipient
+  settles), after which their receipts can be windowed.

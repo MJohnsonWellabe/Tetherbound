@@ -4,30 +4,38 @@ extends RefCounted
 ## transaction_receipts stay bounded, so a long clear never reaches the 4096
 ## cap (after which every foundation action refuses receipt_budget).
 ##
-## Each kind keeps only its newest N receipts (data/config/receipt_windows.json);
-## care keeps only the current host day. Receipts are appended in order, so the
-## front is the oldest. Why an evicted receipt cannot pay twice:
+## Each kind keeps only its newest N receipts (data/config/receipt_windows.json).
+## Receipts are appended in order, so the front is the oldest. NOT windowed:
+## trainer rounds and combat mastery (their retained world duties count as
+## settled only while the receipt exists, so evicting one re-stages the duty;
+## review R1/R2) and care (its receipt carries no world namespace; review R4).
+## Why an evicted receipt cannot pay twice:
 ## - essence_spend, station_craft: a client request; character authority stages
 ##   only at the current character revision with `before` equal to the live
 ##   record, so a resend of an old request is refused stale.
-## - care: keyed by host day; only today's receipts can match a new request.
 ## - groom: keyed by creature and day through F27's care receipt; an old day's
 ##   groom cannot be re-staged today.
 ## - bounty_decision: rotations are guarded by the board's anchor day, claims by
 ##   the permanent bounty_receipts list and the current board.
-## - wild_defeat, trainer_round, shed_win: host-presented combat outcomes, offered
-##   only while their duty is unsettled (retries within the same fight's
-##   settlement). A window of 1024 newer outcomes of the same kind is a recency
-##   margin far beyond any retry, not a construction-level proof.
+## - wild_defeat, shed_win: host-presented wild outcomes, retried only within
+##   the live in-memory encounter (no retained world duty); a window of 1024
+##   newer outcomes is a recency margin far beyond any retry.
+## - station_craft also matches feast cooks (same craft:<c>:<32 hex> shape),
+##   which share the same stale-revision guard.
 ## Once-ever kinds are never touched.
 
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const CONFIG := "res://data/config/receipt_windows.json"
 
 
+static var _config_cache: Dictionary = {}
+
+
 static func window(kind: String) -> int:
-	var raw: Variant = DATA.json(CONFIG)
-	return int((raw as Dictionary).get(kind, 0)) if raw is Dictionary else 0
+	if _config_cache.is_empty():
+		var raw: Variant = DATA.json(CONFIG)
+		_config_cache = raw if raw is Dictionary else {"_unavailable": true}
+	return int(_config_cache.get(kind, 0))
 
 
 ## Whether `receipt` belongs to `kind` for this character.
@@ -35,7 +43,6 @@ static func is_kind(receipt: String, kind: String, character_id: String) -> bool
 	match kind:
 		"essence_spend": return receipt.begins_with("essence_spend:%s:" % character_id)
 		"wild_defeat": return receipt.begins_with("defeat:%s:" % character_id)
-		"trainer_round": return receipt.begins_with("defeat:trainer_round_") and receipt.ends_with(":" + character_id)
 		"shed_win": return receipt.begins_with("craft:%s:shed_win:" % character_id)
 		"groom": return receipt.begins_with("groom:")
 		"bounty_decision": return (receipt.begins_with("bounty:clock_") or receipt.begins_with("bounty:event_")) and receipt.ends_with(":" + character_id)
@@ -65,19 +72,5 @@ static func compact(receipts: Array, kind: String, character_id: String) -> Arra
 		if drop > 0 and is_kind(str(raw), kind, character_id):
 			drop -= 1
 			continue
-		out.append(raw)
-	return out
-
-
-## `receipts` without this character's care receipts from host days before
-## `host_day` (the daily cap reads only today's).
-static func compact_care(receipts: Array, character_id: String, host_day: int) -> Array:
-	var prefix := "care:%s:" % character_id
-	var out: Array = []
-	for raw: Variant in receipts:
-		var text := str(raw)
-		if text.begins_with(prefix):
-			var day := text.substr(prefix.length()).get_slice(":", 0)
-			if day.is_valid_int() and int(day) < host_day: continue
 		out.append(raw)
 	return out
