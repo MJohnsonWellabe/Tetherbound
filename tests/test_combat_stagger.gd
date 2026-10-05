@@ -265,3 +265,28 @@ func test_forced_break_needs_a_charge_started_after_the_tell() -> void:
 	assert_false(bool(manager.call("charge_read_the_tell", windup)), "no tell showing, nothing to read")
 	wild.free()
 	manager.free()
+
+
+## Online, the host compares the guest's committed start tick with the host
+## tick the tell appeared, so link latency and travel never widen the window:
+## a charge started 0.2 s before the tell does not break, even when its impact
+## lands late enough that the windup-only test would call it a read.
+func test_forced_break_host_compares_committed_start_ticks() -> void:
+	var manager := MANAGER.new()
+	var wild := WILD.new()
+	manager.set("_wild", wild)
+	wild.set("engaged", true)
+	wild.set("_intent", AI.Intent.TELEGRAPH)
+	wild.set("_route_cue_left", 0.0)
+	wild.set("_lunge_tell_total", 1.1)
+	wild.set("_beat_left", 0.2)
+	wild.set("_tell_visible_since_ms", 10000)
+	var windup := 0.47
+	assert_true(bool(manager.call("charge_read_the_tell", windup)), "windup-only test is lenient this late")
+	assert_false(bool(manager.call("charge_read_the_tell", windup, 9800)), "committed 0.2 s before the tell: no break")
+	assert_true(bool(manager.call("charge_read_the_tell", windup, 9950)), "committed inside the grace")
+	assert_true(bool(manager.call("charge_read_the_tell", windup, 10130)), "committed after the tell: a read")
+	wild.set("_intent", AI.Intent.CLOSE)
+	assert_false(bool(manager.call("charge_read_the_tell", windup, 10130)), "no tell showing")
+	wild.free()
+	manager.free()

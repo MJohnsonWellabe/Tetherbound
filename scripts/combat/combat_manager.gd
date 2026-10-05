@@ -2475,13 +2475,21 @@ func _enemy_poise_max() -> float:
 ## `windup_s` ago; the tell has been visible for `tell_visible_s()`. A charge
 ## already in flight when the tell began drains poise normally but does not
 ## auto-break, so blind mashing stops earning the reader's reward.
-func charge_read_the_tell(windup_s: float) -> bool:
+## A host-resolved charge passes its committed host start tick instead: the
+## comparison is then start >= tell visible - grace on the host's own clock,
+## free of the latency and travel between start and impact.
+func charge_read_the_tell(windup_s: float, started_at_ms: int = -1) -> bool:
 	if _wild == null or not _wild.has_method("tell_visible_s"):
 		return true
 	var seen := float(_wild.call("tell_visible_s"))
 	if seen < 0.0:
 		return false
-	return windup_s <= seen + float(_poise_config().get("forced_break_grace_s", 0.1)) + 0.0001
+	var grace := float(_poise_config().get("forced_break_grace_s", 0.1))
+	if started_at_ms >= 0 and _wild.has_method("tell_visible_since_ms"):
+		var since := int(_wild.call("tell_visible_since_ms"))
+		if since >= 0:
+			return started_at_ms >= since - roundi(grace * 1000.0)
+	return windup_s <= seen + grace + 0.0001
 
 
 ## The charged windup a host-resolved strike ran: the frozen move's own value
@@ -3288,7 +3296,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 	if not killed and _wild != null and _wild.has_method("apply_poise_damage") and not protected:
 		var force_interrupt := charged and enemy_is_winding_up() \
 			and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true)) \
-			and charge_read_the_tell(_host_charged_windup(impact_context, move_id))
+			and charge_read_the_tell(_host_charged_windup(impact_context, move_id), int(frozen.get("started_at_ms", -1)))
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	if hp_before > float(_enemy.hp) and not killed and is_instance_valid(_wild):
 		if slot == "utility" and _wild.has_method("apply_landed_utility"):
