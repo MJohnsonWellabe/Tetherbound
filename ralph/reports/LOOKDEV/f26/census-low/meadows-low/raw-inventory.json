@@ -1,0 +1,124 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 4626,
+      "sha256": "9588072ea2bd7649041514e38c0700748252b199a22e65fc90165059b4173ad1"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 6270527,
+      "sha256": "788d6a68ae98cfd35e4b6805155e63f6c30df06db315850df0f683dc86ea6e93"
+    },
+    {
+      "path": "raw-evidence-03.zip",
+      "size": 39750926,
+      "sha256": "42dfbb5974cd0a55e88b2dd51acde863149efea982492ef329399dbde66c5859"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 12524,
+      "sha256": "2c9a6a44c102f564d6ec990323c8bdbf5b126e93fdd8317dd7a0d940ba334753"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1025,
+      "sha256": "c1d66a76969ddf952002e8a6e5aa604bb98438fb8e04ba46d804df758fce0d93"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 109,
+      "sha256": "72862b8739460e387183ac6d3462571956444568a377ac358084d8360c7ae24e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 380,
+      "sha256": "1440698d462539b49c532d7506da72d263ac1f245708f24953b24121c298ce26"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-02.zip",
+      "size": 337649541,
+      "sha256": "22a4ccd0060c81f082b64e6d695787db39c64b397639b31076640bdb1480d63f"
+    },
+    {
+      "path": "frames/manifest.json.previous",
+      "archive": "raw-evidence-03.zip",
+      "size": 337649437,
+      "sha256": "19d90db46ae8bf94e3ae38c72c2769af907c1b107132b36e40d925fe97c0ed33"
+    },
+    {
+      "path": "frames/meadows__band1_lower_meadows__01__grandpas_village__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3609402,
+      "sha256": "53016643ef7b91d378da5fffb3861ab1bf36ed1906ef0f5d7f4bb4c44917f5a0"
+    },
+    {
+      "path": "frames/meadows__band1_lower_meadows__02__the_south_bridge__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3394524,
+      "sha256": "9fd23f5b1530e9fde742529ee34a015c4df4524669ee364039123b385bca733f"
+    },
+    {
+      "path": "frames/meadows__band2_stone_and_root__03__the_old_quarry__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3386923,
+      "sha256": "0fad0f2a9d501daaf6cb9d3aeff4793b72019f8a9a8e8fbbb5a4028d89e8425f"
+    },
+    {
+      "path": "frames/meadows__band2_stone_and_root__04__the_burrow_warrens__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3568099,
+      "sha256": "9d27e8af962659747f0926917c281c5b02887b5834171be87dd165109e042308"
+    },
+    {
+      "path": "frames/meadows__band3_the_river_lock__05__the_tether_relay__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2905051,
+      "sha256": "f4fcdc3c0bfce2b9714419d428ca47c319d6f4070595eee33cc45c6b16f873e4"
+    },
+    {
+      "path": "frames/meadows__band3_the_river_lock__06__old_mill_crossing__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3554516,
+      "sha256": "50ebeb3935cc786598a4e4901cb9b2af660d7de95981402d201a7c3fb9828127"
+    },
+    {
+      "path": "frames/meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3877761,
+      "sha256": "471d276692466863814fd055eddfe5a83f80ec416cb9c57e64c044007fd9fea8"
+    },
+    {
+      "path": "frames/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3320634,
+      "sha256": "4dd3c132bde1fcbed6cec5affb135d4c4a0cb5ed76c6472216c47a9716fa5dba"
+    },
+    {
+      "path": "frames/meadows__band5_stronghold_approach__09__stronghold_approach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 3519641,
+      "sha256": "021c64128c0ca8a59c75c8ba3412215bb418e79e2a66446ea674bf3fb2326d0d"
+    },
+    {
+      "path": "frames/meadows__band5_stronghold_approach__10__meadows_hall__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2332520,
+      "sha256": "1bfe131aaa83215777ae8fab2e34113c8d5df27d420703a6eaad10f4bbd7df45"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 131,
+      "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
+    }
+  ]
+}
