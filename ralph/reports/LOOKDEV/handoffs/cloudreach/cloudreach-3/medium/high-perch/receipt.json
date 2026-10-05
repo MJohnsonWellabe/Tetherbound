@@ -1,0 +1,93 @@
+{
+  "source_commit": "56ba1bd87fd15f9868ddd627c9e9c73371bbe7c9",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-f06b679a",
+    "--fixed-fps",
+    "60",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_high_perch_live.gd",
+    "--",
+    "--output=D:/tetherbound/.artifacts/rs-cloudreach-3/medium/high-perch/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 658.922,
+  "preset": "Medium",
+  "profile": "D:\\tetherbound\\.artifacts\\rs-cloudreach-3\\medium\\profile",
+  "scope": "Exact Claude pinned high-perch visual capture; fixed-fps60 requested, no timing or image-quality claim.",
+  "errors": [
+    "ERROR: unscoped chapter flag: fly_tutorial_completed"
+  ],
+  "capture_complete": true,
+  "capture_frames": 12,
+  "contact_sheets": 1,
+  "png_dimensions": {
+    "high-perches-arrival-far-day.png": [
+      1920,
+      1061
+    ],
+    "high-perches-arrival-far-night.png": [
+      1920,
+      1061
+    ],
+    "high-perches-arrival-landed-day.png": [
+      1920,
+      1061
+    ],
+    "high-perches-arrival-landed-night.png": [
+      1920,
+      1061
+    ],
+    "high-perches-arrival-lip-day.png": [
+      1920,
+      1061
+    ],
+    "high-perches-arrival-lip-night.png": [
+      1920,
+      1061
+    ],
+    "high-perches-crown-court-day.png": [
+      1920,
+      1061
+    ],
+    "high-perches-crown-court-night.png": [
+      1920,
+      1061
+    ],
+    "high-perches-crown-rim-out-day.png": [
+      1920,
+      1061
+    ],
+    "high-perches-crown-rim-out-night.png": [
+      1920,
+      1061
+    ],
+    "high-perches-departure-lookback-day.png": [
+      1920,
+      1061
+    ],
+    "high-perches-departure-lookback-night.png": [
+      1920,
+      1061
+    ],
+    "_sheet.png": [
+      1944,
+      1446
+    ]
+  },
+  "runtime_qualification": "FAIL due native unscoped chapter flag error",
+  "native_1080_qualification": false,
+  "boot_wall_seconds": null,
+  "boot_wall_limitation": "Exact boot duration not emitted by existing tool; no source instrumentation added. Last logged environment construction103.418s; elapsed_seconds includes existing preset chooser. First PNG delay is boot+first stance/render/write, not pure boot.",
+  "first_png_delay_from_native_log_creation_seconds": 578.354,
+  "boot_budget_seconds": 600,
+  "source_tool_sha256": "50d0d5694c770633c2ee9a29968993b9824d3bb4a1f7dd6574ce006472e7cd25"
+}

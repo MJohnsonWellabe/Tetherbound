@@ -1,0 +1,103 @@
+{
+  "zip_sha256": "9c82e63575bd69b8f42f4d6401cb213baadffd8a40ca6b98ec0dd8d5831e7742",
+  "zip_size": 26920441,
+  "files": [
+    {
+      "path": "native.log",
+      "size": 14242,
+      "sha256": "44d0c20c69f059dfcd5ef3ccb2e9f8692f5efa72fa9abf073852f7979eb99555"
+    },
+    {
+      "path": "receipt.json",
+      "size": 2628,
+      "sha256": "df4ff8a980b56382b798491d127ce40c6988cf503d26b2ebc99bc77e9928386e"
+    },
+    {
+      "path": "preset.log",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "size": 389,
+      "sha256": "6212a398593bccae19a8fb23dc30f0eb13922d01a8ca52901ec9d1fa5ca2ff6a"
+    },
+    {
+      "path": "frames/manifest.json",
+      "size": 9497,
+      "sha256": "904bf89df24df475563846cca358bb55a3aa60803d9294969e55cd4173aeb0f4"
+    },
+    {
+      "path": "frames/_sheet.png",
+      "size": 3322379,
+      "sha256": "79b13cb178c42b9d57d9aad9acebb7124b48fc9ac2afcc96cadf1a865f1419e1"
+    },
+    {
+      "path": "frames/high-perches-arrival-far-day.png",
+      "size": 1776239,
+      "sha256": "eeb615765e29518b24599714564c34728690ccd9b63c689766751735bc3ad3a5"
+    },
+    {
+      "path": "frames/high-perches-arrival-far-night.png",
+      "size": 1457425,
+      "sha256": "904538326fd2980d3c535f90318c97d5e193bce34b205a6a78cd1a21185758b6"
+    },
+    {
+      "path": "frames/high-perches-arrival-landed-day.png",
+      "size": 2225380,
+      "sha256": "821ca796501226175d1047e367c45c51793c36f22e1203df4e5b43f3575a5d34"
+    },
+    {
+      "path": "frames/high-perches-arrival-landed-night.png",
+      "size": 1785153,
+      "sha256": "5c31f861dd3f9094c0358bcf798b5b282b28ca2d6f2538f5619f22986eee0c18"
+    },
+    {
+      "path": "frames/high-perches-arrival-lip-day.png",
+      "size": 2511265,
+      "sha256": "549605155bd5b11f8c84499ad99511234681dea51acf4802ff1c4392672226c9"
+    },
+    {
+      "path": "frames/high-perches-arrival-lip-night.png",
+      "size": 1922287,
+      "sha256": "8be7772a705f26a46351dd0022d93090085774f86cdc53b4ea464f48a0c71a3a"
+    },
+    {
+      "path": "frames/high-perches-crown-court-day.png",
+      "size": 2660720,
+      "sha256": "f524493c0d90a7be47ffe23b49910e4edc3f5e3b39cb1833c0a04cd784e89e3a"
+    },
+    {
+      "path": "frames/high-perches-crown-court-night.png",
+      "size": 2091004,
+      "sha256": "ea8fbcbcf466bd998a8cb5502274234b1ce6df89171adaf9f60aba7078f9363d"
+    },
+    {
+      "path": "frames/high-perches-crown-rim-out-day.png",
+      "size": 2057634,
+      "sha256": "12a56c2e7f197f3a9787717a2036a3618b993e6fd75fbb9494c84ae1cbdd425e"
+    },
+    {
+      "path": "frames/high-perches-crown-rim-out-night.png",
+      "size": 1654864,
+      "sha256": "28be912f6f1bb6a6acae94f01b166a96e3f07135a5d01929b7f5e459b6cd4e27"
+    },
+    {
+      "path": "frames/high-perches-departure-lookback-day.png",
+      "size": 1680050,
+      "sha256": "ee7299f57b498ed44868d7df9bc1d9053471b9321fce3dc57fd97a10034b1bd0"
+    },
+    {
+      "path": "frames/high-perches-departure-lookback-night.png",
+      "size": 1765019,
+      "sha256": "18e9cb36b9ead97c7feaee956e89fd8f5ee7d6d430d1978a462525a440310f3e"
+    }
+  ],
+  "additional_files_outside_zip": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
