@@ -178,6 +178,11 @@ func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
 	return {}
 
 ## A guest payout moves its satchel; its owner-passive stream must carry that.
+## The owner-passive discovery identity this guest's host replays against.
+func owner_passive_discoveries() -> Variant:
+	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return null
+	return _owner_passive.call("_discoveries")
+
 func _owner_passive_delivery_ready() -> bool:
 	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return true
 	return _owner_passive.call("recording_active") == true

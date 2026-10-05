@@ -75,3 +75,48 @@ The identity idea is right, and most paths are now consistent. The new Cloudreac
 ## Required before approval
 - Fix finding 1 with a host-supplied arrival set, or at minimum the gated stopgap, and add a test for a non-first Cloudreach arrival whose map holds a navigation-revealed landmark.
 - Findings 2-4 can be follow-ups if they are recorded in STATE.
+
+## Re-review bfef391d
+
+**Verdict: APPROVE-WITH-NITS**
+
+This commit fixes finding 1 by having the owner adopt the host's proven arrival set instead of its own map. Its finding 3b fix (filtering known landmarks out of discovery inputs) replaces an immediate host refusal with a rarer, later conflict; see R3. I reviewed by reading the code; Godot was not run.
+
+**(a) Do the `journaled` and `_rebase_host` conditions agree?** Yes, for every live path.
+- **Host send (owner_passive_sync.gd `_completion`).** The proof goes in the packet when the checkpoint has `source_kind == "portal_arrival"`, `grounded`, a `Dictionary` `arrival_discoveries` and `result.durable`.
+- **Host rebase (`_rebase_host`, ~1302-1310).** It additionally checks:
+  - that the packet has no `checkpoint_id` (a settlement rebase never has one);
+  - `result.receipt == row.receipt`;
+  - `row.action == "portal_arrival"`;
+  - that the row intent matches the checkpoint permit exactly.
+- **Owner adopt (`owner_settled`).** It requires `row.action == "portal_arrival"` and `proof.receipt == row.receipt`, where `proof.receipt` is the `result.receipt` the host sent.
+- **Why the owner's missing intent check is harmless.** The row is the host's own journal entry for this checkpoint's request, so binding on the receipt is equivalent.
+- **The checkpoint cannot change before the rebase.** `stream.checkpoint` is only created when it is empty (`_checkpoint` and `action_gate` at 604/645) and only replaced by `_add_host`. `grounded` is never cleared. So the checkpoint seen at `_completion` is the one `_rebase_host` reads.
+- **Every send goes through `_completion`.** Sends and resends all use it, both from `_saved_host` with a result and from `portal_grounded` → `_commit_saved`. A resend just overwrites the same proof.
+- **No cursor drift between grounding and settlement.** `arrival_discoveries` is computed from the cursor at grounding, which is frozen at `final_sequence`. The owner records no input while `pending` is set, so both sides seed from the same base.
+
+**(b) Can `owner_settled` run before `journaled` arrives?** Not in a live session.
+- The host sends `journaled` synchronously inside the commit (`_commit_saved` → `_completion`).
+- The owner settles on one of two triggers: `_rpc_training_decision`, or `_process_creature_training` seeing the accepted row from `publish_journaled_delta`.
+- Both are sent only after `_accept_creature_training` handles the owner's own ACK of the pending row, which is a full round trip later.
+- `journaled` (`_rpc_owner_passive_reply`), the decision RPC and the accepted delta all go out on `CHANNEL_LEDGER`, reliable. Reliable traffic on one channel arrives in order, so `journaled` always arrives first.
+- **Residual LOW.** On a disconnect between `journaled` and settlement, the rejoined owner re-arms at hello: `local`, and the proof with it, are lost, while the host's departed stream still holds `arrival_discoveries`. That falls in the portal-recovery path already recorded as finding 2, not a new gap.
+- **Suggested hardening.** If ordering ever stops being guaranteed (for example a future transport that maps channels differently), the host's `_rebase_host` could also accept a hash equal to `previous.cursor.discovered` in the arrival branch. The owner, finding no proof, would then rebase on its identity and both sides would converge on the unproven set.
+
+**(c) Tests.**
+- **`test_cloud_reentry_without_a_host_proof_keeps_the_identity_whatever_the_map_reveals`.**
+  - On 90bebc8d it fails: the map merge sets `cloudreach` to `[realm_gate_crag, three_bells_bridge]`, so the rebase hash differs from the identity.
+  - It passes now, because no proof means the identity is unchanged.
+  - This is a correct regression test for finding 1.
+- **Updated `test_cloud_portal_navigation_bind_…`.** It now asserts that the host's `journaled` packet carries `arrival_discoveries == discoveries` and delivers that packet to the owner. That covers the host-send half.
+  - **NIT:** the test still sets `session.maps.value = discoveries` before `owner_settled`. That is the same set as the proof, so it would also pass if the owner read its map.
+  - **Fix:** give the map an extra landmark (for example add `three_bells_bridge`) so that only adopting the proof yields the hash the host accepts.
+
+**New nits.**
+- **R1 (NIT): `local.arrival_proof` is stored without a scope check.** The owner stores it on any `journaled` packet whose `result.receipt` is a String, without checking `pending.id == packet.id`. It is only used for the exact receipt and is cleared at the next `arm_owner`, so this is harmless. Gating it on `pending.id` would be tidier.
+- **R2 (NIT): the adopted proof is not shape-checked.** A malformed `discovered` makes `REPLAY.begin` return `{}`, and `owner_settled` then returns silently. The source is the trusted host, so this is acceptable.
+- **R3 (LOW): the finding 3b filter can still cause a later conflict.** Game (game_state.gd:1177-1180) credits `landmarks_visited_together` locally when the map gains a landmark. That happens before `record_input` filters the landmark out because the identity already has it. The host then replays an empty `claimed` and gives no credit, so the next checkpoint ends `owner_passive_exact_projection_conflict` rather than the old immediate `invalid_landmark`.
+  - **Precondition:** the identity holds a landmark the owner's map lacks. That happens after a readmit adopts a held set the map does not have, or after an arrival proof from host flags the owner had not yet seen. Both are rare.
+  - **Fix:** have Game skip the landmark-visit credit when every gained landmark is already in the owner-passive identity, for example via a session accessor.
+
+Findings 2 and 4 remain open as recorded follow-ups.

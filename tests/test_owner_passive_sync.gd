@@ -759,7 +759,10 @@ func test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_befo
 		"after": session._character_authority.state(before.character_id)}
 	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
 	game.local.data = row.after.duplicate(true)
+	# Review nit: the owner's map runs ahead of the proof (an extra region
+	# reveal), so only adopting the host's proof can produce the matching hash.
 	session.maps.value = discoveries.duplicate(true)
+	session.maps.value.cloudreach.append("three_bells_bridge")
 	var journaled: Array = session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "journaled")
 	assert_false(journaled.is_empty(), "the host journals the grounded arrival to its owner")
 	if not journaled.is_empty():
