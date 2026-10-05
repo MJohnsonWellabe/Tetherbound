@@ -376,3 +376,54 @@ func test_a_guest_reconcile_freezes_its_owner_passive_stream_before_staging() ->
 
 func _same(a: Variant, b: Variant) -> bool:
 	return preload("res://scripts/creatures/essence.gd")._equivalent(a, b)
+
+
+class StageAuthority extends Authority:
+	var staged: Array = []
+	var verdict := {"ok": false, "code": "transaction_busy"}
+	func revision(_character: String) -> int: return 4
+	func stage_character_action(character: String, revision: int, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
+		staged.append({"character": character, "revision": revision, "action": action, "intent": intent.duplicate(true), "context": context.duplicate(true)})
+		return verdict.duplicate(true)
+
+
+func _frozen_context(request: Dictionary) -> Dictionary:
+	var source := preload("res://scripts/net/home_key_action.gd").due(_game.world.reward_deliveries[request.delivery_id], CHARACTER)
+	return {"character_id": CHARACTER, "expected_revision": 4, "in_range": true, "in_combat": false,
+		"foundation_runtime_authorized": true, "home_key_authorized": true, "home_key_record": source,
+		"source_key": "opening_home_key:" + request.delivery_id}
+
+
+func test_the_checkpointed_commit_stages_the_frozen_source_and_classifies_refusals() -> void:
+	var authority := StageAuthority.new()
+	_session._character_authority = authority
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	assert_true(OPENING.host_legacy_grant(_session, 7).get("durable") == true)
+	var request := _settlement()
+	request.origin_namespace = NAMESPACE
+	var context := _frozen_context(request)
+	var busy: Dictionary = OPENING.commit_reconcile(_session, 7, request, context)
+	assert_eq(authority.staged.size(), 1)
+	assert_eq(authority.staged[0].action, "home_key_owe", "no admitted escrow yet: a first debt")
+	assert_eq(authority.staged[0].revision, 4, "the frozen quoted revision")
+	assert_true(_same(authority.staged[0].context, context), "exactly the checkpointed context stages")
+	assert_eq(authority.staged[0].intent, {"delivery_id": request.delivery_id, "origin_namespace": NAMESPACE})
+	assert_eq(busy.get("code"), "transaction_busy")
+	assert_true(busy.get("terminal_refusal") != true, "a transient refusal keeps the checkpoint for its retry")
+	authority.verdict = {"ok": false, "code": "finite_home_key_source_required"}
+	var refused: Dictionary = OPENING.commit_reconcile(_session, 7, request, context)
+	assert_true(refused.get("terminal_refusal") == true and refused.get("resolved") == true and refused.get("durable") == false,
+		"a semantic refusal is terminal: the owner rebases and its next request retries")
+	var changed := context.duplicate(true)
+	changed.home_key_record.status = "settled"
+	var stale: Dictionary = OPENING.commit_reconcile(_session, 7, request, changed)
+	assert_eq(stale.get("code"), "home_key_source_changed")
+	assert_true(stale.get("terminal_refusal") == true)
+	authority.locked = true
+	var locked: Dictionary = OPENING.commit_reconcile(_session, 7, request, context)
+	assert_eq(locked.get("code"), "owner_action_pending")
+	assert_true(locked.get("resolved") != true, "a busy record is retried, never terminal")
+	assert_eq(authority.staged.size(), 2, "a changed source or a locked record stages nothing")
+	var stranger: Dictionary = OPENING.commit_reconcile(_session, 9, request, context)
+	assert_eq(stranger.get("code"), "not_admitted")
+	assert_eq(authority.staged.size(), 2)
