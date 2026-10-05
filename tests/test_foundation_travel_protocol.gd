@@ -222,3 +222,34 @@ func test_sample_freshness_is_judged_at_the_request_arrival() -> void:
 	assert_true(LIFECYCLE.sample_fresh(observation, now - 1590), "fresh at the request's arrival a moment after it")
 	assert_false(LIFECYCLE.sample_fresh(observation, now - 1591 + 1100), "a request arriving over a second later still sees it stale")
 	assert_false(LIFECYCLE.sample_fresh({"sample": {}, "seen_at": now}, now - 5), "a sample after the request does not vouch for it")
+
+
+## F18 #4 (render 37338210735: gate ending_fields party_decode): the host
+## rebuilds a guest's party from its portable record, which deliberately
+## drops each card's in-fight energy (character_record_rules, 187a3f24). The
+## capture codec's card schema still carries energy, so every card failed to
+## decode and every guest homecoming was refused.
+func test_ending_fields_decode_the_portable_party_without_its_energy() -> void:
+	var LIFECYCLE := preload("res://scripts/net/foundation_travel_lifecycle.gd")
+	var HOME := preload("res://scripts/story/regional_homecoming.gd")
+	var game := preload("res://autoload/game_state.gd").new()
+	game.reset_for_new_game()
+	game.local.character_id = "character-portable"
+	for index in 5:
+		var species: String = ["terrapup", "brooktail", "mosshell", "bramblebun", "trailpup"][index]
+		assert_true(game.party.call("add", game.local.call("make_creature", species, "P%d" % index)))
+	var personal: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.save_data())
+	assert_false((personal.party[0] as Dictionary).has("energy"), "the portable record carries no energy")
+	var outcome := "stormwood:legendary_answer:f20_fixture:refused"
+	var world := "world-portable"
+	personal.redesign_character.transaction_receipts.append("starter_choice:character-portable:" + str(personal.party[0].uid))
+	personal.redesign_character.transaction_receipts.append(HOME.return_prefix(world, outcome) + "travel:x:character-portable")
+	var flags := {"stormwood:legendary_ceremony_settled": true, outcome: true}
+	var sample := {"character_id": "character-portable", "world_instance_id": world, "session_epoch": "epoch",
+		"party_revision": 5, "party_signature": HOME.party_signature(game.party), "party_identity": HOME.party_identity_signature(game.party)}
+	var fields: Dictionary = LIFECYCLE.ending_fields(personal, flags, sample)
+	assert_false(fields.is_empty(), "the guest's own five decode: " + LIFECYCLE.ending_fields_refusal)
+	assert_eq(fields.get("party_signature"), sample.party_signature)
+	sample.party_identity = "0".repeat(64)
+	assert_true(LIFECYCLE.ending_fields(personal, flags, sample).is_empty(), "another party is still refused")
+	game.free()
