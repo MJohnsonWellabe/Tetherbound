@@ -56,6 +56,16 @@ func _use_home_key() -> bool:
 	await tap("inventory")
 	var menu: Node = game.call("menu")
 	if menu == null or not menu.call("is_open") or menu.call("current_tab_id") != "backpack":
+		var modals: Array[String] = []
+		for node: Node in tree.get_nodes_in_group(&"story_modal"):
+			if node.has_method("is_open") and bool(node.call("is_open")): modals.append(str(node.get_path()))
+		var owner: Node = INPUT_OWNER.current(tree)
+		var beat := ""
+		for node: Node in tree.current_scene.find_children("*", "Node", true, false):
+			if node.get_script() != null and node.get_script().resource_path == "res://scripts/story/sequence_director.gd": beat = str(node.get("_beat"))
+		print("F49 SATCHEL menu=%s open=%s tab=%s refusal=%s modals=%s owner=%s beat=%s" % [str(menu != null),
+			str(menu.call("is_open")) if menu != null else "-", str(menu.call("current_tab_id")) if menu != null else "-",
+			str(menu.call("_refusal_reason")) if menu != null else "-", str(modals), str(owner.get_path()) if owner != null else "none", beat])
 		return _fail("F49 inventory input did not open the actual Satchel")
 	var backpack: Node = (menu.get("_bodies") as Array)[0]
 	var care := CARE.new()
