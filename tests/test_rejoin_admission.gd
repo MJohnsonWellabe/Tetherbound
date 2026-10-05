@@ -243,3 +243,52 @@ func test_an_accepted_row_held_grant_due_is_handed_to_the_owner_to_settle() -> v
 	assert_eq(result.get("code"), "held_wins")
 	assert_eq((authority.call("unconfirmed_folds", character) as Array).map(func(r: Dictionary) -> String: return r.delivery_id), [row.delivery_id],
 		"the accepted row is handed to the owner too")
+
+
+func _veridian_declared(record: Dictionary) -> Dictionary:
+	# The legendary built exactly as stronghold_climax builds it, joined to the
+	# owner's own belt on its side.
+	if _items == null: _items = ITEM_DB.new()
+	var player := preload("res://autoload/player_state.gd").new()
+	player.configure(_items)
+	player.load_data(record.duplicate(true))
+	var spec: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/stronghold_climax.json").get("legendary", {})
+	var creature: RefCounted = preload("res://scripts/world/stronghold_climax.gd").TRAINER_NPCS.creature_for({"species": str(spec.get("species", "veridian")), "level": int(spec.get("level", 1))})
+	player.party.add(creature)
+	return RECORD.portable_projection(player.save_data())
+
+
+func test_an_accepted_legendary_the_world_proves_joins_the_held_record() -> void:
+	# #544 regression (smoke_net_veridian_choices): the guest accepted its
+	# freed Veridian (party add on its side; the world holds its receipt), left
+	# and rejoined. The held record never carried it; adoption must not drop it.
+	var record := _record()
+	var authority := _authority(record, {})
+	var character: String = record.character_id
+	var declared := _veridian_declared(record)
+	assert_eq((declared.party as Array).size(), 2, "fixture: the Veridian is in the owner's belt")
+	var receipt := "legendary_resolution:accepted:" + character
+	var without: Dictionary = authority.call("rejoin_admission", character, declared, {}, [])
+	assert_eq(without.get("code"), "held_wins", "without the world's receipt nothing is vouched: %s" % str(without))
+	assert_eq((authority.call("state", character) as Dictionary).party.size(), 1)
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, {}, [receipt])
+	assert_eq(result.get("code"), "vouched_legendary", "the receipt proves it: %s" % str(result))
+	var held: Dictionary = authority.call("state", character)
+	assert_eq(held.party.size(), 2, "the held record now carries it")
+	assert_eq(str(held.party[1].species_id), "veridian")
+	assert_eq(int(authority.call("revision", character)), 1, "at a higher revision")
+	assert_eq((authority.call("rejoin_admission", character, declared, {}, [receipt]) as Dictionary).get("code"), "held",
+		"and never a second one")
+
+
+func test_a_vouched_legendary_never_carries_other_offline_changes() -> void:
+	var record := _record()
+	var authority := _authority(record, {})
+	var character: String = record.character_id
+	var declared := _veridian_declared(record)
+	declared.party[0].level = int(declared.party[0].level) + 3 # offline levels on another creature
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, {}, ["legendary_resolution:accepted:" + character])
+	assert_eq(result.get("code"), "held_wins", "the other change is still the held record's: %s" % str(result))
+	var held: Dictionary = authority.call("state", character)
+	assert_eq(held.party.size(), 2, "the legendary is kept")
+	assert_eq(int(held.party[0].level), int(record.party[0].level), "the offline levels are not")

@@ -347,11 +347,16 @@ func restore_record(character: String, snapshot: Dictionary) -> void:
 		else: map.erase(character)
 
 
-func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary) -> Dictionary:
+func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, world_flags: Array = []) -> Dictionary:
 	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
-	var held: Dictionary = state(character)
 	var core := preload("res://scripts/net/owner_passive_replay.gd")
-	if ESSENCE._equivalent(core._core(held), core._core(declared)): return {"ok": true, "code": "held"}
+	if ESSENCE._equivalent(core._core(state(character)), core._core(declared)): return {"ok": true, "code": "held"}
+	# (0) A freed legendary this character accepted joins its belt on its own
+	# side (stronghold_climax: no host arbitration), so the held record never
+	# carried it. The world's own receipt proves the acceptance: install that
+	# creature before anything compares (#544 regression, veridian_choices).
+	var vouched := _vouch_accepted_legendaries(character, declared, world_flags)
+	var held: Dictionary = state(character)
 	# (1) Host-proven payouts the held satchel has not absorbed: accepted ones,
 	# and pending ones (host-authored; the owner may have applied one and lost
 	# its ACK to the disconnect). Each row lands whole or not at all (review M1).
@@ -384,10 +389,84 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 		unconfirmed.merge(folded, true)
 		_records[character].unconfirmed_folds = unconfirmed
 	if ESSENCE._equivalent(core._core(candidate), core._core(declared)):
-		return {"ok": true, "code": "replayed_deliveries", "applied": applied}
+		return {"ok": true, "code": "replayed_deliveries" if not applied.is_empty() or vouched.is_empty() else "vouched_legendary",
+			"applied": applied, "vouched": vouched}
 	# (2) Anything else (an offline change): the held record wins.
 	var paths: Array = preload("res://scripts/net/owner_passive_sync.gd")._differing_paths("", core._core(candidate), core._core(declared), 0, []).slice(0, 8)
-	return {"ok": true, "code": "held_wins", "applied": applied, "detail": ", ".join(paths)}
+	return {"ok": true, "code": "held_wins", "applied": applied, "vouched": vouched, "detail": ", ".join(paths)}
+
+
+## Legendary species a freeing can volunteer, by the world receipt prefix that
+## records its acceptance (world_ledger OWNED_FLAG_PREFIXES).
+static func _legendary_species() -> Dictionary:
+	var data := preload("res://scripts/data/redesign_data.gd")
+	return {
+		"legendary_resolution:accepted:": str((data.json("res://data/config/stronghold_climax.json") as Dictionary).get("legendary", {}).get("species", "veridian")),
+		"cloudreach:legendary_resolution:accepted:": str((data.json("res://data/config/cloudreach_solmane_climax.json") as Dictionary).get("legendary", {}).get("species", "solmane")),
+		"stormwood:legendary_resolution:accepted:": preload("res://scripts/world/stormwood_ending.gd").LEGENDARY_SPECIES,
+	}
+
+
+## Installs, into the held record, each declared creature that is a freed
+## legendary this character's own accepted world receipt proves it took and
+## the held record lacks (one per receipt and species). A full belt's release
+## ceremony let one creature go for it: only as many held creatures as the
+## five-creature belt forces out may leave, with the declared release
+## receipts. Every other creature stays exactly as held (an offline change to
+## it is not vouched). The result must pass the first-join rules. Returns the
+## installed creature uids.
+func _vouch_accepted_legendaries(character: String, declared: Dictionary, world_flags: Array) -> Array:
+	var held: Dictionary = state(character)
+	var held_uids := {}
+	var held_species := {}
+	for card: Dictionary in held.get("party", []):
+		held_uids[str(card.get("uid", ""))] = true
+		held_species[str(card.get("species_id", ""))] = true
+	var proven := {}
+	for prefix: String in _legendary_species():
+		if world_flags.has(prefix + character): proven[_legendary_species()[prefix]] = true
+	var vouched: Array = []
+	var added: Array = []
+	for card: Variant in declared.get("party", []):
+		if not card is Dictionary or held_uids.has(str(card.get("uid", ""))): continue
+		var species := str(card.get("species_id", ""))
+		if proven.has(species) and not held_species.has(species):
+			proven.erase(species)
+			vouched.append(str(card.uid))
+			added.append((card as Dictionary).duplicate(true))
+	if vouched.is_empty(): return []
+	var declared_uids := {}
+	for card: Variant in declared.get("party", []):
+		if card is Dictionary: declared_uids[str(card.get("uid", ""))] = true
+	var overflow := (held.party as Array).size() + added.size() - 5
+	var party: Array = []
+	var released: Array = []
+	for card: Dictionary in held.party:
+		if overflow > 0 and not declared_uids.has(str(card.get("uid", ""))):
+			overflow -= 1
+			released.append(str(card.uid))
+			continue
+		party.append(card.duplicate(true))
+	if overflow > 0: return [] # the belt cannot hold it: not what the ceremony allows
+	party.append_array(added)
+	var candidate := held.duplicate(true)
+	candidate.party = party
+	var creatures: Dictionary = candidate.redesign_character.get("creatures", {})
+	for uid: String in vouched:
+		var entry: Variant = declared.get("redesign_character", {}).get("creatures", {}).get(uid)
+		if entry != null: creatures[uid] = (entry as Dictionary).duplicate(true) if entry is Dictionary else entry
+	for uid: String in released: creatures.erase(uid)
+	candidate.redesign_character.creatures = creatures
+	if not released.is_empty():
+		var receipts: Array = declared.get("redesign_character", {}).get("release_receipts", [])
+		for receipt: Variant in held.redesign_character.get("release_receipts", []):
+			if not receipts.has(receipt): return []
+		candidate.redesign_character.release_receipts = receipts.duplicate(true)
+	if not errors(candidate, character).is_empty():
+		print("[authority] legendary for %s not vouched: %s" % [character.left(18), str(errors(candidate, character))])
+		return []
+	_replace_record(character, revision(character) + 1, candidate)
+	return vouched
 
 
 ## Payout rows a rejoin folded into the held record that the owner has not

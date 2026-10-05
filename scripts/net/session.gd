@@ -2908,7 +2908,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		# (character_authority.rejoin_admission). The owner adopts it through
 		# the owner-passive readmit.
 		var rejoin: Dictionary = _character_authority.call("rejoin_admission", character_id, portable,
-			_game().get("world").reward_deliveries)
+			_game().get("world").reward_deliveries, _game().get("world").flags.call("all_set"))
 		last_rejoin_admission[character_id] = str(rejoin.get("code", ""))
 		rejoin_applied = rejoin.get("applied", [])
 		if rejoin.get("code") != "held":
