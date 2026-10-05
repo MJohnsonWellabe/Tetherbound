@@ -36,5 +36,7 @@
     "skip_name_contains": ["square_oak", "Bush_", "Grass_", "Plant_", "CommonTree", "Fern", "Flower", "Leaves"]
   },
   "_comment_renewable_stock_poll": "PERF lane (F26#5, 2026-10-05). harvest_node.gd re-reads a renewable source's stock from its source service on this interval instead of every frame. Gathers still update at once through the ledger delta listener; the poll only catches day rollover and host snapshots. Measured: the per-frame poll across Tidewake's renewable nodes cost ~26 ms of main-thread time at the F26 start stand.",
-  "renewable_stock_poll_s": 1.0
+  "renewable_stock_poll_s": 1.0,
+  "_comment_static_batch_settlements": "Isolated construction-time candidate for Village-authored settlements in Meadows and Stormwood; not accepted main or proven FPS recovery. Eligible static kit base geometry is appended by equivalent material, but grouped LODs are rebuilt and larger batch bounds change culling decisions even though range numbers are retained. Doors, scripted subtrees, collisions and gameplay remain separate. Native visual, distance/shadow and performance proofs remain required. False disables batching for newly constructed buildings only; it does not restore originals already hidden by a merge. Process-scoped PERF_CONFIG cache, no durable world/character state.",
+  "static_batch_settlements": true
 }
