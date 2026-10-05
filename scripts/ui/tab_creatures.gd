@@ -29,6 +29,7 @@ const PARTY := preload("res://autoload/party.gd")
 const CREATURE_VIEWPORT := preload("res://scripts/ui/creature_viewport.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 const TRAIT_DB := preload("res://scripts/creatures/trait_db.gd")
+const TRAIT_RULES := preload("res://scripts/creatures/traits.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINING_READOUT := preload("res://scripts/ui/creature_training_readout.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
@@ -1399,21 +1400,17 @@ func _describe(index: int, cfg: Dictionary) -> void:
 	_appraisal_stars = int(creature.call("overall_appraisal_stars", cfg))
 	_appraisal_pips.queue_redraw()
 
-	var primary := str(creature.get("trait_primary"))
-	var secondary: String = str(creature.call("revealed_trait_secondary", cfg))
-	if primary == "":
-		_detail_traits.text = ""
-		_detail_trait_desc.text = ""
-	elif secondary == "":
-		_detail_traits.text = "Trait: %s" % str(_traits.call("display_name", primary))
-		_detail_trait_desc.text = str(_traits.call("description", primary))
-	else:
-		_detail_traits.text = "Traits: %s, %s" % [
-			str(_traits.call("display_name", primary)), str(_traits.call("display_name", secondary))
-		]
-		_detail_trait_desc.text = "%s  //  %s" % [
-			str(_traits.call("description", primary)), str(_traits.call("description", secondary))
-		]
+	# F30#1: the creature's ACTIVE traits (rolled, taught and a bond-revealed
+	# secondary) from the one F30 pool, never the legacy 8-trait table, so this
+	# line and the training readout below cannot name different traits.
+	var trait_rows := TRAIT_RULES.rows(creature)
+	var trait_names: Array[String] = []
+	var trait_descriptions: Array[String] = []
+	for row: Dictionary in trait_rows:
+		trait_names.append("%s (%s)" % [str(row.get("display_name", row.id)), str(row.get("rarity", "")).capitalize()])
+		trait_descriptions.append(str(row.get("description", "")))
+	_detail_traits.text = ("Trait: " if trait_rows.size() == 1 else "Traits: ") + ", ".join(trait_names) if not trait_rows.is_empty() else ""
+	_detail_trait_desc.text = "  //  ".join(trait_descriptions) if not trait_rows.is_empty() else ""
 	# An untraited creature collapses both lines instead of leaving two empty
 	# FONT_READ rows between HP and EXP.
 	_detail_traits.visible = not _detail_traits.text.is_empty()

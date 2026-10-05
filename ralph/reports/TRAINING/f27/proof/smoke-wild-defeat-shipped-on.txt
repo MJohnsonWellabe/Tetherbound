@@ -6,9 +6,9 @@ WARNING: instance_reset_physics_interpolation() is deprecated.
          [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
          [1] _ready (res://scripts/world/playground_world.gd:806)
 [playground] spawned at 0.0, 2.9, 0.0
-[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1210 reorder[16 layers]=3177
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=3914 reorder[16 layers]=3416
 [vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
-[vegetation] boot phases (ms): placements=4654 mark_harvestable=165 group_by_model=605 register_mesh_assets=38 build_batches_total=6893 (of which harvest_points[56283 nodes]=4157, initial_collision_stream[51210 solid]=226) update_mmis=1154
+[vegetation] boot phases (ms): placements=7619 mark_harvestable=201 group_by_model=624 register_mesh_assets=40 build_batches_total=8230 (of which harvest_points[56283 nodes]=5698, initial_collision_stream[51210 solid]=260) update_mmis=1050
 [grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
 [grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
 [grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
@@ -119,13 +119,13 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
 [stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
 [stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
 [stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66330
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66331
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66332
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66331
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66332
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66333
 [stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
-[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66333
-[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66334
-[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66335
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66334
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66335
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66336
 [stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
 [stronghold] 87 interior dressing prop(s) in the roofed rooms
 [trainers] placed 3 trainer(s) for group 'stronghold'
@@ -137,21 +137,14 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
 [climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
 [meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
 wild creature at 41, -1, -48
-outside a fight, combat_quick says: 'Can't attack outside a fight.'
-outside a fight, combat_throw stays quiet
-with a build armed, the same press stays quiet
+before: essence { "essence_ground": 0, "essence_water": 0, "essence_air": 0, "essence_electric": 0, "essence_fire": 0, "essence_dark": 0, "essence_ice": 0, "essence_psychic": 0 }, receipts 0, ally L3 xp 0
 approached to 3.3m (engage range 6.0m)
-camera 14.3m from the creature, line of sight clear
-creature moved 4.3m on the stick
-pushed to 11.0m from the arena centre (radius 11.0m)
-a swing from out of range missed, as it should
-quick attack: enemy 106.2 -> 93.4 hp
-enemy dealt damage: ally 63.8 -> 54.2 hp
-type chart reached the fight: 8 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
-enemy fainted after 233 action frames; outcome 'won'
-tally: 5 hits on the enemy, 7 on the ally, 2 misses
-5 blows landed for 109.3 damage (the chart says 112.5; a chart-less fight would say 90.0)
-post-fight HP held at 54.2, no auto-heal
+enemy fainted after 254 action frames; outcome 'won'
+tally: 5 hits on the enemy, 0 on the ally, 0 misses
+victory runtime: none retained
+after: foe bramblebun L2 types ["ground"], essence gained { "essence_ground": 1 }
+ally L3 xp 0 -> L3 xp 21
+F27_WILD_DEFEAT_ESSENCE: PASS real wild fight paid { "essence_ground": 1 } and reduced XP via the host transaction
 
 combat: OK — a fight can be entered, piloted, won and left.
 exit 0
