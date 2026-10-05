@@ -178,9 +178,7 @@ func adopt_landmarks(discovered: Dictionary) -> bool:
 	for realm: String in REALMS:
 		var map: RefCounted = player.call("map_for", realm)
 		if map == null: continue
-		var data: Dictionary = map.call("save_data")
-		data["landmarks"] = (discovered.get(realm, []) as Array).duplicate()
-		map.call("load_data", data)
+		map.call("set_discovered_landmarks", (discovered.get(realm, []) as Array).duplicate())
 	return true
 
 func admission_valid(raw: Variant, complete: bool = false) -> bool:

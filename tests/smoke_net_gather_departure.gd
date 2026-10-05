@@ -75,10 +75,6 @@ func _run() -> void:
 	var owner_probe := await _dep_data(1, "owner_passive_probe", {"character_id": guest_id})
 	var host_probe := await _dep_data(0, "owner_passive_probe", {"character_id": guest_id})
 	_print_projection_diff(owner_probe.get("owner", {}).get("projection", {}), host_probe.get("host", {}).get("cursor_state", {}))
-	print("G1 TRAIL owner %s" % JSON.stringify({"id": owner_probe.get("owner", {}).get("stream_id"), "base": owner_probe.get("owner", {}).get("base_hash"),
-		"prefix": owner_probe.get("owner", {}).get("prefix_hash"), "trail": owner_probe.get("owner", {}).get("trail", [])}))
-	print("G1 TRAIL host %s" % JSON.stringify({"id": host_probe.get("host", {}).get("stream_id"), "base": host_probe.get("host", {}).get("base_hash"),
-		"frozen": host_probe.get("host", {}).get("frozen_prefix"), "trail": host_probe.get("host", {}).get("trail", [])}))
 	if not crafted.is_empty():
 		check(int(crafted.after.potion_small) == int(crafted.before.potion_small) + 1,
 			"the rejoined guest's owner-passive stream is alive: it crafts at the host's Kitchen")
