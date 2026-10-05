@@ -170,11 +170,14 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 			ray.exclude=_camp_exclusions(placer_body)
 			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
 			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
+	# Ground inside the allowed rise is not an obstruction: the box starts above
+	# it, so a camp fits rolling ground (Tidewake's domed islands), not only peaks.
+	var lift := float(cfg.maximum_slope_rise_m)+0.05
 	var shape := BoxShape3D.new()
 	shape.size=Vector3(size[0]+2*float(cfg.clearance_m),size[1],size[2]+2*float(cfg.clearance_m))
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape=shape
-	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+0.05,0))
+	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+lift,0))
 	query.collision_mask=3
 	query.collide_with_areas=true
 	query.exclude=_camp_exclusions(placer_body)

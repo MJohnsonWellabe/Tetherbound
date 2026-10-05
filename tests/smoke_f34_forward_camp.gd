@@ -14,7 +14,8 @@ extends SceneTree
 ## craft is test_forward_camp / station-craft territory); the spot is found by
 ## a ring search with the placer's own preview_placement (snap + ground), the player
 ## stands 3 m from it and the ghost is aimed at it (what the camera would do);
-## party HP is lowered directly before the rest.
+## party HP is lowered directly before the rest; wild bodies near the start
+## are parked away with their AI paused (a chasing wild blocks a camp).
 
 const DEFAULT_SCENE := "res://scenes/world/meadows_playground.tscn"
 const KIT := "forward_camp_kit"
@@ -63,12 +64,25 @@ func _find_spot(game: Node, placer: Node, player: Node3D, realm: String, away_fr
 			# The placer's own preview (grid snap + the camp ground check).
 			var preview: Dictionary = placer.call("preview_placement", game, "forward_camp", at)
 			if preview.get("ok") == true and preview.get("position") is Vector3 \
-					and (away_from == Vector3.INF or (preview.position as Vector3).distance_to(away_from) > 20.0):
+					and (away_from == Vector3.INF or (preview.position as Vector3).distance_to(away_from) > 12.0):
 				return preview.position
 	return Vector3.INF
 
 
 var _last_message := ""
+
+
+## Disclosed fixture: wild bodies near the spot are parked far away with their
+## AI paused before each press (spawners may add one late). A creature chasing
+## the trainer rightly blocks a camp's clearance; this smoke measures the
+## placement path, not that chase.
+func _park_wilds(at: Vector3) -> void:
+	for node: Node in current_scene.find_children("*_wild_*", "CharacterBody3D", true, false):
+		var body := node as CharacterBody3D
+		if body.global_position.distance_to(at) < 120.0:
+			body.process_mode = Node.PROCESS_MODE_DISABLED
+			body.global_position += Vector3(0.0, -500.0, 0.0)
+			print("parked wild ", body.name)
 
 
 func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_message := false, presses := 1) -> void:
@@ -78,6 +92,7 @@ func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_messa
 	for _frame in 20:
 		await physics_frame
 		player.global_position = at + Vector3(0.0, 0.5, 3.0)
+	_park_wilds(at)
 	placer.set("_yaw_deg", 0.0)
 	(placer.get("_ghost") as Node3D).global_position = at
 	for press in presses:
@@ -95,12 +110,14 @@ func _run() -> void:
 	await process_frame
 	var game := root.get_node("Game")
 	if not _realm.is_empty(): game.set("current_realm", _realm)
+	var load_started := Time.get_ticks_msec()
 	var world := (load(_scene) as PackedScene).instantiate() as Node3D
 	root.add_child(world)
 	current_scene = world
 	for _frame in 900:
 		await physics_frame
 		if not world.has_method("shell_build_complete") or bool(world.call("shell_build_complete")): break
+	print("F34 world load %s: %d ms to shell built" % [_scene.get_file(), Time.get_ticks_msec() - load_started])
 	for _frame in 120:
 		await physics_frame
 	var player := world.get_node_or_null("Player") as CharacterBody3D
@@ -117,14 +134,51 @@ func _run() -> void:
 	if (local.get("party").call("members") as Array).is_empty():
 		local.get("party").call("add", preload("res://scripts/creatures/creature_species.gd").spawn("terrapup"))
 	var kits_before := int(inventory.call("count", KIT))
+	# Sea and shallows refuse a camp (water_depth_at > 0 anywhere under it).
+	if world.has_method("water_depth_at"):
+		var wet := Vector3.INF
+		for ring in range(1, 80):
+			for step in 16:
+				var angle := TAU * float(step) / 16.0
+				var at := player.global_position + Vector3(cos(angle), 0.0, sin(angle)) * float(ring) * 5.0
+				if float(world.call("water_depth_at", at)) > 0.3:
+					wet = at
+					break
+			if wet != Vector3.INF: break
+		_check(wet != Vector3.INF, "%s has sea or shallows near the start" % realm)
+		if wet != Vector3.INF:
+			var ground := float(placer.call("_ground_height", wet))
+			wet.y = ground if is_finite(ground) else wet.y
+			var refused: Dictionary = placer.call("validate_forward_camp_ground", game, realm, wet, 0.0)
+			_check(refused.get("ok") != true and str(refused.get("code", "")) == "camp_ground",
+				"a camp in the water at %s is refused (%s)" % [str(wet), str(refused.get("reason", ""))])
 	var spot := _find_spot(game, placer, player, realm)
 	_check(spot != Vector3.INF, "valid camp ground found in %s at %s" % [realm, str(spot)])
-	# A second valid spot, found before the first camp exists (20 m clear of it).
-	var second := _find_spot(game, placer, player, realm, spot) if spot != Vector3.INF else Vector3.INF
+	# A second valid spot, found before the first camp exists (12 m clear of it:
+	# footprint plus clearance), searched from beside the first (terrain
+	# collision streams around the player; Tidewake's first flat ground can be
+	# far from the start).
+	var second := Vector3.INF
+	if spot != Vector3.INF:
+		player.global_position = spot + Vector3(0.0, 0.5, 3.0)
+		for _frame in 30:
+			await physics_frame
+		_park_wilds(spot)
+		second = _find_spot(game, placer, player, realm, spot)
+	_check(second != Vector3.INF, "a second valid spot exists in %s (for the one-camp-per-biome checks)" % realm)
 	if spot == Vector3.INF:
 		_finish()
 		return
 	await _place_at(game, placer, player, spot)
+	# A wild that wandered onto the spot since the search rightly blocks it:
+	# search again from here and press again (at most three spots).
+	for _retry in 2:
+		if not _camps(game).is_empty(): break
+		var again := _find_spot(game, placer, player, realm, second)
+		if again == Vector3.INF: break
+		print("spot %s became blocked; trying %s" % [str(spot), str(again)])
+		spot = again
+		await _place_at(game, placer, player, spot)
 	var camps := _camps(game)
 	_check(camps.size() == 1, "one forward-camp record placed (%d)" % camps.size())
 	if camps.size() == 1:
@@ -139,6 +193,10 @@ func _run() -> void:
 		_check((nodes[0].get("_pieces") as Array).size() == 4 and prompts.size() == 3,
 			"it stands as tent-sheltered bed, cookpot and field workbench with three prompts (%d pieces)" % (nodes[0].get("_pieces") as Array).size())
 		if not _shot.is_empty(): await _capture(nodes[0])
+		# Ground inside the allowed rise is not an obstruction, but a standing
+		# structure is: the camp's own footprint now refuses another camp.
+		var occupied: Dictionary = placer.call("validate_forward_camp_ground", game, realm, (nodes[0] as Node3D).global_position, 0.0)
+		_check(occupied.get("ok") != true, "ground under a standing camp is refused (%s)" % str(occupied.get("reason", "")))
 
 	# Rest at the camp bed: the saved team rest recovers the party.
 	if nodes.size() == 1:

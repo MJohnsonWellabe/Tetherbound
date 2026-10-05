@@ -198,6 +198,15 @@ func _ready() -> void:
 		objective_beacon.name = "ObjectiveBeacon"
 		objective_beacon.realm_id = "water"
 		add_child(objective_beacon)
+		# F34 (coordinator-approved hook): building -- forward camps, tents,
+		# campfires -- works in Tidewake as in the other realms
+		# (stormwood_world.gd). Sea and shallows refuse a camp (water_depth_at).
+		var placer := preload("res://scripts/build/build_placer.gd").new()
+		placer.name = "BuildPlacer"
+		placer.player_path = NodePath("../Player")
+		placer.camera_rig_path = NodePath("../CameraRig")
+		add_child(placer)
+		placer.restore_from_game(game)
 	_shell_ready = true
 	if not simulation_only:
 		if str(game.pending_entry_for("water")).is_empty():
