@@ -1,0 +1,57 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "preset": "Low",
+  "biome": "stormwood",
+  "native_exit_code": 0,
+  "native_elapsed_seconds": 256.594,
+  "command": [
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+    "--rendering-method",
+    "gl_compatibility",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--log-file",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-low-stormwood\\engine.log",
+    "--audio-driver",
+    "Dummy",
+    "--rendering-driver",
+    "opengl3",
+    "--",
+    "--f26-route",
+    "--biome=stormwood",
+    "--preset=Low",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/shipping-low-stormwood/route"
+  ],
+  "manifest_complete": true,
+  "failures": [],
+  "runtime_errors": [],
+  "png_dimensions": {
+    "end.png": [
+      1920,
+      1080
+    ],
+    "start.png": [
+      1920,
+      1080
+    ]
+  },
+  "metrics": {
+    "frames": 2100,
+    "average_fps": 13.793933802320515,
+    "one_percent_low_fps": 7.107666938788772,
+    "minimum_fps": 2.7308227969087087,
+    "slowest_one_percent_frames": 21,
+    "cached_monitors_ms": {
+      "process_ms": 76.84915952380953,
+      "physics_ms": 4.096964285714286
+    }
+  },
+  "camera_far_m": 9000.0,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "actual_shipping": true,
+  "average_fps_floor20_pass": false,
+  "measurement_limitations": "Wall intervals plus cached Performance TIME_PROCESS/TIME_PHYSICS_PROCESS only. Embedded route lacks newer frame_limit/uncapping receipt. Runtime FPS/VSync/time settings not explicitly verified; no per-frame true CPU/GPU/draw attribution. New cases use fullscreen; prior four core cases lacked fullscreen flag. No performance recovery or regression onset established.",
+  "scope": "Actual shipping release EXE/PCK same accepted-main334 payload as prior4core routes. Existing packaged route, no debug/EngineProfiler/gpu-profile. New cases fullscreen1920x1080; desktop GTX1060, not Ally/earned campaign."
+}
