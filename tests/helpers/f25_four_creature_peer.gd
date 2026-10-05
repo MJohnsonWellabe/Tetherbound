@@ -239,7 +239,7 @@ func _f25_run(args: Dictionary) -> void:
 	var initial_hp := float(before.get("opponent",{}).get("hp",-1))
 	var start := Time.get_ticks_usec()
 	var previous := start
-	while Time.get_ticks_usec() - start < int(seconds * 1000000.0):
+	while previous - start < int(seconds * 1000000.0):
 		await process_frame
 		var now := Time.get_ticks_usec()
 		if _f25_sample:
@@ -282,7 +282,8 @@ func _f25_run(args: Dictionary) -> void:
 		"participants_min":participants_min,"combat_bodies_min":bodies_min,"visible_bodies_min":visible_min,
 		"on_screen_centres_min":on_screen_min,"census_scope":"every rendered process callback; projected centres are not occlusion or full silhouette proof",
 		"instrumentation_scope":"wall FPS includes required headless participant simulation, control heartbeat/world-hash and per-frame census overhead; fixture file/PNG writes outside timed window",
-		"sample_count":_f25_frames.size(),"warmup_seconds":warmup,"measurement_seconds":float(ended-start)/1000000.0,
+		"sample_count":_f25_frames.size(),"warmup_seconds":warmup,"measurement_seconds":float(previous-start)/1000000.0,
+		"recording_elapsed_seconds":float(ended-start)/1000000.0,
 		"host_hp_before":initial_hp,"host_hp_after":final_hp,"particle_peak":_f25_particles_peak,"particle_cap":384,
 		"scene_lights_peak":_f25_lights_peak,"scene_lights_cap":4,"mesh_bodies_per_effect_peak":_f25_body_peak,
 		"effects_peak":_f25_effects_peak,"average_fps":float(_f25_frames.size())/total if total>0 else 0,

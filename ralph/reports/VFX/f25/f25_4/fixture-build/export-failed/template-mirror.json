@@ -1,0 +1,16 @@
+[
+  {
+    "copy": "D:\\tetherbound\\.artifacts\\c2-eef1e8f413-release\\device-home\\Godot\\export_templates\\4.7.stable\\windows_debug_x86_64.exe",
+    "file": "windows_debug_x86_64.exe",
+    "bytes": 103055872,
+    "sha256": "6B580A72CCA9C31922FF4F7F1519A42DEBDD856E6852EEC39AE46CE0E709231D",
+    "source": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_debug_x86_64.exe"
+  },
+  {
+    "copy": "D:\\tetherbound\\.artifacts\\c2-eef1e8f413-release\\device-home\\Godot\\export_templates\\4.7.stable\\windows_release_x86_64.exe",
+    "file": "windows_release_x86_64.exe",
+    "bytes": 109160448,
+    "sha256": "C42EB5D17F683EB8BCD52C19A9F36EBF811B1788623878D5276A7D9FFC09F95C",
+    "source": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_release_x86_64.exe"
+  }
+]
