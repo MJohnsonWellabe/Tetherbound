@@ -224,7 +224,7 @@ static func _confirm_travel_reset(session: Node, peer: int, realm: String) -> vo
 	var lifecycle: Node = session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
 	var actor: Node3D = lifecycle.call("remote_body", peer) as Node3D if lifecycle != null else null
 	if actor == null or not actor.global_position.is_finite() or not session.has_method("owner_passive_travel_reset_confirmed"): return
-	session.call("owner_passive_travel_reset_confirmed", peer, realm, actor.global_position)
+	session.call("owner_passive_travel_reset_confirmed", peer, realm, actor.global_position, true)
 
 func _same_owner() -> bool:
 	if _pending.is_empty(): return false

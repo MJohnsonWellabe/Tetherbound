@@ -1173,3 +1173,45 @@ func test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance(
 		"travel_valid": false, "new_landmarks": []})
 	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
 	assert_eq(stream.error, "travel_baseline_mismatch", "live endpoint alone never grants another false reset")
+
+## F18 #4: an accepted portal/Home Key arrival mints the proof from the
+## host's view of the guest's body. The guest's own endpoint matches it only
+## within the live-body tolerance; a fly proof stays exact. Single use, no
+## walking credit, and the guest endpoint is still checked against the body.
+func test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_distance() -> void:
+	var stream := _host_stream()
+	service.body_position = Vector3(-16, 1.11597406864166, 14)
+	service.record_input(_input(0.6))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0, 0, 0], "to": [0, 0.900942, 0],
+		"travel_valid": false, "new_landmarks": []})
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_true(stream.cursor.travel_valid)
+	var previous_distance: float = stream.cursor.state.party[0].distance_m_together
+	# The guest reports where its own body stands, not the host's replica.
+	var guest_at := [service.body_position.x + 0.4, service.body_position.y, service.body_position.z - 0.3]
+	service.record_input(_input(0.504022))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0, 0.900942, 0], "to": guest_at,
+		"travel_valid": false, "new_landmarks": []})
+	var reset: Dictionary = service.local.inputs[-1]
+	# A fly-style (exact) proof at the host's view does not explain it.
+	service.travel_reset_confirmed(2, "meadows", service.body_position)
+	assert_false(service._reset_matches(2, stream, reset, service._context(2, stream)), "an exact proof needs the exact endpoint")
+	service.travel_reset_confirmed(2, "meadows", service.body_position, true)
+	var context: Dictionary = service._context(2, stream)
+	assert_true(service._reset_matches(2, stream, reset, context), "an arrival proof matches within the body tolerance")
+	var far: Dictionary = reset.duplicate(true)
+	far.to = [service.body_position.x + 5.0, service.body_position.y, service.body_position.z]
+	assert_false(service._reset_matches(2, stream, far, context), "outside the tolerance the owner cannot move the endpoint")
+	var walking: Dictionary = reset.duplicate(true)
+	walking.travel_valid = true
+	assert_false(service._reset_matches(2, stream, walking, context), "ordinary walking keeps its speed and distance rules")
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(2).duplicate(true)}))
+	assert_eq(stream.error, "", "the arrival reset is accepted")
+	assert_false(stream.has("travel_reset"), "single use")
+	assert_eq(stream.cursor.state.party[0].distance_m_together, previous_distance, "a reset earns no walking credit")
+	# Replayed: the consumed proof cannot explain a second false reset.
+	service.record_input(_input(0.6))
+	service.record_input({"op": "discovery", "realm": "meadows", "from": guest_at, "to": guest_at,
+		"travel_valid": false, "new_landmarks": []})
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
+	assert_eq(stream.error, "travel_baseline_mismatch", "a replayed arrival proof is refused")

@@ -46,9 +46,9 @@ func record_owner_passive_input(packet: Dictionary) -> void:
 	if _owner_passive != null: _owner_passive.call("record_input", packet)
 
 ## Only the existing host landing arbiter's accepted placement calls this.
-func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
 	if is_host() and _owner_passive != null:
-		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor)
+		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor, arrival_endpoint)
 
 func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	return _owner_passive_service().call("gate", peer, action, intent, event)

@@ -384,7 +384,11 @@ func _context(peer: int, stream: Dictionary) -> Dictionary:
 
 ## A host-accepted physical placement explains one same-stream false travel
 ## baseline. Peer inputs cannot create this capability or choose its anchor.
-func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+## A fly landing names the guest's own claimed pose, matched exactly. An
+## accepted portal/Home Key arrival (arrival_endpoint) names the host's view
+## of the guest's body, which the guest's own reported endpoint matches only
+## within the live-body endpoint tolerance.
+func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
 	if owner() == null or owner().call("is_host") != true or not anchor.is_finite(): return
 	var character: String = owner().call("_authority_character", peer)
 	var stream: Dictionary = hosts.get(character, {})
@@ -395,7 +399,7 @@ func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
 	var context := _context(peer, stream)
 	if context.realm != realm or not context.get("initial_position") is Vector3: return
 	stream.travel_reset = {"peer": peer, "stream_id": stream.id, "epoch": stream.epoch, "realm": realm,
-		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence}
+		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence, "arrival": arrival_endpoint}
 
 func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: Dictionary) -> bool:
 	var proof: Dictionary = stream.get("travel_reset", {})
@@ -403,9 +407,12 @@ func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: D
 		or stream.cursor.travel_valid != true or proof.peer != peer or proof.stream_id != stream.id \
 		or proof.epoch != stream.epoch or proof.realm != context.realm or input.get("realm") != proof.realm \
 		or int(input.sequence) <= int(proof.sequence) or not E._equivalent(input.get("from"), stream.cursor.position) \
-		or not E._equivalent(input.get("to"), proof.anchor) or not REPLAY._position(input.get("to")) \
+		or not REPLAY._position(input.get("to")) or not REPLAY._position(proof.anchor) \
 		or not context.get("initial_position") is Vector3: return false
 	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+	if proof.get("arrival") == true:
+		if not _endpoint_matches(Vector3(float(proof.anchor[0]), float(proof.anchor[1]), float(proof.anchor[2])), at): return false
+	elif not E._equivalent(input.get("to"), proof.anchor): return false
 	# Reuse the existing live-body discontinuity endpoint tolerance.
 	return _endpoint_matches(context.initial_position, at)
 

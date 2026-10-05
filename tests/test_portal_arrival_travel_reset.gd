@@ -12,8 +12,8 @@ class Lifecycle extends Node:
 
 class SessionProbe extends Node:
 	var confirmed: Array = []
-	func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
-		confirmed.append([peer, realm, anchor])
+	func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
+		confirmed.append([peer, realm, anchor, arrival_endpoint])
 
 func test_an_accepted_guest_arrival_confirms_the_travel_reset_at_its_body() -> void:
 	var session := SessionProbe.new()
@@ -34,6 +34,7 @@ func test_an_accepted_guest_arrival_confirms_the_travel_reset_at_its_body() -> v
 	# The anchor is the host's live body (global_position needs the scene
 	# tree; smoke_net_f18_travel exercises it end to end).
 	assert_true(session.confirmed[0][2] is Vector3)
+	assert_true(session.confirmed[0][3], "an arrival-sourced proof")
 	lifecycle.body = null
 	ARRIVAL._confirm_travel_reset(session, 7, "meadows")
 	assert_eq(session.confirmed.size(), 1, "no body, no proof")
