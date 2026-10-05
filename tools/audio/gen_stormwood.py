@@ -55,13 +55,13 @@ REPO = synth.REPO_ROOT
 BED_S = 24.0
 CROSSFADE_S = 2.5
 
-# Bed loudness is set by integrated level, not peak, so the five beds sit
-# where the installed ambience beds sit (checked by check_stormwood.py).
-# Break is louder than Building is louder than Calm: the Surge must be
-# nameable from sound (AUDIO §4.3), and energy is one of the two axes.
+# Bed level is set by RMS, not peak. These values are tuned so that the
+# PERCEIVED loudness (BS.1770 LUFS, measured by check_stormwood.py, not this
+# RMS) rises Calm < Building < Break with Fading below Break, each step at
+# least 2 LU: the Surge must be nameable from sound (AUDIO §4.3).
 BED_RMS_DB = {
     "surge_calm_bed": -28.5,
-    "surge_building_bed": -26.0,
+    "surge_building_bed": -27.0,
     "surge_break_bed": -24.0,
     "surge_fading_decay": -31.0,
     "release_forest_sky_bed": -28.5,
@@ -217,8 +217,8 @@ def surge_calm_bed(gen: np.random.Generator) -> np.ndarray:
     """Calm: rain/drip, low moss/forest life, distant thunder with long spacing."""
     a, sr, n = "surge_calm_bed", SR_BED, _bed_canvas()
     t = np.arange(n) / sr
-    rain = synth.band(installed_layer("assets/audio/ambience/river_water.wav", a, n, sr, 1.35), 900.0, 7000.0, sr)
-    _log(a, "river_water.wav at 1.35x speed, band-passed 900-7000 Hz -> steady rain wash")
+    rain = synth.band(installed_layer("assets/audio/ambience/river_water.wav", a, n, sr, 1.35), 600.0, 5000.0, sr)
+    _log(a, "river_water.wav at 1.35x speed, band-passed 600-5000 Hz -> soft steady rain wash")
     canopy = installed_layer("assets/audio/ambience/ironwood_canopy.wav", a, n, sr, 0.85, 3.0)
     _log(a, "ironwood_canopy.wav at 0.85x speed, offset 3 s -> low wet canopy")
     life = synth.lowpass_fft(installed_layer("assets/audio/ambience/night_insects.wav", a, n, sr, 0.7), 2500.0, sr)
@@ -239,10 +239,10 @@ def surge_building_bed(gen: np.random.Generator) -> np.ndarray:
     """Building: copper-vine ticks, canopy motion, rising electrical bed; no strike, no life."""
     a, sr, n = "surge_building_bed", SR_BED, _bed_canvas()
     t = np.arange(n) / sr
-    canopy = installed_layer("assets/audio/ambience/ironwood_canopy.wav", a, n, sr, 1.15)
-    wind = installed_layer("assets/audio/ambience/wind_high.wav", a, n, sr, 1.1, 5.0)
+    canopy = synth.highpass_fft(installed_layer("assets/audio/ambience/ironwood_canopy.wav", a, n, sr, 1.15), 400.0, sr)
+    wind = synth.highpass_fft(installed_layer("assets/audio/ambience/wind_high.wav", a, n, sr, 1.1, 5.0), 500.0, sr)
     motion = 0.55 + 0.45 * (0.5 + 0.5 * np.sin(2 * np.pi * t / 6.1)) ** 1.5
-    _log(a, "ironwood_canopy.wav 1.15x + wind_high.wav 1.1x (offset 5 s), gust-modulated -> increasing canopy motion")
+    _log(a, "ironwood_canopy.wav 1.15x HP 400 Hz + wind_high.wav 1.1x (offset 5 s) HP 500 Hz, gust-modulated -> increasing canopy motion")
     drone = installed_layer("assets/audio/ambience/tether_drone.wav", a, n, sr, 1.6)
     drone = synth.band(drone, 120.0, 3000.0, sr)
     # Rising pulses that swell over ~4 s and reset under the next one: the
@@ -259,9 +259,11 @@ def surge_building_bed(gen: np.random.Generator) -> np.ndarray:
     _log(a, "160 synth copper-vine ticks (2.6-4.2 kHz inharmonic resonators), wrap-scattered")
     sparks = crackle(n, sr, gen, 9.0, swell)
     _log(a, "electrical crackle (~9 impulses/s scaled by swell, HP 1.5 kHz); no birds/insects, no strike")
-    return finish_bed(a, synth.mix(0.6 * synth.normalise(canopy) * motion, 0.4 * synth.normalise(wind) * motion,
-                                   0.55 * synth.normalise(drone) * (0.4 + 0.6 * swell), 0.25 * hum * swell,
-                                   0.7 * ticks, 0.2 * sparks))
+    # Hum is kept under the upper layers: perceived loudness (K-weighted)
+    # must rise from Calm, and low hum adds RMS without adding loudness.
+    return finish_bed(a, synth.mix(0.9 * synth.normalise(canopy) * motion, 0.7 * synth.normalise(wind) * motion,
+                                   0.5 * synth.normalise(drone) * (0.4 + 0.6 * swell), 0.12 * hum * swell,
+                                   0.9 * ticks, 0.35 * sparks))
 
 
 def surge_break_bed(gen: np.random.Generator) -> np.ndarray:

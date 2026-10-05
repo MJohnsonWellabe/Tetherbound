@@ -37,21 +37,28 @@ strike layers at the sfx rate 44100 Hz, mono because positional.
   installed ambience layers (no Tidewake/Cloudreach beds exist in
   `assets/audio/`, so the eight installed ambience layers plus five music loops
   are the comparison set); strike loudness within ±8 LU of `impact_super_*`;
-  Surge phases pairwise distinct by centroid (>= 150 Hz) and energy (>= 1.5 dB),
-  energy Calm < Building < Break > Fading; Building has copper-tick onsets
-  (5.2/s vs 0 in Calm) and a 90-210 Hz electrical share 13x Calm; Release has
-  < half Break's 80-220 Hz share; crack attack 2.8 ms, centroid ~11.7 kHz;
-  body/decay >= 0.9 energy below 250 Hz; chain = transient + low tail; warning
-  rises 11.7 dB and lasts the telegraph; every asset >= 2 dB mean third-octave
+  Surge phases pairwise distinct by centroid (>= 150 Hz) and perceived loudness
+  (BS.1770 LUFS, >= 2 LU; not raw RMS, which is the generator's own setting):
+  Calm -30.6 < Building -26.9 < Break -23.9 > Fading -34.6 LUFS, centroids
+  2796 / 3473 / 4356 / 4026 Hz; Building has copper-tick onsets (3.3/s vs 0 in
+  Calm) and a 90-210 Hz electrical share 13x Calm; Release has < half Break's
+  80-220 Hz share; crack 1 ms-envelope attack 0.41 ms, centroid ~11.7 kHz;
+  body/decay >= 0.9 energy below 250 Hz; whole chain reaches 0.68 of its peak
+  within 5 ms of onset with 0.91 of its tail below 250 Hz; warning rises
+  11.7 dB and lasts the telegraph; every asset >= 2 dB mean third-octave
   shape gap from the other eight and from every installed bed/music loop.
 - `test_stormwood_audio_assets.txt`: headless Godot 4.7, all nine contract paths
   load as mono AudioStreamWAV; beds LOOP_FORWARD, strikes LOOP_DISABLED; warning
   length = telegraph. 2 tests, 48 assertions, 0 failed.
 - `smoke_stormwood_surge_audio.txt`, `cue_timeline.md`, `MISSING_ASSETS.md`:
   production Stormwood world, real Surge clock and host lightning. 20 passed,
-  0 failed; 85 of 85 fired cues found their asset and started a player;
+  0 failed; 93 of 93 fired cues found their asset and started a player;
   MISSING ASSETS (0). Headless uses the dummy audio driver: this proves load
   and playback start, not what was heard.
+
+Independent review (round 1) asked for the phase energy axis in LUFS: Calm
+and Building were 0.3 LU apart by perceived loudness. Fixed in the second
+commit (checker measures LUFS; Building retuned, Calm's rain darkened).
 
 Not proven here: in-game mix against music/other buses, Ally speakers, blinded
 listener identification (AUDIO §12 #3). The rod-area pressure layer, arches and

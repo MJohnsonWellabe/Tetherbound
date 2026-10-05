@@ -45,7 +45,7 @@ SEAM_JUMP_PERCENTILE = 99.9
 SEAM_RMS_DB = 3.0
 SEAM_FLUX_PERCENTILE = 99.0
 MIN_CENTROID_GAP_HZ = 150.0
-MIN_PHASE_ENERGY_GAP_DB = 1.5
+MIN_PHASE_ENERGY_GAP_LU = 2.0
 MIN_PROFILE_DISTANCE_DB = 2.0
 
 
@@ -215,16 +215,18 @@ def main() -> int:
 
     # Surge phases: distinct by spectral centroid and energy.
     cents = {p: centroid(*audio[p]) for p in PHASES}
-    energy = {p: db(rms(audio[p][0])) for p in PHASES}
+    # Perceived loudness (BS.1770), not raw RMS: RMS is what the generator
+    # sets each bed to, so measuring it would only confirm its own constants.
+    energy = {p: lufs(*audio[p]) for p in PHASES}
     for i, a in enumerate(PHASES):
         for b in PHASES[i + 1:]:
             gap = abs(cents[a] - cents[b])
             egap = abs(energy[a] - energy[b])
-            check(f"{a[6:]}|{b[6:]}", "phase pair distinct (centroid, energy)",
-                  gap >= MIN_CENTROID_GAP_HZ and egap >= MIN_PHASE_ENERGY_GAP_DB,
-                  f"{cents[a]:.0f}/{cents[b]:.0f} Hz, {energy[a]:.1f}/{energy[b]:.1f} dB",
-                  f"centroid gap >= {MIN_CENTROID_GAP_HZ:.0f} Hz and energy gap >= {MIN_PHASE_ENERGY_GAP_DB} dB")
-    check("(phases)", "energy ordering calm<building<break>fading",
+            check(f"{a[6:]}|{b[6:]}", "phase pair distinct (centroid, LUFS)",
+                  gap >= MIN_CENTROID_GAP_HZ and egap >= MIN_PHASE_ENERGY_GAP_LU,
+                  f"{cents[a]:.0f}/{cents[b]:.0f} Hz, {energy[a]:.1f}/{energy[b]:.1f} LUFS",
+                  f"centroid gap >= {MIN_CENTROID_GAP_HZ:.0f} Hz and loudness gap >= {MIN_PHASE_ENERGY_GAP_LU} LU")
+    check("(phases)", "loudness ordering calm<building<break>fading",
           energy["surge_calm_bed"] < energy["surge_building_bed"] < energy["surge_break_bed"]
           and energy["surge_fading_decay"] < energy["surge_break_bed"],
           ", ".join(f"{p[6:]} {energy[p]:.1f}" for p in PHASES), "monotonic rise to Break, Fading below Break")
@@ -243,7 +245,9 @@ def main() -> int:
 
     # Strike roles.
     def attack_ms(x: np.ndarray, sr: int) -> float:
-        env = np.abs(x)
+        # 1 ms RMS envelope, so a single sample cannot set the attack.
+        w = max(1, int(0.001 * sr))
+        env = np.sqrt(np.convolve(x * x, np.ones(w) / w, "same"))
         peak = float(np.max(env))
         first = int(np.argmax(env >= 0.1 * peak))
         top = int(np.argmax(env >= 0.9 * peak))
@@ -270,10 +274,16 @@ def main() -> int:
     chain = np.zeros(max(len(l) for l in layers))
     for l in layers:
         chain[: len(l)] += l
-    a_ms = attack_ms(chain[: int(0.1 * FX_SR)], FX_SR)
+    # The body keeps swelling after the crack, so a 10->90% rise would time
+    # the boom, not the strike. The transient test: within 5 ms of onset the
+    # chain's 1 ms envelope already reaches half its overall peak.
+    w = int(0.001 * FX_SR)
+    env = np.sqrt(np.convolve(chain * chain, np.ones(w) / w, "same"))
+    onset = int(np.argmax(env >= 0.1 * env.max()))
+    early = float(env[onset:onset + int(0.005 * FX_SR)].max() / env.max())
     tail_low = band_fraction(chain[int(0.5 * FX_SR):], FX_SR, 20, 250)
-    check("strike chain", "transient then low rumble tail", a_ms <= 5.0 and tail_low >= 0.6,
-          f"attack {a_ms:.2f} ms, tail<250 Hz {tail_low:.2f}", "attack <= 5 ms, tail >= 0.60")
+    check("strike chain", "transient then low rumble tail", early >= 0.5 and tail_low >= 0.6,
+          f"first 5 ms reach {early:.2f} of peak, tail<250 Hz {tail_low:.2f}", ">= 0.50 of peak, tail >= 0.60")
     x, sr = audio["strike_warning"]
     thirds = np.array_split(x, 3)
     rise = db(rms(thirds[2])) - db(rms(thirds[0]))

@@ -1,25 +1,25 @@
   PASS: StormwoodSurgeAudio is mounted by the production Stormwood world
   PASS: an open, exposed trainer stance found by the lightning's own exposed() ((-1400.0, 29.86957, 2300.0), conductor_run)
   PASS: the Long Storm's end committed through the ledger
-  PASS: a replayed impact/warning id fires no second cue (85 -> 85 rows)
+  PASS: a replayed impact/warning id fires no second cue (93 -> 93 rows)
   PASS: phase cues fire exactly once each, in order Calm, Building, Break, Fading, release: ["sw_surge_calm_bed", "sw_surge_building_bed", "sw_surge_break_bed", "sw_surge_fading_decay", "sw_release_forest_sky_bed"]
-  PASS: sw_surge_building_bed fires at its phase boundary (clock 240.009, boundary 240)
-  PASS: sw_surge_break_bed fires at its phase boundary (clock 330.010, boundary 330)
-  PASS: sw_surge_fading_decay fires at its phase boundary (clock 450.008, boundary 450)
+  PASS: sw_surge_building_bed fires at its phase boundary (clock 240.004, boundary 240)
+  PASS: sw_surge_break_bed fires at its phase boundary (clock 330.004, boundary 330)
+  PASS: sw_surge_fading_decay fires at its phase boundary (clock 450.011, boundary 450)
   PASS: every impact fires its strike, body and decay layers once each
-  PASS: real Break strikes happened (20 warnings, 20 impacts)
+  PASS: real Break strikes happened (22 warnings, 22 impacts)
   PASS: no strike warning fires in Calm, Building or Fading (0 outside Break)
   PASS: every strike has a warning with its id (0 without)
   PASS: every warning's position equals its strike's position
-  PASS: warning -> strike is telegraph_seconds 1.20 (+ one frame): min 1.200 max 1.221 s over 20 strikes
-STRIKE SPACING warnings: n=19 min=4.510 max=7.929  scheduler slots: n=21 min=4.510 max=7.929
-STRIKE SPACING gaps: ["6.13", "4.74", "7.10", "6.93", "4.51", "7.01", "6.33", "5.44", "5.05", "5.12", "6.88", "7.44", "6.01", "7.93", "6.13", "5.14", "7.70", "6.27", "6.55"]
-  PASS: Break strike spacing is within 4-8 s (measured 4.510..7.929)
+  PASS: warning -> strike is telegraph_seconds 1.20 (+ one frame): min 1.200 max 1.220 s over 22 strikes
+STRIKE SPACING warnings: n=21 min=4.102 max=7.380  scheduler slots: n=22 min=4.102 max=7.948
+STRIKE SPACING gaps: ["4.98", "6.53", "7.05", "6.08", "4.64", "6.27", "4.27", "4.53", "6.69", "4.74", "6.83", "5.12", "6.29", "5.21", "4.39", "6.11", "7.38", "5.16", "4.42", "4.10", "6.85"]
+  PASS: Break strike spacing is within 4-8 s (measured 4.102..7.380)
   PASS: no cue claims playback without its asset
-  PASS: every fired cue found its asset and started a player (0 of 85 did not)
+  PASS: every fired cue found its asset and started a player (0 of 93 did not)
   PASS: every caption is resolved (direction wedge filled)
 =================== MISSING ASSETS (0) ===================
-  85 of 85 fired cues started a player.
+  93 of 93 fired cues started a player.
 WITNESS WRITTEN /root/.local/share/godot/app_userdata/Tetherbound/f10_audio_witness
   PASS: the cue log is empty after realm teardown
   PASS: the observer is disconnected from the replicated lightning event after teardown

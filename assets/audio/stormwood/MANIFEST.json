@@ -29,14 +29,14 @@
       ],
       "synthesis": "tools/audio/synth.py (project-owned)",
       "steps": [
-        "river_water.wav at 1.35x speed, band-passed 900-7000 Hz -> steady rain wash",
+        "river_water.wav at 1.35x speed, band-passed 600-5000 Hz -> soft steady rain wash",
         "ironwood_canopy.wav at 0.85x speed, offset 3 s -> low wet canopy",
         "night_insects.wav at 0.7x speed, low-passed 2.5 kHz -> low moss/forest life",
         "70 synth drips (resonant pings 1.4-3.2 kHz), wrap-scattered",
         "two distant thunder rolls (brown noise 30-140 Hz, 6 s) at 4.5 s and 16.8 s -> long spacing",
         "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -28.5 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
       ],
-      "sha256": "a6a76ac2f4b2f5a3c94f058f5a4790ef4e6643c8d800a909e7cd342860f9b155"
+      "sha256": "f3786b4c52cb516c47f72ed3bb0e91bee2c8af9613f4c227cc4d67745e5f56e0"
     },
     {
       "asset": "res://assets/audio/stormwood/surge_building_bed.wav",
@@ -63,13 +63,13 @@
       ],
       "synthesis": "tools/audio/synth.py (project-owned)",
       "steps": [
-        "ironwood_canopy.wav 1.15x + wind_high.wav 1.1x (offset 5 s), gust-modulated -> increasing canopy motion",
+        "ironwood_canopy.wav 1.15x HP 400 Hz + wind_high.wav 1.1x (offset 5 s) HP 500 Hz, gust-modulated -> increasing canopy motion",
         "tether_drone.wav 1.6x band-passed 120-3000 Hz + 100/200 Hz synth hum, 4 s rising swells -> rising electrical bed",
         "160 synth copper-vine ticks (2.6-4.2 kHz inharmonic resonators), wrap-scattered",
         "electrical crackle (~9 impulses/s scaled by swell, HP 1.5 kHz); no birds/insects, no strike",
-        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -26.0 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
+        "equal-power seamless loop crossfade 2.5 s; DC removed; scaled to -27.0 dBFS RMS with a -3.0 dBFS tanh peak ceiling"
       ],
-      "sha256": "ab40abec573aee8372b764e57d33bfbdd7ce0a768989bda3ddd748058297fdcb"
+      "sha256": "9085b88fa2aa1aead4fc26d022a824052b8c9529b2b2c040827a964d1b6eb746"
     },
     {
       "asset": "res://assets/audio/stormwood/surge_break_bed.wav",
