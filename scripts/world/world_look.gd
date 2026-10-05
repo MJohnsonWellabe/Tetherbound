@@ -26,6 +26,7 @@ const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
 ## CHARACTER_MODEL directly above: this node never builds or owns the terrain.
 const PLAYGROUND_WORLD := preload("res://scripts/world/playground_world.gd")
 
+const DETAIL_CULL := preload("res://scripts/world/detail_cull.gd")
 const LOCAL_LIGHT_SHADOW_FADE := preload("res://scripts/world/local_light_shadow_fade.gd")
 const GRAPHICS_PREFS := preload("res://scripts/ui/graphics_prefs.gd")
 
@@ -79,6 +80,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	# PERF (F26#5): shadowed room/lantern lights fade their shadows with distance.
 	LOCAL_LIGHT_SHADOW_FADE.watch(get_parent())
+	# PERF (F26#5): sub-pixel detail stops drawing; silhouettes keep their reach.
+	DETAIL_CULL.watch(get_parent())
 	_config = _load()
 	if _config.is_empty():
 		push_warning("art.json missing or unreadable; the scene keeps its authored look")
