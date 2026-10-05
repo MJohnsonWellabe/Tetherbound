@@ -1,0 +1,80 @@
+{
+  "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+  "steps": [
+    {
+      "step": "import",
+      "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--editor",
+        "--path",
+        "D:\\tetherbound\\codex-perf-cpu",
+        "--audio-driver",
+        "Dummy",
+        "--quit"
+      ],
+      "profile": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\validation\\import\\profile",
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 274.656,
+      "started_utc": "2026-10-05T18:22:12.869924+00:00"
+    },
+    {
+      "step": "units",
+      "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\codex-perf-cpu",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_move_tm_db_shared.gd,test_foundation_resource_save.gd"
+      ],
+      "profile": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\validation\\units\\profile",
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 11.172,
+      "started_utc": "2026-10-05T18:26:47.527529+00:00"
+    },
+    {
+      "step": "presentation",
+      "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\codex-perf-cpu",
+        "--script",
+        "tests/smoke_f19_renewable_presentation.gd"
+      ],
+      "profile": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\validation\\presentation\\profile",
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 8.922,
+      "started_utc": "2026-10-05T18:26:58.696281+00:00"
+    },
+    {
+      "step": "contention",
+      "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\codex-perf-cpu",
+        "--script",
+        "tests/smoke_net_f32_node_contention.gd"
+      ],
+      "profile": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\validation\\contention\\profile",
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 225.828,
+      "started_utc": "2026-10-05T18:27:07.626401+00:00"
+    }
+  ],
+  "all_four_completed": true,
+  "all_exit_zero": true,
+  "scope": "Existing focused correctness checks; no FPS, GPU performance, four-peer or earned-campaign acceptance."
+}
