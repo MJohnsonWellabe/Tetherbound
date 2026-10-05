@@ -29,10 +29,13 @@ static func config_valid(cfg: Variant, schema: Dictionary, canonical: Array) -> 
 	for n: Variant in plot.size_m:
 		if float(n) <= 0.0: return false
 	var exclusions: Variant = plot.get("exclusions")
-	if not exclusions is Array or exclusions.size() != 3: return false
+	# The authored home features the plot keeps clear, each exactly once. The
+	# home creature bed (owner ruling 2026-10-04) joined the original three.
+	var known: Array = ["farmhouse", "village_road", "berry_beds", "home_creature_bed"]
+	if not exclusions is Array or exclusions.size() != known.size(): return false
 	var names: Array = []
 	for row: Variant in exclusions:
-		if not row is Dictionary or not ["farmhouse", "village_road", "berry_beds"].has(row.get("id")): return false
+		if not row is Dictionary or not known.has(row.get("id")): return false
 		if names.has(row.id) or not numbers(row.get("min"), 2) or not numbers(row.get("max"), 2): return false
 		names.append(row.id)
 		if float(row.min[0]) >= float(row.max[0]) or float(row.min[1]) >= float(row.max[1]): return false

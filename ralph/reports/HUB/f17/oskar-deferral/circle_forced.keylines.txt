@@ -1,0 +1,34 @@
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5668, 0.910754, 14.17091) Halllocal=(-0.170907, 0.060754, -0.433189) maximum_offroad=0.000
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":1,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":2,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":3,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":4,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":5,"total":5,"where":"native callback deadline before stick input"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":6,"total":6,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":7,"total":7,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":8,"total":8,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":9,"total":9,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":10,"total":10,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":11,"total":11,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":12,"total":12,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":13,"total":13,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":14,"total":14,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":15,"total":15,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":16,"total":16,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":17,"total":17,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":18,"total":18,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":19,"total":19,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":20,"total":20,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":21,"total":21,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":22,"total":22,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":23,"total":23,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":24,"total":24,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":25,"total":25,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":26,"total":26,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":27,"total":27,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":28,"total":28,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":29,"total":29,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":30,"total":30,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":31,"total":31,"where":"production input dispatch deadline"}
+OPENING_PRODUCTION_OBSERVATION ... "refusal":"cooperative deadline exceeded on 31 consecutive frames (production input dispatch deadline; 31 deferred frames total)"
+F17 actual Hall walk FAIL: circle controller travel failed at garden approach: cooperative deadline exceeded on 31 consecutive frames (production input dispatch deadline; 31 deferred frames total)

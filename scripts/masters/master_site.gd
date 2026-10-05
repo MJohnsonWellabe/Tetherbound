@@ -46,6 +46,8 @@ func mount(world: Node3D, player: Node3D) -> bool:
 	reveal.text = "%s · Lv %d\n%s · %s · %s\n%s" % [_definition.name, _definition.cap_level,
 		_definition.species_id.capitalize(), "/".join(_definition.creature_types), _definition.profile, _definition.combat.question]
 	reveal.font_size = 44
+	# Free-standing world text: face the camera upright, never read mirrored.
+	reveal.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	reveal.position = Vector3(0, 3, -4)
 	add_child(reveal)
 	var chest := Node3D.new()
@@ -64,6 +66,10 @@ func mount(world: Node3D, player: Node3D) -> bool:
 		var radius := float(_definition.arena_radius_m)
 		world.call("register_runtime_surface", {"kind": "ellipse", "centre": Vector2(global_position.x, global_position.z),
 			"half": Vector2(radius, radius), "height": global_position.y + 0.2})
+	# Presentation only: a realm may re-skin the generic pad and signpost in
+	# its own families (Cloudreach seats a fly-only pad on a rooted rock islet).
+	# Collision and every interaction above are unchanged.
+	if world.has_method("dress_master_site"): world.call("dress_master_site", self, _definition)
 	_mounted = true
 	return true
 
@@ -111,6 +117,7 @@ func _build_sign(world: Node3D) -> void:
 	var words := Label3D.new()
 	words.text = str(_definition.sign_text) + "\nFollow the side path →"
 	words.font_size = 48
+	words.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	words.position.y = 2.5
 	sign.add_child(words)
 	var lead := NPC.new()

@@ -63,9 +63,23 @@ func test_windscar_tree_exclusion_removes_only_the_aperture_obstruction() -> voi
 	# The next-nearest measured landmark tree is 19.07m away and must remain.
 	assert_false(bool(world.call("_inside_nature_tree_exclusion",
 		Vector3(-265.5821, 488.0, 2698.573))))
-	var exclusions := (visual_cfg as Dictionary).get("nature", {}).get("tree_exclusions", []) as Array
-	assert_eq(exclusions.size(), 1)
-	assert_almost_eq(float((exclusions[0] as Dictionary).radius_m), 7.0, 0.001)
+	# Exactly one radius exclusion near the beacon, still 7 m. Other entries
+	# (e.g. the Aviary's finale-road sightline) must stay far from this site.
+	var beacon := Vector2(-248.64766, 2689.8042)
+	var near_beacon: Array = []
+	for raw: Variant in (visual_cfg as Dictionary).get("nature", {}).get("tree_exclusions", []) as Array:
+		var exclusion := raw as Dictionary
+		if exclusion.has("centre_xz"):
+			var centre := Vector2(float(exclusion.centre_xz[0]), float(exclusion.centre_xz[1]))
+			if centre.distance_to(beacon) < 200.0:
+				near_beacon.append(exclusion)
+		else:
+			var from := Vector2(float(exclusion.from_xz[0]), float(exclusion.from_xz[1]))
+			var to := Vector2(float(exclusion.to_xz[0]), float(exclusion.to_xz[1]))
+			assert_true(Geometry2D.get_closest_point_to_segment(beacon, from, to).distance_to(beacon) > 200.0,
+				"a sightline exclusion must not reach the Windscar beacon site")
+	assert_eq(near_beacon.size(), 1)
+	assert_almost_eq(float((near_beacon[0] as Dictionary).radius_m), 7.0, 0.001)
 	world.free()
 
 

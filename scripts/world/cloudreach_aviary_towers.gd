@@ -63,6 +63,23 @@ static func build(parent: Node3D, spec: Dictionary, drum: Dictionary,
 					inner_radius + post_width, post_width, spring_y, half)
 				mesh.material_override = trim
 				arch.add_child(mesh)
+		# F40#4 night: a lantern block inside the belfry. It carries no light
+		# (the landmark keeps its light count); cloudreach_landmark_lighting.gd
+		# raises its emission with the night weight, so each open arch reads as
+		# a contained warm window from the approach roads.
+		var lantern := MeshInstance3D.new()
+		lantern.name = "BelfryLanternGlow"
+		var lantern_box := BoxMesh.new()
+		lantern_box.size = Vector3(1.1, 1.6, 1.1)
+		lantern.mesh = lantern_box
+		var glow := StandardMaterial3D.new()
+		glow.albedo_color = Color("#d9a46a")
+		glow.emission_enabled = true
+		glow.emission = Color("#ffc17d")
+		glow.emission_energy_multiplier = 0.0
+		lantern.material_override = glow
+		lantern.position = Vector3(0, opening_base + 1.1, 0)
+		tower.add_child(lantern)
 		var eaves_y := opening_base + gallery_height
 		PARTS._box(tower, "Eaves", Vector3(0, eaves_y, 0),
 			Vector3(gallery_width + 0.6, 0.4, gallery_width + 0.6), trim, false)

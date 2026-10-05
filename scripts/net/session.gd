@@ -470,7 +470,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			if card.uid == envelope.intent.get("creature_uid"):
 				return {"ok": true, "creature_uid": card.uid, "loadout_revision": card.get("loadout_revision", 0), "registry_revision": view.registry_revision}
 		return FOUNDATION_ACTIONS.deny("not_owned")
-	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
+	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest", "essence_release"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
 	var character := _authority_character(peer)
 	var world: RefCounted = _game().get("world")
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
@@ -522,6 +522,17 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_feast_feed"}
+	if envelope.op == "essence_release":
+		# F27#1 guest release: the host pays only for a creature in this
+		# admitted record (essence.stage_release); the newcomer stays the
+		# owner's own untyped catch. The ceremony itself is owner-local.
+		context = {}
+		if peer != local_peer_id() and ESSENCE.config().get("ordinary_release_payout_enabled") == true \
+			and str(envelope.station_key).begins_with("release_ceremony:") and str(envelope.station_key).length() <= 128 \
+			and not _altar_peer_in_combat(peer):
+			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+				"source_key": envelope.station_key, "in_range": true, "in_combat": false, "release_ceremony": true}
+		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
 	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
@@ -663,6 +674,12 @@ func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionar
 		context.expected_revision, "dock_conclusion", original, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
+## F27#1: a guest's ordinary catch-overflow release, paid by the host from
+## its admitted record (scripts/net/essence_release_service.gd).
+func request_essence_release(pending_uid: String, intent: Dictionary, revision: int) -> Dictionary:
+	if is_host(): return _foundation_refusal("host_release_is_local")
+	return _foundation_send("essence_release", "release_ceremony:" + pending_uid, intent, revision)
 
 func request_research_claim(intent: Dictionary) -> Dictionary:
 	return _foundation_send("research_claim", "research_journal", intent, -1)
@@ -4610,7 +4627,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
 	var capture_originals: Variant = _owner_training_retry.get("capture_originals")
 	var released: Variant = _owner_training_retry.get("release_instance")
-	if preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] and row.get("action") == "trait_release" and released == null:
+	if preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] and row.get("action") in ["trait_release", "essence_release"] and released == null:
 		# Bind identity while the real original instance is still owned. A weak
 		# identity is not a sixth creature or a second authoritative roster.
 		if ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), row.before):
@@ -4654,7 +4671,7 @@ func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dict
 	if _owner_training_retry.is_empty() or _owner_training_retry.player.get_ref() != player \
 			or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt \
 			or not ESSENCE._equivalent(_owner_training_row(), row) \
-			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 	_owner_training_retry.saved = true
 	return true
 
@@ -4667,7 +4684,7 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 	if not _owner_training_mutation_blocked(player): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
-		and ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
+		and ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
 		and payload.redesign_character.transaction_receipts.has(row.receipt)
 
 
@@ -4679,7 +4696,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 	if not _owner_training_retry.is_empty():
 		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
-			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
@@ -5708,7 +5725,7 @@ func _begin_owner_training_rollback(player: RefCounted, world: RefCounted, row: 
 func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bool:
 	var row := _owner_training_row()
 	if not _owner_training_install or _owner_training_install_rollback or preload("res://scripts/net/character_record_rules.gd").training_version(row) not in [2, 3] \
-		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or not row.get("action") in ["trait_release", "essence_release"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
 	var original: Variant = _owner_training_retry.get("release_instance")
 	var member: RefCounted = player.get("party").call("at", index)
@@ -5721,7 +5738,7 @@ func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefC
 	if _owner_training_install_rollback and _owner_training_row().get("action") == "wild_capture": return _capture_roster_allowed(snapshot.get("members", []), true, player)
 	var row := _owner_training_row()
 	if not _owner_training_install or not _owner_training_install_rollback or preload("res://scripts/net/character_record_rules.gd").training_version(row) not in [2, 3] \
-		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or not row.get("action") in ["trait_release", "essence_release"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt \
 		or not snapshot.get("members") is Array or snapshot.members.size() != row.before.party.size(): return false
 	var original: Variant = _owner_training_retry.get("release_instance")

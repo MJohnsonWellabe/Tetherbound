@@ -1,0 +1,26 @@
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5668, 0.910754, 14.17091) Halllocal=(-0.170907, 0.060754, -0.433189) maximum_offroad=0.000
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":1,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":2,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":3,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":4,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":5,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":6,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":7,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":8,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":9,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":10,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":11,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":12,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":13,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":14,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":15,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":16,"where":"native query budget"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":3,"total":17,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":4,"total":18,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":19,"where":"production observation callback deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":20,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":2,"total":21,"where":"native query cooperative frame deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":22,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":23,"where":"production input dispatch deadline"}
+OPENING_NAV_DEFERRAL {"cap_frames":30,"consecutive":1,"total":24,"where":"production input dispatch deadline"}
+F17 LEGACY CIRCLE physical location PASS: all four actual grounded models/existing colliders/prompt components approached via production joypad steering, after farmhouse-road-Hall traversal. Visual and earned state remain separate.

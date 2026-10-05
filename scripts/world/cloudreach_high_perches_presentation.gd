@@ -6,6 +6,7 @@ extends Node3D
 const CONFIG_PATH := "res://data/config/cloudreach_high_perches_visual.json"
 const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const ARRIVAL_ARCH := preload("res://assets/buildings/quaternius_castle/WallEntranceBricks.obj")
+const ARRIVAL_PYLON := preload("res://assets/buildings/quaternius_castle/SimpleTowerBricks.obj")
 const BANNER := preload("res://assets/props/quaternius_fantasy/Banner_2_Cloth.gltf")
 const TORCH := preload("res://assets/props/built/torch_prop.tscn")
 const BENCH := preload("res://assets/props/quaternius_fantasy/Bench.gltf")
@@ -42,6 +43,9 @@ func build(materials: Dictionary) -> void:
 
 
 func _add_arrival_arch(cfg: Dictionary, material: Material) -> void:
+	if str(cfg.get("arrival_portal_style", "arch")) == "pylons":
+		_add_arrival_pylons(cfg, material)
+		return
 	var arch := MeshInstance3D.new()
 	arch.name = "HighPerchesArrivalArch"
 	arch.mesh = ARRIVAL_ARCH
@@ -56,6 +60,36 @@ func _add_arrival_arch(cfg: Dictionary, material: Material) -> void:
 	arch.set_meta("high_perches_role", "arrival_portal")
 	add_child(arch)
 	_add_box("ArrivalCrown", at + Vector3(0.0, 10.8, 0.0), Vector3(12.2, 0.7, 3.0), material, "arrival_portal")
+
+
+## F08#3 (arrival-lip): a solid arch across the south Fly line filled the
+## production camera's view of the landing for the last 25 m of every arrival,
+## with the trainer framed inside its aperture. Two free-standing gate pylons
+## keep the portal read and the banners on their inner faces, with the line
+## between them open: the glide, the trainer and the court stay in view.
+func _add_arrival_pylons(cfg: Dictionary, material: Material) -> void:
+	var holder := Node3D.new()
+	holder.name = "HighPerchesArrivalArch"
+	holder.position = _v3(cfg.get("arrival_arch_position", [0.0, 0.0, -15.0]))
+	holder.rotation.y = deg_to_rad(float(cfg.get("arrival_arch_yaw_deg", 0.0)))
+	holder.set_meta("high_perches_role", "arrival_portal")
+	add_child(holder)
+	var size := _v3(cfg.get("arrival_arch_size_m", [16.4, 9.5, 2.8]))
+	var stops_cfg := cfg.get("arrival_arch_camera_stops", {}) as Dictionary
+	var opening_half := float(stops_cfg.get("opening_half_width_m", 5.4))
+	var pier_width := size.x * 0.5 - opening_half
+	var bounds := ARRIVAL_PYLON.get_aabb()
+	for side: float in [-1.0, 1.0]:
+		var pylon := MeshInstance3D.new()
+		pylon.name = "ArrivalPylon%s" % ("West" if side < 0.0 else "East")
+		pylon.mesh = ARRIVAL_PYLON
+		pylon.material_override = material
+		pylon.scale = Vector3(pier_width, size.y, size.z) / bounds.size
+		pylon.position = Vector3(side * (opening_half + pier_width * 0.5), 0.0, 0.0) - Vector3(
+			bounds.get_center().x * pylon.scale.x, bounds.position.y * pylon.scale.y,
+			bounds.get_center().z * pylon.scale.z)
+		pylon.set_meta("high_perches_role", "arrival_portal")
+		holder.add_child(pylon)
 
 
 ## The arrival portal is presentation-only, so the production spring arm used to
@@ -82,6 +116,8 @@ func build_camera_stops() -> Node3D:
 	for side: float in [-1.0, 1.0]:
 		_add_stop_shape(holder, "PierStop", at + Vector3(side * (opening_half + pier_width * 0.5),
 			size.y * 0.5, 0.0), Vector3(pier_width, size.y, size.z))
+	if str(cfg.get("arrival_portal_style", "arch")) == "pylons":
+		return holder
 	var crown_top := size.y + 1.15
 	_add_stop_shape(holder, "LintelStop", at + Vector3(0.0, (opening_top + crown_top) * 0.5, 0.0),
 		Vector3(size.x + 1.2, crown_top - opening_top, maxf(size.z, 3.0)))
@@ -243,6 +279,9 @@ func _add_ring(label: String, radii: Array, at: Vector3, material: Material, rol
 	instance.mesh = mesh
 	instance.material_override = material
 	instance.position = at
+	# F08#3: a full-round 0.5 m tube read as a gold rail across the lens of
+	# every landed frame; flattened it is a bronze inlay in the apron.
+	instance.scale = Vector3(1.0, 0.3, 1.0)
 	instance.set_meta("high_perches_role", role)
 	add_child(instance)
 	return instance

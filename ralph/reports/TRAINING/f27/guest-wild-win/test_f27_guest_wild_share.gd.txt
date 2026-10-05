@@ -1,0 +1,124 @@
+extends "res://tests/test_case.gd"
+
+## F27 guest share of a host wild victory: session._journal_guest_wild_defeats
+## retains one `wild_defeat` FoundationEvent duty per guest; the retry scan
+## commits it through character_action_rules, which restages the frozen event
+## with essence.stage_core_defeat. These cases pin the duty codec, the action
+## and the receipt the retry scan uses to recognise an applied share.
+const E := preload("res://scripts/creatures/essence.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const RECORD := preload("res://scripts/net/character_record_rules.gd")
+const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const EVENT := preload("res://scripts/net/foundation_event.gd")
+const RULES := preload("res://scripts/net/character_action_rules.gd")
+const INVENTORY := preload("res://scripts/world/death_satchel_rules.gd")
+const CHARACTER := "f27-share-guest"
+const NAMESPACE := "f27-share-world"
+const EPOCH := "f27-share-epoch"
+
+
+func _admitted() -> Dictionary:
+	var player := preload("res://autoload/player_state.gd").new()
+	player.configure(preload("res://autoload/item_db.gd").new())
+	player.character_id = CHARACTER
+	var card: RefCounted = SPECIES.spawn("terrapup")
+	player.party.add(card)
+	card.set("level", 5)
+	card.call("_apply_level_stats", PROGRESSION.config())
+	var record := RECORD.portable_projection(player.save_data())
+	assert_eq(RECORD.errors(record, CHARACTER), [], "canonical admitted record")
+	return record
+
+
+func _event(record: Dictionary) -> Dictionary:
+	var wild := preload("res://autoload/player_state.gd").new()
+	wild.configure(preload("res://autoload/item_db.gd").new())
+	wild.character_id = "wild"
+	wild.party.add(SPECIES.spawn("bramblebun"))
+	var enemy: Dictionary = RECORD.portable_projection(wild.save_data()).party[0]
+	enemy.uid = "wild-share-enemy"
+	enemy.level = 4
+	enemy.hp = 0
+	enemy.fainted = true
+	var uid: String = record.party[0].uid
+	var event := {"event_id": "wild_defeat:" + "ab".repeat(32), "world_namespace": NAMESPACE, "encounter_id": "enc-share",
+		"enemy_uid": enemy.uid, "enemy_record": enemy, "active_uid": uid, "eligible_uids": [uid],
+		"kind": "wild_defeat", "xp_mode": "hybrid", "realm": "meadows", "shed": {}}
+	event.shed = E.defeat_shed(event, CHARACTER)
+	return event
+
+
+func _duty(event: Dictionary) -> Dictionary:
+	var source := "wild_xp:" + str(event.event_id)
+	return {"character_id": CHARACTER, "action": "wild_defeat", "intent": event.duplicate(true),
+		"context": {"source_key": source, "validated_host_outcome": "win", "defeat_event": event.duplicate(true),
+			"participants": ["f27-share-host", CHARACTER], "world_namespace": NAMESPACE, "session_id": EPOCH}}
+
+
+func _row(duties: Array, source: String) -> Dictionary:
+	var row := {"version": 1, "kind": "foundation_event", "world_id": "f27-share-world-id", "world_namespace": NAMESPACE,
+		"session_id": EPOCH, "source_id": source, "duties": duties, "status": "retained"}
+	row.delivery_id = EVENT.identity(row)
+	return row
+
+
+## Exactly the context the retry scan builds before staging a retained duty.
+func _context(duty: Dictionary, revision: int) -> Dictionary:
+	var context: Dictionary = duty.context.duplicate(true)
+	context.character_id = CHARACTER
+	context.expected_revision = revision
+	context.in_range = true
+	context.retained_event = "foundation_event:retained"
+	context.in_combat = false
+	context.foundation_runtime_authorized = true
+	return context
+
+
+func test_retained_guest_share_duty_validates_and_rejects_tampering() -> void:
+	var event := _event(_admitted())
+	var duty := _duty(event)
+	var source: String = duty.context.source_key
+	assert_true(EVENT.valid(_row([duty], source), NAMESPACE, "f27-share-world-id"), "a host-built share is a valid retained duty")
+	var wrong_source := _row([duty], "wild_xp:other")
+	assert_false(EVENT.valid(wrong_source, NAMESPACE, "f27-share-world-id"), "source must name the event")
+	var forged := duty.duplicate(true)
+	forged.intent.eligible_uids = ["someone-else"]
+	assert_false(EVENT.valid(_row([forged], source), NAMESPACE, "f27-share-world-id"), "intent must equal the frozen event")
+	var outsider := duty.duplicate(true)
+	outsider.context.participants = ["f27-share-host"]
+	assert_false(EVENT.valid(_row([outsider], source), NAMESPACE, "f27-share-world-id"), "only an actual participant holds a share")
+	var lost := duty.duplicate(true)
+	lost.context.validated_host_outcome = "loss"
+	assert_false(EVENT.valid(_row([lost], source), NAMESPACE, "f27-share-world-id"), "only a host win")
+
+
+func test_share_action_pays_reduced_xp_essence_and_the_defeat_receipt_once() -> void:
+	var before := _admitted()
+	var event := _event(before)
+	var duty := _duty(event)
+	var staged := RULES.stage(before, 3, "wild_defeat", duty.intent, _context(duty, 3), RECORD.errors)
+	assert_true(staged.get("ok") == true, str(staged))
+	assert_eq(staged.receipt, E.defeat_receipt(CHARACTER, event), "retry scan's receipt equals the staged one")
+	var direct := E.stage_core_defeat(before, CHARACTER, event, 3, E.config(), PROGRESSION.config(),
+		preload("res://scripts/creatures/teaching.gd").available_moves, preload("res://scripts/creatures/teaching.gd").character_loadout_mirror)
+	assert_true(E._equivalent(staged.state, direct.state), "the action is exactly the host defeat transaction")
+	var essence_before: int = INVENTORY.inventory_from(before.inventory).count("essence_ground")
+	assert_eq(INVENTORY.inventory_from(staged.state.inventory).count("essence_ground"), essence_before + 1, "one Ground Essence")
+	assert_true(int(staged.state.party[0].xp) > int(before.party[0].xp) or int(staged.state.party[0].level) > int(before.party[0].level), "XP paid")
+	var again := RULES.stage(staged.state, 4, "wild_defeat", duty.intent, _context(duty, 4), RECORD.errors)
+	assert_eq(again.get("code"), "reconcile_original_decision", "an applied share never pays twice")
+
+
+func test_share_action_requires_the_host_frozen_win() -> void:
+	var before := _admitted()
+	var duty := _duty(_event(before))
+	var context := _context(duty, 3)
+	context.validated_host_outcome = "draw"
+	assert_eq(RULES.stage(before, 3, "wild_defeat", duty.intent, context, RECORD.errors).get("code"), "actual_host_wild_defeat_required")
+	context = _context(duty, 3)
+	context.in_combat = true
+	assert_eq(RULES.stage(before, 3, "wild_defeat", duty.intent, context, RECORD.errors).get("code"), "actual_host_wild_defeat_required")
+	var swapped: Dictionary = duty.intent.duplicate(true)
+	swapped.xp_mode = "ordinary"
+	assert_eq(RULES.stage(before, 3, "wild_defeat", swapped, _context(duty, 3), RECORD.errors).get("code"), "actual_host_wild_defeat_required",
+		"the packet intent cannot differ from the host's frozen event")
