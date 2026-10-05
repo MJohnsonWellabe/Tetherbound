@@ -34,29 +34,48 @@ func build(id: String, ghost: bool = false) -> void:
 				if ghost: # Placed, the kit Workbench (DRESSING) is the whole visual.
 					_table(2.0,1.2); _box(Vector3(1.6,0.18,0.16),Vector3(0,1.2,-0.4),Color("8c6b46"))
 			"forge":
-				_box(Vector3(1.8,1.4,1.4),Vector3(0,0.7,0),Color("6a6d72"))
-				_box(Vector3(0.55,1.4,0.6),Vector3(0.6,2.1,-0.4),Color("81868b"))
-				_box(Vector3(0.7,0.5,0.05),Vector3(0,0.7,0.72),Color("242b31"))
-				_box(Vector3(0.9,0.16,0.7),Vector3(-0.45,1.48,0.2),Color("a8aeb5"))
+				# Dark stone furnace and chimney with a lit firebox (reads at night).
+				_box(Vector3(1.8,1.4,1.4),Vector3(0,0.7,0),Color("57534f"))
+				_box(Vector3(0.55,1.4,0.6),Vector3(0.6,2.1,-0.4),Color("6b625a"))
+				_box(Vector3(0.7,0.5,0.05),Vector3(0,0.7,0.72),Color("ff7a2a"),2.4)
+				_box(Vector3(0.9,0.16,0.7),Vector3(-0.45,1.48,0.2),Color("8d8f93"))
+				_glow(Vector3(0,0.75,1.1),Color("ff8a3d"))
 			"kitchen":
-				_table(2.4,1.4)
-				_box(Vector3(2.4,0.16,0.2),Vector3(0,1.9,-0.55),Color("99744c"))
-				for x: float in [-1.05,1.05]: _box(Vector3(0.12,1.0,0.12),Vector3(x,1.5,-0.55),Color("99744c"))
-				_cylinder(0.33,0.45,Vector3(0,1.28,0),Color("596d78"))
+				# Prep table and spice shelf, plus a stone hearth with a hanging pot.
+				_table(1.4,1.4,Vector3(-0.5,0,0))
+				_box(Vector3(1.4,0.16,0.2),Vector3(-0.5,1.9,-0.55),Color("99744c"))
+				for x: float in [-1.1,0.1]: _box(Vector3(0.12,1.0,0.12),Vector3(x,1.5,-0.55),Color("99744c"))
+				_cylinder(0.5,0.32,Vector3(0.95,0.16,0.1),Color("6e6760"))
+				_cylinder(0.36,0.06,Vector3(0.95,0.34,0.1),Color("ff7a2a"),2.0)
+				for x: float in [0.5,1.4]: _box(Vector3(0.08,1.6,0.08),Vector3(x,0.8,0.1),Color("5b4632"))
+				_box(Vector3(1.0,0.08,0.08),Vector3(0.95,1.6,0.1),Color("5b4632"))
+				_glow(Vector3(0.95,0.6,0.5),Color("ff8a3d"))
 			"altar":
-				_cylinder(0.3,1.0,Vector3(0,0.5,0),Color("7a8290"))
-				_box(Vector3(0.51,0.15,0.51),Vector3(0,1.08,0),Color("c3b892"))
-				_cylinder(0.18,0.23,Vector3(0,1.27,0),Color("85c9c3"))
+				# Stepped stone plinth, pillar and a glowing relic crystal.
+				_box(Vector3(1.0,0.16,1.0),Vector3(0,0.08,0),Color("8b8a84"))
+				_box(Vector3(0.74,0.16,0.74),Vector3(0,0.24,0),Color("9d9c95"))
+				_cylinder(0.24,0.8,Vector3(0,0.72,0),Color("a9a79e"))
+				_box(Vector3(0.56,0.12,0.56),Vector3(0,1.18,0),Color("c3b892"))
+				_cylinder(0.12,0.34,Vector3(0,1.42,0),Color("6fe3d6"),2.2)
+				_glow(Vector3(0,1.5,0),Color("7ff0e2"))
 			"den":
+				# Thatched A-frame shelter with a back wall and straw beds.
 				for x: float in [-2.0,2.0]:
-					for z: float in [-1.4,1.4]: _box(Vector3(0.16,2.2,0.16),Vector3(x,1.1,z),Color("785a3c"))
-				_box(Vector3(4.4,0.18,3.2),Vector3(0,2.3,0),Color("8b9272"))
-				for i: int in 5: _cylinder(0.48,0.15,Vector3(-1.65+i*0.82,0.1,0.65),Color("c5b77c"))
+					for z: float in [-1.4,1.4]: _box(Vector3(0.16,1.4,0.16),Vector3(x,0.7,z),Color("785a3c"))
+				for side: float in [-1.0,1.0]:
+					var roof := _box(Vector3(4.6,0.16,1.95),Vector3(0,1.95,side*0.78),Color("c9a95a"))
+					roof.rotation.x = side*deg_to_rad(38.0)
+				_box(Vector3(4.2,1.4,0.1),Vector3(0,0.7,-1.42),Color("8a6a46"))
+				for x: float in [-2.02,2.02]: _box(Vector3(0.1,1.4,1.2),Vector3(x,0.7,-0.8),Color("8a6a46"))
+				for i: int in 3: _cylinder(0.55,0.18,Vector3(-1.3+i*1.3,0.09,0.0),Color("d9bf6a"))
 			"farm":
-				_box(Vector3(1.4,0.14,1.4),Vector3(0,0.07,0),Color("584430"))
+				# Dark tilled soil in raised rows with green sprouts.
+				_box(Vector3(1.4,0.14,1.4),Vector3(0,0.07,0),Color("3b2a1d"))
 				for x: float in [-0.7,0.7]: _box(Vector3(0.1,0.22,1.4),Vector3(x,0.11,0),Color("90704b"))
 				for z: float in [-0.7,0.7]: _box(Vector3(1.4,0.22,0.1),Vector3(0,0.11,z),Color("90704b"))
-				for x: float in [-0.4,0.0,0.4]: _box(Vector3(0.12,0.06,1.1),Vector3(x,0.16,0),Color("75604c"))
+				for x: float in [-0.4,0.0,0.4]:
+					_box(Vector3(0.22,0.08,1.15),Vector3(x,0.18,0),Color("4a3524"))
+					for z: float in [-0.4,0.0,0.4]: _sprout(Vector3(x,0.22,z))
 			"greenhouse":
 				_box(Vector3(3.2,0.18,2.6),Vector3(0,0.09,0),Color("77634d"))
 				for x: float in [-1.5,1.5]:
@@ -177,10 +196,10 @@ func next_upgrade(personal: Dictionary) -> Dictionary:
 		if row.station_id == _id and int(row.tier) == int(tier.effective_tier)+1: blueprint=row
 	return NEXT.describe(_id,world,personal,blueprint)
 
-func _table(width: float, depth: float) -> void:
-	_box(Vector3(width,0.18,depth),Vector3(0,0.95,0),Color("ad8557"))
+func _table(width: float, depth: float, at: Vector3 = Vector3.ZERO) -> void:
+	_box(Vector3(width,0.18,depth),at+Vector3(0,0.95,0),Color("ad8557"))
 	for x: float in [-width*0.4,width*0.4]:
-		for z: float in [-depth*0.35,depth*0.35]: _box(Vector3(0.15,0.9,0.15),Vector3(x,0.45,z),Color("735637"))
+		for z: float in [-depth*0.35,depth*0.35]: _box(Vector3(0.15,0.9,0.15),at+Vector3(x,0.45,z),Color("735637"))
 
 func _build_attachment(def: Dictionary) -> void:
 	var palette: Array[Color] = [Color("c5b583"),Color("6fadb2"),Color("a1c4d8"),Color("88a9ba")]
@@ -199,9 +218,10 @@ func _build_attachment(def: Dictionary) -> void:
 const DRESSING := {
 	"workbench": [["Workbench", Vector3(0, 0, 0.05), 0.0]],
 	"forge": [["Anvil_Log", Vector3(-0.35, 0, 1.25), 15.0], ["Bucket_Metal", Vector3(0.75, 0, 1.0), 0.0]],
-	"kitchen": [["Cauldron", Vector3(1.75, 0, 0.35), 0.0], ["Shelf_Simple", Vector3(-0.2, 0, -0.95), 0.0],
+	"kitchen": [["Cauldron", Vector3(0.95, 0.36, 0.1), 0.0], ["Shelf_Simple", Vector3(-0.5, 0, -0.95), 0.0],
 		["Barrel", Vector3(-1.6, 0, 0.4), 20.0]],
-	"altar": [["Pot_1", Vector3(0.55, 0, 0.35), 0.0]],
+	"altar": [["CandleStick_Stand", Vector3(-0.75, 0, 0.3), 0.0], ["CandleStick_Stand", Vector3(0.75, 0, 0.3), 0.0]],
+	"farm": [["FarmCrate_Apple", Vector3(1.15, 0, 0.5), 15.0]],
 }
 const PROPS_DIR := "res://assets/props/quaternius_fantasy/"
 
@@ -216,23 +236,47 @@ func _dress(id: String) -> void:
 		prop.rotation.y = deg_to_rad(float(row[2]))
 		add_child(prop)
 
-func _box(size: Vector3, at: Vector3, color: Color) -> void:
+func _box(size: Vector3, at: Vector3, color: Color, glow: float = 0.0) -> MeshInstance3D:
 	var mesh := BoxMesh.new()
 	mesh.size=size
-	_shape(mesh,at,color)
+	return _shape(mesh,at,color,glow)
 
-func _cylinder(radius: float, height: float, at: Vector3, color: Color) -> void:
+func _cylinder(radius: float, height: float, at: Vector3, color: Color, glow: float = 0.0) -> MeshInstance3D:
 	var mesh := CylinderMesh.new()
 	mesh.top_radius=radius
 	mesh.bottom_radius=radius
 	mesh.height=height
 	mesh.radial_segments=16
-	_shape(mesh,at,color)
+	return _shape(mesh,at,color,glow)
 
-func _shape(mesh: Mesh, at: Vector3, color: Color) -> void:
+## A small leafy sprout: stem plus two tilted leaves.
+func _sprout(at: Vector3) -> void:
+	_cylinder(0.02,0.16,at+Vector3(0,0.08,0),Color("5d8a3a"))
+	for side: float in [-1.0,1.0]:
+		var leaf := _box(Vector3(0.14,0.02,0.07),at+Vector3(side*0.06,0.15,0),Color("78b446"))
+		leaf.rotation.z = side*deg_to_rad(25.0)
+
+## Fire or relic glow: a short-range light on placed stations only, so they
+## still read after dark. Visual only.
+func _glow(at: Vector3, color: Color) -> void:
+	if _ghost: return
+	var light := OmniLight3D.new()
+	light.name = "StationGlow"
+	light.light_color = color
+	light.light_energy = 1.2
+	light.omni_range = 3.0
+	light.shadow_enabled = false
+	light.position = at
+	add_child(light)
+
+func _shape(mesh: Mesh, at: Vector3, color: Color, glow: float = 0.0) -> MeshInstance3D:
 	var material := StandardMaterial3D.new()
 	material.albedo_color=color
 	material.roughness=0.86
+	if glow > 0.0 and not _ghost:
+		material.emission_enabled=true
+		material.emission=color
+		material.emission_energy_multiplier=glow
 	if _ghost or color.a < 1.0: material.transparency=BaseMaterial3D.TRANSPARENCY_ALPHA
 	var instance := MeshInstance3D.new()
 	instance.mesh=mesh
@@ -240,6 +284,7 @@ func _shape(mesh: Mesh, at: Vector3, color: Color) -> void:
 	instance.material_override=material
 	add_child(instance)
 	_materials.append(material)
+	return instance
 
 func tint_ghost(valid: bool) -> void:
 	for material: StandardMaterial3D in _materials:
