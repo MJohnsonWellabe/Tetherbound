@@ -2,8 +2,10 @@ extends "res://tests/test_case.gd"
 
 const HOST := preload("res://scripts/combat/accepted_action_host.gd")
 const WIND := {"max": 100.0, "regen_per_second": 18.0}
+const BODY := {"creature_a": 51, "creature_b": 52}
 var host: RefCounted
 var id := ""
+var _verdicts: Dictionary = {}
 
 func before_each() -> void:
 	host = HOST.new(1)
@@ -11,14 +13,30 @@ func before_each() -> void:
 		"species_id": "bramblebun", "hp": 200.0, "hp_max": 200.0,
 		"position": [2.0, 0.0, 0.0]}, "creature_a", "owner_a")
 	id = rec.encounter_id
+	_verdicts = {}
+	# With combat.json actor_vitals on, every encounter is tracked: the fixture binds the actor as the director does
+	_bind("creature_a")
 
 func _owned(uid: String = "creature_a") -> Dictionary:
-	return {"uid": uid, "hp": 100.0, "fainted": false,
+	return {"uid": uid, "hp": 100.0, "max_hp": 100.0, "fainted": false,
 		"known_moves": ["pebble_toss", "earth_rend"], "move_quick": "pebble_toss", "move_charged": "earth_rend"}
 
+## Director `_ordinary_actor_binding`: bind the admitted owned row to its
+## actual host body unless that exact actor/body is already current. A switch
+## deploys a different body and so advances the participant's actor lifetime.
+func _bind(uid: String) -> void:
+	var participant: Dictionary = host.record(id).get("participants", {}).get(1, {})
+	var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+	if participant.get("actor_bound_uid") == uid and actor.get("body_instance_id") == BODY[uid]: return
+	var bound: Dictionary = host.bind_actor_body(id, 1, "owner_a", _owned(uid), BODY[uid])
+	assert_true(bound.get("ok") == true, "fixture actor bind: " + str(bound))
+
 func _binding(uid: String = "creature_a") -> Dictionary:
-	return {"character_id": "owner_a", "creature_uid": uid, "deployment_generation": 1,
-		"body_instance_id": 51, "actor_generation": 0}
+	_bind(uid)
+	var actor: Dictionary = host.record(id).participants[1].actor_vitals[uid]
+	var generation := int(actor.body_generation)
+	return {"character_id": "owner_a", "creature_uid": uid, "deployment_generation": generation,
+		"body_instance_id": BODY[uid], "actor_generation": generation}
 
 func _move(slot: String = "quick") -> Dictionary:
 	return {"move_id": "pebble_toss" if slot == "quick" else "earth_rend", "slot": slot,
@@ -32,10 +50,37 @@ func _start(action: int, now: int = 1000, uid: String = "creature_a", slot: Stri
 
 func _arrive(action: int, now: int = 1300, binding: Dictionary = {}) -> Dictionary:
 	var start: Dictionary = host.move_commit(id, 1, action)
-	return host.validate_strike({"encounter_id": id, "action": action, "slot": start.slot,
+	# The director's strike view carries the tracked publication binding of the
+	# current bound actor beside the committed start's legacy move binding.
+	var verdict: Dictionary = host.validate_strike({"encounter_id": id, "action": action, "slot": start.slot,
 		"move_id": start.move_id, "move": start.move, "facing": Vector3.RIGHT}, 1,
 		{"now_ms": now, "origin": Vector3.ZERO, "bodies": [],
+		"f22_actor_binding": _binding(str(start.creature_uid)),
 		"move_actor_binding": start.binding if binding.is_empty() else binding})
+	if verdict.get("ok") == true: _verdicts[action] = verdict
+	return verdict
+
+## Director `_finish_host_strike` at arrival: begin the tracked publication,
+## credit the actual debit, commit the opponent HP, record and acknowledge.
+func _resolve(action: int, debit: float, target_uid: String = "", hp_before: float = 0.0) -> Dictionary:
+	var opponent: Dictionary = host.record(id).opponent
+	var start: Dictionary = host.move_commit(id, 1, action)
+	var publication: Dictionary = host.begin_move_action_resolution(id, 1, action,
+		_binding(str(start.creature_uid)), str(opponent.get("card", {}).get("uid", "")),
+		int(opponent.get("body_generation", 0)))
+	assert_true(publication.get("ok") == true and publication.get("tracked") == true,
+		"fixture publication: " + str(publication))
+	if publication.get("ok") != true: return {}
+	var resources: Dictionary = host.credit_move_hit(id, 1, action, debit, target_uid, hp_before)
+	var hp_after := maxf(0.0, float(opponent.hp) - debit)
+	var rolled := {"hp": hp_after, "hp_max": float(opponent.hp_max), "killed": hp_after == 0.0}
+	host.set_opponent_hp(id, hp_after, float(opponent.hp_max), rolled)
+	var verdict: Dictionary = _verdicts.get(action, {})
+	assert_true(host.record_move_action_outcome(id, 1, str(publication.action_id), rolled, verdict),
+		"fixture records the committed debit")
+	assert_true(host.acknowledge_move_action_publication(id, 1, str(publication.action_id), verdict),
+		"fixture acknowledges the body publication")
+	return resources
 
 func test_start_spends_once_and_impact_cannot_run_early_or_repeat() -> void:
 	assert_true(_start(1).ok)
@@ -51,7 +96,7 @@ func test_meters_require_positive_debit_and_credit_one_actual_action_once() -> v
 	assert_true(host.credit_move_hit(id, 1, 1, 10.0).is_empty())
 	assert_true(_arrive(1).ok)
 	assert_true(host.credit_move_hit(id, 1, 1, 0.0).is_empty())
-	var credited: Dictionary = host.credit_move_hit(id, 1, 1, 10.0)
+	var credited: Dictionary = _resolve(1, 10.0)
 	assert_eq(credited.energy, 26.0)
 	assert_eq(credited.ultimate_meter, 6.0)
 	assert_true(host.credit_move_hit(id, 1, 1, 10.0).is_empty())
@@ -71,7 +116,7 @@ func test_wrong_move_or_body_lifetime_cannot_arrive() -> void:
 func test_charged_refusal_has_no_cost_and_does_not_replace_original() -> void:
 	assert_true(_start(1).ok)
 	assert_true(_arrive(1).ok)
-	host.credit_move_hit(id, 1, 1, 10.0)
+	_resolve(1, 10.0)
 	var before: Dictionary = host.record(id).duplicate(true)
 	assert_eq(_start(2, 2200, "creature_a", "charged").code, "insufficient_energy")
 	assert_eq(host.record(id), before)
@@ -80,7 +125,7 @@ func test_charged_refusal_has_no_cost_and_does_not_replace_original() -> void:
 func test_switch_retains_each_creatures_resources_and_cooldown() -> void:
 	assert_true(_start(1).ok)
 	assert_true(_arrive(1).ok)
-	host.credit_move_hit(id, 1, 1, 10.0)
+	_resolve(1, 10.0)
 	assert_true(_start(2, 1500, "creature_b").ok)
 	assert_eq(host.move_resource_snapshot(id, 1, "creature_b").energy, 0.0)
 	assert_eq(host.move_resource_snapshot(id, 1, "creature_a").energy, 26.0)
@@ -100,7 +145,7 @@ func test_unsaved_mastery_and_resources_survive_peer_replacement_and_close() -> 
 	assert_true(host.join(id, 2, "creature_b", "owner_b").ok)
 	assert_true(_start(1).ok)
 	assert_true(_arrive(1).ok)
-	host.credit_move_hit(id, 1, 1, 10.0, "opponent_a", 200.0)
+	_resolve(1, 10.0, "opponent_a", 200.0)
 	var original: Dictionary = host.move_mastery_outcome(id, 1, 1)
 	assert_eq(original.outcome.applied_damage, 10.0)
 	assert_eq(host.pending_move_mastery().size(), 1)
