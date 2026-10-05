@@ -48,6 +48,7 @@ extends SceneTree
 ## framing (rendered captures), an earned-save party.
 
 const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -86,8 +87,8 @@ var _party_level_override := 0
 var _json := ""
 ## F33#2: equip every party member with this tier's Harness and Charm (and
 ## upgrade) in the real Game.local record before each fight; "" = no gear.
-var _gear_tier := ""
-var _gear_upgrade := 0
+var _gear_tier: String = GEAR.from_args().tier
+var _gear_upgrade: int = GEAR.from_args().upgrade
 
 
 func _init() -> void:
@@ -97,8 +98,6 @@ func _init() -> void:
 		elif arg.begins_with("--starter="): _starter_only = arg.trim_prefix("--starter=")
 		elif arg.begins_with("--party-level="): _party_level_override = int(arg.trim_prefix("--party-level="))
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
-		elif arg.begins_with("--gear-tier="): _gear_tier = arg.trim_prefix("--gear-tier=")
-		elif arg.begins_with("--gear-upgrade="): _gear_upgrade = clampi(int(arg.trim_prefix("--gear-upgrade=")), 0, 3)
 	_run.call_deferred()
 
 
@@ -176,7 +175,7 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
-					_equip_gear(party)
+					GEAR.equip(self, party, _gear_tier, _gear_upgrade)
 					var pilot := PILOT.new()
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
@@ -243,7 +242,7 @@ func _run() -> void:
 			errors.append("cannot write %s" % _json)
 		else:
 			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection,
-				"party": {"lead": STARTERS, "retained": RETAINED, "level_override": _party_level_override},
+				"gear": GEAR.label(_gear_tier, _gear_upgrade), "party": {"lead": STARTERS, "retained": RETAINED, "level_override": _party_level_override},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
 				"rows": rows, "runs": runs, "errors": errors}, "  "))
 	for e in errors: print("MEADOWS_C2C3 ERROR: %s" % e)
@@ -327,17 +326,3 @@ static func _max(values: Array) -> float:
 	return best
 
 
-
-## F33#2 (disclosed fixture): the party's gear written straight into the real
-## owner record, where the production combat hooks read it.
-func _equip_gear(party: Array[RefCounted]) -> void:
-	if _gear_tier.is_empty(): return # Bare: the record is left exactly as it is.
-	var local: RefCounted = root.get_node("Game").get("local")
-	var creatures: Dictionary = local.get("redesign_character").get("creatures", {})
-	for creature: RefCounted in party:
-		var gear := {"harness": "", "charm": ""}
-		if not _gear_tier.is_empty():
-			var suffix := "" if _gear_upgrade == 0 else "_plus_%d" % _gear_upgrade
-			gear = {"harness": _gear_tier + "_harness" + suffix, "charm": _gear_tier + "_charm" + suffix}
-		creatures[str(creature.get("uid"))] = {"gear": gear}
-	local.get("redesign_character")["creatures"] = creatures

@@ -37,6 +37,7 @@ extends SceneTree
 const PATTERN_PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
 var NAMED_PATTERNS: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("patterns", {}).get("named", {})
 const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -115,6 +116,8 @@ var _json := ""
 ## Tuning sweeps only: replaces every selected trainer's authored
 ## `foe_power_multiplier`. Recorded in the JSON; evidence runs omit it.
 var _multiplier_override := 0.0
+## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
+var _gear: Dictionary = GEAR.from_args()
 
 
 func _init() -> void:
@@ -199,6 +202,7 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
+					GEAR.equip(self, party, str(_gear.tier), int(_gear.upgrade))
 					var pilot: RefCounted
 					if entry.kind == "alpha":
 						pilot = AlphaPilot.new()
@@ -265,6 +269,7 @@ func _run() -> void:
 			errors.append("cannot write %s" % _json)
 		else:
 			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection, "multiplier_override": _multiplier_override,
+				"gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)),
 				"party": {"lead": STARTERS, "retained": RETAINED, "level": _party_level},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
 				"rows": rows, "runs": runs, "errors": errors, "accepted": false}, "  "))
