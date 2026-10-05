@@ -102,7 +102,7 @@ Type crops extend the built farm loop (`farm.json`: berries grow 1 in-game day, 
 | Drowning and currents | Tidewake | Built: `water_swimming.json` drowning; current push per WORLD | Lower swim stamina drain, drowning rate and current push |
 | Cold heights | Cloudreach | Not built: an authored local zone only, never a survival meter (hard rule) | Reduce that zone's stamina-regen penalty |
 | Storm static | Stormwood | Built: `storm_mitigation()` insulation fields | Reduce strike damage |
-| Hazard terrain | Stormwood, Tidewake | Partial: charged ground, `water_hazard.json` submersion | Reduce contact damage |
+| Hazard terrain | Stormwood, Tidewake | Owner 2026-10-05: Stormwood charged ground deals light, never-lethal contact damage to the trainer only; `water_hazard.json` submersion counts as drowning | Reduce contact damage (Rootiron, Stormglass) |
 
 The Stormwood insulated recipes move from field crafting to the home Workbench (big stations only at home, RD-15).
 
