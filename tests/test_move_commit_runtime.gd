@@ -216,7 +216,14 @@ func test_excluded_encounter_keeps_the_untracked_strike_path() -> void:
 	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 1, "slot": "quick"},
 		1, _owned(), loose, _move(), WIND, 1000).ok)
 	assert_eq(strike.call(1, 1300).get("code"), "stale_actor", "a tracked record refuses an unbound actor")
+	# The exclusion is host-only state, never carried by a record or payload:
+	# a record (or anything a guest could put in one) claiming it changes nothing.
+	for key: String in ["untracked", "exclude_from_actor_tracking", "actor_tracking", "_untracked_encounters"]:
+		rec[key] = {hosted: true} if key == "_untracked_encounters" else (false if key == "actor_tracking" else true)
+	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 3, "slot": "quick"},
+		1, _owned(), loose, _move(), WIND, 3000).ok)
+	assert_eq(strike.call(3, 3300).get("code"), "stale_actor", "a record cannot carry the host-only exclusion in")
 	host.exclude_from_actor_tracking(hosted)
-	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 2, "slot": "quick"},
+	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 4, "slot": "quick"},
 		1, _owned(), loose, _move(), WIND, 5000).ok)
-	assert_true(strike.call(2, 5300).ok, "the excluded hosted record accepts the untracked strike")
+	assert_true(strike.call(4, 5300).ok, "the excluded hosted record accepts the untracked strike")
