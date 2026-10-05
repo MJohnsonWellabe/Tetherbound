@@ -1,0 +1,14 @@
+{
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--script",
+    "D:/tetherbound/.artifacts/render_service_choose_preset.gd",
+    "--",
+    "--preset=Medium"
+  ],
+  "exit_code": 0,
+  "profile": "D:\\tetherbound\\.artifacts\\f26-frame-matrix-1\\stormwood-medium-baseline\\profile"
+}

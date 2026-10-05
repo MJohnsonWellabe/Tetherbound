@@ -1,0 +1,30 @@
+{
+  "source_commit": "e98c2ed7f2ed58361d2d442d515451fc92bb4db8",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_r2_f41_matrix.gd",
+    "--",
+    "--biome=stormwood",
+    "--preset=Medium",
+    "--source-commit=e98c2ed7f2ed58361d2d442d515451fc92bb4db8",
+    "--out=D:/tetherbound/.artifacts/f26-frame-matrix-1/stormwood-medium-baseline/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 727.062,
+  "native_elapsed_seconds": 718.531,
+  "native_started_utc": "2026-10-05T17:29:08.822754+00:00",
+  "preset": "Medium",
+  "profile": "D:\\tetherbound\\.artifacts\\f26-frame-matrix-1\\stormwood-medium-baseline\\profile",
+  "scope": "Owned F26 Stormwood existingF41 nativeJPEG matrix:5stands x4headings x4Surgephases xbefore/afterrelease xday/nightclock=320planned. Stagedteleports/flags/health/cosmeticclock/Surgepins; existingmaxphysicscatchup30 retained. Defaultpresentationflagsunchanged; noearnedfight/FPS/Ally/qualityPASS claim."
+}
