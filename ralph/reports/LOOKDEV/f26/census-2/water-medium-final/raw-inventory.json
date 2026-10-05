@@ -1,0 +1,213 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 2893,
+      "sha256": "6cd5c66e178a9e380208f837efe4455424125f2f4ea913b12130807067a2531e"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 2933116,
+      "sha256": "9bfc567db56f3ffe33d8bd7b392e6e2569a4dc9b5dbfbf6845f93c98966df5ff"
+    },
+    {
+      "path": "raw-evidence-03.zip",
+      "size": 45870221,
+      "sha256": "393b3b636c050f0ed4ce9710e6cb567d729f12556b55e9fa1a2983f72cf3740c"
+    },
+    {
+      "path": "raw-evidence-04.zip",
+      "size": 13294010,
+      "sha256": "f4e1b902a4e994a8372397ca61ab817bdd1d0ba0b024c1f7eb31824568d932e3"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 7235,
+      "sha256": "cb2249d7c0316fab21d844ca658c9a8927b476127c960f87afa79b2d45bf01e9"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1035,
+      "sha256": "c101be5527d4a591819ba7e19ae19794eeb3231507690243d6473916fb42a304"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 388,
+      "sha256": "1249217f3a51a36e2c3c69955f012ee31758226cfbe659321717331bc5ec3551"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-02.zip",
+      "size": 104319624,
+      "sha256": "1c0339d8c4a706c996572500ecb1b6e57394d76e45aec8c4cf5e5fa7bc181f79"
+    },
+    {
+      "path": "frames/manifest.json.previous",
+      "archive": "raw-evidence-03.zip",
+      "size": 104319520,
+      "sha256": "81f52cdd2e41805c0bdc7462241f95801cab9ba0b0f50052b61e26b3af9a8221"
+    },
+    {
+      "path": "frames/water__brine_steps__05__the_tidal_stairstones__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 1806473,
+      "sha256": "27fd15fe0b9fe79a05bd29fab9b4ee53772cca03abf584511e0b6ea24518cd44"
+    },
+    {
+      "path": "frames/water__brine_steps__06__brine_steps_east_beach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2210644,
+      "sha256": "7269d1f547d030b0dcda90cf9422b90fe8d2ea1bbe3c5e1862d887083e1bc603"
+    },
+    {
+      "path": "frames/water__deep_watch__23__deep_watch_lookout__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2788985,
+      "sha256": "93915d1030b01836cea19b895e30f16f604b5c1c6d35f64aee21f2dff97a334c"
+    },
+    {
+      "path": "frames/water__deep_watch__24__deep_watch_beach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2301826,
+      "sha256": "0b5a0bef351baf1f1aab3ee97173db0df530b5dd24584d5129e4ca68b19ad5e9"
+    },
+    {
+      "path": "frames/water__drowned_garden__21__drowned_garden_terraces__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2076697,
+      "sha256": "708797c1757fd7cc207c52693fa4a468d624d2bf0fab5d502c7607c91875f66b"
+    },
+    {
+      "path": "frames/water__drowned_garden__22__drowned_garden_beach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2815336,
+      "sha256": "f43e3e187ecbcf3d780dd3fcba51505998d459ebea61d811d8d6b31d87fb5491"
+    },
+    {
+      "path": "frames/water__first_shore__01__first_shore_welcome_beacon__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2054405,
+      "sha256": "b13b9b05b1a5be0cde85ed95c5686304889378f25145ee9fbfb581302b576d43"
+    },
+    {
+      "path": "frames/water__first_shore__02__first_shore_horizon_stones__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2208883,
+      "sha256": "05e095d1562c0817ff2347e47107aba873a1459d5416aa3f7e2b469f23eb0e3c"
+    },
+    {
+      "path": "frames/water__gull_rest__19__gull_rest_signal_spire__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2630536,
+      "sha256": "e85d7d567154086bd0841299344cbb198bf15325a2e7f83b5f68f6528d92ca35"
+    },
+    {
+      "path": "frames/water__gull_rest__20__gull_rest_beach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2658069,
+      "sha256": "e0b720a12171ffbb38ff5ba5794d33de4c21ad5166a9a85a8f1874f0db8fc9e2"
+    },
+    {
+      "path": "frames/water__lantern_cove__17__lantern_cove_drift_arch__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2270542,
+      "sha256": "9d6f65e26744208e99c94a161da5bf056fc23abbd95fdf6b59ac71818d7c2318"
+    },
+    {
+      "path": "frames/water__lantern_cove__18__lantern_cove_beach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2227681,
+      "sha256": "3e10211b086f58951cc33744e5912c8a2522c3407d05ac27ec32f760783922ee"
+    },
+    {
+      "path": "frames/water__reedhaven__03__reedhaven_woven_hall__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2367042,
+      "sha256": "75f51ffd174900e0c1b23644a0509417adfb73afd2da2c6b411b2bbe9953b4d5"
+    },
+    {
+      "path": "frames/water__reedhaven__04__reedhaven_root_walk__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2652803,
+      "sha256": "74b2797e6a8fcb67a8e3067f020d9f3e0675af39fce05fd678c81db5e46a23ae"
+    },
+    {
+      "path": "frames/water__salt_crown__11__salt_crown_tide_shrine__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2459912,
+      "sha256": "82364e26824106cfcb8fba150ae1414411e0c3d31488ac753b4307130312d687"
+    },
+    {
+      "path": "frames/water__salt_crown__12__salt_crown_return_bell__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2334585,
+      "sha256": "f1648524cd78a1d65a649d3634407fc7b52ee82cfd60555c5179d4ca3fa47879"
+    },
+    {
+      "path": "frames/water__shellwatch__07__shellwatch_rescue_jetty__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2696483,
+      "sha256": "0a23f2892892bf1fe0fdb13ee8a5f84bab1ad32f3927c036bd273df84679e7e4"
+    },
+    {
+      "path": "frames/water__shellwatch__08__shellwatch_cradle_beach__day.png",
+      "archive": "raw-evidence-03.zip",
+      "size": 2392830,
+      "sha256": "d1eb1dfbb9bbfc1b70359da57b608ecfd5f6c55bb6e3ca8eba28175b58eb2d4c"
+    },
+    {
+      "path": "frames/water__sluice_isle__13__sluice_isle_twin_pumps__day.png",
+      "archive": "raw-evidence-04.zip",
+      "size": 2600981,
+      "sha256": "f0c5d0a61ae758576fbebce154cb0529a5820eb6bb4f8cf8875003398d310e90"
+    },
+    {
+      "path": "frames/water__sluice_isle__14__sluice_channel_bridge__day.png",
+      "archive": "raw-evidence-04.zip",
+      "size": 2054356,
+      "sha256": "b411c61ef7a883aa95bb68304fcbd2b8c40a04d6c443ea4fbf46eaa008770235"
+    },
+    {
+      "path": "frames/water__tidal_cradle__09__aquaryn_tidal_basin__day.png",
+      "archive": "raw-evidence-04.zip",
+      "size": 1910469,
+      "sha256": "68b7113eec978c8f8597c27ff63ca62cce4d16fc481f470a3dd272f0b8413297"
+    },
+    {
+      "path": "frames/water__tidal_cradle__10__tidal_cradle_saddle_camp__day.png",
+      "archive": "raw-evidence-04.zip",
+      "size": 3109646,
+      "sha256": "4cc7a3b2c0e716d586d2cbe953dc06718a73662ff9ebbbc403019242f574c799"
+    },
+    {
+      "path": "frames/water__veilfall__15__the_veilfall_cascade__day.png",
+      "archive": "raw-evidence-04.zip",
+      "size": 1564003,
+      "sha256": "9d55ed3e6b3cd27b4511e32c5be980624f0ab025ee2590809a82d743010ca7dd"
+    },
+    {
+      "path": "frames/water__veilfall__16__veilfall_mountain_crown__day.png",
+      "archive": "raw-evidence-04.zip",
+      "size": 2062505,
+      "sha256": "59afbfac811addc263e8cdd125b6ad917c8b97f0066a85957266bf96369bf742"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}

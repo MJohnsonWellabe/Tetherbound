@@ -1,0 +1,31 @@
+{
+  "source_commit": "b5e8cf3842e1d21e5306d6b4e6c78a78233bcb57",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=water",
+    "--preset=Medium",
+    "--source-commit=b5e8cf3842e1d21e5306d6b4e6c78a78233bcb57",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/water-medium-final/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 280.812,
+  "native_elapsed_seconds": 272.391,
+  "native_started_utc": "2026-10-05T15:52:26.853778+00:00",
+  "preset": "Medium",
+  "profile": "D:\\tetherbound\\.artifacts\\f26-census-2\\water-medium-final\\profile",
+  "scope": "Owned F26 production material census visual capture; no FPS/image-quality claim."
+}

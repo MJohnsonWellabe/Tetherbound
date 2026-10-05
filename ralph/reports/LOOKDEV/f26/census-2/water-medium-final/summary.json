@@ -1,0 +1,438 @@
+{
+  "source_commit": "b5e8cf3842e1d21e5306d6b4e6c78a78233bcb57",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=water",
+    "--preset=Medium",
+    "--source-commit=b5e8cf3842e1d21e5306d6b4e6c78a78233bcb57",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/water-medium-final/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "native_elapsed_seconds": 272.391,
+  "supervisor_elapsed_seconds": 280.812,
+  "runtime_errors": [],
+  "native_complete": true,
+  "frame_count": 24,
+  "planned_frame_count": 24,
+  "native_failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "b5e8cf3842e1d21e5306d6b4e6c78a78233bcb57"
+  },
+  "png_dimensions": {
+    "water__brine_steps__05__the_tidal_stairstones__day.png": [
+      1920,
+      1080
+    ],
+    "water__brine_steps__06__brine_steps_east_beach__day.png": [
+      1920,
+      1080
+    ],
+    "water__deep_watch__23__deep_watch_lookout__day.png": [
+      1920,
+      1080
+    ],
+    "water__deep_watch__24__deep_watch_beach__day.png": [
+      1920,
+      1080
+    ],
+    "water__drowned_garden__21__drowned_garden_terraces__day.png": [
+      1920,
+      1080
+    ],
+    "water__drowned_garden__22__drowned_garden_beach__day.png": [
+      1920,
+      1080
+    ],
+    "water__first_shore__01__first_shore_welcome_beacon__day.png": [
+      1920,
+      1080
+    ],
+    "water__first_shore__02__first_shore_horizon_stones__day.png": [
+      1920,
+      1080
+    ],
+    "water__gull_rest__19__gull_rest_signal_spire__day.png": [
+      1920,
+      1080
+    ],
+    "water__gull_rest__20__gull_rest_beach__day.png": [
+      1920,
+      1080
+    ],
+    "water__lantern_cove__17__lantern_cove_drift_arch__day.png": [
+      1920,
+      1080
+    ],
+    "water__lantern_cove__18__lantern_cove_beach__day.png": [
+      1920,
+      1080
+    ],
+    "water__reedhaven__03__reedhaven_woven_hall__day.png": [
+      1920,
+      1080
+    ],
+    "water__reedhaven__04__reedhaven_root_walk__day.png": [
+      1920,
+      1080
+    ],
+    "water__salt_crown__11__salt_crown_tide_shrine__day.png": [
+      1920,
+      1080
+    ],
+    "water__salt_crown__12__salt_crown_return_bell__day.png": [
+      1920,
+      1080
+    ],
+    "water__shellwatch__07__shellwatch_rescue_jetty__day.png": [
+      1920,
+      1080
+    ],
+    "water__shellwatch__08__shellwatch_cradle_beach__day.png": [
+      1920,
+      1080
+    ],
+    "water__sluice_isle__13__sluice_isle_twin_pumps__day.png": [
+      1920,
+      1080
+    ],
+    "water__sluice_isle__14__sluice_channel_bridge__day.png": [
+      1920,
+      1080
+    ],
+    "water__tidal_cradle__09__aquaryn_tidal_basin__day.png": [
+      1920,
+      1080
+    ],
+    "water__tidal_cradle__10__tidal_cradle_saddle_camp__day.png": [
+      1920,
+      1080
+    ],
+    "water__veilfall__15__the_veilfall_cascade__day.png": [
+      1920,
+      1080
+    ],
+    "water__veilfall__16__veilfall_mountain_crown__day.png": [
+      1920,
+      1080
+    ]
+  },
+  "material_snapshots": [
+    {
+      "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day",
+      "binding_count": 4348,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3345,
+        "untextured_material_may_be_authored_requires_source_review": 910
+      },
+      "resource_count": 2823
+    },
+    {
+      "frame_id": "water__first_shore__02__first_shore_horizon_stones__day",
+      "binding_count": 4354,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3352,
+        "untextured_material_may_be_authored_requires_source_review": 909
+      },
+      "resource_count": 2822
+    },
+    {
+      "frame_id": "water__reedhaven__03__reedhaven_woven_hall__day",
+      "binding_count": 4374,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3369,
+        "untextured_material_may_be_authored_requires_source_review": 912
+      },
+      "resource_count": 2835
+    },
+    {
+      "frame_id": "water__reedhaven__04__reedhaven_root_walk__day",
+      "binding_count": 4370,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3370,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2826
+    },
+    {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day",
+      "binding_count": 4371,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3371,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2829
+    },
+    {
+      "frame_id": "water__brine_steps__06__brine_steps_east_beach__day",
+      "binding_count": 4372,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3374,
+        "untextured_material_may_be_authored_requires_source_review": 905
+      },
+      "resource_count": 2828
+    },
+    {
+      "frame_id": "water__shellwatch__07__shellwatch_rescue_jetty__day",
+      "binding_count": 4387,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3391,
+        "untextured_material_may_be_authored_requires_source_review": 903
+      },
+      "resource_count": 2833
+    },
+    {
+      "frame_id": "water__shellwatch__08__shellwatch_cradle_beach__day",
+      "binding_count": 4398,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3398,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2832
+    },
+    {
+      "frame_id": "water__tidal_cradle__09__aquaryn_tidal_basin__day",
+      "binding_count": 4416,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3414,
+        "untextured_material_may_be_authored_requires_source_review": 909
+      },
+      "resource_count": 2845
+    },
+    {
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day",
+      "binding_count": 4422,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3420,
+        "untextured_material_may_be_authored_requires_source_review": 909
+      },
+      "resource_count": 2845
+    },
+    {
+      "frame_id": "water__salt_crown__11__salt_crown_tide_shrine__day",
+      "binding_count": 4432,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3429,
+        "untextured_material_may_be_authored_requires_source_review": 910
+      },
+      "resource_count": 2849
+    },
+    {
+      "frame_id": "water__salt_crown__12__salt_crown_return_bell__day",
+      "binding_count": 4433,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3431,
+        "untextured_material_may_be_authored_requires_source_review": 909
+      },
+      "resource_count": 2845
+    },
+    {
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+      "binding_count": 4443,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3443,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2839
+    },
+    {
+      "frame_id": "water__sluice_isle__14__sluice_channel_bridge__day",
+      "binding_count": 4451,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3452,
+        "untextured_material_may_be_authored_requires_source_review": 906
+      },
+      "resource_count": 2844
+    },
+    {
+      "frame_id": "water__veilfall__15__the_veilfall_cascade__day",
+      "binding_count": 4499,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3494,
+        "untextured_material_may_be_authored_requires_source_review": 912
+      },
+      "resource_count": 2857
+    },
+    {
+      "frame_id": "water__veilfall__16__veilfall_mountain_crown__day",
+      "binding_count": 4454,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3458,
+        "untextured_material_may_be_authored_requires_source_review": 903
+      },
+      "resource_count": 2832
+    },
+    {
+      "frame_id": "water__lantern_cove__17__lantern_cove_drift_arch__day",
+      "binding_count": 4484,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3481,
+        "untextured_material_may_be_authored_requires_source_review": 910
+      },
+      "resource_count": 2853
+    },
+    {
+      "frame_id": "water__lantern_cove__18__lantern_cove_beach__day",
+      "binding_count": 4487,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3484,
+        "untextured_material_may_be_authored_requires_source_review": 910
+      },
+      "resource_count": 2856
+    },
+    {
+      "frame_id": "water__gull_rest__19__gull_rest_signal_spire__day",
+      "binding_count": 4493,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3493,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2849
+    },
+    {
+      "frame_id": "water__gull_rest__20__gull_rest_beach__day",
+      "binding_count": 4501,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3501,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2849
+    },
+    {
+      "frame_id": "water__drowned_garden__21__drowned_garden_terraces__day",
+      "binding_count": 4503,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3501,
+        "untextured_material_may_be_authored_requires_source_review": 909
+      },
+      "resource_count": 2848
+    },
+    {
+      "frame_id": "water__drowned_garden__22__drowned_garden_beach__day",
+      "binding_count": 4497,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3497,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2843
+    },
+    {
+      "frame_id": "water__deep_watch__23__deep_watch_lookout__day",
+      "binding_count": 4507,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3507,
+        "untextured_material_may_be_authored_requires_source_review": 907
+      },
+      "resource_count": 2846
+    },
+    {
+      "frame_id": "water__deep_watch__24__deep_watch_beach__day",
+      "binding_count": 4505,
+      "classifications": {
+        "other": 90,
+        "unbound_primitive_default_requires_source_review": 3,
+        "bound_material_requires_visual_review": 3507,
+        "untextured_material_may_be_authored_requires_source_review": 905
+      },
+      "resource_count": 2846
+    }
+  ],
+  "unbound_bindings_requiring_source_review": [
+    {
+      "node": "Player/Model/Body",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "Player/Model/Nose",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterSignpost/@MeshInstance3D@2142",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "BoxMesh",
+      "mesh_path": "",
+      "visible_in_tree": true
+    }
+  ],
+  "truncated_resource_graphs": 0,
+  "qualification": "Capture completeness and binding inventory only; full visual/material acceptance OPEN. Mounted/visible flags are not pixel or fallback proof. No FPS, travel, campaign or handheld claim."
+}
