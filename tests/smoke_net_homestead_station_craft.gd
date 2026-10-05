@@ -18,6 +18,10 @@ extends "res://tests/smoke_net_crossing_hall_agreement.gd"
 ## owns a creature. The same saved character has played the opening: every
 ## opening:beat:<beat> flag through free_play and every onboarding
 ## opening:lesson:<id> seen flag are set before its save (seed_opening_complete).
+## For the F31#2 relic power case it has also hung the Meadows relic
+## (relics_hung plus the host's relic_hang receipt, seeded before its save:
+## seed_relic_hung), and with portals on it walks the ordinary capsule path
+## to the Meadows Shrine Room pedestal before choosing (relic_pedestal_stand).
 const COUNTED := ["potion_small", "berries", "fiber"]
 
 
@@ -38,6 +42,7 @@ func _run() -> void:
 	# starter before the host first admits it.
 	if not await _craft_step(1, "party_grant", {"species": "terrapup"}): return
 	if not await _craft_step(1, "seed_opening_complete", {}): return
+	if not await _craft_step(1, "seed_relic_hung", {"biome": "meadows"}): return
 	var seeded := await _craft_data(1, "save_character_here", {})
 	if seeded.is_empty():
 		await _craft_finish()
@@ -115,6 +120,7 @@ func _run() -> void:
 	# Read from the shipped portal flag: off, the host refuses with its reason
 	# and nothing changes; on, it is accepted exactly once (a second identical
 	# choice changes nothing more).
+	if not await _craft_step(1, "relic_pedestal_stand", {"biome": "meadows"}, 9000): return
 	var power := await _craft_data(1, "relic_power_attempt", {"heart_id": "meadows"})
 	if not power.is_empty():
 		if not bool(power.runtime_ready):

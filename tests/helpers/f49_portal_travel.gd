@@ -136,6 +136,25 @@ func _ready_world(realm: String) -> bool:
 		and bool(game.call("_realm_scene_ready", tree.current_scene, realm)) \
 		and INPUT_OWNER.current(tree) == null
 
+## Station craft (F31#2 relic power): the ordinary capsule walk to a Shrine
+## Room pedestal, stopping inside the host's interaction radius without Use.
+func walk_to_pedestal(biome: String) -> bool:
+	if not _bind(): return false
+	var pedestal: Node3D
+	for candidate: Node in tree.get_nodes_in_group("crossing_hall_pedestals"):
+		if candidate.get_meta("biome", "") == biome: pedestal = candidate as Node3D
+	if pedestal == null: return _fail("F49 missing producer: authored Shrine Room has no " + biome + " pedestal")
+	var nav := NAV.new(tree, _player, _rig, _stick)
+	var distance := _player.global_position.distance_to(pedestal.global_position)
+	if not await nav.walk_to(pedestal.global_position, maxi(1200, int(distance * 65.0)), 2.5):
+		_stick(0, 0)
+		return _fail("F49 ordinary capsule walk failed to the " + biome + " pedestal")
+	_stick(0, 0)
+	for frame in 30: await tree.physics_frame # The host samples the replicated body.
+	var radius := float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m)
+	distance = _player.global_position.distance_to(pedestal.global_position)
+	return distance <= radius or _fail("F49 walk stopped %.2f m from the %s pedestal (radius %.1f m)" % [distance, biome, radius])
+
 func activate(prompt: Node3D) -> bool:
 	if prompt == null or not _bind(): return _fail("F49 lacks the actual interaction provider")
 	var arbiter: Node = tree.current_scene.get_node_or_null("InteractionArbiter")

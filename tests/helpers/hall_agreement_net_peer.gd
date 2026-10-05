@@ -45,6 +45,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _craft_home_key_trip()
 	if action == "seed_opening_complete":
 		return _seed_opening_complete()
+	if action == "seed_relic_hung":
+		return _seed_relic_hung(str(args.get("biome", "meadows")))
+	if action == "relic_pedestal_stand":
+		return await _relic_pedestal_stand(str(args.get("biome", "meadows")))
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -691,3 +695,37 @@ func _craft_home_key_trip() -> Dictionary:
 	var ok: bool = await travel.home_key()
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest Home Key trip home and arrival" if ok else str(travel.failures),
 		"data": {"skipped": false, "realm": str(game.get("current_realm"))}}
+
+
+## Disclosed fixture (station craft, F31#2 relic power): a returning player
+## who has hung this biome's relic. Before its first save and admission the
+## offline character gains the relic in relics_hung with the receipt the
+## host's relic_hang transaction writes, the pair admission proves.
+func _seed_relic_hung(biome: String) -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	if session != null and bool(session.call("is_active")):
+		return {"verdict": "FAIL", "detail": "seed the relic before the first admission, not in a session"}
+	var player: RefCounted = game.get("local")
+	var character := str(player.get("character_id"))
+	if character.is_empty(): return {"verdict": "FAIL", "detail": "no local character to seed"}
+	var record: Dictionary = player.get("redesign_character")
+	var hung: Array = record.get("relics_hung", [])
+	if not hung.has(biome): hung.append(biome)
+	record.relics_hung = hung
+	var receipt := "relic_hang:%s:%s" % [biome, character]
+	if not (record.transaction_receipts as Array).has(receipt): record.transaction_receipts.append(receipt)
+	player.set("redesign_character", record)
+	return {"verdict": "PASS", "detail": "relic '%s' hung with its receipt for %s" % [biome, character]}
+
+
+## Guest: walk the ordinary path to this biome's Shrine Room pedestal (where a
+## relic power is chosen). Portals off (no runtime shrine context): skipped.
+func _relic_pedestal_stand(biome: String) -> Dictionary:
+	var game := root.get_node("Game")
+	if not bool(_session().call("portal_runtime_ready")):
+		return {"verdict": "PASS", "detail": "portal runtime off: no pedestal walk", "data": {"skipped": true}}
+	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, game)
+	var ok: bool = await travel.walk_to_pedestal(biome)
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest stands at the %s pedestal" % biome if ok else str(travel.failures),
+		"data": {"skipped": false}}
