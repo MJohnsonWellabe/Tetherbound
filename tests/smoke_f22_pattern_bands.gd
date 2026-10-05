@@ -28,6 +28,9 @@ var _trainers := false
 ## --named=<trainer id,...> (F22#4): those named trainers only, each with its
 ## authored F22 pattern row, judged on COMBAT §7's top-trainer bar.
 var _named: PackedStringArray = []
+## `--move-patch=<move>.<key>=<value>[,...]`: test-only A/B of a move-data
+## trial on the same head (combat_depth_pilot.move_patch), never moves.json.
+var _move_patch: Dictionary = {}
 
 
 func _init() -> void:
@@ -36,6 +39,12 @@ func _init() -> void:
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
 		elif arg == "--trainers": _trainers = true
+		elif arg.begins_with("--move-patch="):
+			for item: String in arg.trim_prefix("--move-patch=").split(",", false):
+				var lhs := item.get_slice("=", 0)
+				var row: Dictionary = _move_patch.get(lhs.get_slice(".", 0), {})
+				row[lhs.get_slice(".", 1)] = float(item.get_slice("=", 1))
+				_move_patch[lhs.get_slice(".", 0)] = row
 		elif arg.begins_with("--named="):
 			_named = arg.trim_prefix("--named=").split(",", false)
 			_trainers = true
@@ -190,6 +199,7 @@ func _run() -> void:
 							errors.append("missing actual species in " + str(entry.id))
 							continue
 						var pilot := PILOT.new()
+						pilot.move_patch = _move_patch.duplicate(true)
 						pilot.context = {"chapter": entry.chapter, "band": entry.id,
 							"floor_trainer": _trainers and _named.is_empty(),
 							"after_south_bridge": bool(entry.get("after_south_bridge", true))}
@@ -251,7 +261,7 @@ func _run() -> void:
 		and float(switched_total.median_cost) <= float(fixed_total.median_cost) * float(proof.get("switch_reader_hp_ratio_max", 0.9))
 	passed = passed and switch_value
 	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
-	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
+	var receipt := {"move_patch": _move_patch, "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"mode": "trainers" if _trainers else "wilds", "data_gaps": gaps,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
