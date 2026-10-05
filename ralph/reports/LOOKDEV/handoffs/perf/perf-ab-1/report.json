@@ -1,0 +1,2604 @@
+{
+  "pins": {
+    "before": "946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+    "after": "1b85fb4d985b7d622e022867055770b2f0de6b18"
+  },
+  "packages": {
+    "before": {
+      "source_commit": "946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+      "manifest_sha256": "4878f614a022bfbb5e8aa9ea61dbc32a5b6d88424351c875ed8a89ac4b4fd094",
+      "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+      "expected_camera_far_m": {
+        "meadows": 520,
+        "water": 520,
+        "cloudreach": 3500,
+        "stormwood": 520
+      },
+      "manifest": "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\PERF_DIAGNOSTIC.json",
+      "exe_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+      "pck_sha256": "10b313fa0ce32d7d80d8e256a2b02eb7eedd35acf67bc56fe916bda613e80bbf"
+    },
+    "after": {
+      "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+      "manifest_sha256": "2b4f226fc47cc81e996ee9daa75d2ac2adf5e335ef69446ec3d44f8bd99b69b7",
+      "route_config_sha256": "03eecf6f598218f22d43401c43db1a61ee0753e4cf5d9cca819dac983d2b0041",
+      "expected_camera_far_m": {
+        "meadows": 2000,
+        "water": 6500,
+        "cloudreach": 3500,
+        "stormwood": 9000
+      },
+      "manifest": "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9\\PERF_DIAGNOSTIC.json",
+      "exe_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+      "pck_sha256": "eab0cde207e63904427722f62ddf3e02b8e72efe7d21b58648fba1e8d3822dcd"
+    }
+  },
+  "overlay": "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+  "overlay_sha256": "df11a9000f069301f989212ea8df73885e916da620b533692e67139fd3cff070",
+  "cases": [
+    {
+      "label": "before",
+      "biome": "meadows",
+      "source_commit": "946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\Tetherbound.exe",
+        "--rendering-method",
+        "forward_plus",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\Tetherbound.pck",
+        "--resolution",
+        "1920x1080",
+        "--gpu-profile",
+        "--debug",
+        "--ignore-error-breaks",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+        "--",
+        "--biome=meadows",
+        "--preset=Medium",
+        "--source-commit=946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+        "--output=D:/tetherbound/.artifacts/pab-1/before/meadows/route"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 520.734999999986,
+      "errors": [],
+      "log_sha256": "bdb282c805920c7dd4cd222836df34e1a7bedca6b93fdd0c331e639641628083",
+      "complete": true,
+      "camera_far_m": 520.0,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "metrics": {
+        "frames": 181,
+        "minimum_fps": 1.0634734105060537,
+        "average_fps": 5.3801385971261855,
+        "one_percent_low_fps": 1.0714180485727374,
+        "slowest_one_percent_frames": 2,
+        "monitors": {
+          "draw_calls": {
+            "average": 2169.1215469613257,
+            "slowest_one_percent_mean": 831.0
+          },
+          "primitives": {
+            "average": 4209898.751381216,
+            "slowest_one_percent_mean": 3477088.5
+          },
+          "objects_in_frame": {
+            "average": 3472.7016574585637,
+            "slowest_one_percent_mean": 2161.0
+          },
+          "physics_ms": {
+            "average": 7.37214364640884,
+            "slowest_one_percent_mean": 5.1485
+          },
+          "process_ms": {
+            "average": 516.1431436464088,
+            "slowest_one_percent_mean": 120.82849999999999
+          },
+          "video_memory_bytes": {
+            "average": 1731178958.4972377,
+            "slowest_one_percent_mean": 1731189120.0
+          },
+          "node_count": {
+            "average": 183597.01104972375,
+            "slowest_one_percent_mean": 183533.0
+          },
+          "render_gpu_ms": {
+            "average": 28.269099472636018,
+            "slowest_one_percent_mean": 25.326500892639153
+          },
+          "render_cpu_ms": {
+            "average": 4.222988947978995,
+            "slowest_one_percent_mean": 2.45799994468689
+          },
+          "render_setup_cpu_ms": {
+            "average": 0.8419558011049724,
+            "slowest_one_percent_mean": 0.786
+          }
+        }
+      },
+      "gpu_profile": {
+        "raw_blocks": [
+          {
+            "total_last_frame_ms": 29.001,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01975000090897,
+              "Update GPUParticles": 0.07074999809265,
+              "Cull DirectionalLight3D, Split 1": 0.02774999849498,
+              "Setup Sky": 0.89599996805191,
+              "Render Depth Pre-Pass": 6.88962554931641,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22337500751019,
+              "Render OmniLight Shadows": 0.52300000190735,
+              "Render Directional/SpotLight Shadows": 0.45474997162819,
+              "Prepare Depth for SSAO/SSIL": 0.05974999815226,
+              "Process SSAO": 0.37049999833107,
+              "Render 3D Cluster Elements": 0.04800000414252,
+              "Pack 3D Cluster Elements": 0.01224999967963,
+              "Render Fog": 0.26362499594688,
+              "Filter Fog": 0.07775000482798,
+              "Integrate Fog": 0.03887500241399,
+              "Render Opaque Pass": 14.1761255264282,
+              "Render Sky": 0.23250000178814,
+              "Render 3D Transparent Pass": 1.64787495136261,
+              "Resolve": 0.2419999986887,
+              "Tonemap": 0.49237501621246,
+              "Glow": 0.65025001764297,
+              "Render CanvasItems": 0.09462492913008
+            }
+          },
+          {
+            "total_last_frame_ms": 30.418,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.0195999994874,
+              "Update GPUParticles": 0.06790000200272,
+              "Cull DirectionalLight3D, Split 1": 0.03049999773502,
+              "Cull OmniLight3D Shadow Cube, Side 5": 0.01120000258088,
+              "Setup Sky": 0.92969999313354,
+              "Render Depth Pre-Pass": 7.58470001220703,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22640001773834,
+              "Render OmniLight Shadows": 0.64219999313354,
+              "Render Directional/SpotLight Shadows": 0.45030002593994,
+              "Prepare Depth for SSAO/SSIL": 0.06009999513626,
+              "Process SSAO": 0.3731999874115,
+              "Render 3D Cluster Elements": 0.04460000097752,
+              "Pack 3D Cluster Elements": 0.01169999986887,
+              "Render Fog": 0.25,
+              "Filter Fog": 0.07760000228882,
+              "Integrate Fog": 0.03889999985695,
+              "Render Opaque Pass": 14.8663986206055,
+              "Render Sky": 0.29000000953674,
+              "Render 3D Transparent Pass": 2.48200016021729,
+              "Resolve": 0.25000002384186,
+              "Tonemap": 0.49270000457764,
+              "Glow": 0.64970006942749,
+              "Render CanvasItems": 0.10049992799759
+            }
+          },
+          {
+            "total_last_frame_ms": 29.339,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.06930000185966,
+              "Cull DirectionalLight3D, Split 1": 0.03519999980927,
+              "Setup Sky": 0.89589996337891,
+              "Render Depth Pre-Pass": 7.81859970092773,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22720000743866,
+              "Render OmniLight Shadows": 0.46970000267029,
+              "Render Directional/SpotLight Shadows": 0.44959998130798,
+              "Prepare Depth for SSAO/SSIL": 0.05950000286102,
+              "Process SSAO": 0.3728000164032,
+              "Render 3D Cluster Elements": 0.0302000015974,
+              "Pack 3D Cluster Elements": 0.01140000075102,
+              "Render Fog": 0.2305999994278,
+              "Filter Fog": 0.07739999890327,
+              "Integrate Fog": 0.03869999945164,
+              "Render Opaque Pass": 14.3966003417969,
+              "Render Sky": 0.29069998264313,
+              "Render 3D Transparent Pass": 2.58379993438721,
+              "Resolve": 0.25079998970032,
+              "Tonemap": 0.49170002937317,
+              "Glow": 0.65000004768372,
+              "Render CanvasItems": 0.09439991116524
+            }
+          },
+          {
+            "total_last_frame_ms": 28.942,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01949999928474,
+              "Update GPUParticles": 0.07479999661446,
+              "Cull DirectionalLight3D, Split 1": 0.03479999899864,
+              "Setup Sky": 0.9068000793457,
+              "Render Depth Pre-Pass": 7.54329986572266,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22650001049042,
+              "Render OmniLight Shadows": 0.40969996452332,
+              "Render Directional/SpotLight Shadows": 0.4875,
+              "Prepare Depth for SSAO/SSIL": 0.05939999818802,
+              "Process SSAO": 0.3724999666214,
+              "Render 3D Cluster Elements": 0.03449999690056,
+              "Pack 3D Cluster Elements": 0.0109000004828,
+              "Render Fog": 0.23529999256134,
+              "Filter Fog": 0.0779000043869,
+              "Integrate Fog": 0.0386000007391,
+              "Render Opaque Pass": 14.1942001342773,
+              "Render Sky": 0.28609998226166,
+              "Render 3D Transparent Pass": 2.20629997253418,
+              "Resolve": 0.24679999351501,
+              "Tonemap": 0.49340000152588,
+              "Glow": 0.65,
+              "Render CanvasItems": 0.09469991922379
+            }
+          },
+          {
+            "total_last_frame_ms": 29.076,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.0197999984026,
+              "Update GPUParticles": 0.0680999994278,
+              "Cull DirectionalLight3D, Split 1": 0.03570000231266,
+              "Setup Sky": 0.89490003585815,
+              "Render Depth Pre-Pass": 7.46510009765625,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22739999294281,
+              "Render OmniLight Shadows": 0.53330001831055,
+              "Render Directional/SpotLight Shadows": 0.55079998970032,
+              "Prepare Depth for SSAO/SSIL": 0.05960000157356,
+              "Process SSAO": 0.37339999675751,
+              "Render 3D Cluster Elements": 0.0472000002861,
+              "Pack 3D Cluster Elements": 0.01160000041127,
+              "Render Fog": 0.25280001163483,
+              "Filter Fog": 0.07770000696182,
+              "Integrate Fog": 0.03889999985695,
+              "Render Opaque Pass": 14.4318008422852,
+              "Render Sky": 0.25310001373291,
+              "Render 3D Transparent Pass": 2.01200008392334,
+              "Resolve": 0.24680001735687,
+              "Tonemap": 0.49240002632141,
+              "Glow": 0.64980001449585,
+              "Render CanvasItems": 0.09519992470741
+            }
+          },
+          {
+            "total_last_frame_ms": 29.211,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.06770000457764,
+              "Cull DirectionalLight3D, Split 1": 0.03560000061989,
+              "Setup Sky": 0.894700050354,
+              "Render Depth Pre-Pass": 7.51399993896484,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22889997959137,
+              "Render OmniLight Shadows": 0.55380001068115,
+              "Render Directional/SpotLight Shadows": 0.62670001983643,
+              "Prepare Depth for SSAO/SSIL": 0.06079999804497,
+              "Process SSAO": 0.37220001220703,
+              "Render 3D Cluster Elements": 0.05149999856949,
+              "Pack 3D Cluster Elements": 0.01279999911785,
+              "Render Fog": 0.2566999912262,
+              "Filter Fog": 0.07870000004768,
+              "Integrate Fog": 0.03870000243187,
+              "Render Opaque Pass": 14.4121994018555,
+              "Render Sky": 0.21080000400543,
+              "Render 3D Transparent Pass": 2.16709995269775,
+              "Resolve": 0.24630000591278,
+              "Tonemap": 0.49250001907349,
+              "Glow": 0.64970002174377,
+              "Render CanvasItems": 0.09499992132187
+            }
+          },
+          {
+            "total_last_frame_ms": 28.733,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.06910000443459,
+              "Cull DirectionalLight3D, Split 1": 0.03510000109673,
+              "Setup Sky": 0.89549999237061,
+              "Render Depth Pre-Pass": 7.49389953613281,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22980000972748,
+              "Render OmniLight Shadows": 0.55699996948242,
+              "Render Directional/SpotLight Shadows": 0.75589995384216,
+              "Prepare Depth for SSAO/SSIL": 0.05939999818802,
+              "Process SSAO": 0.37189998626709,
+              "Render 3D Cluster Elements": 0.04379999935627,
+              "Pack 3D Cluster Elements": 0.01429999917746,
+              "Render Fog": 0.24500000476837,
+              "Filter Fog": 0.07770000100136,
+              "Integrate Fog": 0.03869999647141,
+              "Render Opaque Pass": 14.2546005249023,
+              "Render Sky": 0.17060000896454,
+              "Render 3D Transparent Pass": 2.00950012207031,
+              "Resolve": 0.2460000038147,
+              "Tonemap": 0.49230003356934,
+              "Glow": 0.64980001449585,
+              "Render CanvasItems": 0.0949999153614
+            }
+          },
+          {
+            "total_last_frame_ms": 29.091,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.02299999892712,
+              "Update GPUParticles": 0.07319999337196,
+              "Cull DirectionalLight3D, Split 1": 0.05329999923706,
+              "Setup Sky": 0.92779998779297,
+              "Render Depth Pre-Pass": 7.49960021972656,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23099999427795,
+              "Render OmniLight Shadows": 0.571399974823,
+              "Render Directional/SpotLight Shadows": 0.91259994506836,
+              "Prepare Depth for SSAO/SSIL": 0.06050000190735,
+              "Process SSAO": 0.37180001735687,
+              "Render 3D Cluster Elements": 0.03759999871254,
+              "Pack 3D Cluster Elements": 0.01379999965429,
+              "Render Fog": 0.23599998950958,
+              "Filter Fog": 0.07800000309944,
+              "Integrate Fog": 0.03799999654293,
+              "Render Opaque Pass": 13.9094985961914,
+              "Render Sky": 0.17140001058578,
+              "Render 3D Transparent Pass": 1.85169982910156,
+              "Resolve": 0.24650001525879,
+              "Tonemap": 0.49190001487732,
+              "Glow": 0.65010004043579,
+              "Render CanvasItems": 0.09609990119934
+            }
+          },
+          {
+            "total_last_frame_ms": 29.484,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01949999928474,
+              "Update GPUParticles": 0.07089999914169,
+              "Cull DirectionalLight3D, Split 1": 0.05740000009537,
+              "Cull OmniLight3D Shadow Cube, Side 2": 0.01710000187159,
+              "Setup Sky": 0.98099994659424,
+              "Render Depth Pre-Pass": 7.74349975585938,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23320000171661,
+              "Render OmniLight Shadows": 0.61510000228882,
+              "Render Directional/SpotLight Shadows": 0.98999996185303,
+              "Prepare Depth for SSAO/SSIL": 0.05939999818802,
+              "Process SSAO": 0.37219998836517,
+              "Render 3D Cluster Elements": 0.033599999547,
+              "Pack 3D Cluster Elements": 0.0124000005424,
+              "Render Fog": 0.23079998493195,
+              "Filter Fog": 0.07750000357628,
+              "Integrate Fog": 0.03869999945164,
+              "Render Opaque Pass": 13.8366989135742,
+              "Render Sky": 0.15440000295639,
+              "Render 3D Transparent Pass": 2.2798999786377,
+              "Resolve": 0.25010001659393,
+              "Tonemap": 0.49240002632141,
+              "Glow": 0.64980001449585,
+              "Render CanvasItems": 0.09639990329742
+            }
+          },
+          {
+            "total_last_frame_ms": 29.154,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.0197999984026,
+              "Update GPUParticles": 0.0676000058651,
+              "Cull DirectionalLight3D, Split 1": 0.05720000267029,
+              "Setup Sky": 0.92770004272461,
+              "Render Depth Pre-Pass": 7.80580062866211,
+              "Resolve Depth Pre-Pass (MSAA)": 0.2311999797821,
+              "Render OmniLight Shadows": 0.53299999237061,
+              "Render Directional/SpotLight Shadows": 0.95170001983643,
+              "Prepare Depth for SSAO/SSIL": 0.05929999947548,
+              "Process SSAO": 0.37119998931885,
+              "Render 3D Cluster Elements": 0.02549999952316,
+              "Pack 3D Cluster Elements": 0.01180000007153,
+              "Render Fog": 0.22469999790192,
+              "Filter Fog": 0.07709999680519,
+              "Integrate Fog": 0.03859999775887,
+              "Render Opaque Pass": 13.654899597168,
+              "Render Sky": 0.17239999771118,
+              "Render 3D Transparent Pass": 2.47670001983643,
+              "Resolve": 0.25060000419617,
+              "Tonemap": 0.49260001182556,
+              "Glow": 0.65020003318787,
+              "Render CanvasItems": 0.09429991841316
+            }
+          },
+          {
+            "total_last_frame_ms": 28.974,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01987499929965,
+              "Update GPUParticles": 0.06737500429153,
+              "Cull DirectionalLight3D, Split 1": 0.05800000205636,
+              "Setup Sky": 0.90874999761581,
+              "Render Depth Pre-Pass": 7.62025022506714,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23037499189377,
+              "Render OmniLight Shadows": 0.48600000143051,
+              "Render Directional/SpotLight Shadows": 0.93587499856949,
+              "Prepare Depth for SSAO/SSIL": 0.05949999392033,
+              "Process SSAO": 0.37262499332428,
+              "Render 3D Cluster Elements": 0.01987500116229,
+              "Pack 3D Cluster Elements": 0.01012500096112,
+              "Render Fog": 0.21912501752377,
+              "Filter Fog": 0.07750000059605,
+              "Integrate Fog": 0.03875000029802,
+              "Render Opaque Pass": 13.6703748703003,
+              "Render Sky": 0.19224999845028,
+              "Render 3D Transparent Pass": 2.23149991035461,
+              "Resolve": 0.24937501549721,
+              "Tonemap": 0.49287500977516,
+              "Glow": 0.64962500333786,
+              "Render CanvasItems": 0.09499991685152
+            }
+          },
+          {
+            "total_last_frame_ms": 28.993,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01979999989271,
+              "Update GPUParticles": 0.06890000104904,
+              "Cull DirectionalLight3D, Split 1": 0.05779999494553,
+              "Setup Sky": 0.89390001296997,
+              "Render Depth Pre-Pass": 7.68050079345703,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22979998588562,
+              "Render OmniLight Shadows": 0.44769997596741,
+              "Render Directional/SpotLight Shadows": 0.89899997711182,
+              "Prepare Depth for SSAO/SSIL": 0.05939999818802,
+              "Process SSAO": 0.37310001850128,
+              "Render 3D Cluster Elements": 0.01760000139475,
+              "Render Fog": 0.21470000743866,
+              "Filter Fog": 0.07770000100136,
+              "Integrate Fog": 0.03849999904633,
+              "Render Opaque Pass": 13.8010009765625,
+              "Render Sky": 0.20930001735687,
+              "Render 3D Transparent Pass": 2.30379981994629,
+              "Resolve": 0.24849998950958,
+              "Tonemap": 0.49230003356934,
+              "Glow": 0.65130004882812,
+              "Render CanvasItems": 0.09589991569519
+            }
+          },
+          {
+            "total_last_frame_ms": 28.418,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01969999969006,
+              "Update GPUParticles": 0.06909999847412,
+              "Cull DirectionalLight3D, Split 1": 0.05189999938011,
+              "Setup Sky": 0.90679998397827,
+              "Render Depth Pre-Pass": 7.70200042724609,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22820000648499,
+              "Render OmniLight Shadows": 0.3555999994278,
+              "Render Directional/SpotLight Shadows": 0.86140003204346,
+              "Prepare Depth for SSAO/SSIL": 0.0597000002861,
+              "Process SSAO": 0.37199995517731,
+              "Render 3D Cluster Elements": 0.01689999997616,
+              "Render Fog": 0.21419999599457,
+              "Filter Fog": 0.0774000108242,
+              "Integrate Fog": 0.03889999985695,
+              "Render Opaque Pass": 13.7072006225586,
+              "Render Sky": 0.21229999065399,
+              "Render 3D Transparent Pass": 2.33050003051758,
+              "Resolve": 0.24660000801086,
+              "Tonemap": 0.49200000762939,
+              "Glow": 0.65000004768372,
+              "Render CanvasItems": 0.09479991793633
+            }
+          },
+          {
+            "total_last_frame_ms": 27.686,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01972727071155,
+              "Update GPUParticles": 0.06554545055736,
+              "Cull DirectionalLight3D, Split 1": 0.03990909186277,
+              "Setup Sky": 0.91418179598722,
+              "Render Depth Pre-Pass": 7.68318176269531,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22600000554865,
+              "Render OmniLight Shadows": 0.14690909602425,
+              "Render Directional/SpotLight Shadows": 0.88118180361661,
+              "Prepare Depth for SSAO/SSIL": 0.05936363610354,
+              "Process SSAO": 0.37363637577404,
+              "Render 3D Cluster Elements": 0.02418181842024,
+              "Render Fog": 0.22209091620012,
+              "Filter Fog": 0.07763636654074,
+              "Integrate Fog": 0.0384545461698,
+              "Render Opaque Pass": 13.2868180708452,
+              "Render Sky": 0.20363636450334,
+              "Render 3D Transparent Pass": 2.24818177656694,
+              "Resolve": 0.2425454529849,
+              "Tonemap": 0.49254547465931,
+              "Glow": 0.65018185702237,
+              "Render CanvasItems": 0.09672724116932
+            }
+          },
+          {
+            "total_last_frame_ms": 26.598,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.0688000023365,
+              "Cull DirectionalLight3D, Split 1": 0.01620000004768,
+              "Setup Sky": 0.91630001068115,
+              "Render Depth Pre-Pass": 7.39909973144531,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22449998855591,
+              "Render OmniLight Shadows": 0.15470000505447,
+              "Render Directional/SpotLight Shadows": 0.86100006103516,
+              "Prepare Depth for SSAO/SSIL": 0.05969999432564,
+              "Process SSAO": 0.37229998111725,
+              "Render 3D Cluster Elements": 0.03770000040531,
+              "Pack 3D Cluster Elements": 0.01149999946356,
+              "Render Fog": 0.2433000087738,
+              "Filter Fog": 0.0789999961853,
+              "Integrate Fog": 0.03890000283718,
+              "Render Opaque Pass": 12.7893997192383,
+              "Render Sky": 0.19819999933243,
+              "Render 3D Transparent Pass": 2.12800006866455,
+              "Resolve": 0.23710000514984,
+              "Tonemap": 0.49279999732971,
+              "Glow": 0.64970006942749,
+              "Render CanvasItems": 0.09439992308617
+            }
+          },
+          {
+            "total_last_frame_ms": 22.784,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.07540000081062,
+              "Cull DirectionalLight3D, Split 1": 0.01710000038147,
+              "Setup Sky": 1.07940006256104,
+              "Render Depth Pre-Pass": 7.01350021362305,
+              "Resolve Depth Pre-Pass (MSAA)": 0.2300999879837,
+              "Render OmniLight Shadows": 0.14930000305176,
+              "Render Directional/SpotLight Shadows": 0.94230003356934,
+              "Prepare Depth for SSAO/SSIL": 0.06039999723434,
+              "Process SSAO": 0.40840001106262,
+              "Render 3D Cluster Elements": 0.05309999585152,
+              "Pack 3D Cluster Elements": 0.01359999924898,
+              "Render Fog": 0.2811999797821,
+              "Filter Fog": 0.08249999880791,
+              "Integrate Fog": 0.041400000453,
+              "Render Opaque Pass": 13.0341995239258,
+              "Render Sky": 0.17970000505447,
+              "Render 3D Transparent Pass": 1.62309989929199,
+              "Resolve": 0.2305999994278,
+              "Tonemap": 0.55250000953674,
+              "Glow": 0.72630000114441,
+              "Render CanvasItems": 0.10469992160797
+            }
+          },
+          {
+            "total_last_frame_ms": 23.14,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01981818134134,
+              "Update GPUParticles": 0.07281818173148,
+              "Cull DirectionalLight3D, Split 1": 0.01754545488141,
+              "Setup Sky": 1.10209092226895,
+              "Render Depth Pre-Pass": 6.05499961159446,
+              "Resolve Depth Pre-Pass (MSAA)": 0.2329090942036,
+              "Setup Shadows": 0.01136363636364,
+              "Render OmniLight Shadows": 0.06563636389646,
+              "Render Directional/SpotLight Shadows": 1.00063627416437,
+              "Prepare Depth for SSAO/SSIL": 0.05963636528362,
+              "Process SSAO": 0.41081818667325,
+              "Render 3D Cluster Elements": 0.06963636658408,
+              "Pack 3D Cluster Elements": 0.01472727141597,
+              "Render Fog": 0.29390911622481,
+              "Filter Fog": 0.08290909095244,
+              "Integrate Fog": 0.04127272692594,
+              "Render Opaque Pass": 11.1966365467418,
+              "Render Sky": 0.02654545415532,
+              "Render 3D Transparent Pass": 0.53036360307173,
+              "Resolve": 0.22399999878623,
+              "Tonemap": 0.55918182026256,
+              "Glow": 0.73472733931108,
+              "Render CanvasItems": 0.10645451328971
+            }
+          },
+          {
+            "total_last_frame_ms": 28.075,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.02072727138346,
+              "Update GPUParticles": 0.08363637057218,
+              "Cull DirectionalLight3D, Split 1": 0.01990908926184,
+              "Setup Sky": 1.29090916026722,
+              "Render Depth Pre-Pass": 7.01645452325994,
+              "Resolve Depth Pre-Pass (MSAA)": 0.26099998300726,
+              "Setup Shadows": 0.01618181981824,
+              "Render OmniLight Shadows": 0.0599090944637,
+              "Render Directional/SpotLight Shadows": 1.34009083834561,
+              "Prepare Depth for SSAO/SSIL": 0.06063635782762,
+              "Process SSAO": 0.49636368318038,
+              "Render 3D Cluster Elements": 0.09354545853355,
+              "Pack 3D Cluster Elements": 0.01618181846359,
+              "Render Fog": 0.33390909975225,
+              "Filter Fog": 0.09390910105272,
+              "Integrate Fog": 0.04663636467674,
+              "Render Opaque Pass": 13.4359089244496,
+              "Render Sky": 0.02318181774833,
+              "Render 3D Transparent Pass": 0.55945457111705,
+              "Resolve": 0.2456363547932,
+              "Tonemap": 0.6881818337874,
+              "Glow": 0.89872724359686,
+              "Render CanvasItems": 0.12799993428317
+            }
+          }
+        ],
+        "cost_blocks": 17,
+        "mean_task_ms": {
+          "Cull DirectionalLight3D, Split 1": 0.03842139031718235,
+          "Cull OmniLight3D Shadow Cube, Side 2": 0.0010058824630347059,
+          "Cull OmniLight3D Shadow Cube, Side 5": 0.0006588236812282353,
+          "Filter Fog": 0.07930321076655765,
+          "Glow": 0.6740977568422412,
+          "Integrate Fog": 0.03944786075443059,
+          "Pack 3D Cluster Elements": 0.010402005272394706,
+          "Prepare Depth for SSAO/SSIL": 0.059784490395994705,
+          "Prepare Render Frame": 0.02002045347848353,
+          "Process SSAO": 0.3841437156187665,
+          "Render 3D Cluster Elements": 0.04006109634105529,
+          "Render 3D Transparent Pass": 2.001405866643324,
+          "Render CanvasItems": 0.09868120744744706,
+          "Render Depth Pre-Pass": 7.449322767308688,
+          "Render Directional/SpotLight Shadows": 0.8174461126965006,
+          "Render Fog": 0.24613730080306295,
+          "Render OmniLight Shadows": 0.39711496868235646,
+          "Render Opaque Pass": 13.698731542781083,
+          "Render Sky": 0.19085962703839943,
+          "Resolve": 0.24460334672647352,
+          "Resolve Depth Pre-Pass (MSAA)": 0.23085200219230823,
+          "Setup Shadows": 0.001620320951875294,
+          "Setup Sky": 0.9568430610519035,
+          "Tonemap": 0.511428491412637,
+          "Update GPUParticles": 0.07059853041873235
+        },
+        "top_task": "Render Opaque Pass",
+        "scope": "Godot --gpu-profile one-second task means; total is the last frame. First timed block excluded because it can include warmup. GPU passes do not identify individual scene meshes."
+      },
+      "route_sha256": "ec7364edb7866e7af728d32a165b86777bbd3a5722fcadaf87290367fed5b10c",
+      "performance_sha256": "c1226d0832760adaec2d7b0affb2f9c9c1716ad48dc288f543a7cf277a464fac",
+      "engine_cost_summary": {
+        "engine_process_ms": {
+          "mean": 152.20039779005523,
+          "maximum": 904.535
+        },
+        "physics_max_step_ms": {
+          "mean": 5.39453591160221,
+          "maximum": 9.229
+        },
+        "executed_physics_steps": {
+          "mean": 6.392265193370166,
+          "maximum": 8
+        }
+      }
+    },
+    {
+      "label": "after",
+      "biome": "meadows",
+      "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9\\Tetherbound.exe",
+        "--rendering-method",
+        "forward_plus",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9\\Tetherbound.pck",
+        "--resolution",
+        "1920x1080",
+        "--gpu-profile",
+        "--debug",
+        "--ignore-error-breaks",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+        "--",
+        "--biome=meadows",
+        "--preset=Medium",
+        "--source-commit=1b85fb4d985b7d622e022867055770b2f0de6b18",
+        "--output=D:/tetherbound/.artifacts/pab-1/after/meadows/route"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 496.625,
+      "errors": [],
+      "log_sha256": "50a816eef4551382ae4c06a9f420cf8c00b0e99733ae970b62c2cbdae4aa0d5f",
+      "complete": true,
+      "camera_far_m": 2000.0,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "metrics": {
+        "frames": 178,
+        "minimum_fps": 1.146201431147107,
+        "average_fps": 5.810299657065016,
+        "one_percent_low_fps": 1.1877796478708458,
+        "slowest_one_percent_frames": 2,
+        "monitors": {
+          "draw_calls": {
+            "average": 2169.5955056179773,
+            "slowest_one_percent_mean": 1827.5
+          },
+          "primitives": {
+            "average": 4269809.769662921,
+            "slowest_one_percent_mean": 3984989.5
+          },
+          "objects_in_frame": {
+            "average": 3518.174157303371,
+            "slowest_one_percent_mean": 3282.5
+          },
+          "physics_ms": {
+            "average": 7.917870786516854,
+            "slowest_one_percent_mean": 6.8774999999999995
+          },
+          "process_ms": {
+            "average": 545.0984494382022,
+            "slowest_one_percent_mean": 426.9395
+          },
+          "video_memory_bytes": {
+            "average": 1738209739.505618,
+            "slowest_one_percent_mean": 1738071296.0
+          },
+          "node_count": {
+            "average": 183601.55617977527,
+            "slowest_one_percent_mean": 183543.0
+          },
+          "render_gpu_ms": {
+            "average": 28.014432585641245,
+            "slowest_one_percent_mean": 26.9049997329712
+          },
+          "render_cpu_ms": {
+            "average": 4.193949435534102,
+            "slowest_one_percent_mean": 3.6985000371933
+          },
+          "render_setup_cpu_ms": {
+            "average": 0.7904943820224719,
+            "slowest_one_percent_mean": 0.7295
+          }
+        }
+      },
+      "gpu_profile": {
+        "raw_blocks": [
+          {
+            "total_last_frame_ms": 29.359,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01999999880791,
+              "Update GPUParticles": 0.06980000734329,
+              "Cull DirectionalLight3D, Split 1": 0.0272999972105,
+              "Setup Sky": 0.896399974823,
+              "Render Depth Pre-Pass": 6.65330047607422,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22449998855591,
+              "Render OmniLight Shadows": 0.56529994010925,
+              "Render Directional/SpotLight Shadows": 0.45009999275208,
+              "Prepare Depth for SSAO/SSIL": 0.0597000002861,
+              "Process SSAO": 0.37019996643066,
+              "Render 3D Cluster Elements": 0.04899999797344,
+              "Pack 3D Cluster Elements": 0.0109999999404,
+              "Render Fog": 0.30240001678467,
+              "Filter Fog": 0.07740000486374,
+              "Integrate Fog": 0.03849999904633,
+              "Render Opaque Pass": 14.3800994873047,
+              "Render Sky": 0.21189999580383,
+              "Render 3D Transparent Pass": 1.79660015106201,
+              "Resolve": 0.24530000686646,
+              "Tonemap": 0.49230003356934,
+              "Glow": 0.65040006637573,
+              "Render CanvasItems": 0.09789992570877
+            }
+          },
+          {
+            "total_last_frame_ms": 29.919,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.021099999547,
+              "Update GPUParticles": 0.06779999732971,
+              "Cull DirectionalLight3D, Split 1": 0.03250000178814,
+              "Setup Sky": 0.9164999961853,
+              "Render Depth Pre-Pass": 7.42220001220703,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22809998989105,
+              "Render OmniLight Shadows": 0.63149995803833,
+              "Render Directional/SpotLight Shadows": 0.45289998054504,
+              "Prepare Depth for SSAO/SSIL": 0.0595999956131,
+              "Process SSAO": 0.37200000286102,
+              "Render 3D Cluster Elements": 0.04090000092983,
+              "Render Fog": 0.275,
+              "Filter Fog": 0.07710000276566,
+              "Integrate Fog": 0.03869999945164,
+              "Render Opaque Pass": 14.9164001464844,
+              "Render Sky": 0.26229999065399,
+              "Render 3D Transparent Pass": 2.87989978790283,
+              "Resolve": 0.25309998989105,
+              "Tonemap": 0.49210000038147,
+              "Glow": 0.65010004043579,
+              "Render CanvasItems": 0.10219992399216
+            }
+          },
+          {
+            "total_last_frame_ms": 29.026,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01999999880791,
+              "Update GPUParticles": 0.06960000395775,
+              "Cull DirectionalLight3D, Split 1": 0.0352999985218,
+              "Setup Sky": 0.89569997787476,
+              "Render Depth Pre-Pass": 7.45979919433594,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22890000343323,
+              "Render OmniLight Shadows": 0.43979997634888,
+              "Render Directional/SpotLight Shadows": 0.45320000648499,
+              "Prepare Depth for SSAO/SSIL": 0.06009999513626,
+              "Process SSAO": 0.37320001125336,
+              "Render 3D Cluster Elements": 0.03170000016689,
+              "Render Fog": 0.24630000591278,
+              "Filter Fog": 0.07770000100136,
+              "Integrate Fog": 0.03850000202656,
+              "Render Opaque Pass": 14.2269012451172,
+              "Render Sky": 0.26310000419617,
+              "Render 3D Transparent Pass": 2.64180011749268,
+              "Resolve": 0.24959998130798,
+              "Tonemap": 0.49200000762939,
+              "Glow": 0.65000004768372,
+              "Render CanvasItems": 0.09449992179871
+            }
+          },
+          {
+            "total_last_frame_ms": 28.626,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01999999880791,
+              "Update GPUParticles": 0.06949999928474,
+              "Cull DirectionalLight3D, Split 1": 0.0352000027895,
+              "Setup Sky": 0.89480009078979,
+              "Render Depth Pre-Pass": 7.19669952392578,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22780001163483,
+              "Render OmniLight Shadows": 0.42769999504089,
+              "Render Directional/SpotLight Shadows": 0.50069999694824,
+              "Prepare Depth for SSAO/SSIL": 0.05969999432564,
+              "Process SSAO": 0.3724999666214,
+              "Render 3D Cluster Elements": 0.03779999911785,
+              "Pack 3D Cluster Elements": 0.01080000028014,
+              "Render Fog": 0.26110000610352,
+              "Filter Fog": 0.0779000043869,
+              "Integrate Fog": 0.0386000007391,
+              "Render Opaque Pass": 14.1213012695313,
+              "Render Sky": 0.25099999904633,
+              "Render 3D Transparent Pass": 2.21790008544922,
+              "Resolve": 0.24769999980927,
+              "Tonemap": 0.49279999732971,
+              "Glow": 0.64900002479553,
+              "Render CanvasItems": 0.09609991908073
+            }
+          },
+          {
+            "total_last_frame_ms": 29.308,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.02019999921322,
+              "Update GPUParticles": 0.07240000367165,
+              "Cull DirectionalLight3D, Split 1": 0.03519999980927,
+              "Setup Sky": 0.89519996643066,
+              "Render Depth Pre-Pass": 7.14769973754883,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22869999408722,
+              "Render OmniLight Shadows": 0.56840000152588,
+              "Render Directional/SpotLight Shadows": 0.56850004196167,
+              "Prepare Depth for SSAO/SSIL": 0.0597000002861,
+              "Process SSAO": 0.37260000705719,
+              "Render 3D Cluster Elements": 0.04849999845028,
+              "Pack 3D Cluster Elements": 0.01110000014305,
+              "Render Fog": 0.28370001316071,
+              "Filter Fog": 0.0773000061512,
+              "Integrate Fog": 0.03889999985695,
+              "Render Opaque Pass": 14.3632995605469,
+              "Render Sky": 0.21889998912811,
+              "Render 3D Transparent Pass": 2.18010005950928,
+              "Resolve": 0.24730000495911,
+              "Tonemap": 0.49250001907349,
+              "Glow": 0.64920001029968,
+              "Render CanvasItems": 0.09539992213249
+            }
+          },
+          {
+            "total_last_frame_ms": 29.174,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.02009999901056,
+              "Update GPUParticles": 0.06720000505447,
+              "Cull DirectionalLight3D, Split 1": 0.03509999811649,
+              "Setup Sky": 0.89509992599487,
+              "Render Depth Pre-Pass": 7.18449935913086,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22990000247955,
+              "Render OmniLight Shadows": 0.56379995346069,
+              "Render Directional/SpotLight Shadows": 0.64879999160767,
+              "Prepare Depth for SSAO/SSIL": 0.05979999899864,
+              "Process SSAO": 0.37120001316071,
+              "Render 3D Cluster Elements": 0.05040000081062,
+              "Pack 3D Cluster Elements": 0.01109999939799,
+              "Render Fog": 0.28450002670288,
+              "Filter Fog": 0.0779000043869,
+              "Integrate Fog": 0.03870000243187,
+              "Render Opaque Pass": 14.4119995117188,
+              "Render Sky": 0.17930001020432,
+              "Render 3D Transparent Pass": 2.53509979248047,
+              "Resolve": 0.24810001850128,
+              "Tonemap": 0.49269995689392,
+              "Glow": 0.64879999160767,
+              "Render CanvasItems": 0.09559990167618
+            }
+          },
+          {
+            "total_last_frame_ms": 28.265,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.02011111047533,
+              "Update GPUParticles": 0.06766666968664,
+              "Cull DirectionalLight3D, Split 1": 0.03866666555405,
+              "Setup Sky": 0.89488898383247,
+              "Render Depth Pre-Pass": 7.13877783881293,
+              "Resolve Depth Pre-Pass (MSAA)": 0.2315555413564,
+              "Render OmniLight Shadows": 0.56799994574653,
+              "Render Directional/SpotLight Shadows": 0.80088890923394,
+              "Prepare Depth for SSAO/SSIL": 0.05955555041631,
+              "Process SSAO": 0.37222221162584,
+              "Render 3D Cluster Elements": 0.04122221801016,
+              "Pack 3D Cluster Elements": 0.01166666630242,
+              "Render Fog": 0.26155556572808,
+              "Filter Fog": 0.07866666052077,
+              "Integrate Fog": 0.03877777854602,
+              "Render Opaque Pass": 14.0205552842882,
+              "Render Sky": 0.15655555990007,
+              "Render 3D Transparent Pass": 2.08611106872559,
+              "Resolve": 0.24544445673625,
+              "Tonemap": 0.4923333062066,
+              "Glow": 0.64966668023003,
+              "Render CanvasItems": 0.09488880634308
+            }
+          },
+          {
+            "total_last_frame_ms": 28.984,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.0195999994874,
+              "Update GPUParticles": 0.06979999542236,
+              "Cull DirectionalLight3D, Split 1": 0.05400000214577,
+              "Setup Sky": 0.91630001068115,
+              "Render Depth Pre-Pass": 7.24309997558594,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23170001506805,
+              "Render OmniLight Shadows": 0.59520001411438,
+              "Render Directional/SpotLight Shadows": 0.95,
+              "Prepare Depth for SSAO/SSIL": 0.05939999818802,
+              "Process SSAO": 0.37249999046326,
+              "Render 3D Cluster Elements": 0.03660000264645,
+              "Pack 3D Cluster Elements": 0.01119999960065,
+              "Render Fog": 0.25369999408722,
+              "Filter Fog": 0.07750000357628,
+              "Integrate Fog": 0.03899999856949,
+              "Render Opaque Pass": 13.785400390625,
+              "Render Sky": 0.14990000724792,
+              "Render 3D Transparent Pass": 2.08999996185303,
+              "Resolve": 0.24700000286102,
+              "Tonemap": 0.49299998283386,
+              "Glow": 0.64890003204346,
+              "Render CanvasItems": 0.09649991989136
+            }
+          },
+          {
+            "total_last_frame_ms": 29.184,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.0694000005722,
+              "Cull DirectionalLight3D, Split 1": 0.05719999670982,
+              "Cull OmniLight3D Shadow Cube, Side 2": 0.01630000174046,
+              "Setup Sky": 0.99120006561279,
+              "Render Depth Pre-Pass": 7.41050033569336,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23340001106262,
+              "Render OmniLight Shadows": 0.6257999420166,
+              "Render Directional/SpotLight Shadows": 0.98009996414185,
+              "Prepare Depth for SSAO/SSIL": 0.05939999818802,
+              "Process SSAO": 0.37119998931885,
+              "Render 3D Cluster Elements": 0.03130000531673,
+              "Pack 3D Cluster Elements": 0.01040000021458,
+              "Render Fog": 0.24519999027252,
+              "Filter Fog": 0.0773000061512,
+              "Integrate Fog": 0.03849999904633,
+              "Render Opaque Pass": 13.5417007446289,
+              "Render Sky": 0.13909999132156,
+              "Render 3D Transparent Pass": 2.5246997833252,
+              "Resolve": 0.25139999389648,
+              "Tonemap": 0.49300003051758,
+              "Glow": 0.64920001029968,
+              "Render CanvasItems": 0.09629992246628
+            }
+          },
+          {
+            "total_last_frame_ms": 28.444,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.02049999833107,
+              "Update GPUParticles": 0.07039999961853,
+              "Cull DirectionalLight3D, Split 1": 0.05750000476837,
+              "Setup Sky": 0.91639995574951,
+              "Render Depth Pre-Pass": 7.3942008972168,
+              "Resolve Depth Pre-Pass (MSAA)": 0.2319000005722,
+              "Render OmniLight Shadows": 0.49690008163452,
+              "Render Directional/SpotLight Shadows": 0.94209995269775,
+              "Prepare Depth for SSAO/SSIL": 0.05920000076294,
+              "Process SSAO": 0.37180001735687,
+              "Render 3D Cluster Elements": 0.02370000034571,
+              "Render Fog": 0.23359999656677,
+              "Filter Fog": 0.07690000534058,
+              "Integrate Fog": 0.03890000283718,
+              "Render Opaque Pass": 13.4494003295898,
+              "Render Sky": 0.1603000164032,
+              "Render 3D Transparent Pass": 2.54209995269775,
+              "Resolve": 0.24989998340607,
+              "Tonemap": 0.49279999732971,
+              "Glow": 0.64910001754761,
+              "Render CanvasItems": 0.09449992775917
+            }
+          },
+          {
+            "total_last_frame_ms": 28.801,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01999999880791,
+              "Update GPUParticles": 0.06510000228882,
+              "Cull DirectionalLight3D, Split 1": 0.05729999542236,
+              "Setup Sky": 0.90629997253418,
+              "Render Depth Pre-Pass": 7.27739944458008,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23120000362396,
+              "Render OmniLight Shadows": 0.47390007972717,
+              "Render Directional/SpotLight Shadows": 0.92749996185303,
+              "Prepare Depth for SSAO/SSIL": 0.05900000333786,
+              "Process SSAO": 0.37469997406006,
+              "Render 3D Cluster Elements": 0.0188000023365,
+              "Pack 3D Cluster Elements": 0.01010000035167,
+              "Render Fog": 0.22579998970032,
+              "Filter Fog": 0.07689999938011,
+              "Integrate Fog": 0.03920000195503,
+              "Render Opaque Pass": 13.5639999389648,
+              "Render Sky": 0.17849999666214,
+              "Render 3D Transparent Pass": 2.40550003051758,
+              "Resolve": 0.24939999580383,
+              "Tonemap": 0.49270000457764,
+              "Glow": 0.64910001754761,
+              "Render CanvasItems": 0.09579993486404
+            }
+          },
+          {
+            "total_last_frame_ms": 28.565,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01999999880791,
+              "Update GPUParticles": 0.06609999537468,
+              "Cull DirectionalLight3D, Split 1": 0.05419999957085,
+              "Setup Sky": 0.905299949646,
+              "Render Depth Pre-Pass": 7.33889923095703,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23029997348785,
+              "Render OmniLight Shadows": 0.42849998474121,
+              "Render Directional/SpotLight Shadows": 0.8710000038147,
+              "Prepare Depth for SSAO/SSIL": 0.05979999899864,
+              "Process SSAO": 0.37239999771118,
+              "Render 3D Cluster Elements": 0.01710000038147,
+              "Render Fog": 0.22300000190735,
+              "Filter Fog": 0.07740000486374,
+              "Integrate Fog": 0.03889999985695,
+              "Render Opaque Pass": 13.622900390625,
+              "Render Sky": 0.19050000905991,
+              "Render 3D Transparent Pass": 2.48979988098145,
+              "Resolve": 0.24810001850128,
+              "Tonemap": 0.4929000377655,
+              "Glow": 0.64900002479553,
+              "Render CanvasItems": 0.09559991359711
+            }
+          },
+          {
+            "total_last_frame_ms": 28.028,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.06889999508858,
+              "Cull DirectionalLight3D, Split 1": 0.04780000448227,
+              "Setup Sky": 0.91630010604858,
+              "Render Depth Pre-Pass": 7.38669967651367,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22869999408722,
+              "Render OmniLight Shadows": 0.22580001354218,
+              "Render Directional/SpotLight Shadows": 0.87550001144409,
+              "Prepare Depth for SSAO/SSIL": 0.0591000020504,
+              "Process SSAO": 0.37220001220703,
+              "Render 3D Cluster Elements": 0.01899999976158,
+              "Render Fog": 0.22849998474121,
+              "Filter Fog": 0.07739999890327,
+              "Integrate Fog": 0.0386000007391,
+              "Render Opaque Pass": 13.3669998168945,
+              "Render Sky": 0.18480000495911,
+              "Render 3D Transparent Pass": 2.44400005340576,
+              "Resolve": 0.24410002231598,
+              "Tonemap": 0.49270000457764,
+              "Glow": 0.65060005187988,
+              "Render CanvasItems": 0.09439991116524
+            }
+          },
+          {
+            "total_last_frame_ms": 27.458,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.0201999977231,
+              "Update GPUParticles": 0.06359999775887,
+              "Cull DirectionalLight3D, Split 1": 0.02560000121593,
+              "Setup Sky": 0.91490001678467,
+              "Render Depth Pre-Pass": 7.21519927978516,
+              "Resolve Depth Pre-Pass (MSAA)": 0.22630000114441,
+              "Render OmniLight Shadows": 0.14950000047684,
+              "Render Directional/SpotLight Shadows": 0.86859998703003,
+              "Prepare Depth for SSAO/SSIL": 0.05909999608994,
+              "Process SSAO": 0.37189998626709,
+              "Render 3D Cluster Elements": 0.03019999861717,
+              "Render Fog": 0.24790000915527,
+              "Filter Fog": 0.07749999761581,
+              "Integrate Fog": 0.03900000154972,
+              "Render Opaque Pass": 12.8796997070313,
+              "Render Sky": 0.17569999694824,
+              "Render 3D Transparent Pass": 2.57219982147217,
+              "Resolve": 0.24000000953674,
+              "Tonemap": 0.4929000377655,
+              "Glow": 0.64930000305176,
+              "Render CanvasItems": 0.09519992470741
+            }
+          },
+          {
+            "total_last_frame_ms": 27.864,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01999999880791,
+              "Update GPUParticles": 0.07410000562668,
+              "Cull DirectionalLight3D, Split 1": 0.01760000139475,
+              "Setup Sky": 1.05819997787476,
+              "Render Depth Pre-Pass": 7.27459945678711,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23389999866486,
+              "Render OmniLight Shadows": 0.14860000610352,
+              "Render Directional/SpotLight Shadows": 0.95150003433228,
+              "Prepare Depth for SSAO/SSIL": 0.05950000286102,
+              "Process SSAO": 0.40650000572205,
+              "Render 3D Cluster Elements": 0.05040000081062,
+              "Pack 3D Cluster Elements": 0.01150000020862,
+              "Render Fog": 0.30750000476837,
+              "Filter Fog": 0.08220000267029,
+              "Integrate Fog": 0.04099999964237,
+              "Render Opaque Pass": 13.8077011108398,
+              "Render Sky": 0.17669999599457,
+              "Render 3D Transparent Pass": 2.56139984130859,
+              "Resolve": 0.23899998664856,
+              "Tonemap": 0.55320000648499,
+              "Glow": 0.72690000534058,
+              "Render CanvasItems": 0.10529993772507
+            }
+          },
+          {
+            "total_last_frame_ms": 22.673,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01989999860525,
+              "Update GPUParticles": 0.07179999947548,
+              "Cull DirectionalLight3D, Split 1": 0.01780000030994,
+              "Setup Sky": 1.10190010070801,
+              "Render Depth Pre-Pass": 5.9492000579834,
+              "Resolve Depth Pre-Pass (MSAA)": 0.23199999332428,
+              "Render OmniLight Shadows": 0.15910000801086,
+              "Render Directional/SpotLight Shadows": 0.96730003356934,
+              "Prepare Depth for SSAO/SSIL": 0.0595999956131,
+              "Process SSAO": 0.41380000114441,
+              "Render 3D Cluster Elements": 0.06209999918938,
+              "Pack 3D Cluster Elements": 0.01259999871254,
+              "Render Fog": 0.33799998760223,
+              "Filter Fog": 0.08289999961853,
+              "Integrate Fog": 0.04130000174046,
+              "Render Opaque Pass": 11.6773994445801,
+              "Render Sky": 0.07829999923706,
+              "Render 3D Transparent Pass": 1.05500001907349,
+              "Resolve": 0.22509999275208,
+              "Tonemap": 0.55859999656677,
+              "Glow": 0.73650002479553,
+              "Render CanvasItems": 0.10659993886948
+            }
+          },
+          {
+            "total_last_frame_ms": 24.814,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01990000009537,
+              "Update GPUParticles": 0.07640000581741,
+              "Cull DirectionalLight3D, Split 1": 0.01909999847412,
+              "Setup Sky": 1.20789985656738,
+              "Render Depth Pre-Pass": 6.22180023193359,
+              "Resolve Depth Pre-Pass (MSAA)": 0.24870002269745,
+              "Setup Shadows": 0.0179000005126,
+              "Render Directional/SpotLight Shadows": 1.17840013504028,
+              "Prepare Depth for SSAO/SSIL": 0.06009999513626,
+              "Process SSAO": 0.45900001525879,
+              "Render 3D Cluster Elements": 0.08360000252724,
+              "Pack 3D Cluster Elements": 0.01429999917746,
+              "Render Fog": 0.36819999217987,
+              "Filter Fog": 0.08969999551773,
+              "Integrate Fog": 0.04389999806881,
+              "Render Opaque Pass": 12.0660987854004,
+              "Render Sky": 0.02439999878407,
+              "Render 3D Transparent Pass": 0.66149997711182,
+              "Resolve": 0.23509998321533,
+              "Tonemap": 0.63029999732971,
+              "Glow": 0.82720003128052,
+              "Render CanvasItems": 0.11899995803833,
+              "Render OmniLight Shadows": 0.03249999880791
+            }
+          }
+        ],
+        "cost_blocks": 16,
+        "mean_task_ms": {
+          "Cull DirectionalLight3D, Split 1": 0.03875416694208937,
+          "Cull OmniLight3D Shadow Cube, Side 2": 0.00101875010877875,
+          "Filter Fog": 0.07889166830314562,
+          "Glow": 0.6707854383521612,
+          "Integrate Fog": 0.03940486169109875,
+          "Pack 3D Cluster Elements": 0.00717291652432,
+          "Prepare Depth for SSAO/SSIL": 0.059540970375140626,
+          "Prepare Render Frame": 0.020088193358646877,
+          "Process SSAO": 0.3824826376305694,
+          "Render 3D Cluster Elements": 0.038957639338655,
+          "Render 3D Transparent Pass": 2.242944389581682,
+          "Render CanvasItems": 0.0986179802566775,
+          "Render Depth Pre-Pass": 7.141329640812344,
+          "Render Directional/SpotLight Shadows": 0.8085618131690563,
+          "Render Fog": 0.26772222303681875,
+          "Render OmniLight Shadows": 0.40843749745852437,
+          "Render Opaque Pass": 13.613859854804149,
+          "Render Sky": 0.17433472310917314,
+          "Resolve": 0.24502152750889436,
+          "Resolve Depth Pre-Pass (MSAA)": 0.23144097228844876,
+          "Setup Shadows": 0.0011187500320375,
+          "Setup Sky": 0.95168055958218,
+          "Tonemap": 0.5091583364539675,
+          "Update GPUParticles": 0.06936041725178563
+        },
+        "top_task": "Render Opaque Pass",
+        "scope": "Godot --gpu-profile one-second task means; total is the last frame. First timed block excluded because it can include warmup. GPU passes do not identify individual scene meshes."
+      },
+      "route_sha256": "f36b84282b4147caf41ae2d33ee58aa14b0dd9e15444634b262517661180be55",
+      "performance_sha256": "50bf828da7d0407656a2322f0c1d49592b080a321261f47f7b91cc136c4c26ab",
+      "engine_cost_summary": {
+        "engine_process_ms": {
+          "mean": 138.45344382022472,
+          "maximum": 833.914
+        },
+        "physics_max_step_ms": {
+          "mean": 5.431623595505618,
+          "maximum": 20.958
+        },
+        "executed_physics_steps": {
+          "mean": 6.51123595505618,
+          "maximum": 8
+        }
+      }
+    },
+    {
+      "label": "before",
+      "biome": "water",
+      "source_commit": "946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\Tetherbound.exe",
+        "--rendering-method",
+        "forward_plus",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\Tetherbound.pck",
+        "--resolution",
+        "1920x1080",
+        "--gpu-profile",
+        "--debug",
+        "--ignore-error-breaks",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+        "--",
+        "--biome=water",
+        "--preset=Medium",
+        "--source-commit=946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+        "--output=D:/tetherbound/.artifacts/pab-1/before/water/route"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 180.15600000007544,
+      "errors": [],
+      "log_sha256": "15de4862639639eafb2af2fa1ed8de3d4aab45c21efc6f9ea5f7d5fd1c12b57f",
+      "complete": true,
+      "camera_far_m": 520.0,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "metrics": {
+        "frames": 120,
+        "minimum_fps": 1.1442773545222986,
+        "average_fps": 5.302351340958026,
+        "one_percent_low_fps": 1.14651090933793,
+        "slowest_one_percent_frames": 2,
+        "monitors": {
+          "draw_calls": {
+            "average": 758.8166666666667,
+            "slowest_one_percent_mean": 721.5
+          },
+          "primitives": {
+            "average": 2980726.433333333,
+            "slowest_one_percent_mean": 2960613.0
+          },
+          "objects_in_frame": {
+            "average": 1113.1416666666667,
+            "slowest_one_percent_mean": 1070.0
+          },
+          "physics_ms": {
+            "average": 12.625633333333333,
+            "slowest_one_percent_mean": 12.085
+          },
+          "process_ms": {
+            "average": 446.04476666666665,
+            "slowest_one_percent_mean": 50.1635
+          },
+          "video_memory_bytes": {
+            "average": 881916883.4666667,
+            "slowest_one_percent_mean": 881292904.0
+          },
+          "node_count": {
+            "average": 7816.4,
+            "slowest_one_percent_mean": 7804.5
+          },
+          "render_gpu_ms": {
+            "average": 21.663349930445353,
+            "slowest_one_percent_mean": 21.9089994430542
+          },
+          "render_cpu_ms": {
+            "average": 1.4135249992211663,
+            "slowest_one_percent_mean": 1.3620000481605552
+          },
+          "render_setup_cpu_ms": {
+            "average": 0.2902,
+            "slowest_one_percent_mean": 0.2885
+          }
+        }
+      },
+      "gpu_profile": {
+        "raw_blocks": [
+          {
+            "total_last_frame_ms": 21.975,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01411111156146,
+              "Update GPUParticles": 0.08999999364217,
+              "Cull DirectionalLight3D, Split 1": 0.07499999470181,
+              "Setup Sky": 0.90277777777778,
+              "Render Depth Pre-Pass": 5.3575553894043,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21666667196486,
+              "Setup Shadows": 0.0177777790361,
+              "Render Directional/SpotLight Shadows": 0.31100000275506,
+              "Prepare Depth for SSAO/SSIL": 0.06066666046778,
+              "Process SSAO": 0.37066666285197,
+              "Render 3D Cluster Elements": 0.01844444539812,
+              "Render Fog": 0.21311110920376,
+              "Filter Fog": 0.07722222142749,
+              "Integrate Fog": 0.03855555587345,
+              "Render Opaque Pass": 12.7601114908854,
+              "Render Sky": 0.24533332718743,
+              "Render 3D Transparent Pass": 0.07644444704056,
+              "Resolve": 0.22033335102929,
+              "Tonemap": 0.48811112509833,
+              "Glow": 0.64377774132623,
+              "Render CanvasItems": 0.03699998060862
+            }
+          },
+          {
+            "total_last_frame_ms": 21.352,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.0140000000596,
+              "Update GPUParticles": 0.08649999499321,
+              "Cull DirectionalLight3D, Split 1": 0.07459999918938,
+              "Setup Sky": 0.92079992294312,
+              "Render Depth Pre-Pass": 4.80109977722168,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21529998779297,
+              "Setup Shadows": 0.0177000015974,
+              "Render Directional/SpotLight Shadows": 0.32820000648499,
+              "Prepare Depth for SSAO/SSIL": 0.06039999723434,
+              "Process SSAO": 0.37000000476837,
+              "Render 3D Cluster Elements": 0.01429999917746,
+              "Render Fog": 0.20820000171661,
+              "Filter Fog": 0.0772000014782,
+              "Integrate Fog": 0.0386000007391,
+              "Render Opaque Pass": 11.1476997375488,
+              "Render Sky": 0.21900000572205,
+              "Render 3D Transparent Pass": 0.12259999513626,
+              "Resolve": 0.2210000038147,
+              "Tonemap": 0.48779997825623,
+              "Glow": 0.64390001296997,
+              "Render CanvasItems": 0.03709998428822
+            }
+          },
+          {
+            "total_last_frame_ms": 21.451,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01260000020266,
+              "Update GPUParticles": 0.08669999241829,
+              "Cull DirectionalLight3D, Split 1": 0.10509999990463,
+              "Setup Sky": 0.9742000579834,
+              "Render Depth Pre-Pass": 4.90760040283203,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21850001811981,
+              "Setup Shadows": 0.01770000010729,
+              "Render Directional/SpotLight Shadows": 0.36510000228882,
+              "Prepare Depth for SSAO/SSIL": 0.0597000002861,
+              "Process SSAO": 0.36939997673035,
+              "Render 3D Cluster Elements": 0.0126999989152,
+              "Render Fog": 0.20279998779297,
+              "Filter Fog": 0.07770000100136,
+              "Integrate Fog": 0.03829999864101,
+              "Render Opaque Pass": 11.6468994140625,
+              "Render Sky": 0.22990000247955,
+              "Render 3D Transparent Pass": 0.1396999835968,
+              "Resolve": 0.23010001182556,
+              "Tonemap": 0.48790001869202,
+              "Glow": 0.64350004196167,
+              "Render CanvasItems": 0.037999984622
+            }
+          },
+          {
+            "total_last_frame_ms": 22.047,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01400000022517,
+              "Update GPUParticles": 0.08988888396157,
+              "Cull DirectionalLight3D, Split 1": 0.1195555528005,
+              "Setup Sky": 0.99544440375434,
+              "Render Depth Pre-Pass": 5.16133329603407,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21666667196486,
+              "Setup Shadows": 0.01755555636353,
+              "Render Directional/SpotLight Shadows": 0.36711110009087,
+              "Prepare Depth for SSAO/SSIL": 0.05977777640025,
+              "Process SSAO": 0.37122220463223,
+              "Render 3D Cluster Elements": 0.01211111081971,
+              "Render Fog": 0.20322220855289,
+              "Filter Fog": 0.07688889238569,
+              "Integrate Fog": 0.03844444288148,
+              "Render Opaque Pass": 12.2614440917969,
+              "Render Sky": 0.27322223451402,
+              "Render 3D Transparent Pass": 0.09577778312895,
+              "Resolve": 0.22677779197693,
+              "Tonemap": 0.48833333121406,
+              "Glow": 0.64377779430813,
+              "Render CanvasItems": 0.03666665156682
+            }
+          },
+          {
+            "total_last_frame_ms": 22.247,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01224999967963,
+              "Update GPUParticles": 0.08849999308586,
+              "Cull DirectionalLight3D, Split 1": 0.12099999934435,
+              "Setup Sky": 0.99512499570847,
+              "Render Depth Pre-Pass": 5.24362516403198,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21574999392033,
+              "Setup Shadows": 0.01750000007451,
+              "Render Directional/SpotLight Shadows": 0.36787500977516,
+              "Prepare Depth for SSAO/SSIL": 0.05887499451637,
+              "Process SSAO": 0.37162500619888,
+              "Render 3D Cluster Elements": 0.01950000226498,
+              "Render Fog": 0.21975000202656,
+              "Filter Fog": 0.07737500220537,
+              "Integrate Fog": 0.03824999928474,
+              "Render Opaque Pass": 12.7156248092651,
+              "Render Sky": 0.27875000238419,
+              "Render 3D Transparent Pass": 0.08299999684095,
+              "Resolve": 0.22562500834465,
+              "Tonemap": 0.4876249730587,
+              "Glow": 0.64387500286102,
+              "Render CanvasItems": 0.03699999302626
+            }
+          },
+          {
+            "total_last_frame_ms": 22.171,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01410000026226,
+              "Update GPUParticles": 0.08559999465942,
+              "Cull DirectionalLight3D, Split 1": 0.13339999914169,
+              "Setup Sky": 0.99400005340576,
+              "Render Depth Pre-Pass": 5.25929985046387,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21610000133514,
+              "Setup Shadows": 0.01780000030994,
+              "Render Directional/SpotLight Shadows": 0.36979997158051,
+              "Prepare Depth for SSAO/SSIL": 0.06039999723434,
+              "Process SSAO": 0.37269997596741,
+              "Render 3D Cluster Elements": 0.01189999952912,
+              "Render Fog": 0.20379998683929,
+              "Filter Fog": 0.07770000100136,
+              "Integrate Fog": 0.03840000033379,
+              "Render Opaque Pass": 12.3595993041992,
+              "Render Sky": 0.27350001335144,
+              "Render 3D Transparent Pass": 0.0805999994278,
+              "Resolve": 0.2260999917984,
+              "Tonemap": 0.48799996376038,
+              "Glow": 0.64350004196167,
+              "Render CanvasItems": 0.03699998259544
+            }
+          },
+          {
+            "total_last_frame_ms": 21.834,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01399999992414,
+              "Update GPUParticles": 0.08672727779909,
+              "Cull DirectionalLight3D, Split 1": 0.12436363913796,
+              "Setup Sky": 0.99554538726807,
+              "Render Depth Pre-Pass": 5.25936334783381,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21754546598955,
+              "Setup Shadows": 0.01772727343169,
+              "Render Directional/SpotLight Shadows": 0.37590911171653,
+              "Prepare Depth for SSAO/SSIL": 0.05990908904509,
+              "Process SSAO": 0.37099998647516,
+              "Render 3D Cluster Elements": 0.01063636351715,
+              "Render Fog": 0.2018181627447,
+              "Filter Fog": 0.07672726566141,
+              "Integrate Fog": 0.03836363554001,
+              "Render Opaque Pass": 12.2742725719105,
+              "Render Sky": 0.26136363636364,
+              "Render 3D Transparent Pass": 0.07781817696311,
+              "Resolve": 0.22627275640314,
+              "Tonemap": 0.48809086192738,
+              "Glow": 0.64372730255127,
+              "Render CanvasItems": 0.0371817973527
+            }
+          },
+          {
+            "total_last_frame_ms": 21.71,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01399999992414,
+              "Update GPUParticles": 0.08690908822146,
+              "Cull DirectionalLight3D, Split 1": 0.09990908882835,
+              "Setup Sky": 0.98890902779319,
+              "Render Depth Pre-Pass": 5.21145421808416,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21936364607377,
+              "Setup Shadows": 0.01763636415655,
+              "Render Directional/SpotLight Shadows": 0.38227272033691,
+              "Prepare Depth for SSAO/SSIL": 0.05954545194452,
+              "Process SSAO": 0.37118183482777,
+              "Render 3D Cluster Elements": 0.01090909134258,
+              "Render Fog": 0.20263635028492,
+              "Filter Fog": 0.07736363736066,
+              "Integrate Fog": 0.03854545138099,
+              "Render Opaque Pass": 12.2243638472124,
+              "Render Sky": 0.25063638253645,
+              "Render 3D Transparent Pass": 0.07654544982043,
+              "Resolve": 0.22600000554865,
+              "Tonemap": 0.48854541778564,
+              "Glow": 0.64381820505316,
+              "Render CanvasItems": 0.03690907088193
+            }
+          },
+          {
+            "total_last_frame_ms": 21.838,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01488888925976,
+              "Update GPUParticles": 0.08977778090371,
+              "Cull DirectionalLight3D, Split 1": 0.08955554829703,
+              "Setup Sky": 0.96411111619737,
+              "Render Depth Pre-Pass": 5.16900041368273,
+              "Resolve Depth Pre-Pass (MSAA)": 0.2197777695126,
+              "Setup Shadows": 0.01744444502725,
+              "Render Directional/SpotLight Shadows": 0.38777780532837,
+              "Prepare Depth for SSAO/SSIL": 0.05977776977751,
+              "Process SSAO": 0.37133333418104,
+              "Render 3D Cluster Elements": 0.0109999999404,
+              "Render Fog": 0.20222222805023,
+              "Filter Fog": 0.07755555709203,
+              "Integrate Fog": 0.03855555587345,
+              "Render Opaque Pass": 12.1617770724826,
+              "Render Sky": 0.24966666433546,
+              "Render 3D Transparent Pass": 0.07511111100515,
+              "Resolve": 0.22588888804118,
+              "Tonemap": 0.48855553732978,
+              "Glow": 0.64400000042386,
+              "Render CanvasItems": 0.03688887755076
+            }
+          },
+          {
+            "total_last_frame_ms": 21.734,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01410000026226,
+              "Update GPUParticles": 0.08630000948906,
+              "Cull DirectionalLight3D, Split 1": 0.08979999423027,
+              "Setup Sky": 0.96540002822876,
+              "Render Depth Pre-Pass": 5.19029998779297,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21930000782013,
+              "Setup Shadows": 0.01860000193119,
+              "Render Directional/SpotLight Shadows": 0.39079999923706,
+              "Prepare Depth for SSAO/SSIL": 0.05989999771118,
+              "Process SSAO": 0.37109997272491,
+              "Render 3D Cluster Elements": 0.01110000014305,
+              "Render Fog": 0.20190000534058,
+              "Filter Fog": 0.07730000019073,
+              "Integrate Fog": 0.03829999864101,
+              "Render Opaque Pass": 12.1416999816895,
+              "Render Sky": 0.2492999792099,
+              "Render 3D Transparent Pass": 0.07499999403954,
+              "Resolve": 0.22599997520447,
+              "Tonemap": 0.48779997825623,
+              "Glow": 0.64350004196167,
+              "Render CanvasItems": 0.03619998693466
+            }
+          },
+          {
+            "total_last_frame_ms": 21.71,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01399999992414,
+              "Update GPUParticles": 0.08472727645527,
+              "Cull DirectionalLight3D, Split 1": 0.09045454046943,
+              "Setup Sky": 0.95909101312811,
+              "Render Depth Pre-Pass": 5.19254511052912,
+              "Resolve Depth Pre-Pass (MSAA)": 0.21936364607377,
+              "Setup Shadows": 0.01781818406148,
+              "Render Directional/SpotLight Shadows": 0.39327270334417,
+              "Prepare Depth for SSAO/SSIL": 0.05954545194452,
+              "Process SSAO": 0.37127273732966,
+              "Render 3D Cluster Elements": 0.0109999999404,
+              "Render Fog": 0.20181818441911,
+              "Filter Fog": 0.07663636315953,
+              "Integrate Fog": 0.03854545409029,
+              "Render Opaque Pass": 12.1457269841974,
+              "Render Sky": 0.24954546581615,
+              "Render 3D Transparent Pass": 0.07527272267775,
+              "Resolve": 0.22654544223439,
+              "Tonemap": 0.48790905692361,
+              "Glow": 0.64363640004938,
+              "Render CanvasItems": 0.0371817946434
+            }
+          },
+          {
+            "total_last_frame_ms": 21.819,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01400000022517,
+              "Update GPUParticles": 0.08622222476535,
+              "Cull DirectionalLight3D, Split 1": 0.09011110332277,
+              "Setup Sky": 0.93833329942491,
+              "Render Depth Pre-Pass": 5.20922258165148,
+              "Resolve Depth Pre-Pass (MSAA)": 0.219111111429,
+              "Setup Shadows": 0.01833333406183,
+              "Render Directional/SpotLight Shadows": 0.39688886536492,
+              "Prepare Depth for SSAO/SSIL": 0.05955555703905,
+              "Process SSAO": 0.37099999851651,
+              "Render 3D Cluster Elements": 0.01088888943195,
+              "Render Fog": 0.20199999544356,
+              "Filter Fog": 0.07666666640176,
+              "Integrate Fog": 0.03911111421055,
+              "Render Opaque Pass": 12.1582226223416,
+              "Render Sky": 0.24933332867093,
+              "Render 3D Transparent Pass": 0.07555555635028,
+              "Resolve": 0.22599999109904,
+              "Tonemap": 0.48777776294284,
+              "Glow": 0.64422225952148,
+              "Render CanvasItems": 0.03733331958453
+            }
+          }
+        ],
+        "cost_blocks": 11,
+        "mean_task_ms": {
+          "Cull DirectionalLight3D, Split 1": 0.10344086042421455,
+          "Filter Fog": 0.07719212617619091,
+          "Glow": 0.6437688276021164,
+          "Integrate Fog": 0.03849233196512909,
+          "Prepare Depth for SSAO/SSIL": 0.059762371193933635,
+          "Prepare Render Frame": 0.013812626358993637,
+          "Process SSAO": 0.3710759120320264,
+          "Render 3D Cluster Elements": 0.012367768638363636,
+          "Render 3D Transparent Pass": 0.08881643354427454,
+          "Render CanvasItems": 0.03704194936788364,
+          "Render Depth Pre-Pass": 5.145894922741627,
+          "Render Directional/SpotLight Shadows": 0.37500066323166453,
+          "Render Fog": 0.20456064665558363,
+          "Render Opaque Pass": 12.112484585155137,
+          "Render Sky": 0.25311070139852543,
+          "Resolve": 0.22602816966282818,
+          "Resolve Depth Pre-Pass (MSAA)": 0.2178889381847209,
+          "Setup Shadows": 0.01780137828387818,
+          "Setup Sky": 0.9719053914395909,
+          "Tonemap": 0.48803062546789727,
+          "Update GPUParticles": 0.08707750152293546
+        },
+        "top_task": "Render Opaque Pass",
+        "scope": "Godot --gpu-profile one-second task means; total is the last frame. First timed block excluded because it can include warmup. GPU passes do not identify individual scene meshes."
+      },
+      "route_sha256": "5c4e3189d7e8632d4cd739c8dcfe876d873bc5cfda2907e854c122e24fe1cd28",
+      "performance_sha256": "f452f8a4ff13773894cc7b1196db05d7c3bebf21170fe1f6a63a1438b0f93171",
+      "engine_cost_summary": {
+        "engine_process_ms": {
+          "mean": 115.65835294117647,
+          "maximum": 789.592
+        },
+        "physics_max_step_ms": {
+          "mean": 10.808285714285715,
+          "maximum": 14.692
+        },
+        "executed_physics_steps": {
+          "mean": 6.7478991596638656,
+          "maximum": 8
+        }
+      }
+    },
+    {
+      "label": "after",
+      "biome": "water",
+      "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9\\Tetherbound.exe",
+        "--rendering-method",
+        "forward_plus",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\perf-diag-after-1b85fb4d9\\Tetherbound.pck",
+        "--resolution",
+        "1920x1080",
+        "--gpu-profile",
+        "--debug",
+        "--ignore-error-breaks",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+        "--",
+        "--biome=water",
+        "--preset=Medium",
+        "--source-commit=1b85fb4d985b7d622e022867055770b2f0de6b18",
+        "--output=D:/tetherbound/.artifacts/pab-1/after/water/route"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 191.0,
+      "errors": [],
+      "log_sha256": "ddfd308e8dab8e3e3ee980720394013003694dc42a55fe3eb9f2ea8008b35dd4",
+      "complete": true,
+      "camera_far_m": 6500.0,
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "metrics": {
+        "frames": 120,
+        "minimum_fps": 1.06283592257878,
+        "average_fps": 4.058694128693073,
+        "one_percent_low_fps": 1.0646820992336952,
+        "slowest_one_percent_frames": 2,
+        "monitors": {
+          "draw_calls": {
+            "average": 773.3666666666667,
+            "slowest_one_percent_mean": 725.0
+          },
+          "primitives": {
+            "average": 3056568.6416666666,
+            "slowest_one_percent_mean": 3036823.5
+          },
+          "objects_in_frame": {
+            "average": 1135.3666666666666,
+            "slowest_one_percent_mean": 1082.0
+          },
+          "physics_ms": {
+            "average": 16.1066,
+            "slowest_one_percent_mean": 10.9125
+          },
+          "process_ms": {
+            "average": 402.6772916666667,
+            "slowest_one_percent_mean": 473.3125
+          },
+          "video_memory_bytes": {
+            "average": 887756990.4,
+            "slowest_one_percent_mean": 884838312.0
+          },
+          "node_count": {
+            "average": 7817.375,
+            "slowest_one_percent_mean": 7804.5
+          },
+          "render_gpu_ms": {
+            "average": 32.83430836995443,
+            "slowest_one_percent_mean": 33.33699989318845
+          },
+          "render_cpu_ms": {
+            "average": 1.4400499979654948,
+            "slowest_one_percent_mean": 1.40950000286102
+          },
+          "render_setup_cpu_ms": {
+            "average": 0.28545,
+            "slowest_one_percent_mean": 0.268
+          }
+        }
+      },
+      "gpu_profile": {
+        "raw_blocks": [
+          {
+            "total_last_frame_ms": 34.073,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01449999958277,
+              "Update GPUParticles": 0.12399999797344,
+              "Cull DirectionalLight3D, Split 1": 0.10499999672174,
+              "Setup Sky": 1.38899993896484,
+              "Render Depth Pre-Pass": 8.02699947357178,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27650001645088,
+              "Setup Shadows": 0.02700000070035,
+              "Render Directional/SpotLight Shadows": 0.45450001955032,
+              "Prepare Depth for SSAO/SSIL": 0.0625,
+              "Process SSAO": 0.53700000047684,
+              "Render 3D Cluster Elements": 0.03150000050664,
+              "Render Fog": 0.30000001192093,
+              "Filter Fog": 0.09899999946356,
+              "Integrate Fog": 0.0489999987185,
+              "Render Opaque Pass": 19.8899993896484,
+              "Render Sky": 0.36349999904633,
+              "Render 3D Transparent Pass": 0.10549999773502,
+              "Resolve": 0.26250001788139,
+              "Tonemap": 0.74699997901917,
+              "Glow": 0.97850000858307,
+              "Render CanvasItems": 0.05199999734759
+            }
+          },
+          {
+            "total_last_frame_ms": 33.073,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01437499932945,
+              "Update GPUParticles": 0.12325000017881,
+              "Cull DirectionalLight3D, Split 1": 0.10387499630451,
+              "Setup Sky": 1.39125001430511,
+              "Render Depth Pre-Pass": 8.05150032043457,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27699998021126,
+              "Setup Shadows": 0.02637499757111,
+              "Render Directional/SpotLight Shadows": 0.46449998021126,
+              "Prepare Depth for SSAO/SSIL": 0.06237499788404,
+              "Process SSAO": 0.53712499141693,
+              "Render 3D Cluster Elements": 0.02650000154972,
+              "Pack 3D Cluster Elements": 0.01049999985844,
+              "Render Fog": 0.28999999165535,
+              "Filter Fog": 0.09950000047684,
+              "Integrate Fog": 0.04812499880791,
+              "Render Opaque Pass": 19.5756244659424,
+              "Render Sky": 0.37174999713898,
+              "Render 3D Transparent Pass": 0.10825000703335,
+              "Resolve": 0.26187500357628,
+              "Tonemap": 0.74612492322922,
+              "Glow": 0.97675007581711,
+              "Render CanvasItems": 0.05174998566508
+            }
+          },
+          {
+            "total_last_frame_ms": 32.146,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01499999966472,
+              "Update GPUParticles": 0.12274999171495,
+              "Cull DirectionalLight3D, Split 1": 0.10874999314547,
+              "Setup Sky": 1.39125001430511,
+              "Render Depth Pre-Pass": 7.38375043869019,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27625000476837,
+              "Setup Shadows": 0.02649999782443,
+              "Render Directional/SpotLight Shadows": 0.48924997448921,
+              "Prepare Depth for SSAO/SSIL": 0.06237500160933,
+              "Process SSAO": 0.53875005245209,
+              "Render 3D Cluster Elements": 0.02074999734759,
+              "Pack 3D Cluster Elements": 0.01062500011176,
+              "Render Fog": 0.27762499451637,
+              "Filter Fog": 0.09975000470877,
+              "Integrate Fog": 0.04762499779463,
+              "Render Opaque Pass": 17.636625289917,
+              "Render Sky": 0.34200003743172,
+              "Render 3D Transparent Pass": 0.18137499690056,
+              "Resolve": 0.26274999976158,
+              "Tonemap": 0.74699991941452,
+              "Glow": 0.97812509536743,
+              "Render CanvasItems": 0.05262498930097
+            }
+          },
+          {
+            "total_last_frame_ms": 32.891,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01249999925494,
+              "Update GPUParticles": 0.12112499028444,
+              "Cull DirectionalLight3D, Split 1": 0.1473750025034,
+              "Setup Sky": 1.39137494564056,
+              "Render Depth Pre-Pass": 7.53250026702881,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27700001001358,
+              "Setup Shadows": 0.02600000053644,
+              "Render Directional/SpotLight Shadows": 0.55024999380112,
+              "Prepare Depth for SSAO/SSIL": 0.06162500008941,
+              "Process SSAO": 0.5378749370575,
+              "Render 3D Cluster Elements": 0.01824999973178,
+              "Pack 3D Cluster Elements": 0.01112500019372,
+              "Render Fog": 0.27274999022484,
+              "Filter Fog": 0.1000000089407,
+              "Integrate Fog": 0.04762499779463,
+              "Render Opaque Pass": 18.2557487487793,
+              "Render Sky": 0.35087499022484,
+              "Render 3D Transparent Pass": 0.19799999892712,
+              "Resolve": 0.26774999499321,
+              "Tonemap": 0.74687492847443,
+              "Glow": 0.97787499427795,
+              "Render CanvasItems": 0.052499987185
+            }
+          },
+          {
+            "total_last_frame_ms": 33.551,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01414285706622,
+              "Update GPUParticles": 0.12128570250102,
+              "Cull DirectionalLight3D, Split 1": 0.1638571534838,
+              "Setup Sky": 1.38757147107806,
+              "Render Depth Pre-Pass": 7.85400009155273,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27728571210589,
+              "Setup Shadows": 0.0265714270728,
+              "Render Directional/SpotLight Shadows": 0.55085720334734,
+              "Prepare Depth for SSAO/SSIL": 0.06128571288926,
+              "Process SSAO": 0.53771427699498,
+              "Render 3D Cluster Elements": 0.01657142915896,
+              "Pack 3D Cluster Elements": 0.01142857117312,
+              "Render Fog": 0.27114285741534,
+              "Filter Fog": 0.09957143238613,
+              "Integrate Fog": 0.04799999935286,
+              "Render Opaque Pass": 18.8828560965402,
+              "Render Sky": 0.41485714912415,
+              "Render 3D Transparent Pass": 0.14028572184699,
+              "Resolve": 0.26642855576106,
+              "Tonemap": 0.74671425138201,
+              "Glow": 0.97742864063808,
+              "Render CanvasItems": 0.05157141600336
+            }
+          },
+          {
+            "total_last_frame_ms": 34.671,
+            "tasks_ms": {
+              "Update GPUParticles": 0.1248333354791,
+              "Cull DirectionalLight3D, Split 1": 0.16466665267944,
+              "Setup Sky": 1.38933324813843,
+              "Render Depth Pre-Pass": 7.98933347066243,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27583332856496,
+              "Setup Shadows": 0.02633333206177,
+              "Render Directional/SpotLight Shadows": 0.54816667238871,
+              "Prepare Depth for SSAO/SSIL": 0.06216666599115,
+              "Process SSAO": 0.53716667493184,
+              "Render 3D Cluster Elements": 0.0271666670839,
+              "Pack 3D Cluster Elements": 0.01149999971191,
+              "Render Fog": 0.31533332665761,
+              "Filter Fog": 0.10049999753634,
+              "Integrate Fog": 0.04816666245461,
+              "Render Opaque Pass": 19.7418327331543,
+              "Render Sky": 0.42366667588552,
+              "Render 3D Transparent Pass": 0.12233333786329,
+              "Resolve": 0.26600001255671,
+              "Tonemap": 0.74616662661235,
+              "Glow": 0.97766669591268,
+              "Render CanvasItems": 0.05233332514763
+            }
+          },
+          {
+            "total_last_frame_ms": 33.369,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01442857086658,
+              "Update GPUParticles": 0.11628571578435,
+              "Cull DirectionalLight3D, Split 1": 0.17371428012848,
+              "Setup Sky": 1.3924286706107,
+              "Render Depth Pre-Pass": 8.07285744803292,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27628571646554,
+              "Setup Shadows": 0.02599999947207,
+              "Render Directional/SpotLight Shadows": 0.55514287948608,
+              "Prepare Depth for SSAO/SSIL": 0.06099999802453,
+              "Process SSAO": 0.53785715784345,
+              "Render 3D Cluster Elements": 0.02357142737934,
+              "Pack 3D Cluster Elements": 0.01085714250803,
+              "Render Fog": 0.2985714503697,
+              "Filter Fog": 0.09957142387118,
+              "Integrate Fog": 0.04799999935286,
+              "Render Opaque Pass": 19.5335715157645,
+              "Render Sky": 0.42085715702602,
+              "Render 3D Transparent Pass": 0.11528571162905,
+              "Resolve": 0.26514286654336,
+              "Tonemap": 0.74685716629028,
+              "Glow": 0.97842863627842,
+              "Render CanvasItems": 0.05271427971976
+            }
+          },
+          {
+            "total_last_frame_ms": 33.38,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01428571449859,
+              "Update GPUParticles": 0.11785714115415,
+              "Cull DirectionalLight3D, Split 1": 0.18685713836125,
+              "Setup Sky": 1.3924286706107,
+              "Render Depth Pre-Pass": 8.11942781720843,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27699998446873,
+              "Setup Shadows": 0.02671428450516,
+              "Render Directional/SpotLight Shadows": 0.57314286913191,
+              "Prepare Depth for SSAO/SSIL": 0.06114285332816,
+              "Process SSAO": 0.53828573226929,
+              "Render 3D Cluster Elements": 0.01542857182877,
+              "Pack 3D Cluster Elements": 0.0104285712753,
+              "Render Fog": 0.26742855140141,
+              "Filter Fog": 0.09985714299338,
+              "Integrate Fog": 0.04814285465649,
+              "Render Opaque Pass": 19.2308567592076,
+              "Render Sky": 0.40942856243678,
+              "Render 3D Transparent Pass": 0.11157143115997,
+              "Resolve": 0.26628570897239,
+              "Tonemap": 0.74685716629028,
+              "Glow": 0.97871432985578,
+              "Render CanvasItems": 0.05185713512557
+            }
+          },
+          {
+            "total_last_frame_ms": 33.159,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01442857086658,
+              "Update GPUParticles": 0.12228571517127,
+              "Cull DirectionalLight3D, Split 1": 0.17128571442195,
+              "Setup Sky": 1.39414283207485,
+              "Render Depth Pre-Pass": 8.07985741751535,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27714286531721,
+              "Setup Shadows": 0.02628571220807,
+              "Render Directional/SpotLight Shadows": 0.56585713795253,
+              "Prepare Depth for SSAO/SSIL": 0.06142857245037,
+              "Process SSAO": 0.5375714302063,
+              "Render 3D Cluster Elements": 0.01528571439641,
+              "Pack 3D Cluster Elements": 0.01071428614003,
+              "Render Fog": 0.26871429170881,
+              "Filter Fog": 0.09971428768975,
+              "Integrate Fog": 0.04799999509539,
+              "Render Opaque Pass": 18.7842843191964,
+              "Render Sky": 0.39485713413783,
+              "Render 3D Transparent Pass": 0.10828571660178,
+              "Resolve": 0.26514284951346,
+              "Tonemap": 0.74642855780465,
+              "Glow": 0.97857141494751,
+              "Render CanvasItems": 0.05214283721788
+            }
+          },
+          {
+            "total_last_frame_ms": 32.685,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01442857086658,
+              "Update GPUParticles": 0.11957142182759,
+              "Cull DirectionalLight3D, Split 1": 0.13899999856949,
+              "Setup Sky": 1.38942868368966,
+              "Render Depth Pre-Pass": 7.98728561401367,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27900000980922,
+              "Setup Shadows": 0.02628571220807,
+              "Render Directional/SpotLight Shadows": 0.58414282117571,
+              "Prepare Depth for SSAO/SSIL": 0.06142857245037,
+              "Process SSAO": 0.53728573662894,
+              "Render 3D Cluster Elements": 0.01600000155824,
+              "Pack 3D Cluster Elements": 0.01071428614003,
+              "Render Fog": 0.26914286613464,
+              "Filter Fog": 0.10057142802647,
+              "Integrate Fog": 0.04814285465649,
+              "Render Opaque Pass": 18.6722848074777,
+              "Render Sky": 0.37671429770333,
+              "Render 3D Transparent Pass": 0.10671428271702,
+              "Resolve": 0.26599999836513,
+              "Tonemap": 0.74657140459333,
+              "Glow": 0.97871432985578,
+              "Render CanvasItems": 0.05128569688116
+            }
+          },
+          {
+            "total_last_frame_ms": 32.704,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01637499965727,
+              "Update GPUParticles": 0.11937499046326,
+              "Cull DirectionalLight3D, Split 1": 0.12624999880791,
+              "Setup Sky": 1.39012503623962,
+              "Render Depth Pre-Pass": 7.9087495803833,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27950000762939,
+              "Setup Shadows": 0.02662499807775,
+              "Render Directional/SpotLight Shadows": 0.59049999713898,
+              "Prepare Depth for SSAO/SSIL": 0.06187500059605,
+              "Process SSAO": 0.53725004196167,
+              "Render 3D Cluster Elements": 0.01600000075996,
+              "Pack 3D Cluster Elements": 0.01025000028312,
+              "Render Fog": 0.26899999380112,
+              "Filter Fog": 0.09975000470877,
+              "Integrate Fog": 0.04774999991059,
+              "Render Opaque Pass": 18.4997482299805,
+              "Render Sky": 0.37349998950958,
+              "Render 3D Transparent Pass": 0.10549999773502,
+              "Resolve": 0.2661249935627,
+              "Tonemap": 0.74612492322922,
+              "Glow": 0.97775012254715,
+              "Render CanvasItems": 0.05199998244643
+            }
+          },
+          {
+            "total_last_frame_ms": 32.959,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01399999963386,
+              "Update GPUParticles": 0.12371428523745,
+              "Cull DirectionalLight3D, Split 1": 0.12685714449201,
+              "Setup Sky": 1.39357144492013,
+              "Render Depth Pre-Pass": 7.89771379743304,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27871426514217,
+              "Setup Shadows": 0.02671428450516,
+              "Render Directional/SpotLight Shadows": 0.59371423721313,
+              "Prepare Depth for SSAO/SSIL": 0.06114285758563,
+              "Process SSAO": 0.53785715784345,
+              "Render 3D Cluster Elements": 0.01557142926114,
+              "Pack 3D Cluster Elements": 0.0104285712753,
+              "Render Fog": 0.26885715552739,
+              "Filter Fog": 0.10057142802647,
+              "Integrate Fog": 0.04814285465649,
+              "Render Opaque Pass": 18.6141422816685,
+              "Render Sky": 0.37357139587402,
+              "Render 3D Transparent Pass": 0.10599999768393,
+              "Resolve": 0.26571428775787,
+              "Tonemap": 0.74714285986764,
+              "Glow": 0.97914287022182,
+              "Render CanvasItems": 0.05157141174589
+            }
+          },
+          {
+            "total_last_frame_ms": 32.644,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01514285696404,
+              "Update GPUParticles": 0.11871428149087,
+              "Cull DirectionalLight3D, Split 1": 0.12642856155123,
+              "Setup Sky": 1.3898571559361,
+              "Render Depth Pre-Pass": 7.90699986049107,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27828570774623,
+              "Setup Shadows": 0.02642856964043,
+              "Render Directional/SpotLight Shadows": 0.59685713904245,
+              "Prepare Depth for SSAO/SSIL": 0.06114285332816,
+              "Process SSAO": 0.53785715784345,
+              "Render 3D Cluster Elements": 0.01628571322986,
+              "Pack 3D Cluster Elements": 0.01000000004257,
+              "Render Fog": 0.2681428534644,
+              "Filter Fog": 0.09985714299338,
+              "Integrate Fog": 0.04799999935286,
+              "Render Opaque Pass": 18.4475708007813,
+              "Render Sky": 0.37257140023368,
+              "Render 3D Transparent Pass": 0.10599999768393,
+              "Resolve": 0.2655714239393,
+              "Tonemap": 0.74742862156459,
+              "Glow": 0.9785714830671,
+              "Render CanvasItems": 0.05099997775895
+            }
+          },
+          {
+            "total_last_frame_ms": 32.734,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01414285600185,
+              "Update GPUParticles": 0.12128571101597,
+              "Cull DirectionalLight3D, Split 1": 0.12585713182177,
+              "Setup Sky": 1.39214284079415,
+              "Render Depth Pre-Pass": 7.92699977329799,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27885714599064,
+              "Setup Shadows": 0.02699999936989,
+              "Render Directional/SpotLight Shadows": 0.6017142704555,
+              "Prepare Depth for SSAO/SSIL": 0.06128571288926,
+              "Process SSAO": 0.53828576632908,
+              "Render 3D Cluster Elements": 0.01600000155824,
+              "Pack 3D Cluster Elements": 0.01042857233967,
+              "Render Fog": 0.2681428534644,
+              "Filter Fog": 0.10028571741922,
+              "Integrate Fog": 0.04799999935286,
+              "Render Opaque Pass": 18.4991433279855,
+              "Render Sky": 0.37771425928388,
+              "Render 3D Transparent Pass": 0.10585714238031,
+              "Resolve": 0.26542857715062,
+              "Tonemap": 0.74657140459333,
+              "Glow": 0.97800002779279,
+              "Render CanvasItems": 0.05171427130699
+            }
+          },
+          {
+            "total_last_frame_ms": 32.834,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01399999963386,
+              "Update GPUParticles": 0.1165714263916,
+              "Cull DirectionalLight3D, Split 1": 0.12614285945892,
+              "Setup Sky": 1.38971437726702,
+              "Render Depth Pre-Pass": 7.96757125854492,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27900000980922,
+              "Setup Shadows": 0.02642856964043,
+              "Render Directional/SpotLight Shadows": 0.60785715920585,
+              "Prepare Depth for SSAO/SSIL": 0.06128571288926,
+              "Process SSAO": 0.5375714302063,
+              "Render 3D Cluster Elements": 0.01614285686186,
+              "Render Fog": 0.26928572995322,
+              "Filter Fog": 0.09899999414171,
+              "Integrate Fog": 0.04799999935286,
+              "Render Opaque Pass": 18.5844290597098,
+              "Render Sky": 0.37842856134687,
+              "Render 3D Transparent Pass": 0.10642857210977,
+              "Resolve": 0.26471429211753,
+              "Tonemap": 0.74728563853673,
+              "Glow": 0.97900002343314,
+              "Render CanvasItems": 0.05185713086809
+            }
+          },
+          {
+            "total_last_frame_ms": 32.783,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01399999950081,
+              "Update GPUParticles": 0.12112499028444,
+              "Cull DirectionalLight3D, Split 1": 0.1258749961853,
+              "Setup Sky": 1.39037489891052,
+              "Render Depth Pre-Pass": 7.96900033950806,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27849999070168,
+              "Setup Shadows": 0.02662499807775,
+              "Render Directional/SpotLight Shadows": 0.60912501811981,
+              "Prepare Depth for SSAO/SSIL": 0.06199999898672,
+              "Process SSAO": 0.53762501478195,
+              "Render 3D Cluster Elements": 0.01575000025332,
+              "Pack 3D Cluster Elements": 0.0101250000298,
+              "Render Fog": 0.26899999380112,
+              "Filter Fog": 0.09937499463558,
+              "Integrate Fog": 0.04775000363588,
+              "Render Opaque Pass": 18.6352500915527,
+              "Render Sky": 0.37825000286102,
+              "Render 3D Transparent Pass": 0.10625000298023,
+              "Resolve": 0.26575002074242,
+              "Tonemap": 0.74687504768372,
+              "Glow": 0.97825002670288,
+              "Render CanvasItems": 0.05262498557568
+            }
+          },
+          {
+            "total_last_frame_ms": 32.993,
+            "tasks_ms": {
+              "Prepare Render Frame": 0.01437499932945,
+              "Update GPUParticles": 0.12150000035763,
+              "Cull DirectionalLight3D, Split 1": 0.12674999237061,
+              "Setup Sky": 1.39162504673004,
+              "Render Depth Pre-Pass": 7.95687484741211,
+              "Resolve Depth Pre-Pass (MSAA)": 0.27849999070168,
+              "Setup Shadows": 0.02662499807775,
+              "Render Directional/SpotLight Shadows": 0.61050003767014,
+              "Prepare Depth for SSAO/SSIL": 0.06162500008941,
+              "Process SSAO": 0.53762501478195,
+              "Render 3D Cluster Elements": 0.01575000025332,
+              "Pack 3D Cluster Elements": 0.01049999985844,
+              "Render Fog": 0.26875001192093,
+              "Filter Fog": 0.10062500089407,
+              "Integrate Fog": 0.04712500423193,
+              "Render Opaque Pass": 18.6138744354248,
+              "Render Sky": 0.37787500023842,
+              "Render 3D Transparent Pass": 0.1055000051856,
+              "Resolve": 0.2660000026226,
+              "Tonemap": 0.74749994277954,
+              "Glow": 0.97812503576279,
+              "Render CanvasItems": 0.05112497508526
+            }
+          }
+        ],
+        "cost_blocks": 16,
+        "mean_task_ms": {
+          "Cull DirectionalLight3D, Split 1": 0.14022135089284624,
+          "Filter Fog": 0.0999062505905475,
+          "Glow": 0.9781946126549006,
+          "Integrate Fog": 0.04791220127870875,
+          "Pack 3D Cluster Elements": 0.0099765625588275,
+          "Prepare Depth for SSAO/SSIL": 0.06157403194256938,
+          "Prepare Render Frame": 0.013476562070925,
+          "Process SSAO": 0.5377314108468232,
+          "Render 3D Cluster Elements": 0.018188988263275627,
+          "Render 3D Transparent Pass": 0.12085230752737,
+          "Render CanvasItems": 0.05191702418960625,
+          "Render Depth Pre-Pass": 7.912776396388099,
+          "Render Directional/SpotLight Shadows": 0.5682235869268581,
+          "Render Fog": 0.2757429320010406,
+          "Render Opaque Pass": 18.762990185192656,
+          "Render Sky": 0.38355728815354,
+          "Resolve": 0.26541741174601374,
+          "Resolve Depth Pre-Pass (MSAA)": 0.2777596705903606,
+          "Setup Shadows": 0.0264694925530675,
+          "Setup Sky": 1.3910387094531724,
+          "Tonemap": 0.746782711396615,
+          "Update GPUParticles": 0.12072060620855625
+        },
+        "top_task": "Render Opaque Pass",
+        "scope": "Godot --gpu-profile one-second task means; total is the last frame. First timed block excluded because it can include warmup. GPU passes do not identify individual scene meshes."
+      },
+      "route_sha256": "43473f54ba3ed7475a51b3d6d54bbec6d6767fdca3fd5a8402099a31a0039b16",
+      "performance_sha256": "caf2288baee7c701dc51a5cb92f820c7b2682f071f7d1bf349932c83320db6ea",
+      "engine_cost_summary": {
+        "engine_process_ms": {
+          "mean": 142.18055462184873,
+          "maximum": 880.487
+        },
+        "physics_max_step_ms": {
+          "mean": 14.382050420168067,
+          "maximum": 37.434
+        },
+        "executed_physics_steps": {
+          "mean": 7.966386554621849,
+          "maximum": 8
+        }
+      }
+    },
+    {
+      "label": "before",
+      "biome": "cloudreach",
+      "source_commit": "946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\Tetherbound.exe",
+        "--rendering-method",
+        "forward_plus",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\perf-diag-before-946bb39e5\\Tetherbound.pck",
+        "--resolution",
+        "1920x1080",
+        "--gpu-profile",
+        "--debug",
+        "--ignore-error-breaks",
+        "--audio-driver",
+        "Dummy",
+        "--script",
+        "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=Medium",
+        "--source-commit=946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+        "--output=D:/tetherbound/.artifacts/pab-1/before/cloudreach/route"
+      ],
+      "exit_code": 1,
+      "timed_out": false,
+      "elapsed_seconds": 964.5320000000065,
+      "errors": [],
+      "log_sha256": "577de9478296ea29ed92b3b7a85b72f582842dc285436f58f1ce4b03c2364fec",
+      "complete": false
+    }
+  ],
+  "dependencies": {
+    "capture_manifest_writer.gd": "f7fbf392061448a091dce0953ccbd3f281ad2626b56eaf7a507afab1b0e9adb1",
+    "packaged_engine_profiler.gd": "1eb43ed0d8cc64753aa53ad923f93cb6603bfeb7974545f3163b94a7e1a0574d"
+  },
+  "scope": "Identical pinned editor-capable engine hosts with --main-pack loading byte-identical pinned release game PCKs and external instrumentation, not shipping release FPS. Standard export templates refuse --script. No source filesystem fallback or Ally acceptance. Pins differ in realm far floors and other integrated runtime changes; this is not a pure isolated far-plane experiment.",
+  "complete": false,
+  "shipping_ab_complete": false,
+  "fight_complete": false,
+  "failed_route_failures": [
+    "production world shell build timed out"
+  ],
+  "before_export_qualification": {
+    "source_commit": "946bb39e55ba4485868b611eb0c15e5eb7c7be0c",
+    "source_root": "D:\\tetherbound\\perf-before-946bb39e",
+    "package": "D:\\tetherbound\\.artifacts\\perf-before-20261005T011216Z\\package",
+    "steps": [
+      {
+        "name": "export-release",
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--verbose",
+          "--path",
+          "D:\\tetherbound\\perf-before-946bb39e",
+          "--export-release",
+          "Windows Desktop",
+          "D:\\tetherbound\\.artifacts\\perf-before-20261005T011216Z\\package\\Tetherbound.exe"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "errors": [
+          "ERROR: 169 RID allocations of type 'N13RendererDummy15MaterialStorage13DummyMaterialE' were leaked at exit.",
+          "ERROR: 12 RID allocations of type 'N13RendererDummy15MaterialStorage11DummyShaderE' were leaked at exit.",
+          "ERROR: 236 RID allocations of type 'N13RendererDummy9DummyMeshE' were leaked at exit.",
+          "ERROR: 64 RID allocations of type 'PN13RendererDummy14TextureStorage12DummyTextureE' were leaked at exit.",
+          "ERROR: 1065 resources still in use at exit.",
+          "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE",
+          "ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools11BucketSmallE"
+        ],
+        "elapsed_seconds": 714.0779999999795,
+        "log_sha256": "a7ca413216f9cc1e1f421718d4bd5121377f7d0ce19fd1fba1bb6206555cbd30",
+        "pass": false
+      }
+    ],
+    "scope": "Completed export exit0 with seven shutdown leak ERRORs, preserved FAIL. Actual produced PCK independently passes freshness with zero errors and may be used for explicitly labeled diagnostic engine-host comparison only. Not a qualified shipping export or owner package.",
+    "export_representation_adjustment": {
+      "original_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+      "used_sha256": "8acd44c72a8fd44919301bb68e79f879e77c7d8d2fabb55bad79b05609eb8416",
+      "change": "script_export_mode2 -> 0 only; both listed platform presets"
+    },
+    "cpu_preflight_pass": false,
+    "diagnostic_pack_freshness_pass": true,
+    "candidate_pack_probe": {
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\.artifacts\\perf-before-20261005T011216Z\\probe-host",
+        "--main-pack",
+        "D:\\tetherbound\\.artifacts\\perf-before-20261005T011216Z\\probe-host\\Tetherbound.pck",
+        "--script",
+        "D:/tetherbound/redesign-lookdev/tools/check_exported_stormwood_scatter.gd",
+        "--",
+        "--output=D:/tetherbound/.artifacts/perf-before-20261005T011216Z/scatter.json"
+      ],
+      "exit_code": 0,
+      "log_sha256": "d37febc99aa335329ac1265aec9b215be4a720f83169ae713f25070fd492f1a3",
+      "scatter_sha256": "ab823a53c3236da8259ba3f9037fa7d6d1b80d86a17650e292a2c05e6c40b4fd"
+    },
+    "files": [
+      {
+        "path": "addons/terrain_3d/bin/libterrain.windows.release.x86_64.dll",
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86",
+        "size_bytes": 3549184
+      },
+      {
+        "path": "libterrain.windows.release.x86_64.dll",
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86",
+        "size_bytes": 3549184
+      },
+      {
+        "path": "Tetherbound.exe",
+        "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c",
+        "size_bytes": 109052928
+      },
+      {
+        "path": "Tetherbound.pck",
+        "sha256": "10b313fa0ce32d7d80d8e256a2b02eb7eedd35acf67bc56fe916bda613e80bbf",
+        "size_bytes": 1135250216
+      }
+    ]
+  },
+  "raw_evidence": {
+    "path": "raw-evidence.zip",
+    "sha256": "7d794a74b07ef29cf3a660c013d54b5ec2b2a3fb6a5714e63bf932df9c3db8d3",
+    "files": [
+      {
+        "path": "routes/summary.json",
+        "sha256": "0d3504a3b43da2f74019ae7e217a52e0da76485f3f1b6b9422af5d9f2fce24ee",
+        "size_bytes": 105935
+      },
+      {
+        "path": "routes/after/meadows/native.log",
+        "sha256": "50a816eef4551382ae4c06a9f420cf8c00b0e99733ae970b62c2cbdae4aa0d5f",
+        "size_bytes": 538469
+      },
+      {
+        "path": "routes/after/meadows/receipt.json",
+        "sha256": "9cc4c67e2dd035963e4aa7403d681e4628460ca49397f9d1a10919297b52fa01",
+        "size_bytes": 24778
+      },
+      {
+        "path": "routes/after/water/native.log",
+        "sha256": "ddfd308e8dab8e3e3ee980720394013003694dc42a55fe3eb9f2ea8008b35dd4",
+        "size_bytes": 209572
+      },
+      {
+        "path": "routes/after/water/receipt.json",
+        "sha256": "4379571906110d701145054a38f0097e29ba0137a5fe0809ed1bacf998572cbc",
+        "size_bytes": 24486
+      },
+      {
+        "path": "routes/after/meadows/route/end.png",
+        "sha256": "fb192f787650f4e42d414a95d8353fef6405d26f41335b07088e6c8892870c58",
+        "size_bytes": 2820885
+      },
+      {
+        "path": "routes/after/meadows/route/performance.json",
+        "sha256": "50bf828da7d0407656a2322f0c1d49592b080a321261f47f7b91cc136c4c26ab",
+        "size_bytes": 129588
+      },
+      {
+        "path": "routes/after/meadows/route/route.json",
+        "sha256": "f36b84282b4147caf41ae2d33ee58aa14b0dd9e15444634b262517661180be55",
+        "size_bytes": 30612
+      },
+      {
+        "path": "routes/after/meadows/route/start.png",
+        "sha256": "34eb0d7f4d3dedfa24cc87088aaba2eefb80a7c03820466bc26aef4b1697eeff",
+        "size_bytes": 2831189
+      },
+      {
+        "path": "routes/after/water/route/end.png",
+        "sha256": "f20c4db3d056062b965f018124396c4fa3b547c4ed9ab7628e4821fa6ab0bc47",
+        "size_bytes": 2212066
+      },
+      {
+        "path": "routes/after/water/route/performance.json",
+        "sha256": "caf2288baee7c701dc51a5cb92f820c7b2682f071f7d1bf349932c83320db6ea",
+        "size_bytes": 88252
+      },
+      {
+        "path": "routes/after/water/route/route.json",
+        "sha256": "43473f54ba3ed7475a51b3d6d54bbec6d6767fdca3fd5a8402099a31a0039b16",
+        "size_bytes": 22529
+      },
+      {
+        "path": "routes/after/water/route/start.png",
+        "sha256": "7ff07e9194bf774daf166492f452f6845ecb10b8c96a53315e0431c41f67a687",
+        "size_bytes": 2258680
+      },
+      {
+        "path": "routes/before/cloudreach/native.log",
+        "sha256": "577de9478296ea29ed92b3b7a85b72f582842dc285436f58f1ce4b03c2364fec",
+        "size_bytes": 562253
+      },
+      {
+        "path": "routes/before/cloudreach/receipt.json",
+        "sha256": "68725984cdbae3db592815ae5dfccc08cb2ff9d827e33f73ea8305cdda340dd1",
+        "size_bytes": 1091
+      },
+      {
+        "path": "routes/before/meadows/native.log",
+        "sha256": "bdb282c805920c7dd4cd222836df34e1a7bedca6b93fdd0c331e639641628083",
+        "size_bytes": 544375
+      },
+      {
+        "path": "routes/before/meadows/receipt.json",
+        "sha256": "80d7933322136895d1bb05d11edfda87c8ac44790cd568efd330fb7b4b16e492",
+        "size_bytes": 26363
+      },
+      {
+        "path": "routes/before/water/native.log",
+        "sha256": "15de4862639639eafb2af2fa1ed8de3d4aab45c21efc6f9ea5f7d5fd1c12b57f",
+        "size_bytes": 202743
+      },
+      {
+        "path": "routes/before/water/receipt.json",
+        "sha256": "a181f326882cd45974ec00379dd7906972b3d4a1b175b979423c4adf25993ba4",
+        "size_bytes": 17931
+      },
+      {
+        "path": "routes/before/cloudreach/route/performance.json",
+        "sha256": "4e6a7fecb40fefd3183d12a545056548af58948deea44b5e1fa9d53350c43217",
+        "size_bytes": 1512
+      },
+      {
+        "path": "routes/before/cloudreach/route/route.json",
+        "sha256": "f8961ba9773fb7fc8d0154a88273c43fbff1cc1d20a6776e0a1b0b5a9f0ee483",
+        "size_bytes": 2221
+      },
+      {
+        "path": "routes/before/meadows/route/end.png",
+        "sha256": "c34416a4fbd5ef08ec2c8ebe0d36d9976ed556fd7126b9fd7ed72928c2f21ff1",
+        "size_bytes": 2820010
+      },
+      {
+        "path": "routes/before/meadows/route/performance.json",
+        "sha256": "c1226d0832760adaec2d7b0affb2f9c9c1716ad48dc288f543a7cf277a464fac",
+        "size_bytes": 131655
+      },
+      {
+        "path": "routes/before/meadows/route/route.json",
+        "sha256": "ec7364edb7866e7af728d32a165b86777bbd3a5722fcadaf87290367fed5b10c",
+        "size_bytes": 30831
+      },
+      {
+        "path": "routes/before/meadows/route/start.png",
+        "sha256": "85f0dbe5a0fcede719b2c66244608371381e84901b1196cc69c9b070d25b73de",
+        "size_bytes": 2829410
+      },
+      {
+        "path": "routes/before/water/route/end.png",
+        "sha256": "41e36d1d9e57b198382e8c24f3fe8263f88bb952428374330339efd346c27f87",
+        "size_bytes": 2215007
+      },
+      {
+        "path": "routes/before/water/route/performance.json",
+        "sha256": "f452f8a4ff13773894cc7b1196db05d7c3bebf21170fe1f6a63a1438b0f93171",
+        "size_bytes": 88111
+      },
+      {
+        "path": "routes/before/water/route/route.json",
+        "sha256": "5c4e3189d7e8632d4cd739c8dcfe876d873bc5cfda2907e854c122e24fe1cd28",
+        "size_bytes": 22333
+      },
+      {
+        "path": "routes/before/water/route/start.png",
+        "sha256": "14b34b27bd8224fb9c06d2265646c88da1252804e9347c6e7ec7ee61b3a06741",
+        "size_bytes": 2257854
+      },
+      {
+        "path": "packages/before/PERF_DIAGNOSTIC.json",
+        "sha256": "4878f614a022bfbb5e8aa9ea61dbc32a5b6d88424351c875ed8a89ac4b4fd094",
+        "size_bytes": 1486
+      },
+      {
+        "path": "packages/after/PERF_DIAGNOSTIC.json",
+        "sha256": "2b4f226fc47cc81e996ee9daa75d2ac2adf5e335ef69446ec3d44f8bd99b69b7",
+        "size_bytes": 1496
+      },
+      {
+        "path": "before-export/receipt.json",
+        "sha256": "e0c53ab900febd853c021226005888ad54b815f2602bfbc128cc1410cf5aadec",
+        "size_bytes": 2175
+      },
+      {
+        "path": "before-export/diagnostic-candidate-receipt.json",
+        "sha256": "268ecf72ae6782930c465a93e41799f4f18e1940646179c87df1a7efbc5dac44",
+        "size_bytes": 3759
+      },
+      {
+        "path": "before-export/export-release.log",
+        "sha256": "a7ca413216f9cc1e1f421718d4bd5121377f7d0ce19fd1fba1bb6206555cbd30",
+        "size_bytes": 2389465
+      },
+      {
+        "path": "before-export/candidate-pack-freshness.log",
+        "sha256": "d37febc99aa335329ac1265aec9b215be4a720f83169ae713f25070fd492f1a3",
+        "size_bytes": 124
+      },
+      {
+        "path": "before-export/scatter.json",
+        "sha256": "ab823a53c3236da8259ba3f9037fa7d6d1b80d86a17650e292a2c05e6c40b4fd",
+        "size_bytes": 1028
+      },
+      {
+        "path": "before-export/export_presets.original.cfg",
+        "sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+        "size_bytes": 2694
+      },
+      {
+        "path": "before-export/export_presets.used.cfg",
+        "sha256": "8acd44c72a8fd44919301bb68e79f879e77c7d8d2fabb55bad79b05609eb8416",
+        "size_bytes": 2694
+      }
+    ]
+  }
+}
