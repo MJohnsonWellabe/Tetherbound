@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+ERROR: Can't play finished Tween, use stop() first to reset its state.
+   at: play (scene/animation/tween.cpp:206)
+   GDScript backtrace (most recent call first):
+       [0] set_combat_hitstop (res://scripts/creatures/creature_body.gd:2020)
+       [1] _set_bodies_hitstopped (res://scripts/combat/combat_manager.gd:2714)
+       [2] _end_hitstop (res://scripts/combat/combat_manager.gd:2726)
+       [3] _begin_resolve (res://scripts/combat/combat_manager.gd:5011)
+       [4] _perform_player_strike (res://scripts/combat/combat_manager.gd:2993)
+       [5] _resolve_player_strike (res://scripts/combat/combat_manager.gd:2755)
+       [6] _tick_action (res://scripts/combat/combat_manager.gd:2436)
+       [7] _tick_active (res://scripts/combat/combat_manager.gd:2407)
+       [8] _physics_process (res://scripts/combat/combat_manager.gd:2308)
