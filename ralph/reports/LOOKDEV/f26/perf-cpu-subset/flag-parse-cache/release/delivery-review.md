@@ -1,0 +1,11 @@
+Independent release-package audit: PASS for packaging and evidence preservation only.
+
+Verified all three `native-export-records.zip` entries against original raw bytes, inventory sizes and independently recomputed SHA256 hashes, including the exact entry set and ZIP CRCs. Archive: 114,957 bytes, SHA256 `8390e801ea71755f9c2df49c2d7dbdb17f7a39afda6349e2045c496f77dec2a1`. The embedded original receipt matches inventory.json's package_receipt. Original archive bytes remain authoritative where external text metadata may be normalized by Git.
+
+Independently rehashed and size-checked all three locally retained payloads. EXE: 109,052,928 bytes, SHA256 `a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c`. PCK: 1,123,171,248 bytes, SHA256 `6ce9561b67769d652897bc054bca09ecd4d1a19a96f9dda1600c348437b36169`. Terrain3D release DLL: 3,549,184 bytes, SHA256 `40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86`. EXE and DLL identities equal the prior292 package; this PCK has its own distinct identity. Large payloads remain locally at the original receipt paths and are not included in the export-record ZIP.
+
+Archived original export_presets.cfg is byte-identical to the current checkout configuration, explicitly retains script_export_mode=2, and has SHA256 `c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219`, identical to the prior292 original configuration. Source pin is `bd761aaa24babd5c537abf6e6f85bdf663702385`; launch checkout is `afecf718231c557a3e6874455be07e500af1763e`. Independently inspected their complete Git diff: only matched-medium evidence paths changed, preserving the game-source identity.
+
+Original receipt records the explicit Windows Desktop --export-release command against D:/tetherbound/codex-perf-cpu, exit 0, no supervisor stop reason, and 478.937 seconds. The full raw log contains no ERROR or SCRIPT ERROR and preserves the Orphan StringName: Node diagnostic. No raw log, receipt or configuration was rewritten during this audit.
+
+Audit performed CPU file/Git inspection only, without engine execution, source changes or Git mutations. Successful export and verified package identity do not establish FPS recovery, causal bottleneck, GPU/CPU attribution, handheld performance, visual quality or game acceptance. Native comparison remains separate.
