@@ -3249,11 +3249,15 @@ func cancel_original_starter_request() -> bool:
 
 ## F01#6a. The guest's explicit retry once the opening's bound has passed
 ## (opening.json `starters.admission_retry_after_seconds`). Never writes the
-## party itself: it re-sends the first request when nothing is journalled yet,
-## re-runs this owner's install of a pending `starter_choice` row, or -- when the
-## pending live instance no longer equals the card the host staged, which the
-## installer refuses forever -- adopts the host's own staged card as the pending
-## instance so that same install can succeed. Returns {action[, instance]}.
+## party and never changes the pending instance itself:
+##   * nothing journalled yet -> re-send the first request ("resent");
+##   * a valid pending row the installer accepts for the live instance -> re-run
+##     this owner's install of it ("reinstall");
+##   * a valid pending row the installer refuses for the live instance but
+##     accepts for the host's own staged card -> hand that card back decoded
+##     ("readopt"); the opening swaps the follower and then confirms it through
+##     `adopt_original_starter_instance`.
+## The acceptance test is the installer's own (`character_action_owner._starter_plan`).
 func retry_original_starter() -> Dictionary:
 	if is_host() or _original_starter_pending == null or session == null: return {"action": "none"}
 	var row := _pending_starter_row()
@@ -3261,31 +3265,60 @@ func retry_original_starter() -> Dictionary:
 		if not session.has_method("request_original_starter") or _original_starter_pending_card.is_empty(): return {"action": "none"}
 		session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
 		return {"action": "resent"}
+	var owner := preload("res://scripts/net/character_action_owner.gd")
+	if owner._starter_plan([], row, _original_starter_pending).get("ok") == true:
+		var ledger: Node = session.get_node_or_null(^"LedgerRpc") if session is Node else null
+		if ledger != null and ledger.has_method("_process_creature_training"): ledger.call("_process_creature_training", row)
+		return {"action": "reinstall"}
+	var adopted := _staged_starter_instance(row)
+	if adopted == null: return {"action": "none"}
+	return {"action": "readopt", "instance": adopted}
+
+
+## The opening swapped its follower to `instance` (a "readopt" above): make it
+## the pending instance the installer appends, only if the installer accepts it.
+func adopt_original_starter_instance(instance: RefCounted) -> bool:
+	var row := _pending_starter_row()
+	if is_host() or instance == null or row.is_empty() \
+			or preload("res://scripts/net/character_action_owner.gd")._starter_plan([], row, instance).get("ok") != true: return false
+	_original_starter_pending = instance
+	_original_starter_pending_card = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+	return true
+
+
+## Polled while the opening's wait is stalled: has the host's row for the
+## pending starter been accepted meanwhile? Sends nothing.
+func original_starter_admitted_now() -> bool:
+	if _original_starter_pending == null: return false
+	var receipt := "starter_choice:%s:%s" % [local.character_id, str(_original_starter_pending.get("uid"))]
+	var instance: RefCounted = _original_starter_pending
+	return _original_starter_admitted(instance, receipt)
+
+
+## The host's staged card for this character's pending starter row, decoded,
+## if the installer would accept it; otherwise null.
+func _staged_starter_instance(row: Dictionary) -> RefCounted:
 	var staged: Variant = row.get("after", {}).get("party", []) if row.get("after") is Dictionary else []
-	if not staged is Array or (staged as Array).size() != 1 or not (staged as Array)[0] is Dictionary: return {"action": "none"}
+	if not staged is Array or (staged as Array).size() != 1 or not (staged as Array)[0] is Dictionary: return null
 	var card: Dictionary = (staged as Array)[0]
-	var codec := preload("res://scripts/save/water_capture_codec.gd")
-	var rules := preload("res://scripts/net/character_record_rules.gd")
-	if not preload("res://scripts/creatures/essence.gd")._equivalent(rules.portable_card(codec.encode(_original_starter_pending)), card):
-		# The staged card is the portable one (in-fight energy stripped); the
-		# codec needs the field, and a fresh starter's energy is zero.
-		var full: Dictionary = card.duplicate(true)
-		if not full.has("energy"): full["energy"] = 0.0
-		var adopted: RefCounted = codec.decode(full)
-		if adopted == null or str(adopted.get("uid")) != str(card.get("uid", "")): return {"action": "none"}
-		_original_starter_pending = adopted
-		_original_starter_pending_card = codec.encode(adopted)
-		return {"action": "readopt", "instance": adopted}
-	var ledger: Node = session.get_node_or_null(^"LedgerRpc") if session is Node else null
-	if ledger != null and ledger.has_method("_process_creature_training"): ledger.call("_process_creature_training", row)
-	return {"action": "reinstall"}
+	if str(row.receipt) != "starter_choice:%s:%s" % [local.character_id, str(card.get("uid", ""))]: return null
+	# The staged card is the portable one (in-fight energy stripped); the codec
+	# needs the field, and a fresh starter's energy is zero.
+	var full: Dictionary = card.duplicate(true)
+	if not full.has("energy"): full["energy"] = 0.0
+	var adopted: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode(full)
+	if adopted == null or preload("res://scripts/net/character_action_owner.gd")._starter_plan([], row, adopted).get("ok") != true: return null
+	return adopted
 
 
 ## This character's journalled, not yet accepted original-starter row, or {}.
+## Validated exactly as an owner validates a saved row before acting on it.
 func _pending_starter_row() -> Dictionary:
 	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
 	if not row is Dictionary or row.get("action") != "starter_choice" or row.get("status") != "pending" \
 			or not str(row.get("receipt", "")).begins_with("starter_choice:%s:" % local.character_id): return {}
+	if not preload("res://scripts/net/foundation_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors,
+			local.character_id, world.reward_delivery_namespace, world.world_id): return {}
 	return row
 
 

@@ -248,51 +248,97 @@ func test_restores_keep_an_in_flight_choice_and_finishing_closes_the_picker() ->
 
 ## --- F01#6a: the explicit retry after the opening's bound -----------------
 
-func _journal_pending_row(card: Dictionary, uid: String) -> void:
-	var delivery_id := preload("res://scripts/creatures/essence.gd").training_delivery_id("starter-world", GUEST)
-	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "status": "pending",
-		"receipt": "starter_choice:%s:%s" % [GUEST, uid],
-		"after": {"party": [preload("res://scripts/net/character_record_rules.gd").portable_card(card)]}}
+## A real staged and journalled `starter_choice` row for `starter`, placed
+## where this guest's mirror of the host's world holds it.
+func _journal_pending_row(starter: RefCounted) -> Dictionary:
+	var actions := preload("res://scripts/net/foundation_actions.gd")
+	var action := preload("res://scripts/net/starter_choice_action.gd")
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	var progression := preload("res://scripts/creatures/progression.gd")
+	var player := preload("res://autoload/player_state.gd").new()
+	player.configure(preload("res://autoload/item_db.gd").new())
+	player.character_id = GUEST
+	var saved: Dictionary = player.save_data()
+	saved.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(saved.party, saved.redesign_character)
+	var context := action.host_context(GUEST, 0, preload("res://scripts/story/opening_beats.gd").config().get("starters", {}).get("species", []),
+		int(progression.config().get("level", {}).get("starter_level", 3)))
+	context.foundation_runtime_authorized = true
+	var staged := actions.stage(record.portable_projection(saved), 0, "starter_choice",
+		action.intent(preload("res://scripts/save/water_capture_codec.gd").encode(starter)), context, record.errors)
+	assert_true(staged.get("ok") == true, "the fixture starter stages (%s)" % str(staged))
+	staged.character_revision = 1
+	var row: Dictionary = preload("res://scripts/net/foundation_delivery.gd").make_record("starter-slot", "starter-world", "starter-session", staged, null, record.errors)
+	game.world.world_id = "starter-slot"
+	game.world.reward_deliveries[str(row.delivery_id)] = row
+	return row
 
 
-func test_a_retry_with_nothing_journalled_resends_the_first_card() -> void:
+func _guest_with_request() -> Array:
 	var client := RequestingClient.new()
 	game.session = client
 	game.local.character_id = GUEST
 	game.world.reward_delivery_namespace = "starter-world"
 	var starter := _fresh_starter()
 	game._request_original_starter(starter, "Bud")
+	return [client, starter]
+
+
+func test_a_retry_with_nothing_journalled_resends_the_first_card() -> void:
+	var setup := _guest_with_request()
+	var client: RequestingClient = setup[0]
 	assert_eq(game.retry_original_starter().get("action"), "resent")
 	assert_eq(client.requests.size(), 2)
 	assert_eq(client.requests[1], client.requests[0], "the retry is the same request the host may already hold")
 
 
-func test_a_retry_with_a_matching_pending_row_reinstalls_it() -> void:
-	game.session = RequestingClient.new()
-	game.local.character_id = GUEST
-	game.world.reward_delivery_namespace = "starter-world"
-	var starter := _fresh_starter()
-	game._request_original_starter(starter, "Bud")
-	_journal_pending_row(preload("res://scripts/save/water_capture_codec.gd").encode(starter), str(starter.get("uid")))
+func test_a_retry_with_an_installable_pending_row_reinstalls_it() -> void:
+	var setup := _guest_with_request()
+	var starter: RefCounted = setup[1]
+	_journal_pending_row(starter)
+	starter.set("happiness", float(starter.get("happiness")) - 5.0) # passive drift the installer ignores
 	assert_eq(game.retry_original_starter().get("action"), "reinstall",
-		"the host's row is re-run through this owner's install, never re-requested")
+		"the installer accepts the live instance, so the row is re-run, never re-adopted or re-requested")
 	assert_true(game.pending_original_starter_instance() == starter, "the follower's own instance is kept")
 	assert_eq(game.party.size(), 0, "the retry itself never writes the party")
 
 
-func test_a_retry_adopts_the_host_card_when_the_follower_no_longer_matches() -> void:
-	game.session = RequestingClient.new()
-	game.local.character_id = GUEST
-	game.world.reward_delivery_namespace = "starter-world"
-	var starter := _fresh_starter()
-	game._request_original_starter(starter, "Bud")
-	var staged_card := preload("res://scripts/save/water_capture_codec.gd").encode(starter)
-	_journal_pending_row(staged_card, str(starter.get("uid")))
-	starter.set("happiness", float(starter.get("happiness")) - 5.0) # the live follower drifted
+func test_a_retry_offers_the_host_card_only_when_the_installer_refuses_the_follower() -> void:
+	var setup := _guest_with_request()
+	var starter: RefCounted = setup[1]
+	var row := _journal_pending_row(starter)
+	starter.set("nickname", "Changed") # a field the installer does compare
+	var owner := preload("res://scripts/net/character_action_owner.gd")
+	assert_eq(owner._starter_plan([], row, starter).get("code"), "owner_starter_card_changed", "the installer refuses the drifted follower")
 	var outcome: Dictionary = game.retry_original_starter()
-	assert_eq(outcome.get("action"), "readopt", "the installer would refuse the drifted instance forever")
+	assert_eq(outcome.get("action"), "readopt")
 	var adopted: RefCounted = outcome.get("instance")
-	assert_true(adopted != null and adopted != starter and str(adopted.get("uid")) == str(starter.get("uid")))
+	assert_true(adopted != null and adopted != starter)
+	assert_true(game.pending_original_starter_instance() == starter, "nothing changes until the opening has swapped the follower")
+	assert_true(owner._starter_plan([], row, adopted).get("ok") == true, "the installer accepts the adopted instance")
+	assert_true(game.adopt_original_starter_instance(adopted))
 	assert_true(game.pending_original_starter_instance() == adopted, "the installer now appends the host's staged card")
-	assert_eq(game.retry_original_starter().get("action"), "reinstall", "and the next retry installs it")
+	assert_false(game.adopt_original_starter_instance(_fresh_starter()), "an instance the installer would refuse is never adopted")
 	assert_eq(game.party.size(), 0)
+
+
+func test_an_invalid_row_is_never_adopted() -> void:
+	var setup := _guest_with_request()
+	var starter: RefCounted = setup[1]
+	var row := _journal_pending_row(starter)
+	row.after.party[0]["base_attack"] = 400.0 # a tampered mirror row
+	starter.set("nickname", "Changed")
+	var outcome: Dictionary = game.retry_original_starter()
+	assert_true(outcome.get("action") != "readopt" and outcome.get("action") != "reinstall",
+		"a row that fails owner validation is never installed or adopted; at most the request is re-sent (%s)" % str(outcome))
+	assert_true(game.pending_original_starter_instance() == starter)
+
+
+func test_a_late_acceptance_is_seen_without_a_resend() -> void:
+	var setup := _guest_with_request()
+	var client: RequestingClient = setup[0]
+	var starter: RefCounted = setup[1]
+	var row := _journal_pending_row(starter)
+	assert_false(game.original_starter_admitted_now())
+	row.status = "accepted"
+	assert_true(game.original_starter_admitted_now(), "an accepted row is admission")
+	assert_eq(client.requests.size(), 1, "checking sends nothing")

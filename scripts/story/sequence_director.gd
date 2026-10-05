@@ -1982,14 +1982,25 @@ func _adopt(index: int, chosen: String) -> void:
 var _pending_starter_adoption: Dictionary = {}
 
 func _retry_original_starter_save() -> void:
-	if _pending_starter_adoption.is_empty() or _pending_starter_adoption.get("stalled") == true: return
-	# Bounded: past `starters.admission_retry_after_seconds` the automatic
-	# retries stop and the player gets a clear, explicit retry instead.
-	if Time.get_ticks_msec() - int(_pending_starter_adoption.get("started_ms", Time.get_ticks_msec())) >= _starter_wait_bound_ms():
+	if _pending_starter_adoption.is_empty(): return
+	var bound_game := _effect_game()
+	var guest: bool = bound_game != null and bound_game.has_method("is_host") and not bool(bound_game.call("is_host"))
+	if _pending_starter_adoption.get("stalled") == true:
+		# Stalled stops the re-sends, never the listening: a row the host
+		# accepts meanwhile still finishes the adoption.
+		if bound_game != null and bound_game.has_method("original_starter_admitted_now") \
+				and bool(bound_game.call("original_starter_admitted_now")):
+			var admitted_name: String = _pending_starter_adoption.nickname
+			_pending_starter_adoption.clear()
+			_finish_original_starter_adoption(admitted_name, true)
+		return
+	# Bounded (guests only; the host commits its own starter locally and keeps
+	# retrying its own save): past `starters.admission_retry_after_seconds`
+	# the automatic re-sends stop and the player gets a clear, explicit retry.
+	if guest and Time.get_ticks_msec() - int(_pending_starter_adoption.get("started_ms", Time.get_ticks_msec())) >= _starter_wait_bound_ms():
 		_pending_starter_adoption.stalled = true
-		var stalled_game := _effect_game()
-		if stalled_game != null and stalled_game.has_method("push_world_message"):
-			stalled_game.call("push_world_message", "The host has not confirmed your companion yet. Press Interact to ask again.")
+		if bound_game.has_method("push_world_message"):
+			bound_game.call("push_world_message", "The host has not confirmed your companion yet. Press Interact to ask again.")
 		return
 	if Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
 	var game := _effect_game()
@@ -2047,10 +2058,22 @@ func retry_starter_adoption() -> void:
 		return
 	var outcome: Dictionary = game.call("retry_original_starter")
 	if outcome.get("action") == "readopt" and outcome.get("instance") is RefCounted:
+		# Swap the follower to the host's staged card only when the old body
+		# can really be put away (never mid-fight or between trainer rounds),
+		# and confirm it with the game only once the new body exists.
+		if _encounter == null or not _encounter.has_method("dismiss_active_creature") \
+				or not bool(_encounter.call("dismiss_active_creature")):
+			_pending_starter_adoption.stalled = true
+			if game.has_method("push_world_message"):
+				game.call("push_world_message", "Finish the fight, then press Interact to ask the host again.")
+			return
+		if is_inside_tree():
+			await get_tree().process_frame # the dismissed body frees before its replacement takes the name
+		if not bool(await _encounter.call("_spawn_ally_body", outcome.instance)) \
+				or not bool(game.call("adopt_original_starter_instance", outcome.instance)):
+			_pending_starter_adoption.stalled = true
+			return
 		_pending_starter_adoption.instance = outcome.instance
-		if _encounter != null and _encounter.has_method("dismiss_active_creature"):
-			_encounter.call("dismiss_active_creature")
-			await _encounter.call("_spawn_ally_body", outcome.instance)
 	if game.has_method("push_world_message"):
 		game.call("push_world_message", "Asking the host again to save your companion...")
 

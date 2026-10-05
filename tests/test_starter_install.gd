@@ -35,7 +35,10 @@ class GuardSession extends "res://scripts/net/session.gd":
 class EncounterDouble extends Node:
 	var dismissed := 0
 	var ally: RefCounted = null
+	var fighting := false
 	func dismiss_active_creature() -> bool:
+		if fighting:
+			return false
 		dismissed += 1
 		ally = null
 		return true
@@ -201,6 +204,16 @@ class RetryGame extends Node:
 	var outcome: Dictionary = {"action": "resent"}
 	var retries := 0
 	var messages: Array = []
+	var host := false
+	var admitted := false
+	var adopted: RefCounted = null
+	func is_host() -> bool:
+		return host
+	func original_starter_admitted_now() -> bool:
+		return admitted
+	func adopt_original_starter_instance(instance: RefCounted) -> bool:
+		adopted = instance
+		return true
 	func retry_original_starter() -> Dictionary:
 		retries += 1
 		return outcome
@@ -210,8 +223,12 @@ class RetryGame extends Node:
 
 class GameSeamDirector extends "res://scripts/story/sequence_director.gd":
 	var test_game: Node = null
+	var finished := ""
 	func _effect_game() -> Node:
 		return test_game
+	func _finish_original_starter_adoption(chosen: String, _typed: bool) -> void:
+		finished = chosen
+		_adopting = false
 
 
 func _stalled_director(encounter: EncounterDouble, creature: RefCounted) -> Node:
@@ -233,12 +250,15 @@ func test_the_wait_is_bounded_and_then_offers_a_clear_retry() -> void:
 	var creature := _starter()
 	encounter.ally = creature
 	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	director.set("test_game", game)
 	assert_false(bool(director.call("starter_adoption_stalled")))
 	director.call("_retry_original_starter_save")
 	assert_true(bool(director.call("starter_adoption_stalled")), "past the bound the automatic retries stop")
 	assert_false((director.get("_pending_starter_adoption") as Dictionary).is_empty(),
 		"the choice is kept: nothing was refused, so nothing is released")
 	assert_eq(encounter.dismissed, 0, "the follower stays while the player decides to retry")
+	game.free()
 	encounter.free()
 	director.free()
 
@@ -280,6 +300,60 @@ func test_a_readopted_card_replaces_the_follower() -> void:
 		"the pending choice is now the host's staged card")
 	assert_eq(encounter.dismissed, 1, "the stale follower is dismissed")
 	assert_true(encounter.spawned == staged, "the follower is rebuilt from the instance the installer will append")
+	assert_true(game.adopted == staged, "the game confirms the adopted instance only after the new body exists")
+	game.free()
+	encounter.free()
+	director.free()
+
+
+func test_the_host_never_stalls() -> void:
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	game.host = true
+	director.set("test_game", game)
+	director.call("_retry_original_starter_save")
+	assert_false(bool(director.call("starter_adoption_stalled")), "the host keeps retrying its own local save")
+	game.free()
+	encounter.free()
+	director.free()
+
+
+func test_a_late_acceptance_finishes_a_stalled_wait() -> void:
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	director.set("test_game", game)
+	director.call("_retry_original_starter_save")
+	assert_true(bool(director.call("starter_adoption_stalled")))
+	game.admitted = true
+	director.call("_retry_original_starter_save")
+	assert_eq(str(director.get("finished")), "Bud", "the host's late accept finishes the adoption without a press")
+	assert_true((director.get("_pending_starter_adoption") as Dictionary).is_empty())
+	assert_eq(game.retries, 0, "nothing was re-sent")
+	game.free()
+	encounter.free()
+	director.free()
+
+
+func test_a_readopt_waits_while_the_follower_is_fighting() -> void:
+	var encounter := EncounterDouble.new()
+	var creature := _starter()
+	encounter.ally = creature
+	encounter.fighting = true
+	var director := _stalled_director(encounter, creature)
+	var game := RetryGame.new()
+	game.outcome = {"action": "readopt", "instance": _starter()}
+	director.set("test_game", game)
+	director.call("_retry_original_starter_save")
+	await director.call("retry_starter_adoption")
+	assert_true(encounter.spawned == null, "no second body is spawned while the first cannot be put away")
+	assert_true(game.adopted == null, "the pending instance is unchanged")
+	assert_true(bool(director.call("starter_adoption_stalled")), "the player can retry once the fight is over")
 	game.free()
 	encounter.free()
 	director.free()
