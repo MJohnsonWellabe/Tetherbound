@@ -40,15 +40,27 @@ static func watch(world: Node) -> void:
 
 static func _on_node_added(node: Node) -> void:
 	if node is OmniLight3D or node is SpotLight3D:
-		# Builders often set shadow_enabled after add_child; look next frame.
-		# Deferred by id: the node may be freed before then.
-		_apply_deferred.call_deferred(node.get_instance_id())
+		# Builders often set shadow_enabled after add_child; look later. Ids
+		# are collected and flushed by one deferred call, never one per node.
+		_pending.append(node.get_instance_id())
+		if not _flush_queued:
+			_flush_queued = true
+			_flush.call_deferred()
 
 
-static func _apply_deferred(id: int) -> void:
-	var light := instance_from_id(id) as Light3D
-	if light != null:
-		apply(light, _config())
+static var _pending: PackedInt64Array = PackedInt64Array()
+static var _flush_queued := false
+
+
+static func _flush() -> void:
+	_flush_queued = false
+	var ids := _pending
+	_pending = PackedInt64Array()
+	var cfg := _config()
+	for id: int in ids:
+		var light := instance_from_id(id) as Light3D
+		if light != null:
+			apply(light, cfg)
 
 
 static func apply(light: Light3D, cfg: Dictionary) -> void:

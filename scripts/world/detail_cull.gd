@@ -45,15 +45,29 @@ static func watch(world: Node) -> void:
 
 static func _on_node_added(node: Node) -> void:
 	if node is MeshInstance3D or node is MultiMeshInstance3D:
-		# Builders place, scale and assign meshes after add_child; measure next
-		# frame. Deferred by id: the node may be freed before then.
-		_apply_deferred.call_deferred(node.get_instance_id())
+		# Builders place, scale and assign meshes after add_child, so measure
+		# later. Collect ids and flush once: a realm build adds tens of
+		# thousands of meshes in one frame, and one deferred call per mesh
+		# overflowed the engine's message queue and crashed the Meadows boot.
+		_pending.append(node.get_instance_id())
+		if not _flush_queued:
+			_flush_queued = true
+			_flush.call_deferred()
 
 
-static func _apply_deferred(id: int) -> void:
-	var node := instance_from_id(id) as GeometryInstance3D
-	if node != null and node.is_inside_tree():
-		apply(node, _config())
+static var _pending: PackedInt64Array = PackedInt64Array()
+static var _flush_queued := false
+
+
+static func _flush() -> void:
+	_flush_queued = false
+	var ids := _pending
+	_pending = PackedInt64Array()
+	var cfg := _config()
+	for id: int in ids:
+		var node := instance_from_id(id) as GeometryInstance3D
+		if node != null and node.is_inside_tree():
+			apply(node, cfg)
 
 
 static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
