@@ -654,6 +654,11 @@ func _drain_effects() -> void:
 		if opening_game == null or opening_game.call("grant_home_key_from_opening", self) != true:
 			_f18_pending_effects = effects.duplicate()
 			return
+		# The key's owe/deliver CAS may still hold the owner record; the satchel
+		# refuses every add until it settles, which would drop the orbs.
+		if opening_game.get("session").call("_owner_training_mutation_blocked", opening_game.get("local")) == true:
+			_f18_pending_effects = effects.duplicate()
+			return
 		_f18_pending_home_key.clear()
 		_f18_home_key_attempts = 0
 	if not _gift_batch_fits(effects):
