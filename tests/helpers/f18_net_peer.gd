@@ -31,6 +31,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var before := _physics_count
 	var args: Dictionary = msg.get("args", {})
 	var result: Dictionary
+	_f18_tracing = action
+	_f18_trace_loop(action)
 	match action:
 		"f18_boot_world":
 			if _f18_started or _f18_fixture_done or _session().call("is_active") == true:
@@ -70,6 +72,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			_f18_started = true
 			result = await _f18_arch(game, args)
 		_: result = _f18_verdict(false, "unknown F18 action " + action)
+	_f18_tracing = ""
 	result.frames_used = _physics_count - before
 	if is_instance_valid(_f18_presentation): _f18_presentation.call("_flush")
 	return result
@@ -77,6 +80,19 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 func _f18_verdict(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
 	if not ok: detail += " [" + _f18_owner_diagnosis() + "]"
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
+
+## Diagnostic only: a step that never returns a verdict still leaves a trail.
+var _f18_tracing := ""
+
+func _f18_trace_loop(action: String) -> void:
+	var next := Time.get_ticks_msec() + 4000
+	while _f18_tracing == action:
+		await physics_frame
+		if Time.get_ticks_msec() < next: continue
+		next += 4000
+		var requests: Variant = _session().get("_portal_requests") if _session() != null else null
+		print("F18_OWNER_TRACE step=%s t=%d %s portal_requests=%d" % [action, Time.get_ticks_msec(),
+			_f18_owner_diagnosis(), (requests as Dictionary).size() if requests is Dictionary else -1])
 
 ## Diagnostic only: why the local owner record may still be held.
 func _f18_owner_diagnosis() -> String:
