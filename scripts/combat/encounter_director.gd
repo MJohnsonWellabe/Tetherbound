@@ -1,5 +1,6 @@
 extends Node
 
+const PERF_SPAWN_CONFIG := preload("res://scripts/world/performance_config.gd")
 ## SceneTree maintains this live index on enter/exit. Portal views need only
 ## actual directors, rather than every terrain/harvest node in the world.
 const PORTAL_DIRECTOR_GROUP := &"foundation_portal_directors"
@@ -1015,6 +1016,13 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	# today's world exactly rather than approximately.
 	var plan := _spawn_plan(entries)
 
+	# PERF / co-op heartbeat (2026-10-05): the table spawned in one frame --
+	# Stormwood's 808 wilds held the main thread long enough for a crossing
+	# peer to go heartbeat-silent. Spawn order, the per-cluster rng and every
+	# name are unchanged; only the work is spread across frames.
+	var slice_budget_usec := int(float(PERF_SPAWN_CONFIG.config().get("wild_spawn_slice_ms", 12.0)) * 1000.0)
+	var slice_started := Time.get_ticks_usec()
+
 	for index in entries.size():
 		var spawn: Dictionary = entries[index] as Dictionary
 		# The ROLLED species where this cluster named a table and the world seed
@@ -1094,6 +1102,11 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
 
 		for n in count:
+			if slice_budget_usec > 0 and Time.get_ticks_usec() - slice_started > slice_budget_usec:
+				await get_tree().process_frame
+				if not is_inside_tree() or is_queued_for_deletion():
+					return
+				slice_started = Time.get_ticks_usec()
 			# The named individual is always the cluster's first member
 			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
 			# caught or freed, this spot simply spawns one fewer body -- the

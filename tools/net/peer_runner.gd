@@ -4022,6 +4022,22 @@ func _story_gate_rows() -> Array:
 	for node in get_nodes_in_group("progression_restore"):
 		if not is_instance_valid(node) or not node.has_method("is_open"):
 			continue
+		if node.get_method_argument_count("is_open") > 0:
+			# A multi-gate owner (water_return_ramps.gd) answers per ramp id;
+			# calling it bare was a SCRIPT ERROR in every host log.
+			var ramps: Variant = node.get("_ramps")
+			if ramps is Array:
+				for ramp: Variant in ramps:
+					if not ramp is Dictionary:
+						continue
+					var id := str((ramp as Dictionary).get("id", ""))
+					rows.append({
+						"node": "%s/%s" % [node.name, id],
+						"flag": str((ramp as Dictionary).get("flag", "")),
+						"open": bool(node.call("is_open", id)),
+						"position": _opening_position(node),
+					})
+			continue
 		var flag: Variant = node.get("flag_id")
 		rows.append({
 			"node": str(node.name),

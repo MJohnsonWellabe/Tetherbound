@@ -1613,6 +1613,11 @@ jobs:
       - name: Verify Stormwood constructed arch journey
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
+      # PERF / co-op heartbeat: a host's Stormwood shell boot keeps every
+      # main-thread gap under 2 s while all 808 wilds spawn with stable names.
+      - name: Verify Stormwood shell spawn slicing
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        run: timeout 300s godot --headless --path . --script tests/smoke_stormwood_spawn_slicing.gd
       - name: Verify solo Stormwood hosted rewards
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
